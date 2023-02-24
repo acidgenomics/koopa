@@ -14332,10 +14332,6 @@ koopa_is_conda_env_active() {
     return 1
 }
 
-koopa_is_debian_like() {
-    koopa_is_os_like 'debian'
-}
-
 koopa_is_defined_in_user_profile() {
     local file
     koopa_assert_has_no_args "$#"
@@ -14393,10 +14389,6 @@ koopa_is_export() {
         || return 1
     done
     return 0
-}
-
-koopa_is_fedora_like() {
-    koopa_is_os_like 'fedora'
 }
 
 koopa_is_file_system_case_sensitive() {
@@ -14527,24 +14519,6 @@ koopa_is_opensuse() {
     koopa_is_os 'opensuse'
 }
 
-koopa_is_os_like() {
-    local app dict
-    declare -A app dict
-    dict['id']="${1:?}"
-    koopa_is_os "${dict['id']}" && return 0
-    dict['file']='/etc/os-release'
-    [[ -r "${dict['file']}" ]] || return 1
-    app['grep']="$(koopa_locate_grep --allow-system)"
-    [[ -x "${app['grep']}" ]] || return 1
-    "${app['grep']}" 'ID=' "${dict['file']}" \
-        | "${app['grep']}" -q "${dict['id']}" \
-        && return 0
-    "${app['grep']}" 'ID_LIKE=' "${dict['file']}" \
-        | "${app['grep']}" -q "${dict['id']}" \
-        && return 0
-    return 1
-}
-
 koopa_is_os() {
     [[ "$(koopa_os_id)" = "${1:?}" ]]
 }
@@ -14602,10 +14576,6 @@ koopa_is_recent() {
     return 0
 }
 
-koopa_is_rhel_like() {
-    koopa_is_os_like 'rhel'
-}
-
 koopa_is_rstudio() {
     [[ -n "${RSTUDIO:-}" ]]
 }
@@ -14636,10 +14606,6 @@ koopa_is_symlink() {
         return 1
     done
     return 0
-}
-
-koopa_is_ubuntu_like() {
-    koopa_is_os_like 'ubuntu'
 }
 
 koopa_is_url_active() {

@@ -45,6 +45,17 @@ __koopa_id() {
     return 0
 }
 
+_koopa_is_os_like() {
+    local file id
+    file='/etc/os-release'
+    id="${1:?}"
+    koopa_is_os "$id" && return 0
+    [ -r "$file" ] || return 1
+    grep 'ID=' "$file" | grep -q "$id" && return 0
+    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
+    return 1
+}
+
 __koopa_remove_from_path_string() {
     local dir str1 str2
     str1="${1:?}"
@@ -1562,6 +1573,14 @@ koopa_is_alias() {
     return 0
 }
 
+koopa_is_debian_like() {
+    _koopa_is_os_like 'debian'
+}
+
+koopa_is_fedora_like() {
+    _koopa_is_os_like 'fedora'
+}
+
 koopa_is_git_repo_clean() {
     koopa_is_git_repo || return 1
     koopa_git_repo_has_unstaged_changes && return 1
@@ -1624,6 +1643,10 @@ koopa_is_qemu() {
     return 1
 }
 
+koopa_is_rhel_like() {
+    _koopa_is_os_like 'rhel'
+}
+
 koopa_is_root() {
     [ "$(koopa_user_id)" -eq 0 ]
 }
@@ -1639,6 +1662,10 @@ koopa_is_subshell() {
 koopa_is_tty() {
     koopa_is_installed 'tty' || return 1
     tty >/dev/null 2>&1 || false
+}
+
+koopa_is_ubuntu_like() {
+    _koopa_is_os_like 'ubuntu'
 }
 
 koopa_is_user_install() {
