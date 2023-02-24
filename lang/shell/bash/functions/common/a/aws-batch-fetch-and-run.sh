@@ -3,7 +3,7 @@
 koopa_aws_batch_fetch_and_run() {
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2022-03-21.
+    # @note Updated 2023-02-15.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -20,10 +20,9 @@ koopa_aws_batch_fetch_and_run() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['file']="$(koopa_tmp_file)"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['url']="${BATCH_FILE_URL:?}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     case "${dict['url']}" in
         'ftp://'* | \
         'http://'*)

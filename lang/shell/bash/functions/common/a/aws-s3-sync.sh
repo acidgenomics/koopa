@@ -46,9 +46,8 @@ koopa_aws_s3_sync() {
     )
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     # Include common file system and Git cruft that we don't want on S3.
     # FIXME Only set this if the user doesn't pass in exclude?
     # FIXME Can we use '**' glob patterns here? Is that the key?

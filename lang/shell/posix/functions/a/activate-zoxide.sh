@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME This seems to be getting stuck for /bin/bash on Ubuntu EC2 instances.
+
 koopa_activate_zoxide() {
     # """
     # Activate zoxide.

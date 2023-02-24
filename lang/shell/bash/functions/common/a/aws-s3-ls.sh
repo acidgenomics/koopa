@@ -51,11 +51,10 @@ koopa_aws_s3_ls() {
     [[ -x "${app['sed']}" ]] || return 1
     declare -A dict=(
         ['prefix']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['recursive']=0
         ['type']=''
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     ls_args=()
     while (("$#"))
     do

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This currently messes up with GENCODE identifiers.
+# Consider correcting the FASTA file here before proceeding.
+
 koopa_kallisto_quant_paired_end_per_sample() {
     # """
     # Run kallisto quant on a paired-end sample.
@@ -34,6 +37,11 @@ koopa_kallisto_quant_paired_end_per_sample() {
     # - https://pachterlab.github.io/kallisto/manual
     # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     # - https://salmon.readthedocs.io/en/latest/library_type.html
+    # - Usage of GENCODE annotations:
+    #   - https://www.biostars.org/p/419605/
+    #   - https://groups.google.com/g/kallisto-and-applications/c/
+    #       KQ8782UD35E/m/hbqqMOgGBwAJ
+    #   - https://support.bioconductor.org/p/9149475/
     #
     # @examples
     # > koopa_kallisto_quant_paired_end_per_sample \

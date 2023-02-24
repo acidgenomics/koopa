@@ -93,10 +93,10 @@
     },
     "bin": ["asdf"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-02-23",
     "outdated": true,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.11.1"
+    "version": "0.11.2"
   },
   "aspell": {
     "aliases": {
@@ -192,7 +192,7 @@
     "aliases": {
       "fedora": true
     },
-    "bin": ["aclocal", "automake"],
+    "bin": ["aclocal", "aclocal-1.16", "automake", "automake-1.16"],
     "date": "2022-08-29",
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
@@ -202,13 +202,13 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2023-02-08",
+    "date": "2023-02-22",
     "outdated": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.9.21"
+    "version": "2.10.1"
   },
   "azure-cli": {
     "aliases": {
@@ -458,12 +458,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-02-08",
+    "date": "2022-02-22",
     "url": [
       "https://crates.io/crates/broot",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.20.1"
+    "version": "1.20.2"
   },
   "brotli": {
     "aliases": {
@@ -590,9 +590,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-02-12",
+    "date": "2023-02-17",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.30.1"
+    "version": "2.31.0"
   },
   "cli11": {
     "aliases": {
@@ -664,6 +664,7 @@
       "multiqc",
       "nextflow",
       "openbb",
+      "picard",
       "rsem",
       "salmon",
       "sambamba",
@@ -1036,9 +1037,9 @@
     "version": "e96624926d724aff98e862221422cd7124a99c19"
   },
   "dotfiles": {
-    "date": "2023-02-14",
+    "date": "2023-02-22",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "3ad24d726f035da98fdacdbdf285cfb284b19b3a"
+    "version": "ad6047decbfd77c95d709db1bf729049c10ac207"
   },
   "du-dust": {
     "aliases": {
@@ -1769,6 +1770,7 @@
     },
     "conservative": true,
     "date": "2023-02-12",
+    "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.0.0"
@@ -2099,14 +2101,14 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-02-09",
+    "date": "2023-02-22",
     "dependencies": ["python3.10"],
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.12.1"
+    "version": "2.13.5"
   },
   "less": {
     "aliases": {
@@ -2934,6 +2936,7 @@
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
+    "outdated": true,
     "reverse_dependencies": [
       "bash-language-server",
       "gtop",
@@ -2959,10 +2962,11 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2023-02-08",
-    "dependencies": ["openssl3", "rust"],
+    "build_dependencies": ["rust"],
+    "date": "2023-02-22",
+    "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.75.0"
+    "version": "0.76.0"
   },
   "oniguruma": {
     "aliases": {
@@ -2986,14 +2990,15 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-02-02",
+    "date": "2023-02-15",
     "dependencies": ["conda", "poetry"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "2.3.1"
+    "version": "2.4.0"
   },
   "openblas": {
     "aliases": {
@@ -3202,6 +3207,19 @@
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
   },
+  "picard": {
+    "bin": ["picard"],
+    "date": "2023-02-22",
+    "dependencies": ["conda"],
+    "large": true,
+    "outdated": true,
+    "url": [
+      "https://bioconda.github.io/recipes/picard/README.html",
+      "https://broadinstitute.github.io/picard/",
+      "https://github.com/broadinstitute/picard/"
+    ],
+    "version": "2.27.5"
+  },
   "pinentry": {
     "aliases": {
       "homebrew": true
@@ -3345,10 +3363,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-01-30",
+    "date": "2023-02-15",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv"],
-    "version": "2.3.12"
+    "version": "2.3.13"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -3878,6 +3896,7 @@
     "date": "2022-04-07",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -3971,14 +3990,15 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-02-08",
+    "date": "2023-02-22",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.21.0"
+    "version": "7.22.0"
   },
   "sox": {
     "aliases": {
@@ -4609,22 +4629,22 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-01-17",
+    "date": "2023-02-22",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.30.8"
+    "version": "4.31.1"
   },
   "yt-dlp": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-01-09",
+    "date": "2023-02-17",
     "dependencies": ["python3.11"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.1.6"
+    "version": "2023.2.17"
   },
   "zellij": {
     "aliases": {
