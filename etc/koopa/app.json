@@ -1158,9 +1158,9 @@
     },
     "bin": ["fd"],
     "build_dependencies": ["rust"],
-    "date": "2022-12-09",
+    "date": "2023-02-24",
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "8.6.0"
+    "version": "8.7.0"
   },
   "ffmpeg": {
     "aliases": {
@@ -2674,10 +2674,10 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2022-12-24",
+    "date": "2023-02-24",
     "dependencies": ["python3.11"],
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "minimap2": {
     "bin": ["minimap2"],
@@ -3873,6 +3873,7 @@
     "date": "2022-06-23",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"

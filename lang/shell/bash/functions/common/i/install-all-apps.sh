@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-02-24.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -358,6 +358,7 @@ koopa_install_all_apps() {
                 'nanopolish'
                 'nextflow'
                 'openbb'
+                'picard'
                 'rsem'
                 'salmon'
                 'sambamba'
