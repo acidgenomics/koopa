@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# NOTE Consider including '-fembed_data_files' flag during install.
+# https://github.com/jgm/pandoc/issues/8560
+# https://github.com/Homebrew/homebrew-core/pull/120967
+
 main() {
     # """
     # Install Pandoc.

@@ -19,11 +19,10 @@ koopa_aws_s3_cp_regex() {
     declare -A dict=(
         ['bucket_pattern']='^s3://.+/$'
         ['pattern']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['source_prefix']=''
         ['target_prefix']=''
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in

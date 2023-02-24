@@ -7,6 +7,7 @@ koopa_star_align_single_end() {
     #
     # @examples
     # > koopa_star_align_single_end \
+    # >     --aws-bucket='s3://bioinfo/rnaseq' \
     # >     --fastq-dir='fastq' \
     # >     --fastq-tail='_001.fastq.gz' \
     # >     --index-dir='star-index' \
@@ -15,6 +16,8 @@ koopa_star_align_single_end() {
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A dict=(
+        ['aws_bucket']=''
+        ['aws_profile']="${AWS_PROFILE:-default}"
         # e.g. 'fastq'.
         ['fastq_dir']=''
         # e.g. '_001.fastq.gz'.
@@ -29,6 +32,22 @@ koopa_star_align_single_end() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--aws-bucket='*)
+                dict['aws_bucket']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-bucket')
+                dict['aws_bucket']="${2:?}"
+                shift 2
+                ;;
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -67,6 +86,12 @@ koopa_star_align_single_end() {
                 ;;
         esac
     done
+    if [[ -n "${dict['aws_bucket']}" ]]
+    then
+        dict['aws_bucket']="$( \
+            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
+        )"
+    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-tail' "${dict['fastq_tail']}" \
@@ -105,6 +130,8 @@ koopa_star_align_single_end() {
     for fastq_file in "${fastq_files[@]}"
     do
         koopa_star_align_single_end_per_sample \
+            --aws-bucket="${dict['aws_bucket']}" \
+            --aws-profile="${dict['aws_profile']}" \
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict['fastq_tail']}" \
             --index-dir="${dict['index_dir']}" \

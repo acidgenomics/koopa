@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for '--strip-components=1' type approach here.
+# FIXME Need to support '--strip-components=1' type approach here.
 # Perhaps we should extract into temporary directory and then copy in this
 # case, but it can be slow across network file systems.
+
+# FIXME Consider adding support for standardizing archive extraction in our
+# install recipes and in our STAR alignment functions.
 
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2022-09-19.
+    # @note Updated 2023-02-15.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for automatic pushing to AWS S3.
+
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
@@ -118,7 +120,7 @@ to '${dict['tmp_fastq_file']}"
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     koopa_rm \
-        "${dict['output_dir']}/_STARtmp" \
+        "${dict['output_dir']}/_STAR"* \
         "${dict['tmp_fastq_file']}"
     return 0
 }

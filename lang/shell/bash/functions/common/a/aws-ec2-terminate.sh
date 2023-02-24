@@ -14,9 +14,8 @@ koopa_aws_ec2_terminate() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -35,7 +34,7 @@ koopa_aws_ec2_terminate() {
                 ;;
         esac
     done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']:-}"
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     "${app['aws']}" --profile="${dict['profile']}" \
         ec2 terminate-instances --instance-id "${dict['id']}" \
         >/dev/null

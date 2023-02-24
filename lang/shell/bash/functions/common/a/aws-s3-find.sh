@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to only use JSON parsing from s3api.
+
 koopa_aws_s3_find() {
     # """
     # Find files in an AWS S3 bucket.
@@ -32,10 +34,9 @@ koopa_aws_s3_find() {
         ['exclude']=0
         ['include']=0
         ['prefix']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
         ['recursive']=0
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     exclude_arr=()
     include_arr=()
     while (("$#"))
