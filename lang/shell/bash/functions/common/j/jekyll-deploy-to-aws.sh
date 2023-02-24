@@ -17,7 +17,7 @@ koopa_jekyll_deploy_to_aws() {
         ['bucket_prefix']=''
         ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
         ['distribution_id']=''
-        ['local_prefix']="${1:-}"
+        ['local_prefix']="${PWD:?}"
         ['profile']="${AWS_PROFILE:-default}"
     )
     while (("$#"))
@@ -66,7 +66,6 @@ koopa_jekyll_deploy_to_aws() {
         '--bucket' "${dict['bucket_prefix']:-}" \
         '--distribution-id' "${dict['distribution_id']:-}" \
         '--profile' "${dict['profile']:-}"
-    [[ -z "${dict['local_prefix']}" ]] && dict['local_prefix']="${PWD:?}"
     koopa_assert_is_dir "${dict['local_prefix']}"
     dict['local_prefix']="$( \
         koopa_realpath "${dict['local_prefix']}" \
