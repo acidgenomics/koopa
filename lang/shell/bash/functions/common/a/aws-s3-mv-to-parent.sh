@@ -19,9 +19,8 @@ koopa_aws_s3_mv_to_parent() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['prefix']=''
-        ['profile']="${AWS_PROFILE:-}"
+        ['profile']="${AWS_PROFILE:-default}"
     )
-    [[ -z "${dict['profile']}" ]] && dict['profile']='default'
     while (("$#"))
     do
         case "$1" in
@@ -49,8 +48,8 @@ koopa_aws_s3_mv_to_parent() {
         esac
     done
     koopa_assert_is_set \
-        '--profile or AWS_PROFILE' "${dict['profile']:-}"
-        '--prefix' "${dict['prefix']:-}"
+        '--profile or AWS_PROFILE' "${dict['profile']}"
+        '--prefix' "${dict['prefix']}"
     koopa_assert_is_matching_regex \
         --pattern='^s3://.+/$' \
         --string="${dict['prefix']}"

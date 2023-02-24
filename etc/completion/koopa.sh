@@ -310,6 +310,7 @@ __koopa_complete() {
                         'pcre'
                         'pcre2'
                         'perl'
+                        'picard'
                         'pipx'
                         'pixman'
                         'pkg-config'
