@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Add support for AWS S3 URI FASTQ input.
+# FIXME Ensure we index all BAM files with samtools.
 
 koopa_star_align_paired_end_per_sample() {
     # """
