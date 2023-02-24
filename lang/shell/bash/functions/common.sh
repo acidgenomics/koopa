@@ -14723,7 +14723,7 @@ koopa_jekyll_deploy_to_aws() {
         koopa_strip_trailing_slash "${dict['bucket_prefix']}" \
     )"
     koopa_alert "Deploying '${dict['local_prefix']}' \
-to '${dict['bucket_prefix']}."
+to '${dict['bucket_prefix']}'."
     (
         koopa_cd "${dict['local_prefix']}"
         koopa_assert_is_file 'Gemfile'
