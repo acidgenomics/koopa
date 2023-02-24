@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-02-14.
+    # @note Updated 2023-02-24.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -373,6 +373,7 @@ koopa_install_all_binary_apps() {
                 'nanopolish'
                 'nextflow'
                 'openbb'
+                'picard'
                 'rsem'
                 'salmon'
                 'sambamba'
