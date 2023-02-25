@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-02-25.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -18,9 +18,8 @@ main() {
     koopa_is_macos && deps+=('openssl3' 'libssh2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-    )
+    declare -A app
+    app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
@@ -33,7 +32,6 @@ main() {
     )
     if koopa_is_macos
     then
-        dict['libssh2']="$(koopa_app_prefix 'libssh2')"
         dict['openssl']="$(koopa_app_prefix 'openssl3')"
     fi
     dict['file']="v${dict['version']}.tar.gz"
@@ -61,9 +59,6 @@ archive/${dict['file']}"
             "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
             '-DUSE_HTTPS=ON'
             '-DUSE_SSH=ON'
-            "-DLIBSSH2_INCLUDE_DIR=${dict['libssh2']}/include"
-            "-DLIBSSH2_LIBRARY=${dict['libssh2']}/lib/libssh2.${dict['shared_ext']}"
-            # NOTE Use 'OPENSSL_LIBRARIES' here instead?
             "-DOPENSSL_CRYPTO_LIBRARY=${dict['openssl']}/lib/\
 libcrypto.${dict['shared_ext']}"
             "-DOPENSSL_INCLUDE_DIR=${dict['openssl']}/include"
