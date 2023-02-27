@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-01-18.
+    # @note Updated 2023-02-27.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -70,7 +70,7 @@ main() {
             "$(koopa_major_minor_version "${dict['py_version']}")" \
     )"
     case "${dict['version']}" in
-        '22.11.1')
+        '23.'* | '22.'*)
             dict['version2']="${dict['version']}-1"
             ;;
         *)
@@ -80,15 +80,15 @@ main() {
     dict['script']="Miniconda${dict['py_major_version']}-\
 py${dict['py_version2']}_${dict['version2']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
-    # Workaround for installing newer versions that aren't yet available
-    # at 'https://repo.anaconda.com/miniconda/'.
-    case "${dict['version']}" in
-        '23.1.0')
-            dict['from_latest']=1
-            dict['script']="Miniconda${dict['py_major_version']}-latest-\
-${dict['os_type2']}-${dict['arch2']}.sh"
-            ;;
-    esac
+# >     # Workaround for installing newer versions that aren't yet available
+# >     # at 'https://repo.anaconda.com/miniconda/'.
+# >     case "${dict['version']}" in
+# >         'XXX')
+# >             dict['from_latest']=1
+# >             dict['script']="Miniconda${dict['py_major_version']}-latest-\
+# > ${dict['os_type2']}-${dict['arch2']}.sh"
+# >             ;;
+# >     esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
