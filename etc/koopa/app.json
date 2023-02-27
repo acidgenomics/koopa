@@ -4103,9 +4103,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-25",
+    "date": "2023-02-27",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.13.0"
+    "version": "1.13.1"
   },
   "stow": {
     "aliases": {
@@ -4301,9 +4301,9 @@
     },
     "bin": ["tuc"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2023-02-27",
     "url": ["https://github.com/riquito/tuc/"],
-    "version": "0.11.0"
+    "version": "1.0.0"
   },
   "udunits": {
     "aliases": {
