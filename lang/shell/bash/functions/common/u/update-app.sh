@@ -3,10 +3,11 @@
 koopa_update_app() {
     # """
     # Update application.
-    # @note Updated 2022-09-06.
+    # @note Updated 2023-02-27.
     # """
     local bool dict
     koopa_assert_has_args "$#"
+    koopa_assert_is_owner
     koopa_assert_has_no_envs
     declare -A bool=(
         ['prefix_check']=1
