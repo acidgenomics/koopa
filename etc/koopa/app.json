@@ -638,7 +638,7 @@
     "arch": "x86_64",
     "bin": ["conda"],
     "conservative": true,
-    "date": "2022-12-30",
+    "date": "2023-02-27",
     "large": true,
     "outdated": true,
     "reverse_dependencies": [
@@ -676,7 +676,7 @@
       "visidata"
     ],
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "22.11.1"
+    "version": "23.1.0"
   },
   "convmv": {
     "aliases": {
