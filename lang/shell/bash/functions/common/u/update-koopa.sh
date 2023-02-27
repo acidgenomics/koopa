@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Reset ownership of 'lang/shell/zsh' if necessary.
+# Check if this is owned by root and correct.
+
 koopa_update_koopa() {
     # """
     # Update koopa installation.

@@ -462,7 +462,6 @@ __koopa_complete() {
                         'enable-passwordless-sudo'
                         'find-non-symlinked-make-files'
                         'fix-sudo-setrlimit-error'
-                        'fix-zsh-permissions'
                         'host-id'
                         'info'
                         'log'
@@ -480,6 +479,7 @@ __koopa_complete() {
                         'version'
                         'which'
                         'yq'
+                        'zsh-compaudit-set-permissions'
                     )
                     if koopa_is_macos
                     then

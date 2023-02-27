@@ -4300,7 +4300,6 @@ koopa_cli_system() {
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
         'find-non-symlinked-make-files' | \
-        'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
         'prune-app-binaries' | \
@@ -4313,7 +4312,8 @@ koopa_cli_system() {
         'switch-to-develop' | \
         'test' | \
         'variable' | \
-        'variables')
+        'variables' | \
+        'zsh-compaudit-set-permissions')
             dict['key']="${1:?}"
             shift 1
             ;;
@@ -14141,10 +14141,11 @@ koopa_install_zoxide() {
 }
 
 koopa_install_zsh() {
-    koopa_install_app \
-        --name='zsh' \
-        "$@"
-    koopa_zsh_compaudit_set_permissions
+    local dict
+    declare -A dict
+    koopa_install_app --name='zsh' "$@"
+    dict['zsh']="$(koopa_app_prefix 'zsh')"
+    koopa_chmod --recursive 'g-w' "${dict['zsh']}/share/zsh"
     koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/zsh"
     return 0
 }
@@ -26357,15 +26358,21 @@ koopa_zsh_compaudit_set_permissions() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
     declare -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['opt_prefix']="$(koopa_opt_prefix)"
     )
-    koopa_chmod --recursive 'g-w' \
-        "${dict['koopa_prefix']}/lang/shell/zsh"
-    if [[ -d "${dict['app_prefix']}/zsh" ]]
-    then
-        koopa_chmod --recursive 'g-w' \
-            "${dict['app_prefix']}/zsh/"*'/share/zsh'
-    fi
+    fix_prefix() {
+        local prefix
+        prefix="${1:?}"
+        [[ -d "$prefix" ]] || return 0
+        if [[ "$(koopa_stat_access_octal "$prefix")" != '755' ]]
+        then
+            koopa_alert "Fixing permissions at '${prefix}'."
+            koopa_chmod --recursive 'g-w' "$prefix"
+        fi
+        return 0
+    }
+    fix_prefix "${dict['koopa_prefix']}/lang/shell/zsh"
+    fix_prefix "${dict['opt_prefix']}/zsh/share/zsh"
     return 0
 }

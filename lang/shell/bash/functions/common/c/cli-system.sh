@@ -63,7 +63,6 @@ koopa_cli_system() {
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
         'find-non-symlinked-make-files' | \
-        'fix-zsh-permissions' | \
         'host-id' | \
         'os-string' | \
         'prune-app-binaries' | \
@@ -76,7 +75,8 @@ koopa_cli_system() {
         'switch-to-develop' | \
         'test' | \
         'variable' | \
-        'variables')
+        'variables' | \
+        'zsh-compaudit-set-permissions')
             dict['key']="${1:?}"
             shift 1
             ;;
