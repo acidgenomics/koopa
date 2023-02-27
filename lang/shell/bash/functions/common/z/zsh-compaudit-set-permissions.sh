@@ -15,7 +15,7 @@ koopa_zsh_compaudit_set_permissions() {
     declare -A dict=(
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"
-        ['sys_user']="$(koopa_sys_user)"
+        ['user_id']="$(koopa_user_id)"
     )
     prefixes=(
         "${dict['koopa_prefix']}/lang/shell/zsh"
@@ -24,10 +24,10 @@ koopa_zsh_compaudit_set_permissions() {
     for prefix in "${prefixes[@]}"
     do
         [[ -d "$prefix" ]] || continue
-        if [[ "$(koopa_stat_user "$prefix")" != "${dict['sys_user']}" ]]
+        if [[ "$(koopa_stat_user "$prefix")" != "${dict['user_id']}" ]]
         then
             koopa_alert "Fixing ownership at '${prefix}'."
-            koopa_chown --recursive --sudo "${dict['sys_user']}" "$prefix"
+            koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
         fi
         if [[ "$(koopa_stat_access_octal "$prefix")" != '755' ]]
         then
