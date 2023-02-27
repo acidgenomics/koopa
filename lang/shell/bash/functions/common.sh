@@ -1596,6 +1596,20 @@ koopa_assert_is_not_symlink() {
     return 0
 }
 
+koopa_assert_is_owner() {
+    local dict
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_owner
+    then
+        declare -A dict
+        dict['prefix']="$(koopa_koopa_prefix)"
+        dict['user']="$(koopa_user)"
+        koopa_stop "Koopa installation at '${dict['prefix']}' is not \
+owned by '${dict['user']}'."
+    fi
+    return 0
+}
+
 koopa_assert_is_r_package_installed() {
     koopa_assert_has_args "$#"
     if ! koopa_is_r_package_installed "$@"
@@ -8298,42 +8312,6 @@ koopa_fix_rbenv_permissions() {
     return 0
 }
 
-koopa_fix_zsh_permissions() {
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-    )
-    if koopa_is_shared_install
-    then
-        dict['stat_user']="$( \
-            koopa_stat_user "${dict['koopa_prefix']}/lang/shell/zsh" \
-        )"
-        if [[ "${dict['stat_user']}" != 0 ]]
-        then
-            koopa_chown --sudo 'root' \
-                "${dict['koopa_prefix']}/lang/shell/zsh" \
-                "${dict['koopa_prefix']}/lang/shell/zsh/functions"
-            koopa_chmod --sudo 'g-w' \
-                "${dict['koopa_prefix']}/lang/shell/zsh" \
-                "${dict['koopa_prefix']}/lang/shell/zsh/functions"
-        fi
-    else
-        koopa_chmod 'g-w' \
-            "${dict['koopa_prefix']}/lang/shell/zsh" \
-            "${dict['koopa_prefix']}/lang/shell/zsh/functions"
-    fi
-    if [[ -d "${dict['app_prefix']}/zsh" ]]
-    then
-        koopa_chmod 'g-w' \
-            "${dict['app_prefix']}/zsh/"*'/share/zsh' \
-            "${dict['app_prefix']}/zsh/"*'/share/zsh/'* \
-            "${dict['app_prefix']}/zsh/"*'/share/zsh/'*'/functions'
-    fi
-    return 0
-}
-
 koopa_ftp_mirror() {
     local app dict
     koopa_assert_has_args "$#"
@@ -12853,7 +12831,7 @@ koopa_install_koopa() {
     then
         koopa_add_to_user_profile
     fi
-    koopa_fix_zsh_permissions
+    koopa_zsh_compaudit_set_permissions
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     return 0
 }
@@ -14166,7 +14144,7 @@ koopa_install_zsh() {
     koopa_install_app \
         --name='zsh' \
         "$@"
-    koopa_fix_zsh_permissions
+    koopa_zsh_compaudit_set_permissions
     koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/zsh"
     return 0
 }
@@ -14521,6 +14499,15 @@ koopa_is_opensuse() {
 
 koopa_is_os() {
     [[ "$(koopa_os_id)" = "${1:?}" ]]
+}
+
+koopa_is_owner() {
+    local dict
+    declare -A dict
+    dict['prefix']="$(koopa_koopa_prefix)"
+    dict['owner_id']="$(koopa_stat_user "${dict['prefix']}")"
+    dict['user_id']="$(koopa_user_id)"
+    [[ "${dict['user_id']}" == "${dict['owner_id']}" ]]
 }
 
 koopa_is_powerful_machine() {
@@ -22898,9 +22885,9 @@ koopa_sudo_write_string() {
 koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
+    koopa_assert_is_owner
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
         ['branch']='develop'
@@ -22909,11 +22896,6 @@ koopa_switch_to_develop() {
         ['user']="$(koopa_user)"
     )
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
-    if koopa_is_shared_install
-    then
-        koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
-    fi
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
     (
         koopa_cd "${dict['prefix']}"
         "${app['git']}" remote set-branches \
@@ -22921,8 +22903,7 @@ koopa_switch_to_develop() {
         "${app['git']}" fetch "${dict['origin']}"
         "${app['git']}" checkout --track "${dict['origin']}/${dict['branch']}"
     )
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
-    koopa_fix_zsh_permissions
+    koopa_zsh_compaudit_set_permissions
     return 0
 }
 
@@ -26082,6 +26063,7 @@ update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
 koopa_update_koopa() {
     local dict
     koopa_assert_has_no_args "$#"
+    koopa_assert_is_owner
     declare -A dict=(
         ['prefix']="$(koopa_koopa_prefix)"
         ['user']="$(koopa_user)"
@@ -26091,15 +26073,8 @@ koopa_update_koopa() {
         koopa_alert_note "Pinned release detected at '${dict['prefix']}'."
         return 1
     fi
-    if koopa_is_shared_install
-    then
-        koopa_alert "Resetting permissions at '${dict['prefix']}'."
-        koopa_chown --recursive --sudo "${dict['user']}" "${dict['prefix']}"
-    fi
     koopa_git_pull "${dict['prefix']}"
-    koopa_alert "Resetting permissions at '${dict['prefix']}'."
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
-    koopa_fix_zsh_permissions
+    koopa_zsh_compaudit_set_permissions
     return 0
 }
 
@@ -26369,5 +26344,23 @@ koopa_write_string() {
         koopa_mkdir "${dict['parent_dir']}"
     fi
     koopa_print "${dict['string']}" > "${dict['file']}"
+    return 0
+}
+
+koopa_zsh_compaudit_set_permissions() {
+    local dict
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_owner
+    declare -A dict=(
+        ['app_prefix']="$(koopa_app_prefix)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+    )
+    koopa_chmod --recursive 'g-w' \
+        "${dict['koopa_prefix']}/lang/shell/zsh"
+    if [[ -d "${dict['app_prefix']}/zsh" ]]
+    then
+        koopa_chmod --recursive 'g-w' \
+            "${dict['app_prefix']}/zsh/"*'/share/zsh'
+    fi
     return 0
 }
