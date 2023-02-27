@@ -26353,7 +26353,7 @@ koopa_write_string() {
     return 0
 }
 
-koopa_zsh_compaudit_set_permission() {
+koopa_zsh_compaudit_set_permissions() {
     local dict prefix prefixes
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
