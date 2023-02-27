@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_zsh_compaudit_set_permission() {
+koopa_zsh_compaudit_set_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass during 'compinit'.
     # @note Updated 2023-02-27.
