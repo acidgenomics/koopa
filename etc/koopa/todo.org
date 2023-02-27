@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO PyCharm requires Python 3.10 currently.
+    Consider adding support for this on T's machine.
 ** TODO On macOS, need to check version of r-openmp installed /usr/local.
 ** TODO Need to ensure our build scripts don't dump temporary files.
     - `~/.cabal`
