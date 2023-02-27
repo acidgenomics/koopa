@@ -11423,6 +11423,7 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
 koopa_install_app() {
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
+    koopa_assert_is_owner
     koopa_assert_has_no_envs
     declare -A bool=(
         ['auto_prefix']=0
@@ -23560,6 +23561,7 @@ koopa_uninstall_apache_spark() {
 
 koopa_uninstall_app() {
     local bin_arr bool dict man1_arr
+    koopa_assert_is_owner
     declare -A bool=(
         ['quiet']=0
         ['unlink_in_bin']=''
@@ -25898,6 +25900,7 @@ koopa_unlink_in_opt() {
 koopa_update_app() {
     local bool dict
     koopa_assert_has_args "$#"
+    koopa_assert_is_owner
     koopa_assert_has_no_envs
     declare -A bool=(
         ['prefix_check']=1
