@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust packages.
-    # @note Updated 2023-02-10.
+    # @note Updated 2023-02-25.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -97,6 +97,12 @@ main() {
             install_args+=(
                 '--git' 'https://github.com/phiresky/ripgrep-all.git'
                 '--rev' "${dict['commit']}"
+            )
+            ;;
+        'starship')
+            install_args+=(
+                '--git' 'https://github.com/starship/starship.git'
+                '--tag' "v${dict['version']}"
             )
             ;;
         *)
