@@ -3868,15 +3868,14 @@
   },
   "salmon": {
     "bin": ["salmon"],
-    "date": "2022-06-23",
+    "date": "2023-02-27",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "1.9.0"
+    "version": "1.10.0"
   },
   "sambamba": {
     "bin": ["sambamba"],
