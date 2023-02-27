@@ -1,22 +1,26 @@
 #!/usr/bin/env bash
 
-# FIXME Need to harden against /usr/local in PKG_CONFIG on Linux here.
-# FIXME Consider splitting these out to 3 apps:
+# NOTE Need to harden against /usr/local in PKG_CONFIG on Linux here.
+#
+# NOTE Consider splitting these out to 3 apps:
 # - koopa_install_shared_app
 # - koopa_install_system_app
 # - koopa_install_user_app
-# FIXME Add an option, such as '--no-cleanup' to not delete the build in the
+#
+# NOTE Add an option, such as '--no-cleanup' to not delete the build in the
 # temporary directory. Potentially useful for debugging.
-# FIXME If '--push' is set, ensure that the user can push to AWS before
+#
+# NOTE If '--push' is set, ensure that the user can push to AWS before
 # attempting to build the app.
 
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2022-11-28.
+    # @note Updated 2023-02-27.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
+    koopa_assert_is_owner
     koopa_assert_has_no_envs
     declare -A bool=(
         # When enabled, this will change permissions on the top level directory
