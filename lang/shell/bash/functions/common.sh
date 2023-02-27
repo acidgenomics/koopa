@@ -22898,6 +22898,11 @@ koopa_switch_to_develop() {
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
         koopa_cd "${dict['prefix']}"
+        if [[ "$(koopa_git_branch)" == 'develop' ]]
+        then
+            koopa_alert_note "Already on 'develop' branch."
+            return 0
+        fi
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"
         "${app['git']}" fetch "${dict['origin']}"
