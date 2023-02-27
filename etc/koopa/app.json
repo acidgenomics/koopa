@@ -3839,11 +3839,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-02-08",
+    "date": "2023-02-27",
     "dependencies": ["python3.11"],
     "outdated": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.243"
+    "version": "0.0.252"
   },
   "rust": {
     "aliases": {
