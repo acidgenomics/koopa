@@ -56,7 +56,7 @@ archive/${dict['file']}"
     if koopa_is_macos
     then
         cmake_args+=(
-            "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
+            # > "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
             '-DUSE_HTTPS=ON'
             '-DUSE_SSH=ON'
             "-DOPENSSL_CRYPTO_LIBRARY=${dict['openssl']}/lib/\

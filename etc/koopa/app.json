@@ -202,13 +202,13 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2023-02-22",
+    "date": "2023-02-27",
     "outdated": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.10.1"
+    "version": "2.10.3"
   },
   "azure-cli": {
     "aliases": {
@@ -643,6 +643,7 @@
     "outdated": true,
     "reverse_dependencies": [
       "autodock",
+      "autodock-vina",
       "bamtools",
       "bedtools",
       "bioawk",
@@ -672,7 +673,6 @@
       "snakemake",
       "star",
       "subread",
-      "vina",
       "visidata"
     ],
     "url": ["https://repo.anaconda.com/miniconda/"],
@@ -2236,10 +2236,10 @@
     },
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-25",
+    "date": "2023-02-28",
     "dependencies": ["zlib", "pcre", "openssl3", "libssh2"],
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.6.1"
+    "version": "1.6.2"
   },
   "libgpg-error": {
     "aliases": {
