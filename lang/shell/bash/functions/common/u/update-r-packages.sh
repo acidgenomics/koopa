@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 koopa_update_r_packages() {
-    koopa_update_app \
-        --name='r-packages' \
-        --no-prefix-check \
-        "$@"
+    koopa_assert_has_no_args "$#"
+    koopa_r_koopa 'cliUpdateRPackages'
+    return 0
 }
