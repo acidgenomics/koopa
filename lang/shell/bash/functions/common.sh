@@ -13534,29 +13534,6 @@ koopa_install_r_koopa() {
     return 0
 }
 
-koopa_install_r_packages() {
-    local app
-    koopa_assert_has_args_le "$#" 1
-    declare -A app
-    app['r']="${1:-}"
-    if [[ -z "${app['r']}" ]] && koopa_is_macos
-    then
-        app['r']="$(koopa_macos_r_prefix)/bin/R"
-    fi
-    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
-    koopa_configure_r "${app['r']}"
-    "${app['rscript']}" -e " \
-        if (!requireNamespace('AcidDevTools', quietly = TRUE)) { ; \
-            install.packages('AcidDevTools') ; \
-        } ; \
-        AcidDevTools::installRecommendedPackages(); \
-    "
-    return 0
-}
-
 koopa_install_r() {
     koopa_install_app \
         --name='r' \
@@ -14252,10 +14229,6 @@ koopa_is_admin() {
     return 1
 }
 
-koopa_is_alpine() {
-    koopa_is_os 'alpine'
-}
-
 koopa_is_anaconda() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -14269,10 +14242,6 @@ koopa_is_anaconda() {
     )
     [[ -x "${dict['prefix']}/bin/anaconda" ]] || return 1
     return 0
-}
-
-koopa_is_arch() {
-    koopa_is_os 'arch'
 }
 
 koopa_is_array_empty() {
@@ -14493,14 +14462,6 @@ koopa_is_koopa_app() {
             || return 1
     done
     return 0
-}
-
-koopa_is_opensuse() {
-    koopa_is_os 'opensuse'
-}
-
-koopa_is_os() {
-    [[ "$(koopa_os_id)" = "${1:?}" ]]
 }
 
 koopa_is_owner() {
@@ -17841,71 +17802,6 @@ koopa_ngettext() {
     dict['str']="${dict['prefix']}${dict['num']}${dict['middle']}\
 ${dict['msg']}${dict['suffix']}"
     koopa_print "${dict['str']}"
-    return 0
-}
-
-koopa_os_id() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app dict
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || return 1
-    dict['string']="$( \
-        koopa_os_string \
-        | "${app['cut']}" -d '-' -f '1' \
-    )"
-    [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
-    return 0
-}
-
-koopa_os_string() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app dict
-    if koopa_is_macos
-    then
-        dict['id']='macos'
-        dict['version']="$(koopa_macos_os_version)"
-        dict['version']="$(koopa_major_version "${dict['version']}")"
-    elif koopa_is_linux
-    then
-        app['awk']="$(koopa_locate_awk --allow-system)"
-        app['tr']="$(koopa_locate_tr --allow-system)"
-        [[ -x "${app['awk']}" ]] || return 1
-        [[ -x "${app['tr']}" ]] || return 1
-        dict['release_file']='/etc/os-release'
-        if [[ -r "${dict['release_file']}" ]]
-        then
-            dict['id']="$( \
-                "${app['awk']}" -F= \
-                    "\$1==\"ID\" { print \$2 ;}" \
-                    "${dict['release_file']}" \
-                | "${app['tr']}" -d '"' \
-            )"
-            dict['version']="$( \
-                "${app['awk']}" -F= \
-                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
-                    "${dict['release_file']}" \
-                | "${app['tr']}" -d '"' \
-            )"
-            if [[ -n "${dict['version']}" ]]
-            then
-                dict['version']="$(koopa_major_version "${dict['version']}")"
-            else
-                dict['version']='rolling'
-            fi
-        else
-            dict['id']='linux'
-        fi
-    fi
-    [[ -n "${dict['id']}" ]] || return 1
-    dict['string']="${dict['id']}"
-    if [[ -n "${dict['version']:-}" ]]
-    then
-        dict['string']="${dict['string']}-${dict['version']}"
-    fi
-    koopa_print "${dict['string']}"
     return 0
 }
 
@@ -25251,12 +25147,6 @@ koopa_uninstall_r_devel() {
         "$@"
 }
 
-koopa_uninstall_r_packages() {
-    koopa_uninstall_app \
-        --name='r-packages' \
-        "$@"
-}
-
 koopa_uninstall_r() {
     koopa_uninstall_app \
         --name='r' \
@@ -25897,178 +25787,6 @@ koopa_unlink_in_opt() {
         "$@"
 }
 
-koopa_update_app() {
-    local bool dict
-    koopa_assert_has_args "$#"
-    koopa_assert_is_owner
-    koopa_assert_has_no_envs
-    declare -A bool=(
-        ['prefix_check']=1
-        ['quiet']=0
-        ['update_ldconfig']=0
-        ['verbose']=0
-    )
-    declare -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['mode']='shared'
-        ['name']=''
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['platform']='common'
-        ['prefix']=''
-        ['tmp_dir']="$(koopa_tmp_dir)"
-        ['updater_bn']=''
-        ['updater_fun']='main'
-        ['version']=''
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--name='*)
-                dict['name']="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict['name']="${2:?}"
-                shift 2
-                ;;
-            '--platform='*)
-                dict['platform']="${1#*=}"
-                shift 1
-                ;;
-            '--platform')
-                dict['platform']="${2:?}"
-                shift 2
-                ;;
-            '--prefix='*)
-                dict['prefix']="${1#*=}"
-                shift 1
-                ;;
-            '--prefix')
-                dict['prefix']="${2:?}"
-                shift 2
-                ;;
-            '--updater='*)
-                dict['updater_bn']="${1#*=}"
-                shift 1
-                ;;
-            '--updater')
-                dict['updater_bn']="${2:?}"
-                shift 2
-                ;;
-            '--version='*)
-                dict['version']="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict['version']="${2:?}"
-                shift 2
-                ;;
-            '--no-prefix-check')
-                bool['prefix_check']=0
-                shift 1
-                ;;
-            '--quiet')
-                bool['quiet']=1
-                shift 1
-                ;;
-            '--system')
-                dict['mode']='system'
-                shift 1
-                ;;
-            '--user')
-                dict['mode']='user'
-                shift 1
-                ;;
-            '--verbose')
-                dict['verbose']=1
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set '--name' "${dict['name']}"
-    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
-    case "${dict['mode']}" in
-        'shared')
-            if [[ -z "${dict['prefix']}" ]]
-            then
-                dict['prefix']="${dict['opt_prefix']}/${dict['name']}"
-            fi
-            ;;
-        'system')
-            koopa_assert_is_admin
-            koopa_is_linux && bool['update_ldconfig']=1
-            ;;
-    esac
-    if [[ -n "${dict['prefix']}" ]]
-    then
-        if [[ ! -d "${dict['prefix']}" ]] && \
-            [[ "${bool['prefix_check']}" -eq 1 ]]
-        then
-            koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
-            return 1
-        fi
-        dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    fi
-    [[ -z "${dict['updater_bn']}" ]] && dict['updater_bn']="${dict['name']}"
-    dict['updater_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-update/${dict['platform']}/${dict['mode']}/${dict['updater_bn']}.sh"
-    koopa_assert_is_file "${dict['updater_file']}"
-    source "${dict['updater_file']}"
-    koopa_assert_is_function "${dict['updater_fun']}"
-    if [[ "${bool['quiet']}" -eq 0 ]]
-    then
-        if [[ -d "${dict['prefix']}" ]]
-        then
-            koopa_alert_update_start "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_update_start "${dict['name']}"
-        fi
-    fi
-    (
-        koopa_cd "${dict['tmp_dir']}"
-        PATH='/usr/bin:/bin'
-        export PATH
-        if koopa_is_linux && \
-            [[ -x '/usr/bin/pkg-config' ]]
-        then
-            koopa_activate_pkg_config \
-                '/usr/bin/pkg-config'
-        fi
-        export UPDATE_PREFIX="${dict['prefix']}"
-        "${dict['updater_fun']}"
-    )
-    koopa_rm "${dict['tmp_dir']}"
-    case "${dict['mode']}" in
-        'shared')
-            [[ -d "${dict['prefix']}" ]] && \
-                koopa_sys_set_permissions \
-                    --recursive "${dict['prefix']}"
-            ;;
-        'system')
-            [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
-                koopa_linux_update_ldconfig
-            ;;
-        'user')
-            [[ -d "${dict['prefix']}" ]] && \
-                koopa_sys_set_permissions \
-                    --recursive --user "${dict['prefix']}"
-            ;;
-    esac
-    if [[ "${bool['quiet']}" -eq 0 ]]
-    then
-        if [[ -d "${dict['prefix']}" ]]
-        then
-            koopa_alert_update_success "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_update_success "${dict['name']}"
-        fi
-    fi
-    return 0
-}
-
 koopa_update_koopa() {
     local dict prefix prefixes
     koopa_assert_has_no_args "$#"
@@ -26094,25 +25812,67 @@ koopa_update_koopa() {
     return 0
 }
 
-koopa_update_r_packages() {
-    koopa_update_app \
-        --name='r-packages' \
-        --no-prefix-check \
-        "$@"
-}
-
 koopa_update_system_homebrew() {
-    koopa_update_app \
-        --name='homebrew' \
-        --system \
-        "$@"
+    local app dict
+    koopa_assert_is_admin
+    declare -A app dict
+    app['brew']="$(koopa_locate_brew)"
+    [[ -x "${app['brew']}" ]] || return 1
+    dict['reset']=0
+    while (("$#"))
+    do
+        case "$1" in
+            '--reset')
+                dict['reset']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if koopa_is_macos && \
+        ! koopa_macos_is_xcode_clt_installed
+    then
+        koopa_stop 'Need to reinstall Xcode CLT.'
+    fi
+    if [[ "${dict['reset']}" -eq 1 ]]
+    then
+        koopa_brew_reset_permissions
+        koopa_brew_reset_core_repo
+    fi
+    "${app['brew']}" analytics off
+    "${app['brew']}" update &>/dev/null
+    if koopa_is_macos
+    then
+        koopa_macos_brew_upgrade_casks
+    fi
+    koopa_brew_upgrade_brews
+    koopa_brew_cleanup
+    if [[ "${dict['reset']}" -eq 1 ]]
+    then
+        koopa_brew_reset_permissions
+    fi
+    return 0
 }
 
 koopa_update_system_tex_packages() {
-    koopa_update_app \
-        --name='tex-packages' \
-        --system \
-        "$@"
+    local app
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    declare -A app=(
+        ['sudo']="$(koopa_locate_sudo)"
+        ['tlmgr']="$(koopa_locate_tlmgr)"
+    )
+    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['tlmgr']}" ]] || return 1
+    (
+        koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
+        "${app['sudo']}" "${app['tlmgr']}" update --self
+        "${app['sudo']}" "${app['tlmgr']}" update --list
+        "${app['sudo']}" "${app['tlmgr']}" update --all
+    )
+    return 0
 }
 
 koopa_validate_json() {

@@ -4253,19 +4253,6 @@
     "url": ["https://github.com/XAMPPRocky/tokei/"],
     "version": "12.1.2"
   },
-  "trash": {
-    "aliases": {
-      "homebrew": true
-    },
-    "bin": ["trash"],
-    "build_dependencies": ["make"],
-    "check": false,
-    "date": "2022-01-19",
-    "notes": ["Currently failing to build on macOS 13.1 with latest CLT."],
-    "platform": "macos",
-    "url": ["https://github.com/ali-rantakari/trash/"],
-    "version": "0.9.2"
-  },
   "tree": {
     "aliases": {
       "debian": true,

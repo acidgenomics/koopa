@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-# FIXME Our OS-specific checks are no longer accessible in POSIX function
-# library. Need to migrate these back here so completion works as expected.
-
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-02-28.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -66,18 +63,10 @@ __koopa_complete() {
                     )
                     ;;
                 'configure')
-                    args=(
-                        'system'
-                        'user'
-                    )
+                    args=('system' 'user')
                     ;;
                 'header')
-                    args=(
-                        'bash'
-                        'posix'
-                        'r'
-                        'zsh'
-                    )
+                    args=('bash' 'posix' 'r' 'zsh')
                     ;;
                 'install' | \
                 'reinstall' | \
@@ -332,7 +321,6 @@ __koopa_complete() {
                         'r'
                         'r-devel'
                         'r-koopa'
-                        'r-packages'
                         'radian'
                         'ranger-fm'
                         'rbenv'
@@ -438,11 +426,6 @@ __koopa_complete() {
                             'lmod'
                             'pinentry'
                         )
-                    elif koopa_is_macos
-                    then
-                        args+=(
-                            'trash'
-                        )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'install')
@@ -497,11 +480,7 @@ __koopa_complete() {
                     fi
                     ;;
                 'update')
-                    args=(
-                        'koopa'
-                        'r-packages'
-                        'system'
-                    )
+                    args=('koopa' 'system')
                     ;;
                 *)
                     ;;
@@ -512,65 +491,62 @@ __koopa_complete() {
                 'configure')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'system')
-                            args+=(
-                                'r'
-                            )
+                            args+=('r')
                             ;;
                         'user')
-                            args+=(
-                                'chemacs'
-                                'dotfiles'
-                            )
+                            args+=('chemacs' 'dotfiles')
                             ;;
                         esac
                     ;;
                 'install' | \
                 'reinstall' | \
                 'uninstall')
+                    case "${COMP_WORDS[COMP_CWORD-2]}" in
+                        'install' | 'reinstall')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'system')
+                                    args+=('homebrew-bundle' 'tex-packages')
+                                    if koopa_is_linux
+                                    then
+                                        args+=('pivpn')
+                                    elif koopa_is_macos
+                                    then
+                                        args+=('defaults')
+                                    fi
+                                    if koopa_is_debian_like
+                                    then
+                                        args+=('builder-base')
+                                    fi
+                                    ;;
+                                'user')
+                                    if koopa_is_macos
+                                    then
+                                        args+=('defaults')
+                                    fi
+                                    ;;
+                            esac
+                            ;;
+                    esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'system')
-                            args+=(
-                                'homebrew'
-                                'homebrew-bundle'
-                                'tex-packages'
-                                'vscode-server'
-                            )
+                            args+=('homebrew' 'vscode-server')
                             if koopa_is_linux
                             then
-                                args+=(
-                                    'pihole'
-                                    'pivpn'
-                                    'wine'
-                                )
+                                args+=('pihole' 'wine')
                                 if koopa_is_debian_like || koopa_is_fedora_like
                                 then
-                                    args+=(
-                                        'rstudio-server'
-                                        'shiny-server'
-                                    )
+                                    args+=('rstudio-server' 'shiny-server')
                                 fi 
                                 if koopa_is_debian_like
                                 then
-                                    args+=(
-                                        'builder-base'
-                                        'docker'
-                                        'r'
-                                    )
+                                    args+=('docker' 'r')
                                 elif koopa_is_fedora_like
                                 then
-                                    args+=(
-                                        'oracle-instant-client'
-                                    )
+                                    args+=('oracle-instant-client')
                                 fi
                             elif koopa_is_macos
                             then
-                                args+=(
-                                    'defaults'
-                                    'python'
-                                    'r'
-                                    'r-openmp'
-                                    'xcode-clt'
-                                )
+                                args+=('python' 'r' 'r-openmp' 'xcode-clt')
                             fi
                             ;;
                         'user')
@@ -580,10 +556,6 @@ __koopa_complete() {
                                 'spacemacs'
                                 'spacevim'
                             )
-                            if koopa_is_macos
-                            then
-                                args+=('defaults')
-                            fi
                             ;;
                         esac
                         ;;
