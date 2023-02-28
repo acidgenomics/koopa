@@ -643,6 +643,7 @@
     "outdated": true,
     "reverse_dependencies": [
       "autodock",
+      "autodock-vina",
       "bamtools",
       "bedtools",
       "bioawk",
@@ -672,7 +673,6 @@
       "snakemake",
       "star",
       "subread",
-      "vina",
       "visidata"
     ],
     "url": ["https://repo.anaconda.com/miniconda/"],
