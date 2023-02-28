@@ -49,7 +49,7 @@ _koopa_is_os_like() {
     local file id
     file='/etc/os-release'
     id="${1:?}"
-    koopa_is_os "$id" && return 0
+    _koopa_is_os "$id" && return 0
     [ -r "$file" ] || return 1
     grep 'ID=' "$file" | grep -q "$id" && return 0
     grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
