@@ -56,6 +56,10 @@ _koopa_is_os_like() {
     return 1
 }
 
+_koopa_is_os() {
+    [ "$(koopa_os_id)" = "${1:?}" ]
+}
+
 __koopa_remove_from_path_string() {
     local dir str1 str2
     str1="${1:?}"
@@ -1573,6 +1577,14 @@ koopa_is_alias() {
     return 0
 }
 
+koopa_is_alpine() {
+    _koopa_is_os 'alpine'
+}
+
+koopa_is_arch() {
+    _koopa_is_os 'arch'
+}
+
 koopa_is_debian_like() {
     _koopa_is_os_like 'debian'
 }
@@ -1627,6 +1639,10 @@ koopa_is_linux() {
 
 koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
+}
+
+koopa_is_opensuse() {
+    _koopa_is_os 'opensuse'
 }
 
 koopa_is_qemu() {
@@ -1849,6 +1865,55 @@ koopa_openjdk_prefix() {
 
 koopa_opt_prefix() {
     koopa_print "$(koopa_koopa_prefix)/opt"
+    return 0
+}
+
+koopa_os_id() {
+    local string
+    string="$(koopa_os_string | cut -d '-' -f '1')"
+    [ -n "$string" ] || return 1
+    koopa_print "$string"
+    return 0
+}
+
+koopa_os_string() {
+    local id release_file string version
+    if koopa_is_macos
+    then
+        id='macos'
+        version="$(koopa_major_version "$(koopa_macos_os_version)")"
+    elif koopa_is_linux
+    then
+        release_file='/etc/os-release'
+        if [ -r "$release_file" ]
+        then
+            id="$( \
+                awk -F= \
+                    "\$1==\"ID\" { print \$2 ;}" \
+                    "$release_file" \
+                | tr -d '"' \
+            )"
+            version="$( \
+                awk -F= \
+                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
+                    "$release_file" \
+                | tr -d '"' \
+            )"
+            if [ -n "$version" ]
+            then
+                version="$(koopa_major_version "$version")"
+            else
+                version='rolling'
+            fi
+        else
+            id='linux'
+            version=''
+        fi
+    fi
+    [ -n "$id" ] ||  return 1
+    string="$id"
+    [ -n "$version" ] && string="${string}-${version}"
+    koopa_print "$string"
     return 0
 }
 

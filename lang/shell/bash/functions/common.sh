@@ -13534,29 +13534,6 @@ koopa_install_r_koopa() {
     return 0
 }
 
-koopa_install_r_packages() {
-    local app
-    koopa_assert_has_args_le "$#" 1
-    declare -A app
-    app['r']="${1:-}"
-    if [[ -z "${app['r']}" ]] && koopa_is_macos
-    then
-        app['r']="$(koopa_macos_r_prefix)/bin/R"
-    fi
-    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
-    koopa_configure_r "${app['r']}"
-    "${app['rscript']}" -e " \
-        if (!requireNamespace('AcidDevTools', quietly = TRUE)) { ; \
-            install.packages('AcidDevTools') ; \
-        } ; \
-        AcidDevTools::installRecommendedPackages(); \
-    "
-    return 0
-}
-
 koopa_install_r() {
     koopa_install_app \
         --name='r' \
@@ -14252,10 +14229,6 @@ koopa_is_admin() {
     return 1
 }
 
-koopa_is_alpine() {
-    koopa_is_os 'alpine'
-}
-
 koopa_is_anaconda() {
     local app dict
     koopa_assert_has_args_le "$#" 1
@@ -14269,10 +14242,6 @@ koopa_is_anaconda() {
     )
     [[ -x "${dict['prefix']}/bin/anaconda" ]] || return 1
     return 0
-}
-
-koopa_is_arch() {
-    koopa_is_os 'arch'
 }
 
 koopa_is_array_empty() {
@@ -14493,14 +14462,6 @@ koopa_is_koopa_app() {
             || return 1
     done
     return 0
-}
-
-koopa_is_opensuse() {
-    koopa_is_os 'opensuse'
-}
-
-koopa_is_os() {
-    [[ "$(koopa_os_id)" = "${1:?}" ]]
 }
 
 koopa_is_owner() {
@@ -17841,71 +17802,6 @@ koopa_ngettext() {
     dict['str']="${dict['prefix']}${dict['num']}${dict['middle']}\
 ${dict['msg']}${dict['suffix']}"
     koopa_print "${dict['str']}"
-    return 0
-}
-
-koopa_os_id() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app dict
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || return 1
-    dict['string']="$( \
-        koopa_os_string \
-        | "${app['cut']}" -d '-' -f '1' \
-    )"
-    [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
-    return 0
-}
-
-koopa_os_string() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app dict
-    if koopa_is_macos
-    then
-        dict['id']='macos'
-        dict['version']="$(koopa_macos_os_version)"
-        dict['version']="$(koopa_major_version "${dict['version']}")"
-    elif koopa_is_linux
-    then
-        app['awk']="$(koopa_locate_awk --allow-system)"
-        app['tr']="$(koopa_locate_tr --allow-system)"
-        [[ -x "${app['awk']}" ]] || return 1
-        [[ -x "${app['tr']}" ]] || return 1
-        dict['release_file']='/etc/os-release'
-        if [[ -r "${dict['release_file']}" ]]
-        then
-            dict['id']="$( \
-                "${app['awk']}" -F= \
-                    "\$1==\"ID\" { print \$2 ;}" \
-                    "${dict['release_file']}" \
-                | "${app['tr']}" -d '"' \
-            )"
-            dict['version']="$( \
-                "${app['awk']}" -F= \
-                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
-                    "${dict['release_file']}" \
-                | "${app['tr']}" -d '"' \
-            )"
-            if [[ -n "${dict['version']}" ]]
-            then
-                dict['version']="$(koopa_major_version "${dict['version']}")"
-            else
-                dict['version']='rolling'
-            fi
-        else
-            dict['id']='linux'
-        fi
-    fi
-    [[ -n "${dict['id']}" ]] || return 1
-    dict['string']="${dict['id']}"
-    if [[ -n "${dict['version']:-}" ]]
-    then
-        dict['string']="${dict['string']}-${dict['version']}"
-    fi
-    koopa_print "${dict['string']}"
     return 0
 }
 
@@ -25251,12 +25147,6 @@ koopa_uninstall_r_devel() {
         "$@"
 }
 
-koopa_uninstall_r_packages() {
-    koopa_uninstall_app \
-        --name='r-packages' \
-        "$@"
-}
-
 koopa_uninstall_r() {
     koopa_uninstall_app \
         --name='r' \
@@ -25919,12 +25809,6 @@ koopa_update_koopa() {
     done
     koopa_git_pull "${dict['koopa_prefix']}"
     koopa_zsh_compaudit_set_permissions
-    return 0
-}
-
-koopa_update_r_packages() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa 'cliUpdateRPackages'
     return 0
 }
 
