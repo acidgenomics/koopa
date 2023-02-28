@@ -27,7 +27,7 @@ koopa_update_koopa() {
     do
         [[ "$(koopa_stat_user "$prefix")" == "${dict['user_id']}" ]] && continue
         koopa_alert "Fixing ownership of '${prefix}'."
-        koopa_chown --recursive --sudo "${dict['user']}" "$prefix"
+        koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
     done
     koopa_git_pull "${dict['koopa_prefix']}"
     koopa_zsh_compaudit_set_permissions
