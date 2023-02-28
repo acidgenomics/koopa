@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Reset ownership of 'lang/shell/zsh' if necessary.
-# Check if this is owned by root and correct.
-
 koopa_update_koopa() {
     # """
     # Update koopa installation.
@@ -13,19 +10,26 @@ koopa_update_koopa() {
     # This handles updates to Zsh functions that are changed to group
     # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
-    local dict
+    local dict prefix prefixes
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
     declare -A dict=(
-        ['prefix']="$(koopa_koopa_prefix)"
-        ['user']="$(koopa_user)"
+        ['koopa_prefix']="$(koopa_koopa_prefix)"
+        ['user_id']="$(koopa_user_id)"
     )
-    if ! koopa_is_git_repo_top_level "${dict['prefix']}"
+    if ! koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        koopa_alert_note "Pinned release detected at '${dict['prefix']}'."
+        koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
         return 1
     fi
-    koopa_git_pull "${dict['prefix']}"
+    prefixes=("${dict['koopa_prefix']}/lang/shell/zsh")
+    for prefix in "${prefixes[@]}"
+    do
+        [[ "$(koopa_stat_user "$prefix")" == "${dict['user_id']}" ]] && continue
+        koopa_alert "Fixing ownership of '${prefix}'."
+        koopa_chown --recursive --sudo "${dict['user']}" "$prefix"
+    done
+    koopa_git_pull "${dict['koopa_prefix']}"
     koopa_zsh_compaudit_set_permissions
     return 0
 }
