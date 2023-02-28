@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 koopa_is_opensuse() {
     # """
     # Is the operating system openSUSE?
     # @note Updated 2023-01-10.
     # """
-    koopa_is_os 'opensuse'
+    _koopa_is_os 'opensuse'
 }

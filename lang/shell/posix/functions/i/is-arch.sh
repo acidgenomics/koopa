@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 koopa_is_arch() {
     # """
     # Is the operating system Arch Linux?
     # @note Updated 2023-01-10.
     # """
-    koopa_is_os 'arch'
+    _koopa_is_os 'arch'
 }
