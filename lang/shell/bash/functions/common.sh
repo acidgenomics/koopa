@@ -10776,7 +10776,6 @@ koopa_install_all_apps() {
         if ! koopa_is_aarch64
         then
             apps+=(
-                'haskell-stack'
                 'hadolint'
                 'pandoc'
                 'conda'
@@ -11204,7 +11203,6 @@ koopa_install_all_binary_apps() {
                 'gatk'
                 'gffutils'
                 'gget'
-                'haskell-stack'
                 'hisat2'
                 'htseq'
                 'kallisto'
@@ -13134,6 +13132,12 @@ koopa_install_mdcat() {
 koopa_install_meson() {
     koopa_install_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_install_miller() {
+    koopa_install_app \
+        --name='miller' \
         "$@"
 }
 
@@ -24790,6 +24794,12 @@ koopa_uninstall_mdcat() {
 koopa_uninstall_meson() {
     koopa_uninstall_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_uninstall_miller() {
+    koopa_uninstall_app \
+        --name='miller' \
         "$@"
 }
 

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently blowing up disk space by caching package downloads
-# into ~/.conda/pkgs.
-
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2022-11-16.
+    # @note Updated 2023-03-02.
     #
     # Be sure to excluded nested directories that may exist in libexec bin, such
     # as 'bin/scripts' for bowtie2.
     #
     # Consider adding man1 support for relevant apps (e.g. hisat2).
+    #
+    # @seealso
+    # - https://github.com/conda/conda/issues/7741
     # """
     local app bin_names create_args dict pos
     koopa_assert_is_not_aarch64
@@ -53,6 +53,8 @@ main() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_no_args "$#"
     create_args=()
+    dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
+    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     create_args+=("--prefix=${dict['libexec']}")
     if [[ -n "${dict['yaml_file']}" ]]

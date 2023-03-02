@@ -3,12 +3,7 @@
 koopa_debian_install_system_builder_base() {
     # """
     # Bootstrap the Debian/Ubuntu builder AMI.
-    # @note Updated 2022-07-28.
-    #
-    # @section Required dependencies:
-    #
-    # 'haskell-stack' currently requires 'libgmp-dev' with no apparent
-    # workaround for providing a local copy of gmp instead.
+    # @note Updated 2023-03-02.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
