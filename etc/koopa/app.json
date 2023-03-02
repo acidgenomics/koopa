@@ -2677,6 +2677,19 @@
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "1.0.1"
   },
+  "miller": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["mlr"],
+    "build_dependencies": ["go"],
+    "date": "2023-03-02",
+    "url": [
+      "https://miller.readthedocs.io/",
+      "https://github.com/johnkerl/miller/"
+    ],
+    "version": "6.7.0"
+  },
   "minimap2": {
     "bin": ["minimap2"],
     "date": "2023-01-10",
