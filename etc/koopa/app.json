@@ -1910,7 +1910,7 @@
     "build_dependencies": ["go"],
     "date": "2023-03-02",
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.110.1"
+    "version": "0.111.1"
   },
   "hyperfine": {
     "aliases": {

@@ -14,9 +14,8 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
-    declare -A app=(
-        ['go']="$(koopa_locate_go)"
-    )
+    declare -A app
+    app['go']="$(koopa_locate_go)"
     [[ -x "${app['go']}" ]] || return 1
     declare -A dict=(
         ['gocache']="$(koopa_init_dir 'gocache')"
