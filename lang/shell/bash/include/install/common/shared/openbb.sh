@@ -40,8 +40,6 @@ main() {
         "${dict['src_prefix']}"
     dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
     export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
-    dict['poetry_cache_prefix']="$(koopa_init_dir 'poetry')"
-    export POETRY_CACHE_DIR="${dict['poetry_cache_prefix']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
