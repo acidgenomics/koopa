@@ -13135,6 +13135,12 @@ koopa_install_meson() {
         "$@"
 }
 
+koopa_install_miller() {
+    koopa_install_app \
+        --name='miller' \
+        "$@"
+}
+
 koopa_install_minimap2() {
     koopa_install_app \
         --name='minimap2' \
@@ -24788,6 +24794,12 @@ koopa_uninstall_mdcat() {
 koopa_uninstall_meson() {
     koopa_uninstall_app \
         --name='meson' \
+        "$@"
+}
+
+koopa_uninstall_miller() {
+    koopa_uninstall_app \
+        --name='miller' \
         "$@"
 }
 
