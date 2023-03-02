@@ -590,9 +590,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-02-17",
+    "date": "2023-03-02",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.31.0"
+    "version": "2.31.1"
   },
   "cli11": {
     "aliases": {
@@ -1908,9 +1908,9 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-01-17",
+    "date": "2023-03-02",
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.110.0"
+    "version": "0.110.1"
   },
   "hyperfine": {
     "aliases": {
@@ -4614,9 +4614,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-02-22",
+    "date": "2023-03-02",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.31.1"
+    "version": "4.31.2"
   },
   "yt-dlp": {
     "aliases": {
