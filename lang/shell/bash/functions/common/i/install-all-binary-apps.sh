@@ -363,7 +363,7 @@ koopa_install_all_binary_apps() {
                 'gatk'
                 'gffutils'
                 'gget'
-                'haskell-stack'
+                # > 'haskell-stack'
                 'hisat2'
                 'htseq'
                 'kallisto'

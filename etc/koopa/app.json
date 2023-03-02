@@ -372,13 +372,12 @@
   },
   "bioconda-utils": {
     "check": false,
-    "conservaitve": false,
-    "date": "2022-11-15",
+    "date": "2023-03-02",
     "dependencies": ["conda"],
     "large": true,
     "notes": ["Adding bioconda-utils to bin currently causes app to error."],
     "url": ["https://github.com/bioconda/bioconda-utils/"],
-    "version": "1.3.0"
+    "version": "1.3.1"
   },
   "bison": {
     "aliases": {
@@ -1807,6 +1806,7 @@
     },
     "arch": "x86_64",
     "bin": ["stack"],
+    "check": false,
     "date": "2022-12-17",
     "large": true,
     "url": [
@@ -2978,7 +2978,9 @@
   "ont-guppy": {
     "arch": "x86_64",
     "bin": ["guppy_basecaller"],
+    "check": false,
     "date": "2023-01-10",
+    "large": true,
     "platform": "linux",
     "private": true,
     "url": [
@@ -3988,15 +3990,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-02-22",
+    "date": "2023-03-02",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.22.0"
+    "version": "7.24.0"
   },
   "sox": {
     "aliases": {
