@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-01-03.
+    # @note Updated 2023-03-02.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -13,6 +13,7 @@ main() {
     # - https://github.com/OpenBB-finance/OpenBBTerminal/blob/main/
     #     TROUBLESHOOT.md
     # - https://python-poetry.org/docs/configuration/
+    # - https://github.com/conda/conda/issues/7741
     # """
     local app dict
     koopa_activate_app 'ca-certificates'
@@ -37,6 +38,8 @@ main() {
         "${dict['conda_env_prefix']}" \
         "${dict['poetry_prefix']}" \
         "${dict['src_prefix']}"
+    dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
+    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
@@ -95,5 +98,6 @@ END
         --file="${dict['bin_file']}" \
         --string="${dict['bin_string']}"
     koopa_chmod +x "${dict['bin_file']}"
+    koopa_rm "${dict['poetry_prefix']}/cache"
     return 0
 }
