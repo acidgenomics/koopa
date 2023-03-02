@@ -10776,7 +10776,6 @@ koopa_install_all_apps() {
         if ! koopa_is_aarch64
         then
             apps+=(
-                'haskell-stack'
                 'hadolint'
                 'pandoc'
                 'conda'
@@ -11204,7 +11203,6 @@ koopa_install_all_binary_apps() {
                 'gatk'
                 'gffutils'
                 'gget'
-                'haskell-stack'
                 'hisat2'
                 'htseq'
                 'kallisto'
