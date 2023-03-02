@@ -98,5 +98,6 @@ END
         --file="${dict['bin_file']}" \
         --string="${dict['bin_string']}"
     koopa_chmod +x "${dict['bin_file']}"
+    koopa_rm "${dict['poetry_prefix']}/cache"
     return 0
 }

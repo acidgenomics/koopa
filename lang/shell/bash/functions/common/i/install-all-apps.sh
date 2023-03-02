@@ -324,7 +324,7 @@ koopa_install_all_apps() {
         if ! koopa_is_aarch64
         then
             apps+=(
-                'haskell-stack'
+                # > 'haskell-stack'
                 'hadolint'
                 'pandoc'
                 'conda'
