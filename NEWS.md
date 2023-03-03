@@ -1,6 +1,6 @@
 # Release notes
 
-## koopa 0.13.0 (2023-03-04)
+## koopa 0.13.0 (2023-03-06)
 
 Major changes:
 
