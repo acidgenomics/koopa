@@ -1003,9 +1003,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-06",
+    "date": "2023-03-03",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.43.1"
+    "version": "0.44.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -1768,11 +1768,11 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-02-12",
+    "date": "2023-03-03",
     "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "7.0.0"
+    "version": "7.1.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3406,10 +3406,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-02-14",
+    "date": "2023-03-03",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.16.2"
+    "version": "2.16.3"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
