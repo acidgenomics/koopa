@@ -1005,7 +1005,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-03-03",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.44.0"
+    "version": "0.45.0"
   },
   "docker-credential-pass": {
     "aliases": {
