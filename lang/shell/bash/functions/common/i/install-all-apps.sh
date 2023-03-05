@@ -344,6 +344,7 @@ koopa_install_all_apps() {
                 'ffq'
                 'fgbio'
                 'fq'
+                'fqtk'
                 'gatk'
                 'gffutils'
                 'gget'
