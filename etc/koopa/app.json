@@ -654,6 +654,8 @@
       "fastqc",
       "ffq",
       "fgbio",
+      "fq",
+      "fqtk",
       "gffutils",
       "gget",
       "gseapy",
@@ -1294,6 +1296,17 @@
     ],
     "version": "0.9.1"
   },
+  "fqtk": {
+    "bin": ["fqtk"],
+    "date": "2023-03-05",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/fulcrumgenomics/fqtk/",
+      "https://bioconda.github.io/recipes/fqtk/README.html"
+    ],
+    "version": "0.2.1"
+  },
   "freetype": {
     "aliases": {
       "debian": "libfreetype-dev",
@@ -1908,9 +1921,9 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-05",
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.111.1"
+    "version": "0.111.2"
   },
   "hyperfine": {
     "aliases": {
@@ -2753,10 +2766,10 @@
     "build_dependencies": ["cmake"],
     "check": false,
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-05",
     "dependencies": ["zlib", "boost"],
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
-    "version": "5.0.0"
+    "version": "6.0.0"
   },
   "multiqc": {
     "bin": ["multiqc"],
@@ -3423,14 +3436,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-01-17",
+    "date": "2023-03-03",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.2.1"
+    "version": "7.2.2"
   },
   "python3.10": {
     "aliases": {
@@ -4643,7 +4656,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.2.17"
+    "version": "2023.3.4"
   },
   "zellij": {
     "aliases": {

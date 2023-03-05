@@ -12311,6 +12311,12 @@ koopa_install_fq() {
         "$@"
 }
 
+koopa_install_fqtk() {
+    koopa_install_app \
+        --name='fqtk' \
+        "$@"
+}
+
 koopa_install_freetype() {
     koopa_install_app \
         --name='freetype' \
@@ -24128,6 +24134,12 @@ koopa_uninstall_fontconfig() {
 koopa_uninstall_fq() {
     koopa_uninstall_app \
         --name='fq' \
+        "$@"
+}
+
+koopa_uninstall_fqtk() {
+    koopa_uninstall_app \
+        --name='fqtk' \
         "$@"
 }
 
