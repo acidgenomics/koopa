@@ -360,6 +360,7 @@ koopa_install_all_binary_apps() {
                 'ffq'
                 'fgbio'
                 'fq'
+                'fqtk'
                 'gatk'
                 'gffutils'
                 'gget'
