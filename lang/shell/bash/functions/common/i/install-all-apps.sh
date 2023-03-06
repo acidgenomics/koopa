@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for '--no-push' flag.
+# NOTE Consider adding support for '--no-push' flag.
 
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-02-24.
+    # @note Updated 2023-03-06.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -200,6 +200,7 @@ koopa_install_all_apps() {
         'fzf'
         'gh'
         'git-lfs'
+        'miller'
         'aws-cli'
         'autoflake'
         'black'
