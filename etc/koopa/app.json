@@ -1456,7 +1456,10 @@
     "date": "2022-06-05",
     "dependencies": ["conda"],
     "large": true,
-    "url": ["https://github.com/daler/gffutils/"],
+    "url": [
+      "https://github.com/daler/gffutils/",
+      "https://bioconda.github.io/recipes/gffutils/README.html"
+    ],
     "version": "0.11.1"
   },
   "gget": {
@@ -1498,10 +1501,10 @@
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["zlib", "gettext", "openssl3", "curl"],
     "url": ["https://git-scm.com/"],
-    "version": "2.39.1"
+    "version": "2.39.2"
   },
   "git-lfs": {
     "aliases": {
@@ -1534,13 +1537,13 @@
     },
     "build_dependencies": ["meson", "ninja", "pkg-config", "python3.11"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "dependencies": ["zlib", "gettext", "libffi", "pcre"],
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
     ],
-    "version": "2.74.4"
+    "version": "2.75.4"
   },
   "gmp": {
     "aliases": {
@@ -1598,9 +1601,9 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "url": ["https://golang.org/dl/"],
-    "version": "1.20"
+    "version": "1.20.1"
   },
   "google-cloud-sdk": {
     "aliases": {
@@ -1608,12 +1611,12 @@
     },
     "arch": "x86_64",
     "bin": ["gcloud"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["python3.10"],
     "large": true,
     "outdated": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "417.0.0"
+    "version": "420.0.0"
   },
   "googletest": {
     "aliases": {
@@ -1656,10 +1659,10 @@
       "homebrew": true
     },
     "bin": ["gegrep", "gfgrep", "ggrep"],
-    "date": "2022-09-29",
+    "date": "2023-03-07",
     "man1": ["ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
-    "version": "3.8"
+    "version": "3.9"
   },
   "grex": {
     "aliases": {
