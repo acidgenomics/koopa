@@ -548,16 +548,13 @@
     "conservative": true,
     "date": "2023-03-07",
     "dependencies": ["FIXME"],
-    "notes": [
-      "Pinning here because newer versions fail to build with meson/ninja."
-    ],
-    "outdated": true,
     "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
+      "https://www.cairographics.org/releases/",
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.17.4"
+    "version": "1.16.0"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -3268,8 +3265,8 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-01-03",
-    "url": ["http://www.pixman.org/", "https://cairographics.org/releases/"],
+    "date": "2023-03-07",
+    "url": ["https://cairographics.org/releases/", "http://www.pixman.org/"],
     "version": "0.42.2"
   },
   "pkg-config": {
