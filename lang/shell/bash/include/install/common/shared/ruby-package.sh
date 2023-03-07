@@ -44,7 +44,6 @@ gem "${dict['name']}", "${dict['version']}"
 END
     dict['libexec']="${dict['prefix']}/libexec"
     koopa_mkdir "${dict['libexec']}"
-    unset -v GEM_HOME GEM_PATH
     (
         koopa_cd "${dict['libexec']}"
         koopa_write_string \
