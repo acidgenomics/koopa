@@ -2516,6 +2516,7 @@
       "binutils"
     ],
     "large": true,
+    "notes": ["16.0 is scheduled for end of March release."],
     "url": ["https://llvm.org/"],
     "version": "15.0.7"
   },
