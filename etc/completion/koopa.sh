@@ -4,7 +4,7 @@
 __koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-02-28.
+    # @note Updated 2023-03-06.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -155,6 +155,7 @@ __koopa_complete() {
                         'fmt'
                         'fontconfig'
                         'fq'
+                        'fqtk'
                         'freetype'
                         'fribidi'
                         'fzf'
@@ -262,6 +263,7 @@ __koopa_complete() {
                         'mcfly'
                         'mdcat'
                         'meson'
+                        'miller'
                         'minimap2'
                         'misopy'
                         'mpc'

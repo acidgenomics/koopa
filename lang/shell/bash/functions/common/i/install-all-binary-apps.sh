@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-02-24.
+    # @note Updated 2023-03-06.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -182,6 +182,7 @@ koopa_install_all_binary_apps() {
         'mcfly'
         'mdcat'
         'meson'
+        'miller'
         'mpc'
         'mpdecimal'
         'mpfr'
@@ -360,6 +361,7 @@ koopa_install_all_binary_apps() {
                 'ffq'
                 'fgbio'
                 'fq'
+                'fqtk'
                 'gatk'
                 'gffutils'
                 'gget'

@@ -10662,6 +10662,7 @@ koopa_install_all_apps() {
         'fzf'
         'gh'
         'git-lfs'
+        'miller'
         'aws-cli'
         'autoflake'
         'black'
@@ -10794,6 +10795,7 @@ koopa_install_all_apps() {
                 'ffq'
                 'fgbio'
                 'fq'
+                'fqtk'
                 'gatk'
                 'gffutils'
                 'gget'
@@ -11030,6 +11032,7 @@ koopa_install_all_binary_apps() {
         'mcfly'
         'mdcat'
         'meson'
+        'miller'
         'mpc'
         'mpdecimal'
         'mpfr'
@@ -11200,6 +11203,7 @@ koopa_install_all_binary_apps() {
                 'ffq'
                 'fgbio'
                 'fq'
+                'fqtk'
                 'gatk'
                 'gffutils'
                 'gget'
@@ -12308,6 +12312,12 @@ koopa_install_fontconfig() {
 koopa_install_fq() {
     koopa_install_app \
         --name='fq' \
+        "$@"
+}
+
+koopa_install_fqtk() {
+    koopa_install_app \
+        --name='fqtk' \
         "$@"
 }
 
@@ -24128,6 +24138,12 @@ koopa_uninstall_fontconfig() {
 koopa_uninstall_fq() {
     koopa_uninstall_app \
         --name='fq' \
+        "$@"
+}
+
+koopa_uninstall_fqtk() {
+    koopa_uninstall_app \
+        --name='fqtk' \
         "$@"
 }
 

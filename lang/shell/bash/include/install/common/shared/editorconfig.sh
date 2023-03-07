@@ -6,8 +6,6 @@ main() {
     # @note Updated 2022-09-12.
     #
     # @seealso
-    # - https://facebook.github.io/zstd/
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zstd.rb
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
     #     editorconfig.rb
     # - https://github.com/editorconfig/editorconfig-core-c/blob/master/
