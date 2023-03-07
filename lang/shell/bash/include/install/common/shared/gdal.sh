@@ -2,18 +2,18 @@
 
 # NOTE Regarding Python bindings:
 # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
-#
+
 # NOTE May be able to enable these:
 # * ICONV component has been detected, but is disabled with GDAL_USE_ICONV=OFF
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
-# FIXME This is detecting Temurin 19 framework on macOS.
+# NOTE This is detecting Temurin 19 framework on macOS.
 
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-01-05.
+    # @note Updated 2023-03-07.
     #
     # Use 'configure --help' for build options.
     #
@@ -32,12 +32,6 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    # > if koopa_is_linux
-    # > then
-    # >     koopa_assert_is_non_existing \
-    # >         '/usr/bin/gdal-config' \
-    # >         '/usr/include/gdal'
-    # > fi
     koopa_activate_app --build-only \
         'cmake' \
         'libtool' \
@@ -66,7 +60,7 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['make_prefix']="$(koopa_make_prefix)"
-        ['name']='gdal'
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -83,7 +77,7 @@ v${dict['version']}/${dict['file']}"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
-    # > dict['proj']="$(koopa_app_prefix 'proj')"
+    dict['proj']="$(koopa_app_prefix 'proj')"
     dict['python']="$(koopa_app_prefix 'python3.11')"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
@@ -169,10 +163,9 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_ZLIB_INTERNAL=ON'
         '-DGDAL_USE_ZSTD=ON'
         # Required dependency paths.
-        # CMake installer currently warns when this is set:
-        # > "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
-        # > "-DPROJ_LIBRARY_RELEASE=${dict['proj']}/lib/\
-        # > libproj.${dict['shared_ext']}"
+        "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
+        "-DPROJ_LIBRARY_RELEASE=${dict['proj']}/lib/\
+libproj.${dict['shared_ext']}"
         # Optional dependency paths.
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
