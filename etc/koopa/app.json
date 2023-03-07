@@ -4740,6 +4740,21 @@
     "date": "2023-03-07",
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
     "notes": ["FIXME This is failing to build on macOS."],
+    "reverse_dependencies": [
+      "curl",
+      "elfutils",
+      "gdal",
+      "imagemagick",
+      "libarchive",
+      "libgeotiff",
+      "libtiff",
+      "libzip",
+      "llvm",
+      "mamba",
+      "proj",
+      "r",
+      "rsync"
+    ],
     "url": [
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
