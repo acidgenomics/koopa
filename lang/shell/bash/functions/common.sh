@@ -10881,6 +10881,7 @@ koopa_install_all_binary_apps() {
     koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
+        'lz4'
         'zstd'
         'bzip2'
         'ca-certificates'
@@ -11024,7 +11025,6 @@ koopa_install_all_binary_apps() {
         'lsd'
         'lua'
         'luarocks'
-        'lz4'
         'lzo'
         'make'
         'man-db'
