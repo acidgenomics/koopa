@@ -550,12 +550,16 @@
     "conservative": true,
     "date": "2023-03-07",
     "dependencies": ["FIXME"],
+    "notes": [
+      "Pinning here because newer versions fail to build with meson/ninja."
+    ],
+    "outdated": true,
     "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.17.8"
+    "version": "1.17.4"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -1120,7 +1124,10 @@
     "bin": ["exiftool"],
     "date": "2022-11-08",
     "dependencies": ["perl"],
-    "url": ["https://exiftool.org/"],
+    "url": [
+      "https://exiftool.org/",
+      "https://metacpan.org/dist/Image-ExifTool/"
+    ],
     "version": "12.50"
   },
   "expat": {
@@ -1145,11 +1152,11 @@
   },
   "fastqc": {
     "bin": ["fastqc"],
-    "date": "2021-03-25",
+    "date": "2023-03-07",
     "dependencies": ["conda"],
     "large": true,
     "url": ["https://github.com/s-andrews/FastQC/"],
-    "version": "0.11.9"
+    "version": "0.12.1"
   },
   "fd-find": {
     "aliases": {
@@ -1166,10 +1173,10 @@
       "homebrew": true
     },
     "bin": ["ffmpeg", "ffprobe"],
-    "date": "2022-09-29",
+    "date": "2023-03-07",
     "man1": ["ffmpeg.1", "ffprobe.1"],
-    "url": ["https://ffmpeg.org/"],
-    "version": "5.1.2"
+    "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
+    "version": "6.0"
   },
   "ffq": {
     "bin": ["ffq"],
@@ -1312,7 +1319,7 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-03-07",
     "reverse_dependencies": [
       "cairo",
       "fltk",
@@ -1323,7 +1330,7 @@
       "r"
     ],
     "url": ["https://www.freetype.org/"],
-    "version": "2.12.1"
+    "version": "2.13.0"
   },
   "fribidi": {
     "aliases": {
@@ -1343,10 +1350,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-01-24",
+    "date": "2023-03-07",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.37.0"
+    "version": "0.38.0"
   },
   "gatk": {
     "aliases": {
@@ -1356,7 +1363,10 @@
     "date": "2022-10-17",
     "dependencies": ["conda"],
     "large": true,
-    "url": "https://gatk.broadinstitute.org/",
+    "url": [
+      "https://gatk.broadinstitute.org/",
+      "https://bioconda.github.io/recipes/gatk4/README.html"
+    ],
     "version": "4.3.0.0"
   },
   "gawk": {
