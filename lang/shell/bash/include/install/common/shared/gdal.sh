@@ -81,6 +81,7 @@ v${dict['version']}/${dict['file']}"
     dict['python']="$(koopa_app_prefix 'python3.11')"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake_args=(
         '-DBUILD_APPS=ON'
         '-DBUILD_PYTHON_BINDINGS=ON'
@@ -179,6 +180,7 @@ libpcre2-8.${dict['shared_ext']}"
 libsqlite3.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
     )
     koopa_mkdir "${dict['prefix']}/include"
     koopa_print_env
