@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-03-06.
+    # @note Updated 2023-03-07.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -57,6 +57,7 @@ koopa_install_all_apps() {
         'openssl1'
         'openssl3'
         'cmake'
+        'lz4'
         'zstd'
         'curl'
         # NOTE This requires bootstrap on macOS.
@@ -167,7 +168,6 @@ koopa_install_all_apps() {
         'lesspipe'
         'libidn'
         'libpipeline'
-        'lz4'
         'man-db'
         'neofetch'
         'parallel'
