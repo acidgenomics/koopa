@@ -547,17 +547,36 @@
     "build_dependencies": ["pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
-    "dependencies": ["FIXME"],
-    "notes": [
-      "Pinning here because newer versions fail to build with meson/ninja."
+    "dependencies": [
+      "zlib",
+      "gettext",
+      "freetype",
+      "libxml2",
+      "fontconfig",
+      "libffi",
+      "pcre2",
+      "glib",
+      "libpng",
+      "lzo",
+      "pixman",
+      "xorg-xorgproto",
+      "xorg-xcb-proto",
+      "xorg-libpthread-stubs",
+      "xorg-libxau",
+      "xorg-libxdmcp",
+      "xorg-libxcb",
+      "xorg-libx11",
+      "xorg-libxext",
+      "xorg-libxrender",
+      "expat"
     ],
-    "outdated": true,
     "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
+      "https://www.cairographics.org/releases/",
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.17.4"
+    "version": "1.16.0"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -1317,11 +1336,11 @@
     "conservative": true,
     "date": "2023-03-07",
     "reverse_dependencies": [
+      "fontconfig",
+      "harfbuzz",
       "cairo",
       "fltk",
-      "fontconfig",
       "graphviz",
-      "harfbuzz",
       "imagemagick",
       "r"
     ],
@@ -2516,6 +2535,7 @@
       "binutils"
     ],
     "large": true,
+    "notes": ["16.0 is scheduled for end of March release."],
     "url": ["https://llvm.org/"],
     "version": "15.0.7"
   },
@@ -3267,8 +3287,8 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-01-03",
-    "url": ["http://www.pixman.org/", "https://cairographics.org/releases/"],
+    "date": "2023-03-07",
+    "url": ["https://cairographics.org/releases/", "http://www.pixman.org/"],
     "version": "0.42.2"
   },
   "pkg-config": {
@@ -4480,6 +4500,17 @@
     },
     "conservative": true,
     "date": "2023-03-07",
+    "reverse_dependencies": [
+      "xorg-libxext",
+      "xorg-libxrandr",
+      "xorg-libxrender",
+      "xorg-libxt",
+      "cairo",
+      "fltk",
+      "imagemagick",
+      "tcl-tk",
+      "r"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.4"
   },
