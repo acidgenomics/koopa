@@ -25,13 +25,6 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    # > if koopa_is_linux
-    # > then
-    # >     koopa_assert_is_non_existing \
-    # >         '/usr/bin/geos-config' \
-    # >         '/usr/include/geos' \
-    # >         '/usr/include/geos_c.h'
-    # > fi
     koopa_activate_app --build-only 'cmake'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"

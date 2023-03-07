@@ -15,13 +15,6 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    # > if koopa_is_linux
-    # > then
-    # >     koopa_assert_is_non_existing \
-    # >         '/usr/include/proj' \
-    # >         '/usr/include/proj.h' \
-    # >         '/usr/lib/x86_64-linux-gnu/pkgconfig/proj.pc'
-    # > fi
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'curl' \
