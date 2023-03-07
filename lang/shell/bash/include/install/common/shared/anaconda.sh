@@ -34,7 +34,6 @@ main() {
 ${dict['os_type']}-${dict['arch']}.sh"
     dict['url']="https://repo.anaconda.com/archive/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
-    unset -v PYTHONHOME PYTHONPATH
     # Need to include this on macOS, or we'll fail to locate md5.
     koopa_add_to_path_end '/sbin'
     koopa_print_env
