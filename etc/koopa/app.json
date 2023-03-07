@@ -202,7 +202,6 @@
     },
     "bin": ["aws"],
     "date": "2023-03-07",
-    "outdated": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
@@ -217,7 +216,6 @@
     "date": "2023-03-07",
     "dependencies": ["python3.11"],
     "large": true,
-    "outdated": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
     "version": "2.46.0"
   },
@@ -641,7 +639,6 @@
     "conservative": true,
     "date": "2023-02-27",
     "large": true,
-    "outdated": true,
     "reverse_dependencies": [
       "autodock",
       "autodock-vina",
@@ -924,7 +921,6 @@
     "bin": ["cpufetch"],
     "date": "2023-01-09",
     "man1": ["cpufetch.1"],
-    "outdated": true,
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.03"
   },
@@ -1614,7 +1610,6 @@
     "date": "2023-03-07",
     "dependencies": ["python3.10"],
     "large": true,
-    "outdated": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
     "version": "420.0.0"
   },
@@ -1793,7 +1788,6 @@
     },
     "conservative": true,
     "date": "2023-03-03",
-    "outdated": true,
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.1.0"
@@ -2005,7 +1999,7 @@
       "magick-script"
     ],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -2016,17 +2010,17 @@
     ],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-61"
+    "version": "7.1.0-62"
   },
   "ipython": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["ipython"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["python3.11"],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "8.9.0"
+    "version": "8.11.0"
   },
   "isort": {
     "aliases": {
@@ -2068,7 +2062,7 @@
     "bin": ["jq"],
     "date": "2022-08-30",
     "man1": ["jq.1"],
-    "url": ["https://github.com/stedolan/jq/releases"],
+    "url": ["https://github.com/stedolan/jq/"],
     "version": "1.6"
   },
   "julia": {
@@ -2141,10 +2135,10 @@
       "homebrew": true
     },
     "bin": ["less"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "man1": ["less.1"],
     "url": ["https://github.com/gwsw/less/", "https://ftp.gnu.org/gnu/less/"],
-    "version": "623"
+    "version": "629"
   },
   "lesspipe": {
     "aliases": {
@@ -2300,13 +2294,13 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "url": [
       "https://www.libjpeg-turbo.org/",
-      "https://github.com/libjpeg-turbo/libjpeg-turbo",
+      "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "2.1.5"
+    "version": "2.1.5.1"
   },
   "libksba": {
     "aliases": {
@@ -2325,9 +2319,9 @@
     },
     "check": false,
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-03-07",
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
-    "version": "2.45"
+    "version": "2.46"
   },
   "libluv": {
     "aliases": {
@@ -2338,7 +2332,7 @@
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": ["libuv"],
-    "url": ["https://github.com/luvit/luv"],
+    "url": ["https://github.com/luvit/luv/"],
     "version": "1.44.2-1"
   },
   "libpipeline": {
@@ -2610,10 +2604,10 @@
       "homebrew": true
     },
     "bin": ["gmake"],
-    "date": "2022-11-08",
+    "date": "2023-03-07",
     "man1": ["gmake.1"],
     "url": ["https://ftp.gnu.org/gnu/make/"],
-    "version": "4.4"
+    "version": "4.4.1"
   },
   "mamba": {
     "bin": ["micromamba"],
@@ -2639,7 +2633,7 @@
     "large": true,
     "url": [
       "https://mamba.readthedocs.io/",
-      "https://github.com/mamba-org/mamba"
+      "https://github.com/mamba-org/mamba/"
     ],
     "version": "2023.02.09"
   },
@@ -2665,7 +2659,7 @@
     "bin": ["markdownlint"],
     "date": "2023-01-09",
     "dependencies": ["node"],
-    "url": ["https://www.npmjs.com/package/markdownlint-cli"],
+    "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
     "version": "0.33.0"
   },
   "mcfly": {
@@ -2684,10 +2678,10 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "meson": {
     "aliases": {
@@ -2766,9 +2760,9 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-03-07",
     "url": ["https://www.mpfr.org/"],
-    "version": "4.1.0"
+    "version": "4.2.0"
   },
   "msgpack": {
     "aliases": {
@@ -2787,7 +2781,6 @@
     "date": "2023-01-09",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.14"
   },
@@ -2896,11 +2889,11 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2022-12-15",
+    "date": "2023-03-07",
     "dependencies": ["conda"],
     "large": true,
     "url": ["https://bioconda.github.io/recipes/nextflow/README.html"],
-    "version": "22.10.4"
+    "version": "22.10.6"
   },
   "nghttp2": {
     "aliases": {
@@ -2908,7 +2901,7 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "dependencies": [
       "c-ares",
       "jemalloc",
@@ -2919,7 +2912,7 @@
       "boost"
     ],
     "url": ["https://nghttp2.org/"],
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "nim": {
     "aliases": {
@@ -2967,11 +2960,10 @@
     },
     "bin": ["node", "npm", "npx"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "outdated": true,
     "reverse_dependencies": [
       "bash-language-server",
       "gtop",
@@ -2980,7 +2972,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.14.0"
+    "version": "18.14.2"
   },
   "npth": {
     "aliases": {
@@ -3021,6 +3013,7 @@
     "platform": "linux",
     "private": true,
     "url": [
+      "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
     ],
     "version": "6.4.2"
@@ -3030,7 +3023,6 @@
     "date": "2023-03-02",
     "dependencies": ["conda", "poetry"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
@@ -3067,10 +3059,7 @@
     },
     "conservative": true,
     "date": "2023-02-08",
-    "url": [
-      "https://www.openssh.com/",
-      "https://www.openssh.com/portable.html"
-    ],
+    "url": ["https://www.openssh.com/portable.html"],
     "version": "9.2p1"
   },
   "openssl1": {
@@ -3128,12 +3117,10 @@
   },
   "oracle-instant-client": {
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-03-07",
     "platform": "linux",
-    "url": [
-      "https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html"
-    ],
-    "version": "21.8.0.0.0-1"
+    "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
+    "version": "21.9.0.0.0-1"
   },
   "pandoc": {
     "aliases": {
@@ -3158,10 +3145,10 @@
       "homebrew": true
     },
     "bin": ["parallel"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "man1": ["parallel.1"],
     "url": ["https://www.gnu.org/software/parallel/"],
-    "version": "20230122"
+    "version": "20230222"
   },
   "password-store": {
     "aliases": {
@@ -3207,10 +3194,7 @@
     "conservative": true,
     "date": "2023-01-03",
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
-    "url": [
-      "https://github.com/PCRE2Project/pcre2/releases",
-      "https://www.pcre.org/"
-    ],
+    "url": ["https://github.com/PCRE2Project/pcre2/", "https://www.pcre.org/"],
     "version": "10.42"
   },
   "perl": {
@@ -3245,16 +3229,15 @@
   },
   "picard": {
     "bin": ["picard"],
-    "date": "2023-02-22",
+    "date": "2023-03-07",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "2.27.5"
+    "version": "3.0.0"
   },
   "pinentry": {
     "aliases": {
@@ -3314,9 +3297,9 @@
   },
   "prelude-emacs": {
     "check": false,
-    "date": "2022-09-16",
+    "date": "2023-03-07",
     "url": ["https://github.com/bbatsov/prelude/"],
-    "version": "261600daa691f46289657d6de6c3a5a92c6fedd2"
+    "version": "fcb629acb645cdff7fdd5f7332bb669c75527fdb"
   },
   "prettier": {
     "aliases": {
@@ -3401,7 +3384,7 @@
     "conservative": true,
     "date": "2023-03-01",
     "man1": ["pyenv.1"],
-    "url": ["https://github.com/pyenv/pyenv"],
+    "url": ["https://github.com/pyenv/pyenv/"],
     "version": "2.3.14"
   },
   "pyflakes": {
@@ -3877,11 +3860,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-02-27",
+    "date": "2023-03-07",
     "dependencies": ["python3.11"],
-    "outdated": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.252"
+    "version": "0.0.254"
   },
   "rust": {
     "aliases": {
@@ -3942,24 +3924,24 @@
   "scalene": {
     "arch": "x86_64",
     "bin": ["scalene"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
     ],
-    "version": "1.5.19"
+    "version": "1.5.20"
   },
   "scons": {
     "aliases": {
       "homebrew": true
     },
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2023-03-07",
     "dependencies": ["python3.11"],
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
-    "version": "4.4.0"
+    "version": "4.5.1"
   },
   "sd": {
     "aliases": {
@@ -4021,7 +4003,10 @@
     "date": "2023-02-08",
     "dependencies": ["python3.11"],
     "large": true,
-    "url": ["https://github.com/snakemake/snakefmt/"],
+    "url": [
+      "https://github.com/snakemake/snakefmt/",
+      "https://bioconda.github.io/recipes/snakefmt/README.html"
+    ],
     "version": "0.8.1"
   },
   "snakemake": {
@@ -4047,16 +4032,16 @@
   },
   "spacemacs": {
     "check": false,
-    "date": "2022-11-14",
+    "date": "2023-03-07",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
-    "version": "57a7a0e63c4aecf810b19ca3fd49e5ae1a838126"
+    "version": "3512e43c9e6efef78b5104785c99518eff60d668"
   },
   "spacevim": {
     "check": false,
-    "date": "2023-01-05",
+    "date": "2023-03-07",
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
-    "version": "9e80d9bbfad057cd8c056523ac18571083461ef0"
+    "version": "4c07aa025f5ec3c35159942fd4f913499cbed3cc"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "patch", "pkg-config"],
@@ -4076,7 +4061,7 @@
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config", "sed"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "dependencies": ["zlib", "readline"],
     "man1": ["sqlite3.1"],
     "reverse_dependencies": [
@@ -4091,7 +4076,7 @@
       "r-devel"
     ],
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.40.1"
+    "version": "3.41.0"
   },
   "sra-tools": {
     "aliases": {
@@ -4121,15 +4106,14 @@
   },
   "star-fusion": {
     "bin": ["STAR-Fusion"],
-    "date": "2023-01-18",
+    "date": "2023-03-07",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
     ],
-    "version": "1.11.1"
+    "version": "1.12.0"
   },
   "starship": {
     "aliases": {
@@ -4155,8 +4139,12 @@
     "date": "2023-02-13",
     "dependencies": ["conda"],
     "large": true,
+    "notes": ["FIXME Need to update bioconda recipe."],
     "outdated": true,
-    "url": ["https://subread.sourceforge.net/"],
+    "url": [
+      "https://subread.sourceforge.net/",
+      "https://bioconda.github.io/recipes/subread/README.html"
+    ],
     "version": "2.0.3"
   },
   "subversion": {
@@ -4335,7 +4323,10 @@
     "bin": ["udunits2"],
     "conservative": true,
     "date": "2022-08-30",
-    "url": ["https://www.unidata.ucar.edu/software/udunits/"],
+    "url": [
+      "https://www.unidata.ucar.edu/software/udunits/",
+      "https://downloads.unidata.ucar.edu/udunits/"
+    ],
     "version": "2.2.28"
   },
   "unibilium": {
@@ -4380,7 +4371,10 @@
     },
     "conservative": true,
     "date": "2023-01-03",
-    "url": ["https://juliastrings.github.io/utf8proc/"],
+    "url": [
+      "https://juliastrings.github.io/utf8proc/",
+      "https://github.com/JuliaStrings/utf8proc/"
+    ],
     "version": "2.8.0"
   },
   "vim": {
@@ -4485,9 +4479,9 @@
       "homebrew": "libx11"
     },
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
-    "version": "1.8.3"
+    "version": "1.8.4"
   },
   "xorg-libxau": {
     "aliases": {
@@ -4642,7 +4636,7 @@
     "date": "2022-09-26",
     "dependencies": ["node"],
     "notes": ["This is version pinned to classic stable."],
-    "url": ["https://yarnpkg.com/", "https://www.npmjs.com/package/yarn"],
+    "url": ["https://yarnpkg.com/", "https://www.npmjs.com/package/yarn/"],
     "version": "1.22.19"
   },
   "yq": {
@@ -4743,12 +4737,12 @@
       "zstdmt"
     ],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-03-07",
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
     "url": [
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
     ],
-    "version": "1.5.2"
+    "version": "1.5.4"
   }
 }
