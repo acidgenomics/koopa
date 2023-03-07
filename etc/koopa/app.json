@@ -4,10 +4,10 @@
       "homebrew": true
     },
     "bin": ["ack"],
-    "date": "2022-09-26",
+    "date": "2023-03-07",
     "dependencies": ["perl"],
     "url": ["https://beyondgrep.com/"],
-    "version": "3.6.0"
+    "version": "3.7.0"
   },
   "agat": {
     "bin": ["agat"],
@@ -37,19 +37,19 @@
       "homebrew": true
     },
     "bin": ["pyspark", "sparkR"],
-    "date": "2022-10-26",
+    "date": "2023-03-07",
     "dependencies": ["openjdk", "python3.11", "r"],
     "large": true,
     "url": ["https://spark.apache.org/"],
-    "version": "3.3.1"
+    "version": "3.3.2"
   },
   "apptainer": {
     "build_dependencies": ["go"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.1.5"
+    "version": "1.1.6"
   },
   "apr-util": {
     "aliases": {
@@ -59,7 +59,7 @@
     },
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2022-08-30",
+    "date": "2023-02-08",
     "dependencies": ["apr", "expat", "openssl3"],
     "url": ["https://apr.apache.org/"],
     "version": "1.6.3"
@@ -82,10 +82,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-12-30",
+    "date": "2023-03-07",
     "dependencies": ["hdf5"],
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "11.4.3"
+    "version": "12.0.1"
   },
   "asdf": {
     "aliases": {
@@ -94,7 +94,6 @@
     "bin": ["asdf"],
     "conservative": true,
     "date": "2023-02-23",
-    "outdated": true,
     "url": ["https://github.com/asdf-vm/asdf/"],
     "version": "0.11.2"
   },
@@ -184,7 +183,7 @@
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/autoflake/",
-      "https://github.com/PyCQA/autoflake"
+      "https://github.com/PyCQA/autoflake/"
     ],
     "version": "2.0.1"
   },
@@ -215,12 +214,12 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["python3.11"],
     "large": true,
     "outdated": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.45.0"
+    "version": "2.46.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -260,21 +259,21 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["node"],
     "url": [
-      "https://github.com/bash-lsp/bash-language-server/",
-      "https://www.npmjs.com/package/bash-language-server/"
+      "https://www.npmjs.com/package/bash-language-server/",
+      "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "4.6.2"
+    "version": "4.8.2"
   },
   "bashcov": {
     "bin": ["bashcov"],
     "date": "2022-09-26",
     "dependencies": ["ruby"],
     "url": [
-      "https://github.com/infertux/bashcov/",
-      "https://rubygems.org/gems/bashcov/"
+      "https://rubygems.org/gems/bashcov/",
+      "https://github.com/infertux/bashcov/"
     ],
     "version": "1.8.2"
   },
@@ -327,7 +326,7 @@
     "platform": "linux",
     "private": true,
     "url": [
-      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
+      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html"
     ],
     "version": "2.20"
   },
@@ -459,7 +458,7 @@
     "build_dependencies": ["rust"],
     "date": "2022-02-22",
     "url": [
-      "https://crates.io/crates/broot",
+      "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
     "version": "1.20.2"
@@ -549,15 +548,14 @@
     },
     "build_dependencies": ["pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["FIXME"],
-    "outdated": true,
     "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.17.4"
+    "version": "1.17.8"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -565,7 +563,7 @@
     "platform": "linux",
     "private": true,
     "url": [
-      "https://support.10xgenomics.com/single-cell-gene-expression/software/pipelines/latest/installation"
+      "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
     "version": "7.1.0"
   },
@@ -579,9 +577,9 @@
     "version": "4.4.0"
   },
   "chemacs": {
-    "date": "2022-12-30",
+    "date": "2023-03-07",
     "url": ["https://github.com/plexus/chemacs2/"],
-    "version": "fb6301d1563c6cf88c8aac51ff8bcd4e06276139"
+    "version": "c2d700b784c793cc82131ef86323801b8d6e67bb"
   },
   "chezmoi": {
     "aliases": {
@@ -943,11 +941,11 @@
       "in2csv",
       "sql2csv"
     ],
-    "date": "2023-02-08",
+    "date": "2023-03-07",
     "dependencies": ["python3.11"],
     "homebrew": true,
     "url": ["https://csvkit.readthedocs.io/"],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "csvtk": {
     "bin": ["csvtk"],
@@ -964,11 +962,11 @@
     },
     "bin": ["curl", "curl-config"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "dependencies": ["ca-certificates"],
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.haxx.se/"],
-    "version": "7.87.0"
+    "version": "7.88.1"
   },
   "deeptools": {
     "bin": ["deeptools"],
@@ -1032,15 +1030,15 @@
   },
   "doom-emacs": {
     "check": false,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
-    "version": "e96624926d724aff98e862221422cd7124a99c19"
+    "version": "8f6b045dfdb6d00e5a324c3f9044dce773791502"
   },
   "dotfiles": {
-    "date": "2023-02-27",
+    "date": "2023-03-07",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "2ffbab520093d4db1769d46890deb123d430e7b7"
+    "version": "f5e5f9823e06882b921ad51abba83e03d4b43d93"
   },
   "du-dust": {
     "aliases": {
@@ -1072,10 +1070,10 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-07",
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
-    "version": "0.188"
+    "version": "0.189"
   },
   "emacs": {
     "aliases": {
