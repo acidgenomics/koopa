@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reverting to an older PROJ version.
+
 # NOTE Regarding Python bindings:
 # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
 
@@ -180,6 +182,9 @@ libpcre2-8.${dict['shared_ext']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
+
+        # FIXME Need to set this: SQLITE3EXT_INCLUDE_DIR?
+
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
         "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"

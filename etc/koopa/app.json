@@ -1415,6 +1415,7 @@
     "conservative": true,
     "date": "2023-02-08",
     "man1": ["gdal-config.1"],
+    "notes": ["FIXME Having build issues with PROJ 9.2.0."],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
     "version": "3.6.2"
@@ -3349,10 +3350,12 @@
     },
     "bin": ["proj", "projinfo"],
     "conservative": true,
-    "date": "2023-03-01",
+    "date": "2023-03-07",
     "man1": ["proj.1", "projinfo.1"],
+    "outdated": true,
+    "notes": ["FIXME 9.2.0 has build issues with GDAL 3.6.2?"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.2.0"
+    "version": "9.1.1"
   },
   "pth": {
     "aliases": {
