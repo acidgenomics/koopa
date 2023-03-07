@@ -4500,6 +4500,17 @@
     },
     "conservative": true,
     "date": "2023-03-07",
+    "reverse_dependencies": [
+      "xorg-libxext",
+      "xorg-libxrandr",
+      "xorg-libxrender",
+      "xorg-libxt",
+      "cairo",
+      "fltk",
+      "imagemagick",
+      "tcl-tk",
+      "r"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.4"
   },
