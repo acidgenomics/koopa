@@ -10,8 +10,6 @@
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
-# NOTE This is detecting Temurin 19 framework on macOS.
-
 main() {
     # """
     # Install GDAL.
@@ -56,9 +54,11 @@ main() {
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['make_prefix']="$(koopa_make_prefix)"
@@ -86,7 +86,7 @@ v${dict['version']}/${dict['file']}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake_args=(
         '-DBUILD_APPS=ON'
-        '-DBUILD_PYTHON_BINDINGS=ON'
+        '-DBUILD_PYTHON_BINDINGS=OFF'
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -165,6 +165,7 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_WEBP=OFF'
         '-DGDAL_USE_XERCESC=OFF'
         '-DGDAL_USE_ZLIB=ON'
+        '-DGDAL_USE_ZLIB_INTERNAL=OFF'
         '-DGDAL_USE_ZSTD=ON'
         # Dependency paths.
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
@@ -178,17 +179,26 @@ libpcre2-8.${dict['shared_ext']}"
         "-DPROJ_DIR=${dict['proj']}/lib/cmake/proj"
         "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
         "-DPROJ_LIBRARY=${dict['proj']}/lib/libproj.${dict['shared_ext']}"
+        "-DPython_EXECUTABLE=${app['python']}"
         "-DPython_ROOT=${dict['python']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
-
-        # FIXME Need to set this: SQLITE3EXT_INCLUDE_DIR?
-
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
         "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
+
+        # FIXME Consider setting these (from Homebrew):
+        # > '-DCMAKE_CXX_STANDARD=17'
+        # > '-DENABLE_PAM=ON'
+        # FIXME Need to set this: 'SQLITE3EXT_INCLUDE_DIR'?
     )
+    if koopa_is_macos
+    then
+        cmake_args+=(
+            '-DBUILD_JAVA_BINDINGS=OFF'
+        )
+    fi
     koopa_mkdir "${dict['prefix']}/include"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
