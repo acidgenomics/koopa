@@ -174,6 +174,7 @@ v${dict['version']}/${dict['file']}"
         "-DPCRE2-8_LIBRARY=${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
         "-DPROJ_DIR=${dict['proj']}/lib/cmake/proj"
+        "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
         "-DPython_ROOT=${dict['python']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
