@@ -64,13 +64,6 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    # Harden against any undesirable variables set by user.
-    unset -v \
-        PERL5LIB \
-        PERL_BASE \
-        PERL_LOCAL_LIB_ROOT \
-        PERL_MB_OPT \
-        PERL_MM_OPT
     dict['cpan_config_file']="${dict['cpan_prefix']}/CPAN/MyConfig.pm"
     read -r -d '' "dict[cpan_config_string]" << END || true
 \$CPAN::Config = {
