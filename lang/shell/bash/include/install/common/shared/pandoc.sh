@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider including '-fembed_data_files' flag during install.
-# https://github.com/jgm/pandoc/issues/8560
-# https://github.com/Homebrew/homebrew-core/pull/120967
-
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-02-10.
+    # @note Updated 2023-03-06.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -18,6 +14,9 @@ main() {
     # - https://cabal.readthedocs.io/en/latest/nix-local-build-overview.html
     # - https://cabal.readthedocs.io/en/stable/cabal-project.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/pandoc.rb
+    # - Regarding data file embedding:
+    #   - https://github.com/jgm/pandoc/issues/8560
+    #   - https://github.com/Homebrew/homebrew-core/pull/120967
     # """
     local app build_deps dict
     koopa_assert_is_not_aarch64
