@@ -75,7 +75,7 @@ main() {
     read -r -d '' "dict[cpan_config_string]" << END || true
 \$CPAN::Config = {
   'allow_installing_module_downgrades' => q[no],
-  'allow_installing_outdated_dists' => q[no],
+  'allow_installing_outdated_dists' => q[yes],
   'applypatch' => q[],
   'auto_commit' => q[0],
   'build_cache' => q[100],
