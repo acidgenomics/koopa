@@ -3,7 +3,7 @@
 main() {
     # """
     # Install udunits.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-03-07.
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -19,10 +19,8 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    # HTTP alternative:
-    # > dict['url']="https://www.unidata.ucar.edu/downloads/
-    # >     ${dict['name']}/${dict['file']}"
-    dict['url']="ftp://ftp.unidata.ucar.edu/pub/${dict['name']}/${dict['file']}"
+    dict['url']="https://artifacts.unidata.ucar.edu/repository/\
+downloads-${dict['name']}/${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
