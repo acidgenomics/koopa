@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reverting to an older PROJ version.
+
 # NOTE Regarding Python bindings:
 # Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
-#
+
 # NOTE May be able to enable these:
 # * ICONV component has been detected, but is disabled with GDAL_USE_ICONV=OFF
 # * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
 # * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
 
-# FIXME This is detecting Temurin 19 framework on macOS.
-
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-01-05.
+    # @note Updated 2023-03-07.
     #
     # Use 'configure --help' for build options.
     #
@@ -32,12 +32,6 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    # > if koopa_is_linux
-    # > then
-    # >     koopa_assert_is_non_existing \
-    # >         '/usr/bin/gdal-config' \
-    # >         '/usr/include/gdal'
-    # > fi
     koopa_activate_app --build-only \
         'cmake' \
         'libtool' \
@@ -60,13 +54,15 @@ main() {
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['make']="$(koopa_locate_make)"
+        ['python']="$(koopa_locate_python --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['make_prefix']="$(koopa_make_prefix)"
-        ['name']='gdal'
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -83,12 +79,14 @@ v${dict['version']}/${dict['file']}"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
-    # > dict['proj']="$(koopa_app_prefix 'proj')"
+    dict['proj']="$(koopa_app_prefix 'proj')"
     dict['python']="$(koopa_app_prefix 'python3.11')"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake_args=(
         '-DBUILD_APPS=ON'
-        '-DBUILD_PYTHON_BINDINGS=ON'
+        '-DBUILD_PYTHON_BINDINGS=OFF'
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -166,14 +164,10 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_TILEDB=OFF'
         '-DGDAL_USE_WEBP=OFF'
         '-DGDAL_USE_XERCESC=OFF'
-        '-DGDAL_USE_ZLIB_INTERNAL=ON'
+        '-DGDAL_USE_ZLIB=ON'
+        '-DGDAL_USE_ZLIB_INTERNAL=OFF'
         '-DGDAL_USE_ZSTD=ON'
-        # Required dependency paths.
-        # CMake installer currently warns when this is set:
-        # > "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
-        # > "-DPROJ_LIBRARY_RELEASE=${dict['proj']}/lib/\
-        # > libproj.${dict['shared_ext']}"
-        # Optional dependency paths.
+        # Dependency paths.
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
         "-DHDF5_ROOT=${dict['hdf5']}"
@@ -182,11 +176,29 @@ v${dict['version']}/${dict['file']}"
         "-DPCRE2_INCLUDE_DIR=${dict['pcre2']}/include"
         "-DPCRE2-8_LIBRARY=${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
+        "-DPROJ_DIR=${dict['proj']}/lib/cmake/proj"
+        "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
+        "-DPROJ_LIBRARY=${dict['proj']}/lib/libproj.${dict['shared_ext']}"
+        "-DPython_EXECUTABLE=${app['python']}"
         "-DPython_ROOT=${dict['python']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
+        "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
+        "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
+
+        # FIXME Consider setting these (from Homebrew):
+        # > '-DCMAKE_CXX_STANDARD=17'
+        # > '-DENABLE_PAM=ON'
+        # FIXME Need to set this: 'SQLITE3EXT_INCLUDE_DIR'?
     )
+    if koopa_is_macos
+    then
+        cmake_args+=(
+            '-DBUILD_JAVA_BINDINGS=OFF'
+        )
+    fi
     koopa_mkdir "${dict['prefix']}/include"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"

@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-03-06.
+    # @note Updated 2023-03-07.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -23,6 +23,7 @@ koopa_install_all_binary_apps() {
     koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
+        'lz4'
         'zstd'
         'bzip2'
         'ca-certificates'
@@ -174,7 +175,6 @@ koopa_install_all_binary_apps() {
         'lsd'
         'lua'
         'luarocks'
-        'lz4'
         'lzo'
         'make'
         'man-db'

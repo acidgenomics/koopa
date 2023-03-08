@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Alternatively can use cpan -j with our config file here?
-
 main() {
     # """
     # Install Perl package.
@@ -173,7 +171,15 @@ END
     dict['perl_ver']="$(koopa_get_version "${app['perl']}")"
     dict['perl_maj_ver']="$(koopa_major_version "${dict['perl_ver']}")"
     dict['lib_prefix']="${dict['prefix']}/lib/perl${dict['perl_maj_ver']}"
+    export PERL5LIB="${dict['lib_prefix']}"
     koopa_print_env
+    case "${dict['name']}" in
+        'ack')
+            "${app['cpan']}" \
+                -j "${dict['cpan_config_file']}" \
+                'File::Next'
+            ;;
+    esac
     "${app['cpan']}" \
         -j "${dict['cpan_config_file']}" \
         "${dict['author']}/${dict['name2']}-${dict['version2']}.tar.gz"
