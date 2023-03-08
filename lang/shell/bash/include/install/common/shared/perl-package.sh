@@ -174,6 +174,13 @@ END
     dict['perl_maj_ver']="$(koopa_major_version "${dict['perl_ver']}")"
     dict['lib_prefix']="${dict['prefix']}/lib/perl${dict['perl_maj_ver']}"
     koopa_print_env
+    case "${dict['name']}" in
+        'ack')
+            "${app['cpan']}" \
+                -j "${dict['cpan_config_file']}" \
+                'File::Next'
+            ;;
+    esac
     "${app['cpan']}" \
         -j "${dict['cpan_config_file']}" \
         "${dict['author']}/${dict['name2']}-${dict['version2']}.tar.gz"
