@@ -3,23 +3,27 @@
 _koopa_activate_completion() {
     # """
     # Activate completion (with TAB key).
-    # @note Updated 2021-05-06.
+    # @note Updated 2023-03-09.
     # """
-    local file koopa_prefix shell
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v __kvar_shell
             return 0
             ;;
     esac
-    koopa_prefix="$(_koopa_koopa_prefix)"
-    for file in "${koopa_prefix}/etc/completion/"*'.sh'
+    __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
+    for __kvar_file in "${__kvar_koopa_prefix}/etc/completion/"*'.sh'
     do
         # shellcheck source=/dev/null
-        [ -f "$file" ] && . "$file"
+        [ -f "$__kvar_file" ] && . "$__kvar_file"
     done
+    unset -v \
+        __kvar_file \
+        __kvar_koopa_prefix \
+        __kvar_shell
     return 0
 }
