@@ -7,5 +7,5 @@ _koopa_is_os() {
     #
     # This will match Debian but not Ubuntu for 'debian' input.
     # """
-    [ "$(koopa_os_id)" = "${1:?}" ]
+    [ "$(_koopa_os_id)" = "${1:?}" ]
 }

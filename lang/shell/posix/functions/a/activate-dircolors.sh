@@ -7,15 +7,15 @@ _koopa_activate_dircolors() {
     #
     # This will set the 'LS_COLORS' environment variable.
     #
-    # Ensure this follows 'koopa_activate_color_mode'.
+    # Ensure this follows '_koopa_activate_color_mode'.
     # """
     [ -n "${SHELL:-}" ] || return 0
     local dircolors
-    dircolors="$(koopa_bin_prefix)/gdircolors"
+    dircolors="$(_koopa_bin_prefix)/gdircolors"
     [ -x "$dircolors" ] || return 0
     local color_mode config_prefix dircolors_file
-    config_prefix="$(koopa_xdg_config_home)/dircolors"
-    color_mode="$(koopa_color_mode)"
+    config_prefix="$(_koopa_xdg_config_home)/dircolors"
+    color_mode="$(_koopa_color_mode)"
     dircolors_file="${config_prefix}/dircolors-${color_mode}"
     [ -f "$dircolors_file" ] || return 0
     eval "$("$dircolors" "$dircolors_file")"

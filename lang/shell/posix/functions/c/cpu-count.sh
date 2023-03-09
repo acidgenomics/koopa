@@ -13,7 +13,7 @@ _koopa_cpu_count() {
         _koopa_print "$num"
         return 0
     fi
-    bin_prefix="$(koopa_bin_prefix)"
+    bin_prefix="$(_koopa_bin_prefix)"
     nproc="${bin_prefix}/gnproc"
     if [ -x "$nproc" ]
     then

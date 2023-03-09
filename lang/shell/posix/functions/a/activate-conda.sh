@@ -7,13 +7,13 @@ _koopa_activate_conda() {
     # """
     local nounset prefix
     prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(koopa_conda_prefix)"
+    [ -z "$prefix" ] && prefix="$(_koopa_conda_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
     _koopa_is_alias 'conda' && unalias 'conda'
     _koopa_is_alias 'mamba' && unalias 'mamba'
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null
     . "$script"

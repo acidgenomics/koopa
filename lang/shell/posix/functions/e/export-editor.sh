@@ -7,7 +7,7 @@ _koopa_export_editor() {
     # """
     if [ -z "${EDITOR:-}" ]
     then
-        EDITOR="$(koopa_bin_prefix)/vim"
+        EDITOR="$(_koopa_bin_prefix)/vim"
     fi
     VISUAL="$EDITOR"
     export EDITOR VISUAL

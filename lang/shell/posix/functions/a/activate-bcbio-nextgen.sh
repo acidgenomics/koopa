@@ -16,7 +16,7 @@ _koopa_activate_bcbio_nextgen() {
     #     installation.html
     # """
     local prefix
-    prefix="$(koopa_bcbio_nextgen_prefix)"
+    prefix="$(_koopa_bcbio_nextgen_prefix)"
     [ -d "$prefix" ] || return 0
     # Only enable this when debugging.
     # > _koopa_add_to_path_end "${prefix}/install/anaconda/bin"

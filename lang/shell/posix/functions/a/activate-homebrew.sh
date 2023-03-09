@@ -6,7 +6,7 @@ _koopa_activate_homebrew() {
     # @note Updated 2023-02-16.
     # """
     local prefix
-    prefix="$(koopa_homebrew_prefix)"
+    prefix="$(_koopa_homebrew_prefix)"
     [ -d "$prefix" ] || return 0
     [ -x "${prefix}/bin/brew" ] || return 0
     [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \

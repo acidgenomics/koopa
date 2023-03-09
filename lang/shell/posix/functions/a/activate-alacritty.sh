@@ -13,11 +13,11 @@ _koopa_activate_alacritty() {
     # """
     local conf_file color_file color_mode pattern prefix replacement
     _koopa_is_alacritty || return 0
-    prefix="$(koopa_xdg_config_home)/alacritty"
+    prefix="$(_koopa_xdg_config_home)/alacritty"
     [ -d "$prefix" ] || return 0
     conf_file="${prefix}/alacritty.yml"
     [ -f "$conf_file" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     color_file_bn="colors-${color_mode}.yml"
     color_file="${prefix}/${color_file_bn}"
     [ -f "$color_file" ] || return 0

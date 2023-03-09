@@ -9,13 +9,13 @@ _koopa_activate_pyenv() {
     # """
     local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
-    [ -x "$(koopa_bin_prefix)/pyenv" ] || return 0
-    prefix="$(koopa_pyenv_prefix)"
+    [ -x "$(_koopa_bin_prefix)/pyenv" ] || return 0
+    prefix="$(_koopa_pyenv_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/pyenv"
     [ -r "$script" ] || return 0
     export PYENV_ROOT="$prefix"
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -o nounset

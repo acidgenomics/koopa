@@ -9,7 +9,7 @@ _koopa_alias_glances() {
     # - https://github.com/nicolargo/glances/issues/976
     # """
     local color_mode
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     case "$color_mode" in
         'light')
             set -- '--theme-white' "$@"

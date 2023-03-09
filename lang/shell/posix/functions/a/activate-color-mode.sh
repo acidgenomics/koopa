@@ -7,7 +7,7 @@ _koopa_activate_color_mode() {
     # """
     if [ -z "${KOOPA_COLOR_MODE:-}" ]
     then
-        KOOPA_COLOR_MODE="$(koopa_color_mode)"
+        KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
     then

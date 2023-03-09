@@ -18,7 +18,7 @@ __koopa_posix_header() {
         . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
     else
         local file
-        for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'.sh'
+        for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'/'*'.sh'
         do
             # shellcheck source=/dev/null
             . "$file"
@@ -107,12 +107,12 @@ __koopa_activate_koopa() {
     then
         _koopa_macos_activate_cli_colors || return 1
     fi
-    case "$(koopa_shell_name)" in
+    case "$(_koopa_shell_name)" in
         'zsh')
             [ -x "${KOOPA_PREFIX}/bin/conda" ] && \
-                alias conda='koopa_alias_conda'
+                alias conda='_koopa_alias_conda'
             [ -x "${KOOPA_PREFIX}/bin/mamba" ] && \
-                alias mamba='koopa_alias_mamba'
+                alias mamba='_koopa_alias_mamba'
             ;;
         *)
             _koopa_activate_conda || return 1
@@ -120,16 +120,16 @@ __koopa_activate_koopa() {
     esac
     _koopa_activate_micromamba || return 1
     # Previously included:
-    # > "$(koopa_xdg_local_home)/bin"
+    # > "$(_koopa_xdg_local_home)/bin"
     _koopa_add_to_path_start \
-        "$(koopa_scripts_private_prefix)/bin" \
+        "$(_koopa_scripts_private_prefix)/bin" \
         || return 1
     if ! _koopa_is_subshell
     then
         _koopa_add_config_link \
             "$KOOPA_PREFIX" 'home' \
             "${KOOPA_PREFIX}/activate" 'activate' \
-            "$(koopa_dotfiles_prefix)" 'dotfiles' \
+            "$(_koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         _koopa_activate_today_bucket || return 1
     fi

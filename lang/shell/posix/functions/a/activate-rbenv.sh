@@ -10,13 +10,13 @@ _koopa_activate_rbenv() {
     # """
     local nounset prefix script
     [ -n "${RBENV_ROOT:-}" ] && return 0
-    [ -x "$(koopa_bin_prefix)/rbenv" ] || return 0
-    prefix="$(koopa_rbenv_prefix)"
+    [ -x "$(_koopa_bin_prefix)/rbenv" ] || return 0
+    prefix="$(_koopa_rbenv_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/rbenv"
     [ -r "$script" ] || return 0
     export RBENV_ROOT="$prefix"
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -o nounset

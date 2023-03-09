@@ -12,7 +12,7 @@ _koopa_is_qemu() {
     basename='basename'
     cmd="/proc/${$}/exe"
     [ -L "$cmd" ] || return 1
-    real_cmd="$(koopa_realpath "$cmd")"
+    real_cmd="$(_koopa_realpath "$cmd")"
     case "$("$basename" "$real_cmd")" in
         'qemu-'*)
             return 0

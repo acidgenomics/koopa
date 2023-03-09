@@ -6,7 +6,7 @@ _koopa_spacemacs() {
     # @note Updated 2023-01-06.
     # """
     local prefix
-    prefix="$(koopa_spacemacs_prefix)"
+    prefix="$(_koopa_spacemacs_prefix)"
     if [ ! -d "$prefix" ]
     then
         _koopa_print "Spacemacs is not installed at '${prefix}'."

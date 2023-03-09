@@ -6,7 +6,7 @@ _koopa_shell_name() {
     # @note Updated 2021-05-25.
     # """
     local shell str
-    shell="$(koopa_locate_shell)"
+    shell="$(_koopa_locate_shell)"
     str="$(basename "$shell")"
     [ -n "$str" ] || return 1
     _koopa_print "$str"

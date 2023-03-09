@@ -9,7 +9,7 @@ _koopa_export_history() {
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
     local shell
-    shell="$(koopa_shell_name)"
+    shell="$(_koopa_shell_name)"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
