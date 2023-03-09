@@ -1,6 +1,8 @@
 #!/bin/sh
 
-koopa_git_branch() {
+# FIXME Move this to Bash library.
+
+_koopa_git_branch() {
     # """
     # Current git branch name.
     # @note Updated 2022-02-23.
@@ -21,7 +23,7 @@ koopa_git_branch() {
     #       git-completion.bash?id=HEAD
     # """
     local branch
-    koopa_is_git_repo || return 0
+    _koopa_is_git_repo || return 0
     branch="$(git branch --show-current 2>/dev/null)"
     # Keep track of detached HEAD state, similar to starship.
     if [ -z "$branch" ]
@@ -33,6 +35,6 @@ koopa_git_branch() {
         )"
     fi
     [ -n "$branch" ] || return 0
-    koopa_print "$branch"
+    _koopa_print "$branch"
     return 0
 }

@@ -3,7 +3,7 @@
 _koopa_is_os_like() {
     # """
     # Does the current operating system match an expected distribution?
-    # @note Updated 2023-02-28.
+    # @note Updated 2023-03-09.
     #
     # For example, this will match both Debian and Ubuntu when checking against
     # 'debian' value.

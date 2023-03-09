@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_xdg_data_dirs() {
+_koopa_xdg_data_dirs() {
     # """
     # XDG data dirs.
     # @note Updated 2022-04-08.
@@ -11,6 +11,6 @@ koopa_xdg_data_dirs() {
     then
         x='/usr/local/share:/usr/share'
     fi
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

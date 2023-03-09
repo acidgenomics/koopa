@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_colorls() {
+_koopa_alias_colorls() {
     # """
     # colorls alias.
     # @note Updated 2022-04-14.

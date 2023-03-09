@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_broot() {
+_koopa_activate_broot() {
     # """
     # Activate broot directory tree utility.
     # @note Updated 2022-05-12.

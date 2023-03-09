@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_emacs() {
+_koopa_emacs() {
     # """
     # Emacs alias that provides 24-bit color support.
     # @note Updated 2023-01-06.
@@ -15,15 +15,15 @@ koopa_emacs() {
     prefix="${HOME:?}/.emacs.d"
     if [ ! -L "$prefix" ]
     then
-        koopa_print "Chemacs is not linked at '${prefix}'."
+        _koopa_print "Chemacs is not linked at '${prefix}'."
         return 1
     fi
     if [ ! -f "${prefix}/chemacs.el" ]
     then
-        koopa_print "Chemacs is not configured at '${prefix}'."
+        _koopa_print "Chemacs is not configured at '${prefix}'."
         return 1
     fi
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         emacs="$(koopa_macos_emacs)"
     else
@@ -31,7 +31,7 @@ koopa_emacs() {
     fi
     if [ ! -e "$emacs" ]
     then
-        koopa_print "Emacs not installed at '${emacs}'."
+        _koopa_print "Emacs not installed at '${emacs}'."
         return 1
     fi
     if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]

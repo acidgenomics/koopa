@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_export_pager() {
+_koopa_export_pager() {
     # """
     # Export 'PAGER' variable.
     # @note Updated 2022-05-12.

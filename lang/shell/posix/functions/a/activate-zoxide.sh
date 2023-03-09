@@ -2,7 +2,7 @@
 
 # FIXME This seems to be getting stuck for /bin/bash on Ubuntu EC2 instances.
 
-koopa_activate_zoxide() {
+_koopa_activate_zoxide() {
     # """
     # Activate zoxide.
     # @note Updated 2021-05-07.

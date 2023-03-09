@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_os_string() {
+_koopa_os_string() {
     # """
     # Operating system string.
     # @note Updated 2023-01-10.
@@ -11,11 +11,11 @@ koopa_os_string() {
     # If we ever add Windows support, look for: cygwin, mingw32*, msys*.
     # """
     local id release_file string version
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         id='macos'
         version="$(koopa_major_version "$(koopa_macos_os_version)")"
-    elif koopa_is_linux
+    elif _koopa_is_linux
     then
         release_file='/etc/os-release'
         if [ -r "$release_file" ]
@@ -48,6 +48,6 @@ koopa_os_string() {
     [ -n "$id" ] ||  return 1
     string="$id"
     [ -n "$version" ] && string="${string}-${version}"
-    koopa_print "$string"
+    _koopa_print "$string"
     return 0
 }

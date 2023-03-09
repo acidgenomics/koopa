@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_tealdeer() {
+_koopa_activate_tealdeer() {
     # """
     # Activate Rust tealdeer (tldr).
     # @note Updated 2022-10-07.
@@ -18,7 +18,7 @@ koopa_activate_tealdeer() {
     fi
     if [ ! -d "${TEALDEER_CACHE_DIR:?}" ]
     then
-        koopa_is_alias 'mkdir' && unalias 'mkdir'
+        _koopa_is_alias 'mkdir' && unalias 'mkdir'
         mkdir -p "${TEALDEER_CACHE_DIR:?}" >/dev/null
     fi
     export TEALDEER_CACHE_DIR TEALDEER_CONFIG_DIR

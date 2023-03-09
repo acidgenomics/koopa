@@ -1,6 +1,8 @@
 #!/bin/sh
 
-koopa_git_repo_has_unstaged_changes() {
+# FIXME Move this to Bash.
+
+_koopa_git_repo_has_unstaged_changes() {
     # """
     # Are there unstaged changes in current git repo?
     # @note Updated 2021-08-19.

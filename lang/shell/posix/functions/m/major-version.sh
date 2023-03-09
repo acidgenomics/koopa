@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_major_version() {
+_koopa_major_version() {
     # """
     # Program 'MAJOR' version.
     # @note Updated 2022-02-23.
@@ -11,11 +11,11 @@ koopa_major_version() {
     for version in "$@"
     do
         x="$( \
-            koopa_print "$version" \
+            _koopa_print "$version" \
             | cut -d '.' -f '1' \
         )"
         [ -n "$x" ] || return 1
-        koopa_print "$x"
+        _koopa_print "$x"
     done
     return 0
 }

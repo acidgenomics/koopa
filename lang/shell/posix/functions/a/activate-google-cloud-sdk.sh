@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_google_cloud_sdk() {
+_koopa_activate_google_cloud_sdk() {
     # """
     # Activate Google Cloud SDK.
     # @note Updated 2023-01-03.

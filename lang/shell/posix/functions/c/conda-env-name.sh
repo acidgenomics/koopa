@@ -1,6 +1,8 @@
 #!/bin/sh
 
-koopa_conda_env_name() {
+# FIXME Move this to Bash.
+
+_koopa_conda_env_name() {
     # """
     # Conda environment name.
     # @note Updated 2020-08-17.
@@ -16,6 +18,6 @@ koopa_conda_env_name() {
     local x
     x="${CONDA_DEFAULT_ENV:-}"
     [ -n "$x" ] || return 1
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

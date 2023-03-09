@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_julia() {
+_koopa_activate_julia() {
     # """
     # Activate Julia.
     # @note Updated 2022-07-28.

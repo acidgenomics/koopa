@@ -1,12 +1,11 @@
 #!/bin/sh
 
-koopa_user() {
+_koopa_user() {
     # """
     # Current user name.
-    # @note Updated 2020-06-30.
+    # @note Updated 2023-03-09.
     #
     # Alternatively, can use 'whoami' here.
     # """
-    __koopa_id -un
-    return 0
+    id -un
 }

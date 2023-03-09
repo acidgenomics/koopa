@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_is_qemu() {
+_koopa_is_qemu() {
     # """
     # Is the current shell running inside of QEMU emulation?
     # @note Updated 2021-05-26.
