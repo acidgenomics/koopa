@@ -3,9 +3,8 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2022-12-07.
+    # @note Updated 2023-03-09.
     # """
-    local file
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
@@ -72,11 +71,9 @@ _koopa_activate_aliases() {
     alias week='_koopa_alias_week'
     alias z='_koopa_alias_zoxide'
     # Keep these at the end to allow the user to override our defaults.
-    file="${HOME:?}/.aliases"
     # shellcheck source=/dev/null
-    [ -f "$file" ] && . "$file"
-    file="${HOME:?}/.aliases-private"
+    [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
     # shellcheck source=/dev/null
-    [ -f "$file" ] && . "$file"
+    [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
     return 0
 }

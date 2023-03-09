@@ -15,11 +15,13 @@ _koopa_activate_bcbio_nextgen() {
     # - https://bcbio-nextgen.readthedocs.io/en/latest/contents/
     #     installation.html
     # """
-    local prefix
-    prefix="$(_koopa_bcbio_nextgen_prefix)"
-    [ -d "$prefix" ] || return 0
-    # Only enable this when debugging.
-    # > _koopa_add_to_path_end "${prefix}/install/anaconda/bin"
-    _koopa_add_to_path_end "${prefix}/tools/bin"
+    __kvar_prefix="$(_koopa_bcbio_nextgen_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    _koopa_add_to_path_end "${__kvar_prefix}/tools/bin"
+    unset -v __kvar_prefix
     return 0
 }
