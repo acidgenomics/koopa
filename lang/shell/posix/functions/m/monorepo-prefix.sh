@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Move this to Bash.
+
 _koopa_monorepo_prefix() {
     # """
     # Git monorepo prefix.

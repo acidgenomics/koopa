@@ -5510,118 +5510,6 @@ koopa_defunct() {
     koopa_stop "${msg}"
 }
 
-koopa_activate_conda_env() {
-    koopa_conda_activate_env "$@"
-}
-
-koopa_deactivate_conda() {
-    koopa_conda_deactivate "$@"
-}
-
-koopa_brew_update() {
-    koopa_defunct 'koopa_update_homebrew'
-}
-
-koopa_check_data_disk() {
-    koopa_defunct
-}
-
-koopa_configure_start() {
-    koopa_defunct 'koopa_alert_configure_start'
-}
-
-koopa_configure_success() {
-    koopa_defunct 'koopa_alert_configure_success'
-}
-
-koopa_data_disk_link_prefix() {
-    koopa_defunct
-}
-
-koopa_file_match_fixed() {
-    koopa_defunct 'koopa_file_detect_fixed'
-}
-
-koopa_file_match_regex() {
-    koopa_defunct 'koopa_file_detect_regex'
-}
-
-koopa_info() {
-    koopa_defunct 'koopa_alert_info'
-}
-
-koopa_install_start() {
-    koopa_defunct 'koopa_alert_install_start'
-}
-
-koopa_install_success() {
-    koopa_defunct 'koopa_alert_install_success'
-}
-
-koopa_is_darwin() {
-    koopa_defunct 'koopa_is_macos'
-}
-
-koopa_is_matching_fixed() {
-    koopa_defunct 'koopa_str_detect_fixed'
-}
-
-koopa_is_matching_regex() {
-    koopa_defunct 'koopa_str_detect_regex'
-}
-
-koopa_local_app_prefix() {
-    koopa_defunct 'koopa_local_data_prefix'
-}
-
-koopa_note() {
-    koopa_defunct 'koopa_alert_note'
-}
-
-koopa_quiet_cd() {
-    koopa_defunct 'koopa_cd'
-}
-
-koopa_remove_broken_symlinks() {
-    koopa_defunct 'koopa_delete_broken_symlinks'
-}
-
-koopa_remove_empty_dirs() {
-    koopa_defunct 'koopa_delete_empty_dirs'
-}
-
-koopa_restart() {
-    koopa_defunct 'koopa_alert_restart'
-}
-
-koopa_str_match_fixed() {
-    koopa_defunct 'koopa_str_detect_fixed'
-}
-
-koopa_str_match_regex() {
-    koopa_defunct 'koopa_str_detect_regex'
-}
-
-koopa_success() {
-    koopa_defunct 'koopa_alert_success'
-}
-
-koopa_uninstall_start() {
-    koopa_defunct 'koopa_alert_uninstall_start'
-}
-
-koopa_uninstall_success() {
-    koopa_defunct 'koopa_alert_uninstall_success'
-}
-
-koopa_update_start() {
-    koopa_defunct 'koopa_alert_update_start'
-}
-
-koopa_update_success() {
-    koopa_defunct 'koopa_alert_update_success'
-}
-
 koopa_delete_broken_symlinks() {
     local prefix file files
     koopa_assert_has_args "$#"
@@ -8291,24 +8179,6 @@ koopa_find() {
         fi
         koopa_print "${results[@]}"
     fi
-    return 0
-}
-
-koopa_fix_pyenv_permissions() {
-    local pyenv_prefix
-    koopa_assert_has_no_args "$#"
-    pyenv_prefix="$(koopa_pyenv_prefix)"
-    [[ -d "${pyenv_prefix}/shims" ]] || return 0
-    koopa_chmod '0777' "${pyenv_prefix}/shims"
-    return 0
-}
-
-koopa_fix_rbenv_permissions() {
-    local rbenv_prefix
-    koopa_assert_has_no_args "$#"
-    rbenv_prefix="$(koopa_rbenv_prefix)"
-    [[ -d "${rbenv_prefix}/shims" ]] || return 0
-    koopa_chmod '0777' "${rbenv_prefix}/shims"
     return 0
 }
 
@@ -14426,13 +14296,14 @@ koopa_is_gitlab_ssh_enabled() {
 }
 
 koopa_is_gnu() {
-    local cmd str
+    local cmd
     koopa_assert_has_args "$#"
     for cmd in "$@"
     do
+        local str
         koopa_is_installed "$cmd" || return 1
         str="$("$cmd" --version 2>&1 || true)"
-        koopa_str_detect_posix "$str" 'GNU' || return 1
+        koopa_str_detect_fixed --pattern='GNU' --string="$str" || return 1
     done
     return 0
 }
@@ -15550,10 +15421,6 @@ koopa_list_path_priority() {
     fi
     koopa_print "${all_arr[@]}"
     return 0
-}
-
-koopa_lmod_prefix() {
-    koopa_print "$(koopa_opt_prefix)/lmod"
 }
 
 koopa_ln() {
@@ -18360,6 +18227,10 @@ koopa_boolean_nounset() {
 
 koopa_config_prefix() {
     _koopa_config_prefix "$@"
+}
+
+koopa_cpu_count() {
+    _koopa_cpu_count "$@"
 }
 
 koopa_is_debian_like() {
