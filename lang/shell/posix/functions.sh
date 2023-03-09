@@ -219,25 +219,43 @@ _koopa_activate_bottom() {
 }
 
 _koopa_activate_broot() {
-    local config_dir nounset script shell
     [ -x "$(_koopa_bin_prefix)/broot" ] || return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_config_dir="$(_koopa_xdg_config_home)/broot"
+    if [ ! -d "$__kvar_config_dir" ]
+    then
+        unset -v __kvar_config_dir
+        return 0
+    fi
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v \
+                __kvar_config_dir \
+                __kvar_shell
             return 0
             ;;
     esac
-    config_dir="${HOME:?}/.config/broot"
-    [ -d "$config_dir" ] || return 0
-    script="${config_dir}/launcher/bash/br"
-    [ -f "$script" ] || return 0
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_script="${__kvar_config_dir}/launcher/bash/br"
+    if [ ! -f "$__kvar_script" ]
+    then
+        unset -v \
+            __kvar_config_dir \
+            __kvar_script \
+            __kvar_shell \
+        return 0
+    fi
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    . "$__kvar_script"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_config_dir \
+        __kvar_nounset \
+        __kvar_script \
+        __kvar_shell
     return 0
 }
 
