@@ -288,21 +288,25 @@ _koopa_activate_color_mode() {
 }
 
 _koopa_activate_completion() {
-    local file koopa_prefix shell
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v __kvar_shell
             return 0
             ;;
     esac
-    koopa_prefix="$(_koopa_koopa_prefix)"
-    for file in "${koopa_prefix}/etc/completion/"*'.sh'
+    __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
+    for __kvar_file in "${__kvar_koopa_prefix}/etc/completion/"*'.sh'
     do
-        [ -f "$file" ] && . "$file"
+        [ -f "$__kvar_file" ] && . "$__kvar_file"
     done
+    unset -v \
+        __kvar_file \
+        __kvar_koopa_prefix \
+        __kvar_shell
     return 0
 }
 
