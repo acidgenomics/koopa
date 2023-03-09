@@ -34,6 +34,10 @@ koopa_config_prefix() {
     _koopa_config_prefix "$@"
 }
 
+koopa_cpu_count() {
+    _koopa_cpu_count "$@"
+}
+
 koopa_is_debian_like() {
     _koopa_is_debian_like "$@"
 }

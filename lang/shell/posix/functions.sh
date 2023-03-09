@@ -1666,11 +1666,6 @@ _koopa_macos_emacs() {
     return 0
 }
 
-_koopa_macos_homebrew_cask_prefix() {
-    _koopa_print "$(_koopa_homebrew_prefix)/Caskroom"
-    return 0
-}
-
 _koopa_macos_is_dark_mode() {
     local x
     x=$(defaults read -g 'AppleInterfaceStyle' 2>/dev/null)
@@ -1679,24 +1674,6 @@ _koopa_macos_is_dark_mode() {
 
 _koopa_macos_is_light_mode() {
     ! _koopa_macos_is_dark_mode
-}
-
-_koopa_macos_julia_prefix() {
-    local x
-    x="$( \
-        find '/Applications' \
-            -mindepth 1 \
-            -maxdepth 1 \
-            -name 'Julia-*.app' \
-            -type 'd' \
-            -print \
-        | sort \
-        | tail -n 1 \
-    )"
-    [ -d "$x" ] || return 1
-    prefix="${x}/Contents/Resources/julia"
-    [ -d "$x" ] || return 1
-    _koopa_print "$prefix"
 }
 
 _koopa_macos_os_version() {
@@ -1774,11 +1751,6 @@ _koopa_make_prefix() {
 
 _koopa_monorepo_prefix() {
     _koopa_print "${HOME:?}/monorepo"
-    return 0
-}
-
-_koopa_openjdk_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/openjdk"
     return 0
 }
 
@@ -1918,11 +1890,6 @@ _koopa_remove_from_path_string() {
         )"
     [ -n "$str2" ] || return 1
     _koopa_print "$str2"
-    return 0
-}
-
-_koopa_rust_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/rust"
     return 0
 }
 
