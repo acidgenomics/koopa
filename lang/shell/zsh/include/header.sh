@@ -103,7 +103,7 @@ __koopa_zsh_header() {
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
     then
-        koopa_duration_start || return 1
+        _koopa_duration_start || return 1
     fi
     if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[minimal]}" -eq 0 ]]
     then
@@ -112,7 +112,7 @@ __koopa_zsh_header() {
     fi
     if [[ "${dict[test]}" -eq 1 ]]
     then
-        koopa_duration_stop 'zsh' || return 1
+        _koopa_duration_stop 'zsh' || return 1
     fi
     return 0
 }

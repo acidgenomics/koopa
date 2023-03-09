@@ -5,8 +5,8 @@ _koopa_zsh_prompt() {
     # Koopa ZSH prompt.
     # @note Updated 2023-03-09.
     # """
-    koopa_is_root && return 0
-    koopa_activate_starship
+    _koopa_is_root && return 0
+    _koopa_activate_starship
     [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     PROMPT="$(_koopa_zsh_prompt_string)"
     return 0

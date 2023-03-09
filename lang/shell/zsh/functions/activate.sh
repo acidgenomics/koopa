@@ -75,7 +75,7 @@ _koopa_activate_zsh_extras() {
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
-    koopa_is_interactive || return 0
+    _koopa_is_interactive || return 0
     _koopa_activate_zsh_fpath
     _koopa_activate_zsh_compinit
     _koopa_activate_zsh_bashcompinit
@@ -85,7 +85,7 @@ _koopa_activate_zsh_extras() {
     _koopa_activate_zsh_aliases
     _koopa_activate_zsh_prompt
     _koopa_activate_zsh_reverse_search
-    koopa_activate_completion
+    _koopa_activate_completion
     return 0
 }
 
@@ -94,15 +94,15 @@ _koopa_activate_zsh_fpath() {
     # Activate Zsh FPATH.
     # @note Updated 2021-01-19.
     # """
-    local koopa_fpath koopa_prefix
-    koopa_prefix="$(koopa_koopa_prefix)"
-    koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
+    local _koopa_fpath _koopa_prefix
+    _koopa_prefix="$(koopa_koopa_prefix)"
+    _koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
-        koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
+        _koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
         return 1
     fi
-    koopa_add_to_fpath_start "$koopa_fpath"
+    _koopa_add_to_fpath_start "$koopa_fpath"
     return 0
 }
 
@@ -150,7 +150,7 @@ _koopa_activate_zsh_prompt() {
     # This step must be sourced after oh-my-zsh.
     # """
     local nounset
-    koopa_is_root && return 0
+    _koopa_is_root && return 0
     nounset="$(koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
     setopt promptsubst
@@ -168,5 +168,21 @@ _koopa_activate_zsh_reverse_search() {
     #
     # > bindkey '^R' 'history-incremental-search-backward'
     # """
-    koopa_activate_mcfly
+    _koopa_activate_mcfly
+}
+
+_koopa_add_to_fpath_start() {
+    # """
+    # Force add to 'FPATH' start.
+    # @note Updated 2023-03-09.
+    # """
+    local dir
+    FPATH="${FPATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        FPATH="$(_koopa_add_to_path_string_start "$FPATH" "$dir")"
+    done
+    export FPATH
+    return 0
 }
