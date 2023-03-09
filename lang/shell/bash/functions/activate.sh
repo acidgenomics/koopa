@@ -13,42 +13,19 @@ _koopa_activate_bash_aliases() {
     return 0
 }
 
-_koopa_activate_bash_completion() {
-    local dict
-    declare -A dict=(
-        ['make_prefix']="$(koopa_make_prefix)"
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
-    dict['script']="${dict['make_prefix']}/etc/profile.d/bash_completion.sh"
-    [[ -r "${dict['script']}" ]] || return 0
-    if [[ "${dict['nounset']}" -eq 1 ]]
-    then
-        set +o errexit
-        set +o nounset
-    fi
-    source "${dict['script']}"
-    if [[ "${dict['nounset']}" -eq 1 ]]
-    then
-        set -o errexit
-        set -o nounset
-    fi
-    return 0
-}
-
 _koopa_activate_bash_extras() {
-    koopa_is_interactive || return 0
-    _koopa_activate_bash_completion
+    _koopa_is_interactive || return 0
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
-    koopa_activate_completion
+    _koopa_activate_completion
     return 0
 }
 
 _koopa_activate_bash_prompt() {
-    koopa_is_root && return 0
-    koopa_activate_starship
+    _koopa_is_root && return 0
+    _koopa_activate_starship
     [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     PS1="$(_koopa_bash_prompt_string)"
     export PS1
@@ -67,7 +44,7 @@ _koopa_activate_bash_readline() {
 }
 
 _koopa_activate_bash_reverse_search() {
-    koopa_activate_mcfly
+    _koopa_activate_mcfly
     return 0
 }
 
