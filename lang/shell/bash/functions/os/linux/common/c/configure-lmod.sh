@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rename this function to include "system".
+
 koopa_linux_configure_lmod() {
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2022-01-28.
+    # @note Updated 2023-03-09.
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
@@ -12,7 +14,11 @@ koopa_linux_configure_lmod() {
         ['etc_dir']='/etc/profile.d'
         ['prefix']="${1:-}"
     )
-    [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_lmod_prefix)"
+    if [[ -z "${dict['prefix']}" ]]
+    then
+        dict['prefix']="$(koopa_app_prefix 'lmod')"
+    fi
+    koopa_assert_is_dir "${dict['prefix']}"
     dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
     koopa_assert_is_dir "${dict['init_dir']}"
     if [[ ! -d "${dict['etc_dir']}" ]]
