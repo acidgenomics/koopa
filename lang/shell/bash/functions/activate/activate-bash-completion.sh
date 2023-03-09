@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-koopa_activate_bash_completion() {
+_koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
     # @note Updated 2022-02-04.
     # """
     local dict
-    [[ "$#" -eq 0 ]] || return 1
     declare -A dict=(
         ['make_prefix']="$(koopa_make_prefix)"
         ['nounset']="$(koopa_boolean_nounset)"
