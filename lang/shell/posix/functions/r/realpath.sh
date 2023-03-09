@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_realpath() {
+_koopa_realpath() {
     # """
     # Real path to file/directory on disk.
     # @note Updated 2022-08-26.
@@ -20,6 +20,6 @@ koopa_realpath() {
     local x
     x="$(readlink -f "$@")"
     [ -n "$x" ] || return 1
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

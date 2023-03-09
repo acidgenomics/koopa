@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_dircolors() {
+_koopa_activate_dircolors() {
     # """
     # Activate directory colors.
     # @note Updated 2022-08-30.

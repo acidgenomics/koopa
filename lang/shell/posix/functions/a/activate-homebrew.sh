@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_homebrew() {
+_koopa_activate_homebrew() {
     # """
     # Activate Homebrew.
     # @note Updated 2023-02-16.

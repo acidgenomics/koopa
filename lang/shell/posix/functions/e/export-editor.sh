@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_export_editor() {
+_koopa_export_editor() {
     # """
     # Export 'EDITOR' variable.
     # @note Updated 2022-05-12.

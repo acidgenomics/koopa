@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_kp() {
+_koopa_alias_kp() {
     # """
     # Koopa 'kp' shortcut alias.
     # @note Updated 2022-07-21.

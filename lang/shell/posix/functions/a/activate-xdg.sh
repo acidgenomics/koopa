@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_xdg() {
+_koopa_activate_xdg() {
     # """
     # Activate XDG base directory specification.
     # @note Updated 2022-04-04.

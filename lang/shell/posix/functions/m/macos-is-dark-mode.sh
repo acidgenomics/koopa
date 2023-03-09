@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_macos_is_dark_mode() {
+_koopa_macos_is_dark_mode() {
     # """
     # Is the current macOS terminal running in dark mode?
     # @note Updated 2021-05-05.

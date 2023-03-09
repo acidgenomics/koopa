@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_os_id() {
+_koopa_os_id() {
     # """
     # Operating system ID.
     # @note Updated 2023-02-28.
@@ -10,6 +10,6 @@ koopa_os_id() {
     local string
     string="$(koopa_os_string | cut -d '-' -f '1')"
     [ -n "$string" ] || return 1
-    koopa_print "$string"
+    _koopa_print "$string"
     return 0
 }

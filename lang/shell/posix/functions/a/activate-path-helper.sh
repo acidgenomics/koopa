@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_path_helper() {
+_koopa_activate_path_helper() {
     # """
     # Activate 'path_helper'.
     # @note Updated 2022-05-12.
