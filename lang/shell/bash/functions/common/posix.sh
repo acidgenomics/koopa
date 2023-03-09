@@ -1,6 +1,26 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this once we get our renamed functions working again.
+# FIXME Rework these into individual files, with POSIX labels.
+
+koopa_activate_conda() {
+    _koopa_activate_conda "$@"
+}
+
+koopa_add_config_link() {
+    _koopa_add_config_link "$@"
+}
+
+koopa_add_to_path_start() {
+    _koopa_add_to_path_start "$@"
+}
+
+koopa_add_to_path_string_start() {
+    _koopa_add_to_path_string_start "$@"
+}
+
+koopa_arch() {
+    _koopa_arch "$@"
+}
 
 koopa_bin_prefix() {
     _koopa_bin_prefix "$@"
@@ -8,6 +28,10 @@ koopa_bin_prefix() {
 
 koopa_boolean_nounset() {
     _koopa_boolean_nounset "$@"
+}
+
+koopa_config_prefix() {
+    _koopa_config_prefix "$@"
 }
 
 koopa_is_debian_like() {
