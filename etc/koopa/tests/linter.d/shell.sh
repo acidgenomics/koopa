@@ -181,7 +181,7 @@ test_zsh_illegal_strings() {
 test_shellcheck() {
     # """
     # Run ShellCheck.
-    # @note Updated 2022-10-07.
+    # @note Updated 2023-03-09.
     #
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
@@ -192,10 +192,9 @@ test_shellcheck() {
     )
     readarray -t files <<< \
         "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash|sh)$')"
-    "${app['shellcheck']}" \
-        --exclude='SC2119,SC2120,SC3040,SC3043' \
-        --external-sources \
-        "${files[@]}"
+    # Consider running with:
+    # > --exclude='SC2119,SC2120,SC3040,SC3043'
+    "${app['shellcheck']}" --external-sources "${files[@]}"
     koopa_status_ok "shell | shellcheck [${#files[@]}]"
     return 0
 }
