@@ -12,14 +12,6 @@
     printf '%s\n' 'koopa does not support tcsh.' && \
     exit 1
 
-# Ksh is not supported, primarily due to lack of 'local' variables.
-# > ksh -il
-if [ "$0" = 'ksh' ] || [ -n "${KSH_VERSION:-}" ]
-then
-    printf '%s\n' 'koopa does not support ksh.'
-    return 1
-fi
-
 __koopa_activate_usage() {
     # """
     # Koopa activation usage triggered by '--help' flag.
@@ -106,25 +98,25 @@ __koopa_check_zsh() {
 __koopa_export_koopa_prefix() {
     # """
     # Export 'KOOPA_PREFIX' variable.
-    # @note Updated 2022-04-14.
+    # @note Updated 2023-03-09.
     # """
-    local prefix script shell
-    shell="$(__koopa_shell_name)"
-    script="$("__koopa_${shell}_source")"
-    if [ ! -e "$script" ]
+    __kvar_shell="$(__koopa_shell_name)"
+    __kvar_script="$("__koopa_${__kvar_shell}_source")"
+    if [ ! -e "$__kvar_script" ]
     then
         __koopa_warn 'Failed to locate koopa activate script.'
         return 1
     fi
     # Note that running realpath on the file instead of the directory will
     # properly resolve '~/.config/koopa/activate' symlink case.
-    if [ -L "$script" ]
+    if [ -L "$__kvar_script" ]
     then
-        script="$(__koopa_realpath "$script")"
+        __kvar_script="$(__koopa_realpath "$__kvar_script")"
     fi
-    prefix="$(__koopa_realpath "$(dirname "$script")")"
-    KOOPA_PREFIX="$prefix"
+    __kvar_prefix="$(__koopa_realpath "$(dirname "$__kvar_script")")"
+    KOOPA_PREFIX="$__kvar_prefix"
     export KOOPA_PREFIX
+    unset -v __kvar_prefix __kvar_script __kvar_shell
     return 0
 }
 
@@ -145,27 +137,27 @@ __koopa_export_koopa_subshell() {
 __koopa_header() {
     # """
     # Shared shell header file location.
-    # @note Updated 2021-05-25.
+    # @note Updated 2023-03-09.
     # """
-    local file prefix shell
-    prefix="${KOOPA_PREFIX:?}/lang/shell"
-    shell="$(__koopa_shell_name)"
-    file="${prefix}/${shell}/include/header.sh"
-    [ -f "$file" ] || return 1
-    __koopa_print "$file"
+    __kvar_prefix="${KOOPA_PREFIX:?}/lang/shell"
+    __kvar_shell="$(__koopa_shell_name)"
+    __kvar_file="${__kvar_prefix}/${__kvar_shell}/include/header.sh"
+    [ -f "$__kvar_file" ] || return 1
+    __koopa_print "$__kvar_file"
+    unset -v __kvar_file __kvar_prefix __kvar_shell
     return 0
 }
 
 __koopa_is_installed() {
     # """
     # Are all of the requested programs installed?
-    # @note Updated 2021-05-07.
+    # @note Updated 2023-03-09.
     # """
-    local cmd
-    for cmd in "$@"
+    for __kvar_cmd in "$@"
     do
-        command -v "$cmd" >/dev/null || return 1
+        command -v "$__kvar_cmd" >/dev/null || return 1
     done
+    unset -v __kvar_cmd
     return 0
 }
 
@@ -180,24 +172,24 @@ __koopa_is_interactive() {
 __koopa_posix_source() {
     # """
     # POSIX source file location.
-    # @note Updated 2021-05-10.
+    # @note Updated 2023-03-09.
     #
     # POSIX doesn't support file path resolution of sourced dot scripts.
     # """
-    local prefix
-    prefix="${KOOPA_PREFIX:-}"
-    if [ ! "$prefix" ] && [ -d '/opt/koopa' ]
+    __kvar_prefix="${KOOPA_PREFIX:-}"
+    if [ -z "$__kvar_prefix" ] && [ -d '/opt/koopa' ]
     then
-        prefix='/opt/koopa'
+        __kvar_prefix='/opt/koopa'
     fi
-    if [ ! -d "$prefix" ]
+    if [ ! -d "$__kvar_prefix" ]
     then
         __koopa_warn \
             'Failed to locate koopa activation script.' \
             "Required 'KOOPA_PREFIX' variable is unset."
         return 1
     fi
-    __koopa_print "${prefix:?}/activate"
+    __koopa_print "${__kvar_prefix}/activate"
+    unset -v __kvar_prefix
     return 0
 }
 
@@ -216,43 +208,45 @@ __koopa_preflight() {
 __koopa_print() {
     # """
     # Print a string.
-    # @note Updated 2021-05-07.
+    # @note Updated 2023-03-09.
     # """
-    local string
-    for string in "$@"
+    for __kvar_string in "$@"
     do
-        printf '%b\n' "$string"
+        printf '%b\n' "$__kvar_string"
     done
+    unset -v __kvar_string
     return 0
 }
 
 __koopa_realpath() {
     # """
     # Resolve file path.
-    # @note Updated 2022-09-06.
+    # @note Updated 2023-03-09.
     # """
-    local x
-    x="$(readlink -f "$@")"
-    [ -n "$x" ] || return 1
-    __koopa_print "$x"
+    __kvar_string="$(readlink -f "$@")"
+    [ -n "$__kvar_string" ] || return 1
+    __koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 __koopa_shell_name() {
     # """
     # Shell name.
-    # @note Updated 2021-05-25.
+    # @note Updated 2023-03-09.
     # """
     if [ -n "${BASH_VERSION:-}" ]
     then
-        shell='bash'
+        __kvar_string='bash'
     elif [ -n "${ZSH_VERSION:-}" ]
     then
-        shell='zsh'
+        __kvar_string='zsh'
     else
-        shell='posix'
+        __kvar_string='posix'
     fi
-    __koopa_print "$shell"
+    __koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
 }
 
 __koopa_str_detect_posix() {
@@ -268,11 +262,11 @@ __koopa_warn() {
     # Print a warning message to the console.
     # @note Updated 2021-05-14.
     # """
-    local string
-    for string in "$@"
+    for __kvar_string in "$@"
     do
-        printf '%b\n' "$string" >&2
+        printf '%b\n' "$__kvar_string" >&2
     done
+    unset -v __kvar_string
     return 0
 }
 
