@@ -94,9 +94,9 @@ _koopa_activate_zsh_fpath() {
     # Activate Zsh FPATH.
     # @note Updated 2021-01-19.
     # """
-    local _koopa_fpath _koopa_prefix
-    _koopa_prefix="$(koopa_koopa_prefix)"
-    _koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
+    local koopa_fpath koopa_prefix
+    koopa_prefix="$(_koopa_koopa_prefix)"
+    koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
         _koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
@@ -119,8 +119,8 @@ _koopa_activate_zsh_plugins() {
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
     local dotfiles_prefix plugin plugins zsh_plugins_dir
-    dotfiles_prefix="$(koopa_dotfiles_prefix)"
-    zsh_plugins_dir="$(koopa_xdg_data_home)/zsh/plugins"
+    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+    zsh_plugins_dir="$(_koopa_xdg_data_home)/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
     plugins=("${(@f)$( \
         find "$zsh_plugins_dir" \
@@ -151,7 +151,7 @@ _koopa_activate_zsh_prompt() {
     # """
     local nounset
     _koopa_is_root && return 0
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
     setopt promptsubst
     autoload -U promptinit
