@@ -4692,7 +4692,7 @@ koopa_conda_deactivate() {
     local dict
     koopa_assert_has_no_args "$#"
     declare -A dict=(
-        ['env_name']="$(koopa_conda_env_name)"
+        ['env_name']="${CONDA_DEFAULT_ENV:-}"
         ['nounset']="$(koopa_boolean_nounset)"
     )
     if [[ -z "${dict['env_name']}" ]]
@@ -12645,23 +12645,6 @@ koopa_install_jq() {
         "$@"
 }
 
-koopa_install_julia_packages() {
-    local app dict
-    koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['julia']="$(koopa_locate_julia)"
-    )
-    [[ -x "${app['julia']}" ]] || return 1
-    declare -A dict=(
-        ['script_prefix']="$(koopa_julia_script_prefix)"
-    )
-    dict['script']="${dict['script_prefix']}/install-packages.jl"
-    koopa_assert_is_file "${dict['script']}"
-    koopa_activate_julia
-    "${app['julia']}" "${dict['script']}"
-    return 0
-}
-
 koopa_install_julia() {
     koopa_install_app \
         --name='julia' \
@@ -15408,92 +15391,6 @@ koopa_line_count() {
     return 0
 }
 
-koopa_link_dotfile() {
-    local dict pos
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['dotfiles_config_link']="$(koopa_dotfiles_config_link)"
-        ['dotfiles_prefix']="$(koopa_dotfiles_prefix)"
-        ['dotfiles_private_prefix']="$(koopa_dotfiles_private_prefix)"
-        ['into_xdg_config_home']=0
-        ['overwrite']=0
-        ['private']=0
-        ['xdg_config_home']="$(koopa_xdg_config_home)"
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--into-xdg-config-home')
-                dict['into_xdg_config_home']=1
-                shift 1
-                ;;
-            '--overwrite')
-                dict['overwrite']=1
-                shift 1
-                ;;
-            '--private')
-                dict['private']=1
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_le "$#" 2
-    dict['source_subdir']="${1:?}"
-    dict['symlink_basename']="${2:-}"
-    if [[ -z "${dict['symlink_basename']}" ]]
-    then
-        dict['symlink_basename']="$(koopa_basename "${dict['source_subdir']}")"
-    fi
-    if [[ "${dict['private']}" -eq 1 ]]
-    then
-        dict['source_prefix']="${dict['dotfiles_private_prefix']}"
-    else
-        dict['source_prefix']="${dict['dotfiles_config_link']}"
-        if [[ ! -L "${dict['source_prefix']}" ]]
-        then
-            koopa_ln "${dict['dotfiles_prefix']}" "${dict['source_prefix']}"
-        fi
-    fi
-    dict['source_path']="${dict['source_prefix']}/${dict['source_subdir']}"
-    koopa_assert_is_existing "${dict['source_path']}"
-    if [[ "${dict['into_xdg_config_home']}" -eq 1 ]]
-    then
-        dict['symlink_prefix']="${dict['xdg_config_home']}"
-    else
-        dict['symlink_prefix']="${HOME:?}"
-        dict['symlink_basename']=".${dict['symlink_basename']}"
-    fi
-    dict['symlink_path']="${dict['symlink_prefix']}/${dict['symlink_basename']}"
-    if [[ "${dict['overwrite']}" -eq 1 ]] ||
-        { [[ -L "${dict['symlink_path']}" ]] && \
-            [[ ! -e "${dict['symlink_path']}" ]]; }
-    then
-        koopa_rm "${dict['symlink_path']}"
-    fi
-    if [[ -e "${dict['symlink_path']}" ]] && \
-        [[ ! -L "${dict['symlink_path']}" ]]
-    then
-        koopa_alert_note "Exists and not symlink: '${dict['symlink_path']}'."
-        return 0
-    fi
-    dict['symlink_dirname']="$(koopa_dirname "${dict['symlink_path']}")"
-    if [[ "${dict['symlink_dirname']}" != "${HOME:?}" ]]
-    then
-        koopa_mkdir "${dict['symlink_dirname']}"
-    fi
-    koopa_ln "${dict['source_path']}" "${dict['symlink_path']}"
-    return 0
-}
-
 koopa_link_in_bin() {
     __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }
@@ -17985,66 +17882,6 @@ koopa_paste0() {
     koopa_paste --sep='' "$@"
 }
 
-koopa_bin_prefix() {
-    _koopa_bin_prefix "$@"
-}
-
-koopa_boolean_nounset() {
-    _koopa_boolean_nounset "$@"
-}
-
-koopa_is_debian_like() {
-    _koopa_is_debian_like "$@"
-}
-
-koopa_is_fedora_like() {
-    _koopa_is_fedora_like "$@"
-}
-
-koopa_is_installed() {
-    _koopa_is_installed "$@"
-}
-
-koopa_is_linux() {
-    _koopa_is_linux "$@"
-}
-
-koopa_is_macos() {
-    _koopa_is_macos "$@"
-}
-
-koopa_is_rhel_like() {
-    _koopa_is_rhel_like "$@"
-}
-
-koopa_is_root() {
-    _koopa_is_root "$@"
-}
-
-koopa_is_user_install() {
-    _koopa_is_user_install "$@"
-}
-
-koopa_koopa_prefix() {
-    _koopa_koopa_prefix "$@"
-}
-
-koopa_opt_prefix() {
-    _koopa_opt_prefix "$@"
-}
-
-koopa_os_id() {
-    _koopa_os_id "$@"
-}
-
-koopa_print() {
-    _koopa_print "$@"
-}
-
-koopa_realpath() {
-    _koopa_realpath "$@"
-}
-
 koopa_print_black_bold() {
     __koopa_print_ansi 'black-bold' "$@"
     return 0
@@ -18406,7 +18243,7 @@ koopa_python_deactivate_venv() {
     then
         koopa_stop 'Python virtual environment is not active.'
     fi
-    koopa_remove_from_path "${dict['prefix']}/bin"
+    koopa_remove_from_path_string "${dict['prefix']}/bin"
     unset -v VIRTUAL_ENV
     return 0
 }
@@ -18491,6 +18328,90 @@ koopa_python_system_packages_prefix() {
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_print "${dict['prefix']}"
     return 0
+}
+
+koopa_activate_conda() {
+    _koopa_activate_conda "$@"
+}
+
+koopa_add_config_link() {
+    _koopa_add_config_link "$@"
+}
+
+koopa_add_to_path_start() {
+    _koopa_add_to_path_start "$@"
+}
+
+koopa_add_to_path_string_start() {
+    _koopa_add_to_path_string_start "$@"
+}
+
+koopa_arch() {
+    _koopa_arch "$@"
+}
+
+koopa_bin_prefix() {
+    _koopa_bin_prefix "$@"
+}
+
+koopa_boolean_nounset() {
+    _koopa_boolean_nounset "$@"
+}
+
+koopa_config_prefix() {
+    _koopa_config_prefix "$@"
+}
+
+koopa_is_debian_like() {
+    _koopa_is_debian_like "$@"
+}
+
+koopa_is_fedora_like() {
+    _koopa_is_fedora_like "$@"
+}
+
+koopa_is_installed() {
+    _koopa_is_installed "$@"
+}
+
+koopa_is_linux() {
+    _koopa_is_linux "$@"
+}
+
+koopa_is_macos() {
+    _koopa_is_macos "$@"
+}
+
+koopa_is_rhel_like() {
+    _koopa_is_rhel_like "$@"
+}
+
+koopa_is_root() {
+    _koopa_is_root "$@"
+}
+
+koopa_is_user_install() {
+    _koopa_is_user_install "$@"
+}
+
+koopa_koopa_prefix() {
+    _koopa_koopa_prefix "$@"
+}
+
+koopa_opt_prefix() {
+    _koopa_opt_prefix "$@"
+}
+
+koopa_os_id() {
+    _koopa_os_id "$@"
+}
+
+koopa_print() {
+    _koopa_print "$@"
+}
+
+koopa_realpath() {
+    _koopa_realpath "$@"
 }
 
 koopa_r_configure_environ() {
@@ -24528,13 +24449,6 @@ koopa_uninstall_jpeg() {
 koopa_uninstall_jq() {
     koopa_uninstall_app \
         --name='jq' \
-        "$@"
-}
-
-koopa_uninstall_julia_packages() {
-    koopa_uninstall_app \
-        --name='julia-packages' \
-        --prefix="$(koopa_julia_packages_prefix)" \
         "$@"
 }
 
