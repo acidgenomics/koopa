@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-koopa_activate_zsh_aliases() {
+_koopa_activate_zsh_aliases() {
     # """
     # Activate Zsh aliases.
     # @note Updated 2020-11-24.
@@ -15,7 +15,7 @@ koopa_activate_zsh_aliases() {
     return 0
 }
 
-koopa_activate_zsh_bashcompinit() {
+_koopa_activate_zsh_bashcompinit() {
     # """
     # Activate Bash completions for Zsh.
     # @note Updated 2020-11-24.
@@ -24,7 +24,7 @@ koopa_activate_zsh_bashcompinit() {
     return 0
 }
 
-koopa_activate_zsh_colors() {
+_koopa_activate_zsh_colors() {
     # """
     # Enable colors in terminal.
     # @note Updated 2020-11-24.
@@ -33,7 +33,7 @@ koopa_activate_zsh_colors() {
     return 0
 }
 
-koopa_activate_zsh_compinit() {
+_koopa_activate_zsh_compinit() {
     # """
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-11-24.
@@ -42,7 +42,7 @@ koopa_activate_zsh_compinit() {
     return 0
 }
 
-koopa_activate_zsh_editor() {
+_koopa_activate_zsh_editor() {
     # """
     # Activate Zsh editor.
     # @note Updated 2020-11-24.
@@ -59,7 +59,7 @@ koopa_activate_zsh_editor() {
     return 0
 }
 
-koopa_activate_zsh_extras() {
+_koopa_activate_zsh_extras() {
     # """
     # Activate Zsh extras.
     # @note Updated 2021-06-16.
@@ -76,20 +76,20 @@ koopa_activate_zsh_extras() {
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
     koopa_is_interactive || return 0
-    koopa_activate_zsh_fpath
-    koopa_activate_zsh_compinit
-    koopa_activate_zsh_bashcompinit
-    koopa_activate_zsh_colors
-    koopa_activate_zsh_editor
-    koopa_activate_zsh_plugins
-    koopa_activate_zsh_aliases
-    koopa_activate_zsh_prompt
-    koopa_activate_zsh_reverse_search
+    _koopa_activate_zsh_fpath
+    _koopa_activate_zsh_compinit
+    _koopa_activate_zsh_bashcompinit
+    _koopa_activate_zsh_colors
+    _koopa_activate_zsh_editor
+    _koopa_activate_zsh_plugins
+    _koopa_activate_zsh_aliases
+    _koopa_activate_zsh_prompt
+    _koopa_activate_zsh_reverse_search
     koopa_activate_completion
     return 0
 }
 
-koopa_activate_zsh_fpath() {
+_koopa_activate_zsh_fpath() {
     # """
     # Activate Zsh FPATH.
     # @note Updated 2021-01-19.
@@ -106,7 +106,7 @@ koopa_activate_zsh_fpath() {
     return 0
 }
 
-koopa_activate_zsh_plugins() {
+_koopa_activate_zsh_plugins() {
     # """
     # Activate Zsh plugins.
     # Updated 2022-05-10.
@@ -137,7 +137,7 @@ koopa_activate_zsh_plugins() {
     return 0
 }
 
-koopa_activate_zsh_prompt() {
+_koopa_activate_zsh_prompt() {
     # """
     # Activate Zsh prompt.
     # Updated 2023-03-09.
@@ -161,7 +161,7 @@ koopa_activate_zsh_prompt() {
     return 0
 }
 
-koopa_activate_zsh_reverse_search() {
+_koopa_activate_zsh_reverse_search() {
     # """
     # Activate reverse search using Ctrl+R in Zsh.
     # @note Updated 2023-02-01.
