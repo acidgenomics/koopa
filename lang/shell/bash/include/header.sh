@@ -273,7 +273,7 @@ __koopa_bash_header() {
         __koopa_source_functions 'activate'
         if [[ "${bool['minimal']}" -eq 0 ]]
         then
-            koopa_activate_bash_extras
+            _koopa_activate_bash_extras
         fi
     fi
     if [[ "${bool['activate']}" -eq 0 ]]
