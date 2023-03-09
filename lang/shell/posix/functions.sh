@@ -1455,12 +1455,19 @@ _koopa_go_prefix() {
 }
 
 _koopa_group_id() {
-    id -g
+    __kvar_string="$(id -g)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_group() {
-    id -gn
+    __kvar_string="$(id -gn)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
 }
 
 _koopa_homebrew_prefix() {
@@ -1831,43 +1838,51 @@ _koopa_os_id() {
 }
 
 _koopa_os_string() {
-    local id release_file string version
+    __kvar_id=''
     if _koopa_is_macos
     then
-        id='macos'
-        version="$(_koopa_major_version "$(_koopa_macos_os_version)")"
+        __kvar_id='macos'
+        __kvar_version="$(_koopa_major_version "$(_koopa_macos_os_version)")"
     elif _koopa_is_linux
     then
-        release_file='/etc/os-release'
-        if [ -r "$release_file" ]
+        __kvar_release_file='/etc/os-release'
+        if [ -r "$__kvar_release_file" ]
         then
-            id="$( \
+            __kvar_id="$( \
                 awk -F= \
                     "\$1==\"ID\" { print \$2 ;}" \
-                    "$release_file" \
+                    "$__kvar_release_file" \
                 | tr -d '"' \
             )"
-            version="$( \
+            __kvar_version="$( \
                 awk -F= \
                     "\$1==\"VERSION_ID\" { print \$2 ;}" \
-                    "$release_file" \
+                    "$__kvar_release_file" \
                 | tr -d '"' \
             )"
-            if [ -n "$version" ]
+            if [ -n "$__kvar_version" ]
             then
-                version="$(_koopa_major_version "$version")"
+                __kvar_version="$(_koopa_major_version "$__kvar_version")"
             else
-                version='rolling'
+                __kvar_version='rolling'
             fi
         else
-            id='linux'
-            version=''
+            __kvar_id='linux'
+            __kvar_version=''
         fi
     fi
-    [ -n "$id" ] ||  return 1
-    string="$id"
-    [ -n "$version" ] && string="${string}-${version}"
-    _koopa_print "$string"
+    [ -n "$__kvar_id" ] ||  return 1
+    __kvar_string="$__kvar_id"
+    if [ -n "$__kvar_version" ]
+    then
+        __kvar_string="${__kvar_string}-${__kvar_version}"
+    fi
+    _koopa_print "$__kvar_string"
+    unset -v \
+        __kvar_id \
+        __kvar_release_file \
+        __kvar_string \
+        __kvar_version
     return 0
 }
 
@@ -2025,10 +2040,10 @@ _koopa_str_detect_posix() {
 }
 
 _koopa_today() {
-    local str
-    str="$(date '+%Y-%m-%d')"
-    [ -n "$str" ] || return 1
-    _koopa_print "$str"
+    __kvar_string="$(date '+%Y-%m-%d')"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
@@ -2038,11 +2053,19 @@ _koopa_umask() {
 }
 
 _koopa_user_id() {
-    id -u
+    __kvar_string="$(id -u)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
 }
 
 _koopa_user() {
-    id -un
+    __kvar_string="$(id -un)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
 }
 
 _koopa_xdg_cache_home() {
