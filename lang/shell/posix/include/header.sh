@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME Rework to elimiate usage of 'local' here.
-
 __koopa_posix_header() {
     # """
     # POSIX shell header.
@@ -17,12 +15,13 @@ __koopa_posix_header() {
         # shellcheck source=/dev/null
         . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
     else
-        local file
-        for file in "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'/'*'.sh'
+        for __kvar_file in \
+            "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'/'*'.sh'
         do
             # shellcheck source=/dev/null
-            . "$file"
+            . "$__kvar_file"
         done
+        unset -v __kvar_file
     fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
