@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Consider moving this directly into Bash library.
+
 _koopa_hostname() {
     # """
     # Host name.
