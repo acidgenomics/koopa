@@ -739,7 +739,6 @@ _koopa_activate_xdg() {
     return 0
 }
 
-
 _koopa_activate_zoxide() {
     local nounset shell zoxide
     zoxide="$(_koopa_bin_prefix)/zoxide"
@@ -781,5 +780,1320 @@ _koopa_add_config_link() {
         rm -fr "$dest_file" >/dev/null
         ln -fns "$source_file" "$dest_file" >/dev/null
     done
+    return 0
+}
+
+_koopa_add_to_manpath_end() {
+    local dir
+    MANPATH="${MANPATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        MANPATH="$(_koopa_add_to_path_string_end "$MANPATH" "$dir")"
+    done
+    export MANPATH
+    return 0
+}
+
+_koopa_add_to_manpath_start() {
+    local dir
+    MANPATH="${MANPATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$dir")"
+    done
+    export MANPATH
+    return 0
+}
+
+_koopa_add_to_path_end() {
+    local dir
+    PATH="${PATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        PATH="$(_koopa_add_to_path_string_end "$PATH" "$dir")"
+    done
+    export PATH
+    return 0
+}
+
+_koopa_add_to_path_start() {
+    local dir
+    PATH="${PATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        PATH="$(_koopa_add_to_path_string_start "$PATH" "$dir")"
+    done
+    export PATH
+    return 0
+}
+
+_koopa_add_to_path_string_end() {
+    local dir str
+    str="${1:-}"
+    dir="${2:?}"
+    if _koopa_str_detect_posix "$str" ":${dir}"
+    then
+        str="$(_koopa_remove_from_path_string "$str" "${dir}")"
+    fi
+    if [ -z "$str" ]
+    then
+        str="$dir"
+    else
+        str="${str}:${dir}"
+    fi
+    _koopa_print "$str"
+    return 0
+}
+
+_koopa_add_to_path_string_start() {
+    local dir str
+    str="${1:-}"
+    dir="${2:?}"
+    if _koopa_str_detect_posix "$str" "${dir}:"
+    then
+        str="$(_koopa_remove_from_path_string "$str" "${dir}")"
+    fi
+    if [ -z "$str" ]
+    then
+        str="$dir"
+    else
+        str="${dir}:${str}"
+    fi
+    _koopa_print "$str"
+    return 0
+}
+
+_koopa_alias_asdf() {
+    _koopa_is_alias 'asdf' && unalias 'asdf'
+    _koopa_activate_asdf
+    asdf "$@"
+}
+
+_koopa_alias_broot() {
+    _koopa_is_alias 'br' && unalias 'br'
+    _koopa_activate_broot
+    br "$@"
+}
+
+_koopa_alias_bucket() {
+    local prefix
+    prefix="${HOME:?}/today"
+    [ -d "$prefix" ] || return 1
+    cd "$prefix" || return 1
+    ls
+}
+
+_koopa_alias_colorls() {
+    local color_flag color_mode
+    color_mode="$(_koopa_color_mode)"
+    case "$color_mode" in
+        'dark')
+            color_flag='--dark'
+            ;;
+        'light')
+            color_flag='--light'
+            ;;
+    esac
+    colorls \
+        "$color_flag" \
+        --group-directories-first \
+            "$@"
+    return 0
+}
+
+_koopa_alias_conda() {
+    _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_activate_conda
+    conda "$@"
+}
+
+_koopa_alias_emacs_vanilla() {
+    emacs --no-init-file --no-window-system "$@"
+}
+
+_koopa_alias_glances() {
+    local color_mode
+    color_mode="$(_koopa_color_mode)"
+    case "$color_mode" in
+        'light')
+            set -- '--theme-white' "$@"
+            ;;
+    esac
+    glances \
+        --config "${HOME}/.config/glances/glances.conf" \
+        "$@"
+    return 0
+}
+
+_koopa_alias_k() {
+    cd "$(_koopa_koopa_prefix)" || return 1
+}
+
+_koopa_alias_kb() {
+    cd "$(_koopa_koopa_prefix)/lang/shell/bash" || return 1
+}
+
+_koopa_alias_kdev() {
+    local bash bin_prefix env koopa_prefix
+    bin_prefix="$(_koopa_bin_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
+    bash="${bin_prefix}/bash"
+    env="${bin_prefix}/genv"
+    [ ! -x "$bash" ] && bash='/usr/bin/bash'
+    [ ! -x "$env" ] && env='/usr/bin/env'
+    [ -x "$bash" ] || return 1
+    [ -x "$env" ] || return 1
+    "$env" -i \
+        HOME="${HOME:?}" \
+        KOOPA_ACTIVATE=0 \
+        PATH='/usr/bin:/bin' \
+        SUDO_PS1="${SUDO_PS1:-}" \
+        SUDO_USER="${SUDO_USER:-}" \
+        TMPDIR="${TMPDIR:-/tmp}" \
+        "$bash" \
+            --noprofile \
+            --rcfile "${koopa_prefix}/lang/shell/bash/include/header.sh" \
+            -o errexit \
+            -o errtrace \
+            -o nounset \
+            -o pipefail
+    return 0
+}
+
+_koopa_alias_kp() {
+    cd "$(_koopa_koopa_prefix)/lang/shell/posix" || return 1
+}
+
+_koopa_alias_l() {
+    if _koopa_is_installed 'exa'
+    then
+        exa \
+            --classify \
+            --group \
+            --group-directories-first \
+            --sort='Name' \
+            "$@"
+    else
+        ls -BFh "$@"
+    fi
+}
+
+_koopa_alias_mamba() {
+    _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
+    _koopa_activate_conda
+    mamba "$@"
+}
+
+_koopa_alias_nvim_fzf() {
+    nvim "$(fzf)"
+}
+
+_koopa_alias_nvim_vanilla() {
+    nvim -u 'NONE' "$@"
+}
+
+_koopa_alias_pyenv() {
+    _koopa_is_alias 'pyenv' && unalias 'pyenv'
+    _koopa_activate_pyenv
+    pyenv "$@"
+}
+
+_koopa_alias_rbenv() {
+    _koopa_is_alias 'rbenv' && unalias 'rbenv'
+    _koopa_activate_rbenv
+    rbenv "$@"
+}
+
+_koopa_alias_sha256() {
+    shasum -a 256 "$@"
+}
+
+_koopa_alias_tmux_vanilla() {
+    tmux -f '/dev/null'
+}
+
+_koopa_alias_today() {
+    date '+%Y-%m-%d'
+}
+
+_koopa_alias_vim_fzf() {
+    vim "$(fzf)"
+}
+
+_koopa_alias_vim_vanilla() {
+    vim -i 'NONE' -u 'NONE' -U 'NONE' "$@"
+}
+
+_koopa_alias_week() {
+    date '+%V'
+}
+
+_koopa_alias_zoxide() {
+    _koopa_is_alias 'z' && unalias 'z'
+    _koopa_activate_zoxide
+    z "$@"
+}
+
+_koopa_anaconda_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/anaconda"
+    return 0
+}
+
+_koopa_arch() {
+    local x
+    x="$(uname -m)"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_asdf_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/asdf"
+    return 0
+}
+
+_koopa_aspera_connect_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
+    return 0
+}
+
+_koopa_bcbio_nextgen_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/bcbio-nextgen"
+    return 0
+}
+
+_koopa_bin_prefix() {
+    _koopa_print "$(_koopa_koopa_prefix)/bin"
+    return 0
+}
+
+_koopa_boolean_nounset() {
+    local bool
+    if _koopa_is_set_nounset
+    then
+        bool=1
+    else
+        bool=0
+    fi
+    _koopa_print "$bool"
+    return 0
+}
+
+_koopa_color_mode() {
+    local str
+    str="${KOOPA_COLOR_MODE:-}"
+    if [ -n "$str" ]
+    then
+        _koopa_print "$str"
+        return 0
+    fi
+    if [ -z "$str" ]
+    then
+        if _koopa_is_macos
+        then
+            if _koopa_macos_is_dark_mode
+            then
+                str='dark'
+            else
+                str='light'
+            fi
+        fi
+    fi
+    [ -n "$str" ] || return 0
+    _koopa_print "$str"
+    return 0
+}
+
+_koopa_conda_env_name() {
+    local x
+    x="${CONDA_DEFAULT_ENV:-}"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_conda_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/conda"
+    return 0
+}
+
+_koopa_config_prefix() {
+    _koopa_print "$(_koopa_xdg_config_home)/koopa"
+    return 0
+}
+
+_koopa_cpu_count() {
+    local bin_prefix getconf nproc num sysctl
+    [ "$#" -eq 0 ] || return 1
+    num="${KOOPA_CPU_COUNT:-}"
+    if [ -n "$num" ]
+    then
+        _koopa_print "$num"
+        return 0
+    fi
+    bin_prefix="$(_koopa_bin_prefix)"
+    nproc="${bin_prefix}/gnproc"
+    if [ -x "$nproc" ]
+    then
+        num="$("$nproc" --all)"
+    elif _koopa_is_macos
+    then
+        sysctl='/usr/sbin/sysctl'
+        [ -x "$sysctl" ] || return 1
+        num="$("$sysctl" -n 'hw.ncpu')"
+    elif _koopa_is_linux
+    then
+        getconf='/usr/bin/getconf'
+        [ -x "$getconf" ] || return 1
+        num="$("$getconf" '_NPROCESSORS_ONLN')"
+    else
+        num=1
+    fi
+    _koopa_print "$num"
+    return 0
+}
+
+_koopa_default_shell_name() {
+    local shell str
+    shell="${SHELL:-sh}"
+    str="$(basename "$shell")"
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
+    return 0
+}
+
+_koopa_docker_prefix() {
+    _koopa_print "$(_koopa_config_prefix)/docker"
+    return 0
+}
+
+_koopa_docker_private_prefix() {
+    _koopa_print "$(_koopa_config_prefix)/docker-private"
+    return 0
+}
+
+_koopa_doom_emacs_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)/doom"
+    return 0
+}
+
+_koopa_doom_emacs() {
+    local prefix
+    prefix="$(_koopa_doom_emacs_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_print "Doom Emacs is not installed at '${prefix}'."
+        return 1
+    fi
+    _koopa_emacs --with-profile 'doom' "$@"
+    return 0
+}
+
+_koopa_dotfiles_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/dotfiles"
+    return 0
+}
+
+_koopa_dotfiles_private_prefix() {
+    _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
+    return 0
+}
+
+_koopa_duration_start() {
+    local bin_prefix
+    bin_prefix="$(_koopa_bin_prefix)"
+    [ -x "${bin_prefix}/date" ] || return 0
+    KOOPA_DURATION_START="$(date -u '+%s%3N')"
+    export KOOPA_DURATION_START
+    return 0
+}
+
+_koopa_duration_stop() {
+    local bin_prefix
+    bin_prefix="$(_koopa_bin_prefix)"
+    if [ ! -x "${bin_prefix}/bc" ] || \
+        [ ! -x "${bin_prefix}/date" ]
+    then
+        return 0
+    fi
+    local duration key start stop
+    key="${1:-}"
+    if [ -z "$key" ]
+    then
+        key='duration'
+    else
+        key="[${key}] duration"
+    fi
+    start="${KOOPA_DURATION_START:?}"
+    stop="$(date -u '+%s%3N')"
+    duration="$(_koopa_print "${stop}-${start}" | bc)"
+    [ -n "$duration" ] || return 1
+    _koopa_dl "$key" "${duration} ms"
+    unset -v KOOPA_DURATION_START
+    return 0
+}
+
+_koopa_emacs_prefix() {
+    _koopa_print "${HOME:?}/.emacs.d"
+    return 0
+}
+
+_koopa_emacs() {
+    local emacs prefix
+    prefix="${HOME:?}/.emacs.d"
+    if [ ! -L "$prefix" ]
+    then
+        _koopa_print "Chemacs is not linked at '${prefix}'."
+        return 1
+    fi
+    if [ ! -f "${prefix}/chemacs.el" ]
+    then
+        _koopa_print "Chemacs is not configured at '${prefix}'."
+        return 1
+    fi
+    if _koopa_is_macos
+    then
+        emacs="$(_koopa_macos_emacs)"
+    else
+        emacs="$(_koopa_bin_prefix)/emacs"
+    fi
+    if [ ! -e "$emacs" ]
+    then
+        _koopa_print "Emacs not installed at '${emacs}'."
+        return 1
+    fi
+    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
+    then
+        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
+    else
+        "$emacs" "$@" >/dev/null 2>&1
+    fi
+    return 0
+}
+
+_koopa_ensembl_perl_api_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/ensembl-perl-api"
+    return 0
+}
+
+_koopa_export_editor() {
+    if [ -z "${EDITOR:-}" ]
+    then
+        EDITOR="$(_koopa_bin_prefix)/vim"
+    fi
+    VISUAL="$EDITOR"
+    export EDITOR VISUAL
+    return 0
+}
+
+_koopa_export_gnupg() {
+    [ -z "${GPG_TTY:-}" ] || return 0
+    _koopa_is_tty || return 0
+    GPG_TTY="$(tty || true)"
+    [ -n "$GPG_TTY" ] || return 0
+    export GPG_TTY
+    return 0
+}
+
+_koopa_export_history() {
+    local shell
+    shell="$(_koopa_shell_name)"
+    if [ -z "${HISTFILE:-}" ]
+    then
+        HISTFILE="${HOME:?}/.${shell}_history"
+    fi
+    export HISTFILE
+    if [ ! -f "$HISTFILE" ] \
+        && [ -e "${HOME:-}" ] \
+        && _koopa_is_installed 'touch'
+    then
+        touch "$HISTFILE"
+    fi
+    if [ -z "${HISTCONTROL:-}" ]
+    then
+        HISTCONTROL='ignoredups'
+    fi
+    export HISTCONTROL
+    if [ -z "${HISTIGNORE:-}" ]
+    then
+        HISTIGNORE='&:ls:[bf]g:exit'
+    fi
+    export HISTIGNORE
+    if [ -z "${HISTSIZE:-}" ] || [ "${HISTSIZE:-}" -eq 0 ]
+    then
+        HISTSIZE=1000
+    fi
+    export HISTSIZE
+    if [ -z "${HISTTIMEFORMAT:-}" ]
+    then
+        HISTTIMEFORMAT='%Y%m%d %T  '
+    fi
+    export HISTTIMEFORMAT
+    if [ "${HISTSIZE:-}" != "${SAVEHIST:-}" ]
+    then
+        SAVEHIST="$HISTSIZE"
+    fi
+    export SAVEHIST
+    return 0
+}
+
+_koopa_export_koopa_cpu_count() {
+    KOOPA_CPU_COUNT="$(_koopa_cpu_count)"
+    export KOOPA_CPU_COUNT
+    return 0
+}
+
+_koopa_export_koopa_shell() {
+    unset -v KOOPA_SHELL
+    KOOPA_SHELL="$(_koopa_locate_shell)"
+    export KOOPA_SHELL
+    return 0
+}
+
+_koopa_export_pager() {
+    local less
+    [ -n "${PAGER:-}" ] && return 0
+    less="$(_koopa_bin_prefix)/less"
+    [ -x "$less" ] || return 0
+    export PAGER="${less} -R"
+    return 0
+}
+
+_koopa_expr() {
+    expr "${1:?}" : "${2:?}" 1>/dev/null
+}
+
+_koopa_git_branch() {
+    local branch
+    _koopa_is_git_repo || return 0
+    branch="$(git branch --show-current 2>/dev/null)"
+    if [ -z "$branch" ]
+    then
+        branch="$( \
+            git branch 2>/dev/null \
+            | head -n 1 \
+            | cut -c '3-' \
+        )"
+    fi
+    [ -n "$branch" ] || return 0
+    _koopa_print "$branch"
+    return 0
+}
+
+_koopa_git_repo_has_unstaged_changes() {
+    local x
+    git update-index --refresh >/dev/null 2>&1
+    x="$(git diff-index 'HEAD' -- 2>/dev/null)"
+    [ -n "$x" ]
+}
+
+_koopa_git_repo_needs_pull_or_push() {
+    local rev_1 rev_2
+    rev_1="$(git rev-parse 'HEAD' 2>/dev/null)"
+    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
+    [ "$rev_1" != "$rev_2" ]
+}
+
+_koopa_go_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/go"
+    return 0
+}
+
+_koopa_group_id() {
+    id -g
+    return 0
+}
+
+_koopa_group() {
+    id -gn
+}
+
+_koopa_homebrew_cellar_prefix() {
+    _koopa_print "$(_koopa_homebrew_prefix)/Cellar"
+    return 0
+}
+
+_koopa_homebrew_opt_prefix() {
+    _koopa_print "$(_koopa_homebrew_prefix)/opt"
+    return 0
+}
+
+_koopa_homebrew_prefix() {
+    local arch x
+    x="${HOMEBREW_PREFIX:-}"
+    if [ -z "$x" ]
+    then
+        if _koopa_is_installed 'brew'
+        then
+            x="$(brew --prefix)"
+        elif _koopa_is_macos
+        then
+            arch="$(_koopa_arch)"
+            case "$arch" in
+                'arm'*)
+                    x='/opt/homebrew'
+                    ;;
+                'x86'*)
+                    x='/usr/local'
+                    ;;
+            esac
+        elif _koopa_is_linux
+        then
+            x='/home/linuxbrew/.linuxbrew'
+        fi
+    fi
+    [ -d "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_host_id() {
+    local id
+    if [ -r '/etc/hostname' ]
+    then
+        id="$(cat '/etc/hostname')"
+    elif _koopa_is_installed 'hostname'
+    then
+        id="$(hostname -f)"
+    else
+        return 0
+    fi
+    case "$id" in
+        *'.ec2.internal')
+            id='aws'
+            ;;
+        *'.o2.rc.hms.harvard.edu')
+            id='harvard-o2'
+            ;;
+        *'.rc.fas.harvard.edu')
+            id='harvard-odyssey'
+            ;;
+    esac
+    [ -n "$id" ] || return 1
+    _koopa_print "$id"
+    return 0
+}
+
+_koopa_hostname() {
+    local x
+    x="$(uname -n)"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_is_alacritty() {
+    [ -n "${ALACRITTY_SOCKET:-}" ]
+}
+
+_koopa_is_alias() {
+    local cmd str
+    for cmd in "$@"
+    do
+        _koopa_is_installed "$cmd" || return 1
+        str="$(type "$cmd")"
+        _koopa_str_detect_posix "$str" ' is aliased to ' && continue
+        _koopa_str_detect_posix "$str" ' is an alias for ' && continue
+        return 1
+    done
+    return 0
+}
+
+_koopa_is_alpine() {
+    _koopa_is_os 'alpine'
+}
+
+_koopa_is_arch() {
+    _koopa_is_os 'arch'
+}
+
+_koopa_is_debian_like() {
+    _koopa_is_os_like 'debian'
+}
+
+_koopa_is_fedora_like() {
+    _koopa_is_os_like 'fedora'
+}
+
+_koopa_is_git_repo_clean() {
+    _koopa_is_git_repo || return 1
+    _koopa_git_repo_has_unstaged_changes && return 1
+    _koopa_git_repo_needs_pull_or_push && return 1
+    return 0
+}
+
+_koopa_is_git_repo_top_level() {
+    local dir
+    dir="${1:-.}"
+    [ -e "${dir}/.git" ]
+}
+
+_koopa_is_git_repo() {
+    _koopa_is_git_repo_top_level '.' && return 0
+    git rev-parse --git-dir >/dev/null 2>&1 || return 1
+    return 0
+}
+
+_koopa_is_installed() {
+    local cmd
+    for cmd in "$@"
+    do
+        command -v "$cmd" >/dev/null || return 1
+    done
+    return 0
+}
+
+_koopa_is_interactive() {
+    [ "${KOOPA_INTERACTIVE:-0}" -eq 1 ] && return 0
+    [ "${KOOPA_FORCE:-0}" -eq 1 ] && return 0
+    _koopa_str_detect_posix "$-" 'i' && return 0
+    _koopa_is_tty && return 0
+    return 1
+}
+
+_koopa_is_kitty() {
+    [ -n "${KITTY_PID:-}" ]
+}
+
+_koopa_is_linux() {
+    [ "$(uname -s)" = 'Linux' ]
+}
+
+_koopa_is_macos() {
+    [ "$(uname -s)" = 'Darwin' ]
+}
+
+_koopa_is_opensuse() {
+    _koopa_is_os 'opensuse'
+}
+
+_koopa_is_os_like() {
+    local file id
+    file='/etc/os-release'
+    id="${1:?}"
+    _koopa_is_os "$id" && return 0
+    [ -r "$file" ] || return 1
+    grep 'ID=' "$file" | grep -q "$id" && return 0
+    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
+    return 1
+}
+
+_koopa_is_os() {
+    [ "$(_koopa_os_id)" = "${1:?}" ]
+}
+
+_koopa_is_qemu() {
+    local basename cmd real_cmd
+    basename='basename'
+    cmd="/proc/${$}/exe"
+    [ -L "$cmd" ] || return 1
+    real_cmd="$(_koopa_realpath "$cmd")"
+    case "$("$basename" "$real_cmd")" in
+        'qemu-'*)
+            return 0
+            ;;
+    esac
+    return 1
+}
+
+_koopa_is_rhel_like() {
+    _koopa_is_os_like 'rhel'
+}
+
+_koopa_is_root() {
+    [ "$(_koopa_user_id)" -eq 0 ]
+}
+
+_koopa_is_set_nounset() {
+    _koopa_str_detect_posix "$(set +o)" 'set -o nounset'
+}
+
+_koopa_is_subshell() {
+    [ "${KOOPA_SUBSHELL:-0}" -gt 0 ]
+}
+
+_koopa_is_tty() {
+    _koopa_is_installed 'tty' || return 1
+    tty >/dev/null 2>&1 || false
+}
+
+_koopa_is_ubuntu_like() {
+    _koopa_is_os_like 'ubuntu'
+}
+
+_koopa_is_user_install() {
+    _koopa_str_detect_posix "$(_koopa_koopa_prefix)" "${HOME:?}"
+}
+
+_koopa_julia_packages_prefix() {
+    _koopa_print "${HOME:?}/.julia"
+}
+
+_koopa_koopa_prefix() {
+    _koopa_print "${KOOPA_PREFIX:?}"
+    return 0
+}
+
+_koopa_local_data_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)"
+    return 0
+}
+
+_koopa_locate_shell() {
+    local proc_file pid shell
+    shell="${KOOPA_SHELL:-}"
+    if [ -n "$shell" ]
+    then
+        _koopa_print "$shell"
+        return 0
+    fi
+    pid="${$}"
+    proc_file="/proc/${pid}/exe"
+    if [ -x "$proc_file" ] && ! _koopa_is_qemu
+    then
+        shell="$(_koopa_realpath "$proc_file")"
+    elif _koopa_is_installed 'ps'
+    then
+        shell="$( \
+            ps -p "$pid" -o 'comm=' \
+            | sed 's/^-//' \
+        )"
+    fi
+    if [ -z "$shell" ]
+    then
+        if [ -n "${BASH_VERSION:-}" ]
+        then
+            shell='bash'
+        elif [ -n "${ZSH_VERSION:-}" ]
+        then
+            shell='zsh'
+        fi
+    fi
+    [ -n "$shell" ] || return 1
+    _koopa_print "$shell"
+    return 0
+}
+
+_koopa_macos_activate_cli_colors() {
+    [ -z "${CLICOLOR:-}" ] && export CLICOLOR=1
+    return 0
+}
+
+_koopa_macos_emacs() {
+    _koopa_print '/usr/local/bin/emacs'
+    return 0
+}
+
+_koopa_macos_homebrew_cask_prefix() {
+    _koopa_print "$(_koopa_homebrew_prefix)/Caskroom"
+    return 0
+}
+
+_koopa_macos_is_dark_mode() {
+    local x
+    x=$(defaults read -g 'AppleInterfaceStyle' 2>/dev/null)
+    [ "$x" = 'Dark' ]
+}
+
+_koopa_macos_is_light_mode() {
+    ! _koopa_macos_is_dark_mode
+}
+
+_koopa_macos_julia_prefix() {
+    local x
+    x="$( \
+        find '/Applications' \
+            -mindepth 1 \
+            -maxdepth 1 \
+            -name 'Julia-*.app' \
+            -type 'd' \
+            -print \
+        | sort \
+        | tail -n 1 \
+    )"
+    [ -d "$x" ] || return 1
+    prefix="${x}/Contents/Resources/julia"
+    [ -d "$x" ] || return 1
+    _koopa_print "$prefix"
+}
+
+_koopa_macos_os_version() {
+    local x
+    x="$(sw_vers -productVersion)"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_macos_python_prefix() {
+    _koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
+}
+
+_koopa_macos_r_prefix() {
+    _koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
+}
+
+_koopa_major_minor_patch_version() {
+    local version x
+    for version in "$@"
+    do
+        x="$( \
+            _koopa_print "$version" \
+            | cut -d '.' -f '1-3' \
+        )"
+        [ -n "$x" ] || return 1
+        _koopa_print "$x"
+    done
+    return 0
+}
+
+_koopa_major_minor_version() {
+    local version x
+    for version in "$@"
+    do
+        x="$( \
+            _koopa_print "$version" \
+            | cut -d '.' -f '1-2' \
+        )"
+        [ -n "$x" ] || return 1
+        _koopa_print "$x"
+    done
+    return 0
+}
+
+_koopa_major_version() {
+    local version x
+    for version in "$@"
+    do
+        x="$( \
+            _koopa_print "$version" \
+            | cut -d '.' -f '1' \
+        )"
+        [ -n "$x" ] || return 1
+        _koopa_print "$x"
+    done
+    return 0
+}
+
+_koopa_make_prefix() {
+    local prefix
+    if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
+    then
+        prefix="$KOOPA_MAKE_PREFIX"
+    elif _koopa_is_user_install
+    then
+        prefix="$(_koopa_xdg_local_home)"
+    else
+        prefix='/usr/local'
+    fi
+    _koopa_print "$prefix"
+    return 0
+}
+
+_koopa_monorepo_prefix() {
+    _koopa_print "${HOME:?}/monorepo"
+    return 0
+}
+
+_koopa_openjdk_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/openjdk"
+    return 0
+}
+
+_koopa_opt_prefix() {
+    _koopa_print "$(_koopa_koopa_prefix)/opt"
+    return 0
+}
+
+_koopa_os_id() {
+    local string
+    string="$(_koopa_os_string | cut -d '-' -f '1')"
+    [ -n "$string" ] || return 1
+    _koopa_print "$string"
+    return 0
+}
+
+_koopa_os_string() {
+    local id release_file string version
+    if _koopa_is_macos
+    then
+        id='macos'
+        version="$(_koopa_major_version "$(_koopa_macos_os_version)")"
+    elif _koopa_is_linux
+    then
+        release_file='/etc/os-release'
+        if [ -r "$release_file" ]
+        then
+            id="$( \
+                awk -F= \
+                    "\$1==\"ID\" { print \$2 ;}" \
+                    "$release_file" \
+                | tr -d '"' \
+            )"
+            version="$( \
+                awk -F= \
+                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
+                    "$release_file" \
+                | tr -d '"' \
+            )"
+            if [ -n "$version" ]
+            then
+                version="$(_koopa_major_version "$version")"
+            else
+                version='rolling'
+            fi
+        else
+            id='linux'
+            version=''
+        fi
+    fi
+    [ -n "$id" ] ||  return 1
+    string="$id"
+    [ -n "$version" ] && string="${string}-${version}"
+    _koopa_print "$string"
+    return 0
+}
+
+_koopa_pipx_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)/pipx"
+    return 0
+}
+
+_koopa_prelude_emacs_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)/prelude"
+    return 0
+}
+
+_koopa_prelude_emacs() {
+    local prefix
+    prefix="$(_koopa_prelude_emacs_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_print "Prelude Emacs is not installed at '${prefix}'."
+        return 1
+    fi
+    _koopa_emacs --with-profile 'prelude' "$@"
+    return 0
+}
+
+_koopa_print() {
+    local string
+    if [ "$#" -eq 0 ]
+    then
+        printf '\n'
+        return 0
+    fi
+    for string in "$@"
+    do
+        printf '%b\n' "$string"
+    done
+    return 0
+}
+
+_koopa_pyenv_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/pyenv"
+    return 0
+}
+
+_koopa_python_venv_name() {
+    local x
+    x="${VIRTUAL_ENV:-}"
+    [ -n "$x" ] || return 1
+    x="${x##*/}"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_python_virtualenvs_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/python-virtualenvs"
+    return 0
+}
+
+_koopa_rbenv_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/rbenv"
+    return 0
+}
+
+_koopa_realpath() {
+    local x
+    x="$(readlink -f "$@")"
+    [ -n "$x" ] || return 1
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_remove_from_path_string() {
+    local dir str1 str2
+    str1="${1:?}"
+    dir="${2:?}"
+    str2="$( \
+        _koopa_print "$str1" \
+            | sed \
+                -e "s|^${dir}:||g" \
+                -e "s|:${dir}:|:|g" \
+                -e "s|:${dir}\$||g" \
+        )"
+    [ -n "$str2" ] || return 1
+    _koopa_print "$str2"
+    return 0
+}
+
+_koopa_rust_prefix() {
+    _koopa_print "$(_koopa_opt_prefix)/rust"
+    return 0
+}
+
+_koopa_scripts_private_prefix() {
+    _koopa_print "$(_koopa_config_prefix)/scripts-private"
+    return 0
+}
+
+_koopa_shell_name() {
+    local shell str
+    shell="$(_koopa_locate_shell)"
+    str="$(basename "$shell")"
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
+    return 0
+}
+
+_koopa_spacemacs_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)/spacemacs"
+    return 0
+}
+
+_koopa_spacemacs() {
+    local prefix
+    prefix="$(_koopa_spacemacs_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_print "Spacemacs is not installed at '${prefix}'."
+        return 1
+    fi
+    _koopa_emacs --with-profile 'spacemacs' "$@"
+    return 0
+}
+
+_koopa_spacevim_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)/spacevim"
+    return 0
+}
+
+_koopa_spacevim() {
+    local gvim prefix vim vimrc
+    vim='vim'
+    if _koopa_is_macos
+    then
+        gvim='/Applications/MacVim.app/Contents/bin/gvim'
+        if [ -x "$gvim" ]
+        then
+            vim="$gvim"
+        fi
+    fi
+    prefix="$(_koopa_spacevim_prefix)"
+    if [ ! -d "$prefix" ]
+    then
+        _koopa_print "SpaceVim is not installed at '${prefix}'."
+        return 1
+    fi
+    vimrc="${prefix}/vimrc"
+    if [ ! -f "$vimrc" ]
+    then
+        _koopa_print "No vimrc file at '${vimrc}'."
+        return 1
+    fi
+    _koopa_is_alias 'vim' && unalias 'vim'
+    "$vim" -u "$vimrc" "$@"
+}
+
+_koopa_str_detect_posix() {
+    unset test
+    test "${1#*"$2"}" != "$1"
+}
+
+_koopa_today() {
+    local str
+    str="$(date '+%Y-%m-%d')"
+    [ -n "$str" ] || return 1
+    _koopa_print "$str"
+    return 0
+}
+
+_koopa_umask() {
+    umask 0002
+    return 0
+}
+
+_koopa_user_id() {
+    id -u
+}
+
+_koopa_user() {
+    id -un
+}
+
+_koopa_xdg_cache_home() {
+    local x
+    x="${XDG_CACHE_HOME:-}"
+    if [ -z "$x" ]
+    then
+        x="${HOME:?}/.cache"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_config_dirs() {
+    local x
+    x="${XDG_CONFIG_DIRS:-}"
+    if [ -z "$x" ] 
+    then
+        x='/etc/xdg'
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_config_home() {
+    local x
+    x="${XDG_CONFIG_HOME:-}"
+    if [ -z "$x" ]
+    then
+        x="${HOME:?}/.config"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_data_dirs() {
+    local x
+    x="${XDG_DATA_DIRS:-}"
+    if [ -z "$x" ]
+    then
+        x='/usr/local/share:/usr/share'
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_data_home() {
+    local x
+    x="${XDG_DATA_HOME:-}"
+    if [ -z "$x" ]
+    then
+        x="${HOME:?}/.local/share"
+    fi
+    _koopa_print "$x"
+    return 0
+}
+
+_koopa_xdg_local_home() {
+    _koopa_print "${HOME:?}/.local"
     return 0
 }

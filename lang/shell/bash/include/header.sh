@@ -88,7 +88,7 @@ __koopa_source_functions() {
     # doesn't support readarray/mapfile.
     # """
     local cache_file file files prefix
-    prefix="$(koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
+    prefix="$(_koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     cache_file="${prefix}.sh"
     if [[ -f "$cache_file" ]]
@@ -266,7 +266,7 @@ __koopa_bash_header() {
     source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
     if [[ "${bool['test']}" -eq 1 ]]
     then
-        koopa_duration_start || return 1
+        _koopa_duration_start || return 1
     fi
     if [[ "${bool['activate']}" -eq 1 ]]
     then
@@ -279,21 +279,21 @@ __koopa_bash_header() {
     if [[ "${bool['activate']}" -eq 0 ]]
     then
         __koopa_source_functions 'common'
-        dict['os_id']="$(koopa_os_id)"
-        if koopa_is_linux
+        dict['os_id']="$(_koopa_os_id)"
+        if _koopa_is_linux
         then
             dict['linux_prefix']='os/linux'
             __koopa_source_functions "${dict['linux_prefix']}/common"
-            if koopa_is_debian_like
+            if _koopa_is_debian_like
             then
                 __koopa_source_functions "${dict['linux_prefix']}/debian"
-                # > koopa_is_ubuntu_like && \
+                # > _koopa_is_ubuntu_like && \
                 # >     __koopa_source_functions \
                 # >         "${dict['linux_prefix']}/ubuntu"
-            elif koopa_is_fedora_like
+            elif _koopa_is_fedora_like
             then
                 __koopa_source_functions "${dict['linux_prefix']}/fedora"
-                koopa_is_rhel_like && \
+                _koopa_is_rhel_like && \
                     __koopa_source_functions "${dict['linux_prefix']}/rhel"
             fi
             __koopa_source_functions "${dict['linux_prefix']}/${dict['os_id']}"
@@ -304,7 +304,7 @@ __koopa_bash_header() {
         case "${1:-}" in
             '--help' | \
             '-h')
-                koopa_help_2
+                _koopa_help_2
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
@@ -325,25 +325,25 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        app['locale']="$(koopa_locate_locale --allow-missing --allow-system)"
-        koopa_alert_info 'Shell options'
+        app['locale']="$(_koopa_locate_locale --allow-missing --allow-system)"
+        _koopa_alert_info 'Shell options'
         set +o
         shopt
-        koopa_alert_info 'Shell variables'
-        koopa_dl \
+        _koopa_alert_info 'Shell variables'
+        _koopa_dl \
             '$' "${$}" \
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
         if [[ -x "${app['locale']}" ]]
         then
-            koopa_alert_info 'Locale'
+            _koopa_alert_info 'Locale'
             "${app['locale']}"
         fi
     fi
     if [[ "${bool['test']}" -eq 1 ]]
     then
-        koopa_duration_stop 'bash' || return 1
+        _koopa_duration_stop 'bash' || return 1
     fi
     return 0
 }
