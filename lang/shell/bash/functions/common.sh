@@ -17989,6 +17989,10 @@ koopa_bin_prefix() {
     _koopa_bin_prefix "$@"
 }
 
+koopa_boolean_nounset() {
+    _koopa_boolean_nounset "$@"
+}
+
 koopa_is_debian_like() {
     _koopa_is_debian_like "$@"
 }
