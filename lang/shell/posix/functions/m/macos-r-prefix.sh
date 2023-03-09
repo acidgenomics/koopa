@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Move this to Bash library.
+
 _koopa_macos_r_prefix() {
     # """
     # macOS R installation prefix.
