@@ -1855,7 +1855,7 @@ _koopa_python_venv_name() {
 }
 
 _koopa_python_virtualenvs_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/python-virtualenvs"
+    _koopa_print "${HOME}/.virtualenvs"
     return 0
 }
 
