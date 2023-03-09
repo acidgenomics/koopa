@@ -9,9 +9,9 @@ _koopa_activate_mcfly() {
     # """
     local color_mode nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
-    [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
+    [ -x "$(_koopa_bin_prefix)/mcfly" ] || return 0
     _koopa_is_root && return 0
-    shell="$(koopa_shell_name)"
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -20,7 +20,7 @@ _koopa_activate_mcfly() {
             return 0
             ;;
     esac
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     [ "$color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'emacs' | \
@@ -34,7 +34,7 @@ _koopa_activate_mcfly() {
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(mcfly init "$shell")"
     [ "$nounset" -eq 1 ] && set -o nounset

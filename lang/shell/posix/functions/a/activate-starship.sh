@@ -12,8 +12,8 @@ _koopa_activate_starship() {
     # https://starship.rs/
     # """
     local nounset shell
-    [ -x "$(koopa_bin_prefix)/starship" ] || return 0
-    shell="$(koopa_shell_name)"
+    [ -x "$(_koopa_bin_prefix)/starship" ] || return 0
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -23,7 +23,7 @@ _koopa_activate_starship() {
             ;;
     esac
     unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && return 0
     eval "$(starship init "$shell")"
     return 0

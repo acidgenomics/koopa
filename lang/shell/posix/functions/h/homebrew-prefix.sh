@@ -16,7 +16,7 @@ _koopa_homebrew_prefix() {
             x="$(brew --prefix)"
         elif _koopa_is_macos
         then
-            arch="$(koopa_arch)"
+            arch="$(_koopa_arch)"
             case "$arch" in
                 'arm'*)
                     x='/opt/homebrew'

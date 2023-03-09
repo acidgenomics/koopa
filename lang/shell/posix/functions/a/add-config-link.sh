@@ -6,7 +6,7 @@ _koopa_add_config_link() {
     # @note Updated 2022-09-12.
     # """
     local config_prefix dest_file dest_name source_file
-    config_prefix="$(koopa_config_prefix)"
+    config_prefix="$(_koopa_config_prefix)"
     _koopa_is_alias 'ln' && unalias 'ln'
     _koopa_is_alias 'mkdir' && unalias 'mkdir'
     _koopa_is_alias 'rm' && unalias 'rm'

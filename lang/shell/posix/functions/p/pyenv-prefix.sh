@@ -7,6 +7,6 @@ _koopa_pyenv_prefix() {
     #
     # See also approach used for rbenv.
     # """
-    _koopa_print "$(koopa_opt_prefix)/pyenv"
+    _koopa_print "$(_koopa_opt_prefix)/pyenv"
     return 0
 }

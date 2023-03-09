@@ -14,7 +14,7 @@ _koopa_activate_coreutils_aliases() {
     # gmv on macOS can run into issues on NFS shares.
     # """
     local bin_prefix
-    bin_prefix="$(koopa_bin_prefix)"
+    bin_prefix="$(_koopa_bin_prefix)"
     if [ -x "${bin_prefix}/gcat" ]
     then
         alias cat='gcat'

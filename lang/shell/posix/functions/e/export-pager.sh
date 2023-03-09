@@ -11,7 +11,7 @@ _koopa_export_pager() {
     # """
     local less
     [ -n "${PAGER:-}" ] && return 0
-    less="$(koopa_bin_prefix)/less"
+    less="$(_koopa_bin_prefix)/less"
     [ -x "$less" ] || return 0
     export PAGER="${less} -R"
     return 0

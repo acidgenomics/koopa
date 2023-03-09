@@ -10,8 +10,8 @@ _koopa_activate_pipx() {
     # - https://pipxproject.github.io/pipx/installation/
     # """
     local prefix
-    [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
-    prefix="$(koopa_pipx_prefix)"
+    [ -x "$(_koopa_bin_prefix)/pipx" ] || return 0
+    prefix="$(_koopa_pipx_prefix)"
     if [ ! -d "$prefix" ]
     then
         _koopa_is_alias 'mkdir' && unalias 'mkdir'

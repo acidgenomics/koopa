@@ -5,6 +5,6 @@ _koopa_opt_prefix() {
     # Custom application install prefix.
     # @note Updated 2021-05-17.
     # """
-    _koopa_print "$(koopa_koopa_prefix)/opt"
+    _koopa_print "$(_koopa_koopa_prefix)/opt"
     return 0
 }

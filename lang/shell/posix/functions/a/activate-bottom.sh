@@ -6,10 +6,10 @@ _koopa_activate_bottom() {
     # @note Updated 2022-12-08.
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
-    [ -x "$(koopa_bin_prefix)/btm" ] || return 0
-    prefix="$(koopa_xdg_config_home)/bottom"
+    [ -x "$(_koopa_bin_prefix)/btm" ] || return 0
+    prefix="$(_koopa_xdg_config_home)/bottom"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     source_bn="bottom-${color_mode}.toml"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0

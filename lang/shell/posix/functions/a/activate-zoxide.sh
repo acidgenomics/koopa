@@ -16,9 +16,9 @@ _koopa_activate_zoxide() {
     # - https://github.com/ajeetdsouza/zoxide
     # """
     local nounset shell zoxide
-    zoxide="$(koopa_bin_prefix)/zoxide"
+    zoxide="$(_koopa_bin_prefix)/zoxide"
     [ -x "$zoxide" ] || return 0
-    shell="$(koopa_shell_name)"
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -27,7 +27,7 @@ _koopa_activate_zoxide() {
             return 0
             ;;
     esac
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$zoxide" init "$shell")"
     [ "$nounset" -eq 1 ] && set -o nounset

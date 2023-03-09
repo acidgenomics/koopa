@@ -25,9 +25,9 @@ _koopa_emacs() {
     fi
     if _koopa_is_macos
     then
-        emacs="$(koopa_macos_emacs)"
+        emacs="$(_koopa_macos_emacs)"
     else
-        emacs="$(koopa_bin_prefix)/emacs"
+        emacs="$(_koopa_bin_prefix)/emacs"
     fi
     if [ ! -e "$emacs" ]
     then

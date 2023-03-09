@@ -28,7 +28,7 @@ _koopa_activate_today_bucket() {
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
     if _koopa_str_detect_posix \
-        "$(koopa_realpath "$today_link")" \
+        "$(_koopa_realpath "$today_link")" \
         "$today_bucket"
     then
         return 0
