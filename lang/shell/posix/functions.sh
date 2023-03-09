@@ -2,33 +2,52 @@
 # shellcheck disable=all
 
 _koopa_activate_alacritty() {
-    local conf_file color_file color_mode pattern prefix replacement
     _koopa_is_alacritty || return 0
-    prefix="$(_koopa_xdg_config_home)/alacritty"
-    [ -d "$prefix" ] || return 0
-    conf_file="${prefix}/alacritty.yml"
-    [ -f "$conf_file" ] || return 0
-    color_mode="$(_koopa_color_mode)"
-    color_file_bn="colors-${color_mode}.yml"
-    color_file="${prefix}/${color_file_bn}"
-    [ -f "$color_file" ] || return 0
-    if ! grep -q "$color_file_bn" "$conf_file"
+    __kvar_prefix="$(_koopa_xdg_config_home)/alacritty"
+    if [ ! -d "$__kvar_prefix" ]
     then
-        pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
-        replacement="  - \"~/.config/alacritty/${color_file_bn}\""
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_conf_file="${__kvar_prefix}/alacritty.yml"
+    if [ ! -f "$__kvar_conf_file" ]
+    then
+        unset -v __kvar_conf_file __kvar_prefix
+        return 0
+    fi
+    __kvar_color_mode="$(_koopa_color_mode)"
+    __kvar_color_file_bn="colors-${__kvar_color_mode}.yml"
+    __kvar_color_file="${__kvar_prefix}/${__kvar_color_file_bn}"
+    if [ ! -f "$__kvar_color_file" ]
+    then
+        unset -v \
+            __kvar_color_file \
+            __kvar_color_file_bn \
+            __kvar_color_mode \
+            __kvar_conf_file \
+            __kvar_prefix
+        return 0
+    fi
+    if ! grep -q "$__kvar_color_file_bn" "$__kvar_conf_file"
+    then
+        __kvar_pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
+        __kvar_replacement="  - \"~/.config/alacritty/${__kvar_color_file_bn}\""
         perl -i -l -p \
-            -e "s|${pattern}|${replacement}|" \
-            "$conf_file"
+            -e "s|${__kvar_pattern}|${__kvar_replacement}|" \
+            "$__kvar_conf_file"
     fi
-    if [ -f "${prefix}/colors.yml" ]
-    then
-        rm "${prefix}/colors.yml"
-    fi
+    unset -v \
+        __kvar_color_file \
+        __kvar_color_file_bn \
+        __kvar_color_mode \
+        __kvar_conf_file \
+        __kvar_pattern \
+        __kvar_prefix \
+        __kvar_replacement
     return 0
 }
 
 _koopa_activate_aliases() {
-    local file
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
@@ -88,45 +107,66 @@ _koopa_activate_aliases() {
     alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
     alias z='_koopa_alias_zoxide'
-    file="${HOME:?}/.aliases"
-    [ -f "$file" ] && . "$file"
-    file="${HOME:?}/.aliases-private"
-    [ -f "$file" ] && . "$file"
+    [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
+    [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
     return 0
 }
 
 _koopa_activate_asdf() {
-    local nounset prefix
-    prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_asdf_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/libexec/asdf.sh"
-    [ -r "$script" ] || return 0
+    __kvar_prefix="${1:-}"
+    if [ -z "$__kvar_prefix" ]
+    then
+        __kvar_prefix="$(_koopa_asdf_prefix)"
+    fi
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_script="${__kvar_prefix}/libexec/asdf.sh"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v __kvar_prefix __kvar_script
+        return 0
+    fi
     _koopa_is_alias 'asdf' && unalias 'asdf'
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    . "$__kvar_script"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v __kvar_nounset __kvar_prefix __kvar_script
     return 0
 }
 
 _koopa_activate_bat() {
-    local color_mode conf_file prefix
     [ -x "$(_koopa_bin_prefix)/bat" ] || return 0
-    prefix="$(_koopa_xdg_config_home)/bat"
-    [ -d "$prefix" ] || return 0
-    color_mode="$(_koopa_color_mode)"
-    conf_file="${prefix}/config-${color_mode}"
-    [ -f "$conf_file" ] || return 0
-    export BAT_CONFIG_PATH="$conf_file"
+    __kvar_prefix="$(_koopa_xdg_config_home)/bat"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_color_mode="$(_koopa_color_mode)"
+    __kvar_conf_file="${__kvar_prefix}/config-${__kvar_color_mode}"
+    if [ ! -f "$__kvar_conf_file" ]
+    then
+        unset -v __kvar_color_mode __kvar_conf_file __kvar_prefix
+        return 0
+    fi
+    export BAT_CONFIG_PATH="$__kvar_conf_file"
+    unset -v __kvar_color_mode __kvar_conf_file __kvar_prefix
     return 0
 }
 
 _koopa_activate_bcbio_nextgen() {
-    local prefix
-    prefix="$(_koopa_bcbio_nextgen_prefix)"
-    [ -d "$prefix" ] || return 0
-    _koopa_add_to_path_end "${prefix}/tools/bin"
+    __kvar_prefix="$(_koopa_bcbio_nextgen_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    _koopa_add_to_path_end "${__kvar_prefix}/tools/bin"
+    unset -v __kvar_prefix
     return 0
 }
 
@@ -1978,57 +2018,57 @@ _koopa_user() {
 }
 
 _koopa_xdg_cache_home() {
-    local x
-    x="${XDG_CACHE_HOME:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_CACHE_HOME:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x="${HOME:?}/.cache"
+        __kvar_string="${HOME:?}/.cache"
     fi
-    _koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_xdg_config_dirs() {
-    local x
-    x="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$x" ] 
+    __kvar_string="${XDG_CONFIG_DIRS:-}"
+    if [ -z "$__kvar_string" ] 
     then
-        x='/etc/xdg'
+        __kvar_string='/etc/xdg'
     fi
-    _koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_xdg_config_home() {
-    local x
-    x="${XDG_CONFIG_HOME:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_CONFIG_HOME:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x="${HOME:?}/.config"
+        __kvar_string="${HOME:?}/.config"
     fi
-    _koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_xdg_data_dirs() {
-    local x
-    x="${XDG_DATA_DIRS:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_DATA_DIRS:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x='/usr/local/share:/usr/share'
+        __kvar_string='/usr/local/share:/usr/share'
     fi
-    _koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_xdg_data_home() {
-    local x
-    x="${XDG_DATA_HOME:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_DATA_HOME:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x="${HOME:?}/.local/share"
+        __kvar_string="${HOME:?}/.local/share"
     fi
-    _koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
