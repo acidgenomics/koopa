@@ -3,20 +3,31 @@
 _koopa_activate_asdf() {
     # """
     # Activate asdf.
-    # @note Updated 2022-08-31.
+    # @note Updated 2023-03-09.
     # """
-    local nounset prefix
-    prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_asdf_prefix)"
-    [ -d "$prefix" ] || return 0
+    __kvar_prefix="${1:-}"
+    if [ -z "$__kvar_prefix" ]
+    then
+        __kvar_prefix="$(_koopa_asdf_prefix)"
+    fi
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
     # NOTE Use 'asdf.fish' for Fish shell.
-    script="${prefix}/libexec/asdf.sh"
-    [ -r "$script" ] || return 0
+    __kvar_script="${__kvar_prefix}/libexec/asdf.sh"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v __kvar_prefix __kvar_script
+        return 0
+    fi
     _koopa_is_alias 'asdf' && unalias 'asdf'
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null
-    . "$script"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    . "$__kvar_script"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v __kvar_nounset __kvar_prefix __kvar_script
     return 0
 }

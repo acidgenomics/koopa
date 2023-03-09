@@ -3,14 +3,14 @@
 _koopa_xdg_data_home() {
     # """
     # XDG data home.
-    # @note Updated 2021-05-20.
+    # @note Updated 2023-03-09.
     # """
-    local x
-    x="${XDG_DATA_HOME:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_DATA_HOME:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x="${HOME:?}/.local/share"
+        __kvar_string="${HOME:?}/.local/share"
     fi
-    _koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
