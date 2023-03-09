@@ -27,7 +27,7 @@ _koopa_color_mode() {
     [ -n "$str" ] || return 0
     # Optionally, here's how to write the config to a file:
     # > local conf_file
-    # > conf_file="$(koopa_config_prefix)/color-mode"
+    # > conf_file="$(_koopa_config_prefix)/color-mode"
     # > _koopa_print "$str" > "$conf_file"
     _koopa_print "$str"
     return 0

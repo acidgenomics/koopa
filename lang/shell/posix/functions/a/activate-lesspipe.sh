@@ -17,7 +17,7 @@ _koopa_activate_lesspipe() {
     #   'pygmentize -L styles'
     # """
     local lesspipe
-    lesspipe="$(koopa_bin_prefix)/lesspipe.sh"
+    lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
     [ -x "$lesspipe" ] || return 0
     export LESS='-R'
     export LESSCOLOR='yes'

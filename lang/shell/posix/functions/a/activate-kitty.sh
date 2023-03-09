@@ -12,9 +12,9 @@ _koopa_activate_kitty() {
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
     _koopa_is_kitty || return 0
-    prefix="$(koopa_xdg_config_home)/kitty"
+    prefix="$(_koopa_xdg_config_home)/kitty"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     source_bn="theme-${color_mode}.conf"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0

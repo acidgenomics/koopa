@@ -15,7 +15,7 @@ _koopa_spacevim() {
             vim="$gvim"
         fi
     fi
-    prefix="$(koopa_spacevim_prefix)"
+    prefix="$(_koopa_spacevim_prefix)"
     if [ ! -d "$prefix" ]
     then
         _koopa_print "SpaceVim is not installed at '${prefix}'."

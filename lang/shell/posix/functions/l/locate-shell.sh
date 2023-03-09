@@ -30,7 +30,7 @@ _koopa_locate_shell() {
     proc_file="/proc/${pid}/exe"
     if [ -x "$proc_file" ] && ! _koopa_is_qemu
     then
-        shell="$(koopa_realpath "$proc_file")"
+        shell="$(_koopa_realpath "$proc_file")"
     elif _koopa_is_installed 'ps'
     then
         shell="$( \

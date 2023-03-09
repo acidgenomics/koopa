@@ -5,8 +5,8 @@ _koopa_activate_completion() {
     # Activate completion (with TAB key).
     # @note Updated 2021-05-06.
     # """
-    local file _koopa_prefix shell
-    shell="$(koopa_shell_name)"
+    local file koopa_prefix shell
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -15,7 +15,7 @@ _koopa_activate_completion() {
             return 0
             ;;
     esac
-    _koopa_prefix="$(koopa_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     for file in "${koopa_prefix}/etc/completion/"*'.sh'
     do
         # shellcheck source=/dev/null

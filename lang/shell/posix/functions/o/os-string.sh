@@ -14,7 +14,7 @@ _koopa_os_string() {
     if _koopa_is_macos
     then
         id='macos'
-        version="$(koopa_major_version "$(koopa_macos_os_version)")"
+        version="$(_koopa_major_version "$(_koopa_macos_os_version)")"
     elif _koopa_is_linux
     then
         release_file='/etc/os-release'
@@ -35,7 +35,7 @@ _koopa_os_string() {
             )"
             if [ -n "$version" ]
             then
-                version="$(koopa_major_version "$version")"
+                version="$(_koopa_major_version "$version")"
             else
                 # This is the case for Arch Linux.
                 version='rolling'

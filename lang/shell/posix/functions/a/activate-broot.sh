@@ -18,8 +18,8 @@ _koopa_activate_broot() {
     # https://github.com/Canop/broot
     # """
     local config_dir nounset script shell
-    [ -x "$(koopa_bin_prefix)/broot" ] || return 0
-    shell="$(koopa_shell_name)"
+    [ -x "$(_koopa_bin_prefix)/broot" ] || return 0
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -33,7 +33,7 @@ _koopa_activate_broot() {
     # This is supported for Bash and Zsh.
     script="${config_dir}/launcher/bash/br"
     [ -f "$script" ] || return 0
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null
     . "$script"

@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Move this to Bash.
+
 _koopa_make_prefix() {
     # """
     # Return the installation prefix to use.
@@ -11,7 +13,7 @@ _koopa_make_prefix() {
         prefix="$KOOPA_MAKE_PREFIX"
     elif _koopa_is_user_install
     then
-        prefix="$(koopa_xdg_local_home)"
+        prefix="$(_koopa_xdg_local_home)"
     else
         prefix='/usr/local'
     fi

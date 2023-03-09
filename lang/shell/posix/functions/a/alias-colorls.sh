@@ -8,7 +8,7 @@ _koopa_alias_colorls() {
     # Use of '--git-status' is slow for large directories / monorepos.
     # """
     local color_flag color_mode
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     case "$color_mode" in
         'dark')
             color_flag='--dark'

@@ -8,10 +8,10 @@ _koopa_activate_delta() {
     # This function dynamically updates dark/light color mode.
     # """
     local color_mode prefix source_bn source_file target_file target_link_bn
-    [ -x "$(koopa_bin_prefix)/delta" ] || return 0
-    prefix="$(koopa_xdg_config_home)/delta"
+    [ -x "$(_koopa_bin_prefix)/delta" ] || return 0
+    prefix="$(_koopa_xdg_config_home)/delta"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     source_bn="theme-${color_mode}.gitconfig"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0

@@ -14,9 +14,9 @@ _koopa_activate_julia() {
     # - https://github.com/JuliaLang/julia/issues/43949
     # """
     local depot_path num_threads
-    [ -x "$(koopa_bin_prefix)/julia" ] || return 0
-    depot_path="$(koopa_julia_packages_prefix)"
-    num_threads="$(koopa_cpu_count)"
+    [ -x "$(_koopa_bin_prefix)/julia" ] || return 0
+    depot_path="$(_koopa_julia_packages_prefix)"
+    num_threads="$(_koopa_cpu_count)"
     export JULIA_DEPOT_PATH="$depot_path"
     export JULIA_NUM_THREADS="$num_threads"
     return 0

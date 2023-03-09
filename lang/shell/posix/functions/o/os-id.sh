@@ -8,7 +8,7 @@ _koopa_os_id() {
     # Just return the OS platform ID (e.g. debian).
     # """
     local string
-    string="$(koopa_os_string | cut -d '-' -f '1')"
+    string="$(_koopa_os_string | cut -d '-' -f '1')"
     [ -n "$string" ] || return 1
     _koopa_print "$string"
     return 0
