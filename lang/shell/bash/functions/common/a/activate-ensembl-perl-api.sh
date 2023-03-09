@@ -3,15 +3,14 @@
 koopa_activate_ensembl_perl_api() {
     # """
     # Activate Ensembl Perl API.
-    # @note Updated 2022-07-25.
+    # @note Updated 2023-03-09.
     #
     # @seealso
     # - https://useast.ensembl.org/info/docs/api/api_installation.html
     # """
     local dict
-    declare -A dict=(
-        ['prefix']="$(koopa_ensembl_perl_api_prefix)"
-    )
+    declare -A dict
+    dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_add_to_path_start "${dict['prefix']}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB:-}"

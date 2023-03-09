@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework these into individual files, with POSIX labels.
-
 koopa_activate_conda() {
     _koopa_activate_conda "$@"
 }
@@ -36,6 +34,26 @@ koopa_config_prefix() {
 
 koopa_cpu_count() {
     _koopa_cpu_count "$@"
+}
+
+koopa_default_shell_name() {
+    _koopa_default_shell_name "$@"
+}
+
+koopa_docker_prefix() {
+    _koopa_docker_prefix "$@"
+}
+
+koopa_doom_emacs_prefix() {
+    _koopa_doom_emacs_prefix "$@"
+}
+
+koopa_dotfiles_prefix() {
+    _koopa_dotfiles_prefix "$@"
+}
+
+koopa_emacs_prefix() {
+    _koopa_emacs_prefix "$@"
 }
 
 koopa_is_debian_like() {
