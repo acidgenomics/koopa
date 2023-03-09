@@ -4,11 +4,11 @@
 _koopa_activate_alacritty() {
     local conf_file color_file color_mode pattern prefix replacement
     _koopa_is_alacritty || return 0
-    prefix="$(koopa_xdg_config_home)/alacritty"
+    prefix="$(_koopa_xdg_config_home)/alacritty"
     [ -d "$prefix" ] || return 0
     conf_file="${prefix}/alacritty.yml"
     [ -f "$conf_file" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     color_file_bn="colors-${color_mode}.yml"
     color_file="${prefix}/${color_file_bn}"
     [ -f "$color_file" ] || return 0
@@ -37,57 +37,57 @@ _koopa_activate_aliases() {
     alias ..='cd ..'
     alias :q='exit'
     alias R='R --no-restore --no-save --quiet'
-    alias asdf='koopa_alias_asdf'
+    alias asdf='_koopa_alias_asdf'
     alias black='black --line-length=79'
     alias br-size='br --sort-by-size'
-    alias br='koopa_alias_broot'
-    alias bucket='koopa_alias_bucket'
+    alias br='_koopa_alias_broot'
+    alias bucket='_koopa_alias_bucket'
     alias c='clear'
-    alias cls='koopa_alias_colorls'
+    alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
     alias d='clear; cd -; l'
-    alias doom-emacs='koopa_doom_emacs'
+    alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
-    alias emacs-vanilla='koopa_alias_emacs_vanilla'
-    alias emacs='koopa_alias_emacs'
+    alias emacs-vanilla='_koopa_alias_emacs_vanilla'
+    alias emacs='_koopa_alias_emacs'
     alias fd='fd --case-sensitive --no-ignore'
     alias fvim='vim "$(fzf)"'
     alias g='git'
-    alias glances='koopa_alias_glances'
+    alias glances='_koopa_alias_glances'
     alias h='history'
     alias j='z'
-    alias k='koopa_alias_k'
-    alias kb='koopa_alias_kb'
-    alias kdev='koopa_alias_kdev'
-    alias kp='koopa_alias_kp'
+    alias k='_koopa_alias_k'
+    alias kb='_koopa_alias_kb'
+    alias kdev='_koopa_alias_kdev'
+    alias kp='_koopa_alias_kp'
     alias l.='l -d .*'
     alias l1='l -1'
-    alias l='koopa_alias_l'
+    alias l='_koopa_alias_l'
     alias la='l -a'
     alias lh='l | head'
     alias ll='la -l'
     alias lt='l | tail'
-    alias nvim-fzf='koopa_alias_nvim_fzf'
-    alias nvim-vanilla='koopa_alias_nvim_vanilla'
-    alias prelude-emacs='koopa_prelude_emacs'
-    alias pyenv='koopa_alias_pyenv'
+    alias nvim-fzf='_koopa_alias_nvim_fzf'
+    alias nvim-vanilla='_koopa_alias_nvim_vanilla'
+    alias prelude-emacs='_koopa_prelude_emacs'
+    alias pyenv='_koopa_alias_pyenv'
     alias q='exit'
     alias radian='radian --no-restore --no-save --quiet'
-    alias rbenv='koopa_alias_rbenv'
+    alias rbenv='_koopa_alias_rbenv'
     alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
-    alias sha256='koopa_alias_sha256'
-    alias spacemacs='koopa_spacemacs'
-    alias spacevim='koopa_spacevim'
-    alias tmux-vanilla='koopa_alias_tmux_vanilla'
-    alias today='koopa_alias_today'
+    alias sha256='_koopa_alias_sha256'
+    alias spacemacs='_koopa_spacemacs'
+    alias spacevim='_koopa_spacevim'
+    alias tmux-vanilla='_koopa_alias_tmux_vanilla'
+    alias today='_koopa_alias_today'
     alias u='clear; cd ../; pwd; l'
     alias variable-bodies='typeset -p'
     alias variable-names='compgen -A variable | sort'
-    alias vim-fzf='koopa_alias_vim_fzf'
-    alias vim-vanilla='koopa_alias_vim_vanilla'
-    alias week='koopa_alias_week'
-    alias z='koopa_alias_zoxide'
+    alias vim-fzf='_koopa_alias_vim_fzf'
+    alias vim-vanilla='_koopa_alias_vim_vanilla'
+    alias week='_koopa_alias_week'
+    alias z='_koopa_alias_zoxide'
     file="${HOME:?}/.aliases"
     [ -f "$file" ] && . "$file"
     file="${HOME:?}/.aliases-private"
@@ -98,12 +98,12 @@ _koopa_activate_aliases() {
 _koopa_activate_asdf() {
     local nounset prefix
     prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(koopa_asdf_prefix)"
+    [ -z "$prefix" ] && prefix="$(_koopa_asdf_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/libexec/asdf.sh"
     [ -r "$script" ] || return 0
     _koopa_is_alias 'asdf' && unalias 'asdf'
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     . "$script"
     [ "$nounset" -eq 1 ] && set -o nounset
@@ -112,10 +112,10 @@ _koopa_activate_asdf() {
 
 _koopa_activate_bat() {
     local color_mode conf_file prefix
-    [ -x "$(koopa_bin_prefix)/bat" ] || return 0
-    prefix="$(koopa_xdg_config_home)/bat"
+    [ -x "$(_koopa_bin_prefix)/bat" ] || return 0
+    prefix="$(_koopa_xdg_config_home)/bat"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     conf_file="${prefix}/config-${color_mode}"
     [ -f "$conf_file" ] || return 0
     export BAT_CONFIG_PATH="$conf_file"
@@ -124,7 +124,7 @@ _koopa_activate_bat() {
 
 _koopa_activate_bcbio_nextgen() {
     local prefix
-    prefix="$(koopa_bcbio_nextgen_prefix)"
+    prefix="$(_koopa_bcbio_nextgen_prefix)"
     [ -d "$prefix" ] || return 0
     _koopa_add_to_path_end "${prefix}/tools/bin"
     return 0
@@ -132,10 +132,10 @@ _koopa_activate_bcbio_nextgen() {
 
 _koopa_activate_bottom() {
     local color_mode prefix source_bn source_file target_file target_link_bn
-    [ -x "$(koopa_bin_prefix)/btm" ] || return 0
-    prefix="$(koopa_xdg_config_home)/bottom"
+    [ -x "$(_koopa_bin_prefix)/btm" ] || return 0
+    prefix="$(_koopa_xdg_config_home)/bottom"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     source_bn="bottom-${color_mode}.toml"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0
@@ -152,8 +152,8 @@ _koopa_activate_bottom() {
 
 _koopa_activate_broot() {
     local config_dir nounset script shell
-    [ -x "$(koopa_bin_prefix)/broot" ] || return 0
-    shell="$(koopa_shell_name)"
+    [ -x "$(_koopa_bin_prefix)/broot" ] || return 0
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -166,7 +166,7 @@ _koopa_activate_broot() {
     [ -d "$config_dir" ] || return 0
     script="${config_dir}/launcher/bash/br"
     [ -f "$script" ] || return 0
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     . "$script"
     [ "$nounset" -eq 1 ] && set -o nounset
@@ -175,9 +175,9 @@ _koopa_activate_broot() {
 
 _koopa_activate_ca_certificates() {
     local prefix ssl_cert_file
-    prefix="$(koopa_opt_prefix)/ca-certificates"
+    prefix="$(_koopa_opt_prefix)/ca-certificates"
     [ -d "$prefix" ] || return 0
-    prefix="$(koopa_realpath "$prefix")"
+    prefix="$(_koopa_realpath "$prefix")"
     ssl_cert_file="${prefix}/share/ca-certificates/cacert.pem"
     [ -f "$ssl_cert_file" ] || return 0
     export SSL_CERT_FILE="$ssl_cert_file"
@@ -187,7 +187,7 @@ _koopa_activate_ca_certificates() {
 _koopa_activate_color_mode() {
     if [ -z "${KOOPA_COLOR_MODE:-}" ]
     then
-        KOOPA_COLOR_MODE="$(koopa_color_mode)"
+        KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
     then
@@ -199,8 +199,8 @@ _koopa_activate_color_mode() {
 }
 
 _koopa_activate_completion() {
-    local file _koopa_prefix shell
-    shell="$(koopa_shell_name)"
+    local file koopa_prefix shell
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -209,7 +209,7 @@ _koopa_activate_completion() {
             return 0
             ;;
     esac
-    _koopa_prefix="$(koopa_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     for file in "${koopa_prefix}/etc/completion/"*'.sh'
     do
         [ -f "$file" ] && . "$file"
@@ -220,13 +220,13 @@ _koopa_activate_completion() {
 _koopa_activate_conda() {
     local nounset prefix
     prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(koopa_conda_prefix)"
+    [ -z "$prefix" ] && prefix="$(_koopa_conda_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
     _koopa_is_alias 'conda' && unalias 'conda'
     _koopa_is_alias 'mamba' && unalias 'mamba'
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     . "$script"
     if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
@@ -240,7 +240,7 @@ _koopa_activate_conda() {
 
 _koopa_activate_coreutils_aliases() {
     local bin_prefix
-    bin_prefix="$(koopa_bin_prefix)"
+    bin_prefix="$(_koopa_bin_prefix)"
     if [ -x "${bin_prefix}/gcat" ]
     then
         alias cat='gcat'
@@ -363,10 +363,10 @@ _koopa_activate_coreutils_aliases() {
 
 _koopa_activate_delta() {
     local color_mode prefix source_bn source_file target_file target_link_bn
-    [ -x "$(koopa_bin_prefix)/delta" ] || return 0
-    prefix="$(koopa_xdg_config_home)/delta"
+    [ -x "$(_koopa_bin_prefix)/delta" ] || return 0
+    prefix="$(_koopa_xdg_config_home)/delta"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     source_bn="theme-${color_mode}.gitconfig"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0
@@ -382,8 +382,8 @@ _koopa_activate_delta() {
 }
 
 _koopa_activate_difftastic() {
-    [ -x "$(koopa_bin_prefix)/difft" ] || return 0
-    DFT_BACKGROUND="$(koopa_color_mode)"
+    [ -x "$(_koopa_bin_prefix)/difft" ] || return 0
+    DFT_BACKGROUND="$(_koopa_color_mode)"
     DFT_DISPLAY='side-by-side'
     export DFT_BACKGROUND DFT_DISPLAY
     return 0
@@ -392,11 +392,11 @@ _koopa_activate_difftastic() {
 _koopa_activate_dircolors() {
     [ -n "${SHELL:-}" ] || return 0
     local dircolors
-    dircolors="$(koopa_bin_prefix)/gdircolors"
+    dircolors="$(_koopa_bin_prefix)/gdircolors"
     [ -x "$dircolors" ] || return 0
     local color_mode config_prefix dircolors_file
-    config_prefix="$(koopa_xdg_config_home)/dircolors"
-    color_mode="$(koopa_color_mode)"
+    config_prefix="$(_koopa_xdg_config_home)/dircolors"
+    color_mode="$(_koopa_color_mode)"
     dircolors_file="${config_prefix}/dircolors-${color_mode}"
     [ -f "$dircolors_file" ] || return 0
     eval "$("$dircolors" "$dircolors_file")"
@@ -410,7 +410,7 @@ _koopa_activate_dircolors() {
 }
 
 _koopa_activate_fzf() {
-    [ -x "$(koopa_bin_prefix)/fzf" ] || return 0
+    [ -x "$(_koopa_bin_prefix)/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
     then
         export FZF_DEFAULT_OPTS='--border --color bw --multi'
@@ -427,7 +427,7 @@ quote=01:warning=01;35"
 
 _koopa_activate_google_cloud_sdk() {
     local python
-    python="$(koopa_bin_prefix)/python3.10"
+    python="$(_koopa_bin_prefix)/python3.10"
     [ -x "$python" ] || return 0
     CLOUDSDK_PYTHON="$python"
     export CLOUDSDK_PYTHON
@@ -436,7 +436,7 @@ _koopa_activate_google_cloud_sdk() {
 
 _koopa_activate_homebrew() {
     local prefix
-    prefix="$(koopa_homebrew_prefix)"
+    prefix="$(_koopa_homebrew_prefix)"
     [ -d "$prefix" ] || return 0
     [ -x "${prefix}/bin/brew" ] || return 0
     [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
@@ -452,9 +452,9 @@ _koopa_activate_homebrew() {
 
 _koopa_activate_julia() {
     local depot_path num_threads
-    [ -x "$(koopa_bin_prefix)/julia" ] || return 0
-    depot_path="$(koopa_julia_packages_prefix)"
-    num_threads="$(koopa_cpu_count)"
+    [ -x "$(_koopa_bin_prefix)/julia" ] || return 0
+    depot_path="$(_koopa_julia_packages_prefix)"
+    num_threads="$(_koopa_cpu_count)"
     export JULIA_DEPOT_PATH="$depot_path"
     export JULIA_NUM_THREADS="$num_threads"
     return 0
@@ -463,9 +463,9 @@ _koopa_activate_julia() {
 _koopa_activate_kitty() {
     local color_mode prefix source_bn source_file target_file target_link_bn
     _koopa_is_kitty || return 0
-    prefix="$(koopa_xdg_config_home)/kitty"
+    prefix="$(_koopa_xdg_config_home)/kitty"
     [ -d "$prefix" ] || return 0
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     source_bn="theme-${color_mode}.conf"
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0
@@ -482,7 +482,7 @@ _koopa_activate_kitty() {
 
 _koopa_activate_lesspipe() {
     local lesspipe
-    lesspipe="$(koopa_bin_prefix)/lesspipe.sh"
+    lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
     [ -x "$lesspipe" ] || return 0
     export LESS='-R'
     export LESSCOLOR='yes'
@@ -497,9 +497,9 @@ _koopa_activate_lesspipe() {
 _koopa_activate_mcfly() {
     local color_mode nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
-    [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
+    [ -x "$(_koopa_bin_prefix)/mcfly" ] || return 0
     _koopa_is_root && return 0
-    shell="$(koopa_shell_name)"
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -508,7 +508,7 @@ _koopa_activate_mcfly() {
             return 0
             ;;
     esac
-    color_mode="$(koopa_color_mode)"
+    color_mode="$(_koopa_color_mode)"
     [ "$color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'emacs' | \
@@ -522,7 +522,7 @@ _koopa_activate_mcfly() {
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$(mcfly init "$shell")"
     [ "$nounset" -eq 1 ] && set -o nounset
@@ -547,8 +547,8 @@ _koopa_activate_path_helper() {
 
 _koopa_activate_pipx() {
     local prefix
-    [ -x "$(koopa_bin_prefix)/pipx" ] || return 0
-    prefix="$(koopa_pipx_prefix)"
+    [ -x "$(_koopa_bin_prefix)/pipx" ] || return 0
+    prefix="$(_koopa_pipx_prefix)"
     if [ ! -d "$prefix" ]
     then
         _koopa_is_alias 'mkdir' && unalias 'mkdir'
@@ -564,13 +564,13 @@ _koopa_activate_pipx() {
 _koopa_activate_pyenv() {
     local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
-    [ -x "$(koopa_bin_prefix)/pyenv" ] || return 0
-    prefix="$(koopa_pyenv_prefix)"
+    [ -x "$(_koopa_bin_prefix)/pyenv" ] || return 0
+    prefix="$(_koopa_pyenv_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/pyenv"
     [ -r "$script" ] || return 0
     export PYENV_ROOT="$prefix"
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -o nounset
@@ -609,13 +609,13 @@ _koopa_activate_python() {
 _koopa_activate_rbenv() {
     local nounset prefix script
     [ -n "${RBENV_ROOT:-}" ] && return 0
-    [ -x "$(koopa_bin_prefix)/rbenv" ] || return 0
-    prefix="$(koopa_rbenv_prefix)"
+    [ -x "$(_koopa_bin_prefix)/rbenv" ] || return 0
+    prefix="$(_koopa_rbenv_prefix)"
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/rbenv"
     [ -r "$script" ] || return 0
     export RBENV_ROOT="$prefix"
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$script" init -)"
     [ "$nounset" -eq 1 ] && set -o nounset
@@ -657,8 +657,8 @@ _koopa_activate_ssh_key() {
 
 _koopa_activate_starship() {
     local nounset shell
-    [ -x "$(koopa_bin_prefix)/starship" ] || return 0
-    shell="$(koopa_shell_name)"
+    [ -x "$(_koopa_bin_prefix)/starship" ] || return 0
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -668,21 +668,21 @@ _koopa_activate_starship() {
             ;;
     esac
     unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && return 0
     eval "$(starship init "$shell")"
     return 0
 }
 
 _koopa_activate_tealdeer() {
-    [ -x "$(koopa_bin_prefix)/tldr" ] || return 0
+    [ -x "$(_koopa_bin_prefix)/tldr" ] || return 0
     if [ -z "${TEALDEER_CACHE_DIR:-}" ]
     then
-        TEALDEER_CACHE_DIR="$(koopa_xdg_cache_home)/tealdeer"
+        TEALDEER_CACHE_DIR="$(_koopa_xdg_cache_home)/tealdeer"
     fi
     if [ -z "${TEALDEER_CONFIG_DIR:-}" ]
     then
-        TEALDEER_CONFIG_DIR="$(koopa_xdg_config_home)/tealdeer"
+        TEALDEER_CONFIG_DIR="$(_koopa_xdg_config_home)/tealdeer"
     fi
     if [ ! -d "${TEALDEER_CACHE_DIR:?}" ]
     then
@@ -701,7 +701,7 @@ _koopa_activate_today_bucket() {
     today_bucket="$(date '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     if _koopa_str_detect_posix \
-        "$(koopa_realpath "$today_link")" \
+        "$(_koopa_realpath "$today_link")" \
         "$today_bucket"
     then
         return 0
@@ -716,23 +716,23 @@ _koopa_activate_today_bucket() {
 _koopa_activate_xdg() {
     if [ -z "${XDG_CACHE_HOME:-}" ]
     then
-        XDG_CACHE_HOME="$(koopa_xdg_cache_home)"
+        XDG_CACHE_HOME="$(_koopa_xdg_cache_home)"
     fi
     if [ -z "${XDG_CONFIG_DIRS:-}" ]
     then
-        XDG_CONFIG_DIRS="$(koopa_xdg_config_dirs)"
+        XDG_CONFIG_DIRS="$(_koopa_xdg_config_dirs)"
     fi
     if [ -z "${XDG_CONFIG_HOME:-}" ]
     then
-        XDG_CONFIG_HOME="$(koopa_xdg_config_home)"
+        XDG_CONFIG_HOME="$(_koopa_xdg_config_home)"
     fi
     if [ -z "${XDG_DATA_DIRS:-}" ]
     then
-        XDG_DATA_DIRS="$(koopa_xdg_data_dirs)"
+        XDG_DATA_DIRS="$(_koopa_xdg_data_dirs)"
     fi
     if [ -z "${XDG_DATA_HOME:-}" ]
     then
-        XDG_DATA_HOME="$(koopa_xdg_data_home)"
+        XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
     export XDG_CACHE_HOME XDG_CONFIG_DIRS XDG_CONFIG_HOME \
         XDG_DATA_DIRS XDG_DATA_HOME
@@ -742,9 +742,9 @@ _koopa_activate_xdg() {
 
 _koopa_activate_zoxide() {
     local nounset shell zoxide
-    zoxide="$(koopa_bin_prefix)/zoxide"
+    zoxide="$(_koopa_bin_prefix)/zoxide"
     [ -x "$zoxide" ] || return 0
-    shell="$(koopa_shell_name)"
+    shell="$(_koopa_shell_name)"
     case "$shell" in
         'bash' | \
         'zsh')
@@ -753,7 +753,7 @@ _koopa_activate_zoxide() {
             return 0
             ;;
     esac
-    nounset="$(koopa_boolean_nounset)"
+    nounset="$(_koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     eval "$("$zoxide" init "$shell")"
     [ "$nounset" -eq 1 ] && set -o nounset
@@ -762,7 +762,7 @@ _koopa_activate_zoxide() {
 
 _koopa_add_config_link() {
     local config_prefix dest_file dest_name source_file
-    config_prefix="$(koopa_config_prefix)"
+    config_prefix="$(_koopa_config_prefix)"
     _koopa_is_alias 'ln' && unalias 'ln'
     _koopa_is_alias 'mkdir' && unalias 'mkdir'
     _koopa_is_alias 'rm' && unalias 'rm'
