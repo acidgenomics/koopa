@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2207
 
-__koopa_complete() {
+_koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-06.
+    # @note Updated 2023-03-09.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -413,7 +413,7 @@ __koopa_complete() {
                         'zsh'
                         'zstd'
                     )
-                    if koopa_is_linux
+                    if _koopa_is_linux
                     then
                         args+=(
                             'apptainer'
@@ -466,7 +466,7 @@ __koopa_complete() {
                         'yq'
                         'zsh-compaudit-set-permissions'
                     )
-                    if koopa_is_macos
+                    if _koopa_is_macos
                     then
                         args+=(
                             'clean-launch-services'
@@ -508,20 +508,20 @@ __koopa_complete() {
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'system')
                                     args+=('homebrew-bundle' 'tex-packages')
-                                    if koopa_is_linux
+                                    if _koopa_is_linux
                                     then
                                         args+=('pivpn')
-                                    elif koopa_is_macos
+                                    elif _koopa_is_macos
                                     then
                                         args+=('defaults')
                                     fi
-                                    if koopa_is_debian_like
+                                    if _koopa_is_debian_like
                                     then
                                         args+=('builder-base')
                                     fi
                                     ;;
                                 'user')
-                                    if koopa_is_macos
+                                    if _koopa_is_macos
                                     then
                                         args+=('defaults')
                                     fi
@@ -532,21 +532,22 @@ __koopa_complete() {
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'system')
                             args+=('homebrew' 'vscode-server')
-                            if koopa_is_linux
+                            if _koopa_is_linux
                             then
                                 args+=('pihole' 'wine')
-                                if koopa_is_debian_like || koopa_is_fedora_like
+                                if _koopa_is_debian_like || \
+                                   _koopa_is_fedora_like
                                 then
                                     args+=('rstudio-server' 'shiny-server')
                                 fi 
-                                if koopa_is_debian_like
+                                if _koopa_is_debian_like
                                 then
                                     args+=('docker' 'r')
-                                elif koopa_is_fedora_like
+                                elif _koopa_is_fedora_like
                                 then
                                     args+=('oracle-instant-client')
                                 fi
-                            elif koopa_is_macos
+                            elif _koopa_is_macos
                             then
                                 args+=('python' 'r' 'r-openmp' 'xcode-clt')
                             fi
@@ -581,7 +582,7 @@ __koopa_complete() {
                                 'path-priority'
                                 'programs'
                             )
-                            if koopa_is_macos
+                            if _koopa_is_macos
                             then
                                 args+=('launch-agents')
                             fi
@@ -777,4 +778,4 @@ __koopa_complete() {
     return 0
 }
 
-complete -F __koopa_complete koopa
+complete -F _koopa_complete koopa
