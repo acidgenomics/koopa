@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_bcbio_nextgen() {
+_koopa_activate_bcbio_nextgen() {
     # """
     # Activate bcbio-nextgen tool binaries.
     # @note Updated 2022-05-12.
@@ -19,7 +19,7 @@ koopa_activate_bcbio_nextgen() {
     prefix="$(koopa_bcbio_nextgen_prefix)"
     [ -d "$prefix" ] || return 0
     # Only enable this when debugging.
-    # > koopa_add_to_path_end "${prefix}/install/anaconda/bin"
-    koopa_add_to_path_end "${prefix}/tools/bin"
+    # > _koopa_add_to_path_end "${prefix}/install/anaconda/bin"
+    _koopa_add_to_path_end "${prefix}/tools/bin"
     return 0
 }

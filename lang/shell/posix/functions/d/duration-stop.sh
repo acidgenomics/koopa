@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_duration_stop() {
+_koopa_duration_stop() {
     # """
     # Stop activation duration timer.
     # @note Updated 2022-04-10.
@@ -24,7 +24,7 @@ koopa_duration_stop() {
     stop="$(date -u '+%s%3N')"
     duration="$(koopa_print "${stop}-${start}" | bc)"
     [ -n "$duration" ] || return 1
-    koopa_dl "$key" "${duration} ms"
+    _koopa_dl "$key" "${duration} ms"
     unset -v KOOPA_DURATION_START
     return 0
 }

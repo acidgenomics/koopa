@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_print() {
+_koopa_print() {
     # """
     # Print a string.
     # @note Updated 2020-07-05.

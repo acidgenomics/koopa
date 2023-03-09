@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_export_koopa_shell() {
+_koopa_export_koopa_shell() {
     # """
     # Export 'KOOPA_SHELL' variable.
     # @note Updated 2022-02-02.

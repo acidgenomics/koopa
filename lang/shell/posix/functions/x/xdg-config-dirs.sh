@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_xdg_config_dirs() {
+_koopa_xdg_config_dirs() {
     # """
     # XDG config dirs.
     # @note Updated 2021-05-20.
@@ -11,6 +11,6 @@ koopa_xdg_config_dirs() {
     then
         x='/etc/xdg'
     fi
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

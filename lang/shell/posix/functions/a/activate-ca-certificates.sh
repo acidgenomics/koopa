@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_ca_certificates() {
+_koopa_activate_ca_certificates() {
     # """
     # Activate CA certificates for OpenSSL.
     # @note Updated 2022-10-05.

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_starship() {
+_koopa_activate_starship() {
     # """
     # Activate starship prompt.
     # @note Updated 2022-05-12.

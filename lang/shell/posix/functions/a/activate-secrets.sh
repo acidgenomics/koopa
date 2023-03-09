@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_secrets() {
+_koopa_activate_secrets() {
     # """
     # Source secrets file.
     # @note Updated 2020-07-07.

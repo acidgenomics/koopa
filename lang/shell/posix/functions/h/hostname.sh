@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_hostname() {
+_koopa_hostname() {
     # """
     # Host name.
     # @note Updated 2022-01-21.
@@ -8,6 +8,6 @@ koopa_hostname() {
     local x
     x="$(uname -n)"
     [ -n "$x" ] || return 1
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

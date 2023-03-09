@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_glances() {
+_koopa_alias_glances() {
     # """
     # glances alias.
     # @note Updated 2022-11-15.

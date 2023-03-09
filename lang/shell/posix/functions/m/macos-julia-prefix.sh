@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_macos_julia_prefix() {
+_koopa_macos_julia_prefix() {
     # """
     # macOS Julia prefix.
     # @note Updated 2021-12-01.
@@ -19,5 +19,5 @@ koopa_macos_julia_prefix() {
     [ -d "$x" ] || return 1
     prefix="${x}/Contents/Resources/julia"
     [ -d "$x" ] || return 1
-    koopa_print "$prefix"
+    _koopa_print "$prefix"
 }

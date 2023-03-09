@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_ssh_key() {
+_koopa_activate_ssh_key() {
     # """
     # Import an SSH key automatically.
     # @note Updated 2021-05-26.
@@ -15,7 +15,7 @@ koopa_activate_ssh_key() {
     # > ssh-add -L
     # """
     local key
-    koopa_is_linux || return 0
+    _koopa_is_linux || return 0
     key="${1:-}"
     if [ -z "$key" ] && [ -n "${SSH_KEY:-}" ]
     then

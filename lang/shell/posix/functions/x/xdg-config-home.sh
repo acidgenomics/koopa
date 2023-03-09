@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_xdg_config_home() {
+_koopa_xdg_config_home() {
     # """
     # XDG config home.
     # @note Updated 2021-05-20.
@@ -11,6 +11,6 @@ koopa_xdg_config_home() {
     then
         x="${HOME:?}/.config"
     fi
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

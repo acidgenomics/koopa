@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_today_bucket() {
+_koopa_activate_today_bucket() {
     # """
     # Create a dated file today bucket.
     # @note Updated 2022-10-07.
@@ -27,14 +27,14 @@ koopa_activate_today_bucket() {
     today_bucket="$(date '+%Y/%m/%d')"
     today_link="${HOME:?}/today"
     # Early return if we've already updated the symlink.
-    if koopa_str_detect_posix \
+    if _koopa_str_detect_posix \
         "$(koopa_realpath "$today_link")" \
         "$today_bucket"
     then
         return 0
     fi
-    koopa_is_alias 'ln' && unalias 'ln'
-    koopa_is_alias 'mkdir' && unalias 'mkdir'
+    _koopa_is_alias 'ln' && unalias 'ln'
+    _koopa_is_alias 'mkdir' && unalias 'mkdir'
     mkdir -p "${bucket_dir}/${today_bucket}" >/dev/null
     ln -fns "${bucket_dir}/${today_bucket}" "$today_link" >/dev/null
     return 0

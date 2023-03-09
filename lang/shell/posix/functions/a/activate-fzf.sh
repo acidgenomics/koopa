@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_fzf() {
+_koopa_activate_fzf() {
     # """
     # Activate fzf, command-line fuzzy finder.
     # @note Updated 2022-05-12.

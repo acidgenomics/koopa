@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_pyenv() {
+_koopa_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
     # @note Updated 2022-05-12.

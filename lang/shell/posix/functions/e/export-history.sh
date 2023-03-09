@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_export_history() {
+_koopa_export_history() {
     # """
     # Export history.
     # @note Updated 2021-01-31.
@@ -21,7 +21,7 @@ koopa_export_history() {
     # Note that the HOME check here hardens against symlinked data disk failure.
     if [ ! -f "$HISTFILE" ] \
         && [ -e "${HOME:-}" ] \
-        && koopa_is_installed 'touch'
+        && _koopa_is_installed 'touch'
     then
         touch "$HISTFILE"
     fi

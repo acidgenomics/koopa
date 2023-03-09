@@ -1,12 +1,12 @@
 #!/bin/sh
 
-koopa_activate_aliases() {
+_koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
     # @note Updated 2022-12-07.
     # """
     local file
-    koopa_activate_coreutils_aliases
+    _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'

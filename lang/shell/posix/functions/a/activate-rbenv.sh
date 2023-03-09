@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_rbenv() {
+_koopa_activate_rbenv() {
     # """
     # Activate Ruby version manager (rbenv).
     # @note Updated 2022-05-12.

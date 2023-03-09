@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_is_debian_like() {
+_koopa_is_debian_like() {
     # """
     # Is the operating system Debian-like?
     # @note Updated 2023-02-24.

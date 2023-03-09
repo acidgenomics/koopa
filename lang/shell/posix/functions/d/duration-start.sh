@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_duration_start() {
+_koopa_duration_start() {
     # """
     # Start activation duration timer.
     # @note Updated 2022-04-10.

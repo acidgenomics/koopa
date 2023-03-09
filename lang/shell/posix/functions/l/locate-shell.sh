@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_locate_shell() {
+_koopa_locate_shell() {
     # """
     # Locate the current shell executable.
     # @note Updated 2022-11-14.
@@ -23,15 +23,15 @@ koopa_locate_shell() {
     shell="${KOOPA_SHELL:-}"
     if [ -n "$shell" ]
     then
-        koopa_print "$shell"
+        _koopa_print "$shell"
         return 0
     fi
     pid="${$}"
     proc_file="/proc/${pid}/exe"
-    if [ -x "$proc_file" ] && ! koopa_is_qemu
+    if [ -x "$proc_file" ] && ! _koopa_is_qemu
     then
         shell="$(koopa_realpath "$proc_file")"
-    elif koopa_is_installed 'ps'
+    elif _koopa_is_installed 'ps'
     then
         shell="$( \
             ps -p "$pid" -o 'comm=' \
@@ -50,6 +50,6 @@ koopa_locate_shell() {
         fi
     fi
     [ -n "$shell" ] || return 1
-    koopa_print "$shell"
+    _koopa_print "$shell"
     return 0
 }

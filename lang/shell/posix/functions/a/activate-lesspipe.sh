@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_lesspipe() {
+_koopa_activate_lesspipe() {
     # """
     # Activate lesspipe.
     # @note Updated 2022-05-12.

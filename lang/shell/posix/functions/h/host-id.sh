@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_host_id() {
+_koopa_host_id() {
     # """
     # Simple host ID string to load up host-specific scripts.
     # @note Updated 2022-01-20.
@@ -19,7 +19,7 @@ koopa_host_id() {
     if [ -r '/etc/hostname' ]
     then
         id="$(cat '/etc/hostname')"
-    elif koopa_is_installed 'hostname'
+    elif _koopa_is_installed 'hostname'
     then
         id="$(hostname -f)"
     else
@@ -39,6 +39,6 @@ koopa_host_id() {
             ;;
     esac
     [ -n "$id" ] || return 1
-    koopa_print "$id"
+    _koopa_print "$id"
     return 0
 }

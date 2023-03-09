@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_mcfly() {
+_koopa_activate_mcfly() {
     # """
     # Activate mcfly.
     # @note Updated 2023-02-01.
@@ -10,7 +10,7 @@ koopa_activate_mcfly() {
     local color_mode nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(koopa_bin_prefix)/mcfly" ] || return 0
-    koopa_is_root && return 0
+    _koopa_is_root && return 0
     shell="$(koopa_shell_name)"
     case "$shell" in
         'bash' | \

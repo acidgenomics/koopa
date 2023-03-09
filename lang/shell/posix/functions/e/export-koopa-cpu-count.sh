@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_export_koopa_cpu_count() {
+_koopa_export_koopa_cpu_count() {
     # """
     # Export 'KOOPA_CPU_COUNT' variable.
     # @note Updated 2022-07-28.

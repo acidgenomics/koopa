@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_pipx() {
+_koopa_activate_pipx() {
     # """
     # Activate pipx for Python.
     # @note Updated 2022-10-07.
@@ -14,10 +14,10 @@ koopa_activate_pipx() {
     prefix="$(koopa_pipx_prefix)"
     if [ ! -d "$prefix" ]
     then
-        koopa_is_alias 'mkdir' && unalias 'mkdir'
+        _koopa_is_alias 'mkdir' && unalias 'mkdir'
         mkdir -p "$prefix" >/dev/null
     fi
-    koopa_add_to_path_start "${prefix}/bin"
+    _koopa_add_to_path_start "${prefix}/bin"
     PIPX_HOME="$prefix"
     PIPX_BIN_DIR="${prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR

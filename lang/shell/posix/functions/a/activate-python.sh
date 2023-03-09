@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_python() {
+_koopa_activate_python() {
     # """
     # Activate Python, including custom installed packages.
     # @note Updated 2022-05-09.

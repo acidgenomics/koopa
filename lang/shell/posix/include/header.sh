@@ -1,11 +1,12 @@
 #!/bin/sh
 
+# FIXME Rework to elimiate usage of 'local' here.
+
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2022-12-07.
+    # @note Updated 2023-03-09.
     # """
-    [ "$#" -eq 0 ] || return 1
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
@@ -77,7 +78,6 @@ __koopa_activate_koopa() {
     [ -n "${SHELL:-}" ] && export SHELL
     koopa_activate_xdg || return 1
     koopa_export_editor || return 1
-    koopa_export_git || return 1
     koopa_export_gnupg || return 1
     koopa_export_history || return 1
     koopa_export_pager || return 1

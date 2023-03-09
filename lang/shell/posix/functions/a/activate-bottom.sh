@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_bottom() {
+_koopa_activate_bottom() {
     # """
     # Activate bottom.
     # @note Updated 2022-12-08.
@@ -14,12 +14,12 @@ koopa_activate_bottom() {
     source_file="${prefix}/${source_bn}"
     [ -f "$source_file" ] || return 0
     target_file="${prefix}/bottom.toml"
-    if [ -h "$target_file" ] && koopa_is_installed 'readlink'
+    if [ -h "$target_file" ] && _koopa_is_installed 'readlink'
     then
         target_link_bn="$(readlink "$target_file")"
         [ "$target_link_bn" = "$source_bn" ] && return 0
     fi
-    koopa_is_alias 'ln' && unalias 'ln'
+    _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$source_file" "$target_file" >/dev/null
     return 0
 }

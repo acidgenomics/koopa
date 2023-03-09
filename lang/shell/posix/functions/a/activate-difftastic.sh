@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_difftastic() {
+_koopa_activate_difftastic() {
     # """
     # Activate difftastic.
     # @note Updated 2022-05-12.

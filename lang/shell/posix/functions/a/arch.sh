@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_arch() {
+_koopa_arch() {
     # """
     # Platform architecture.
     # @note Updated 2022-01-21.
@@ -10,6 +10,6 @@ koopa_arch() {
     local x
     x="$(uname -m)"
     [ -n "$x" ] || return 1
-    koopa_print "$x"
+    _koopa_print "$x"
     return 0
 }

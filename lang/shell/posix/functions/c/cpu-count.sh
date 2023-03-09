@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_cpu_count() {
+_koopa_cpu_count() {
     # """
     # Return a usable number of CPU cores.
     # @note Updated 2023-02-01.
@@ -10,7 +10,7 @@ koopa_cpu_count() {
     num="${KOOPA_CPU_COUNT:-}"
     if [ -n "$num" ]
     then
-        koopa_print "$num"
+        _koopa_print "$num"
         return 0
     fi
     bin_prefix="$(koopa_bin_prefix)"
@@ -18,12 +18,12 @@ koopa_cpu_count() {
     if [ -x "$nproc" ]
     then
         num="$("$nproc" --all)"
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
         sysctl='/usr/sbin/sysctl'
         [ -x "$sysctl" ] || return 1
         num="$("$sysctl" -n 'hw.ncpu')"
-    elif koopa_is_linux
+    elif _koopa_is_linux
     then
         getconf='/usr/bin/getconf'
         [ -x "$getconf" ] || return 1
@@ -31,6 +31,6 @@ koopa_cpu_count() {
     else
         num=1
     fi
-    koopa_print "$num"
+    _koopa_print "$num"
     return 0
 }

@@ -1,6 +1,8 @@
 #!/bin/sh
 
-koopa_git_repo_needs_pull_or_push() {
+# FIXME Move this to Bash.
+
+_koopa_git_repo_needs_pull_or_push() {
     # """
     # Does the current git repo need a pull or push?
     # @note Updated 2021-08-19.

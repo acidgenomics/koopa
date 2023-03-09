@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_alacritty() {
+_koopa_activate_alacritty() {
     # """
     # Activate Alacritty terminal client.
     # @note Updated 2022-08-04.
@@ -12,7 +12,7 @@ koopa_activate_alacritty() {
     #   https://github.com/alacritty/alacritty/issues/2237
     # """
     local conf_file color_file color_mode pattern prefix replacement
-    koopa_is_alacritty || return 0
+    _koopa_is_alacritty || return 0
     prefix="$(koopa_xdg_config_home)/alacritty"
     [ -d "$prefix" ] || return 0
     conf_file="${prefix}/alacritty.yml"

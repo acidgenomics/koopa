@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_conda() {
+_koopa_activate_conda() {
     # """
     # Activate conda using 'activate' script.
     # @note Updated 2022-12-07.
@@ -11,8 +11,8 @@ koopa_activate_conda() {
     [ -d "$prefix" ] || return 0
     script="${prefix}/bin/activate"
     [ -r "$script" ] || return 0
-    koopa_is_alias 'conda' && unalias 'conda'
-    koopa_is_alias 'mamba' && unalias 'mamba'
+    _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
     nounset="$(koopa_boolean_nounset)"
     [ "$nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null

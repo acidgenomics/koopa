@@ -1,6 +1,6 @@
 #!/bin/sh
 
-__koopa_add_to_path_string_start() {
+_koopa_add_to_path_string_start() {
     # """
     # Add a directory to the beginning of a PATH string.
     # @note Updated 2022-08-29.
@@ -11,9 +11,9 @@ __koopa_add_to_path_string_start() {
     local dir str
     str="${1:-}"
     dir="${2:?}"
-    if koopa_str_detect_posix "$str" "${dir}:"
+    if _koopa_str_detect_posix "$str" "${dir}:"
     then
-        str="$(__koopa_remove_from_path_string "$str" "${dir}")"
+        str="$(_koopa_remove_from_path_string "$str" "${dir}")"
     fi
     if [ -z "$str" ]
     then
@@ -21,6 +21,6 @@ __koopa_add_to_path_string_start() {
     else
         str="${dir}:${str}"
     fi
-    koopa_print "$str"
+    _koopa_print "$str"
     return 0
 }

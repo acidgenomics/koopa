@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_coreutils_aliases() {
+_koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
     # @note Updated 2022-09-20.

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_kdev() {
+_koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
     # @note Updated 2022-09-08.
@@ -19,9 +19,9 @@ koopa_alias_kdev() {
     # @seealso
     # - https://superuser.com/questions/319043/
     # """
-    local bash bin_prefix env koopa_prefix
+    local bash bin_prefix env _koopa_prefix
     bin_prefix="$(koopa_bin_prefix)"
-    koopa_prefix="$(koopa_koopa_prefix)"
+    _koopa_prefix="$(koopa_koopa_prefix)"
     bash="${bin_prefix}/bash"
     env="${bin_prefix}/genv"
     [ ! -x "$bash" ] && bash='/usr/bin/bash'

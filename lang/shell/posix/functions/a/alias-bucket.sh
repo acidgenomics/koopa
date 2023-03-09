@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_bucket() {
+_koopa_alias_bucket() {
     # """
     # Today bucket alias.
     # @note Updated 2021-06-08.
