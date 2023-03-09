@@ -95,7 +95,6 @@ koopa_activate_zsh_fpath() {
     # @note Updated 2021-01-19.
     # """
     local koopa_fpath koopa_prefix
-    [[ "$#" -eq 0 ]] || return 1
     koopa_prefix="$(koopa_koopa_prefix)"
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
@@ -120,7 +119,6 @@ koopa_activate_zsh_plugins() {
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
     local dotfiles_prefix plugin plugins zsh_plugins_dir
-    [[ "$#" -eq 0 ]] || return 1
     dotfiles_prefix="$(koopa_dotfiles_prefix)"
     zsh_plugins_dir="$(koopa_xdg_data_home)/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
@@ -142,7 +140,7 @@ koopa_activate_zsh_plugins() {
 koopa_activate_zsh_prompt() {
     # """
     # Activate Zsh prompt.
-    # Updated 2022-03-16.
+    # Updated 2023-03-09.
     #
     # See also:
     # - https://github.com/sindresorhus/pure
@@ -152,7 +150,6 @@ koopa_activate_zsh_prompt() {
     # This step must be sourced after oh-my-zsh.
     # """
     local nounset
-    [[ "$#" -eq 0 ]] || return 1
     koopa_is_root && return 0
     nounset="$(koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
