@@ -1263,11 +1263,6 @@ _koopa_emacs() {
     return 0
 }
 
-_koopa_ensembl_perl_api_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/ensembl-perl-api"
-    return 0
-}
-
 _koopa_export_editor() {
     if [ -z "${EDITOR:-}" ]
     then

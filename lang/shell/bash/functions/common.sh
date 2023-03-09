@@ -655,9 +655,8 @@ koopa_activate_app() {
 
 koopa_activate_ensembl_perl_api() {
     local dict
-    declare -A dict=(
-        ['prefix']="$(koopa_ensembl_perl_api_prefix)"
-    )
+    declare -A dict
+    dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_add_to_path_start "${dict['prefix']}/ensembl-git-tools/bin"
     PERL5LIB="${PERL5LIB:-}"
@@ -18231,6 +18230,26 @@ koopa_config_prefix() {
 
 koopa_cpu_count() {
     _koopa_cpu_count "$@"
+}
+
+koopa_default_shell_name() {
+    _koopa_default_shell_name "$@"
+}
+
+koopa_docker_prefix() {
+    _koopa_docker_prefix "$@"
+}
+
+koopa_doom_emacs_prefix() {
+    _koopa_doom_emacs_prefix "$@"
+}
+
+koopa_dotfiles_prefix() {
+    _koopa_dotfiles_prefix "$@"
+}
+
+koopa_emacs_prefix() {
+    _koopa_emacs_prefix "$@"
 }
 
 koopa_is_debian_like() {
