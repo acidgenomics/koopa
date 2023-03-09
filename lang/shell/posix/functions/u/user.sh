@@ -7,5 +7,9 @@ _koopa_user() {
     #
     # Alternatively, can use 'whoami' here.
     # """
-    id -un
+    __kvar_string="$(id -un)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
 }
