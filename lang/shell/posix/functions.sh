@@ -311,23 +311,28 @@ _koopa_activate_completion() {
 }
 
 _koopa_activate_conda() {
-    local nounset prefix
-    prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(_koopa_conda_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/bin/activate"
-    [ -r "$script" ] || return 0
-    _koopa_is_alias 'conda' && unalias 'conda'
-    _koopa_is_alias 'mamba' && unalias 'mamba'
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    . "$script"
-    if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
-        [ "${CONDA_SHLVL:-0}" -eq 1 ]
+    __kvar_prefix="${1:-}"
+    [ -z "$__kvar_prefix" ] && __kvar_prefix="$(_koopa_conda_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
     then
-        conda deactivate
+        unset -v __kvar_prefix
+        return 0
     fi
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_script="${__kvar_prefix}/bin/activate"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v __kvar_prefix __kvar_script
+        return 0
+    fi
+    _koopa_is_alias 'conda' && unalias 'conda'
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    . "$__kvar_script"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_prefix \
+        __kvar_script
     return 0
 }
 
