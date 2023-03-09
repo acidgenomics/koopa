@@ -1039,11 +1039,6 @@ _koopa_alias_zoxide() {
     z "$@"
 }
 
-_koopa_anaconda_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/anaconda"
-    return 0
-}
-
 _koopa_arch() {
     local x
     x="$(uname -m)"
@@ -1106,14 +1101,6 @@ _koopa_color_mode() {
     fi
     [ -n "$str" ] || return 0
     _koopa_print "$str"
-    return 0
-}
-
-_koopa_conda_env_name() {
-    local x
-    x="${CONDA_DEFAULT_ENV:-}"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
     return 0
 }
 
@@ -1411,16 +1398,6 @@ _koopa_group_id() {
 
 _koopa_group() {
     id -gn
-}
-
-_koopa_homebrew_cellar_prefix() {
-    _koopa_print "$(_koopa_homebrew_prefix)/Cellar"
-    return 0
-}
-
-_koopa_homebrew_opt_prefix() {
-    _koopa_print "$(_koopa_homebrew_prefix)/opt"
-    return 0
 }
 
 _koopa_homebrew_prefix() {
