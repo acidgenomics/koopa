@@ -8,15 +8,22 @@ _koopa_activate_mcfly() {
     # Use "mcfly search 'query'" to query directly.
     # """
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
-    [ -x "$(_koopa_bin_prefix)/mcfly" ] || return 0
     _koopa_is_root && return 0
+    __kvar_mcfly="$(_koopa_bin_prefix)/mcfly"
+    if [ ! -x "$__kvar_mcfly" ]
+    then
+        unset -v __kvar_mcfly
+        return 0
+    fi
     __kvar_shell="$(_koopa_shell_name)"
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
-            unset -v __kvar_shell
+            unset -v \
+                __kvar_mcfly \
+                __kvar_shell
             return 0
             ;;
     esac
@@ -36,10 +43,11 @@ _koopa_activate_mcfly() {
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$(mcfly init "$__kvar_shell")"
+    eval "$("$__kvar_mcfly" init "$__kvar_shell")"
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_color_mode \
+        __kvar_mcfly \
         __kvar_nounset \
         __kvar_shell
     return 0
