@@ -832,19 +832,23 @@ _koopa_activate_rbenv() {
 }
 
 _koopa_activate_ruby() {
-    local prefix
-    prefix="${HOME:?}/.gem"
-    export GEM_HOME="$prefix"
-    _koopa_add_to_path_start "${prefix}/bin"
+    __kvar_prefix="${HOME:?}/.gem"
+    export GEM_HOME="$__kvar_prefix"
+    _koopa_add_to_path_start "${__kvar_prefix}/bin"
+    unset -v __kvar_prefix
     return 0
 }
 
 _koopa_activate_secrets() {
-    local file
-    file="${1:-}"
-    [ -z "$file" ] && file="${HOME:?}/.secrets"
-    [ -r "$file" ] || return 0
-    . "$file"
+    __kvar_file="${1:-}"
+    [ -z "$__kvar_file" ] && __kvar_file="${HOME:?}/.secrets"
+    if [ ! -r "$__kvar_file" ]
+    then
+        unset -v __kvar_file
+        return 0
+    fi
+    . "$__kvar_file"
+    unset -v __kvar_file
     return 0
 }
 
