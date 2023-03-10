@@ -3,21 +3,32 @@
 _koopa_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
-    # @note Updated 2022-05-12.
-    #
-    # Note that pyenv forks rbenv, so activation is very similar.
+    # @note Updated 2023-03-10.
     # """
-    local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
     [ -x "$(_koopa_bin_prefix)/pyenv" ] || return 0
-    prefix="$(_koopa_pyenv_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/bin/pyenv"
-    [ -r "$script" ] || return 0
-    export PYENV_ROOT="$prefix"
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$("$script" init -)"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_prefix="$(_koopa_pyenv_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_script="${__kvar_prefix}/bin/pyenv"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v \
+            __kvar_prefix \
+            __kvar_script
+        return 0
+    fi
+    export PYENV_ROOT="$__kvar_prefix"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    eval "$("$__kvar_script" init -)"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_prefix \
+        __kvar_script
     return 0
 }
