@@ -3407,6 +3407,7 @@
     "conservative": true,
     "date": "2023-03-01",
     "man1": ["pyenv.1"],
+    "outdated": true,
     "url": ["https://github.com/pyenv/pyenv/"],
     "version": "2.3.14"
   },
@@ -4037,6 +4038,7 @@
     "date": "2023-03-02",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
