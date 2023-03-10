@@ -2782,6 +2782,7 @@
     },
     "conservative": true,
     "date": "2023-03-07",
+    "reverse_dependencies": ["mpc", "gcc", "gawk"],
     "url": ["https://www.mpfr.org/"],
     "version": "4.2.0"
   },

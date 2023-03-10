@@ -18,7 +18,7 @@ koopa_activate_pkg_config() {
         [[ -x "$app" ]] || continue
         str="$("$app" --variable 'pc_path' 'pkg-config')"
         PKG_CONFIG_PATH="$( \
-            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$str" \
+            koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$str" \
         )"
     done
     export PKG_CONFIG_PATH
