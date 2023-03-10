@@ -3,7 +3,7 @@
 _koopa_activate_today_bucket() {
     # """
     # Create a dated file today bucket.
-    # @note Updated 2022-10-07.
+    # @note Updated 2023-03-10.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -19,23 +19,37 @@ _koopa_activate_today_bucket() {
     # -s, --symbolic
     #        make symbolic links instead of hard links
     # """
-    local bucket_dir today_bucket today_link
-    bucket_dir="${KOOPA_BUCKET:-}"
-    [ -z "$bucket_dir" ] && bucket_dir="${HOME:?}/bucket"
-    # Early return if there's no bucket directory on the system.
-    [ -d "$bucket_dir" ] || return 0
-    today_bucket="$(date '+%Y/%m/%d')"
-    today_link="${HOME:?}/today"
-    # Early return if we've already updated the symlink.
-    if _koopa_str_detect_posix \
-        "$(_koopa_realpath "$today_link")" \
-        "$today_bucket"
+    __kvar_bucket_dir="${KOOPA_BUCKET:-}"
+    [ -z "$__kvar_bucket_dir" ] && __kvar_bucket_dir="${HOME:?}/bucket"
+    if [ ! -d "$__kvar_bucket_dir" ]
     then
+        unset -v __kvar_bucket_dir
+        return 0
+    fi
+    __kvar_today_link="${HOME:?}/today"
+    __kvar_today_subdirs="$(date '+%Y/%m/%d')"
+    if _koopa_str_detect_posix \
+        "$(_koopa_realpath "$__kvar_today_link")" \
+        "$__kvar_today_subdirs"
+    then
+        unset -v \
+            __kvar_bucket_dir \
+            __kvar_today_link \
+            __kvar_today_subdirs
         return 0
     fi
     _koopa_is_alias 'ln' && unalias 'ln'
     _koopa_is_alias 'mkdir' && unalias 'mkdir'
-    mkdir -p "${bucket_dir}/${today_bucket}" >/dev/null
-    ln -fns "${bucket_dir}/${today_bucket}" "$today_link" >/dev/null
+    mkdir -p \
+        "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \
+        >/dev/null
+    ln -fns \
+        "${__kvar_bucket_dir}/${__kvar_today_subdirs}" \
+        "$__kvar_today_link" \
+        >/dev/null
+    unset -v \
+        __kvar_bucket_dir \
+        __kvar_today_link \
+        __kvar_today_subdirs
     return 0
 }
