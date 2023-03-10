@@ -7,9 +7,6 @@ _koopa_activate_zoxide() {
     #
     # Highly recommended to use along with fzf.
     #
-    # POSIX option:
-    # eval "$(zoxide init posix --hook prompt)"
-    #
     # @seealso
     # - https://github.com/ajeetdsouza/zoxide
     # """
