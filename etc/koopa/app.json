@@ -3406,11 +3406,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-03-01",
+    "date": "2023-03-10",
     "man1": ["pyenv.1"],
-    "outdated": true,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.14"
+    "version": "2.3.15"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4705,9 +4704,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-07",
+    "date": "2023-03-10",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.35.1"
+    "version": "0.35.2"
   },
   "zip": {
     "aliases": {
