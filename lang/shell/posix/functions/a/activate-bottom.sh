@@ -12,13 +12,11 @@ _koopa_activate_bottom() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_color_mode="$(_koopa_color_mode)"
-    __kvar_source_bn="bottom-${__kvar_color_mode}.toml"
+    __kvar_source_bn="bottom-$(_koopa_color_mode).toml"
     __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
     if [ ! -f "$__kvar_source_file" ]
     then
         unset -v \
-            __kvar_color_mode \
             __kvar_prefix \
             __kvar_source_bn \
             __kvar_source_file
@@ -31,7 +29,6 @@ _koopa_activate_bottom() {
         if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
         then
             unset -v \
-                __kvar_color_mode \
                 __kvar_prefix \
                 __kvar_source_bn \
                 __kvar_source_file \
@@ -43,7 +40,6 @@ _koopa_activate_bottom() {
     _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
     unset -v \
-        __kvar_color_mode \
         __kvar_prefix \
         __kvar_source_bn \
         __kvar_source_file \
