@@ -666,15 +666,22 @@ _koopa_activate_lesspipe() {
 
 _koopa_activate_mcfly() {
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
-    [ -x "$(_koopa_bin_prefix)/mcfly" ] || return 0
     _koopa_is_root && return 0
+    __kvar_mcfly="$(_koopa_bin_prefix)/mcfly"
+    if [ ! -x "$__kvar_mcfly" ]
+    then
+        unset -v __kvar_mcfly
+        return 0
+    fi
     __kvar_shell="$(_koopa_shell_name)"
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
-            unset -v __kvar_shell
+            unset -v \
+                __kvar_mcfly \
+                __kvar_shell
             return 0
             ;;
     esac
@@ -694,10 +701,11 @@ _koopa_activate_mcfly() {
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$(mcfly init "$__kvar_shell")"
+    eval "$("$__kvar_mcfly" init "$__kvar_shell")"
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_color_mode \
+        __kvar_mcfly \
         __kvar_nounset \
         __kvar_shell
     return 0
@@ -746,30 +754,29 @@ _koopa_activate_pipx() {
 
 _koopa_activate_pyenv() {
     [ -n "${PYENV_ROOT:-}" ] && return 0
-    [ -x "$(_koopa_bin_prefix)/pyenv" ] || return 0
     __kvar_prefix="$(_koopa_pyenv_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_script="${__kvar_prefix}/bin/pyenv"
-    if [ ! -r "$__kvar_script" ]
+    __kvar_pyenv="${__kvar_prefix}/bin/pyenv"
+    if [ ! -r "$__kvar_pyenv" ]
     then
         unset -v \
             __kvar_prefix \
-            __kvar_script
+            __kvar_pyenv
         return 0
     fi
     export PYENV_ROOT="$__kvar_prefix"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$("$__kvar_script" init -)"
+    eval "$("$__kvar_pyenv" init -)"
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_nounset \
         __kvar_prefix \
-        __kvar_script
+        __kvar_pyenv
     return 0
 }
 
@@ -804,30 +811,29 @@ _koopa_activate_python() {
 
 _koopa_activate_rbenv() {
     [ -n "${RBENV_ROOT:-}" ] && return 0
-    [ -x "$(_koopa_bin_prefix)/rbenv" ] || return 0
     __kvar_prefix="$(_koopa_rbenv_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_script="${__kvar_prefix}/bin/rbenv"
-    if [ ! -r "$__kvar_script" ]
+    __kvar_rbenv="${__kvar_prefix}/bin/rbenv"
+    if [ ! -r "$__kvar_rbenv" ]
     then
         unset -v \
             __kvar_prefix \
-            __kvar_script
+            __kvar_rbenv
         return 0
     fi
     export RBENV_ROOT="$__kvar_prefix"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$("$__kvar_script" init -)"
+    eval "$("$__kvar_rbenv" init -)"
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_nounset \
         __kvar_prefix \
-        __kvar_script
+        __kvar_rbenv
     return 0
 }
 
@@ -879,21 +885,36 @@ _koopa_activate_ssh_key() {
 }
 
 _koopa_activate_starship() {
-    local nounset shell
-    [ -x "$(_koopa_bin_prefix)/starship" ] || return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_starship="$(_koopa_bin_prefix)/starship"
+    if [ ! -x "$__kvar_starship" ]
+    then
+        unset -v __kvar_starship
+        return 0
+    fi
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v __kvar_shell
             return 0
             ;;
     esac
-    unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && return 0
-    eval "$(starship init "$shell")"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    if [ "$__kvar_nounset" -eq 1 ]
+    then
+        unset -v \
+            __kvar_nounset \
+            __kvar_shell \
+            __kvar_starship
+        return 0
+    fi
+    eval "$("$__kvar_starship" init "$__kvar_shell")"
+    unset -v \
+            __kvar_nounset \
+            __kvar_shell \
+            __kvar_starship
     return 0
 }
 
@@ -963,22 +984,29 @@ _koopa_activate_xdg() {
 }
 
 _koopa_activate_zoxide() {
-    local nounset shell zoxide
-    zoxide="$(_koopa_bin_prefix)/zoxide"
-    [ -x "$zoxide" ] || return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_zoxide="$(_koopa_bin_prefix)/zoxide"
+    if [ ! -x "$__kvar_zoxide" ]
+    then
+        unset -v __kvar_zoxide
+        return 0
+    fi
+    __kvar_shell="$(_koopa_shell_name)"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
+            eval "$("$__kvar_zoxide" init "$__kvar_shell")"
             ;;
         *)
-            return 0
+            eval "$("$__kvar_zoxide" init 'posix' --hook 'prompt')"
             ;;
     esac
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$("$zoxide" init "$shell")"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_shell \
+        __kvar_zoxide
     return 0
 }
 
