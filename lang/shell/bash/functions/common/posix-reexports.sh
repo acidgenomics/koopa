@@ -157,10 +157,6 @@ koopa_local_data_prefix() {
     _koopa_local_data_prefix "$@"
 }
 
-koopa_locate_shell() {
-    _koopa_locate_shell "$@"
-}
-
 koopa_macos_emacs() {
     _koopa_macos_emacs "$@"
 }
