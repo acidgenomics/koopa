@@ -678,7 +678,7 @@ koopa_activate_pkg_config() {
         [[ -x "$app" ]] || continue
         str="$("$app" --variable 'pc_path' 'pkg-config')"
         PKG_CONFIG_PATH="$( \
-            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$str" \
+            koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$str" \
         )"
     done
     export PKG_CONFIG_PATH
@@ -762,7 +762,7 @@ koopa_add_to_pkg_config_path() {
     do
         [[ -d "$dir" ]] || continue
         PKG_CONFIG_PATH="$( \
-            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$dir" \
+            koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$dir" \
         )"
     done
     export PKG_CONFIG_PATH
@@ -18348,10 +18348,6 @@ koopa_local_data_prefix() {
     _koopa_local_data_prefix "$@"
 }
 
-koopa_locate_shell() {
-    _koopa_locate_shell "$@"
-}
-
 koopa_macos_emacs() {
     _koopa_macos_emacs "$@"
 }
@@ -19744,9 +19740,8 @@ koopa_relink() {
 koopa_reload_shell() {
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['shell']="$(koopa_locate_shell)"
-    )
+    declare -A app
+    app['shell']="$(koopa_shell_name)"
     [[ -x "${app['shell']}" ]] || return 1
     exec "${app['shell']}" -il
     return 0

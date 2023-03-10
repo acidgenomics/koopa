@@ -3,25 +3,25 @@
 _koopa_activate_mcfly() {
     # """
     # Activate mcfly.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-03-10.
     #
     # Use "mcfly search 'query'" to query directly.
     # """
-    local color_mode nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(_koopa_bin_prefix)/mcfly" ] || return 0
     _koopa_is_root && return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v __kvar_shell
             return 0
             ;;
     esac
-    color_mode="$(_koopa_color_mode)"
-    [ "$color_mode" = 'light' ] && export MCFLY_LIGHT=true
+    __kvar_color_mode="$(_koopa_color_mode)"
+    [ "$__kvar_color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'emacs' | \
         'vim')
@@ -34,9 +34,13 @@ _koopa_activate_mcfly() {
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$(mcfly init "$shell")"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    eval "$(mcfly init "$__kvar_shell")"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_color_mode \
+        __kvar_nounset \
+        __kvar_shell
     return 0
 }

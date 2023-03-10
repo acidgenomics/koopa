@@ -595,65 +595,91 @@ _koopa_activate_homebrew() {
 }
 
 _koopa_activate_julia() {
-    local depot_path num_threads
     [ -x "$(_koopa_bin_prefix)/julia" ] || return 0
-    depot_path="$(_koopa_julia_packages_prefix)"
-    num_threads="$(_koopa_cpu_count)"
-    export JULIA_DEPOT_PATH="$depot_path"
-    export JULIA_NUM_THREADS="$num_threads"
+    JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
+    JULIA_NUM_THREADS="$(_koopa_cpu_count)"
+    export JULIA_DEPOT_PATH JULIA_NUM_THREADS
     return 0
 }
 
 _koopa_activate_kitty() {
-    local color_mode prefix source_bn source_file target_file target_link_bn
     _koopa_is_kitty || return 0
-    prefix="$(_koopa_xdg_config_home)/kitty"
-    [ -d "$prefix" ] || return 0
-    color_mode="$(_koopa_color_mode)"
-    source_bn="theme-${color_mode}.conf"
-    source_file="${prefix}/${source_bn}"
-    [ -f "$source_file" ] || return 0
-    target_file="${prefix}/current-theme.conf"
-    if [ -h "$target_file" ] && _koopa_is_installed 'readlink'
+    __kvar_prefix="$(_koopa_xdg_config_home)/kitty"
+    if [ ! -d "$__kvar_prefix" ]
     then
-        target_link_bn="$(readlink "$target_file")"
-        [ "$target_link_bn" = "$source_bn" ] && return 0
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_source_bn="theme-$(_koopa_color_mode).conf"
+    __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
+    if [ ! -f "$__kvar_source_file" ]
+    then
+        unset -v \
+            __kvar_prefix \
+            __kvar_source_bn \
+            __kvar_source_file
+        return 0
+    fi
+    __kvar_target_file="${__kvar_prefix}/current-theme.conf"
+    if [ -h "$__kvar_target_file" ] && _koopa_is_installed 'readlink'
+    then
+        __kvar_target_link_bn="$(readlink "$__kvar_target_file")"
+        if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
+        then
+            unset -v \
+                __kvar_prefix \
+                __kvar_source_bn \
+                __kvar_source_file \
+                __kvar_target_file \
+                __kvar_target_link_bn
+            return 0
+        fi
     fi
     _koopa_is_alias 'ln' && unalias 'ln'
-    ln -fns "$source_file" "$target_file" >/dev/null
+    ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
+    unset -v \
+        __kvar_prefix \
+        __kvar_source_bn \
+        __kvar_source_file \
+        __kvar_target_file \
+        __kvar_target_link_bn
     return 0
 }
 
 _koopa_activate_lesspipe() {
-    local lesspipe
-    lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
-    [ -x "$lesspipe" ] || return 0
+    __kvar_lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
+    if [ ! -x "$__kvar_lesspipe" ]
+    then
+        unset -v __kvar_lesspipe
+        return 0
+    fi
     export LESS='-R'
+    export LESSANSIMIDCHARS="0123456789;[?!\"'#%()*+ SetMark"
+    export LESSCHARSET='utf-8'
     export LESSCOLOR='yes'
-    export LESSOPEN="|${lesspipe} %s"
+    export LESSOPEN="|${__kvar_lesspipe} %s"
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
-    export LESSANSIMIDCHARS="0123456789;[?!\"'#%()*+ SetMark"
-    [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
+    unset -v __kvar_lesspipe
     return 0
 }
 
 _koopa_activate_mcfly() {
-    local color_mode nounset shell
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     [ -x "$(_koopa_bin_prefix)/mcfly" ] || return 0
     _koopa_is_root && return 0
-    shell="$(_koopa_shell_name)"
-    case "$shell" in
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v __kvar_shell
             return 0
             ;;
     esac
-    color_mode="$(_koopa_color_mode)"
-    [ "$color_mode" = 'light' ] && export MCFLY_LIGHT=true
+    __kvar_color_mode="$(_koopa_color_mode)"
+    [ "$__kvar_color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
         'emacs' | \
         'vim')
@@ -666,10 +692,14 @@ _koopa_activate_mcfly() {
     export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$(mcfly init "$shell")"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    eval "$(mcfly init "$__kvar_shell")"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_color_mode \
+        __kvar_nounset \
+        __kvar_shell
     return 0
 }
 
@@ -1290,11 +1320,11 @@ _koopa_cpu_count() {
 }
 
 _koopa_default_shell_name() {
-    local shell str
-    shell="${SHELL:-sh}"
-    str="$(basename "$shell")"
-    [ -n "$str" ] || return 1
-    _koopa_print "$str"
+    __kvar_shell="${SHELL:-sh}"
+    __kvar_shell="$(basename "$__kvar_shell")"
+    [ -n "$__kvar_shell" ] || return 1
+    _koopa_print "$__kvar_shell"
+    unset -v __kvar_shell
     return 0
 }
 
@@ -1663,11 +1693,11 @@ _koopa_is_git_repo() {
 }
 
 _koopa_is_installed() {
-    local cmd
-    for cmd in "$@"
+    for __kvar_cmd in "$@"
     do
-        command -v "$cmd" >/dev/null || return 1
+        command -v "$__kvar_cmd" >/dev/null || return 1
     done
+    unset -v __kvar_cmd
     return 0
 }
 
@@ -1768,37 +1798,41 @@ _koopa_local_data_prefix() {
 }
 
 _koopa_locate_shell() {
-    local proc_file pid shell
-    shell="${KOOPA_SHELL:-}"
-    if [ -n "$shell" ]
+    __kvar_shell="${KOOPA_SHELL:-}"
+    if [ -n "$__kvar_shell" ]
     then
-        _koopa_print "$shell"
+        _koopa_print "$__kvar_shell"
         return 0
     fi
-    pid="${$}"
-    proc_file="/proc/${pid}/exe"
-    if [ -x "$proc_file" ] && ! _koopa_is_qemu
+    __kvar_pid="${$}"
+    if _koopa_is_installed 'ps'
     then
-        shell="$(_koopa_realpath "$proc_file")"
-    elif _koopa_is_installed 'ps'
-    then
-        shell="$( \
-            ps -p "$pid" -o 'comm=' \
+        __kvar_shell="$( \
+            ps -p "$__kvar_pid" -o 'comm=' \
             | sed 's/^-//' \
         )"
-    fi
-    if [ -z "$shell" ]
+    elif _koopa_is_linux
     then
+        __kvar_proc_file="/proc/${__kvar_pid}/exe"
+        [ -f "$__kvar_proc_file" ] || return 1
+        __kvar_shell="$(_koopa_realpath "$__kvar_proc_file")"
+        __kvar_shell="$(basename "$__kvar_shell")"
+        unset -v __kvar_proc_file
+    else
         if [ -n "${BASH_VERSION:-}" ]
         then
-            shell='bash'
+            __kvar_shell='bash'
+        elif [ -n "${KSH_VERSION:-}" ]
+        then
+            __kvar_shell='ksh'
         elif [ -n "${ZSH_VERSION:-}" ]
         then
-            shell='zsh'
+            __kvar_shell='zsh'
         fi
     fi
-    [ -n "$shell" ] || return 1
-    _koopa_print "$shell"
+    [ -n "$__kvar_shell" ] || return 1
+    _koopa_print "$__kvar_shell"
+    unset -v __kvar_pid __kvar_shell
     return 0
 }
 
@@ -2053,11 +2087,10 @@ _koopa_scripts_private_prefix() {
 }
 
 _koopa_shell_name() {
-    local shell str
-    shell="$(_koopa_locate_shell)"
-    str="$(basename "$shell")"
-    [ -n "$str" ] || return 1
-    _koopa_print "$str"
+    __kvar_shell="$(_koopa_locate_shell)"
+    __kvar_shell="$(basename "$__kvar_shell")"
+    [ -n "$__kvar_shell" ] || return 1
+    _koopa_print "$__kvar_shell"
     return 0
 }
 
