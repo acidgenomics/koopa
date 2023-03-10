@@ -13,8 +13,12 @@ _koopa_activate_path_helper() {
         unset -v __kvar_path_helper
         return 0
     fi
-    # FIXME Consider hardening with nounset boolean here.
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     eval "$("$__kvar_path_helper" -s)"
-    unset -v __kvar_path_helper
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_path_helper
     return 0
 }

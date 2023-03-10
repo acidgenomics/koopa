@@ -718,8 +718,13 @@ _koopa_activate_path_helper() {
         unset -v __kvar_path_helper
         return 0
     fi
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     eval "$("$__kvar_path_helper" -s)"
-    unset -v __kvar_path_helper
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_path_helper
     return 0
 }
 
@@ -740,18 +745,31 @@ _koopa_activate_pipx() {
 }
 
 _koopa_activate_pyenv() {
-    local nounset prefix script
     [ -n "${PYENV_ROOT:-}" ] && return 0
     [ -x "$(_koopa_bin_prefix)/pyenv" ] || return 0
-    prefix="$(_koopa_pyenv_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/bin/pyenv"
-    [ -r "$script" ] || return 0
-    export PYENV_ROOT="$prefix"
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$("$script" init -)"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_prefix="$(_koopa_pyenv_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_script="${__kvar_prefix}/bin/pyenv"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v \
+            __kvar_prefix \
+            __kvar_script
+        return 0
+    fi
+    export PYENV_ROOT="$__kvar_prefix"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    eval "$("$__kvar_script" init -)"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_prefix \
+        __kvar_script
     return 0
 }
 
