@@ -3,12 +3,14 @@
 _koopa_activate_homebrew() {
     # """
     # Activate Homebrew.
-    # @note Updated 2023-02-16.
+    # @note Updated 2023-03-09.
     # """
-    local prefix
-    prefix="$(_koopa_homebrew_prefix)"
-    [ -d "$prefix" ] || return 0
-    [ -x "${prefix}/bin/brew" ] || return 0
+    __kvar_prefix="$(_koopa_homebrew_prefix)"
+    if [ ! -x "${__kvar_prefix}/bin/brew" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
     [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
         export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
@@ -17,5 +19,6 @@ _koopa_activate_homebrew() {
         export HOMEBREW_NO_ANALYTICS=1
     [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
         export HOMEBREW_NO_ENV_HINTS=1
+    unset -v __kvar_prefix
     return 0
 }

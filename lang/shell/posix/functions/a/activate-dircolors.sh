@@ -19,7 +19,9 @@ _koopa_activate_dircolors() {
     __kvar_prefix="$(_koopa_xdg_config_home)/dircolors"
     if [ ! -d "$__kvar_prefix" ]
     then
-        unset -v __kvar_dircolors __kvar_prefix
+        unset -v \
+            __kvar_dircolors \
+            __kvar_prefix
         return 0
     fi
     __kvar_conf_file="${__kvar_prefix}/dircolors-$(_koopa_color_mode)"
@@ -27,7 +29,8 @@ _koopa_activate_dircolors() {
     then
         unset -v \
             __kvar_conf_file \
-            __kvar_dircolors
+            __kvar_dircolors \
+            __kvar_prefix
         return 0
     fi
     eval "$("$__kvar_dircolors" "$__kvar_conf_file")"
@@ -39,6 +42,7 @@ _koopa_activate_dircolors() {
     alias gvdir='gvdir --color=auto'
     unset -v \
         __kvar_conf_file \
-        __kvar_dircolors
+        __kvar_dircolors \
+        __kvar_prefix
     return 0
 }

@@ -518,7 +518,9 @@ _koopa_activate_dircolors() {
     __kvar_prefix="$(_koopa_xdg_config_home)/dircolors"
     if [ ! -d "$__kvar_prefix" ]
     then
-        unset -v __kvar_dircolors __kvar_prefix
+        unset -v \
+            __kvar_dircolors \
+            __kvar_prefix
         return 0
     fi
     __kvar_conf_file="${__kvar_prefix}/dircolors-$(_koopa_color_mode)"
@@ -526,7 +528,8 @@ _koopa_activate_dircolors() {
     then
         unset -v \
             __kvar_conf_file \
-            __kvar_dircolors
+            __kvar_dircolors \
+            __kvar_prefix
         return 0
     fi
     eval "$("$__kvar_dircolors" "$__kvar_conf_file")"
@@ -538,7 +541,8 @@ _koopa_activate_dircolors() {
     alias gvdir='gvdir --color=auto'
     unset -v \
         __kvar_conf_file \
-        __kvar_dircolors
+        __kvar_dircolors \
+        __kvar_prefix
     return 0
 }
 
@@ -559,19 +563,25 @@ quote=01:warning=01;35"
 }
 
 _koopa_activate_google_cloud_sdk() {
-    local python
-    python="$(_koopa_bin_prefix)/python3.10"
-    [ -x "$python" ] || return 0
-    CLOUDSDK_PYTHON="$python"
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    if [ ! -x "${__kvar_bin_prefix}/gcloud" ]
+    then
+        unset -v __kvar_bin_prefix
+        return 0
+    fi
+    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.10"
     export CLOUDSDK_PYTHON
+    unset -v __kvar_bin_prefix
     return 0
 }
 
 _koopa_activate_homebrew() {
-    local prefix
-    prefix="$(_koopa_homebrew_prefix)"
-    [ -d "$prefix" ] || return 0
-    [ -x "${prefix}/bin/brew" ] || return 0
+    __kvar_prefix="$(_koopa_homebrew_prefix)"
+    if [ ! -x "${__kvar_prefix}/bin/brew" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
     [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
         export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
@@ -580,6 +590,7 @@ _koopa_activate_homebrew() {
         export HOMEBREW_NO_ANALYTICS=1
     [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
         export HOMEBREW_NO_ENV_HINTS=1
+    unset -v __kvar_prefix
     return 0
 }
 
