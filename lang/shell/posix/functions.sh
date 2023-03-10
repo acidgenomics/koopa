@@ -712,26 +712,30 @@ _koopa_activate_micromamba() {
 }
 
 _koopa_activate_path_helper() {
-    local path_helper
-    path_helper='/usr/libexec/path_helper'
-    [ -x "$path_helper" ] || return 0
-    eval "$("$path_helper" -s)"
+    __kvar_path_helper='/usr/libexec/path_helper'
+    if [ ! -x "$__kvar_path_helper" ]
+    then
+        unset -v __kvar_path_helper
+        return 0
+    fi
+    eval "$("$__kvar_path_helper" -s)"
+    unset -v __kvar_path_helper
     return 0
 }
 
 _koopa_activate_pipx() {
-    local prefix
     [ -x "$(_koopa_bin_prefix)/pipx" ] || return 0
-    prefix="$(_koopa_pipx_prefix)"
-    if [ ! -d "$prefix" ]
+    __kvar_prefix="$(_koopa_pipx_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
     then
         _koopa_is_alias 'mkdir' && unalias 'mkdir'
-        mkdir -p "$prefix" >/dev/null
+        mkdir -p "$__kvar_prefix" >/dev/null
     fi
-    _koopa_add_to_path_start "${prefix}/bin"
-    PIPX_HOME="$prefix"
-    PIPX_BIN_DIR="${prefix}/bin"
+    _koopa_add_to_path_start "${__kvar_prefix}/bin"
+    PIPX_HOME="$__kvar_prefix"
+    PIPX_BIN_DIR="${__kvar_prefix}/bin"
     export PIPX_HOME PIPX_BIN_DIR
+    unset -v __kvar_prefix
     return 0
 }
 
