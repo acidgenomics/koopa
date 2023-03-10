@@ -1027,92 +1027,101 @@ _koopa_activate_zoxide() {
 }
 
 _koopa_add_config_link() {
-    local config_prefix dest_file dest_name source_file
-    config_prefix="$(_koopa_config_prefix)"
+    __kvar_config_prefix="$(_koopa_config_prefix)"
     _koopa_is_alias 'ln' && unalias 'ln'
     _koopa_is_alias 'mkdir' && unalias 'mkdir'
     _koopa_is_alias 'rm' && unalias 'rm'
     while [ "$#" -ge 2 ]
     do
-        source_file="${1:?}"
-        dest_name="${2:?}"
+        __kvar_source_file="${1:?}"
+        __kvar_dest_name="${2:?}"
         shift 2
-        [ -e "$source_file" ] || continue
-        dest_file="${config_prefix}/${dest_name}"
-        if [ -L "$dest_file" ] && [ -e "$dest_file" ]
+        [ -e "$__kvar_source_file" ] || continue
+        __kvar_dest_file="${__kvar_config_prefix}/${__kvar_dest_name}"
+        if [ -L "$__kvar_dest_file" ] && [ -e "$__kvar_dest_file" ]
         then
             continue
         fi
-        mkdir -p "$config_prefix" >/dev/null
-        rm -fr "$dest_file" >/dev/null
-        ln -fns "$source_file" "$dest_file" >/dev/null
+        mkdir -p "$__kvar_config_prefix" >/dev/null
+        rm -fr "$__kvar_dest_file" >/dev/null
+        ln -fns "$__kvar_source_file" "$__kvar_dest_file" >/dev/null
     done
+    unset -v \
+        __kvar_config_prefix \
+        __kvar_dest_file \
+        __kvar_dest_name \
+        __kvar_source_file
     return 0
 }
 
 _koopa_add_to_manpath_end() {
-    local dir
     MANPATH="${MANPATH:-}"
-    for dir in "$@"
+    for __kvar_dir in "$@"
     do
-        [ -d "$dir" ] || continue
-        MANPATH="$(_koopa_add_to_path_string_end "$MANPATH" "$dir")"
+        [ -d "$__kvar_dir" ] || continue
+        MANPATH="$(_koopa_add_to_path_string_end "$MANPATH" "$__kvar_dir")"
     done
     export MANPATH
+    unset -v __kvar_dir
     return 0
 }
 
 _koopa_add_to_manpath_start() {
-    local dir
     MANPATH="${MANPATH:-}"
-    for dir in "$@"
+    for __kvar_dir in "$@"
     do
-        [ -d "$dir" ] || continue
-        MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$dir")"
+        [ -d "$__kvar_dir" ] || continue
+        MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$__kvar_dir")"
     done
     export MANPATH
+    unset -v __kvar_dir
     return 0
 }
 
 _koopa_add_to_path_end() {
-    local dir
     PATH="${PATH:-}"
-    for dir in "$@"
+    for __kvar_dir in "$@"
     do
-        [ -d "$dir" ] || continue
-        PATH="$(_koopa_add_to_path_string_end "$PATH" "$dir")"
+        [ -d "$__kvar_dir" ] || continue
+        PATH="$(_koopa_add_to_path_string_end "$PATH" "$__kvar_dir")"
     done
     export PATH
+    unset -v __kvar_dir
     return 0
 }
 
 _koopa_add_to_path_start() {
-    local dir
     PATH="${PATH:-}"
-    for dir in "$@"
+    for __kvar_dir in "$@"
     do
-        [ -d "$dir" ] || continue
-        PATH="$(_koopa_add_to_path_string_start "$PATH" "$dir")"
+        [ -d "$__kvar_dir" ] || continue
+        PATH="$(_koopa_add_to_path_string_start "$PATH" "$__kvar_dir")"
     done
     export PATH
+    unset -v __kvar_dir
     return 0
 }
 
 _koopa_add_to_path_string_end() {
-    local dir str
-    str="${1:-}"
-    dir="${2:?}"
-    if _koopa_str_detect_posix "$str" ":${dir}"
+    __kvar_string="${1:-}"
+    __kvar_dir="${2:?}"
+    if _koopa_str_detect_posix "$__kvar_string" ":${__kvar_dir}"
     then
-        str="$(_koopa_remove_from_path_string "$str" "${dir}")"
+        __kvar_string="$(\
+            _koopa_remove_from_path_string \
+                "$__kvar_string" ":${__kvar_dir}" \
+        )"
     fi
-    if [ -z "$str" ]
+    if [ -z "$__kvar_string" ]
     then
-        str="$dir"
+        __kvar_string="$__kvar_dir"
     else
-        str="${str}:${dir}"
+        __kvar_string="${__kvar_string}:${__kvar_dir}"
     fi
-    _koopa_print "$str"
+    _koopa_print "$__kvar_string"
+    unset -v \
+        __kvar_dir \
+        __kvar_string
     return 0
 }
 
