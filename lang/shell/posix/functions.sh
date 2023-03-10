@@ -788,12 +788,12 @@ _koopa_activate_python() {
     fi
     if [ -z "${PYTHONSTARTUP:-}" ]
     then
-        local startup_file
-        startup_file="${HOME:?}/.pyrc"
-        if [ -f "$startup_file" ]
+        __kvar_startup_file="${HOME:?}/.pyrc"
+        if [ -f "$__kvar_startup_file" ]
         then
-            export PYTHONSTARTUP="$startup_file"
+            export PYTHONSTARTUP="$__kvar_startup_file"
         fi
+        unset -v __kvar_startup_file
     fi
     if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
     then
@@ -803,18 +803,31 @@ _koopa_activate_python() {
 }
 
 _koopa_activate_rbenv() {
-    local nounset prefix script
     [ -n "${RBENV_ROOT:-}" ] && return 0
     [ -x "$(_koopa_bin_prefix)/rbenv" ] || return 0
-    prefix="$(_koopa_rbenv_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/bin/rbenv"
-    [ -r "$script" ] || return 0
-    export RBENV_ROOT="$prefix"
-    nounset="$(_koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$("$script" init -)"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    __kvar_prefix="$(_koopa_rbenv_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_script="${__kvar_prefix}/bin/rbenv"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v \
+            __kvar_prefix \
+            __kvar_script
+        return 0
+    fi
+    export RBENV_ROOT="$__kvar_prefix"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    eval "$("$__kvar_script" init -)"
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_prefix \
+        __kvar_script
     return 0
 }
 
