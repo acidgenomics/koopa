@@ -3,7 +3,7 @@
 _koopa_activate_python() {
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2022-05-09.
+    # @note Updated 2023-03-10.
     #
     # Configures:
     # - Site packages library.
@@ -39,12 +39,12 @@ _koopa_activate_python() {
     fi
     if [ -z "${PYTHONSTARTUP:-}" ]
     then
-        local startup_file
-        startup_file="${HOME:?}/.pyrc"
-        if [ -f "$startup_file" ]
+        __kvar_startup_file="${HOME:?}/.pyrc"
+        if [ -f "$__kvar_startup_file" ]
         then
-            export PYTHONSTARTUP="$startup_file"
+            export PYTHONSTARTUP="$__kvar_startup_file"
         fi
+        unset -v __kvar_startup_file
     fi
     if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
     then
