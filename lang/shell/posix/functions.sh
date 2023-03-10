@@ -15,15 +15,13 @@ _koopa_activate_alacritty() {
         unset -v __kvar_conf_file __kvar_prefix
         return 0
     fi
-    __kvar_color_mode="$(_koopa_color_mode)"
-    __kvar_color_file_bn="colors-${__kvar_color_mode}.yml"
+    __kvar_color_file_bn="colors-$(_koopa_color_mode).yml"
     __kvar_color_file="${__kvar_prefix}/${__kvar_color_file_bn}"
     if [ ! -f "$__kvar_color_file" ]
     then
         unset -v \
             __kvar_color_file \
             __kvar_color_file_bn \
-            __kvar_color_mode \
             __kvar_conf_file \
             __kvar_prefix
         return 0
@@ -39,7 +37,6 @@ _koopa_activate_alacritty() {
     unset -v \
         __kvar_color_file \
         __kvar_color_file_bn \
-        __kvar_color_mode \
         __kvar_conf_file \
         __kvar_pattern \
         __kvar_prefix \
@@ -146,15 +143,18 @@ _koopa_activate_bat() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_color_mode="$(_koopa_color_mode)"
-    __kvar_conf_file="${__kvar_prefix}/config-${__kvar_color_mode}"
+    __kvar_conf_file="${__kvar_prefix}/config-$(_koopa_color_mode)"
     if [ ! -f "$__kvar_conf_file" ]
     then
-        unset -v __kvar_color_mode __kvar_conf_file __kvar_prefix
+        unset -v \
+            __kvar_conf_file \
+            __kvar_prefix
         return 0
     fi
     export BAT_CONFIG_PATH="$__kvar_conf_file"
-    unset -v __kvar_color_mode __kvar_conf_file __kvar_prefix
+    unset -v \
+        __kvar_conf_file \
+        __kvar_prefix
     return 0
 }
 
@@ -178,13 +178,11 @@ _koopa_activate_bottom() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_color_mode="$(_koopa_color_mode)"
-    __kvar_source_bn="bottom-${__kvar_color_mode}.toml"
+    __kvar_source_bn="bottom-$(_koopa_color_mode).toml"
     __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
     if [ ! -f "$__kvar_source_file" ]
     then
         unset -v \
-            __kvar_color_mode \
             __kvar_prefix \
             __kvar_source_bn \
             __kvar_source_file
@@ -197,7 +195,6 @@ _koopa_activate_bottom() {
         if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
         then
             unset -v \
-                __kvar_color_mode \
                 __kvar_prefix \
                 __kvar_source_bn \
                 __kvar_source_file \
@@ -209,7 +206,6 @@ _koopa_activate_bottom() {
     _koopa_is_alias 'ln' && unalias 'ln'
     ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
     unset -v \
-        __kvar_color_mode \
         __kvar_prefix \
         __kvar_source_bn \
         __kvar_source_file \
@@ -460,22 +456,46 @@ _koopa_activate_coreutils_aliases() {
 }
 
 _koopa_activate_delta() {
-    local color_mode prefix source_bn source_file target_file target_link_bn
     [ -x "$(_koopa_bin_prefix)/delta" ] || return 0
-    prefix="$(_koopa_xdg_config_home)/delta"
-    [ -d "$prefix" ] || return 0
-    color_mode="$(_koopa_color_mode)"
-    source_bn="theme-${color_mode}.gitconfig"
-    source_file="${prefix}/${source_bn}"
-    [ -f "$source_file" ] || return 0
-    target_file="${prefix}/theme.gitconfig"
-    if [ -h "$target_file" ] && _koopa_is_installed 'readlink'
+    __kvar_prefix="$(_koopa_xdg_config_home)/delta"
+    if [ ! -d "$__kvar_prefix" ]
     then
-        target_link_bn="$(readlink "$target_file")"
-        [ "$target_link_bn" = "$source_bn" ] && return 0
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_source_bn="theme-$(_koopa_color_mode).gitconfig"
+    __kvar_source_file="${__kvar_prefix}/${__kvar_source_bn}"
+    if [ ! -f "$__kvar_source_file" ]
+    then
+        unset -v \
+            __kvar_prefix \
+            __kvar_source_bn \
+            __kvar_source_file
+        return 0
+    fi
+    __kvar_target_file="${__kvar_prefix}/theme.gitconfig"
+    if [ -h "$__kvar_target_file" ] && _koopa_is_installed 'readlink'
+    then
+        __kvar_target_link_bn="$(readlink "$__kvar_target_file")"
+        if [ "$__kvar_target_link_bn" = "$__kvar_source_bn" ]
+        then
+            unset -v \
+                __kvar_prefix \
+                __kvar_source_bn \
+                __kvar_source_file \
+                __kvar_target_file \
+                __kvar_target_link_bn
+            return 0
+        fi
     fi
     _koopa_is_alias 'ln' && unalias 'ln'
-    ln -fns "$source_file" "$target_file" >/dev/null
+    ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
+    unset -v \
+        __kvar_prefix \
+        __kvar_source_bn \
+        __kvar_source_file \
+        __kvar_target_file \
+        __kvar_target_link_bn
     return 0
 }
 
@@ -489,21 +509,36 @@ _koopa_activate_difftastic() {
 
 _koopa_activate_dircolors() {
     [ -n "${SHELL:-}" ] || return 0
-    local dircolors
-    dircolors="$(_koopa_bin_prefix)/gdircolors"
-    [ -x "$dircolors" ] || return 0
-    local color_mode config_prefix dircolors_file
-    config_prefix="$(_koopa_xdg_config_home)/dircolors"
-    color_mode="$(_koopa_color_mode)"
-    dircolors_file="${config_prefix}/dircolors-${color_mode}"
-    [ -f "$dircolors_file" ] || return 0
-    eval "$("$dircolors" "$dircolors_file")"
+    __kvar_dircolors="$(_koopa_bin_prefix)/gdircolors"
+    if [ ! -x "$__kvar_dircolors" ]
+    then
+        unset -v __kvar_dircolors
+        return 0
+    fi
+    __kvar_prefix="$(_koopa_xdg_config_home)/dircolors"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_dircolors __kvar_prefix
+        return 0
+    fi
+    __kvar_conf_file="${__kvar_prefix}/dircolors-$(_koopa_color_mode)"
+    if [ ! -f "$__kvar_conf_file" ]
+    then
+        unset -v \
+            __kvar_conf_file \
+            __kvar_dircolors
+        return 0
+    fi
+    eval "$("$__kvar_dircolors" "$__kvar_conf_file")"
     alias gdir='gdir --color=auto'
     alias gegrep='gegrep --color=auto'
     alias gfgrep='gfgrep --color=auto'
     alias ggrep='ggrep --color=auto'
     alias gls='gls --color=auto'
     alias gvdir='gvdir --color=auto'
+    unset -v \
+        __kvar_conf_file \
+        __kvar_dircolors
     return 0
 }
 
