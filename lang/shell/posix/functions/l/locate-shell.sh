@@ -2,8 +2,11 @@
 
 _koopa_locate_shell() {
     # """
-    # Locate the current shell executable.
-    # @note Updated 2022-11-14.
+    # Locate the current shell (name, not absolute path).
+    # @note Updated 2023-03-10.
+    #
+    # Don't use 'lsof' on macOS, as it can hang on NFS shares
+    # (see '-b' flag for details).
     #
     # Detection issues with qemu ARM emulation on x86:
     # - The 'ps' approach will return correct shell for ARM running via
@@ -19,37 +22,40 @@ _koopa_locate_shell() {
     # - https://unix.stackexchange.com/questions/87061/
     # - https://unix.stackexchange.com/questions/182590/
     # """
-    local proc_file pid shell
-    shell="${KOOPA_SHELL:-}"
-    if [ -n "$shell" ]
+    __kvar_shell="${KOOPA_SHELL:-}"
+    if [ -n "$__kvar_shell" ]
     then
-        _koopa_print "$shell"
+        _koopa_print "$__kvar_shell"
         return 0
     fi
-    pid="${$}"
-    proc_file="/proc/${pid}/exe"
-    if [ -x "$proc_file" ] && ! _koopa_is_qemu
+    __kvar_pid="${$}"
+    if _koopa_is_installed 'ps'
     then
-        shell="$(_koopa_realpath "$proc_file")"
-    elif _koopa_is_installed 'ps'
-    then
-        shell="$( \
-            ps -p "$pid" -o 'comm=' \
+        __kvar_shell="$( \
+            ps -p "$__kvar_pid" -o 'comm=' \
             | sed 's/^-//' \
         )"
-    fi
-    # Fallback support for detection failure inside of some subprocesses.
-    if [ -z "$shell" ]
+    elif _koopa_is_linux
     then
+        __kvar_proc_file="/proc/${__kvar_pid}/exe"
+        [ -f "$__kvar_proc_file" ] || return 1
+        __kvar_shell="$(_koopa_realpath "$__kvar_proc_file")"
+        __kvar_shell="$(basename "$__kvar_shell")"
+        unset -v __kvar_proc_file
+    else
         if [ -n "${BASH_VERSION:-}" ]
         then
-            shell='bash'
+            __kvar_shell='bash'
+        elif [ -n "${KSH_VERSION:-}" ]
+        then
+            __kvar_shell='ksh'
         elif [ -n "${ZSH_VERSION:-}" ]
         then
-            shell='zsh'
+            __kvar_shell='zsh'
         fi
     fi
-    [ -n "$shell" ] || return 1
-    _koopa_print "$shell"
+    [ -n "$__kvar_shell" ] || return 1
+    _koopa_print "$__kvar_shell"
+    unset -v __kvar_pid __kvar_shell
     return 0
 }
