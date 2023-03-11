@@ -57,7 +57,6 @@ _koopa_activate_aliases() {
     alias black='black --line-length=79'
     alias br-size='br --sort-by-size'
     alias br='_koopa_alias_broot'
-    alias bucket='_koopa_alias_bucket'
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
@@ -1126,20 +1125,25 @@ _koopa_add_to_path_string_end() {
 }
 
 _koopa_add_to_path_string_start() {
-    local dir str
-    str="${1:-}"
-    dir="${2:?}"
-    if _koopa_str_detect_posix "$str" "${dir}:"
+    __kvar_string="${1:-}"
+    __kvar_dir="${2:?}"
+    if _koopa_str_detect_posix "$__kvar_string" "${__kvar_dir}:"
     then
-        str="$(_koopa_remove_from_path_string "$str" "${dir}")"
+        __kvar_string="$( \
+            _koopa_remove_from_path_string \
+                "$__kvar_string" "${__kvar_dir}" \
+        )"
     fi
-    if [ -z "$str" ]
+    if [ -z "$__kvar_string" ]
     then
-        str="$dir"
+        __kvar_string="$__kvar_dir"
     else
-        str="${dir}:${str}"
+        __kvar_string="${__kvar_dir}:${__kvar_string}"
     fi
-    _koopa_print "$str"
+    _koopa_print "$__kvar_string"
+    unset -v \
+        __kvar_dir \
+        __kvar_string
     return 0
 }
 
@@ -1153,14 +1157,6 @@ _koopa_alias_broot() {
     _koopa_is_alias 'br' && unalias 'br'
     _koopa_activate_broot
     br "$@"
-}
-
-_koopa_alias_bucket() {
-    local prefix
-    prefix="${HOME:?}/today"
-    [ -d "$prefix" ] || return 1
-    cd "$prefix" || return 1
-    ls
 }
 
 _koopa_alias_colorls() {
