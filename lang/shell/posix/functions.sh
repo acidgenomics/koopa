@@ -1160,20 +1160,19 @@ _koopa_alias_broot() {
 }
 
 _koopa_alias_colorls() {
-    local color_flag color_mode
-    color_mode="$(_koopa_color_mode)"
-    case "$color_mode" in
+    case "$(_koopa_color_mode)" in
         'dark')
-            color_flag='--dark'
+            __kvar_color_flag='--dark'
             ;;
         'light')
-            color_flag='--light'
+            __kvar_color_flag='--light'
             ;;
     esac
     colorls \
-        "$color_flag" \
+        "$__kvar_color_flag" \
         --group-directories-first \
-            "$@"
+        "$@"
+    unset -v __kvar_color_flag
     return 0
 }
 
@@ -1188,9 +1187,7 @@ _koopa_alias_emacs_vanilla() {
 }
 
 _koopa_alias_glances() {
-    local color_mode
-    color_mode="$(_koopa_color_mode)"
-    case "$color_mode" in
+    case "$(_koopa_color_mode)" in
         'light')
             set -- '--theme-white' "$@"
             ;;
@@ -1210,29 +1207,34 @@ _koopa_alias_kb() {
 }
 
 _koopa_alias_kdev() {
-    local bash bin_prefix env koopa_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
-    koopa_prefix="$(_koopa_koopa_prefix)"
-    bash="${bin_prefix}/bash"
-    env="${bin_prefix}/genv"
-    [ ! -x "$bash" ] && bash='/usr/bin/bash'
-    [ ! -x "$env" ] && env='/usr/bin/env'
-    [ -x "$bash" ] || return 1
-    [ -x "$env" ] || return 1
-    "$env" -i \
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
+    __kvar_bash="${__kvar_bin_prefix}/bash"
+    __kvar_env="${__kvar_bin_prefix}/genv"
+    __kvar_rcfile="${__kvar_koopa_prefix}/lang/shell/bash/include/header.sh"
+    [ -x "$__kvar_bash" ] || return 1
+    [ -x "$__kvar_env" ] || return 1
+    [ -f "$__kvar_rcfile" ] || return 1
+    "$__kvar_env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
         PATH='/usr/bin:/bin' \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TMPDIR="${TMPDIR:-/tmp}" \
-        "$bash" \
+        "$__kvar_bash" \
             --noprofile \
-            --rcfile "${koopa_prefix}/lang/shell/bash/include/header.sh" \
+            --rcfile "$__kvar_rcfile" \
             -o errexit \
             -o errtrace \
             -o nounset \
             -o pipefail
+    unset -v \
+        __kvar_bash \
+        __kvar_bin_prefix \
+        __kvar_env \
+        __kvar_koopa_prefix \
+        __kvar_rcfile
     return 0
 }
 
@@ -1312,10 +1314,9 @@ _koopa_alias_zoxide() {
 }
 
 _koopa_arch() {
-    local x
-    x="$(uname -m)"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
+    __kvar_string="$(uname -m)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
     return 0
 }
 
@@ -1340,39 +1341,36 @@ _koopa_bin_prefix() {
 }
 
 _koopa_boolean_nounset() {
-    local bool
     if _koopa_is_set_nounset
     then
-        bool=1
+        __kvar_bool=1
     else
-        bool=0
+        __kvar_bool=0
     fi
-    _koopa_print "$bool"
+    _koopa_print "$__kvar_bool"
+    unset -v __kvar_bool
     return 0
 }
 
 _koopa_color_mode() {
-    local str
-    str="${KOOPA_COLOR_MODE:-}"
-    if [ -n "$str" ]
-    then
-        _koopa_print "$str"
-        return 0
-    fi
-    if [ -z "$str" ]
+    __kvar_string="${KOOPA_COLOR_MODE:-}"
+    if [ -z "$__kvar_string" ]
     then
         if _koopa_is_macos
         then
             if _koopa_macos_is_dark_mode
             then
-                str='dark'
+                __kvar_string='dark'
             else
-                str='light'
+                __kvar_string='light'
             fi
+        else
+            __kvar_string='dark'
         fi
     fi
-    [ -n "$str" ] || return 0
-    _koopa_print "$str"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
@@ -1387,33 +1385,38 @@ _koopa_config_prefix() {
 }
 
 _koopa_cpu_count() {
-    local bin_prefix getconf nproc num sysctl
-    [ "$#" -eq 0 ] || return 1
-    num="${KOOPA_CPU_COUNT:-}"
-    if [ -n "$num" ]
+    __kvar_num="${KOOPA_CPU_COUNT:-}"
+    if [ -n "$__kvar_num" ]
     then
-        _koopa_print "$num"
+        _koopa_print "$__kvar_num"
+        unset -v __kvar_num
         return 0
     fi
-    bin_prefix="$(_koopa_bin_prefix)"
-    nproc="${bin_prefix}/gnproc"
-    if [ -x "$nproc" ]
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_nproc="${__kvar_bin_prefix}/gnproc"
+    unset -v __kvar_bin_prefix
+    if [ -x "$__kvar_nproc" ]
     then
-        num="$("$nproc" --all)"
+        __kvar_num="$("$__kvar_nproc" --all)"
+        unset -v __kvar_nproc
     elif _koopa_is_macos
     then
-        sysctl='/usr/sbin/sysctl'
-        [ -x "$sysctl" ] || return 1
-        num="$("$sysctl" -n 'hw.ncpu')"
+        __kvar_sysctl='/usr/sbin/sysctl'
+        [ -x "$__kvar_sysctl" ] || return 1
+        __kvar_num="$("$__kvar_sysctl" -n 'hw.ncpu')"
+        unset -v __kvar_sysctl
     elif _koopa_is_linux
     then
-        getconf='/usr/bin/getconf'
-        [ -x "$getconf" ] || return 1
-        num="$("$getconf" '_NPROCESSORS_ONLN')"
+        __kvar_getconf='/usr/bin/getconf'
+        [ -x "$__kvar_getconf" ] || return 1
+        __kvar_num="$("$__kvar_getconf" '_NPROCESSORS_ONLN')"
+        unset -v __kvar_getconf
     else
-        num=1
+        __kvar_num=1
     fi
-    _koopa_print "$num"
+    [ -n "$__kvar_num" ] || return 1
+    _koopa_print "$__kvar_num"
+    unset -v __kvar_num
     return 0
 }
 
@@ -1442,13 +1445,7 @@ _koopa_doom_emacs_prefix() {
 }
 
 _koopa_doom_emacs() {
-    local prefix
-    prefix="$(_koopa_doom_emacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        _koopa_print "Doom Emacs is not installed at '${prefix}'."
-        return 1
-    fi
+    [ -d "$(_koopa_doom_emacs_prefix)" ] || return 1
     _koopa_emacs --with-profile 'doom' "$@"
     return 0
 }
@@ -1464,36 +1461,50 @@ _koopa_dotfiles_private_prefix() {
 }
 
 _koopa_duration_start() {
-    local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
-    [ -x "${bin_prefix}/date" ] || return 0
-    KOOPA_DURATION_START="$(date -u '+%s%3N')"
+    __kvar_date="$(_koopa_bin_prefix)/gdate"
+    if [ ! -x "$__kvar_date" ]
+    then
+        unset -v __kvar_date
+        return 0
+    fi
+    KOOPA_DURATION_START="$("$__kvar_date" -u '+%s%3N')"
     export KOOPA_DURATION_START
+    unset -v __kvar_date
     return 0
 }
 
 _koopa_duration_stop() {
-    local bin_prefix
-    bin_prefix="$(_koopa_bin_prefix)"
-    if [ ! -x "${bin_prefix}/bc" ] || \
-        [ ! -x "${bin_prefix}/date" ]
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_bc="${__kvar_bin_prefix}/gbc"
+    __kvar_date="${__kvar_bin_prefix}/gdate"
+    unset -v __kvar_bin_prefix
+    if [ ! -x "$__kvar_bc" ] || [ ! -x "$__kvar_date" ]
     then
+        unset -v __kvar_bc __kvar_date
         return 0
     fi
-    local duration key start stop
-    key="${1:-}"
-    if [ -z "$key" ]
+    __kvar_key="${1:-}"
+    if [ -z "$__kvar_key" ]
     then
-        key='duration'
+        __kvar_key='duration'
     else
-        key="[${key}] duration"
+        __kvar_key="[${__kvar_key}] duration"
     fi
-    start="${KOOPA_DURATION_START:?}"
-    stop="$(date -u '+%s%3N')"
-    duration="$(_koopa_print "${stop}-${start}" | bc)"
-    [ -n "$duration" ] || return 1
-    _koopa_dl "$key" "${duration} ms"
-    unset -v KOOPA_DURATION_START
+    __kvar_start="${KOOPA_DURATION_START:?}"
+    __kvar_stop="$("$__kvar_date" -u '+%s%3N')"
+    __kvar_duration="$( \
+        _koopa_print "${__kvar_stop}-${__kvar_start}" \
+        | "$__kvar_bc" \
+    )"
+    [ -n "$__kvar_duration" ] || return 1
+    _koopa_dl "$__kvar_key" "${__kvar_duration} ms"
+    unset -v \
+        KOOPA_DURATION_START \
+        __kvar_bc \
+        __kvar_date \
+        __kvar_duration \
+        __kvar_start \
+        __kvar_stop
     return 0
 }
 
@@ -1503,35 +1514,36 @@ _koopa_emacs_prefix() {
 }
 
 _koopa_emacs() {
-    local emacs prefix
-    prefix="${HOME:?}/.emacs.d"
-    if [ ! -L "$prefix" ]
+    __kvar_prefix="${HOME:?}/.emacs.d"
+    if [ ! -L "$__kvar_prefix" ] || [ ! -f "${__kvar_prefix}/chemacs.el" ]
     then
-        _koopa_print "Chemacs is not linked at '${prefix}'."
-        return 1
-    fi
-    if [ ! -f "${prefix}/chemacs.el" ]
-    then
-        _koopa_print "Chemacs is not configured at '${prefix}'."
+        _koopa_print "Chemacs is not configured at '${__kvar_prefix}'."
+        unset -v __kvar_prefix
         return 1
     fi
     if _koopa_is_macos
     then
-        emacs="$(_koopa_macos_emacs)"
+        __kvar_emacs="$(_koopa_macos_emacs)"
     else
-        emacs="$(_koopa_bin_prefix)/emacs"
+        __kvar_emacs="$(_koopa_bin_prefix)/emacs"
     fi
-    if [ ! -e "$emacs" ]
+    if [ ! -e "$__kvar_emacs" ]
     then
-        _koopa_print "Emacs not installed at '${emacs}'."
+        _koopa_print "Emacs not installed at '${__kvar_emacs}'."
+        unset -v \
+            __kvar_emacs \
+            __kvar_prefix
         return 1
     fi
     if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
     then
-        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
+        TERM='xterm-24bit' "$__kvar_emacs" "$@" >/dev/null 2>&1
     else
-        "$emacs" "$@" >/dev/null 2>&1
+        "$__kvar_emacs" "$@" >/dev/null 2>&1
     fi
+    unset -v \
+        __kvar_emacs \
+        __kvar_prefix
     return 0
 }
 

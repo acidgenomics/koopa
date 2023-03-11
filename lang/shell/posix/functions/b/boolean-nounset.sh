@@ -2,21 +2,22 @@
 
 _koopa_boolean_nounset() {
     # """
-    # Return 0 (false) / 1 (true) boolean whether nounset mode is enabled.
-    # @note Updated 2020-07-05.
+    # Return '0' (false) / '1' (true) boolean whether nounset mode is enabled.
+    # @note Updated 2023-03-11.
     #
+    # @details
     # Intended for [ "$x" -eq 1 ] (true) checks.
     #
     # This approach is the opposite of POSIX shell status codes, where 0 is
     # true and 1 is false.
     # """
-    local bool
     if _koopa_is_set_nounset
     then
-        bool=1
+        __kvar_bool=1
     else
-        bool=0
+        __kvar_bool=0
     fi
-    _koopa_print "$bool"
+    _koopa_print "$__kvar_bool"
+    unset -v __kvar_bool
     return 0
 }
