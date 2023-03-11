@@ -3,7 +3,7 @@
 _koopa_emacs() {
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2023-01-06.
+    # @note Updated 2023-03-11.
     #
     # Check that configuration is correct with 'infocmp xterm-24bit'.
     #
@@ -11,34 +11,35 @@ _koopa_emacs() {
     # - https://emacs.stackexchange.com/questions/51100/
     # - https://github.com/kovidgoyal/kitty/issues/1141
     # """
-    local emacs prefix
-    prefix="${HOME:?}/.emacs.d"
-    if [ ! -L "$prefix" ]
+    __kvar_prefix="${HOME:?}/.emacs.d"
+    if [ ! -L "$__kvar_prefix" ] || [ ! -f "${__kvar_prefix}/chemacs.el" ]
     then
-        _koopa_print "Chemacs is not linked at '${prefix}'."
-        return 1
-    fi
-    if [ ! -f "${prefix}/chemacs.el" ]
-    then
-        _koopa_print "Chemacs is not configured at '${prefix}'."
+        _koopa_print "Chemacs is not configured at '${__kvar_prefix}'."
+        unset -v __kvar_prefix
         return 1
     fi
     if _koopa_is_macos
     then
-        emacs="$(_koopa_macos_emacs)"
+        __kvar_emacs="$(_koopa_macos_emacs)"
     else
-        emacs="$(_koopa_bin_prefix)/emacs"
+        __kvar_emacs="$(_koopa_bin_prefix)/emacs"
     fi
-    if [ ! -e "$emacs" ]
+    if [ ! -e "$__kvar_emacs" ]
     then
-        _koopa_print "Emacs not installed at '${emacs}'."
+        _koopa_print "Emacs not installed at '${__kvar_emacs}'."
+        unset -v \
+            __kvar_emacs \
+            __kvar_prefix
         return 1
     fi
     if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
     then
-        TERM='xterm-24bit' "$emacs" "$@" >/dev/null 2>&1
+        TERM='xterm-24bit' "$__kvar_emacs" "$@" >/dev/null 2>&1
     else
-        "$emacs" "$@" >/dev/null 2>&1
+        "$__kvar_emacs" "$@" >/dev/null 2>&1
     fi
+    unset -v \
+        __kvar_emacs \
+        __kvar_prefix
     return 0
 }
