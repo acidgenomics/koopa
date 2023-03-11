@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# FIXME Consider moving this directly into Bash library.
+# FIXME Move this to Bash library.
 
 _koopa_hostname() {
     # """

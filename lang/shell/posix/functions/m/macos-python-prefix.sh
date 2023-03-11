@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Move this to Bash library.
+
 _koopa_macos_python_prefix() {
     # """
     # macOS Python installation prefix.

@@ -1567,11 +1567,9 @@ _koopa_export_gnupg() {
 }
 
 _koopa_export_history() {
-    local shell
-    shell="$(_koopa_shell_name)"
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.${shell}_history"
+        HISTFILE="${HOME:?}/.$(koopa_shell_name)_history"
     fi
     export HISTFILE
     if [ ! -f "$HISTFILE" ] \
@@ -1622,11 +1620,13 @@ _koopa_export_koopa_shell() {
 }
 
 _koopa_export_pager() {
-    local less
     [ -n "${PAGER:-}" ] && return 0
-    less="$(_koopa_bin_prefix)/less"
-    [ -x "$less" ] || return 0
-    export PAGER="${less} -R"
+    __kvar_less="$(_koopa_bin_prefix)/less"
+    if [ -x "$__kvar_less" ]
+    then
+        export PAGER="${__kvar_less} -R"
+    fi
+    unset -v __kvar_less
     return 0
 }
 
@@ -1687,58 +1687,30 @@ _koopa_group() {
 }
 
 _koopa_homebrew_prefix() {
-    local arch x
-    x="${HOMEBREW_PREFIX:-}"
-    if [ -z "$x" ]
+    __kvar_string="${HOMEBREW_PREFIX:-}"
+    if [ -z "$__kvar_string" ]
     then
         if _koopa_is_installed 'brew'
         then
-            x="$(brew --prefix)"
+            __kvar_string="$(brew --prefix)"
         elif _koopa_is_macos
         then
-            arch="$(_koopa_arch)"
-            case "$arch" in
+            case "$(_koopa_arch)" in
                 'arm'*)
-                    x='/opt/homebrew'
+                    __kvar_string='/opt/homebrew'
                     ;;
                 'x86'*)
-                    x='/usr/local'
+                    __kvar_string='/usr/local'
                     ;;
             esac
         elif _koopa_is_linux
         then
-            x='/home/linuxbrew/.linuxbrew'
+            __kvar_string='/home/linuxbrew/.linuxbrew'
         fi
     fi
-    [ -d "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_host_id() {
-    local id
-    if [ -r '/etc/hostname' ]
-    then
-        id="$(cat '/etc/hostname')"
-    elif _koopa_is_installed 'hostname'
-    then
-        id="$(hostname -f)"
-    else
-        return 0
-    fi
-    case "$id" in
-        *'.ec2.internal')
-            id='aws'
-            ;;
-        *'.o2.rc.hms.harvard.edu')
-            id='harvard-o2'
-            ;;
-        *'.rc.fas.harvard.edu')
-            id='harvard-odyssey'
-            ;;
-    esac
-    [ -n "$id" ] || return 1
-    _koopa_print "$id"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
@@ -1755,15 +1727,27 @@ _koopa_is_alacritty() {
 }
 
 _koopa_is_alias() {
-    local cmd str
-    for cmd in "$@"
+    for __kvar_alias in "$@"
     do
-        _koopa_is_installed "$cmd" || return 1
-        str="$(type "$cmd")"
-        _koopa_str_detect_posix "$str" ' is aliased to ' && continue
-        _koopa_str_detect_posix "$str" ' is an alias for ' && continue
+        if ! _koopa_is_installed "$__kvar_alias"
+        then
+            unset -v __kvar_alias
+            return 1
+        fi
+        __kvar_string="$(type "$__kvar_alias")"
+        unset -v __kvar_alias
+        _koopa_str_detect_posix \
+            "$__kvar_string" \
+            ' is aliased to ' \
+            && continue
+        _koopa_str_detect_posix \
+            "$__kvar_string" \
+            ' is an alias for ' \
+            && continue
+        unset -v __kvar_string
         return 1
     done
+    unset -v __kvar_string
     return 0
 }
 
@@ -1836,32 +1820,34 @@ _koopa_is_opensuse() {
 }
 
 _koopa_is_os_like() {
-    local file id
-    file='/etc/os-release'
-    id="${1:?}"
-    _koopa_is_os "$id" && return 0
-    [ -r "$file" ] || return 1
-    grep 'ID=' "$file" | grep -q "$id" && return 0
-    grep 'ID_LIKE=' "$file" | grep -q "$id" && return 0
+    __kvar_id="${1:?}"
+    if _koopa_is_os "$__kvar_id"
+    then
+        unset __kvar_id
+        return 0
+    fi
+    __kvar_file='/etc/os-release'
+    if [ ! -r "$__kvar_file" ]
+    then
+        unset -v __kvar_file __kvar_id
+        return 1
+    fi
+    if grep 'ID=' "$__kvar_file" | grep -q "$__kvar_id"
+    then
+        unset -v __kvar_file __kvar_id
+        return 0
+    fi
+    if grep 'ID_LIKE=' "$__kvar_file" | grep -q "$__kvar_id"
+    then
+        unset -v __kvar_file __kvar_id
+        return 0
+    fi
+    unset -v __kvar_file __kvar_id
     return 1
 }
 
 _koopa_is_os() {
     [ "$(_koopa_os_id)" = "${1:?}" ]
-}
-
-_koopa_is_qemu() {
-    local basename cmd real_cmd
-    basename='basename'
-    cmd="/proc/${$}/exe"
-    [ -L "$cmd" ] || return 1
-    real_cmd="$(_koopa_realpath "$cmd")"
-    case "$("$basename" "$real_cmd")" in
-        'qemu-'*)
-            return 0
-            ;;
-    esac
-    return 1
 }
 
 _koopa_is_rhel_like() {
@@ -1957,9 +1943,12 @@ _koopa_macos_emacs() {
 }
 
 _koopa_macos_is_dark_mode() {
-    local x
-    x=$(defaults read -g 'AppleInterfaceStyle' 2>/dev/null)
-    [ "$x" = 'Dark' ]
+    [ \
+        "$( \
+            /usr/bin/defaults read -g 'AppleInterfaceStyle' \
+            2>/dev/null \
+        )" = 'Dark' \
+    ]
 }
 
 _koopa_macos_is_light_mode() {
@@ -1967,10 +1956,10 @@ _koopa_macos_is_light_mode() {
 }
 
 _koopa_macos_os_version() {
-    local x
-    x="$(sw_vers -productVersion)"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
+    __kvar_string="$(/usr/bin/sw_vers -productVersion)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
@@ -1983,44 +1972,47 @@ _koopa_macos_r_prefix() {
 }
 
 _koopa_major_minor_patch_version() {
-    local version x
-    for version in "$@"
+    _koopa_is_alias 'cut' && unalias 'cut'
+    for __kvar_string in "$@"
     do
-        x="$( \
-            _koopa_print "$version" \
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
             | cut -d '.' -f '1-3' \
         )"
-        [ -n "$x" ] || return 1
-        _koopa_print "$x"
+        [ -n "$__kvar_string" ] || return 1
+        _koopa_print "$__kvar_string"
     done
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_major_minor_version() {
-    local version x
-    for version in "$@"
+    _koopa_is_alias 'cut' && unalias 'cut'
+    for __kvar_string in "$@"
     do
-        x="$( \
-            _koopa_print "$version" \
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
             | cut -d '.' -f '1-2' \
         )"
-        [ -n "$x" ] || return 1
-        _koopa_print "$x"
+        [ -n "$__kvar_string" ] || return 1
+        _koopa_print "$__kvar_string"
     done
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_major_version() {
-    local version x
-    for version in "$@"
+    _koopa_is_alias 'cut' && unalias 'cut'
+    for __kvar_string in "$@"
     do
-        x="$( \
-            _koopa_print "$version" \
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
             | cut -d '.' -f '1' \
         )"
-        [ -n "$x" ] || return 1
-        _koopa_print "$x"
+        [ -n "$__kvar_string" ] || return 1
+        _koopa_print "$__kvar_string"
     done
+    unset -v __kvar_string
     return 0
 }
 
@@ -2050,10 +2042,10 @@ _koopa_opt_prefix() {
 }
 
 _koopa_os_id() {
-    local string
-    string="$(_koopa_os_string | cut -d '-' -f '1')"
-    [ -n "$string" ] || return 1
-    _koopa_print "$string"
+    __kvar_string="$(_koopa_os_string | cut -d '-' -f '1')"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
@@ -2117,28 +2109,22 @@ _koopa_prelude_emacs_prefix() {
 }
 
 _koopa_prelude_emacs() {
-    local prefix
-    prefix="$(_koopa_prelude_emacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        _koopa_print "Prelude Emacs is not installed at '${prefix}'."
-        return 1
-    fi
+    [ -d "$(_koopa_prelude_emacs_prefix)" ] || return 1
     _koopa_emacs --with-profile 'prelude' "$@"
     return 0
 }
 
 _koopa_print() {
-    local string
     if [ "$#" -eq 0 ]
     then
         printf '\n'
         return 0
     fi
-    for string in "$@"
+    for __kvar_string in "$@"
     do
-        printf '%b\n' "$string"
+        printf '%b\n' "$__kvar_string"
     done
+    unset __kvar_string
     return 0
 }
 
@@ -2168,26 +2154,29 @@ _koopa_rbenv_prefix() {
 }
 
 _koopa_realpath() {
-    local x
-    x="$(readlink -f "$@")"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
+    __kvar_string="$(readlink -f "$@")"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
 _koopa_remove_from_path_string() {
-    local dir str1 str2
-    str1="${1:?}"
-    dir="${2:?}"
-    str2="$( \
-        _koopa_print "$str1" \
+    __kvar_str1="${1:?}"
+    __kvar_dir="${2:?}"
+    __kvar_str2="$( \
+        _koopa_print "$__kvar_str1" \
             | sed \
-                -e "s|^${dir}:||g" \
-                -e "s|:${dir}:|:|g" \
-                -e "s|:${dir}\$||g" \
+                -e "s|^${__kvar_dir}:||g" \
+                -e "s|:${__kvar_dir}:|:|g" \
+                -e "s|:${__kvar_dir}\$||g" \
         )"
-    [ -n "$str2" ] || return 1
-    _koopa_print "$str2"
+    [ -n "$__kvar_str2" ] || return 1
+    _koopa_print "$__kvar_str2"
+    unset -v \
+        __kvar_dir \
+        __kvar_str1 \
+        __kvar_str2
     return 0
 }
 
