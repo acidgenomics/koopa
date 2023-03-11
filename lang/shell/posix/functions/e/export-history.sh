@@ -3,18 +3,16 @@
 _koopa_export_history() {
     # """
     # Export history.
-    # @note Updated 2021-01-31.
+    # @note Updated 2023-03-11.
     #
-    # See bash(1) for more options.
+    # See 'bash(1)' for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
-    local shell
-    shell="$(_koopa_shell_name)"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.${shell}_history"
+        HISTFILE="${HOME:?}/.$(koopa_shell_name)_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
