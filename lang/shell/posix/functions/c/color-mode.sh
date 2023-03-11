@@ -2,33 +2,26 @@
 
 _koopa_color_mode() {
     # """
-    # macOS color mode (dark/light) value.
-    # @note Updated 2022-04-13.
+    # Color mode.
+    # @note Updated 2023-03-11.
     # """
-    local str
-    str="${KOOPA_COLOR_MODE:-}"
-    if [ -n "$str" ]
-    then
-        _koopa_print "$str"
-        return 0
-    fi
-    if [ -z "$str" ]
+    __kvar_string="${KOOPA_COLOR_MODE:-}"
+    if [ -z "$__kvar_string" ]
     then
         if _koopa_is_macos
         then
             if _koopa_macos_is_dark_mode
             then
-                str='dark'
+                __kvar_string='dark'
             else
-                str='light'
+                __kvar_string='light'
             fi
+        else
+            __kvar_string='dark'
         fi
     fi
-    [ -n "$str" ] || return 0
-    # Optionally, here's how to write the config to a file:
-    # > local conf_file
-    # > conf_file="$(_koopa_config_prefix)/color-mode"
-    # > _koopa_print "$str" > "$conf_file"
-    _koopa_print "$str"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
