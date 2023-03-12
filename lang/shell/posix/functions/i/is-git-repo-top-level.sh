@@ -1,11 +1,12 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-_koopa_is_git_repo_top_level() {
+koopa_is_git_repo_top_level() {
     # """
     # Is the working directory the top level of a git repository?
-    # @note Updated 2021-08-19.
+    # @note Updated 2023-03-12.
     # """
-    local dir
-    dir="${1:-.}"
-    [ -e "${dir}/.git" ]
+    local prefix
+    koopa_assert_has_args_le "$#" 1
+    prefix="${1:-${PWD:?}}"
+    [[ -e "${prefix}/.git" ]]
 }
