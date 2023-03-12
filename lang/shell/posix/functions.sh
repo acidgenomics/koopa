@@ -1429,11 +1429,6 @@ _koopa_default_shell_name() {
     return 0
 }
 
-_koopa_docker_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/docker"
-    return 0
-}
-
 _koopa_docker_private_prefix() {
     _koopa_print "$(_koopa_config_prefix)/docker-private"
     return 0
@@ -1634,37 +1629,6 @@ _koopa_expr() {
     expr "${1:?}" : "${2:?}" 1>/dev/null
 }
 
-_koopa_git_branch() {
-    local branch
-    _koopa_is_git_repo || return 0
-    branch="$(git branch --show-current 2>/dev/null)"
-    if [ -z "$branch" ]
-    then
-        branch="$( \
-            git branch 2>/dev/null \
-            | head -n 1 \
-            | cut -c '3-' \
-        )"
-    fi
-    [ -n "$branch" ] || return 0
-    _koopa_print "$branch"
-    return 0
-}
-
-_koopa_git_repo_has_unstaged_changes() {
-    local x
-    git update-index --refresh >/dev/null 2>&1
-    x="$(git diff-index 'HEAD' -- 2>/dev/null)"
-    [ -n "$x" ]
-}
-
-_koopa_git_repo_needs_pull_or_push() {
-    local rev_1 rev_2
-    rev_1="$(git rev-parse 'HEAD' 2>/dev/null)"
-    rev_2="$(git rev-parse '@{u}' 2>/dev/null)"
-    [ "$rev_1" != "$rev_2" ]
-}
-
 _koopa_go_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/go"
     return 0
@@ -1714,14 +1678,6 @@ _koopa_homebrew_prefix() {
     return 0
 }
 
-_koopa_hostname() {
-    local x
-    x="$(uname -n)"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
 _koopa_is_alacritty() {
     [ -n "${ALACRITTY_SOCKET:-}" ]
 }
@@ -1767,23 +1723,11 @@ _koopa_is_fedora_like() {
     _koopa_is_os_like 'fedora'
 }
 
-_koopa_is_git_repo_clean() {
-    _koopa_is_git_repo || return 1
-    _koopa_git_repo_has_unstaged_changes && return 1
-    _koopa_git_repo_needs_pull_or_push && return 1
-    return 0
-}
-
-_koopa_is_git_repo_top_level() {
-    local dir
-    dir="${1:-.}"
-    [ -e "${dir}/.git" ]
-}
-
-_koopa_is_git_repo() {
-    _koopa_is_git_repo_top_level '.' && return 0
-    git rev-parse --git-dir >/dev/null 2>&1 || return 1
-    return 0
+koopa_is_git_repo_top_level() {
+    local prefix
+    koopa_assert_has_args_le "$#" 1
+    prefix="${1:-${PWD:?}}"
+    [[ -e "${prefix}/.git" ]]
 }
 
 _koopa_is_installed() {
@@ -1875,10 +1819,6 @@ _koopa_is_ubuntu_like() {
     _koopa_is_os_like 'ubuntu'
 }
 
-_koopa_is_user_install() {
-    _koopa_str_detect_posix "$(_koopa_koopa_prefix)" "${HOME:?}"
-}
-
 _koopa_julia_packages_prefix() {
     _koopa_print "${HOME:?}/.julia"
 }
@@ -1963,14 +1903,6 @@ _koopa_macos_os_version() {
     return 0
 }
 
-_koopa_macos_python_prefix() {
-    _koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
-}
-
-_koopa_macos_r_prefix() {
-    _koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
-}
-
 _koopa_major_minor_patch_version() {
     _koopa_is_alias 'cut' && unalias 'cut'
     for __kvar_string in "$@"
@@ -2013,26 +1945,6 @@ _koopa_major_version() {
         _koopa_print "$__kvar_string"
     done
     unset -v __kvar_string
-    return 0
-}
-
-_koopa_make_prefix() {
-    local prefix
-    if [ -n "${KOOPA_MAKE_PREFIX:-}" ]
-    then
-        prefix="$KOOPA_MAKE_PREFIX"
-    elif _koopa_is_user_install
-    then
-        prefix="$(_koopa_xdg_local_home)"
-    else
-        prefix='/usr/local'
-    fi
-    _koopa_print "$prefix"
-    return 0
-}
-
-_koopa_monorepo_prefix() {
-    _koopa_print "${HOME:?}/monorepo"
     return 0
 }
 
@@ -2133,21 +2045,6 @@ _koopa_pyenv_prefix() {
     return 0
 }
 
-_koopa_python_venv_name() {
-    local x
-    x="${VIRTUAL_ENV:-}"
-    [ -n "$x" ] || return 1
-    x="${x##*/}"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
-    return 0
-}
-
-_koopa_python_virtualenvs_prefix() {
-    _koopa_print "${HOME}/.virtualenvs"
-    return 0
-}
-
 _koopa_rbenv_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/rbenv"
     return 0
@@ -2221,9 +2118,7 @@ _koopa_spacevim() {
     [ -f "$__kvar_vimrc" ] || return 1
     _koopa_is_alias 'vim' && unalias 'vim'
     "$__kvar_vim" -u "$__kvar_vimrc" "$@"
-    unset -v \
-        __kvar_vim \
-        __kvar_vimrc
+    unset -v __kvar_vim __kvar_vimrc
     return 0
 }
 
