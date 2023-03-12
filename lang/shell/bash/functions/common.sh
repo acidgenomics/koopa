@@ -6296,6 +6296,11 @@ koopa_docker_is_build_recent() {
     return 0
 }
 
+koopa_docker_prefix() {
+    koopa_print "$(koopa_config_prefix)/docker"
+    return 0
+}
+
 koopa_docker_prune_all_images() {
     local app
     koopa_assert_has_no_args "$#"
@@ -8324,6 +8329,36 @@ koopa_gfortran_libs() {
     return 0
 }
 
+koopa_git_branch() {
+    local app dict
+    koopa_assert_has_args_eq "$#" 1
+    declare -A app dict
+    dict['prefix']="${1:?}"
+    koopa_assert_is_git_repo "${dict['prefix']}"
+    app['cut']="$(koopa_locate_cut)"
+    app['git']="$(koopa_locate_git)"
+    app['head']="$(koopa_locate_head)"
+    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || return 1
+    (
+        local dict2
+        declare -A dict2
+        dict2['branch']="$("${app['git']}" branch --show-current 2>/dev/null)"
+        if [[ -z "${dict2['branch']}" ]]
+        then
+            dict2['branch']="$( \
+                "${app['git']}" branch 2>/dev/null \
+                | "${app['head']}" -n 1 \
+                | "${app['cut']}" -c '3-' \
+            )"
+        fi
+        [[ -n "${dict2['branch']}" ]] || return 0
+        koopa_print "${dict2['branch']}"
+    )
+    return 0
+}
+
 koopa_git_checkout_recursive() {
     local app dict dirs pos
     declare -A app=(
@@ -8881,6 +8916,37 @@ koopa_git_rename_master_to_main() {
         done
     )
     return 0
+}
+
+koopa_git_repo_has_unstaged_changes() {
+    local app dict
+    declare -A app dict
+    app['git']="$(koopa_locate_git)"
+    [[ -x "${app['git']}" ]] || return 1
+    "${app['git']}" update-index --refresh &>/dev/null
+    dict['string']="$("${app['git']}" diff-index 'HEAD' -- 2>/dev/null)"
+    [[ -n "${dict['string']}" ]]
+}
+
+koopa_git_repo_needs_pull_or_push() {
+    local app prefix
+    koopa_assert_has_args "$#"
+    declare -A app
+    app['git']="$(koopa_locate_git)"
+    [[ -x "${app['git']}" ]] || return 1
+    (
+        for prefix in "$@"
+        do
+            local dict
+            declare -A dict
+            dict['prefix']="$prefix"
+            koopa_cd "${dict['prefix']}"
+            dict['rev1']="$("${app['git']}" rev-parse 'HEAD' 2>/dev/null)"
+            dict['rev2']="$("${app['git']}" rev-parse '@{u}' 2>/dev/null)"
+            [[ "${dict['rev1']}" != "${dict['rev2']}" ]] && return 0
+        done
+        return 1
+    )
 }
 
 koopa_git_reset_fork_to_upstream() {
@@ -10204,6 +10270,18 @@ koopa_hisat2_index() {
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_hostname() {
+    local app dict
+    koopa_assert_has_no_args "$#"
+    declare -A app dict
+    app['uname']="$(koopa_locate_uname)"
+    [[ -x "${app['uname']}" ]] || return 1
+    dict['string']="$("${app['uname']}" -n)"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
     return 0
 }
 
@@ -14284,6 +14362,29 @@ koopa_is_function() {
     return 0
 }
 
+koopa_is_git_repo_clean() {
+    local prefix
+    koopa_assert_has_args "$#"
+    for prefix in "$@"
+    do
+        koopa_is_git_repo "$prefix" || return 1
+        koopa_git_repo_has_unstaged_changes "$prefix" && return 1
+        koopa_git_repo_needs_pull_or_push "$prefix" && return 1
+    done
+    return 0
+}
+
+koopa_is_git_repo() {
+    local app
+    koopa_assert_has_no_args "$#"
+    declare -A app
+    app['git']="$(koopa_locate_git)"
+    [[ -x "${app['git']}" ]] || return 1
+    koopa_is_git_repo_top_level "${PWD:?}" && return 0
+    "${app['git']}" rev-parse --git-dir >/dev/null 2>&1 || return 1
+    return 0
+}
+
 koopa_is_github_ssh_enabled() {
     koopa_assert_has_no_args "$#"
     __koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
@@ -14451,6 +14552,12 @@ koopa_is_url_active() {
         continue
     done
     return 0
+}
+
+koopa_is_user_install() {
+    koopa_str_detect_fixed \
+       --pattern="${HOME:?}" \
+       --string="$(koopa_koopa_prefix)"
 }
 
 koopa_is_variable_defined() {
@@ -17070,6 +17177,23 @@ koopa_make_build_string() {
     return 0
 }
 
+koopa_make_prefix() {
+    local prefix
+    prefix="${KOOPA_MAKE_PREFIX:-}"
+    if [[ -z "$prefix" ]]
+    then
+        if koopa_is_user_install
+        then
+            prefix="$(koopa_xdg_local_home)"
+        else
+            prefix='/usr/local'
+        fi
+    fi
+    [[ -n "$prefix" ]] || return 1
+    koopa_print "$prefix"
+    return 0
+}
+
 koopa_man_prefix() {
     koopa_print "$(koopa_koopa_prefix)/share/man"
     return 0
@@ -17242,6 +17366,11 @@ koopa_mktemp() {
     str="$("${app['mktemp']}" "${mktemp_args[@]}")"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
+    return 0
+}
+
+koopa_monorepo_prefix() {
+    koopa_print "${HOME:?}/monorepo"
     return 0
 }
 
@@ -18196,6 +18325,11 @@ koopa_python_system_packages_prefix() {
     return 0
 }
 
+koopa_python_virtualenvs_prefix() {
+    koopa_print "${HOME}/.virtualenvs"
+    return 0
+}
+
 koopa_activate_conda() {
     _koopa_activate_conda "$@"
 }
@@ -18236,10 +18370,6 @@ koopa_default_shell_name() {
     _koopa_default_shell_name "$@"
 }
 
-koopa_docker_prefix() {
-    _koopa_docker_prefix "$@"
-}
-
 koopa_doom_emacs_prefix() {
     _koopa_doom_emacs_prefix "$@"
 }
@@ -18252,28 +18382,12 @@ koopa_emacs_prefix() {
     _koopa_emacs_prefix "$@"
 }
 
-koopa_git_branch() {
-    _koopa_git_branch "$@"
-}
-
-koopa_git_repo_has_unstaged_changes() {
-    _koopa_git_repo_has_unstaged_changes "$@"
-}
-
-koopa_git_repo_needs_pull_or_push() {
-    _koopa_git_repo_needs_pull_or_push "$@"
-}
-
 koopa_group() {
     _koopa_group "$@"
 }
 
 koopa_homebrew_prefix() {
     _koopa_homebrew_prefix "$@"
-}
-
-koopa_hostname() {
-    _koopa_hostname "$@"
 }
 
 koopa_is_alias() {
@@ -18294,18 +18408,6 @@ koopa_is_debian_like() {
 
 koopa_is_fedora_like() {
     _koopa_is_fedora_like "$@"
-}
-
-koopa_is_git_repo() {
-    _koopa_is_git_repo "$@"
-}
-
-koopa_is_git_repo_clean() {
-    _koopa_is_git_repo_clean "$@"
-}
-
-koopa_is_git_repo_top_level() {
-    _koopa_is_git_repo_top_level "$@"
 }
 
 koopa_is_installed() {
@@ -18336,10 +18438,6 @@ koopa_is_ubuntu_like() {
     _koopa_is_ubuntu_like "$@"
 }
 
-koopa_is_user_install() {
-    _koopa_is_user_install "$@"
-}
-
 koopa_koopa_prefix() {
     _koopa_koopa_prefix "$@"
 }
@@ -18356,14 +18454,6 @@ koopa_macos_os_version() {
     _koopa_macos_os_version "$@"
 }
 
-koopa_macos_python_prefix() {
-    _koopa_macos_python_prefix "$@"
-}
-
-koopa_macos_r_prefix() {
-    _koopa_macos_r_prefix "$@"
-}
-
 koopa_major_minor_patch_version() {
     _koopa_major_minor_patch_version "$@"
 }
@@ -18374,14 +18464,6 @@ koopa_major_minor_version() {
 
 koopa_major_version() {
     _koopa_major_version "$@"
-}
-
-koopa_make_prefix() {
-    _koopa_make_prefix "$@"
-}
-
-koopa_monorepo_prefix() {
-    _koopa_monorepo_prefix "$@"
 }
 
 koopa_opt_prefix() {
@@ -18406,14 +18488,6 @@ koopa_prelude_emacs() {
 
 koopa_print() {
     _koopa_print "$@"
-}
-
-koopa_python_venv_name() {
-    _koopa_python_venv_name "$@"
-}
-
-koopa_python_virtualenvs_prefix() {
-    _koopa_python_virtualenvs_prefix "$@"
 }
 
 koopa_realpath() {
@@ -19462,13 +19536,11 @@ koopa_r_rebuild_docs() {
 
 koopa_r_shiny_run_app() {
     local app dict
-    declare -A app=(
-        ['r']="$(koopa_locate_r)"
-    )
+    declare -A app
+    app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="${1:-}"
-    )
+    declare -A dict
+    dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"

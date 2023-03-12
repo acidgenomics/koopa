@@ -975,6 +975,16 @@ koopa_macos_os_codename() {
     return 0
 }
 
+koopa_macos_python_prefix() {
+    koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
+    return 0
+}
+
+koopa_macos_r_prefix() {
+    koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
+    return 0
+}
+
 koopa_macos_reload_autofs() {
     local app
     koopa_assert_has_no_args "$#"
