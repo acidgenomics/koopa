@@ -6,7 +6,7 @@ koopa_nfiletypes() {
     # @note Updated 2022-02-27.
     #
     # @examples
-    # > koopa_nfiletypes "$PWD"
+    # > koopa_nfiletypes "${PWD:?}"
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
