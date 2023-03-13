@@ -17615,6 +17615,18 @@ ${dict['msg']}${dict['suffix']}"
     return 0
 }
 
+koopa_opt_prefix() {
+    _koopa_opt_prefix "$@"
+}
+
+koopa_os_id() {
+    _koopa_os_id "$@"
+}
+
+koopa_os_string() {
+    _koopa_os_string "$@"
+}
+
 koopa_os_type() {
     local app str
     koopa_assert_has_no_args "$#"
@@ -17781,6 +17793,14 @@ koopa_paste0() {
     koopa_paste --sep='' "$@"
 }
 
+koopa_prelude_emacs_prefix() {
+    _koopa_prelude_emacs_prefix "$@"
+}
+
+koopa_prelude_emacs() {
+    _koopa_prelude_emacs "$@"
+}
+
 koopa_print_black_bold() {
     __koopa_print_ansi 'black-bold' "$@"
     return 0
@@ -17874,6 +17894,10 @@ koopa_print_yellow_bold() {
 koopa_print_yellow() {
     __koopa_print_ansi 'yellow' "$@"
     return 0
+}
+
+koopa_print() {
+    _koopa_print "$@"
 }
 
 koopa_private_installers_url() {
@@ -18232,66 +18256,6 @@ koopa_python_system_packages_prefix() {
 koopa_python_virtualenvs_prefix() {
     koopa_print "${HOME}/.virtualenvs"
     return 0
-}
-
-koopa_opt_prefix() {
-    _koopa_opt_prefix "$@"
-}
-
-koopa_os_id() {
-    _koopa_os_id "$@"
-}
-
-koopa_os_string() {
-    _koopa_os_string "$@"
-}
-
-koopa_prelude_emacs_prefix() {
-    _koopa_prelude_emacs_prefix "$@"
-}
-
-koopa_prelude_emacs() {
-    _koopa_prelude_emacs "$@"
-}
-
-koopa_print() {
-    _koopa_print "$@"
-}
-
-koopa_realpath() {
-    _koopa_realpath "$@"
-}
-
-koopa_remove_from_path_string() {
-    _koopa_remove_from_path_string "$@"
-}
-
-koopa_spacemacs_prefix() {
-    _koopa_spacemacs_prefix "$@"
-}
-
-koopa_spacevim_prefix() {
-    _koopa_spacevim_prefix "$@"
-}
-
-koopa_today() {
-    _koopa_today "$@"
-}
-
-koopa_user() {
-    _koopa_user "$@"
-}
-
-koopa_user_id() {
-    _koopa_user_id "$@"
-}
-
-koopa_xdg_config_home() {
-    _koopa_xdg_config_home "$@"
-}
-
-koopa_xdg_data_home() {
-    _koopa_xdg_data_home "$@"
 }
 
 koopa_r_configure_environ() {
@@ -19533,6 +19497,10 @@ koopa_read() {
     return 0
 }
 
+koopa_realpath() {
+    _koopa_realpath "$@"
+}
+
 koopa_reinstall_all_revdeps() {
     local app_name flags pos
     koopa_assert_has_args "$#"
@@ -19635,6 +19603,10 @@ koopa_reload_shell() {
     [[ -x "${app['shell']}" ]] || return 1
     exec "${app['shell']}" -il
     return 0
+}
+
+koopa_remove_from_path_string() {
+    _koopa_remove_from_path_string "$@"
 }
 
 koopa_rename_from_csv() {
@@ -21293,6 +21265,14 @@ koopa_source_dir() {
         . "$file"
     done
     return 0
+}
+
+koopa_spacemacs_prefix() {
+    _koopa_spacemacs_prefix "$@"
+}
+
+koopa_spacevim_prefix() {
+    _koopa_spacevim_prefix "$@"
 }
 
 koopa_spell() {
@@ -23267,6 +23247,10 @@ koopa_to_string() {
     koopa_assert_has_args "$#"
     koopa_paste0 --sep=', ' "$@"
     return 0
+}
+
+koopa_today() {
+    _koopa_today "$@"
 }
 
 koopa_touch() {
@@ -25802,6 +25786,14 @@ koopa_update_system_tex_packages() {
     return 0
 }
 
+koopa_user_id() {
+    _koopa_user_id "$@"
+}
+
+koopa_user() {
+    _koopa_user "$@"
+}
+
 koopa_validate_json() {
     local app dict
     declare -A app
@@ -26048,6 +26040,14 @@ koopa_write_string() {
     fi
     koopa_print "${dict['string']}" > "${dict['file']}"
     return 0
+}
+
+koopa_xdg_config_home() {
+    _koopa_xdg_config_home "$@"
+}
+
+koopa_xdg_data_home() {
+    _koopa_xdg_data_home "$@"
 }
 
 koopa_zsh_compaudit_set_permissions() {

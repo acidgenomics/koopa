@@ -2988,6 +2988,7 @@
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
+    "outdated": true,
     "reverse_dependencies": [
       "bash-language-server",
       "gtop",
