@@ -8339,15 +8339,17 @@ koopa_gfortran_libs() {
 koopa_git_branch() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
-    dict['prefix']="${1:?}"
-    koopa_assert_is_git_repo "${dict['prefix']}"
-    app['cut']="$(koopa_locate_cut)"
-    app['git']="$(koopa_locate_git)"
-    app['head']="$(koopa_locate_head)"
+    declare -a app=(
+        ['cut']="$(koopa_locate_cut --allow-system)"
+        ['git']="$(koopa_locate_git --allow-system)"
+        ['head']="$(koopa_locate_head --allow-system)"
+    )
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
+    declare -a dict
+    dict['prefix']="${1:?}"
+    koopa_assert_is_git_repo "${dict['prefix']}"
     (
         local dict2
         declare -A dict2
@@ -22914,7 +22916,7 @@ koopa_switch_to_develop() {
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
         koopa_cd "${dict['prefix']}"
-        if [[ "$(koopa_git_branch)" == 'develop' ]]
+        if [[ "$(koopa_git_branch "${PWD:?}")" == 'develop' ]]
         then
             koopa_alert_note "Already on 'develop' branch."
             return 0
