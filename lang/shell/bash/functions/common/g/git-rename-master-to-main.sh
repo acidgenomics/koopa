@@ -15,7 +15,8 @@ koopa_git_rename_master_to_main() {
     # @examples
     # > koopa_git_rename_master_to_main "${HOME}/git/example"
     # """
-    local app dict repos
+    local app dict
+    koopa_assert_has_args "$#"
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
@@ -24,14 +25,12 @@ koopa_git_rename_master_to_main() {
         ['old_branch']='master'
         ['new_branch']='main'
     )
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             koopa_cd "$repo"
             # Switch to the old branch.
