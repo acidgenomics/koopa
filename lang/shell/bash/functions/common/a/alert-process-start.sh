@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_alert_process_start() {
+koopa_alert_process_start() {
     # """
     # Inform the user about the start of a process.
     # @note Updated 2022-04-08.

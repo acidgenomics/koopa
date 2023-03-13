@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_str_detect() {
+koopa_str_detect() {
     # """
     # Does the input pattern match a string?
     # @note Updated 2022-02-23.

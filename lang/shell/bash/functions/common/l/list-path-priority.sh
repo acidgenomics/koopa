@@ -3,16 +3,17 @@
 koopa_list_path_priority() {
     # """
     # List path priority.
-    # @note Updated 2022-08-25.
+    # @note Updated 2023-03-13.
     # """
     local all_arr app dict unique_arr
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-    )
+    koopa_assert_has_args_le "$#" 1
+    declare -A app
+    app['awk']="$(koopa_locate_awk)"
     [[ -x "${app['awk']}" ]] || return 1
     declare -A dict
+    dict['string']="${1:-$PATH}"
     readarray -t all_arr <<< "$( \
-        __koopa_list_path_priority "$@" \
+        koopa_print "${dict['string']//:/$'\n'}" \
     )"
     koopa_is_array_non_empty "${all_arr[@]:-}" || return 1
     # shellcheck disable=SC2016

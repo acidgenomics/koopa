@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_print_ansi() {
+koopa_print_ansi() {
     # """
     # Print a colored line in console.
     # @note Updated 2022-02-25.
@@ -26,8 +26,8 @@ __koopa_print_ansi() {
     # - https://bixense.com/clicolors/
     # """
     local color nocolor str
-    color="$(__koopa_ansi_escape "${1:?}")"
-    nocolor="$(__koopa_ansi_escape 'nocolor')"
+    color="$(koopa_ansi_escape "${1:?}")"
+    nocolor="$(koopa_ansi_escape 'nocolor')"
     shift 1
     for str in "$@"
     do

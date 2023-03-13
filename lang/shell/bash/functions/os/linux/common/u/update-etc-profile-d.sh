@@ -24,10 +24,10 @@ koopa_linux_update_etc_profile_d() {
     read -r -d '' "dict[string]" << END || true
 #!/bin/sh
 
-__koopa_activate_shared_profile() {
+_koopa_activate_shared_profile() {
     # """
     # Activate koopa shell for all users.
-    # @note Updated 2021-11-11.
+    # @note Updated 2023-03-13.
     # @seealso
     # - https://koopa.acidgenomics.com/
     # """
@@ -36,7 +36,7 @@ __koopa_activate_shared_profile() {
     return 0
 }
 
-__koopa_activate_shared_profile
+_koopa_activate_shared_profile
 END
     koopa_sudo_write_string \
         --file="${dict['file']}" \

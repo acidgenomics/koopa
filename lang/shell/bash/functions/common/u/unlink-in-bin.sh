@@ -10,7 +10,7 @@ koopa_unlink_in_bin() {
     # @examples
     # > koopa_unlink_in_bin 'R' 'Rscript'
     # """
-    __koopa_unlink_in_dir \
+    koopa_unlink_in_dir \
         --allow-missing \
         --prefix="$(koopa_bin_prefix)" \
         "$@"

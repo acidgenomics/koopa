@@ -8,7 +8,7 @@ koopa_dl() {
     koopa_assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
     do
-        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
+        koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
         shift 2
     done
     return 0

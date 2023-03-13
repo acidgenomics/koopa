@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-__koopa_h() {
+koopa_h() {
     # """
     # Header message generator.
-    # @note Updated 2022-01-20.
+    # @note Updated 2023-03-13.
     # """
     local dict
     koopa_assert_has_args_ge "$#" 2
@@ -39,6 +39,6 @@ __koopa_h() {
             koopa_stop 'Invalid header level.'
             ;;
     esac
-    __koopa_msg 'magenta' 'default' "${dict['emoji']} ${dict['prefix']}" "$@"
+    koopa_msg 'magenta' 'default' "${dict['emoji']} ${dict['prefix']}" "$@"
     return 0
 }

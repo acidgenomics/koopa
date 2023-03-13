@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_is_ssh_enabled() {
+koopa_is_ssh_enabled() {
     # """
     # Is SSH key enabled (e.g. for git)?
     # @note Updated 2022-07-15.

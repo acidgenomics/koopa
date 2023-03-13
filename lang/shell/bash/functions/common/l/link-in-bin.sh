@@ -17,5 +17,5 @@ koopa_link_in_bin() {
     # >     --name='emacs' \
     # >     --source='/usr/local/bin/emacs'
     # """
-    __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+    koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
 }

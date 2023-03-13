@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_status() {
+koopa_status() {
     # """
     # Koopa status.
     # @note Updated 2021-11-18.
@@ -9,8 +9,8 @@ __koopa_status() {
     koopa_assert_has_args_ge "$#" 3
     declare -A dict=(
         ['label']="$(printf '%10s\n' "${1:?}")"
-        ['color']="$(__koopa_ansi_escape "${2:?}")"
-        ['nocolor']="$(__koopa_ansi_escape 'nocolor')"
+        ['color']="$(koopa_ansi_escape "${2:?}")"
+        ['nocolor']="$(koopa_ansi_escape 'nocolor')"
     )
     shift 2
     for string in "$@"
