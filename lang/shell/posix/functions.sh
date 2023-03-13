@@ -1723,13 +1723,6 @@ _koopa_is_fedora_like() {
     _koopa_is_os_like 'fedora'
 }
 
-koopa_is_git_repo_top_level() {
-    local prefix
-    koopa_assert_has_args_le "$#" 1
-    prefix="${1:-${PWD:?}}"
-    [[ -e "${prefix}/.git" ]]
-}
-
 _koopa_is_installed() {
     for __kvar_cmd in "$@"
     do
