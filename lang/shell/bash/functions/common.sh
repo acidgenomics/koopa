@@ -18375,6 +18375,7 @@ koopa_r_configure_environ() {
     fi
     declare -A app_pc_path_arr
     keys=(
+        'cairo'
         'curl'
         'fontconfig'
         'freetype'
@@ -18387,6 +18388,7 @@ koopa_r_configure_environ() {
         'icu4c'
         'imagemagick'
         'lapack'
+        'libffi'
         'libgit2'
         'libjpeg-turbo'
         'libpng'
@@ -18397,10 +18399,23 @@ koopa_r_configure_environ() {
         'openssl3'
         'pcre'
         'pcre2'
+        'pixman'
         'proj'
         'python3.11'
         'readline'
         'sqlite'
+        'xorg-libice'
+        'xorg-libpthread-stubs'
+        'xorg-libsm'
+        'xorg-libx11'
+        'xorg-libxau'
+        'xorg-libxcb'
+        'xorg-libxdmcp'
+        'xorg-libxext'
+        'xorg-libxrandr'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-xorgproto'
         'xz'
         'zlib'
         'zstd'
@@ -18414,11 +18429,14 @@ koopa_r_configure_environ() {
     done
     for i in "${!app_pc_path_arr[@]}"
     do
-        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
-    done
-    for i in "${!app_pc_path_arr[@]}"
-    do
-        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
+        case "$i" in
+            'xorg-xorgproto')
+                app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
+                ;;
+            *)
+                app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
+                ;;
+        esac
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()
@@ -18621,6 +18639,7 @@ koopa_r_configure_ldpaths() {
     declare -A ld_lib_app_arr
     keys=(
         'bzip2'
+        'cairo'
         'curl'
         'fontconfig'
         'freetype'
@@ -18634,6 +18653,7 @@ koopa_r_configure_ldpaths() {
         'icu4c'
         'imagemagick'
         'lapack'
+        'libffi'
         'libgit2'
         'libiconv'
         'libjpeg-turbo'
@@ -18645,10 +18665,22 @@ koopa_r_configure_ldpaths() {
         'openssl3'
         'pcre'
         'pcre2'
+        'pixman'
         'proj'
         'python3.11'
         'readline'
         'sqlite'
+        'xorg-libice'
+        'xorg-libpthread-stubs'
+        'xorg-libsm'
+        'xorg-libx11'
+        'xorg-libxau'
+        'xorg-libxcb'
+        'xorg-libxdmcp'
+        'xorg-libxext'
+        'xorg-libxrandr'
+        'xorg-libxrender'
+        'xorg-libxt'
         'xz'
         'zlib'
         'zstd'
@@ -18888,6 +18920,7 @@ koopa_r_configure_makevars() {
         local app_pc_path_arr i key keys pkg_config
         declare -A app_pc_path_arr
         keys=(
+            'cairo'
             'curl'
             'fontconfig'
             'freetype'
@@ -18900,6 +18933,7 @@ koopa_r_configure_makevars() {
             'icu4c'
             'imagemagick'
             'lapack'
+            'libffi'
             'libgit2'
             'libjpeg-turbo'
             'libpng'
@@ -18910,10 +18944,23 @@ koopa_r_configure_makevars() {
             'openssl3'
             'pcre'
             'pcre2'
+            'pixman'
             'proj'
             'python3.11'
             'readline'
             'sqlite'
+            'xorg-libice'
+            'xorg-libpthread-stubs'
+            'xorg-libsm'
+            'xorg-libx11'
+            'xorg-libxau'
+            'xorg-libxcb'
+            'xorg-libxdmcp'
+            'xorg-libxext'
+            'xorg-libxrandr'
+            'xorg-libxrender'
+            'xorg-libxt'
+            'xorg-xorgproto'
             'xz'
             'zlib'
             'zstd'
@@ -18927,11 +18974,14 @@ koopa_r_configure_makevars() {
         done
         for i in "${!app_pc_path_arr[@]}"
         do
-            app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
-        done
-        for i in "${!app_pc_path_arr[@]}"
-        do
-            app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
+            case "$i" in
+                'xorg-xorgproto')
+                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
+                    ;;
+                *)
+                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
+                    ;;
+            esac
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
