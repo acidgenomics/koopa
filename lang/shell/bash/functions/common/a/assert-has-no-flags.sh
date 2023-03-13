@@ -3,8 +3,9 @@
 koopa_assert_has_no_flags() {
     # """
     # Assert that the user input does not contain flags.
-    # @note Updated 2021-09-20.
+    # @note Updated 2023-03-12.
     # """
+    koopa_assert_has_args "$#"
     while (("$#"))
     do
         case "$1" in

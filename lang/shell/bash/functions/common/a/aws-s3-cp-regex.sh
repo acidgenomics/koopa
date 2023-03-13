@@ -12,9 +12,8 @@ koopa_aws_s3_cp_regex() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-    )
+    declare -A app
+    app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['bucket_pattern']='^s3://.+/$'
