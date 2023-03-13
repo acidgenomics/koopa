@@ -20,7 +20,7 @@ koopa_git_branch() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -a app=(
+    declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
@@ -28,7 +28,7 @@ koopa_git_branch() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
-    declare -a dict
+    declare -A dict
     dict['prefix']="${1:?}"
     koopa_assert_is_git_repo "${dict['prefix']}"
     (
