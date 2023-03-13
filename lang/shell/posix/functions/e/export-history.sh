@@ -3,7 +3,7 @@
 _koopa_export_history() {
     # """
     # Export history.
-    # @note Updated 2023-03-11.
+    # @note Updated 2023-03-13.
     #
     # See 'bash(1)' for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
@@ -12,7 +12,7 @@ _koopa_export_history() {
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.$(koopa_shell_name)_history"
+        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
