@@ -608,9 +608,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-13",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.31.1"
+    "version": "2.32.0"
   },
   "cli11": {
     "aliases": {
@@ -1483,6 +1483,7 @@
     "date": "2023-01-05",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.2"
   },
@@ -1947,6 +1948,7 @@
     "bin": ["hugo"],
     "build_dependencies": ["go"],
     "date": "2023-03-05",
+    "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
     "version": "0.111.2"
   },
@@ -3281,6 +3283,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": ["python3.11"],
+    "outdated": true,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.1.0"
   },
@@ -3436,10 +3439,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-03-06",
+    "date": "2023-03-13",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.16.4"
+    "version": "2.17.0"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -3915,6 +3918,7 @@
     "date": "2023-02-27",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
