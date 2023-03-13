@@ -1,56 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Create a Bash-specific version of this function.
-koopa_add_to_path_start() {
-    _koopa_add_to_path_start "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_add_to_path_string_start() {
-    _koopa_add_to_path_string_start "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_arch() {
-    _koopa_arch "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_bin_prefix() {
-    _koopa_bin_prefix "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_boolean_nounset() {
-    _koopa_boolean_nounset "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_config_prefix() {
-    _koopa_config_prefix "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_cpu_count() {
-    _koopa_cpu_count "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_default_shell_name() {
-    _koopa_default_shell_name "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_doom_emacs_prefix() {
-    _koopa_doom_emacs_prefix "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_dotfiles_prefix() {
-    _koopa_dotfiles_prefix "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
 koopa_emacs_prefix() {
     _koopa_emacs_prefix "$@"
 }
