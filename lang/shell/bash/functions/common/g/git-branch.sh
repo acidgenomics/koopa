@@ -18,8 +18,8 @@ koopa_git_branch() {
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    local app dict
-    koopa_assert_has_args_eq "$#" 1
+    local app
+    koopa_assert_has_args "$#"
     declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
@@ -28,24 +28,30 @@ koopa_git_branch() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
-    declare -A dict
-    dict['prefix']="${1:?}"
-    koopa_assert_is_git_repo "${dict['prefix']}"
+    koopa_assert_is_git_repo "$@"
     (
-        local dict2
-        declare -A dict2
-        dict2['branch']="$("${app['git']}" branch --show-current 2>/dev/null)"
-        # Keep track of detached HEAD state.
-        if [[ -z "${dict2['branch']}" ]]
-        then
+        local repo
+        for repo in "$@"
+        do
+            local dict2
+            koopa_cd "$repo"
+            declare -A dict2
             dict2['branch']="$( \
-                "${app['git']}" branch 2>/dev/null \
-                | "${app['head']}" -n 1 \
-                | "${app['cut']}" -c '3-' \
+                "${app['git']}" branch --show-current \
+                2>/dev/null \
             )"
-        fi
-        [[ -n "${dict2['branch']}" ]] || return 0
-        koopa_print "${dict2['branch']}"
+            # Keep track of detached HEAD state.
+            if [[ -z "${dict2['branch']}" ]]
+            then
+                dict2['branch']="$( \
+                    "${app['git']}" branch 2>/dev/null \
+                    | "${app['head']}" -n 1 \
+                    | "${app['cut']}" -c '3-' \
+                )"
+            fi
+            [[ -n "${dict2['branch']}" ]] || return 0
+            koopa_print "${dict2['branch']}"
+        done
     )
     return 0
 }
