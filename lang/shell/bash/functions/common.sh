@@ -3146,7 +3146,7 @@ koopa_brew_reset_core_repo() {
         prefix="$("${app['brew']}" --repo "$repo")"
         koopa_assert_is_dir "$prefix"
         koopa_cd "$prefix"
-        branch="$(koopa_git_default_branch)"
+        branch="$(koopa_git_default_branch "${PWD:?}")"
         "${app['git']}" checkout -q "$branch"
         "${app['git']}" branch -q "$branch" -u "${origin}/${branch}"
         "${app['git']}" reset -q --hard "${origin}/${branch}"
@@ -8333,8 +8333,8 @@ koopa_gfortran_libs() {
 }
 
 koopa_git_branch() {
-    local app dict
-    koopa_assert_has_args_eq "$#" 1
+    local app
+    koopa_assert_has_args "$#"
     declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
@@ -8343,23 +8343,29 @@ koopa_git_branch() {
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
-    declare -A dict
-    dict['prefix']="${1:?}"
-    koopa_assert_is_git_repo "${dict['prefix']}"
+    koopa_assert_is_git_repo "$@"
     (
-        local dict2
-        declare -A dict2
-        dict2['branch']="$("${app['git']}" branch --show-current 2>/dev/null)"
-        if [[ -z "${dict2['branch']}" ]]
-        then
+        local repo
+        for repo in "$@"
+        do
+            local dict2
+            koopa_cd "$repo"
+            declare -A dict2
             dict2['branch']="$( \
-                "${app['git']}" branch 2>/dev/null \
-                | "${app['head']}" -n 1 \
-                | "${app['cut']}" -c '3-' \
+                "${app['git']}" branch --show-current \
+                2>/dev/null \
             )"
-        fi
-        [[ -n "${dict2['branch']}" ]] || return 0
-        koopa_print "${dict2['branch']}"
+            if [[ -z "${dict2['branch']}" ]]
+            then
+                dict2['branch']="$( \
+                    "${app['git']}" branch 2>/dev/null \
+                    | "${app['head']}" -n 1 \
+                    | "${app['cut']}" -c '3-' \
+                )"
+            fi
+            [[ -n "${dict2['branch']}" ]] || return 0
+            koopa_print "${dict2['branch']}"
+        done
     )
     return 0
 }
@@ -8478,7 +8484,8 @@ koopa_git_clone() {
 }
 
 koopa_git_commit_date() {
-    local app repos
+    local app
+    koopa_assert_has_args "$#"
     declare -A app=(
         ['date']="$(koopa_locate_date --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
@@ -8487,86 +8494,78 @@ koopa_git_commit_date() {
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
-            local x
+            local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
-            x="$( \
+            string="$( \
                 "${app['git']}" log -1 --format='%at' \
-                    | "${app['xargs']}" -I '{}' \
-                        "${app['date']}" -d '@{}' '+%Y-%m-%d' \
-                    2>/dev/null || true \
+                | "${app['xargs']}" -I '{}' \
+                "${app['date']}" -d '@{}' '+%Y-%m-%d' \
+                2>/dev/null \
+                || true \
             )"
-            [[ -n "$x" ]] || return 1
-            koopa_print "$x"
+            [[ -n "$string" ]] || return 1
+            koopa_print "$string"
         done
     )
     return 0
 }
 
 koopa_git_default_branch() {
-    local app dict repos
+    local app dict
+    koopa_assert_has_args "$#"
     declare -A app=(
         ['git']="$(koopa_locate_git --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    declare -A dict=(
-        ['remote']='origin'
-    )
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    declare -A dict
+    dict['remote']='origin'
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
-            local x
+            local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
-            x="$( \
+            string="$( \
                 "${app['git']}" remote show "${dict['remote']}" \
-                    | koopa_grep --pattern='HEAD branch' \
-                    | "${app['sed']}" 's/.*: //' \
+                | koopa_grep --pattern='HEAD branch' \
+                | "${app['sed']}" 's/.*: //' \
             )"
-            [[ -n "$x" ]] || return 1
-            koopa_print "$x"
+            [[ -n "$string" ]] || return 1
+            koopa_print "$string"
         done
     )
     return 0
 }
 
 koopa_git_last_commit_local() {
-    local app dict repos
-    declare -A app
+    local app dict
+    koopa_assert_has_args "$#"
+    declare -A app dict
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    declare -A dict=(
-        ['ref']='HEAD'
-    )
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    dict['ref']='HEAD'
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
-            local x
+            local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
-            x="$( \
+            string="$( \
                 "${app['git']}" rev-parse "${dict['ref']}" \
-                    2>/dev/null || true \
+                2>/dev/null \
+                || true \
             )"
-            [[ -n "$x" ]] || return 1
-            koopa_print "$x"
+            [[ -n "$string" ]] || return 1
+            koopa_print "$string"
         done
     )
     return 0
@@ -8583,39 +8582,34 @@ koopa_git_last_commit_remote() {
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
-    declare -A dict=(
-        ['ref']='HEAD'
-    )
+    declare -A dict
+    dict['ref']='HEAD'
     for url in "$@"
     do
-        local x
-        x="$( \
+        local string
+        string="$( \
             "${app['git']}" ls-remote --quiet "$url" "${dict['ref']}" \
             | "${app['head']}" -n 1 \
             | "${app['awk']}" '{ print $1 }' \
         )"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
+        [[ -n "$string" ]] || return 1
+        koopa_print "$string"
     done
     return 0
 }
 
 koopa_git_latest_tag() {
-    local app repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
+    local app
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             local rev tag
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
             rev="$("${app['git']}" rev-list --tags --max-count=1)"
             tag="$("${app['git']}" describe --tags "$rev")"
             [[ -n "$tag" ]] || return 1
@@ -8646,17 +8640,14 @@ koopa_git_pull() {
 }
 
 koopa_git_push_submodules() {
-    local app repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
+    local app
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             koopa_cd "$repo"
             "${app['git']}" submodule update --remote --merge
@@ -8668,30 +8659,31 @@ koopa_git_push_submodules() {
 }
 
 koopa_git_remote_url() {
-    local app repos
+    local app
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
-            local x
+            local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
-            x="$("${app['git']}" config --get 'remote.origin.url' || true)"
-            [[ -n "$x" ]] || return 1
-            koopa_print "$x"
+            string="$( \
+                "${app['git']}" config --get 'remote.origin.url' \
+                || true \
+            )"
+            [[ -n "$string" ]] || return 1
+            koopa_print "$string"
         done
     )
     return 0
 }
 
 koopa_git_rename_master_to_main() {
-    local app dict repos
+    local app dict
+    koopa_assert_has_args "$#"
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
@@ -8700,12 +8692,10 @@ koopa_git_rename_master_to_main() {
         ['old_branch']='master'
         ['new_branch']='main'
     )
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             koopa_cd "$repo"
             "${app['git']}" switch "${dict['old_branch']}"
@@ -8763,21 +8753,20 @@ koopa_git_repo_needs_pull_or_push() {
 }
 
 koopa_git_reset_fork_to_upstream() {
-    local app repos
+    local app
+    koopa_assert_has_args "$#"
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             local dict
             koopa_cd "$repo"
             declare -A dict=(
-                ['branch']="$(koopa_git_default_branch)"
+                ['branch']="$(koopa_git_default_branch "${PWD:?}")"
                 ['origin']='origin'
                 ['upstream']='upstream'
             )
@@ -8864,16 +8853,20 @@ koopa_git_rm_untracked() {
 
 koopa_git_set_remote_url() {
     local app dict
-    koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_git_repo
+    koopa_assert_has_args_eq "$#" 2
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     declare -A dict=(
-        ['url']="${1:?}"
         ['origin']='origin'
+        ['prefix']="${1:?}"
+        ['url']="${2:?}"
     )
-    "${app['git']}" remote set-url "${dict['origin']}" "${dict['url']}"
+    koopa_assert_is_git_repo "${dict['prefix']}"
+    (
+        koopa_cd "${dict['prefix']}"
+        "${app['git']}" remote set-url "${dict['origin']}" "${dict['url']}"
+    )
     return 0
 }
 
@@ -14151,18 +14144,21 @@ koopa_is_git_repo_top_level() {
 }
 
 koopa_is_git_repo() {
-    local app arg
+    local app repo
     koopa_assert_has_args "$#"
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    for arg in "$@"
-    do
-        [[ -d "$arg" ]] || return 1
-        koopa_is_git_repo_top_level "$arg" || return 1
-        "${app['git']}" rev-parse --git-dir >/dev/null 2>&1 || return 1
-    done
-    return 0
+    (
+        for repo in "$@"
+        do
+            [[ -d "$repo" ]] || return 1
+            koopa_is_git_repo_top_level "$repo" || return 1
+            koopa_cd "$repo"
+            "${app['git']}" rev-parse --git-dir >/dev/null 2>&1 || return 1
+        done
+        return 0
+    )
 }
 
 koopa_is_github_ssh_enabled() {
