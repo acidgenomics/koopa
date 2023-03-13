@@ -1568,7 +1568,7 @@ _koopa_export_gnupg() {
 _koopa_export_history() {
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.$(koopa_shell_name)_history"
+        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
     fi
     export HISTFILE
     if [ ! -f "$HISTFILE" ] \

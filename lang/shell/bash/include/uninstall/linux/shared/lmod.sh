@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this, to avoid touching system-wide configuration.
+
 main() {
     # """
     # Uninstall Lmod.
