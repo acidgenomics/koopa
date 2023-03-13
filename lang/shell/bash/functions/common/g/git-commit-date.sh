@@ -3,7 +3,7 @@
 koopa_git_commit_date() {
     # """
     # Date of last git commit.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-03-12.
     #
     # Alternative approach:
     # > "${app['git']}" log -1 --format='%cd'
@@ -13,6 +13,7 @@ koopa_git_commit_date() {
     # # 2022-08-04
     # """
     local app repos
+    koopa_assert_has_args "$#"
     declare -A app=(
         ['date']="$(koopa_locate_date --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
@@ -22,7 +23,6 @@ koopa_git_commit_date() {
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
