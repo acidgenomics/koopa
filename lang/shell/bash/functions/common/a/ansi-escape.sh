@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_ansi_escape() {
+koopa_ansi_escape() {
     # """
     # ANSI escape codes.
     # @note Updated 2020-07-05.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_alert_process_success() {
+koopa_alert_process_success() {
     # """
     # Inform the user about the successful completion of a process.
     # @note Updated 2022-10-06.

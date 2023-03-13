@@ -898,12 +898,12 @@ koopa_linux_update_etc_profile_d() {
     koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 
-__koopa_activate_shared_profile() {
+_koopa_activate_shared_profile() {
     . "${dict['koopa_prefix']}/activate"
     return 0
 }
 
-__koopa_activate_shared_profile
+_koopa_activate_shared_profile
 END
     koopa_sudo_write_string \
         --file="${dict['file']}" \

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 koopa_str_detect_regex() {
-    __koopa_str_detect --mode='regex' "$@"
+    koopa_str_detect --mode='regex' "$@"
 }

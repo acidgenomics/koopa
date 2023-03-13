@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-__koopa_link_in_dir() {
+koopa_link_in_dir() {
     # """
     # Symlink multiple programs in a directory.
     # @note Updated 2022-08-02.
     #
     # @usage
-    # > __koopa_link_in_dir \
+    # > koopa_link_in_dir \
     # >     --name=TARGET_NAME \
     # >     --prefix=TARGET_PREFIX \
     # >     --source=SOURCE_FILE \
     #
     # @examples
-    # > __koopa_link_in_dir \
+    # > koopa_link_in_dir \
     # >     --name='emacs' \
     # >     --prefix="$(koopa_bin_prefix)" \
     # >     --source='/usr/local/bin/emacs'
