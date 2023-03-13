@@ -650,17 +650,13 @@ _koopa_complete() {
                             ;;
                         'git')
                             args=(
-                                'checkout-recursive'
                                 'pull'
-                                'pull-recursive'
-                                'push-recursive'
                                 'push-submodules'
                                 'rename-master-to-main'
                                 'reset'
                                 'reset-fork-to-upstream'
                                 'rm-submodule'
                                 'rm-untracked'
-                                'status-recursive'
                             )
                             ;;
                         'gpg')

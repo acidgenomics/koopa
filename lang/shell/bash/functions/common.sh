@@ -3952,17 +3952,13 @@ koopa_cli_app() {
             ;;
         'git')
             case "${2:-}" in
-                'checkout-recursive' | \
                 'pull' | \
-                'pull-recursive' | \
-                'push-recursive' | \
                 'push-submodules' | \
                 'rename-master-to-main' | \
                 'reset' | \
                 'reset-fork-to-upstream' | \
                 'rm-submodule' | \
-                'rm-untracked' | \
-                'status-recursive')
+                'rm-untracked')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
@@ -8368,102 +8364,6 @@ koopa_git_branch() {
     return 0
 }
 
-koopa_git_checkout_recursive() {
-    local app dict dirs pos
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || return 1
-    declare -A dict=(
-        ['branch']=''
-        ['origin']=''
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--branch='*)
-                dict['branch']="${1#*=}"
-                shift 1
-                ;;
-            '--branch')
-                dict['branch']="${2:?}"
-                shift 2
-                ;;
-            '--origin='*)
-                dict['origin']="${1#*=}"
-                shift 1
-                ;;
-            '--origin')
-                dict['origin']="${2:?}"
-                shift 2
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    dirs=("$@")
-    koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
-    koopa_assert_is_dir "${dirs[@]}"
-    (
-        local dir
-        for dir in "${dirs[@]}"
-        do
-            local repo repos
-            dir="$(koopa_realpath "$dir")"
-            readarray -t repos <<< "$( \
-                koopa_find \
-                    --max-depth=3 \
-                    --min-depth=2 \
-                    --pattern='.git' \
-                    --prefix="$dir" \
-                    --sort \
-            )"
-            if koopa_is_array_empty "${repos[@]:-}"
-            then
-                koopa_stop "Failed to detect any repos in '${dir}'."
-            fi
-            koopa_h1 "Checking out ${#repos[@]} repos in '${dir}'."
-            for repo in "${repos[@]}"
-            do
-                local dict2
-                declare -A dict2
-                koopa_h2 "$repo"
-                koopa_cd "$repo"
-                dict2['branch']="${dict['branch']}"
-                dict2['default_branch']="$(koopa_git_default_branch)"
-                if [[ -z "${dict2['branch']}" ]]
-                then
-                    dict2['branch']="${dict2['default_branch']}"
-                fi
-                if [[ -n "${dict['origin']}" ]]
-                then
-                    "${app['git']}" fetch --all
-                    if [[ "${dict2['branch']}" \
-                        != "${dict2['default_branch']}" ]]
-                    then
-                        "${app['git']}" checkout "${dict2['default_branch']}"
-                        "${app['git']}" branch -D "${dict2['branch']}" || true
-                    fi
-                    "${app['git']}" checkout \
-                        -B "${dict2['branch']}" \
-                        "${dict['origin']}"
-                else
-                    "${app['git']}" checkout "${dict2['branch']}"
-                fi
-                "${app['git']}" branch -vv
-            done
-        done
-    )
-    return 0
-}
-
 koopa_git_clone() {
     local app clone_args dict
     koopa_assert_has_args "$#"
@@ -8725,53 +8625,6 @@ koopa_git_latest_tag() {
     return 0
 }
 
-koopa_git_pull_recursive() {
-    local app dirs
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || return 1
-    dirs=("$@")
-    koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
-    koopa_assert_is_dir "${dirs[@]}"
-    (
-        local dir
-        for dir in "${dirs[@]}"
-        do
-            local repo repos
-            dir="$(koopa_realpath "$dir")"
-            readarray -t repos <<< "$( \
-                koopa_find \
-                    --max-depth=3 \
-                    --min-depth=2 \
-                    --pattern='.git' \
-                    --prefix="$dir" \
-                    --sort \
-            )"
-            if koopa_is_array_empty "${repos[@]:-}"
-            then
-                koopa_stop "Failed to detect any git repos in '${dir}'."
-            fi
-            koopa_h1 "$(koopa_ngettext \
-                --prefix='Pulling ' \
-                --num="${#repos[@]}" \
-                --msg1='repo' \
-                --msg2='repos' \
-                --suffix=" in '${dir}'." \
-            )"
-            for repo in "${repos[@]}"
-            do
-                koopa_h2 "$repo"
-                koopa_cd "$repo"
-                "${app['git']}" fetch --all
-                "${app['git']}" pull --all
-                "${app['git']}" status
-            done
-        done
-    )
-    return 0
-}
-
 koopa_git_pull() {
     local app repos
     declare -A app
@@ -8787,51 +8640,6 @@ koopa_git_pull() {
             koopa_cd "$repo"
             "${app['git']}" fetch --all --quiet
             "${app['git']}" pull --all --no-rebase --recurse-submodules
-        done
-    )
-    return 0
-}
-
-koopa_git_push_recursive() {
-    local app dirs
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || return 1
-    dirs=("$@")
-    koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
-    koopa_assert_is_dir "${dirs[@]}"
-    (
-        local dir
-        for dir in "${dirs[@]}"
-        do
-            local repo repos
-            dir="$(koopa_realpath "$dir")"
-            readarray -t repos <<< "$( \
-                koopa_find \
-                    --max-depth=3 \
-                    --min-depth=2 \
-                    --pattern='.git' \
-                    --prefix="$dir" \
-                    --sort \
-            )"
-            if koopa_is_array_empty "${repos[@]:-}"
-            then
-                koopa_stop "Failed to detect any git repos in '${dir}'."
-            fi
-            koopa_h1 "$(koopa_ngettext \
-                --prefix='Pushing ' \
-                --num="${#repos[@]}" \
-                --msg1='repo' \
-                --msg2='repos' \
-                --suffix=" in '${dir}'." \
-            )"
-            for repo in "${repos[@]}"
-            do
-                koopa_h2 "$repo"
-                koopa_cd "$repo"
-                "${app['git']}" push
-            done
         done
     )
     return 0
@@ -9066,50 +8874,6 @@ koopa_git_set_remote_url() {
         ['origin']='origin'
     )
     "${app['git']}" remote set-url "${dict['origin']}" "${dict['url']}"
-    return 0
-}
-
-koopa_git_status_recursive() {
-    local app dirs
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || return 1
-    dirs=("$@")
-    koopa_is_array_empty "${dirs[@]}" && dirs[0]="${PWD:?}"
-    (
-        local dir
-        for dir in "${dirs[@]}"
-        do
-            local repo repos
-            dir="$(koopa_realpath "$dir")"
-            readarray -t repos <<< "$( \
-                koopa_find \
-                    --max-depth=3 \
-                    --min-depth=2 \
-                    --pattern='.git' \
-                    --prefix="$dir" \
-                    --sort \
-            )"
-            if koopa_is_array_empty "${repos[@]:-}"
-            then
-                koopa_stop "Failed to detect any git repos in '${dir}'."
-            fi
-            koopa_h1 "$(koopa_ngettext \
-                --prefix='Checking status of ' \
-                --num="${#repos[@]}" \
-                --msg1='repo' \
-                --msg2='repos' \
-                --suffix=" in '${dir}'." \
-            )"
-            for repo in "${repos[@]}"
-            do
-                koopa_h2 "$repo"
-                koopa_cd "$repo"
-                "${app['git']}" status
-            done
-        done
-    )
     return 0
 }
 
