@@ -9,10 +9,10 @@ koopa_git_commit_date() {
     # > "${app['git']}" log -1 --format='%cd'
     #
     # @examples
-    # > koopa_git_last_commit_local "${HOME}/git/monorepo"
+    # > koopa_git_commit_date "${HOME}/git/monorepo"
     # # 2022-08-04
     # """
-    local app repos
+    local app
     koopa_assert_has_args "$#"
     declare -A app=(
         ['date']="$(koopa_locate_date --allow-system)"
@@ -22,25 +22,24 @@ koopa_git_commit_date() {
     [[ -x "${app['date']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
-    repos=("$@")
-    koopa_assert_is_dir "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
-            local x
+            local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
-            x="$( \
+            string="$( \
                 "${app['git']}" log -1 --format='%at' \
-                    | "${app['xargs']}" -I '{}' \
-                        "${app['date']}" -d '@{}' '+%Y-%m-%d' \
-                    2>/dev/null || true \
+                | "${app['xargs']}" -I '{}' \
+                "${app['date']}" -d '@{}' '+%Y-%m-%d' \
+                2>/dev/null \
+                || true \
             )"
-            [[ -n "$x" ]] || return 1
-            koopa_print "$x"
+            [[ -n "$string" ]] || return 1
+            koopa_print "$string"
         done
     )
     return 0
