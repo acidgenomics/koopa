@@ -1,46 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Create a Bash-specific version of this function.
-koopa_is_ubuntu_like() {
-    _koopa_is_ubuntu_like "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_koopa_prefix() {
-    _koopa_koopa_prefix "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_local_data_prefix() {
-    _koopa_local_data_prefix "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_macos_emacs() {
-    _koopa_macos_emacs "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_macos_os_version() {
-    _koopa_macos_os_version "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_major_minor_patch_version() {
-    _koopa_major_minor_patch_version "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_major_minor_version() {
-    _koopa_major_minor_version "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
-koopa_major_version() {
-    _koopa_major_version "$@"
-}
-
-# FIXME Create a Bash-specific version of this function.
 koopa_opt_prefix() {
     _koopa_opt_prefix "$@"
 }
