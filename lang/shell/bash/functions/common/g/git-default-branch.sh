@@ -38,7 +38,7 @@ koopa_git_default_branch() {
         do
             local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
+            koopa_is_git_repo "${PWD:?}" || return 1
             string="$( \
                 "${app['git']}" remote show "${dict['remote']}" \
                     | koopa_grep --pattern='HEAD branch' \
