@@ -323,6 +323,10 @@ _koopa_activate_conda() {
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     . "$__kvar_script"
+    if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && [ "${CONDA_SHLVL:-0}" -eq 1 ]
+    then
+        conda deactivate
+    fi
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_nounset \
