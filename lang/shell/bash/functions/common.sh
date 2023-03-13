@@ -14406,6 +14406,10 @@ koopa_is_symlink() {
     return 0
 }
 
+koopa_is_ubuntu_like() {
+    _koopa_is_ubuntu_like "$@"
+}
+
 koopa_is_url_active() {
     local app url
     koopa_assert_has_args "$#"
@@ -15203,6 +15207,10 @@ koopa_local_ip_address() {
     return 0
 }
 
+koopa_koopa_prefix() {
+    _koopa_koopa_prefix "$@"
+}
+
 koopa_koopa_url() {
     koopa_assert_has_no_args "$#"
     koopa_print 'https://koopa.acidgenomics.com'
@@ -15498,6 +15506,10 @@ koopa_ln() {
     fi
     "${ln[@]}" "${ln_args[@]}"
     return 0
+}
+
+koopa_local_data_prefix() {
+    _koopa_local_data_prefix "$@"
 }
 
 koopa_locate_7z() {
@@ -17041,6 +17053,18 @@ koopa_lowercase() {
     return 0
 }
 
+koopa_major_minor_patch_version() {
+    _koopa_major_minor_patch_version "$@"
+}
+
+koopa_major_minor_version() {
+    _koopa_major_minor_version "$@"
+}
+
+koopa_major_version() {
+    _koopa_major_version "$@"
+}
+
 koopa_make_build_string() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -18208,38 +18232,6 @@ koopa_python_system_packages_prefix() {
 koopa_python_virtualenvs_prefix() {
     koopa_print "${HOME}/.virtualenvs"
     return 0
-}
-
-koopa_is_ubuntu_like() {
-    _koopa_is_ubuntu_like "$@"
-}
-
-koopa_koopa_prefix() {
-    _koopa_koopa_prefix "$@"
-}
-
-koopa_local_data_prefix() {
-    _koopa_local_data_prefix "$@"
-}
-
-koopa_macos_emacs() {
-    _koopa_macos_emacs "$@"
-}
-
-koopa_macos_os_version() {
-    _koopa_macos_os_version "$@"
-}
-
-koopa_major_minor_patch_version() {
-    _koopa_major_minor_patch_version "$@"
-}
-
-koopa_major_minor_version() {
-    _koopa_major_minor_version "$@"
-}
-
-koopa_major_version() {
-    _koopa_major_version "$@"
 }
 
 koopa_opt_prefix() {

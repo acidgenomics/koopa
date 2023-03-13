@@ -342,6 +342,10 @@ koopa_macos_download_macos() {
     return 0
 }
 
+koopa_macos_emacs() {
+    _koopa_macos_emacs "$@"
+}
+
 koopa_macos_enable_crashplan() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
@@ -973,6 +977,10 @@ koopa_macos_os_codename() {
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"
     return 0
+}
+
+koopa_macos_os_version() {
+    _koopa_macos_os_version "$@"
 }
 
 koopa_macos_python_prefix() {
