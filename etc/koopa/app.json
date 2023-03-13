@@ -1413,12 +1413,11 @@
     },
     "bin": ["gdal-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-13",
     "man1": ["gdal-config.1"],
-    "notes": ["FIXME Having build issues with PROJ 9.2.0."],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.6.2"
+    "version": "3.6.3"
   },
   "gdbm": {
     "aliases": {
@@ -3355,10 +3354,13 @@
     },
     "bin": ["proj", "projinfo"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-13",
     "man1": ["proj.1", "projinfo.1"],
+    "notes": [
+      "9.2.0 has an issue with proj-config.cmake",
+      "cmake_policy PUSH without matching POP"
+    ],
     "outdated": true,
-    "notes": ["FIXME 9.2.0 has build issues with GDAL 3.6.2?"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.1.1"
   },
