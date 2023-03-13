@@ -182,15 +182,7 @@ libsqlite3.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
         "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
-        # FIXME Consider setting these (from Homebrew):
-        # > '-DCMAKE_CXX_STANDARD=17'
-        # > '-DENABLE_PAM=ON'
-        # FIXME Need to set this: 'SQLITE3EXT_INCLUDE_DIR'?
     )
-    if koopa_is_macos
-    then
-        cmake_args+=('-DBUILD_JAVA_BINDINGS=OFF')
-    fi
     koopa_mkdir "${dict['prefix']}/include"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
