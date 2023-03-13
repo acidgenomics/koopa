@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_get_version_arg() {
+koopa_get_version_arg() {
     # """
     # Return matching version argument for an input program.
     # @note Updated 2022-06-20.

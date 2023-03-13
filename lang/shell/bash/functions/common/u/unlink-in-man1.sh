@@ -11,7 +11,7 @@ koopa_unlink_in_man1() {
     # @examples
     # > koopa_link_in_man1 'cp.1' 'mv.1'
     # """
-    __koopa_unlink_in_dir \
+    koopa_unlink_in_dir \
         --allow-missing \
         --prefix="$(koopa_man_prefix)/man1" \
         "$@"

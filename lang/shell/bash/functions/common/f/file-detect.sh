@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_file_detect() {
+koopa_file_detect() {
     # """
     # Is a pattern defined in a file?
     # @note Updated 2022-02-23.

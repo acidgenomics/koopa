@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-__koopa_unlink_in_dir() {
+koopa_unlink_in_dir() {
     # """
     # Unlink multiple symlinks in a directory.
     # @note Updated 2022-08-03.

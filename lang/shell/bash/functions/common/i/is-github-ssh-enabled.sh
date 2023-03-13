@@ -6,5 +6,5 @@ koopa_is_github_ssh_enabled() {
     # @note Updated 2020-06-30.
     # """
     koopa_assert_has_no_args "$#"
-    __koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
+    koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }

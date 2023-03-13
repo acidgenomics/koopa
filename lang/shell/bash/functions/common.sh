@@ -1,535 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=all
 
-__koopa_alert_process_start() {
-    local dict
-    declare -A dict
-    dict['word']="${1:?}"
-    shift 1
-    koopa_assert_has_args_le "$#" 3
-    dict['name']="${1:?}"
-    dict['version']=''
-    dict['prefix']=''
-    if [[ "$#" -eq 2 ]]
-    then
-        dict['prefix']="${2:?}"
-    elif [[ "$#" -eq 3 ]]
-    then
-        dict['version']="${2:?}"
-        dict['prefix']="${3:?}"
-    fi
-    if [[ -n "${dict['prefix']}" ]] && [[ -n "${dict['version']}" ]]
-    then
-        dict['out']="${dict['word']} '${dict['name']}' ${dict['version']} \
-at '${dict['prefix']}'."
-    elif [[ -n "${dict['prefix']}" ]]
-    then
-        dict['out']="${dict['word']} '${dict['name']}' at '${dict['prefix']}'."
-    else
-        dict['out']="${dict['word']} '${dict['name']}'."
-    fi
-    koopa_alert "${dict['out']}"
-    return 0
-}
-
-__koopa_alert_process_success() {
-    local dict
-    declare -A dict
-    dict['word']="${1:?}"
-    shift 1
-    koopa_assert_has_args_le "$#" 2
-    dict['name']="${1:?}"
-    dict['prefix']="${2:-}"
-    if [[ -n "${dict['prefix']}" ]]
-    then
-        dict['out']="${dict['word']} of '${dict['name']}' at \
-'${dict['prefix']}' was successful."
-    else
-        dict['out']="${dict['word']} of '${dict['name']}' was successful."
-    fi
-    koopa_alert_success "${dict['out']}"
-    return 0
-}
-
-__koopa_ansi_escape() {
-    local escape
-    case "${1:?}" in
-        'nocolor')
-            escape='0'
-            ;;
-        'default')
-            escape='0;39'
-            ;;
-        'default-bold')
-            escape='1;39'
-            ;;
-        'black')
-            escape='0;30'
-            ;;
-        'black-bold')
-            escape='1;30'
-            ;;
-        'blue')
-            escape='0;34'
-            ;;
-        'blue-bold')
-            escape='1;34'
-            ;;
-        'cyan')
-            escape='0;36'
-            ;;
-        'cyan-bold')
-            escape='1;36'
-            ;;
-        'green')
-            escape='0;32'
-            ;;
-        'green-bold')
-            escape='1;32'
-            ;;
-        'magenta')
-            escape='0;35'
-            ;;
-        'magenta-bold')
-            escape='1;35'
-            ;;
-        'red')
-            escape='0;31'
-            ;;
-        'red-bold')
-            escape='1;31'
-            ;;
-        'yellow')
-            escape='0;33'
-            ;;
-        'yellow-bold')
-            escape='1;33'
-            ;;
-        'white')
-            escape='0;97'
-            ;;
-        'white-bold')
-            escape='1;97'
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-    printf '\033[%sm' "$escape"
-    return 0
-}
-
-__koopa_file_detect() {
-    local dict grep_args
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']=''
-        ['mode']=''
-        ['pattern']=''
-        ['stdin']=1
-        ['sudo']=0
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--file='*)
-                dict['file']="${1#*=}"
-                dict['stdin']=0
-                shift 1
-                ;;
-            '--file')
-                dict['file']="${2:?}"
-                dict['stdin']=0
-                shift 2
-                ;;
-            '--mode='*)
-                dict['mode']="${1#*=}"
-                shift 1
-                ;;
-            '--mode')
-                dict['mode']="${2:?}"
-                shift 2
-                ;;
-            '--pattern='*)
-                dict['pattern']="${1#*=}"
-                shift 1
-                ;;
-            '--pattern')
-                dict['pattern']="${2:?}"
-                shift 2
-                ;;
-            '--sudo')
-                dict['sudo']=1
-                shift 1
-                ;;
-            '-')
-                dict['stdin']=1
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ "${dict['stdin']}" -eq 1 ]]
-    then
-        dict['file']="$(</dev/stdin)"
-    fi
-    koopa_assert_is_set \
-        '--file' "${dict['file']}" \
-        '--mode' "${dict['mode']}" \
-        '--pattern' "${dict['pattern']}"
-    grep_args=(
-        '--boolean'
-        '--file' "${dict['file']}"
-        '--mode' "${dict['mode']}"
-        '--pattern' "${dict['pattern']}"
-    )
-    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
-    koopa_grep "${grep_args[@]}"
-}
-
-__koopa_get_version_arg() {
-    local arg name
-    koopa_assert_has_args_eq "$#" 1
-    name="$(koopa_basename "${1:?}")"
-    case "$name" in
-        'apptainer' | \
-        'docker-credential-pass' | \
-        'go' | \
-        'openssl' | \
-        'rstudio-server')
-            arg='version'
-            ;;
-        'exiftool')
-            arg='-ver'
-            ;;
-        'lua')
-            arg='-v'
-            ;;
-        'openssh' | \
-        'ssh' | \
-        'tmux')
-            arg='-V'
-            ;;
-        *)
-            arg='--version'
-            ;;
-    esac
-    koopa_print "$arg"
-    return 0
-}
-
-__koopa_h() {
-    local dict
-    koopa_assert_has_args_ge "$#" 2
-    declare -A dict=(
-        ['emoji']="$(koopa_acid_emoji)"
-        ['level']="${1:?}"
-    )
-    shift 1
-    case "${dict['level']}" in
-        '1')
-            koopa_print ''
-            dict['prefix']='#'
-            ;;
-        '2')
-            dict['prefix']='##'
-            ;;
-        '3')
-            dict['prefix']='###'
-            ;;
-        '4')
-            dict['prefix']='####'
-            ;;
-        '5')
-            dict['prefix']='#####'
-            ;;
-        '6')
-            dict['prefix']='######'
-            ;;
-        '7')
-            dict['prefix']='#######'
-            ;;
-        *)
-            koopa_stop 'Invalid header level.'
-            ;;
-    esac
-    __koopa_msg 'magenta' 'default' "${dict['emoji']} ${dict['prefix']}" "$@"
-    return 0
-}
-
-__koopa_is_ssh_enabled() {
-    local app dict
-    koopa_assert_has_args_eq "$#" 2
-    declare -A app=(
-        ['ssh']="$(koopa_locate_ssh)"
-    )
-    [[ -x "${app['ssh']}" ]] || return 1
-    declare -A dict=(
-        ['url']="${1:?}"
-        ['pattern']="${2:?}"
-    )
-    dict['str']="$( \
-        "${app['ssh']}" -T \
-            -o StrictHostKeyChecking='no' \
-            "${dict['url']}" 2>&1 \
-    )"
-    [[ -n "${dict['str']}" ]] || return 1
-    koopa_str_detect_fixed \
-        --string="${dict['str']}" \
-        --pattern="${dict['pattern']}"
-}
-
-__koopa_link_in_dir() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['name']=''
-        ['prefix']=''
-        ['source']=''
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--name='*)
-                dict['name']="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict['name']="${2:?}"
-                shift 2
-                ;;
-            '--prefix='*)
-                dict['prefix']="${1#*=}"
-                shift 1
-                ;;
-            '--prefix')
-                dict['prefix']="${2:?}"
-                shift 2
-                ;;
-            '--source='*)
-                dict['source']="${1#*=}"
-                shift 1
-                ;;
-            '--source')
-                dict['source']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set \
-        '--name' "${dict['name']}" \
-        '--prefix' "${dict['prefix']}" \
-        '--source' "${dict['source']}"
-    [[ ! -d "${dict['prefix']}" ]] && koopa_mkdir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    dict['target']="${dict['prefix']}/${dict['name']}"
-    koopa_assert_is_existing "${dict['source']}"
-    koopa_sys_ln "${dict['source']}" "${dict['target']}"
-    return 0
-}
-
-__koopa_list_path_priority_unique() {
-    local app str
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['tac']="$(koopa_locate_tac)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['tac']}" ]] || return 1
-    str="$( \
-        __koopa_list_path_priority "$@" \
-            | "${app['tac']}" \
-            | "${app['awk']}" '!a[$0]++' \
-            | "${app['tac']}" \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-__koopa_list_path_priority() {
-    local str
-    koopa_assert_has_args_le "$#" 1
-    str="${1:-$PATH}"
-    str="$(koopa_print "${str//:/$'\n'}")"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
-__koopa_msg() {
-    local c1 c2 nc prefix str
-    c1="$(__koopa_ansi_escape "${1:?}")"
-    c2="$(__koopa_ansi_escape "${2:?}")"
-    nc="$(__koopa_ansi_escape 'nocolor')"
-    prefix="${3:?}"
-    shift 3
-    for str in "$@"
-    do
-        koopa_print "${c1}${prefix}${nc} ${c2}${str}${nc}"
-    done
-    return 0
-}
-
-__koopa_print_ansi() {
-    local color nocolor str
-    color="$(__koopa_ansi_escape "${1:?}")"
-    nocolor="$(__koopa_ansi_escape 'nocolor')"
-    shift 1
-    for str in "$@"
-    do
-        printf '%s%b%s\n' "$color" "$str" "$nocolor"
-    done
-    return 0
-}
-
-__koopa_status() {
-    local dict string
-    koopa_assert_has_args_ge "$#" 3
-    declare -A dict=(
-        ['label']="$(printf '%10s\n' "${1:?}")"
-        ['color']="$(__koopa_ansi_escape "${2:?}")"
-        ['nocolor']="$(__koopa_ansi_escape 'nocolor')"
-    )
-    shift 2
-    for string in "$@"
-    do
-        string="${dict['color']}${dict['label']}${dict['nocolor']} | ${string}"
-        koopa_print "$string"
-    done
-    return 0
-}
-
-__koopa_str_detect() {
-    local dict grep_args
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['mode']=''
-        ['pattern']=''
-        ['stdin']=1
-        ['string']=''
-        ['sudo']=0
-    )
-    while (("$#"))
-    do
-        case "$1" in
-            '--mode='*)
-                dict['mode']="${1#*=}"
-                shift 1
-                ;;
-            '--mode')
-                dict['mode']="${2:?}"
-                shift 2
-                ;;
-            '--pattern='*)
-                dict['pattern']="${1#*=}"
-                shift 1
-                ;;
-            '--pattern')
-                dict['pattern']="${2:?}"
-                shift 2
-                ;;
-            '--string='*)
-                dict['string']="${1#*=}"
-                dict['stdin']=0
-                shift 1
-                ;;
-            '--string')
-                dict['string']="${2:-}"
-                dict['stdin']=0
-                shift 2
-                ;;
-            '--sudo')
-                dict['sudo']=1
-                shift 1
-                ;;
-            '-')
-                dict['stdin']=1
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ "${dict['stdin']}" -eq 1 ]]
-    then
-        dict['string']="$(</dev/stdin)"
-    fi
-    koopa_assert_is_set \
-        '--mode' "${dict['mode']}" \
-        '--pattern' "${dict['pattern']}"
-    grep_args=(
-        '--boolean'
-        '--mode' "${dict['mode']}"
-        '--pattern' "${dict['pattern']}"
-        '--string' "${dict['string']}"
-    )
-    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
-    koopa_grep "${grep_args[@]}"
-}
-
-__koopa_unlink_in_dir() {
-    local dict name names pos
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['allow_missing']=0
-        ['prefix']=''
-    )
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--prefix='*)
-                dict['prefix']="${1#*=}"
-                shift 1
-                ;;
-            '--prefix')
-                dict['prefix']="${2:?}"
-                shift 2
-                ;;
-            '--allow-missing')
-                dict['allow_missing']=1
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    koopa_assert_is_set '--prefix' "${dict['prefix']}"
-    koopa_assert_is_dir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    names=("$@")
-    for name in "${names[@]}"
-    do
-        local file
-        file="${dict['prefix']}/${name}"
-        if [[ "${dict['allow_missing']}" -eq 1 ]]
-        then
-            if [[ -L "$file" ]]
-            then
-                koopa_rm "$file"
-            fi
-        else
-            koopa_assert_is_symlink "$file"
-            koopa_rm "$file"
-        fi
-    done
-    return 0
-}
-
 koopa_acid_emoji() {
     koopa_print '🧪'
 }
@@ -788,12 +259,11 @@ koopa_add_to_pkg_config_path() {
 koopa_add_to_user_profile() {
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['file']="$(koopa_find_user_profile)"
-    )
+    declare -A dict
+    dict['file']="$(koopa_find_user_profile)"
     koopa_alert "Adding koopa activation to '${dict['file']}'."
     read -r -d '' "dict[string]" << END || true
-__koopa_activate_user_profile() {
+_koopa_activate_user_profile() {
     local script xdg_config_home
     [ "\$#" -eq 0 ] || return 1
     xdg_config_home="\${XDG_CONFIG_HOME:-}"
@@ -809,7 +279,7 @@ __koopa_activate_user_profile() {
     return 0
 }
 
-__koopa_activate_user_profile
+_koopa_activate_user_profile
 END
     koopa_append_string \
         --file="${dict['file']}" \
@@ -850,24 +320,24 @@ koopa_alert_coffee_time() {
 }
 
 koopa_alert_configure_start() {
-    __koopa_alert_process_start 'Configuring' "$@"
+    koopa_alert_process_start 'Configuring' "$@"
 }
 
 koopa_alert_configure_success() {
-    __koopa_alert_process_success 'Configuration' "$@"
+    koopa_alert_process_success 'Configuration' "$@"
 }
 
 koopa_alert_info() {
-    __koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
+    koopa_msg 'cyan' 'default' 'ℹ︎' "$@"
     return 0
 }
 
 koopa_alert_install_start() {
-    __koopa_alert_process_start 'Installing' "$@"
+    koopa_alert_process_start 'Installing' "$@"
 }
 
 koopa_alert_install_success() {
-    __koopa_alert_process_success 'Installation' "$@"
+    koopa_alert_process_success 'Installation' "$@"
 }
 
 koopa_alert_is_installed() {
@@ -899,7 +369,57 @@ koopa_alert_is_not_installed() {
 }
 
 koopa_alert_note() {
-    __koopa_msg 'yellow' 'default' '**' "$@"
+    koopa_msg 'yellow' 'default' '**' "$@"
+}
+
+koopa_alert_process_start() {
+    local dict
+    declare -A dict
+    dict['word']="${1:?}"
+    shift 1
+    koopa_assert_has_args_le "$#" 3
+    dict['name']="${1:?}"
+    dict['version']=''
+    dict['prefix']=''
+    if [[ "$#" -eq 2 ]]
+    then
+        dict['prefix']="${2:?}"
+    elif [[ "$#" -eq 3 ]]
+    then
+        dict['version']="${2:?}"
+        dict['prefix']="${3:?}"
+    fi
+    if [[ -n "${dict['prefix']}" ]] && [[ -n "${dict['version']}" ]]
+    then
+        dict['out']="${dict['word']} '${dict['name']}' ${dict['version']} \
+at '${dict['prefix']}'."
+    elif [[ -n "${dict['prefix']}" ]]
+    then
+        dict['out']="${dict['word']} '${dict['name']}' at '${dict['prefix']}'."
+    else
+        dict['out']="${dict['word']} '${dict['name']}'."
+    fi
+    koopa_alert "${dict['out']}"
+    return 0
+}
+
+koopa_alert_process_success() {
+    local dict
+    declare -A dict
+    dict['word']="${1:?}"
+    shift 1
+    koopa_assert_has_args_le "$#" 2
+    dict['name']="${1:?}"
+    dict['prefix']="${2:-}"
+    if [[ -n "${dict['prefix']}" ]]
+    then
+        dict['out']="${dict['word']} of '${dict['name']}' at \
+'${dict['prefix']}' was successful."
+    else
+        dict['out']="${dict['word']} of '${dict['name']}' was successful."
+    fi
+    koopa_alert_success "${dict['out']}"
+    return 0
 }
 
 koopa_alert_restart() {
@@ -907,27 +427,95 @@ koopa_alert_restart() {
 }
 
 koopa_alert_success() {
-    __koopa_msg 'green-bold' 'green' '✓' "$@"
+    koopa_msg 'green-bold' 'green' '✓' "$@"
 }
 
 koopa_alert_uninstall_start() {
-    __koopa_alert_process_start 'Uninstalling' "$@"
+    koopa_alert_process_start 'Uninstalling' "$@"
 }
 
 koopa_alert_uninstall_success() {
-    __koopa_alert_process_success 'Uninstallation' "$@"
+    koopa_alert_process_success 'Uninstallation' "$@"
 }
 
 koopa_alert_update_start() {
-    __koopa_alert_process_start 'Updating' "$@"
+    koopa_alert_process_start 'Updating' "$@"
 }
 
 koopa_alert_update_success() {
-    __koopa_alert_process_success 'Update' "$@"
+    koopa_alert_process_success 'Update' "$@"
 }
 
 koopa_alert() {
-    __koopa_msg 'default' 'default' '→' "$@"
+    koopa_msg 'default' 'default' '→' "$@"
+    return 0
+}
+
+koopa_ansi_escape() {
+    local escape
+    case "${1:?}" in
+        'nocolor')
+            escape='0'
+            ;;
+        'default')
+            escape='0;39'
+            ;;
+        'default-bold')
+            escape='1;39'
+            ;;
+        'black')
+            escape='0;30'
+            ;;
+        'black-bold')
+            escape='1;30'
+            ;;
+        'blue')
+            escape='0;34'
+            ;;
+        'blue-bold')
+            escape='1;34'
+            ;;
+        'cyan')
+            escape='0;36'
+            ;;
+        'cyan-bold')
+            escape='1;36'
+            ;;
+        'green')
+            escape='0;32'
+            ;;
+        'green-bold')
+            escape='1;32'
+            ;;
+        'magenta')
+            escape='0;35'
+            ;;
+        'magenta-bold')
+            escape='1;35'
+            ;;
+        'red')
+            escape='0;31'
+            ;;
+        'red-bold')
+            escape='1;31'
+            ;;
+        'yellow')
+            escape='0;33'
+            ;;
+        'yellow-bold')
+            escape='1;33'
+            ;;
+        'white')
+            escape='0;97'
+            ;;
+        'white-bold')
+            escape='1;97'
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+    printf '\033[%sm' "$escape"
     return 0
 }
 
@@ -5894,7 +5482,7 @@ koopa_dl() {
     koopa_assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
     do
-        __koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
+        koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
         shift 2
     done
     return 0
@@ -7399,11 +6987,81 @@ koopa_file_count() {
 }
 
 koopa_file_detect_fixed() {
-    __koopa_file_detect --mode='fixed' "$@"
+    koopa_file_detect --mode='fixed' "$@"
 }
 
 koopa_file_detect_regex() {
-    __koopa_file_detect --mode='regex' "$@"
+    koopa_file_detect --mode='regex' "$@"
+}
+
+koopa_file_detect() {
+    local dict grep_args
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        ['file']=''
+        ['mode']=''
+        ['pattern']=''
+        ['stdin']=1
+        ['sudo']=0
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--file='*)
+                dict['file']="${1#*=}"
+                dict['stdin']=0
+                shift 1
+                ;;
+            '--file')
+                dict['file']="${2:?}"
+                dict['stdin']=0
+                shift 2
+                ;;
+            '--mode='*)
+                dict['mode']="${1#*=}"
+                shift 1
+                ;;
+            '--mode')
+                dict['mode']="${2:?}"
+                shift 2
+                ;;
+            '--pattern='*)
+                dict['pattern']="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict['pattern']="${2:?}"
+                shift 2
+                ;;
+            '--sudo')
+                dict['sudo']=1
+                shift 1
+                ;;
+            '-')
+                dict['stdin']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "${dict['stdin']}" -eq 1 ]]
+    then
+        dict['file']="$(</dev/stdin)"
+    fi
+    koopa_assert_is_set \
+        '--file' "${dict['file']}" \
+        '--mode' "${dict['mode']}" \
+        '--pattern' "${dict['pattern']}"
+    grep_args=(
+        '--boolean'
+        '--file' "${dict['file']}"
+        '--mode' "${dict['mode']}"
+        '--pattern' "${dict['pattern']}"
+    )
+    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
+    koopa_grep "${grep_args[@]}"
 }
 
 koopa_file_ext_2() {
@@ -8307,6 +7965,37 @@ koopa_gcrypt_url() {
     return 0
 }
 
+koopa_get_version_arg() {
+    local arg name
+    koopa_assert_has_args_eq "$#" 1
+    name="$(koopa_basename "${1:?}")"
+    case "$name" in
+        'apptainer' | \
+        'docker-credential-pass' | \
+        'go' | \
+        'openssl' | \
+        'rstudio-server')
+            arg='version'
+            ;;
+        'exiftool')
+            arg='-ver'
+            ;;
+        'lua')
+            arg='-v'
+            ;;
+        'openssh' | \
+        'ssh' | \
+        'tmux')
+            arg='-V'
+            ;;
+        *)
+            arg='--version'
+            ;;
+    esac
+    koopa_print "$arg"
+    return 0
+}
+
 koopa_get_version() {
     local cmd
     koopa_assert_has_args "$#"
@@ -8317,7 +8006,7 @@ koopa_get_version() {
         dict['cmd']="$cmd"
         dict['bn']="$(koopa_basename "${dict['cmd']}")"
         dict['bn_snake']="$(koopa_snake_case_simple "${dict['bn']}")"
-        dict['version_arg']="$(__koopa_get_version_arg "${dict['bn']}")"
+        dict['version_arg']="$(koopa_get_version_arg "${dict['bn']}")"
         dict['version_fun']="koopa_${dict['bn_snake']}_version"
         if koopa_is_function "${dict['version_fun']}"
         then
@@ -9340,32 +9029,71 @@ koopa_gsub() {
     koopa_sub --global "$@"
 }
 
+koopa_h() {
+    local dict
+    koopa_assert_has_args_ge "$#" 2
+    declare -A dict=(
+        ['emoji']="$(koopa_acid_emoji)"
+        ['level']="${1:?}"
+    )
+    shift 1
+    case "${dict['level']}" in
+        '1')
+            koopa_print ''
+            dict['prefix']='#'
+            ;;
+        '2')
+            dict['prefix']='##'
+            ;;
+        '3')
+            dict['prefix']='###'
+            ;;
+        '4')
+            dict['prefix']='####'
+            ;;
+        '5')
+            dict['prefix']='#####'
+            ;;
+        '6')
+            dict['prefix']='######'
+            ;;
+        '7')
+            dict['prefix']='#######'
+            ;;
+        *)
+            koopa_stop 'Invalid header level.'
+            ;;
+    esac
+    koopa_msg 'magenta' 'default' "${dict['emoji']} ${dict['prefix']}" "$@"
+    return 0
+}
+
 koopa_h1() {
-    __koopa_h 1 "$@"
+    koopa_h 1 "$@"
 }
 
 koopa_h2() {
-    __koopa_h 2 "$@"
+    koopa_h 2 "$@"
 }
 
 koopa_h3() {
-    __koopa_h 3 "$@"
+    koopa_h 3 "$@"
 }
 
 koopa_h4() {
-    __koopa_h 4 "$@"
+    koopa_h 4 "$@"
 }
 
 koopa_h5() {
-    __koopa_h 5 "$@"
+    koopa_h 5 "$@"
 }
 
 koopa_h6() {
-    __koopa_h 6 "$@"
+    koopa_h 6 "$@"
 }
 
 koopa_h7() {
-    __koopa_h 7 "$@"
+    koopa_h 7 "$@"
 }
 
 koopa_has_file_ext() {
@@ -14243,12 +13971,12 @@ koopa_is_git_repo() {
 
 koopa_is_github_ssh_enabled() {
     koopa_assert_has_no_args "$#"
-    __koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
+    koopa_is_ssh_enabled 'git@github.com' 'successfully authenticated'
 }
 
 koopa_is_gitlab_ssh_enabled() {
     koopa_assert_has_no_args "$#"
-    __koopa_is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
+    koopa_is_ssh_enabled 'git@gitlab.com' 'Welcome to GitLab'
 }
 
 koopa_is_gnu() {
@@ -14390,6 +14118,28 @@ koopa_is_spacemacs_installed() {
     init_file="${prefix}/init.el"
     [[ -s "$init_file" ]] || return 1
     koopa_file_detect_fixed --file="$init_file" --pattern='Spacemacs'
+}
+
+koopa_is_ssh_enabled() {
+    local app dict
+    koopa_assert_has_args_eq "$#" 2
+    declare -A app=(
+        ['ssh']="$(koopa_locate_ssh)"
+    )
+    [[ -x "${app['ssh']}" ]] || return 1
+    declare -A dict=(
+        ['url']="${1:?}"
+        ['pattern']="${2:?}"
+    )
+    dict['str']="$( \
+        "${app['ssh']}" -T \
+            -o StrictHostKeyChecking='no' \
+            "${dict['url']}" 2>&1 \
+    )"
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_str_detect_fixed \
+        --string="${dict['str']}" \
+        --pattern="${dict['pattern']}"
 }
 
 koopa_is_symlink() {
@@ -15257,7 +15007,59 @@ koopa_line_count() {
 }
 
 koopa_link_in_bin() {
-    __koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+    koopa_link_in_dir --prefix="$(koopa_bin_prefix)" "$@"
+}
+
+koopa_link_in_dir() {
+    local dict
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        ['name']=''
+        ['prefix']=''
+        ['source']=''
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--name='*)
+                dict['name']="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict['name']="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '--source='*)
+                dict['source']="${1#*=}"
+                shift 1
+                ;;
+            '--source')
+                dict['source']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--name' "${dict['name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--source' "${dict['source']}"
+    [[ ! -d "${dict['prefix']}" ]] && koopa_mkdir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    dict['target']="${dict['prefix']}/${dict['name']}"
+    koopa_assert_is_existing "${dict['source']}"
+    koopa_sys_ln "${dict['source']}" "${dict['target']}"
+    return 0
 }
 
 koopa_link_in_make() {
@@ -15346,11 +15148,11 @@ into '${dict['make_prefix']}'."
 }
 
 koopa_link_in_man1() {
-    __koopa_link_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
+    koopa_link_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
 }
 
 koopa_link_in_opt() {
-    __koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
+    koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
 
 koopa_list_app_versions() {
@@ -15385,15 +15187,38 @@ koopa_list_dotfiles() {
     koopa_find_dotfiles 'l' 'Symlinks'
 }
 
-koopa_list_path_priority() {
-    local all_arr app dict unique_arr
+koopa_list_path_priority_unique() {
+    local app dict
+    koopa_assert_has_args_le "$#" 1
     declare -A app=(
         ['awk']="$(koopa_locate_awk)"
+        ['tac']="$(koopa_locate_tac)"
     )
     [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['tac']}" ]] || return 1
     declare -A dict
+    dict['string']="${1:-$PATH}"
+    dict['string']="$( \
+        koopa_print "${dict['string']//:/$'\n'}" \
+        | "${app['tac']}" \
+        | "${app['awk']}" '!a[$0]++' \
+        | "${app['tac']}" \
+    )"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
+koopa_list_path_priority() {
+    local all_arr app dict unique_arr
+    koopa_assert_has_args_le "$#" 1
+    declare -A app
+    app['awk']="$(koopa_locate_awk)"
+    [[ -x "${app['awk']}" ]] || return 1
+    declare -A dict
+    dict['string']="${1:-$PATH}"
     readarray -t all_arr <<< "$( \
-        __koopa_list_path_priority "$@" \
+        koopa_print "${dict['string']//:/$'\n'}" \
     )"
     koopa_is_array_non_empty "${all_arr[@]:-}" || return 1
     readarray -t unique_arr <<< "$( \
@@ -17408,6 +17233,23 @@ koopa_move_into_dated_dirs_by_timestamp() {
     return 0
 }
 
+koopa_msg() {
+    local dict string
+    declare -A dict=(
+        ['c1']="$(koopa_ansi_escape "${1:?}")"
+        ['c2']="$(koopa_ansi_escape "${2:?}")"
+        ['nc']="$(koopa_ansi_escape 'nocolor')"
+        ['prefix']="${3:?}"
+    )
+    shift 3
+    for string in "$@"
+    do
+        koopa_print "${dict['c1']}${dict['prefix']}${dict['nc']} \
+${dict['c2']}${string}${dict['nc']}"
+    done
+    return 0
+}
+
 koopa_mv() {
     local app dict mkdir mv mv_args pos rm
     declare -A app=(
@@ -17801,43 +17643,55 @@ koopa_prelude_emacs() {
     _koopa_prelude_emacs "$@"
 }
 
+koopa_print_ansi() {
+    local color nocolor str
+    color="$(koopa_ansi_escape "${1:?}")"
+    nocolor="$(koopa_ansi_escape 'nocolor')"
+    shift 1
+    for str in "$@"
+    do
+        printf '%s%b%s\n' "$color" "$str" "$nocolor"
+    done
+    return 0
+}
+
 koopa_print_black_bold() {
-    __koopa_print_ansi 'black-bold' "$@"
+    koopa_print_ansi 'black-bold' "$@"
     return 0
 }
 
 koopa_print_black() {
-    __koopa_print_ansi 'black' "$@"
+    koopa_print_ansi 'black' "$@"
     return 0
 }
 
 koopa_print_blue_bold() {
-    __koopa_print_ansi 'blue-bold' "$@"
+    koopa_print_ansi 'blue-bold' "$@"
     return 0
 }
 
 koopa_print_blue() {
-    __koopa_print_ansi 'blue' "$@"
+    koopa_print_ansi 'blue' "$@"
     return 0
 }
 
 koopa_print_cyan_bold() {
-    __koopa_print_ansi 'cyan-bold' "$@"
+    koopa_print_ansi 'cyan-bold' "$@"
     return 0
 }
 
 koopa_print_cyan() {
-    __koopa_print_ansi 'cyan' "$@"
+    koopa_print_ansi 'cyan' "$@"
     return 0
 }
 
 koopa_print_default_bold() {
-    __koopa_print_ansi 'default-bold' "$@"
+    koopa_print_ansi 'default-bold' "$@"
     return 0
 }
 
 koopa_print_default() {
-    __koopa_print_ansi 'default' "$@"
+    koopa_print_ansi 'default' "$@"
     return 0
 }
 
@@ -17847,52 +17701,52 @@ koopa_print_env() {
 }
 
 koopa_print_green_bold() {
-    __koopa_print_ansi 'green-bold' "$@"
+    koopa_print_ansi 'green-bold' "$@"
     return 0
 }
 
 koopa_print_green() {
-    __koopa_print_ansi 'green' "$@"
+    koopa_print_ansi 'green' "$@"
     return 0
 }
 
 koopa_print_magenta_bold() {
-    __koopa_print_ansi 'magenta-bold' "$@"
+    koopa_print_ansi 'magenta-bold' "$@"
     return 0
 }
 
 koopa_print_magenta() {
-    __koopa_print_ansi 'magenta' "$@"
+    koopa_print_ansi 'magenta' "$@"
     return 0
 }
 
 koopa_print_red_bold() {
-    __koopa_print_ansi 'red-bold' "$@"
+    koopa_print_ansi 'red-bold' "$@"
     return 0
 }
 
 koopa_print_red() {
-    __koopa_print_ansi 'red' "$@"
+    koopa_print_ansi 'red' "$@"
     return 0
 }
 
 koopa_print_white_bold() {
-    __koopa_print_ansi 'white-bold' "$@"
+    koopa_print_ansi 'white-bold' "$@"
     return 0
 }
 
 koopa_print_white() {
-    __koopa_print_ansi 'white' "$@"
+    koopa_print_ansi 'white' "$@"
     return 0
 }
 
 koopa_print_yellow_bold() {
-    __koopa_print_ansi 'yellow-bold' "$@"
+    koopa_print_ansi 'yellow-bold' "$@"
     return 0
 }
 
 koopa_print_yellow() {
-    __koopa_print_ansi 'yellow' "$@"
+    koopa_print_ansi 'yellow' "$@"
     return 0
 }
 
@@ -22382,28 +22236,114 @@ koopa_stat() {
 }
 
 koopa_status_fail() {
-    __koopa_status 'FAIL' 'red' "$@" >&2
+    koopa_status 'FAIL' 'red' "$@" >&2
 }
 
 koopa_status_note() {
-    __koopa_status 'NOTE' 'yellow' "$@"
+    koopa_status 'NOTE' 'yellow' "$@"
 }
 
 koopa_status_ok() {
-    __koopa_status 'OK' 'green' "$@"
+    koopa_status 'OK' 'green' "$@"
+}
+
+koopa_status() {
+    local dict string
+    koopa_assert_has_args_ge "$#" 3
+    declare -A dict=(
+        ['label']="$(printf '%10s\n' "${1:?}")"
+        ['color']="$(koopa_ansi_escape "${2:?}")"
+        ['nocolor']="$(koopa_ansi_escape 'nocolor')"
+    )
+    shift 2
+    for string in "$@"
+    do
+        string="${dict['color']}${dict['label']}${dict['nocolor']} | ${string}"
+        koopa_print "$string"
+    done
+    return 0
 }
 
 koopa_stop() {
-    __koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
+    koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
     exit 1
 }
 
 koopa_str_detect_fixed() {
-    __koopa_str_detect --mode='fixed' "$@"
+    koopa_str_detect --mode='fixed' "$@"
 }
 
 koopa_str_detect_regex() {
-    __koopa_str_detect --mode='regex' "$@"
+    koopa_str_detect --mode='regex' "$@"
+}
+
+koopa_str_detect() {
+    local dict grep_args
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        ['mode']=''
+        ['pattern']=''
+        ['stdin']=1
+        ['string']=''
+        ['sudo']=0
+    )
+    while (("$#"))
+    do
+        case "$1" in
+            '--mode='*)
+                dict['mode']="${1#*=}"
+                shift 1
+                ;;
+            '--mode')
+                dict['mode']="${2:?}"
+                shift 2
+                ;;
+            '--pattern='*)
+                dict['pattern']="${1#*=}"
+                shift 1
+                ;;
+            '--pattern')
+                dict['pattern']="${2:?}"
+                shift 2
+                ;;
+            '--string='*)
+                dict['string']="${1#*=}"
+                dict['stdin']=0
+                shift 1
+                ;;
+            '--string')
+                dict['string']="${2:-}"
+                dict['stdin']=0
+                shift 2
+                ;;
+            '--sudo')
+                dict['sudo']=1
+                shift 1
+                ;;
+            '-')
+                dict['stdin']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "${dict['stdin']}" -eq 1 ]]
+    then
+        dict['string']="$(</dev/stdin)"
+    fi
+    koopa_assert_is_set \
+        '--mode' "${dict['mode']}" \
+        '--pattern' "${dict['pattern']}"
+    grep_args=(
+        '--boolean'
+        '--mode' "${dict['mode']}"
+        '--pattern' "${dict['pattern']}"
+        '--string' "${dict['string']}"
+    )
+    [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
+    koopa_grep "${grep_args[@]}"
 }
 
 koopa_strip_left() {
@@ -25639,10 +25579,66 @@ koopa_uninstall_zstd() {
 }
 
 koopa_unlink_in_bin() {
-    __koopa_unlink_in_dir \
+    koopa_unlink_in_dir \
         --allow-missing \
         --prefix="$(koopa_bin_prefix)" \
         "$@"
+}
+
+koopa_unlink_in_dir() {
+    local dict name names pos
+    koopa_assert_has_args "$#"
+    declare -A dict=(
+        ['allow_missing']=0
+        ['prefix']=''
+    )
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '--allow-missing')
+                dict['allow_missing']=1
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    names=("$@")
+    for name in "${names[@]}"
+    do
+        local file
+        file="${dict['prefix']}/${name}"
+        if [[ "${dict['allow_missing']}" -eq 1 ]]
+        then
+            if [[ -L "$file" ]]
+            then
+                koopa_rm "$file"
+            fi
+        else
+            koopa_assert_is_symlink "$file"
+            koopa_rm "$file"
+        fi
+    done
+    return 0
 }
 
 koopa_unlink_in_make() {
@@ -25685,14 +25681,14 @@ koopa_unlink_in_make() {
 }
 
 koopa_unlink_in_man1() {
-    __koopa_unlink_in_dir \
+    koopa_unlink_in_dir \
         --allow-missing \
         --prefix="$(koopa_man_prefix)/man1" \
         "$@"
 }
 
 koopa_unlink_in_opt() {
-    __koopa_unlink_in_dir \
+    koopa_unlink_in_dir \
         --allow-missing \
         --prefix="$(koopa_opt_prefix)" \
         "$@"
@@ -25854,7 +25850,7 @@ koopa_warn_if_export() {
 }
 
 koopa_warn() {
-    __koopa_msg 'magenta-bold' 'magenta' '!!' "$@" >&2
+    koopa_msg 'magenta-bold' 'magenta' '!!' "$@" >&2
     return 0
 }
 
