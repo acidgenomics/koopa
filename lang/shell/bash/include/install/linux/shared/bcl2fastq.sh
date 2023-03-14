@@ -39,8 +39,7 @@ main() {
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_extract "${dict['name']}${dict['maj_ver']}-v${dict['version']}-\
-Source.tar.gz"
+    koopa_extract "${dict['name']}${dict['maj_ver']}-"*"-Source.tar.gz"
     koopa_cd "${dict['name']}"
     koopa_mkdir "${dict['name']}-build"
     koopa_cd "${dict['name']}-build"
