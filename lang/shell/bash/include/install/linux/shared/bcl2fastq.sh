@@ -12,6 +12,12 @@ main() {
     #
     # @seealso
     # - https://gist.github.com/jblachly/f8dc0f328d66659d9ee005548a5a2d2e
+    # - https://github.com/rossigng/easybuild-easyconfigs/blob/main/
+    #     easybuild/easyconfigs/b/bcl2fastq2/
+    # - https://github.com/perllb/ctg-wgs/blob/master/
+    #     container/ngs-tools-builder
+    # - https://github.com/AlexsLemonade/alsf-scpca/blob/main/images/
+    #     cellranger/install-bcl2fastq.sh
     # """
     local app dict
     koopa_assert_has_no_args "$#"
