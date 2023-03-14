@@ -1413,7 +1413,7 @@
     },
     "bin": ["gdal-config"],
     "conservative": true,
-    "date": "2023-03-13",
+    "date": "2023-03-14",
     "man1": ["gdal-config.1"],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
@@ -3354,15 +3354,10 @@
     },
     "bin": ["proj", "projinfo"],
     "conservative": true,
-    "date": "2023-03-13",
+    "date": "2023-03-14",
     "man1": ["proj.1", "projinfo.1"],
-    "notes": [
-      "9.2.0 has an issue with proj-config.cmake",
-      "cmake_policy PUSH without matching POP"
-    ],
-    "outdated": true,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.1.1"
+    "version": "9.2.0"
   },
   "pth": {
     "aliases": {
