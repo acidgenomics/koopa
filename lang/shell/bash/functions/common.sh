@@ -10967,6 +10967,7 @@ koopa_install_app() {
         ['name']=''
         ['platform']='common'
         ['prefix']=''
+        ['private']=0
         ['version']=''
         ['version_key']=''
     )
@@ -11058,6 +11059,10 @@ koopa_install_app() {
                 bool['subshell']=0
                 shift 1
                 ;;
+            '--private')
+                dict['private']=1
+                shift 1
+                ;;
             '--quiet')
                 bool['quiet']=1
                 shift 1
@@ -11127,6 +11132,10 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
+    if [[ "${dict['private']}" -eq 1 ]]
+    then
+        koopa_assert_has_private_access
+    fi
     if [[ -n "${dict['prefix']}" ]] && [[ "${bool['prefix_check']}" -eq 1 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
@@ -11255,18 +11264,23 @@ bash/include/header.sh"
                     fi
                     ;;
                 '1')
+                    koopa_assert_has_private_access
                     [[ "${dict['mode']}" == 'shared' ]] || return 1
                     [[ -n "${dict['prefix']}" ]] || return 1
                     koopa_install_app_from_binary_package "${dict['prefix']}"
                     ;;
             esac
-            [[ "${bool['auto_prefix']}" -eq 1 ]] && \
+            if [[ "${bool['auto_prefix']}" -eq 1 ]]
+            then
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
+            fi
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
-            [[ "${bool['link_in_opt']}" -eq 1 ]] && \
+            if [[ "${bool['link_in_opt']}" -eq 1 ]]
+            then
                 koopa_link_in_opt \
                     --name="${dict['name']}" \
                     --source="${dict['prefix']}"
+            fi
             if [[ "${bool['link_in_bin']}" -eq 1 ]]
             then
                 readarray -t bin_arr <<< "$( \
@@ -12789,15 +12803,6 @@ koopa_install_oniguruma() {
         "$@"
 }
 
-koopa_install_ont_guppy() {
-    koopa_install_app \
-        --name='ont-guppy' \
-        "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://nanoporetech.com/support/nanopore-sequencing-data-analysis'."
-    return 0
-}
-
 koopa_install_openbb() {
     koopa_install_app \
         --name='openbb' \
@@ -12910,6 +12915,16 @@ koopa_install_prettier() {
     koopa_install_app \
         --name='prettier' \
         "$@"
+}
+
+koopa_install_private_ont_guppy() {
+    koopa_install_app \
+        --name='ont-guppy' \
+        --private \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://nanoporetech.com/support/nanopore-sequencing-data-analysis'."
+    return 0
 }
 
 koopa_install_procs() {
@@ -24810,12 +24825,6 @@ koopa_uninstall_oniguruma() {
         "$@"
 }
 
-koopa_uninstall_ont_guppy() {
-    koopa_uninstall_app \
-        --name='ont-guppy' \
-        "$@"
-}
-
 koopa_uninstall_openbb() {
     koopa_uninstall_app \
         --name='openbb' \
@@ -24927,6 +24936,12 @@ koopa_uninstall_poetry() {
 koopa_uninstall_prettier() {
     koopa_uninstall_app \
         --name='prettier' \
+        "$@"
+}
+
+koopa_uninstall_private_ont_guppy() {
+    koopa_uninstall_app \
+        --name='ont-guppy' \
         "$@"
 }
 
@@ -25753,7 +25768,7 @@ koopa_update_koopa() {
     return 0
 }
 
-koopa_update_ont_guppy_installers() {
+koopa_update_private_ont_guppy_installers() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_has_private_access

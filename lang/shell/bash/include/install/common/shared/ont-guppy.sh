@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME s3://private.koopa.acidgenomics.com/installers/ont-guppy/linux/amd64/6.4.2-cpu.tar.gz
-# FIXME s3://private.koopa.acidgenomics.com/installers/ont-guppy/macos/amd64/6.4.2-cpu.zip
-
 main() {
     # """
     # Install Oxford Nanopore guppy caller.
@@ -10,7 +7,6 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_assert_has_private_access
     declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1

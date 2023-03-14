@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_update_ont_guppy_installers() {
+koopa_update_private_ont_guppy_installers() {
     # """
     # Download and push Oxford Nanopore guppy installers to our private bucket.
     # @note Updated 2023-03-14.
