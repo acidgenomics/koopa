@@ -306,6 +306,7 @@ _koopa_complete() {
                         'pkg-config'
                         'poetry'
                         'prettier'
+                        'private'
                         'procs'
                         'proj'
                         'py-spy'
@@ -529,6 +530,13 @@ _koopa_complete() {
                             ;;
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'private')
+                            args+=('ont-guppy')
+                            if _koopa_is_linux
+                            then
+                                args+=('bcl2fastq' 'cellranger')
+                            fi
+                            ;;
                         'system')
                             args+=('homebrew' 'vscode-server')
                             if _koopa_is_linux
