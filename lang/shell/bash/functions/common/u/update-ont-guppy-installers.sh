@@ -10,7 +10,7 @@ koopa_update_ont_guppy_installers() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    # FIXME koopa_assert_has_private_access
+    koopa_assert_has_private_access
     declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
