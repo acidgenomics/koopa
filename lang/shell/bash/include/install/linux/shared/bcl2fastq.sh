@@ -34,7 +34,7 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-    dict['file']="${dict['version']}.tar.gz"
+    dict['file']="${dict['version']}.tar.zip"
     dict['url']="${dict['installers_base']}/${dict['name']}/src/${dict['file']}"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
