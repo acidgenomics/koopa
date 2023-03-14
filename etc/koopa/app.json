@@ -3717,15 +3717,6 @@
     ],
     "version": "83977"
   },
-  "r-gfortran": {
-    "check": false,
-    "conservative": true,
-    "date": "2022-09-26",
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/tools/"],
-    "version": "8.2"
-  },
   "r-openmp": {
     "check": false,
     "conservative": true,

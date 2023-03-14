@@ -635,16 +635,6 @@ koopa_macos_install_system_python() {
         "$@"
 }
 
-koopa_macos_install_system_r_gfortran() {
-    koopa_install_app \
-        --name='r-gfortran' \
-        --no-prefix-check \
-        --platform='macos' \
-        --prefix='/usr/local/gfortran' \
-        --system \
-        "$@"
-}
-
 koopa_macos_install_system_r_openmp() {
     koopa_install_app \
         --name='r-openmp' \
@@ -1136,15 +1126,6 @@ koopa_macos_uninstall_system_python() {
     koopa_uninstall_app \
         --name='python3.11' \
         --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_uninstall_system_r_gfortran() {
-    koopa_uninstall_app \
-        --name='r-gfortran' \
-        --platform='macos' \
-        --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }
