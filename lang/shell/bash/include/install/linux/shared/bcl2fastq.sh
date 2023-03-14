@@ -24,26 +24,25 @@ main() {
     # - https://github.com/AlexsLemonade/alsf-scpca/blob/main/images/
     #     cellranger/install-bcl2fastq.sh
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
+    deps=('icu4c')
+    koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['cmake']="$(koopa_locate_cmake --realpath)"
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['icu4c']="$(koopa_app_prefix 'icu4c')"
         ['installers_base']="$(koopa_private_installers_s3_uri)"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='bcl2fastq'
-        ['openssl']="$(koopa_app_prefix 'openssl3')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -63,15 +62,18 @@ main() {
         local b2_args bootstrap_args
         bootstrap_args=(
             "--prefix=${dict['libexec']}/boost"
+            "--libdir=${dict['libexec']}/boost/lib"
             "--with-icu=${dict['icu4c']}"
-            "--with-python=${app['python']}"
+            '--without-libraries=mpi,python'
         )
         b2_args=(
-            "-j${dict['jobs']}"
             "--prefix=${dict['libexec']}/boost"
-            'link=static'
-            'threading=multi'
+            "--libdir=${dict['libexec']}/boost/lib"
+            '-d2'
+            "-j${dict['jobs']}"
             'install'
+            'threading=multi,single'
+            'link=shared,static'
         )
         koopa_cp \
             'bcl2fastq/redist/boost_1_54_0.tar.bz2' \
