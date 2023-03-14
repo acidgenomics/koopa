@@ -34,19 +34,8 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-    # e.g. '2.20.0.422' to '2-20-0'.
-    dict['version2']="$( \
-        koopa_sub \
-            --pattern='\.[0-9]+$' \
-            --regex \
-            --replacement='' \
-            "${dict['version']}" \
-    )"
-    dict['version2']="$(koopa_kebab_case_simple "${dict['version2']}")"
-    dict['file']="${dict['name']}${dict['maj_ver']}-\
-v${dict['version2']}-tar.zip"
-    dict['url']="${dict['installers_base']}/${dict['name']}/\
-source/${dict['file']}"
+    dict['file']="${dict['version']}.tar.gz"
+    dict['url']="${dict['installers_base']}/${dict['name']}/src/${dict['file']}"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
