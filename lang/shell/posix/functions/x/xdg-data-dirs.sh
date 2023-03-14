@@ -1,16 +1,16 @@
 #!/bin/sh
 
-koopa_xdg_data_dirs() {
+_koopa_xdg_data_dirs() {
     # """
     # XDG data dirs.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-03-09.
     # """
-    local x
-    x="${XDG_DATA_DIRS:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_DATA_DIRS:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x='/usr/local/share:/usr/share'
+        __kvar_string='/usr/local/share:/usr/share'
     fi
-    koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

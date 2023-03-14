@@ -3,9 +3,10 @@
 koopa_assert_is_matching_fixed() {
     # """
     # Assert that input matches a fixed pattern.
-    # @note Updated 2022-02-27.
+    # @note Updated 2023-03-12.
     # """
     local dict
+    koopa_assert_has_args "$#"
     declare -A dict=(
         ['pattern']=''
         ['string']=''

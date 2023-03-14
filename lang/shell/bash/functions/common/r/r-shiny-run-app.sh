@@ -6,13 +6,11 @@ koopa_r_shiny_run_app() {
     # @note Updated 2022-07-11.
     # """
     local app dict
-    declare -A app=(
-        ['r']="$(koopa_locate_r)"
-    )
+    declare -A app
+    app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="${1:-}"
-    )
+    declare -A dict
+    dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"

@@ -1,16 +1,16 @@
 #!/bin/sh
 
-koopa_xdg_cache_home() {
+_koopa_xdg_cache_home() {
     # """
     # XDG cache home.
-    # @note Updated 2021-05-20.
+    # @note Updated 2023-03-09.
     # """
-    local x
-    x="${XDG_CACHE_HOME:-}"
-    if [ -z "$x" ]
+    __kvar_string="${XDG_CACHE_HOME:-}"
+    if [ -z "$__kvar_string" ]
     then
-        x="${HOME:?}/.cache"
+        __kvar_string="${HOME:?}/.cache"
     fi
-    koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

@@ -1,13 +1,13 @@
 #!/bin/sh
 
-koopa_today() {
+_koopa_today() {
     # """
     # Today string.
-    # @note Updated 2021-05-26.
+    # @note Updated 2023-03-09.
     # """
-    local str
-    str="$(date '+%Y-%m-%d')"
-    [ -n "$str" ] || return 1
-    koopa_print "$str"
+    __kvar_string="$(date '+%Y-%m-%d')"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

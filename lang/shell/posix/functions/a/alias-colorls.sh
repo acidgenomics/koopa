@@ -1,25 +1,24 @@
 #!/bin/sh
 
-koopa_alias_colorls() {
+_koopa_alias_colorls() {
     # """
     # colorls alias.
-    # @note Updated 2022-04-14.
+    # @note Updated 2023-03-11.
     #
     # Use of '--git-status' is slow for large directories / monorepos.
     # """
-    local color_flag color_mode
-    color_mode="$(koopa_color_mode)"
-    case "$color_mode" in
+    case "$(_koopa_color_mode)" in
         'dark')
-            color_flag='--dark'
+            __kvar_color_flag='--dark'
             ;;
         'light')
-            color_flag='--light'
+            __kvar_color_flag='--light'
             ;;
     esac
     colorls \
-        "$color_flag" \
+        "$__kvar_color_flag" \
         --group-directories-first \
-            "$@"
+        "$@"
+    unset -v __kvar_color_flag
     return 0
 }

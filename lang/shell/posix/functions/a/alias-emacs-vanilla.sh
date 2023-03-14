@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_emacs_vanilla() {
+_koopa_alias_emacs_vanilla() {
     # """
     # Vanilla Emacs alias.
     # @note Updated 2022-04-07.

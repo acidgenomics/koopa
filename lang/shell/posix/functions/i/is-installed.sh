@@ -1,14 +1,14 @@
 #!/bin/sh
 
-koopa_is_installed() {
+_koopa_is_installed() {
     # """
     # Is the requested program name installed?
-    # @note Updated 2020-07-05.
+    # @note Updated 2023-03-10.
     # """
-    local cmd
-    for cmd in "$@"
+    for __kvar_cmd in "$@"
     do
-        command -v "$cmd" >/dev/null || return 1
+        command -v "$__kvar_cmd" >/dev/null || return 1
     done
+    unset -v __kvar_cmd
     return 0
 }

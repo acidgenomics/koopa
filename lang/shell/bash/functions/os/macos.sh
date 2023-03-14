@@ -342,6 +342,10 @@ koopa_macos_download_macos() {
     return 0
 }
 
+koopa_macos_emacs() {
+    _koopa_macos_emacs "$@"
+}
+
 koopa_macos_enable_crashplan() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
@@ -627,16 +631,6 @@ koopa_macos_install_system_python() {
         --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
-        --system \
-        "$@"
-}
-
-koopa_macos_install_system_r_gfortran() {
-    koopa_install_app \
-        --name='r-gfortran' \
-        --no-prefix-check \
-        --platform='macos' \
-        --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }
@@ -975,6 +969,20 @@ koopa_macos_os_codename() {
     return 0
 }
 
+koopa_macos_os_version() {
+    _koopa_macos_os_version "$@"
+}
+
+koopa_macos_python_prefix() {
+    koopa_print '/Library/Frameworks/Python.framework/Versions/Current'
+    return 0
+}
+
+koopa_macos_r_prefix() {
+    koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
+    return 0
+}
+
 koopa_macos_reload_autofs() {
     local app
     koopa_assert_has_no_args "$#"
@@ -1118,15 +1126,6 @@ koopa_macos_uninstall_system_python() {
     koopa_uninstall_app \
         --name='python3.11' \
         --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_uninstall_system_r_gfortran() {
-    koopa_uninstall_app \
-        --name='r-gfortran' \
-        --platform='macos' \
-        --prefix='/usr/local/gfortran' \
         --system \
         "$@"
 }

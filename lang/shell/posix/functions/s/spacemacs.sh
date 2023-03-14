@@ -1,17 +1,11 @@
 #!/bin/sh
 
-koopa_spacemacs() {
+_koopa_spacemacs() {
     # """
     # Spacemacs.
-    # @note Updated 2023-01-06.
+    # @note Updated 2023-03-11.
     # """
-    local prefix
-    prefix="$(koopa_spacemacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        koopa_print "Spacemacs is not installed at '${prefix}'."
-        return 1
-    fi
-    koopa_emacs --with-profile 'spacemacs' "$@"
+    [ -d "$(_koopa_spacemacs_prefix)" ] || return 1
+    _koopa_emacs --with-profile 'spacemacs' "$@"
     return 0
 }
