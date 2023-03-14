@@ -94,8 +94,6 @@ main() {
             "cxxflags=${CPPFLAGS:?}"
             # This is 'pkg-config --libs-only-L' return.
             "linkflags=${LDFLAGS:?}"
-            '-sNO_BZIP2=1' # FIXME
-            '-sNO_ZLIB=1' # FIXME
             'install'
         )
         koopa_cp \
