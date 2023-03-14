@@ -25756,6 +25756,7 @@ koopa_update_koopa() {
 koopa_update_ont_guppy_installers() {
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_assert_has_private_access
     declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
@@ -25766,7 +25767,7 @@ koopa_update_ont_guppy_installers() {
         ['s3_profile']='acidgenomics'
     )
     dict['s3_target']="$(koopa_private_installers_s3_uri)/${dict['name']}"
-    dict['version']="$(koopa_app_version "${dict['name']}")"
+    dict['version']="$(koopa_app_json_version "${dict['name']}")"
     koopa_mkdir \
         "${dict['prefix']}/linux/amd64" \
         "${dict['prefix']}/linux/arm64" \

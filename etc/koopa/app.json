@@ -3030,7 +3030,7 @@
     "arch": "x86_64",
     "bin": ["guppy_basecaller"],
     "check": false,
-    "date": "2023-03-13",
+    "date": "2023-03-14",
     "large": true,
     "platform": "linux",
     "private": true,
