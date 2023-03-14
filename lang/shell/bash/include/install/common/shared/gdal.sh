@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-03-14.
     #
     # Use 'configure --help' for build options.
     #
@@ -69,6 +69,7 @@ v${dict['version']}/${dict['file']}"
     koopa_cd 'build'
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
@@ -154,12 +155,11 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_SPATIALITE=OFF'
         '-DGDAL_USE_SQLITE3=ON'
         '-DGDAL_USE_TEIGHA=OFF'
-        '-DGDAL_USE_TIFF_INTERNAL=ON'
+        '-DGDAL_USE_TIFF=ON'
         '-DGDAL_USE_TILEDB=OFF'
         '-DGDAL_USE_WEBP=OFF'
         '-DGDAL_USE_XERCESC=OFF'
         '-DGDAL_USE_ZLIB=ON'
-        '-DGDAL_USE_ZLIB_INTERNAL=OFF'
         '-DGDAL_USE_ZSTD=ON'
         # Dependency paths.
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
@@ -179,6 +179,9 @@ libpcre2-8.${dict['shared_ext']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
+        "-DTIFF_INCLUDE_DIR=${dict['libtiff']}/include"
+        "-DTIFF_LIBRARY_RELEASE=${dict['libtiff']}/lib/\
+libtiff.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
         "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
