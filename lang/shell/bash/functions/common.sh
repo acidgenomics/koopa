@@ -3810,6 +3810,7 @@ koopa_cli_install() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     case "${1:-}" in
+        'private' | \
         'system' | \
         'user')
             dict['stem']="${dict['stem']}-${1:?}"
