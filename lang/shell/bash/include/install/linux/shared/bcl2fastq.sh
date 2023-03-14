@@ -78,6 +78,7 @@ main() {
             '--without-libraries=log,mpi,python'
         )
         b2_args=(
+            '-q'
             # Show commands as they are executed.
             '-d+2'
             "-j${dict['jobs']}"
