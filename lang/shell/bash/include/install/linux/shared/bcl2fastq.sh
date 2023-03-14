@@ -33,7 +33,6 @@ main() {
     dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
     koopa_assert_is_dir "${dict['c_include_path']}"
     export C_INCLUDE_PATH="${dict['c_include_path']}"
-    export CPLUS_INCLUDE_PATH="${dict['c_include_path']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['file']="${dict['version']}.tar.zip"
     dict['url']="${dict['installers_base']}/${dict['name']}/src/${dict['file']}"
