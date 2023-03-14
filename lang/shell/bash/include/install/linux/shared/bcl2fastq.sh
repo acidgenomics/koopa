@@ -2,9 +2,6 @@
 
 # FIXME This is currently failing to build on Ubuntu 20.
 
-# Potential method for disabling ICU:
-# https://stackoverflow.com/questions/31138251/building-boost-without-icu
-
 main() {
     # """
     # Install bcl2fastq from source.
@@ -22,6 +19,8 @@ main() {
     #     container/ngs-tools-builder
     # - https://github.com/AlexsLemonade/alsf-scpca/blob/main/images/
     #     cellranger/install-bcl2fastq.sh
+    # - Potential method for disabling ICU in Boost build (if necessary):
+    #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
