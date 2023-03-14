@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE This is currently failing to build on Ubuntu 20.
+# FIXME This is currently failing to build on Ubuntu 20.
 
-# FIXME Consider installing:
-# - boost 1.54
-# - cmake 2.8.0
+# Potential method for disabling ICU:
+# https://stackoverflow.com/questions/31138251/building-boost-without-icu
 
 main() {
     # """
@@ -27,7 +26,14 @@ main() {
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
-    deps=('icu4c')
+    # These are required for Boost.
+    deps=(
+        'bzip2'
+        'icu4c'
+        'xz'
+        'zlib'
+        'zstd'
+    )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
