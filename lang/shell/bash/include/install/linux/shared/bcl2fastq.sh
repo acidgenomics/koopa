@@ -25,7 +25,6 @@ main() {
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
-    # These are required for Boost.
     deps=(
         'bzip2'
         'icu4c'
@@ -51,6 +50,12 @@ main() {
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    if koopa_is_macos
+    then
+        dict['toolset']='clang'
+    else
+        dict['toolset']='gcc'
+    fi
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
     koopa_assert_is_dir "${dict['c_include_path']}"
@@ -61,37 +66,41 @@ main() {
         s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_extract "${dict['name']}${dict['maj_ver']}-"*"-Source.tar.gz"
-    # Install Boost 1.54.0 from redist.
+    # Install Boost 1.54.0 from 'redist'.
     # Refer to 'src/cmake/bootstrap/installBoost.sh'.
     (
         local b2_args bootstrap_args
         bootstrap_args=(
             "--prefix=${dict['libexec']}/boost"
             "--libdir=${dict['libexec']}/boost/lib"
+            "--with-toolset=${dict['toolset']}"
             "--with-icu=${dict['icu4c']}"
             '--without-libraries=log,mpi,python'
         )
         b2_args=(
-            "--prefix=${dict['libexec']}/boost"
-            "--libdir=${dict['libexec']}/boost/lib"
-            '-d2'
+            # Show commands as they are executed.
+            '-d+2'
             "-j${dict['jobs']}"
-            'install'
-            'threading=multi'
+            "--prefix=${dict['prefix']}"
+            "--libdir=${dict['prefix']}/lib"
+            "toolset=${dict['toolset']}"
+            'variant=release'
             'link=shared,static'
+            'threading=multi'
+            'runtime-link=shared'
+            "cxxflags=${CPPFLAGS:?}"
+            "linkflags=${LDFLAGS:?}"
+            'install'
         )
         koopa_cp \
             'bcl2fastq/redist/boost_1_54_0.tar.bz2' \
             'boost_1_54_0.tar.bz2'
         koopa_extract 'boost_1_54_0.tar.bz2'
         koopa_cd 'boost_1_54_0'
-        echo 'FIXME AAA'
+        ./bootstrap.sh --help
         ./bootstrap.sh "${bootstrap_args[@]}"
-        echo 'FIXME BBB'
-        ./b2 headers
-        echo 'FIXME CCC'
+        ./b2 --help
         ./b2 "${b2_args[@]}"
-        echo 'FIXME DDD'
         return 0
     )
     koopa_cd "${dict['name']}"
