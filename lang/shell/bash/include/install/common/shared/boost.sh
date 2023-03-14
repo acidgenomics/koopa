@@ -48,13 +48,15 @@ ${dict['version']}/source/${dict['file']}"
         '--without-libraries=log,mpi,python'
     )
     b2_args=(
+        # Show commands as they are executed.
+        '-d+2'
+        "-j${dict['jobs']}"
         "--prefix=${dict['prefix']}"
         "--libdir=${dict['prefix']}/lib"
-        "-j${dict['jobs']}"
-        'variant=release'
         "toolset=${dict['toolset']}"
-        'threading=multi'
+        'variant=release'
         'link=shared,static'
+        'threading=multi'
         'runtime-link=shared'
         "cxxflags=${CPPFLAGS:?}"
         "linkflags=${LDFLAGS:?}"
@@ -63,8 +65,7 @@ ${dict['version']}/source/${dict['file']}"
     koopa_print_env
     ./bootstrap.sh --help
     ./bootstrap.sh "${bootstrap_args[@]}"
-    # FIXME Can we print out '--help' here?
-    ./b2 headers
+    ./b2 --help
     ./b2 "${b2_args[@]}"
     return 0
 }
