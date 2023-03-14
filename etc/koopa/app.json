@@ -1516,11 +1516,10 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "dependencies": ["zlib", "gettext", "openssl3", "curl"],
     "url": ["https://git-scm.com/"],
-    "version": "2.39.2"
+    "version": "2.40.0"
   },
   "git-lfs": {
     "aliases": {
