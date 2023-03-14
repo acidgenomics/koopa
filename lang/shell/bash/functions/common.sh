@@ -846,6 +846,15 @@ koopa_assert_has_no_flags() {
     return 0
 }
 
+koopa_assert_has_private_access() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_has_private_access
+    then
+        koopa_stop 'User does not have access to koopa private S3 bucket.'
+    fi
+    return 0
+}
+
 koopa_assert_is_aarch64() {
     koopa_assert_has_no_args "$#"
     if ! koopa_is_aarch64
