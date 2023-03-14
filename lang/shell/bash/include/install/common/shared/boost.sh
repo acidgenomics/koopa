@@ -48,11 +48,11 @@ ${dict['version']}/source/${dict['file']}"
         '-d2'
         "-j${dict['jobs']}"
         'install'
-        # > 'threading=multi,single'
         'threading=multi'
         'link=shared,static'
     )
     koopa_print_env
+    ./bootstrap.sh --help
     ./bootstrap.sh "${bootstrap_args[@]}"
     ./b2 headers
     ./b2 "${b2_args[@]}"
