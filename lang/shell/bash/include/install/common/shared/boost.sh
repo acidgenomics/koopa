@@ -5,6 +5,9 @@ main() {
     # Install Boost library.
     # @note Updated 2023-03-14.
     #
+    # If you hit any cryptic 'failed updating 1 target...' errors, refer to
+    # 'bin.v2/config.log' file for debugging details.
+    #
     # @seealso
     # - https://www.boost.org/users/download/
     # - https://github.com/conda-forge/boost-feedstock/blob/main/recipe/build.sh
