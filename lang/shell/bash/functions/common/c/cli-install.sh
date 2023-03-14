@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-03-14.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'python3.10' 'tmux'
@@ -59,6 +59,7 @@ koopa_cli_install() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     case "${1:-}" in
+        'private' | \
         'system' | \
         'user')
             dict['stem']="${dict['stem']}-${1:?}"
