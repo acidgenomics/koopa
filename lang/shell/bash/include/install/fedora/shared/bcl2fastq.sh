@@ -3,12 +3,11 @@
 main() {
     # """
     # Install bcl2fastq binary from Fedora/RHEL RPM file.
-    # @note Updated 2023-01-10.
+    # @note Updated 2023-03-14.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     # FIXME koopa_assert_has_private_access
-    # This is required for permissions fix at end of install script.
     koopa_assert_is_admin
     declare -A app
     app['aws']="$(koopa_locate_aws)"
