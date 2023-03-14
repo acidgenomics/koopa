@@ -372,6 +372,7 @@ koopa_install_all_apps() {
                 'subread'
                 'sra-tools'
                 'scalene'
+                # > 'umis'
             )
         fi
         # Build mamba (experimental).

@@ -11,7 +11,7 @@
 main() {
     # """
     # Install bcl2fastq from source.
-    # @note Updated 2022-01-07.
+    # @note Updated 2022-03-14.
     #
     # This uses CMake to install.
     # ARM is not yet supported for this.
@@ -19,12 +19,14 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
         ['make']="$(koopa_locate_make)"
     )
+    [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
-        ['installers_url']="$(koopa_private_installers_url)"
+        ['installers_base']="$(koopa_private_installers_s3_uri)"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='bcl2fastq'
         ['platform']='linux-gnu'
@@ -43,9 +45,10 @@ main() {
     dict['version2']="$(koopa_kebab_case_simple "${dict['version2']}")"
     dict['file']="${dict['name']}${dict['maj_ver']}-\
 v${dict['version2']}-tar.zip"
-    dict['url']="${dict['installers_url']}/${dict['name']}/\
+    dict['url']="${dict['installers_base']}/${dict['name']}/\
 source/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
+    "${app['aws']}" --profile='acidgenomics' \
+        s3 cp "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_extract "${dict['name']}${dict['maj_ver']}-v${dict['version']}-\
 Source.tar.gz"
