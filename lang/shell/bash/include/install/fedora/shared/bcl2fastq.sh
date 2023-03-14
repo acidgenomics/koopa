@@ -7,7 +7,6 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    # FIXME koopa_assert_has_private_access
     koopa_assert_is_admin
     declare -A app
     app['aws']="$(koopa_locate_aws)"

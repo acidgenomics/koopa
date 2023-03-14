@@ -496,17 +496,6 @@ bcl2fastq-conversion-software/downloads.html'."
     return 0
 }
 
-koopa_linux_install_cellranger() {
-    koopa_install_app \
-        --name='cellranger' \
-        --platform='linux' \
-        "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://support.10xgenomics.com/single-cell-gene-expression/\
-software/downloads/latest'."
-    return 0
-}
-
 koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name='cloudbiolinux' \
@@ -540,6 +529,18 @@ koopa_linux_install_pinentry() {
         --name='pinentry' \
         --platform='linux' \
         "$@"
+}
+
+koopa_linux_install_private_cellranger() {
+    koopa_install_app \
+        --name='cellranger' \
+        --platform='linux' \
+        --private \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://support.10xgenomics.com/single-cell-gene-expression/\
+software/downloads/latest'."
+    return 0
 }
 
 koopa_linux_install_system_pihole() {
@@ -832,13 +833,6 @@ koopa_linux_uninstall_bcl2fastq() {
         "$@"
 }
 
-koopa_linux_uninstall_cellranger() {
-    koopa_uninstall_app \
-        --name='cellranger' \
-        --platform='linux' \
-        "$@"
-}
-
 koopa_linux_uninstall_cloudbiolinux() {
     koopa_uninstall_app \
         --name='cloudbiolinux' \
@@ -877,6 +871,13 @@ koopa_linux_uninstall_openjdk() {
 koopa_linux_uninstall_pinentry() {
     koopa_uninstall_app \
         --name='pinentry' \
+        --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_private_cellranger() {
+    koopa_uninstall_app \
+        --name='cellranger' \
         --platform='linux' \
         "$@"
 }
