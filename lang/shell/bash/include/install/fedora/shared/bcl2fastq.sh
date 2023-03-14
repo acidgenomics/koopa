@@ -13,14 +13,14 @@ main() {
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['installers_url']="$(koopa_private_installers_url)"
+        ['installers_base']="$(koopa_private_installers_s3_uri)"
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['user']="$(koopa_user)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.zip"
-    dict['url']="${dict['installers_url']}/${dict['name']}/fedora/\
+    dict['url']="${dict['installers_base']}/${dict['name']}/fedora/\
 ${dict['arch']}/${dict['file']}"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"

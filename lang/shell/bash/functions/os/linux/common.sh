@@ -485,17 +485,6 @@ koopa_linux_install_bcbio_nextgen() {
         "$@"
 }
 
-koopa_linux_install_bcl2fastq() {
-    koopa_install_app \
-        --name='bcl2fastq' \
-        --platform='linux' \
-        "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://support.illumina.com/sequencing/sequencing_software/\
-bcl2fastq-conversion-software/downloads.html'."
-    return 0
-}
-
 koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name='cloudbiolinux' \
@@ -529,6 +518,18 @@ koopa_linux_install_pinentry() {
         --name='pinentry' \
         --platform='linux' \
         "$@"
+}
+
+koopa_linux_install_private_bcl2fastq() {
+    koopa_install_app \
+        --name='bcl2fastq' \
+        --platform='linux' \
+        --private \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://support.illumina.com/sequencing/sequencing_software/\
+bcl2fastq-conversion-software/downloads.html'."
+    return 0
 }
 
 koopa_linux_install_private_cellranger() {
@@ -826,7 +827,7 @@ koopa_linux_uninstall_bcbio_nextgen() {
         "$@"
 }
 
-koopa_linux_uninstall_bcl2fastq() {
+koopa_linux_uninstall_private_bcl2fastq() {
     koopa_uninstall_app \
         --name='bcl2fastq' \
         --platform='linux' \
