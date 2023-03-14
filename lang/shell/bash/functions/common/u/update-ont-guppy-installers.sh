@@ -18,7 +18,7 @@ koopa_update_ont_guppy_installers() {
         ['prefix']="$(koopa_tmp_dir)"
         ['s3_profile']='acidgenomics'
     )
-    dict['s3_target']="$(koopa_private_installers_url)/${dict['name']}"
+    dict['s3_target']="$(koopa_private_installers_s3_uri)/${dict['name']}"
     dict['version']="$(koopa_app_version "${dict['name']}")"
     koopa_mkdir \
         "${dict['prefix']}/linux/amd64" \
