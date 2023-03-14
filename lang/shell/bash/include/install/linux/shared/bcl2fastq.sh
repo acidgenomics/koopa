@@ -15,6 +15,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_assert_is_not_aarch64
     declare -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['make']="$(koopa_locate_make)"
