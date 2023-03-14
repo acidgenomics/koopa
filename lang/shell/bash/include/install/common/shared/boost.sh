@@ -3,18 +3,24 @@
 main() {
     # """
     # Install Boost library.
-    # @note Updated 2022-08-11.
+    # @note Updated 2023-03-14.
     #
     # @seealso
     # - https://www.boost.org/users/download/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/boost.rb
     # """
-    local app b2_args bootstrap_args dict
+    local b2_args bootstrap_args deps dict
     koopa_assert_has_no_args "$#"
-    declare -A app
-    app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    deps=(
+        # > 'bzip2'
+        # > 'xz'
+        # > 'zlib'
+        # > 'zstd'
+        'icu4c'
+    )
+    koopa_activate_app "${deps[@]}"
     declare -A dict=(
+        ['icu4c']="$(koopa_app_prefix 'icu4c')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='boost'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -27,19 +33,20 @@ ${dict['version']}/source/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}_${dict['snake_version']}"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     bootstrap_args=(
         "--prefix=${dict['prefix']}"
+        "--libdir=${dict['prefix']}/lib"
         "--with-icu=${dict['icu4c']}"
-        "--with-python=${app['python']}"
+        '--without-libraries=mpi,python'
     )
     b2_args=(
         "--prefix=${dict['prefix']}"
+        "--libdir=${dict['prefix']}/lib"
         '-d2'
         "-j${dict['jobs']}"
         'install'
-        'link=static'
-        'threading=multi'
+        'threading=multi,single'
+        'link=shared,static'
     )
     koopa_print_env
     ./bootstrap.sh "${bootstrap_args[@]}"
