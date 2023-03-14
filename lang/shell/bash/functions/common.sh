@@ -9144,7 +9144,7 @@ koopa_has_passwordless_sudo() {
     return 1
 }
 
-koopa_has_private_acccess() {
+koopa_has_private_access() {
     local file
     file="${HOME}/.aws/credentials"
     [[ -f "$file" ]] || return 1
