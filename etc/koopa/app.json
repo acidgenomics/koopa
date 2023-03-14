@@ -989,9 +989,10 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2021-03-17",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
@@ -1065,12 +1066,12 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["rust"],
-    "date": "2023-01-30",
+    "date": "2023-03-14",
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "editorconfig": {
     "aliases": {
@@ -1479,12 +1480,11 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2023-01-05",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.27.2"
+    "version": "0.27.3"
   },
   "gh": {
     "aliases": {
@@ -4037,15 +4037,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-03-02",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.24.0"
+    "version": "7.24.2"
   },
   "sox": {
     "aliases": {
