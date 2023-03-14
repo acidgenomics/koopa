@@ -88,7 +88,9 @@ main() {
             'link=shared,static'
             'threading=multi'
             'runtime-link=shared'
+            # This is 'pkg-config --cflags' return.
             "cxxflags=${CPPFLAGS:?}"
+            # This is 'pkg-config --libs-only-L' return.
             "linkflags=${LDFLAGS:?}"
             'install'
         )
