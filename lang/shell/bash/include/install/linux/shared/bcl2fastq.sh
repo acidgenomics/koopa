@@ -94,6 +94,9 @@ main() {
             "cxxflags=${CPPFLAGS:?}"
             # This is 'pkg-config --libs-only-L' return.
             "linkflags=${LDFLAGS:?}"
+            '-s' 'NO_COMPRESSION=0'
+            '-s' 'NO_ZLIB=0'
+            '-s' 'NO_BZIP2=0'
             'install'
         )
         koopa_cp \
