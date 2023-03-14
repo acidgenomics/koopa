@@ -13379,6 +13379,12 @@ koopa_install_udunits() {
         "$@"
 }
 
+koopa_install_umis() {
+    koopa_install_app \
+        --name='umis' \
+        "$@"
+}
+
 koopa_install_unibilium() {
     koopa_install_app \
         --name='unibilium' \
@@ -25334,6 +25340,12 @@ koopa_uninstall_tuc() {
 koopa_uninstall_udunits() {
     koopa_uninstall_app \
         --name='udunits' \
+        "$@"
+}
+
+koopa_uninstall_umis() {
+    koopa_uninstall_app \
+        --name='umis' \
         "$@"
 }
 

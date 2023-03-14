@@ -4345,6 +4345,17 @@
     ],
     "version": "2.2.28"
   },
+  "umis": {
+    "bin": ["umis"],
+    "date": "2023-03-14",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/vals/umis/",
+      "https://bioconda.github.io/recipes/umis/README.html"
+    ],
+    "version": "1.0.9"
+  },
   "unibilium": {
     "aliases": {
       "homebrew": true
