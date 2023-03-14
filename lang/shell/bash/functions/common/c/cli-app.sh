@@ -166,17 +166,13 @@ koopa_cli_app() {
             ;;
         'git')
             case "${2:-}" in
-                'checkout-recursive' | \
                 'pull' | \
-                'pull-recursive' | \
-                'push-recursive' | \
                 'push-submodules' | \
                 'rename-master-to-main' | \
                 'reset' | \
                 'reset-fork-to-upstream' | \
                 'rm-submodule' | \
-                'rm-untracked' | \
-                'status-recursive')
+                'rm-untracked')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;

@@ -12,7 +12,7 @@ koopa_add_to_pkg_config_path() {
     do
         [[ -d "$dir" ]] || continue
         PKG_CONFIG_PATH="$( \
-            __koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$dir" \
+            koopa_add_to_path_string_start "$PKG_CONFIG_PATH" "$dir" \
         )"
     done
     export PKG_CONFIG_PATH

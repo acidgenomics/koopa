@@ -1,53 +1,61 @@
 #!/bin/sh
 
-koopa_os_string() {
+_koopa_os_string() {
     # """
     # Operating system string.
-    # @note Updated 2023-01-10.
+    # @note Updated 2023-03-03.
     #
     # Alternatively, use 'hostnamectl'.
     # https://linuxize.com/post/how-to-check-linux-version/
     #
     # If we ever add Windows support, look for: cygwin, mingw32*, msys*.
     # """
-    local id release_file string version
-    if koopa_is_macos
+    __kvar_id=''
+    if _koopa_is_macos
     then
-        id='macos'
-        version="$(koopa_major_version "$(koopa_macos_os_version)")"
-    elif koopa_is_linux
+        __kvar_id='macos'
+        __kvar_version="$(_koopa_major_version "$(_koopa_macos_os_version)")"
+    elif _koopa_is_linux
     then
-        release_file='/etc/os-release'
-        if [ -r "$release_file" ]
+        __kvar_release_file='/etc/os-release'
+        if [ -r "$__kvar_release_file" ]
         then
-            id="$( \
+            __kvar_id="$( \
                 awk -F= \
                     "\$1==\"ID\" { print \$2 ;}" \
-                    "$release_file" \
+                    "$__kvar_release_file" \
                 | tr -d '"' \
             )"
             # Include the major release version.
-            version="$( \
+            __kvar_version="$( \
                 awk -F= \
                     "\$1==\"VERSION_ID\" { print \$2 ;}" \
-                    "$release_file" \
+                    "$__kvar_release_file" \
                 | tr -d '"' \
             )"
-            if [ -n "$version" ]
+            if [ -n "$__kvar_version" ]
             then
-                version="$(koopa_major_version "$version")"
+                __kvar_version="$(_koopa_major_version "$__kvar_version")"
             else
                 # This is the case for Arch Linux.
-                version='rolling'
+                __kvar_version='rolling'
             fi
         else
-            id='linux'
-            version=''
+            __kvar_id='linux'
+            __kvar_version=''
         fi
     fi
-    [ -n "$id" ] ||  return 1
-    string="$id"
-    [ -n "$version" ] && string="${string}-${version}"
-    koopa_print "$string"
+    [ -n "$__kvar_id" ] ||  return 1
+    __kvar_string="$__kvar_id"
+    if [ -n "$__kvar_version" ]
+    then
+        __kvar_string="${__kvar_string}-${__kvar_version}"
+    fi
+    _koopa_print "$__kvar_string"
+    unset -v \
+        __kvar_id \
+        __kvar_release_file \
+        __kvar_string \
+        __kvar_version
     return 0
 }

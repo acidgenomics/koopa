@@ -1,36 +1,35 @@
 #!/bin/sh
 
-koopa_homebrew_prefix() {
+_koopa_homebrew_prefix() {
     # """
     # Homebrew prefix.
-    # @note Updated 2022-04-07.
+    # @note Updated 2023-03-11.
     #
     # @seealso https://brew.sh/
     # """
-    local arch x
-    x="${HOMEBREW_PREFIX:-}"
-    if [ -z "$x" ]
+    __kvar_string="${HOMEBREW_PREFIX:-}"
+    if [ -z "$__kvar_string" ]
     then
-        if koopa_is_installed 'brew'
+        if _koopa_is_installed 'brew'
         then
-            x="$(brew --prefix)"
-        elif koopa_is_macos
+            __kvar_string="$(brew --prefix)"
+        elif _koopa_is_macos
         then
-            arch="$(koopa_arch)"
-            case "$arch" in
+            case "$(_koopa_arch)" in
                 'arm'*)
-                    x='/opt/homebrew'
+                    __kvar_string='/opt/homebrew'
                     ;;
                 'x86'*)
-                    x='/usr/local'
+                    __kvar_string='/usr/local'
                     ;;
             esac
-        elif koopa_is_linux
+        elif _koopa_is_linux
         then
-            x='/home/linuxbrew/.linuxbrew'
+            __kvar_string='/home/linuxbrew/.linuxbrew'
         fi
     fi
-    [ -d "$x" ] || return 1
-    koopa_print "$x"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

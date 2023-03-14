@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_micromamba() {
+_koopa_activate_micromamba() {
     # """
     # Activate mamba (micromamba).
     # @note Update 2022-12-07.

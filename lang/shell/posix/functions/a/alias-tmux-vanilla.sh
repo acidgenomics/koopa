@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_tmux_vanilla() {
+_koopa_alias_tmux_vanilla() {
     # """
     # Vanilla tmux.
     # @note Updated 2022-04-13.

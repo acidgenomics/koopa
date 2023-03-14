@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_activate_alacritty() {
+_koopa_activate_alacritty() {
     # """
     # Activate Alacritty terminal client.
-    # @note Updated 2022-08-04.
+    # @note Updated 2023-03-09.
     #
     # This function dynamically updates dark/light color mode.
     #
@@ -11,28 +11,44 @@ koopa_activate_alacritty() {
     # - Live config reload doesn't detect symlink change.
     #   https://github.com/alacritty/alacritty/issues/2237
     # """
-    local conf_file color_file color_mode pattern prefix replacement
-    koopa_is_alacritty || return 0
-    prefix="$(koopa_xdg_config_home)/alacritty"
-    [ -d "$prefix" ] || return 0
-    conf_file="${prefix}/alacritty.yml"
-    [ -f "$conf_file" ] || return 0
-    color_mode="$(koopa_color_mode)"
-    color_file_bn="colors-${color_mode}.yml"
-    color_file="${prefix}/${color_file_bn}"
-    [ -f "$color_file" ] || return 0
-    if ! grep -q "$color_file_bn" "$conf_file"
+    _koopa_is_alacritty || return 0
+    __kvar_prefix="$(_koopa_xdg_config_home)/alacritty"
+    if [ ! -d "$__kvar_prefix" ]
     then
-        pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
-        replacement="  - \"~/.config/alacritty/${color_file_bn}\""
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_conf_file="${__kvar_prefix}/alacritty.yml"
+    if [ ! -f "$__kvar_conf_file" ]
+    then
+        unset -v __kvar_conf_file __kvar_prefix
+        return 0
+    fi
+    __kvar_color_file_bn="colors-$(_koopa_color_mode).yml"
+    __kvar_color_file="${__kvar_prefix}/${__kvar_color_file_bn}"
+    if [ ! -f "$__kvar_color_file" ]
+    then
+        unset -v \
+            __kvar_color_file \
+            __kvar_color_file_bn \
+            __kvar_conf_file \
+            __kvar_prefix
+        return 0
+    fi
+    if ! grep -q "$__kvar_color_file_bn" "$__kvar_conf_file"
+    then
+        __kvar_pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
+        __kvar_replacement="  - \"~/.config/alacritty/${__kvar_color_file_bn}\""
         perl -i -l -p \
-            -e "s|${pattern}|${replacement}|" \
-            "$conf_file"
+            -e "s|${__kvar_pattern}|${__kvar_replacement}|" \
+            "$__kvar_conf_file"
     fi
-    # Clean up legacy 'colors.yml' file, if necessary.
-    if [ -f "${prefix}/colors.yml" ]
-    then
-        rm "${prefix}/colors.yml"
-    fi
+    unset -v \
+        __kvar_color_file \
+        __kvar_color_file_bn \
+        __kvar_conf_file \
+        __kvar_pattern \
+        __kvar_prefix \
+        __kvar_replacement
     return 0
 }

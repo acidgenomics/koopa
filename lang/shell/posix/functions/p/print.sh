@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_print() {
+_koopa_print() {
     # """
     # Print a string.
-    # @note Updated 2020-07-05.
+    # @note Updated 2023-03-11.
     #
     # printf vs. echo
     # - http://www.etalabs.net/sh_tricks.html
@@ -11,15 +11,15 @@ koopa_print() {
     # - https://www.freecodecamp.org/news/
     #       how-print-newlines-command-line-output/
     # """
-    local string
     if [ "$#" -eq 0 ]
     then
         printf '\n'
         return 0
     fi
-    for string in "$@"
+    for __kvar_string in "$@"
     do
-        printf '%b\n' "$string"
+        printf '%b\n' "$__kvar_string"
     done
+    unset __kvar_string
     return 0
 }

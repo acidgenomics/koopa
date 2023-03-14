@@ -8,9 +8,8 @@ koopa_aws_ec2_terminate() {
     # @note Updated 2022-03-21.
     # """
     local app dict
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-    )
+    declare -A app
+    app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['id']="$(koopa_aws_ec2_instance_id)"

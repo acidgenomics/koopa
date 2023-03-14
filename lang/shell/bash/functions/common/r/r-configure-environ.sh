@@ -18,7 +18,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-02-03.
+    # @note Updated 2023-03-13.
     #
     # @section Package library location:
     #
@@ -159,6 +159,7 @@ koopa_r_configure_environ() {
     # Set the 'PKG_CONFIG_PATH' string.
     declare -A app_pc_path_arr
     keys=(
+        'cairo'
         'curl'
         'fontconfig'
         'freetype'
@@ -172,6 +173,7 @@ koopa_r_configure_environ() {
         'imagemagick'
         # > 'jpeg'
         'lapack'
+        'libffi'
         'libgit2'
         'libjpeg-turbo'
         'libpng'
@@ -183,10 +185,23 @@ koopa_r_configure_environ() {
         'openssl3'
         'pcre'
         'pcre2'
+        'pixman'
         'proj'
         'python3.11'
         'readline'
         'sqlite'
+        'xorg-libice'
+        'xorg-libpthread-stubs'
+        'xorg-libsm'
+        'xorg-libx11'
+        'xorg-libxau'
+        'xorg-libxcb'
+        'xorg-libxdmcp'
+        'xorg-libxext'
+        'xorg-libxrandr'
+        'xorg-libxrender'
+        'xorg-libxt'
+        'xorg-xorgproto'
         'xz'
         'zlib'
         'zstd'
@@ -200,11 +215,14 @@ koopa_r_configure_environ() {
     done
     for i in "${!app_pc_path_arr[@]}"
     do
-        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib"
-    done
-    for i in "${!app_pc_path_arr[@]}"
-    do
-        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/pkgconfig"
+        case "$i" in
+            'xorg-xorgproto')
+                app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
+                ;;
+            *)
+                app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
+                ;;
+        esac
     done
     koopa_assert_is_dir "${app_pc_path_arr[@]}"
     pc_path_arr=()

@@ -20,7 +20,7 @@ main() {
     declare -A app
     declare -A dict=(
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        ['conda_prefix']="$(koopa_conda_prefix)"
+        ['conda_prefix']="$(koopa_app_prefix 'conda')"
         ['name']='OpenBBTerminal'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

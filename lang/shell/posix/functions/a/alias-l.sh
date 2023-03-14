@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_alias_l() {
+_koopa_alias_l() {
     # """
     # List files alias that uses 'exa' instead of 'ls', when possible.
     # @note Updated 2022-04-14.
@@ -32,7 +32,7 @@ koopa_alias_l() {
     # * -h, --human-readable
     #         with -l and -s, print sizes like 1K 234M 2G etc.
     # """
-    if koopa_is_installed 'exa'
+    if _koopa_is_installed 'exa'
     then
         exa \
             --classify \

@@ -387,6 +387,7 @@ koopa_install_all_binary_apps() {
                 'star'
                 'star-fusion'
                 'subread'
+                # > 'umis'
             )
         fi
         if koopa_is_linux

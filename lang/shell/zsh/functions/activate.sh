@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-koopa_activate_zsh_aliases() {
+_koopa_activate_zsh_aliases() {
     # """
     # Activate Zsh aliases.
     # @note Updated 2020-11-24.
@@ -15,7 +15,7 @@ koopa_activate_zsh_aliases() {
     return 0
 }
 
-koopa_activate_zsh_bashcompinit() {
+_koopa_activate_zsh_bashcompinit() {
     # """
     # Activate Bash completions for Zsh.
     # @note Updated 2020-11-24.
@@ -24,7 +24,7 @@ koopa_activate_zsh_bashcompinit() {
     return 0
 }
 
-koopa_activate_zsh_colors() {
+_koopa_activate_zsh_colors() {
     # """
     # Enable colors in terminal.
     # @note Updated 2020-11-24.
@@ -33,7 +33,7 @@ koopa_activate_zsh_colors() {
     return 0
 }
 
-koopa_activate_zsh_compinit() {
+_koopa_activate_zsh_compinit() {
     # """
     # Activate Zsh compinit (completion system).
     # @note Updated 2020-11-24.
@@ -42,7 +42,7 @@ koopa_activate_zsh_compinit() {
     return 0
 }
 
-koopa_activate_zsh_editor() {
+_koopa_activate_zsh_editor() {
     # """
     # Activate Zsh editor.
     # @note Updated 2020-11-24.
@@ -59,7 +59,7 @@ koopa_activate_zsh_editor() {
     return 0
 }
 
-koopa_activate_zsh_extras() {
+_koopa_activate_zsh_extras() {
     # """
     # Activate Zsh extras.
     # @note Updated 2021-06-16.
@@ -75,39 +75,38 @@ koopa_activate_zsh_extras() {
     # https://unix.stackexchange.com/questions/214296
     # https://stackoverflow.com/questions/30840651/what-does-autoload-do-in-zsh
     # """
-    koopa_is_interactive || return 0
-    koopa_activate_zsh_fpath
-    koopa_activate_zsh_compinit
-    koopa_activate_zsh_bashcompinit
-    koopa_activate_zsh_colors
-    koopa_activate_zsh_editor
-    koopa_activate_zsh_plugins
-    koopa_activate_zsh_aliases
-    koopa_activate_zsh_prompt
-    koopa_activate_zsh_reverse_search
-    koopa_activate_completion
+    _koopa_is_interactive || return 0
+    _koopa_activate_zsh_fpath
+    _koopa_activate_zsh_compinit
+    _koopa_activate_zsh_bashcompinit
+    _koopa_activate_zsh_colors
+    _koopa_activate_zsh_editor
+    _koopa_activate_zsh_plugins
+    _koopa_activate_zsh_aliases
+    _koopa_activate_zsh_prompt
+    _koopa_activate_zsh_reverse_search
+    _koopa_activate_completion
     return 0
 }
 
-koopa_activate_zsh_fpath() {
+_koopa_activate_zsh_fpath() {
     # """
     # Activate Zsh FPATH.
     # @note Updated 2021-01-19.
     # """
     local koopa_fpath koopa_prefix
-    [[ "$#" -eq 0 ]] || return 1
-    koopa_prefix="$(koopa_koopa_prefix)"
+    koopa_prefix="$(_koopa_koopa_prefix)"
     koopa_fpath="${koopa_prefix}/lang/shell/zsh/functions"
     if [[ ! -d "$koopa_fpath" ]]
     then
-        koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
+        _koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
         return 1
     fi
-    koopa_add_to_fpath_start "$koopa_fpath"
+    _koopa_add_to_fpath_start "$koopa_fpath"
     return 0
 }
 
-koopa_activate_zsh_plugins() {
+_koopa_activate_zsh_plugins() {
     # """
     # Activate Zsh plugins.
     # Updated 2022-05-10.
@@ -120,9 +119,8 @@ koopa_activate_zsh_plugins() {
     # Alternatively, can use '<<<' herestring, which also works in Bash.
     # """
     local dotfiles_prefix plugin plugins zsh_plugins_dir
-    [[ "$#" -eq 0 ]] || return 1
-    dotfiles_prefix="$(koopa_dotfiles_prefix)"
-    zsh_plugins_dir="$(koopa_xdg_data_home)/zsh/plugins"
+    dotfiles_prefix="$(_koopa_dotfiles_prefix)"
+    zsh_plugins_dir="$(_koopa_xdg_data_home)/zsh/plugins"
     [[ -d "$zsh_plugins_dir" ]] || return 0
     plugins=("${(@f)$( \
         find "$zsh_plugins_dir" \
@@ -139,10 +137,10 @@ koopa_activate_zsh_plugins() {
     return 0
 }
 
-koopa_activate_zsh_prompt() {
+_koopa_activate_zsh_prompt() {
     # """
     # Activate Zsh prompt.
-    # Updated 2022-03-16.
+    # Updated 2023-03-09.
     #
     # See also:
     # - https://github.com/sindresorhus/pure
@@ -152,9 +150,8 @@ koopa_activate_zsh_prompt() {
     # This step must be sourced after oh-my-zsh.
     # """
     local nounset
-    [[ "$#" -eq 0 ]] || return 1
-    koopa_is_root && return 0
-    nounset="$(koopa_boolean_nounset)"
+    _koopa_is_root && return 0
+    nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
     setopt promptsubst
     autoload -U promptinit
@@ -164,12 +161,28 @@ koopa_activate_zsh_prompt() {
     return 0
 }
 
-koopa_activate_zsh_reverse_search() {
+_koopa_activate_zsh_reverse_search() {
     # """
     # Activate reverse search using Ctrl+R in Zsh.
     # @note Updated 2023-02-01.
     #
     # > bindkey '^R' 'history-incremental-search-backward'
     # """
-    koopa_activate_mcfly
+    _koopa_activate_mcfly
+}
+
+_koopa_add_to_fpath_start() {
+    # """
+    # Force add to 'FPATH' start.
+    # @note Updated 2023-03-09.
+    # """
+    local dir
+    FPATH="${FPATH:-}"
+    for dir in "$@"
+    do
+        [ -d "$dir" ] || continue
+        FPATH="$(_koopa_add_to_path_string_start "$FPATH" "$dir")"
+    done
+    export FPATH
+    return 0
 }

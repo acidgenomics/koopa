@@ -1,16 +1,14 @@
 #!/bin/sh
 
-koopa_alias_glances() {
+_koopa_alias_glances() {
     # """
     # glances alias.
-    # @note Updated 2022-11-15.
+    # @note Updated 2023-03-11.
     #
     # @seealso
     # - https://github.com/nicolargo/glances/issues/976
     # """
-    local color_mode
-    color_mode="$(koopa_color_mode)"
-    case "$color_mode" in
+    case "$(_koopa_color_mode)" in
         'light')
             set -- '--theme-white' "$@"
             ;;

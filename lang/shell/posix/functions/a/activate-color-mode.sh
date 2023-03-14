@@ -1,13 +1,13 @@
 #!/bin/sh
 
-koopa_activate_color_mode() {
+_koopa_activate_color_mode() {
     # """
     # Activate dark / light color mode.
     # @note Updated 2022-04-13.
     # """
     if [ -z "${KOOPA_COLOR_MODE:-}" ]
     then
-        KOOPA_COLOR_MODE="$(koopa_color_mode)"
+        KOOPA_COLOR_MODE="$(_koopa_color_mode)"
     fi
     if [ -n "${KOOPA_COLOR_MODE:-}" ]
     then

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_is_linux() {
+_koopa_is_linux() {
     # """
     # Is the current operating system Linux?
     # @note Updated 2020-02-05.

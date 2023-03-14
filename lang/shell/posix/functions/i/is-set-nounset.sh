@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_is_set_nounset() {
+_koopa_is_set_nounset() {
     # """
     # Is shell running in 'nounset' variable mode?
     # @note Updated 2020-04-29.
@@ -22,5 +22,5 @@ koopa_is_set_nounset() {
     # setopt
     # Enabled: 'nounset'.
     # """
-    koopa_str_detect_posix "$(set +o)" 'set -o nounset'
+    _koopa_str_detect_posix "$(set +o)" 'set -o nounset'
 }

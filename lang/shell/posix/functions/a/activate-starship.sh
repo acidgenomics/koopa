@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_starship() {
+_koopa_activate_starship() {
     # """
     # Activate starship prompt.
     # @note Updated 2022-05-12.
@@ -11,20 +11,35 @@ koopa_activate_starship() {
     # See also:
     # https://starship.rs/
     # """
-    local nounset shell
-    [ -x "$(koopa_bin_prefix)/starship" ] || return 0
-    shell="$(koopa_shell_name)"
-    case "$shell" in
+    __kvar_starship="$(_koopa_bin_prefix)/starship"
+    if [ ! -x "$__kvar_starship" ]
+    then
+        unset -v __kvar_starship
+        return 0
+    fi
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
             ;;
         *)
+            unset -v __kvar_shell
             return 0
             ;;
     esac
-    unset -v STARSHIP_SESSION_KEY STARSHIP_SHELL
-    nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && return 0
-    eval "$(starship init "$shell")"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    if [ "$__kvar_nounset" -eq 1 ]
+    then
+        unset -v \
+            __kvar_nounset \
+            __kvar_shell \
+            __kvar_starship
+        return 0
+    fi
+    eval "$("$__kvar_starship" init "$__kvar_shell")"
+    unset -v \
+            __kvar_nounset \
+            __kvar_shell \
+            __kvar_starship
     return 0
 }

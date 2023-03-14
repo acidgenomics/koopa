@@ -10,7 +10,7 @@ koopa_unlink_in_opt() {
     # @examples
     # > koopa_unlink_in_opt 'python3.11' 'r'
     # """
-    __koopa_unlink_in_dir \
+    koopa_unlink_in_dir \
         --allow-missing \
         --prefix="$(koopa_opt_prefix)" \
         "$@"

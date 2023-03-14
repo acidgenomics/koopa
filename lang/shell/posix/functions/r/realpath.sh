@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_realpath() {
+_koopa_realpath() {
     # """
     # Real path to file/directory on disk.
-    # @note Updated 2022-08-26.
+    # @note Updated 2023-03-11.
     #
     # macOS/BSD readlink now supports '-f' flag.
     #
@@ -17,9 +17,9 @@ koopa_realpath() {
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
     # """
-    local x
-    x="$(readlink -f "$@")"
-    [ -n "$x" ] || return 1
-    koopa_print "$x"
+    __kvar_string="$(readlink -f "$@")"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

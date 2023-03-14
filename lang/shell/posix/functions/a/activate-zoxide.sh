@@ -1,35 +1,37 @@
 #!/bin/sh
 
-# FIXME This seems to be getting stuck for /bin/bash on Ubuntu EC2 instances.
-
-koopa_activate_zoxide() {
+_koopa_activate_zoxide() {
     # """
     # Activate zoxide.
-    # @note Updated 2021-05-07.
+    # @note Updated 2023-03-10.
     #
     # Highly recommended to use along with fzf.
-    #
-    # POSIX option:
-    # eval "$(zoxide init posix --hook prompt)"
     #
     # @seealso
     # - https://github.com/ajeetdsouza/zoxide
     # """
-    local nounset shell zoxide
-    zoxide="$(koopa_bin_prefix)/zoxide"
-    [ -x "$zoxide" ] || return 0
-    shell="$(koopa_shell_name)"
-    case "$shell" in
+    __kvar_zoxide="$(_koopa_bin_prefix)/zoxide"
+    if [ ! -x "$__kvar_zoxide" ]
+    then
+        unset -v __kvar_zoxide
+        return 0
+    fi
+    __kvar_shell="$(_koopa_shell_name)"
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    case "$__kvar_shell" in
         'bash' | \
         'zsh')
+            eval "$("$__kvar_zoxide" init "$__kvar_shell")"
             ;;
         *)
-            return 0
+            eval "$("$__kvar_zoxide" init 'posix' --hook 'prompt')"
             ;;
     esac
-    nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
-    eval "$("$zoxide" init "$shell")"
-    [ "$nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_shell \
+        __kvar_zoxide
     return 0
 }

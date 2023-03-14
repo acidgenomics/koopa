@@ -50,6 +50,8 @@ in '${dict['target_file']}'."
             --string="${dict['header_string']}"
         for file in "${files[@]}"
         do
+            # This can be useful for more verbose debugging, but is slower.
+            # > koopa_alert "$file"
             # Consider switching to 'koopa_grep' here in a future update.
             "${app['grep']}" -Eiv '^(\s+)?#' "$file" \
             >> "${dict['target_file']}"

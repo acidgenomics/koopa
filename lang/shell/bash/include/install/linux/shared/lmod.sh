@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider not writing files into /etc/profile.d
+
 main() {
     # """
     # Install Lmod.

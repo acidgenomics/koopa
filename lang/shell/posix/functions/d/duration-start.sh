@@ -1,14 +1,18 @@
 #!/bin/sh
 
-koopa_duration_start() {
+_koopa_duration_start() {
     # """
     # Start activation duration timer.
-    # @note Updated 2022-04-10.
+    # @note Updated 2023-03-11.
     # """
-    local bin_prefix
-    bin_prefix="$(koopa_bin_prefix)"
-    [ -x "${bin_prefix}/date" ] || return 0
-    KOOPA_DURATION_START="$(date -u '+%s%3N')"
+    __kvar_date="$(_koopa_bin_prefix)/gdate"
+    if [ ! -x "$__kvar_date" ]
+    then
+        unset -v __kvar_date
+        return 0
+    fi
+    KOOPA_DURATION_START="$("$__kvar_date" -u '+%s%3N')"
     export KOOPA_DURATION_START
+    unset -v __kvar_date
     return 0
 }
