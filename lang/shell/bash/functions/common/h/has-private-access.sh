@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_has_private_acccess() {
+koopa_has_private_access() {
     # """
     # Does the current user have access to our private S3 bucket?
     # @note Updated 2023-03-14.
