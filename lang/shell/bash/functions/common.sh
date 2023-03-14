@@ -4004,6 +4004,7 @@ koopa_cli_uninstall() {
     [[ "$#" -eq 0 ]] && set -- 'koopa'
     stem='uninstall'
     case "$1" in
+        'private' | \
         'system' | \
         'user')
             stem="${stem}-${1}"
