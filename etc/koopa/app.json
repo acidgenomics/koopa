@@ -2019,7 +2019,7 @@
       "magick-script"
     ],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -2030,7 +2030,7 @@
     ],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-62"
+    "version": "7.1.1-3"
   },
   "ipython": {
     "aliases": {
@@ -2982,11 +2982,10 @@
     },
     "bin": ["node", "npm", "npx"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "outdated": true,
     "reverse_dependencies": [
       "bash-language-server",
       "gtop",
@@ -2995,7 +2994,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.14.2"
+    "version": "18.15.0"
   },
   "npth": {
     "aliases": {
@@ -3862,7 +3861,7 @@
     "bin": ["rsync"],
     "date": "2022-11-08",
     "man1": ["rsync.1"],
-    "url": ["https://download.samba.org/pub/rsync/src/"],
+    "url": ["https://download.samba.org/pub/rsync/src/?C=M;O=D"],
     "version": "3.2.7"
   },
   "ruby": {
@@ -4089,6 +4088,7 @@
     "date": "2023-03-07",
     "dependencies": ["zlib", "readline"],
     "man1": ["sqlite3.1"],
+    "outdated": true,
     "reverse_dependencies": [
       "apr",
       "gnupg",
