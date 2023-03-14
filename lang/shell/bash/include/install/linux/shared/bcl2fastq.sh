@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME This is currently failing to build on Ubuntu 20.
+# NOTE May need to compile against a much older GCC (e.g. 4.8.2).
 
 main() {
     # """
@@ -93,8 +94,8 @@ main() {
             "cxxflags=${CPPFLAGS:?}"
             # This is 'pkg-config --libs-only-L' return.
             "linkflags=${LDFLAGS:?}"
-            '-s' 'NO_BZIP2=1' # FIXME
-            '-s' 'NO_ZLIB=1' # FIXME
+            '-sNO_BZIP2=1' # FIXME
+            '-sNO_ZLIB=1' # FIXME
             'install'
         )
         koopa_cp \
