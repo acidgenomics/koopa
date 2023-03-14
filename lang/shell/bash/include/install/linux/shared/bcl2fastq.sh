@@ -78,7 +78,7 @@ main() {
             '-d2'
             "-j${dict['jobs']}"
             'install'
-            'threading=multi,single'
+            'threading=multi'
             'link=shared,static'
         )
         koopa_cp \
