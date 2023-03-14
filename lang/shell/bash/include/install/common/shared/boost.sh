@@ -59,7 +59,6 @@ ${dict['version']}/source/${dict['file']}"
         'link=shared,static'
         'threading=multi'
         'runtime-link=shared'
-        # This is 'pkg-config --cflags' return.
         "cxxflags=${CPPFLAGS:?}"
         "linkflags=${LDFLAGS:?}"
         'install'

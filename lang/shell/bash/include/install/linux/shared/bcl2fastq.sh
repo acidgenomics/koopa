@@ -87,12 +87,14 @@ main() {
             "--libdir=${dict['prefix']}/lib"
             "toolset=${dict['toolset']}"
             'variant=release'
-            'link=shared'
+            'link=shared,static'
             'threading=multi'
             'runtime-link=shared'
-            # This is 'pkg-config --cflags' return.
+            # This is 'koopa_activate_app' 'pkg-config --cflags' return.
+            # NOTE We should consider renaming this variable during
+            # installation, to avoid confusing between CPPFLAGS and CXXFLAGS.
             "cxxflags=${CPPFLAGS:?}"
-            # This is 'pkg-config --libs-only-L' return.
+            # This is 'koopa_activate_app' 'pkg-config --libs-only-L' return.
             "linkflags=${LDFLAGS:?}"
             'install'
         )
