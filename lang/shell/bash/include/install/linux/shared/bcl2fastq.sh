@@ -58,6 +58,7 @@ main() {
     koopa_extract "${dict['file']}"
     koopa_extract "${dict['name']}${dict['maj_ver']}-"*"-Source.tar.gz"
     # Install Boost 1.54.0 from redist.
+    # Refer to 'src/cmake/bootstrap/installBoost.sh'.
     (
         local b2_args bootstrap_args
         bootstrap_args=(
@@ -66,21 +67,25 @@ main() {
             "--with-python=${app['python']}"
         )
         b2_args=(
-            "--prefix=${dict['libexec']}/boost"
-            '-d2'
             "-j${dict['jobs']}"
-            'install'
+            "--prefix=${dict['libexec']}/boost"
             'link=static'
             'threading=multi'
+            'install'
         )
         koopa_cp \
             'bcl2fastq/redist/boost_1_54_0.tar.bz2' \
             'boost_1_54_0.tar.bz2'
         koopa_extract 'boost_1_54_0.tar.bz2'
         koopa_cd 'boost_1_54_0'
+        echo 'FIXME AAA'
         ./bootstrap.sh "${bootstrap_args[@]}"
+        echo 'FIXME BBB'
         ./b2 headers
+        echo 'FIXME CCC'
         ./b2 "${b2_args[@]}"
+        echo 'FIXME DDD'
+        return 0
     )
     koopa_cd "${dict['name']}"
     koopa_mkdir "${dict['name']}-build"
