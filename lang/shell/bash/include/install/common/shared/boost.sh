@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't picking up zstd.
-# How to locate this during bootstrap?
-
 main() {
     # """
     # Install Boost library.

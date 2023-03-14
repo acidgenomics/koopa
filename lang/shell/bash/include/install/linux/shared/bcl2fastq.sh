@@ -70,7 +70,7 @@ main() {
             "--prefix=${dict['libexec']}/boost"
             "--libdir=${dict['libexec']}/boost/lib"
             "--with-icu=${dict['icu4c']}"
-            '--without-libraries=mpi,python'
+            '--without-libraries=log,mpi,python'
         )
         b2_args=(
             "--prefix=${dict['libexec']}/boost"
