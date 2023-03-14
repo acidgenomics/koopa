@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't picking up zstd.
+# How to locate this during bootstrap?
+
 main() {
     # """
     # Install Boost library.
@@ -12,11 +15,11 @@ main() {
     local b2_args bootstrap_args deps dict
     koopa_assert_has_no_args "$#"
     deps=(
-        # > 'bzip2'
-        # > 'xz'
-        # > 'zlib'
-        # > 'zstd'
+        'bzip2'
         'icu4c'
+        'xz'
+        'zlib'
+        'zstd'
     )
     koopa_activate_app "${deps[@]}"
     declare -A dict=(
@@ -37,7 +40,7 @@ ${dict['version']}/source/${dict['file']}"
         "--prefix=${dict['prefix']}"
         "--libdir=${dict['prefix']}/lib"
         "--with-icu=${dict['icu4c']}"
-        '--without-libraries=mpi,python'
+        '--without-libraries=log,mpi,python'
     )
     b2_args=(
         "--prefix=${dict['prefix']}"
@@ -45,7 +48,8 @@ ${dict['version']}/source/${dict['file']}"
         '-d2'
         "-j${dict['jobs']}"
         'install'
-        'threading=multi,single'
+        # > 'threading=multi,single'
+        'threading=multi'
         'link=shared,static'
     )
     koopa_print_env
