@@ -1,28 +1,36 @@
 #!/bin/sh
 
-koopa_activate_conda() {
+_koopa_activate_conda() {
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2022-12-07.
+    # @note Updated 2023-03-13.
     # """
-    local nounset prefix
-    prefix="${1:-}"
-    [ -z "$prefix" ] && prefix="$(koopa_conda_prefix)"
-    [ -d "$prefix" ] || return 0
-    script="${prefix}/bin/activate"
-    [ -r "$script" ] || return 0
-    koopa_is_alias 'conda' && unalias 'conda'
-    koopa_is_alias 'mamba' && unalias 'mamba'
-    nounset="$(koopa_boolean_nounset)"
-    [ "$nounset" -eq 1 ] && set +o nounset
+    __kvar_prefix="${1:-}"
+    [ -z "$__kvar_prefix" ] && __kvar_prefix="$(_koopa_conda_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_script="${__kvar_prefix}/bin/activate"
+    if [ ! -r "$__kvar_script" ]
+    then
+        unset -v __kvar_prefix __kvar_script
+        return 0
+    fi
+    _koopa_is_alias 'conda' && unalias 'conda'
+    __kvar_nounset="$(_koopa_boolean_nounset)"
+    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null
-    . "$script"
-    # Ensure the base environment is deactivated by default.
-    if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
-        [ "${CONDA_SHLVL:-0}" -eq 1 ]
+    . "$__kvar_script"
+    if [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && [ "${CONDA_SHLVL:-0}" -eq 1 ]
     then
         conda deactivate
     fi
-    [ "$nounset" -eq 1 ] && set -o nounset
+    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    unset -v \
+        __kvar_nounset \
+        __kvar_prefix \
+        __kvar_script
     return 0
 }

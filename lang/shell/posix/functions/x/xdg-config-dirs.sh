@@ -1,16 +1,16 @@
 #!/bin/sh
 
-koopa_xdg_config_dirs() {
+_koopa_xdg_config_dirs() {
     # """
     # XDG config dirs.
-    # @note Updated 2021-05-20.
+    # @note Updated 2023-03-09.
     # """
-    local x
-    x="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$x" ] 
+    __kvar_string="${XDG_CONFIG_DIRS:-}"
+    if [ -z "$__kvar_string" ] 
     then
-        x='/etc/xdg'
+        __kvar_string='/etc/xdg'
     fi
-    koopa_print "$x"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

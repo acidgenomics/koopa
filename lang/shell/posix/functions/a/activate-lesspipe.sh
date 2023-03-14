@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_activate_lesspipe() {
+_koopa_activate_lesspipe() {
     # """
     # Activate lesspipe.
-    # @note Updated 2022-05-12.
+    # @note Updated 2023-03-10.
     #
     # Preferentially uses 'bat' when installed.
     #
@@ -15,18 +15,22 @@ koopa_activate_lesspipe() {
     # - brew info lesspipe
     # - To list available styles (requires pygments):
     #   'pygmentize -L styles'
+    # - Use extended ANSI codes, for Markdown rendering in iTerm2.
+    #   https://github.com/wofr06/lesspipe/issues/48
     # """
-    local lesspipe
-    lesspipe="$(koopa_bin_prefix)/lesspipe.sh"
-    [ -x "$lesspipe" ] || return 0
+    __kvar_lesspipe="$(_koopa_bin_prefix)/lesspipe.sh"
+    if [ ! -x "$__kvar_lesspipe" ]
+    then
+        unset -v __kvar_lesspipe
+        return 0
+    fi
     export LESS='-R'
+    export LESSANSIMIDCHARS="0123456789;[?!\"'#%()*+ SetMark"
+    export LESSCHARSET='utf-8'
     export LESSCOLOR='yes'
-    export LESSOPEN="|${lesspipe} %s"
+    export LESSOPEN="|${__kvar_lesspipe} %s"
     export LESSQUIET=1
     export LESS_ADVANCED_PREPROCESSOR=1
-    # Use extended ANSI codes, for Markdown rendering in iTerm2.
-    # https://github.com/wofr06/lesspipe/issues/48
-    export LESSANSIMIDCHARS="0123456789;[?!\"'#%()*+ SetMark"
-    [ -z "${LESSCHARSET:-}" ] && export LESSCHARSET='utf-8'
+    unset -v __kvar_lesspipe
     return 0
 }

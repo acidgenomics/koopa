@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_str_detect_posix() {
+_koopa_str_detect_posix() {
     # """
     # Evaluate whether a string contains a desired value.
     # @note Updated 2022-02-15.

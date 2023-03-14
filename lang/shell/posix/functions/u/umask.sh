@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_umask() {
+_koopa_umask() {
     # """
     # Set default file permissions.
     # @note Updated 2020-06-03.

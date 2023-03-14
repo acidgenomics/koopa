@@ -1,9 +1,9 @@
 #!/bin/sh
 
-koopa_activate_coreutils_aliases() {
+_koopa_activate_coreutils_aliases() {
     # """
     # Activate GNU coreutils aliases.
-    # @note Updated 2022-09-20.
+    # @note Updated 2023-03-09.
     #
     # Creates hardened interactive aliases for coreutils.
     #
@@ -13,124 +13,124 @@ koopa_activate_coreutils_aliases() {
     # macOS ships with BSD coreutils, which don't support all GNU options.
     # gmv on macOS can run into issues on NFS shares.
     # """
-    local bin_prefix
-    bin_prefix="$(koopa_bin_prefix)"
-    if [ -x "${bin_prefix}/gcat" ]
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    if [ -x "${__kvar_bin_prefix}/gcat" ]
     then
         alias cat='gcat'
     fi
-    if [ -x "${bin_prefix}/gcp" ]
+    if [ -x "${__kvar_bin_prefix}/gcp" ]
     then
         alias gcp='gcp --interactive --recursive --verbose'
         alias cp='gcp'
     fi
-    if [ -x "${bin_prefix}/gcut" ]
+    if [ -x "${__kvar_bin_prefix}/gcut" ]
     then
         alias cut='gcut'
     fi
-    if [ -x "${bin_prefix}/gdf" ]
+    if [ -x "${__kvar_bin_prefix}/gdf" ]
     then
         alias df='gdf'
     fi
-    if [ -x "${bin_prefix}/gdir" ]
+    if [ -x "${__kvar_bin_prefix}/gdir" ]
     then
         alias dir='gdir'
     fi
-    if [ -x "${bin_prefix}/gecho" ]
+    if [ -x "${__kvar_bin_prefix}/gecho" ]
     then
         alias echo='gecho'
     fi
-    if [ -x "${bin_prefix}/gegrep" ]
+    if [ -x "${__kvar_bin_prefix}/gegrep" ]
     then
         alias egrep='gegrep'
     fi
-    if [ -x "${bin_prefix}/gfgrep" ]
+    if [ -x "${__kvar_bin_prefix}/gfgrep" ]
     then
         alias fgrep='gfgrep'
     fi
-    if [ -x "${bin_prefix}/gfind" ]
+    if [ -x "${__kvar_bin_prefix}/gfind" ]
     then
         alias find='gfind'
     fi
-    if [ -x "${bin_prefix}/ggrep" ]
+    if [ -x "${__kvar_bin_prefix}/ggrep" ]
     then
         alias grep='ggrep'
     fi
-    if [ -x "${bin_prefix}/ghead" ]
+    if [ -x "${__kvar_bin_prefix}/ghead" ]
     then
         alias head='ghead'
     fi
-    if [ -x "${bin_prefix}/gln" ]
+    if [ -x "${__kvar_bin_prefix}/gln" ]
     then
         alias gln='gln --interactive --no-dereference --symbolic --verbose'
         alias ln='gln'
     fi
-    if [ -x "${bin_prefix}/gls" ]
+    if [ -x "${__kvar_bin_prefix}/gls" ]
     then
         alias ls='gls'
     fi
-    if [ -x "${bin_prefix}/gmd5sum" ]
+    if [ -x "${__kvar_bin_prefix}/gmd5sum" ]
     then
         alias md5sum='gmd5sum'
     fi
-    if [ -x "${bin_prefix}/gmkdir" ]
+    if [ -x "${__kvar_bin_prefix}/gmkdir" ]
     then
         alias gmkdir='gmkdir --parents --verbose'
         alias mkdir='gmkdir'
     fi
-    if [ -x "${bin_prefix}/gmv" ]
+    if [ -x "${__kvar_bin_prefix}/gmv" ]
     then
         alias gmv='gmv --interactive --verbose'
         alias mv='gmv'
     fi
-    if [ -x "${bin_prefix}/greadlink" ]
+    if [ -x "${__kvar_bin_prefix}/greadlink" ]
     then
         alias readlink='greadlink'
     fi
-    if [ -x "${bin_prefix}/grealpath" ]
+    if [ -x "${__kvar_bin_prefix}/grealpath" ]
     then
         alias realpath='grealpath'
     fi
-    if [ -x "${bin_prefix}/grm" ]
+    if [ -x "${__kvar_bin_prefix}/grm" ]
     then
         alias grm='grm --interactive=once --verbose'
         alias rm='grm'
     fi
-    if [ -x "${bin_prefix}/gsed" ]
+    if [ -x "${__kvar_bin_prefix}/gsed" ]
     then
         alias sed='gsed'
     fi
-    if [ -x "${bin_prefix}/gsha256sum" ]
+    if [ -x "${__kvar_bin_prefix}/gsha256sum" ]
     then
         alias sha256sum='gsha256sum'
     fi
-    if [ -x "${bin_prefix}/gstat" ]
+    if [ -x "${__kvar_bin_prefix}/gstat" ]
     then
         alias stat='gstat'
     fi
-    if [ -x "${bin_prefix}/gtail" ]
+    if [ -x "${__kvar_bin_prefix}/gtail" ]
     then
         alias tail='gtail'
     fi
-    if [ -x "${bin_prefix}/gtar" ]
+    if [ -x "${__kvar_bin_prefix}/gtar" ]
     then
         alias tar='gtar'
     fi
-    if [ -x "${bin_prefix}/gtouch" ]
+    if [ -x "${__kvar_bin_prefix}/gtouch" ]
     then
         alias touch='gtouch'
     fi
-    if [ -x "${bin_prefix}/gtr" ]
+    if [ -x "${__kvar_bin_prefix}/gtr" ]
     then
         alias tr='gtr'
     fi
-    if [ -x "${bin_prefix}/gwhich" ]
+    if [ -x "${__kvar_bin_prefix}/gwhich" ]
     then
         alias which='gwhich'
     fi
-    if [ -x "${bin_prefix}/gxargs" ]
+    if [ -x "${__kvar_bin_prefix}/gxargs" ]
     then
         alias xargs='gxargs'
     fi
+    unset -v __kvar_bin_prefix
     return 0
 }

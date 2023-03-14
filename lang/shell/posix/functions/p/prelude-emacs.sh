@@ -1,17 +1,11 @@
 #!/bin/sh
 
-koopa_prelude_emacs() {
+_koopa_prelude_emacs() {
     # """
     # Prelude Emacs.
-    # @note Updated 2023-01-06.
+    # @note Updated 2023-03-11.
     # """
-    local prefix
-    prefix="$(koopa_prelude_emacs_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        koopa_print "Prelude Emacs is not installed at '${prefix}'."
-        return 1
-    fi
-    koopa_emacs --with-profile 'prelude' "$@"
+    [ -d "$(_koopa_prelude_emacs_prefix)" ] || return 1
+    _koopa_emacs --with-profile 'prelude' "$@"
     return 0
 }

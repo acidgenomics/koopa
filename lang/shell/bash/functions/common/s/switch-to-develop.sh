@@ -3,7 +3,7 @@
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2023-02-27.
+    # @note Updated 2023-03-12.
     #
     # @seealso
     # - https://stackoverflow.com/questions/49297153/
@@ -23,7 +23,7 @@ koopa_switch_to_develop() {
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
         koopa_cd "${dict['prefix']}"
-        if [[ "$(koopa_git_branch)" == 'develop' ]]
+        if [[ "$(koopa_git_branch "${PWD:?}")" == 'develop' ]]
         then
             koopa_alert_note "Already on 'develop' branch."
             return 0

@@ -608,9 +608,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-13",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.31.1"
+    "version": "2.32.0"
   },
   "cli11": {
     "aliases": {
@@ -989,9 +989,10 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2021-03-17",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
@@ -1055,9 +1056,9 @@
     "version": "8f6b045dfdb6d00e5a324c3f9044dce773791502"
   },
   "dotfiles": {
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "124e7f7f25bf4b2ef720aef9482ef0b4a162e58e"
+    "version": "93ce1691589b494e9d69a26360a825fd63684142"
   },
   "du-dust": {
     "aliases": {
@@ -1065,12 +1066,12 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["rust"],
-    "date": "2023-01-30",
+    "date": "2023-03-14",
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "editorconfig": {
     "aliases": {
@@ -1413,12 +1414,11 @@
     },
     "bin": ["gdal-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-14",
     "man1": ["gdal-config.1"],
-    "notes": ["FIXME Having build issues with PROJ 9.2.0."],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.6.2"
+    "version": "3.6.3"
   },
   "gdbm": {
     "aliases": {
@@ -1480,11 +1480,11 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2023-01-05",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.27.2"
+    "version": "0.27.3"
   },
   "gh": {
     "aliases": {
@@ -1516,11 +1516,10 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "dependencies": ["zlib", "gettext", "openssl3", "curl"],
     "url": ["https://git-scm.com/"],
-    "version": "2.39.2"
+    "version": "2.40.0"
   },
   "git-lfs": {
     "aliases": {
@@ -1947,6 +1946,7 @@
     "bin": ["hugo"],
     "build_dependencies": ["go"],
     "date": "2023-03-05",
+    "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
     "version": "0.111.2"
   },
@@ -2019,7 +2019,7 @@
       "magick-script"
     ],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -2030,7 +2030,7 @@
     ],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-62"
+    "version": "7.1.1-3"
   },
   "ipython": {
     "aliases": {
@@ -2782,6 +2782,7 @@
     },
     "conservative": true,
     "date": "2023-03-07",
+    "reverse_dependencies": ["mpc", "gcc", "gawk"],
     "url": ["https://www.mpfr.org/"],
     "version": "4.2.0"
   },
@@ -2981,7 +2982,7 @@
     },
     "bin": ["node", "npm", "npx"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
@@ -2993,7 +2994,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.14.2"
+    "version": "18.15.0"
   },
   "npth": {
     "aliases": {
@@ -3029,7 +3030,7 @@
     "arch": "x86_64",
     "bin": ["guppy_basecaller"],
     "check": false,
-    "date": "2023-01-10",
+    "date": "2023-03-14",
     "large": true,
     "platform": "linux",
     "private": true,
@@ -3037,7 +3038,7 @@
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
     ],
-    "version": "6.4.2"
+    "version": "6.4.6"
   },
   "openbb": {
     "bin": ["openbb"],
@@ -3103,7 +3104,7 @@
     },
     "bin": ["openssl"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
     "reverse_dependencies": [
       "cmake",
@@ -3134,7 +3135,7 @@
       "mamba"
     ],
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.0.8"
+    "version": "3.1.0"
   },
   "oracle-instant-client": {
     "conservative": true,
@@ -3280,6 +3281,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": ["python3.11"],
+    "outdated": true,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.1.0"
   },
@@ -3350,12 +3352,10 @@
     },
     "bin": ["proj", "projinfo"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "man1": ["proj.1", "projinfo.1"],
-    "outdated": true,
-    "notes": ["FIXME 9.2.0 has build issues with GDAL 3.6.2?"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.1.1"
+    "version": "9.2.0"
   },
   "pth": {
     "aliases": {
@@ -3405,10 +3405,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-03-01",
+    "date": "2023-03-10",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.14"
+    "version": "2.3.15"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -3435,10 +3435,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-03-06",
+    "date": "2023-03-13",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.16.4"
+    "version": "2.17.0"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -3642,7 +3642,7 @@
   },
   "r-devel": {
     "check": false,
-    "date": "2023-02-13",
+    "date": "2023-03-14",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3715,16 +3715,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "83818"
-  },
-  "r-gfortran": {
-    "check": false,
-    "conservative": true,
-    "date": "2022-09-26",
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/tools/"],
-    "version": "8.2"
+    "version": "83977"
   },
   "r-openmp": {
     "check": false,
@@ -3861,7 +3852,7 @@
     "bin": ["rsync"],
     "date": "2022-11-08",
     "man1": ["rsync.1"],
-    "url": ["https://download.samba.org/pub/rsync/src/"],
+    "url": ["https://download.samba.org/pub/rsync/src/?C=M;O=D"],
     "version": "3.2.7"
   },
   "ruby": {
@@ -3904,16 +3895,17 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-02-10",
+    "date": "2023-03-09",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.67.1"
+    "version": "1.68.0"
   },
   "salmon": {
     "bin": ["salmon"],
     "date": "2023-02-27",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
@@ -4034,14 +4026,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-03-02",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.24.0"
+    "version": "7.24.2"
   },
   "sox": {
     "aliases": {
@@ -4087,6 +4079,7 @@
     "date": "2023-03-07",
     "dependencies": ["zlib", "readline"],
     "man1": ["sqlite3.1"],
+    "outdated": true,
     "reverse_dependencies": [
       "apr",
       "gnupg",
@@ -4352,6 +4345,17 @@
     ],
     "version": "2.2.28"
   },
+  "umis": {
+    "bin": ["umis"],
+    "date": "2023-03-14",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/vals/umis/",
+      "https://bioconda.github.io/recipes/umis/README.html"
+    ],
+    "version": "1.0.9"
+  },
   "unibilium": {
     "aliases": {
       "homebrew": true
@@ -4426,8 +4430,8 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2023-01-17",
-    "dependencies": ["python3.11"],
+    "date": "2023-03-13",
+    "dependencies": ["conda"],
     "man1": ["vd.1", "visidata.1"],
     "url": ["https://github.com/saulpw/visidata/"],
     "version": "2.11"
@@ -4702,9 +4706,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-07",
+    "date": "2023-03-10",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.35.1"
+    "version": "0.35.2"
   },
   "zip": {
     "aliases": {

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-koopa_activate_gcc_colors() {
+_koopa_activate_gcc_colors() {
     # """
     # Activate GCC colors.
     # @note Updated 2020-06-30.

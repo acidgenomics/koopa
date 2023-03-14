@@ -1,27 +1,25 @@
 #!/bin/sh
 
-koopa_export_history() {
+_koopa_export_history() {
     # """
     # Export history.
-    # @note Updated 2021-01-31.
+    # @note Updated 2023-03-13.
     #
-    # See bash(1) for more options.
+    # See 'bash(1)' for more options.
     # For setting history length, see HISTSIZE and HISTFILESIZE.
     # """
-    local shell
-    shell="$(koopa_shell_name)"
     # Standardize the history file name across shells.
     # Note that snake case is commonly used here across platforms.
     if [ -z "${HISTFILE:-}" ]
     then
-        HISTFILE="${HOME:?}/.${shell}_history"
+        HISTFILE="${HOME:?}/.$(_koopa_shell_name)_history"
     fi
     export HISTFILE
     # Create the history file, if necessary.
     # Note that the HOME check here hardens against symlinked data disk failure.
     if [ ! -f "$HISTFILE" ] \
         && [ -e "${HOME:-}" ] \
-        && koopa_is_installed 'touch'
+        && _koopa_is_installed 'touch'
     then
         touch "$HISTFILE"
     fi

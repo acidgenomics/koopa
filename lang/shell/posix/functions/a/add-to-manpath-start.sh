@@ -1,20 +1,20 @@
 #!/bin/sh
 
-koopa_add_to_manpath_start() {
+_koopa_add_to_manpath_start() {
     # """
     # Force add to 'MANPATH' start.
-    # @note Updated 2022-03-21.
+    # @note Updated 2022-03-10.
     #
     # @seealso
     # - /etc/manpath.config
     # """
-    local dir
     MANPATH="${MANPATH:-}"
-    for dir in "$@"
+    for __kvar_dir in "$@"
     do
-        [ -d "$dir" ] || continue
-        MANPATH="$(__koopa_add_to_path_string_start "$MANPATH" "$dir")"
+        [ -d "$__kvar_dir" ] || continue
+        MANPATH="$(_koopa_add_to_path_string_start "$MANPATH" "$__kvar_dir")"
     done
     export MANPATH
+    unset -v __kvar_dir
     return 0
 }
