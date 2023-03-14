@@ -233,6 +233,10 @@ koopa_add_rpath_to_ldflags() {
     return 0
 }
 
+koopa_add_to_path_end() {
+    _koopa_add_to_path_end "$@"
+}
+
 koopa_add_to_path_start() {
     _koopa_add_to_path_start "$@"
 }
