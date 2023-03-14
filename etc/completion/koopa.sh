@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-03-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -373,6 +373,7 @@ _koopa_complete() {
                         'tree-sitter'
                         'tuc'
                         'udunits'
+                        'umis'
                         'unibilium'
                         'units'
                         'unzip'
