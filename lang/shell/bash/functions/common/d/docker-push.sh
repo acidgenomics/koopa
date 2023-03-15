@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework server handling here.
+
 koopa_docker_push() {
     # """
     # Push a local Docker build.

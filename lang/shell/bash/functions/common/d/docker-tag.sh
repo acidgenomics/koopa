@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework the server handling here.
+# FIXME Rework this to use '--args' instead of positional.
+
 koopa_docker_tag() {
     # """
     # Add Docker tag.
-    # Updated 2022-10-06.
+    # Updated 2023-03-15.
     # """
     local app dict
     koopa_assert_has_args "$#"
