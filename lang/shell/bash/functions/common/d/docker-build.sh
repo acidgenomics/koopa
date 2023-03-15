@@ -1,25 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Rework server handling here.
-
-# AWS public login:
-# > aws ecr-public get-login-password --region <REGION> \
-# >     | docker login --username AWS --password-stdin public.ecr.aws
-
-# AWS private login:
-# > aws ecr get-login-password --region <REGION> \
-# >     | docker login \
-# >         --username AWS \
-# >         --password-stdin <ID>.dkr.ecr.<REGION>.amazonaws.com
-
-# FIXME Require that input contains three slashes.
-# Server is the first slash.
-
 koopa_docker_build() {
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2023-03-15.
+    # @note Updated 2023-03-15.
     #
+    # @details
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
     # * --rm
@@ -32,7 +18,7 @@ koopa_docker_build() {
     # have 'docker build' use the current buildx builder. To remove this
     # alias, run 'docker buildx uninstall'.
     #
-    # See also:
+    # @seealso
     # - docker build --help
     # - https://docs.docker.com/buildx/working-with-buildx/
     # - https://docs.docker.com/config/containers/resource_constraints/
@@ -43,8 +29,14 @@ koopa_docker_build() {
     # - https://phoenixnap.com/kb/docker-memory-and-cpu-limit
     # - https://jaimyn.com.au/how-to-build-multi-architecture-docker-images-
     #       on-an-m1-mac/
+    #
+    # @examples
+    # > local_dir="${HOME}/.config/koopa/docker/acidgenomics/koopa/debian"
+    # > remote_url='public.ecr.aws/x3y6k8r3/koopa:debian'
+    # > koopa app docker build --local="$local_dir" --remote="$remote_url"
     # """
-    local app dict pos
+    local app dict
+    local build_args image_ids platforms tag tags
     koopa_assert_has_args "$#"
     declare -A app=(
         ['cut']="$(koopa_locate_cut)"
@@ -57,24 +49,23 @@ koopa_docker_build() {
     [[ -x "${app['docker']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
-        ['docker_dir']="$(koopa_docker_prefix)"
-        ['delete']=0
+        ['default_tag']='latest'
+        ['delete']=1
+        ['local_dir']=''
         ['memory']=''
         ['push']=1
-        ['server']='docker.io'
-        ['tag']='latest'
+        ['remote_url']=''
     )
-    pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--docker-dir='*)
-                dict['docker_dir']="${1#*=}"
+            '--local='*)
+                dict['local_dir']="${1#*=}"
                 shift 1
                 ;;
-            '--docker-dir')
-                dict['docker_dir']="${2:?}"
+            '--local')
+                dict['local_dir']="${2:?}"
                 shift 2
                 ;;
             '--memory='*)
@@ -86,182 +77,154 @@ koopa_docker_build() {
                 dict['memory']="${2:?}"
                 shift 2
                 ;;
-            '--server='*)
-                dict['server']="${1#*=}"
+            '--remote='*)
+                dict['remote_url']="${1#*=}"
                 shift 1
                 ;;
-            '--server')
-                dict['server']="${2:?}"
+            '--remote')
+                dict['remote_url']="${2:?}"
                 shift 2
-                ;;
-            '--tag='*)
-                dict['tag']="${1#*=}"
-                shift 1
-                ;;
-            '--tag')
-                dict['tag']="${2:?}"
-                shift 2
-                ;;
-            # Flags ------------------------------------------------------------
-            '--delete')
-                dict['delete']=1
-                shift 1
-                ;;
-            '--no-delete')
-                dict['delete']=0
-                shift 1
-                ;;
-            '--no-push')
-                dict['push']=0
-                shift 1
-                ;;
-            '--push')
-                dict['push']=1
-                shift 1
                 ;;
             # Other ------------------------------------------------------------
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    for image in "$@"
+    koopa_assert_is_set \
+        '--local' "${dict['local_dir']}" \
+        '--remote' "${dict['remote_url']}"
+    koopa_assert_is_dir "${dict['local_dir']}"
+    koopa_assert_is_file "${dict['local_dir']}/Dockerfile"
+    build_args=()
+    platforms=()
+    tags=()
+    if ! koopa_str_detect_fixed \
+        --string="${dict['remote_url']}" \
+        --pattern=':'
+    then
+        dict['remote_url']="${dict['remote_url']}:${dict['default_tag']}"
+    fi
+    koopa_assert_is_matching_regex \
+        --pattern='^(.+)/(.+)/(.+):(.+)$' \
+        --string="${dict['remote_url']}"
+    dict['remote_str']="$( \
+        koopa_sub \
+            --fixed \
+            --pattern=':' \
+            --replacement='/' \
+            "${dict['remote_url']}"
+    )"
+    dict['image_name']="$( \
+        koopa_print "${dict['remote_str']}" \
+        | "${app['cut']}" -d '/' -f '2-3' \
+    )"
+    dict['tag']="$( \
+        koopa_print "${dict['remote_str']}" \
+        | "${app['cut']}" -d '/' -f '4' \
+    )"
+    # Tags.
+    dict['tags_file']="${dict['local_dir']}/tags.txt"
+    if [[ -f "${dict['tags_file']}" ]]
+    then
+        readarray -t tags < "${dict['tags_file']}"
+    fi
+    if [[ -L "${dict['local_dir']}" ]]
+    then
+        tags+=("${dict['tag']}")
+        dict['local_dir']="$(koopa_realpath "${dict['local_dir']}")"
+        dict['tag']="$(koopa_basename "${dict['local_dir']}")"
+    fi
+    tags+=(
+        "${dict['tag']}"
+        "${dict['tag']}-$(${app['date']} '+%Y%m%d')"
+    )
+    # Ensure tags are sorted and unique.
+    readarray -t tags <<< "$( \
+        koopa_print "${tags[@]}" \
+        | "${app['sort']}" -u \
+    )"
+    for tag in "${tags[@]}"
     do
-        local build_args dict2 image_ids platforms tag tags
-        declare -A dict2
-        dict2['image']="$image"
-        build_args=()
-        platforms=()
-        tags=()
-        # Assume input is an Acid Genomics Docker recipe by default.
-        if ! koopa_str_detect_fixed \
-            --string="${dict2['image']}" \
-            --pattern='/'
-        then
-            dict2['image']="acidgenomics/${dict2['image']}"
-        fi
-        # Handle tag support, if necessary.
-        if koopa_str_detect_fixed \
-            --string="${dict2['image']}" \
-            --pattern=':'
-        then
-            dict2['tag']="$( \
-                koopa_print "${dict2['image']}" \
-                | "${app['cut']}" -d ':' -f '2' \
-            )"
-            dict2['image']="$( \
-                koopa_print "${dict2['image']}" \
-                | "${app['cut']}" -d ':' -f '1' \
-            )"
-        else
-            dict2['tag']="${dict['tag']}"
-        fi
-        dict2['source_image']="${dict['docker_dir']}/\
-${dict2['image']}/${dict2['tag']}"
-        koopa_assert_is_dir "${dict2['source_image']}"
-        # Tags.
-        dict2['tags_file']="${dict2['source_image']}/tags.txt"
-        if [[ -f "${dict2['tags_file']}" ]]
-        then
-            readarray -t tags < "${dict2['tags_file']}"
-        fi
-        if [[ -L "${dict2['source_image']}" ]]
-        then
-            tags+=("${dict2['tag']}")
-            dict2['source_image']="$(koopa_realpath "${dict2['source_image']}")"
-            dict2['tag']="$(koopa_basename "${dict2['source_image']}")"
-        fi
-        tags+=(
-            "${dict2['tag']}"
-            "${dict2['tag']}-$(${app['date']} '+%Y%m%d')"
-        )
-        # Ensure tags are sorted and unique.
-        readarray -t tags <<< "$( \
-            koopa_print "${tags[@]}" \
-            | "${app['sort']}" -u \
-        )"
-        for tag in "${tags[@]}"
-        do
-            build_args+=("--tag=${dict2['image']}:${tag}")
-        done
-        # Platforms.
-        # Assume x86 by default.
-        platforms=('linux/amd64')
-        dict2['platforms_file']="${dict2['source_image']}/platforms.txt"
-        if [[ -f "${dict2['platforms_file']}" ]]
-        then
-            readarray -t platforms < "${dict2['platforms_file']}"
-        fi
-        # e.g. 'linux/amd64,linux/arm64'.
-        dict2['platforms_string']="$(koopa_paste --sep=',' "${platforms[@]}")"
-        build_args+=("--platform=${dict2['platforms_string']}")
-        # Harden against buildx blowing up memory on a local machine.
-        # Consider raising this when we deploy a more powerful build machine.
-        # > local memory
-        if [[ -n "${dict['memory']}" ]]
-        then
-            # If you don't want to use swap, give '--memory' and '--memory-swap'
-            # the same values. Don't set '--memory-swap' to 0. Alternatively,
-            # set '--memory-swap' to '-1' for unlimited swap.
-            build_args+=(
-                "--memory=${dict['memory']}"
-                "--memory-swap=${dict['memory']}"
-            )
-        fi
-        build_args+=(
-            '--no-cache'
-            '--progress=auto'
-            '--pull'
-        )
-        if [[ "${dict['push']}" -eq 1 ]]
-        then
-            build_args+=('--push')
-        fi
-        build_args+=("${dict2['source_image']}")
-        # Force remove any existing locally tagged images before building.
-        if [[ "${dict['delete']}" -eq 1 ]]
-        then
-            koopa_alert "Pruning images '${dict2['image']}:${dict2['tag']}'."
-            readarray -t image_ids <<< "$( \
-                "${app['docker']}" image ls \
-                    --filter reference="${dict2['image']}:${dict2['tag']}" \
-                    --quiet \
-            )"
-            if koopa_is_array_non_empty "${image_ids[@]:-}"
-            then
-                "${app['docker']}" image rm --force "${image_ids[@]}"
-            fi
-        fi
-        koopa_alert "Building '${dict2['source_image']}' Docker image."
-        koopa_dl 'Build args' "${build_args[*]}"
-
-        # FIXME Need to rework this for ECR private and public repos.
-        # FIXME Need to either remove or rework this interactive login approach.
-        "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
-
-        dict2['build_name']="$(koopa_basename "${dict2['image']}")"
-        # Ensure any previous build failures are removed.
-        "${app['docker']}" buildx rm \
-            "${dict2['build_name']}" \
-            &>/dev/null \
-            || true
-        "${app['docker']}" buildx create \
-            --name="${dict2['build_name']}" \
-            --use \
-            >/dev/null
-        "${app['docker']}" buildx build "${build_args[@]}" || return 1
-        "${app['docker']}" buildx rm "${dict2['build_name']}"
-        "${app['docker']}" image ls \
-            --filter \
-            reference="${dict2['image']}:${dict2['tag']}"
-        koopa_alert_success "Build of '${dict2['source_image']}' \
-was successful."
+        build_args+=("--tag=${dict['image_name']}:${tag}")
     done
+    # Platforms.
+    # Assume x86 by default.
+    platforms=('linux/amd64')
+    dict['platforms_file']="${dict['local_dir']}/platforms.txt"
+    if [[ -f "${dict['platforms_file']}" ]]
+    then
+        readarray -t platforms < "${dict['platforms_file']}"
+    fi
+    # e.g. 'linux/amd64,linux/arm64'.
+    dict['platforms_string']="$(koopa_paste --sep=',' "${platforms[@]}")"
+    build_args+=("--platform=${dict['platforms_string']}")
+    # Harden against buildx blowing up memory on a local machine.
+    # Consider raising this when we deploy a more powerful build machine.
+    # > local memory
+    if [[ -n "${dict['memory']}" ]]
+    then
+        # If you don't want to use swap, give '--memory' and '--memory-swap'
+        # the same values. Don't set '--memory-swap' to 0. Alternatively,
+        # set '--memory-swap' to '-1' for unlimited swap.
+        build_args+=(
+            "--memory=${dict['memory']}"
+            "--memory-swap=${dict['memory']}"
+        )
+    fi
+    build_args+=(
+        '--no-cache'
+        '--progress=auto'
+        '--pull'
+    )
+    if [[ "${dict['push']}" -eq 1 ]]
+    then
+        build_args+=('--push')
+    fi
+    build_args+=("${dict['local_dir']}")
+    # Force remove any existing locally tagged images before building.
+    if [[ "${dict['delete']}" -eq 1 ]]
+    then
+        koopa_alert "Pruning images '${dict['image_name']}:${dict['tag']}'."
+        readarray -t image_ids <<< "$( \
+            "${app['docker']}" image ls \
+                --filter reference="${dict['image_name']}:${dict['tag']}" \
+                --quiet \
+        )"
+        if koopa_is_array_non_empty "${image_ids[@]:-}"
+        then
+            "${app['docker']}" image rm --force "${image_ids[@]}"
+        fi
+    fi
+    koopa_alert "Building '${dict['image_name']}' Docker image."
+    koopa_dl 'Build args' "${build_args[*]}"
+    case "${dict['remote_url']}" in
+        'dockerhub.io/'*)
+            "${app['docker']}" login "${dict['server']}" \
+                >/dev/null || return 1
+            ;;
+        *'.dkr.ecr.'*'.amazonaws.com/'*)
+            koopa_aws_ecr_login_private
+            ;;
+        'public.ecr.aws/'*)
+            koopa_aws_ecr_login_public
+            ;;
+    esac
+    dict['build_name']="$(koopa_basename "${dict['image_name']}")"
+    # Ensure any previous build failures are removed.
+    "${app['docker']}" buildx rm \
+        "${dict['build_name']}" \
+        &>/dev/null \
+        || true
+    "${app['docker']}" buildx create \
+        --name="${dict['build_name']}" \
+        --use \
+        >/dev/null
+    "${app['docker']}" buildx build "${build_args[@]}" || return 1
+    "${app['docker']}" buildx rm "${dict['build_name']}"
+    "${app['docker']}" image ls \
+        --filter \
+        reference="${dict['image_name']}:${dict['tag']}"
+    koopa_alert_success "Build of '${dict['image_name']}' was successful."
     return 0
 }
