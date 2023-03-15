@@ -15,12 +15,11 @@ koopa_aws_ecr_login_public() {
     declare -A dict=(
         ['region']="${AWS_ECR_REGION:?}"
     )
-    "${app['aws']}" ecr-public get-login-password \
-        --region "${dict['region']}" \
-    | "${app['docker']}" login \
-        --password-stdin \
-        --username 'AWS' \
-        'public.ecr.aws' \
-        >/dev/null
+    "${app['aws']}" ecr-public get-login-password --region "${dict['region']}" \
+        | "${app['docker']}" login \
+            --password-stdin \
+            --username 'AWS' \
+            'public.ecr.aws' \
+            >/dev/null || return 1
     return 0
 }
