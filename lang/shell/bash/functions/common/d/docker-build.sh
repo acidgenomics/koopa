@@ -1,9 +1,24 @@
 #!/usr/bin/env bash
 
+# FIXME Rework server handling here.
+
+# AWS public login:
+# > aws ecr-public get-login-password --region <REGION> \
+# >     | docker login --username AWS --password-stdin public.ecr.aws
+
+# AWS private login:
+# > aws ecr get-login-password --region <REGION> \
+# >     | docker login \
+# >         --username AWS \
+# >         --password-stdin <ID>.dkr.ecr.<REGION>.amazonaws.com
+
+# FIXME Require that input contains three slashes.
+# Server is the first slash.
+
 koopa_docker_build() {
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # Updated 2022-01-20.
+    # Updated 2023-03-15.
     #
     # Potentially useful arguments:
     # * --label='Descriptive metadata about the image'"
@@ -225,8 +240,11 @@ ${dict2['image']}/${dict2['tag']}"
         fi
         koopa_alert "Building '${dict2['source_image']}' Docker image."
         koopa_dl 'Build args' "${build_args[*]}"
+
+        # FIXME Need to rework this for ECR private and public repos.
         # FIXME Need to either remove or rework this interactive login approach.
         "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
+
         dict2['build_name']="$(koopa_basename "${dict2['image']}")"
         # Ensure any previous build failures are removed.
         "${app['docker']}" buildx rm \
