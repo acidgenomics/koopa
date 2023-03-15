@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Having authentication issue at AWS:
+# ERROR: failed to solve: failed to push x3y6k8r3/koopa:debian: server message: insufficient_scope: authorization failed
+
 koopa_docker_build() {
     # """
     # Build and push a multi-architecture Docker image using buildx.
