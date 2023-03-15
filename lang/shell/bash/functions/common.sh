@@ -1619,7 +1619,8 @@ koopa_aws_ecr_login_private() {
     | "${app['docker']}" login \
             --password-stdin \
             --username 'AWS' \
-            "${dict['account_id']}.dkr.ecr.${dict['region']}.amazonaws.com"
+            "${dict['account_id']}.dkr.ecr.${dict['region']}.amazonaws.com" \
+        >/dev/null
     return 0
 }
 
@@ -1639,7 +1640,8 @@ koopa_aws_ecr_login_public() {
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
-        'public.ecr.aws'
+        'public.ecr.aws' \
+        >/dev/null
     return 0
 }
 
