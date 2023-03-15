@@ -20,11 +20,17 @@ koopa_aws_ecr_login_private() {
         ['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
         ['region']="${AWS_ECR_REGION:?}" # FIXME
     )
-    "${app['aws']}" ecr get-login-password --region "${dict['region']}" \
-        | "${app['docker']}" login \
-                --password-stdin \
-              --username 'AWS' \
-               "${dict['account_id']}.dkr.ecr.${dict['region']}.amazonaws.com" \
-        >/dev/null || return 1
+    dict['repo_url']="${dict['account_id']}.dkr.ecr.\
+${dict['region']}.amazonaws.com"
+    koopa_alert "Logging into '${dict['repo_url']}'."
+    "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
+    "${app['aws']}" ecr get-login-password \
+        --region "${dict['region']}" \
+    | "${app['docker']}" login \
+        --password-stdin \
+        --username 'AWS' \
+        "${dict['repo_url']}" \
+        >/dev/null \
+    || return 1
     return 0
 }
