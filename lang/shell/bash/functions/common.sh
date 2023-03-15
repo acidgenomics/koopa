@@ -1612,14 +1612,16 @@ koopa_aws_ecr_login_private() {
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
         ['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
+        ['profile']="${AWS_ECR_PROFILE:?}" # FIXME
         ['region']="${AWS_ECR_REGION:?}" # FIXME
     )
     dict['repo_url']="${dict['account_id']}.dkr.ecr.\
 ${dict['region']}.amazonaws.com"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
-    "${app['aws']}" ecr get-login-password \
-        --region "${dict['region']}" \
+    "${app['aws']}" --profile="${dict['profile']}" \
+        ecr get-login-password \
+            --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
@@ -1638,13 +1640,15 @@ koopa_aws_ecr_login_public() {
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
+        ['profile']="${AWS_ECR_PROFILE:?}" # FIXME
         ['region']="${AWS_ECR_REGION:?}" # FIXME
         ['repo_url']='public.ecr.aws'
     )
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
-    "${app['aws']}" ecr-public get-login-password \
-        --region "${dict['region']}" \
+    "${app['aws']}" --profile="${dict['profile']}" \
+        ecr-public get-login-password \
+            --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
