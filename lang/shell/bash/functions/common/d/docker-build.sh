@@ -123,6 +123,22 @@ koopa_docker_build() {
         koopa_print "${dict['remote_str']}" \
         | "${app['cut']}" -d '/' -f '4' \
     )"
+    # Authenticate with remote repository, if necessary.
+    if [[ "${dict['push']}" -eq 1 ]]
+    then
+        case "${dict['remote_url']}" in
+            'dockerhub.io/'*)
+                "${app['docker']}" login "${dict['server']}" \
+                    >/dev/null || return 1
+                ;;
+            *'.dkr.ecr.'*'.amazonaws.com/'*)
+                koopa_aws_ecr_login_private
+                ;;
+            'public.ecr.aws/'*)
+                koopa_aws_ecr_login_public
+                ;;
+        esac
+    fi
     # Tags.
     dict['tags_file']="${dict['local_dir']}/tags.txt"
     if [[ -f "${dict['tags_file']}" ]]
@@ -198,18 +214,6 @@ koopa_docker_build() {
     fi
     koopa_alert "Building '${dict['image_name']}' Docker image."
     koopa_dl 'Build args' "${build_args[*]}"
-    case "${dict['remote_url']}" in
-        'dockerhub.io/'*)
-            "${app['docker']}" login "${dict['server']}" \
-                >/dev/null || return 1
-            ;;
-        *'.dkr.ecr.'*'.amazonaws.com/'*)
-            koopa_aws_ecr_login_private
-            ;;
-        'public.ecr.aws/'*)
-            koopa_aws_ecr_login_public
-            ;;
-    esac
     dict['build_name']="$(koopa_basename "${dict['image_name']}")"
     # Ensure any previous build failures are removed.
     "${app['docker']}" buildx rm \
