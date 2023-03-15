@@ -20,6 +20,7 @@ koopa_aws_ecr_login_public() {
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
-        'public.ecr.aws'
+        'public.ecr.aws' \
+        >/dev/null
     return 0
 }
