@@ -201,12 +201,12 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2023-03-07",
+    "date": "2023-03-15",
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.0"
+    "version": "2.11.2"
   },
   "azure-cli": {
     "aliases": {
