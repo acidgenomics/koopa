@@ -1602,6 +1602,47 @@ koopa_aws_ec2_terminate() {
     return 0
 }
 
+koopa_aws_ecr_login_private() {
+    local app dict
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
+        ['docker']="$(koopa_locate_docker)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
+    declare -A dict=(
+        ['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
+        ['region']="${AWS_ECR_REGION:?}" # FIXME
+    )
+    "${app['aws']}" ecr get-login-password \
+        --region "${dict['region']}" \
+    | "${app['docker']}" login \
+            --password-stdin \
+            --username 'AWS' \
+            "${dict['account_id']}.dkr.ecr.${dict['region']}.amazonaws.com"
+    return 0
+}
+
+koopa_aws_ecr_login_public() {
+    local app dict
+    declare -A app=(
+        ['aws']="$(koopa_locate_aws)"
+        ['docker']="$(koopa_locate_docker)"
+    )
+    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || return 1
+    declare -A dict=(
+        ['region']="${AWS_ECR_REGION:?}"
+    )
+    "${app['aws']}" ecr-public get-login-password \
+        --region "${dict['region']}" \
+    | "${app['docker']}" login \
+        --password-stdin \
+        --username 'AWS' \
+        'public.ecr.aws'
+    return 0
+}
+
 koopa_aws_s3_cp_regex() {
     local app dict
     koopa_assert_has_args "$#"
@@ -2987,7 +3028,7 @@ koopa_camel_case() {
 }
 
 koopa_can_install_binary() {
-    [[ -n "${KOOPA_AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]]
+    [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]]
 }
 
 koopa_capitalize() {
@@ -5811,7 +5852,9 @@ ${dict2['image']}/${dict2['tag']}"
         fi
         koopa_alert "Building '${dict2['source_image']}' Docker image."
         koopa_dl 'Build args' "${build_args[*]}"
+
         "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
+
         dict2['build_name']="$(koopa_basename "${dict2['image']}")"
         "${app['docker']}" buildx rm \
             "${dict2['build_name']}" \
@@ -6068,9 +6111,8 @@ koopa_docker_remove() {
 koopa_docker_run() {
     local app dict pos run_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['docker']="$(koopa_locate_docker)"
-    )
+    declare -A app
+    app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
         ['arm']=0
@@ -6112,10 +6154,7 @@ koopa_docker_run() {
     koopa_assert_has_args_eq "$#" 1
     dict['image']="${1:?}"
     "${app['docker']}" pull "${dict['image']}"
-    run_args=(
-        '--interactive'
-        '--tty'
-    )
+    run_args=('--interactive' '--tty')
     if [[ "${dict['bind']}" -eq 1 ]]
     then
         if [[ "${HOME:?}" == "${PWD:?}" ]]
