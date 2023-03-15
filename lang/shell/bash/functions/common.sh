@@ -1614,13 +1614,18 @@ koopa_aws_ecr_login_private() {
         ['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
         ['region']="${AWS_ECR_REGION:?}" # FIXME
     )
+    dict['repo_url']="${dict['account_id']}.dkr.ecr.\
+${dict['region']}.amazonaws.com"
+    koopa_alert "Logging into '${dict['repo_url']}'."
+    "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
     "${app['aws']}" ecr get-login-password \
         --region "${dict['region']}" \
     | "${app['docker']}" login \
-            --password-stdin \
-          --username 'AWS' \
-           "${dict['account_id']}.dkr.ecr.${dict['region']}.amazonaws.com" \
-    >/dev/null || return 1
+        --password-stdin \
+        --username 'AWS' \
+        "${dict['repo_url']}" \
+        >/dev/null \
+    || return 1
     return 0
 }
 
@@ -1633,17 +1638,19 @@ koopa_aws_ecr_login_public() {
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
-        ['region']="${AWS_ECR_REGION:?}"
+        ['region']="${AWS_ECR_REGION:?}" # FIXME
+        ['repo_url']='public.ecr.aws'
     )
-    "${app['docker']}" logout 'public.ecr.aws' \
-        >/dev/null || true
+    koopa_alert "Logging into '${dict['repo_url']}'."
+    "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
     "${app['aws']}" ecr-public get-login-password \
         --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
-        'public.ecr.aws' \
-        >/dev/null || return 1
+        "${dict['repo_url']}" \
+        >/dev/null \
+    || return 1
     return 0
 }
 
@@ -5755,9 +5762,13 @@ koopa_docker_build() {
             --replacement='/' \
             "${dict['remote_url']}"
     )"
+    dict['server']="$( \
+        koopa_print "${dict['remote_str']}" \
+        | "${app['cut']}" -d '/' -f '1' \
+    )"
     dict['image_name']="$( \
         koopa_print "${dict['remote_str']}" \
-        | "${app['cut']}" -d '/' -f '2-3' \
+        | "${app['cut']}" -d '/' -f '1-3' \
     )"
     dict['tag']="$( \
         koopa_print "${dict['remote_str']}" \
@@ -5765,15 +5776,18 @@ koopa_docker_build() {
     )"
     if [[ "${dict['push']}" -eq 1 ]]
     then
-        case "${dict['remote_url']}" in
-            'dockerhub.io/'*)
+        case "${dict['server']}" in
+            'dockerhub.io')
+                koopa_alert "Logging into '${dict['server']}'."
+                "${app['docker']}" logout "${dict['server']}" \
+                    >/dev/null || true
                 "${app['docker']}" login "${dict['server']}" \
                     >/dev/null || return 1
                 ;;
-            *'.dkr.ecr.'*'.amazonaws.com/'*)
+            *'.dkr.ecr.'*'.amazonaws.com')
                 koopa_aws_ecr_login_private
                 ;;
-            'public.ecr.aws/'*)
+            'public.ecr.aws')
                 koopa_aws_ecr_login_public
                 ;;
         esac

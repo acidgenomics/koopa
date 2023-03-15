@@ -118,9 +118,13 @@ koopa_docker_build() {
             --replacement='/' \
             "${dict['remote_url']}"
     )"
+    dict['server']="$( \
+        koopa_print "${dict['remote_str']}" \
+        | "${app['cut']}" -d '/' -f '1' \
+    )"
     dict['image_name']="$( \
         koopa_print "${dict['remote_str']}" \
-        | "${app['cut']}" -d '/' -f '2-3' \
+        | "${app['cut']}" -d '/' -f '1-3' \
     )"
     dict['tag']="$( \
         koopa_print "${dict['remote_str']}" \
@@ -129,15 +133,18 @@ koopa_docker_build() {
     # Authenticate with remote repository, if necessary.
     if [[ "${dict['push']}" -eq 1 ]]
     then
-        case "${dict['remote_url']}" in
-            'dockerhub.io/'*)
+        case "${dict['server']}" in
+            'dockerhub.io')
+                koopa_alert "Logging into '${dict['server']}'."
+                "${app['docker']}" logout "${dict['server']}" \
+                    >/dev/null || true
                 "${app['docker']}" login "${dict['server']}" \
                     >/dev/null || return 1
                 ;;
-            *'.dkr.ecr.'*'.amazonaws.com/'*)
+            *'.dkr.ecr.'*'.amazonaws.com')
                 koopa_aws_ecr_login_private
                 ;;
-            'public.ecr.aws/'*)
+            'public.ecr.aws')
                 koopa_aws_ecr_login_public
                 ;;
         esac
