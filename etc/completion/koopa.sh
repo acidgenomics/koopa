@@ -646,10 +646,8 @@ _koopa_complete() {
                                 'prune-all-stale-tags'
                                 'prune-old-images'
                                 'prune-stale-tags'
-                                'push'
                                 'remove'
                                 'run'
-                                'tag'
                             )
                             ;;
                         'ftp')
