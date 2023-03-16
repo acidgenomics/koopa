@@ -48,6 +48,7 @@ ${dict['version']}/source/${dict['file']}"
         '--without-libraries=log,mpi,python'
     )
     b2_args=(
+        '-q'
         # Show commands as they are executed.
         '-d+2'
         "-j${dict['jobs']}"
@@ -58,7 +59,6 @@ ${dict['version']}/source/${dict['file']}"
         'link=shared,static'
         'threading=multi'
         'runtime-link=shared'
-        # This is 'pkg-config --cflags' return.
         "cxxflags=${CPPFLAGS:?}"
         "linkflags=${LDFLAGS:?}"
         'install'
