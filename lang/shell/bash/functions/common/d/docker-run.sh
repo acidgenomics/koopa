@@ -3,7 +3,7 @@
 koopa_docker_run() {
     # """
     # Run Docker image.
-    # @note Updated 2022-02-17.
+    # @note Updated 2023-03-15.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -14,9 +14,8 @@ koopa_docker_run() {
     # """
     local app dict pos run_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['docker']="$(koopa_locate_docker)"
-    )
+    declare -A app
+    app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['docker']}" ]] || return 1
     declare -A dict=(
         ['arm']=0
@@ -60,10 +59,7 @@ koopa_docker_run() {
     koopa_assert_has_args_eq "$#" 1
     dict['image']="${1:?}"
     "${app['docker']}" pull "${dict['image']}"
-    run_args=(
-        '--interactive'
-        '--tty'
-    )
+    run_args=('--interactive' '--tty')
     # Legacy bind mounts approach, now disabled by default.
     # Useful for quickly checking whether a local script will run.
     if [[ "${dict['bind']}" -eq 1 ]]

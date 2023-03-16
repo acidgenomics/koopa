@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME This is currently failing to build on Ubuntu 20.
+# NOTE May need to compile against a much older GCC (e.g. 4.8.2).
 
 main() {
     # """
@@ -78,6 +79,7 @@ main() {
             '--without-libraries=log,mpi,python'
         )
         b2_args=(
+            '-q'
             # Show commands as they are executed.
             '-d+2'
             "-j${dict['jobs']}"
@@ -88,9 +90,11 @@ main() {
             'link=shared,static'
             'threading=multi'
             'runtime-link=shared'
-            # This is 'pkg-config --cflags' return.
+            # This is 'koopa_activate_app' 'pkg-config --cflags' return.
+            # NOTE We should consider renaming this variable during
+            # installation, to avoid confusing between CPPFLAGS and CXXFLAGS.
             "cxxflags=${CPPFLAGS:?}"
-            # This is 'pkg-config --libs-only-L' return.
+            # This is 'koopa_activate_app' 'pkg-config --libs-only-L' return.
             "linkflags=${LDFLAGS:?}"
             'install'
         )
