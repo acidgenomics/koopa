@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework / rethink the utility of this function.
+
 koopa_docker_build_all_images() {
     # """
     # Build all Docker images.
