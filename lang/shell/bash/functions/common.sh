@@ -5737,6 +5737,9 @@ koopa_docker_build() {
                 dict['remote_url']="${2:?}"
                 shift 2
                 ;;
+            '--no-push')
+                dict['push']=0
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -5781,18 +5784,18 @@ koopa_docker_build() {
     if [[ "${dict['push']}" -eq 1 ]]
     then
         case "${dict['server']}" in
-            'dockerhub.io')
-                koopa_alert "Logging into '${dict['server']}'."
-                "${app['docker']}" logout "${dict['server']}" \
-                    >/dev/null || true
-                "${app['docker']}" login "${dict['server']}" \
-                    >/dev/null || return 1
-                ;;
             *'.dkr.ecr.'*'.amazonaws.com')
                 koopa_aws_ecr_login_private
                 ;;
             'public.ecr.aws')
                 koopa_aws_ecr_login_public
+                ;;
+            *)
+                koopa_alert "Logging into '${dict['server']}'."
+                "${app['docker']}" logout "${dict['server']}" \
+                    >/dev/null || true
+                "${app['docker']}" login "${dict['server']}" \
+                    >/dev/null || return 1
                 ;;
         esac
     fi
@@ -5846,10 +5849,10 @@ koopa_docker_build() {
     build_args+=("${dict['local_dir']}")
     if [[ "${dict['delete']}" -eq 1 ]]
     then
-        koopa_alert "Pruning images '${dict['image_name']}:${dict['tag']}'."
+        koopa_alert "Pruning images '${dict['remote_url']}'."
         readarray -t image_ids <<< "$( \
             "${app['docker']}" image ls \
-                --filter reference="${dict['image_name']}:${dict['tag']}" \
+                --filter reference="${dict['remote_url']}" \
                 --quiet \
         )"
         if koopa_is_array_non_empty "${image_ids[@]:-}"
@@ -5857,7 +5860,7 @@ koopa_docker_build() {
             "${app['docker']}" image rm --force "${image_ids[@]}"
         fi
     fi
-    koopa_alert "Building '${dict['image_name']}' Docker image."
+    koopa_alert "Building '${dict['remote_url']}' Docker image."
     koopa_dl 'Build args' "${build_args[*]}"
     dict['build_name']="$(koopa_basename "${dict['image_name']}")"
     "${app['docker']}" buildx rm \
@@ -5872,8 +5875,13 @@ koopa_docker_build() {
     "${app['docker']}" buildx rm "${dict['build_name']}"
     "${app['docker']}" image ls \
         --filter \
-        reference="${dict['image_name']}:${dict['tag']}"
-    koopa_alert_success "Build of '${dict['image_name']}' was successful."
+        reference="${dict['remote_url']}"
+    if [[ "${dict['push']}" -eq 1 ]]
+    then
+        "${app['docker']}" logout "${dict['server']}" \
+            >/dev/null || true
+    fi
+    koopa_alert_success "Build of '${dict['remote_url']}' was successful."
     return 0
 }
 
