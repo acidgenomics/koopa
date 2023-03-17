@@ -304,7 +304,7 @@ __koopa_bash_header() {
         case "${1:-}" in
             '--help' | \
             '-h')
-                _koopa_help_2
+                koopa_help_2
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
