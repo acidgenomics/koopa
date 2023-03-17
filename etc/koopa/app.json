@@ -93,9 +93,9 @@
     },
     "bin": ["asdf"],
     "conservative": true,
-    "date": "2023-02-23",
+    "date": "2023-03-16",
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.11.2"
+    "version": "0.11.3"
   },
   "aspell": {
     "aliases": {
@@ -1376,14 +1376,14 @@
       "conda": "gatk4"
     },
     "bin": ["gatk"],
-    "date": "2022-10-17",
+    "date": "2023-03-17",
     "dependencies": ["conda"],
     "large": true,
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
     ],
-    "version": "4.3.0.0"
+    "version": "4.4.0.0"
   },
   "gawk": {
     "aliases": {
@@ -1437,9 +1437,9 @@
     },
     "bin": ["geos-config"],
     "conservative": true,
-    "date": "2022-11-14",
+    "date": "2023-03-17",
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.11.1"
+    "version": "3.11.2"
   },
   "gettext": {
     "aliases": {
@@ -3109,10 +3109,10 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-15",
+    "date": "2023-03-17",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.77.0"
+    "version": "0.77.1"
   },
   "oniguruma": {
     "aliases": {
@@ -3177,9 +3177,9 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-17",
     "url": ["https://www.openssh.com/portable.html"],
-    "version": "9.2p1"
+    "version": "9.3p1"
   },
   "openssl1": {
     "aliases": {
@@ -3477,11 +3477,11 @@
   "pybind11": {
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-17",
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "2.10.3"
+    "version": "2.10.4"
   },
   "pycodestyle": {
     "aliases": {
