@@ -3609,13 +3609,9 @@ koopa_cli_app() {
                 'build-all-images' | \
                 'build-all-tags' | \
                 'prune-all-images' | \
-                'prune-all-stale-tags' | \
                 'prune-old-images' | \
-                'prune-stale-tags' | \
-                'push' | \
                 'remove' | \
-                'run' | \
-                'tag')
+                'run')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
@@ -6016,12 +6012,6 @@ koopa_docker_prune_all_images() {
     return 0
 }
 
-koopa_docker_prune_all_stale_tags() {
-    koopa_assert_has_no_args "$#"
-    koopa_r_koopa 'cliDockerPruneAllStaleTags' "$@"
-    return 0
-}
-
 koopa_docker_prune_old_images() {
     local app
     koopa_assert_has_no_args "$#"
@@ -6036,64 +6026,6 @@ koopa_docker_prune_old_images() {
         --force \
         || true
     "${app['docker']}" image prune --force || true
-    return 0
-}
-
-koopa_docker_prune_stale_tags() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDockerPruneStaleTags' "$@"
-    return 0
-}
-
-koopa_docker_push() {
-    local app dict pattern
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        ['docker']="$(koopa_locate_docker)"
-        ['sed']="$(koopa_locate_sed)"
-        ['sort']="$(koopa_locate_sort)"
-        ['tr']="$(koopa_locate_tr)"
-    )
-    [[ -x "${app['docker']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
-    declare -A dict=(
-        ['server']='docker.io'
-    )
-    for pattern in "$@"
-    do
-        local dict2 image images
-        declare -A dict2=(
-            ['pattern']="$pattern"
-        )
-        koopa_assert_is_matching_regex \
-            --string="${dict2['pattern']}" \
-            --pattern='^.+/.+$'
-        dict2['json']="$( \
-            "${app['docker']}" inspect \
-                --format="{{json .RepoTags}}" \
-                "${dict2['pattern']}" \
-        )"
-        readarray -t images <<< "$( \
-            koopa_print "${dict2['json']}" \
-                | "${app['tr']}" ',' '\n' \
-                | "${app['sed']}" 's/^\[//' \
-                | "${app['sed']}" 's/\]$//' \
-                | "${app['sed']}" 's/^\"//g' \
-                | "${app['sed']}" 's/\"$//g' \
-                | "${app['sort']}" \
-        )"
-        if koopa_is_array_empty "${images[@]:-}"
-        then
-            koopa_stop "Failed to match any images with '${dict2['pattern']}'."
-        fi
-        for image in "${images[@]}"
-        do
-            koopa_alert "Pushing '${image}' to '${dict['server']}'."
-            "${app['docker']}" push "${dict['server']}/${image}"
-        done
-    done
     return 0
 }
 
@@ -6189,45 +6121,6 @@ koopa_docker_run() {
         run_args+=('bash' '-il')
     fi
     "${app['docker']}" run "${run_args[@]}"
-    return 0
-}
-
-koopa_docker_tag() {
-    local app dict
-    koopa_assert_has_args "$#"
-    declare -A app=(
-        ['docker']="$(koopa_locate_docker)"
-    )
-    [[ -x "${app['docker']}" ]] || return 1
-    declare -A dict=(
-        ['dest_tag']="${3:-}"
-        ['image']="${1:?}"
-        ['server']='docker.io'
-        ['source_tag']="${2:?}"
-    )
-    [[ -z "${dict['dest_tag']}" ]] && dict['dest_tag']='latest'
-    if ! koopa_str_detect_fixed \
-        --string="${dict['image']}" \
-        --pattern='/'
-    then
-        dict['image']="acidgenomics/${dict['image']}"
-    fi
-    if [[ "${dict['source_tag']}" == "${dict['dest_tag']}" ]]
-    then
-        koopa_alert_info "Source tag identical to destination \
-('${dict['source_tag']}')."
-        return 0
-    fi
-    koopa_alert "Tagging '${dict['image']}:${dict['source_tag']}' \
-as '${dict['dest_tag']}'."
-    "${app['docker']}" login "${dict['server']}" >/dev/null || return 1
-    "${app['docker']}" pull \
-        "${dict['server']}/${dict['image']}:${dict['source_tag']}"
-    "${app['docker']}" tag \
-        "${dict['image']}:${dict['source_tag']}" \
-        "${dict['image']}:${dict['dest_tag']}"
-    "${app['docker']}" push \
-        "${dict['server']}/${dict['image']}:${dict['dest_tag']}"
     return 0
 }
 
