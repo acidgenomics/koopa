@@ -4077,7 +4077,7 @@
     "version": "4.9"
   },
   "seqkit": {
-    "bin": ["salmon"],
+    "bin": ["seqkit"],
     "date": "2023-03-17",
     "dependencies": ["conda"],
     "large": true,
