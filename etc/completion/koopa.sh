@@ -643,13 +643,9 @@ _koopa_complete() {
                                 'build-all-images'
                                 'build-all-tags'
                                 'prune-all-images'
-                                'prune-all-stale-tags'
                                 'prune-old-images'
-                                'prune-stale-tags'
-                                'push'
                                 'remove'
                                 'run'
-                                'tag'
                             )
                             ;;
                         'ftp')

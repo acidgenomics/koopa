@@ -138,13 +138,9 @@ koopa_cli_app() {
                 'build-all-images' | \
                 'build-all-tags' | \
                 'prune-all-images' | \
-                'prune-all-stale-tags' | \
                 'prune-old-images' | \
-                'prune-stale-tags' | \
-                'push' | \
                 'remove' | \
-                'run' | \
-                'tag')
+                'run')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
