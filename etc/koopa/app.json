@@ -689,6 +689,7 @@
       "salmon",
       "sambamba",
       "samtools",
+      "seqkit",
       "snakemake",
       "star",
       "subread",
@@ -4074,6 +4075,17 @@
     "man1": ["gsed.1"],
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.9"
+  },
+  "seqkit": {
+    "bin": ["salmon"],
+    "date": "2023-03-17",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/shenwei356/seqkit/",
+      "https://bioconda.github.io/recipes/seqkit/README.html"
+    ],
+    "version": "2.4.0"
   },
   "serf": {
     "aliases": {
