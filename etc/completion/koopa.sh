@@ -345,6 +345,7 @@ _koopa_complete() {
                         'scons'
                         'sd'
                         'sed'
+                        'seqkit'
                         'serf'
                         'shellcheck'
                         'shunit2'

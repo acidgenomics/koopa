@@ -10274,6 +10274,7 @@ koopa_install_all_apps() {
                 'salmon'
                 'sambamba'
                 'samtools'
+                'seqkit'
                 'snakefmt'
                 'snakemake'
                 'star'
@@ -10281,6 +10282,7 @@ koopa_install_all_apps() {
                 'subread'
                 'sra-tools'
                 'scalene'
+                'umis'
             )
         fi
         apps+=(
@@ -10681,12 +10683,14 @@ koopa_install_all_binary_apps() {
                 'sambamba'
                 'samtools'
                 'scalene'
+                'seqkit'
                 'snakefmt'
                 'snakemake'
                 'sra-tools'
                 'star'
                 'star-fusion'
                 'subread'
+                'umis'
             )
         fi
         if koopa_is_linux
@@ -13141,6 +13145,12 @@ koopa_install_sd() {
 koopa_install_sed() {
     koopa_install_app \
         --name='sed' \
+        "$@"
+}
+
+koopa_install_seqkit() {
+    koopa_install_app \
+        --name='seqkit' \
         "$@"
 }
 
@@ -25121,6 +25131,12 @@ koopa_uninstall_sd() {
 koopa_uninstall_sed() {
     koopa_uninstall_app \
         --name='sed' \
+        "$@"
+}
+
+koopa_uninstall_seqkit() {
+    koopa_uninstall_app \
+        --name='seqkit' \
         "$@"
 }
 
