@@ -454,12 +454,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-02-22",
+    "date": "2022-03-18",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.20.2"
+    "version": "1.21.0"
   },
   "brotli": {
     "aliases": {
@@ -4791,9 +4791,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-18",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.31.2"
+    "version": "4.32.1"
   },
   "yt-dlp": {
     "aliases": {
