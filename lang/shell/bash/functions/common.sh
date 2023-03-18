@@ -23183,7 +23183,7 @@ koopa_tmp_log_file() {
 
 koopa_to_string() {
     koopa_assert_has_args "$#"
-    koopa_paste0 --sep=', ' "$@"
+    koopa_paste --sep=', ' "$@"
     return 0
 }
 

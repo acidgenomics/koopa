@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2022-11-30.
+    # @note Updated 2023-03-18.
     #
     # Useful CMake linker variables:
     # - CMAKE_CXX_FLAGS
@@ -127,8 +127,8 @@ main() {
         'libcxxabi'
         'libunwind'
     )
-    dict['projects']="$(printf '%s;' "${projects[@]}")"
-    dict['runtimes']="$(printf '%s;' "${runtimes[@]}")"
+    dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
+    dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
     cmake_args=(
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
