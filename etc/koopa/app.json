@@ -454,12 +454,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-02-22",
+    "date": "2022-03-18",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.20.2"
+    "version": "1.21.0"
   },
   "brotli": {
     "aliases": {
@@ -689,6 +689,7 @@
       "salmon",
       "sambamba",
       "samtools",
+      "seqkit",
       "snakemake",
       "star",
       "subread",
@@ -2621,7 +2622,7 @@
     },
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-18",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2633,9 +2634,8 @@
       "binutils"
     ],
     "large": true,
-    "notes": ["16.0 is scheduled for end of March release."],
     "url": ["https://llvm.org/"],
-    "version": "15.0.7"
+    "version": "16.0.0"
   },
   "lmod": {
     "conservative": true,
@@ -3936,10 +3936,10 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2023-01-03",
+    "date": "2023-03-17",
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2022.12.0+353"
+    "version": "2023.03.0+386"
   },
   "rsync": {
     "aliases": {
@@ -3971,10 +3971,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-03-07",
+    "date": "2023-03-17",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.254"
+    "version": "0.0.256"
   },
   "rust": {
     "aliases": {
@@ -4074,6 +4074,17 @@
     "man1": ["gsed.1"],
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.9"
+  },
+  "seqkit": {
+    "bin": ["seqkit"],
+    "date": "2023-03-17",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/shenwei356/seqkit/",
+      "https://bioconda.github.io/recipes/seqkit/README.html"
+    ],
+    "version": "2.4.0"
   },
   "serf": {
     "aliases": {
@@ -4780,9 +4791,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-18",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.31.2"
+    "version": "4.32.1"
   },
   "yt-dlp": {
     "aliases": {
