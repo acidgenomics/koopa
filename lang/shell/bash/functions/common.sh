@@ -9146,8 +9146,9 @@ koopa_help_2() {
     dict['man_prefix']="$( \
         koopa_parent_dir --num=2 "${dict['script_file']}" \
     )"
-    dict['man_file']="${dict['man_prefix']}/man/\
+    dict['man_file']="${dict['man_prefix']}/share/man/\
 man1/${dict['script_name']}.1"
+    koopa_assert_is_file "${dict['man_file']}"
     koopa_help "${dict['man_file']}"
 }
 
@@ -10273,6 +10274,7 @@ koopa_install_all_apps() {
                 'salmon'
                 'sambamba'
                 'samtools'
+                'seqkit'
                 'snakefmt'
                 'snakemake'
                 'star'
@@ -10280,6 +10282,7 @@ koopa_install_all_apps() {
                 'subread'
                 'sra-tools'
                 'scalene'
+                'umis'
             )
         fi
         apps+=(
@@ -10680,12 +10683,14 @@ koopa_install_all_binary_apps() {
                 'sambamba'
                 'samtools'
                 'scalene'
+                'seqkit'
                 'snakefmt'
                 'snakemake'
                 'sra-tools'
                 'star'
                 'star-fusion'
                 'subread'
+                'umis'
             )
         fi
         if koopa_is_linux
@@ -13140,6 +13145,12 @@ koopa_install_sd() {
 koopa_install_sed() {
     koopa_install_app \
         --name='sed' \
+        "$@"
+}
+
+koopa_install_seqkit() {
+    koopa_install_app \
+        --name='seqkit' \
         "$@"
 }
 
@@ -22212,11 +22223,20 @@ koopa_stat() {
     declare -A app
     app['stat']="$(koopa_locate_stat --allow-system)"
     [[ -x "${app['stat']}" ]] || return 1
-    declare -A dict=(
-        ['format']="${1:?}"
-    )
+    declare -A dict
+    dict['format']="${1:?}"
     shift 1
-    dict['out']="$("${app['stat']}" -c "${dict['format']}" "$@")"
+    if [[ "${app['stat']}" == '/usr/bin/stat' ]] && koopa_is_macos
+    then
+        dict['format_flag']='-f'
+    else
+        dict['format_flag']='--format'
+    fi
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" "${dict['format']}" \
+            "$@" \
+    )"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0
@@ -23172,7 +23192,7 @@ koopa_tmp_log_file() {
 
 koopa_to_string() {
     koopa_assert_has_args "$#"
-    koopa_paste0 --sep=', ' "$@"
+    koopa_paste --sep=', ' "$@"
     return 0
 }
 
@@ -25120,6 +25140,12 @@ koopa_uninstall_sd() {
 koopa_uninstall_sed() {
     koopa_uninstall_app \
         --name='sed' \
+        "$@"
+}
+
+koopa_uninstall_seqkit() {
+    koopa_uninstall_app \
+        --name='seqkit' \
         "$@"
 }
 

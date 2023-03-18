@@ -365,6 +365,7 @@ koopa_install_all_apps() {
                 'salmon'
                 'sambamba'
                 'samtools'
+                'seqkit'
                 'snakefmt'
                 'snakemake'
                 'star'
@@ -372,7 +373,7 @@ koopa_install_all_apps() {
                 'subread'
                 'sra-tools'
                 'scalene'
-                # > 'umis'
+                'umis'
             )
         fi
         # Build mamba (experimental).

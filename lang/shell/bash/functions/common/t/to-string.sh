@@ -3,13 +3,13 @@
 koopa_to_string() {
     # """
     # Paste arguments to a comma separated string.
-    # @note Updated 2021-11-30.
+    # @note Updated 2023-03-18.
     #
     # @examples
     # > koopa_to_string 'aaa' 'bbb'
     # # aaa, bbb
     # """
     koopa_assert_has_args "$#"
-    koopa_paste0 --sep=', ' "$@"
+    koopa_paste --sep=', ' "$@"
     return 0
 }
