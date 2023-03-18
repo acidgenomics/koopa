@@ -2622,7 +2622,7 @@
     },
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-18",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2634,9 +2634,8 @@
       "binutils"
     ],
     "large": true,
-    "notes": ["16.0 is scheduled for end of March release."],
     "url": ["https://llvm.org/"],
-    "version": "15.0.7"
+    "version": "16.0.0"
   },
   "lmod": {
     "conservative": true,
