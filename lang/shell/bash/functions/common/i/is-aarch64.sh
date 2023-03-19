@@ -3,9 +3,14 @@
 koopa_is_aarch64() {
     # """
     # Is the architecture ARM 64-bit?
-    # @note Updated 2023-01-10.
-    #
-    # a.k.a. "arm64" (arch2 return).
+    # @note Updated 2023-03-19.
     # """
-    [[ "$(koopa_arch)" = 'aarch64' ]]
+    case "$(koopa_arch)" in
+        'aarch64' | 'arm64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
