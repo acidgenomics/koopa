@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Can optionally include isl and zstd.
-# NOTE Need to deal with missing makeinfo (which is gmakeinfo)?
-
 main() {
     # """
     # Install GCC.
@@ -71,30 +68,32 @@ main() {
         'gmp'
         'mpfr'
         'mpc'
-        # > 'isl'
-        # > 'zstd'
+        'isl'
+        'zstd'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        # > ['isl']="$(koopa_app_prefix 'isl')"
-        # > ['zstd']="$(koopa_app_prefix 'zstd')"
         ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['isl']="$(koopa_app_prefix 'isl')"
         ['jobs']="$(koopa_cpu_count)"
         ['mpc']="$(koopa_app_prefix 'mpc')"
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
         ['name']='gcc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['gmp']}" \
+        "${dict['isl']}" \
         "${dict['mpc']}" \
-        "${dict['mpfr']}"
+        "${dict['mpfr']}" \
+        "${dict['zstd']}"
     # GCC 12.2.0 requires custom patches to build on Apple Silicon.
     if koopa_is_macos && \
         [[ "${dict['arch']}" == 'arm64' ]] && \
@@ -124,13 +123,16 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         '--enable-libstdcxx-time'
         '--enable-lto'
         '--with-build-config=bootstrap-debug'
-        # Required dependencies:
+        # Required dependencies.
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        # Optional dependencies:
-        # > "--with-isl=${dict['isl']}"
-        # > "--with-zstd=${dict['zstd']}"
+        # Optional dependencies.
+        "--with-isl=${dict['isl']}"
+        "--with-zstd=${dict['zstd']}"
+        # Ensure linkage is current during bootstrap (stage 2).
+        "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
+        "--with-boot-libs=${LDLIBS:?}"
     )
     if koopa_is_linux
     then
@@ -145,15 +147,6 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
             "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
-# >         # NOTE May need this to support zstd for Apple Silicon. This is taken
-# >         # from the current Homebrew recipe.
-# >         if [[ "${dict['arch']}" == 'arm64' ]] && \
-# >             [[ "${dict['version']}" == '12.2.0' ]]
-# >         then
-# >             conf_args+=(
-# >                 "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
-# >             )
-# >         fi
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"

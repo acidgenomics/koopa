@@ -9957,6 +9957,8 @@ koopa_install_all_apps() {
         'gperf'
         'mpfr'
         'mpc'
+        'isl'
+        'zstd'
         'gcc'
         'autoconf'
         'automake'
@@ -9980,7 +9982,6 @@ koopa_install_all_apps() {
         'openssl3'
         'cmake'
         'lz4'
-        'zstd'
         'curl'
         'bash'
         'git'
@@ -10448,6 +10449,7 @@ koopa_install_all_binary_apps() {
         'icu4c'
         'imagemagick'
         'ipython'
+        'isl'
         'isort'
         'jemalloc'
         'jpeg'
@@ -12094,6 +12096,12 @@ koopa_install_imagemagick() {
 koopa_install_ipython() {
     koopa_install_app \
         --name='ipython' \
+        "$@"
+}
+
+koopa_install_isl() {
+    koopa_install_app \
+        --name='isl' \
         "$@"
 }
 
@@ -24281,6 +24289,12 @@ koopa_uninstall_imagemagick() {
 koopa_uninstall_ipython() {
     koopa_uninstall_app \
         --name='ipython' \
+        "$@"
+}
+
+koopa_uninstall_isl() {
+    koopa_uninstall_app \
+        --name='isl' \
         "$@"
 }
 
