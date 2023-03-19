@@ -562,6 +562,7 @@ _koopa_complete() {
                                     'python'
                                     'r'
                                     'r-openmp'
+                                    # NOTE No uninstaller currently.
                                     'rosetta'
                                     'xcode-clt'
                                 )
