@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This currently fails to build with Xcode CLT 14
-# https://github.com/iains/gcc-12-branch/issues/6
-
 main() {
     # """
     # Install GCC.
-    # @note Updated 2022-10-01.
+    # @note Updated 2023-03-19.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -53,76 +50,107 @@ main() {
     # - https://gcc.gnu.org/install/prerequisites.html
     # - https://gcc.gnu.org/wiki/InstallingGCC
     # - https://gcc.gnu.org/wiki/FAQ
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gcc.rb
+    # - https://github.com/macports/macports-ports/blob/master/lang/
+    #     gcc12/Portfile
     # - https://github.com/fxcoudert/gfortran-for-macOS/blob/
     #     master/build_package.md
     # - https://solarianprogrammer.com/2019/10/12/compiling-gcc-macos/
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
+    # - How to ensure @rpath gets baked correctly:
+    #   https://www.linuxquestions.org/questions/linux-software-2/
+    #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app \
-        'gmp' \
-        'mpfr' \
+    deps=(
+        'gmp'
+        'mpfr'
         'mpc'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
+        'isl'
+        'zstd'
     )
+    koopa_activate_app "${deps[@]}"
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        ['isl']="$(koopa_app_prefix 'isl')"
         ['jobs']="$(koopa_cpu_count)"
         ['mpc']="$(koopa_app_prefix 'mpc')"
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
         ['name']='gcc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['gmp']}" \
+        "${dict['isl']}" \
         "${dict['mpc']}" \
-        "${dict['mpfr']}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
+        "${dict['mpfr']}" \
+        "${dict['zstd']}"
+    # GCC 12 requires custom patches by iains to build on Apple Silicon.
+    if koopa_is_macos && \
+        [[ "${dict['arch']}" == 'arm64' ]] && \
+        [[ "${dict['version']}" == '12.2.0' ]]
+    then
+        dict['file']="gcc-12-2-darwin.tar.gz"
+        dict['url']="https://github.com/iains/gcc-12-branch/archive/refs/\
+heads/${dict['file']}"
+    else
+        dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+        dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
+    fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    # Need to build outside of source code directory.
+    koopa_mv "${dict['name']}-"*'/' 'src/'
     koopa_mkdir 'build'
     koopa_cd 'build'
     conf_args=(
+        '-v'
         "--prefix=${dict['prefix']}"
         '--disable-multilib'
+        '--disable-nls'
         '--enable-checking=release'
+        '--enable-host-shared'
         '--enable-languages=c,c++,fortran,objc,obj-c++'
+        '--enable-libstdcxx-time'
+        '--enable-lto'
+        '--with-build-config=bootstrap-debug'
+        # Required dependencies.
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        '-v'
+        # Optional dependencies.
+        "--with-isl=${dict['isl']}"
+        "--with-zstd=${dict['zstd']}"
+        # Ensure linkage is defined during bootstrap (stage 2).
+        "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     )
-    if koopa_is_macos
+    if koopa_is_linux
     then
-        app['uname']="$(koopa_locate_uname --allow-system)"
-        [[ -x "${app['uname']}" ]] || return 1
-        # e.g. '21.4.0' for macOS 12.3.1.
-        dict['kernel_version']="$("${app['uname']}" -r)"
-        dict['kernel_maj_ver']="$( \
-            koopa_major_version "${dict['kernel_version']}" \
-        )"
-        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        # Enable to PIE by default to match what the host GCC uses.
+        conf_args+=('--enable-default-pie')
+    elif koopa_is_macos
+    then
+        dict['sysroot']="$(koopa_macos_sdk_prefix)"
+        koopa_assert_is_dir "${dict['sysroot']}"
         conf_args+=(
-            "--build=${dict['arch']}-apple-darwin${dict['kernel_maj_ver']}"
-            '--disable-multilib'
             '--with-native-system-header-dir=/usr/include'
-            "--with-sysroot=${dict['sdk_prefix']}"
+            "--with-sysroot=${dict['sysroot']}"
+            '--with-system-zlib'
         )
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
-    "../${dict['name']}-${dict['version']}/configure" --help
-    "../${dict['name']}-${dict['version']}/configure" "${conf_args[@]}"
+    ../src/configure --help
+    ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
