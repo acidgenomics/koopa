@@ -3,30 +3,19 @@
 _koopa_spacevim() {
     # """
     # SpaceVim alias.
-    # @note Updated 2023-01-06.
+    # @note Updated 2023-03-11.
     # """
-    local gvim prefix vim vimrc
-    vim='vim'
+    __kvar_vim='vim'
     if _koopa_is_macos
     then
-        gvim='/Applications/MacVim.app/Contents/bin/gvim'
-        if [ -x "$gvim" ]
-        then
-            vim="$gvim"
-        fi
+        __kvar_gvim='/Applications/MacVim.app/Contents/bin/gvim'
+        [ -x "$__kvar_gvim" ] && __kvar_vim="$__kvar_gvim"
+        unset -v __kvar_gvim
     fi
-    prefix="$(_koopa_spacevim_prefix)"
-    if [ ! -d "$prefix" ]
-    then
-        _koopa_print "SpaceVim is not installed at '${prefix}'."
-        return 1
-    fi
-    vimrc="${prefix}/vimrc"
-    if [ ! -f "$vimrc" ]
-    then
-        _koopa_print "No vimrc file at '${vimrc}'."
-        return 1
-    fi
+    __kvar_vimrc="$(_koopa_spacevim_prefix)/vimrc"
+    [ -f "$__kvar_vimrc" ] || return 1
     _koopa_is_alias 'vim' && unalias 'vim'
-    "$vim" -u "$vimrc" "$@"
+    "$__kvar_vim" -u "$__kvar_vimrc" "$@"
+    unset -v __kvar_vim __kvar_vimrc
+    return 0
 }

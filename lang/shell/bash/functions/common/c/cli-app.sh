@@ -138,13 +138,9 @@ koopa_cli_app() {
                 'build-all-images' | \
                 'build-all-tags' | \
                 'prune-all-images' | \
-                'prune-all-stale-tags' | \
                 'prune-old-images' | \
-                'prune-stale-tags' | \
-                'push' | \
                 'remove' | \
-                'run' | \
-                'tag')
+                'run')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
@@ -166,17 +162,13 @@ koopa_cli_app() {
             ;;
         'git')
             case "${2:-}" in
-                'checkout-recursive' | \
                 'pull' | \
-                'pull-recursive' | \
-                'push-recursive' | \
                 'push-submodules' | \
                 'rename-master-to-main' | \
                 'reset' | \
                 'reset-fork-to-upstream' | \
                 'rm-submodule' | \
-                'rm-untracked' | \
-                'status-recursive')
+                'rm-untracked')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;

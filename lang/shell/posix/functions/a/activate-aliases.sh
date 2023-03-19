@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-03-11.
     # """
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
@@ -17,7 +17,6 @@ _koopa_activate_aliases() {
     alias black='black --line-length=79'
     alias br-size='br --sort-by-size'
     alias br='_koopa_alias_broot'
-    alias bucket='_koopa_alias_bucket'
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'

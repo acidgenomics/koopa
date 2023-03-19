@@ -3,15 +3,15 @@
 _koopa_add_to_path_end() {
     # """
     # Force add to 'PATH' end.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-03-10.
     # """
-    local dir
     PATH="${PATH:-}"
-    for dir in "$@"
+    for __kvar_dir in "$@"
     do
-        [ -d "$dir" ] || continue
-        PATH="$(_koopa_add_to_path_string_end "$PATH" "$dir")"
+        [ -d "$__kvar_dir" ] || continue
+        PATH="$(_koopa_add_to_path_string_end "$PATH" "$__kvar_dir")"
     done
     export PATH
+    unset -v __kvar_dir
     return 0
 }

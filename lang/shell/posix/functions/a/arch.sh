@@ -3,13 +3,12 @@
 _koopa_arch() {
     # """
     # Platform architecture.
-    # @note Updated 2022-01-21.
+    # @note Updated 2023-03-11.
     #
     # e.g. Intel: x86_64; ARM: aarch64.
     # """
-    local x
-    x="$(uname -m)"
-    [ -n "$x" ] || return 1
-    _koopa_print "$x"
+    __kvar_string="$(uname -m)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
     return 0
 }

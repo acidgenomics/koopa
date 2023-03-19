@@ -6,9 +6,8 @@ koopa_aws_batch_list_jobs() {
     # @note Updated 2021-11-05.
     # """
     local app dict job_queue_array status status_array
-    local -A app=(
-        ['aws']="$(koopa_locate_aws)"
-    )
+    local -A app
+    app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
     local -A dict=(
         ['account_id']="${AWS_BATCH_ACCOUNT_ID:-}"

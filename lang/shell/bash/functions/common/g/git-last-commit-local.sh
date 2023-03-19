@@ -3,7 +3,7 @@
 koopa_git_last_commit_local() {
     # """
     # Last git commit of local repository.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-03-12.
     #
     # Alternate approach:
     # Can use '%h' for abbreviated commit identifier.
@@ -13,31 +13,28 @@ koopa_git_last_commit_local() {
     # > koopa_git_last_commit_local "${HOME}/git/monorepo"
     # # 9b7217c27858dd7ebffdf5a8ba66a6ea56ac5e1d
     # """
-    local app dict repos
-    declare -A app
+    local app dict
+    koopa_assert_has_args "$#"
+    declare -A app dict
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    declare -A dict=(
-        ['ref']='HEAD'
-    )
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    dict['ref']='HEAD'
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
-            local x
+            local string
             koopa_cd "$repo"
-            koopa_is_git_repo || return 1
-            x="$( \
+            string="$( \
                 "${app['git']}" rev-parse "${dict['ref']}" \
-                    2>/dev/null || true \
+                2>/dev/null \
+                || true \
             )"
-            [[ -n "$x" ]] || return 1
-            koopa_print "$x"
+            [[ -n "$string" ]] || return 1
+            koopa_print "$string"
         done
     )
     return 0

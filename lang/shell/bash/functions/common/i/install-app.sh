@@ -16,7 +16,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-02-27.
+    # @note Updated 2023-03-14.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -59,6 +59,7 @@ koopa_install_app() {
         ['name']=''
         ['platform']='common'
         ['prefix']=''
+        ['private']=0
         ['version']=''
         ['version_key']=''
     )
@@ -153,6 +154,10 @@ koopa_install_app() {
                 bool['subshell']=0
                 shift 1
                 ;;
+            '--private')
+                dict['private']=1
+                shift 1
+                ;;
             '--quiet')
                 bool['quiet']=1
                 shift 1
@@ -226,6 +231,10 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
+    if [[ "${dict['private']}" -eq 1 ]]
+    then
+        koopa_assert_has_private_access
+    fi
     if [[ -n "${dict['prefix']}" ]] && [[ "${bool['prefix_check']}" -eq 1 ]]
     then
         if [[ -d "${dict['prefix']}" ]]
@@ -361,20 +370,23 @@ bash/include/header.sh"
                     fi
                     ;;
                 '1')
+                    koopa_assert_has_private_access
                     [[ "${dict['mode']}" == 'shared' ]] || return 1
                     [[ -n "${dict['prefix']}" ]] || return 1
                     koopa_install_app_from_binary_package "${dict['prefix']}"
                     ;;
             esac
-            # FIXME This step currently has permissions issue when installing
-            # as another user for shared koopa install. Need to resolve this.
-            [[ "${bool['auto_prefix']}" -eq 1 ]] && \
+            if [[ "${bool['auto_prefix']}" -eq 1 ]]
+            then
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
+            fi
             koopa_sys_set_permissions --recursive "${dict['prefix']}"
-            [[ "${bool['link_in_opt']}" -eq 1 ]] && \
+            if [[ "${bool['link_in_opt']}" -eq 1 ]]
+            then
                 koopa_link_in_opt \
                     --name="${dict['name']}" \
                     --source="${dict['prefix']}"
+            fi
             if [[ "${bool['link_in_bin']}" -eq 1 ]]
             then
                 # FIXME Rework this as a function.

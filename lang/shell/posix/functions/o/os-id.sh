@@ -3,13 +3,13 @@
 _koopa_os_id() {
     # """
     # Operating system ID.
-    # @note Updated 2023-02-28.
+    # @note Updated 2023-03-11.
     #
     # Just return the OS platform ID (e.g. debian).
     # """
-    local string
-    string="$(_koopa_os_string | cut -d '-' -f '1')"
-    [ -n "$string" ] || return 1
-    _koopa_print "$string"
+    __kvar_string="$(_koopa_os_string | cut -d '-' -f '1')"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }

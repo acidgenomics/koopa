@@ -26,11 +26,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-02-08",
+    "date": "2023-03-15",
     "dependencies": ["python3.11"],
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.5.1"
+    "version": "2.5.2"
   },
   "apache-spark": {
     "aliases": {
@@ -93,9 +93,9 @@
     },
     "bin": ["asdf"],
     "conservative": true,
-    "date": "2023-02-23",
+    "date": "2023-03-16",
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.11.2"
+    "version": "0.11.3"
   },
   "aspell": {
     "aliases": {
@@ -201,12 +201,12 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2023-03-07",
+    "date": "2023-03-15",
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.0"
+    "version": "2.11.2"
   },
   "azure-cli": {
     "aliases": {
@@ -454,12 +454,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-02-22",
+    "date": "2022-03-18",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.20.2"
+    "version": "1.21.0"
   },
   "brotli": {
     "aliases": {
@@ -608,9 +608,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-13",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.31.1"
+    "version": "2.32.0"
   },
   "cli11": {
     "aliases": {
@@ -689,6 +689,7 @@
       "salmon",
       "sambamba",
       "samtools",
+      "seqkit",
       "snakemake",
       "star",
       "subread",
@@ -989,9 +990,10 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2021-03-17",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
@@ -1055,9 +1057,9 @@
     "version": "8f6b045dfdb6d00e5a324c3f9044dce773791502"
   },
   "dotfiles": {
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "124e7f7f25bf4b2ef720aef9482ef0b4a162e58e"
+    "version": "93ce1691589b494e9d69a26360a825fd63684142"
   },
   "du-dust": {
     "aliases": {
@@ -1065,12 +1067,12 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["rust"],
-    "date": "2023-01-30",
+    "date": "2023-03-14",
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "editorconfig": {
     "aliases": {
@@ -1375,14 +1377,14 @@
       "conda": "gatk4"
     },
     "bin": ["gatk"],
-    "date": "2022-10-17",
+    "date": "2023-03-17",
     "dependencies": ["conda"],
     "large": true,
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
     ],
-    "version": "4.3.0.0"
+    "version": "4.4.0.0"
   },
   "gawk": {
     "aliases": {
@@ -1413,12 +1415,11 @@
     },
     "bin": ["gdal-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-14",
     "man1": ["gdal-config.1"],
-    "notes": ["FIXME Having build issues with PROJ 9.2.0."],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.6.2"
+    "version": "3.6.3"
   },
   "gdbm": {
     "aliases": {
@@ -1437,9 +1438,9 @@
     },
     "bin": ["geos-config"],
     "conservative": true,
-    "date": "2022-11-14",
+    "date": "2023-03-17",
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.11.1"
+    "version": "3.11.2"
   },
   "gettext": {
     "aliases": {
@@ -1480,11 +1481,11 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2023-01-05",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.27.2"
+    "version": "0.27.3"
   },
   "gh": {
     "aliases": {
@@ -1516,11 +1517,10 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "dependencies": ["zlib", "gettext", "openssl3", "curl"],
     "url": ["https://git-scm.com/"],
-    "version": "2.39.2"
+    "version": "2.40.0"
   },
   "git-lfs": {
     "aliases": {
@@ -1694,9 +1694,106 @@
       "debian": "groff-base",
       "homebrew": true
     },
-    "bin": ["groff"],
-    "date": "2022-08-30",
-    "man1": ["groff.1"],
+    "bin": [
+      "addftinfo",
+      "afmtodit",
+      "chem",
+      "eqn",
+      "eqn2graph",
+      "gdiffmk",
+      "glilypond",
+      "gperl",
+      "gpinyin",
+      "grap2graph",
+      "grn",
+      "grodvi",
+      "groff",
+      "groffer",
+      "grog",
+      "grolbp",
+      "grolj4",
+      "gropdf",
+      "grops",
+      "grotty",
+      "gxditview",
+      "hpftodit",
+      "indxbib",
+      "lkbib",
+      "lookbib",
+      "mmroff",
+      "neqn",
+      "nroff",
+      "pdfmom",
+      "pdfroff",
+      "pfbtops",
+      "pic",
+      "pic2graph",
+      "post-grohtml",
+      "pre-grohtml",
+      "preconv",
+      "refer",
+      "roff2dvi",
+      "roff2html",
+      "roff2pdf",
+      "roff2ps",
+      "roff2text",
+      "roff2x",
+      "soelim",
+      "tbl",
+      "tfmtodit",
+      "troff",
+      "xtotroff"
+    ],
+    "date": "2023-03-15",
+    "man1": [
+      "addftinfo.1",
+      "afmtodit.1",
+      "chem.1",
+      "eqn.1",
+      "eqn2graph.1",
+      "gdiffmk.1",
+      "glilypond.1",
+      "gperl.1",
+      "gpinyin.1",
+      "grap2graph.1",
+      "grn.1",
+      "grodvi.1",
+      "groff.1",
+      "groffer.1",
+      "grog.1",
+      "grohtml.1",
+      "grolbp.1",
+      "grolj4.1",
+      "gropdf.1",
+      "grops.1",
+      "grotty.1",
+      "gxditview.1",
+      "hpftodit.1",
+      "indxbib.1",
+      "lkbib.1",
+      "lookbib.1",
+      "mmroff.1",
+      "neqn.1",
+      "nroff.1",
+      "pdfmom.1",
+      "pdfroff.1",
+      "pfbtops.1",
+      "pic.1",
+      "pic2graph.1",
+      "preconv.1",
+      "refer.1",
+      "roff2dvi.1",
+      "roff2html.1",
+      "roff2pdf.1",
+      "roff2ps.1",
+      "roff2text.1",
+      "roff2x.1",
+      "soelim.1",
+      "tbl.1",
+      "tfmtodit.1",
+      "troff.1",
+      "xtotroff.1"
+    ],
     "url": ["https://ftp.gnu.org/gnu/groff/"],
     "version": "1.22.4"
   },
@@ -1947,6 +2044,7 @@
     "bin": ["hugo"],
     "build_dependencies": ["go"],
     "date": "2023-03-05",
+    "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
     "version": "0.111.2"
   },
@@ -1956,9 +2054,9 @@
     },
     "bin": ["hyperfine"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-07",
+    "date": "2023-03-15",
     "url": ["https://github.com/sharkdp/hyperfine/"],
-    "version": "1.15.0"
+    "version": "1.16.0"
   },
   "icu4c": {
     "aliases": {
@@ -2019,7 +2117,7 @@
       "magick-script"
     ],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -2030,7 +2128,7 @@
     ],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.0-62"
+    "version": "7.1.1-3"
   },
   "ipython": {
     "aliases": {
@@ -2524,7 +2622,7 @@
     },
     "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-18",
     "dependencies": [
       "zlib",
       "libedit",
@@ -2536,9 +2634,8 @@
       "binutils"
     ],
     "large": true,
-    "notes": ["16.0 is scheduled for end of March release."],
     "url": ["https://llvm.org/"],
-    "version": "15.0.7"
+    "version": "16.0.0"
   },
   "lmod": {
     "conservative": true,
@@ -2782,6 +2879,7 @@
     },
     "conservative": true,
     "date": "2023-03-07",
+    "reverse_dependencies": ["mpc", "gcc", "gawk"],
     "url": ["https://www.mpfr.org/"],
     "version": "4.2.0"
   },
@@ -2981,7 +3079,7 @@
     },
     "bin": ["node", "npm", "npx"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
@@ -2993,7 +3091,7 @@
       "yarn"
     ],
     "url": ["https://nodejs.org/"],
-    "version": "18.14.2"
+    "version": "18.15.0"
   },
   "npth": {
     "aliases": {
@@ -3011,10 +3109,10 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-22",
+    "date": "2023-03-17",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.76.0"
+    "version": "0.77.1"
   },
   "oniguruma": {
     "aliases": {
@@ -3029,7 +3127,7 @@
     "arch": "x86_64",
     "bin": ["guppy_basecaller"],
     "check": false,
-    "date": "2023-01-10",
+    "date": "2023-03-14",
     "large": true,
     "platform": "linux",
     "private": true,
@@ -3037,7 +3135,7 @@
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
     ],
-    "version": "6.4.2"
+    "version": "6.4.6"
   },
   "openbb": {
     "bin": ["openbb"],
@@ -3079,9 +3177,9 @@
       "homebrew": true
     },
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-17",
     "url": ["https://www.openssh.com/portable.html"],
-    "version": "9.2p1"
+    "version": "9.3p1"
   },
   "openssl1": {
     "aliases": {
@@ -3103,7 +3201,7 @@
     },
     "bin": ["openssl"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
     "reverse_dependencies": [
       "cmake",
@@ -3134,7 +3232,7 @@
       "mamba"
     ],
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.0.8"
+    "version": "3.1.0"
   },
   "oracle-instant-client": {
     "conservative": true,
@@ -3280,6 +3378,7 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": ["python3.11"],
+    "outdated": true,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.1.0"
   },
@@ -3350,12 +3449,10 @@
     },
     "bin": ["proj", "projinfo"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-14",
     "man1": ["proj.1", "projinfo.1"],
-    "outdated": true,
-    "notes": ["FIXME 9.2.0 has build issues with GDAL 3.6.2?"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.1.1"
+    "version": "9.2.0"
   },
   "pth": {
     "aliases": {
@@ -3380,11 +3477,11 @@
   "pybind11": {
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2023-01-03",
+    "date": "2023-03-17",
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "2.10.3"
+    "version": "2.10.4"
   },
   "pycodestyle": {
     "aliases": {
@@ -3405,10 +3502,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-03-01",
+    "date": "2023-03-10",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.14"
+    "version": "2.3.15"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -3435,10 +3532,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-03-06",
+    "date": "2023-03-13",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.16.4"
+    "version": "2.17.0"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -3568,7 +3665,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-11-01",
+    "date": "2023-03-15",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3638,11 +3735,11 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.2.2"
+    "version": "4.2.3"
   },
   "r-devel": {
     "check": false,
-    "date": "2023-02-13",
+    "date": "2023-03-14",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3715,16 +3812,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "83818"
-  },
-  "r-gfortran": {
-    "check": false,
-    "conservative": true,
-    "date": "2022-09-26",
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/tools/"],
-    "version": "8.2"
+    "version": "83977"
   },
   "r-openmp": {
     "check": false,
@@ -3848,10 +3936,10 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2023-01-03",
+    "date": "2023-03-17",
     "platform": "linux",
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2022.12.0+353"
+    "version": "2023.03.0+386"
   },
   "rsync": {
     "aliases": {
@@ -3861,7 +3949,7 @@
     "bin": ["rsync"],
     "date": "2022-11-08",
     "man1": ["rsync.1"],
-    "url": ["https://download.samba.org/pub/rsync/src/"],
+    "url": ["https://download.samba.org/pub/rsync/src/?C=M;O=D"],
     "version": "3.2.7"
   },
   "ruby": {
@@ -3883,10 +3971,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-03-07",
+    "date": "2023-03-17",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.254"
+    "version": "0.0.256"
   },
   "rust": {
     "aliases": {
@@ -3914,6 +4002,7 @@
     "date": "2023-02-27",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
@@ -3986,6 +4075,17 @@
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.9"
   },
+  "seqkit": {
+    "bin": ["seqkit"],
+    "date": "2023-03-17",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/shenwei356/seqkit/",
+      "https://bioconda.github.io/recipes/seqkit/README.html"
+    ],
+    "version": "2.4.0"
+  },
   "serf": {
     "aliases": {
       "debian": "libserf-dev",
@@ -4034,14 +4134,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-03-02",
+    "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.24.0"
+    "version": "7.24.2"
   },
   "sox": {
     "aliases": {
@@ -4087,6 +4187,7 @@
     "date": "2023-03-07",
     "dependencies": ["zlib", "readline"],
     "man1": ["sqlite3.1"],
+    "outdated": true,
     "reverse_dependencies": [
       "apr",
       "gnupg",
@@ -4273,11 +4374,11 @@
   "tl-expected": {
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2022-11-04",
+    "date": "2023-03-15",
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/TartanLlama/expected/"],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "tmux": {
     "aliases": {
@@ -4351,6 +4452,17 @@
       "https://downloads.unidata.ucar.edu/udunits/"
     ],
     "version": "2.2.28"
+  },
+  "umis": {
+    "bin": ["umis"],
+    "date": "2023-03-14",
+    "dependencies": ["conda"],
+    "large": true,
+    "url": [
+      "https://github.com/vals/umis/",
+      "https://bioconda.github.io/recipes/umis/README.html"
+    ],
+    "version": "1.0.9"
   },
   "unibilium": {
     "aliases": {
@@ -4426,8 +4538,8 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2023-01-17",
-    "dependencies": ["python3.11"],
+    "date": "2023-03-13",
+    "dependencies": ["conda"],
     "man1": ["vd.1", "visidata.1"],
     "url": ["https://github.com/saulpw/visidata/"],
     "version": "2.11"
@@ -4679,9 +4791,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-03-18",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.31.2"
+    "version": "4.32.1"
   },
   "yt-dlp": {
     "aliases": {
@@ -4702,9 +4814,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-07",
+    "date": "2023-03-10",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.35.1"
+    "version": "0.35.2"
   },
   "zip": {
     "aliases": {

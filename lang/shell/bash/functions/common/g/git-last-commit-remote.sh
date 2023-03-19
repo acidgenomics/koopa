@@ -3,7 +3,7 @@
 koopa_git_last_commit_remote() {
     # """
     # Last git commit of remote repository.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-03-12.
     #
     # @examples
     # > url='https://github.com/acidgenomics/koopa.git'
@@ -23,20 +23,19 @@ koopa_git_last_commit_remote() {
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['head']}" ]] || return 1
-    declare -A dict=(
-        ['ref']='HEAD'
-    )
+    declare -A dict
+    dict['ref']='HEAD'
     for url in "$@"
     do
-        local x
+        local string
         # shellcheck disable=SC2016
-        x="$( \
+        string="$( \
             "${app['git']}" ls-remote --quiet "$url" "${dict['ref']}" \
             | "${app['head']}" -n 1 \
             | "${app['awk']}" '{ print $1 }' \
         )"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
+        [[ -n "$string" ]] || return 1
+        koopa_print "$string"
     done
     return 0
 }

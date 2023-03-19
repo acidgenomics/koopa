@@ -6,7 +6,7 @@ koopa_reset_permissions() {
     # @note Updated 2022-02-27.
     #
     # @examples
-    # > koopa_reset_permissions "$PWD"
+    # > koopa_reset_permissions "${PWD:?}"
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1

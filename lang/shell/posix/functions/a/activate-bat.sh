@@ -14,14 +14,17 @@ _koopa_activate_bat() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_color_mode="$(_koopa_color_mode)"
-    __kvar_conf_file="${__kvar_prefix}/config-${__kvar_color_mode}"
+    __kvar_conf_file="${__kvar_prefix}/config-$(_koopa_color_mode)"
     if [ ! -f "$__kvar_conf_file" ]
     then
-        unset -v __kvar_color_mode __kvar_conf_file __kvar_prefix
+        unset -v \
+            __kvar_conf_file \
+            __kvar_prefix
         return 0
     fi
     export BAT_CONFIG_PATH="$__kvar_conf_file"
-    unset -v __kvar_color_mode __kvar_conf_file __kvar_prefix
+    unset -v \
+        __kvar_conf_file \
+        __kvar_prefix
     return 0
 }

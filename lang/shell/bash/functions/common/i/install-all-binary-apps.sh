@@ -381,12 +381,14 @@ koopa_install_all_binary_apps() {
                 'sambamba'
                 'samtools'
                 'scalene'
+                'seqkit'
                 'snakefmt'
                 'snakemake'
                 'sra-tools'
                 'star'
                 'star-fusion'
                 'subread'
+                'umis'
             )
         fi
         if koopa_is_linux
