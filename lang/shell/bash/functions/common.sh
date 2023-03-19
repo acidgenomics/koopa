@@ -13691,7 +13691,14 @@ koopa_ip_address() {
 }
 
 koopa_is_aarch64() {
-    [[ "$(koopa_arch)" = 'aarch64' ]]
+    case "$(koopa_arch)" in
+        'aarch64' | 'arm64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 koopa_is_admin() {
