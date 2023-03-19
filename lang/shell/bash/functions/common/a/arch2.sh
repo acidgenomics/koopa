@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME May need to rework this on macOS for Apple Silicon.
+
 koopa_arch2() {
     # """
     # Alternative platform architecture.
