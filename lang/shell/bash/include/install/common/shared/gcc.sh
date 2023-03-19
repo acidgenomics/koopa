@@ -2,11 +2,12 @@
 
 # NOTE Consider applying Apple Silicon-specific patches recommended by Homebrew.
 # FIXME We're hitting a compiler error at libgomp build step on M1.
+# FIXME Need to include isl.
 
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-03-18.
+    # @note Updated 2023-03-19.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -65,9 +66,8 @@ main() {
         'gmp' \
         'mpfr' \
         'mpc'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
@@ -79,49 +79,47 @@ main() {
         ['name']='gcc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
+        ['zlib']="$(koopa_app_prefix 'zlib')"
+        ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['gmp']}" \
         "${dict['mpc']}" \
-        "${dict['mpfr']}"
-    # FIXME Need to support specific versions.
-    if [[ "${dict['arch']}" == 'arm64' ]] && koopa_is_macos
-    then
-        dict['file']='gcc-12.2-darwin-r0.tar.gz'
-        dict['url']="https://github.com/iains/gcc-12-branch/archive/\
-refs/tags/${dict['file']}"
-    else
-        dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-        dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
+        "${dict['mpfr']}" \
+        "${dict['zlib']}" \
+        "${dict['zstd']}"
+    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+    dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
-    fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     # Need to build outside of source code directory.
     koopa_mkdir 'build'
     koopa_cd 'build'
     conf_args=(
+        '-v'
         "--prefix=${dict['prefix']}"
-        '--disable-multilib'
+        '--disable-nls'
         '--enable-checking=release'
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         "--with-gmp=${dict['gmp']}"
+        # FIXME > "--with-isl=${dict['isl']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        '-v'
+        "--with-zlib=${dict['zlib']}"
+        "--with-zstd=${dict['zstd']}"
     )
+    if koopa_is_linux
+    then
+        conf_args+=(
+            '--disable-multilib'
+            '--enable-default-pie'
+        )
+    fi
     if koopa_is_macos
     then
         app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
-        case "${dict['arch']}" in
-            'arm64')
-                dict['arch2']='x86_64'
-                ;;
-            *)
-                dict['arch2']="${dict['arch']}"
-                ;;
-        esac
         # e.g. '21.4.0' for macOS 12.3.1.
         dict['kernel_version']="$("${app['uname']}" -r)"
         dict['kernel_maj_ver']="$( \
@@ -129,18 +127,25 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         )"
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         conf_args+=(
-            "--build=${dict['arch2']}-apple-darwin${dict['kernel_maj_ver']}"
-            '--disable-multilib'
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sdk_prefix']}"
         )
+        if [[ "${dict['arch']}" == 'arm64' ]] && \
+            [[ "${dict['version']}" == '12.2.0' ]]
+        then
+            conf_args+=(
+                "--build=x86_64-apple-darwin${dict['kernel_maj_ver']}"
+            )
+        else
+            conf_args+=(
+                "--build=${dict['arch']}-apple-darwin${dict['kernel_maj_ver']}"
+            )
+        fi
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
-    # shellcheck disable=SC2211
-    "../${dict['name']}-"*"/configure" --help
-    # shellcheck disable=SC2211
-    "../${dict['name']}-"*"/configure" "${conf_args[@]}"
+    "../${dict['name']}-${dict['version']}/configure" --help
+    "../${dict['name']}-${dict['version']}/configure" "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
