@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently failing on Apple Silicon.
-# FIXME Work on customizing via Makefile.rule.
-
 main() {
     # """
     # Install OpenBLAS.
