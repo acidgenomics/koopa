@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Tell the user what we're doing here more clearly.
+# FIXME How to set disable sleep when screen is off while plugged in:
+# Displays > Advanced > Prevent automatic sleeping on power adapter when the
+# display is off
 
 main() {
     # """
