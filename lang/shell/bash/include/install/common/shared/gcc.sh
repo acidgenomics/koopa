@@ -132,6 +132,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         "--with-zstd=${dict['zstd']}"
         # Ensure linkage is current during bootstrap (stage 2).
         "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
+        # NOTE Do we need to include '-lstdc++' here?
         "--with-boot-libs=${LDLIBS:?}"
     )
     if koopa_is_linux
