@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Apply Apple Silicon-specific patch recommended by Homebrew and MacPorts.
-# FIXME Need to include isl.
-# Need to deal with missing makeinfo (which is gmakeinfo)?
+# NOTE Can optionally include isl and zstd.
+# NOTE Need to deal with missing makeinfo (which is gmakeinfo)?
 
 main() {
     # """
@@ -70,10 +69,10 @@ main() {
     koopa_assert_has_no_args "$#"
     deps=(
         'gmp'
-        # FIXME > 'isl'
         'mpfr'
         'mpc'
-        'zstd'
+        # FIXME > 'isl'
+        # FIXME > 'zstd'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app
@@ -83,20 +82,24 @@ main() {
         ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
+        # FIXME > ['isl']="$(koopa_app_prefix 'isl')"
         ['jobs']="$(koopa_cpu_count)"
         ['mpc']="$(koopa_app_prefix 'mpc')"
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
         ['name']='gcc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
+        # FIXME > ['zstd']="$(koopa_app_prefix 'zstd')"
     )
+    # FIXME Consider adding isl, zstd.
     koopa_assert_is_dir \
         "${dict['gmp']}" \
         "${dict['mpc']}" \
-        "${dict['mpfr']}" \
-        "${dict['zstd']}"
-    if koopa_is_macos && [[ "${dict['version']}" == '12.2.0' ]]
+        "${dict['mpfr']}"
+    # GCC 12.2.0 requires custom patches to build on Apple Silicon.
+    if koopa_is_macos && \
+        [[ "${dict['arch']}" == 'arm64' ]] && \
+        [[ "${dict['version']}" == '12.2.0' ]]
     then
         dict['file']="gcc-12-2-darwin.tar.gz"
         dict['url']="https://github.com/iains/gcc-12-branch/archive/refs/\
@@ -111,25 +114,23 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     koopa_mv "${dict['name']}-"*'/' 'src/'
     koopa_mkdir 'build'
     koopa_cd 'build'
-    # FIXME Need to disable LTO for macOS ARM?
     conf_args=(
+        # > '--disable-nls'
+        # > '--enable-bootstrap'
+        # > '--enable-checking=release'
         '-v'
         "--prefix=${dict['prefix']}"
-        '--disable-nls'
-        '--enable-bootstrap'
-        '--enable-checking=release'
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         "--with-gmp=${dict['gmp']}"
-        # FIXME > "--with-isl=${dict['isl']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        "--with-zstd=${dict['zstd']}"
-        # FIXME These may be required to bake @rpath correctly:
-        # FIXME Consider only setting these for macOS ARM.
-        #"--with-boot-ldflags=${LDFLAGS:?}"
-        #"--with-boot-libs=${CPPFLAGS:?}"
-        #"--with-stage1-ldflags=${LDFLAGS:?}"
-        #"--with-stage1-libs=${CPPFLAGS:?}"
+        # FIXME > "--with-isl=${dict['isl']}"
+        # FIXME > "--with-zstd=${dict['zstd']}"
+        # FIXME These may be required to bake @rpath correctly on macOS ARM:
+        # FIXME > "--with-boot-ldflags=${LDFLAGS:?}"
+        # FIXME > "--with-boot-libs=${CPPFLAGS:?}"
+        # FIXME > "--with-stage1-ldflags=${LDFLAGS:?}"
+        # FIXME > "--with-stage1-libs=${CPPFLAGS:?}"
     )
     if koopa_is_linux
     then
@@ -137,29 +138,14 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
             '--disable-multilib'
             '--enable-default-pie'
         )
-    fi
-    if koopa_is_macos
+    elif koopa_is_macos
     then
-        app['uname']="$(koopa_locate_uname --allow-system)"
-        [[ -x "${app['uname']}" ]] || return 1
-        dict['kernel_version']="$("${app['uname']}" -r)"
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         conf_args+=(
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sdk_prefix']}"
             '--with-system-zlib'
         )
-        # FIXME See if we can run the patched version without this:
-        #if [[ "${dict['arch']}" == 'arm64' ]] && \
-        #    [[ "${dict['version']}" == '12.2.0' ]]
-        #then
-        #    dict['build_arch']='x86_64'
-        #else
-        #    dict['build_arch']="${dict['arch']}"
-        #fi
-        #conf_args+=(
-        #    "--build=${dict['build_arch'}-apple-darwin${dict['kernel_version']}"
-        #)
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
