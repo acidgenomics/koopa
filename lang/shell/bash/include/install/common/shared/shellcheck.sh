@@ -23,7 +23,6 @@ main() {
         ['ghc_version']='9.4.3'
         ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -54,6 +53,6 @@ END
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
         --verbose \
-        "${dict['name']}-${dict['version']}"
+        "ShellCheck-${dict['version']}"
     return 0
 }
