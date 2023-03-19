@@ -3,27 +3,24 @@
 koopa_git_reset_fork_to_upstream() {
     # """
     # Reset Git fork to upstream.
-    # @note Updated 2022-09-24.
+    # @note Updated 2023-03-12.
     # """
-    local app repos
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
+    local app
+    koopa_assert_has_args "$#"
+    declare -A app
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             local dict
             koopa_cd "$repo"
-            koopa_assert_is_git_repo
             declare -A dict=(
-                ['branch']="$(koopa_git_default_branch)"
+                ['branch']="$(koopa_git_default_branch "${PWD:?}")"
                 ['origin']='origin'
                 ['upstream']='upstream'
             )

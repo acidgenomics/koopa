@@ -3,7 +3,7 @@
 _koopa_is_alias() {
     # """
     # Is the specified argument an alias?
-    # @note Updated 2022-01-10.
+    # @note Updated 2023-03-11.
     #
     # Intended primarily to determine if we need to unalias.
     # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
@@ -11,16 +11,28 @@ _koopa_is_alias() {
     # @example
     # > _koopa_is_alias 'R'
     # """
-    local cmd str
-    for cmd in "$@"
+    for __kvar_alias in "$@"
     do
-        _koopa_is_installed "$cmd" || return 1
-        str="$(type "$cmd")"
+        if ! _koopa_is_installed "$__kvar_alias"
+        then
+            unset -v __kvar_alias
+            return 1
+        fi
+        __kvar_string="$(type "$__kvar_alias")"
+        unset -v __kvar_alias
         # Bash convention.
-        _koopa_str_detect_posix "$str" ' is aliased to ' && continue
+        _koopa_str_detect_posix \
+            "$__kvar_string" \
+            ' is aliased to ' \
+            && continue
         # Zsh convention.
-        _koopa_str_detect_posix "$str" ' is an alias for ' && continue
+        _koopa_str_detect_posix \
+            "$__kvar_string" \
+            ' is an alias for ' \
+            && continue
+        unset -v __kvar_string
         return 1
     done
+    unset -v __kvar_string
     return 0
 }

@@ -485,28 +485,6 @@ koopa_linux_install_bcbio_nextgen() {
         "$@"
 }
 
-koopa_linux_install_bcl2fastq() {
-    koopa_install_app \
-        --name='bcl2fastq' \
-        --platform='linux' \
-        "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://support.illumina.com/sequencing/sequencing_software/\
-bcl2fastq-conversion-software/downloads.html'."
-    return 0
-}
-
-koopa_linux_install_cellranger() {
-    koopa_install_app \
-        --name='cellranger' \
-        --platform='linux' \
-        "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://support.10xgenomics.com/single-cell-gene-expression/\
-software/downloads/latest'."
-    return 0
-}
-
 koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name='cloudbiolinux' \
@@ -540,6 +518,30 @@ koopa_linux_install_pinentry() {
         --name='pinentry' \
         --platform='linux' \
         "$@"
+}
+
+koopa_linux_install_private_bcl2fastq() {
+    koopa_install_app \
+        --name='bcl2fastq' \
+        --platform='linux' \
+        --private \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://support.illumina.com/sequencing/sequencing_software/\
+bcl2fastq-conversion-software/downloads.html'."
+    return 0
+}
+
+koopa_linux_install_private_cellranger() {
+    koopa_install_app \
+        --name='cellranger' \
+        --platform='linux' \
+        --private \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://support.10xgenomics.com/single-cell-gene-expression/\
+software/downloads/latest'."
+    return 0
 }
 
 koopa_linux_install_system_pihole() {
@@ -825,16 +827,9 @@ koopa_linux_uninstall_bcbio_nextgen() {
         "$@"
 }
 
-koopa_linux_uninstall_bcl2fastq() {
+koopa_linux_uninstall_private_bcl2fastq() {
     koopa_uninstall_app \
         --name='bcl2fastq' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_uninstall_cellranger() {
-    koopa_uninstall_app \
-        --name='cellranger' \
         --platform='linux' \
         "$@"
 }
@@ -881,6 +876,13 @@ koopa_linux_uninstall_pinentry() {
         "$@"
 }
 
+koopa_linux_uninstall_private_cellranger() {
+    koopa_uninstall_app \
+        --name='cellranger' \
+        --platform='linux' \
+        "$@"
+}
+
 koopa_linux_update_etc_profile_d() {
     local dict
     koopa_assert_has_no_args "$#"
@@ -898,12 +900,12 @@ koopa_linux_update_etc_profile_d() {
     koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 
-__koopa_activate_shared_profile() {
+_koopa_activate_shared_profile() {
     . "${dict['koopa_prefix']}/activate"
     return 0
 }
 
-__koopa_activate_shared_profile
+_koopa_activate_shared_profile
 END
     koopa_sudo_write_string \
         --file="${dict['file']}" \

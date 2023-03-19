@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Think we can set NONINTERACTIVE=1 here now similar to installer.
-# FIXME Remove the usage of 'yes' here.
-
-# Here's how to remove all brew formula:
+# NOTE Here's how to remove all brew formula:
 # https://apple.stackexchange.com/questions/198623/
 # > while [[ "$(brew list | wc -l)" -ne 0 ]]
 # > do
@@ -16,40 +13,25 @@
 main() {
     # """
     # Uninstall Homebrew.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-03-13.
     #
-    # macOS Catalina now uses Zsh instead of Bash by default.
+    # Important! Homebrew uninstaller will currently attempt to delete the
+    # parent directory containing 'brew', so make sure we remove our symlink
+    # in koopa first.
     #
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
-    local app dict
+    local dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['yes']="$(koopa_locate_yes)"
-    )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['yes']}" ]] || return 1
-    declare -A dict=(
-        ['user']="$(koopa_user)"
-    )
+    declare -A dict
+    dict['user']="$(koopa_user)"
     dict['file']='uninstall.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"
-    # Important! Homebrew uninstaller will currently attempt to delete the
-    # parent directory containing 'brew', so make sure we remove our symlink
-    # in koopa first.
-    koopa_unlink_in_bin 'brew'
-    # > if koopa_is_macos
-    # > then
-    # >     koopa_alert 'Changing default shell to system Zsh.'
-    # >     chsh -s '/bin/zsh' "${dict['user']}"
-    # > fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"
-    "${app['sudo']}" -v
-    "${app['yes']}" | "./${dict['file']}" || true
+    NONINTERACTIVE=1 "./${dict['file']}" || true
     if koopa_is_linux
     then
         if [[ -d '/home/linuxbrew' ]]

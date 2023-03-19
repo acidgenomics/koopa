@@ -1,19 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider reverting to an older PROJ version.
-
-# NOTE Regarding Python bindings:
-# Could NOT find Python (missing: Python_NumPy_INCLUDE_DIRS NumPy)
-
-# NOTE May be able to enable these:
-# * ICONV component has been detected, but is disabled with GDAL_USE_ICONV=OFF
-# * EXPAT component has been detected, but is disabled with GDAL_USE_EXPAT=OFF
-# * OPENCL component has been detected, but is disabled with GDAL_USE_OPENCL=OFF
-
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-03-07.
+    # @note Updated 2023-03-14.
     #
     # Use 'configure --help' for build options.
     #
@@ -50,11 +40,13 @@ main() {
         'libtiff' \
         'proj' \
         'xz' \
-        'zstd'
+        'zstd' \
+        'python3.11' \
+        'openjdk'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python --realpath)"
+        ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
@@ -77,7 +69,9 @@ v${dict['version']}/${dict['file']}"
     koopa_cd 'build'
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['proj']="$(koopa_app_prefix 'proj')"
     dict['python']="$(koopa_app_prefix 'python3.11')"
@@ -86,7 +80,8 @@ v${dict['version']}/${dict['file']}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake_args=(
         '-DBUILD_APPS=ON'
-        '-DBUILD_PYTHON_BINDINGS=OFF'
+        '-DBUILD_JAVA_BINDINGS=ON'
+        '-DBUILD_PYTHON_BINDINGS=ON'
         '-DBUILD_SHARED_LIBS=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
@@ -160,17 +155,17 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_SPATIALITE=OFF'
         '-DGDAL_USE_SQLITE3=ON'
         '-DGDAL_USE_TEIGHA=OFF'
-        '-DGDAL_USE_TIFF_INTERNAL=ON'
+        '-DGDAL_USE_TIFF=ON'
         '-DGDAL_USE_TILEDB=OFF'
         '-DGDAL_USE_WEBP=OFF'
         '-DGDAL_USE_XERCESC=OFF'
         '-DGDAL_USE_ZLIB=ON'
-        '-DGDAL_USE_ZLIB_INTERNAL=OFF'
         '-DGDAL_USE_ZSTD=ON'
         # Dependency paths.
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
         "-DHDF5_ROOT=${dict['hdf5']}"
+        "-DJAVA_HOME=${dict['openjdk']}"
         "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
         "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
         "-DPCRE2_INCLUDE_DIR=${dict['pcre2']}/include"
@@ -184,21 +179,13 @@ libpcre2-8.${dict['shared_ext']}"
         "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
         "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
+        "-DTIFF_INCLUDE_DIR=${dict['libtiff']}/include"
+        "-DTIFF_LIBRARY_RELEASE=${dict['libtiff']}/lib/\
+libtiff.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
         "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
-
-        # FIXME Consider setting these (from Homebrew):
-        # > '-DCMAKE_CXX_STANDARD=17'
-        # > '-DENABLE_PAM=ON'
-        # FIXME Need to set this: 'SQLITE3EXT_INCLUDE_DIR'?
     )
-    if koopa_is_macos
-    then
-        cmake_args+=(
-            '-DBUILD_JAVA_BINDINGS=OFF'
-        )
-    fi
     koopa_mkdir "${dict['prefix']}/include"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
