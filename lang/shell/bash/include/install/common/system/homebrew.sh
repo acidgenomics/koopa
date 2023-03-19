@@ -18,8 +18,11 @@ main() {
     # Linux:
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
-    local dict
+    local app dict
     koopa_assert_has_no_args "$#"
+    declare -A app
+    app['sudo']="$(koopa_locate_sudo --allow-system)"
+    [[ -x "${app['sudo']}" ]] || return 1
     declare -A dict
     dict['file']='install.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
@@ -30,6 +33,7 @@ master/${dict['file']}"
     fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"
+    "${app['sudo']}" -v
     NONINTERACTIVE=1 "./${dict['file']}" || true
     return 0
 }

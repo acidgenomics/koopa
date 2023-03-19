@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2022-10-28.
+    # @note Updated 2023-03-19.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -132,7 +132,7 @@ ${dict['file']}"
         # https://github.com/python/cpython/issues/98557.
         dict['arch']="$(koopa_arch)"
         case "${dict['arch']}" in
-            'aarch64')
+            'aarch64' | 'arm64')
                 dict['decimal_arch']='uint128'
                 ;;
             'x86_64')

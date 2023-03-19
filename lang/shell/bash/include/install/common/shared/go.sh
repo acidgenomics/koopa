@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't working for Apple Silicon.
+
 main() {
     # """
     # Install Go.

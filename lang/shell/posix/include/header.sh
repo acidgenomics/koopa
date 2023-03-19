@@ -64,12 +64,6 @@ __koopa_activate_koopa() {
     _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     [ "${KOOPA_MINIMAL:-0}" -eq 0 ] || return 0
-    _koopa_add_to_path_start \
-        '/usr/local/bin'
-    _koopa_add_to_manpath_start \
-        '/usr/local/man' \
-        '/usr/local/share/man'
-    _koopa_add_to_manpath_end '/usr/share/man'
     # > _koopa_umask || return 1
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
@@ -118,10 +112,17 @@ __koopa_activate_koopa() {
             ;;
     esac
     _koopa_activate_micromamba || return 1
-    # Previously included:
-    # > "$(_koopa_xdg_local_home)/bin"
     _koopa_add_to_path_start \
+        '/usr/local/bin' \
+        "$(_koopa_xdg_local_home)/bin" \
         "$(_koopa_scripts_private_prefix)/bin" \
+        || return 1
+    _koopa_add_to_manpath_start \
+        '/usr/local/man' \
+        '/usr/local/share/man' \
+        || return 1
+    _koopa_add_to_manpath_end \
+        '/usr/share/man' \
         || return 1
     if ! _koopa_is_subshell
     then

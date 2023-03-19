@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-14.
+    # @note Updated 2023-03-19.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -206,6 +206,7 @@ _koopa_complete() {
                         'icu4c'
                         'imagemagick'
                         'ipython'
+                        'isl'
                         'isort'
                         'jemalloc'
                         'jpeg'
@@ -557,7 +558,14 @@ _koopa_complete() {
                                 fi
                             elif _koopa_is_macos
                             then
-                                args+=('python' 'r' 'r-openmp' 'xcode-clt')
+                                args+=(
+                                    'python'
+                                    'r'
+                                    'r-openmp'
+                                    # NOTE No uninstaller currently.
+                                    'rosetta'
+                                    'xcode-clt'
+                                )
                             fi
                             ;;
                         'user')
