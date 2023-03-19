@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-03-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -306,6 +306,7 @@ _koopa_complete() {
                         'pkg-config'
                         'poetry'
                         'prettier'
+                        'private'
                         'procs'
                         'proj'
                         'py-spy'
@@ -344,6 +345,7 @@ _koopa_complete() {
                         'scons'
                         'sd'
                         'sed'
+                        'seqkit'
                         'serf'
                         'shellcheck'
                         'shunit2'
@@ -373,6 +375,7 @@ _koopa_complete() {
                         'tree-sitter'
                         'tuc'
                         'udunits'
+                        'umis'
                         'unibilium'
                         'units'
                         'unzip'
@@ -528,6 +531,13 @@ _koopa_complete() {
                             ;;
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'private')
+                            args+=('ont-guppy')
+                            if _koopa_is_linux
+                            then
+                                args+=('bcl2fastq' 'cellranger')
+                            fi
+                            ;;
                         'system')
                             args+=('homebrew' 'vscode-server')
                             if _koopa_is_linux
@@ -634,13 +644,9 @@ _koopa_complete() {
                                 'build-all-images'
                                 'build-all-tags'
                                 'prune-all-images'
-                                'prune-all-stale-tags'
                                 'prune-old-images'
-                                'prune-stale-tags'
-                                'push'
                                 'remove'
                                 'run'
-                                'tag'
                             )
                             ;;
                         'ftp')
@@ -650,17 +656,13 @@ _koopa_complete() {
                             ;;
                         'git')
                             args=(
-                                'checkout-recursive'
                                 'pull'
-                                'pull-recursive'
-                                'push-recursive'
                                 'push-submodules'
                                 'rename-master-to-main'
                                 'reset'
                                 'reset-fork-to-upstream'
                                 'rm-submodule'
                                 'rm-untracked'
-                                'status-recursive'
                             )
                             ;;
                         'gpg')

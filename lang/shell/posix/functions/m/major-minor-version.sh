@@ -3,17 +3,18 @@
 _koopa_major_minor_version() {
     # """
     # Program 'MAJOR.MINOR' version.
-    # @note Updated 2021-05-26.
+    # @note Updated 2023-03-11.
     # """
-    local version x
-    for version in "$@"
+    _koopa_is_alias 'cut' && unalias 'cut'
+    for __kvar_string in "$@"
     do
-        x="$( \
-            _koopa_print "$version" \
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
             | cut -d '.' -f '1-2' \
         )"
-        [ -n "$x" ] || return 1
-        _koopa_print "$x"
+        [ -n "$__kvar_string" ] || return 1
+        _koopa_print "$__kvar_string"
     done
+    unset -v __kvar_string
     return 0
 }

@@ -28,14 +28,15 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     dict['name2']="${dict['name']}"
     conf_args=("--prefix=${dict['prefix']}" "$@")
+    # Alternative URLs:
+    # - https://download.savannah.gnu.org/releases
+    # - https://download.savannah.nongnu.org/releases
     case "${dict['name']}" in
-        'freetype' | \
-        'man-db')
-            dict['gnu_mirror']='https://download.savannah.gnu.org/releases'
-            ;;
         'attr' | \
-        'libpipeline')
-            dict['gnu_mirror']='https://download.savannah.nongnu.org/releases'
+        'freetype' | \
+        'libpipeline' | \
+        'man-db')
+            dict['gnu_mirror']='https://mirrors.sarata.com/non-gnu'
             ;;
     esac
     case "${dict['name']}" in

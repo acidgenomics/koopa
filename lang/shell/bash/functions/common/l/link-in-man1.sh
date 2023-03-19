@@ -15,5 +15,5 @@ koopa_link_in_man1() {
     # >     --name='cp.1' \
     # >     --source='/opt/koopa/app/coreutils/9.1/share/man/man1/cp.1'
     # """
-    __koopa_link_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
+    koopa_link_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
 }

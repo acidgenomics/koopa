@@ -3,7 +3,7 @@
 koopa_cli_uninstall() {
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2022-02-15.
+    # @note Updated 2023-03-14.
     #
     # @seealso
     # > koopa_cli_uninstall 'python3.10'
@@ -12,6 +12,7 @@ koopa_cli_uninstall() {
     [[ "$#" -eq 0 ]] && set -- 'koopa'
     stem='uninstall'
     case "$1" in
+        'private' | \
         'system' | \
         'user')
             stem="${stem}-${1}"

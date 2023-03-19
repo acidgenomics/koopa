@@ -24,15 +24,13 @@ _koopa_activate_alacritty() {
         unset -v __kvar_conf_file __kvar_prefix
         return 0
     fi
-    __kvar_color_mode="$(_koopa_color_mode)"
-    __kvar_color_file_bn="colors-${__kvar_color_mode}.yml"
+    __kvar_color_file_bn="colors-$(_koopa_color_mode).yml"
     __kvar_color_file="${__kvar_prefix}/${__kvar_color_file_bn}"
     if [ ! -f "$__kvar_color_file" ]
     then
         unset -v \
             __kvar_color_file \
             __kvar_color_file_bn \
-            __kvar_color_mode \
             __kvar_conf_file \
             __kvar_prefix
         return 0
@@ -48,7 +46,6 @@ _koopa_activate_alacritty() {
     unset -v \
         __kvar_color_file \
         __kvar_color_file_bn \
-        __kvar_color_mode \
         __kvar_conf_file \
         __kvar_pattern \
         __kvar_prefix \

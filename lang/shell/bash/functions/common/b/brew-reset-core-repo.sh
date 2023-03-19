@@ -3,7 +3,7 @@
 koopa_brew_reset_core_repo() {
     # """
     # Ensure internal 'homebrew-core' repo is clean.
-    # @note Updated 2022-09-24.
+    # @note Updated 2023-03-12.
     # """
     local app branch origin prefix repo
     koopa_assert_has_no_args "$#"
@@ -19,7 +19,7 @@ koopa_brew_reset_core_repo() {
         prefix="$("${app['brew']}" --repo "$repo")"
         koopa_assert_is_dir "$prefix"
         koopa_cd "$prefix"
-        branch="$(koopa_git_default_branch)"
+        branch="$(koopa_git_default_branch "${PWD:?}")"
         "${app['git']}" checkout -q "$branch"
         "${app['git']}" branch -q "$branch" -u "${origin}/${branch}"
         "${app['git']}" reset -q --hard "${origin}/${branch}"

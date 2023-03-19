@@ -166,7 +166,7 @@ __koopa_is_interactive() {
     # Is the current shell interactive?
     # @note Updated 2021-10-25.
     # """
-    __koopa_str_detect_posix "$-" 'i'
+    __koopa_str_detect "$-" 'i'
 }
 
 __koopa_posix_source() {
@@ -249,10 +249,10 @@ __koopa_shell_name() {
     return 0
 }
 
-__koopa_str_detect_posix() {
+__koopa_str_detect() {
     # """
     # Evaluate whether a string contains a desired value.
-    # @note Updated 2022-01-10.
+    # @note Updated 2023-03-10.
     # """
     test "${1#*"$2"}" != "$1"
 }
