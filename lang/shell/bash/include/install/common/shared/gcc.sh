@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider applying Apple Silicon-specific patches recommended by Homebrew.
+
 main() {
     # """
     # Install GCC.
