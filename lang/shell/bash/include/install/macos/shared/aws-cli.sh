@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This currently requires Rosetta on Apple Silicon.
+
 main() {
     # """
     # Install AWS CLI binary.
