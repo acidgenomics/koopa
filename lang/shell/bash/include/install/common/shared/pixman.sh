@@ -3,17 +3,21 @@
 main() {
     # """
     # Install pixman.
-    # @note Updated 2022-04-21.
+    # @note Updated 2023-03-19.
+    #
+    # @seealso
+    # - https://github.com/macports/macports-ports/blob/master/graphics/
+    #     libpixman/Portfile
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/pixman.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
-        ['name']='pixman'
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -28,6 +32,13 @@ main() {
         '--disable-gtk'
         '--disable-silent-rules'
     )
+    # Disable NEON intrinsic support on macOS.
+    # - https://gitlab.freedesktop.org/pixman/pixman/-/issues/59
+    # - https://gitlab.freedesktop.org/pixman/pixman/-/issues/69
+    if koopa_is_macos
+    then
+        conf_args+=('--disable-arm-a64-neon')
+    fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
