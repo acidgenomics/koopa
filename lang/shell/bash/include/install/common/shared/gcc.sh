@@ -67,7 +67,6 @@ main() {
         # FIXME > 'isl'
         'mpfr'
         'mpc'
-        'zlib'
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
@@ -84,14 +83,12 @@ main() {
         ['name']='gcc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
         ['zstd']="$(koopa_app_prefix 'zstd')"
     )
     koopa_assert_is_dir \
         "${dict['gmp']}" \
         "${dict['mpc']}" \
         "${dict['mpfr']}" \
-        "${dict['zlib']}" \
         "${dict['zstd']}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
@@ -111,7 +108,6 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         # FIXME > "--with-isl=${dict['isl']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        "--with-zlib=${dict['zlib']}"
         "--with-zstd=${dict['zstd']}"
     )
     if koopa_is_linux
@@ -134,6 +130,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         conf_args+=(
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sdk_prefix']}"
+            '--with-system-zlib'
         )
         if [[ "${dict['arch']}" == 'arm64' ]] && \
             [[ "${dict['version']}" == '12.2.0' ]]
