@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # NOTE Consider applying Apple Silicon-specific patches recommended by Homebrew.
+# FIXME We're hitting a compiler error at libgomp build step on M1.
 
 main() {
     # """
