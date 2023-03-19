@@ -15,10 +15,13 @@ main() {
     # """
     local app dict install_args
     koopa_assert_has_no_args "$#"
-    declare -A app
-    declare -A dict
-    app['brew']="$(koopa_locate_brew)"
+    declare -A app=(
+        ['brew']="$(koopa_locate_brew)"
+        ['sudo']="$(koopa_locate_sudo --allow-system)"
+    )
     [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || return 1
+    declare -A dict
     dict['brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
     koopa_assert_is_file "${dict['brewfile']}"
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global
@@ -32,6 +35,7 @@ main() {
         "--file=${dict['brewfile']}"
     )
     koopa_dl 'Brewfile' "${dict['brewfile']}"
+    "${app['sudo']}" -v
     "${app['brew']}" analytics off
     "${app['brew']}" bundle install "${install_args[@]}"
     return 0
