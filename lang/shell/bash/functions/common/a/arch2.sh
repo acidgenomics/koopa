@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME May need to rework this on macOS for Apple Silicon.
-
 koopa_arch2() {
     # """
     # Alternative platform architecture.
-    # @note Updated 2022-02-09.
+    # @note Updated 2023-03-18.
     #
     # e.g. Intel: amd64; ARM: arm64.
     #
@@ -14,15 +12,13 @@ koopa_arch2() {
     # """
     local str
     koopa_assert_has_no_args "$#"
-    case "$(koopa_arch)" in
+    str="$(koopa_arch)"
+    case "$str" in
         'aarch64')
             str='arm64'
             ;;
         'x86_64')
             str='amd64'
-            ;;
-        *)
-            return 1
             ;;
     esac
     [[ -n "$str" ]] || return 1

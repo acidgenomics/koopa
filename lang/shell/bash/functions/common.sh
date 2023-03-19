@@ -693,15 +693,13 @@ koopa_arch() {
 koopa_arch2() {
     local str
     koopa_assert_has_no_args "$#"
-    case "$(koopa_arch)" in
+    str="$(koopa_arch)"
+    case "$str" in
         'aarch64')
             str='arm64'
             ;;
         'x86_64')
             str='amd64'
-            ;;
-        *)
-            return 1
             ;;
     esac
     [[ -n "$str" ]] || return 1
