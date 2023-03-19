@@ -17,7 +17,7 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app=(
         ['brew']="$(koopa_locate_brew)"
-        ['sudo']="$(koopa_locate_sudo --allow-system)"
+        ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
