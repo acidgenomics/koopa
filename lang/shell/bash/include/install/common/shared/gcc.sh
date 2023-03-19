@@ -134,10 +134,8 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     )
     if koopa_is_linux
     then
-        conf_args+=(
-            '--disable-multilib'
-            '--enable-default-pie'
-        )
+        # Enable to PIE by default to match what the host GCC uses.
+        conf_args+=('--enable-default-pie')
     elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
@@ -147,6 +145,15 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
             "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
+# >         # NOTE May need this to support zstd for Apple Silicon. This is taken
+# >         # from the current Homebrew recipe.
+# >         if [[ "${dict['arch']}" == 'arm64' ]] && \
+# >             [[ "${dict['version']}" == '12.2.0' ]]
+# >         then
+# >             conf_args+=(
+# >                 "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
+# >             )
+# >         fi
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
