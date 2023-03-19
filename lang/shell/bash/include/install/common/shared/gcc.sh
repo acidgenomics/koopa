@@ -70,6 +70,7 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
         ['jobs']="$(koopa_cpu_count)"
@@ -83,9 +84,17 @@ main() {
         "${dict['gmp']}" \
         "${dict['mpc']}" \
         "${dict['mpfr']}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
+    # FIXME Need to support specific versions.
+    if [[ "${dict['arch']}" == 'arm64' ]] && koopa_is_macos
+    then
+        dict['file']='gcc-12.2-darwin-r0.tar.gz'
+        dict['url']="https://github.com/iains/gcc-12-branch/archive/\
+refs/tags/${dict['file']}"
+    else
+        dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+        dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
+    fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     # Need to build outside of source code directory.
@@ -105,7 +114,6 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     then
         app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
-        dict['arch']="$(koopa_arch)"
         case "${dict['arch']}" in
             'arm64')
                 dict['arch2']='x86_64'
