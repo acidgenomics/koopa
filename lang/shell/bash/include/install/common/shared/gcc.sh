@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# NOTE Consider applying Apple Silicon-specific patches recommended by Homebrew.
-# FIXME We're hitting a compiler error at libgomp build step on M1.
+# FIXME Apply Apple Silicon-specific patch recommended by Homebrew and MacPorts.
 # FIXME Need to include isl.
+# Need to deal with missing makeinfo (which is gmakeinfo)?
 
 main() {
     # """
@@ -54,13 +54,19 @@ main() {
     # - https://gcc.gnu.org/install/prerequisites.html
     # - https://gcc.gnu.org/wiki/InstallingGCC
     # - https://gcc.gnu.org/wiki/FAQ
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gcc.rb
+    # - https://github.com/macports/macports-ports/blob/master/lang/
+    #     gcc12/Portfile
     # - https://github.com/fxcoudert/gfortran-for-macOS/blob/
     #     master/build_package.md
     # - https://solarianprogrammer.com/2019/10/12/compiling-gcc-macos/
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
+    # - How to ensure @rpath gets baked correctly:
+    #   https://www.linuxquestions.org/questions/linux-software-2/
+    #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
-    local app conf_args deps dict
+    local app conf_args dict
     koopa_assert_has_no_args "$#"
     deps=(
         'gmp'
@@ -90,18 +96,27 @@ main() {
         "${dict['mpc']}" \
         "${dict['mpfr']}" \
         "${dict['zstd']}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
+    if koopa_is_macos && [[ "${dict['version']}" == '12.2.0' ]]
+    then
+        dict['file']="gcc-12-2-darwin.tar.gz"
+        dict['url']="https://github.com/iains/gcc-12-branch/archive/refs/\
+heads/${dict['file']}"
+    else
+        dict['file']="${dict['name']}-${dict['version']}.tar.xz"
+        dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}/${dict['file']}"
+    fi
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    # Need to build outside of source code directory.
+    koopa_mv "${dict['name']}-"*'/' 'src/'
     koopa_mkdir 'build'
     koopa_cd 'build'
+    # FIXME Need to disable LTO for macOS ARM?
     conf_args=(
         '-v'
         "--prefix=${dict['prefix']}"
         '--disable-nls'
+        '--enable-bootstrap'
         '--enable-checking=release'
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         "--with-gmp=${dict['gmp']}"
@@ -109,6 +124,12 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
         "--with-zstd=${dict['zstd']}"
+        # FIXME These may be required to bake @rpath correctly:
+        # FIXME Consider only setting these for macOS ARM.
+        #"--with-boot-ldflags=${LDFLAGS:?}"
+        #"--with-boot-libs=${CPPFLAGS:?}"
+        #"--with-stage1-ldflags=${LDFLAGS:?}"
+        #"--with-stage1-libs=${CPPFLAGS:?}"
     )
     if koopa_is_linux
     then
@@ -121,33 +142,29 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     then
         app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
-        # e.g. '21.4.0' for macOS 12.3.1.
         dict['kernel_version']="$("${app['uname']}" -r)"
-        dict['kernel_maj_ver']="$( \
-            koopa_major_version "${dict['kernel_version']}" \
-        )"
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         conf_args+=(
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sdk_prefix']}"
             '--with-system-zlib'
         )
-        if [[ "${dict['arch']}" == 'arm64' ]] && \
-            [[ "${dict['version']}" == '12.2.0' ]]
-        then
-            conf_args+=(
-                "--build=x86_64-apple-darwin${dict['kernel_maj_ver']}"
-            )
-        else
-            conf_args+=(
-                "--build=${dict['arch']}-apple-darwin${dict['kernel_maj_ver']}"
-            )
-        fi
+        # FIXME See if we can run the patched version without this:
+        #if [[ "${dict['arch']}" == 'arm64' ]] && \
+        #    [[ "${dict['version']}" == '12.2.0' ]]
+        #then
+        #    dict['build_arch']='x86_64'
+        #else
+        #    dict['build_arch']="${dict['arch']}"
+        #fi
+        #conf_args+=(
+        #    "--build=${dict['build_arch'}-apple-darwin${dict['kernel_version']}"
+        #)
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
-    "../${dict['name']}-${dict['version']}/configure" --help
-    "../${dict['name']}-${dict['version']}/configure" "${conf_args[@]}"
+    ../src/configure --help
+    ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
