@@ -130,7 +130,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         # Optional dependencies.
         "--with-isl=${dict['isl']}"
         "--with-zstd=${dict['zstd']}"
-        # Ensure linkage is current during bootstrap (stage 2).
+        # Ensure linkage is defined during bootstrap (stage 2).
         "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
         "--with-boot-libs=-lstdc++ ${LDLIBS:?}"
     )
