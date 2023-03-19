@@ -60,12 +60,17 @@ main() {
     # - https://solarianprogrammer.com/2016/10/07/building-gcc-ubuntu-linux/
     # - https://medium.com/@darrenjs/building-gcc-from-source-dcc368a3bb70
     # """
-    local app conf_args dict
+    local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app \
-        'gmp' \
-        'mpfr' \
+    deps=(
+        'gmp'
+        # FIXME > 'isl'
+        'mpfr'
         'mpc'
+        'zlib'
+        'zstd'
+    )
+    koopa_activate_app "${deps[@]}"
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
