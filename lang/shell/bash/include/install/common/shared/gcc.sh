@@ -94,7 +94,7 @@ main() {
         "${dict['mpc']}" \
         "${dict['mpfr']}" \
         "${dict['zstd']}"
-    # GCC 12.2.0 requires custom patches to build on Apple Silicon.
+    # GCC 12 requires custom patches by iains to build on Apple Silicon.
     if koopa_is_macos && \
         [[ "${dict['arch']}" == 'arm64' ]] && \
         [[ "${dict['version']}" == '12.2.0' ]]
@@ -132,8 +132,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         "--with-zstd=${dict['zstd']}"
         # Ensure linkage is current during bootstrap (stage 2).
         "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
-        # NOTE Do we need to include '-lstdc++' here?
-        "--with-boot-libs=${LDLIBS:?}"
+        "--with-boot-libs=-lstdc++ ${LDLIBS:?}"
     )
     if koopa_is_linux
     then
