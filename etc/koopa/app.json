@@ -1403,6 +1403,7 @@
     "bin": ["gfortran"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["gmp", "mpfr", "mpc", "isl", "zstd"],
     "reverse_dependencies": ["hdf5", "lapack", "r", "r-devel"],
     "url": ["https://gcc.gnu.org/"],
     "version": "12.2.0"
@@ -2139,6 +2140,17 @@
     "dependencies": ["python3.11"],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
     "version": "8.11.0"
+  },
+  "isl": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["pkg-config"],
+    "conservative": true,
+    "date": "2023-03-19",
+    "dependencies": ["gmp"],
+    "url": ["https://libisl.sourceforge.io/"],
+    "version": "0.25"
   },
   "isort": {
     "aliases": {
