@@ -137,8 +137,10 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
-    "../${dict['name']}-${dict['version']}/configure" --help
-    "../${dict['name']}-${dict['version']}/configure" "${conf_args[@]}"
+    # shellcheck disable=SC2211
+    "../${dict['name']}-"*"/configure" --help
+    # shellcheck disable=SC2211
+    "../${dict['name']}-"*"/configure" "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
