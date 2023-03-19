@@ -106,7 +106,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         [[ -x "${app['uname']}" ]] || return 1
         dict['arch']="$(koopa_arch)"
         case "${dict['arch']}" in
-            'aarch64')
+            'arm64')
                 dict['arch2']='x86_64'
                 ;;
             *)
