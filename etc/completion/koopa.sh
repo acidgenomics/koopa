@@ -558,7 +558,13 @@ _koopa_complete() {
                                 fi
                             elif _koopa_is_macos
                             then
-                                args+=('python' 'r' 'r-openmp' 'xcode-clt')
+                                args+=(
+                                    'python'
+                                    'r'
+                                    'r-openmp'
+                                    'rosetta'
+                                    'xcode-clt'
+                                )
                             fi
                             ;;
                         'user')
