@@ -114,17 +114,23 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     conf_args=(
-        # > '--disable-nls'
-        # > '--enable-bootstrap'
-        # > '--enable-checking=release'
-        # > "--with-isl=${dict['isl']}"
-        # > "--with-zstd=${dict['zstd']}"
         '-v'
         "--prefix=${dict['prefix']}"
+        '--disable-multilib'
+        '--disable-nls'
+        '--enable-checking=release'
+        '--enable-host-shared'
         '--enable-languages=c,c++,fortran,objc,obj-c++'
+        '--enable-libstdcxx-time'
+        '--enable-lto'
+        '--with-build-config=bootstrap-debug'
+        # Required dependencies:
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
+        # Optional dependencies:
+        # > "--with-isl=${dict['isl']}"
+        # > "--with-zstd=${dict['zstd']}"
     )
     if koopa_is_linux
     then
@@ -134,10 +140,11 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         )
     elif koopa_is_macos
     then
-        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        dict['sysroot']="$(koopa_macos_sdk_prefix)"
+        koopa_assert_is_dir "${dict['sysroot']}"
         conf_args+=(
             '--with-native-system-header-dir=/usr/include'
-            "--with-sysroot=${dict['sdk_prefix']}"
+            "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
     fi
