@@ -9,6 +9,8 @@ main() {
     # - https://www.tcl.tk/software/tcltk/download.html
     # - https://www.tcl.tk/doc/howto/compile.html
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/tcl-tk.rb
+    # - https://github.com/macports/macports-ports/blob/master/lang/tcl/Portfile
+    # - https://github.com/macports/macports-ports/blob/master/x11/tk/Portfile
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -39,8 +41,6 @@ main() {
         "--prefix=${dict['prefix']}"
         '--enable-shared'
         '--enable-threads'
-        # This fails on Apple Silicon, so disabling.
-        # > '--enable-64bit'
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
@@ -65,7 +65,6 @@ main() {
         conf_args_2=(
             "${conf_args[@]}"
             "--with-tcl=${dict['prefix']}/lib"
-            '--without-x'
         )
         if koopa_is_macos
         then
