@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This currently fails to build with Xcode CLT 14
-# https://github.com/iains/gcc-12-branch/issues/6
-
 main() {
     # """
     # Install GCC.
-    # @note Updated 2022-10-01.
+    # @note Updated 2023-03-18.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -70,7 +67,6 @@ main() {
     )
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
-        ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
         ['jobs']="$(koopa_cpu_count)"
@@ -106,6 +102,15 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
     then
         app['uname']="$(koopa_locate_uname --allow-system)"
         [[ -x "${app['uname']}" ]] || return 1
+        dict['arch']="$(koopa_arch)"
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['arch2']='x86_64'
+                ;;
+            *)
+                dict['arch2']="${dict['arch']}"
+                ;;
+        esac
         # e.g. '21.4.0' for macOS 12.3.1.
         dict['kernel_version']="$("${app['uname']}" -r)"
         dict['kernel_maj_ver']="$( \
@@ -113,7 +118,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         )"
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         conf_args+=(
-            "--build=${dict['arch']}-apple-darwin${dict['kernel_maj_ver']}"
+            "--build=${dict['arch2']}-apple-darwin${dict['kernel_maj_ver']}"
             '--disable-multilib'
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sdk_prefix']}"
