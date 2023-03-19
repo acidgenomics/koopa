@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME This needs to be called before adding /usr/local/bin to path.
+
 _koopa_activate_homebrew() {
     # """
     # Activate Homebrew.
