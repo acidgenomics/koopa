@@ -71,27 +71,26 @@ main() {
         'gmp'
         'mpfr'
         'mpc'
-        # FIXME > 'isl'
-        # FIXME > 'zstd'
+        # > 'isl'
+        # > 'zstd'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
+        # > ['isl']="$(koopa_app_prefix 'isl')"
+        # > ['zstd']="$(koopa_app_prefix 'zstd')"
         ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
-        # FIXME > ['isl']="$(koopa_app_prefix 'isl')"
         ['jobs']="$(koopa_cpu_count)"
         ['mpc']="$(koopa_app_prefix 'mpc')"
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
         ['name']='gcc'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
-        # FIXME > ['zstd']="$(koopa_app_prefix 'zstd')"
     )
-    # FIXME Consider adding isl, zstd.
     koopa_assert_is_dir \
         "${dict['gmp']}" \
         "${dict['mpc']}" \
@@ -118,19 +117,14 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         # > '--disable-nls'
         # > '--enable-bootstrap'
         # > '--enable-checking=release'
+        # > "--with-isl=${dict['isl']}"
+        # > "--with-zstd=${dict['zstd']}"
         '-v'
         "--prefix=${dict['prefix']}"
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        # FIXME > "--with-isl=${dict['isl']}"
-        # FIXME > "--with-zstd=${dict['zstd']}"
-        # FIXME These may be required to bake @rpath correctly on macOS ARM:
-        # FIXME > "--with-boot-ldflags=${LDFLAGS:?}"
-        # FIXME > "--with-boot-libs=${CPPFLAGS:?}"
-        # FIXME > "--with-stage1-ldflags=${LDFLAGS:?}"
-        # FIXME > "--with-stage1-libs=${CPPFLAGS:?}"
     )
     if koopa_is_linux
     then
