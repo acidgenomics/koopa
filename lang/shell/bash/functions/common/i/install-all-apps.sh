@@ -78,6 +78,7 @@ koopa_install_all_apps() {
         'sqlite'
         'mpdecimal'
         'libedit'
+        # > 'python3.9'
         'python3.10'
         'python3.11'
         'xorg-xorgproto'

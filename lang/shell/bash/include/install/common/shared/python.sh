@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-20.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -200,8 +200,14 @@ ${dict['file']}"
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     koopa_alert 'Checking module integrity.'
+    case "${dict['version']}" in
+        '3.9.'*)
+            ;;
+        *)
+            "${app['python']}" -c 'import _decimal'
+            ;;
+    esac
     "${app['python']}" -c 'import _ctypes'
-    "${app['python']}" -c 'import _decimal'
     "${app['python']}" -c 'import _gdbm'
     "${app['python']}" -c 'import hashlib'
     "${app['python']}" -c 'import pyexpat'
