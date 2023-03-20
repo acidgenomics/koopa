@@ -4137,11 +4137,12 @@
     "date": "2023-03-17",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.4.0"
+    "version": "2.3.1"
   },
   "serf": {
     "aliases": {
