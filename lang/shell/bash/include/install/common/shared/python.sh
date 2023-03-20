@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider not installing as macOS framework.
-
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-20.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
