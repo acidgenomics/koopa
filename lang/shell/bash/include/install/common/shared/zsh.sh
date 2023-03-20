@@ -20,7 +20,7 @@ main() {
     # - url="ftp://ftp.fu-berlin.de/pub/unix/shells/${name}/${file}"
     # - url="https://www.zsh.org/pub/${file}" (slow)
     # - url="https://downloads.sourceforge.net/project/\
-    #       ${name}/${name}/${version}/${file}" (redirects, curl issues)
+    #       ${name}/${name}/${version}/${file}" (redirects)
     #
     # See also:
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719

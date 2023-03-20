@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Adoptium Temurin OpenJDK.
-    # @note Updated 2022-07-11.
+    # @note Updated 2023-03-19.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -35,6 +35,10 @@ main() {
         dict['platform']='linux'
     fi
     case "${dict['arch']}" in
+        'arm64')
+            # e.g. Apple Silicon.
+            dict['arch2']='aarch64'
+            ;;
         'x86_64')
             dict['arch2']='x64'
             ;;

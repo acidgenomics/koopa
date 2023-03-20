@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-03-06.
+    # @note Updated 2023-03-19.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -19,7 +19,6 @@ main() {
     #   - https://github.com/Homebrew/homebrew-core/pull/120967
     # """
     local app build_deps dict
-    koopa_assert_is_not_aarch64
     build_deps=('git' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     declare -A app=(

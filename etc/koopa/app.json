@@ -10,6 +10,7 @@
     "version": "3.7.0"
   },
   "agat": {
+    "arch": "amd64",
     "bin": ["agat"],
     "date": "2022-11-14",
     "dependencies": ["conda"],
@@ -18,7 +19,6 @@
     "version": "1.0.0"
   },
   "anaconda": {
-    "arch": "x86_64",
     "date": "2022-10-19",
     "large": true,
     "url": ["https://repo.continuum.io/archive/"],
@@ -149,6 +149,7 @@
     "version": "2.71"
   },
   "autodock": {
+    "arch": "amd64",
     "bin": ["autodock4"],
     "date": "2022-10-19",
     "dependencies": ["conda"],
@@ -157,6 +158,7 @@
     "version": "4.2.6"
   },
   "autodock-adfr": {
+    "arch": "amd64",
     "check": false,
     "date": "2022-10-19",
     "large": true,
@@ -167,6 +169,7 @@
     "aliases": {
       "conda": "vina"
     },
+    "arch": "amd64",
     "bin": ["vina"],
     "date": "2022-10-19",
     "dependencies": ["conda"],
@@ -202,6 +205,7 @@
     },
     "bin": ["aws"],
     "date": "2023-03-15",
+    "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
@@ -220,6 +224,7 @@
     "version": "2.46.0"
   },
   "bamtools": {
+    "arch": "amd64",
     "bin": ["bamtools"],
     "date": "2022-03-14",
     "dependencies": ["conda"],
@@ -329,6 +334,7 @@
     "version": "2.20"
   },
   "bedtools": {
+    "arch": "amd64",
     "bin": ["bedtools"],
     "date": "2021-08-12",
     "dependencies": ["conda"],
@@ -360,6 +366,7 @@
     "version": "2.40"
   },
   "bioawk": {
+    "arch": "amd64",
     "bin": ["bioawk"],
     "date": "2019-10-26",
     "dependencies": ["conda"],
@@ -428,6 +435,7 @@
     "version": "0.8.0"
   },
   "bowtie2": {
+    "arch": "amd64",
     "bin": ["bowtie2"],
     "date": "2023-02-08",
     "dependencies": ["conda"],
@@ -473,6 +481,7 @@
     "version": "1.0.9"
   },
   "bustools": {
+    "arch": "amd64",
     "bin": ["bustools"],
     "date": "2022-01-05",
     "dependencies": ["conda"],
@@ -653,7 +662,7 @@
     "version": "1.4.6"
   },
   "conda": {
-    "arch": "x86_64",
+    "arch": "amd64",
     "bin": ["conda"],
     "conservative": true,
     "date": "2023-02-27",
@@ -982,13 +991,23 @@
     },
     "bin": ["curl", "curl-config"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-20",
     "dependencies": ["ca-certificates"],
     "man1": ["curl.1", "curl-config.1"],
-    "url": ["https://curl.haxx.se/"],
+    "reverse_dependencies": ["gdal", "git", "libgeotiff", "mamba", "proj"],
+    "url": ["https://curl.se/"],
+    "version": "8.0.0"
+  },
+  "curl7": {
+    "conservative": true,
+    "date": "2023-03-20",
+    "dependencies": ["ca-certificates"],
+    "reverse_dependencies": ["r", "r-devel"],
+    "url": ["https://curl.se/"],
     "version": "7.88.1"
   },
   "deeptools": {
+    "arch": "amd64",
     "bin": ["deeptools"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
@@ -1114,6 +1133,7 @@
     "version": "109"
   },
   "entrez-direct": {
+    "arch": "amd64",
     "bin": ["efetch", "esearch"],
     "date": "2022-06-06",
     "dependencies": ["conda"],
@@ -1168,6 +1188,7 @@
     "version": "2.5.0"
   },
   "fastqc": {
+    "arch": "amd64",
     "bin": ["fastqc"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
@@ -1196,6 +1217,7 @@
     "version": "6.0"
   },
   "ffq": {
+    "arch": "amd64",
     "bin": ["ffq"],
     "date": "2022-11-08",
     "dependencies": ["conda"],
@@ -1207,6 +1229,7 @@
     "version": "0.3.0"
   },
   "fgbio": {
+    "arch": "amd64",
     "date": "2023-02-08",
     "dependencies": ["conda"],
     "large": true,
@@ -1308,6 +1331,7 @@
     "version": "2.14.2"
   },
   "fq": {
+    "arch": "amd64",
     "bin": ["fq"],
     "date": "2022-11-16",
     "dependencies": ["conda"],
@@ -1319,6 +1343,7 @@
     "version": "0.9.1"
   },
   "fqtk": {
+    "arch": "amd64",
     "bin": ["fqtk"],
     "date": "2023-03-05",
     "dependencies": ["conda"],
@@ -1376,6 +1401,7 @@
     "aliases": {
       "conda": "gatk4"
     },
+    "arch": "amd64",
     "bin": ["gatk"],
     "date": "2023-03-17",
     "dependencies": ["conda"],
@@ -1470,6 +1496,7 @@
     "version": "0.21.1"
   },
   "gffutils": {
+    "arch": "amd64",
     "bin": ["gffutils-cli"],
     "date": "2022-06-05",
     "dependencies": ["conda"],
@@ -1481,10 +1508,12 @@
     "version": "0.11.1"
   },
   "gget": {
+    "arch": "amd64",
     "bin": ["gget"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.3"
   },
@@ -1626,13 +1655,12 @@
     "aliases": {
       "homebrew-cask": true
     },
-    "arch": "x86_64",
     "bin": ["gcloud"],
-    "date": "2023-03-07",
+    "date": "2023-03-20",
     "dependencies": ["python3.10"],
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "420.0.0"
+    "version": "422.0.0"
   },
   "googletest": {
     "aliases": {
@@ -1799,6 +1827,7 @@
     "version": "1.22.4"
   },
   "gseapy": {
+    "arch": "amd64",
     "bin": ["gseapy"],
     "date": "2023-02-08",
     "dependencies": ["conda"],
@@ -1885,7 +1914,7 @@
     "aliases": {
       "homebrew": true
     },
-    "arch": "x86_64",
+    "arch": "amd64",
     "bin": ["hadolint"],
     "build_dependencies": [
       "git",
@@ -1940,7 +1969,7 @@
     "aliases": {
       "homebrew": true
     },
-    "arch": "x86_64",
+    "arch": "amd64",
     "bin": ["stack"],
     "check": false,
     "date": "2022-12-17",
@@ -1998,6 +2027,7 @@
     "version": "0.12.0"
   },
   "hisat2": {
+    "arch": "amd64",
     "bin": ["hisat2"],
     "date": "2020-07-24",
     "dependencies": ["conda"],
@@ -2020,6 +2050,7 @@
     "version": "3.2.2"
   },
   "htseq": {
+    "arch": "amd64",
     "bin": ["htseq-count"],
     "date": "2022-07-02",
     "dependencies": ["conda"],
@@ -2207,14 +2238,17 @@
     "version": "1.8.5"
   },
   "jupyterlab": {
+    "arch": "amd64",
     "bin": ["jupyter-lab"],
     "date": "2023-02-03",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
     "version": "3.6.1"
   },
   "kallisto": {
+    "arch": "amd64",
     "bin": ["kallisto"],
     "date": "2022-01-17",
     "dependencies": ["conda"],
@@ -2249,14 +2283,15 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-02-22",
+    "date": "2023-03-19",
     "dependencies": ["python3.10"],
+    "large": true,
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.13.5"
+    "version": "2.14.0"
   },
   "less": {
     "aliases": {
@@ -2839,6 +2874,7 @@
     "version": "6.7.0"
   },
   "minimap2": {
+    "arch": "amd64",
     "bin": ["minimap2"],
     "date": "2023-01-10",
     "dependencies": ["conda"],
@@ -2908,6 +2944,7 @@
     "version": "6.0.0"
   },
   "multiqc": {
+    "arch": "amd64",
     "bin": ["multiqc"],
     "date": "2023-01-09",
     "dependencies": ["conda"],
@@ -2928,6 +2965,7 @@
     "version": "7.2"
   },
   "nanopolish": {
+    "arch": "amd64",
     "bin": ["nanopolish"],
     "date": "2022-10-11",
     "dependencies": ["conda"],
@@ -3019,6 +3057,7 @@
     "version": "3.8.1"
   },
   "nextflow": {
+    "arch": "amd64",
     "bin": ["nextflow"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
@@ -3136,7 +3175,7 @@
     "version": "6.9.8"
   },
   "ont-guppy": {
-    "arch": "x86_64",
+    "arch": "amd64",
     "bin": ["guppy_basecaller"],
     "check": false,
     "date": "2023-03-14",
@@ -3359,6 +3398,7 @@
     "version": "5.36.0"
   },
   "picard": {
+    "arch": "amd64",
     "bin": ["picard"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
@@ -3420,12 +3460,12 @@
     },
     "bin": ["poetry"],
     "conservative": true,
-    "date": "2023-02-27",
+    "date": "2023-03-20",
     "dependencies": ["python3.11"],
     "large": true,
     "reverse_dependencies": ["openbb"],
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "prelude-emacs": {
     "check": false,
@@ -3438,10 +3478,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-02-08",
+    "date": "2023-03-20",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.4"
+    "version": "2.8.5"
   },
   "procs": {
     "aliases": {
@@ -3677,12 +3717,12 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-15",
+    "date": "2023-03-20",
     "dependencies": [
       "bzip2",
       "cairo",
       "coreutils",
-      "curl",
+      "curl7",
       "fontconfig",
       "freetype",
       "fribidi",
@@ -3751,12 +3791,12 @@
   },
   "r-devel": {
     "check": false,
-    "date": "2023-03-14",
+    "date": "2023-03-20",
     "dependencies": [
       "bzip2",
       "cairo",
       "coreutils",
-      "curl",
+      "curl7",
       "fontconfig",
       "freetype",
       "fribidi",
@@ -3937,6 +3977,7 @@
     "version": "0.7.3"
   },
   "rsem": {
+    "arch": "amd64",
     "bin": ["rsem-calculate-expression", "rsem-prepare-reference"],
     "date": "2023-02-01",
     "dependencies": ["conda"],
@@ -4010,6 +4051,7 @@
     "version": "1.68.0"
   },
   "salmon": {
+    "arch": "amd64",
     "bin": ["salmon"],
     "date": "2023-02-27",
     "dependencies": ["conda"],
@@ -4022,6 +4064,7 @@
     "version": "1.10.0"
   },
   "sambamba": {
+    "arch": "amd64",
     "bin": ["sambamba"],
     "date": "2023-02-08",
     "dependencies": ["conda"],
@@ -4034,6 +4077,7 @@
     "version": "1.0"
   },
   "samtools": {
+    "arch": "amd64",
     "bin": ["samtools"],
     "date": "2022-04-07",
     "dependencies": ["conda"],
@@ -4046,7 +4090,7 @@
     "version": "1.16.1"
   },
   "scalene": {
-    "arch": "x86_64",
+    "arch": "amd64",
     "bin": ["scalene"],
     "date": "2023-03-07",
     "dependencies": ["python3.11"],
@@ -4088,6 +4132,7 @@
     "version": "4.9"
   },
   "seqkit": {
+    "arch": "amd64",
     "bin": ["seqkit"],
     "date": "2023-03-17",
     "dependencies": ["conda"],
@@ -4134,6 +4179,7 @@
     "version": "2.1.8"
   },
   "snakefmt": {
+    "arch": "amd64",
     "bin": ["snakefmt"],
     "date": "2023-02-08",
     "dependencies": ["python3.11"],
@@ -4145,6 +4191,7 @@
     "version": "0.8.1"
   },
   "snakemake": {
+    "arch": "amd64",
     "bin": ["snakemake"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
@@ -4218,7 +4265,7 @@
     "aliases": {
       "homebrew": "sratoolkit"
     },
-    "arch": "x86_64",
+    "arch": "amd64",
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["cmake"],
     "date": "2023-01-03",
@@ -4230,6 +4277,7 @@
     "version": "3.0.2"
   },
   "star": {
+    "arch": "amd64",
     "bin": ["STAR"],
     "date": "2022-11-08",
     "dependencies": ["conda"],
@@ -4241,6 +4289,7 @@
     "version": "2.7.10b"
   },
   "star-fusion": {
+    "arch": "amd64",
     "bin": ["STAR-Fusion"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
@@ -4271,6 +4320,7 @@
     "version": "2.3.1"
   },
   "subread": {
+    "arch": "amd64",
     "bin": ["featureCounts"],
     "date": "2023-02-13",
     "dependencies": ["conda"],
@@ -4466,6 +4516,7 @@
     "version": "2.2.28"
   },
   "umis": {
+    "arch": "amd64",
     "bin": ["umis"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
@@ -4803,9 +4854,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-18",
+    "date": "2023-03-20",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.32.1"
+    "version": "4.32.2"
   },
   "yt-dlp": {
     "aliases": {

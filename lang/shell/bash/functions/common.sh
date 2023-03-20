@@ -3920,6 +3920,11 @@ koopa_cli_reinstall() {
             koopa_reinstall_all_revdeps "$@"
             return 0
             ;;
+        '--only-revdeps')
+            shift 1
+            koopa_reinstall_all_revdeps "$@"
+            return 0
+            ;;
     esac
     koopa_cli_install --reinstall "$@"
 }
@@ -9983,6 +9988,7 @@ koopa_install_all_apps() {
         'cmake'
         'lz4'
         'curl'
+        'curl7'
         'bash'
         'git'
         'lapack'
@@ -10349,6 +10355,7 @@ koopa_install_all_binary_apps() {
         'openssl1'
         'openssl3'
         'curl'
+        'curl7'
         'm4'
         'gmp'
         'coreutils'
@@ -11620,6 +11627,13 @@ koopa_install_csvtk() {
 koopa_install_curl() {
     koopa_install_app \
         --name='curl' \
+        "$@"
+}
+
+koopa_install_curl7() {
+    koopa_install_app \
+        --installer='curl' \
+        --name='curl7' \
         "$@"
 }
 
@@ -13691,7 +13705,14 @@ koopa_ip_address() {
 }
 
 koopa_is_aarch64() {
-    [[ "$(koopa_arch)" = 'aarch64' ]]
+    case "$(koopa_arch)" in
+        'aarch64' | 'arm64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 koopa_is_admin() {
@@ -18190,7 +18211,7 @@ koopa_r_configure_environ() {
     declare -A app_pc_path_arr
     keys=(
         'cairo'
-        'curl'
+        'curl7'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -18454,7 +18475,7 @@ koopa_r_configure_ldpaths() {
     keys=(
         'bzip2'
         'cairo'
-        'curl'
+        'curl7'
         'fontconfig'
         'freetype'
         'fribidi'
@@ -18735,7 +18756,7 @@ koopa_r_configure_makevars() {
         declare -A app_pc_path_arr
         keys=(
             'cairo'
-            'curl'
+            'curl7'
             'fontconfig'
             'freetype'
             'fribidi'
@@ -19396,7 +19417,7 @@ koopa_reinstall_all_revdeps() {
                 "${app_name} reverse dependencies" \
                 "$(koopa_to_string "${revdeps[@]}")"
         else
-            koopa_alert_note "${app_name} has no reverse dependencies."
+            koopa_alert_note "'${app_name}' has no reverse dependencies."
         fi
         koopa_cli_reinstall "${install_args[@]}"
     done
@@ -19406,6 +19427,49 @@ koopa_reinstall_all_revdeps() {
 koopa_reinstall_app() {
     koopa_assert_has_args "$#"
     koopa_koopa install "$@" --reinstall
+}
+
+koopa_reinstall_only_revdeps() {
+    local app_name flags pos
+    koopa_assert_has_args "$#"
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--'*)
+                flags+=("$1")
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        local install_args revdeps
+        install_args=()
+        if koopa_is_array_non_empty "${flags[@]}"
+        then
+            install_args+=("${flags[@]}")
+        fi
+        readarray -t revdeps <<< "$(koopa_app_json_revdeps "$app_name")"
+        if koopa_assert_is_array_non_empty "${revdeps[@]}"
+        then
+            install_args+=("${revdeps[@]}")
+            koopa_dl \
+                "${app_name} reverse dependencies" \
+                "$(koopa_to_string "${revdeps[@]}")"
+        else
+            koopa_stop "'${app_name}' has no reverse dependencies."
+        fi
+        koopa_cli_reinstall "${install_args[@]}"
+    done
+    return 0
 }
 
 koopa_relink() {
@@ -23815,6 +23879,12 @@ koopa_uninstall_csvtk() {
 koopa_uninstall_curl() {
     koopa_uninstall_app \
         --name='curl' \
+        "$@"
+}
+
+koopa_uninstall_curl7() {
+    koopa_uninstall_app \
+        --name='curl7' \
         "$@"
 }
 
