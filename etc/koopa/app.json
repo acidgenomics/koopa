@@ -993,17 +993,17 @@
     "date": "2023-03-20",
     "dependencies": ["ca-certificates"],
     "man1": ["curl.1", "curl-config.1"],
-    "reverse_dependencies": [
-      "gdal",
-      "git",
-      "libgeotiff",
-      "mamba",
-      "proj",
-      "r",
-      "r-devel"
-    ],
+    "reverse_dependencies": ["gdal", "git", "libgeotiff", "mamba", "proj"],
     "url": ["https://curl.se/"],
     "version": "8.0.0"
+  },
+  "curl7": {
+    "conservative": true,
+    "date": "2023-03-20",
+    "dependencies": ["ca-certificates"],
+    "reverse_dependencies": ["r", "r-devel"],
+    "url": ["https://curl.se/"],
+    "version": "7.88.1"
   },
   "deeptools": {
     "arch": "amd64",
