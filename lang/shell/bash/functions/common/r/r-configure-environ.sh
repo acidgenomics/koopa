@@ -160,7 +160,7 @@ koopa_r_configure_environ() {
     declare -A app_pc_path_arr
     keys=(
         'cairo'
-        'curl'
+        'curl7'
         'fontconfig'
         'freetype'
         'fribidi'
