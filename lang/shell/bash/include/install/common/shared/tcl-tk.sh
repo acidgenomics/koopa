@@ -3,12 +3,14 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2022-07-20.
+    # @note Updated 2023-03-19.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
     # - https://www.tcl.tk/doc/howto/compile.html
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/tcl-tk.rb
+    # - https://github.com/macports/macports-ports/blob/master/lang/tcl/Portfile
+    # - https://github.com/macports/macports-ports/blob/master/x11/tk/Portfile
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
@@ -39,7 +41,6 @@ main() {
         "--prefix=${dict['prefix']}"
         '--enable-shared'
         '--enable-threads'
-        '--enable-64bit'
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
@@ -52,7 +53,6 @@ main() {
         ./configure --help
         ./configure "${conf_args[@]}"
         "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-        # > "${app['make']}" test
         "${app['make']}" install
         "${app['make']}" install-private-headers
     )
@@ -61,11 +61,19 @@ main() {
     koopa_download "${dict['tk_url']}" "${dict['tk_file']}"
     koopa_extract "${dict['tk_file']}"
     (
+        local conf_args_2
+        conf_args_2=(
+            "${conf_args[@]}"
+            "--with-tcl=${dict['prefix']}/lib"
+        )
+        if koopa_is_macos
+        then
+            conf_args_2+=('--enable-aqua=yes')
+        fi
         koopa_cd "tk${dict['version']}/unix"
         ./configure --help
-        ./configure "${conf_args[@]}"
+        ./configure "${conf_args_2[@]}"
         "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-        # > "${app['make']}" test
         "${app['make']}" install
         "${app['make']}" install-private-headers
     )

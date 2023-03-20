@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-03-19.
     #
     # @section Intel:
     #
@@ -39,14 +39,29 @@ main() {
         ['url_stem']='https://cran.r-project.org/bin/macosx'
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['maj_min_version']="$(koopa_major_minor_version "${dict['version']}")"
-    dict['prefix']="${dict['framework_prefix']}/Versions/\
-${dict['maj_min_version']}/Resources"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     case "${dict['arch']}" in
-        'aarch64')
+        'arm64')
+            dict['maj_min_ver']="${dict['maj_min_ver']}-${dict['arch']}"
+            ;;
+    esac
+    dict['prefix']="${dict['framework_prefix']}/Versions/\
+${dict['maj_min_ver']}/Resources"
+    case "${dict['arch']}" in
+        'aarch64' | 'arm64')
+            case "${dict['os']}" in
+                'ventura' | \
+                'monterey' | \
+                'big-sur')
+                    dict['os2']='big-sur'
+                    ;;
+                *)
+                    koopa_stop 'Unsupported OS.'
+                    ;;
+            esac
             dict['arch2']='arm64'
             dict['pkg_file']="R-${dict['version']}-${dict['arch2']}.pkg"
-            dict['url']="${dict['url_stem']}/${dict['os']}-${dict['arch2']}/\
+            dict['url']="${dict['url_stem']}/${dict['os2']}-${dict['arch2']}/\
 base/${dict['pkg_file']}"
             ;;
         'x86_64')

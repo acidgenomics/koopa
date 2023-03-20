@@ -436,7 +436,7 @@ _koopa_complete() {
                             args+=('--all' '--all-binary')
                             ;;
                         'reinstall')
-                            args+=('--all-revdeps')
+                            args+=('--all-revdeps' '--only-revdeps')
                             ;;
                     esac
                     ;;
