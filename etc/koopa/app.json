@@ -994,9 +994,9 @@
     "date": "2023-03-20",
     "dependencies": ["ca-certificates"],
     "man1": ["curl.1", "curl-config.1"],
-    "reverse_dependencies": ["gdal", "git", "libgeotiff", "mamba", "proj"],
+    "reverse_dependencies": ["git", "libgeotiff", "proj", "gdal", "mamba"],
     "url": ["https://curl.se/"],
-    "version": "8.0.0"
+    "version": "8.0.1"
   },
   "curl7": {
     "conservative": true,
@@ -1745,7 +1745,6 @@
       "gropdf",
       "grops",
       "grotty",
-      "gxditview",
       "hpftodit",
       "indxbib",
       "lkbib",
@@ -1771,8 +1770,7 @@
       "soelim",
       "tbl",
       "tfmtodit",
-      "troff",
-      "xtotroff"
+      "troff"
     ],
     "date": "2023-03-15",
     "man1": [
@@ -1797,7 +1795,6 @@
       "gropdf.1",
       "grops.1",
       "grotty.1",
-      "gxditview.1",
       "hpftodit.1",
       "indxbib.1",
       "lkbib.1",
@@ -1821,8 +1818,7 @@
       "soelim.1",
       "tbl.1",
       "tfmtodit.1",
-      "troff.1",
-      "xtotroff.1"
+      "troff.1"
     ],
     "url": ["https://ftp.gnu.org/gnu/groff/"],
     "version": "1.22.4"
@@ -2284,7 +2280,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-03-19",
+    "date": "2023-03-20",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -3275,6 +3271,7 @@
       "gdal",
       "mdcat",
       "nushell",
+      "python3.9",
       "python3.10",
       "python3.11",
       "node",
@@ -3610,6 +3607,33 @@
       "https://github.com/pytest-dev/pytest/"
     ],
     "version": "7.2.2"
+  },
+  "python3.9": {
+    "aliases": {
+      "homebrew": "python@3.9"
+    },
+    "bin": ["python3.9", "python3.9-config"],
+    "build_dependencies": ["make", "pkg-config"],
+    "check": false,
+    "conservative": true,
+    "date": "2023-03-20",
+    "dependencies": [
+      "bzip2",
+      "expat",
+      "gdbm",
+      "libedit",
+      "libffi",
+      "mpdecimal",
+      "ncurses",
+      "openssl3",
+      "sqlite",
+      "unzip",
+      "xz",
+      "zlib"
+    ],
+    "man1": ["python3.9.1"],
+    "url": ["https://www.python.org/"],
+    "version": "3.9.16"
   },
   "python3.10": {
     "aliases": {

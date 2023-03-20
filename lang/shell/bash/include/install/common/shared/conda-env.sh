@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Consider using Python instead of jq here, to work better on cloud
+# workflows, such as Latch SDK.
+
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-03-20.
     #
     # Be sure to excluded nested directories that may exist in libexec bin, such
     # as 'bin/scripts' for bowtie2.
@@ -16,7 +19,7 @@ main() {
     local app bin_names create_args dict pos
     koopa_assert_is_not_aarch64
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['jq']="$(koopa_locate_jq)"
     )
     [[ -x "${app['cut']}" ]] || return 1

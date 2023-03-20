@@ -78,6 +78,7 @@ to '${dict['bucket_prefix']}'."
     (
         koopa_cd "${dict['local_prefix']}"
         koopa_assert_is_file 'Gemfile'
+        koopa_dl 'Bundle prefix' "${dict['bundle_prefix']}"
         "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
         [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
         "${app['bundle']}" install
