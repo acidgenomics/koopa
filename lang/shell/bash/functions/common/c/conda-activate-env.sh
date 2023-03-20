@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this to not deactivate dynamically.
+
 koopa_conda_activate_env() {
     # """
     # Activate a conda environment.
@@ -48,6 +50,7 @@ environment '${dict['env_name']}'."
     fi
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     koopa_is_conda_env_active && koopa_conda_deactivate
+    # FIXME This step likely won't work due to our deactivate command.
     koopa_activate_conda
     koopa_assert_is_function 'conda'
     conda activate "${dict['env_prefix']}"
