@@ -982,11 +982,11 @@
     },
     "bin": ["curl", "curl-config"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-20",
     "dependencies": ["ca-certificates"],
     "man1": ["curl.1", "curl-config.1"],
-    "url": ["https://curl.haxx.se/"],
-    "version": "7.88.1"
+    "url": ["https://curl.se/"],
+    "version": "8.0.0"
   },
   "deeptools": {
     "bin": ["deeptools"],
@@ -1626,13 +1626,12 @@
     "aliases": {
       "homebrew-cask": true
     },
-    "arch": "x86_64",
     "bin": ["gcloud"],
-    "date": "2023-03-07",
+    "date": "2023-03-20",
     "dependencies": ["python3.10"],
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "420.0.0"
+    "version": "422.0.0"
   },
   "googletest": {
     "aliases": {
