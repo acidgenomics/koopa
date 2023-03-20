@@ -3920,6 +3920,11 @@ koopa_cli_reinstall() {
             koopa_reinstall_all_revdeps "$@"
             return 0
             ;;
+        '--only-revdeps')
+            shift 1
+            koopa_reinstall_all_revdeps "$@"
+            return 0
+            ;;
     esac
     koopa_cli_install --reinstall "$@"
 }
@@ -19403,7 +19408,7 @@ koopa_reinstall_all_revdeps() {
                 "${app_name} reverse dependencies" \
                 "$(koopa_to_string "${revdeps[@]}")"
         else
-            koopa_alert_note "${app_name} has no reverse dependencies."
+            koopa_alert_note "'${app_name}' has no reverse dependencies."
         fi
         koopa_cli_reinstall "${install_args[@]}"
     done
@@ -19413,6 +19418,49 @@ koopa_reinstall_all_revdeps() {
 koopa_reinstall_app() {
     koopa_assert_has_args "$#"
     koopa_koopa install "$@" --reinstall
+}
+
+koopa_reinstall_only_revdeps() {
+    local app_name flags pos
+    koopa_assert_has_args "$#"
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--'*)
+                flags+=("$1")
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    for app_name in "$@"
+    do
+        local install_args revdeps
+        install_args=()
+        if koopa_is_array_non_empty "${flags[@]}"
+        then
+            install_args+=("${flags[@]}")
+        fi
+        readarray -t revdeps <<< "$(koopa_app_json_revdeps "$app_name")"
+        if koopa_assert_is_array_non_empty "${revdeps[@]}"
+        then
+            install_args+=("${revdeps[@]}")
+            koopa_dl \
+                "${app_name} reverse dependencies" \
+                "$(koopa_to_string "${revdeps[@]}")"
+        else
+            koopa_stop "'${app_name}' has no reverse dependencies."
+        fi
+        koopa_cli_reinstall "${install_args[@]}"
+    done
+    return 0
 }
 
 koopa_relink() {
