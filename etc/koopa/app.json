@@ -3715,12 +3715,12 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-15",
+    "date": "2023-03-20",
     "dependencies": [
       "bzip2",
       "cairo",
       "coreutils",
-      "curl",
+      "curl7",
       "fontconfig",
       "freetype",
       "fribidi",
@@ -3789,12 +3789,12 @@
   },
   "r-devel": {
     "check": false,
-    "date": "2023-03-14",
+    "date": "2023-03-20",
     "dependencies": [
       "bzip2",
       "cairo",
       "coreutils",
-      "curl",
+      "curl7",
       "fontconfig",
       "freetype",
       "fribidi",
