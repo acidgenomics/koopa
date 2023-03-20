@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME This currently requires Rosetta on Apple Silicon.
+# FIXME Rework to build from source, similar to Homebrew approach.
 
 main() {
     # """

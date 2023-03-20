@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Also set the origin to SSH instead of HTTPS.
+# git remote set-url origin git@github.com:acidgenomics/koopa.git
+
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
