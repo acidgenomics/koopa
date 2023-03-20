@@ -61,6 +61,7 @@ koopa_install_all_apps() {
         'cmake'
         'lz4'
         'curl'
+        'curl7'
         # NOTE This requires bootstrap on macOS.
         'bash'
         'git'
