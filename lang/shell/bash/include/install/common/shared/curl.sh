@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Likely need to fix this on macOS:
-# checking if libraries can be versioned... no
-# configure: WARNING: You need an ld version supporting the --version-script option
-
 main() {
     # """
     # Install cURL.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-20.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -28,9 +24,8 @@ main() {
         'zstd' \
         'ca-certificates' \
         'openssl3'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
@@ -65,7 +60,6 @@ download/${dict['name']}-${dict['version2']}/${dict['file']}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    # > "${app['make']}" test
     "${app['make']}" install
     return 0
 }

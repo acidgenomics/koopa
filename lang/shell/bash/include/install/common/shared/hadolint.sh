@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2023-02-10.
+    # @note Updated 2023-03-19.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -14,7 +14,6 @@ main() {
     # - https://github.com/hadolint/hadolint/issues/904
     # """
     local app build_deps dict
-    koopa_assert_is_not_aarch64
     build_deps=('git' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     declare -A app=(
@@ -28,6 +27,7 @@ main() {
         ['ghc_version']='9.2.5'
         ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
         ['jobs']="$(koopa_cpu_count)"
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -58,6 +58,6 @@ END
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
         --verbose \
-        "hadolint-${dict['version']}"
+        "${dict['name']}-${dict['version']}"
     return 0
 }

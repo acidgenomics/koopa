@@ -916,7 +916,7 @@ koopa_macos_os_codename() {
     dict['version']="$(koopa_macos_os_version)"
     case "${dict['version']}" in
         '13.'*)
-            dict['string']='Mammoth'
+            dict['string']='Ventura'
             ;;
         '12.'*)
             dict['string']='Monterey'
