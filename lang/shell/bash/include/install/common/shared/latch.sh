@@ -2,8 +2,10 @@
 
 # NOTE macOS segfault debugging:
 #
-# https://developer.apple.com/forums/thread/719949
-# https://github.com/Homebrew/homebrew-core/issues/116415
+# - https://developer.apple.com/forums/thread/719949
+# - https://github.com/Homebrew/homebrew-core/issues/116415
+# - https://github.com/aws/aws-sdk-pandas/issues/1774
+# - https://github.com/invoke-ai/InvokeAI/pull/1969
 #
 # Thread 0 Crashed::  Dispatch queue: com.apple.main-thread
 # 0   libarrow.600.dylib            	       0x12197f162 Aws::Http::CurlHandleContainer::~CurlHandleContainer() + 50
