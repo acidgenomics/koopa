@@ -17936,8 +17936,7 @@ koopa_python_create_venv() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app
-    app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    app['python']=''
     declare -A dict=(
         ['name']=''
         ['pip']=1
@@ -17983,6 +17982,8 @@ koopa_python_create_venv() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     pkgs=("$@")
+    [[ -z "${app['python']}" ]] && \
+        app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
@@ -18028,7 +18029,8 @@ ${dict['py_maj_min_ver']}"
     then
         case "${dict['py_version']}" in
             '3.11.'* | \
-            '3.10.'*)
+            '3.10.'* | \
+            '3.9.'*)
                 dict['pip_version']='22.3.1'
                 dict['setuptools_version']='65.6.3'
                 dict['wheel_version']='0.38.4'
