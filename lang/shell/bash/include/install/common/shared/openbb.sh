@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This is now hitting a conda enviroment error:
+# > Error: conda is not active.
+
 main() {
     # """
     # Install OpenBB terminal.
