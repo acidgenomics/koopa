@@ -12995,6 +12995,13 @@ koopa_install_python311() {
     return 0
 }
 
+koopa_install_python39() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.9' \
+        "$@"
+}
+
 koopa_install_r_devel() {
     koopa_install_app \
         --name='r-devel' \
@@ -14310,6 +14317,7 @@ to '${dict['bucket_prefix']}'."
     (
         koopa_cd "${dict['local_prefix']}"
         koopa_assert_is_file 'Gemfile'
+        koopa_dl 'Bundle prefix' "${dict['bundle_prefix']}"
         "${app['bundle']}" config set --local path "${dict['bundle_prefix']}"
         [[ -f 'Gemfile.lock' ]] && koopa_rm 'Gemfile.lock'
         "${app['bundle']}" install
@@ -16424,6 +16432,13 @@ koopa_locate_python311() {
         "$@"
 }
 
+koopa_locate_python39() {
+    koopa_locate_app \
+        --app-name='python3.9' \
+        --bin-name='python3.9' \
+        "$@"
+}
+
 koopa_locate_r() {
     koopa_locate_app \
         --app-name='r' \
@@ -17921,8 +17936,7 @@ koopa_python_create_venv() {
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     declare -A app
-    app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    app['python']=''
     declare -A dict=(
         ['name']=''
         ['pip']=1
@@ -17968,6 +17982,8 @@ koopa_python_create_venv() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     pkgs=("$@")
+    [[ -z "${app['python']}" ]] && \
+        app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
@@ -18013,7 +18029,8 @@ ${dict['py_maj_min_ver']}"
     then
         case "${dict['py_version']}" in
             '3.11.'* | \
-            '3.10.'*)
+            '3.10.'* | \
+            '3.9.'*)
                 dict['pip_version']='22.3.1'
                 dict['setuptools_version']='65.6.3'
                 dict['wheel_version']='0.38.4'
@@ -25079,6 +25096,12 @@ koopa_uninstall_python311() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
+}
+
+koopa_uninstall_python39() {
+    koopa_uninstall_app \
+        --name='python3.9' \
+        "$@"
 }
 
 koopa_uninstall_r_devel() {
