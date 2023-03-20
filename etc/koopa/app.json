@@ -1770,8 +1770,7 @@
       "soelim",
       "tbl",
       "tfmtodit",
-      "troff",
-      "xtotroff"
+      "troff"
     ],
     "date": "2023-03-15",
     "man1": [
@@ -1796,7 +1795,6 @@
       "gropdf.1",
       "grops.1",
       "grotty.1",
-      "gxditview.1",
       "hpftodit.1",
       "indxbib.1",
       "lkbib.1",
@@ -1820,8 +1818,7 @@
       "soelim.1",
       "tbl.1",
       "tfmtodit.1",
-      "troff.1",
-      "xtotroff.1"
+      "troff.1"
     ],
     "url": ["https://ftp.gnu.org/gnu/groff/"],
     "version": "1.22.4"
