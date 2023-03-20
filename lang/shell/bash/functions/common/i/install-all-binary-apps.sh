@@ -223,6 +223,7 @@ koopa_install_all_binary_apps() {
         'pylint'
         'pytaglib'
         'pytest'
+        'python3.9'
         'python3.10'
         'python3.11'
         'r'
