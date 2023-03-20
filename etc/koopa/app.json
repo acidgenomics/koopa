@@ -2281,7 +2281,7 @@
   "latch": {
     "bin": ["latch"],
     "date": "2023-03-20",
-    "dependencies": ["python3.9"],
+    "dependencies": ["python3.10"],
     "large": true,
     "url": [
       "https://docs.latch.bio/",
@@ -3614,6 +3614,7 @@
     },
     "bin": ["python3.9", "python3.9-config"],
     "build_dependencies": ["make", "pkg-config"],
+    "check": false,
     "conservative": true,
     "date": "2023-03-20",
     "dependencies": [
@@ -3631,7 +3632,6 @@
       "zlib"
     ],
     "man1": ["python3.9.1"],
-    "reverse_dependencies": ["latch"],
     "url": ["https://www.python.org/"],
     "version": "3.9.16"
   },
@@ -3658,7 +3658,7 @@
       "zlib"
     ],
     "man1": ["python3.10.1"],
-    "reverse_dependencies": ["google-cloud-sdk"],
+    "reverse_dependencies": ["google-cloud-sdk", "latch"],
     "url": ["https://www.python.org/"],
     "version": "3.10.10"
   },
