@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
-# NOTE macOS segfault debugging:
+# NOTE macOS segfault debugging due to pyarrow
 #
+# Relevant file:
+# /opt/koopa/app/latch/2.14.0/libexec/lib/python3.10/site-packages/
+#   pyarrow/libarrow.600.dylib
+#
+# See also:
 # - https://developer.apple.com/forums/thread/719949
 # - https://github.com/Homebrew/homebrew-core/issues/116415
 # - https://github.com/aws/aws-sdk-pandas/issues/1774
 # - https://github.com/invoke-ai/InvokeAI/pull/1969
+# - https://youtrack.jetbrains.com/issue/IDEA-306048
 #
 # Thread 0 Crashed::  Dispatch queue: com.apple.main-thread
 # 0   libarrow.600.dylib            	       0x12197f162 Aws::Http::CurlHandleContainer::~CurlHandleContainer() + 50
