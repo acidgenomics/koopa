@@ -53,7 +53,7 @@ koopa_r_configure_ldpaths() {
     keys=(
         'bzip2'
         'cairo'
-        'curl'
+        'curl7'
         'fontconfig'
         'freetype'
         'fribidi'

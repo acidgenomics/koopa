@@ -11,7 +11,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2022-11-09.
+    # @note Updated 2023-03-20.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -81,8 +81,9 @@ main() {
         'xz'
         # deps: zlib.
         'openssl3'
+        # NOTE cURL 8 currently fails build checks.
         # deps: openssl3.
-        'curl'
+        'curl7'
         # deps: gcc.
         'lapack'
         # deps: none.

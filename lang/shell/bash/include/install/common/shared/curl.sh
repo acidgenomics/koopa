@@ -30,7 +30,7 @@ main() {
     declare -A dict=(
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
+        ['name']='curl'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['ssl']="$(koopa_app_prefix 'openssl3')"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
