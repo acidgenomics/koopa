@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-03-20.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -25,7 +25,7 @@ main() {
         dict['os']='darwin'
     fi
     case "${dict['arch']}" in
-        'aarch64')
+        'aarch64' | 'arm64')
             dict['arch2']='arm'
             ;;
         *)
