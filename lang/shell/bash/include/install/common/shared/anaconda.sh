@@ -6,7 +6,6 @@ main() {
     # @note Updated 2022-12-01.
     # """
     local app dict
-    koopa_assert_is_not_aarch64
     koopa_assert_has_no_args "$#"
     declare -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
