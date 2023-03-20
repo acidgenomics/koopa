@@ -205,6 +205,7 @@
     },
     "bin": ["aws"],
     "date": "2023-03-15",
+    "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
@@ -2284,6 +2285,7 @@
     "bin": ["latch"],
     "date": "2023-03-19",
     "dependencies": ["python3.10"],
+    "large": true,
     "url": [
       "https://docs.latch.bio/",
       "https://github.com/latchbio/latch/",
