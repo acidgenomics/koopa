@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider not installing as macOS framework.
+
 main() {
     # """
     # Install Python.
