@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-21.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -496,6 +496,10 @@ _koopa_complete() {
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'system')
                             args+=('r')
+                            if koopa_is_linux
+                            then
+                                args+=('sshd')
+                            fi
                             ;;
                         'user')
                             args+=('chemacs' 'dotfiles')

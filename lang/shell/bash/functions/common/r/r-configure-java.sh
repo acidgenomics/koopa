@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2022-09-24.
+    # @note Updated 2023-03-21.
     #
     # The default Java path differs depending on the system.
     #
@@ -31,25 +31,34 @@ koopa_r_configure_java() {
     local app conf_dict dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
     declare -A app
-    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    dict['system']=0
+    declare -A dict=(
+        ['system']=0
+        ['use_apps']=1
+    )
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    if [[ "${dict['system']}" -eq 1 ]] && \
+        koopa_is_linux && \
+        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
     then
-        return 0
+        dict['use_apps']=0
     fi
-    app['jar']="$(koopa_locate_jar --realpath)"
-    app['java']="$(koopa_locate_java --realpath)"
-    app['javac']="$(koopa_locate_javac --realpath)"
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    else
+        dict['openjdk']='/usr/lib/jvm/default-java'
+    fi
+    koopa_assert_is_dir "${dict['openjdk']}"
+    app['jar']="${dict['openjdk']}/bin/jar"
+    app['java']="${dict['openjdk']}/bin/java"
+    app['javac']="${dict['openjdk']}/bin/javac"
     app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['jar']}" ]] || return 1
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
-    koopa_assert_is_dir "${dict['openjdk']}"
     koopa_alert 'Updating R Java configuration.'
     declare -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
