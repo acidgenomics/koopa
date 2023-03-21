@@ -65,6 +65,12 @@ __koopa_activate_koopa() {
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     [ "${KOOPA_MINIMAL:-0}" -eq 0 ] || return 0
     # > _koopa_umask || return 1
+    # Edge case for JupyterLab terminal inside of conda.
+    if [ -z "${HOME:-}" ]
+    then
+        HOME="$(pwd)"
+        export HOME
+    fi
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
     # Edge case for RStudio Server terminal to support dircolors.
