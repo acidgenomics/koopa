@@ -9,7 +9,7 @@
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
-    # @note Updated 2022-10-25.
+    # @note Updated 2023-03-21.
     #
     # Default LIBS:
     # - macOS: -lpcre2-8 -llzma -lbz2 -lz -licucore -ldl -lm -liconv
@@ -22,13 +22,18 @@ koopa_r_configure_makeconf() {
     # """
     local app dict libs
     declare -A app
-    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    dict['system']=0
+    declare -A dict=(
+        ['system']=0
+        ['use_apps']=1
+    )
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    if [[ "${dict['system']}" -eq 1 ]] && \
+        koopa_is_linux && \
+        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
     then
+        dict['use_apps']=0
         return 0
     fi
     app['pkg_config']="$(koopa_locate_pkg_config)"

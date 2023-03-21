@@ -18,7 +18,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-03-21.
     #
     # @section Package library location:
     #
@@ -84,51 +84,71 @@ koopa_r_configure_environ() {
     local app_pc_path_arr pc_path_arr
     koopa_assert_has_args_eq "$#" 1
     declare -A app
-    declare -A dict
     app['r']="${1:?}"
+    app['sort']="$(koopa_locate_sort --allow-system)"
     [[ -x "${app['r']}" ]] || return 1
-    dict['system']=0
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
-    then
-        return 0
-    fi
-    app['bzip2']="$(koopa_locate_bzip2)"
-    app['cat']="$(koopa_locate_cat)"
-    app['gzip']="$(koopa_locate_gzip)"
-    app['less']="$(koopa_locate_less)"
-    app['lpr']="$(koopa_locate_lpr --allow-missing)"
-    app['open']="$(koopa_locate_open --allow-missing)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    app['sort']="$(koopa_locate_sort)"
-    app['texi2dvi']="$(koopa_locate_texi2dvi)"
-    app['unzip']="$(koopa_locate_unzip)"
-    app['zip']="$(koopa_locate_zip)"
-    [[ -x "${app['bzip2']}" ]] || return 1
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['gzip']}" ]] || return 1
-    [[ -x "${app['less']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['texi2dvi']}" ]] || return 1
-    [[ -x "${app['unzip']}" ]] || return 1
-    [[ -x "${app['zip']}" ]] || return 1
-    [[ ! -x "${app['lpr']}" ]] && app['lpr']='/usr/bin/lpr'
-    [[ ! -x "${app['open']}" ]] && app['open']='/usr/bin/open'
+    declare -A dict=(
+        ['system']=0
+        ['use_apps']=1
+    )
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    if [[ "${dict['system']}" -eq 1 ]] && \
+        koopa_is_linux && \
+        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
+    then
+        dict['use_apps']=0
+    fi
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
-    dict['udunits2']="$(koopa_app_prefix 'udunits')"
-    koopa_assert_is_dir \
-        "${dict['r_prefix']}" \
-        "${dict['udunits2']}"
+    koopa_assert_is_dir "${dict['r_prefix']}"
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        app['bzip2']="$(koopa_locate_bzip2)"
+        app['cat']="$(koopa_locate_cat)"
+        app['gzip']="$(koopa_locate_gzip)"
+        app['less']="$(koopa_locate_less)"
+        app['lpr']="$(koopa_locate_lpr --allow-missing)"
+        app['open']="$(koopa_locate_open --allow-missing)"
+        app['pkg_config']="$(koopa_locate_pkg_config)"
+        app['texi2dvi']="$(koopa_locate_texi2dvi)"
+        app['unzip']="$(koopa_locate_unzip)"
+        app['zip']="$(koopa_locate_zip)"
+        [[ -x "${app['bzip2']}" ]] || return 1
+        [[ -x "${app['cat']}" ]] || return 1
+        [[ -x "${app['gzip']}" ]] || return 1
+        [[ -x "${app['less']}" ]] || return 1
+        [[ -x "${app['pkg_config']}" ]] || return 1
+        [[ -x "${app['texi2dvi']}" ]] || return 1
+        [[ -x "${app['unzip']}" ]] || return 1
+        [[ -x "${app['zip']}" ]] || return 1
+        if [[ ! -x "${app['lpr']}" ]]
+        then
+            app['lpr']='/usr/bin/lpr'
+        fi
+        if [[ ! -x "${app['open']}" ]]
+        then
+            if koopa_is_linux
+            then
+                app['open']='/usr/bin/xdg-open'
+            else
+                app['open']='/usr/bin/open'
+            fi
+        fi
+        dict['udunits2']="$(koopa_app_prefix 'udunits')"
+    fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     koopa_alert "Configuring '${dict['file']}'."
     declare -A conf_dict
     lines=()
     lines+=(
+        'R_BATCHSAVE=--no-save --no-restore'
         "R_LIBS_SITE=\${R_HOME}/site-library"
         "R_LIBS_USER=\${R_LIBS_SITE}"
+        'R_PAPERSIZE=letter'
+        "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
+        "TZ=\${TZ:-America/New_York}"
     )
     # Set the 'PATH' string. Restricting path, so we don't mask compiler
     # binaries with virtual environment. This also greatly improves consistency
@@ -156,116 +176,109 @@ koopa_r_configure_environ() {
             '/opt/X11/bin'
         )
     fi
-    # Set the 'PKG_CONFIG_PATH' string.
-    declare -A app_pc_path_arr
-    keys=(
-        'cairo'
-        'curl7'
-        'fontconfig'
-        'freetype'
-        'fribidi'
-        'gdal'
-        'geos'
-        'glib'
-        'graphviz'
-        'harfbuzz'
-        'icu4c'
-        'imagemagick'
-        # > 'jpeg'
-        'lapack'
-        'libffi'
-        'libgit2'
-        'libjpeg-turbo'
-        'libpng'
-        'libssh2'
-        'libtiff'
-        # > 'libuv'
-        'libxml2'
-        'openblas'
-        'openssl3'
-        'pcre'
-        'pcre2'
-        'pixman'
-        'proj'
-        'python3.11'
-        'readline'
-        'sqlite'
-        'xorg-libice'
-        'xorg-libpthread-stubs'
-        'xorg-libsm'
-        'xorg-libx11'
-        'xorg-libxau'
-        'xorg-libxcb'
-        'xorg-libxdmcp'
-        'xorg-libxext'
-        'xorg-libxrandr'
-        'xorg-libxrender'
-        'xorg-libxt'
-        'xorg-xorgproto'
-        'xz'
-        'zlib'
-        'zstd'
-    )
-    for key in "${keys[@]}"
-    do
-        local prefix
-        prefix="$(koopa_app_prefix "$key")"
-        koopa_assert_is_dir "$prefix"
-        app_pc_path_arr[$key]="$prefix"
-    done
-    for i in "${!app_pc_path_arr[@]}"
-    do
-        case "$i" in
-            'xorg-xorgproto')
-                app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
-                ;;
-            *)
-                app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
-                ;;
-        esac
-    done
-    koopa_assert_is_dir "${app_pc_path_arr[@]}"
-    pc_path_arr=()
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        pc_path_arr+=('/usr/local/lib/pkgconfig')
-    fi
-    pc_path_arr+=("${app_pc_path_arr[@]}")
-    if [[ "${dict['system']}" -eq 1 ]]
-    then
-        local sys_pc_path_arr
-        # NOTE Likely want to include '/usr/bin/pkg-config' here also.
-        readarray -t sys_pc_path_arr <<< "$( \
-            "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
-        )"
-        pc_path_arr+=("${sys_pc_path_arr[@]}")
-    fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
-    conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
-    lines+=(
-        "PAGER=${app['less']}"
-        "PATH=${conf_dict['path']}"
-        "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
-        'R_BATCHSAVE=--no-save --no-restore'
-        "R_BROWSER=${app['open']}"
-        "R_BZIPCMD=${app['bzip2']}"
-        "R_GZIPCMD=${app['gzip']}"
-        'R_PAPERSIZE=letter'
-        "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
-        "R_PDFVIEWER=${app['open']}"
-        "R_PRINTCMD=${app['lpr']}"
-        "R_TEXI2DVICMD=${app['texi2dvi']}"
-        "R_UNZIPCMD=${app['unzip']}"
-        "R_ZIPCMD=${app['zip']}"
-        "TZ=\${TZ:-America/New_York}"
-    )
-    if koopa_is_linux
+    lines+=("PATH=${conf_dict['path']}")
+    if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        lines+=(
-            'R_BROWSER=/usr/bin/xdg-open'
-            'R_PRINTCMD=/usr/bin/lpr'
+        # Set the 'PKG_CONFIG_PATH' string.
+        declare -A app_pc_path_arr
+        keys=(
+            'cairo'
+            'curl7'
+            'fontconfig'
+            'freetype'
+            'fribidi'
+            'gdal'
+            'geos'
+            'glib'
+            'graphviz'
+            'harfbuzz'
+            'icu4c'
+            'imagemagick'
+            # > 'jpeg'
+            'lapack'
+            'libffi'
+            'libgit2'
+            'libjpeg-turbo'
+            'libpng'
+            'libssh2'
+            'libtiff'
+            # > 'libuv'
+            'libxml2'
+            'openblas'
+            'openssl3'
+            'pcre'
+            'pcre2'
+            'pixman'
+            'proj'
+            'python3.11'
+            'readline'
+            'sqlite'
+            'xorg-libice'
+            'xorg-libpthread-stubs'
+            'xorg-libsm'
+            'xorg-libx11'
+            'xorg-libxau'
+            'xorg-libxcb'
+            'xorg-libxdmcp'
+            'xorg-libxext'
+            'xorg-libxrandr'
+            'xorg-libxrender'
+            'xorg-libxt'
+            'xorg-xorgproto'
+            'xz'
+            'zlib'
+            'zstd'
         )
-    elif koopa_is_macos
+        for key in "${keys[@]}"
+        do
+            local prefix
+            prefix="$(koopa_app_prefix "$key")"
+            koopa_assert_is_dir "$prefix"
+            app_pc_path_arr[$key]="$prefix"
+        done
+        for i in "${!app_pc_path_arr[@]}"
+        do
+            case "$i" in
+                'xorg-xorgproto')
+                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
+                    ;;
+                *)
+                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
+                    ;;
+            esac
+        done
+        koopa_assert_is_dir "${app_pc_path_arr[@]}"
+        pc_path_arr=()
+        if [[ "${dict['system']}" -eq 1 ]]
+        then
+            pc_path_arr+=('/usr/local/lib/pkgconfig')
+        fi
+        pc_path_arr+=("${app_pc_path_arr[@]}")
+        if [[ "${dict['system']}" -eq 1 ]]
+        then
+            local sys_pc_path_arr
+            # NOTE Likely want to include '/usr/bin/pkg-config' here also.
+            readarray -t sys_pc_path_arr <<< "$( \
+                "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
+            )"
+            pc_path_arr+=("${sys_pc_path_arr[@]}")
+        fi
+        conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
+        lines+=(
+            "PAGER=${app['less']}"
+            "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
+            "R_BROWSER=${app['open']}"
+            "R_BZIPCMD=${app['bzip2']}"
+            "R_GZIPCMD=${app['gzip']}"
+            "R_PDFVIEWER=${app['open']}"
+            "R_PRINTCMD=${app['lpr']}"
+            "R_TEXI2DVICMD=${app['texi2dvi']}"
+            "R_UNZIPCMD=${app['unzip']}"
+            "R_ZIPCMD=${app['zip']}"
+        )
+    fi
+    if koopa_is_macos
     then
         lines+=('R_MAX_NUM_DLLS=153')
     fi
@@ -317,10 +330,13 @@ koopa_r_configure_environ() {
     # units
     # --------------------------------------------------------------------------
     # The units package requires udunits2 to be installed.
-    lines+=(
-        "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
-        "UDUNITS2_LIBS=${dict['udunits2']}/lib"
-    )
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        lines+=(
+            "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
+            "UDUNITS2_LIBS=${dict['udunits2']}/lib"
+        )
+    fi
     # vroom
     # --------------------------------------------------------------------------
     # Default connection size of 131072 is often too small. Increasing by 4x.

@@ -88,6 +88,7 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name2']}-${dict['version']}"
+    export FORCE_UNSAFE_CONFIGURE=1
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help

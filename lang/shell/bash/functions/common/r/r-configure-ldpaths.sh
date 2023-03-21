@@ -26,13 +26,18 @@ koopa_r_configure_ldpaths() {
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
     declare -A app
-    declare -A dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    dict['system']=0
+    declare -A dict=(
+        ['system']=0
+        ['use_apps']=1
+    )
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_docker
+    if [[ "${dict['system']}" -eq 1 ]] && \
+        koopa_is_linux && \
+        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
     then
+        dict['use_apps']=0
         return 0
     fi
     dict['arch']="$(koopa_arch)"

@@ -1,20 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME Consider symlinking '/usr/local/lib/R/site-library' to
-# '/usr/lib/R/site-library' on Linux.
+# FIXME Ensure we symlink '/usr/local/lib/R/site-library' to '/usr/lib/R/site-library' on Linux.
+# FIXME This needs to work for system R on Debian (e.g. Dockerfile, Latch Pod).
 
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-03-21.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['r']="${1:-}"
-    )
+    declare -A app
+    app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
