@@ -18179,7 +18179,9 @@ koopa_r_configure_environ() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app
     app['r']="${1:?}"
+    app['sort']="$(koopa_locate_sort --allow-system)"
     [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
     declare -A dict=(
         ['system']=0
         ['use_apps']=1
@@ -18204,7 +18206,6 @@ koopa_r_configure_environ() {
         app['lpr']="$(koopa_locate_lpr --allow-missing)"
         app['open']="$(koopa_locate_open --allow-missing)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
-        app['sort']="$(koopa_locate_sort)"
         app['texi2dvi']="$(koopa_locate_texi2dvi)"
         app['unzip']="$(koopa_locate_unzip)"
         app['zip']="$(koopa_locate_zip)"
@@ -18213,7 +18214,6 @@ koopa_r_configure_environ() {
         [[ -x "${app['gzip']}" ]] || return 1
         [[ -x "${app['less']}" ]] || return 1
         [[ -x "${app['pkg_config']}" ]] || return 1
-        [[ -x "${app['sort']}" ]] || return 1
         [[ -x "${app['texi2dvi']}" ]] || return 1
         [[ -x "${app['unzip']}" ]] || return 1
         [[ -x "${app['zip']}" ]] || return 1
