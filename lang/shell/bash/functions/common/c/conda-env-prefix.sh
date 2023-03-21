@@ -3,7 +3,7 @@
 koopa_conda_env_prefix() {
     # """
     # Return prefix for a specified conda environment.
-    # @note Updated 2022-07-28.
+    # @note Updated 2023-03-20.
     #
     # Attempt to locate by default path first, which is the fastest approach.
     #
@@ -22,20 +22,20 @@ koopa_conda_env_prefix() {
     koopa_assert_has_args_le "$#" 1
     declare -A app=(
         ['conda']="$(koopa_locate_conda)"
-        ['jq']="$(koopa_locate_jq)"
-        ['sed']="$(koopa_locate_sed)"
-        ['tail']="$(koopa_locate_tail)"
+        ['python']="$(koopa_locate_conda_python)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
+        ['tail']="$(koopa_locate_tail --allow-system)"
     )
     [[ -x "${app['conda']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1
-    declare -A dict=(
-        ['env_name']="${1:-}"
-    )
+    declare -A dict
+    dict['env_name']="${1:-}"
     dict['env_prefix']="$( \
-        "${app['conda']}" info --json | \
-            "${app['jq']}" --raw-output '.envs_dirs[0]' \
+        "${app['conda']}" info --json \
+        | "${app['python']}" -c \
+            "import json,sys;print(json.load(sys.stdin)['envs_dirs'][0])" \
     )"
     [[ -n "${dict['env_prefix']}" ]] || return 1
     if [[ -z "${dict['env_name']}" ]]
