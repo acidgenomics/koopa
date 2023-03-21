@@ -72,7 +72,7 @@ __koopa_bash_source() {
 __koopa_check_zsh() {
     # """
     # Check that current Zsh configuration is supported.
-    # @note Updated 2021-05-25.
+    # @note Updated 2023-03-21.
     #
     # Zsh currently requires presence of '~/.zshrc' for clean activation.
     # This check will intentionally force early return when activation is
@@ -89,6 +89,8 @@ __koopa_check_zsh() {
     [ -n "${ZSH_VERSION:-}" ] || return 0
     case "$0" in
         '_src_etc_profile'*)
+            echo "FIXME $0"
+            # FIXME Only do this if we have a .zshrc file.
             return 1
             ;;
     esac
