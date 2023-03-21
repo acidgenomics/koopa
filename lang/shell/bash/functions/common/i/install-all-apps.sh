@@ -5,12 +5,12 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-20.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
     # """
-    local app app_name apps bool push_apps
+    local app app_name apps bool dict push_apps
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
@@ -18,11 +18,16 @@ koopa_install_all_apps() {
     declare -A bool
     bool['large']=0
     koopa_has_large_system_disk && bool['large']=1
-    apps=()
-    apps+=(
-        'make'
-        'pkg-config'
+    declare -A dict=(
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
     )
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
+    fi
+    apps=()
+    apps+=('make' 'pkg-config')
     koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
@@ -62,7 +67,6 @@ koopa_install_all_apps() {
         'nano'
         'curl'
         'curl7'
-        # NOTE This requires bootstrap on macOS.
         'bash'
         'git'
         'lapack'

@@ -25,8 +25,7 @@ main() {
     )
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "'${dict['name']}' requires ${dict['mem_gb_cutoff']} \
-GB of RAM."
+        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
     fi
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://github.com/Kitware/CMake/releases/download/\
