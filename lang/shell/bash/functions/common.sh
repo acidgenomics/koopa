@@ -2392,7 +2392,7 @@ koopa_basename_sans_ext_2() {
     local app file str
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     for file in "$@"
@@ -4235,7 +4235,7 @@ koopa_conda_create_env() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['conda']="$(koopa_locate_conda)"
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1
@@ -4664,7 +4664,7 @@ koopa_convert_fastq_to_fasta() {
     local app dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['paste']="$(koopa_locate_paste)"
         ['sed']="$(koopa_locate_sed)"
         ['tr']="$(koopa_locate_tr)"
@@ -4940,7 +4940,7 @@ koopa_current_bcbio_nextgen_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     str="$( \
@@ -4967,7 +4967,7 @@ koopa_current_ensembl_version() {
     local app str
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['cut']}" ]] || return 1
@@ -5065,7 +5065,7 @@ koopa_current_wormbase_version() {
     local app str url
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     url="ftp://ftp.wormbase.org/pub/wormbase/\
@@ -5692,7 +5692,7 @@ koopa_docker_build() {
     local build_args image_ids platforms tag tags
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['date']="$(koopa_locate_date)"
         ['docker']="$(koopa_locate_docker)"
         ['sort']="$(koopa_locate_sort)"
@@ -6596,7 +6596,7 @@ koopa_fasta_generate_chromosomes_file() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['grep']="$(koopa_locate_grep)"
         ['sed']="$(koopa_locate_sed)"
     )
@@ -7028,7 +7028,7 @@ koopa_file_ext_2() {
     local app file x
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     for file in "$@"
@@ -8639,7 +8639,7 @@ koopa_github_latest_release() {
     local app repo
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['cut']}" ]] || return 1
@@ -15019,7 +15019,7 @@ koopa_line_count() {
     local app file str
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['wc']="$(koopa_locate_wc)"
         ['xargs']="$(koopa_locate_xargs)"
     )
@@ -21245,7 +21245,7 @@ koopa_sra_download_accession_list() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['efetch']="$(koopa_locate_efetch)"
         ['esearch']="$(koopa_locate_esearch)"
         ['sed']="$(koopa_locate_sed)"
