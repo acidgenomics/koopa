@@ -294,7 +294,10 @@ END
 koopa_admin_group() {
     local group
     koopa_assert_has_no_args "$#"
-    if koopa_is_alpine
+    if koopa_is_root
+    then
+        group='root'
+    elif koopa_is_alpine
     then
         group='wheel'
     elif koopa_is_arch

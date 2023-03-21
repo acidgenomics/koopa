@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Let's use apt instead of gdebi here.
+
 main() {
     # """
     # Install RStudio Server binary.
@@ -24,11 +26,10 @@ main() {
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local app dict
+    local app conf_lines dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['r']="$(koopa_locate_system_r --realpath)"
-    )
+    declare -A app
+    app['r']="$(koopa_locate_system_r --realpath)"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
@@ -81,13 +82,20 @@ ${dict['arch']}/${dict['file']}"
     koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['fun']}" "${dict['file']}"
-    # Ensure RStudio Server is using our recommended version of R.
     # Don't enclose values in quotes in the conf file.
-    read -r -d '' "dict[conf_string]" << END || true
-auth-minimum-user-id=0
-auth-none=1
-rsession-which-r=${app['r']}
-END
+    conf_lines=()
+    # Ensure RStudio Server is using our recommended version of R.
+    conf_lines+=("rsession-which-r=${app['r']}")
+    # Allow root user to log in without password, when applicable. This is
+    # currently used by Latch Pods.
+    if koopa_is_root
+    then
+        conf_lines+=(
+            'auth-minimum-user-id=0'
+            'auth-none=1'
+        )
+    fi
+    dict['conf_string']="$(koopa_print "${conf_lines[@]}")"
     dict['conf_file']='/etc/rstudio/rserver.conf'
     koopa_sudo_write_string \
         --file="${dict['conf_file']}" \
