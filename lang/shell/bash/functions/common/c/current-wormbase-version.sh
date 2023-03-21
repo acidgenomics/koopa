@@ -12,7 +12,7 @@ koopa_current_wormbase_version() {
     local app str url
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     url="ftp://ftp.wormbase.org/pub/wormbase/\
