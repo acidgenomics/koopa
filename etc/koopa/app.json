@@ -2081,9 +2081,9 @@
     },
     "bin": ["hyperfine"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-15",
+    "date": "2023-03-21",
     "url": ["https://github.com/sharkdp/hyperfine/"],
-    "version": "1.16.0"
+    "version": "1.16.1"
   },
   "icu4c": {
     "aliases": {
