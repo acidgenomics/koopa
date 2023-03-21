@@ -3,7 +3,7 @@
 koopa_admin_group() {
     # """
     # Return the administrator group.
-    # @note Updated 2022-02-11.
+    # @note Updated 2023-03-21.
     #
     # Usage of 'groups' can be terribly slow for domain users. Instead of grep
     # matching against 'groups' return, just set the expected default per Linux
@@ -12,7 +12,10 @@ koopa_admin_group() {
     # """
     local group
     koopa_assert_has_no_args "$#"
-    if koopa_is_alpine
+    if koopa_is_root
+    then
+        group='root'
+    elif koopa_is_alpine
     then
         group='wheel'
     elif koopa_is_arch
