@@ -10,7 +10,7 @@ main() {
     # """
     local app bin_name bin_names dict man1_name man1_names pos
     declare -A app
-    app['cut']="$(koopa_locate_cut)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(
         ['locate_python']='koopa_locate_python311'

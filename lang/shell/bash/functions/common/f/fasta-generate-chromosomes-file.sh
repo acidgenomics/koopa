@@ -8,7 +8,7 @@ koopa_fasta_generate_chromosomes_file() {
     local app dict
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['grep']="$(koopa_locate_grep)"
         ['sed']="$(koopa_locate_sed)"
     )
