@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Make apt sources configuration accessible to user on Debian.
+** TODO Add install support for Quarto (on Linux).
 ** TODO Add install support for dash, ksh93, and tcsh.
 ** TODO Consider renaming 'openjdk' to 'temurin'.
 ** TODO On macOS, need to check version of r-openmp installed /usr/local.
