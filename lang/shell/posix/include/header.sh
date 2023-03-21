@@ -100,17 +100,22 @@ __koopa_activate_koopa() {
     then
         _koopa_macos_activate_cli_colors || return 1
     fi
-    case "$(_koopa_shell_name)" in
-        'zsh')
-            [ -x "${KOOPA_PREFIX}/bin/conda" ] && \
-                alias conda='_koopa_alias_conda'
-            [ -x "${KOOPA_PREFIX}/bin/mamba" ] && \
-                alias mamba='_koopa_alias_mamba'
-            ;;
-        *)
-            _koopa_activate_conda || return 1
-            ;;
-    esac
+    # FIXME Does this work OK for Bash?
+    # > case "$(_koopa_shell_name)" in
+    # >     'zsh')
+    # >         [ -x "${KOOPA_PREFIX}/bin/conda" ] && \
+    # >             alias conda='_koopa_alias_conda'
+    # >         [ -x "${KOOPA_PREFIX}/bin/mamba" ] && \
+    # >             alias mamba='_koopa_alias_mamba'
+    # >         ;;
+    # >     *)
+    # >         _koopa_activate_conda || return 1
+    # >         ;;
+    # > esac
+    [ -x "${KOOPA_PREFIX}/bin/conda" ] && \
+        alias conda='_koopa_alias_conda'
+    [ -x "${KOOPA_PREFIX}/bin/mamba" ] && \
+        alias mamba='_koopa_alias_mamba'
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \
         '/usr/local/bin' \
