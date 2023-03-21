@@ -18,7 +18,7 @@ main() {
     koopa_activate_app --build-only 'patch'
     declare -A app=(
         ['curl']="$(koopa_locate_curl)"
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['make']="$(koopa_locate_make)"
         ['patch']="$(koopa_locate_patch)"
     )
