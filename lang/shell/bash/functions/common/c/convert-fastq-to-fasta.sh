@@ -24,7 +24,7 @@ koopa_convert_fastq_to_fasta() {
     local app dict fastq_file fastq_files
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['paste']="$(koopa_locate_paste)"
         ['sed']="$(koopa_locate_sed)"
         ['tr']="$(koopa_locate_tr)"

@@ -15,7 +15,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_asset_is_admin
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict

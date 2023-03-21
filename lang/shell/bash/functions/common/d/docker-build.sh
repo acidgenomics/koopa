@@ -39,7 +39,7 @@ koopa_docker_build() {
     local build_args image_ids platforms tag tags
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['date']="$(koopa_locate_date)"
         ['docker']="$(koopa_locate_docker)"
         ['sort']="$(koopa_locate_sort)"

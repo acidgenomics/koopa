@@ -562,7 +562,7 @@ koopa_debian_apt_enabled_repos() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || return 1
     declare -A dict=(

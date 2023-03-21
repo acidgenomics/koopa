@@ -3,7 +3,7 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2022-10-19.
+    # @note Updated 2023-03-20.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
@@ -14,7 +14,7 @@ koopa_conda_create_env() {
     koopa_assert_has_args "$#"
     declare -A app=(
         ['conda']="$(koopa_locate_conda)"
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1

@@ -10,7 +10,7 @@ koopa_line_count() {
     local app file str
     koopa_assert_has_args "$#"
     declare -A app=(
-        ['cut']="$(koopa_locate_cut)"
+        ['cut']="$(koopa_locate_cut --allow-system)"
         ['wc']="$(koopa_locate_wc)"
         ['xargs']="$(koopa_locate_xargs)"
     )
