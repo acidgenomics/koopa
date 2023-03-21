@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2022-09-13.
+    # @note Updated 2023-03-21.
     #
     # RStudio Server Pro was renamed to Workbench in 2021-06.
     #
@@ -84,6 +84,8 @@ ${dict['arch']}/${dict['file']}"
     # Ensure RStudio Server is using our recommended version of R.
     # Don't enclose values in quotes in the conf file.
     read -r -d '' "dict[conf_string]" << END || true
+auth-minimum-user-id=0
+auth-none=1
 rsession-which-r=${app['r']}
 END
     dict['conf_file']='/etc/rstudio/rserver.conf'

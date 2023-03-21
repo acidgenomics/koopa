@@ -88,6 +88,8 @@ main() {
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name2']}-${dict['version']}"
+    # This is necessary to install some apps (e.g. tar) from root user. This
+    # is very useful for Latch Pods configuration.
     export FORCE_UNSAFE_CONFIGURE=1
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
