@@ -16,12 +16,13 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app \
-        'm4' \
+    koopa_activate_app --build-only \
         'autoconf' \
         'automake' \
+        'libtool'
+    koopa_activate_app \
+        'm4' \
         'gettext' \
-        'libtool' \
         'oniguruma'
     declare -A app=(
         ['autoreconf']="$(koopa_locate_autoreconf)"

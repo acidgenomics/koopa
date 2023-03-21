@@ -2,10 +2,10 @@
 
 """
 Parse koopa 'app.json' file.
-@note Updated 2022-10-06.
+@note Updated 2023-03-20.
 
 @examples
-./parse-app-json.py \
+./app-json.py \
     --app-name='coreutils' \
     --key='bin'
 """
@@ -13,22 +13,22 @@ Parse koopa 'app.json' file.
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
-import sys
+from sys import exit as sys_exit
 
 
 def main(json_file, app_name, key):
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2022-08-23.
+    @note Updated 2023-03-20.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
         keys = json_data.keys()
         if app_name not in keys:
-            sys.exit(1)
+            sys_exit(1)
         app_dict = json_data[app_name]
         if key not in app_dict.keys():
-            sys.exit(1)
+            sys_exit(1)
         value = app_dict[key]
         if isinstance(value, list):
             for i in value:

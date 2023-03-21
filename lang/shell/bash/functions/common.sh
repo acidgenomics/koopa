@@ -17597,9 +17597,21 @@ koopa_parent_dir() {
 koopa_parse_app_json() {
     local cmd
     koopa_assert_has_args "$#"
-    cmd="$(koopa_koopa_prefix)/lang/python/parse-app-json.py"
+    cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
     koopa_assert_is_executable "$cmd"
     "$cmd" "$@"
+    return 0
+}
+
+koopa_parse_conda_meta_json() {
+    local cmd file
+    koopa_assert_has_args_eq "$#" 1
+    file="${1:?}"
+    koopa_assert_is_file "$file"
+    cmd="$(koopa_koopa_prefix)/lang/python/conda-meta-json.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$file"
+    return 0
 }
 
 koopa_parse_url() {
