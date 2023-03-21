@@ -1401,7 +1401,7 @@
     },
     "arch": "amd64",
     "bin": ["gatk"],
-    "date": "2023-03-17",
+    "date": "2023-03-21",
     "dependencies": ["conda"],
     "large": true,
     "outdated": true,
@@ -1409,7 +1409,7 @@
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
     ],
-    "version": "4.3.0.0"
+    "version": "4.4.0.0"
   },
   "gawk": {
     "aliases": {
@@ -2416,10 +2416,10 @@
     },
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-28",
+    "date": "2023-03-21",
     "dependencies": ["zlib", "pcre", "openssl3", "libssh2"],
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.6.2"
+    "version": "1.6.3"
   },
   "libgpg-error": {
     "aliases": {
@@ -3479,7 +3479,7 @@
     "date": "2023-03-20",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.5"
+    "version": "2.8.6"
   },
   "procs": {
     "aliases": {
@@ -4159,7 +4159,7 @@
   "seqkit": {
     "arch": "amd64",
     "bin": ["seqkit"],
-    "date": "2023-03-17",
+    "date": "2023-03-21",
     "dependencies": ["conda"],
     "large": true,
     "outdated": true,
@@ -4167,7 +4167,7 @@
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.3.1"
+    "version": "2.4.0"
   },
   "serf": {
     "aliases": {
