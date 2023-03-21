@@ -5,7 +5,7 @@ Parse koopa 'app.json' file.
 @note Updated 2023-03-20.
 
 @examples
-./parse-app-json.py \
+./app-json.py \
     --app-name='coreutils' \
     --key='bin'
 """
