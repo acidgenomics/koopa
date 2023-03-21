@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider making this user accessible.
+
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
