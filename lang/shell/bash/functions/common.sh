@@ -9937,7 +9937,7 @@ koopa_install_agat() {
 }
 
 koopa_install_all_apps() {
-    local app app_name apps bool push_apps
+    local app app_name apps bool dict push_apps
     koopa_assert_has_no_args "$#"
     declare -A app
     app['koopa']="$(koopa_locate_koopa)"
@@ -9945,11 +9945,16 @@ koopa_install_all_apps() {
     declare -A bool
     bool['large']=0
     koopa_has_large_system_disk && bool['large']=1
-    apps=()
-    apps+=(
-        'make'
-        'pkg-config'
+    declare -A dict=(
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
     )
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
+    fi
+    apps=()
+    apps+=('make' 'pkg-config')
     koopa_is_linux && apps+=('attr')
     apps+=(
         'zlib'
@@ -9963,6 +9968,11 @@ koopa_install_all_apps() {
         'mpfr'
         'mpc'
         'isl'
+        'ca-certificates'
+        'openssl1'
+        'openssl3'
+        'cmake'
+        'lz4'
         'zstd'
         'gcc'
         'autoconf'
@@ -9982,11 +9992,6 @@ koopa_install_all_apps() {
         'libxml2'
         'gettext'
         'nano'
-        'ca-certificates'
-        'openssl1'
-        'openssl3'
-        'cmake'
-        'lz4'
         'curl'
         'curl7'
         'bash'
