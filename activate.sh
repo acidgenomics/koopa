@@ -72,7 +72,7 @@ __koopa_bash_source() {
 __koopa_check_zsh() {
     # """
     # Check that current Zsh configuration is supported.
-    # @note Updated 2021-05-25.
+    # @note Updated 2023-03-21.
     #
     # Zsh currently requires presence of '~/.zshrc' for clean activation.
     # This check will intentionally force early return when activation is

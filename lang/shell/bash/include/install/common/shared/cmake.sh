@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to address missing fortran?
-# -- Looking for a Fortran compiler - NOTFOUND
-
 main() {
     # """
     # Install CMake.
-    # @note Updated 2022-08-11.
+    # @note Updated 2023-03-21.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
@@ -20,10 +17,16 @@ main() {
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
+        ['mem_gb']="$(koopa_mem_gb)"
+        ['mem_gb_cutoff']=14
         ['name']='cmake'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
+    fi
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://github.com/Kitware/CMake/releases/download/\
 v${dict['version']}/${dict['file']}"
