@@ -18469,7 +18469,6 @@ koopa_r_configure_java() {
         dict['openjdk']='/usr/lib/jvm/default-java'
     fi
     koopa_assert_is_dir "${dict['openjdk']}"
-    dict['openjdk']="$(koopa_realpath "${dict['openjdk']}")"
     app['jar']="${dict['openjdk']}/bin/jar"
     app['java']="${dict['openjdk']}/bin/java"
     app['javac']="${dict['openjdk']}/bin/javac"
