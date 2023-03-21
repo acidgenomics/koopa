@@ -86,12 +86,9 @@ __koopa_check_zsh() {
     #
     # @seealso
     # - https://stackoverflow.com/a/23259585/3911732
-    echo "FIXME HELLO THERE"
     [ -n "${ZSH_VERSION:-}" ] || return 0
     case "$0" in
         '_src_etc_profile'*)
-            echo "FIXME $0"
-            # FIXME Only do this if we have a .zshrc file.
             return 1
             ;;
     esac
