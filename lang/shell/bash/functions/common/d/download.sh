@@ -5,6 +5,8 @@ koopa_download() {
     # Download a file.
     # @note Updated 2023-03-21.
     #
+    # Some web servers may fail unless we appear to be a web browser.
+    #
     # @section curl:
     #
     # Potentially useful arguments:
