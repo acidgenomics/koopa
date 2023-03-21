@@ -3,7 +3,9 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-03-21.
+    #
+    # Some web servers may fail unless we appear to be a web browser.
     #
     # @section curl:
     #
@@ -32,6 +34,9 @@ koopa_download() {
         ['progress']=1
     )
     declare -A dict=(
+        ['user_agent']="Mozilla/5.0 \
+(Macintosh; Intel Mac OS X 10.15; rv:109.0) \
+Gecko/20100101 Firefox/111.0"
         ['engine']='curl'
         ['file']="${2:-}"
         ['url']="${1:?}"
@@ -122,6 +127,15 @@ koopa_download() {
                 '--retry' 5
                 '--show-error'
             )
+            case "${dict['url']}" in
+                *'sourceforge.net/'*)
+                    ;;
+                *)
+                    download_args+=(
+                        '--user-agent' "${dict['user_agent']}"
+                    )
+                    ;;
+            esac
             if [[ "${bool['progress']}" -eq 0 ]]
             then
                 # Alternatively, can use '--no-progress-meter'.
