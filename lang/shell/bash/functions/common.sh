@@ -6286,8 +6286,16 @@ Gecko/20100101 Firefox/111.0"
                 '--output' "${dict['file']}"
                 '--retry' 5
                 '--show-error'
-                '--user-agent' "${dict['user_agent']}"
             )
+            case "${dict['url']}" in
+                *'sourceforge.net/'*)
+                    ;;
+                *)
+                    download_args+=(
+                        '--user-agent' "${dict['user_agent']}"
+                    )
+                    ;;
+            esac
             if [[ "${bool['progress']}" -eq 0 ]]
             then
                 download_args+=('--silent')
