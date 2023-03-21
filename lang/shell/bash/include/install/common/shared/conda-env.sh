@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider using Python instead of jq here, to work better on cloud
-# workflows, such as Latch SDK.
-
 main() {
     # """
     # Install a conda environment as an application.
@@ -16,14 +13,7 @@ main() {
     # @seealso
     # - https://github.com/conda/conda/issues/7741
     # """
-    local app bin_names create_args dict pos
-    koopa_assert_is_not_aarch64
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['jq']="$(koopa_locate_jq)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
+    local bin_names create_args dict pos
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -83,9 +73,7 @@ main() {
     )"
     koopa_assert_is_file "${dict['json_file']}"
     readarray -t bin_names <<< "$( \
-        "${app['jq']}" --raw-output '.files[]' "${dict['json_file']}" \
-            | koopa_grep --pattern='^bin/[^/]+$' --regex \
-            | "${app['cut']}" -d '/' -f '2' \
+        koopa_parse_conda_meta_json "${dict['json_file']}" \
     )"
     if koopa_is_array_non_empty "${bin_names[@]:-}"
     then
