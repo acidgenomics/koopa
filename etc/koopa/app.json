@@ -19,10 +19,10 @@
     "version": "1.0.0"
   },
   "anaconda": {
-    "date": "2022-10-19",
+    "date": "2023-03-21",
     "large": true,
     "url": ["https://repo.continuum.io/archive/"],
-    "version": "2022.10"
+    "version": "2023.03"
   },
   "apache-airflow": {
     "bin": ["airflow"],
