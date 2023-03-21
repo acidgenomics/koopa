@@ -326,18 +326,18 @@ __koopa_bash_header() {
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
         app['locale']="$(_koopa_locate_locale --allow-missing --allow-system)"
-        _koopa_alert_info 'Shell options'
+        koopa_alert_info 'Shell options'
         set +o
         shopt
-        _koopa_alert_info 'Shell variables'
-        _koopa_dl \
+        koopa_alert_info 'Shell variables'
+        koopa_dl \
             '$' "${$}" \
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
         if [[ -x "${app['locale']}" ]]
         then
-            _koopa_alert_info 'Locale'
+            koopa_alert_info 'Locale'
             "${app['locale']}"
         fi
     fi
