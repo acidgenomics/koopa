@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Include apt dependencies here.
+# FIXME Configuration doesn't work when only apt packages are installed.
+
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2022-08-02.
+    # @note Updated 2023-03-21.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -16,24 +19,85 @@ main() {
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/README.html
     # """
-    local app dict
+    local app dep_pkgs dict pkgs
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['r']='/usr/bin/R'
+    declare -A app
+    app['r']='/usr/bin/R'
+    declare -A dict
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dep_pkgs=(
+        'autoconf'
+        'bash'
+        'bash-completion'
+        'bc'
+        'bison'
+        'build-essential'
+        'bzip2'
+        'ca-certificates'
+        'coreutils'
+        'curl'
+        'debhelper'
+        'default-jdk'
+        'findutils'
+        'gdb'
+        'gettext'
+        'gfortran'
+        'git'
+        'gnupg'
+        'groff-base'
+        'less'
+        'libblas-dev'
+        'libbz2-dev'
+        'libcairo2-dev'
+        'libcurl4-openssl-dev'
+        'libjpeg-dev'
+        'liblapack-dev'
+        'liblzma-dev'
+        'libncurses-dev'
+        'libncurses5-dev'
+        'libpango1.0-dev'
+        'libpcre3-dev'
+        'libpng-dev'
+        'libreadline-dev'
+        'libssl-dev'
+        'libtiff5-dev'
+        'libx11-dev'
+        'libxml2-dev'
+        'libxt-dev'
+        'locales'
+        'lsb-release'
+        'man-db'
+        'mpack'
+        'python3'
+        'python3-venv'
+        'subversion'
+        'sudo'
+        'tcl8.6-dev'
+        'texinfo'
+        'texlive-base'
+        'texlive-extra-utils'
+        'texlive-fonts-extra'
+        'texlive-fonts-recommended'
+        'texlive-latex-base'
+        'texlive-latex-extra'
+        'texlive-latex-recommended'
+        'tk8.6-dev'
+        'tzdata'
+        'unzip'
+        'wget'
+        'x11proto-core-dev'
+        'xauth'
+        'xdg-utils'
+        'xfonts-base'
+        'xvfb'
+        'xz-utils'
+        'zlib1g-dev'
     )
-    declare -A dict=(
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    # These removal steps will mess up existing installation, unless we run
-    # 'sudo apt purge r-base-core' first.
-    # > koopa_rm --sudo \
-    # >     '/etc/R' \
-    # >     '/usr/lib/R/etc' \
-    # >     '/usr/local/lib/R'
+    koopa_debian_apt_install "${dep_pkgs[@]}"
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
     koopa_assert_is_installed "${app['r']}"
-    koopa_configure_r "${app['r']}"
+    # FIXME koopa_configure_r "${app['r']}"
     return 0
 }
