@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-03-21.
     #
     # @section curl:
     #
@@ -32,6 +32,9 @@ koopa_download() {
         ['progress']=1
     )
     declare -A dict=(
+        ['user_agent']="Mozilla/5.0 \
+(Macintosh; Intel Mac OS X 10.15; rv:109.0) \
+Gecko/20100101 Firefox/111.0"
         ['engine']='curl'
         ['file']="${2:-}"
         ['url']="${1:?}"
@@ -121,6 +124,7 @@ koopa_download() {
                 '--output' "${dict['file']}"
                 '--retry' 5
                 '--show-error'
+                '--user-agent' "${dict['user_agent']}"
             )
             if [[ "${bool['progress']}" -eq 0 ]]
             then
