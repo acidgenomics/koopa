@@ -86,6 +86,7 @@ __koopa_check_zsh() {
     #
     # @seealso
     # - https://stackoverflow.com/a/23259585/3911732
+    echo "FIXME HELLO THERE"
     [ -n "${ZSH_VERSION:-}" ] || return 0
     case "$0" in
         '_src_etc_profile'*)
