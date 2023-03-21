@@ -496,7 +496,7 @@ _koopa_complete() {
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'system')
                             args+=('r')
-                            if koopa_is_linux
+                            if _koopa_is_linux
                             then
                                 args+=('sshd')
                             fi
