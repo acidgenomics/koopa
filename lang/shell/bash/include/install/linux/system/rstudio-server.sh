@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Let's use apt instead of gdebi here.
+
 main() {
     # """
     # Install RStudio Server binary.
@@ -26,9 +28,8 @@ main() {
     # """
     local app conf_lines dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['r']="$(koopa_locate_system_r --realpath)"
-    )
+    declare -A app
+    app['r']="$(koopa_locate_system_r --realpath)"
     [[ -x "${app['r']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
