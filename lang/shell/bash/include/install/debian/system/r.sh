@@ -98,6 +98,6 @@ main() {
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
     koopa_assert_is_installed "${app['r']}"
-    # FIXME koopa_configure_r "${app['r']}"
+    koopa_configure_r "${app['r']}"
     return 0
 }
