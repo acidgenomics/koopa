@@ -3,7 +3,7 @@
 _koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
-    # @note Updated 2023-03-11.
+    # @note Updated 2023-03-21.
     #
     # Potentially useful Bash options:
     # * --debugger
@@ -19,9 +19,14 @@ _koopa_alias_kdev() {
     __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
     __kvar_bash="${__kvar_bin_prefix}/bash"
     __kvar_env="${__kvar_bin_prefix}/genv"
-    __kvar_rcfile="${__kvar_koopa_prefix}/lang/shell/bash/include/header.sh"
+    if [ ! -x "$__kvar_bash" ] && _koopa_is_linux
+    then
+        __kvar_bash='/bin/bash'
+        __kvar_env='/usr/bin/env'
+    fi
     [ -x "$__kvar_bash" ] || return 1
     [ -x "$__kvar_env" ] || return 1
+    __kvar_rcfile="${__kvar_koopa_prefix}/lang/shell/bash/include/header.sh"
     [ -f "$__kvar_rcfile" ] || return 1
     "$__kvar_env" -i \
         HOME="${HOME:?}" \
