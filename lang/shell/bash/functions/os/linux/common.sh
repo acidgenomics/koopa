@@ -417,6 +417,21 @@ koopa_linux_configure_lmod() {
     return 0
 }
 
+koopa_linux_configure_system_sshd() {
+    local dict
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    declare -A dict
+    dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
+    read -r -d '' "dict[string]" << END || true
+AcceptEnv KOOPA_COLOR_MODE
+END
+    koopa_sudo_write_string \
+        --file="${dict['file']}" \
+        --string="${dict['string']}"
+    return 0
+}
+
 koopa_linux_delete_cache() {
     koopa_assert_has_no_args "$#"
     if ! koopa_is_docker
@@ -923,19 +938,5 @@ koopa_linux_update_ldconfig() {
     [[ -x "${app['ldconfig']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
     "${app['sudo']}" "${app['ldconfig']}" || true
-    return 0
-}
-
-koopa_linux_update_system_sshd_config() {
-    local dict
-    koopa_assert_has_no_args "$#"
-    declare -A dict
-    dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
-    read -r -d '' "dict[string]" << END || true
-AcceptEnv KOOPA_COLOR_MODE
-END
-    koopa_sudo_write_string \
-        --file="${dict['file']}" \
-        --string="${dict['string']}"
     return 0
 }

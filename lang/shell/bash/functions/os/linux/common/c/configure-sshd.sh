@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_linux_update_system_sshd_config() {
+koopa_linux_configure_system_sshd() {
     # """
-    # Update sshd configuration.
-    # @note Updated 2022-10-06.
+    # Configure system sshd.
+    # @note Updated 2023-03-21.
     #
     # Creates a 'koopa.conf' file, which contains passthrough support of
     # 'KOOPA_COLOR_MODE' environment variable.
@@ -25,6 +25,7 @@ koopa_linux_update_system_sshd_config() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     declare -A dict
     dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
     read -r -d '' "dict[string]" << END || true
