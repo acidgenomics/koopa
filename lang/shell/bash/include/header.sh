@@ -325,7 +325,7 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        app['locale']="$(_koopa_locate_locale --allow-missing --allow-system)"
+        app['locale']="$(koopa_locate_locale --allow-missing --allow-system)"
         koopa_alert_info 'Shell options'
         set +o
         shopt
