@@ -24,7 +24,6 @@ _koopa_activate_bash_extras() {
 }
 
 _koopa_activate_bash_prompt() {
-    _koopa_is_root && return 0
     _koopa_activate_starship
     [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
     PS1="$(_koopa_bash_prompt_string)"

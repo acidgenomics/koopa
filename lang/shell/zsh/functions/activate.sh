@@ -150,7 +150,6 @@ _koopa_activate_zsh_prompt() {
     # This step must be sourced after oh-my-zsh.
     # """
     local nounset
-    _koopa_is_root && return 0
     nounset="$(_koopa_boolean_nounset)"
     [[ "$nounset" -eq 1 ]] && set +o nounset
     setopt promptsubst
