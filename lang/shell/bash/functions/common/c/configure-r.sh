@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Consider symlinking '/usr/local/lib/R/site-library' to
-# '/usr/lib/R/site-library' on Linux.
+# FIXME Ensure we symlink '/usr/local/lib/R/site-library' to '/usr/lib/R/site-library' on Linux.
 # FIXME This needs to work for system R on Debian (e.g. Dockerfile, Latch Pod).
 
 koopa_configure_r() {
