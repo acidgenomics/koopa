@@ -5,7 +5,7 @@ Parse conda JSON metadata for files to link in bin.
 @note Updated 2023-03-20.
 
 @examples
-./parse-conda-meta-json.py \
+./conda-meta-json.py \
     /opt/koopa/opt/salmon/libexec/conda-meta/salmon-*.json
 """
 
@@ -36,8 +36,6 @@ def main(json_file):
         if any(bin_files):
             for bin_file in bin_files:
                 print(bin_file)
-        else:
-            sys_exit(1)
         return True
 
 
