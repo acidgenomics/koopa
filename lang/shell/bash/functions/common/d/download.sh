@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Using a browser header isn't working for sourceforge.
-
 koopa_download() {
     # """
     # Download a file.
