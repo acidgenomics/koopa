@@ -40,6 +40,7 @@ koopa_install_all_apps() {
         'openssl1'
         'openssl3'
         'cmake'
+        'lz4'
         'zstd'
         'gcc'
         'autoconf'
@@ -59,7 +60,6 @@ koopa_install_all_apps() {
         'libxml2'
         'gettext'
         'nano'
-        'lz4'
         'curl'
         'curl7'
         # NOTE This requires bootstrap on macOS.
