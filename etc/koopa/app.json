@@ -298,8 +298,10 @@
       "homebrew": true
     },
     "bin": ["bc"],
+    "build_dependencies": ["texinfo"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["ed"],
     "man1": ["bc.1"],
     "url": ["https://ftp.gnu.org/gnu/bc/"],
     "version": "1.07.1"
@@ -1091,6 +1093,20 @@
       "https://crates.io/crates/du-dust/"
     ],
     "version": "0.8.5"
+  },
+  "ed": {
+    "aliases": {
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
+    },
+    "bin": ["ed"],
+    "build_dependencies": ["lzip"],
+    "conservative": true,
+    "date": "2023-03-22",
+    "man1": ["ed.1"],
+    "url": ["https://www.gnu.org/software/ed/ed.html"],
+    "version": "1.19"
   },
   "editorconfig": {
     "aliases": {
@@ -2742,6 +2758,19 @@
     "date": "2022-08-30",
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
+  },
+  "lzip": {
+    "aliases": {
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
+    },
+    "bin": ["lzip"],
+    "conservative": true,
+    "date": "2023-03-22",
+    "man1": ["lzip.1"],
+    "url": ["https://www.nongnu.org/lzip/"],
+    "version": "1.23"
   },
   "lzo": {
     "aliases": {

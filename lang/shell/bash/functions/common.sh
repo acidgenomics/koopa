@@ -6525,6 +6525,7 @@ koopa_extract() {
         case "$file" in
             *'.tar.bz2' | \
             *'.tar.gz' | \
+            *'.tar.lz' | \
             *'.tar.xz' | \
             *'.tbz2' | \
             *'.tgz')
@@ -6544,6 +6545,13 @@ koopa_extract() {
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
+                        ;;
+                    *'.lz')
+                        app['cmd2']="$(koopa_locate_lzip --allow-system)"
+                        [[ -x "${app['cmd2']}" ]] || return 1
+                        koopa_add_to_path_start \
+                            "$(koopa_dirname "${app['cmd2']}")"
+                        cmd_args+=('--lzip')
                         ;;
                     *'.xz')
                         app['cmd2']="$(koopa_locate_xz --allow-system)"
@@ -10074,6 +10082,8 @@ koopa_install_all_apps() {
         'apr-util'
         'armadillo'
         'aspell'
+        'lzip'
+        'ed'
         'bc'
         'flex'
         'binutils'
@@ -10426,6 +10436,7 @@ koopa_install_all_binary_apps() {
         'dog'
         'dotfiles'
         'du-dust'
+        'ed'
         'editorconfig'
         'emacs'
         'entrez-direct'
@@ -10512,6 +10523,7 @@ koopa_install_all_binary_apps() {
         'lsd'
         'lua'
         'luarocks'
+        'lzip'
         'lzo'
         'make'
         'man-db'
@@ -11064,8 +11076,7 @@ koopa_install_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
-        koopa_app_json_version "${dict['version_key']}" \
-            2>/dev/null || true \
+        koopa_app_json_version "${dict['version_key']}" 2>/dev/null || true \
     )"
     [[ -z "${dict['version']}" ]] && \
         dict['version']="${dict['current_version']}"
@@ -11696,6 +11707,12 @@ koopa_install_dotfiles() {
 koopa_install_du_dust() {
     koopa_install_app \
         --name='du-dust' \
+        "$@"
+}
+
+koopa_install_ed() {
+    koopa_install_app \
+        --name='ed' \
         "$@"
 }
 
@@ -12589,6 +12606,12 @@ koopa_install_luarocks() {
 koopa_install_lz4() {
     koopa_install_app \
         --name='lz4' \
+        "$@"
+}
+
+koopa_install_lzip() {
+    koopa_install_app \
+        --name='lzip' \
         "$@"
 }
 
@@ -16210,6 +16233,13 @@ koopa_locate_luarocks() {
     koopa_locate_app \
         --app-name='luarocks' \
         --bin-name='luarocks' \
+        "$@"
+}
+
+koopa_locate_lzip() {
+    koopa_locate_app \
+        --app-name='lzip' \
+        --bin-name='lzip' \
         "$@"
 }
 
@@ -24020,6 +24050,12 @@ koopa_uninstall_du_dust() {
         "$@"
 }
 
+koopa_uninstall_ed() {
+    koopa_uninstall_app \
+        --name='ed' \
+        "$@"
+}
+
 koopa_uninstall_editorconfig() {
     koopa_uninstall_app \
         --name='editorconfig' \
@@ -24760,6 +24796,12 @@ koopa_uninstall_luarocks() {
 koopa_uninstall_lz4() {
     koopa_uninstall_app \
         --name='lz4' \
+        "$@"
+}
+
+koopa_uninstall_lzip() {
+    koopa_uninstall_app \
+        --name='lzip' \
         "$@"
 }
 

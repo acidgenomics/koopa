@@ -134,6 +134,8 @@ koopa_install_all_apps() {
         'apr-util'
         'armadillo'
         'aspell'
+        'lzip'
+        'ed'
         'bc'
         'flex'
         'binutils'
