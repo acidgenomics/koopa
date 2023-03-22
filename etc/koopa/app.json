@@ -205,6 +205,7 @@
     },
     "bin": ["aws"],
     "date": "2023-03-15",
+    "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
@@ -2288,7 +2289,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.14.0"
+    "version": "2.14.1"
   },
   "less": {
     "aliases": {
@@ -3608,33 +3609,6 @@
     ],
     "version": "7.2.2"
   },
-  "python3.9": {
-    "aliases": {
-      "homebrew": "python@3.9"
-    },
-    "bin": ["python3.9", "python3.9-config"],
-    "build_dependencies": ["make", "pkg-config"],
-    "check": false,
-    "conservative": true,
-    "date": "2023-03-20",
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "gdbm",
-      "libedit",
-      "libffi",
-      "mpdecimal",
-      "ncurses",
-      "openssl3",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
-    "man1": ["python3.9.1"],
-    "url": ["https://www.python.org/"],
-    "version": "3.9.16"
-  },
   "python3.10": {
     "aliases": {
       "homebrew": "python@3.10"
@@ -3691,6 +3665,7 @@
       "apache-airflow",
       "apache-spark",
       "autoflake",
+      "aws-cli",
       "azure-cli",
       "black",
       "bpytop",
