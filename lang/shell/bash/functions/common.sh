@@ -6496,7 +6496,6 @@ koopa_extract_version() {
 koopa_extract() {
     local app cmd_args dict file
     koopa_assert_has_args "$#"
-    set -x # FIXME
     declare -A app
     declare -A dict
     dict['orig_path']="${PATH:-}"
@@ -6512,7 +6511,9 @@ koopa_extract() {
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
-                if koopa_is_root && [[ "$(koopa_basename)" == 'gtar' ]]
+                app['tar']="$(koopa_locate_tar --allow-system)"
+                [[ -x "${app['tar']}" ]] || return 1
+                if koopa_is_root && koopa_is_gnu "${app['tar']}"
                 then
                     tar_cmd_args+=(
                         '--no-same-owner'
@@ -6527,7 +6528,7 @@ koopa_extract() {
             *'.tar.xz' | \
             *'.tbz2' | \
             *'.tgz')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
+                app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
                 koopa_stop "FIXME ${cmd_args[*]}"
                 case "$file" in
@@ -6566,7 +6567,7 @@ koopa_extract() {
                 )
                 ;;
             *'.tar')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
+                app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
                 ;;
             *'.xz')
