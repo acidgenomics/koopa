@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-03-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -134,6 +134,7 @@ _koopa_complete() {
                         'difftastic'
                         'dotfiles'
                         'du-dust'
+                        'ed'
                         'editorconfig'
                         'emacs'
                         'ensembl-perl-api'
@@ -254,6 +255,7 @@ _koopa_complete() {
                         'luajit'
                         'luarocks'
                         'lz4'
+                        'lzip'
                         'lzo'
                         'm4'
                         'make'
