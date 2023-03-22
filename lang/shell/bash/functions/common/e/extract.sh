@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for lz (lzip).
 # FIXME Add support for zstd.
 
 # FIXME Need to support '--strip-components=1' type approach here.
@@ -51,6 +52,7 @@ koopa_extract() {
         case "$file" in
             *'.tar.bz2' | \
             *'.tar.gz' | \
+            *'.tar.lz' | \
             *'.tar.xz' | \
             *'.tbz2' | \
             *'.tgz')
@@ -70,6 +72,13 @@ koopa_extract() {
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
+                        ;;
+                    *'.lz')
+                        app['cmd2']="$(koopa_locate_lzip --allow-system)"
+                        [[ -x "${app['cmd2']}" ]] || return 1
+                        koopa_add_to_path_start \
+                            "$(koopa_dirname "${app['cmd2']}")"
+                        cmd_args+=('--lzip')
                         ;;
                     *'.xz')
                         app['cmd2']="$(koopa_locate_xz --allow-system)"
