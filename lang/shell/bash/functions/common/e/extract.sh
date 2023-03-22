@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support extraction to a desired output directory.
-
 # FIXME Need to support '--strip-components=1' type approach here.
 # Perhaps we should extract into temporary directory and then copy in this
 # case, but it can be slow across network file systems.
@@ -12,7 +10,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-02-15.
+    # @note Updated 2023-03-22.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -31,24 +29,38 @@ koopa_extract() {
         file="$(koopa_realpath "$file")"
         koopa_alert "Extracting '${file}'."
         case "$file" in
-            # Two extensions (must come first).
-            *'.tar.bz2' | \
-            *'.tar.gz' | \
-            *'.tar.xz')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
+            '*.tar.'* | *'.tar')
+                local tar_cmd_args
+                tar_cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
+                if koopa_is_root && [[ "$(koopa_basename)" == 'gtar' ]]
+                then
+                    tar_cmd_args+=(
+                        '--no-same-owner'
+                        '--no-same-permissions'
+                    )
+                fi
+                ;;
+        esac
+        case "$file" in
+            *'.tar.bz2' | \
+            *'.tar.gz' | \
+            *'.tar.xz' | \
+            *'.tbz2' | \
+            *'.tgz')
+                app['cmd']="$(koopa_locate_tar --allow-system)"
+                cmd_args=("${tar_cmd_args[@]}")
                 case "$file" in
-                    *'.bz2')
+                    *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
-                    *'.gz')
+                    *'.gz' | *'.tgz')
                         app['cmd2']="$(koopa_locate_gzip --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
@@ -64,7 +76,6 @@ koopa_extract() {
                         ;;
                 esac
                 ;;
-            # Single extension.
             *'.bz2')
                 app['cmd']="$(koopa_locate_bunzip2 --allow-system)"
                 cmd_args=("$file")
@@ -78,26 +89,7 @@ koopa_extract() {
                 ;;
             *'.tar')
                 app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
-                    '-f' "$file" # '--file'.
-                    '-x' # '--extract'.
-                )
-                ;;
-            *'.tbz2')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
-                    '-f' "$file" # '--file'.
-                    '-j' # '--bzip2'.
-                    '-x' # '--extract'.
-                )
-                ;;
-            *'.tgz')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
-                    '-f' "$file" # '--file'.
-                    '-x' # '--extract'.
-                    '-z' # '--gzip'.
-                )
+                cmd_args=("${tar_cmd_args[@]}")
                 ;;
             *'.xz')
                 app['cmd']="$(koopa_locate_xz --allow-system)"
