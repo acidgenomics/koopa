@@ -13511,7 +13511,6 @@ koopa_install_visidata() {
 koopa_install_visual_studio_code_cli() {
     koopa_install_app \
         --name='visual-studio-code-cli' \
-        --system \
         "$@"
 }
 
@@ -25640,7 +25639,6 @@ koopa_uninstall_visidata() {
 koopa_uninstall_visual_studio_code_cli() {
     koopa_uninstall_app \
         --name='visual-studio-code-cli' \
-        --system \
         "$@"
 }
 
