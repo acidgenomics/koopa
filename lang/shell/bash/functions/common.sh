@@ -13019,13 +13019,6 @@ koopa_install_python311() {
     return 0
 }
 
-koopa_install_python39() {
-    koopa_install_app \
-        --installer='python' \
-        --name='python3.9' \
-        "$@"
-}
-
 koopa_install_r_devel() {
     koopa_install_app \
         --name='r-devel' \
@@ -16460,13 +16453,6 @@ koopa_locate_python311() {
     koopa_locate_app \
         --app-name='python3.11' \
         --bin-name='python3.11' \
-        "$@"
-}
-
-koopa_locate_python39() {
-    koopa_locate_app \
-        --app-name='python3.9' \
-        --bin-name='python3.9' \
         "$@"
 }
 
@@ -25179,12 +25165,6 @@ koopa_uninstall_python311() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
-}
-
-koopa_uninstall_python39() {
-    koopa_uninstall_app \
-        --name='python3.9' \
-        "$@"
 }
 
 koopa_uninstall_r_devel() {
