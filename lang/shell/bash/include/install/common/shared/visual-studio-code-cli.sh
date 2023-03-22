@@ -11,6 +11,11 @@ main() {
     #     Formula/code-cli.rb
     # """
     local app dict install_args
+    koopa_assert_has_no_args "$#"
+    koopa_activate_app --build-only \
+        'git' \
+        'pkg-config' \
+        'rust'
     declare -A app
     app['cargo']="$(koopa_locate_cargo)"
     [[ -x "${app['cargo']}" ]] || return 1
@@ -31,7 +36,10 @@ tags/${dict['file']}"
     export VSCODE_CLI_NAME_LONG='Code OSS'
     export VSCODE_CLI_VERSION="${dict['version']}"
     install_args=(
+        '--config' 'net.git-fetch-with-cli=true'
+        '--config' 'net.retry=5'
         '--jobs' "${dict['jobs']}"
+        '--path' .
         '--root' "${dict['prefix']}"
         '--verbose'
     )
