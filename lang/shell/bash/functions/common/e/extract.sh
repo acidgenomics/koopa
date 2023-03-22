@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for zstd.
+
 # FIXME Need to support '--strip-components=1' type approach here.
 # Perhaps we should extract into temporary directory and then copy in this
 # case, but it can be slow across network file systems.
