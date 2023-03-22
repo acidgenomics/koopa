@@ -6505,28 +6505,53 @@ koopa_extract() {
         file="$(koopa_realpath "$file")"
         koopa_alert "Extracting '${file}'."
         case "$file" in
-            *'.tar.bz2' | \
-            *'.tar.gz' | \
-            *'.tar.xz')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
+            *'.tar.'* | *'.tar')
+                local tar_cmd_args
+                tar_cmd_args=(
                     '-f' "$file" # '--file'.
                     '-x' # '--extract'.
                 )
+                app['tar']="$(koopa_locate_tar --allow-system)"
+                [[ -x "${app['tar']}" ]] || return 1
+                if koopa_is_root && koopa_is_gnu "${app['tar']}"
+                then
+                    tar_cmd_args+=(
+                        '--no-same-owner'
+                        '--no-same-permissions'
+                    )
+                fi
+                ;;
+        esac
+        case "$file" in
+            *'.tar.bz2' | \
+            *'.tar.gz' | \
+            *'.tar.lz' | \
+            *'.tar.xz' | \
+            *'.tbz2' | \
+            *'.tgz')
+                app['cmd']="${app['tar']}"
+                cmd_args=("${tar_cmd_args[@]}")
                 case "$file" in
-                    *'.bz2')
+                    *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
-                    *'.gz')
+                    *'.gz' | *'.tgz')
                         app['cmd2']="$(koopa_locate_gzip --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
+                        ;;
+                    *'.lz')
+                        app['cmd2']="$(koopa_locate_lzip --allow-system)"
+                        [[ -x "${app['cmd2']}" ]] || return 1
+                        koopa_add_to_path_start \
+                            "$(koopa_dirname "${app['cmd2']}")"
+                        cmd_args+=('--lzip')
                         ;;
                     *'.xz')
                         app['cmd2']="$(koopa_locate_xz --allow-system)"
@@ -6549,27 +6574,8 @@ koopa_extract() {
                 )
                 ;;
             *'.tar')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
-                    '-f' "$file" # '--file'.
-                    '-x' # '--extract'.
-                )
-                ;;
-            *'.tbz2')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
-                    '-f' "$file" # '--file'.
-                    '-j' # '--bzip2'.
-                    '-x' # '--extract'.
-                )
-                ;;
-            *'.tgz')
-                app['cmd']="$(koopa_locate_tar --allow-system)"
-                cmd_args=(
-                    '-f' "$file" # '--file'.
-                    '-x' # '--extract'.
-                    '-z' # '--gzip'.
-                )
+                app['cmd']="${app['tar']}"
+                cmd_args=("${tar_cmd_args[@]}")
                 ;;
             *'.xz')
                 app['cmd']="$(koopa_locate_xz --allow-system)"
@@ -10076,6 +10082,8 @@ koopa_install_all_apps() {
         'apr-util'
         'armadillo'
         'aspell'
+        'lzip'
+        'ed'
         'bc'
         'flex'
         'binutils'
@@ -10128,7 +10136,6 @@ koopa_install_all_apps() {
         'libyaml'
         'ruby'
         'subversion'
-        'shellcheck'
         'shunit2'
         'sox'
         'stow'
@@ -10264,6 +10271,7 @@ koopa_install_all_apps() {
             apps+=(
                 'hadolint'
                 'pandoc'
+                'shellcheck'
                 'conda'
                 'agat'
                 'anaconda'
@@ -10428,6 +10436,7 @@ koopa_install_all_binary_apps() {
         'dog'
         'dotfiles'
         'du-dust'
+        'ed'
         'editorconfig'
         'emacs'
         'entrez-direct'
@@ -10514,6 +10523,7 @@ koopa_install_all_binary_apps() {
         'lsd'
         'lua'
         'luarocks'
+        'lzip'
         'lzo'
         'make'
         'man-db'
@@ -10926,6 +10936,7 @@ koopa_install_app() {
         ['link_in_man1']=''
         ['link_in_opt']=''
         ['prefix_check']=1
+        ['private']=0
         ['push']=0
         ['quiet']=0
         ['reinstall']=0
@@ -10935,15 +10946,13 @@ koopa_install_app() {
     )
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
+        ['cpu_count']="$(koopa_cpu_count)"
         ['installer']=''
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['stderr_file']="$(koopa_tmp_log_file)"
-        ['stdout_file']="$(koopa_tmp_log_file)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
         ['prefix']=''
-        ['private']=0
         ['version']=''
         ['version_key']=''
     )
@@ -10951,6 +10960,14 @@ koopa_install_app() {
     while (("$#"))
     do
         case "$1" in
+            '--cpu='*)
+                dict['cpu_count']="${1#*=}"
+                shift 1
+                ;;
+            '--cpu')
+                dict['cpu_count']="${2:?}"
+                shift 2
+                ;;
             '--installer='*)
                 dict['installer']="${1#*=}"
                 shift 1
@@ -11036,7 +11053,7 @@ koopa_install_app() {
                 shift 1
                 ;;
             '--private')
-                dict['private']=1
+                bool['private']=1
                 shift 1
                 ;;
             '--quiet')
@@ -11068,8 +11085,7 @@ koopa_install_app() {
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
-        koopa_app_json_version "${dict['version_key']}" \
-            2>/dev/null || true \
+        koopa_app_json_version "${dict['version_key']}" 2>/dev/null || true \
     )"
     [[ -z "${dict['version']}" ]] && \
         dict['version']="${dict['current_version']}"
@@ -11108,7 +11124,9 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
-    if [[ "${dict['private']}" -eq 1 ]]
+    if [[ "${bool['binary']}" -eq 1 ]] || \
+        [[ "${bool['private']}" -eq 1 ]] || \
+        [[ "${bool['push']}" -eq 1 ]]
     then
         koopa_assert_has_private_access
     fi
@@ -11157,95 +11175,108 @@ ${dict['version2']}"
             koopa_alert_install_start "${dict['name']}"
         fi
     fi
+    if [[ "${bool['binary']}" -eq 1 ]]
+    then
+        [[ "${dict['mode']}" == 'shared' ]] || return 1
+        [[ -n "${dict['prefix']}" ]] || return 1
+        koopa_install_app_from_binary_package "${dict['prefix']}"
+    else
+        local app env_vars path_arr
+        declare -A app
+        app['bash']="$(koopa_locate_bash --allow-missing)"
+        if [[ ! -x "${app['bash']}" ]] || \
+            [[ "${dict['name']}" == 'bash' ]]
+        then
+            if koopa_is_macos
+            then
+                app['bash']='/usr/local/bin/bash'
+            else
+                app['bash']='/bin/bash'
+            fi
+        fi
+        app['env']="$(koopa_locate_env --allow-system)"
+        app['tee']="$(koopa_locate_tee --allow-system)"
+        [[ -x "${app['bash']}" ]] || return 1
+        [[ -x "${app['env']}" ]] || return 1
+        [[ -x "${app['tee']}" ]] || return 1
+        path_arr=(
+            '/usr/bin'
+            '/usr/sbin'
+            '/bin'
+            '/sbin'
+        )
+        env_vars=(
+            "HOME=${HOME:?}"
+            'KOOPA_ACTIVATE=0'
+            "KOOPA_CPU_COUNT=${dict['cpu_count']}"
+            'KOOPA_INSTALL_APP_SUBSHELL=1'
+            "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
+            "LANG=${LANG:-}"
+            "LC_ALL=${LC_ALL:-}"
+            "LC_COLLATE=${LC_COLLATE:-}"
+            "LC_CTYPE=${LC_CTYPE:-}"
+            "LC_MESSAGES=${LC_MESSAGES:-}"
+            "LC_MONETARY=${LC_MONETARY:-}"
+            "LC_NUMERIC=${LC_NUMERIC:-}"
+            "LC_TIME=${LC_TIME:-}"
+            "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+            "TMPDIR=${TMPDIR:-/tmp}"
+        )
+        if [[ "${dict['mode']}" == 'shared' ]]
+        then
+            PKG_CONFIG_PATH=''
+            if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
+            then
+                koopa_activate_pkg_config '/usr/bin/pkg-config'
+            fi
+            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}")
+            if [[ -d "${dict['prefix']}" ]] && \
+                [[ "${dict['mode']}" != 'system' ]]
+            then
+                bool['copy_log_files']=1
+            fi
+        fi
+        dict['header_file']="${dict['koopa_prefix']}/lang/shell/bash/\
+include/header.sh"
+        dict['stderr_file']="$(koopa_tmp_log_file)"
+        dict['stdout_file']="$(koopa_tmp_log_file)"
+        koopa_assert_is_file \
+            "${dict['header_file']}" \
+            "${dict['stderr_file']}" \
+            "${dict['stdout_file']}"
+        "${app['env']}" -i \
+            "${env_vars[@]}" \
+            "${app['bash']}" \
+                --noprofile \
+                --norc \
+                -o errexit \
+                -o errtrace \
+                -o nounset \
+                -o pipefail \
+                -c "source '${dict['header_file']}'; \
+                    koopa_install_app_subshell \
+                        --installer=${dict['installer']} \
+                        --mode=${dict['mode']} \
+                        --name=${dict['name']} \
+                        --platform=${dict['platform']} \
+                        --prefix=${dict['prefix']} \
+                        --version=${dict['version']} \
+                        ${*}" \
+            > >("${app['tee']}" "${dict['stdout_file']}") \
+            2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
+        if [[ "${bool['copy_log_files']}" -eq 1 ]] && \
+            [[ -d "${dict['prefix']}" ]]
+        then
+            koopa_cp \
+                "${dict['stdout_file']}" \
+                "${dict['prefix']}/.koopa-install-stdout.log"
+            koopa_cp \
+                "${dict['stderr_file']}" \
+                "${dict['prefix']}/.koopa-install-stderr.log"
+        fi
+    fi
     case "${dict['mode']}" in
         'shared')
-            case "${bool['binary']}" in
-                '0')
-                    local app env_vars path_arr
-                    declare -A app
-                    app['env']="$(koopa_locate_env --allow-system)"
-                    app['tee']="$(koopa_locate_tee --allow-system)"
-                    if koopa_is_macos
-                    then
-                        app['bash']='/usr/local/bin/bash'
-                    else
-                        app['bash']='/bin/bash'
-                    fi
-                    [[ -x "${app['bash']}" ]] || return 1
-                    [[ -x "${app['env']}" ]] || return 1
-                    [[ -x "${app['tee']}" ]] || return 1
-                    path_arr=(
-                        '/usr/bin'
-                        '/usr/sbin'
-                        '/bin'
-                        '/sbin'
-                    )
-                    PKG_CONFIG_PATH=''
-                    if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
-                    then
-                        koopa_activate_pkg_config '/usr/bin/pkg-config'
-                    fi
-                    env_vars=(
-                        "HOME=${HOME:?}"
-                        'KOOPA_ACTIVATE=0'
-                        'KOOPA_INSTALL_APP_SUBSHELL=1'
-                        "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
-                        "LANG=${LANG:-}"
-                        "LC_ALL=${LC_ALL:-}"
-                        "LC_COLLATE=${LC_COLLATE:-}"
-                        "LC_CTYPE=${LC_CTYPE:-}"
-                        "LC_MESSAGES=${LC_MESSAGES:-}"
-                        "LC_MONETARY=${LC_MONETARY:-}"
-                        "LC_NUMERIC=${LC_NUMERIC:-}"
-                        "LC_TIME=${LC_TIME:-}"
-                        "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
-                        "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
-                        "TMPDIR=${TMPDIR:-/tmp}"
-                    )
-                    if [[ -d "${dict['prefix']}" ]] && \
-                        [[ "${dict['mode']}" != 'system' ]]
-                    then
-                        bool['copy_log_files']=1
-                    fi
-                    dict['header_file']="${dict['koopa_prefix']}/lang/shell/\
-bash/include/header.sh"
-                    "${app['env']}" -i \
-                        "${env_vars[@]}" \
-                        "${app['bash']}" \
-                            --noprofile \
-                            --norc \
-                            -o errexit \
-                            -o errtrace \
-                            -o nounset \
-                            -o pipefail \
-                            -c "source '${dict['header_file']}'; \
-                                koopa_install_app_subshell \
-                                    --installer=${dict['installer']} \
-                                    --mode=${dict['mode']} \
-                                    --name=${dict['name']} \
-                                    --platform=${dict['platform']} \
-                                    --prefix=${dict['prefix']} \
-                                    --version=${dict['version']} \
-                                    ${*}" \
-                        > >("${app['tee']}" "${dict['stdout_file']}") \
-                        2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
-                    if [[ "${bool['copy_log_files']}" -eq 1 ]]
-                    then
-                        koopa_cp \
-                            "${dict['stdout_file']}" \
-                            "${dict['prefix']}/.koopa-install-stdout.log"
-                        koopa_cp \
-                            "${dict['stderr_file']}" \
-                            "${dict['prefix']}/.koopa-install-stderr.log"
-                    fi
-                    ;;
-                '1')
-                    koopa_assert_has_private_access
-                    [[ "${dict['mode']}" == 'shared' ]] || return 1
-                    [[ -n "${dict['prefix']}" ]] || return 1
-                    koopa_install_app_from_binary_package "${dict['prefix']}"
-                    ;;
-            esac
             if [[ "${bool['auto_prefix']}" -eq 1 ]]
             then
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
@@ -11312,26 +11343,10 @@ man1/${dict2['name']}"
                 koopa_push_app_build "${dict['name']}"
             ;;
         'system')
-            koopa_install_app_subshell \
-                --installer="${dict['installer']}" \
-                --mode="${dict['mode']}" \
-                --name="${dict['name']}" \
-                --platform="${dict['platform']}" \
-                --prefix="${dict['prefix']}" \
-                --version="${dict['version']}" \
-                "$@"
             [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
                 koopa_linux_update_ldconfig
             ;;
         'user')
-            koopa_install_app_subshell \
-                --installer="${dict['installer']}" \
-                --mode="${dict['mode']}" \
-                --name="${dict['name']}" \
-                --platform="${dict['platform']}" \
-                --prefix="${dict['prefix']}" \
-                --version="${dict['version']}" \
-                "$@"
             [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
@@ -11411,6 +11426,12 @@ koopa_install_autoflake() {
 koopa_install_automake() {
     koopa_install_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_install_aws_cli() {
+    koopa_install_app \
+        --name='aws-cli' \
         "$@"
 }
 
@@ -11696,6 +11717,12 @@ koopa_install_dotfiles() {
 koopa_install_du_dust() {
     koopa_install_app \
         --name='du-dust' \
+        "$@"
+}
+
+koopa_install_ed() {
+    koopa_install_app \
+        --name='ed' \
         "$@"
 }
 
@@ -12592,6 +12619,12 @@ koopa_install_lz4() {
         "$@"
 }
 
+koopa_install_lzip() {
+    koopa_install_app \
+        --name='lzip' \
+        "$@"
+}
+
 koopa_install_lzo() {
     koopa_install_app \
         --name='lzo' \
@@ -13015,13 +13048,6 @@ koopa_install_python311() {
     return 0
 }
 
-koopa_install_python39() {
-    koopa_install_app \
-        --installer='python' \
-        --name='python3.9' \
-        "$@"
-}
-
 koopa_install_r_devel() {
     koopa_install_app \
         --name='r-devel' \
@@ -13294,6 +13320,14 @@ koopa_install_subversion() {
 koopa_install_swig() {
     koopa_install_app \
         --name='swig' \
+        "$@"
+}
+
+koopa_install_system_bootstrap() {
+    koopa_install_app \
+        --name='bootstrap' \
+        --no-prefix-check \
+        --system \
         "$@"
 }
 
@@ -16212,6 +16246,13 @@ koopa_locate_luarocks() {
         "$@"
 }
 
+koopa_locate_lzip() {
+    koopa_locate_app \
+        --app-name='lzip' \
+        --bin-name='lzip' \
+        "$@"
+}
+
 koopa_locate_magick_core_config() {
     koopa_locate_app \
         --app-name='imagemagick' \
@@ -16456,13 +16497,6 @@ koopa_locate_python311() {
     koopa_locate_app \
         --app-name='python3.11' \
         --bin-name='python3.11' \
-        "$@"
-}
-
-koopa_locate_python39() {
-    koopa_locate_app \
-        --app-name='python3.9' \
-        --bin-name='python3.9' \
         "$@"
 }
 
@@ -24026,6 +24060,12 @@ koopa_uninstall_du_dust() {
         "$@"
 }
 
+koopa_uninstall_ed() {
+    koopa_uninstall_app \
+        --name='ed' \
+        "$@"
+}
+
 koopa_uninstall_editorconfig() {
     koopa_uninstall_app \
         --name='editorconfig' \
@@ -24769,6 +24809,12 @@ koopa_uninstall_lz4() {
         "$@"
 }
 
+koopa_uninstall_lzip() {
+    koopa_uninstall_app \
+        --name='lzip' \
+        "$@"
+}
+
 koopa_uninstall_lzo() {
     koopa_uninstall_app \
         --name='lzo' \
@@ -25177,12 +25223,6 @@ koopa_uninstall_python311() {
     return 0
 }
 
-koopa_uninstall_python39() {
-    koopa_uninstall_app \
-        --name='python3.9' \
-        "$@"
-}
-
 koopa_uninstall_r_devel() {
     koopa_uninstall_app \
         --name='r-devel' \
@@ -25426,6 +25466,13 @@ koopa_uninstall_subversion() {
 koopa_uninstall_swig() {
     koopa_uninstall_app \
         --name='swig' \
+        "$@"
+}
+
+koopa_uninstall_system_bootstrap() {
+    koopa_uninstall_app \
+        --name='bootstrap' \
+        --system \
         "$@"
 }
 

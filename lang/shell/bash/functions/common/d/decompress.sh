@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for zstd.
+# FIXME Add support for lzip.
+
 koopa_decompress() {
     # """
     # Decompress a compressed file.

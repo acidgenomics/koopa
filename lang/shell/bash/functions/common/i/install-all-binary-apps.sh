@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-22.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -91,6 +91,7 @@ koopa_install_all_binary_apps() {
         'dog'
         'dotfiles'
         'du-dust'
+        'ed'
         'editorconfig'
         'emacs'
         'entrez-direct'
@@ -177,6 +178,7 @@ koopa_install_all_binary_apps() {
         'lsd'
         'lua'
         'luarocks'
+        'lzip'
         'lzo'
         'make'
         'man-db'
@@ -223,7 +225,6 @@ koopa_install_all_binary_apps() {
         'pylint'
         'pytaglib'
         'pytest'
-        # > 'python3.9'
         'python3.10'
         'python3.11'
         'r'
@@ -404,6 +405,8 @@ koopa_install_all_binary_apps() {
         fi
     fi
     koopa_add_to_path_start '/usr/local/bin'
+    # FIXME This approach no longer works, since aws-cli is installing from
+    # source now...need to rethink.
     "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do

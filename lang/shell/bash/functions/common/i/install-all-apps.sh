@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-22.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -82,7 +82,6 @@ koopa_install_all_apps() {
         'sqlite'
         'mpdecimal'
         'libedit'
-        # > 'python3.9'
         'python3.10'
         'python3.11'
         'xorg-xorgproto'
@@ -135,6 +134,8 @@ koopa_install_all_apps() {
         'apr-util'
         'armadillo'
         'aspell'
+        'lzip'
+        'ed'
         'bc'
         'flex'
         'binutils'
@@ -188,7 +189,6 @@ koopa_install_all_apps() {
         'libyaml'
         'ruby'
         'subversion'
-        'shellcheck'
         'shunit2'
         'sox'
         'stow'
@@ -335,6 +335,7 @@ koopa_install_all_apps() {
                 # > 'haskell-stack'
                 'hadolint'
                 'pandoc'
+                'shellcheck'
                 'conda'
                 'agat'
                 'anaconda'
