@@ -4637,6 +4637,16 @@
     "url": ["https://github.com/saulpw/visidata/"],
     "version": "2.11"
   },
+  "visual-studio-code-cli": {
+    "aliases": {
+      "homebrew": "code-cli"
+    },
+    "bin": ["code"],
+    "build_dependencies": ["rust"],
+    "date": "2023-03-22",
+    "url": ["https://github.com/microsoft/vscode/"],
+    "version": "1.76.2"
+  },
   "vulture": {
     "aliases": {
       "homebrew": true
