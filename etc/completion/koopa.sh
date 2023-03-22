@@ -544,7 +544,11 @@ _koopa_complete() {
                             fi
                             ;;
                         'system')
-                            args+=('homebrew' 'vscode-server')
+                            args+=(
+                                'bootstrap'
+                                'homebrew'
+                                'vscode-server'
+                            )
                             if _koopa_is_linux
                             then
                                 args+=('pihole' 'wine')
