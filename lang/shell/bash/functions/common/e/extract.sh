@@ -32,7 +32,9 @@ koopa_extract() {
         file="$(koopa_realpath "$file")"
         koopa_alert "Extracting '${file}'."
         case "$file" in
-            *'.tar.'* | *'.tar')
+            *'.tar' | \
+            *'.tar.'* | \
+            *'.tgz')
                 local tar_cmd_args
                 tar_cmd_args=(
                     '-f' "$file" # '--file'.
