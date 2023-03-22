@@ -485,13 +485,6 @@ koopa_linux_install_attr() {
         "$@"
 }
 
-koopa_linux_install_aws_cli() {
-    koopa_install_app \
-        --name='aws-cli' \
-        --platform='linux' \
-        "$@"
-}
-
 koopa_linux_install_bcbio_nextgen() {
     koopa_install_app \
         --name='bcbio-nextgen' \

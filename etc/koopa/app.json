@@ -205,12 +205,13 @@
     },
     "bin": ["aws"],
     "date": "2023-03-15",
+    "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.2"
+    "version": "2.11.4"
   },
   "azure-cli": {
     "aliases": {
@@ -297,8 +298,10 @@
       "homebrew": true
     },
     "bin": ["bc"],
+    "build_dependencies": ["texinfo"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["ed"],
     "man1": ["bc.1"],
     "url": ["https://ftp.gnu.org/gnu/bc/"],
     "version": "1.07.1"
@@ -1090,6 +1093,20 @@
       "https://crates.io/crates/du-dust/"
     ],
     "version": "0.8.5"
+  },
+  "ed": {
+    "aliases": {
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
+    },
+    "bin": ["ed"],
+    "build_dependencies": ["lzip"],
+    "conservative": true,
+    "date": "2023-03-22",
+    "man1": ["ed.1"],
+    "url": ["https://www.gnu.org/software/ed/ed.html"],
+    "version": "1.19"
   },
   "editorconfig": {
     "aliases": {
@@ -2288,7 +2305,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.14.0"
+    "version": "2.14.1"
   },
   "less": {
     "aliases": {
@@ -2741,6 +2758,19 @@
     "date": "2022-08-30",
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
+  },
+  "lzip": {
+    "aliases": {
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
+    },
+    "bin": ["lzip"],
+    "conservative": true,
+    "date": "2023-03-22",
+    "man1": ["lzip.1"],
+    "url": ["https://www.nongnu.org/lzip/"],
+    "version": "1.23"
   },
   "lzo": {
     "aliases": {
@@ -3608,33 +3638,6 @@
     ],
     "version": "7.2.2"
   },
-  "python3.9": {
-    "aliases": {
-      "homebrew": "python@3.9"
-    },
-    "bin": ["python3.9", "python3.9-config"],
-    "build_dependencies": ["make", "pkg-config"],
-    "check": false,
-    "conservative": true,
-    "date": "2023-03-20",
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "gdbm",
-      "libedit",
-      "libffi",
-      "mpdecimal",
-      "ncurses",
-      "openssl3",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
-    "man1": ["python3.9.1"],
-    "url": ["https://www.python.org/"],
-    "version": "3.9.16"
-  },
   "python3.10": {
     "aliases": {
       "homebrew": "python@3.10"
@@ -3691,6 +3694,7 @@
       "apache-airflow",
       "apache-spark",
       "autoflake",
+      "aws-cli",
       "azure-cli",
       "black",
       "bpytop",
