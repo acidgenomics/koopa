@@ -2597,7 +2597,7 @@
       "fedora": true,
       "homebrew": true
     },
-    "bin": ["glibtool", "glibtoolize"],
+    "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
     "date": "2022-08-29",
     "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
