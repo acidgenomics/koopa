@@ -47,8 +47,6 @@ koopa_install_app() {
         ['app_prefix']="$(koopa_app_prefix)"
         ['installer']=''
         ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['stderr_file']="$(koopa_tmp_log_file)"
-        ['stdout_file']="$(koopa_tmp_log_file)"
         ['mode']='shared'
         ['name']=''
         ['platform']='common'
@@ -300,8 +298,6 @@ ${dict['version2']}"
         [[ -x "${app['bash']}" ]] || return 1
         [[ -x "${app['env']}" ]] || return 1
         [[ -x "${app['tee']}" ]] || return 1
-        dict['header_file']="${dict['koopa_prefix']}/lang/shell/bash/\
-include/header.sh"
         # Configure 'PATH' string.
         path_arr=(
             '/usr/bin'
@@ -341,6 +337,14 @@ include/header.sh"
                 bool['copy_log_files']=1
             fi
         fi
+        dict['header_file']="${dict['koopa_prefix']}/lang/shell/bash/\
+include/header.sh"
+        dict['stderr_file']="$(koopa_tmp_log_file)"
+        dict['stdout_file']="$(koopa_tmp_log_file)"
+        koopa_assert_is_file \
+            "${dict['header_file']}" \
+            "${dict['stderr_file']}" \
+            "${dict['stdout_file']}"
         "${app['env']}" -i \
             "${env_vars[@]}" \
             "${app['bash']}" \
