@@ -41,6 +41,7 @@ tags/${dict['file']}"
         "--prefix=${dict['prefix']}"
         '--with-download-deps'
     )
+    export PIP_NO_CACHE_DIR=1
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
