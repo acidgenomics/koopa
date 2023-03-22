@@ -44,6 +44,7 @@ koopa_install_app() {
     )
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
+        ['cpu_count']="$(koopa_cpu_count)"
         ['installer']=''
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'
@@ -58,6 +59,14 @@ koopa_install_app() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--cpu='*)
+                dict['cpu_count']="${1#*=}"
+                shift 1
+                ;;
+            '--cpu')
+                dict['cpu_count']="${2:?}"
+                shift 2
+                ;;
             '--installer='*)
                 dict['installer']="${1#*=}"
                 shift 1
@@ -307,6 +316,7 @@ ${dict['version2']}"
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
+            "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
             "LANG=${LANG:-}"
