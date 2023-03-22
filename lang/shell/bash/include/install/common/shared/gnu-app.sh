@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2022-11-28.
+    # @note Updated 2023-03-22.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -35,6 +35,7 @@ main() {
         'attr' | \
         'freetype' | \
         'libpipeline' | \
+        'lzip' | \
         'man-db')
             dict['gnu_mirror']='https://mirrors.sarata.com/non-gnu'
             ;;
@@ -54,6 +55,7 @@ main() {
         'libpipeline' | \
         'libtasn1' | \
         'libunistring' | \
+        'lzip' | \
         'make' | \
         'mpc' | \
         'ncurses' | \
@@ -67,6 +69,9 @@ main() {
         'wget' | \
         'which')
             dict['suffix']='gz'
+            ;;
+        'ed')
+            dict['suffix']='lz'
             ;;
         'parallel')
             dict['suffix']='bz2'

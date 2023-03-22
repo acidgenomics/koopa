@@ -22,7 +22,7 @@ main() {
     # - url="https://downloads.sourceforge.net/project/\
     #       ${name}/${name}/${version}/${file}" (redirects)
     #
-    # See also:
+    # @seealso
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
