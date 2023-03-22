@@ -1204,6 +1204,11 @@ _koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
 
+_koopa_alias_emacs() {
+    _koopa_is_alias 'emacs' && unalias 'emacs'
+    _koopa_emacs "$@"
+}
+
 _koopa_alias_glances() {
     case "$(_koopa_color_mode)" in
         'light')
