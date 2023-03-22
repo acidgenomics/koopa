@@ -1553,7 +1553,7 @@ _koopa_emacs() {
             __kvar_prefix
         return 1
     fi
-    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
+    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
     then
         TERM='xterm-24bit' "$__kvar_emacs" "$@" >/dev/null 2>&1
     else
