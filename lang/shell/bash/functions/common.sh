@@ -13356,13 +13356,6 @@ koopa_install_system_tex_packages() {
         "$@"
 }
 
-koopa_install_system_vscode_server() {
-    koopa_install_app \
-        --name='vscode-server' \
-        --system \
-        "$@"
-}
-
 koopa_install_taglib() {
     koopa_install_app \
         --name='taglib' \
@@ -13512,6 +13505,13 @@ koopa_install_vim() {
 koopa_install_visidata() {
     koopa_install_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_install_visual_studio_code_cli() {
+    koopa_install_app \
+        --name='visual-studio-code-cli' \
+        --system \
         "$@"
 }
 
@@ -25485,13 +25485,6 @@ koopa_uninstall_system_homebrew() {
         "$@"
 }
 
-koopa_uninstall_system_vscode_server() {
-    koopa_uninstall_app \
-        --name='vscode-server' \
-        --system \
-        "$@"
-}
-
 koopa_uninstall_taglib() {
     koopa_uninstall_app \
         --name='taglib' \
@@ -25641,6 +25634,13 @@ koopa_uninstall_vim() {
 koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_uninstall_visual_studio_code_cli() {
+    koopa_uninstall_app \
+        --name='visual-studio-code-cli' \
+        --system \
         "$@"
 }
 
