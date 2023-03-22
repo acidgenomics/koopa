@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is causing shell to exit when bash is installed at /usr/local.
+
 main() {
     local app files
     declare -A app
