@@ -29,7 +29,7 @@ koopa_extract() {
         file="$(koopa_realpath "$file")"
         koopa_alert "Extracting '${file}'."
         case "$file" in
-            '*.tar.'* | *'.tar')
+            *'.tar.'* | *'.tar')
                 local tar_cmd_args
                 tar_cmd_args=(
                     '-f' "$file" # '--file'.
@@ -52,7 +52,6 @@ koopa_extract() {
             *'.tgz')
                 app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=("${tar_cmd_args[@]}")
-                koopa_stop "FIXME ${cmd_args[*]}"
                 case "$file" in
                     *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
