@@ -10126,7 +10126,6 @@ koopa_install_all_apps() {
         'libyaml'
         'ruby'
         'subversion'
-        'shellcheck'
         'shunit2'
         'sox'
         'stow'
@@ -10262,6 +10261,7 @@ koopa_install_all_apps() {
             apps+=(
                 'hadolint'
                 'pandoc'
+                'shellcheck'
                 'conda'
                 'agat'
                 'anaconda'
