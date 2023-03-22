@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to disable Python caching here?
+
 main() {
     # """
     # Install a Python package as a virtual environment application.
