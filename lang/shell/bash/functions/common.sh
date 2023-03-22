@@ -6496,6 +6496,7 @@ koopa_extract_version() {
 koopa_extract() {
     local app cmd_args dict file
     koopa_assert_has_args "$#"
+    set -x # FIXME
     declare -A app
     declare -A dict
     dict['orig_path']="${PATH:-}"
@@ -6528,8 +6529,7 @@ koopa_extract() {
             *'.tgz')
                 app['cmd']="$(koopa_locate_tar --allow-system)"
                 cmd_args=("${tar_cmd_args[@]}")
-                koopa_warn "FIXME ${cmd_args[*]}"
-                set -x
+                koopa_stop "FIXME ${cmd_args[*]}"
                 case "$file" in
                     *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
