@@ -10924,6 +10924,7 @@ koopa_install_app() {
         ['link_in_man1']=''
         ['link_in_opt']=''
         ['prefix_check']=1
+        ['private']=0
         ['push']=0
         ['quiet']=0
         ['reinstall']=0
@@ -10941,7 +10942,6 @@ koopa_install_app() {
         ['name']=''
         ['platform']='common'
         ['prefix']=''
-        ['private']=0
         ['version']=''
         ['version_key']=''
     )
@@ -11034,7 +11034,7 @@ koopa_install_app() {
                 shift 1
                 ;;
             '--private')
-                dict['private']=1
+                bool['private']=1
                 shift 1
                 ;;
             '--quiet')
@@ -11106,7 +11106,9 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             ;;
     esac
-    if [[ "${dict['private']}" -eq 1 ]]
+    if [[ "${bool['binary']}" -eq 1 ]] || \
+        [[ "${bool['private']}" -eq 1 ]] || \
+        [[ "${bool['push']}" -eq 1 ]]
     then
         koopa_assert_has_private_access
     fi
@@ -11161,14 +11163,19 @@ ${dict['version2']}"
                 '0')
                     local app env_vars path_arr
                     declare -A app
+                    app['bash']="$(koopa_locate_bash --allow-missing)"
+                    if [[ ! -x "${app['bash']}" ]] || \
+                        [[ "${dict['name']}" == 'bash' ]]
+                    then
+                        if koopa_is_macos
+                        then
+                            app['bash']='/usr/local/bin/bash'
+                        else
+                            app['bash']='/bin/bash'
+                        fi
+                    fi
                     app['env']="$(koopa_locate_env --allow-system)"
                     app['tee']="$(koopa_locate_tee --allow-system)"
-                    if koopa_is_macos
-                    then
-                        app['bash']='/usr/local/bin/bash'
-                    else
-                        app['bash']='/bin/bash'
-                    fi
                     [[ -x "${app['bash']}" ]] || return 1
                     [[ -x "${app['env']}" ]] || return 1
                     [[ -x "${app['tee']}" ]] || return 1
@@ -11238,12 +11245,64 @@ bash/include/header.sh"
                     fi
                     ;;
                 '1')
-                    koopa_assert_has_private_access
-                    [[ "${dict['mode']}" == 'shared' ]] || return 1
                     [[ -n "${dict['prefix']}" ]] || return 1
                     koopa_install_app_from_binary_package "${dict['prefix']}"
                     ;;
             esac
+            ;;
+        'system' | \
+        'user')
+            local app env_vars path_arr
+            declare -A app
+            app['bash']="$(koopa_locate_bash --allow-missing)"
+            if [[ ! -x "${app['bash']}" ]]
+            then
+                if koopa_is_macos
+                then
+                    app['bash']='/usr/local/bin/bash'
+                else
+                    app['bash']='/bin/bash'
+                fi
+            fi
+            app['env']="$(koopa_locate_env --allow-system)"
+            app['tee']="$(koopa_locate_tee --allow-system)"
+            [[ -x "${app['bash']}" ]] || return 1
+            [[ -x "${app['env']}" ]] || return 1
+            [[ -x "${app['tee']}" ]] || return 1
+            path_arr=(
+                '/usr/bin'
+                '/usr/sbin'
+                '/bin'
+                '/sbin'
+            )
+            env_vars=(
+                "HOME=${HOME:?}"
+                'KOOPA_ACTIVATE=0'
+                'KOOPA_INSTALL_APP_SUBSHELL=1'
+                "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
+                "LANG=${LANG:-}"
+                "LC_ALL=${LC_ALL:-}"
+                "LC_COLLATE=${LC_COLLATE:-}"
+                "LC_CTYPE=${LC_CTYPE:-}"
+                "LC_MESSAGES=${LC_MESSAGES:-}"
+                "LC_MONETARY=${LC_MONETARY:-}"
+                "LC_NUMERIC=${LC_NUMERIC:-}"
+                "LC_TIME=${LC_TIME:-}"
+                "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+                "TMPDIR=${TMPDIR:-/tmp}"
+            )
+            koopa_install_app_subshell \
+                --installer="${dict['installer']}" \
+                --mode="${dict['mode']}" \
+                --name="${dict['name']}" \
+                --platform="${dict['platform']}" \
+                --prefix="${dict['prefix']}" \
+                --version="${dict['version']}" \
+                "$@"
+            ;;
+    esac
+    case "${dict['mode']}" in
+        'shared')
             if [[ "${bool['auto_prefix']}" -eq 1 ]]
             then
                 koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
@@ -11310,26 +11369,10 @@ man1/${dict2['name']}"
                 koopa_push_app_build "${dict['name']}"
             ;;
         'system')
-            koopa_install_app_subshell \
-                --installer="${dict['installer']}" \
-                --mode="${dict['mode']}" \
-                --name="${dict['name']}" \
-                --platform="${dict['platform']}" \
-                --prefix="${dict['prefix']}" \
-                --version="${dict['version']}" \
-                "$@"
             [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
                 koopa_linux_update_ldconfig
             ;;
         'user')
-            koopa_install_app_subshell \
-                --installer="${dict['installer']}" \
-                --mode="${dict['mode']}" \
-                --name="${dict['name']}" \
-                --platform="${dict['platform']}" \
-                --prefix="${dict['prefix']}" \
-                --version="${dict['version']}" \
-                "$@"
             [[ -d "${dict['prefix']}" ]] && \
                 koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
             ;;
@@ -13291,6 +13334,14 @@ koopa_install_subversion() {
 koopa_install_swig() {
     koopa_install_app \
         --name='swig' \
+        "$@"
+}
+
+koopa_install_system_bootstrap() {
+    koopa_install_app \
+        --name='bootstrap' \
+        --no-prefix-check \
+        --system \
         "$@"
 }
 
@@ -25410,6 +25461,13 @@ koopa_uninstall_subversion() {
 koopa_uninstall_swig() {
     koopa_uninstall_app \
         --name='swig' \
+        "$@"
+}
+
+koopa_uninstall_system_bootstrap() {
+    koopa_uninstall_app \
+        --name='bootstrap' \
+        --system \
         "$@"
 }
 
