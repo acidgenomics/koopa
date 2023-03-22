@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Do we need to disable Python pip caching here?
+
 main() {
     # """
     # Install AWS CLI.
