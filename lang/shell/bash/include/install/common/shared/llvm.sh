@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2023-03-18.
+    # @note Updated 2023-03-22.
     #
     # Useful CMake linker variables:
     # - CMAKE_CXX_FLAGS
@@ -15,6 +15,7 @@ main() {
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
+    # - https://llvm.org/docs/CMake.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/llvm.rb
     # - https://github.com/llvm/llvm-project/blob/main/clang/CMakeLists.txt
     # - https://github.com/llvm/llvm-project/blob/main/cmake/
@@ -76,6 +77,7 @@ main() {
     [[ -x "${app['python']}" ]] || return 1
     [[ -x "${app['swig']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['libedit']="$(koopa_app_prefix 'libedit')"
         ['libffi']="$(koopa_app_prefix 'libffi')"
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
@@ -130,6 +132,7 @@ main() {
     dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
     dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
@@ -138,6 +141,7 @@ main() {
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        # LLVM options ---------------------------------------------------------
         '-DLLDB_ENABLE_CURSES=ON'
         '-DLLDB_ENABLE_LUA=OFF'
         '-DLLDB_ENABLE_LZMA=OFF'
@@ -235,7 +239,12 @@ llvmorg-${dict['version']}/${dict['file']}"
         -G 'Ninja' \
         -S ../llvm \
         "${cmake_args[@]}"
-    "${app['cmake']}" --build .
-    "${app['cmake']}" --build . --target 'install'
+    "${app['cmake']}" \
+        --build . \
+        --parallel "${dict['jobs']}"
+    "${app['cmake']}" \
+        --build . \
+        --parallel "${dict['jobs']}" \
+        --target 'install'
     return 0
 }
