@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Make this a shared install script with hadolint, shellcheck.
+
 main() {
     # """
     # Install Pandoc.
