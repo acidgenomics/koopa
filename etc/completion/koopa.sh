@@ -386,6 +386,7 @@ _koopa_complete() {
                         'utf8proc'
                         'vim'
                         'visidata'
+                        'visual-studio-code-cli'
                         'vulture'
                         'wget'
                         'which'
@@ -549,7 +550,6 @@ _koopa_complete() {
                             args+=(
                                 'bootstrap'
                                 'homebrew'
-                                'vscode-server'
                             )
                             if _koopa_is_linux
                             then
