@@ -11412,6 +11412,12 @@ koopa_install_automake() {
         "$@"
 }
 
+koopa_install_aws_cli() {
+    koopa_install_app \
+        --name='aws-cli' \
+        "$@"
+}
+
 koopa_install_azure_cli() {
     koopa_install_app \
         --name='azure-cli' \

@@ -404,6 +404,8 @@ koopa_install_all_binary_apps() {
         fi
     fi
     koopa_add_to_path_start '/usr/local/bin'
+    # FIXME This approach no longer works, since aws-cli is installing from
+    # source now...need to rethink.
     "${app['koopa']}" install 'aws-cli'
     for app_name in "${apps[@]}"
     do
