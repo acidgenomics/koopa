@@ -4643,6 +4643,7 @@
     },
     "bin": ["code"],
     "build_dependencies": ["rust"],
+    "check": false,
     "date": "2023-03-22",
     "url": ["https://github.com/microsoft/vscode/"],
     "version": "1.76.2"
