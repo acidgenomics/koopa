@@ -609,13 +609,6 @@ koopa_macos_ifactive() {
     return 0
 }
 
-koopa_macos_install_aws_cli() {
-    koopa_install_app \
-        --name='aws-cli' \
-        --platform='macos' \
-        "$@"
-}
-
 koopa_macos_install_system_defaults() {
     koopa_install_app \
         --name='defaults' \
