@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Aspera Connect.
-    # @note Updated 2022-11-15.
+    # @note Updated 2023-03-22.
     #
     # Script install target is currently hard-coded in IBM's install script.
     #
@@ -36,7 +36,6 @@ latest/bin/${dict['file']}"
         koopa_cp "${dict['script_target']}" "${dict['prefix']}"
         koopa_rm "${dict['script_target']}" "${dict['aspera_user_prefix']}"
     fi
-    koopa_chmod 0775 "${dict['prefix']}/var/log"
     koopa_assert_is_installed "${dict['prefix']}/bin/ascp"
     return 0
 }
