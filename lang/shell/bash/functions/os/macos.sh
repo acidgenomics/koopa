@@ -617,6 +617,15 @@ koopa_macos_install_system_defaults() {
         "$@"
 }
 
+koopa_macos_install_system_openmp() {
+    koopa_install_app \
+        --name='openmp' \
+        --no-prefix-check \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
@@ -624,15 +633,6 @@ koopa_macos_install_system_python() {
         --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
-        --system \
-        "$@"
-}
-
-koopa_macos_install_system_r_openmp() {
-    koopa_install_app \
-        --name='r-openmp' \
-        --no-prefix-check \
-        --platform='macos' \
         --system \
         "$@"
 }
@@ -1119,6 +1119,14 @@ koopa_macos_uninstall_system_microsoft_onedrive() {
         "$@"
 }
 
+koopa_macos_uninstall_system_openmp() {
+    koopa_uninstall_app \
+        --name='openmp' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_uninstall_system_oracle_java() {
     koopa_uninstall_app \
         --name='oracle-java' \
@@ -1130,14 +1138,6 @@ koopa_macos_uninstall_system_oracle_java() {
 koopa_macos_uninstall_system_python() {
     koopa_uninstall_app \
         --name='python3.11' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_uninstall_system_r_openmp() {
-    koopa_uninstall_app \
-        --name='r-openmp' \
         --platform='macos' \
         --system \
         "$@"
