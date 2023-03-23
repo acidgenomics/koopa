@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure we symlink '/usr/local/lib/R/site-library' to '/usr/lib/R/site-library' on Linux.
-# FIXME This needs to work for system R on Debian (e.g. Dockerfile, Latch Pod).
-
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-03-23.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     # """
@@ -29,12 +26,11 @@ koopa_configure_r() {
     dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    # On macOS, ensure we've installed OpenMP.
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_stop \
             "'libomp' is not installed." \
-            "Run 'koopa install system r-openmp' to resolve."
+            "Run 'koopa install system openmp' to resolve."
     fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"

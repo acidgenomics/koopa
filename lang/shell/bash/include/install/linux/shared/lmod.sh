@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider not writing files into /etc/profile.d
+# NOTE Consider not writing files into '/etc/profile.d'.
+
+# NOTE Lmod activation is disabled by default for root user. Can override with
+# 'LMOD_ALLOW_ROOT_USE' environment variable in profile activation.
 
 main() {
     # """
