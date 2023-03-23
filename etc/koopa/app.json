@@ -3250,6 +3250,16 @@
     "url": ["https://adoptium.net/"],
     "version": "17.0.6+10"
   },
+  "openmp": {
+    "check": false,
+    "conservative": true,
+    "date": "2023-02-08",
+    "notes": ["FIXME Need to add version chec for this."],
+    "platform": "macos",
+    "system": true,
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "14.0.6"
+  },
   "openssh": {
     "aliases": {
       "homebrew": true
@@ -3894,15 +3904,6 @@
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
     "version": "83977"
-  },
-  "r-openmp": {
-    "check": false,
-    "conservative": true,
-    "date": "2023-02-08",
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
   },
   "radian": {
     "bin": ["radian"],
