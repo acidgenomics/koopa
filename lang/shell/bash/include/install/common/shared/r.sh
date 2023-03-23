@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Error if r-openmp hasn't been installed on macOS.
+
 # NOTE Consider adding an assert check for libomp in /usr/local for macOS.
 # NOTE Need to reduce the number of rpath dependencies here, and offload to
 #      ldpaths instead.
@@ -11,7 +13,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-22.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -43,6 +45,12 @@ main() {
     # """
     local app build_deps conf_args conf_dict deps dict
     koopa_assert_has_no_args "$#"
+
+    if koopa_is_macos && [[ ! -f '/usr/local/lib/libomp.dylib' ]]
+    then
+        koopa_stop "Need to run 'koopa install system openmp'."
+    fi
+
     build_deps=('pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
