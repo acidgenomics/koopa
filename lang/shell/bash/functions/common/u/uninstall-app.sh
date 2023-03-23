@@ -6,7 +6,7 @@
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2023-02-27.
+    # @note Updated 2023-03-23.
     # """
     local bin_arr bool dict man1_arr
     koopa_assert_is_owner
@@ -113,6 +113,9 @@ koopa_uninstall_app() {
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
+            app['sudo']="$(koopa_locate_sudo)"
+            [[ -x "${app['sudo']}" ]] || return 1
+            "${app['sudo']}" -v
             ;;
         'user')
             bool['unlink_in_bin']=0

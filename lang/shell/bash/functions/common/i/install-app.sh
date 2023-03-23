@@ -7,7 +7,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-23.
     # """
     local bin_arr bool dict i man1_arr pos
     koopa_assert_has_args "$#"
@@ -222,6 +222,9 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
+            app['sudo']="$(koopa_locate_sudo)"
+            [[ -x "${app['sudo']}" ]] || return 1
+            "${app['sudo']}" -v
             ;;
         'user')
             bool['link_in_bin']=0
