@@ -4558,7 +4558,7 @@ koopa_configure_r() {
     then
         koopa_stop \
             "'libomp' is not installed." \
-            "Run 'koopa install system r-openmp' to resolve."
+            "Run 'koopa install system openmp' to resolve."
     fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"

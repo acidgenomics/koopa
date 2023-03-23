@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Error if r-openmp hasn't been installed on macOS.
-
-# NOTE Consider adding an assert check for libomp in /usr/local for macOS.
-# NOTE Need to reduce the number of rpath dependencies here, and offload to
-#      ldpaths instead.
-# NOTE Now seeing this ld warning popping up on macOS:
-#      ld: warning: -undefined dynamic_lookup may not work with chained fixups
-#      Potentially related:
-#      https://github.com/ziglang/zig/issues/8180
+# FIXME Check for openmp on macOS.
 
 main() {
     # """
     # Install R.
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-23.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -45,12 +37,12 @@ main() {
     # """
     local app build_deps conf_args conf_dict deps dict
     koopa_assert_has_no_args "$#"
-
-    if koopa_is_macos && [[ ! -f '/usr/local/lib/libomp.dylib' ]]
+    if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
-        koopa_stop "Need to run 'koopa install system openmp'."
+        koopa_stop \
+            "'libomp' is not installed." \
+            "Run 'koopa install system openmp' to resolve."
     fi
-
     build_deps=('pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
