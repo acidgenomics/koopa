@@ -10927,10 +10927,11 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
 }
 
 koopa_install_app() {
-    local bin_arr bool dict i man1_arr pos
+    local app bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
+    declare -A app
     declare -A bool=(
         ['auto_prefix']=0
         ['binary']=0
@@ -11187,8 +11188,6 @@ ${dict['version2']}"
         [[ -n "${dict['prefix']}" ]] || return 1
         koopa_install_app_from_binary_package "${dict['prefix']}"
     else
-        local app env_vars path_arr
-        declare -A app
         app['bash']="$(koopa_locate_bash --allow-missing)"
         if [[ ! -x "${app['bash']}" ]] || \
             [[ "${dict['name']}" == 'bash' ]]
@@ -23514,8 +23513,9 @@ koopa_uninstall_apache_spark() {
 }
 
 koopa_uninstall_app() {
-    local bin_arr bool dict man1_arr
+    local app bin_arr bool dict man1_arr
     koopa_assert_is_owner
+    declare -A app
     declare -A bool=(
         ['quiet']=0
         ['unlink_in_bin']=''

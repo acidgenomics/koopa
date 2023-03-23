@@ -9,10 +9,11 @@ koopa_install_app() {
     # Install application in a versioned directory structure.
     # @note Updated 2023-03-23.
     # """
-    local bin_arr bool dict i man1_arr pos
+    local app bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
+    declare -A app
     declare -A bool=(
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
@@ -290,8 +291,6 @@ ${dict['version2']}"
         [[ -n "${dict['prefix']}" ]] || return 1
         koopa_install_app_from_binary_package "${dict['prefix']}"
     else
-        local app env_vars path_arr
-        declare -A app
         app['bash']="$(koopa_locate_bash --allow-missing)"
         if [[ ! -x "${app['bash']}" ]] || \
             [[ "${dict['name']}" == 'bash' ]]
