@@ -81,7 +81,7 @@ base/${dict['pkg_file']}"
     koopa_assert_is_installed "${app['r']}"
     if [[ ! -f '/usr/local/include/omp.h' ]]
     then
-        koopa_macos_install_system_r_openmp
+        koopa_macos_install_system_openmp
     fi
     koopa_configure_r "${app['r']}"
     return 0
