@@ -68,14 +68,38 @@ __koopa_print() {
 __koopa_realpath() {
     # """
     # Resolve file path.
-    # @note Updated 2022-08-26.
-    #
-    # macOS/BSD readlink now supports '-f' flag. Added in 2022?
+    # @note Updated 2023-03-23.
     # """
-    local x
-    x="$(readlink -f "$@")"
-    [[ -n "$x" ]] || return 1
-    __koopa_print "$x"
+    local arg string
+    for arg in "$@"
+    do
+        string="$( \
+            readlink -f "$arg" \
+            2>/dev/null \
+            || true \
+        )"
+        if [[ -z "$string" ]]
+        then
+            string="$( \
+                perl -MCwd -le \
+                    'print Cwd::abs_path shift' \
+                    "$arg" \
+                2>/dev/null \
+                || true \
+            )"
+        fi
+        if [[ -z "$string" ]]
+        then
+            string="$( \
+                python3 -c \
+                    "import os; print(os.path.realpath('${arg}'))" \
+                2>/dev/null \
+                || true \
+            )"
+        fi
+        [[ -n "$string" ]] || return 1
+        __koopa_print "$string"
+    done
     return 0
 }
 
