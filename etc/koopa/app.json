@@ -1549,11 +1549,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-05",
+    "date": "2023-03-23",
     "large": true,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.0.0"
+    "version": "10.01.0"
   },
   "git": {
     "aliases": {
@@ -4227,6 +4227,7 @@
     "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
