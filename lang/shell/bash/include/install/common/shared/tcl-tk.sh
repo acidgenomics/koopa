@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-22.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -37,6 +37,7 @@ main() {
         ['url_stem']='https://prdownloads.sourceforge.net/tcl'
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--enable-shared'
@@ -76,6 +77,12 @@ main() {
         "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
         "${app['make']}" install
         "${app['make']}" install-private-headers
+    )
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        # This is necessary for Lmod install.
+        koopa_ln "tclsh${dict['maj_min_ver']}" 'tclsh'
+        koopa_ln "wish${dict['maj_min_ver']}" 'wish'
     )
     return 0
 }

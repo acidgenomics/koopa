@@ -95,8 +95,6 @@ tags/${dict['file']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-G' 'Ninja'
-        # > -Wno-dev
         # Mamba build settings -------------------------------------------------
         '-DBUILD_SHARED=ON'
         '-DBUILD_LIBMAMBA=ON'
@@ -132,8 +130,9 @@ libsolv.${dict['shared_ext']}"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        -S . \
         -B 'build' \
+        -G 'Ninja' \
+        -S . \
         "${cmake_args[@]}"
     "${app['cmake']}" \
         --build 'build' \

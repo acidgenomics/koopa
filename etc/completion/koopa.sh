@@ -386,6 +386,7 @@ _koopa_complete() {
                         'utf8proc'
                         'vim'
                         'visidata'
+                        'visual-studio-code-cli'
                         'vulture'
                         'wget'
                         'which'
@@ -549,7 +550,6 @@ _koopa_complete() {
                             args+=(
                                 'bootstrap'
                                 'homebrew'
-                                'vscode-server'
                             )
                             if _koopa_is_linux
                             then
@@ -569,9 +569,9 @@ _koopa_complete() {
                             elif _koopa_is_macos
                             then
                                 args+=(
+                                    'openmp'
                                     'python'
                                     'r'
-                                    'r-openmp'
                                     # NOTE No uninstaller currently.
                                     'rosetta'
                                     'xcode-clt'

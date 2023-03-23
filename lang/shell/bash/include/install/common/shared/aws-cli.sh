@@ -13,20 +13,26 @@ main() {
     local app conf_args dict
     koopa_assert_has_no_args "$#"
     declare -A app=(
-        ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python311)"
+        ['make']="$(koopa_locate_make --allow-system)"
+        ['python']="$(koopa_locate_python311 --allow-missing)"
     )
+    # Allow edge case building against system Python, for system bootstrapping.
+    if [[ ! -x "${app['python']}" ]]
+    then
+        app['python']='/usr/bin/python3'
+        koopa_alert_note "Building against system Python at '${app['python']}'."
+    fi
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
-        ['name']='aws-cli'
+        ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['file']="${dict['version']}.tar.gz"
-    dict['url']="https://github.com/aws/aws-cli/archive/refs/\
+    dict['url']="https://github.com/aws/${dict['name']}/archive/refs/\
 tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
