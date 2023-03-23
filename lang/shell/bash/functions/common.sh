@@ -10747,6 +10747,7 @@ koopa_install_all_binary_apps() {
     do
         "${app['koopa']}" install --binary "$app_name"
     done
+    "${app['koopa']}" reinstall --binary 'aws-cli'
     return 0
 }
 
