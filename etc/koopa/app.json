@@ -1549,11 +1549,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-05",
+    "date": "2023-03-23",
     "large": true,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.0.0"
+    "version": "10.01.0"
   },
   "git": {
     "aliases": {
@@ -2597,7 +2597,7 @@
       "fedora": true,
       "homebrew": true
     },
-    "bin": ["glibtool", "glibtoolize"],
+    "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
     "date": "2022-08-29",
     "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
@@ -2805,7 +2805,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2023-02-10",
+    "date": "2023-03-23",
     "dependencies": [
       "cli11",
       "curl",
@@ -2827,7 +2827,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.02.09"
+    "version": "2023.03.22"
   },
   "man-db": {
     "aliases": {
@@ -3250,6 +3250,16 @@
     "url": ["https://adoptium.net/"],
     "version": "17.0.6+10"
   },
+  "openmp": {
+    "check": false,
+    "conservative": true,
+    "date": "2023-02-08",
+    "notes": ["FIXME Need to add version chec for this."],
+    "platform": "macos",
+    "system": true,
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "14.0.6"
+  },
   "openssh": {
     "aliases": {
       "homebrew": true
@@ -3612,10 +3622,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-03-13",
+    "date": "2023-03-23",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.0"
+    "version": "2.17.1"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -3894,15 +3904,6 @@
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
     "version": "83977"
-  },
-  "r-openmp": {
-    "check": false,
-    "conservative": true,
-    "date": "2023-02-08",
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
   },
   "radian": {
     "bin": ["radian"],
@@ -4226,6 +4227,7 @@
     "date": "2023-03-14",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
@@ -4636,6 +4638,17 @@
     "man1": ["vd.1", "visidata.1"],
     "url": ["https://github.com/saulpw/visidata/"],
     "version": "2.11"
+  },
+  "visual-studio-code-cli": {
+    "aliases": {
+      "homebrew": "code-cli"
+    },
+    "bin": ["code"],
+    "build_dependencies": ["rust"],
+    "check": false,
+    "date": "2023-03-22",
+    "url": ["https://github.com/microsoft/vscode/"],
+    "version": "1.76.2"
   },
   "vulture": {
     "aliases": {

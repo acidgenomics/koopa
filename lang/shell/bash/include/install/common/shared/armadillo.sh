@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-22.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -22,6 +22,7 @@ main() {
     )
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
+        ['jobs']="$(koopa_cpu_count)"
         ['name']='armadillo'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -40,7 +41,6 @@ main() {
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DDETECT_HDF5=ON'
     )
     if koopa_is_macos
     then
@@ -52,7 +52,9 @@ main() {
         -S . \
         -B 'build' \
         "${cmake_args[@]}"
-    "${app['cmake']}" --build 'build'
+    "${app['cmake']}" \
+        --build 'build' \
+        --parallel "${dict['jobs']}"
     "${app['cmake']}" --install 'build'
     return 0
 }

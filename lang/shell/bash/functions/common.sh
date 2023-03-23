@@ -4558,7 +4558,7 @@ koopa_configure_r() {
     then
         koopa_stop \
             "'libomp' is not installed." \
-            "Run 'koopa install system r-openmp' to resolve."
+            "Run 'koopa install system openmp' to resolve."
     fi
     koopa_r_link_files_in_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
@@ -6505,7 +6505,9 @@ koopa_extract() {
         file="$(koopa_realpath "$file")"
         koopa_alert "Extracting '${file}'."
         case "$file" in
-            *'.tar.'* | *'.tar')
+            *'.tar' | \
+            *'.tar.'* | \
+            *'.tgz')
                 local tar_cmd_args
                 tar_cmd_args=(
                     '-f' "$file" # '--file'.
@@ -10745,6 +10747,7 @@ koopa_install_all_binary_apps() {
     do
         "${app['koopa']}" install --binary "$app_name"
     done
+    "${app['koopa']}" reinstall --binary 'aws-cli'
     return 0
 }
 
@@ -13354,13 +13357,6 @@ koopa_install_system_tex_packages() {
         "$@"
 }
 
-koopa_install_system_vscode_server() {
-    koopa_install_app \
-        --name='vscode-server' \
-        --system \
-        "$@"
-}
-
 koopa_install_taglib() {
     koopa_install_app \
         --name='taglib' \
@@ -13510,6 +13506,12 @@ koopa_install_vim() {
 koopa_install_visidata() {
     koopa_install_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_install_visual_studio_code_cli() {
+    koopa_install_app \
+        --name='visual-studio-code-cli' \
         "$@"
 }
 
@@ -25483,13 +25485,6 @@ koopa_uninstall_system_homebrew() {
         "$@"
 }
 
-koopa_uninstall_system_vscode_server() {
-    koopa_uninstall_app \
-        --name='vscode-server' \
-        --system \
-        "$@"
-}
-
 koopa_uninstall_taglib() {
     koopa_uninstall_app \
         --name='taglib' \
@@ -25639,6 +25634,12 @@ koopa_uninstall_vim() {
 koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
+        "$@"
+}
+
+koopa_uninstall_visual_studio_code_cli() {
+    koopa_uninstall_app \
+        --name='visual-studio-code-cli' \
         "$@"
 }
 

@@ -1204,6 +1204,11 @@ _koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
 
+_koopa_alias_emacs() {
+    _koopa_is_alias 'emacs' && unalias 'emacs'
+    _koopa_emacs "$@"
+}
+
 _koopa_alias_glances() {
     case "$(_koopa_color_mode)" in
         'light')
@@ -1553,7 +1558,7 @@ _koopa_emacs() {
             __kvar_prefix
         return 1
     fi
-    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ]
+    if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
     then
         TERM='xterm-24bit' "$__kvar_emacs" "$@" >/dev/null 2>&1
     else
