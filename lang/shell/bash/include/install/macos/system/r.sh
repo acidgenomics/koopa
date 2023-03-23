@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-23.
     #
     # @section Intel:
     #
@@ -26,6 +26,12 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    if [[ ! -f '/usr/local/include/omp.h' ]]
+    then
+        koopa_stop \
+            "'libomp' is not installed." \
+            "Run 'koopa install system openmp' to resolve."
+    fi
     declare -A app=(
         ['installer']="$(koopa_macos_locate_installer)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -79,10 +85,6 @@ base/${dict['pkg_file']}"
     koopa_assert_is_dir "${dict['prefix']}"
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
-    if [[ ! -f '/usr/local/include/omp.h' ]]
-    then
-        koopa_macos_install_system_openmp
-    fi
     koopa_configure_r "${app['r']}"
     return 0
 }
