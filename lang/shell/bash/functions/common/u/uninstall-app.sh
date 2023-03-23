@@ -8,8 +8,9 @@ koopa_uninstall_app() {
     # Uninstall an application.
     # @note Updated 2023-03-23.
     # """
-    local bin_arr bool dict man1_arr
+    local app bin_arr bool dict man1_arr
     koopa_assert_is_owner
+    declare -A app
     declare -A bool=(
         ['quiet']=0
         ['unlink_in_bin']=''
