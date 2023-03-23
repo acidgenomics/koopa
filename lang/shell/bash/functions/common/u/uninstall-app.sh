@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Currently errors if 'opt' folder doesn't exist.
+# This can happen when bootstrapping a system and the first install fails.
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
