@@ -11,7 +11,11 @@ _koopa_realpath() {
     # """
     for __kvar_arg in "$@"
     do
-        __kvar_string="$(readlink -f "$__kvar_arg" 2>/dev/null)"
+        __kvar_string="$( \
+            readlink -f "$__kvar_arg" \
+            2>/dev/null \
+            || true \
+        )"
         if [ -z "$__kvar_string" ]
         then
             __kvar_string="$( \
@@ -19,6 +23,7 @@ _koopa_realpath() {
                     'print Cwd::abs_path shift' \
                     "$__kvar_arg" \
                 2>/dev/null \
+                || true \
             )"
         fi
         if [ -z "$__kvar_string" ]
@@ -27,6 +32,7 @@ _koopa_realpath() {
                 python3 -c \
                     "import os; print(os.path.realpath('${__kvar_arg}'))" \
                 2>/dev/null \
+                || true \
             )"
         fi
         if [ -z "$__kvar_string" ]
