@@ -18106,9 +18106,9 @@ ${dict['py_maj_min_ver']}"
             '3.11.'* | \
             '3.10.'* | \
             '3.9.'*)
-                dict['pip_version']='22.3.1'
-                dict['setuptools_version']='65.6.3'
-                dict['wheel_version']='0.38.4'
+                dict['pip_version']='23.0.1'
+                dict['setuptools_version']='67.6.0'
+                dict['wheel_version']='0.40.0'
                 ;;
             *)
                 koopa_stop "Unsupported Python: ${dict['py_version']}."
