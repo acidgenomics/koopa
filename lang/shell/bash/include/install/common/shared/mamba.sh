@@ -88,7 +88,7 @@ main() {
     case "${dict['version']}" in
         '2023.03.22')
             dict['commit']='e169199955b16eccb7ba95085d4a8ee769077688'
-            dict['file']="${dict['commit']}"
+            dict['file']="${dict['commit']}.tar.gz"
             ;;
         *)
             dict['file']="${dict['version']}.tar.gz"
