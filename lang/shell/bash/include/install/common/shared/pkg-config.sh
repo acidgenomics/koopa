@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pkg-config.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-03-24.
     #
     # Requires cmp and diff to be installed.
     #
@@ -24,8 +24,9 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://${dict['name']}.freedesktop.org/releases/\
-${dict['file']}"
+# >     dict['url']="https://${dict['name']}.freedesktop.org/releases/\
+# > ${dict['file']}"
+    dict['url']="http://fresh-center.net/linux/misc/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
