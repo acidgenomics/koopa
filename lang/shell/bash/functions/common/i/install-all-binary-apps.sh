@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rethink our bootstrapping approach here.
-# Set a bootstrap flag, and conditionally install aws, curl first.
-# FIXME Don't always reinstall aws-cli at the end...conditional!
-
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
@@ -14,14 +10,16 @@ koopa_install_all_binary_apps() {
     #
     # Need to install PCRE libraries before grep.
     # """
-    local app app_name apps bool
+    local app app_name apps bool dict
     koopa_assert_has_no_args "$#"
-    declare -A app
+    declare -A app bool dict
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
-    declare -A bool
+    bool['bootstrap']=0
     bool['large']=0
     koopa_has_large_system_disk && bool['large']=1
+    dict['app_prefix']="$(koopa_app_prefix)"
+    [[ ! -d "${dict['app_prefix']}/aws-cli" ]] && bool['bootstrap']=1
     apps=()
     # Priority -----------------------------------------------------------------
     koopa_is_linux && apps+=('attr')
@@ -410,11 +408,17 @@ koopa_install_all_binary_apps() {
         fi
     fi
     koopa_add_to_path_start '/usr/local/bin'
-    "${app['koopa']}" install 'aws-cli'
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
+    then
+        "${app['koopa']}" install 'aws-cli'
+    fi
     for app_name in "${apps[@]}"
     do
         "${app['koopa']}" install --binary "$app_name"
     done
-    "${app['koopa']}" reinstall --binary 'aws-cli'
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
+    then
+        "${app['koopa']}" reinstall --binary 'aws-cli'
+    fi
     return 0
 }
