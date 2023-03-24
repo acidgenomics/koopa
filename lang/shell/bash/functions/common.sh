@@ -8687,8 +8687,10 @@ releases/latest"
 }
 
 koopa_gnu_mirror_url() {
+    local server
     koopa_assert_has_no_args "$#"
-    koopa_print 'https://ftpmirror.gnu.org'
+    server='ftp://aeneas.mit.edu/pub/gnu'
+    koopa_print "$server"
     return 0
 }
 
