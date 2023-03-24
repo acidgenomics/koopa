@@ -329,17 +329,17 @@ koopa_install_all_apps() {
             'julia'
             # > 'nim'
             'ghostscript'
+            # > 'haskell-stack'
+            'hadolint'
+            'pandoc'
+            'shellcheck'
+            'conda'
+            'anaconda'
         )
         if ! koopa_is_aarch64
         then
             apps+=(
-                # > 'haskell-stack'
-                'hadolint'
-                'pandoc'
-                'shellcheck'
-                'conda'
                 'agat'
-                'anaconda'
                 'autodock'
                 'autodock-vina'
                 # > 'bioconda-utils'
