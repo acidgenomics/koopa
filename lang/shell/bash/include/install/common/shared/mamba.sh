@@ -2,6 +2,9 @@
 
 # NOTE Currently hitting ninja-related build error on Ubuntu 20.
 # https://github.com/mamba-org/mamba/issues/2410
+#
+# Potentially related new commit that may fix the issue:
+# https://github.com/mamba-org/mamba/commit/e169199955b16eccb7ba95085d4a8ee769077688
 
 main() {
     # """
