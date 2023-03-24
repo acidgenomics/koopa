@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Currently hitting ninja-related build error on Ubuntu 20.
+# https://github.com/mamba-org/mamba/issues/2410
+
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2023-02-10.
+    # @note Updated 2023-03-24.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
     # bzip2 and zstd requirement added in 1.2.0 release.
@@ -95,6 +98,7 @@ tags/${dict['file']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Mamba build settings -------------------------------------------------
         '-DBUILD_SHARED=ON'
         '-DBUILD_LIBMAMBA=ON'
