@@ -2,7 +2,7 @@
 
 """
 Parse koopa 'app.json' file.
-@note Updated 2023-03-20.
+@note Updated 2023-03-24.
 
 @examples
 ./app-json.py \
@@ -16,7 +16,7 @@ from os.path import abspath, dirname, join
 from sys import exit as sys_exit
 
 
-def main(json_file, app_name, key):
+def main(json_file: str, app_name: str, key: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
     @note Updated 2023-03-20.

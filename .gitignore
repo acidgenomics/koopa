@@ -1,5 +1,6 @@
 .koopa-binary
 .koopa-install.log
+.vscode/
 /app/
 /bin/
 /bootstrap/
