@@ -100,7 +100,7 @@ refs/tags/${dict['file']}"
     esac
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cd "./${dict['name']}-"*
+    koopa_cd "$(koopa_basename_sans_ext "${dict['file']}")"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
