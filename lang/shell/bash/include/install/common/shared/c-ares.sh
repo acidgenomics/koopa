@@ -3,7 +3,7 @@
 main() {
     # """
     # Install c-ares.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://c-ares.org/
@@ -29,6 +29,7 @@ main() {
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"

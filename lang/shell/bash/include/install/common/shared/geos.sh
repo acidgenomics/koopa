@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GEOS.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # Can build with autotools or cmake.
     # See 'INSTALL' file for details.
@@ -47,10 +47,13 @@ archive/${dict['file']}"
     koopa_mkdir 'build'
     koopa_cd 'build'
     cmake_args=(
-        '-DBUILD_SHARED_LIBS=ON'
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        '-DBUILD_SHARED_LIBS=ON'
         '-DGEOS_ENABLE_TESTS=OFF'
     )
     koopa_print_env

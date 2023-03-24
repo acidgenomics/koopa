@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2022-12-16.
+    # @note Updated 2023-03-24.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -52,6 +52,7 @@ main() {
     export JAVA_HOME="${dict['openjdk']}"
     koopa_print_env
     shared_cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
@@ -60,6 +61,8 @@ main() {
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Dependency paths -----------------------------------------------------
         "-DPython3_EXECUTABLE=${app['python']}"
     )
     # Build NCBI VDB Software Development Kit (no install).

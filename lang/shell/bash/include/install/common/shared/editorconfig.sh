@@ -3,7 +3,7 @@
 main() {
     # """
     # Install EditorConfig.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
@@ -45,6 +45,7 @@ libpcre2-8.${dict['shared_ext']}"
     koopa_assert_is_dir "${dict['pcre2_include_dir']}"
     koopa_assert_is_file "${dict['pcre2_library']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
@@ -54,6 +55,8 @@ libpcre2-8.${dict['shared_ext']}"
         "-DCMAKE_LIBRARY_PATH=${dict['pcre2']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Dependency paths -----------------------------------------------------
         "-DPCRE2_INCLUDE_DIR=${dict['pcre2_include_dir']}"
         "-DPCRE2_LIBRARY=${dict['pcre2_library']}"
     )
