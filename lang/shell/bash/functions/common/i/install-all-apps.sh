@@ -5,7 +5,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-24.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -129,6 +129,7 @@ koopa_install_all_apps() {
         'gzip'
         'groff'
         'less'
+        'quarto'
         'r'
         'apr'
         'apr-util'
