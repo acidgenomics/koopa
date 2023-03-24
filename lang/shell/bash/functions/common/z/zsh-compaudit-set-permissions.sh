@@ -3,7 +3,7 @@
 koopa_zsh_compaudit_set_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass during 'compinit'.
-    # @note Updated 2023-02-27.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - echo "$FPATH" (string) or echo "$fpath" (array)
@@ -23,13 +23,19 @@ koopa_zsh_compaudit_set_permissions() {
     )
     for prefix in "${prefixes[@]}"
     do
+        local access
         [[ -d "$prefix" ]] || continue
         if [[ "$(koopa_stat_user "$prefix")" != "${dict['user_id']}" ]]
         then
             koopa_alert "Fixing ownership at '${prefix}'."
             koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
         fi
-        if [[ "$(koopa_stat_access_octal "$prefix")" != '755' ]]
+        # Ensure '2755' returns as '755' for check.
+        access="$(koopa_stat_access_octal "$prefix")"
+        access="${access: -3}"
+        # Alternative method:
+        # > access="${access:(-3)}"
+        if [[ "$access" != '755' ]]
         then
             koopa_alert "Fixing write access at '${prefix}'."
             koopa_chmod --recursive 'g-w' "$prefix"
