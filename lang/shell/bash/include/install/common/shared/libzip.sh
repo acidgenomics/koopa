@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libzip.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://libzip.org/download/
@@ -49,12 +49,15 @@ main() {
     koopa_mkdir 'build'
     koopa_cd 'build'
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DENABLE_BZIP2=ON'
         '-DENABLE_COMMONCRYPTO=OFF'
         '-DENABLE_GNUTLS=OFF'
@@ -63,6 +66,7 @@ main() {
         '-DENABLE_OPENSSL=OFF'
         '-DENABLE_WINDOWS_CRYPTO=OFF'
         '-DENABLE_ZSTD=ON'
+        # Dependency paths -----------------------------------------------------
         "-DBZIP2_INCLUDE_DIR=${dict['bzip2']}/include"
         "-DBZIP2_LIBRARY=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
         "-DZstd_INCLUDE_DIR=${dict['zstd']}/include"

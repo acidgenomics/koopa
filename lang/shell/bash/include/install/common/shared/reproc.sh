@@ -3,7 +3,7 @@
 main() {
     # """
     # Install reproc.
-    # @note Updated 2022-11-03.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/reproc.rb
@@ -28,8 +28,11 @@ tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DBUILD_SHARED_LIBS=ON'
         '-DREPROC++=ON'
     )

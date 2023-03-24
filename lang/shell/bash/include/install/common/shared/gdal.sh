@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-03-14.
+    # @note Updated 2023-03-24.
     #
     # Use 'configure --help' for build options.
     #
@@ -79,10 +79,7 @@ v${dict['version']}/${dict['file']}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake_args=(
-        '-DBUILD_APPS=ON'
-        '-DBUILD_JAVA_BINDINGS=ON'
-        '-DBUILD_PYTHON_BINDINGS=ON'
-        '-DBUILD_SHARED_LIBS=ON'
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
@@ -91,6 +88,12 @@ v${dict['version']}/${dict['file']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        '-DBUILD_APPS=ON'
+        '-DBUILD_JAVA_BINDINGS=ON'
+        '-DBUILD_PYTHON_BINDINGS=ON'
+        '-DBUILD_SHARED_LIBS=ON'
         '-DGDAL_USE_ARMADILLO=OFF'
         '-DGDAL_USE_ARROW=OFF'
         '-DGDAL_USE_BLOSC=OFF'
@@ -161,7 +164,7 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_XERCESC=OFF'
         '-DGDAL_USE_ZLIB=ON'
         '-DGDAL_USE_ZSTD=ON'
-        # Dependency paths.
+        # Dependency paths -----------------------------------------------------
         "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
         "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
         "-DHDF5_ROOT=${dict['hdf5']}"
