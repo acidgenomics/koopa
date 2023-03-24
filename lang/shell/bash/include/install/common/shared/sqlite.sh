@@ -25,7 +25,7 @@ main() {
     koopa_activate_app 'zlib' 'readline'
     declare -A app=(
         ['make']="$(koopa_locate_make)"
-        ['sed']="$(koopa_locate_sed)"
+        ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
