@@ -11281,6 +11281,9 @@ include/header.sh"
                 "${dict['stderr_file']}" \
                 "${dict['prefix']}/.koopa-install-stderr.log"
         fi
+        koopa_rm \
+            "${dict['stderr_file']}" \
+            "${dict['stdout_file']}"
     fi
     case "${dict['mode']}" in
         'shared')
