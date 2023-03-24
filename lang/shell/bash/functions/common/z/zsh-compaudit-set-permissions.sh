@@ -30,6 +30,7 @@ koopa_zsh_compaudit_set_permissions() {
             koopa_alert "Fixing ownership at '${prefix}'."
             koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
         fi
+        # Ensure '2755' returns as '755' for check.
         access="$(koopa_stat_access_octal "$prefix")"
         access="${access: -3}"
         # Alternative method:
