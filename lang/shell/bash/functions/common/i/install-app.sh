@@ -7,7 +7,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-03-24.
     # """
     local app bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
@@ -385,6 +385,9 @@ include/header.sh"
                 "${dict['stderr_file']}" \
                 "${dict['prefix']}/.koopa-install-stderr.log"
         fi
+        koopa_rm \
+            "${dict['stderr_file']}" \
+            "${dict['stdout_file']}"
     fi
     case "${dict['mode']}" in
         'shared')

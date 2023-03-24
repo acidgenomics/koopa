@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Consider bundling quarto pandoc (on macOS):
-# /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools
-
-# NOTE RStudio PATH is now inconsistent with R due to breaking changes in
+# NOTE RStudio PATH is now inconsistent with system R due to breaking changes in
 # internal 'SessionPath.cpp'.
 #
 # Consider filing an issue or pull request that looks for PATH defined
@@ -14,6 +11,10 @@
 #     modules/SessionPath.cpp
 # - https://github.com/rstudio/rstudio/issues/10551
 # - https://github.com/rstudio/rstudio/issues/10311
+
+# NOTE Consider adding these to PATH on macOS:
+# - /Applications/RStudio.app/Contents/Resources/app/quarto/bin
+# - /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools
 
 koopa_r_configure_environ() {
     # """
