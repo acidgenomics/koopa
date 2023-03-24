@@ -82,11 +82,10 @@ main() {
         "${dict['tl_expected']}" \
         "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
-    dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
-tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
+tags/${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
