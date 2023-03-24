@@ -25,7 +25,7 @@ main() {
     #     Homebrew/formula.rb#L1539
     # """
     local app build_deps cmake_args deps dict
-    build_deps=('ninja')
+    build_deps=('cmake' 'ninja')
     deps=(
         'bzip2'
         'zstd'
