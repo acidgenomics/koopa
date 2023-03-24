@@ -37,7 +37,7 @@ v${dict['version']}/${dict['file']}"
     else
         koopa_cp \
             --target-directory="${dict['prefix']}" \
-            "${dict['name']}-${dict['version']}"
+            "${dict['name']}-${dict['version']}/"*
     fi
     return 0
 }
