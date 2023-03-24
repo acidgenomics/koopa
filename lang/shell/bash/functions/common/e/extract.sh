@@ -13,7 +13,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-24.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -136,7 +136,7 @@ koopa_extract() {
                 ;;
         esac
         [[ -x "${app['cmd']}" ]] || return 1
-        "${app['cmd']}" "${cmd_args[@]}"
+        "${app['cmd']}" "${cmd_args[@]}" 2>/dev/null
     done
     export PATH="${dict['orig_path']}"
     return 0
