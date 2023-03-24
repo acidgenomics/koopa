@@ -45,6 +45,7 @@ main() {
     conf_args=(
         # > '--with-expat'
         "--prefix=${dict['prefix']}"
+        '--without-lzma'
         '--without-lzo2'
         '--without-nettle'
         '--without-openssl'
