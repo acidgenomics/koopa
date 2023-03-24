@@ -2,7 +2,7 @@
 
 """
 Parse conda JSON metadata for files to link in bin.
-@note Updated 2023-03-20.
+@note Updated 2023-03-24.
 
 @examples
 ./conda-meta-json.py \
@@ -15,10 +15,10 @@ from re import compile as re_compile
 from sys import exit as sys_exit
 
 
-def main(json_file):
+def main(json_file: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2022-08-23.
+    @note Updated 2023-03-24.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
