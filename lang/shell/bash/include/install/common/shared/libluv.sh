@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libluv.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # Currently only using this in Neovim installer with LuaJIT.
     #
@@ -64,17 +64,21 @@ deps/lua-compat-5.3" \
     # > export CFLAGS
     koopa_mkdir "${dict['prefix']}/lib"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        '-DBUILD_MODULE=ON'
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        '-DBUILD_MODULE=ON'
         '-DLUA_BUILD_TYPE=System'
         '-DLUA_COMPAT53_DIR=deps/lua-compat-5.3'
         '-DWITH_SHARED_LIBUV=ON'
+        # Dependency paths -----------------------------------------------------
         "-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include"
         "-DLIBUV_LIBRARIES=${dict['libuv']}/lib/libuv.${dict['shared_ext']}"
     )

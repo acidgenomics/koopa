@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2022-11-11.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -37,9 +37,12 @@ refs/tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        '-DBUILD_SHARED_LIBS:BOOL=ON'
-        '-DLAPACKE:BOOL=ON'
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        '-DBUILD_SHARED_LIBS=ON'
+        '-DLAPACKE=ON'
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"

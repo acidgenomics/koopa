@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install termcolor.
-    # @note Updated 2022-11-05.
+    # Install nlohmann-json.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/nlohmann/json
@@ -30,7 +30,10 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DJSON_BuildTests=OFF'
         '-DJSON_MultipleHeaders=ON'
     )

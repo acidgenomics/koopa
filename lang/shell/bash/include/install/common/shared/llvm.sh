@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-24.
     #
     # Useful CMake linker variables:
     # - CMAKE_CXX_FLAGS
@@ -141,6 +141,7 @@ main() {
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # LLVM options ---------------------------------------------------------
         '-DLLDB_ENABLE_CURSES=ON'
         '-DLLDB_ENABLE_LUA=OFF'

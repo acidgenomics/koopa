@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -35,8 +35,11 @@ ${dict['version']}/${dict['name']}-${dict['version']}.tar.gz"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DWITH_JPEG8=1'
     )
     koopa_print_env
