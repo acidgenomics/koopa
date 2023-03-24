@@ -6609,7 +6609,7 @@ koopa_extract() {
                 ;;
         esac
         [[ -x "${app['cmd']}" ]] || return 1
-        "${app['cmd']}" "${cmd_args[@]}"
+        "${app['cmd']}" "${cmd_args[@]}" 2>/dev/null
     done
     export PATH="${dict['orig_path']}"
     return 0
@@ -13053,6 +13053,12 @@ koopa_install_python311() {
         "${dict['app_prefix']}/python" \
         "${dict['opt_prefix']}/python"
     return 0
+}
+
+koopa_install_quarto() {
+    koopa_install_app \
+        --name='quarto' \
+        "$@"
 }
 
 koopa_install_r_devel() {
@@ -25231,6 +25237,12 @@ koopa_uninstall_python311() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
+}
+
+koopa_uninstall_quarto() {
+    koopa_uninstall_app \
+        --name='quarto' \
+        "$@"
 }
 
 koopa_uninstall_r_devel() {
