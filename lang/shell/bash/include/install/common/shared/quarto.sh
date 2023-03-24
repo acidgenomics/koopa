@@ -29,8 +29,15 @@ main() {
 v${dict['version']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cp \
-        --target-directory="${dict['prefix']}" \
-        'bin' 'share'
+    if koopa_is_macos
+    then
+        koopa_cp \
+            --target-directory="${dict['prefix']}" \
+            'bin' 'share'
+    else
+        koopa_cp \
+            --target-directory="${dict['prefix']}" \
+            "${dict['name']}-${dict['version']}"
+    fi
     return 0
 }
