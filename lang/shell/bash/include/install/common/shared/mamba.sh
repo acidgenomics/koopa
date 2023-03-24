@@ -85,7 +85,15 @@ main() {
         "${dict['tl_expected']}" \
         "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
-    dict['file']="${dict['version']}.tar.gz"
+    case "${dict['version']}" in
+        '2023.03.22')
+            dict['commit']='e169199955b16eccb7ba95085d4a8ee769077688'
+            dict['file']="${dict['commit']}"
+            ;;
+        *)
+            dict['file']="${dict['version']}.tar.gz"
+            ;;
+    esac
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
 tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
