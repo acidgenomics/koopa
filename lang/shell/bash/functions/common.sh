@@ -26375,13 +26375,16 @@ koopa_zsh_compaudit_set_permissions() {
     )
     for prefix in "${prefixes[@]}"
     do
+        local access
         [[ -d "$prefix" ]] || continue
         if [[ "$(koopa_stat_user "$prefix")" != "${dict['user_id']}" ]]
         then
             koopa_alert "Fixing ownership at '${prefix}'."
             koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
         fi
-        if [[ "$(koopa_stat_access_octal "$prefix")" != '755' ]]
+        access="$(koopa_stat_access_octal "$prefix")"
+        access="${access: -3}"
+        if [[ "$access" != '755' ]]
         then
             koopa_alert "Fixing write access at '${prefix}'."
             koopa_chmod --recursive 'g-w' "$prefix"
