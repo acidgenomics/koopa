@@ -89,16 +89,18 @@ main() {
         '2023.03.22')
             dict['commit']='e169199955b16eccb7ba95085d4a8ee769077688'
             dict['file']="${dict['commit']}.tar.gz"
+            dict['url']="https://github.com/mamba-org/mamba/\
+archive/${dict['file']}"
             ;;
         *)
             dict['file']="${dict['version']}.tar.gz"
+            dict['url']="https://github.com/mamba-org/mamba/archive/\
+refs/tags/${dict['file']}"
             ;;
     esac
-    dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
-tags/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_cd "./${dict['name']}-"*
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
