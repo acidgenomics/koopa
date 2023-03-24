@@ -3,7 +3,7 @@
 main() {
     # """
     # Install fmt library.
-    # @note Updated 2022-12-07.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/fmtlib/fmt
@@ -30,17 +30,20 @@ tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     shared_cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         # > "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         # > "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         # > "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         # > "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        # > '-DFMT_PEDANTIC=ON'
-        # > '-DFMT_SYSTEM_HEADERS=ON'
-        # > '-DFMT_WERROR=ON'
         '-DCMAKE_BUILD_TYPE=Release'
         '-DCMAKE_INSTALL_LIBDIR=lib'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        # > '-DFMT_PEDANTIC=ON'
+        # > '-DFMT_SYSTEM_HEADERS=ON'
+        # > '-DFMT_WERROR=ON'
         '-DFMT_DOC=OFF'
         '-DFMT_INSTALL=ON'
         '-DFMT_TEST=ON'

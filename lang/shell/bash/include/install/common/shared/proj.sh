@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PROJ.
-    # @note Updated 2023-01-04.
+    # @note Updated 2023-03-24.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -50,10 +50,7 @@ ${dict['version']}/${dict['file']}"
     dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     cmake_args=(
-        '-DBUILD_APPS=ON'
-        '-DBUILD_FRAMEWORKS_AND_BUNDLE=OFF'
-        '-DBUILD_SHARED_LIBS=ON'
-        '-DBUILD_TESTING=OFF'
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
@@ -62,8 +59,15 @@ ${dict['version']}/${dict['file']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        '-DBUILD_APPS=ON'
+        '-DBUILD_FRAMEWORKS_AND_BUNDLE=OFF'
+        '-DBUILD_SHARED_LIBS=ON'
+        '-DBUILD_TESTING=OFF'
         '-DENABLE_CURL=ON'
         '-DENABLE_TIFF=ON'
+        # Dependency paths -----------------------------------------------------
         # Required dependency paths.
         "-DEXE_SQLITE3=${dict['sqlite']}/bin/sqlite3"
         "-DSQLITE3_INCLUDE_DIR=${dict['sqlite']}/include"

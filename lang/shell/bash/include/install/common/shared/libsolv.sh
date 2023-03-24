@@ -9,7 +9,7 @@
 main() {
     # """
     # Install libsolv.
-    # @note Updated 2022-11-03.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/openSUSE/libsolv
@@ -39,10 +39,21 @@ tags/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         # > '-DENABLE_PYTHON=yes'
         # > '-DWITH_LIBXML2=yes'
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DENABLE_CONDA=yes'
+        # Dependency paths -----------------------------------------------------
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )

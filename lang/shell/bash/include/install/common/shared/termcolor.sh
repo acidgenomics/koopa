@@ -3,7 +3,7 @@
 main() {
     # """
     # Install termcolor.
-    # @note Updated 2022-11-05.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/ikalnytskyi/termcolor
@@ -30,6 +30,7 @@ archive/${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"

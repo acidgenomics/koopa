@@ -3,7 +3,7 @@
 main() {
     # """
     # Install spdlog.
-    # @note Updated 2022-12-07.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/gabime/spdlog/
@@ -41,9 +41,8 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     shared_cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         # > "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        # > '-Dpkg_config_libdir=lib'
-        # > '-Wno-dev'
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
@@ -52,9 +51,13 @@ archive/${dict['file']}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_TESTS=ON'
         '-DSPDLOG_FMT_EXTERNAL=ON'
+        # Dependency paths -----------------------------------------------------
+        # > '-Dpkg_config_libdir=lib'
         "-Dfmt_DIR=${dict['fmt']}/lib/cmake/fmt"
     )
     koopa_print_env

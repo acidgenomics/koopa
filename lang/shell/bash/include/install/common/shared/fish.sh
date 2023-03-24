@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Fish shell.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
@@ -32,12 +32,15 @@ ${dict['name']}-shell/releases/download/${dict['version']}/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Dependency paths -----------------------------------------------------
         "-DCURSES_INCLUDE_PATH=${dict['ncurses']}/include"
         "-DCURSES_LIBRARY=${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"

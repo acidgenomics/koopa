@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zstd.
-    # @note Updated 2023-03-07.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -32,17 +32,20 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
         '-DCMAKE_CXX_STANDARD=11'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DZSTD_BUILD_CONTRIB=ON'
         '-DZSTD_LEGACY_SUPPORT=ON'
         '-DZSTD_LZ4_SUPPORT=ON'
         '-DZSTD_LZMA_SUPPORT=OFF'
         '-DZSTD_PROGRAMS_LINK_SHARED=ON'
         '-DZSTD_ZLIB_SUPPORT=ON'
-        # External dependencies.
+        # Dependency paths -----------------------------------------------------
         "-DLIBLZ4_INCLUDE_DIR=${dict['lz4']}/include"
         "-DLIBLZ4_LIBRARY=${dict['lz4']}/lib/liblz4.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"

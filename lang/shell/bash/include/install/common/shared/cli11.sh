@@ -3,7 +3,7 @@
 main() {
     # """
     # Install CLI11.
-    # @note Updated 2022-12-06.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cli11.rb
@@ -28,7 +28,10 @@ ${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DCLI11_BUILD_DOCS=OFF'
         '-DCLI11_BUILD_TESTS=OFF'
     )
