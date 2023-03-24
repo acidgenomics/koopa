@@ -3,7 +3,7 @@
 main() {
     # """
     # Install CMake.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://github.com/Kitware/CMake

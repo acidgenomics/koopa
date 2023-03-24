@@ -5,7 +5,7 @@
 main() {
     # """
     # Install msgpack.
-    # @note Updated 2022-11-08.
+    # @note Updated 2023-03-24.
     #
     # - @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/msgpack.rb
@@ -33,12 +33,15 @@ cpp-${dict['version']}/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Dependency paths -----------------------------------------------------
         "-DBoost_INCLUDE_DIR=${dict['boost']}/include"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
