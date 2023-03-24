@@ -2,9 +2,6 @@
 
 # NOTE Currently hitting ninja-related build error on Ubuntu 20.
 # https://github.com/mamba-org/mamba/issues/2410
-#
-# Potentially related new commit that may fix the issue:
-# https://github.com/mamba-org/mamba/commit/e169199955b16eccb7ba95085d4a8ee769077688
 
 main() {
     # """
@@ -85,22 +82,11 @@ main() {
         "${dict['tl_expected']}" \
         "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
-    case "${dict['version']}" in
-        '2023.03.22')
-            dict['commit']='e169199955b16eccb7ba95085d4a8ee769077688'
-            dict['file']="${dict['commit']}.tar.gz"
-            dict['url']="https://github.com/mamba-org/mamba/\
-archive/${dict['file']}"
-            ;;
-        *)
-            dict['file']="${dict['version']}.tar.gz"
-            dict['url']="https://github.com/mamba-org/mamba/archive/\
-refs/tags/${dict['file']}"
-            ;;
-    esac
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "$(koopa_basename_sans_ext "${dict['file']}")"
+    dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
+tags/${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")"
+    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
