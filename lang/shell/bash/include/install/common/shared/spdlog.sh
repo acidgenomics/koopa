@@ -17,7 +17,7 @@ main() {
     koopa_activate_app --build-only 'cmake' 'patch' 'pkg-config'
     koopa_activate_app 'fmt'
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
         ['cmake']="$(koopa_locate_cmake)"
         ['ctest']="$(koopa_locate_ctest)"
         ['patch']="$(koopa_locate_patch)"
