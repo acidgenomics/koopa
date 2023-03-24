@@ -322,6 +322,7 @@ koopa_install_all_binary_apps() {
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
+            'anaconda'
             'apache-airflow'
             'apache-spark'
             'azure-cli'
@@ -354,7 +355,6 @@ koopa_install_all_binary_apps() {
         then
             apps+=(
                 'agat'
-                'anaconda'
                 'autodock'
                 'autodock-vina'
                 'bamtools'
