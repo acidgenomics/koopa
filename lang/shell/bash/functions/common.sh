@@ -10758,7 +10758,7 @@ koopa_install_all_binary_apps() {
     done
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        "${app['koopa']}" reinstall --binary 'aws-cli'
+        "${app['koopa']}" reinstall 'aws-cli'
     fi
     return 0
 }
