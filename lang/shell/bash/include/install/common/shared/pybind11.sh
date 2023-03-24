@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pybind11.
-    # @note Updated 2022-11-04.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://pybind11.readthedocs.io/en/stable/compiling.html
@@ -28,7 +28,10 @@ archive/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
         '-DPYBIND11_NOPYTHON=ON'
         '-DPYBIND11_TEST=OFF'
     )

@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -41,6 +41,7 @@ main() {
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
     if koopa_is_macos
     then

@@ -45,6 +45,7 @@ archive/refs/tags/${dict['file']}"
         '-DCMAKE_BUILD_TYPE=Release'
         '-DCMAKE_CXX_FLAGS=-fpic'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
