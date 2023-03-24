@@ -18,7 +18,7 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
+        ['mem_gb_cutoff']=7
         ['name']='cmake'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
