@@ -19,12 +19,15 @@ def get_deps(app_name: str, json_data: dict) -> list:
     Get unique build dependencies and dependencies in an ordered list.
     @note Updated 2023-03-24.
     """
-    # FIXME Need to handle if empty.
-    build_deps = json_data[app_name]["build_dependencies"]
-    # FIXME Need to handle if empty.
-    deps = json_data[app_name]["dependencies"]
+    build_deps = []
+    deps = []
+    if "build_dependencies" in json_data[app_name]:
+        build_deps = json_data[app_name]["build_dependencies"]
+    if "dependencies" in json_data[app_name]:
+        deps = json_data[app_name]["dependencies"]
     out = build_deps + deps
-    # FIXME What if both are empty?
+    # This makes list unique but keeps order intact, whereas usage of 'set()'
+    # can rearrange.
     out = list(dict.fromkeys(out))
     return out
 
@@ -40,7 +43,30 @@ def main(app_name: str, json_file: str):
         if app_name not in keys:
             sys_exit(1)
         deps = get_deps(app_name=app_name, json_data=json_data)
-        print(deps)
+        if not deps:
+            return True
+        i = 0
+        # FIXME We need to work on appending the list here...need to
+        # use '.append' for that I think...
+        lst = [[]]
+        lst[i] = deps
+        while i + 1:
+            deps2 = lst[i]
+            deps3 = [[]]
+            j = 0
+            for app_name in deps2:
+                print(app_name)
+                print(j)
+                xxx = get_deps(app_name=app_name, json_data=json_data)
+                if xxx:
+                    deps3[j] = xxx
+                j = j + 1
+            print(len(deps3))
+            print(deps3)
+            break
+            i = i + 1
+        # print(lst)
+        # print(lst[0])
         return True
 
 
