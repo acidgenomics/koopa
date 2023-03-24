@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Currently hitting ninja-related build error on Ubuntu 20.
+# https://github.com/mamba-org/mamba/issues/2410
+
 main() {
     # """
     # Install micromamba.
