@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Error if Homebrew is already installed.
+
 main() {
     # """
     # Install Homebrew.
