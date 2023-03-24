@@ -620,9 +620,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-03-13",
+    "date": "2023-03-24",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.32.0"
+    "version": "2.33.0"
   },
   "cli11": {
     "aliases": {
@@ -3516,10 +3516,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-03-20",
+    "date": "2023-03-24",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.6"
+    "version": "2.8.7"
   },
   "procs": {
     "aliases": {
@@ -3592,10 +3592,10 @@
     },
     "bin": ["pyenv"],
     "conservative": true,
-    "date": "2023-03-10",
+    "date": "2023-03-24",
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.15"
+    "version": "2.3.16"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
