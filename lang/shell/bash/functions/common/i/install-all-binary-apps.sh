@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Rethink our bootstrapping approach here.
+# Set a bootstrap flag, and conditionally install aws, curl first.
+# FIXME Don't always reinstall aws-cli at the end...conditional!
+
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
