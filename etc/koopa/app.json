@@ -4626,6 +4626,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "date": "2023-03-07",
+    "dependencies": ["FIXME"],
     "man1": [
       "ex.1",
       "rview.1",
