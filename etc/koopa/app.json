@@ -2376,6 +2376,7 @@
       "debian": "liblapack-dev",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-11-11",
     "dependencies": ["gcc"],
