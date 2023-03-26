@@ -2640,6 +2640,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-01-03",
+    "dependencies": ["zlib"],
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/openSUSE/libsolv/"],
@@ -2651,8 +2652,10 @@
       "fedora": "libssh2-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["openssl3"],
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
@@ -2660,6 +2663,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libtasn1/"],
@@ -2681,8 +2685,10 @@
       "fedora": "libtiff-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["libjpeg-turbo", "zstd"],
     "url": [
       "https://download.osgeo.org/libtiff/",
       "https://libtiff.gitlab.io/libtiff/"
@@ -2714,6 +2720,14 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "m4",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/libuv/libuv/"],
@@ -2738,8 +2752,10 @@
       "homebrew": true
     },
     "bin": ["xml2-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["zlib", "icu4c", "readline"],
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
