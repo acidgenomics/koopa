@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ncurses.
-    # @note Updated 2022-08-02.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
