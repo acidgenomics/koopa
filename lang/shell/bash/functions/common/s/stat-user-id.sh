@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_stat_user() {
+koopa_stat_user_id() {
     # """
     # Get the current user (owner) identifier of a file or directory.
     # @note Updated 2022-11-28.

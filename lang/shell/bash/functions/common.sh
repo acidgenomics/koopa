@@ -291,7 +291,7 @@ END
     return 0
 }
 
-koopa_admin_group() {
+koopa_admin_group_name() {
     local group
     koopa_assert_has_no_args "$#"
     if koopa_is_root
@@ -2842,19 +2842,21 @@ koopa_brew_reset_core_repo() {
 }
 
 koopa_brew_reset_permissions() {
-    local group prefix user
+    local dict
     koopa_assert_has_no_args "$#"
-    user="$(koopa_user)"
-    group="$(koopa_admin_group)"
-    prefix="$(koopa_homebrew_prefix)"
+    declare -A dict=(
+        [group]="$(koopa_admin_group_name)"
+        [prefix]="$(koopa_homebrew_prefix)"
+        [user]="$(koopa_user_name)"
+    )
     koopa_alert "Resetting ownership of files in \
-'${prefix}' to '${user}:${group}'."
+'${dict['prefix']}' to '${dict['user']}:${dict['group']}'."
     koopa_chown \
         --no-dereference \
         --recursive \
         --sudo \
-        "${user}:${group}" \
-        "${prefix}/"*
+        "${dict['user']}:${dict['group']}" \
+        "${dict['prefix']}/"*
     return 0
 }
 
@@ -3075,50 +3077,6 @@ koopa_cd() {
     return 0
 }
 
-koopa_check_access_human() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['code']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist."
-        return 1
-    fi
-    dict['access']="$(koopa_stat_access_human "${dict['file']}")"
-    if [[ "${dict['access']}" != "${dict['code']}" ]]
-    then
-        koopa_warn "'${dict['file']}' current access '${dict['access']}' \
-is not '${dict['code']}'."
-        return 1
-    fi
-    return 0
-}
-
-koopa_check_access_octal() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['code']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist."
-        return 1
-    fi
-    dict['access']="$(koopa_stat_access_octal "${dict['file']}")"
-    if [[ "${dict['access']}" != "${dict['code']}" ]]
-    then
-        koopa_warn "'${dict['file']}' current access '${dict['access']}' \
-is not '${dict['code']}'."
-        return 1
-    fi
-    return 0
-}
-
 koopa_check_disk() {
     local dict
     koopa_assert_has_args "$#"
@@ -3148,37 +3106,13 @@ koopa_check_exports() {
     return 0
 }
 
-koopa_check_group() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['code']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist."
-        return 1
-    fi
-    dict['group']="$(koopa_stat_group "${dict['file']}")"
-    if [[ "${dict['group']}" != "${dict['code']}" ]]
-    then
-        koopa_warn "'${dict['file']}' current group '${dict['group']}' \
-is not '${dict['code']}'."
-        return 1
-    fi
-    return 0
-}
-
 koopa_check_mount() {
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['wc']="$(koopa_locate_wc)"
-    )
-    declare -A dict=(
-        ['prefix']="${1:?}"
-    )
+    declare -A app dict
+    app['wc']="$(koopa_locate_wc --allow-system)"
+    [[ -x "${app['wc']}" ]] || return 1
+    dict['prefix']="${1:?}"
     if [[ ! -r "${dict['prefix']}" ]] || [[ ! -d "${dict['prefix']}" ]]
     then
         koopa_warn "'${dict['prefix']}' is not a readable directory."
@@ -3281,46 +3215,6 @@ koopa_check_system() {
     koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
-}
-
-koopa_check_user() {
-    local dict
-    koopa_assert_has_args_eq "$#" 2
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['expected_user']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist on disk."
-        return 1
-    fi
-    dict['file']="$(koopa_realpath "${dict['file']}")"
-    dict['current_user']="$(koopa_stat_user "${dict['file']}")"
-    if [[ "${dict['current_user']}" != "${dict['expected_user']}" ]]
-    then
-        koopa_warn "'${dict['file']}' user '${dict['current_user']}' \
-is not '${dict['expected_user']}'."
-        return 1
-    fi
-    return 0
-}
-
-koopa_check_version() {
-    local current expected status
-    koopa_assert_has_args "$#"
-    IFS='.' read -r -a current <<< "${1:?}"
-    IFS='.' read -r -a expected <<< "${2:?}"
-    status=0
-    for i in "${!current[@]}"
-    do
-        if [[ ! "${current[$i]}" -ge "${expected[$i]}" ]]
-        then
-            status=1
-            break
-        fi
-    done
-    return "$status"
 }
 
 koopa_chgrp() {
@@ -4574,8 +4468,8 @@ koopa_configure_r() {
             koopa_sys_mkdir "${dict['site_library']}"
             ;;
         '1')
-            dict['group']="$(koopa_admin_group)"
-            dict['user']="$(koopa_user)"
+            dict['group']="$(koopa_admin_group_name)"
+            dict['user']="$(koopa_user_name)"
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
@@ -5385,7 +5279,7 @@ koopa_disable_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict
-    dict['group']="$(koopa_admin_group)"
+    dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
@@ -6337,7 +6231,7 @@ koopa_enable_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict
-    dict['group']="$(koopa_admin_group)"
+    dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
@@ -9006,8 +8900,8 @@ koopa_grep() {
     fi
 }
 
-koopa_group() {
-    _koopa_group "$@"
+koopa_group_name() {
+    _koopa_group_name "$@"
 }
 
 koopa_gsub() {
@@ -14147,7 +14041,7 @@ koopa_is_owner() {
     local dict
     declare -A dict
     dict['prefix']="$(koopa_koopa_prefix)"
-    dict['owner_id']="$(koopa_stat_user "${dict['prefix']}")"
+    dict['owner_id']="$(koopa_stat_user_id "${dict['prefix']}")"
     dict['user_id']="$(koopa_user_id)"
     [[ "${dict['user_id']}" == "${dict['owner_id']}" ]]
 }
@@ -22413,7 +22307,7 @@ koopa_stat_dereference() {
     koopa_stat '%N' "$@"
 }
 
-koopa_stat_group() {
+koopa_stat_group_name() {
     koopa_stat '%G' "$@"
 }
 
@@ -22438,8 +22332,12 @@ koopa_stat_modified() {
     return 0
 }
 
-koopa_stat_user() {
+koopa_stat_user_id() {
     koopa_stat '%u' "$@"
+}
+
+koopa_stat_user_name() {
+    koopa_stop 'FIXME'
 }
 
 koopa_stat() {
@@ -22884,14 +22782,14 @@ koopa_switch_to_develop() {
     return 0
 }
 
-koopa_sys_group() {
+koopa_sys_group_name() {
     local group
     koopa_assert_has_no_args "$#"
     if koopa_is_shared_install
     then
-        group="$(koopa_admin_group)"
+        group="$(koopa_admin_group_name)"
     else
-        group="$(koopa_group)"
+        group="$(koopa_group_name)"
     fi
     koopa_print "$group"
     return 0
@@ -22965,12 +22863,12 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     case "${dict['shared']}" in
         '0')
-            dict['group']="$(koopa_group)"
-            dict['user']="$(koopa_user)"
+            dict['group']="$(koopa_group_name)"
+            dict['user']="$(koopa_user_name)"
             ;;
         '1')
-            dict['group']="$(koopa_sys_group)"
-            dict['user']="$(koopa_sys_user)"
+            dict['group']="$(koopa_sys_group_name)"
+            dict['user']="$(koopa_sys_user_name)"
             ;;
     esac
     chown_args+=('--no-dereference')
@@ -23002,7 +22900,7 @@ koopa_sys_set_permissions() {
 
 koopa_sys_user() {
     koopa_assert_has_no_args "$#"
-    koopa_print "$(koopa_user)"
+    koopa_print "$(koopa_user_name)"
     return 0
 }
 
@@ -26387,7 +26285,7 @@ koopa_zsh_compaudit_set_permissions() {
     do
         local access
         [[ -d "$prefix" ]] || continue
-        if [[ "$(koopa_stat_user "$prefix")" != "${dict['user_id']}" ]]
+        if [[ "$(koopa_stat_user_id "$prefix")" != "${dict['user_id']}" ]]
         then
             koopa_alert "Fixing ownership at '${prefix}'."
             koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"

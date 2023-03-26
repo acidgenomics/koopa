@@ -1683,7 +1683,7 @@ _koopa_group_id() {
     return 0
 }
 
-_koopa_group() {
+_koopa_group_name() {
     __kvar_string="$(id -gn)"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
@@ -2212,7 +2212,7 @@ _koopa_user_id() {
     return 0
 }
 
-_koopa_user() {
+_koopa_user_name() {
     __kvar_string="$(id -un)"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
