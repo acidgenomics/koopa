@@ -20,10 +20,10 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
-        'pkg-config' \
         'cmake' \
         'meson' \
-        'ninja'
+        'ninja' \
+        'pkg-config'
     # glib deps: zlib, gettext, libffi, pcre.
     koopa_activate_app \
         'zlib' \
