@@ -1,9 +1,9 @@
 #!/bin/sh
 
-_koopa_group() {
+_koopa_group_name() {
     # """
-    # Current user's default group.
-    # @note Updated 2023-03-09.
+    # Current user's default group name.
+    # @note Updated 2023-03-26.
     # """
     __kvar_string="$(id -gn)"
     [ -n "$__kvar_string" ] || return 1
