@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Add a '--without-solver' option here (draft).
 # FIXME If '--push' is set, ensure that the user can push to AWS before
 # attempting to build the app.
 # FIXME Need to harden against '/usr/local' in PKG_CONFIG on Linux here.
