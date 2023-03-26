@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this per stat function instead...makes the flag overrides easier.
+
 koopa_stat() {
     # """
     # Display file or file system status.

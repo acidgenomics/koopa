@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_stat_group() {
+koopa_stat_group_name() {
     # """
-    # Get the current group of a file or directory.
-    # @note Updated 2021-11-16.
+    # Get the current group name of a file or directory.
+    # @note Updated 2023-03-26.
     #
     # @examples
     # > koopa_stat_group '/tmp'
