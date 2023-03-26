@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_admin_group() {
+koopa_admin_group_name() {
     # """
-    # Return the administrator group.
-    # @note Updated 2023-03-21.
+    # Return the administrator group name.
+    # @note Updated 2023-03-26.
     #
     # Usage of 'groups' can be terribly slow for domain users. Instead of grep
     # matching against 'groups' return, just set the expected default per Linux
