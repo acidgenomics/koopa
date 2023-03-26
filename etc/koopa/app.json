@@ -57,7 +57,7 @@
       "fedora": "apr-util-devel",
       "homebrew": true
     },
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["apr", "expat", "openssl3"],
@@ -69,7 +69,7 @@
       "fedora": "apr-devel",
       "homebrew": true
     },
-    "build_dependencies": ["autoconf", "automake", "libtool", "make"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["sqlite"],
@@ -252,6 +252,7 @@
       "homebrew": true
     },
     "bin": ["bash"],
+    "build_dependencies": ["make", "pkg-config", "patch"],
     "conservative": true,
     "date": "2022-12-14",
     "man1": ["bash.1"],
@@ -534,6 +535,7 @@
       "debian": "libc-ares-dev",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "url": ["https://c-ares.org/"],
@@ -3491,6 +3493,7 @@
       "homebrew": true
     },
     "bin": ["pkg-config"],
+    "build_dependencies": ["make"],
     "date": "2022-08-29",
     "man1": ["pkg-config.1"],
     "url": ["https://pkg-config.freedesktop.org/"],
