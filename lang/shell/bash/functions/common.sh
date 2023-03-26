@@ -22307,6 +22307,10 @@ koopa_stat_dereference() {
     koopa_stat '%N' "$@"
 }
 
+koopa_stat_group_id() {
+    koopa_stat '%g' "$@"
+}
+
 koopa_stat_group_name() {
     koopa_stat '%G' "$@"
 }
