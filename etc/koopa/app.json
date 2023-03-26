@@ -4122,8 +4122,10 @@
       "fedora": "readline-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["ncurses"],
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
     "version": "8.2"
   },
