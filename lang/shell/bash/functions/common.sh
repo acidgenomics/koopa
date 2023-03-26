@@ -26003,7 +26003,10 @@ koopa_update_koopa() {
     prefixes=("${dict['koopa_prefix']}/lang/shell/zsh")
     for prefix in "${prefixes[@]}"
     do
-        [[ "$(koopa_stat_user "$prefix")" == "${dict['user_id']}" ]] && continue
+        if [[ "$(koopa_stat_user_id "$prefix")" == "${dict['user_id']}" ]]
+        then
+            continue
+        fi
         koopa_alert "Fixing ownership of '${prefix}'."
         koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
     done
