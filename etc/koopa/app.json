@@ -1276,7 +1276,7 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "build_dependencies": ["pkg-config", "cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-03-26",
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1291,6 +1291,7 @@
       "homebrew": true
     },
     "bin": ["flac"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
     "man1": ["flac.1"],
     "url": ["https://xiph.org/flac/"],
@@ -3286,6 +3287,7 @@
       "fedora": "openssl11-devel",
       "homebrew": "openssl@1.1"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["ca-certificates"],
@@ -3300,6 +3302,7 @@
       "homebrew": "openssl@3"
     },
     "bin": ["openssl"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
