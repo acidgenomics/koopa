@@ -3639,6 +3639,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
     "url": ["https://cairographics.org/releases/", "http://www.pixman.org/"],
@@ -3702,8 +3703,18 @@
       "homebrew": true
     },
     "bin": ["proj", "projinfo"],
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
+    "dependencies": [
+      "curl",
+      "libjpeg-turbo",
+      "libtiff",
+      "python3.11",
+      "sqlite",
+      "zlib",
+      "zstd"
+    ],
     "man1": ["proj.1", "projinfo.1"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.2.0"
@@ -3729,7 +3740,7 @@
     "version": "0.3.14"
   },
   "pybind11": {
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "python3.11"],
     "conservative": true,
     "date": "2023-03-17",
     "large": true,
