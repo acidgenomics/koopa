@@ -1236,7 +1236,7 @@ koopa_assert_is_owner() {
     then
         declare -A dict=(
             ['prefix']="$(koopa_koopa_prefix)"
-            ['user']="$(koopa_user)"
+            ['user']="$(koopa_user_name)"
         )
         koopa_stop "Koopa installation at '${dict['prefix']}' is not \
 owned by '${dict['user']}'."
@@ -6256,7 +6256,7 @@ koopa_enable_shell_for_all_users() {
     koopa_is_admin || return 0
     declare -A dict=(
         ['etc_file']='/etc/shells'
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     apps=("$@")
     for app in "${apps[@]}"
@@ -19678,9 +19678,9 @@ koopa_reset_permissions() {
     [[ -x "${app['chmod']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        ['group']="$(koopa_group)"
+        ['group']="$(koopa_group_name)"
         ['prefix']="${1:?}"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
@@ -21573,7 +21573,7 @@ koopa_ssh_generate_key() {
         ['hostname']="$(koopa_hostname)"
         ['key_name']='id_rsa' # or 'id_ed25519'.
         ['prefix']="${HOME:?}/.ssh"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     while (("$#"))
     do
@@ -22874,7 +22874,7 @@ koopa_switch_to_develop() {
         ['branch']='develop'
         ['origin']='origin'
         ['prefix']="$(koopa_koopa_prefix)"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
@@ -23009,7 +23009,7 @@ koopa_sys_set_permissions() {
     return 0
 }
 
-koopa_sys_user() {
+koopa_sys_user_name() {
     koopa_assert_has_no_args "$#"
     koopa_print "$(koopa_user_name)"
     return 0
@@ -26122,8 +26122,8 @@ koopa_user_id() {
     _koopa_user_id "$@"
 }
 
-koopa_user() {
-    _koopa_user "$@"
+koopa_user_name() {
+    _koopa_user_name "$@"
 }
 
 koopa_validate_json() {
