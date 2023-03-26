@@ -2291,6 +2291,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
     "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
