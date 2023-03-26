@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zstd.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -11,7 +11,7 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake'
+    koopa_activate_app --build-only 'cmake' 'pkg-config'
     koopa_activate_app 'lz4' 'zlib'
     declare -A app
     app['cmake']="$(koopa_locate_cmake)"
