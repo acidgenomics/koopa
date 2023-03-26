@@ -18060,7 +18060,7 @@ koopa_python_deactivate_venv() {
 }
 
 koopa_python_pip_install() {
-    local app dict dl_args pkgs pos
+    local app dict dl_args pkg pkgs pos
     koopa_assert_has_args "$#"
     declare -A app dict
     dict['prefix']=''
@@ -18108,10 +18108,6 @@ koopa_python_pip_install() {
         '--no-warn-script-location'
         '--progress-bar=on'
     )
-    dl_args=(
-        'Python' "${app['python']}"
-        'Packages' "$(koopa_to_string "${pkgs[@]}")"
-    )
     if [[ -n "${dict['prefix']}" ]]
     then
         install_args+=(
@@ -18120,10 +18116,30 @@ koopa_python_pip_install() {
         )
         dl_args+=('Target' "${dict['prefix']}")
     fi
+    for pkg in "${pkgs[@]}"
+    do
+        case "$pkg" in
+            'pytaglib' | \
+            'pytaglib=='*)
+                local pkg_name
+                app['cut']="$(koopa_locate_cut --allow-system)"
+                [[ -x "${app['cut']}" ]] || return 1
+                pkg_name="$( \
+                    koopa_print "$pkg" \
+                    | "${app['cut']}" -d '=' -f 1 \
+                )"
+                install_args+=('--no-binary' "$pkg_name")
+                ;;
+        esac
+    done
+    install_args+=("${pkgs[@]}")
+    dl_args=(
+        'python' "${app['python']}"
+        'pip install' "${install_args[*]}"
+    )
     koopa_dl "${dl_args[@]}"
     export PIP_REQUIRE_VIRTUALENV='false'
-    "${app['python']}" -m pip --isolated \
-        install "${install_args[@]}" "${pkgs[@]}"
+    "${app['python']}" -m pip --isolated install "${install_args[@]}"
     return 0
 }
 
