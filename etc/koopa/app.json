@@ -4140,7 +4140,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-11-03",
     "large": true,
@@ -4228,12 +4228,11 @@
       "homebrew": true
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
-    "dependencies": ["openssl3", "readline", "zlib"],
+    "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
-    "notes": ["jekyll doesn't currently work with ruby 3.2.0."],
     "reverse_dependencies": ["bashcov", "colorls", "rmate", "ronn"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.2.1"
@@ -4365,8 +4364,10 @@
       "debian": "libserf-dev",
       "homebrew": false
     },
+    "build_dependencies": ["patch"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
     "reverse_dependencies": ["subversion"],
     "url": ["https://serf.apache.org/"],
     "version": "1.3.9"

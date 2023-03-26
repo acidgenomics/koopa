@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Ruby.
-    # @note Updated 2023-01-04.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
@@ -16,11 +16,10 @@ main() {
         # > 'readline'
         'libyaml'
     )
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
