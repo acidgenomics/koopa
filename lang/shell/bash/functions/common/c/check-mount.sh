@@ -3,19 +3,17 @@
 koopa_check_mount() {
     # """
     # Check if a drive is mounted.
-    # @note Updated 2022-01-31.
+    # @note Updated 2023-03-26.
     #
     # @examples
     # > koopa_check_mount '/mnt/scratch'
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['wc']="$(koopa_locate_wc)"
-    )
-    declare -A dict=(
-        ['prefix']="${1:?}"
-    )
+    declare -A app dict
+    app['wc']="$(koopa_locate_wc --allow-system)"
+    [[ -x "${app['wc']}" ]] || return 1
+    dict['prefix']="${1:?}"
     if [[ ! -r "${dict['prefix']}" ]] || [[ ! -d "${dict['prefix']}" ]]
     then
         koopa_warn "'${dict['prefix']}' is not a readable directory."
