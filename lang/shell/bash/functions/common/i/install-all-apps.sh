@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure we pass the '--no-solver' flag to install here (draft).
+
 # NOTE Consider adding support for '--no-push' flag.
 
 koopa_install_all_apps() {
