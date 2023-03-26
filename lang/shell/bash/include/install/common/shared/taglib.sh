@@ -3,16 +3,7 @@
 main() {
     # """
     # Install TagLib.
-    # @note Updated 2022-09-12.
-    #
-    # To build a static library, set the following two options with CMake:
-    # -DBUILD_SHARED_LIBS=OFF -DENABLE_STATIC_RUNTIME=ON
-    #
-    # How to set '-fPIC' compiler flags?
-    # -DCMAKE_CXX_FLAGS='-fpic'
-    #
-    # Enable for unit tests with 'make check':
-    # -DBUILD_TESTS='on'
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://stackoverflow.com/questions/29200461
@@ -24,10 +15,9 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake'
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-    )
+    koopa_activate_app --build-only 'cmake' 'pkg-config'
+    declare -A app
+    app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
@@ -42,10 +32,13 @@ archive/refs/tags/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
+        # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
-        '-DCMAKE_CXX_FLAGS=-fpic'
+        "-DCMAKE_CXX_FLAGS=-fpic ${CXXFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Build options --------------------------------------------------------
+        '-DBUILD_TESTS=OFF'
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
