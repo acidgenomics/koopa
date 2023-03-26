@@ -15,7 +15,7 @@
 main() {
     # """
     # Install graphviz.
-    # @note Updated 2022-07-28.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://graphviz.org/
@@ -25,9 +25,9 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'make' 'pkg-config'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
