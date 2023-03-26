@@ -1335,7 +1335,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-08",
     "large": true,
     "reverse_dependencies": ["mamba"],
@@ -1386,6 +1386,7 @@
       "fedora": "freetype-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
     "reverse_dependencies": [
