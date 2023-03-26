@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This fixing step keeps happening on older MBP. Need to debug.
+
 koopa_zsh_compaudit_set_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass during 'compinit'.
