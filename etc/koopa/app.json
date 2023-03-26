@@ -4426,7 +4426,9 @@
       "homebrew": true
     },
     "bin": ["sox"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
+    "dependencies": ["flac"],
     "man1": ["sox.1"],
     "url": ["http://sox.sourceforge.net/sox.html"],
     "version": "14.4.2"
