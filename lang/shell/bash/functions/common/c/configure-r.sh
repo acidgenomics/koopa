@@ -46,8 +46,8 @@ koopa_configure_r() {
             koopa_sys_mkdir "${dict['site_library']}"
             ;;
         '1')
-            dict['group']="$(koopa_admin_group)"
-            dict['user']="$(koopa_user)"
+            dict['group']="$(koopa_admin_group_name)"
+            dict['user']="$(koopa_user_name)"
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
