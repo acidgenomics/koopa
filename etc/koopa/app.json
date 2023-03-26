@@ -1268,7 +1268,9 @@
       "homebrew": true
     },
     "bin": ["fish"],
+    "build_dependencies": ["pkg-config", "cmake"],
     "date": "2023-03-26",
+    "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
