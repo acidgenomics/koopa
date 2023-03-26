@@ -2483,6 +2483,7 @@
       "fedora": "libffi-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "reverse_dependencies": [
@@ -2553,6 +2554,7 @@
     "aliases": {
       "homebrew": "libidn2"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "url": ["https://www.gnu.org/software/libidn/"],
@@ -2564,6 +2566,7 @@
       "fedora": "libjpeg-turbo-devel",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
     "url": [
@@ -2610,6 +2613,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
     "url": [
@@ -2625,8 +2629,10 @@
       "homebrew": true
     },
     "bin": ["libpng-config", "libpng16-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["zlib"],
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.39"
   },
