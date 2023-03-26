@@ -17247,7 +17247,7 @@ koopa_move_into_dated_dirs_by_timestamp() {
     for file in "$@"
     do
         local subdir
-        subdir="$(koopa_stat_modified '%Y/%m/%d' "$file")"
+        subdir="$(koopa_stat_modified --format='%Y/%m/%d' "$file")"
         koopa_mv --target-directory="$subdir" "$file"
     done
     return 0
@@ -22296,77 +22296,184 @@ ${dict['mem_gb_cutoff']} GB of RAM."
 }
 
 koopa_stat_access_human() {
-    koopa_stat '%A' "$@"
-}
-
-koopa_stat_access_octal() {
-    koopa_stat '%a' "$@"
-}
-
-koopa_stat_dereference() {
-    koopa_stat '%N' "$@"
-}
-
-koopa_stat_group_id() {
-    koopa_stat '%g' "$@"
-}
-
-koopa_stat_group_name() {
-    koopa_stat '%G' "$@"
-}
-
-koopa_stat_modified() {
-    local app dict timestamp timestamps x
-    koopa_assert_has_args_ge "$#" 2
-    declare -A app=(
-        ['date']="$(koopa_locate_date)"
-    )
-    [[ -x "${app['date']}" ]] || return 1
-    declare -A dict=(
-        ['format']="${1:?}"
-    )
-    shift 1
-    readarray -t timestamps <<< "$(koopa_stat '%Y' "$@")"
-    for timestamp in "${timestamps[@]}"
-    do
-        x="$("${app['date']}" -d "@${timestamp}" +"${dict['format']}")"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
-    done
-    return 0
-}
-
-koopa_stat_user_id() {
-    koopa_stat '%u' "$@"
-}
-
-koopa_stat_user_name() {
-    koopa_stop 'FIXME'
-}
-
-koopa_stat() {
-    local app dict
-    koopa_assert_has_args_ge "$#" 2
-    declare -A app
-    app['stat']="$(koopa_locate_stat --allow-system)"
-    [[ -x "${app['stat']}" ]] || return 1
-    declare -A dict
-    dict['format']="${1:?}"
-    shift 1
-    if [[ "${app['stat']}" == '/usr/bin/stat' ]] && koopa_is_macos
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
     then
+        app['stat']='/usr/bin/stat'
         dict['format_flag']='-f'
+        dict['format_string']='%Sp'
     else
+        app['stat']="$(koopa_locate_stat --allow-system)"
         dict['format_flag']='--format'
+        dict['format_string']='%A'
     fi
+    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
-            "${dict['format_flag']}" "${dict['format']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
             "$@" \
     )"
     [[ -n "${dict['out']}" ]] || return 1
     koopa_print "${dict['out']}"
     return 0
+}
+
+koopa_stat_access_octal() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%OLp'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%a'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
+}
+
+koopa_stat_group_id() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    dict['format_string']='%g'
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
+}
+
+koopa_stat_group_name() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%Sg'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%G'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
+}
+
+koopa_stat_modified() {
+    local app dict pos timestamp timestamps
+    koopa_assert_has_args "$#"
+    declare -A app dict
+    app['date']="$(koopa_locate_date)"
+    app['stat']="$(koopa_locate_stat)"
+    [[ -x "${app['date']}" ]] || return 1
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['format']=''
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--format='*)
+                dict['format']="${1#*=}"
+                shift 1
+                ;;
+            '--format')
+                dict['format']="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--format' "${dict['format']}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    readarray -t timestamps <<< "$( \
+        "${app['stat']}" --format='%Y' "$@" \
+    )"
+    for timestamp in "${timestamps[@]}"
+    do
+        local string
+        string="$( \
+            "${app['date']}" -d "@${timestamp}" +"${dict['format']}" \
+        )"
+        [[ -n "$string" ]] || return 1
+        koopa_print "$string"
+    done
+    return 0
+}
+
+koopa_stat_user_id() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    dict['format_string']='%u'
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
+}
+
+koopa_stat_user_name() {
+    koopa_stop 'FIXME'
 }
 
 koopa_status_fail() {

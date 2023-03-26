@@ -10,9 +10,31 @@ koopa_stat_access_human() {
     #     command-line-on-linuxunix/
     #
     # @examples
-    # > koopa_stat_access_human '/tmp'
+    # > koopa_stat_access_human '/tmp' "${HOME:?}"
     # # lrwxr-xr-x
+    # # drwxr-x---
     # """
-    # FIXME BSD use: '%Sp'.
-    koopa_stat '%A' "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%Sp'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%A'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
 }

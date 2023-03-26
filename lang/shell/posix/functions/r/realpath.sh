@@ -5,9 +5,6 @@ _koopa_realpath() {
     # Real path to file/directory on disk.
     # @note Updated 2023-03-23.
     #
-    # Alternative approach on macOS with BSD stat:
-    # /usr/bin/stat -f '%R' /opt/koopa/activate
-    #
     # @seealso
     # - https://stackoverflow.com/questions/3572030/
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/tests/run_tests.sh
