@@ -558,9 +558,9 @@
       "fedora": "cairo-devel",
       "homebrew": true
     },
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-26",
     "dependencies": [
       "zlib",
       "gettext",
@@ -630,7 +630,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "large": true,
@@ -993,9 +993,10 @@
       "homebrew": true
     },
     "bin": ["curl", "curl-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-20",
-    "dependencies": ["ca-certificates"],
+    "dependencies": ["ca-certificates", "zlib", "zstd", "openssl3"],
     "man1": ["curl.1", "curl-config.1"],
     "reverse_dependencies": ["git", "libgeotiff", "proj", "gdal", "mamba"],
     "url": ["https://curl.se/"],
