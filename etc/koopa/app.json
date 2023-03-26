@@ -1116,7 +1116,9 @@
       "homebrew": true
     },
     "bin": ["editorconfig"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-01-19",
+    "dependencies": ["pcre2"],
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
@@ -1190,6 +1192,7 @@
       "fedora": "expat-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "reverse_dependencies": [
@@ -1229,7 +1232,9 @@
       "homebrew": true
     },
     "bin": ["ffmpeg", "ffprobe"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-07",
+    "dependencies": ["lame"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
     "version": "6.0"
