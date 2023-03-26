@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2022-09-26.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -14,7 +14,10 @@ main() {
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only \
+        'make' \
+        'pkg-config' \
+        'python3.11'
     deps=(
         'c-ares'
         'jemalloc'
@@ -23,7 +26,6 @@ main() {
         'openssl3'
         'zlib'
         'boost'
-        # > 'python3.11'
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
