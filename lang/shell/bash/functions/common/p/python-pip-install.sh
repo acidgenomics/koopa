@@ -3,7 +3,9 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-03-26.
+    #
+    # The pip '--isolated' flag ignores the user 'pip.conf' file.
     #
     # @seealso
     # - https://pip.pypa.io/en/stable/cli/pip_install/
@@ -12,7 +14,7 @@ koopa_python_pip_install() {
     # - https://github.com/pypa/pip/issues/8063
     # - https://stackoverflow.com/a/43560499/3911732
     # """
-    local app dict dl_args pkgs pos
+    local app dict dl_args pkg pkgs pos
     koopa_assert_has_args "$#"
     declare -A app dict
     dict['prefix']=''
@@ -63,10 +65,6 @@ koopa_python_pip_install() {
         '--no-warn-script-location'
         '--progress-bar=on'
     )
-    dl_args=(
-        'Python' "${app['python']}"
-        'Packages' "$(koopa_to_string "${pkgs[@]}")"
-    )
     if [[ -n "${dict['prefix']}" ]]
     then
         install_args+=(
@@ -75,11 +73,31 @@ koopa_python_pip_install() {
         )
         dl_args+=('Target' "${dict['prefix']}")
     fi
+    # Disable binary wheels for some packages.
+    for pkg in "${pkgs[@]}"
+    do
+        case "$pkg" in
+            'pytaglib' | \
+            'pytaglib=='*)
+                local pkg_name
+                app['cut']="$(koopa_locate_cut --allow-system)"
+                [[ -x "${app['cut']}" ]] || return 1
+                pkg_name="$( \
+                    koopa_print "$pkg" \
+                    | "${app['cut']}" -d '=' -f 1 \
+                )"
+                install_args+=('--no-binary' "$pkg_name")
+                ;;
+        esac
+    done
+    install_args+=("${pkgs[@]}")
+    dl_args=(
+        'python' "${app['python']}"
+        'pip install' "${install_args[*]}"
+    )
     koopa_dl "${dl_args[@]}"
     # > unset -v PYTHONPATH
     export PIP_REQUIRE_VIRTUALENV='false'
-    # The pip '--isolated' flag ignores the user 'pip.conf' file.
-    "${app['python']}" -m pip --isolated \
-        install "${install_args[@]}" "${pkgs[@]}"
+    "${app['python']}" -m pip --isolated install "${install_args[@]}"
     return 0
 }
