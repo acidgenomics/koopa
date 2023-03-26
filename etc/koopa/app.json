@@ -287,9 +287,9 @@
     },
     "bin": ["bat"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-12",
+    "date": "2023-03-26",
     "url": ["https://github.com/sharkdp/bat"],
-    "version": "0.22.1"
+    "version": "0.23.0"
   },
   "bc": {
     "aliases": {
@@ -1268,13 +1268,13 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "date": "2023-01-09",
+    "date": "2023-03-26",
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.6.0"
+    "version": "3.6.1"
   },
   "flac": {
     "aliases": {
@@ -3631,13 +3631,13 @@
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "date": "2022-09-26",
+    "date": "2023-03-26",
     "dependencies": ["python3.10"],
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
     ],
-    "version": "1.5.0"
+    "version": "2.0.0"
   },
   "pytest": {
     "bin": ["pytest"],
@@ -3757,9 +3757,9 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2023-03-24",
+    "date": "2023-03-26",
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.3.287"
+    "version": "1.2.475"
   },
   "r": {
     "aliases": {
@@ -4909,9 +4909,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-20",
+    "date": "2023-03-26",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.32.2"
+    "version": "4.33.1"
   },
   "yt-dlp": {
     "aliases": {

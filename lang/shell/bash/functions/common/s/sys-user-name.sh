@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_sys_user() {
+koopa_sys_user_name() {
     # """
     # Set the koopa installation system user name.
     # @note Updated 2023-03-26.

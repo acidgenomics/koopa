@@ -21,7 +21,7 @@ koopa_switch_to_develop() {
         ['branch']='develop'
         ['origin']='origin'
         ['prefix']="$(koopa_koopa_prefix)"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
