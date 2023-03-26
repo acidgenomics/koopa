@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-26.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -46,37 +46,24 @@ main() {
     # """
     local app deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
-        # zlib deps: none.
         'zlib'
-        # bzip2 deps: none.
         'bzip2'
-        # expat deps: none.
         'expat'
-        # libffi deps: none.
         'libffi'
-        # mpdecimal deps: none.
         'mpdecimal'
-        # ncurses deps: none.
         'ncurses'
-        # openssl3 deps: none.
         'openssl3'
-        # xz deps: none.
         'xz'
-        # unzip deps: none.
         'unzip'
-        # libedit deps: ncurses.
         'libedit'
-        # gdbm deps: readline.
         'gdbm'
-        # sqlite deps: readline.
         'sqlite'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"

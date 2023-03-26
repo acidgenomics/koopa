@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PROJ.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-26.
     #
     # Alternative approach for SQLite3 dependency:
     # > -DCMAKE_PREFIX_PATH='/opt/koopa/opt/sqlite'
@@ -15,7 +15,7 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'cmake' 'make' 'pkg-config'
     koopa_activate_app \
         'curl' \
         'zlib' \
