@@ -1512,6 +1512,7 @@
       "homebrew": true
     },
     "bin": ["geos-config"],
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-17",
     "url": ["https://github.com/libgeos/geos/"],
@@ -1629,10 +1630,16 @@
       "fedora": "glib2-devel",
       "homebrew": true
     },
-    "build_dependencies": ["meson", "ninja", "pkg-config", "python3.11"],
+    "build_dependencies": [
+      "cmake",
+      "meson",
+      "ninja",
+      "pkg-config",
+      "python3.11"
+    ],
     "conservative": true,
     "date": "2023-03-07",
-    "dependencies": ["zlib", "gettext", "libffi", "pcre"],
+    "dependencies": ["zlib", "gettext", "libffi", "pcre2"],
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
@@ -1645,8 +1652,10 @@
       "fedora": "gmp-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["m4"],
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
