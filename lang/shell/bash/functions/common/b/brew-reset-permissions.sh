@@ -3,20 +3,22 @@
 koopa_brew_reset_permissions() {
     # """
     # Reset permissions on Homebrew installation.
-    # @note Updated 2021-10-27.
+    # @note Updated 2023-03-27.
     # """
-    local group prefix user
+    local dict
     koopa_assert_has_no_args "$#"
-    user="$(koopa_user)"
-    group="$(koopa_admin_group)"
-    prefix="$(koopa_homebrew_prefix)"
+    declare -A dict=(
+        [group]="$(koopa_admin_group_name)"
+        [prefix]="$(koopa_homebrew_prefix)"
+        [user]="$(koopa_user_name)"
+    )
     koopa_alert "Resetting ownership of files in \
-'${prefix}' to '${user}:${group}'."
+'${dict['prefix']}' to '${dict['user']}:${dict['group']}'."
     koopa_chown \
         --no-dereference \
         --recursive \
         --sudo \
-        "${user}:${group}" \
-        "${prefix}/"*
+        "${dict['user']}:${dict['group']}" \
+        "${dict['prefix']}/"*
     return 0
 }
