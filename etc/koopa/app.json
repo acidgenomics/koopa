@@ -2445,8 +2445,10 @@
       "debian": "libedit-dev",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["ncurses"],
     "url": ["https://thrysoee.dk/editline/"],
     "version": "20221030-3.1"
   },
@@ -2468,8 +2470,10 @@
       "fedora": "libevent-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["openssl3"],
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
   },
