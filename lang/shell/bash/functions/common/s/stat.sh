@@ -7,6 +7,9 @@ koopa_stat() {
     # Display file or file system status.
     # @note Updated 2023-03-18.
     #
+    # @seealso
+    # - man /usr/share/man/man1/stat.1
+    #
     # @examples
     # > koopa_stat '%A' '/tmp/'
     # # drwxrwxrwt

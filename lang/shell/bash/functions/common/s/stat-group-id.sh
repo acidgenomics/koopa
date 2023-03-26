@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-koopa_stat_group_name() {
+koopa_stat_group_id() {
     # """
     # Get the current group name of a file or directory.
     # @note Updated 2023-03-26.
     #
     # @examples
-    # > koopa_stat_group_name '/tmp'
-    # # wheel
+    # > koopa_stat_group_id '/tmp'
+    # # 0
     # """
-    # FIXME BSD '%Sg'
-    koopa_stat '%G' "$@"
+    koopa_stat '%g' "$@"
 }
