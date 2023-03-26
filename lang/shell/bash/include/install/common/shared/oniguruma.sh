@@ -3,7 +3,7 @@
 main() {
     # """
     # Install oniguruma regular expressions library.
-    # @note Updated 2022-07-12.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -11,7 +11,13 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app 'm4' 'autoconf' 'automake' 'libtool'
+    koopa_activate_app --build-only \
+        'autoconf' \
+        'automake' \
+        'libtool' \
+        'm4' \
+        'make' \
+        'pkg-config'
     declare -A app=(
         ['autoreconf']="$(koopa_locate_autoreconf)"
         ['make']="$(koopa_locate_make)"
