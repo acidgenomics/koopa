@@ -35,15 +35,15 @@ main() {
     dict['curses_include_path']="${dict['ncurses']}/include"
     dict['curses_library']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
-    dict['pcre2_include_dir']="${dict['pcre2']}/include"
-    dict['pcre2_library']="${dict['pcre2']}/lib/\
+    dict['sys_pcre2_include_dir']="${dict['pcre2']}/include"
+    dict['sys_pcre2_lib']="${dict['pcre2']}/lib/\
 libpcre2-32.${dict['shared_ext']}"
     koopa_assert_is_dir \
         "${dict['curses_include_path']}" \
-        "${dict['pcre2_include_dir']}"
+        "${dict['sys_pcre2_include_dir']}"
     koopa_assert_is_file \
         "${dict['curses_library']}" \
-        "${dict['pcre2_library']}"
+        "${dict['sys_pcre2_lib']}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://github.com/${dict['name']}-shell/\
 ${dict['name']}-shell/releases/download/${dict['version']}/${dict['file']}"
@@ -65,8 +65,8 @@ ${dict['name']}-shell/releases/download/${dict['version']}/${dict['file']}"
         # Dependency paths -----------------------------------------------------
         "-DCURSES_INCLUDE_PATH=${dict['curses_include_path']}"
         "-DCURSES_LIBRARY=${dict['curses_library']}"
-        "-DSYS_PCRE2_INCLUDE_DIR=${dict['pcre2_include_dir']}"
-        "-DSYS_PCRE2_LIB=${dict['pcre2_library']}"
+        "-DSYS_PCRE2_INCLUDE_DIR=${dict['sys_pcre2_include_dir']}"
+        "-DSYS_PCRE2_LIB=${dict['sys_pcre2_lib']}"
     )
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
