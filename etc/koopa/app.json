@@ -3270,6 +3270,7 @@
     "version": "1.11.1"
   },
   "nlohmann-json": {
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-05",
     "large": true,
     "reverse_dependencies": ["mamba"],
@@ -3330,6 +3331,14 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "m4",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
@@ -3365,8 +3374,10 @@
       "debian": ["libblas-dev", "libopenblas-base", "libopenblas-dev"],
       "fedora": "openblas-devel"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["gcc"],
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.21"
   },
@@ -3522,8 +3533,16 @@
       "homebrew": true
     },
     "bin": ["pcre-config", "pcregrep", "pcretest"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["bzip2", "zlib"],
     "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"],
     "url": ["https://sourceforge.net/projects/pcre/"],
     "version": "8.45"
@@ -3535,8 +3554,16 @@
       "homebrew": true
     },
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["bzip2", "zlib"],
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
     "url": ["https://github.com/PCRE2Project/pcre2/", "https://www.pcre.org/"],
     "version": "10.42"
