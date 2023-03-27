@@ -3,7 +3,7 @@
 koopa_stat_user_id() {
     # """
     # Get the current user (owner) identifier of a file or directory.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-27.
     #
     # @examples
     # > koopa_stat_user_id '/tmp' "${HOME:?}"
@@ -13,16 +13,18 @@ koopa_stat_user_id() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
     dict['format_string']='%u'
-    if koopa_is_macos
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \

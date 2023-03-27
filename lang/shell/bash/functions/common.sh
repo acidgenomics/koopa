@@ -15364,6 +15364,7 @@ koopa_locate_app() {
         ['allow_koopa_bin']=1
         ['allow_missing']=0
         ['allow_system']=0
+        ['only_system']=0
         ['realpath']=0
     )
     declare -A dict=(
@@ -15414,6 +15415,10 @@ koopa_locate_app() {
                 bool['allow_koopa_bin']=0
                 shift 1
                 ;;
+            '--only-system')
+                bool['only_system']=1
+                shift 1
+                ;;
             '--realpath')
                 bool['realpath']=1
                 shift 1
@@ -15427,6 +15432,11 @@ koopa_locate_app() {
                 ;;
         esac
     done
+    if [[ "${bool['only_system']}" -eq 1 ]]
+    then
+        bool['allow_koopa_bin']=0
+        bool['allow_system']=1
+    fi
     if [[ "${#pos[@]}" -gt 0 ]]
     then
         set -- "${pos[@]}"
@@ -15460,10 +15470,13 @@ koopa_locate_app() {
         koopa_print "${dict['app']}"
         return 0
     fi
-    dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
+
+    if [[ "${bool['only_system']}" -eq 0 ]]
+    then
+        dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
-    if [[ ! -x "${dict['app']}" ]] && \
-        [[ "${bool['allow_system']}" -eq 1 ]]
+    fi
+    if [[ ! -x "${dict['app']}" ]] && [[ "${bool['allow_system']}" -eq 1 ]]
     then
         [[ -z "${dict['system_bin_name']}" ]] && \
             dict['system_bin_name']="${dict['bin_name']}"
@@ -22315,17 +22328,19 @@ koopa_stat_access_human() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
-    if koopa_is_macos
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+        dict['format_string']='%A'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
         dict['format_string']='%Sp'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
-        dict['format_string']='%A'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \
@@ -22341,17 +22356,19 @@ koopa_stat_access_octal() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
-    if koopa_is_macos
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+        dict['format_string']='%a'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
         dict['format_string']='%OLp'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
-        dict['format_string']='%a'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \
@@ -22367,16 +22384,18 @@ koopa_stat_group_id() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
     dict['format_string']='%g'
-    if koopa_is_macos
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \
@@ -22392,17 +22411,19 @@ koopa_stat_group_name() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
-    if koopa_is_macos
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+        dict['format_string']='%G'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
         dict['format_string']='%Sg'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
-        dict['format_string']='%G'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \
@@ -22467,16 +22488,18 @@ koopa_stat_user_id() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
     dict['format_string']='%u'
-    if koopa_is_macos
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \
@@ -22492,17 +22515,19 @@ koopa_stat_user_name() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
-    if koopa_is_macos
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+        dict['format_string']='%U'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
         dict['format_string']='%Su'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
-        dict['format_string']='%U'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \

@@ -3,7 +3,7 @@
 koopa_locate_app() {
     # """
     # Locate file system path to an application.
-    # @note Updated 2022-11-28.
+    # @note Updated 2023-03-27.
     #
     # Mode 1: direct executable file path input.
     # Mode 2: '--app-name' and '--bin-name' input.
@@ -20,6 +20,7 @@ koopa_locate_app() {
         ['allow_koopa_bin']=1
         ['allow_missing']=0
         ['allow_system']=0
+        ['only_system']=0
         ['realpath']=0
     )
     declare -A dict=(
@@ -72,6 +73,10 @@ koopa_locate_app() {
                 bool['allow_koopa_bin']=0
                 shift 1
                 ;;
+            '--only-system')
+                bool['only_system']=1
+                shift 1
+                ;;
             '--realpath')
                 bool['realpath']=1
                 shift 1
@@ -86,6 +91,11 @@ koopa_locate_app() {
                 ;;
         esac
     done
+    if [[ "${bool['only_system']}" -eq 1 ]]
+    then
+        bool['allow_koopa_bin']=0
+        bool['allow_system']=1
+    fi
     if [[ "${#pos[@]}" -gt 0 ]]
     then
         set -- "${pos[@]}"
@@ -119,10 +129,13 @@ koopa_locate_app() {
         koopa_print "${dict['app']}"
         return 0
     fi
-    dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
+
+    if [[ "${bool['only_system']}" -eq 0 ]]
+    then
+        dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
-    if [[ ! -x "${dict['app']}" ]] && \
-        [[ "${bool['allow_system']}" -eq 1 ]]
+    fi
+    if [[ ! -x "${dict['app']}" ]] && [[ "${bool['allow_system']}" -eq 1 ]]
     then
         [[ -z "${dict['system_bin_name']}" ]] && \
             dict['system_bin_name']="${dict['bin_name']}"
