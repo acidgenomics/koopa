@@ -61,26 +61,26 @@ def main(json_file: str) -> bool:
     Parse the koopa 'app.json' file for defined values.
     @note Updated 2023-03-27.
     """
-    dct = {}
-    dct["arch"] = arch2()
-    dct["large"] = large()
-    dct["platform"] = platform()
+    sys_dict = {}
+    sys_dict["arch"] = arch2()
+    sys_dict["large"] = large()
+    sys_dict["platform"] = platform()
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
     for app_name in json_data.keys():
         json = json_data[app_name]
         keys = json.keys()
         if "arch" in keys:
-            if json["arch"] != dct["arch"]:
+            if json["arch"] != sys_dict["arch"]:
                 continue
         if "enabled" in keys:
             if not json["enabled"]:
                 continue
         if "large" in keys:
-            if json["large"] and not dct["large"]:
+            if json["large"] and not sys_dict["large"]:
                 continue
         if "platform" in keys:
-            if json["platform"] != dct["platform"]:
+            if json["platform"] != sys_dict["platform"]:
                 continue
         if "private" in keys:
             if json["private"]:

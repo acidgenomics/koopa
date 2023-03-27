@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
@@ -21,11 +21,9 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        # > ['cat']="$(koopa_locate_cat)"
-        ['make']="$(koopa_locate_make)"
-    )
-    # > [[ -x "${app['cat']}" ]] || return 1
+    koopa_activate_app --build-only 'make'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='bzip2'
