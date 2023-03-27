@@ -188,7 +188,7 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then
-        # Compare with current values defined in '~/.bashrc'.
+        # Compare with current values defined in '~/.bash_profile'.
         # Check all values with 'set +o'.
         # Note that '+o' here means disable, '-o' means enable.
         set +o allexport  # -a
