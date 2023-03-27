@@ -11,7 +11,8 @@ main() {
         #     msg00050.html
         # - https://lists.gnu.org/archive/html/bug-findutils/2021-01/
         #     msg00051.html
-        export CFLAGS='-D__nonnull\(params\)='
+        CFLAGS="-D__nonnull\(params\)= ${CFLAGS:-}"
+        export CFLAGS
     fi
     koopa_install_app_subshell \
         --installer='gnu-app' \

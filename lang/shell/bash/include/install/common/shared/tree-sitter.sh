@@ -12,9 +12,9 @@ main() {
     #     Formula/tree-sitter.rb
     # """
     local app dict
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'make' 'pkg-config'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='tree-sitter'

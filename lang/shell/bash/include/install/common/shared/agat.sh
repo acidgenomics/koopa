@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
+    # """
+    # Install agat.
+    # @note Updated 2023-03-27.
+    # """
     local app dict
     declare -A app
     app['patch']="$(koopa_locate_patch)"

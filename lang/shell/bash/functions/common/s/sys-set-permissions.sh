@@ -55,12 +55,12 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     case "${dict['shared']}" in
         '0')
-            dict['group']="$(koopa_group)"
-            dict['user']="$(koopa_user)"
+            dict['group']="$(koopa_group_name)"
+            dict['user']="$(koopa_user_name)"
             ;;
         '1')
-            dict['group']="$(koopa_sys_group)"
-            dict['user']="$(koopa_sys_user)"
+            dict['group']="$(koopa_sys_group_name)"
+            dict['user']="$(koopa_sys_user_name)"
             ;;
     esac
     chown_args+=('--no-dereference')

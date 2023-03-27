@@ -6,7 +6,7 @@
 main() {
     # """
     # Install bcl2fastq from source.
-    # @note Updated 2022-03-14.
+    # @note Updated 2022-03-27.
     #
     # This uses CMake to install.
     # ARM is not yet supported for this.
@@ -26,6 +26,7 @@ main() {
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
+    koopa_activate_app --build-only 'make'
     deps=(
         'bzip2'
         'icu4c'

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2023-03-07.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
@@ -11,7 +11,7 @@ main() {
     # """
     local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    build_deps=('pkg-config')
+    build_deps=('make' 'pkg-config')
     deps=(
         'zlib'
         'gettext'

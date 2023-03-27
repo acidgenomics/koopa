@@ -3,13 +3,13 @@
 main() {
     # """
     # Install elfutils.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
     local app conf_args deps dict
-    koopa_activate_app --build-only 'm4'
+    koopa_activate_app --build-only 'm4' 'make'
     deps=(
         'bzip2'
         'xz'

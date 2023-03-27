@@ -102,7 +102,7 @@ _koopa_activate_aliases() {
     alias vim-fzf='_koopa_alias_vim_fzf'
     alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
-    alias z='_koopa_alias_zoxide'
+    alias z='_koopa_alias_z'
     [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
     [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
     return 0
@@ -330,6 +330,7 @@ _koopa_activate_conda() {
         return 0
     fi
     _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     . "$__kvar_script"
@@ -1023,6 +1024,7 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
+    _koopa_is_alias 'zoxide' && unalias 'zoxide'
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
@@ -1195,8 +1197,8 @@ _koopa_alias_colorls() {
 }
 
 _koopa_alias_conda() {
-    _koopa_is_alias 'conda' && unalias 'conda'
     _koopa_activate_conda
+    _koopa_is_function 'conda' || return 1
     conda "$@"
 }
 
@@ -1234,9 +1236,15 @@ _koopa_alias_kdev() {
     __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
     __kvar_bash="${__kvar_bin_prefix}/bash"
     __kvar_env="${__kvar_bin_prefix}/genv"
-    if [ ! -x "$__kvar_bash" ] && _koopa_is_linux
+    if [ ! -x "$__kvar_bash" ]
     then
-        __kvar_bash='/bin/bash'
+        if _koopa_is_linux
+        then
+            __kvar_bash='/bin/bash'
+        elif _koopa_is_macos
+        then
+            __kvar_bash='/usr/local/bin/bash'
+        fi
         __kvar_env='/usr/bin/env'
     fi
     [ -x "$__kvar_bash" ] || return 1
@@ -1285,9 +1293,8 @@ _koopa_alias_l() {
 }
 
 _koopa_alias_mamba() {
-    _koopa_is_alias 'conda' && unalias 'conda'
-    _koopa_is_alias 'mamba' && unalias 'mamba'
     _koopa_activate_conda
+    _koopa_is_function 'mamba' || return 1
     mamba "$@"
 }
 
@@ -1335,9 +1342,9 @@ _koopa_alias_week() {
     date '+%V'
 }
 
-_koopa_alias_zoxide() {
-    _koopa_is_alias 'z' && unalias 'z'
+_koopa_alias_z() {
     _koopa_activate_zoxide
+    _koopa_is_function 'z' || return 1
     z "$@"
 }
 
@@ -1677,7 +1684,7 @@ _koopa_group_id() {
     return 0
 }
 
-_koopa_group() {
+_koopa_group_name() {
     __kvar_string="$(id -gn)"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
@@ -1718,27 +1725,20 @@ _koopa_is_alacritty() {
 }
 
 _koopa_is_alias() {
-    for __kvar_alias in "$@"
+    for __kvar_cmd in "$@"
     do
-        if ! _koopa_is_installed "$__kvar_alias"
-        then
-            unset -v __kvar_alias
-            return 1
-        fi
-        __kvar_string="$(type "$__kvar_alias")"
-        unset -v __kvar_alias
-        _koopa_str_detect_posix \
-            "$__kvar_string" \
-            ' is aliased to ' \
-            && continue
-        _koopa_str_detect_posix \
-            "$__kvar_string" \
-            ' is an alias for ' \
-            && continue
-        unset -v __kvar_string
-        return 1
+        __kvar_string="$(command -v "$__kvar_cmd")"
+        case "$__kvar_string" in
+            'alias '*)
+                continue
+                ;;
+            *)
+                unset -v __kvar_cmd __kvar_string
+                return 1
+                ;;
+        esac
     done
-    unset -v __kvar_string
+    unset -v __kvar_cmd __kvar_string
     return 0
 }
 
@@ -1758,12 +1758,27 @@ _koopa_is_fedora_like() {
     _koopa_is_os_like 'fedora'
 }
 
+_koopa_is_function() {
+    for __kvar_cmd in "$@"
+    do
+        __kvar_string="$(command -v "$__kvar_cmd")"
+        [ "$__kvar_string" = "$__kvar_cmd" ] && continue
+        unset -v __kvar_cmd __kvar_string
+        return 1
+    done
+    unset -v __kvar_cmd __kvar_string
+    return 0
+}
+
 _koopa_is_installed() {
     for __kvar_cmd in "$@"
     do
-        command -v "$__kvar_cmd" >/dev/null || return 1
+        __kvar_string="$(command -v "$__kvar_cmd")"
+        [ -x "$__kvar_string" ] && continue
+        unset -v __kvar_cmd __kvar_string
+        return 1
     done
-    unset -v __kvar_cmd
+    unset -v __kvar_cmd __kvar_string
     return 0
 }
 
@@ -2206,7 +2221,7 @@ _koopa_user_id() {
     return 0
 }
 
-_koopa_user() {
+_koopa_user_name() {
     __kvar_string="$(id -un)"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"

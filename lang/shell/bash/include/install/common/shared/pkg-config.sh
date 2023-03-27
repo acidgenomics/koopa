@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pkg-config.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-26.
     #
     # Requires cmp and diff to be installed.
     #
@@ -13,9 +13,9 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make --allow-system)"
-    )
+    koopa_activate_app --build-only 'make'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
