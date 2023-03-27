@@ -5,7 +5,7 @@ Return supported shared applications defined in 'app.json' file.
 @note Updated 2023-03-27.
 
 @examples
-./supported-shared-apps.py
+./shared-apps.py
 """
 
 from json import load
@@ -73,8 +73,8 @@ def main(json_file: str) -> bool:
         if "arch" in keys:
             if json["arch"] != dct["arch"]:
                 continue
-        if "check" in keys:
-            if not json["check"]:
+        if "enabled" in keys:
+            if not json["enabled"]:
                 continue
         if "large" in keys:
             if json["large"] and not dct["large"]:
