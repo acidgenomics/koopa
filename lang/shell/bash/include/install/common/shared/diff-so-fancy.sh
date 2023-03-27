@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Not currently building this from source.
+
 main() {
     # """
     # Install diff-so-fancy.

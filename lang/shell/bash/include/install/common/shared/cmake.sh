@@ -3,17 +3,17 @@
 main() {
     # """
     # Install CMake.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
     # """
     local app bootstrap_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_app --build-only 'make'
     koopa_activate_app 'ncurses' 'openssl3'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

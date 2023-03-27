@@ -528,6 +528,7 @@
       "bzless",
       "bzmore"
     ],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-09-26",
     "man1": [
@@ -661,6 +662,7 @@
       "homebrew": true
     },
     "bin": ["cmake", "cpack", "ctest"],
+    "build_dependencies": ["make"],
     "date": "2023-02-08",
     "dependencies": ["ncurses", "openssl3"],
     "url": ["https://cmake.org/download/"],
@@ -691,6 +693,7 @@
       "homebrew": true
     },
     "bin": ["convmv"],
+    "build_dependencies": ["make"],
     "date": "2022-09-26",
     "url": "https://www.j3e.de/linux/convmv/",
     "version": "2.05"
@@ -808,8 +811,10 @@
       "gwhoami",
       "gyes"
     ],
+    "build_dependencies": ["gperf", "make"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["attr", "gmp"],
     "man1": [
       "gb2sum.1",
       "gbase32.1",
@@ -924,6 +929,7 @@
       "homebrew": true
     },
     "bin": ["cpufetch"],
+    "build_dependencies": ["make"],
     "date": "2023-01-09",
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
@@ -969,15 +975,16 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-20",
-    "dependencies": ["ca-certificates", "zlib", "zstd", "openssl3"],
+    "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "url": ["https://curl.se/"],
     "version": "8.0.1"
   },
   "curl7": {
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-20",
-    "dependencies": ["ca-certificates"],
+    "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "url": ["https://curl.se/"],
     "version": "7.88.1"
   },
@@ -999,6 +1006,7 @@
       "homebrew": "git-delta"
     },
     "bin": ["delta"],
+    "build_dependencies": ["rust"],
     "date": "2022-09-01",
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.15.1"
