@@ -3412,7 +3412,6 @@
     "version": "17.0.6+10"
   },
   "openmp": {
-    "check": false,
     "conservative": true,
     "date": "2023-02-08",
     "notes": ["FIXME Need to add version chec for this."],
