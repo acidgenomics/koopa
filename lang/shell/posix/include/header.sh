@@ -55,7 +55,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa in interactive shell.
-    # @note Updated 2022-09-02.
+    # @note Updated 2023-03-27.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -106,17 +106,7 @@ __koopa_activate_koopa() {
     then
         _koopa_macos_activate_cli_colors || return 1
     fi
-    case "$(_koopa_shell_name)" in
-        'zsh')
-            [ -x "${KOOPA_PREFIX}/bin/conda" ] && \
-                alias conda='_koopa_alias_conda'
-            [ -x "${KOOPA_PREFIX}/bin/mamba" ] && \
-                alias mamba='_koopa_alias_mamba'
-            ;;
-        *)
-            _koopa_activate_conda || return 1
-            ;;
-    esac
+    _koopa_activate_conda || return 1
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \
         '/usr/local/bin' \
