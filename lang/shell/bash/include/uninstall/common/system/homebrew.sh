@@ -3,7 +3,7 @@
 main() {
     # """
     # Uninstall Homebrew.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-03-24.
     #
     # Important! Homebrew uninstaller will currently attempt to delete the
     # parent directory containing 'brew', so make sure we remove our symlink
@@ -14,8 +14,12 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
+    if [[ ! -x "$(koopa_locate_brew --allow-missing)" ]]
+    then
+        koopa_stop 'Homebrew is not installed.'
+    fi
     declare -A dict
-    dict['user']="$(koopa_user)"
+    dict['user']="$(koopa_user_name)"
     dict['file']='uninstall.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"

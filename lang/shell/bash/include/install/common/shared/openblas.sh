@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-26.
     #
     # Attempting to make in parallel can cause installer to crash.
     #
@@ -17,7 +17,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gcc'
     declare -A app=(
         ['cc']='/usr/bin/gcc'

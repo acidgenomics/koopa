@@ -29,6 +29,7 @@ _koopa_activate_conda() {
         return 0
     fi
     _koopa_is_alias 'conda' && unalias 'conda'
+    _koopa_is_alias 'mamba' && unalias 'mamba'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null

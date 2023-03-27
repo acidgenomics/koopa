@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-26.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -18,11 +18,11 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
+        'ca-certificates' \
         'zlib' \
         'zstd' \
-        'ca-certificates' \
         'openssl3'
     declare -A app
     app['make']="$(koopa_locate_make)"

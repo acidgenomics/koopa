@@ -9,7 +9,11 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'autoconf' 'automake' 'pkg-config'
+    koopa_activate_app --build-only \
+        'autoconf' \
+        'automake' \
+        'make' \
+        'pkg-config'
     declare -A app=(
         ['gpg']='/usr/bin/gpg'
         ['gpg_agent']='/usr/bin/gpg-agent'
@@ -172,8 +176,6 @@ tar.${dict['compress_ext']}"
             gnupg_patch_dirmngr
             ;;
     esac
-
-
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"

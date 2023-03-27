@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apptainer.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://github.com/apptainer/apptainer
@@ -11,7 +11,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'go' 'pkg-config'
+    koopa_activate_app --build-only 'go' 'make' 'pkg-config'
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
