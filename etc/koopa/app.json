@@ -163,9 +163,9 @@
   },
   "autodock-adfr": {
     "arch": "amd64",
-    "check": false,
     "date": "2022-10-19",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://ccsb.scripps.edu/adfr/"],
     "version": "1.0"
@@ -247,8 +247,8 @@
     },
     "bin": ["grex"],
     "build_dependencies": ["rust"],
-    "check": false,
     "date": "2022-12-08",
+    "enabled": false,
     "notes": ["Current version has build issues related to Cargo lock."],
     "url": ["https://github.com/imsnif/bandwhich/"],
     "version": "0.20.0"
@@ -317,8 +317,8 @@
   },
   "bcbio-nextgen": {
     "bin": ["bcbio_nextgen.py"],
-    "check": false,
     "date": "2022-09-26",
+    "enabled": false,
     "platform": "linux",
     "url": [
       "https://bcbio-nextgen.readthedocs.io/",
@@ -328,8 +328,8 @@
   },
   "bcbio-nextgen-vm": {
     "bin": ["bcbio-nextgen.py"],
-    "check": false,
     "date": "2022-09-26",
+    "enabled": false,
     "platform": "linux",
     "url": ["https://github.com/bcbio/bcbio-nextgen-vm/"],
     "version": "0.1.6"
@@ -363,9 +363,9 @@
       "homebrew": true
     },
     "bin": ["bfg"],
-    "check": false,
     "date": "2022-09-22",
     "dependencies": ["openjdk"],
+    "enabled": false,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
     "version": "1.14.0"
   },
@@ -390,9 +390,9 @@
     "version": "1.0"
   },
   "bioconda-utils": {
-    "check": false,
     "date": "2023-03-02",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "notes": ["Adding bioconda-utils to bin currently causes app to error."],
     "url": ["https://github.com/bioconda/bioconda-utils/"],
@@ -489,9 +489,9 @@
       "debian": "libbrotli-dev",
       "homebrew": true
     },
-    "check": false,
     "conservative": true,
     "date": "2022-09-26",
+    "enabled": false,
     "url": ["https://github.com/google/brotli/"],
     "version": "1.0.9"
   },
@@ -650,8 +650,8 @@
     "version": "2.3.2"
   },
   "cloudbiolinux": {
-    "check": false,
     "date": "2022-12-30",
+    "enabled": false,
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
     "version": "2e65f8f854ac43c78a5ff09ca4b98f28d1fb22de"
   },
@@ -2047,8 +2047,8 @@
     },
     "arch": "amd64",
     "bin": ["stack"],
-    "check": false,
     "date": "2022-12-17",
+    "enabled": false,
     "large": true,
     "url": [
       "https://haskellstack.org/",
@@ -2604,9 +2604,9 @@
     "aliases": {
       "homebrew": true
     },
-    "check": false,
     "conservative": true,
     "date": "2023-03-07",
+    "enabled": false,
     "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
     "version": "2.46"
   },
@@ -2615,10 +2615,10 @@
       "homebrew": "luv"
     },
     "build_dependencies": ["cmake", "lua", "luajit"],
-    "check": false,
     "conservative": true,
     "date": "2022-09-09",
     "dependencies": ["libuv"],
+    "enabled": false,
     "url": ["https://github.com/luvit/luv/"],
     "version": "1.44.2-1"
   },
@@ -2686,9 +2686,9 @@
     "aliases": {
       "homebrew": true
     },
-    "check": false,
     "conservative": true,
     "date": "2022-09-09",
+    "enabled": false,
     "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
     "version": "0.22"
   },
@@ -2750,9 +2750,9 @@
     "aliases": {
       "homebrew": true
     },
-    "check": false,
     "conservative": true,
     "date": "2022-09-29",
+    "enabled": false,
     "notes": ["0.2.0 is incompatible with neovim."],
     "outdated": true,
     "url": ["https://www.leonerd.org.uk/code/libvterm/"],
@@ -2785,9 +2785,9 @@
       "make",
       "pkg-config"
     ],
-    "check": false,
     "conservative": true,
     "date": "2023-01-04",
+    "enabled": false,
     "url": "https://github.com/yaml/libyaml/",
     "version": "0.2.5"
   },
@@ -2871,9 +2871,9 @@
       "homebrew": true
     },
     "bin": ["luajit"],
-    "check": false,
     "conservative": true,
     "date": "2022-09-09",
+    "enabled": false,
     "url": ["https://luajit.org/"],
     "version": "2.1.0-beta3"
   },
@@ -3057,9 +3057,9 @@
   },
   "misopy": {
     "bin": ["miso"],
-    "check": false,
     "date": "2023-01-10",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "http://hollywood.mit.edu/burgelab/miso/",
@@ -3108,10 +3108,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake"],
-    "check": false,
     "conservative": true,
     "date": "2023-03-05",
     "dependencies": ["zlib", "boost"],
+    "enabled": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
     "version": "6.0.0"
   },
@@ -3267,8 +3267,8 @@
       "homebrew": true
     },
     "bin": ["nim"],
-    "check": false,
     "date": "2022-01-03",
+    "enabled": false,
     "large": true,
     "url": ["https://nim-lang.org/"],
     "version": "1.6.10"
@@ -3736,9 +3736,9 @@
     "aliases": {
       "homebrew": true
     },
-    "check": false,
     "conservative": true,
     "date": "2022-09-26",
+    "enabled": false,
     "url": ["https://ftp.gnu.org/gnu/pth/"],
     "version": "2.0.7"
   },
@@ -4738,9 +4738,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "check": false,
     "conservative": true,
     "date": "2022-09-09",
+    "enabled": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
@@ -4788,9 +4788,9 @@
     "aliases": {
       "homebrew": true
     },
-    "check": false,
     "conservative": true,
     "date": "2022-09-09",
+    "enabled": false,
     "url": ["https://github.com/neovim/unibilium/"],
     "version": "2.1.1"
   },
@@ -4873,8 +4873,8 @@
     },
     "bin": ["code"],
     "build_dependencies": ["rust"],
-    "check": false,
     "date": "2023-03-22",
+    "enabled": false,
     "url": ["https://github.com/microsoft/vscode/"],
     "version": "1.76.2"
   },
