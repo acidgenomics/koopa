@@ -2,15 +2,18 @@
 
 main() {
     # """
-    # Install libxcb.
-    # @note Updated 2023-01-03.
+    # Install xorg-libxcb.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only \
+        'make' \
+        'pkg-config' \
+        'python3.11'
     koopa_activate_app \
         'xorg-xorgproto' \
         'xorg-xcb-proto' \
