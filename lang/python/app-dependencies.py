@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-03-25.
+@note Updated 2023-03-27.
 
 @examples
 ./app-dependencies.py 'mamba'
@@ -24,7 +24,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i:i + 1] = x
+                items[i : i + 1] = x
                 x = items[i]
     except IndexError:
         pass
@@ -54,7 +54,7 @@ def get_deps(app_name: str, json_data: dict) -> list:
 def main(app_name: str, json_file: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-25.
+    @note Updated 2023-03-27.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
@@ -67,20 +67,20 @@ def main(app_name: str, json_file: str) -> bool:
         lst = []
         lst.append(deps)
         while i < len(deps):
-            aaa = []
-            for bbb in lst[i]:
-                if isinstance(bbb, list):
-                    for ccc in bbb:
-                        ddd = get_deps(app_name=ccc, json_data=json_data)
-                        if len(ddd) > 0:
-                            aaa.append(ddd)
+            lvl1 = []
+            for lvl2 in lst[i]:
+                if isinstance(lvl2, list):
+                    for lvl3 in lvl2:
+                        lvl4 = get_deps(app_name=lvl3, json_data=json_data)
+                        if len(lvl4) > 0:
+                            lvl1.append(lvl4)
                 else:
-                    ccc = get_deps(app_name=bbb, json_data=json_data)
-                    if len(ccc) > 0:
-                        aaa.append(ccc)
-            if len(aaa) <= 0:
+                    lvl3 = get_deps(app_name=lvl2, json_data=json_data)
+                    if len(lvl3) > 0:
+                        lvl1.append(lvl3)
+            if len(lvl1) <= 0:
                 break
-            lst.append(aaa)
+            lst.append(lvl1)
             i = i + 1
         lst.reverse()
         lst = flatten(lst)
@@ -91,7 +91,7 @@ def main(app_name: str, json_file: str) -> bool:
 
 
 parser = ArgumentParser()
-parser.add_argument('app_name', nargs='?', type=str)
+parser.add_argument("app_name", nargs="?", type=str)
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
