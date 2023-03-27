@@ -38,7 +38,7 @@ def main(json_file: str) -> bool:
 
 
 parser = ArgumentParser()
-parser.add_argument('json_file', nargs='?', type=str)
+parser.add_argument("json_file", nargs="?", type=str)
 args = parser.parse_args()
 
 main(json_file=args.json_file)
