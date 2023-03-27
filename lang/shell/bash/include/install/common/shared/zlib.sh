@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zlib.
-    # @note Updated 2022-04-28.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://www.zlib.net/
@@ -13,10 +13,9 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'make' 'pkg-config'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='zlib'

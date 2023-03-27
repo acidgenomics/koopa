@@ -27,7 +27,7 @@ koopa_ssh_generate_key() {
         ['hostname']="$(koopa_hostname)"
         ['key_name']='id_rsa' # or 'id_ed25519'.
         ['prefix']="${HOME:?}/.ssh"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     while (("$#"))
     do

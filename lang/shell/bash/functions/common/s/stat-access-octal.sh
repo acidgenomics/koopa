@@ -3,11 +3,38 @@
 koopa_stat_access_octal() {
     # """
     # Get the current access permissions in octal form.
-    # @note Updated 2021-11-16.
+    # @note Updated 2023-03-26.
+    #
+    # @seealso
+    # - https://www.cyberciti.biz/faq/get-octal-file-permissions-from-
+    #     command-line-on-linuxunix/
     #
     # @examples
-    # > koopa_stat_access_octal '/tmp'
+    # > koopa_stat_access_octal '/tmp' "${HOME:?}"
     # # 755
+    # # 750
     # """
-    koopa_stat '%a' "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%OLp'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%a'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
 }

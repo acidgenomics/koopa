@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libyaml.
-    # @note Updated 2023-01-04.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libyaml.rb
@@ -14,10 +14,12 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
-        'm4' \
         'autoconf' \
         'automake' \
-        'libtool'
+        'libtool' \
+        'm4' \
+        'make' \
+        'pkg-config'
     declare -A app=(
         ['autoreconf']="$(koopa_locate_autoreconf)"
         ['autoupdate']="$(koopa_locate_autoupdate)"

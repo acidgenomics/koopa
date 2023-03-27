@@ -6,7 +6,7 @@
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2022-07-30.
+    # @note Updated 2023-03-26.
     #
     # Also consider requiring:
     # - ghostscript
@@ -32,33 +32,20 @@ main() {
     # """
     local app conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
-        # zlib deps: none.
         'zlib'
-        # zstd deps: none.
         'zstd'
-        # bzip2 deps: none.
         'bzip2'
-        # xz deps: none.
         'xz'
-        # freetype deps: none.
         'freetype'
-        # jpeg deps: none.
         'jpeg'
-        # libpng deps: none.
         'libpng'
-        # libtiff deps: libjpeg-turbo, zstd.
         'libtiff'
-        # libtool deps: m4.
         'libtool'
-        # libxml2 deps: icu4c, readline.
         'libxml2'
-        # libzip deps: zlib, nettle, openssl3, perl, zstd.
         'libzip'
-        # fontconfig deps: gperf, freetype, libxml2.
         'fontconfig'
-        # X11.
         'xorg-xorgproto'
         'xorg-xcb-proto'
         'xorg-libpthread-stubs'
@@ -80,9 +67,8 @@ main() {
         deps+=('gcc')
     fi
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

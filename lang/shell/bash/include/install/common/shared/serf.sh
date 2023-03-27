@@ -22,7 +22,7 @@ main() {
     # """
     local app dict scons_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'patch'
+    koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'apr' \
@@ -55,7 +55,7 @@ main() {
 @@ -152,7 +152,7 @@
                   True),
      )
- 
+
 -env = Environment(variables=opts,
 +env = Environment(variables=opts, RPATHPREFIX = '-Wl,-rpath,',
                    tools=('default', 'textfile',),
@@ -64,7 +64,7 @@ main() {
 @@ -163,9 +163,9 @@
                suffix='.def', src_suffix='.h')
    })
- 
+
 -match = re.search('SERF_MAJOR_VERSION ([0-9]+).*'
 -                  'SERF_MINOR_VERSION ([0-9]+).*'
 -                  'SERF_PATCH_VERSION ([0-9]+)',
@@ -75,12 +75,12 @@ main() {
                    re.DOTALL)
  MAJOR, MINOR, PATCH = [int(x) for x in match.groups()]
 @@ -183,7 +183,7 @@
- 
+
  unknown = opts.UnknownVariables()
  if unknown:
 -  print 'Warning: Used unknown variables:', ', '.join(unknown.keys())
 +  print('Warning: Used unknown variables:', ', '.join(unknown.keys()))
- 
+
  apr = str(env['APR'])
  apu = str(env['APU'])
 END
@@ -97,13 +97,13 @@ END
 --- SConstruct-1	2022-07-13 08:33:39.000000000 -0400
 +++ SConstruct-2	2022-07-13 08:34:21.000000000 -0400
 @@ -372,6 +372,8 @@
- 
+
    env.Append(CPPPATH=['\$OPENSSL/include'])
    env.Append(LIBPATH=['\$OPENSSL/lib'])
 +  env.Append(CPPPATH=['\$ZLIB/include'])
 +  env.Append(LIBPATH=['\$ZLIB/lib'])
- 
- 
+
+
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
 END
         "${app['patch']}" \
@@ -130,7 +130,7 @@ diff -Naurp serf-1.3.9.orig/buckets/ssl_buckets.c serf-1.3.9/buckets/ssl_buckets
 --- serf-1.3.9.orig/buckets/ssl_buckets.c	2016-06-30 10:45:07.000000000 -0500
 +++ serf-1.3.9/buckets/ssl_buckets.c	2021-12-30 10:56:53.101158440 -0600
 @@ -407,7 +407,7 @@ static int bio_bucket_destroy(BIO *bio)
- 
+
  static long bio_bucket_ctrl(BIO *bio, int cmd, long num, void *ptr)
  {
 -    long ret = 1;

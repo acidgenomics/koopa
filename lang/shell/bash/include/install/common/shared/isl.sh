@@ -11,7 +11,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gmp'
     declare -A app
     app['make']="$(koopa_locate_make)"

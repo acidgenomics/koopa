@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-26.
     #
     # Use 'configure --help' for build options.
     #
@@ -25,6 +25,7 @@ main() {
     koopa_activate_app --build-only \
         'cmake' \
         'libtool' \
+        'make' \
         'pkg-config'
     koopa_activate_app \
         'curl' \

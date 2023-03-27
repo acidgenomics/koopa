@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Check for openmp on macOS.
-
 main() {
     # """
     # Install R.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -43,88 +41,47 @@ main() {
             "'libomp' is not installed." \
             "Run 'koopa install system openmp' to resolve."
     fi
-    build_deps=('pkg-config')
+    build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
-        # zlib deps: none.
         'zlib'
-        # zstd deps: none.
         'zstd'
-        # m4 deps: none.
-        # > 'm4'
-        # gmp deps: m4.
-        # > 'gmp'
-        # mpfr deps: gmp.
-        # > 'mpfr'
-        # mpc deps: gmp, mpfr.
-        # > 'mpc'
-        # gcc deps: gmp, mpfr, mpc.
         'gcc'
     )
     # bzip2 deps: none.
     # R currently has configuration issues with libbz2.dylib on macOS.
     koopa_is_linux && deps+=('bzip2')
     deps+=(
-        # deps: none.
         'icu4c'
-        # deps: none.
         'ncurses'
-        # deps: ncurses.
         'readline'
-        # deps: icu4c, readline.
         'libxml2'
-        # deps: none.
         'libiconv'
-        # deps: bison, libiconv, libunistring, ncurses, libxml2.
         'gettext'
-        # deps: none.
         'xz'
-        # deps: zlib.
         'openssl3'
         # NOTE cURL 8 currently fails build checks.
-        # deps: openssl3.
         'curl7'
-        # deps: gcc.
         'lapack'
-        # deps: none.
         'libffi'
-        # deps: none.
         'libjpeg-turbo'
-        # deps: zlib.
         'libpng'
-        # deps: libjpeg-turbo, zstd.
         'libtiff'
-        # deps: gcc.
         'openblas'
-        # deps: none.
         'openjdk'
-        # deps: zlib, bzip2.
         'pcre'
-        # deps: zlib, bzip2.
         'pcre2'
-        # deps: none.
         'perl'
-        # deps: gettext, ncurses, perl.
         'texinfo'
-        # deps: zlib, gettext, libffi, pcre.
         'glib'
-        # deps: none.
         'freetype'
-        # deps: none.
         'gperf'
-        # deps: gperf, freetype, libxml2.
         'fontconfig'
-        # deps: none.
         'lzo'
-        # deps: none.
         'pixman'
-        # deps: none.
         'fribidi'
-        # deps: freetype, icu4c.
         'harfbuzz'
-        # deps: m4.
         'libtool'
-        # X11.
         'xorg-xorgproto'
         'xorg-xcb-proto'
         'xorg-libpthread-stubs'
@@ -137,10 +94,7 @@ main() {
         'xorg-libxext'
         'xorg-libxrender'
         'xorg-libxt'
-        # deps: gettext, freetype, libxml2, fontconfig, libffi, pcre, glib,
-        # libpng, lzo, pixman, X11.
         'cairo'
-        # deps: X11.
         'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"

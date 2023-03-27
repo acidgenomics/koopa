@@ -12,6 +12,7 @@
   "agat": {
     "arch": "amd64",
     "bin": ["agat"],
+    "build_dependencies": ["patch"],
     "date": "2022-11-14",
     "dependencies": ["conda"],
     "large": true,
@@ -44,7 +45,7 @@
     "version": "3.3.2"
   },
   "apptainer": {
-    "build_dependencies": ["go"],
+    "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2023-03-07",
     "large": true,
     "platform": "linux",
@@ -57,7 +58,7 @@
       "fedora": "apr-util-devel",
       "homebrew": true
     },
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["apr", "expat", "openssl3"],
@@ -69,7 +70,7 @@
       "fedora": "apr-devel",
       "homebrew": true
     },
-    "build_dependencies": ["autoconf", "automake", "libtool", "make"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["sqlite"],
@@ -124,6 +125,7 @@
       "debian": ["attr", "libattr1-dev"],
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
     "platform": "linux",
@@ -144,7 +146,9 @@
       "autoupdate",
       "ifnames"
     ],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
+    "dependencies": ["m4"],
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
@@ -161,6 +165,7 @@
     "arch": "amd64",
     "check": false,
     "date": "2022-10-19",
+    "dependencies": ["conda"],
     "large": true,
     "url": ["https://ccsb.scripps.edu/adfr/"],
     "version": "1.0"
@@ -195,7 +200,9 @@
       "fedora": true
     },
     "bin": ["aclocal", "aclocal-1.16", "automake", "automake-1.16"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
+    "dependencies": ["autoconf"],
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
@@ -204,6 +211,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
+    "build_dependencies": ["make"],
     "date": "2023-03-15",
     "dependencies": ["python3.11"],
     "large": true,
@@ -252,6 +260,7 @@
       "homebrew": true
     },
     "bin": ["bash"],
+    "build_dependencies": ["make", "pkg-config", "patch"],
     "conservative": true,
     "date": "2022-12-14",
     "man1": ["bash.1"],
@@ -287,9 +296,9 @@
     },
     "bin": ["bat"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-12",
+    "date": "2023-03-26",
     "url": ["https://github.com/sharkdp/bat"],
-    "version": "0.22.1"
+    "version": "0.23.0"
   },
   "bc": {
     "aliases": {
@@ -298,7 +307,7 @@
       "homebrew": true
     },
     "bin": ["bc"],
-    "build_dependencies": ["texinfo"],
+    "build_dependencies": ["make", "texinfo"],
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["ed"],
@@ -327,8 +336,10 @@
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
+    "build_dependencies": ["make"],
     "check": false,
     "date": "2023-01-10",
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "platform": "linux",
     "private": true,
     "url": [
@@ -363,7 +374,9 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["bison", "flex"],
     "date": "2023-02-08",
+    "dependencies": ["texinfo", "zlib"],
     "reverse_dependencies": ["llvm"],
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
     "version": "2.40"
@@ -534,6 +547,7 @@
       "debian": "libc-ares-dev",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "url": ["https://c-ares.org/"],
@@ -556,9 +570,9 @@
       "fedora": "cairo-devel",
       "homebrew": true
     },
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-07",
+    "date": "2023-03-26",
     "dependencies": [
       "zlib",
       "gettext",
@@ -628,7 +642,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "large": true,
@@ -991,9 +1005,10 @@
       "homebrew": true
     },
     "bin": ["curl", "curl-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-20",
-    "dependencies": ["ca-certificates"],
+    "dependencies": ["ca-certificates", "zlib", "zstd", "openssl3"],
     "man1": ["curl.1", "curl-config.1"],
     "reverse_dependencies": ["git", "libgeotiff", "proj", "gdal", "mamba"],
     "url": ["https://curl.se/"],
@@ -1077,9 +1092,9 @@
     "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
   },
   "dotfiles": {
-    "date": "2023-03-22",
+    "date": "2023-03-27",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "c9d61597b0e5881ac9a9c5cc2082f52f08d080b9"
+    "version": "d1cc24085e3a850eb7a3a31f6786be57de0ea4fd"
   },
   "du-dust": {
     "aliases": {
@@ -1113,7 +1128,9 @@
       "homebrew": true
     },
     "bin": ["editorconfig"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-01-19",
+    "dependencies": ["pcre2"],
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
@@ -1124,8 +1141,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["m4", "make"],
     "conservative": true,
     "date": "2023-03-07",
+    "dependencies": ["bzip2", "xz", "zlib"],
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
     "version": "0.189"
@@ -1187,6 +1206,7 @@
       "fedora": "expat-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "reverse_dependencies": [
@@ -1226,7 +1246,9 @@
       "homebrew": true
     },
     "bin": ["ffmpeg", "ffprobe"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-07",
+    "dependencies": ["lame"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
     "version": "6.0"
@@ -1268,19 +1290,22 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "date": "2023-01-09",
+    "build_dependencies": ["cmake", "pkg-config"],
+    "date": "2023-03-26",
+    "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.6.0"
+    "version": "3.6.1"
   },
   "flac": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["flac"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
     "man1": ["flac.1"],
     "url": ["https://xiph.org/flac/"],
@@ -1324,7 +1349,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-08",
     "large": true,
     "reverse_dependencies": ["mamba"],
@@ -1375,6 +1400,7 @@
       "fedora": "freetype-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
     "reverse_dependencies": [
@@ -1395,6 +1421,7 @@
       "fedora": "fribidi-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
     "reverse_dependencies": ["r"],
@@ -1457,8 +1484,27 @@
       "homebrew": true
     },
     "bin": ["gdal-config"],
+    "build_dependencies": ["cmake", "libtool", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
+    "dependencies": [
+      "curl",
+      "geos",
+      "hdf5",
+      "libxml2",
+      "openssl3",
+      "pcre2",
+      "sqlite",
+      "zlib",
+      "zstd",
+      "libjpeg-turbo",
+      "libtiff",
+      "proj",
+      "xz",
+      "zstd",
+      "python3.11",
+      "openjdk"
+    ],
     "man1": ["gdal-config.1"],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
@@ -1480,6 +1526,7 @@
       "homebrew": true
     },
     "bin": ["geos-config"],
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-17",
     "url": ["https://github.com/libgeos/geos/"],
@@ -1597,10 +1644,16 @@
       "fedora": "glib2-devel",
       "homebrew": true
     },
-    "build_dependencies": ["meson", "ninja", "pkg-config", "python3.11"],
+    "build_dependencies": [
+      "cmake",
+      "meson",
+      "ninja",
+      "pkg-config",
+      "python3.11"
+    ],
     "conservative": true,
     "date": "2023-03-07",
-    "dependencies": ["zlib", "gettext", "libffi", "pcre"],
+    "dependencies": ["zlib", "gettext", "libffi", "pcre2"],
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
@@ -1613,8 +1666,10 @@
       "fedora": "gmp-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["m4"],
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
@@ -1682,7 +1737,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-02-08",
     "large": true,
     "reverse_dependencies": ["mamba"],
@@ -1704,9 +1759,9 @@
       "debian": true,
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
-    "dependencies": ["openjdk"],
     "reverse_dependencies": ["fontconfig"],
     "url": [
       "https://www.graphviz.org/download/source/",
@@ -1856,6 +1911,7 @@
       "fedora": "gsl-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/gsl/"],
@@ -1945,16 +2001,25 @@
       "fedora": "harfbuzz-devel",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
     "conservative": true,
     "date": "2023-03-03",
+    "dependencies": [
+      "zlib",
+      "gettext",
+      "libffi",
+      "pcre2",
+      "glib",
+      "freetype",
+      "icu4c"
+    ],
     "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.1.0"
   },
   "haskell-cabal": {
     "aliases": {
-      "homebrew": "cabal-install",
-      "homebrew": true
+      "homebrew": "cabal-install"
     },
     "bin": ["cabal"],
     "build_dependencies": ["haskell-ghcup"],
@@ -2121,6 +2186,7 @@
       "pkgdata",
       "uconv"
     ],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "man1": [
@@ -2160,8 +2226,35 @@
       "magick",
       "magick-script"
     ],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
+    "dependencies": [
+      "zlib",
+      "zstd",
+      "bzip2",
+      "xz",
+      "freetype",
+      "jpeg",
+      "libpng",
+      "libtiff",
+      "libtool",
+      "libxml2",
+      "libzip",
+      "fontconfig",
+      "xorg-xorgproto",
+      "xorg-xcb-proto",
+      "xorg-libpthread-stubs",
+      "xorg-libice",
+      "xorg-libsm",
+      "xorg-libxau",
+      "xorg-libxdmcp",
+      "xorg-libxcb",
+      "xorg-libx11",
+      "xorg-libxext",
+      "xorg-libxrender",
+      "xorg-libxt"
+    ],
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -2188,7 +2281,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-19",
     "dependencies": ["gmp"],
@@ -2212,6 +2305,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
     "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
@@ -2221,6 +2315,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.ijg.org/"],
@@ -2233,9 +2328,15 @@
       "homebrew": true
     },
     "bin": ["jq"],
-    "build_dependencies": ["autoconf", "automake", "libtool"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "make",
+      "pkg-config"
+    ],
     "date": "2022-08-30",
-    "dependences": ["m4", "gettext", "oniguruma"],
+    "dependencies": ["m4", "gettext", "oniguruma"],
     "man1": ["jq.1"],
     "url": ["https://github.com/stedolan/jq/"],
     "version": "1.6"
@@ -2289,6 +2390,7 @@
       "debian": "liblapack-dev",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-11-11",
     "dependencies": ["gcc"],
@@ -2357,8 +2459,10 @@
       "debian": "libedit-dev",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["ncurses"],
     "url": ["https://thrysoee.dk/editline/"],
     "version": "20221030-3.1"
   },
@@ -2380,8 +2484,10 @@
       "fedora": "libevent-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["openssl3"],
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
   },
@@ -2391,6 +2497,7 @@
       "fedora": "libffi-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "reverse_dependencies": [
@@ -2461,6 +2568,7 @@
     "aliases": {
       "homebrew": "libidn2"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "url": ["https://www.gnu.org/software/libidn/"],
@@ -2472,6 +2580,7 @@
       "fedora": "libjpeg-turbo-devel",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
     "url": [
@@ -2518,6 +2627,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
     "url": [
@@ -2533,8 +2643,10 @@
       "homebrew": true
     },
     "bin": ["libpng-config", "libpng16-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["zlib"],
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.39"
   },
@@ -2542,6 +2654,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-01-03",
+    "dependencies": ["zlib"],
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/openSUSE/libsolv/"],
@@ -2553,8 +2666,10 @@
       "fedora": "libssh2-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["openssl3"],
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
@@ -2562,6 +2677,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://www.gnu.org/software/libtasn1/"],
@@ -2583,8 +2699,10 @@
       "fedora": "libtiff-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["libjpeg-turbo", "zstd"],
     "url": [
       "https://download.osgeo.org/libtiff/",
       "https://libtiff.gitlab.io/libtiff/"
@@ -2616,6 +2734,14 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "m4",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/libuv/libuv/"],
@@ -2640,8 +2766,10 @@
       "homebrew": true
     },
     "bin": ["xml2-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["zlib", "icu4c", "readline"],
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
@@ -2650,6 +2778,14 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "m4",
+      "make",
+      "pkg-config"
+    ],
     "check": false,
     "conservative": true,
     "date": "2023-01-04",
@@ -2660,8 +2796,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["zlib", "bzip2", "zstd", "nettle", "openssl3", "perl"],
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
   },
@@ -2699,8 +2837,10 @@
     "version": "16.0.0"
   },
   "lmod": {
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
+    "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "large": true,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
@@ -2754,6 +2894,7 @@
       "fedora": "lz4-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
@@ -2776,6 +2917,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.oberhumer.com/opensource/lzo/"],
@@ -2954,8 +3096,10 @@
       "fedora": "mpfr-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
+    "dependencies": ["gmp"],
     "reverse_dependencies": ["mpc", "gcc", "gawk"],
     "url": ["https://www.mpfr.org/"],
     "version": "4.2.0"
@@ -3022,6 +3166,7 @@
       "tput",
       "tset"
     ],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
     "man1": [
@@ -3080,8 +3225,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["gmp", "m4"],
     "url": ["https://ftp.gnu.org/gnu/nettle/"],
     "version": "3.8.1"
   },
@@ -3099,6 +3246,7 @@
       "debian": "libnghttp2-dev",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config", "python3.11"],
     "conservative": true,
     "date": "2023-03-07",
     "dependencies": [
@@ -3138,6 +3286,7 @@
     "version": "1.11.1"
   },
   "nlohmann-json": {
+    "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-05",
     "large": true,
     "reverse_dependencies": ["mamba"],
@@ -3198,6 +3347,14 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "m4",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
@@ -3233,10 +3390,12 @@
       "debian": ["libblas-dev", "libopenblas-base", "libopenblas-dev"],
       "fedora": "openblas-devel"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["gcc"],
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.21"
+    "version": "0.3.22"
   },
   "openjdk": {
     "aliases": {
@@ -3276,6 +3435,7 @@
       "fedora": "openssl11-devel",
       "homebrew": "openssl@1.1"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["ca-certificates"],
@@ -3290,6 +3450,7 @@
       "homebrew": "openssl@3"
     },
     "bin": ["openssl"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
@@ -3388,8 +3549,16 @@
       "homebrew": true
     },
     "bin": ["pcre-config", "pcregrep", "pcretest"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["bzip2", "zlib"],
     "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"],
     "url": ["https://sourceforge.net/projects/pcre/"],
     "version": "8.45"
@@ -3401,8 +3570,16 @@
       "homebrew": true
     },
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "make",
+      "pkg-config"
+    ],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["bzip2", "zlib"],
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
     "url": ["https://github.com/PCRE2Project/pcre2/", "https://www.pcre.org/"],
     "version": "10.42"
@@ -3478,6 +3655,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
     "url": ["https://cairographics.org/releases/", "http://www.pixman.org/"],
@@ -3489,6 +3667,7 @@
       "homebrew": true
     },
     "bin": ["pkg-config"],
+    "build_dependencies": ["make"],
     "date": "2022-08-29",
     "man1": ["pkg-config.1"],
     "url": ["https://pkg-config.freedesktop.org/"],
@@ -3540,8 +3719,18 @@
       "homebrew": true
     },
     "bin": ["proj", "projinfo"],
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
+    "dependencies": [
+      "curl",
+      "libjpeg-turbo",
+      "libtiff",
+      "python3.11",
+      "sqlite",
+      "zlib",
+      "zstd"
+    ],
     "man1": ["proj.1", "projinfo.1"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.2.0"
@@ -3567,7 +3756,7 @@
     "version": "0.3.14"
   },
   "pybind11": {
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "python3.11"],
     "conservative": true,
     "date": "2023-03-17",
     "large": true,
@@ -3631,13 +3820,13 @@
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "date": "2022-09-26",
+    "date": "2023-03-26",
     "dependencies": ["python3.10"],
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
     ],
-    "version": "1.5.0"
+    "version": "2.0.0"
   },
   "pytest": {
     "bin": ["pytest"],
@@ -3757,9 +3946,9 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2023-03-24",
+    "date": "2023-03-26",
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.3.287"
+    "version": "1.2.475"
   },
   "r": {
     "aliases": {
@@ -3949,8 +4138,10 @@
       "fedora": "readline-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["ncurses"],
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
     "version": "8.2"
   },
@@ -3965,7 +4156,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-11-03",
     "large": true,
@@ -4053,12 +4244,11 @@
       "homebrew": true
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
-    "dependencies": ["openssl3", "readline", "zlib"],
+    "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
-    "notes": ["jekyll doesn't currently work with ruby 3.2.0."],
     "reverse_dependencies": ["bashcov", "colorls", "rmate", "ronn"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.2.1"
@@ -4190,8 +4380,10 @@
       "debian": "libserf-dev",
       "homebrew": false
     },
+    "build_dependencies": ["patch"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
     "reverse_dependencies": ["subversion"],
     "url": ["https://serf.apache.org/"],
     "version": "1.3.9"
@@ -4250,7 +4442,9 @@
       "homebrew": true
     },
     "bin": ["sox"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
+    "dependencies": ["flac"],
     "man1": ["sox.1"],
     "url": ["http://sox.sourceforge.net/sox.html"],
     "version": "14.4.2"
@@ -4272,6 +4466,7 @@
     "build_dependencies": ["cmake", "patch", "pkg-config"],
     "conservative": true,
     "date": "2022-11-04",
+    "dependencies": ["fmt"],
     "large": true,
     "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/gabime/spdlog/"],
@@ -4284,10 +4479,10 @@
       "homebrew": true
     },
     "bin": ["sqlite3"],
-    "build_dependencies": ["make", "pkg-config", "sed"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
-    "dependencies": ["zlib", "readline"],
+    "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "outdated": true,
     "reverse_dependencies": [
@@ -4382,8 +4577,20 @@
       "homebrew": true
     },
     "bin": ["svn"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": [
+      "apr",
+      "apr-util",
+      "openssl3",
+      "perl",
+      "python3.11",
+      "ruby",
+      "serf",
+      "sqlite",
+      "zlib"
+    ],
     "man1": ["svn.1"],
     "url": ["https://subversion.apache.org/"],
     "version": "1.14.2"
@@ -4403,6 +4610,7 @@
       "fedora": "taglib-devel",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "url": ["https://github.com/taglib/taglib/"],
@@ -4425,8 +4633,18 @@
       "debian": ["tcl-dev", "tcl8.6-dev", "tk-dev", "tk8.6-dev"],
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libx11",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xcb-proto",
+      "xorg-xorgproto"
+    ],
     "url": ["https://www.tcl-lang.org/"],
     "version": "8.6.13"
   },
@@ -4523,7 +4741,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["make", "pkg-config"],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -4610,6 +4828,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
     "url": [
@@ -4625,7 +4844,9 @@
       "homebrew": true
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-07",
+    "dependencies": ["ncurses", "python3.11"],
     "man1": [
       "ex.1",
       "rview.1",
@@ -4693,6 +4914,7 @@
       "homebrew": "gnu-which"
     },
     "bin": ["gwhich"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-25",
     "man1": ["gwhich.1"],
@@ -4703,8 +4925,10 @@
     "aliases": {
       "homebrew": "libice"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-xorgproto", "xorg-xtrans"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
     "version": "1.1.1"
   },
@@ -4712,6 +4936,7 @@
     "aliases": {
       "homebrew": "libpthread-stubs"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
     "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/"],
@@ -4721,8 +4946,10 @@
     "aliases": {
       "homebrew": "libsm"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-libice", "xorg-xorgproto", "xorg-xtrans"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
     "version": "1.2.4"
   },
@@ -4730,8 +4957,17 @@
     "aliases": {
       "homebrew": "libx11"
     },
+    "build_dependencies": ["make", "pkg-config", "sed"],
     "conservative": true,
     "date": "2023-03-07",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xorgproto",
+      "xorg-xtrans"
+    ],
     "reverse_dependencies": [
       "xorg-libxext",
       "xorg-libxrandr",
@@ -4750,8 +4986,10 @@
     "aliases": {
       "homebrew": "libxau"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-xorgproto"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
     "version": "1.0.11"
   },
@@ -4759,8 +4997,16 @@
     "aliases": {
       "homebrew": "libxcb"
     },
+    "build_dependencies": ["make", "pkg-config", "python3.11"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libxau",
+      "xorg-libxdmcp",
+      "xorg-xcb-proto",
+      "xorg-xorgproto"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/"],
     "version": "1.15"
   },
@@ -4768,8 +5014,10 @@
     "aliases": {
       "homebrew": "libxdmcp"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-xorgproto"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/"],
     "version": "1.1.4"
   },
@@ -4777,8 +5025,17 @@
     "aliases": {
       "homebrew": "libxext"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libx11",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xorgproto"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext/"],
     "version": "1.3.5"
   },
@@ -4786,8 +5043,19 @@
     "aliases": {
       "homebrew": "libxrandr"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libx11",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-libxext",
+      "xorg-libxrender",
+      "xorg-xorgproto"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/"],
     "version": "1.5.3"
   },
@@ -4795,8 +5063,17 @@
     "aliases": {
       "homebrew": "libxrender"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libx11",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xorgproto"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender/"],
     "version": "0.9.11"
   },
@@ -4804,8 +5081,19 @@
     "aliases": {
       "homebrew": "libxt"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": [
+      "xorg-libice",
+      "xorg-libpthread-stubs",
+      "xorg-libsm",
+      "xorg-libx11",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xorgproto"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt/"],
     "version": "1.2.1"
   },
@@ -4813,6 +5101,7 @@
     "aliases": {
       "homebrew": "xcb-proto"
     },
+    "build_dependencies": ["make", "pkg-config", "python3.11"],
     "conservative": true,
     "date": "2022-09-26",
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto/"],
@@ -4822,6 +5111,7 @@
     "aliases": {
       "homebrew": "xorgproto"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-30",
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto/"],
@@ -4831,8 +5121,10 @@
     "aliases": {
       "homebrew": "xtrans"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": ["xorg-xorgproto"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans/"],
     "version": "1.4.0"
   },
@@ -4852,6 +5144,7 @@
       "fedora": "xxhash-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["https://github.com/Cyan4973/xxHash/"],
@@ -4864,6 +5157,7 @@
       "homebrew": true
     },
     "bin": ["xz"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "man1": ["xz.1"],
@@ -4871,7 +5165,7 @@
     "version": "5.4.1"
   },
   "yaml-cpp": {
-    "build_dependencies": ["cmake", "make"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "large": true,
     "reverse_dependencies": ["mamba"],
@@ -4908,9 +5202,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-20",
+    "date": "2023-03-26",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.32.2"
+    "version": "4.33.1"
   },
   "yt-dlp": {
     "aliases": {
@@ -4956,6 +5250,7 @@
       "fedora": "zlib-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
     "reverse_dependencies": ["FIXME"],
@@ -4999,10 +5294,11 @@
       "zstdless",
       "zstdmt"
     ],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
+    "dependencies": ["lz4", "zlib"],
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
-    "notes": ["FIXME This is failing to build on macOS."],
     "reverse_dependencies": [
       "curl",
       "elfutils",

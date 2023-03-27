@@ -291,7 +291,7 @@ END
     return 0
 }
 
-koopa_admin_group() {
+koopa_admin_group_name() {
     local group
     koopa_assert_has_no_args "$#"
     if koopa_is_root
@@ -1236,7 +1236,7 @@ koopa_assert_is_owner() {
     then
         declare -A dict=(
             ['prefix']="$(koopa_koopa_prefix)"
-            ['user']="$(koopa_user)"
+            ['user']="$(koopa_user_name)"
         )
         koopa_stop "Koopa installation at '${dict['prefix']}' is not \
 owned by '${dict['user']}'."
@@ -2842,19 +2842,21 @@ koopa_brew_reset_core_repo() {
 }
 
 koopa_brew_reset_permissions() {
-    local group prefix user
+    local dict
     koopa_assert_has_no_args "$#"
-    user="$(koopa_user)"
-    group="$(koopa_admin_group)"
-    prefix="$(koopa_homebrew_prefix)"
+    declare -A dict=(
+        [group]="$(koopa_admin_group_name)"
+        [prefix]="$(koopa_homebrew_prefix)"
+        [user]="$(koopa_user_name)"
+    )
     koopa_alert "Resetting ownership of files in \
-'${prefix}' to '${user}:${group}'."
+'${dict['prefix']}' to '${dict['user']}:${dict['group']}'."
     koopa_chown \
         --no-dereference \
         --recursive \
         --sudo \
-        "${user}:${group}" \
-        "${prefix}/"*
+        "${dict['user']}:${dict['group']}" \
+        "${dict['prefix']}/"*
     return 0
 }
 
@@ -3075,50 +3077,6 @@ koopa_cd() {
     return 0
 }
 
-koopa_check_access_human() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['code']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist."
-        return 1
-    fi
-    dict['access']="$(koopa_stat_access_human "${dict['file']}")"
-    if [[ "${dict['access']}" != "${dict['code']}" ]]
-    then
-        koopa_warn "'${dict['file']}' current access '${dict['access']}' \
-is not '${dict['code']}'."
-        return 1
-    fi
-    return 0
-}
-
-koopa_check_access_octal() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['code']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist."
-        return 1
-    fi
-    dict['access']="$(koopa_stat_access_octal "${dict['file']}")"
-    if [[ "${dict['access']}" != "${dict['code']}" ]]
-    then
-        koopa_warn "'${dict['file']}' current access '${dict['access']}' \
-is not '${dict['code']}'."
-        return 1
-    fi
-    return 0
-}
-
 koopa_check_disk() {
     local dict
     koopa_assert_has_args "$#"
@@ -3148,37 +3106,13 @@ koopa_check_exports() {
     return 0
 }
 
-koopa_check_group() {
-    local dict
-    koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['code']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist."
-        return 1
-    fi
-    dict['group']="$(koopa_stat_group "${dict['file']}")"
-    if [[ "${dict['group']}" != "${dict['code']}" ]]
-    then
-        koopa_warn "'${dict['file']}' current group '${dict['group']}' \
-is not '${dict['code']}'."
-        return 1
-    fi
-    return 0
-}
-
 koopa_check_mount() {
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['wc']="$(koopa_locate_wc)"
-    )
-    declare -A dict=(
-        ['prefix']="${1:?}"
-    )
+    declare -A app dict
+    app['wc']="$(koopa_locate_wc --allow-system)"
+    [[ -x "${app['wc']}" ]] || return 1
+    dict['prefix']="${1:?}"
     if [[ ! -r "${dict['prefix']}" ]] || [[ ! -d "${dict['prefix']}" ]]
     then
         koopa_warn "'${dict['prefix']}' is not a readable directory."
@@ -3281,46 +3215,6 @@ koopa_check_system() {
     koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
-}
-
-koopa_check_user() {
-    local dict
-    koopa_assert_has_args_eq "$#" 2
-    declare -A dict=(
-        ['file']="${1:?}"
-        ['expected_user']="${2:?}"
-    )
-    if [[ ! -e "${dict['file']}" ]]
-    then
-        koopa_warn "'${dict['file']}' does not exist on disk."
-        return 1
-    fi
-    dict['file']="$(koopa_realpath "${dict['file']}")"
-    dict['current_user']="$(koopa_stat_user "${dict['file']}")"
-    if [[ "${dict['current_user']}" != "${dict['expected_user']}" ]]
-    then
-        koopa_warn "'${dict['file']}' user '${dict['current_user']}' \
-is not '${dict['expected_user']}'."
-        return 1
-    fi
-    return 0
-}
-
-koopa_check_version() {
-    local current expected status
-    koopa_assert_has_args "$#"
-    IFS='.' read -r -a current <<< "${1:?}"
-    IFS='.' read -r -a expected <<< "${2:?}"
-    status=0
-    for i in "${!current[@]}"
-    do
-        if [[ ! "${current[$i]}" -ge "${expected[$i]}" ]]
-        then
-            status=1
-            break
-        fi
-    done
-    return "$status"
 }
 
 koopa_chgrp() {
@@ -4574,8 +4468,8 @@ koopa_configure_r() {
             koopa_sys_mkdir "${dict['site_library']}"
             ;;
         '1')
-            dict['group']="$(koopa_admin_group)"
-            dict['user']="$(koopa_user)"
+            dict['group']="$(koopa_admin_group_name)"
+            dict['user']="$(koopa_user_name)"
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
@@ -5385,7 +5279,7 @@ koopa_disable_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict
-    dict['group']="$(koopa_admin_group)"
+    dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
@@ -6337,7 +6231,7 @@ koopa_enable_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A dict
-    dict['group']="$(koopa_admin_group)"
+    dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
@@ -6362,7 +6256,7 @@ koopa_enable_shell_for_all_users() {
     koopa_is_admin || return 0
     declare -A dict=(
         ['etc_file']='/etc/shells'
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     apps=("$@")
     for app in "${apps[@]}"
@@ -9006,8 +8900,8 @@ koopa_grep() {
     fi
 }
 
-koopa_group() {
-    _koopa_group "$@"
+koopa_group_name() {
+    _koopa_group_name "$@"
 }
 
 koopa_gsub() {
@@ -10081,6 +9975,7 @@ koopa_install_all_apps() {
         'gzip'
         'groff'
         'less'
+        'quarto'
         'r'
         'apr'
         'apr-util'
@@ -10269,16 +10164,16 @@ koopa_install_all_apps() {
             'llvm'
             'julia'
             'ghostscript'
+            'hadolint'
+            'pandoc'
+            'shellcheck'
+            'conda'
+            'anaconda'
         )
         if ! koopa_is_aarch64
         then
             apps+=(
-                'hadolint'
-                'pandoc'
-                'shellcheck'
-                'conda'
                 'agat'
-                'anaconda'
                 'autodock'
                 'autodock-vina'
                 'bamtools'
@@ -10368,14 +10263,16 @@ koopa_install_all_apps() {
 }
 
 koopa_install_all_binary_apps() {
-    local app app_name apps bool
+    local app app_name apps bool dict
     koopa_assert_has_no_args "$#"
-    declare -A app
+    declare -A app bool dict
     app['koopa']="$(koopa_locate_koopa)"
     [[ -x "${app['koopa']}" ]] || return 1
-    declare -A bool
+    bool['bootstrap']=0
     bool['large']=0
     koopa_has_large_system_disk && bool['large']=1
+    dict['app_prefix']="$(koopa_app_prefix)"
+    [[ ! -d "${dict['app_prefix']}/aws-cli" ]] && bool['bootstrap']=1
     apps=()
     koopa_is_linux && apps+=('attr')
     apps+=(
@@ -10576,6 +10473,7 @@ koopa_install_all_binary_apps() {
         'pytest'
         'python3.10'
         'python3.11'
+        'quarto'
         'r'
         'radian'
         'ranger-fm'
@@ -10662,6 +10560,7 @@ koopa_install_all_binary_apps() {
     if [[ "${bool['large']}" -eq 1 ]]
     then
         apps+=(
+            'anaconda'
             'apache-airflow'
             'apache-spark'
             'azure-cli'
@@ -10693,7 +10592,6 @@ koopa_install_all_binary_apps() {
         then
             apps+=(
                 'agat'
-                'anaconda'
                 'autodock'
                 'autodock-vina'
                 'bamtools'
@@ -10744,12 +10642,18 @@ koopa_install_all_binary_apps() {
         fi
     fi
     koopa_add_to_path_start '/usr/local/bin'
-    "${app['koopa']}" install 'aws-cli'
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
+    then
+        "${app['koopa']}" install 'aws-cli'
+    fi
     for app_name in "${apps[@]}"
     do
         "${app['koopa']}" install --binary "$app_name"
     done
-    "${app['koopa']}" reinstall --binary 'aws-cli'
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
+    then
+        "${app['koopa']}" reinstall 'aws-cli'
+    fi
     return 0
 }
 
@@ -14137,7 +14041,7 @@ koopa_is_owner() {
     local dict
     declare -A dict
     dict['prefix']="$(koopa_koopa_prefix)"
-    dict['owner_id']="$(koopa_stat_user "${dict['prefix']}")"
+    dict['owner_id']="$(koopa_stat_user_id "${dict['prefix']}")"
     dict['user_id']="$(koopa_user_id)"
     [[ "${dict['user_id']}" == "${dict['owner_id']}" ]]
 }
@@ -17343,7 +17247,7 @@ koopa_move_into_dated_dirs_by_timestamp() {
     for file in "$@"
     do
         local subdir
-        subdir="$(koopa_stat_modified '%Y/%m/%d' "$file")"
+        subdir="$(koopa_stat_modified --format='%Y/%m/%d' "$file")"
         koopa_mv --target-directory="$subdir" "$file"
     done
     return 0
@@ -18156,7 +18060,7 @@ koopa_python_deactivate_venv() {
 }
 
 koopa_python_pip_install() {
-    local app dict dl_args pkgs pos
+    local app dict dl_args pkg pkgs pos
     koopa_assert_has_args "$#"
     declare -A app dict
     dict['prefix']=''
@@ -18204,10 +18108,6 @@ koopa_python_pip_install() {
         '--no-warn-script-location'
         '--progress-bar=on'
     )
-    dl_args=(
-        'Python' "${app['python']}"
-        'Packages' "$(koopa_to_string "${pkgs[@]}")"
-    )
     if [[ -n "${dict['prefix']}" ]]
     then
         install_args+=(
@@ -18216,10 +18116,30 @@ koopa_python_pip_install() {
         )
         dl_args+=('Target' "${dict['prefix']}")
     fi
+    for pkg in "${pkgs[@]}"
+    do
+        case "$pkg" in
+            'pytaglib' | \
+            'pytaglib=='*)
+                local pkg_name
+                app['cut']="$(koopa_locate_cut --allow-system)"
+                [[ -x "${app['cut']}" ]] || return 1
+                pkg_name="$( \
+                    koopa_print "$pkg" \
+                    | "${app['cut']}" -d '=' -f 1 \
+                )"
+                install_args+=('--no-binary' "$pkg_name")
+                ;;
+        esac
+    done
+    install_args+=("${pkgs[@]}")
+    dl_args=(
+        'python' "${app['python']}"
+        'pip install' "${install_args[*]}"
+    )
     koopa_dl "${dl_args[@]}"
     export PIP_REQUIRE_VIRTUALENV='false'
-    "${app['python']}" -m pip --isolated \
-        install "${install_args[@]}" "${pkgs[@]}"
+    "${app['python']}" -m pip --isolated install "${install_args[@]}"
     return 0
 }
 
@@ -19774,9 +19694,9 @@ koopa_reset_permissions() {
     [[ -x "${app['chmod']}" ]] || return 1
     [[ -x "${app['xargs']}" ]] || return 1
     declare -A dict=(
-        ['group']="$(koopa_group)"
+        ['group']="$(koopa_group_name)"
         ['prefix']="${1:?}"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
@@ -21669,7 +21589,7 @@ koopa_ssh_generate_key() {
         ['hostname']="$(koopa_hostname)"
         ['key_name']='id_rsa' # or 'id_ed25519'.
         ['prefix']="${HOME:?}/.ssh"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     while (("$#"))
     do
@@ -22392,64 +22312,201 @@ ${dict['mem_gb_cutoff']} GB of RAM."
 }
 
 koopa_stat_access_human() {
-    koopa_stat '%A' "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%Sp'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%A'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
 }
 
 koopa_stat_access_octal() {
-    koopa_stat '%a' "$@"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%OLp'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%a'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
 }
 
-koopa_stat_dereference() {
-    koopa_stat '%N' "$@"
+koopa_stat_group_id() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    dict['format_string']='%g'
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
 }
 
-koopa_stat_group() {
-    koopa_stat '%G' "$@"
+koopa_stat_group_name() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%Sg'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%G'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
 }
 
 koopa_stat_modified() {
-    local app dict timestamp timestamps x
-    koopa_assert_has_args_ge "$#" 2
-    declare -A app=(
-        ['date']="$(koopa_locate_date)"
-    )
+    local app dict pos timestamp timestamps
+    koopa_assert_has_args "$#"
+    declare -A app dict
+    app['date']="$(koopa_locate_date)"
+    app['stat']="$(koopa_locate_stat)"
     [[ -x "${app['date']}" ]] || return 1
-    declare -A dict=(
-        ['format']="${1:?}"
-    )
-    shift 1
-    readarray -t timestamps <<< "$(koopa_stat '%Y' "$@")"
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['format']=''
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--format='*)
+                dict['format']="${1#*=}"
+                shift 1
+                ;;
+            '--format')
+                dict['format']="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--format' "${dict['format']}"
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    readarray -t timestamps <<< "$( \
+        "${app['stat']}" --format='%Y' "$@" \
+    )"
     for timestamp in "${timestamps[@]}"
     do
-        x="$("${app['date']}" -d "@${timestamp}" +"${dict['format']}")"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
+        local string
+        string="$( \
+            "${app['date']}" -d "@${timestamp}" +"${dict['format']}" \
+        )"
+        [[ -n "$string" ]] || return 1
+        koopa_print "$string"
     done
     return 0
 }
 
-koopa_stat_user() {
-    koopa_stat '%u' "$@"
-}
-
-koopa_stat() {
-    local app dict
-    koopa_assert_has_args_ge "$#" 2
-    declare -A app
-    app['stat']="$(koopa_locate_stat --allow-system)"
-    [[ -x "${app['stat']}" ]] || return 1
-    declare -A dict
-    dict['format']="${1:?}"
-    shift 1
-    if [[ "${app['stat']}" == '/usr/bin/stat' ]] && koopa_is_macos
+koopa_stat_user_id() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    dict['format_string']='%u'
+    if koopa_is_macos
     then
+        app['stat']='/usr/bin/stat'
         dict['format_flag']='-f'
     else
+        app['stat']="$(koopa_locate_stat --allow-system)"
         dict['format_flag']='--format'
     fi
+    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
-            "${dict['format_flag']}" "${dict['format']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
+            "$@" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
+}
+
+koopa_stat_user_name() {
+    koopa_assert_has_args "$#"
+    koopa_assert_is_existing "$@"
+    declare -A app dict
+    if koopa_is_macos
+    then
+        app['stat']='/usr/bin/stat'
+        dict['format_flag']='-f'
+        dict['format_string']='%Su'
+    else
+        app['stat']="$(koopa_locate_stat --allow-system)"
+        dict['format_flag']='--format'
+        dict['format_string']='%U'
+    fi
+    [[ -x "${app['stat']}" ]] || return 1
+    dict['out']="$( \
+        "${app['stat']}" \
+            "${dict['format_flag']}" \
+            "${dict['format_string']}" \
             "$@" \
     )"
     [[ -n "${dict['out']}" ]] || return 1
@@ -22855,7 +22912,7 @@ koopa_switch_to_develop() {
         ['branch']='develop'
         ['origin']='origin'
         ['prefix']="$(koopa_koopa_prefix)"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
     )
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
@@ -22874,14 +22931,14 @@ koopa_switch_to_develop() {
     return 0
 }
 
-koopa_sys_group() {
+koopa_sys_group_name() {
     local group
     koopa_assert_has_no_args "$#"
     if koopa_is_shared_install
     then
-        group="$(koopa_admin_group)"
+        group="$(koopa_admin_group_name)"
     else
-        group="$(koopa_group)"
+        group="$(koopa_group_name)"
     fi
     koopa_print "$group"
     return 0
@@ -22955,12 +23012,12 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     case "${dict['shared']}" in
         '0')
-            dict['group']="$(koopa_group)"
-            dict['user']="$(koopa_user)"
+            dict['group']="$(koopa_group_name)"
+            dict['user']="$(koopa_user_name)"
             ;;
         '1')
-            dict['group']="$(koopa_sys_group)"
-            dict['user']="$(koopa_sys_user)"
+            dict['group']="$(koopa_sys_group_name)"
+            dict['user']="$(koopa_sys_user_name)"
             ;;
     esac
     chown_args+=('--no-dereference')
@@ -22990,9 +23047,9 @@ koopa_sys_set_permissions() {
     return 0
 }
 
-koopa_sys_user() {
+koopa_sys_user_name() {
     koopa_assert_has_no_args "$#"
-    koopa_print "$(koopa_user)"
+    koopa_print "$(koopa_user_name)"
     return 0
 }
 
@@ -25984,7 +26041,10 @@ koopa_update_koopa() {
     prefixes=("${dict['koopa_prefix']}/lang/shell/zsh")
     for prefix in "${prefixes[@]}"
     do
-        [[ "$(koopa_stat_user "$prefix")" == "${dict['user_id']}" ]] && continue
+        if [[ "$(koopa_stat_user_id "$prefix")" == "${dict['user_id']}" ]]
+        then
+            continue
+        fi
         koopa_alert "Fixing ownership of '${prefix}'."
         koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
     done
@@ -26100,8 +26160,8 @@ koopa_user_id() {
     _koopa_user_id "$@"
 }
 
-koopa_user() {
-    _koopa_user "$@"
+koopa_user_name() {
+    _koopa_user_name "$@"
 }
 
 koopa_validate_json() {
@@ -26377,7 +26437,7 @@ koopa_zsh_compaudit_set_permissions() {
     do
         local access
         [[ -d "$prefix" ]] || continue
-        if [[ "$(koopa_stat_user "$prefix")" != "${dict['user_id']}" ]]
+        if [[ "$(koopa_stat_user_id "$prefix")" != "${dict['user_id']}" ]]
         then
             koopa_alert "Fixing ownership at '${prefix}'."
             koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"

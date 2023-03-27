@@ -19,7 +19,9 @@ main() {
     koopa_activate_app --build-only \
         'autoconf' \
         'automake' \
-        'libtool'
+        'libtool' \
+        'make' \
+        'pkg-config'
     koopa_activate_app \
         'm4' \
         'gettext' \

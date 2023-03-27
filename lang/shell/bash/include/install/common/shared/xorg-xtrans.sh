@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install xtrans.
-    # @note Updated 2022-04-26.
+    # Install xorg-xtrans.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/xtrans.rb
@@ -11,11 +11,10 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'xorg-xorgproto'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

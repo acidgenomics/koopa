@@ -16,7 +16,7 @@ main() {
         ['installers_base']="$(koopa_private_installers_s3_uri)"
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['user']="$(koopa_user)"
+        ['user']="$(koopa_user_name)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
     dict['file']="${dict['version']}.zip"

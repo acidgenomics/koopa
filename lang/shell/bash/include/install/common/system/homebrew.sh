@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Homebrew.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-03-24.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -20,6 +20,10 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
+    if [[ -x "$(koopa_locate_brew --allow-missing)" ]]
+    then
+        koopa_stop 'Homebrew is already installed.'
+    fi
     if koopa_is_macos && [[ ! -d '/Library/Developer/CommandLineTools' ]]
     then
         koopa_stop \

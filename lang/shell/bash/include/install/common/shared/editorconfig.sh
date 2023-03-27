@@ -3,7 +3,7 @@
 main() {
     # """
     # Install EditorConfig.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
@@ -16,7 +16,7 @@ main() {
     # """
     local app cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake'
+    koopa_activate_app --build-only 'cmake' 'pkg-config'
     koopa_activate_app 'pcre2'
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"

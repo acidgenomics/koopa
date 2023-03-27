@@ -11,7 +11,7 @@ koopa_assert_is_owner() {
     then
         declare -A dict=(
             ['prefix']="$(koopa_koopa_prefix)"
-            ['user']="$(koopa_user)"
+            ['user']="$(koopa_user_name)"
         )
         koopa_stop "Koopa installation at '${dict['prefix']}' is not \
 owned by '${dict['user']}'."

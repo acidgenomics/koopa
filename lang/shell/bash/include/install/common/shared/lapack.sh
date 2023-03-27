@@ -14,9 +14,8 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'cmake' 'pkg-config'
     koopa_activate_app 'gcc'
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-    )
+    declare -A app
+    app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

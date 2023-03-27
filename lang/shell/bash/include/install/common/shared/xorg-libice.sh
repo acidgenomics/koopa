@@ -3,23 +3,25 @@
 main() {
     # """
     # Install libice.
-    # @note Updated 2022-04-26.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libice.rb
     # """
     local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    build_deps=('pkg-config')
+    build_deps=(
+        'make'
+        'pkg-config'
+    )
     deps=(
         'xorg-xorgproto'
         'xorg-xtrans'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

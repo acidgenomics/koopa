@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2023-03-22.
+    # @note Updated 2023-03-26.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -17,7 +17,7 @@ main() {
     koopa_activate_app 'zlib'
     if koopa_is_linux
     then
-        koopa_activate_app --build-only 'pkg-config'
+        koopa_activate_app --build-only 'make' 'pkg-config'
         koopa_activate_app \
             'xorg-xorgproto' \
             'xorg-xcb-proto' \
@@ -27,9 +27,8 @@ main() {
             'xorg-libxcb' \
             'xorg-libx11'
     fi
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
