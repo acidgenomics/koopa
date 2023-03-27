@@ -87,11 +87,6 @@ __koopa_check_zsh() {
     # @seealso
     # - https://stackoverflow.com/a/23259585/3911732
     [ -n "${ZSH_VERSION:-}" ] || return 0
-    case "$0" in
-        '_src_etc_profile'*)
-            return 1
-            ;;
-    esac
     return 0
 }
 
