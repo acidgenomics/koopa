@@ -13,17 +13,19 @@ koopa_stat_user_name() {
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
     declare -A app dict
-    if koopa_is_macos
+    app['stat']="$(koopa_locate_stat --allow-system)"
+    [[ -x "${app['stat']}" ]] || return 1
+    if koopa_is_gnu "${app['stat']}"
     then
-        app['stat']='/usr/bin/stat'
+        dict['format_flag']='--format'
+        dict['format_string']='%U'
+    elif koopa_is_macos
+    then
         dict['format_flag']='-f'
         dict['format_string']='%Su'
     else
-        app['stat']="$(koopa_locate_stat --allow-system)"
-        dict['format_flag']='--format'
-        dict['format_string']='%U'
+        return 1
     fi
-    [[ -x "${app['stat']}" ]] || return 1
     dict['out']="$( \
         "${app['stat']}" \
             "${dict['format_flag']}" \
