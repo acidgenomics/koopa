@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework using our new Python solver.
+
 koopa_reinstall_only_revdeps() {
     # """
     # Reinstall only the reverse dependencies of an app.
