@@ -146,7 +146,9 @@
       "autoupdate",
       "ifnames"
     ],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
+    "dependencies": ["m4"],
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
@@ -163,6 +165,7 @@
     "arch": "amd64",
     "check": false,
     "date": "2022-10-19",
+    "dependencies": ["conda"],
     "large": true,
     "url": ["https://ccsb.scripps.edu/adfr/"],
     "version": "1.0"
@@ -197,7 +200,9 @@
       "fedora": true
     },
     "bin": ["aclocal", "aclocal-1.16", "automake", "automake-1.16"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
+    "dependencies": ["autoconf"],
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
@@ -206,6 +211,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
+    "build_dependencies": ["make"],
     "date": "2023-03-15",
     "dependencies": ["python3.11"],
     "large": true,
@@ -301,7 +307,7 @@
       "homebrew": true
     },
     "bin": ["bc"],
-    "build_dependencies": ["texinfo"],
+    "build_dependencies": ["make", "texinfo"],
     "conservative": true,
     "date": "2022-08-30",
     "dependencies": ["ed"],
@@ -368,7 +374,9 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["bison", "flex"],
     "date": "2023-02-08",
+    "dependencies": ["texinfo", "zlib"],
     "reverse_dependencies": ["llvm"],
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
     "version": "2.40"
