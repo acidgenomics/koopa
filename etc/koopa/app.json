@@ -12,6 +12,7 @@
   "agat": {
     "arch": "amd64",
     "bin": ["agat"],
+    "build_dependencies": ["patch"],
     "date": "2022-11-14",
     "dependencies": ["conda"],
     "large": true,
@@ -44,7 +45,7 @@
     "version": "3.3.2"
   },
   "apptainer": {
-    "build_dependencies": ["go"],
+    "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2023-03-07",
     "large": true,
     "platform": "linux",
@@ -124,6 +125,7 @@
       "debian": ["attr", "libattr1-dev"],
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
     "platform": "linux",
@@ -328,8 +330,10 @@
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
+    "build_dependencies": ["make"],
     "check": false,
     "date": "2023-01-10",
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "platform": "linux",
     "private": true,
     "url": [
@@ -1129,8 +1133,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["m4", "make"],
     "conservative": true,
     "date": "2023-03-07",
+    "dependencies": ["bzip2", "xz", "zlib"],
     "platform": "linux",
     "url": ["https://fedorahosted.org/elfutils/"],
     "version": "0.189"
@@ -2823,8 +2829,10 @@
     "version": "16.0.0"
   },
   "lmod": {
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
+    "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "large": true,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],

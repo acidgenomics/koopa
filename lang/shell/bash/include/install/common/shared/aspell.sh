@@ -3,7 +3,7 @@
 main() {
     # """
     # Install aspell.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - http://aspell.net/
@@ -12,9 +12,9 @@ main() {
     # """
     local dict key lang
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'make'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
