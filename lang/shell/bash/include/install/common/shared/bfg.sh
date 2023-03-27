@@ -3,12 +3,12 @@
 main() {
     # """
     # Install BFG git repo cleaner.
-    # @note Updated 2022-09-22.
+    # @note Updated 2023-03-27.
     # """
     local app dict
     koopa_activate_app 'openjdk'
     declare -A app=(
-        ['cat']="$(koopa_locate_cat)"
+        ['cat']="$(koopa_locate_cat --allow-system)"
         ['java']="$(koopa_locate_java)"
     )
     [[ -x "${app['cat']}" ]] || return 1
