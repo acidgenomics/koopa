@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2022-10-05.
+    # @note Updated 2023-03-27.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
@@ -24,7 +24,7 @@ main() {
     # """
     local app dict install_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'bzip2'
+    koopa_activate_app --build-only 'bzip2' 'python3.11'
     declare -A app
     app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
@@ -52,31 +52,6 @@ scripts/${dict['file']}"
     koopa_print_env
     koopa_dl 'Install args' "${install_args[*]}"
     "${app['python']}" "${dict['file']}" "${install_args[@]}"
-    # Version-specific hotfixes.
-    # > case "${dict['version']}" in
-    # >     '1.2.9')
-    # >         koopa_alert_info 'Fixing bcftools and samtools.'
-    # >         app['mamba']="${dict['install_dir']}/anaconda/bin/mamba"
-    # >         "${app['mamba']}" install --yes \
-    # >             --name 'base' \
-    # >             'bcftools==1.15' \
-    # >             'samtools==1.15'
-    # >         # bcftools / samtools (htslib) are also currently messed up
-    # >         # in these other conda environments:
-    # >         # > "${app['mamba']}" install --yes \
-    # >         # >     --name 'bwakit' \
-    # >         # >     'samtools==1.15'
-    # >         # > "${app['mamba']}" install --yes \
-    # >         # >     --name 'htslib1.12_py3.9' \
-    # >         # >     'samtools==1.15'
-    # >         # > "${app['mamba']}" install --yes \
-    # >         # >     --name 'python2' \
-    # >         # >     'bcftools==1.15' 'samtools==1.15'
-    # >         # > "${app['mamba']}" install --yes \
-    # >         # >     --name 'python3.6' \
-    # >         # >     'samtools==1.15'
-    # >         ;;
-    # > esac
     app['conda']="${dict['install_dir']}/anaconda/bin/conda"
     koopa_assert_is_installed "${app['conda']}"
     "${app['conda']}" clean --yes --tarballs
