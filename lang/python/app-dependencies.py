@@ -5,7 +5,7 @@ Solve app dependencies defined in 'app.json' file.
 @note Updated 2023-03-27.
 
 @examples
-./app-dependencies.py 'mamba'
+./app-dependencies.py 'python3.11'
 """
 
 from argparse import ArgumentParser
