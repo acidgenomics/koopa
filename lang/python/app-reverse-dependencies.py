@@ -49,6 +49,9 @@ def main(app_name: str, json_file: str) -> bool:
         return True
     for val in deps:
         print(val)
+    # FIXME Need to ensure that apps are supported on our arch and platform.
+    # e.g. attr for coreutils.
+    # FIXME Exclude large, private, and user specific apps here.
     return True
 
 
