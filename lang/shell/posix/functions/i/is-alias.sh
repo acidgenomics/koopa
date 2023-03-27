@@ -3,36 +3,29 @@
 _koopa_is_alias() {
     # """
     # Is the specified argument an alias?
-    # @note Updated 2023-03-11.
-    #
-    # Intended primarily to determine if we need to unalias.
-    # Tracked aliases (e.g. 'dash' to '/bin/dash') don't need to be unaliased.
+    # @note Updated 2023-03-27.
     #
     # @example
-    # > _koopa_is_alias 'R'
+    # TRUE:
+    # _koopa_is_alias 'tmux-vanilla'
+    #
+    # FALSE:
+    # _koopa_is_alias 'bash'
+    # _koopa_is_alias '_koopa_koopa_prefix'
     # """
-    for __kvar_alias in "$@"
+    for __kvar_cmd in "$@"
     do
-        if ! _koopa_is_installed "$__kvar_alias"
-        then
-            unset -v __kvar_alias
-            return 1
-        fi
-        __kvar_string="$(type "$__kvar_alias")"
-        unset -v __kvar_alias
-        # Bash convention.
-        _koopa_str_detect_posix \
-            "$__kvar_string" \
-            ' is aliased to ' \
-            && continue
-        # Zsh convention.
-        _koopa_str_detect_posix \
-            "$__kvar_string" \
-            ' is an alias for ' \
-            && continue
-        unset -v __kvar_string
-        return 1
+        __kvar_string="$(command -v "$__kvar_cmd")"
+        case "$__kvar_string" in
+            'alias '*)
+                continue
+                ;;
+            *)
+                unset -v __kvar_cmd __kvar_string
+                return 1
+                ;;
+        esac
     done
-    unset -v __kvar_string
+    unset -v __kvar_cmd __kvar_string
     return 0
 }

@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-03-11.
+    # @note Updated 2023-03-27.
     # """
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
@@ -68,7 +68,7 @@ _koopa_activate_aliases() {
     alias vim-fzf='_koopa_alias_vim_fzf'
     alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
-    alias z='_koopa_alias_zoxide'
+    alias z='_koopa_alias_z'
     # Keep these at the end to allow the user to override our defaults.
     # shellcheck source=/dev/null
     [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
