@@ -87,6 +87,8 @@ def main(app_name: str, json_file: str) -> bool:
     lst = list(dict.fromkeys(lst))
     for val in lst:
         print(val)
+    # FIXME Need to ensure that apps are supported on our arch and platform.
+    # e.g. attr for coreutils.
     return True
 
 
