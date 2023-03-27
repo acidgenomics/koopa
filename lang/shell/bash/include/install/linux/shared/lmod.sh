@@ -14,7 +14,7 @@ main() {
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
     local app dict rock rocks
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'lua' \
