@@ -337,7 +337,6 @@
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
     "build_dependencies": ["make"],
-    "check": false,
     "date": "2023-01-10",
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "platform": "linux",
@@ -1085,10 +1084,10 @@
     "version": "0.1.0"
   },
   "doom-emacs": {
-    "check": false,
     "date": "2023-03-23",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
+    "user": true,
     "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
   },
   "dotfiles": {
@@ -3363,7 +3362,6 @@
   "ont-guppy": {
     "arch": "amd64",
     "bin": ["guppy_basecaller"],
-    "check": false,
     "date": "2023-03-14",
     "large": true,
     "platform": "linux",
@@ -3686,9 +3684,9 @@
     "version": "1.4.1"
   },
   "prelude-emacs": {
-    "check": false,
     "date": "2023-03-07",
     "url": ["https://github.com/bbatsov/prelude/"],
+    "user": true,
     "version": "fcb629acb645cdff7fdd5f7332bb669c75527fdb"
   },
   "prettier": {
@@ -4028,7 +4026,6 @@
     "version": "4.2.3"
   },
   "r-devel": {
-    "check": false,
     "date": "2023-03-20",
     "dependencies": [
       "bzip2",
@@ -4449,16 +4446,16 @@
     "version": "14.4.2"
   },
   "spacemacs": {
-    "check": false,
     "date": "2023-03-07",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
+    "user": true,
     "version": "3512e43c9e6efef78b5104785c99518eff60d668"
   },
   "spacevim": {
-    "check": false,
     "date": "2023-03-07",
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
+    "user": true,
     "version": "4c07aa025f5ec3c35159942fd4f913499cbed3cc"
   },
   "spdlog": {
