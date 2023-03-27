@@ -34,7 +34,7 @@ archive/refs/tags/${dict['file']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=-fpic ${CXXFLAGS:-}"
+        "-DCMAKE_CXX_FLAGS=-fPIC ${CXXFLAGS:-}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------

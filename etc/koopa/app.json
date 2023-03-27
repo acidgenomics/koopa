@@ -4725,7 +4725,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["make", "pkg-config"],
     "check": false,
     "conservative": true,
     "date": "2022-09-09",
@@ -4812,6 +4812,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
     "url": [
@@ -4897,6 +4898,7 @@
       "homebrew": "gnu-which"
     },
     "bin": ["gwhich"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-25",
     "man1": ["gwhich.1"],
@@ -4907,8 +4909,10 @@
     "aliases": {
       "homebrew": "libice"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-xorgproto", "xorg-xtrans"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
     "version": "1.1.1"
   },
@@ -4916,6 +4920,7 @@
     "aliases": {
       "homebrew": "libpthread-stubs"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-26",
     "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/"],
@@ -4925,8 +4930,10 @@
     "aliases": {
       "homebrew": "libsm"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-libice", "xorg-xorgproto", "xorg-xtrans"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
     "version": "1.2.4"
   },
@@ -4934,8 +4941,17 @@
     "aliases": {
       "homebrew": "libx11"
     },
+    "build_dependencies": ["make", "pkg-config", "sed"],
     "conservative": true,
     "date": "2023-03-07",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xorgproto",
+      "xorg-xtrans"
+    ],
     "reverse_dependencies": [
       "xorg-libxext",
       "xorg-libxrandr",
@@ -4954,8 +4970,10 @@
     "aliases": {
       "homebrew": "libxau"
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["xorg-xorgproto"],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
     "version": "1.0.11"
   },
@@ -4963,8 +4981,16 @@
     "aliases": {
       "homebrew": "libxcb"
     },
+    "build_dependencies": ["make", "pkg-config", "python3.11"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": [
+      "xorg-libpthread-stubs",
+      "xorg-libxau",
+      "xorg-libxdmcp",
+      "xorg-xcb-proto",
+      "xorg-xorgproto"
+    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/"],
     "version": "1.15"
   },
@@ -5068,6 +5094,7 @@
       "homebrew": true
     },
     "bin": ["xz"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
     "man1": ["xz.1"],
@@ -5075,7 +5102,7 @@
     "version": "5.4.1"
   },
   "yaml-cpp": {
-    "build_dependencies": ["cmake", "make"],
+    "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "large": true,
     "reverse_dependencies": ["mamba"],
