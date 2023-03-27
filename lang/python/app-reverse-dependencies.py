@@ -33,15 +33,23 @@ def main(app_name: str, json_file: str) -> bool:
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
-        keys = json_data.keys()
-        assert app_name in keys
-        all_deps = []
-        i = 0
-        for key in keys:
-            all_deps[i] = get_deps(app_name=key, json_data=json_data)
-            i += 1
-        print(all_deps)
+    keys = list(json_data.keys())
+    assert app_name in keys
+    all_deps = []
+    for key in keys:
+        key_deps = get_deps(app_name=key, json_data=json_data)
+        all_deps.append(key_deps)
+    deps = []
+    i = 0
+    while i < len(all_deps):
+        if app_name in all_deps[i]:
+            deps.append(keys[i])
+        i += 1
+    if len(deps) <= 0:
         return True
+    for val in deps:
+        print(val)
+    return True
 
 
 parser = ArgumentParser()

@@ -58,36 +58,36 @@ def main(app_name: str, json_file: str) -> bool:
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
-        keys = json_data.keys()
-        assert app_name in keys
-        deps = get_deps(app_name=app_name, json_data=json_data)
-        if len(deps) <= 0:
-            return True
-        i = 0
-        lst = []
-        lst.append(deps)
-        while i < len(deps):
-            lvl1 = []
-            for lvl2 in lst[i]:
-                if isinstance(lvl2, list):
-                    for lvl3 in lvl2:
-                        lvl4 = get_deps(app_name=lvl3, json_data=json_data)
-                        if len(lvl4) > 0:
-                            lvl1.append(lvl4)
-                else:
-                    lvl3 = get_deps(app_name=lvl2, json_data=json_data)
-                    if len(lvl3) > 0:
-                        lvl1.append(lvl3)
-            if len(lvl1) <= 0:
-                break
-            lst.append(lvl1)
-            i = i + 1
-        lst.reverse()
-        lst = flatten(lst)
-        lst = list(dict.fromkeys(lst))
-        for val in lst:
-            print(val)
+    keys = json_data.keys()
+    assert app_name in keys
+    deps = get_deps(app_name=app_name, json_data=json_data)
+    if len(deps) <= 0:
         return True
+    i = 0
+    lst = []
+    lst.append(deps)
+    while i < len(deps):
+        lvl1 = []
+        for lvl2 in lst[i]:
+            if isinstance(lvl2, list):
+                for lvl3 in lvl2:
+                    lvl4 = get_deps(app_name=lvl3, json_data=json_data)
+                    if len(lvl4) > 0:
+                        lvl1.append(lvl4)
+            else:
+                lvl3 = get_deps(app_name=lvl2, json_data=json_data)
+                if len(lvl3) > 0:
+                    lvl1.append(lvl3)
+        if len(lvl1) <= 0:
+            break
+        lst.append(lvl1)
+        i = i + 1
+    lst.reverse()
+    lst = flatten(lst)
+    lst = list(dict.fromkeys(lst))
+    for val in lst:
+        print(val)
+    return True
 
 
 parser = ArgumentParser()
