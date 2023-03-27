@@ -19,8 +19,8 @@ def arch() -> str:
     Architecture string.
     @note Updated 2023-03-27.
     """
-    str = machine()
-    return str
+    string = machine()
+    return string
 
 
 def arch2() -> str:
@@ -28,17 +28,20 @@ def arch2() -> str:
     Architecture string 2.
     @note Updated 2023-03-27.
     """
-    str = arch()
-    match str:
-        case "x86_64":
-            str = "amd64"
-    return str
+    string = arch()
+    if string == "x86_64":
+        string = "amd64"
+    return string
 
 
 def large() -> bool:
-    du = disk_usage(path="/")
-    bool = du.total >= 400000000000
-    return bool
+    """
+    Is the current machine a large instance?
+    @note Updated 2023-03-27.
+    """
+    usage = disk_usage(path="/")
+    lgl = usage.total >= 400000000000
+    return lgl
 
 
 def platform() -> str:
@@ -46,41 +49,38 @@ def platform() -> str:
     Platform string.
     @note Updated 2023-03-27.
     """
-    str = system()
-    str = str.lower()
-    match str:
-        case "darwin":
-            str = "macos"
-    return str
+    string = system()
+    string = string.lower()
+    if string == "darwin":
+        string = "macos"
+    return string
 
-
-# FIXME Need to define large in the dict.
 
 def main(json_file: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
     @note Updated 2023-03-27.
     """
-    dd = dict()
-    dd["arch"] = arch2()
-    dd["large"] = large()
-    dd["platform"] = platform()
+    dct = {}
+    dct["arch"] = arch2()
+    dct["large"] = large()
+    dct["platform"] = platform()
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
     for app_name in json_data.keys():
         json = json_data[app_name]
         keys = json.keys()
         if "arch" in keys:
-            if json["arch"] != dd["arch"]:
+            if json["arch"] != dct["arch"]:
                 continue
         if "check" in keys:
             if not json["check"]:
                 continue
         if "large" in keys:
-            if json["large"] and not dd["large"]:
+            if json["large"] and not dct["large"]:
                 continue
         if "platform" in keys:
-            if json["platform"] != dd["platform"]:
+            if json["platform"] != dct["platform"]:
                 continue
         if "private" in keys:
             if json["private"]:
