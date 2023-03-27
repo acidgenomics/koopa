@@ -526,6 +526,16 @@ koopa_ansi_escape() {
     return 0
 }
 
+koopa_app_dependencies() {
+    local app_name cmd
+    koopa_assert_has_args_eq "$#" 1
+    app_name="${1:?}"
+    cmd="$(koopa_koopa_prefix)/lang/python/app-dependencies.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$app_name"
+    return 0
+}
+
 koopa_app_json_bin() {
     local app_name
     koopa_assert_has_args "$#"
@@ -628,6 +638,16 @@ ${dict2['version']}"
         fi
         koopa_print "${dict2['prefix']}"
     done
+    return 0
+}
+
+koopa_app_reverse_dependencies() {
+    local app_name cmd
+    koopa_assert_has_args_eq "$#" 1
+    app_name="${1:?}"
+    cmd="$(koopa_koopa_prefix)/lang/python/app-reverse-dependencies.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$app_name"
     return 0
 }
 
@@ -21192,6 +21212,15 @@ koopa_script_name() {
     dict['bn']="$(koopa_basename "${dict['file']}")"
     [[ -n "${dict['bn']}" ]] || return 0
     koopa_print "${dict['bn']}"
+    return 0
+}
+
+koopa_shared_apps() {
+    local cmd
+    koopa_assert_has_no_args "$#"
+    cmd="$(koopa_koopa_prefix)/lang/python/shared-apps.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd"
     return 0
 }
 
