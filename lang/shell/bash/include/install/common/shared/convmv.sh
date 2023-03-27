@@ -3,16 +3,15 @@
 main() {
     # """
     # Install convmv.
-    # @note Updated 2022-08-27.
+    # @note Updated 2023-03-27.
     #
     # @seealso
     # - https://www.j3e.de/linux/convmv/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/convmv.rb
     # """
     local app dict
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='convmv'
