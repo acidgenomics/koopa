@@ -1094,7 +1094,7 @@
   "dotfiles": {
     "date": "2023-03-27",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "09bc8939d08f0f8f84a5d7b01604d02c1fadb52c"
+    "version": "d89fa29d1c31536ecc6c6768b9132b84e12e238c"
   },
   "du-dust": {
     "aliases": {
@@ -1939,7 +1939,7 @@
     "date": "2023-01-12",
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.9.0"
+    "version": "0.10.0"
   },
   "gzip": {
     "aliases": {
@@ -4276,10 +4276,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-03-09",
+    "date": "2023-03-27",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.68.0"
+    "version": "1.68.1"
   },
   "salmon": {
     "arch": "amd64",

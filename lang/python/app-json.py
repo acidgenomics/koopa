@@ -2,7 +2,7 @@
 
 """
 Parse koopa 'app.json' file.
-@note Updated 2023-03-25.
+@note Updated 2023-03-27.
 
 @examples
 ./app-json.py \
@@ -18,21 +18,21 @@ from os.path import abspath, dirname, join
 def main(json_file: str, app_name: str, key: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-25.
+    @note Updated 2023-03-27.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
-        keys = json_data.keys()
-        assert app_name in keys
-        app_dict = json_data[app_name]
-        assert key in app_dict.keys()
-        value = app_dict[key]
-        if isinstance(value, list):
-            for i in value:
-                print(i)
-        else:
-            print(value)
-        return True
+    keys = json_data.keys()
+    assert app_name in keys
+    app_dict = json_data[app_name]
+    assert key in app_dict.keys()
+    value = app_dict[key]
+    if isinstance(value, list):
+        for i in value:
+            print(i)
+    else:
+        print(value)
+    return True
 
 
 parser = ArgumentParser()
