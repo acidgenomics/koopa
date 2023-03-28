@@ -3350,6 +3350,7 @@
     "conservative": true,
     "date": "2023-03-07",
     "platform": "linux",
+    "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
     "version": "21.9.0.0.0-1"
   },
@@ -4028,6 +4029,7 @@
   "rstudio-server": {
     "date": "2023-03-17",
     "platform": "linux",
+    "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
     "version": "2023.03.0+386"
   },
@@ -4203,6 +4205,7 @@
   "shiny-server": {
     "date": "2023-02-08",
     "platform": "linux",
+    "system": true,
     "url": ["https://www.rstudio.com/products/shiny/download-server/"],
     "version": "1.5.20.1002"
   },
