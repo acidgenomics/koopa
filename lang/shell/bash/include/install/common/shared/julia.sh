@@ -18,11 +18,10 @@ main() {
     # """
     local app build_deps dict
     koopa_assert_has_no_args "$#"
-    build_deps=('cmake' 'bzip2' 'tar' 'xz')
+    build_deps=('bzip2' 'cmake' 'make' 'tar' 'xz')
     koopa_activate_app --build-only "${build_deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
