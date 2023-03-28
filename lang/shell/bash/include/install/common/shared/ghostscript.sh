@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Consider depending on: fontconfig, freetype, jbig2dec, jpeg-turbo, libidn,
+# libpng, libtiff, little-cms2, openjpeg, expat, zlib
+
 main() {
     # """
     # Install Ghostscript.
@@ -14,18 +17,6 @@ main() {
     # """
     local app conf_args dict
     koopa_activate_app --build-only 'pkg-config'
-    # FIXME Consider adding these (similar to Homebrew):
-    # depends_on "fontconfig"
-    # depends_on "freetype"
-    # depends_on "jbig2dec"
-    # depends_on "jpeg-turbo"
-    # depends_on "libidn"
-    # depends_on "libpng"
-    # depends_on "libtiff"
-    # depends_on "little-cms2"
-    # depends_on "openjpeg"
-    # uses_from_macos "expat"
-    # uses_from_macos "zlib"
     declare -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
