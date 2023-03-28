@@ -135,7 +135,6 @@ koopa_cli_app() {
         'docker')
             case "${2:-}" in
                 'build' | \
-                'build-all-images' | \
                 'build-all-tags' | \
                 'prune-all-images' | \
                 'prune-old-images' | \
