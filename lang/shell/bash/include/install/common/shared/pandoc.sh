@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-03-28.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -42,6 +42,9 @@ main() {
         '3.1.'* | '3.1' | \
         '3.0.'* | '3.0')
             dict['cli_version']='0.1'
+            ;;
+        *)
+            koopa_stop 'Unsupported version.'
             ;;
     esac
     koopa_assert_is_dir "${dict['zlib']}"
