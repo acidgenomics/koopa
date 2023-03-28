@@ -28,9 +28,10 @@ koopa_extract() {
     fi
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    koopa_alert "Extracting '${dict['file']}'."
     if [[ "${dict['move_into_target']}" -eq 1 ]]
     then
+        dict['target']="$(koopa_init_dir "${dict['target']}")"
+        koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
         dict['tmpdir']="$( \
             koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
 .koopa-extract-$(koopa_random_string)" \
@@ -39,6 +40,7 @@ koopa_extract() {
         koopa_ln "${dict['file']}" "${dict['tmpfile']}"
         dict['file']="${dict['tmpfile']}"
     else
+        koopa_alert "Extracting '${dict['file']}'."
         dict['tmpdir']="${dict['wd']}"
     fi
     (
