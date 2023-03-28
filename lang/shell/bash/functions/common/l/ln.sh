@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to speed this function up, currently too slow.
-
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-28.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     # """
@@ -17,9 +15,9 @@ koopa_ln() {
     )
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
-        ['quiet']=0
         ['sudo']=0
         ['target_dir']=''
+        ['verbose']=0
     )
     pos=()
     while (("$#"))
@@ -36,13 +34,19 @@ koopa_ln() {
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
-            '--quiet')
-                dict['quiet']=1
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -69,8 +73,8 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fns')
-    [[ "${dict['quiet']}" -eq 0 ]] && ln_args+=('-v')
+    ln_args=('-f' '-n' '-s')
+    [[ "${dict['verbose']}" -eq 1 ]] && ln_args+=('-v')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
