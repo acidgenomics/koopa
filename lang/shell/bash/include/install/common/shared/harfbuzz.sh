@@ -24,7 +24,6 @@ main() {
         'meson' \
         'ninja' \
         'pkg-config'
-    # glib deps: zlib, gettext, libffi, pcre.
     koopa_activate_app \
         'zlib' \
         'gettext' \
