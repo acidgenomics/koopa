@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider skipping koopa activation here for non-interactive shell.
+
 koopa_add_to_user_profile() {
     # """
     # Add koopa configuration to user profile.
