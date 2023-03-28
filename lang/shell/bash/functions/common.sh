@@ -10928,7 +10928,7 @@ ${dict['version2']}"
             koopa_is_linux && bool['update_ldconfig']=1
             app['sudo']="$(koopa_locate_sudo)"
             [[ -x "${app['sudo']}" ]] || return 1
-            "${app['sudo']}" -nv
+            "${app['sudo']}" -v
             ;;
         'user')
             bool['link_in_bin']=0

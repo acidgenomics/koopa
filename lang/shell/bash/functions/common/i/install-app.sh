@@ -229,7 +229,7 @@ ${dict['version2']}"
             # Useful sudo arguments:
             # -n, --non-interactive
             # -v, --validate
-            "${app['sudo']}" -nv
+            "${app['sudo']}" -v
             ;;
         'user')
             bool['link_in_bin']=0
