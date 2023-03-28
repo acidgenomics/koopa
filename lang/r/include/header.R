@@ -4,23 +4,29 @@
 local({
     #' Check if r-koopa package is installed, and meets dependency requirements.
     #'
-    #' @note Updated 2023-01-31.
+    #' @note Updated 2023-03-27.
     #' @noRd
     checkInstall <- function() {
         ## Minimum version of koopa R package.
-        minVersion <- package_version("0.3.18")
+        minVersion <- package_version("0.4.0")
         stopifnot(requireNamespace("utils", quietly = TRUE))
         isInstalled <- function(pkgs) {
             basename(pkgs) %in% rownames(utils::installed.packages())
         }
         if (isFALSE(isInstalled("koopa"))) {
-            stop("R koopa package is not installed.")
+            stop(
+                 "R koopa package is not installed.",
+                 call. = FALSE
+            )
         }
         if (isFALSE(utils::packageVersion("koopa") >= minVersion)) {
-            stop(sprintf(
-                "%s %s %s is required.",
-                "R koopa", ">=", as.character(minVersion)
-            ))
+            stop(
+                sprintf(
+                    "%s %s %s is required.",
+                    "R koopa", ">=", as.character(minVersion)
+                ),
+                call. = FALSE
+            )
         }
         invisible(TRUE)
     }
@@ -49,7 +55,10 @@ local({
         name <- basename(file)
         manFile <- file.path(koopaPrefix, "man", "man1", paste0(name, ".1"))
         if (!isTRUE(file.exists(manFile))) {
-            stop(sprintf("No documentation for '%s'.", name), call. = FALSE)
+            stop(
+                sprintf("No documentation for '%s'.", name),
+                call. = FALSE
+            )
         }
         system2(command = "man", args = manFile)
         quit()

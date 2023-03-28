@@ -74,7 +74,6 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["sqlite"],
-    "reverse_dependencies": ["apr-util"],
     "url": ["https://apr.apache.org/"],
     "version": "1.7.2"
   },
@@ -317,6 +316,7 @@
   },
   "bcbio-nextgen": {
     "bin": ["bcbio_nextgen.py"],
+    "build_dependencies": ["bzip2", "python3.11"],
     "date": "2022-09-26",
     "enabled": false,
     "platform": "linux",
@@ -376,7 +376,6 @@
     "build_dependencies": ["bison", "flex"],
     "date": "2023-02-08",
     "dependencies": ["texinfo", "zlib"],
-    "reverse_dependencies": ["llvm"],
     "url": ["https://ftp.gnu.org/gnu/binutils/"],
     "version": "2.40"
   },
@@ -404,8 +403,10 @@
       "fedora": "bison-devel",
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["m4"],
     "url": ["https://www.gnu.org/software/bison/"],
     "version": "3.8.2"
   },
@@ -435,7 +436,7 @@
     },
     "conservative": true,
     "date": "2023-02-08",
-    "reverse_dependencies": ["msgpack", "nghttp2"],
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "url": ["https://www.boost.org/"],
     "version": "1.81.0"
   },
@@ -489,6 +490,7 @@
       "debian": "libbrotli-dev",
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "make"],
     "conservative": true,
     "date": "2022-09-26",
     "enabled": false,
@@ -526,6 +528,7 @@
       "bzless",
       "bzmore"
     ],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-09-26",
     "man1": [
@@ -559,7 +562,6 @@
     },
     "conservative": true,
     "date": "2023-02-08",
-    "reverse_dependencies": ["openssl1", "openssl3", "curl", "node"],
     "url": ["https://curl.se/docs/caextract.html"],
     "version": "2023-01-10"
   },
@@ -595,7 +597,6 @@
       "xorg-libxrender",
       "expat"
     ],
-    "reverse_dependencies": ["fontconfig", "freetype", "harfbuzz"],
     "url": [
       "https://www.cairographics.org/releases/",
       "https://cairographics.org/",
@@ -645,7 +646,6 @@
     "conservative": true,
     "date": "2023-02-08",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/CLIUtils/CLI11/"],
     "version": "2.3.2"
   },
@@ -662,6 +662,7 @@
       "homebrew": true
     },
     "bin": ["cmake", "cpack", "ctest"],
+    "build_dependencies": ["make"],
     "date": "2023-02-08",
     "dependencies": ["ncurses", "openssl3"],
     "url": ["https://cmake.org/download/"],
@@ -683,43 +684,6 @@
     "conservative": true,
     "date": "2023-02-27",
     "large": true,
-    "reverse_dependencies": [
-      "autodock",
-      "autodock-vina",
-      "bamtools",
-      "bedtools",
-      "bioawk",
-      "bioconda-utils",
-      "bowtie2",
-      "bustools",
-      "deeptools",
-      "entrez-direct",
-      "fastqc",
-      "ffq",
-      "fgbio",
-      "fq",
-      "fqtk",
-      "gffutils",
-      "gget",
-      "gseapy",
-      "hisat2",
-      "htseq",
-      "jupyterlab",
-      "kallisto",
-      "multiqc",
-      "nextflow",
-      "openbb",
-      "picard",
-      "rsem",
-      "salmon",
-      "sambamba",
-      "samtools",
-      "seqkit",
-      "snakemake",
-      "star",
-      "subread",
-      "visidata"
-    ],
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.1.0"
   },
@@ -729,6 +693,7 @@
       "homebrew": true
     },
     "bin": ["convmv"],
+    "build_dependencies": ["make"],
     "date": "2022-09-26",
     "url": "https://www.j3e.de/linux/convmv/",
     "version": "2.05"
@@ -846,8 +811,10 @@
       "gwhoami",
       "gyes"
     ],
+    "build_dependencies": ["gperf", "make"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": ["attr", "gmp"],
     "man1": [
       "gb2sum.1",
       "gbase32.1",
@@ -962,6 +929,7 @@
       "homebrew": true
     },
     "bin": ["cpufetch"],
+    "build_dependencies": ["make"],
     "date": "2023-01-09",
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
@@ -1007,17 +975,16 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-20",
-    "dependencies": ["ca-certificates", "zlib", "zstd", "openssl3"],
+    "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
-    "reverse_dependencies": ["git", "libgeotiff", "proj", "gdal", "mamba"],
     "url": ["https://curl.se/"],
     "version": "8.0.1"
   },
   "curl7": {
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-20",
-    "dependencies": ["ca-certificates"],
-    "reverse_dependencies": ["r", "r-devel"],
+    "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "url": ["https://curl.se/"],
     "version": "7.88.1"
   },
@@ -1039,6 +1006,7 @@
       "homebrew": "git-delta"
     },
     "bin": ["delta"],
+    "build_dependencies": ["rust"],
     "date": "2022-09-01",
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.15.1"
@@ -1091,9 +1059,9 @@
     "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
   },
   "dotfiles": {
-    "date": "2023-03-27",
+    "date": "2023-03-28",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "af6a7e6a9371f65cbef9291d71eef2f23f8b466e"
+    "version": "45a0886abff2b871f619658d411ae1d56d5aa727"
   },
   "du-dust": {
     "aliases": {
@@ -1208,16 +1176,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "reverse_dependencies": [
-      "apr-util",
-      "fontconfig",
-      "graphviz",
-      "perl",
-      "python3.11",
-      "subversion",
-      "udunits",
-      "cairo"
-    ],
     "url": ["https://libexpat.github.io/"],
     "version": "2.5.0"
   },
@@ -1340,7 +1298,6 @@
     },
     "conservative": true,
     "date": "2022-08-30",
-    "reverse_dependencies": ["freetype"],
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
   },
@@ -1351,7 +1308,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-08",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
     "version": "9.1.0"
   },
@@ -1365,7 +1321,6 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["gperf", "freetype", "libxml2"],
-    "reverse_dependencies": ["cairo", "graphviz", "imagemagick", "r"],
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
     "version": "2.14.2"
   },
@@ -1402,15 +1357,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-07",
-    "reverse_dependencies": [
-      "fontconfig",
-      "harfbuzz",
-      "cairo",
-      "fltk",
-      "graphviz",
-      "imagemagick",
-      "r"
-    ],
     "url": ["https://www.freetype.org/"],
     "version": "2.13.0"
   },
@@ -1423,7 +1369,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
-    "reverse_dependencies": ["r"],
     "url": ["https://github.com/fribidi/fribidi/"],
     "version": "1.0.12"
   },
@@ -1472,7 +1417,6 @@
     "conservative": true,
     "date": "2022-08-29",
     "dependencies": ["gmp", "mpfr", "mpc", "isl", "zstd"],
-    "reverse_dependencies": ["hdf5", "lapack", "r", "r-devel"],
     "url": ["https://gcc.gnu.org/"],
     "version": "12.2.0"
   },
@@ -1505,7 +1449,6 @@
       "openjdk"
     ],
     "man1": ["gdal-config.1"],
-    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://gdal.org/download.html"],
     "version": "3.6.3"
   },
@@ -1539,21 +1482,6 @@
     },
     "conservative": true,
     "date": "2022-11-08",
-    "reverse_dependencies": [
-      "cairo",
-      "elfutils",
-      "flex",
-      "gawk",
-      "git",
-      "glib",
-      "harfbuzz",
-      "jq",
-      "neovim",
-      "r",
-      "r-devel",
-      "texinfo",
-      "wget"
-    ],
     "url": ["https://www.gnu.org/software/gettext/"],
     "version": "0.21.1"
   },
@@ -1739,7 +1667,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-02-08",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/google/googletest/"],
     "version": "1.13.0"
   },
@@ -1761,7 +1688,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
-    "reverse_dependencies": ["fontconfig"],
     "url": [
       "https://www.graphviz.org/download/source/",
       "https://gitlab.com/graphviz/graphviz/"
@@ -2012,7 +1938,6 @@
       "freetype",
       "icu4c"
     ],
-    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.1.0"
   },
@@ -2088,7 +2013,6 @@
     "conservative": true,
     "date": "2023-01-03",
     "dependencies": ["zlib", "gcc"],
-    "reverse_dependencies": ["armadillo"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.14.0"
   },
@@ -2201,15 +2125,6 @@
       "pkgdata.1",
       "uconv.1"
     ],
-    "reverse_dependencies": [
-      "boost",
-      "harfbuzz",
-      "imagemagick",
-      "libxml2",
-      "node",
-      "r",
-      "r-devel"
-    ],
     "url": ["https://icu.unicode.org/"],
     "version": "72.1"
   },
@@ -2262,7 +2177,6 @@
       "magick.1",
       "magick-script.1"
     ],
-    "reverse_dependencies": ["r", "r-devel"],
     "url": ["https://imagemagick.org/"],
     "version": "7.1.1-3"
   },
@@ -2438,7 +2352,6 @@
     "date": "2022-12-09",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://www.libarchive.org/"],
     "version": "3.6.2"
   },
@@ -2499,15 +2412,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "reverse_dependencies": [
-      "cairo",
-      "glib",
-      "harfbuzz",
-      "python3.11",
-      "r",
-      "r-devel",
-      "llvm"
-    ],
     "url": ["https://sourceware.org/libffi/"],
     "version": "3.4.4"
   },
@@ -2655,7 +2559,6 @@
     "date": "2022-01-03",
     "dependencies": ["zlib"],
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/openSUSE/libsolv/"],
     "version": "0.7.23"
   },
@@ -3099,7 +3002,6 @@
     "conservative": true,
     "date": "2023-03-07",
     "dependencies": ["gmp"],
-    "reverse_dependencies": ["mpc", "gcc", "gawk"],
     "url": ["https://www.mpfr.org/"],
     "version": "4.2.0"
   },
@@ -3288,7 +3190,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-05",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/nlohmann/json/"],
     "version": "3.11.2"
   },
@@ -3311,13 +3212,6 @@
     "dependencies": ["ca-certificates"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "reverse_dependencies": [
-      "bash-language-server",
-      "gtop",
-      "markdownlint-cli",
-      "prettier",
-      "yarn"
-    ],
     "url": ["https://nodejs.org/"],
     "version": "18.15.0"
   },
@@ -3405,7 +3299,6 @@
     "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
-    "reverse_dependencies": ["apache-spark", "bfg", "graphviz", "r"],
     "url": ["https://adoptium.net/"],
     "version": "17.0.6+10"
   },
@@ -3436,7 +3329,6 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["ca-certificates"],
-    "reverse_dependencies": ["dog"],
     "url": ["https://www.openssl.org/source/"],
     "version": "1.1.1t"
   },
@@ -3451,35 +3343,6 @@
     "conservative": true,
     "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
-    "reverse_dependencies": [
-      "cmake",
-      "curl",
-      "wget",
-      "apr-util",
-      "libevent",
-      "libgit2",
-      "libssh2",
-      "libzip",
-      "git",
-      "nghttp2",
-      "nmap",
-      "openssh",
-      "rsync",
-      "serf",
-      "subversion",
-      "imagemagick",
-      "gdal",
-      "mdcat",
-      "nushell",
-      "python3.9",
-      "python3.10",
-      "python3.11",
-      "node",
-      "ruby",
-      "r",
-      "r-devel",
-      "mamba"
-    ],
     "url": ["https://www.openssl.org/source/"],
     "version": "3.1.0"
   },
@@ -3607,7 +3470,6 @@
     ],
     "conservative": true,
     "date": "2022-08-29",
-    "reverse_dependencies": ["ack", "exiftool"],
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
   },
@@ -3679,7 +3541,6 @@
     "date": "2023-03-20",
     "dependencies": ["python3.11"],
     "large": true,
-    "reverse_dependencies": ["openbb"],
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.4.1"
   },
@@ -3757,7 +3618,6 @@
     "conservative": true,
     "date": "2023-03-17",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://pybind11.readthedocs.io/"],
     "version": "2.10.4"
   },
@@ -3859,7 +3719,6 @@
       "zlib"
     ],
     "man1": ["python3.10.1"],
-    "reverse_dependencies": ["google-cloud-sdk", "latch"],
     "url": ["https://www.python.org/"],
     "version": "3.10.10"
   },
@@ -3886,55 +3745,6 @@
       "zlib"
     ],
     "man1": ["python3.11.1"],
-    "reverse_dependencies": [
-      "meson",
-      "ninja",
-      "apache-airflow",
-      "apache-spark",
-      "autoflake",
-      "aws-cli",
-      "azure-cli",
-      "black",
-      "bpytop",
-      "csvkit",
-      "flake8",
-      "glances",
-      "httpie",
-      "ipython",
-      "isort",
-      "pipx",
-      "poetry",
-      "py-spy",
-      "pycodestyle",
-      "pyflakes",
-      "pygments",
-      "pylint",
-      "pytaglib",
-      "pytest",
-      "radian",
-      "ranger-fm",
-      "ruff",
-      "scons",
-      "snakefmt",
-      "vulture",
-      "yapf",
-      "yt-dlp",
-      "vim",
-      "xorg-xcb-proto",
-      "xorg-libxcb",
-      "glib",
-      "htop",
-      "nghttp2",
-      "neovim",
-      "sra-tools",
-      "subversion",
-      "proj",
-      "gdal",
-      "r",
-      "r-devel",
-      "node",
-      "llvm"
-    ],
     "url": ["https://www.python.org/"],
     "version": "3.11.2"
   },
@@ -4156,7 +3966,6 @@
     "conservative": true,
     "date": "2022-11-03",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
     "version": "14.2.4"
   },
@@ -4245,7 +4054,6 @@
     "date": "2023-02-08",
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
-    "reverse_dependencies": ["bashcov", "colorls", "rmate", "ronn"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.2.1"
   },
@@ -4380,7 +4188,6 @@
     "conservative": true,
     "date": "2022-09-26",
     "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
-    "reverse_dependencies": ["subversion"],
     "url": ["https://serf.apache.org/"],
     "version": "1.3.9"
   },
@@ -4464,7 +4271,6 @@
     "date": "2022-11-04",
     "dependencies": ["fmt"],
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.11.0"
   },
@@ -4481,17 +4287,6 @@
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "outdated": true,
-    "reverse_dependencies": [
-      "apr",
-      "gnupg",
-      "libgeotiff",
-      "proj",
-      "gdal",
-      "python3.11",
-      "subversion",
-      "r",
-      "r-devel"
-    ],
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.41.0"
   },
@@ -4657,7 +4452,6 @@
   "termcolor": {
     "date": "2022-11-05",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": [
       "https://termcolor.readthedocs.io/",
       "https://github.com/ikalnytskyi/termcolor/"
@@ -4695,7 +4489,6 @@
     "conservative": true,
     "date": "2023-03-15",
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/TartanLlama/expected/"],
     "version": "1.1.0"
   },
@@ -4964,17 +4757,6 @@
       "xorg-xorgproto",
       "xorg-xtrans"
     ],
-    "reverse_dependencies": [
-      "xorg-libxext",
-      "xorg-libxrandr",
-      "xorg-libxrender",
-      "xorg-libxt",
-      "cairo",
-      "fltk",
-      "imagemagick",
-      "tcl-tk",
-      "r"
-    ],
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.4"
   },
@@ -5164,7 +4946,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "large": true,
-    "reverse_dependencies": ["mamba"],
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.7.0"
   },
@@ -5249,7 +5030,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "reverse_dependencies": ["FIXME"],
     "url": ["https://www.zlib.net/"],
     "version": "1.2.13"
   },
@@ -5295,21 +5075,6 @@
     "date": "2023-03-07",
     "dependencies": ["lz4", "zlib"],
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
-    "reverse_dependencies": [
-      "curl",
-      "elfutils",
-      "gdal",
-      "imagemagick",
-      "libarchive",
-      "libgeotiff",
-      "libtiff",
-      "libzip",
-      "llvm",
-      "mamba",
-      "proj",
-      "r",
-      "rsync"
-    ],
     "url": [
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
