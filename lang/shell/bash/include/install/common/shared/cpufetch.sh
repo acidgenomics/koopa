@@ -3,13 +3,12 @@
 main() {
     # """
     # Install cpufetch.
-    # @note Updated 2023-01-09.
+    # @note Updated 2023-03-27.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

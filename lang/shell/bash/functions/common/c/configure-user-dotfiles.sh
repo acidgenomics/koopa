@@ -3,7 +3,7 @@
 koopa_configure_user_dotfiles() {
     # """
     # Configure dotfiles for current user.
-    # @note Updated 2022-12-05.
+    # @note Updated 2023-03-27.
     #
     # This also configures chezmoi to use our koopa managed dotfiles repo.
     #
@@ -23,9 +23,12 @@ koopa_configure_user_dotfiles() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash --allow-system)"
-    )
+    declare -A app
+    app['bash']="$(koopa_locate_bash --allow-system)"
+    if [[ "${app['bash']}" == '/bin/bash' ]] && koopa_is_macos
+    then
+        app['bash']='/usr/local/bin/bash'
+    fi
     [[ -x "${app['bash']}" ]] || return 1
     declare -A dict=(
         ['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"

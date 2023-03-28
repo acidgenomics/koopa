@@ -11,6 +11,28 @@ Solve app dependencies defined in 'app.json' file.
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
+from platform import machine, system
+from shutil import disk_usage
+
+
+def arch() -> str:
+    """
+    Architecture string.
+    @note Updated 2023-03-27.
+    """
+    string = machine()
+    return string
+
+
+def arch2() -> str:
+    """
+    Architecture string 2.
+    @note Updated 2023-03-27.
+    """
+    string = arch()
+    if string == "x86_64":
+        string = "amd64"
+    return string
 
 
 def get_deps(app_name: str, json_data: dict) -> list:
@@ -24,6 +46,28 @@ def get_deps(app_name: str, json_data: dict) -> list:
         deps = json_data[app_name]["dependencies"]
     out = list(dict.fromkeys(deps))
     return out
+
+
+def large() -> bool:
+    """
+    Is the current machine a large instance?
+    @note Updated 2023-03-27.
+    """
+    usage = disk_usage(path="/")
+    lgl = usage.total >= 400000000000
+    return lgl
+
+
+def platform() -> str:
+    """
+    Platform string.
+    @note Updated 2023-03-27.
+    """
+    string = system()
+    string = string.lower()
+    if string == "darwin":
+        string = "macos"
+    return string
 
 
 def main(app_name: str, json_file: str) -> bool:
@@ -47,7 +91,34 @@ def main(app_name: str, json_file: str) -> bool:
         i += 1
     if len(deps) <= 0:
         return True
+    sys_dict = {}
+    sys_dict["arch"] = arch2()
+    sys_dict["large"] = large()
+    sys_dict["platform"] = platform()
     for val in deps:
+        json = json_data[val]
+        keys = json.keys()
+        if "arch" in keys:
+            if json["arch"] != sys_dict["arch"]:
+                continue
+        if "enabled" in keys:
+            if not json["enabled"]:
+                continue
+        if "large" in keys:
+            if json["large"] and not sys_dict["large"]:
+                continue
+        if "platform" in keys:
+            if json["platform"] != sys_dict["platform"]:
+                continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
         print(val)
     return True
 
