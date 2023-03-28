@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-02-27.
+    # @note Updated 2023-03-28.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -12,7 +12,6 @@ main() {
     # - https://github.com/mamba-org/mamba
     # """
     local app dict
-    koopa_assert_is_not_aarch64
     declare -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
     [[ -x "${app['bash']}" ]] || return 1
