@@ -660,7 +660,6 @@ _koopa_complete() {
                         'docker')
                             args=(
                                 'build'
-                                'build-all-images'
                                 'build-all-tags'
                                 'prune-all-images'
                                 'prune-old-images'
