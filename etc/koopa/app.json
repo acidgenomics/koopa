@@ -1815,7 +1815,9 @@
       "tfmtodit",
       "troff"
     ],
+    "build_dependencies": ["make"],
     "date": "2023-03-15",
+    "dependencies": ["texinfo"],
     "man1": [
       "addftinfo.1",
       "afmtodit.1",
@@ -1934,6 +1936,7 @@
       "zmore",
       "znew"
     ],
+    "build_dependencies": ["make"],
     "date": "2022-08-30",
     "man1": [
       "gunzip.1",
@@ -1978,13 +1981,13 @@
     "conservative": true,
     "date": "2023-03-03",
     "dependencies": [
-      "zlib",
+      "freetype",
       "gettext",
+      "glib",
+      "icu4c",
       "libffi",
       "pcre2",
-      "glib",
-      "freetype",
-      "icu4c"
+      "zlib"
     ],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.1.0"
@@ -2058,9 +2061,10 @@
       "h5unjam",
       "h5watch"
     ],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-01-03",
-    "dependencies": ["zlib", "gcc"],
+    "dependencies": ["gcc", "zlib"],
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.14.0"
   },
@@ -2092,7 +2096,9 @@
       "homebrew": true
     },
     "bin": ["htop"],
+    "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2023-02-06",
+    "dependencies": ["ncurses", "python3.11"],
     "man1": ["htop.1"],
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
     "version": "3.2.2"
@@ -2192,10 +2198,8 @@
     "conservative": true,
     "date": "2023-03-14",
     "dependencies": [
-      "zlib",
-      "zstd",
       "bzip2",
-      "xz",
+      "fontconfig",
       "freetype",
       "jpeg",
       "libpng",
@@ -2203,19 +2207,21 @@
       "libtool",
       "libxml2",
       "libzip",
-      "fontconfig",
-      "xorg-xorgproto",
-      "xorg-xcb-proto",
-      "xorg-libpthread-stubs",
       "xorg-libice",
+      "xorg-libpthread-stubs",
       "xorg-libsm",
-      "xorg-libxau",
-      "xorg-libxdmcp",
-      "xorg-libxcb",
       "xorg-libx11",
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
       "xorg-libxext",
       "xorg-libxrender",
-      "xorg-libxt"
+      "xorg-libxt",
+      "xorg-xcb-proto",
+      "xorg-xorgproto",
+      "xz",
+      "zlib",
+      "zstd"
     ],
     "man1": [
       "ImageMagick.1",
@@ -2297,7 +2303,7 @@
       "pkg-config"
     ],
     "date": "2022-08-30",
-    "dependencies": ["m4", "gettext", "oniguruma"],
+    "dependencies": ["gettext", "m4", "oniguruma"],
     "man1": ["jq.1"],
     "url": ["https://github.com/stedolan/jq/"],
     "version": "1.6"
@@ -2341,6 +2347,7 @@
       "homebrew": true
     },
     "bin": ["lame"],
+    "build_dependencies": ["make"],
     "date": "2022-08-30",
     "man1": ["lame.1"],
     "url": ["https://lame.sourceforge.io/"],
@@ -2377,7 +2384,9 @@
       "homebrew": true
     },
     "bin": ["less"],
+    "build_dependencies": ["autoconf", "groff", "make"],
     "date": "2023-03-07",
+    "dependencies": ["ncurses", "pcre2"],
     "man1": ["less.1"],
     "url": ["https://github.com/gwsw/less/", "https://ftp.gnu.org/gnu/less/"],
     "version": "629"
@@ -2387,6 +2396,7 @@
       "homebrew": true
     },
     "bin": ["lesspipe.sh"],
+    "build_dependencies": ["make"],
     "date": "2023-01-10",
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.07"

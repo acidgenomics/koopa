@@ -9,10 +9,10 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_app --build-only 'make'
     koopa_activate_app 'zlib' 'gcc'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
