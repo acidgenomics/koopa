@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider skipping koopa activation here for non-interactive shell.
+
 koopa_linux_update_etc_profile_d() {
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.

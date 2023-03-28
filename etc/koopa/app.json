@@ -2849,7 +2849,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake"],
     "conservative": true,
-    "date": "2023-03-23",
+    "date": "2023-03-28",
     "dependencies": [
       "cli11",
       "curl",
@@ -2867,13 +2867,13 @@
       "yaml-cpp"
     ],
     "large": true,
-    "notes": ["2023.03.22 release has build issues on Ubuntu 20."],
+    "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
     "outdated": true,
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.02.09"
+    "version": "2023.03.28"
   },
   "man-db": {
     "aliases": {
@@ -3365,10 +3365,10 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-03-03",
+    "date": "2023-03-28",
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.1"
+    "version": "3.1.2"
   },
   "parallel": {
     "aliases": {
@@ -4080,10 +4080,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-03-27",
+    "date": "2023-03-28",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.68.1"
+    "version": "1.68.2"
   },
   "salmon": {
     "arch": "amd64",
