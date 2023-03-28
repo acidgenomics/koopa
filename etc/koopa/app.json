@@ -645,6 +645,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/CLIUtils/CLI11/"],
     "version": "2.3.2"
@@ -1307,6 +1308,7 @@
     },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-08",
+    "enabled": false,
     "large": true,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
     "version": "9.1.0"
@@ -2351,6 +2353,7 @@
     "conservative": true,
     "date": "2022-12-09",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
+    "enabled": false,
     "large": true,
     "url": ["https://www.libarchive.org/"],
     "version": "3.6.2"
@@ -2558,6 +2561,7 @@
     "conservative": true,
     "date": "2022-01-03",
     "dependencies": ["zlib"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/openSUSE/libsolv/"],
     "version": "0.7.23"
@@ -2866,6 +2870,7 @@
       "tl-expected",
       "yaml-cpp"
     ],
+    "enabled": false,
     "large": true,
     "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
     "outdated": true,
@@ -3189,6 +3194,7 @@
   "nlohmann-json": {
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-05",
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/nlohmann/json/"],
     "version": "3.11.2"
@@ -3618,6 +3624,7 @@
     "build_dependencies": ["cmake", "python3.11"],
     "conservative": true,
     "date": "2023-03-17",
+    "enabled": false,
     "large": true,
     "url": ["https://pybind11.readthedocs.io/"],
     "version": "2.10.4"
@@ -3966,6 +3973,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2022-11-03",
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
     "version": "14.2.4"
@@ -4273,6 +4281,7 @@
     "conservative": true,
     "date": "2022-11-04",
     "dependencies": ["fmt"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.11.0"
@@ -4454,6 +4463,7 @@
   },
   "termcolor": {
     "date": "2022-11-05",
+    "enabled": false,
     "large": true,
     "url": [
       "https://termcolor.readthedocs.io/",
@@ -4491,6 +4501,7 @@
     "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2023-03-15",
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/TartanLlama/expected/"],
     "version": "1.1.0"
@@ -4948,6 +4959,7 @@
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.7.0"
