@@ -33,6 +33,7 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    CFLAGS="${CFLAGS:-}"
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
@@ -102,25 +103,39 @@ koopa_activate_app() {
             dict2['ldlibs']="$( \
                 "${app['pkg_config']}" --libs-only-l "${pc_files[@]}" \
             )"
-            [[ -n "${dict2['cflags']}" ]] && \
+            if [[ -n "${dict2['cflags']}" ]]
+            then
+                CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
                 CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
-            [[ -n "${dict2['ldflags']}" ]] && \
+            fi
+            if [[ -n "${dict2['ldflags']}" ]]
+            then
                 LDFLAGS="${LDFLAGS:-} ${dict2['ldflags']}"
-            [[ -n "${dict2['ldlibs']}" ]] && \
+            fi
+            if [[ -n "${dict2['ldlibs']}" ]]
+            then
                 LDLIBS="${LDLIBS:-} ${dict2['ldlibs']}"
+            fi
         else
-            [[ -d "${dict2['prefix']}/include" ]] && \
+            if [[ -d "${dict2['prefix']}/include" ]]
+            then
+                CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
                 CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
-            [[ -d "${dict2['prefix']}/lib" ]] && \
+            fi
+            if [[ -d "${dict2['prefix']}/lib" ]]
+            then
                 LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib"
-            [[ -d "${dict2['prefix']}/lib64" ]] && \
+            fi
+            if [[ -d "${dict2['prefix']}/lib64" ]]
+            then
                 LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib64"
+            fi
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
     done
-    export CPPFLAGS LDFLAGS LDLIBS
+    export CFLAGS CPPFLAGS LDFLAGS LDLIBS
     return 0
 }
 
@@ -4770,6 +4785,7 @@ koopa_cp() {
         ['sudo']=0
         ['symlink']=0
         ['target_dir']=''
+        ['verbose']=0
     )
     pos=()
     while (("$#"))
@@ -4784,6 +4800,11 @@ koopa_cp() {
                 dict['target_dir']="${2:?}"
                 shift 2
                 ;;
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
@@ -4793,6 +4814,11 @@ koopa_cp() {
             '--symlink' | \
             '-s')
                 dict['symlink']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             '-'*)
@@ -4818,8 +4844,9 @@ koopa_cp() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    cp_args=('-afv')
+    cp_args=('-a' '-f')
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
+    [[ "${dict['verbose']}" -eq 1 ]] && cp_args+=('-v')
     cp_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -6287,23 +6314,43 @@ koopa_extract_version() {
 }
 
 koopa_extract() {
-    local app cmd_args dict file
-    koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict
-    dict['orig_path']="${PATH:-}"
-    for file in "$@"
-    do
-        koopa_assert_is_file "$file"
-        file="$(koopa_realpath "$file")"
-        koopa_alert "Extracting '${file}'."
-        case "$file" in
+    local app cmd_args dict
+    koopa_assert_has_args_le "$#" 2
+    declare -A app dict
+    dict['file']="${1:?}"
+    dict['target']="${2:-}"
+    dict['wd']="${PWD:?}"
+    [[ -z "${dict['target']}" ]] && dict['target']="${dict['wd']}"
+    if [[ "${dict['target']}" != "${dict['wd']}"  ]]
+    then
+        dict['move_into_target']=1
+    else
+        dict['move_into_target']=0
+    fi
+    koopa_assert_is_file "${dict['file']}"
+    dict['file']="$(koopa_realpath "${dict['file']}")"
+    koopa_alert "Extracting '${dict['file']}'."
+    if [[ "${dict['move_into_target']}" -eq 1 ]]
+    then
+        dict['tmpdir']="$( \
+            koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
+.koopa-extract-$(koopa_random_string)" \
+        )"
+        dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
+        koopa_ln "${dict['file']}" "${dict['tmpfile']}"
+        dict['file']="${dict['tmpfile']}"
+    else
+        dict['tmpdir']="${dict['wd']}"
+    fi
+    (
+        koopa_cd "${dict['tmpdir']}"
+        case "${dict['file']}" in
             *'.tar' | \
             *'.tar.'* | \
             *'.tgz')
                 local tar_cmd_args
                 tar_cmd_args=(
-                    '-f' "$file" # '--file'.
+                    '-f' "${dict['file']}" # '--file'.
                     '-x' # '--extract'.
                 )
                 app['tar']="$(koopa_locate_tar --allow-system)"
@@ -6317,7 +6364,7 @@ koopa_extract() {
                 fi
                 ;;
         esac
-        case "$file" in
+        case "${dict['file']}" in
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.lz' | \
@@ -6326,7 +6373,7 @@ koopa_extract() {
             *'.tgz')
                 app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
-                case "$file" in
+                case "${dict['file']}" in
                     *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
@@ -6359,13 +6406,13 @@ koopa_extract() {
                 ;;
             *'.bz2')
                 app['cmd']="$(koopa_locate_bunzip2 --allow-system)"
-                cmd_args=("$file")
+                cmd_args=("${dict['file']}")
                 ;;
             *'.gz')
                 app['cmd']="$(koopa_locate_gzip --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
-                    "$file"
+                    "${dict['file']}"
                 )
                 ;;
             *'.tar')
@@ -6376,35 +6423,62 @@ koopa_extract() {
                 app['cmd']="$(koopa_locate_xz --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
-                    "$file"
+                    "${dict['file']}"
                     )
                 ;;
             *'.zip')
                 app['cmd']="$(koopa_locate_unzip --allow-system)"
                 cmd_args=(
                     '-qq'
-                    "$file"
+                    "${dict['file']}"
                 )
                 ;;
             *'.Z')
                 app['cmd']="$(koopa_locate_uncompress --allow-system)"
-                cmd_args=("$file")
+                cmd_args=("${dict['file']}")
                 ;;
             *'.7z')
                 app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
                     '-x'
-                    "$file"
+                    "${dict['file']}"
                 )
                 ;;
             *)
-                koopa_stop "Unsupported extension: '${file}'."
+                koopa_stop 'Unsupported file type.'
                 ;;
         esac
         [[ -x "${app['cmd']}" ]] || return 1
         "${app['cmd']}" "${cmd_args[@]}" 2>/dev/null
-    done
-    export PATH="${dict['orig_path']}"
+    )
+    if [[ "${dict['move_into_target']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['tmpfile']}"
+        app['wc']="$(koopa_locate_wc --allow-system)"
+        [[ -x "${app['wc']}" ]] || return 1
+        dict['count']="$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --prefix="${dict['tmpdir']}" \
+            | "${app['wc']}" -l \
+        )"
+        [[ "${dict['count']}" -gt 0 ]] || return 1
+        (
+            shopt -s dotglob
+            if [[ "${dict['count']}" -eq 1 ]]
+            then
+                koopa_mv \
+                    --target-directory="${dict['target']}" \
+                    "${dict['tmpdir']}"/*/*
+            else
+                koopa_mv \
+                    --target-directory="${dict['target']}" \
+                    "${dict['tmpdir']}"/*
+            fi
+        )
+        koopa_rm "${dict['tmpdir']}"
+    fi
     return 0
 }
 
@@ -6740,13 +6814,10 @@ koopa_fastq_number_of_reads() {
 koopa_file_count() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['wc']="$(koopa_locate_wc)"
-    )
+    declare -A app dict
+    app['wc']="$(koopa_locate_wc --allow-system)"
     [[ -x "${app['wc']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="${1:?}"
-    )
+    dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['out']="$( \
@@ -15156,9 +15227,9 @@ koopa_ln() {
     )
     [[ -x "${app['ln']}" ]] || return 1
     declare -A dict=(
-        ['quiet']=0
         ['sudo']=0
         ['target_dir']=''
+        ['verbose']=0
     )
     pos=()
     while (("$#"))
@@ -15173,13 +15244,19 @@ koopa_ln() {
                 dict['target_dir']="${2:?}"
                 shift 2
                 ;;
-            '--quiet')
-                dict['quiet']=1
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             '-'*)
@@ -15205,8 +15282,8 @@ koopa_ln() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    ln_args=('-fns')
-    [[ "${dict['quiet']}" -eq 0 ]] && ln_args+=('-v')
+    ln_args=('-f' '-n' '-s')
+    [[ "${dict['verbose']}" -eq 1 ]] && ln_args+=('-v')
     ln_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -16975,15 +17052,27 @@ koopa_mkdir() {
     declare -A app
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
     [[ -x "${app['mkdir']}" ]] || return 1
-    declare -A dict
-    dict['sudo']=0
+    declare -A dict=(
+        ['sudo']=0
+        ['verbose']=0
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             '-'*)
@@ -16998,6 +17087,7 @@ koopa_mkdir() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     mkdir_args=('-p')
+    [[ "${dict['verbose']}" -eq 1 ]] && mkdir_args+=('-v')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
@@ -17194,6 +17284,7 @@ koopa_mv() {
     declare -A dict=(
         ['sudo']=0
         ['target_dir']=''
+        ['verbose']=0
     )
     pos=()
     while (("$#"))
@@ -17208,9 +17299,19 @@ koopa_mv() {
                 dict['target_dir']="${2:?}"
                 shift 2
                 ;;
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             '-'*)
@@ -17235,7 +17336,8 @@ koopa_mv() {
         mv=("${app['mv']}")
         rm=("${app['rm']}")
     fi
-    mv_args=('-fv')
+    mv_args=('-f')
+    [[ "${dict['verbose']}" -eq 1 ]] && mv_args+=('-v')
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
@@ -19689,15 +19791,27 @@ koopa_rm() {
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
     [[ -x "${app['rm']}" ]] || return 1
-    declare -A dict
-    dict['sudo']=0
+    declare -A dict=(
+        ['sudo']=0
+        ['verbose']=0
+    )
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             '-'*)
@@ -19711,7 +19825,8 @@ koopa_rm() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    rm_args=('-fr')
+    rm_args=('-f' '-r')
+    [[ "${dict['verbose']}" -eq 1 ]] && rm_args+=('-v')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
