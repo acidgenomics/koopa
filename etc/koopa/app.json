@@ -1485,8 +1485,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-09-26",
+    "dependencies": ["readline"],
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.23"
   },
@@ -1509,8 +1511,10 @@
       "fedora": true,
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-11-08",
+    "dependencies": ["bison", "libiconv", "libunistring", "libxml2", "ncurses"],
     "url": ["https://www.gnu.org/software/gettext/"],
     "version": "0.21.1"
   },
@@ -1588,7 +1592,7 @@
       "homebrew": true
     },
     "bin": ["git-lfs"],
-    "build_dependencies": ["go"],
+    "build_dependencies": ["go", "make"],
     "date": "2023-01-03",
     "url": ["https://git-lfs.github.com/"],
     "version": "3.3.0"
@@ -1621,7 +1625,7 @@
     ],
     "conservative": true,
     "date": "2023-03-07",
-    "dependencies": ["zlib", "gettext", "libffi", "pcre2"],
+    "dependencies": ["gettext", "libffi", "pcre2", "zlib"],
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
@@ -1651,18 +1655,18 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": [
-      "zlib",
       "bzip2",
-      "readline",
-      "nettle",
-      "libtasn1",
       "gnutls",
-      "sqlite",
-      "libgpg-error",
-      "libgcrypt",
       "libassuan",
+      "libgcrypt",
+      "libgpg-error",
       "libksba",
-      "npth"
+      "libtasn1",
+      "nettle",
+      "npth",
+      "readline",
+      "sqlite",
+      "zlib"
     ],
     "url": ["https://gnupg.org/download/"],
     "version": "2.4.0"
@@ -1716,6 +1720,7 @@
       "debian": true,
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/gperf/"],
@@ -1740,7 +1745,9 @@
       "homebrew": true
     },
     "bin": ["gegrep", "gfgrep", "ggrep"],
+    "build_dependencies": ["make"],
     "date": "2023-03-07",
+    "dependencies": ["pcre2"],
     "man1": ["ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
     "version": "3.9"

@@ -19,13 +19,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only \
-        'autoconf' \
-        'less' \
-        'make' \
-        'perl' \
-        'python3.11' \
-        'vim'
+    koopa_activate_app --build-only 'autoconf' 'make'
     koopa_activate_app \
         'expat' \
         'zlib' \
