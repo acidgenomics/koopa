@@ -2441,6 +2441,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-09-26",
     "url": [
@@ -2489,8 +2490,18 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["libtool", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": [
+      "curl",
+      "libjpeg-turbo",
+      "libtiff",
+      "proj",
+      "sqlite",
+      "zlib",
+      "zstd"
+    ],
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
   },
@@ -2503,7 +2514,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
     "date": "2023-03-21",
-    "dependencies": ["zlib", "pcre", "openssl3", "libssh2"],
+    "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.6.3"
   },
@@ -2521,6 +2532,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-09-08",
     "url": ["https://www.gnu.org/software/libiconv/"],
@@ -2563,24 +2575,14 @@
     "url": ["https://gnupg.org/download/"],
     "version": "1.6.3"
   },
-  "liblinear": {
-    "aliases": {
-      "homebrew": true
-    },
-    "conservative": true,
-    "date": "2023-03-07",
-    "enabled": false,
-    "url": "https://www.csie.ntu.edu.tw/~cjlin/liblinear/",
-    "version": "2.46"
-  },
   "libluv": {
     "aliases": {
       "homebrew": "luv"
     },
-    "build_dependencies": ["cmake", "lua", "luajit"],
+    "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2022-09-09",
-    "dependencies": ["libuv"],
+    "dependencies": ["libuv", "luajit"],
     "enabled": false,
     "url": ["https://github.com/luvit/luv/"],
     "version": "1.44.2-1"
@@ -2649,8 +2651,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["libtool", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-09",
+    "dependencies": ["ncurses", "unibilium"],
     "enabled": false,
     "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
     "version": "0.22"
@@ -2678,7 +2682,9 @@
       "homebrew": true
     },
     "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
+    "build_dependencies": ["make"],
     "date": "2022-08-29",
+    "dependencies": ["m4"],
     "man1": ["glibtool.1", "glibtoolize.1"],
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
     "version": "2.4.7"
@@ -2687,6 +2693,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-11-08",
     "url": ["https://www.gnu.org/software/libunistring/"],
