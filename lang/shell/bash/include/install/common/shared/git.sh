@@ -35,12 +35,12 @@ main() {
         'pcre2' \
         'libiconv'
     declare -A app=(
-        ['bash']="$(koopa_locate_bash --realpath)"
-        ['less']="$(koopa_locate_less --realpath)"
+        ['bash']="$(koopa_locate_bash)"
+        ['less']="$(koopa_locate_less)"
         ['make']="$(koopa_locate_make)"
-        ['perl']="$(koopa_locate_perl --realpath)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-        ['vim']="$(koopa_locate_vim --realpath)"
+        ['perl']="$(koopa_locate_perl)"
+        ['python']="$(koopa_locate_python311)"
+        ['vim']="$(koopa_locate_vim)"
     )
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['less']}" ]] || return 1
