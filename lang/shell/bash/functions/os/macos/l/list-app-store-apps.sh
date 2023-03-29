@@ -4,6 +4,9 @@ koopa_macos_list_app_store_apps() {
     # """
     # List applications installed via the Mac App Store.
     # @note Updated 2023-03-29.
+    # 
+    # @seealso
+    # - https://osxdaily.com/2013/09/28/list-mac-app-store-apps-terminal/
     # """
     local app string
     declare -A app
