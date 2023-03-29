@@ -682,6 +682,31 @@ koopa_macos_is_xcode_clt_installed() {
     [[ -d '/Library/Developer/CommandLineTools/usr/bin' ]]
 }
 
+koopa_macos_list_app_store_apps() {
+    local app string
+    declare -A app
+    app['find']="$(koopa_locate_find --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    app['sort']="$(koopa_locate_sort --allow-system)"
+    [[ -x "${app['find']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sort']}" ]] || return 1
+    string="$( \
+        "${app['find']}" \
+            '/Applications' \
+            -maxdepth 4 \
+            -path '*Contents/_MASReceipt/receipt' \
+            -print \
+        | "${app['sed']}" \
+            -e 's#.app/Contents/_MASReceipt/receipt#.app#g' \
+            -e 's#/Applications/##' \
+        | "${app['sort']}" \
+    )"
+    [[ -n "$string" ]] || return 1
+    koopa_print "$string"
+    return 0
+}
+
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"
