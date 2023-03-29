@@ -10,6 +10,7 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_app --build-only 'make'
     koopa_activate_app 'zlib' 'pcre2'
     declare -A app
     app['make']="$(koopa_locate_make)"
