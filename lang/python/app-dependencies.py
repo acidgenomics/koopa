@@ -73,6 +73,8 @@ def get_deps(app_name: str, json_data: dict) -> list:
     return all_deps
 
 
+# FIXME This should return true if KOOPA_BUILDER environment variable is defined.
+
 def large() -> bool:
     """
     Is the current machine a large instance?
