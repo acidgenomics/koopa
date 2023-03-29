@@ -11024,6 +11024,7 @@ koopa_install_app() {
     [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
     if [[ "${bool['deps']}" -eq 1 ]]
     then
+        koopa_stop 'HELLO THERE'
         local dep deps
         readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
         koopa_print "${deps[*]}"
@@ -11039,6 +11040,7 @@ koopa_install_app() {
             koopa_install_app "$dep"
         fi
     fi
+    koopa_stop 'NOOOO'
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
         koopa_app_json_version "${dict['version_key']}" 2>/dev/null || true \
