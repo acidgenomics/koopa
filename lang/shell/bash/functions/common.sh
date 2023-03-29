@@ -11193,8 +11193,10 @@ ${dict['version2']}"
                     --regex \
                     --pattern='/usr/local[^\:]+:' \
                     --replacement='' \
+                    "$PKG_CONFIG_PATH"
             )"
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}")
+            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
