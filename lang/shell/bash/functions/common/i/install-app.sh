@@ -197,11 +197,11 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
-    koopa_stop "FIXME ${dict['mode']} ${bool['deps']}"
     if [[ "${bool['deps']}" -eq 1 ]]
     then
         local dep deps
         readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
+        koopa_print "${deps[*]}"
         if koopa_is_array_non_empty "${deps[@]:-}"
         then
             for dep in "${deps[@]}"
