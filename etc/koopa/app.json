@@ -3562,6 +3562,21 @@
     "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-08-29",
+    "dependencies": [
+      "bash",
+      "bzip2",
+      "gnupg",
+      "gzip",
+      "less",
+      "make",
+      "patch",
+      "tar",
+      "unzip",
+      "wget"
+    ],
+    "notes": [
+      "Extra dependencies defined here for our Perl package installer."
+    ],
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
   },
