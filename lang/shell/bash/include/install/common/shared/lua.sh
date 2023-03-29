@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # NOTE Need to improve build to include dylib.
+# See Homebrew recipe for details.
 
 main() {
     # """
     # Install Lua.
-    # @note Updated 2022-09-09.
+    # @note Updated 2023-03-29.
     #
     # @seealso
     # - http://www.lua.org/manual/
@@ -13,10 +14,9 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app 'pkg-config'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'make' 'pkg-config'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='lua'

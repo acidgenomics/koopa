@@ -5,20 +5,17 @@
 main() {
     # """
     # Install flex.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-03-28.
     #
     # @seealso
     # - https://github.com/westes/flex/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/flex.rb
     # """
     local app conf_args dict
-    koopa_activate_app --build-only 'bison'
-    koopa_activate_app \
-        'gettext' \
-        'm4'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'bison' 'make'
+    koopa_activate_app 'gettext' 'm4'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"

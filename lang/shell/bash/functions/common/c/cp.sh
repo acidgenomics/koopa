@@ -3,7 +3,7 @@
 koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2022-09-02.
+    # @note Updated 2023-03-28.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     #
@@ -28,6 +28,7 @@ koopa_cp() {
         ['sudo']=0
         ['symlink']=0
         ['target_dir']=''
+        ['verbose']=0
     )
     pos=()
     while (("$#"))
@@ -44,6 +45,11 @@ koopa_cp() {
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--quiet' | \
+            '-q')
+                dict['verbose']=0
+                shift 1
+                ;;
             '--sudo' | \
             '-S')
                 dict['sudo']=1
@@ -53,6 +59,11 @@ koopa_cp() {
             '--symlink' | \
             '-s')
                 dict['symlink']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                dict['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -79,8 +90,9 @@ koopa_cp() {
         mkdir=("${app['mkdir']}")
         rm=("${app['rm']}")
     fi
-    cp_args=('-afv')
+    cp_args=('-a' '-f')
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
+    [[ "${dict['verbose']}" -eq 1 ]] && cp_args+=('-v')
     cp_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
