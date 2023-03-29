@@ -631,7 +631,9 @@ koopa_app_prefix() {
         declare -A dict2
         dict2['app_name']="$app_name"
         dict2['version']="$( \
-            koopa_app_json_version "${dict2['app_name']}" || true \
+            koopa_app_json_version "${dict2['app_name']}" \
+            2>/dev/null \
+            || true \
         )"
         if [[ -z "${dict2['version']}" ]]
         then
@@ -643,14 +645,13 @@ koopa_app_prefix() {
         fi
         dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
 ${dict2['version']}"
-        if [[ "${dict['allow_missing']}" -eq 0 ]]
+        if [[ "${dict['allow_missing']}" -eq 0 ]] && \
+            [[ ! -d "${dict2['prefix']}" ]]
         then
-            koopa_assert_is_dir "${dict2['prefix']}"
+            continue
         fi
-        if [[ -d "${dict2['prefix']}" ]]
-        then
-            dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
-        fi
+        koopa_assert_is_dir "${dict2['prefix']}"
+        dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
         koopa_print "${dict2['prefix']}"
     done
     return 0
@@ -10218,7 +10219,6 @@ koopa_install_all_apps() {
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
         "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
