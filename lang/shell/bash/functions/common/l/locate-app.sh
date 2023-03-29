@@ -139,15 +139,15 @@ bin/${dict['bin_name']}"
     then
         [[ -z "${dict['system_bin_name']}" ]] && \
             dict['system_bin_name']="${dict['bin_name']}"
-        if [[ -x "/usr/bin/${dict['system_bin_name']}" ]]
+        if [[ -x "/usr/local/bin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/usr/local/bin/${dict['system_bin_name']}"
+        elif [[ -x "/usr/bin/${dict['system_bin_name']}" ]]
         then
             dict['app']="/usr/bin/${dict['system_bin_name']}"
         elif [[ -x "/bin/${dict['system_bin_name']}" ]]
         then
             dict['app']="/bin/${dict['system_bin_name']}"
-        elif [[ -x "/usr/local/bin/${dict['system_bin_name']}" ]]
-        then
-            dict['app']="/usr/local/bin/${dict['system_bin_name']}"
         fi
     fi
     if [[ -x "${dict['app']}" ]]
