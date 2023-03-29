@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for '--allow-missing'
+# This will be useful for our dependency solver function.
+
 koopa_app_prefix() {
     # """
     # Application prefix.
