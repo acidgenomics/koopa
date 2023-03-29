@@ -226,9 +226,10 @@ ${dict['version2']}"
             koopa_is_linux && bool['update_ldconfig']=1
             app['sudo']="$(koopa_locate_sudo)"
             [[ -x "${app['sudo']}" ]] || return 1
-            # Useful sudo arguments:
+            # Relevant sudo arguments:
             # -n, --non-interactive
             # -v, --validate
+            # Don't use '--non-interactive' here.
             "${app['sudo']}" -v
             ;;
         'user')
