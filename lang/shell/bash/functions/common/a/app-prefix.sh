@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for '--allow-missing'
-# This will be useful for our dependency solver function.
-
 koopa_app_prefix() {
     # """
     # Application prefix.
-    # @note Updated 2023-01-03.
+    # @note Updated 2023-03-29.
     #
     # @examples
     # > koopa_app_prefix
@@ -51,7 +48,9 @@ koopa_app_prefix() {
         declare -A dict2
         dict2['app_name']="$app_name"
         dict2['version']="$( \
-            koopa_app_json_version "${dict2['app_name']}" || true \
+            koopa_app_json_version "${dict2['app_name']}" \
+            2>/dev/null \
+            || true \
         )"
         if [[ -z "${dict2['version']}" ]]
         then
@@ -64,14 +63,13 @@ koopa_app_prefix() {
         fi
         dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
 ${dict2['version']}"
-        if [[ "${dict['allow_missing']}" -eq 0 ]]
+        if [[ "${dict['allow_missing']}" -eq 0 ]] && \
+            [[ ! -d "${dict2['prefix']}" ]]
         then
-            koopa_assert_is_dir "${dict2['prefix']}"
+            continue
         fi
-        if [[ -d "${dict2['prefix']}" ]]
-        then
-            dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
-        fi
+        koopa_assert_is_dir "${dict2['prefix']}"
+        dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
         koopa_print "${dict2['prefix']}"
     done
     return 0
