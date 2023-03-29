@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-03-29.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -47,8 +47,19 @@ koopa_cli_app() {
                 'ec2')
                     case "${3:-}" in
                         'instance-id' | \
-                        'suspend' | \
-                        'terminate')
+                        'suspend')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                'ecr')
+                    case "${3:-}" in
+                        'login-public' | \
+                        'login-private')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;

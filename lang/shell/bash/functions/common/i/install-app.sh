@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Add a '--without-solver' option here (draft).
-# FIXME If '--push' is set, ensure that the user can push to AWS before
-# attempting to build the app.
-# FIXME Need to harden against '/usr/local' in PKG_CONFIG on Linux here.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-29.
     # """
     local app bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
@@ -24,6 +19,8 @@ koopa_install_app() {
         ['binary']=0
         # Should we copy the log files into the install prefix?
         ['copy_log_files']=0
+        # Automatically install required dependencies (shared apps only).
+        ['deps']=1
         # Will any individual programs be linked into koopa 'bin/'?
         ['link_in_bin']=''
         # Link corresponding man1 documentation files for app in bin.
@@ -34,7 +31,7 @@ koopa_install_app() {
         ['prefix_check']=1
         # Whether current user has access to our private AWS S3 bucket.
         ['private']=0
-        # Push completed build to AWS S3 bucket.
+        # Push completed build to AWS S3 bucket (shared apps only).
         ['push']=0
         # This is useful for avoiding duplicate alert messages inside of
         # nested install calls (e.g. Emacs installer handoff to GNU app).
@@ -122,6 +119,16 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
+            '--deps' | \
+            '--dependencies')
+                bool['deps']=1
+                shift 1
+                ;;
+            '--no-deps' | \
+            '--no-dependencies')
+                bool['deps']=0
+                shift 1
+                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -189,6 +196,28 @@ koopa_install_app() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
+    if [[ "${bool['deps']}" -eq 1 ]]
+    then
+        local dep deps
+        readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
+        if koopa_is_array_non_empty "${deps[@]:-}"
+        then
+            for dep in "${deps[@]}"
+            do
+                if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
+                then
+                    continue
+                fi
+                if [[ "${bool['binary']}" -eq 1 ]]
+                then
+                    koopa_cli_install --binary "$dep"
+                else
+                    koopa_cli_install "$dep"
+                fi
+            done
+        fi
+    fi
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
         koopa_app_json_version "${dict['version_key']}" 2>/dev/null || true \
@@ -226,10 +255,7 @@ ${dict['version2']}"
             koopa_is_linux && bool['update_ldconfig']=1
             app['sudo']="$(koopa_locate_sudo)"
             [[ -x "${app['sudo']}" ]] || return 1
-            # Relevant sudo arguments:
-            # -n, --non-interactive
             # -v, --validate
-            # Don't use '--non-interactive' here.
             "${app['sudo']}" -v
             ;;
         'user')
@@ -339,13 +365,23 @@ ${dict['version2']}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            # Configure 'PKG_CONFIG_PATH' string.
             PKG_CONFIG_PATH=''
-            if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
+            app['pkg_config']="$( \
+                koopa_locate_pkg_config --allow-missing --only-system \
+            )"
+            if [[ -x "${app['pkg_config']}" ]]
             then
-                koopa_activate_pkg_config '/usr/bin/pkg-config'
+                koopa_activate_pkg_config "${app['pkg_config']}"
             fi
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}")
+            PKG_CONFIG_PATH="$( \
+                koopa_gsub \
+                    --regex \
+                    --pattern='/usr/local[^\:]+:' \
+                    --replacement='' \
+                    "$PKG_CONFIG_PATH"
+            )"
+            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
