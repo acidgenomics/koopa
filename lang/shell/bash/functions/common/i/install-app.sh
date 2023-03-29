@@ -197,6 +197,7 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
+    koopa_stop "FIXME ${dict['mode']} ${bool['deps']}"
     if [[ "${bool['deps']}" -eq 1 ]]
     then
         local dep deps
