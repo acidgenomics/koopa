@@ -8,11 +8,8 @@ koopa_install_all_apps() {
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
     # """
-    local app app_name app_names dict push_apps
+    local app_name app_names dict push_apps
     koopa_assert_has_no_args "$#"
-    declare -A app
-    app['koopa']="$(koopa_locate_koopa)"
-    [[ -x "${app['koopa']}" ]] || return 1
     declare -A dict=(
         ['mem_gb']="$(koopa_mem_gb)"
         ['mem_gb_cutoff']=6
@@ -24,10 +21,11 @@ koopa_install_all_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     for app_name in "${app_names[@]}"
     do
-        local prefix
-        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        "${app['koopa']}" install "$app_name"
+        if [[ -d "$(koopa_app_prefix --allow-missing "$app_name")" ]]
+        then
+            continue
+        fi
+        koopa_cli_install "$app_name"
         push_apps+=("$app_name")
     done
     if koopa_can_install_binary && \
