@@ -623,6 +623,7 @@ _koopa_complete() {
                                 'batch'
                                 'codecommit'
                                 'ec2'
+                                'ecr'
                                 's3'
                             )
                             ;;
@@ -751,6 +752,12 @@ _koopa_complete() {
                                         'instance-id'
                                         'suspend'
                                         # > 'terminate'
+                                    )
+                                    ;;
+                                'ecr')
+                                    args=(
+                                        'login-public'
+                                        'login-private'
                                     )
                                     ;;
                                 's3')

@@ -631,7 +631,9 @@ koopa_app_prefix() {
         declare -A dict2
         dict2['app_name']="$app_name"
         dict2['version']="$( \
-            koopa_app_json_version "${dict2['app_name']}" || true \
+            koopa_app_json_version "${dict2['app_name']}" \
+            2>/dev/null \
+            || true \
         )"
         if [[ -z "${dict2['version']}" ]]
         then
@@ -643,14 +645,13 @@ koopa_app_prefix() {
         fi
         dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
 ${dict2['version']}"
-        if [[ "${dict['allow_missing']}" -eq 0 ]]
+        if [[ ! -d "${dict2['prefix']}" ]] && \
+            [[ "${dict['allow_missing']}" -eq 1 ]]
         then
-            koopa_assert_is_dir "${dict2['prefix']}"
+            continue
         fi
-        if [[ -d "${dict2['prefix']}" ]]
-        then
-            dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
-        fi
+        koopa_assert_is_dir "${dict2['prefix']}"
+        dict2['prefix']="$(koopa_realpath "${dict2['prefix']}")"
         koopa_print "${dict2['prefix']}"
     done
     return 0
@@ -3240,7 +3241,16 @@ koopa_check_shared_object() {
 }
 
 koopa_check_system() {
+    local app
+    declare -A app
     koopa_assert_has_no_args "$#"
+    app['r']="$(koopa_locate_r --allow-missing)"
+    if [[ ! -x "${app['r']}" ]]
+    then
+        koopa_stop \
+            'koopa R is not installed.' \
+            "Resolve with 'koopa install r'."
+    fi
     koopa_check_exports || return 1
     koopa_check_disk '/' || return 1
     if ! koopa_is_r_package_installed 'koopa'
@@ -3448,8 +3458,19 @@ koopa_cli_app() {
                 'ec2')
                     case "${3:-}" in
                         'instance-id' | \
-                        'suspend' | \
-                        'terminate')
+                        'suspend')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                'ecr')
+                    case "${3:-}" in
+                        'login-public' | \
+                        'login-private')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
@@ -3845,19 +3866,44 @@ Check autocompletion of supported arguments with <TAB>."
 }
 
 koopa_cli_reinstall() {
-    case "${1:-}" in
-        '--all-revdeps')
-            shift 1
+    local dict pos
+    koopa_assert_has_args "$#"
+    declare -A dict
+    dict['mode']='default'
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--all')
+                koopa_invalid_arg "$1"
+                ;;
+            '--all-revdeps')
+                dict['mode']='all-revdeps'
+                shift 1
+                ;;
+            '--only-revdeps')
+                dict['mode']='only-revdeps'
+                shift 1
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    case "${dict['mode']}" in
+        'all-revdeps')
             koopa_reinstall_all_revdeps "$@"
-            return 0
             ;;
-        '--only-revdeps')
-            shift 1
-            koopa_reinstall_all_revdeps "$@"
-            return 0
+        'default')
+            koopa_cli_install --reinstall "$@"
+            ;;
+        'only-revdeps')
+            koopa_reinstall_only_revdeps "$@"
             ;;
     esac
-    koopa_cli_install --reinstall "$@"
+    return 0
 }
 
 koopa_cli_system() {
@@ -10218,7 +10264,6 @@ koopa_install_all_apps() {
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        koopa_alert "$prefix"
         [[ -d "$prefix" ]] && continue
         "${app['koopa']}" install "$app_name"
         push_apps+=("$app_name")
@@ -10814,6 +10859,7 @@ koopa_install_app() {
         ['auto_prefix']=0
         ['binary']=0
         ['copy_log_files']=0
+        ['deps']=1
         ['link_in_bin']=''
         ['link_in_man1']=''
         ['link_in_opt']=''
@@ -10902,6 +10948,16 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
+            '--deps' | \
+            '--dependencies')
+                bool['deps']=1
+                shift 1
+                ;;
+            '--no-deps' | \
+            '--no-dependencies')
+                bool['deps']=0
+                shift 1
+                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -10965,6 +11021,28 @@ koopa_install_app() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
+    if [[ "${bool['deps']}" -eq 1 ]]
+    then
+        local dep deps
+        readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
+        if koopa_is_array_non_empty "${deps[@]:-}"
+        then
+            for dep in "${deps[@]}"
+            do
+                if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
+                then
+                    continue
+                fi
+                if [[ "${bool['binary']}" -eq 1 ]]
+                then
+                    koopa_cli_install --binary "$dep"
+                else
+                    koopa_cli_install "$dep"
+                fi
+            done
+        fi
+    fi
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
         koopa_app_json_version "${dict['version_key']}" 2>/dev/null || true \
@@ -11108,11 +11186,22 @@ ${dict['version2']}"
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             PKG_CONFIG_PATH=''
-            if koopa_is_linux && [[ -x '/usr/bin/pkg-config' ]]
+            app['pkg_config']="$( \
+                koopa_locate_pkg_config --allow-missing --only-system \
+            )"
+            if [[ -x "${app['pkg_config']}" ]]
             then
-                koopa_activate_pkg_config '/usr/bin/pkg-config'
+                koopa_activate_pkg_config "${app['pkg_config']}"
             fi
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}")
+            PKG_CONFIG_PATH="$( \
+                koopa_gsub \
+                    --regex \
+                    --pattern='/usr/local[^\:]+:' \
+                    --replacement='' \
+                    "$PKG_CONFIG_PATH"
+            )"
+            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
@@ -19503,11 +19592,6 @@ koopa_reinstall_all_revdeps() {
         koopa_cli_reinstall "${install_args[@]}"
     done
     return 0
-}
-
-koopa_reinstall_app() {
-    koopa_assert_has_args "$#"
-    koopa_koopa install "$@" --reinstall
 }
 
 koopa_reinstall_only_revdeps() {

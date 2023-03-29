@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-03-27.
+@note Updated 2023-03-29.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -12,7 +12,6 @@ from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
 from platform import machine, system
-from shutil import disk_usage
 
 
 def arch() -> str:
@@ -73,16 +72,6 @@ def get_deps(app_name: str, json_data: dict) -> list:
     return all_deps
 
 
-def large() -> bool:
-    """
-    Is the current machine a large instance?
-    @note Updated 2023-03-27.
-    """
-    usage = disk_usage(path="/")
-    lgl = usage.total >= 400000000000
-    return lgl
-
-
 def platform() -> str:
     """
     Platform string.
@@ -95,15 +84,44 @@ def platform() -> str:
     return string
 
 
-def main(app_name: str, json_file: str) -> bool:
+def print_apps(app_names: list, json_data: dict) -> bool:
     """
-    Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-27.
+    Print relevant apps.
+    @note Updated 2023-03-29.
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
-    sys_dict["large"] = large()
     sys_dict["platform"] = platform()
+    for val in app_names:
+        json = json_data[val]
+        keys = json.keys()
+        if "arch" in keys:
+            if json["arch"] != sys_dict["arch"]:
+                continue
+        if "enabled" in keys:
+            if not json["enabled"]:
+                continue
+        if "platform" in keys:
+            if json["platform"] != sys_dict["platform"]:
+                continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
+        print(val)
+    return True
+
+
+def main(app_name: str, json_file: str) -> bool:
+    """
+    Parse the koopa 'app.json' file for defined values.
+    @note Updated 2023-03-29.
+    """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
     keys = json_data.keys()
@@ -134,31 +152,7 @@ def main(app_name: str, json_file: str) -> bool:
     lst.reverse()
     lst = flatten(lst)
     lst = list(dict.fromkeys(lst))
-    for val in lst:
-        json = json_data[val]
-        keys = json.keys()
-        if "arch" in keys:
-            if json["arch"] != sys_dict["arch"]:
-                continue
-        if "enabled" in keys:
-            if not json["enabled"]:
-                continue
-        if "large" in keys:
-            if json["large"] and not sys_dict["large"]:
-                continue
-        if "platform" in keys:
-            if json["platform"] != sys_dict["platform"]:
-                continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
-        print(val)
+    print_apps(app_names=lst, json_data=json_data)
     return True
 
 
