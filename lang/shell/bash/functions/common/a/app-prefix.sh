@@ -63,8 +63,8 @@ koopa_app_prefix() {
         fi
         dict2['prefix']="${dict['app_prefix']}/${dict2['app_name']}/\
 ${dict2['version']}"
-        if [[ "${dict['allow_missing']}" -eq 0 ]] && \
-            [[ ! -d "${dict2['prefix']}" ]]
+        if [[ ! -d "${dict2['prefix']}" ]] && \
+            [[ "${dict['allow_missing']}" -eq 1 ]]
         then
             continue
         fi
