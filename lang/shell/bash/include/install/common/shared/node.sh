@@ -28,10 +28,7 @@ main() {
     # """
     local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    build_deps=(
-        'pkg-config'
-        'ninja'
-    )
+    build_deps=('make' 'ninja' 'pkg-config')
     deps=(
         'ca-certificates'
         'zlib'

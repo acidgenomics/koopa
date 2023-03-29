@@ -9,7 +9,7 @@ main() {
     # Attempting to bundle pcre fails on macOS.
     #
     # May need to include libcap and liblinear here.
-    # 
+    #
     # @seealso
     # - https://nmap.org/
     # - https://svn.nmap.org/nmap/
@@ -21,7 +21,8 @@ main() {
     local app conf_args deps dict
     koopa_activate_app --build-only \
         'bison' \
-        'flex'
+        'flex' \
+        'make'
     deps=(
         'zlib'
         'openssl3'

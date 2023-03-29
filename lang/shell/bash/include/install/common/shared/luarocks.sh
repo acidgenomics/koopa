@@ -7,7 +7,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'unzip'
+    koopa_activate_app --build-only 'make' 'unzip'
     koopa_activate_app 'lua'
     declare -A app=(
         ['lua']="$(koopa_locate_lua)"

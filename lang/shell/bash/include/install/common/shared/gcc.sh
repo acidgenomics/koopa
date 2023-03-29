@@ -38,7 +38,7 @@ main() {
     # That will download the support libraries and create symlinks, causing
     # them to be built automatically as part of the GCC build process.
     # Set 'GRAPHITE_LOOP_OPT=no' in the script if you want to build GCC without
-    # ISL, which is only needed for the optional Graphite loop optimizations. 
+    # ISL, which is only needed for the optional Graphite loop optimizations.
     #
     # The difficult way, which is not recommended, is to download the sources
     # for GMP, MPFR and MPC, then configure and install each of them in
@@ -64,6 +64,7 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_app --build-only 'make'
     deps=(
         'gmp'
         'mpfr'

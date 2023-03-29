@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-28.
     #
     # Use 'configure --help' for build options.
     #
@@ -41,7 +41,6 @@ main() {
         'libtiff' \
         'proj' \
         'xz' \
-        'zstd' \
         'python3.11' \
         'openjdk'
     declare -A app=(

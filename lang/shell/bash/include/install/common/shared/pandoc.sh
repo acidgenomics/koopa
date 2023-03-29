@@ -38,15 +38,6 @@ main() {
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
-    case "${dict['version']}" in
-        '3.1.'* | '3.1' | \
-        '3.0.'* | '3.0')
-            dict['cli_version']='0.1'
-            ;;
-        *)
-            koopa_stop 'Unsupported version.'
-            ;;
-    esac
     koopa_assert_is_dir "${dict['zlib']}"
     # NOTE R pkgdown will fail unless we keep track of this in store:
     # cabal/store/ghc-*/pndc-*-*/share/data/abbreviations
@@ -80,6 +71,6 @@ END
         --jobs="${dict['jobs']}" \
         --verbose \
         "pandoc-${dict['version']}" \
-        "pandoc-cli-${dict['cli_version']}"
+        'pandoc-cli'
     return 0
 }

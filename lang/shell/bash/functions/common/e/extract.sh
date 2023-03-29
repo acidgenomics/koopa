@@ -3,13 +3,6 @@
 # FIXME Add support for lz (lzip).
 # FIXME Add support for zstd.
 
-# FIXME Need to support '--strip-components=1' type approach here.
-# Perhaps we should extract into temporary directory and then copy in this
-# case, but it can be slow across network file systems.
-
-# FIXME Consider adding support for standardizing archive extraction in our
-# install recipes and in our STAR alignment functions.
-
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -20,24 +13,45 @@ koopa_extract() {
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local app cmd_args dict file
-    koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict
-    # Ensure modifications to 'PATH' are temporary during this function call.
-    dict['orig_path']="${PATH:-}"
-    for file in "$@"
-    do
-        koopa_assert_is_file "$file"
-        file="$(koopa_realpath "$file")"
-        koopa_alert "Extracting '${file}'."
-        case "$file" in
+    local app cmd_args dict
+    koopa_assert_has_args_le "$#" 2
+    declare -A app dict
+    dict['file']="${1:?}"
+    dict['target']="${2:-}"
+    dict['wd']="${PWD:?}"
+    [[ -z "${dict['target']}" ]] && dict['target']="${dict['wd']}"
+    if [[ "${dict['target']}" != "${dict['wd']}"  ]]
+    then
+        dict['move_into_target']=1
+    else
+        dict['move_into_target']=0
+    fi
+    koopa_assert_is_file "${dict['file']}"
+    dict['file']="$(koopa_realpath "${dict['file']}")"
+    if [[ "${dict['move_into_target']}" -eq 1 ]]
+    then
+        dict['target']="$(koopa_init_dir "${dict['target']}")"
+        koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
+        dict['tmpdir']="$( \
+            koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
+.koopa-extract-$(koopa_random_string)" \
+        )"
+        dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
+        koopa_ln "${dict['file']}" "${dict['tmpfile']}"
+        dict['file']="${dict['tmpfile']}"
+    else
+        koopa_alert "Extracting '${dict['file']}'."
+        dict['tmpdir']="${dict['wd']}"
+    fi
+    (
+        koopa_cd "${dict['tmpdir']}"
+        case "${dict['file']}" in
             *'.tar' | \
             *'.tar.'* | \
             *'.tgz')
                 local tar_cmd_args
                 tar_cmd_args=(
-                    '-f' "$file" # '--file'.
+                    '-f' "${dict['file']}" # '--file'.
                     '-x' # '--extract'.
                 )
                 app['tar']="$(koopa_locate_tar --allow-system)"
@@ -51,7 +65,7 @@ koopa_extract() {
                 fi
                 ;;
         esac
-        case "$file" in
+        case "${dict['file']}" in
             *'.tar.bz2' | \
             *'.tar.gz' | \
             *'.tar.lz' | \
@@ -60,7 +74,7 @@ koopa_extract() {
             *'.tgz')
                 app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
-                case "$file" in
+                case "${dict['file']}" in
                     *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         [[ -x "${app['cmd2']}" ]] || return 1
@@ -93,13 +107,13 @@ koopa_extract() {
                 ;;
             *'.bz2')
                 app['cmd']="$(koopa_locate_bunzip2 --allow-system)"
-                cmd_args=("$file")
+                cmd_args=("${dict['file']}")
                 ;;
             *'.gz')
                 app['cmd']="$(koopa_locate_gzip --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
-                    "$file"
+                    "${dict['file']}"
                 )
                 ;;
             *'.tar')
@@ -110,34 +124,61 @@ koopa_extract() {
                 app['cmd']="$(koopa_locate_xz --allow-system)"
                 cmd_args=(
                     '-d' # '--decompress'.
-                    "$file"
+                    "${dict['file']}"
                     )
                 ;;
             *'.zip')
                 app['cmd']="$(koopa_locate_unzip --allow-system)"
                 cmd_args=(
                     '-qq'
-                    "$file"
+                    "${dict['file']}"
                 )
                 ;;
             *'.Z')
                 app['cmd']="$(koopa_locate_uncompress --allow-system)"
-                cmd_args=("$file")
+                cmd_args=("${dict['file']}")
                 ;;
             *'.7z')
                 app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
                     '-x'
-                    "$file"
+                    "${dict['file']}"
                 )
                 ;;
             *)
-                koopa_stop "Unsupported extension: '${file}'."
+                koopa_stop 'Unsupported file type.'
                 ;;
         esac
         [[ -x "${app['cmd']}" ]] || return 1
         "${app['cmd']}" "${cmd_args[@]}" 2>/dev/null
-    done
-    export PATH="${dict['orig_path']}"
+    )
+    if [[ "${dict['move_into_target']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['tmpfile']}"
+        app['wc']="$(koopa_locate_wc --allow-system)"
+        [[ -x "${app['wc']}" ]] || return 1
+        dict['count']="$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --prefix="${dict['tmpdir']}" \
+            | "${app['wc']}" -l \
+        )"
+        [[ "${dict['count']}" -gt 0 ]] || return 1
+        (
+            shopt -s dotglob
+            if [[ "${dict['count']}" -eq 1 ]]
+            then
+                koopa_mv \
+                    --target-directory="${dict['target']}" \
+                    "${dict['tmpdir']}"/*/*
+            else
+                koopa_mv \
+                    --target-directory="${dict['target']}" \
+                    "${dict['tmpdir']}"/*
+            fi
+        )
+        koopa_rm "${dict['tmpdir']}"
+    fi
     return 0
 }
