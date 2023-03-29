@@ -3241,7 +3241,16 @@ koopa_check_shared_object() {
 }
 
 koopa_check_system() {
+    local app
+    declare -A app
     koopa_assert_has_no_args "$#"
+    app['r']="$(koopa_locate_r --allow-missing)"
+    if [[ ! -x "${app['r']}" ]]
+    then
+        koopa_stop \
+            'koopa R is not installed.' \
+            "Resolve with 'koopa install r'."
+    fi
     koopa_check_exports || return 1
     koopa_check_disk '/' || return 1
     if ! koopa_is_r_package_installed 'koopa'
