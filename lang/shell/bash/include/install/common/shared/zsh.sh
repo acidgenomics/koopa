@@ -28,13 +28,13 @@ main() {
     # """
     local app conf_args dict
     koopa_assert_has_no_args "$#"
+    koopa_activate_app --build-only 'make'
     koopa_activate_app \
         'ncurses' \
         'pcre' \
         'texinfo'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['bin_prefix']="$(koopa_bin_prefix)"

@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to parse all arguments for '--all-revdeps'
+# FIXME Don't allow passthrough of '--all' here.
+
 koopa_cli_reinstall() {
     case "${1:-}" in
         '--all-revdeps')
