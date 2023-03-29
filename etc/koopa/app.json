@@ -46,11 +46,11 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-03-07",
+    "date": "2023-03-29",
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.1.6"
+    "version": "1.1.7"
   },
   "apr-util": {
     "aliases": {
@@ -2720,6 +2720,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["libtool", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-29",
     "enabled": false,
@@ -2738,7 +2739,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "dependencies": ["zlib", "icu4c", "readline"],
+    "dependencies": ["icu4c", "readline", "zlib"],
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
@@ -2768,7 +2769,7 @@
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
-    "dependencies": ["zlib", "bzip2", "zstd", "nettle", "openssl3", "perl"],
+    "dependencies": ["bzip2", "nettle", "openssl3", "perl", "zlib", "zstd"],
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
   },
@@ -2792,14 +2793,14 @@
     "conservative": true,
     "date": "2023-03-18",
     "dependencies": [
-      "zlib",
+      "binutils",
       "libedit",
       "libffi",
       "libxml2",
       "ncurses",
       "python3.11",
       "swig",
-      "binutils"
+      "zlib"
     ],
     "large": true,
     "url": ["https://llvm.org/"],
@@ -2831,6 +2832,7 @@
       "homebrew": true
     },
     "bin": ["lua", "luac"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-30",
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
@@ -2841,6 +2843,7 @@
       "homebrew": true
     },
     "bin": ["luajit"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-09",
     "enabled": false,
@@ -2852,8 +2855,10 @@
       "homebrew": true
     },
     "bin": ["luarocks"],
+    "build_dependencies": ["make", "unzip"],
     "conservative": true,
     "date": "2023-02-08",
+    "dependencies": ["lua"],
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.2"
   },
@@ -2876,6 +2881,7 @@
       "homebrew": true
     },
     "bin": ["lzip"],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-03-22",
     "man1": ["lzip.1"],
@@ -2914,10 +2920,11 @@
   },
   "mamba": {
     "bin": ["micromamba"],
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["cmake", "ninja"],
     "conservative": true,
     "date": "2023-03-28",
     "dependencies": [
+      "bzip2",
       "cli11",
       "curl",
       "fmt",
@@ -2925,13 +2932,13 @@
       "libsolv",
       "nlohmann-json",
       "openssl3",
-      "pybind11",
       "python3.11",
       "reproc",
       "spdlog",
       "termcolor",
       "tl-expected",
-      "yaml-cpp"
+      "yaml-cpp",
+      "zstd"
     ],
     "enabled": false,
     "large": true,
@@ -2950,6 +2957,7 @@
       "homebrew": true
     },
     "bin": ["gman"],
+    "build_dependencies": ["make"],
     "date": "2023-02-08",
     "man1": ["gman.1"],
     "url": [
@@ -3045,8 +3053,10 @@
       "fedora": "libmpc-devel",
       "homebrew": "libmpc"
     },
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-01-03",
+    "dependencies": ["gmp", "mpfr"],
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.3.1"
   },
@@ -3080,7 +3090,7 @@
     "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2023-03-05",
-    "dependencies": ["zlib", "boost"],
+    "dependencies": ["boost", "zlib"],
     "enabled": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
     "version": "6.0.0"
@@ -3100,7 +3110,7 @@
       "homebrew": true
     },
     "bin": ["nano"],
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2023-02-08",
     "dependencies": ["gettext", "ncurses"],
     "url": ["https://www.nano-editor.org/"],
@@ -3169,22 +3179,15 @@
       "homebrew": true
     },
     "bin": ["nvim"],
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "cmake",
-      "libtool",
-      "ninja",
-      "pkg-config"
-    ],
+    "build_dependencies": ["cmake", "libtool", "ninja", "pkg-config"],
     "date": "2023-02-08",
     "dependencies": [
-      "m4",
-      "zlib",
       "gettext",
       "libiconv",
+      "m4",
       "ncurses",
-      "python3.11"
+      "python3.11",
+      "zlib"
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
@@ -3219,13 +3222,13 @@
     "conservative": true,
     "date": "2023-03-07",
     "dependencies": [
+      "boost",
       "c-ares",
       "jemalloc",
       "libev",
       "libxml2",
       "openssl3",
-      "zlib",
-      "boost"
+      "zlib"
     ],
     "url": ["https://nghttp2.org/"],
     "version": "1.52.0"
@@ -3267,7 +3270,9 @@
       "homebrew": true
     },
     "bin": ["nmap"],
+    "build_dependencies": ["bison", "flex", "make"],
     "date": "2022-09-29",
+    "dependencies": ["openssl3", "pcre", "zlib"],
     "url": "https://nmap.org/",
     "version": "7.93"
   },
@@ -3276,9 +3281,19 @@
       "homebrew": true
     },
     "bin": ["node", "npm", "npx"],
+    "build_dependencies": ["make", "ninja", "pkg-config"],
     "conservative": true,
     "date": "2023-03-14",
-    "dependencies": ["ca-certificates"],
+    "dependencies": [
+      "ca-certificates",
+      "c-ares",
+      "icu4c",
+      "libuv",
+      "nghttp2",
+      "openssl3",
+      "python3.11",
+      "zlib"
+    ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
     "url": ["https://nodejs.org/"],
@@ -3374,7 +3389,7 @@
   "openmp": {
     "conservative": true,
     "date": "2023-02-08",
-    "notes": ["FIXME Need to add version chec for this."],
+    "notes": ["Need to add version check for this."],
     "platform": "macos",
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
@@ -3384,8 +3399,10 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-17",
+    "dependencies": ["libedit", "openssl3", "zlib"],
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
   },
@@ -3446,6 +3463,7 @@
       "homebrew": true
     },
     "bin": ["parallel"],
+    "build_dependencies": ["make"],
     "date": "2023-03-07",
     "man1": ["parallel.1"],
     "url": ["https://www.gnu.org/software/parallel/"],
@@ -3456,6 +3474,7 @@
       "homebrew": "pass"
     },
     "bin": ["pass"],
+    "build_dependencies": ["make"],
     "date": "2022-08-30",
     "man1": ["pass.1"],
     "url": ["https://www.passwordstore.org/"],
@@ -3467,7 +3486,9 @@
       "homebrew": "gpatch"
     },
     "bin": ["patch"],
+    "build_dependencies": ["make"],
     "date": "2022-08-29",
+    "dependencies": ["attr"],
     "man1": ["patch.1"],
     "url": ["https://ftp.gnu.org/gnu/patch/"],
     "version": "2.7.6"
@@ -3538,6 +3559,7 @@
       "ptardiff",
       "ptargrep"
     ],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.perl.org/get.html"],
@@ -3563,7 +3585,7 @@
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-30",
-    "dependencies": ["fltk", "ncurses", "libgpg-error", "libassuan"],
+    "dependencies": ["fltk", "libassuan", "libgpg-error", "ncurses"],
     "platform": "linux",
     "url": ["https://gnupg.org/download/"],
     "version": "1.2.1"
@@ -3662,16 +3684,6 @@
     "man1": ["proj.1", "projinfo.1"],
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.2.0"
-  },
-  "pth": {
-    "aliases": {
-      "homebrew": true
-    },
-    "conservative": true,
-    "date": "2022-09-26",
-    "enabled": false,
-    "url": ["https://ftp.gnu.org/gnu/pth/"],
-    "version": "2.0.7"
   },
   "py-spy": {
     "aliases": {
