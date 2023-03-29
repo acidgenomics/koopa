@@ -3339,17 +3339,23 @@
     "version": "6.9.8"
   },
   "ont-guppy": {
-    "arch": "amd64",
     "bin": ["guppy_basecaller"],
     "date": "2023-03-14",
     "large": true,
-    "platform": "linux",
     "private": true,
     "url": [
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
     ],
     "version": "6.4.6"
+  },
+  "ont-vbz-compression": {
+    "build_dependencies": ["cmake"],
+    "date": "2023-03-29",
+    "dependencies": ["hdf5", "zstd"],
+    "large": true,
+    "url": ["https://github.com/nanoporetech/vbz_compression/"],
+    "version": "1.0.2"
   },
   "openbb": {
     "bin": ["openbb"],
