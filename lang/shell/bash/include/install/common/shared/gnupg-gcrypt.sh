@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to simplify this, splitting back out into separate installers.
+# FIXME pinentry needs to be installed before npth on linux...hitting error.
 
 main() {
     # """
@@ -169,7 +170,6 @@ tar.${dict['compress_ext']}"
     koopa_extract "${dict['tar_file']}"
     koopa_cd "${dict['name']}-${dict['version']}"
     koopa_print_env
-
     case "${dict['name']}" in
         'gnupg')
             # May only need to apply this to 2.3.8.
