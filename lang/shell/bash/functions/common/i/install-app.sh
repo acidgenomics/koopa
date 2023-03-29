@@ -5,7 +5,7 @@ koopa_install_app() {
     # Install application in a versioned directory structure.
     # @note Updated 2023-03-29.
     # """
-    local app bin_arr bool dict env_vars i man1_arr path_arr pos
+    local app bash_vars bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
@@ -396,15 +396,22 @@ include/header.sh"
             "${dict['header_file']}" \
             "${dict['stderr_file']}" \
             "${dict['stdout_file']}"
+        bash_vars=(
+            '--noprofile'
+            '--norc'
+            '-o' 'errexit'
+            '-o' 'errtrace'
+            '-o' 'nounset'
+            '-o' 'pipefail'
+        )
+        if [[ "${bool['verbose']}" -eq 1 ]]
+        then
+            bash_vars+=('-o' 'verbose')
+        fi
         "${app['env']}" -i \
             "${env_vars[@]}" \
             "${app['bash']}" \
-                --noprofile \
-                --norc \
-                -o errexit \
-                -o errtrace \
-                -o nounset \
-                -o pipefail \
+                "${bash_vars[@]}" \
                 -c "source '${dict['header_file']}'; \
                     koopa_install_app_subshell \
                         --installer=${dict['installer']} \
