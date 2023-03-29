@@ -10,10 +10,8 @@ Solve app dependencies defined in 'app.json' file.
 
 from argparse import ArgumentParser
 from json import load
-from os import getenv
 from os.path import abspath, dirname, join
 from platform import machine, system
-from shutil import disk_usage
 
 
 def arch() -> str:
@@ -74,18 +72,6 @@ def get_deps(app_name: str, json_data: dict) -> list:
     return all_deps
 
 
-def large() -> bool:
-    """
-    Is the current machine a large instance?
-    @note Updated 2023-03-29.
-    """
-    if getenv("KOOPA_BUILDER") == "1":
-        return True
-    usage = disk_usage(path="/")
-    lgl = usage.total >= 400000000000
-    return lgl
-
-
 def platform() -> str:
     """
     Platform string.
@@ -105,7 +91,6 @@ def print_apps(app_names: list, json_data: dict) -> bool:
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
-    sys_dict["large"] = large()
     sys_dict["platform"] = platform()
     for val in app_names:
         json = json_data[val]
@@ -115,9 +100,6 @@ def print_apps(app_names: list, json_data: dict) -> bool:
                 continue
         if "enabled" in keys:
             if not json["enabled"]:
-                continue
-        if "large" in keys:
-            if json["large"] and not sys_dict["large"]:
                 continue
         if "platform" in keys:
             if json["platform"] != sys_dict["platform"]:
