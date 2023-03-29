@@ -12,7 +12,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     declare -A app
-    app['aws']="$(koopa_locate_aws)"
+    app['aws']="$(koopa_locate_aws --allow-system)"
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['installers_base']="$(koopa_private_installers_s3_uri)"

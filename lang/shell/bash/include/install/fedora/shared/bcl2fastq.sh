@@ -9,7 +9,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     declare -A app
-    app['aws']="$(koopa_locate_aws)"
+    app['aws']="$(koopa_locate_aws --allow-system)"
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.

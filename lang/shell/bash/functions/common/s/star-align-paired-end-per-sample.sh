@@ -182,7 +182,7 @@ to '${dict['tmp_fastq_r2_file']}"
         "${dict['tmp_fastq_r2_file']}"
     if [[ -n "${dict['aws_s3_uri']}" ]]
     then
-        app['aws']="$(koopa_locate_aws)"
+        app['aws']="$(koopa_locate_aws --allow-system)"
         [[ -x "${app['aws']}" ]] || return 1
         koopa_alert "Syncing '${dict['output_dir']}' \
 to '${dict['aws_s3_uri']}'."

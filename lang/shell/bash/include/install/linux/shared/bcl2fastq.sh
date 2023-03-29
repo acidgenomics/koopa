@@ -36,7 +36,7 @@ main() {
     )
     koopa_activate_app "${deps[@]}"
     declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
+        ['aws']="$(koopa_locate_aws --allow-system)"
         ['cmake']="$(koopa_locate_cmake --realpath)"
         ['make']="$(koopa_locate_make)"
     )
