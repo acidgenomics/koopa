@@ -4550,6 +4550,7 @@
     "version": "1.6.1"
   },
   "termcolor": {
+    "build_dependencies": ["cmake"],
     "date": "2022-11-05",
     "enabled": false,
     "large": true,
@@ -4572,8 +4573,10 @@
       "texi2pdf",
       "texindex"
     ],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-02-08",
+    "dependencies": ["gettext", "ncurses", "perl"],
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
@@ -4601,7 +4604,9 @@
       "homebrew": true
     },
     "bin": ["tmux"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
+    "dependencies": ["libevent", "ncurses", "utf8proc"],
     "man1": ["tmux.1"],
     "url": ["https://github.com/tmux/tmux/"],
     "version": "3.3a"
@@ -4623,6 +4628,7 @@
       "homebrew": true
     },
     "bin": ["tree"],
+    "build_dependencies": ["make"],
     "date": "2023-01-03",
     "man1": ["tree.1"],
     "url": ["https://mama.indstate.edu/users/ice/tree/"],
@@ -4659,8 +4665,10 @@
       "homebrew": true
     },
     "bin": ["udunits2"],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-08-30",
+    "dependencies": ["expat"],
     "url": [
       "https://www.unidata.ucar.edu/software/udunits/",
       "https://downloads.unidata.ucar.edu/udunits/"
@@ -4683,6 +4691,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["libtool", "make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-09",
     "enabled": false,
@@ -4694,8 +4703,10 @@
       "homebrew": "gnu-units"
     },
     "bin": ["gunits"],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2022-09-30",
+    "dependencies": ["readline"],
     "man1": ["gunits.1"],
     "url": ["https://www.gnu.org/software/units/"],
     "version": "2.22"
@@ -4793,9 +4804,18 @@
       "homebrew": true
     },
     "bin": ["wget"],
+    "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2022-08-30",
+    "dependencies": [
+      "gettext",
+      "gnutls",
+      "libidn",
+      "libtasn1",
+      "nettle",
+      "openssl3",
+      "pcre2"
+    ],
     "man1": ["wget.1"],
-    "notes": ["wget2 is still considered alpha."],
     "url": ["https://www.gnu.org/software/wget/"],
     "version": "1.21.3"
   },
@@ -5153,7 +5173,9 @@
       "homebrew": true
     },
     "bin": ["zsh"],
+    "build_dependencies": ["make"],
     "date": "2022-09-26",
+    "dependencies": ["ncurses", "pcre", "texinfo"],
     "man1": ["zsh.1"],
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],
     "version": "5.9"

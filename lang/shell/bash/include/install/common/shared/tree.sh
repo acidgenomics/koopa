@@ -11,9 +11,9 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_activate_app --build-only 'make'
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='tree'
