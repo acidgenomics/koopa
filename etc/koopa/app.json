@@ -1664,6 +1664,7 @@
       "libtasn1",
       "nettle",
       "npth",
+      "pinentry",
       "readline",
       "sqlite",
       "zlib"
