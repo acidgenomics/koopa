@@ -4734,7 +4734,7 @@
       "homebrew": true
     },
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "patch"],
     "conservative": true,
     "date": "2022-09-01",
     "dependencies": ["bzip2"],
@@ -5152,7 +5152,7 @@
       "homebrew": true
     },
     "bin": ["zip"],
-    "build_dependencies": ["make"],
+    "build_dependencies": ["gcc", "make", "patch"],
     "conservative": true,
     "date": "2022-10-12",
     "dependencies": ["bzip2"],
