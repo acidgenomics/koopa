@@ -13,9 +13,8 @@ main() {
     local app cmake_args dict
     koopa_activate_app --build-only 'cmake'
     koopa_activate_app 'zlib' 'boost'
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-    )
+    declare -A app
+    app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
         ['boost']="$(koopa_app_prefix 'boost')"

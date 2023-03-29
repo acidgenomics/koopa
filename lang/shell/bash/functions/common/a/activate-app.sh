@@ -3,7 +3,7 @@
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
-    # @note Updated 2022-10-12.
+    # @note Updated 2023-03-28.
     #
     # Consider using 'pkg-config' to manage CFLAGS, CPPFLAGS, and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -68,6 +68,7 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    CFLAGS="${CFLAGS:-}"
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
@@ -142,24 +143,38 @@ koopa_activate_app() {
             dict2['ldlibs']="$( \
                 "${app['pkg_config']}" --libs-only-l "${pc_files[@]}" \
             )"
-            [[ -n "${dict2['cflags']}" ]] && \
+            if [[ -n "${dict2['cflags']}" ]]
+            then
+                CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
                 CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
-            [[ -n "${dict2['ldflags']}" ]] && \
+            fi
+            if [[ -n "${dict2['ldflags']}" ]]
+            then
                 LDFLAGS="${LDFLAGS:-} ${dict2['ldflags']}"
-            [[ -n "${dict2['ldlibs']}" ]] && \
+            fi
+            if [[ -n "${dict2['ldlibs']}" ]]
+            then
                 LDLIBS="${LDLIBS:-} ${dict2['ldlibs']}"
+            fi
         else
-            [[ -d "${dict2['prefix']}/include" ]] && \
+            if [[ -d "${dict2['prefix']}/include" ]]
+            then
+                CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
                 CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
-            [[ -d "${dict2['prefix']}/lib" ]] && \
+            fi
+            if [[ -d "${dict2['prefix']}/lib" ]]
+            then
                 LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib"
-            [[ -d "${dict2['prefix']}/lib64" ]] && \
+            fi
+            if [[ -d "${dict2['prefix']}/lib64" ]]
+            then
                 LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib64"
+            fi
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
     done
-    export CPPFLAGS LDFLAGS LDLIBS
+    export CFLAGS CPPFLAGS LDFLAGS LDLIBS
     return 0
 }

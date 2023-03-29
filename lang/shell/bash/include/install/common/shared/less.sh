@@ -13,11 +13,10 @@ main() {
     # """
     local app conf_args dict
     # This step is only needed when installing from GitHub.
-    koopa_activate_app --build-only 'autoconf' 'groff'
+    koopa_activate_app --build-only 'autoconf' 'groff' 'make'
     koopa_activate_app 'ncurses' 'pcre2'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['name']='less'

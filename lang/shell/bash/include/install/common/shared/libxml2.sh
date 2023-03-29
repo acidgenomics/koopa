@@ -3,19 +3,16 @@
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2022-09-20.
+    # @note Updated 2023-03-29.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
     # """
-    local app conf_args deps dict
+    local app build_deps conf_args deps dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    deps=(
-        'zlib'
-        'icu4c'
-        'readline'
-    )
+    build_deps=('make' 'pkg-config')
+    deps=('zlib' 'icu4c' 'readline')
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     declare -A app
     app['make']="$(koopa_locate_make)"
