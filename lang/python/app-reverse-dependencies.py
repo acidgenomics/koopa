@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-03-27.
+@note Updated 2023-03-29.
 
 @examples
 ./app-reverse-dependencies.py 'python3.11'
@@ -10,6 +10,7 @@ Solve app dependencies defined in 'app.json' file.
 
 from argparse import ArgumentParser
 from json import load
+from os import getenv
 from os.path import abspath, dirname, join
 from platform import machine, system
 from shutil import disk_usage
@@ -51,8 +52,10 @@ def get_deps(app_name: str, json_data: dict) -> list:
 def large() -> bool:
     """
     Is the current machine a large instance?
-    @note Updated 2023-03-27.
+    @note Updated 2023-03-29.
     """
+    if getenv("KOOPA_BUILDER") == "1":
+        return True
     usage = disk_usage(path="/")
     lgl = usage.total >= 400000000000
     return lgl
@@ -70,32 +73,16 @@ def platform() -> str:
     return string
 
 
-def main(app_name: str, json_file: str) -> bool:
+def print_apps(app_names: list, json_data: dict) -> bool:
     """
-    Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-27.
+    Print relevant apps.
+    @note Updated 2023-03-29.
     """
-    with open(json_file, encoding="utf-8") as con:
-        json_data = load(con)
-    keys = list(json_data.keys())
-    assert app_name in keys
-    all_deps = []
-    for key in keys:
-        key_deps = get_deps(app_name=key, json_data=json_data)
-        all_deps.append(key_deps)
-    deps = []
-    i = 0
-    while i < len(all_deps):
-        if app_name in all_deps[i]:
-            deps.append(keys[i])
-        i += 1
-    if len(deps) <= 0:
-        return True
     sys_dict = {}
     sys_dict["arch"] = arch2()
     sys_dict["large"] = large()
     sys_dict["platform"] = platform()
-    for val in deps:
+    for val in app_names:
         json = json_data[val]
         keys = json.keys()
         if "arch" in keys:
@@ -120,6 +107,31 @@ def main(app_name: str, json_file: str) -> bool:
             if json["user"]:
                 continue
         print(val)
+    return True
+
+
+def main(app_name: str, json_file: str) -> bool:
+    """
+    Parse the koopa 'app.json' file for defined values.
+    @note Updated 2023-03-29.
+    """
+    with open(json_file, encoding="utf-8") as con:
+        json_data = load(con)
+    keys = list(json_data.keys())
+    assert app_name in keys
+    all_deps = []
+    for key in keys:
+        key_deps = get_deps(app_name=key, json_data=json_data)
+        all_deps.append(key_deps)
+    deps = []
+    i = 0
+    while i < len(all_deps):
+        if app_name in all_deps[i]:
+            deps.append(keys[i])
+        i += 1
+    if len(deps) <= 0:
+        return True
+    print_apps(app_names=deps, json_data=json_data)
     return True
 
 
