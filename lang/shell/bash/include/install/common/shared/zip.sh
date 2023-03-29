@@ -13,16 +13,15 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zip.rb
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
-    local app dict
+    local build_deps app deps dict
+    build_deps=('make')
     # Currently hitting build issues when using Clang on macOS.
-    if koopa_is_macos
-    then
-        koopa_activate_app --build-only 'gcc'
-    fi
-    koopa_activate_app 'bzip2'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
+    koopa_is_macos && build_deps+=('gcc')
+    deps=('bzip2')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
+    declare -A app
+    app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || return 1
     declare -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
@@ -58,16 +57,14 @@ Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/${dict['file']}"
     return 0
 }
 
-# FIXME Consider generalizing this function.
 apply_debian_patch_set() {
     # """
     # Apply Debian patch set (to 3.0 release).
     # @note Updated 2022-10-12.
     # """
     local app dict file
-    declare -A app=(
-        ['patch']="$(koopa_locate_patch)"
-    )
+    declare -A app
+    app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['patch']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"

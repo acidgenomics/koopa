@@ -89,16 +89,14 @@ ${dict['file']}"
     return 0
 }
 
-# FIXME Consider generalizing this function.
 apply_ubuntu_patch_set() {
     # """
     # Apply Ubuntu patch set (to 6.0 release).
     # @note Updated 2022-10-12.
     # """
     local app dict file
-    declare -A app=(
-        ['patch']="$(koopa_locate_patch)"
-    )
+    declare -A app
+    app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['patch']}" ]] || return 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
