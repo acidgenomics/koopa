@@ -3,13 +3,13 @@
 main() {
     # """
     # Install Oxford Nanopore guppy caller.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-29.
     # """
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_is_macos && koopa_assert_is_not_aarch64
     declare -A app
-    app['aws']="$(koopa_locate_aws)"
+    app['aws']="$(koopa_locate_aws --allow-system)"
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
