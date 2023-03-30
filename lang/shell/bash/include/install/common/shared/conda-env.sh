@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-30.
     #
     # Be sure to excluded nested directories that may exist in libexec bin, such
     # as 'bin/scripts' for bowtie2.
@@ -72,9 +72,7 @@ main() {
             --type='f' \
     )"
     koopa_assert_is_file "${dict['json_file']}"
-    readarray -t bin_names <<< "$( \
-        koopa_parse_conda_meta_json "${dict['json_file']}" \
-    )"
+    readarray -t bin_names <<< "$(koopa_conda_bin "${dict['json_file']}")"
     if koopa_is_array_non_empty "${bin_names[@]:-}"
     then
         for bin_name in "${bin_names[@]}"
