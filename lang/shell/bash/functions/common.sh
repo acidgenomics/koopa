@@ -4207,6 +4207,17 @@ environment '${dict['env_name']}'."
     return 0
 }
 
+koopa_conda_bin() {
+    local cmd file
+    koopa_assert_has_args_eq "$#" 1
+    file="${1:?}"
+    koopa_assert_is_file "$file"
+    cmd="$(koopa_koopa_prefix)/lang/python/conda-bin.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$file"
+    return 0
+}
+
 koopa_conda_create_env() {
     local app dict pos string
     koopa_assert_has_args "$#"
@@ -16961,17 +16972,6 @@ koopa_parse_app_json() {
     cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
     koopa_assert_is_executable "$cmd"
     "$cmd" "$@"
-    return 0
-}
-
-koopa_parse_conda_meta_json() {
-    local cmd file
-    koopa_assert_has_args_eq "$#" 1
-    file="${1:?}"
-    koopa_assert_is_file "$file"
-    cmd="$(koopa_koopa_prefix)/lang/python/conda-meta-json.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$file"
     return 0
 }
 
