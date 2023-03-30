@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zstd.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-30.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -19,25 +19,15 @@ main() {
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['lz4']="$(koopa_app_prefix 'lz4')"
-        ['name']='zstd'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
         ['zlib']="$(koopa_app_prefix 'zlib')"
     )
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/facebook/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
+    readarray -t cmake_args <<< "$(koopa_std_cmake_args "${dict['prefix']}")"
+    cmake_args+=(
+        # CMake options --------------------------------------------------------
         '-DCMAKE_CXX_STANDARD=11'
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------
         '-DZSTD_BUILD_CONTRIB=ON'
         '-DZSTD_LEGACY_SUPPORT=ON'
@@ -51,11 +41,16 @@ archive/${dict['file']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
+    dict['url']="https://github.com/facebook/zstd/archive/\
+v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        '-S' 'build/cmake' \
         '-B' 'builddir' \
+        '-S' 'build/cmake' \
         "${cmake_args[@]}"
     "${app['cmake']}" \
         --build 'builddir' \
