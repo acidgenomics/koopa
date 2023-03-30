@@ -11,6 +11,7 @@ koopa_cmake_build() {
     koopa_activate_app --build-only 'cmake'
     app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
+    dict['builddir']="builddir-$(koopa_random_string)"
     dict['jobs']="$(koopa_cpu_count)"
     pos=()
     while (("$#"))
@@ -43,12 +44,12 @@ koopa_cmake_build() {
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        '-B' 'builddir' \
-        '-S' 'build/cmake' \
+        '-B' "${dict['builddir']}" \
+        '-S' '.' \
         "${cmake_args[@]}"
     "${app['cmake']}" \
-        --build 'builddir' \
+        --build "${dict['builddir']}" \
         --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'builddir'
+    "${app['cmake']}" --install "${dict['builddir']}"
     return 0
 }
