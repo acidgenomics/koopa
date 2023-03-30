@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Parse conda JSON metadata for files to link in bin.
-@note Updated 2023-03-27.
+Parse conda JSON metadata for files to link in 'bin'.
+@note Updated 2023-03-30.
 
 @examples
-./conda-meta-json.py \
+./conda-bin.py \
     /opt/koopa/opt/salmon/libexec/conda-meta/salmon-*.json
 """
 
@@ -16,8 +16,8 @@ from re import compile as re_compile
 
 def main(json_file: str) -> bool:
     """
-    Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-27.
+    Parse conda JSON metadata for files to link in 'bin'.
+    @note Updated 2023-03-30.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
