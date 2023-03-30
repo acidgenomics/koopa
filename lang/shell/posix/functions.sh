@@ -1012,8 +1012,17 @@ _koopa_activate_xdg() {
     then
         XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
-    export XDG_CACHE_HOME XDG_CONFIG_DIRS XDG_CONFIG_HOME \
-        XDG_DATA_DIRS XDG_DATA_HOME
+    if [ -z "${XDG_STATE_HOME:-}" ]
+    then
+        XDG_STATE_HOME="$(_koopa_xdg_state_home)"
+    fi
+    export \
+        XDG_CACHE_HOME \
+        XDG_CONFIG_DIRS \
+        XDG_CONFIG_HOME \
+        XDG_DATA_DIRS \
+        XDG_DATA_HOME \
+        XDG_STATE_HOME
     return 0
 }
 
@@ -2286,5 +2295,10 @@ _koopa_xdg_data_home() {
 
 _koopa_xdg_local_home() {
     _koopa_print "${HOME:?}/.local"
+    return 0
+}
+
+_koopa_xdg_state_home() {
+    _koopa_print "$(_koopa_xdg_local_home)/state"
     return 0
 }
