@@ -4377,10 +4377,10 @@
     "version": "3512e43c9e6efef78b5104785c99518eff60d668"
   },
   "spacevim": {
-    "date": "2023-03-07",
+    "date": "2023-03-30",
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
     "user": true,
-    "version": "4c07aa025f5ec3c35159942fd4f913499cbed3cc"
+    "version": "e9062da7bdbabb8524c8d345da98172604d4115f"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "patch", "pkg-config"],
