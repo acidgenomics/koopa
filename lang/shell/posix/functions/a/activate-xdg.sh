@@ -3,7 +3,7 @@
 _koopa_activate_xdg() {
     # """
     # Activate XDG base directory specification.
-    # @note Updated 2022-04-04.
+    # @note Updated 2023-03-30.
     #
     # @seealso
     # - https://developer.gnome.org/basedir-spec/
@@ -32,7 +32,16 @@ _koopa_activate_xdg() {
     then
         XDG_DATA_HOME="$(_koopa_xdg_data_home)"
     fi
-    export XDG_CACHE_HOME XDG_CONFIG_DIRS XDG_CONFIG_HOME \
-        XDG_DATA_DIRS XDG_DATA_HOME
+    if [ -z "${XDG_STATE_HOME:-}" ]
+    then
+        XDG_STATE_HOME="$(_koopa_xdg_state_home)"
+    fi
+    export \
+        XDG_CACHE_HOME \
+        XDG_CONFIG_DIRS \
+        XDG_CONFIG_HOME \
+        XDG_DATA_DIRS \
+        XDG_DATA_HOME \
+        XDG_STATE_HOME
     return 0
 }
