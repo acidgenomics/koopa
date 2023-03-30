@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework using our new Python solver.
-
-koopa_reinstall_all_revdeps() {
+koopa_reinstall_only_revdeps() {
     # """
-    # Reinstall an app and all of its reverse dependencies.
-    # @note Updated 2022-10-18.
+    # Reinstall only the reverse dependencies of an app.
+    # @note Updated 2023-03-30.
     #
     # We're intentionally allowing the passthrough of '--push' here, but the
     # ability to push a koopa binary is not required.
     #
     # @examples
-    # > koopa_reinstall_all_revdeps --push 'node' 'python3.11'
+    # > koopa_reinstall_only_revdeps --push 'node' 'python3.11'
     # """
     local app_name flags pos
     koopa_assert_has_args "$#"
@@ -41,16 +39,15 @@ koopa_reinstall_all_revdeps() {
         then
             install_args+=("${flags[@]}")
         fi
-        install_args+=("$app_name")
-        readarray -t revdeps <<< "$(koopa_app_json_revdeps "$app_name")"
-        if koopa_is_array_non_empty "${revdeps[@]}"
+        readarray -t revdeps <<< "$(koopa_app_reverse_dependencies "$app_name")"
+        if koopa_assert_is_array_non_empty "${revdeps[@]}"
         then
             install_args+=("${revdeps[@]}")
             koopa_dl \
                 "${app_name} reverse dependencies" \
                 "$(koopa_to_string "${revdeps[@]}")"
         else
-            koopa_alert_note "'${app_name}' has no reverse dependencies."
+            koopa_stop "'${app_name}' has no reverse dependencies."
         fi
         koopa_cli_reinstall "${install_args[@]}"
     done

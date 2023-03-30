@@ -3,7 +3,7 @@
 koopa_cli_reinstall() {
     # """
     # Parse user input to 'koopa reinstall'
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-03-30.
     # """
     local dict pos
     koopa_assert_has_args "$#"
@@ -32,14 +32,16 @@ koopa_cli_reinstall() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     case "${dict['mode']}" in
-        'all-revdeps')
-            koopa_reinstall_all_revdeps "$@"
+        'all-revdeps' | \
+        'all-reverse-dependencies')
+            koopa_reinstall_all_reverse_dependencies "$@"
             ;;
         'default')
             koopa_cli_install --reinstall "$@"
             ;;
-        'only-revdeps')
-            koopa_reinstall_only_revdeps "$@"
+        'only-revdeps' | \
+        'only-reverse-dependencies')
+            koopa_reinstall_only_reverse_dependencies "$@"
             ;;
     esac
     return 0

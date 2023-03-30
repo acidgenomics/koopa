@@ -556,7 +556,7 @@ koopa_app_json_bin() {
     koopa_assert_has_args "$#"
     for app_name in "$@"
     do
-        koopa_parse_app_json \
+        koopa_app_json \
             --app-name="$app_name" \
             --key='bin'
     done
@@ -567,22 +567,10 @@ koopa_app_json_man1() {
     koopa_assert_has_args "$#"
     for app_name in "$@"
     do
-        koopa_parse_app_json \
+        koopa_app_json \
             --app-name="$app_name" \
             --key='man1'
     done
-}
-
-koopa_app_json_revdeps() {
-    local app_name
-    koopa_assert_has_args "$#"
-    for app_name in "$@"
-    do
-        koopa_parse_app_json \
-            --app-name="$app_name" \
-            --key='reverse_dependencies'
-    done
-    return 0
 }
 
 koopa_app_json_version() {
@@ -590,10 +578,19 @@ koopa_app_json_version() {
     koopa_assert_has_args "$#"
     for app_name in "$@"
     do
-        koopa_parse_app_json \
+        koopa_app_json \
             --app-name="$app_name" \
             --key='version'
     done
+}
+
+koopa_app_json() {
+    local cmd
+    koopa_assert_has_args "$#"
+    cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$@"
+    return 0
 }
 
 koopa_app_prefix() {
@@ -3893,14 +3890,16 @@ koopa_cli_reinstall() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     case "${dict['mode']}" in
-        'all-revdeps')
-            koopa_reinstall_all_revdeps "$@"
+        'all-revdeps' | \
+        'all-reverse-dependencies')
+            koopa_reinstall_all_reverse_dependencies "$@"
             ;;
         'default')
             koopa_cli_install --reinstall "$@"
             ;;
-        'only-revdeps')
-            koopa_reinstall_only_revdeps "$@"
+        'only-revdeps' | \
+        'only-reverse-dependencies')
+            koopa_reinstall_only_reverse_dependencies "$@"
             ;;
     esac
     return 0
@@ -16966,15 +16965,6 @@ koopa_parent_dir() {
     return 0
 }
 
-koopa_parse_app_json() {
-    local cmd
-    koopa_assert_has_args "$#"
-    cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
-    return 0
-}
-
 koopa_parse_url() {
     local app curl_args pos
     koopa_assert_has_args "$#"
@@ -18855,7 +18845,7 @@ koopa_reinstall_all_revdeps() {
             install_args+=("${flags[@]}")
         fi
         install_args+=("$app_name")
-        readarray -t revdeps <<< "$(koopa_app_json_revdeps "$app_name")"
+        readarray -t revdeps <<< "$(koopa_app_reverse_dependencies "$app_name")"
         if koopa_is_array_non_empty "${revdeps[@]}"
         then
             install_args+=("${revdeps[@]}")
@@ -18898,7 +18888,7 @@ koopa_reinstall_only_revdeps() {
         then
             install_args+=("${flags[@]}")
         fi
-        readarray -t revdeps <<< "$(koopa_app_json_revdeps "$app_name")"
+        readarray -t revdeps <<< "$(koopa_app_reverse_dependencies "$app_name")"
         if koopa_assert_is_array_non_empty "${revdeps[@]}"
         then
             install_args+=("${revdeps[@]}")
