@@ -6,7 +6,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
     # bzip2 and zstd requirement added in 1.2.0 release.
@@ -24,8 +24,8 @@ main() {
     # - https://github.com/Homebrew/brew/blob/3.6.14/Library/
     #     Homebrew/formula.rb#L1539
     # """
-    local app build_deps cmake_args deps dict
-    build_deps=('cmake' 'ninja')
+    local app cmake_args deps dict
+    declare -A app dict
     deps=(
         'bzip2'
         'zstd'
@@ -44,32 +44,23 @@ main() {
         'tl-expected'
         'yaml-cpp'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['curl']="$(koopa_app_prefix 'curl')"
-        ['fmt']="$(koopa_app_prefix 'fmt')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['libarchive']="$(koopa_app_prefix 'libarchive')"
-        ['libsolv']="$(koopa_app_prefix 'libsolv')"
-        ['name']='mamba'
-        ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['reproc']="$(koopa_app_prefix 'reproc')"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['spdlog']="$(koopa_app_prefix 'spdlog')"
-        ['tl_expected']="$(koopa_app_prefix 'tl-expected')"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['yaml_cpp']="$(koopa_app_prefix 'yaml-cpp')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
-    )
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['fmt']="$(koopa_app_prefix 'fmt')"
+    dict['libarchive']="$(koopa_app_prefix 'libarchive')"
+    dict['libsolv']="$(koopa_app_prefix 'libsolv')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['reproc']="$(koopa_app_prefix 'reproc')"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['spdlog']="$(koopa_app_prefix 'spdlog')"
+    dict['tl_expected']="$(koopa_app_prefix 'tl-expected')"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['yaml_cpp']="$(koopa_app_prefix 'yaml-cpp')"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['curl']}" \
@@ -82,23 +73,8 @@ main() {
         "${dict['tl_expected']}" \
         "${dict['yaml_cpp']}" \
         "${dict['zstd']}"
-    dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
-tags/${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")"
-    koopa_cd "${dict['name']}-${dict['version']}"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
-        # Mamba build settings -------------------------------------------------
+        # Build settings -------------------------------------------------------
         '-DBUILD_SHARED=ON'
         '-DBUILD_LIBMAMBA=ON'
         '-DBUILD_LIBMAMBAPY=OFF'
@@ -130,16 +106,14 @@ libsolv.${dict['shared_ext']}"
         "-Dyaml-cpp_DIR=${dict['yaml_cpp']}/share/cmake/yaml-cpp"
         "-Dzstd_DIR=${dict['zstd']}/lib/cmake/zstd"
     )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH \
-        -B 'build' \
-        -G 'Ninja' \
-        -S . \
+    dict['url']="https://github.com/mamba-org/mamba/archive/refs/\
+tags/${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build \
+        --ninja \
+        --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build 'build' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build'
     return 0
 }

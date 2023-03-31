@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-30.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -222,6 +222,7 @@ _koopa_complete() {
                         'lesspipe'
                         'libarchive'
                         'libassuan'
+                        'libdeflate'
                         'libedit'
                         'libev'
                         'libevent'
@@ -289,7 +290,7 @@ _koopa_complete() {
                         'npth'
                         'nushell'
                         'oniguruma'
-                        'ont-guppy'
+                        'ont-vbz-compression'
                         'openbb'
                         'openblas'
                         'openjdk'
@@ -426,8 +427,6 @@ _koopa_complete() {
                             'aspera-connect'
                             'bcbio-nextgen'
                             'bcbio-nextgen-vm'
-                            'bcl2fastq'
-                            'cellranger'
                             'cloudbiolinux'
                             'docker-credential-pass'
                             'elfutils'

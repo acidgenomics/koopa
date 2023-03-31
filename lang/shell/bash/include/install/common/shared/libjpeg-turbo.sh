@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # NOTE Add support for NASM compiler, to improve performance.
+# SIMD extensions disabled: could not find NASM compiler.
 
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -13,40 +14,18 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     jpeg-turbo.rb
     # """
-    local app cmake_args dict
+    local cmake_args dict
+    declare -A dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'make' 'pkg-config'
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libjpeg-turbo'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://downloads.sourceforge.net/project/${dict['name']}/\
-${dict['version']}/${dict['name']}-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
-        # Build options --------------------------------------------------------
-        '-DWITH_JPEG8=1'
-    )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH -S '.' "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    # > "${app['make']}" test
-    "${app['make']}" install
+    koopa_activate_app --build-only 'pkg-config'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    cmake_args=('-DWITH_JPEG8=1')
+    dict['url']="https://downloads.sourceforge.net/project/libjpeg-turbo/\
+${dict['version']}/libjpeg-turbo-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

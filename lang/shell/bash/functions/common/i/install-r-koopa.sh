@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't returning with shell error code correctly.
+# FIXME Assert that koopa package is installed at end.
+
 koopa_install_r_koopa() {
     # """
     # Install koopa R package.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-03-31.
     # """
     local app
     koopa_assert_has_args_le "$#" 1

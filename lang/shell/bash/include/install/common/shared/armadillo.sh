@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-30.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -13,48 +13,20 @@ main() {
     #     Formula/armadillo.rb
     # - https://git.alpinelinux.org/aports/tree/community/armadillo/APKBUILD
     # """
-    local app cmake_args dict
+    local cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'hdf5'
-    declare -A app
-    app['cmake']="$(koopa_locate_cmake)"
-    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='armadillo'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="http://sourceforge.net/projects/arma/files/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    cmake_args=(
-        # > '-DCMAKE_BUILD_TYPE=MinSizeRel'
-        # > '-DCMAKE_INSTALL_LIBDIR=lib'
-        "-DCMAKE_INSTALL_PREFIX:PATH=${dict['prefix']}"
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
-    )
-    if koopa_is_macos
-    then
-        cmake_args+=('-DALLOW_OPENBLAS_MACOS=ON')
-    fi
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH \
-        -S . \
-        -B 'build' \
-        "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build 'build' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build'
+    cmake_args=('-DALLOW_OPENBLAS_MACOS=ON')
+    dict['url']="http://sourceforge.net/projects/arma/files/\
+armadillo-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

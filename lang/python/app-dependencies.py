@@ -87,7 +87,7 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-03-29.
+    @note Updated 2023-03-31.
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
@@ -97,9 +97,6 @@ def print_apps(app_names: list, json_data: dict) -> bool:
         keys = json.keys()
         if "arch" in keys:
             if json["arch"] != sys_dict["arch"]:
-                continue
-        if "enabled" in keys:
-            if not json["enabled"]:
                 continue
         if "platform" in keys:
             if json["platform"] != sys_dict["platform"]:

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install EditorConfig.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-30.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
@@ -14,55 +14,33 @@ main() {
     #     CMake_Modules/FindPCRE2.cmake
     # - https://git.alpinelinux.org/aports/tree/community/editorconfig/APKBUILD
     # """
-    local app cmake_args dict
+    local cmake_args cmake_dict dict
+    declare -A cmake_dict dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'pcre2'
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['name']='editorconfig-core-c'
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/editorconfig/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
-    dict['pcre2_include_dir']="${dict['pcre2']}/include"
-    dict['pcre2_library']="${dict['pcre2']}/lib/\
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    cmake_dict['cmake_library_path']="${dict['pcre2']}/lib"
+    cmake_dict['pcre2_include_dir']="${dict['pcre2']}/include"
+    cmake_dict['pcre2_library']="${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
-    koopa_assert_is_dir "${dict['pcre2_include_dir']}"
-    koopa_assert_is_file "${dict['pcre2_library']}"
+    koopa_assert_is_dir "${cmake_dict['pcre2_include_dir']}"
+    koopa_assert_is_file "${cmake_dict['pcre2_library']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
-        # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_INSTALL_LIBDIR=lib'
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        "-DCMAKE_LIBRARY_PATH=${dict['pcre2']}/lib"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        "-DCMAKE_LIBRARY_PATH=${cmake_dict['cmake_library_path']}"
         # Dependency paths -----------------------------------------------------
-        "-DPCRE2_INCLUDE_DIR=${dict['pcre2_include_dir']}"
-        "-DPCRE2_LIBRARY=${dict['pcre2_library']}"
+        "-DPCRE2_INCLUDE_DIR=${cmake_dict['pcre2_include_dir']}"
+        "-DPCRE2_LIBRARY=${cmake_dict['pcre2_library']}"
     )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1 install
+    dict['url']="https://github.com/editorconfig/editorconfig-core-c/\
+archive/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

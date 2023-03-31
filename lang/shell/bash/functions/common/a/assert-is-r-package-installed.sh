@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to allow user to specify with R.
+
 koopa_assert_is_r_package_installed() {
     # """
     # Assert that specific R packages are installed.

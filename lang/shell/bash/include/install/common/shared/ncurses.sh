@@ -1,14 +1,21 @@
 #!/usr/bin/env bash
 
+# NOTE Consider building with '--with-termlib' enabled, to build libtinfo.
+# This will get picked up in the Fish build configuration. Take a look at
+# the conda-forge recipe for details.
+
 main() {
     # """
     # Install ncurses.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-31.
     #
     # @seealso
+    # - https://github.com/conda-forge/ncurses-feedstock
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
     #     repos/core-x86_64/PKGBUILD
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/ncurses.rb
+    # - https://www.linuxfromscratch.org/lfs/view/development/chapter06/
+    #     ncurses.html
     # - https://lists.gnu.org/archive/html/bug-ncurses/2019-07/msg00025.html
     # - https://github.com/microsoft/vcpkg/issues/22654
     # - https://stackoverflow.com/questions/6562403/
