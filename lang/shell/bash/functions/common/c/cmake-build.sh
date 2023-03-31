@@ -8,7 +8,7 @@ koopa_cmake_build() {
     local app cmake_args dict pos
     declare -A app dict
     koopa_assert_has_args "$#"
-    koopa_activate_app --build-only 'cmake'
+    koopa_activate_app --build-only 'cmake' 'make'
     app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
     dict['builddir']="builddir-$(koopa_random_string)"
