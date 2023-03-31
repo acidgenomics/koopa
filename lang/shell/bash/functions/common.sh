@@ -15199,6 +15199,7 @@ koopa_locate_dirname() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gdirname' \
+        --system-bin-name='dirname' \
         "$@"
 }
 
@@ -15224,6 +15225,7 @@ koopa_locate_du() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gdu' \
+        --system-bin-name='du' \
         "$@"
 }
 
@@ -15231,6 +15233,7 @@ koopa_locate_echo() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gecho' \
+        --system-bin-name='echo' \
         "$@"
 }
 
@@ -15480,6 +15483,7 @@ koopa_locate_id() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gid' \
+        --system-bin-name='id' \
         "$@"
 }
 
@@ -15587,6 +15591,7 @@ koopa_locate_ls() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gls' \
+        --system-bin-name='ls' \
         "$@"
 }
 
@@ -15746,6 +15751,7 @@ koopa_locate_nproc() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gnproc' \
+        --system-bin-name='nproc' \
         "$@"
 }
 
@@ -15753,6 +15759,7 @@ koopa_locate_numfmt() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gnumfmt' \
+        --system-bin-name='numfmt' \
         "$@"
 }
 
@@ -15760,6 +15767,7 @@ koopa_locate_od() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='god' \
+        --system-bin-name='od' \
         "$@"
 }
 
@@ -15780,6 +15788,7 @@ koopa_locate_parallel() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gparallel' \
+        --system-bin-name='parallel' \
         "$@"
 }
 
@@ -15793,6 +15802,7 @@ koopa_locate_paste() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gpaste' \
+        --system-bin-name='paste' \
         "$@"
 }
 
@@ -15891,6 +15901,7 @@ koopa_locate_readlink() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='greadlink' \
+        --system-bin-name='readlink' \
         "$@"
 }
 
@@ -15898,6 +15909,7 @@ koopa_locate_realpath() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='grealpath' \
+        --system-bin-name='realpath' \
         "$@"
 }
 
@@ -16129,6 +16141,7 @@ koopa_locate_tac() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gtac' \
+        --system-bin-name='tac' \
         "$@"
 }
 
@@ -16222,6 +16235,7 @@ koopa_locate_uniq() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='guniq' \
+        --system-bin-name='uniq' \
         "$@"
 }
 
@@ -16259,6 +16273,7 @@ koopa_locate_whoami() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gwhoami' \
+        --system-bin-name='whoami' \
         "$@"
 }
 
@@ -16288,6 +16303,7 @@ koopa_locate_yes() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gyes' \
+        --system-bin-name='yes' \
         "$@"
 }
 
