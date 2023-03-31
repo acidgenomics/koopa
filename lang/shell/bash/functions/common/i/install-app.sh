@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-03-31.
     # """
     local app bash_vars bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
@@ -301,7 +301,9 @@ ${dict['version2']}"
         readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
         if koopa_is_array_non_empty "${deps[@]:-}"
         then
-            koopa_dl 'Dependencies' "$(koopa_to_string "${deps[@]}")"
+            koopa_dl \
+                "${dict['name']} dependencies" \
+                "$(koopa_to_string "${deps[@]}")"
             for dep in "${deps[@]}"
             do
                 if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
