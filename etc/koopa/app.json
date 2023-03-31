@@ -2426,6 +2426,15 @@
     "url": ["https://gnupg.org/download/"],
     "version": "2.5.5"
   },
+  "libdeflate": {
+    "aliases": {
+      "conda": true
+    },
+    "build_dependencies": ["cmake"],
+    "date": "2023-03-30",
+    "url": ["https://github.com/ebiggers/libdeflate/"],
+    "version": "1.18"
+  },
   "libedit": {
     "aliases": {
       "debian": "libedit-dev",
@@ -2795,6 +2804,7 @@
     "date": "2023-03-18",
     "dependencies": [
       "binutils",
+      "elfutils",
       "libedit",
       "libffi",
       "libxml2",
@@ -4524,7 +4534,8 @@
     },
     "build_dependencies": ["cmake", "pkg-config"],
     "conservative": true,
-    "date": "2022-11-08",
+    "date": "2023-03-31",
+    "dependencies": ["zlib"],
     "url": ["https://github.com/taglib/taglib/"],
     "version": "1.13"
   },
