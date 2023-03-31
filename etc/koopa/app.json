@@ -3363,6 +3363,7 @@
     "build_dependencies": ["cmake"],
     "date": "2023-03-29",
     "dependencies": ["hdf5", "zstd"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/nanoporetech/vbz_compression/"],
     "version": "1.0.2"
