@@ -3100,7 +3100,7 @@
     "build_dependencies": ["cmake"],
     "conservative": true,
     "date": "2023-03-05",
-    "dependencies": ["boost", "zlib"],
+    "dependencies": ["boost"],
     "enabled": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
     "version": "6.0.0"
