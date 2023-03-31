@@ -9965,9 +9965,11 @@ koopa_install_all_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     for app_name in "${app_names[@]}"
     do
-        koopa_alert "$app_name"
-        if [[ -d "$(koopa_app_prefix --allow-missing "$app_name")" ]]
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        if [[ -d "$prefix" ]]
         then
+            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
             continue
         fi
         koopa_cli_install "$app_name"
@@ -10000,9 +10002,11 @@ koopa_install_all_binary_apps() {
     fi
     for app_name in "${app_names[@]}"
     do
-        koopa_alert "$app_name"
-        if [[ -d "$(koopa_app_prefix --allow-missing "$app_name")" ]]
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        if [[ -d "$prefix" ]]
         then
+            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
             continue
         fi
         koopa_cli_install --binary "$app_name"
