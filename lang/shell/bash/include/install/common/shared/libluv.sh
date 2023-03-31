@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libluv.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # Currently only using this in Neovim installer with LuaJIT.
     #
@@ -13,100 +13,71 @@ main() {
     # - cmake/Modules/FindLua.cmake
     # - cmake/Modules/FindLuaJIT.cmake
     # """
-    local app cmake_args deps dict
-    koopa_activate_app --build-only 'cmake'
-    deps=(
-        'libuv'
-        # > 'lua'
-        'luajit'
-    )
+    local app cmake_args cmake_dict deps dict
+    declare -A app cmake_dict dict
+    deps=('libuv' 'luajit')
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['luajit']="$(koopa_locate_luajit)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
+    app['luajit']="$(koopa_locate_luajit)"
     [[ -x "${app['luajit']}" ]] || return 1
-    declare -A dict=(
-        ['libuv']="$(koopa_app_prefix 'libuv')"
-        # > ['lua']="$(koopa_app_prefix 'lua')"
-        ['luajit']="$(koopa_app_prefix 'luajit')"
-        ['name']='luv'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    koopa_assert_is_dir \
-        "${dict['libuv']}" \
-        "${dict['luajit']}"
+    dict['libuv']="$(koopa_app_prefix 'libuv')"
+    dict['luajit']="$(koopa_app_prefix 'luajit')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['luajit_ver']="$(koopa_get_version "${app['luajit']}")"
     dict['luajit_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['luajit_ver']}" \
     )"
-    # Download libluv source code.
-    dict['file']="${dict['version']}.tar.gz"
-    dict['url']="https://github.com/luvit/luv/archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    # Download 'lua-compat-5.3', which is required for LuaJIT.
-    dict['file']='v0.10.tar.gz'
-    dict['url']="https://github.com/keplerproject/lua-compat-5.3/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cp \
-        --target-directory="${dict['name']}-${dict['version']}/\
-deps/lua-compat-5.3" \
-        'lua-compat-5.3-0.10'/*
-    koopa_cd "${dict['name']}-${dict['version']}"
-    # Lua no longer builds with pkg-config support by default.
-    # > CFLAGS="-I${dict['lua']}/include ${CFLAGS:-}"
-    # > export CFLAGS
-    koopa_mkdir "${dict['prefix']}/lib"
+    koopa_assert_is_dir \
+        "${dict['libuv']}" \
+        "${dict['luajit']}"
+    cmake_dict['libuv_include_dir']="${dict['libuv']}/include"
+    cmake_dict['libuv_libraries']="${dict['libuv']}/lib/\
+libuv.${dict['shared_ext']}"
+    cmake_dict['luajit_include_dir']="${dict['luajit']}/include/\
+luajit-${dict['luajit_maj_min_ver']}"
+    cmake_dict['luajit_libraries']="${dict['luajit']}/lib/\
+libluajit.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake_dict['libuv_include_dir']}" \
+        "${cmake_dict['luajit_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake_dict['libuv_libraries']}" \
+        "${cmake_dict['luajit_libraries']}"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        # > "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------
         '-DBUILD_MODULE=ON'
+        '-DBUILD_SHARED_LIBS=ON'
+        '-DBUILD_STATIC_LIBS=ON'
         '-DLUA_BUILD_TYPE=System'
         '-DLUA_COMPAT53_DIR=deps/lua-compat-5.3'
+        '-DWITH_LUA_ENGINE=LuaJIT'
         '-DWITH_SHARED_LIBUV=ON'
         # Dependency paths -----------------------------------------------------
-        "-DLIBUV_INCLUDE_DIR=${dict['libuv']}/include"
-        "-DLIBUV_LIBRARIES=${dict['libuv']}/lib/libuv.${dict['shared_ext']}"
+        "-DLIBUV_INCLUDE_DIR=${cmake_dict['libuv_include_dir']}"
+        "-DLIBUV_LIBRARIES=${cmake_dict['libuv_libraries']}"
+        "-DLUAJIT_INCLUDE_DIR=${cmake_dict['luajit_include_dir']}"
+        "-DLUAJIT_LIBRARIES=${cmake_dict['luajit_libraries']}"
     )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    # Lua support.
-    # NOTE May want to link to shared object instead of 'liblua.a' in the
-    # future, but this requires an update to the Lua install script.
-    # > "${app['cmake']}" -LH -S . -B 'buildlua' \
-    # >     "${cmake_args[@]}" \
-    # >     '-DBUILD_SHARED_LIBS=OFF' \
-    # >     '-DBUILD_STATIC_LIBS=OFF' \
-    # >     '-DWITH_LUA_ENGINE=Lua' \
-    # >     "-DLUA_INCLUDE_DIR=${dict['lua']}/include" \
-    # >     "-DLUA_LIBRARIES=${dict['lua']}/lib/liblua.a"
-    # > "${app['cmake']}" --build 'buildlua'
-    # > "${app['cmake']}" --install 'buildlua'
-    # LuaJIT support (for neovim).
-    "${app['cmake']}" -LH -S . -B 'buildjit' \
-        "${cmake_args[@]}" \
-        '-DBUILD_SHARED_LIBS=ON' \
-        '-DBUILD_STATIC_LIBS=ON' \
-        '-DWITH_LUA_ENGINE=LuaJIT' \
-        "-DLUAJIT_INCLUDE_DIR=${dict['luajit']}/include/\
-luajit-${dict['luajit_maj_min_ver']}" \
-        "-DLUAJIT_LIBRARIES=${dict['luajit']}/lib/\
-libluajit.${dict['shared_ext']}"
-    "${app['cmake']}" --build 'buildjit'
-    "${app['cmake']}" --install 'buildjit'
+    # Download libluv source code.
+    dict['luv_url']="https://github.com/luvit/luv/archive/\
+${dict['version']}.tar.gz"
+    koopa_download "${dict['luv_url']}"
+    koopa_extract \
+        "$(koopa_basename "${dict['luv_url']}")" \
+        'src'
+    # Download 'lua-compat-5.3', which is required for LuaJIT.
+    dict['lua_compat_url']="https://github.com/keplerproject/lua-compat-5.3/\
+archive/v0.10.tar.gz"
+    koopa_download "${dict['lua_compat_url']}"
+    koopa_extract \
+        "$(koopa_basename "${dict['lua_compat_url']}")" \
+        'lua-compat-src'
+    koopa_cp \
+        --target-directory='src/deps/lua-compat-5.3' \
+        'lua-compat-src'/*
+    koopa_cd 'src'
+    koopa_mkdir "${dict['prefix']}/lib"
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
