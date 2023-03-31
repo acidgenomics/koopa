@@ -25,6 +25,7 @@ koopa_install_all_binary_apps() {
     fi
     for app_name in "${app_names[@]}"
     do
+        koopa_alert "$app_name"
         if [[ -d "$(koopa_app_prefix --allow-missing "$app_name")" ]]
         then
             continue

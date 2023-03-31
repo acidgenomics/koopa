@@ -21,6 +21,7 @@ koopa_install_all_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     for app_name in "${app_names[@]}"
     do
+        koopa_alert "$app_name"
         if [[ -d "$(koopa_app_prefix --allow-missing "$app_name")" ]]
         then
             continue
