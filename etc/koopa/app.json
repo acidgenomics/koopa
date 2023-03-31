@@ -245,7 +245,7 @@
       "homebrew": true
     },
     "bin": ["grex"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-12-08",
     "enabled": false,
     "notes": ["Current version has build issues related to Cargo lock."],
@@ -294,7 +294,7 @@
       "homebrew": true
     },
     "bin": ["bat"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-26",
     "url": ["https://github.com/sharkdp/bat"],
     "version": "0.23.0"
@@ -445,7 +445,7 @@
       "homebrew": true
     },
     "bin": ["btm"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-02-08",
     "url": ["https://github.com/ClementTsang/bottom/"],
     "version": "0.8.0"
@@ -477,7 +477,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-03-31",
     "url": [
       "https://crates.io/crates/broot/",
@@ -1007,7 +1007,7 @@
       "homebrew": "git-delta"
     },
     "bin": ["delta"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-01",
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.15.1"
@@ -1026,10 +1026,10 @@
       "homebrew": true
     },
     "bin": ["difft"],
-    "build_dependencies": ["rust"],
-    "date": "2023-03-03",
+    "build_dependencies": ["git", "rust"],
+    "date": "2023-03-31",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.45.0"
+    "version": "0.46.0"
   },
   "docker-credential-pass": {
     "aliases": {
@@ -1046,7 +1046,7 @@
       "homebrew": true
     },
     "bin": ["dog"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "dependencies": ["openssl1"],
     "url": ["https://github.com/ogham/dog/"],
@@ -1069,7 +1069,7 @@
       "homebrew": "dust"
     },
     "bin": ["dust"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-14",
     "url": [
       "https://github.com/bootandy/dust/",
@@ -1162,7 +1162,7 @@
       "homebrew": true
     },
     "bin": ["exa"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "url": ["https://github.com/ogham/exa/"],
     "version": "0.10.1"
@@ -1205,7 +1205,7 @@
       "homebrew": "fd"
     },
     "bin": ["fd"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-02-24",
     "url": ["https://github.com/sharkdp/fd/"],
     "version": "8.7.0"
@@ -1758,7 +1758,7 @@
       "homebrew": true
     },
     "bin": ["grex"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-12-08",
     "url": ["https://github.com/pemistahl/grex/"],
     "version": "1.4.1"
@@ -2074,7 +2074,7 @@
       "homebrew": true
     },
     "bin": ["hexyl"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-12-08",
     "url": ["https://github.com/sharkdp/hexyl/"],
     "version": "0.12.0"
@@ -2140,7 +2140,7 @@
       "homebrew": true
     },
     "bin": ["hyperfine"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-21",
     "url": ["https://github.com/sharkdp/hyperfine/"],
     "version": "1.16.1"
@@ -2831,7 +2831,7 @@
       "homebrew": true
     },
     "bin": ["lsd"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "url": ["https://github.com/Peltoche/lsd/"],
     "version": "0.23.1"
@@ -2991,7 +2991,7 @@
       "homebrew": true
     },
     "bin": ["mcfly"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-07",
     "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.8.0"
@@ -3001,7 +3001,7 @@
       "homebrew": true
     },
     "bin": ["mdcat"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-07",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
@@ -3324,7 +3324,7 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-17",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
@@ -3678,7 +3678,7 @@
       "homebrew": true
     },
     "bin": ["procs"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-07",
     "url": ["https://github.com/dalance/procs/"],
     "version": "0.14.0"
@@ -4079,7 +4079,7 @@
       "homebrew": true
     },
     "bin": ["rga"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "url": ["https://github.com/phiresky/ripgrep-all/"],
     "version": "0.9.7"
@@ -4089,7 +4089,7 @@
       "homebrew": true
     },
     "bin": ["rg"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
@@ -4259,7 +4259,7 @@
       "homebrew": true
     },
     "bin": ["sd"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-12-08",
     "url": ["https://github.com/chmln/sd/"],
     "version": "0.7.6"
@@ -4451,7 +4451,7 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-02-27",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.13.1"
@@ -4566,7 +4566,7 @@
       "homebrew": true
     },
     "bin": ["tldr"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-11-04",
     "url": ["https://github.com/dbrgn/tealdeer/"],
     "version": "1.6.1"
@@ -4638,7 +4638,7 @@
       "homebrew": true
     },
     "bin": ["tokei"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "url": ["https://github.com/XAMPPRocky/tokei/"],
     "version": "12.1.2"
@@ -4675,7 +4675,7 @@
       "homebrew": true
     },
     "bin": ["tuc"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-02-27",
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.0.0"
@@ -4800,7 +4800,7 @@
       "homebrew": "code-cli"
     },
     "bin": ["code"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-22",
     "enabled": false,
     "url": ["https://github.com/microsoft/vscode/"],
@@ -5055,7 +5055,7 @@
       "homebrew": true
     },
     "bin": ["xsv"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2022-09-26",
     "url": ["https://github.com/BurntSushi/xsv/"],
     "version": "0.13.0"
@@ -5146,7 +5146,7 @@
       "homebrew": true
     },
     "bin": ["zellij"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-03-10",
     "url": ["https://github.com/zellij-org/zellij/"],
     "version": "0.35.2"
@@ -5183,7 +5183,7 @@
       "homebrew": true
     },
     "bin": ["zoxide"],
-    "build_dependencies": ["rust"],
+    "build_dependencies": ["git", "rust"],
     "date": "2023-01-09",
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
     "version": "0.9.0"
