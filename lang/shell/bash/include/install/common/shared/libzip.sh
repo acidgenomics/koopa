@@ -3,15 +3,16 @@
 main() {
     # """
     # Install libzip.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - https://libzip.org/download/
     # - https://noknow.info/it/os/install_libzip_from_source?lang=en
     # """
-    local app cmake_args deps dict
+    local cmake_args cmake_dict deps dict
+    declare -A cmake_dict dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     deps=(
         'zlib'
         'bzip2'
@@ -21,42 +22,34 @@ main() {
         'perl'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libzip'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
-    )
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['zlib']}" \
         "${dict['zstd']}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://libzip.org/download/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
+    cmake_dict['bzip2_include_dir']="${dict['bzip2']}/include"
+    cmake_dict['bzip2_library']="${dict['bzip2']}/lib/\
+libbz2.${dict['shared_ext']}"
+    cmake_dict['zlib_include_dir']="${dict['zlib']}/include"
+    cmake_dict['zlib_library']="${dict['zlib']}/lib/\
+libz.${dict['shared_ext']}"
+    cmake_dict['zstd_include_dir']="${dict['zstd']}/include"
+    cmake_dict['zstd_library']="${dict['zstd']}/lib/\
+libzstd.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake_dict['bzip2_include_dir']}" \
+        "${cmake_dict['zlib_include_dir']}" \
+        "${cmake_dict['zstd_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake_dict['bzip2_library']}" \
+        "${cmake_dict['zlib_library']}" \
+        "${cmake_dict['zstd_library']}"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------
         '-DENABLE_BZIP2=ON'
         '-DENABLE_COMMONCRYPTO=OFF'
@@ -67,17 +60,17 @@ main() {
         '-DENABLE_WINDOWS_CRYPTO=OFF'
         '-DENABLE_ZSTD=ON'
         # Dependency paths -----------------------------------------------------
-        "-DBZIP2_INCLUDE_DIR=${dict['bzip2']}/include"
-        "-DBZIP2_LIBRARY=${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
-        "-DZstd_INCLUDE_DIR=${dict['zstd']}/include"
-        "-DZstd_LIBRARY=${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
-        "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
-        "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        "-DBZIP2_INCLUDE_DIR=${cmake_dict['bzip2_include_dir']}"
+        "-DBZIP2_LIBRARY=${cmake_dict['bzip2_library']}"
+        "-DZLIB_INCLUDE_DIR=${cmake_dict['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake_dict['zlib_library']}"
+        "-DZstd_INCLUDE_DIR=${cmake_dict['zstd_include_dir']}"
+        "-DZstd_LIBRARY=${cmake_dict['zstd_library']}"
     )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://libzip.org/download/libzip-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
