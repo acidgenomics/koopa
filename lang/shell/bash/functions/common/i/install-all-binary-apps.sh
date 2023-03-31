@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -25,9 +25,11 @@ koopa_install_all_binary_apps() {
     fi
     for app_name in "${app_names[@]}"
     do
-        koopa_alert "$app_name"
-        if [[ -d "$(koopa_app_prefix --allow-missing "$app_name")" ]]
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        if [[ -d "$prefix" ]]
         then
+            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
             continue
         fi
         koopa_cli_install --binary "$app_name"
