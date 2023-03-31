@@ -227,7 +227,7 @@ local({  # nolint
             split = ".",
             fixed = TRUE
         )[[1L]][[1L]]
-        ## FIXME Work on extracting this from '/etc' instead...
+        ## Can access codename with 'lsb_release -cs'.
         distro <- switch(
             EXPR = x,
             "18" = "bionic",
