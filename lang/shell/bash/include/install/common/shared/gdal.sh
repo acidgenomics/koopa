@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-03-31.
     #
     # Use 'configure --help' for build options.
     #
@@ -20,75 +20,94 @@ main() {
     # - https://github.com/OSGeo/gdal/issues/1708
     # - https://stackoverflow.com/questions/53511533/
     # """
-    local app cmake_args dict
+    local app build_deps cmake_args cmake_dict deps dict
+    declare -A app cmake_dict dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only \
-        'cmake' \
-        'libtool' \
-        'make' \
-        'pkg-config'
-    koopa_activate_app \
-        'curl' \
-        'geos' \
-        'hdf5' \
-        'libxml2' \
-        'openssl3' \
-        'pcre2' \
-        'sqlite' \
-        'zlib' \
-        'zstd' \
-        'libjpeg-turbo' \
-        'libtiff' \
-        'proj' \
-        'xz' \
-        'python3.11' \
+    build_deps=('libtool' 'pkg-config')
+    deps=(
+        'curl'
+        'geos'
+        'hdf5'
+        'libxml2'
+        'openssl3'
+        'pcre2'
+        'sqlite'
+        'zlib'
+        'zstd'
+        'libjpeg-turbo'
+        'libtiff'
+        'proj'
+        'xz'
+        'python3.11'
         'openjdk'
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python311 --realpath)"
     )
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['make_prefix']="$(koopa_make_prefix)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://github.com/OSGeo/${dict['name']}/releases/download/\
-v${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['proj']="$(koopa_app_prefix 'proj')"
     dict['python']="$(koopa_app_prefix 'python3.11')"
+    dict['shared_ext']="$(koopa_shared_ext)"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
+    cmake_dict['curl_include_dir']="${dict['curl']}/include"
+    cmake_dict['curl_library']="${dict['curl']}/lib/\
+libcurl.${dict['shared_ext']}"
+    cmake_dict['hdf5_root']="${dict['hdf5']}"
+    cmake_dict['java_home']="${dict['openjdk']}"
+    cmake_dict['libxml2_include_dir']="${dict['libxml2']}/include"
+    cmake_dict['libxml2_library']="${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+    cmake_dict['pcre2_include_dir']="${dict['pcre2']}/include"
+    cmake_dict['pcre2_8_library']="${dict['pcre2']}/lib/\
+libpcre2-8.${dict['shared_ext']}"
+    cmake_dict['proj_dir']="${dict['proj']}/lib/cmake/proj"
+    cmake_dict['proj_include_dir']="${dict['proj']}/include"
+    cmake_dict['proj_library']="${dict['proj']}/lib/\
+libproj.${dict['shared_ext']}"
+    cmake_dict['python_executable']="${app['python']}"
+    cmake_dict['python_root']="${dict['python']}"
+    cmake_dict['sqlite3_include_dir']="${dict['sqlite']}/include"
+    cmake_dict['sqlite3_library']="${dict['sqlite']}/lib/\
+libsqlite3.${dict['shared_ext']}"
+    cmake_dict['tiff_include_dir']="${dict['libtiff']}/include"
+    cmake_dict['tiff_library_release']="${dict['libtiff']}/lib/\
+libtiff.${dict['shared_ext']}"
+    cmake_dict['zlib_include_dir']="${dict['zlib']}/include"
+    cmake_dict['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    cmake_dict['zstd_dir']="${dict['zstd']}/lib/cmake/zstd"
+    koopa_assert_is_dir \
+        "${cmake_dict['curl_include_dir']}" \
+        "${cmake_dict['hdf5_root']}" \
+        "${cmake_dict['java_home']}" \
+        "${cmake_dict['libxml2_include_dir']}" \
+        "${cmake_dict['pcre2_include_dir']}" \
+        "${cmake_dict['proj_dir']}" \
+        "${cmake_dict['proj_include_dir']}" \
+        "${cmake_dict['python_root']}" \
+        "${cmake_dict['sqlite3_include_dir']}" \
+        "${cmake_dict['tiff_include_dir']}" \
+        "${cmake_dict['zlib_include_dir']}" \
+        "${cmake_dict['zstd_dir']}"
+    koopa_assert_is_executable \
+        "${cmake_dict['python_executable']}"
+    koopa_assert_is_file \
+        "${cmake_dict['curl_library']}" \
+        "${cmake_dict['libxml2_library']}" \
+        "${cmake_dict['pcre2_8_library']}" \
+        "${cmake_dict['proj_library']}" \
+        "${cmake_dict['sqlite3_library']}" \
+        "${cmake_dict['tiff_library_release']}" \
+        "${cmake_dict['zlib_library']}"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------
         '-DBUILD_APPS=ON'
         '-DBUILD_JAVA_BINDINGS=ON'
@@ -165,35 +184,33 @@ v${dict['version']}/${dict['file']}"
         '-DGDAL_USE_ZLIB=ON'
         '-DGDAL_USE_ZSTD=ON'
         # Dependency paths -----------------------------------------------------
-        "-DCURL_INCLUDE_DIR=${dict['curl']}/include"
-        "-DCURL_LIBRARY=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
-        "-DHDF5_ROOT=${dict['hdf5']}"
-        "-DJAVA_HOME=${dict['openjdk']}"
-        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
-        "-DLIBXML2_LIBRARY=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
-        "-DPCRE2_INCLUDE_DIR=${dict['pcre2']}/include"
-        "-DPCRE2-8_LIBRARY=${dict['pcre2']}/lib/\
-libpcre2-8.${dict['shared_ext']}"
-        "-DPROJ_DIR=${dict['proj']}/lib/cmake/proj"
-        "-DPROJ_INCLUDE_DIR=${dict['proj']}/include"
-        "-DPROJ_LIBRARY=${dict['proj']}/lib/libproj.${dict['shared_ext']}"
-        "-DPython_EXECUTABLE=${app['python']}"
-        "-DPython_ROOT=${dict['python']}"
-        "-DSQLite3_INCLUDE_DIR=${dict['sqlite']}/include"
-        "-DSQLite3_LIBRARY=${dict['sqlite']}/lib/\
-libsqlite3.${dict['shared_ext']}"
-        "-DTIFF_INCLUDE_DIR=${dict['libtiff']}/include"
-        "-DTIFF_LIBRARY_RELEASE=${dict['libtiff']}/lib/\
-libtiff.${dict['shared_ext']}"
-        "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
-        "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-        "-DZSTD_DIR=${dict['zstd']}/lib/cmake/zstd"
+        "-DCURL_INCLUDE_DIR=${cmake_dict['curl_include_dir']}"
+        "-DCURL_LIBRARY=${cmake_dict['curl_library']}"
+        "-DHDF5_ROOT=${cmake_dict['hdf5_root']}"
+        "-DJAVA_HOME=${cmake_dict['java_home']}"
+        "-DLIBXML2_INCLUDE_DIR=${cmake_dict['libxml2_include_dir']}"
+        "-DLIBXML2_LIBRARY=${cmake_dict['libxml2_library']}"
+        "-DPCRE2_INCLUDE_DIR=${cmake_dict['pcre2_include_dir']}"
+        "-DPCRE2-8_LIBRARY=${cmake_dict['pcre2_8_library']}"
+        "-DPROJ_DIR=${cmake_dict['proj_dir']}"
+        "-DPROJ_INCLUDE_DIR=${cmake_dict['proj_include_dir']}"
+        "-DPROJ_LIBRARY=${cmake_dict['proj_library']}"
+        "-DPython_EXECUTABLE=${cmake_dict['python_executable']}"
+        "-DPython_ROOT=${cmake_dict['python_root']}"
+        "-DSQLite3_INCLUDE_DIR=${cmake_dict['sqlite3_include_dir']}"
+        "-DSQLite3_LIBRARY=${cmake_dict['sqlite3_library']}"
+        "-DTIFF_INCLUDE_DIR=${cmake_dict['tiff_include_dir']}"
+        "-DTIFF_LIBRARY_RELEASE=${cmake_dict['tiff_library_release']}"
+        "-DZLIB_INCLUDE_DIR=${cmake_dict['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake_dict['zlib_library']}"
+        "-DZSTD_DIR=${cmake_dict['zstd_dir']}"
     )
+    dict['url']="https://github.com/OSGeo/gdal/releases/download/\
+v${dict['version']}/gdal-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_mkdir "${dict['prefix']}/include"
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH -S .. "${cmake_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
