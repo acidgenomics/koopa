@@ -301,7 +301,7 @@ ${dict['version2']}"
         readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
         if koopa_is_array_non_empty "${deps[@]:-}"
         then
-            koopa_dl 'Dependencies' "${deps[*]}"
+            koopa_dl 'Dependencies' "$(koopa_to_string "${deps[@]}")"
             for dep in "${deps[@]}"
             do
                 if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]

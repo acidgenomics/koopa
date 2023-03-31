@@ -14901,7 +14901,6 @@ koopa_locate_app() {
         koopa_print "${dict['app']}"
         return 0
     fi
-
     if [[ "${bool['only_system']}" -eq 0 ]]
     then
         dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
@@ -14932,9 +14931,15 @@ bin/${dict['bin_name']}"
         return 0
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
-    koopa_stop \
-        "Failed to locate '${dict['bin_name']}'." \
-        "Run 'koopa install ${dict['app_name']}' to resolve."
+    if [[ "${bool['allow_system']}" -eq 1 ]]
+    then
+        koopa_stop \
+            "Failed to locate '${dict['system_bin_name']}'."
+    else
+        koopa_stop \
+            "Failed to locate '${dict['bin_name']}'." \
+            "Run 'koopa install ${dict['app_name']}' to resolve."
+    fi
 }
 
 koopa_locate_ascp() {
@@ -14983,6 +14988,7 @@ koopa_locate_basename() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gbasename' \
+        --system-bin-name='basename' \
         "$@"
 }
 
@@ -15653,6 +15659,7 @@ koopa_locate_md5sum() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gmd5sum' \
+        --system-bin-name='md5sum' \
         "$@"
 }
 
@@ -16237,6 +16244,7 @@ koopa_locate_wc() {
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gwc' \
+        --system-bin-name='wc' \
         "$@"
 }
 
