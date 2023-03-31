@@ -6,7 +6,6 @@ koopa_cmake_std_args() {
     # @note Updated 2023-03-31.
     #
     # Potentially useful:
-    # - CMAKE_CXX_FLAGS
     # - CMAKE_STATIC_LINKER_FLAGS
     # """
     local dict prefix
@@ -15,6 +14,7 @@ koopa_cmake_std_args() {
     dict['prefix']="${1:?}"
     args=(
         '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_INCLUDEDIR=${dict['prefix']}/include"
