@@ -3190,7 +3190,7 @@
       "homebrew": true
     },
     "bin": ["nvim"],
-    "build_dependencies": ["cmake", "libtool", "ninja", "pkg-config"],
+    "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
     "date": "2023-02-08",
     "dependencies": [
       "gettext",
