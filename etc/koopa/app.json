@@ -478,12 +478,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2022-03-23",
+    "date": "2022-03-31",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.21.1"
+    "version": "1.21.2"
   },
   "brotli": {
     "aliases": {
@@ -2368,7 +2368,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-03-20",
+    "date": "2023-03-31",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2376,7 +2376,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.14.2"
+    "version": "2.15.1"
   },
   "less": {
     "aliases": {
@@ -5135,9 +5135,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-26",
+    "date": "2023-03-31",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.33.1"
+    "version": "4.33.2"
   },
   "yt-dlp": {
     "aliases": {
