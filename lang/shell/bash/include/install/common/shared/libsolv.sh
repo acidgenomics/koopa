@@ -11,7 +11,7 @@ main() {
     local cmake_args cmake_dict dict
     declare -A cmake_dict dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'zlib'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
