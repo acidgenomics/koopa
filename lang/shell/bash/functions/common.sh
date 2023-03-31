@@ -4170,6 +4170,74 @@ koopa_clone() {
     return 0
 }
 
+koopa_cmake_build() {
+    local app cmake_args dict pos
+    declare -A app dict
+    koopa_assert_has_args "$#"
+    koopa_activate_app --build-only 'cmake' 'make'
+    app['cmake']="$(koopa_locate_cmake)"
+    [[ -x "${app['cmake']}" ]] || return 1
+    dict['builddir']="builddir-$(koopa_random_string)"
+    dict['jobs']="$(koopa_cpu_count)"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '-D'*)
+                pos+=("$1")
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
+    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
+    [[ "$#" -gt 0 ]] && cmake_args+=("$@")
+    koopa_print_env
+    koopa_dl 'CMake args' "${cmake_args[*]}"
+    "${app['cmake']}" -LH \
+        '-B' "${dict['builddir']}" \
+        '-S' '.' \
+        "${cmake_args[@]}"
+    "${app['cmake']}" \
+        --build "${dict['builddir']}" \
+        --parallel "${dict['jobs']}"
+    "${app['cmake']}" --install "${dict['builddir']}"
+    return 0
+}
+
+koopa_cmake_std_args() {
+    local dict prefix
+    koopa_assert_has_args_eq "$#" 1
+    declare -A dict
+    dict['prefix']="${1:?}"
+    args=(
+        '-DCMAKE_BUILD_TYPE=Release'
+        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_INSTALL_INCLUDEDIR=include'
+        '-DCMAKE_INSTALL_LIBDIR=lib'
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+    )
+    koopa_print "${args[@]}"
+    return 0
+}
+
 koopa_compress_ext_pattern() {
     koopa_assert_has_no_args "$#"
     koopa_print '\.(bz2|gz|xz|zip)$'
@@ -11664,6 +11732,12 @@ koopa_install_libarchive() {
 koopa_install_libassuan() {
     koopa_install_app \
         --name='libassuan' \
+        "$@"
+}
+
+koopa_install_libdeflate() {
+    koopa_install_app \
+        --name='libdeflate' \
         "$@"
 }
 
@@ -20469,8 +20543,9 @@ koopa_sambamba_sort() {
 }
 
 koopa_samtools_convert_sam_to_bam() {
-    local bam_bn input_sam output_bam sam_bn threads
+    local app bam_bn input_sam output_bam sam_bn threads
     koopa_assert_has_args "$#"
+    declare -A app
     koopa_assert_is_installed 'samtools'
     while (("$#"))
     do
@@ -20509,7 +20584,6 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "$threads"
     "${app['samtools']}" view \
         -@ "$threads" \
         -b \
@@ -24078,6 +24152,12 @@ koopa_uninstall_libarchive() {
 koopa_uninstall_libassuan() {
     koopa_uninstall_app \
         --name='libassuan' \
+        "$@"
+}
+
+koopa_uninstall_libdeflate() {
+    koopa_uninstall_app \
+        --name='libdeflate' \
         "$@"
 }
 
