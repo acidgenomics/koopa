@@ -205,6 +205,7 @@ koopa_install_app() {
         then
             for dep in "${deps[@]}"
             do
+                koopa_alert "$dep"
                 if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
                 then
                     continue
