@@ -4171,13 +4171,14 @@ koopa_clone() {
 }
 
 koopa_cmake_build() {
-    local app cmake_args dict pos
+    local app build_deps cmake_args dict pos
     declare -A app dict
     koopa_assert_has_args "$#"
-    koopa_activate_app --build-only 'cmake' 'make'
+    build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
     [[ -x "${app['cmake']}" ]] || return 1
     dict['builddir']="builddir-$(koopa_random_string)"
+    dict['generator']='Unix Makefiles'
     dict['jobs']="$(koopa_cpu_count)"
     pos=()
     while (("$#"))
@@ -4190,6 +4191,10 @@ koopa_cmake_build() {
             '--prefix')
                 dict['prefix']="${2:?}"
                 shift 2
+                ;;
+            '--ninja')
+                dict['generator']='Ninja'
+                shift 1
                 ;;
             '-D'*)
                 pos+=("$1")
@@ -4204,10 +4209,23 @@ koopa_cmake_build() {
     koopa_assert_is_set '--prefix' "${dict['prefix']}"
     readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
     [[ "$#" -gt 0 ]] && cmake_args+=("$@")
+    case "${dict['generator']}" in
+        'Ninja')
+            build_deps+=('ninja')
+            ;;
+        'Unix Makefiles')
+            build_deps+=('make')
+            ;;
+        *)
+            koopa_stop 'Unsupported generator.'
+            ;;
+    esac
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
         '-B' "${dict['builddir']}" \
+        '-G' "${dict['generator']}" \
         '-S' '.' \
         "${cmake_args[@]}"
     "${app['cmake']}" \
