@@ -619,6 +619,7 @@
       "homebrew": true
     },
     "bin": ["cheat"],
+    "build_dependencies": ["go"],
     "date": "2022-11-07",
     "url": ["https://github.com/cheat/cheat/"],
     "version": "4.4.0"
