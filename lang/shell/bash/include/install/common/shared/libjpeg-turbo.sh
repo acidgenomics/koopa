@@ -18,7 +18,6 @@ main() {
     declare -A dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
-    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=('-DWITH_JPEG8=1')
