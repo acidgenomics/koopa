@@ -3,15 +3,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2023-03-24.
-    #
-    # Useful CMake linker variables:
-    # - CMAKE_CXX_FLAGS
-    # - CMAKE_C_FLAGS
-    # - CMAKE_EXE_LINKER_FLAGS
-    # - CMAKE_MODULE_LINKER_FLAGS
-    # - CMAKE_SHARED_LINKER_FLAGS
-    # - CMAKE_STATIC_LINKER_FLAGS
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
@@ -32,14 +24,7 @@ main() {
     # - https://stackoverflow.com/questions/6077414/
     # """
     local app build_deps cmake_args dict deps projects
-    build_deps=(
-        'cmake'
-        'git'
-        'ninja'
-        'perl'
-        'pkg-config'
-    )
-    koopa_activate_app --build-only "${build_deps[@]}"
+    build_deps=('git' 'perl' 'pkg-config')
     deps=(
         'zlib'
         'libedit'
@@ -54,11 +39,11 @@ main() {
         deps+=(
             # Needed for 'gold'.
             'binutils'
-            # > 'zstd' # may be required for elfutils
             # OpenMP requires 'gelf.h'.
             'elfutils'
         )
     fi
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     declare -A app=(
         ['cmake']="$(koopa_locate_cmake)"
@@ -77,11 +62,9 @@ main() {
     [[ -x "${app['python']}" ]] || return 1
     [[ -x "${app['swig']}" ]] || return 1
     declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
         ['libedit']="$(koopa_app_prefix 'libedit')"
         ['libffi']="$(koopa_app_prefix 'libffi')"
         ['libxml2']="$(koopa_app_prefix 'libxml2')"
-        ['name']='llvm-project'
         ['ncurses']="$(koopa_app_prefix 'ncurses')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['python']="$(koopa_app_prefix 'python3.11')"
@@ -132,17 +115,7 @@ main() {
     dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
     dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
-        # LLVM options ---------------------------------------------------------
+        # Build options --------------------------------------------------------
         '-DLLDB_ENABLE_CURSES=ON'
         '-DLLDB_ENABLE_LUA=OFF'
         '-DLLDB_ENABLE_LZMA=OFF'
@@ -166,9 +139,7 @@ main() {
         '-DLLVM_OPTIMIZED_TABLEGEN=ON'
         '-DLLVM_POLLY_LINK_INTO_TOOLS=ON'
         '-DLLVM_TARGETS_TO_BUILD=all'
-    )
-    # Link external dependencies.
-    cmake_args+=(
+        # External dependencies ------------------------------------------------
         "-DCURSES_INCLUDE_DIRS=${dict['ncurses']}/include"
         "-DCURSES_LIBRARIES=${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
@@ -195,9 +166,7 @@ libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
 libncursesw.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    )
-    # Additional Python binding fixes.
-    cmake_args+=(
+        # Additional Python binding fixes --------------------------------------
         "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
         "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/\
 bin/python${dict['py_maj_min_ver']}"
@@ -226,26 +195,14 @@ libelf.${dict['shared_ext']}"
             '-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF'
         )
     fi
-    dict['file']="${dict['name']}-${dict['version']}.src.tar.xz"
-    dict['url']="https://github.com/llvm/${dict['name']}/releases/download/\
-llvmorg-${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}.src"
-    koopa_mkdir 'build'
-    koopa_cd 'build'
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH \
-        -G 'Ninja' \
-        -S ../llvm \
+    dict['url']="https://github.com/llvm/llvm-project/releases/download/\
+llvmorg-${dict['version']}/llvm-${dict['version']}.src.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build \
+        --ninja \
+        --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build . \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" \
-        --build . \
-        --parallel "${dict['jobs']}" \
-        --target 'install'
     return 0
 }
