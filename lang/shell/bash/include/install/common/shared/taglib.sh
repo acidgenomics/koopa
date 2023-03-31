@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TagLib.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - https://stackoverflow.com/questions/29200461
@@ -13,42 +13,34 @@ main() {
     # - https://cmake.org/pipermail/cmake/2012-June/050792.html
     # - https://github.com/gabime/spdlog/issues/1190
     # """
-    local app cmake_args dict
+    local cmake_args cmake_dict dict
+    declare -A cmake_dict dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'pkg-config'
-    declare -A app
-    app['cmake']="$(koopa_locate_cmake)"
-    [[ -x "${app['cmake']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='taglib'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
-archive/refs/tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app 'zlib'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    koopa_assert_is_dir "${dict['zlib']}"
+    cmake_dict['zlib_include_dir']="${dict['zlib']}/include"
+    cmake_dict['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_assert_is_dir "${cmake_dict['zlib_include_dir']}"
+    koopa_assert_is_file "${cmake_dict['zlib_library']}"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=-fPIC ${CXXFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------
+        '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTS=OFF'
+        '-DWITH_ZLIB=ON'
+        # Dependency paths -----------------------------------------------------
+        "-DZLIB_INCLUDE_DIR=${cmake_dict['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake_dict['zlib_library']}"
     )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH \
-        -S . \
-        -B 'build' \
-        "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build 'build' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build'
+    dict['url']="https://github.com/taglib/taglib/archive/refs/tags/\
+v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

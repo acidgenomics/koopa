@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -346,6 +346,7 @@ R-${dict['maj_ver']}/${dict['file']}"
     if [[ "${dict['name']}" != 'r-devel' ]]
     then
         koopa_install_r_koopa "${app['r']}"
+        koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
     fi
     return 0
 }

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -11,19 +11,15 @@ main() {
     # - https://github.com/libgit2/libgit2/blob/main/CMakeLists.txt
     # - https://github.com/libgit2/libgit2/issues/5079
     # """
-    local app build_deps cmake_args deps dict
+    local build_deps cmake_args deps dict
+    declare -A cmake_dict dict
     koopa_assert_has_no_args "$#"
     build_deps=('cmake' 'pkg-config')
     deps=('zlib' 'pcre')
     koopa_is_macos && deps+=('openssl3' 'libssh2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app
-    app['cmake']="$(koopa_locate_cmake)"
-    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libgit2'
         ['pcre']="$(koopa_app_prefix 'pcre')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
@@ -34,40 +30,47 @@ main() {
     then
         dict['openssl']="$(koopa_app_prefix 'openssl3')"
     fi
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    cmake_dict['pcre_include_dir']="${dict['pcre']}/include"
+    cmake_dict['pcre_library']="${dict['pcre']}/lib/\
+libpcre.${dict['shared_ext']}"
+    cmake_dict['zlib_include_dir']="${dict['zlib']}/include"
+    cmake_dict['zlib_library']="${dict['zlib']}/lib/\
+libz.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake_dict['pcre_include_dir']}" \
+        "${cmake_dict['zlib_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake_dict['pcre_library']}" \
+        "${cmake_dict['zlib_library']}"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
         # Build options --------------------------------------------------------
         '-DBUILD_TESTS=OFF'
         # Dependency paths -----------------------------------------------------
-        "-DPCRE_INCLUDE_DIR=${dict['pcre']}/include"
-        "-DPCRE_LIBRARY=${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
-        "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
-        "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        "-DPCRE_INCLUDE_DIR=${cmake_dict['pcre_include_dir']}"
+        "-DPCRE_LIBRARY=${cmake_dict['pcre_library']}"
+        "-DZLIB_INCLUDE_DIR=${cmake_dict['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake_dict['zlib_library']}"
     )
     if koopa_is_macos
     then
+        cmake_dict['openssl_crypto_library']="${dict['openssl']}/lib/\
+libcrypto.${dict['shared_ext']}"
+        cmake_dict['openssl_include_dir']="${dict['openssl']}/include"
+        cmake_dict['openssl_ssl_library']="${dict['openssl']}/lib/\
+libssl.${dict['shared_ext']}"
+        koopa_assert_is_dir \
+            "${cmake_dict['openssl_include_dir']}"
+        koopa_assert_is_file \
+            "${cmake_dict['openssl_crypto_library']}" \
+            "${cmake_dict['openssl_ssl_library']}"
         cmake_args+=(
-            # > "-DCMAKE_INSTALL_RPATH=${dict['openssl']}/lib"
+            # Build options ----------------------------------------------------
             '-DUSE_HTTPS=ON'
             '-DUSE_SSH=ON'
-            "-DOPENSSL_CRYPTO_LIBRARY=${dict['openssl']}/lib/\
-libcrypto.${dict['shared_ext']}"
-            "-DOPENSSL_INCLUDE_DIR=${dict['openssl']}/include"
-            "-DOPENSSL_SSL_LIBRARY=${dict['openssl']}/lib/\
-libssl.${dict['shared_ext']}"
+            # Dependency paths -------------------------------------------------
+            "-DOPENSSL_CRYPTO_LIBRARY=${cmake_dict['openssl_crypto_library']}"
+            "-DOPENSSL_INCLUDE_DIR=${cmake_dict['openssl_include_dir']}"
+            "-DOPENSSL_SSL_LIBRARY=${cmake_dict['openssl_ssl_library']}"
         )
     else
         cmake_args+=(
@@ -75,15 +78,11 @@ libssl.${dict['shared_ext']}"
             '-DUSE_SSH=OFF'
         )
     fi
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH \
-        -S '.' \
-        -B 'build' \
-        "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build 'build' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build'
+    dict['url']="https://github.com/libgit2/libgit2/archive/\
+v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

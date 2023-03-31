@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
 # FIXME Rework our location of conda environment tool here instead.
-# FIXME Rework using a dl approach here.
+# FIXME Also add bam sorting and indexing wrappers.
+# FIXME Add minimap2 index function.
+# FIXME Add minimap2 align function.
 
 koopa_samtools_convert_sam_to_bam() {
     # """
     # Convert a SAM file to BAM format.
-    # @note Updated 2022-06-20.
+    # @note Updated 2023-03-30.
     #
     # samtools view --help
     # Useful flags:
@@ -19,8 +21,9 @@ koopa_samtools_convert_sam_to_bam() {
     # -o FILE               output file name [stdout]
     # -u                    uncompressed BAM output (implies -b)
     # """
-    local bam_bn input_sam output_bam sam_bn threads
+    local app bam_bn input_sam output_bam sam_bn threads
     koopa_assert_has_args "$#"
+    declare -A app
     koopa_assert_is_installed 'samtools'
     while (("$#"))
     do
@@ -62,7 +65,6 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
-    koopa_dl 'Threads' "$threads"
     "${app['samtools']}" view \
         -@ "$threads" \
         -b \

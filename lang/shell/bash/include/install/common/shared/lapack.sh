@@ -3,23 +3,18 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-03-31.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
     # - https://github.com/Reference-LAPACK/lapack
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/lapack.rb
     # """
-    local app dict
+    local cmake_args dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'gcc'
-    declare -A app
-    app['cmake']="$(koopa_locate_cmake)"
-    [[ -x "${app['cmake']}" ]] || return 1
     declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='lapack'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )
@@ -29,29 +24,15 @@ main() {
             dict['version']='3.11'
             ;;
     esac
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/Reference-LAPACK/${dict['name']}/archive/\
-refs/tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/Reference-LAPACK/lapack/archive/refs/tags/\
+v${dict['version']}.tar.gz"
     cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
-        # Build options --------------------------------------------------------
         '-DBUILD_SHARED_LIBS=ON'
         '-DLAPACKE=ON'
     )
-    koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
-    "${app['cmake']}" -LH \
-        -S '.' \
-        -B 'build' \
-        "${cmake_args[@]}"
-    "${app['cmake']}" \
-        --build 'build' \
-        --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install 'build'
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
