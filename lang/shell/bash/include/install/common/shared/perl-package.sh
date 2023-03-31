@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Perl package.
-    # @note Updated 2023-03-07.
+    # @note Updated 2023-03-31.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -27,22 +27,21 @@ main() {
     # - https://stackoverflow.com/questions/540640/
     # """
     local app bin_file bin_files dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'perl'
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
-        ['bzip2']="$(koopa_locate_bzip2)"
-        ['cpan']="$(koopa_locate_cpan)"
-        ['gpg']="$(koopa_locate_gpg)"
-        ['gzip']="$(koopa_locate_gzip)"
-        ['less']="$(koopa_locate_less)"
-        ['make']="$(koopa_locate_make)"
-        ['patch']="$(koopa_locate_patch)"
-        ['perl']="$(koopa_locate_perl)"
-        ['tar']="$(koopa_locate_tar)"
-        ['unzip']="$(koopa_locate_unzip)"
-        ['wget']="$(koopa_locate_wget)"
-    )
+    app['bash']="$(koopa_locate_bash --allow-system)"
+    app['bzip2']="$(koopa_locate_bzip2 --allow-system)"
+    app['cpan']="$(koopa_locate_cpan)"
+    app['gpg']="$(koopa_locate_gpg --allow-system)"
+    app['gzip']="$(koopa_locate_gzip --allow-system)"
+    app['less']="$(koopa_locate_less --allow-system)"
+    app['make']="$(koopa_locate_make --allow-system)"
+    app['patch']="$(koopa_locate_patch --allow-system)"
+    app['perl']="$(koopa_locate_perl)"
+    app['tar']="$(koopa_locate_tar --allow-system)"
+    app['unzip']="$(koopa_locate_unzip --allow-system)"
+    app['wget']="$(koopa_locate_wget --allow-system)"
     [[ -x "${app['bash']}" ]] || return 1
     [[ -x "${app['bzip2']}" ]] || return 1
     [[ -x "${app['cpan']}" ]] || return 1
@@ -55,13 +54,11 @@ main() {
     [[ -x "${app['tar']}" ]] || return 1
     [[ -x "${app['unzip']}" ]] || return 1
     [[ -x "${app['wget']}" ]] || return 1
-    declare -A dict=(
-        ['cpan_prefix']="$(koopa_init_dir 'cpan')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['cpan_prefix']="$(koopa_init_dir 'cpan')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['cpan_config_file']="${dict['cpan_prefix']}/CPAN/MyConfig.pm"
     read -r -d '' "dict[cpan_config_string]" << END || true
 \$CPAN::Config = {
