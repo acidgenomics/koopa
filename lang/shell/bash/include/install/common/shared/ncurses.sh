@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Consider building with '--with-termlib' enabled, to build libtinfo.
+# This will get picked up in the Fish build configuration.
+
 main() {
     # """
     # Install ncurses.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-03-30.
     #
     # @seealso
     # - https://github.com/archlinux/svntogit-packages/blob/master/ncurses/
