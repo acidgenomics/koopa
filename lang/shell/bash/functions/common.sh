@@ -4226,8 +4226,8 @@ koopa_cmake_std_args() {
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_C_FLAGS=${CFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_INSTALL_INCLUDEDIR=include'
-        '-DCMAKE_INSTALL_LIBDIR=lib'
+        "-DCMAKE_INSTALL_INCLUDEDIR=${dict['prefix']}/include"
+        "-DCMAKE_INSTALL_LIBDIR=${dict['prefix']}/lib"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
