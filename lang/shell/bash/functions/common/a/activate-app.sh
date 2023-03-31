@@ -70,6 +70,7 @@ koopa_activate_app() {
     koopa_assert_has_args "$#"
     CFLAGS="${CFLAGS:-}"
     CPPFLAGS="${CPPFLAGS:-}"
+    CXXFLAGS="${CXXFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
     for app_name in "$@"
@@ -147,6 +148,7 @@ koopa_activate_app() {
             then
                 CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
                 CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
+                CXXFLAGS="${CXXFLAGS:-} ${dict2['cflags']}"
             fi
             if [[ -n "${dict2['ldflags']}" ]]
             then
@@ -161,6 +163,7 @@ koopa_activate_app() {
             then
                 CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
                 CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
+                CXXFLAGS="${CXXFLAGS:-} -I${dict2['prefix']}/include"
             fi
             if [[ -d "${dict2['prefix']}/lib" ]]
             then
@@ -175,6 +178,11 @@ koopa_activate_app() {
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
     done
-    export CFLAGS CPPFLAGS LDFLAGS LDLIBS
+    export \
+        CFLAGS \
+        CPPFLAGS \
+        CXXFLAGS \
+        LDFLAGS \
+        LDLIBS
     return 0
 }
