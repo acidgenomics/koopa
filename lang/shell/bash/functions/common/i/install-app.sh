@@ -314,6 +314,7 @@ ${dict['version2']}"
                 then
                     koopa_cli_install --binary "$dep"
                 else
+                    # FIXME If '--push' is enabled, also need to set it here.
                     koopa_cli_install "$dep"
                 fi
             done
