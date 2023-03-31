@@ -227,6 +227,7 @@ local({  # nolint
             split = ".",
             fixed = TRUE
         )[[1L]][[1L]]
+        ## FIXME Work on extracting this from '/etc' instead...
         distro <- switch(
             EXPR = x,
             "18" = "bionic",

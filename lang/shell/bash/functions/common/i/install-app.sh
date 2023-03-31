@@ -3,7 +3,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-03-31.
     # """
     local app bash_vars bin_arr bool dict env_vars i man1_arr path_arr pos
     koopa_assert_has_args "$#"
@@ -197,27 +197,6 @@ koopa_install_app() {
     koopa_assert_is_set '--name' "${dict['name']}"
     [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
     [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
-    if [[ "${bool['deps']}" -eq 1 ]]
-    then
-        local dep deps
-        readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
-        if koopa_is_array_non_empty "${deps[@]:-}"
-        then
-            for dep in "${deps[@]}"
-            do
-                if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
-                then
-                    continue
-                fi
-                if [[ "${bool['binary']}" -eq 1 ]]
-                then
-                    koopa_cli_install --binary "$dep"
-                else
-                    koopa_cli_install "$dep"
-                fi
-            done
-        fi
-    fi
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
         koopa_app_json_version "${dict['version_key']}" 2>/dev/null || true \
@@ -314,6 +293,31 @@ ${dict['version2']}"
             koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
         else
             koopa_alert_install_start "${dict['name']}"
+        fi
+    fi
+    if [[ "${bool['deps']}" -eq 1 ]]
+    then
+        local dep deps
+        readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
+        if koopa_is_array_non_empty "${deps[@]:-}"
+        then
+            koopa_dl \
+                "${dict['name']} dependencies" \
+                "$(koopa_to_string "${deps[@]}")"
+            for dep in "${deps[@]}"
+            do
+                if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
+                then
+                    continue
+                fi
+                if [[ "${bool['binary']}" -eq 1 ]]
+                then
+                    koopa_cli_install --binary "$dep"
+                else
+                    # FIXME If '--push' is enabled, also need to set it here.
+                    koopa_cli_install "$dep"
+                fi
+            done
         fi
     fi
     if [[ "${bool['binary']}" -eq 1 ]]

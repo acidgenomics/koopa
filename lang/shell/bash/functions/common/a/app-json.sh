@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-koopa_parse_app_json() {
+koopa_app_json() {
     # """
     # Parse 'app.json' file using our internal Python JSON parser.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-03-30.
     #
     # @examples
-    # koopa_parse_app_json \
+    # koopa_app_json \
     #     --app-name='coreutils' \
     #     --key='bin'
     # """
