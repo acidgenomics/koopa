@@ -2768,7 +2768,6 @@
     ],
     "conservative": true,
     "date": "2023-01-04",
-    "enabled": false,
     "url": "https://github.com/yaml/libyaml/",
     "version": "0.2.5"
   },
