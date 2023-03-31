@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-03-30.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -222,6 +222,7 @@ _koopa_complete() {
                         'lesspipe'
                         'libarchive'
                         'libassuan'
+                        'libdeflate'
                         'libedit'
                         'libev'
                         'libevent'
