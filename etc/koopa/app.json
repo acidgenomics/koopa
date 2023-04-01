@@ -3386,10 +3386,10 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-04-01",
     "dependencies": ["gcc"],
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.22"
+    "version": "0.3.23"
   },
   "openjdk": {
     "aliases": {
