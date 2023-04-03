@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure that the installer doesn't do hacky root stuff.
-
 main() {
     # """
     # Install NCBI VDB.
