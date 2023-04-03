@@ -12,21 +12,27 @@ main() {
     # - https://github.com/bioconda/bioconda-recipes/tree/master/
     #     recipes/ncbi-vdb
     # """
-    local app deps dict
+    local app cmake_args deps dict
     declare -A app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake'
-    deps=('bison' 'flex' 'python3.11')
+    deps=('bison' 'flex' 'hdf5' 'python3.11')
     koopa_activate_app "${deps[@]}"
+    app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python311 --realpath)"
+    [[ -x "${app['cmake']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
+    dict['jobs']="$(koopa_cpu_count)"
     dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['openjdk']}"
     export JAVA_HOME="${dict['openjdk']}"
-    cmake_args=("-DPython3_EXECUTABLE=${app['python']}")
+    CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
+    export CFLAGS
+    cmake_args=(
+        '-DLIBS_ONLY=OFF'
+        "-DPython3_EXECUTABLE=${app['python']}"
+    )
     dict['url']="https://github.com/ncbi/ncbi-vdb/archive/refs/tags/\
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"

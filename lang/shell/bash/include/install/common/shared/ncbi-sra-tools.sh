@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rename to 'ncbi-sra-tools'
-# FIXME Split out 'ncbi-vdb' to separate recipe.
-
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-04-03.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -18,123 +15,50 @@ main() {
     #
     # @seealso
     # - https://github.com/ncbi/sra-tools/wiki/
-    # - https://github.com/ncbi/ncbi-vdb/wiki/
     # - https://github.com/ncbi/ngs-tools
     # - https://hpc.nih.gov/apps/sratoolkit.html
+    # - https://github.com/bioconda/bioconda-recipes/tree/master/
+    #     recipes/sra-tools
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
     # """
-    local app deps dict shared_cmake_args
-    koopa_assert_is_not_aarch64
+    local app deps cmake_args dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'cmake'
-    deps=()
-    # > koopa_is_linux && deps+=('gcc')
-    deps+=(
+    deps=(
         'bison'
         'flex'
+        'hdf5'
+        'libxml2'
+        'ncbi-vdb'
         'python3.11'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
+    app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['base_url']='https://github.com/ncbi'
-        ['openjdk']="$(koopa_app_prefix 'openjdk')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    koopa_assert_is_dir "${dict['openjdk']}"
-    # Ensure we define Java location, otherwise install can hit warnings during
-    # ngs-tools install.
-    export JAVA_HOME="${dict['openjdk']}"
-    koopa_print_env
-    shared_cmake_args=(
-        # Standard CMake arguments ---------------------------------------------
-        '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        '-DCMAKE_VERBOSE_MAKEFILE=ON'
+    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['vdb']="$(koopa_app_prefix 'ncbi-vdb')"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
+    export CFLAGS
+    cmake_args=(
+        # Build options --------------------------------------------------------
+        '-DNO_JAVA=ON'
         # Dependency paths -----------------------------------------------------
+        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
+        "-DLIBXML2_LIBRARIES=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
         "-DPython3_EXECUTABLE=${app['python']}"
+        "-DVDB_BINDIR=${dict['vdb']}/lib"
+        "-DVDB_INCDIR=${dict['vdb']}/include"
+        "-DVDB_LIBDIR=${dict['vdb']}/lib"
     )
-    # Build NCBI VDB Software Development Kit (no install).
-    (
-        local cmake_args dict2
-        declare -A dict2
-        dict2['name']='ncbi-vdb'
-        dict2['file']="${dict2['name']}-${dict['version']}.tar.gz"
-        dict2['url']="${dict['base_url']}/${dict2['name']}/archive/refs/tags/\
+    dict['url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
 ${dict['version']}.tar.gz"
-        koopa_download "${dict2['url']}" "${dict2['file']}"
-        koopa_extract "${dict2['file']}"
-        koopa_mv \
-            "${dict2['name']}-${dict['version']}" \
-            "${dict2['name']}-source"
-        cmake_args=("${shared_cmake_args[@]}")
-        koopa_dl 'CMake args' "${cmake_args[*]}"
-        "${app['cmake']}" -LH \
-            -S "${dict2['name']}-source" \
-            -B "${dict2['name']}-build" \
-            "${cmake_args[@]}"
-        "${app['cmake']}" --build "${dict2['name']}-build"
-    )
-    dict['ncbi_vdb_build']="$( \
-        koopa_realpath "ncbi-vdb-build" \
-    )"
-    dict['ncbi_vdb_source']="$( \
-        koopa_realpath "ncbi-vdb-source" \
-    )"
-    # This step is currently needed to correctly link bzip2 and zlib.
-    koopa_ln 'ncbi-vdb-source' 'ncbi-vdb'
-    # Build and install NCBI SRA Toolkit.
-    (
-        local cmake_args dict2
-        declare -A dict2
-        dict2['name']='sra-tools'
-        dict2['file']="${dict2['name']}-${dict['version']}.tar.gz"
-        dict2['url']="${dict['base_url']}/${dict2['name']}/archive/refs/tags/\
-${dict['version']}.tar.gz"
-        koopa_download "${dict2['url']}" "${dict2['file']}"
-        koopa_extract "${dict2['file']}"
-        koopa_mv \
-            "${dict2['name']}-${dict['version']}" \
-            "${dict2['name']}-source"
-        # See related: https://github.com/ncbi/sra-tools/pull/664/files
-        koopa_find_and_replace_in_file \
-            --fixed \
-            --pattern='/obj/ngs/ngs-java/' \
-            --replacement='/ngs/ngs-java/' \
-            "${dict2['name']}-source/ngs/ngs-java/CMakeLists.txt"
-        cmake_args=(
-            "${shared_cmake_args[@]}"
-            "-DVDB_BINDIR=${dict['ncbi_vdb_build']}"
-            "-DVDB_INCDIR=${dict['ncbi_vdb_source']}/interfaces"
-            "-DVDB_LIBDIR=${dict['ncbi_vdb_build']}/lib"
-        )
-        koopa_dl 'CMake args' "${cmake_args[*]}"
-        "${app['cmake']}" -LH \
-            -S "${dict2['name']}-source" \
-            -B "${dict2['name']}-build" \
-            "${cmake_args[@]}"
-        koopa_find_and_replace_in_file \
-            --fixed \
-            --pattern='/obj/ngs/ngs-java/' \
-            --replacement='/ngs/ngs-java/' \
-            "${dict2['name']}-build/ngs/ngs-java/CMakeFiles/\
-ngs-doc-jar.dir/build.make"
-        "${app['cmake']}" --build "${dict2['name']}-build"
-        "${app['cmake']}" --install "${dict2['name']}-build"
-    )
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
