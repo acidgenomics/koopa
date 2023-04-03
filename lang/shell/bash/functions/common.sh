@@ -18098,11 +18098,10 @@ koopa_r_configure_ldpaths() {
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
-    case "${dict['system']}" in
-        '1')
-            ld_lib_arr+=('/usr/local/lib')
-            ;;
-    esac
+    if [[ "${dict['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
+    then
+        ld_lib_arr+=('/usr/local/lib')
+    fi
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
@@ -18111,10 +18110,9 @@ koopa_r_configure_ldpaths() {
         koopa_assert_is_dir "$sys_libdir"
         ld_lib_arr+=("$sys_libdir")
     fi
-    ld_lib_arr+=(
-        '/usr/lib'
-        "\${R_JAVA_LD_LIBRARY_PATH}"
-    )
+    [[ -d '/usr/lib' ]] && ld_lib_arr+=('/usr/lib')
+    [[ -d '/lib' ]] && ld_lib_arr+=('/lib')
+    ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
     lines+=(
         "LD_LIBRARY_PATH=\"$(printf '%s:' "${ld_lib_arr[@]}")\""
         'export LD_LIBRARY_PATH'
