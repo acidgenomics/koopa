@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rename to 'ncbi-sra-tools'
+# FIXME Split out 'ncbi-vdb' to separate recipe.
+
 main() {
     # """
     # Install SRA toolkit.
