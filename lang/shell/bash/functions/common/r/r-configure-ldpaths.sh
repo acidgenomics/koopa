@@ -109,6 +109,10 @@ koopa_r_configure_ldpaths() {
     then
         keys+=('gettext')
     fi
+    if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+    then
+        keys+=('gcc')
+    fi
     for key in "${keys[@]}"
     do
         local prefix
@@ -118,7 +122,14 @@ koopa_r_configure_ldpaths() {
     done
     for i in "${!ld_lib_app_arr[@]}"
     do
-        ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+        case "$i" in
+            'gcc')
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
+                ;;
+            *)
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+                ;;
+        esac
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
