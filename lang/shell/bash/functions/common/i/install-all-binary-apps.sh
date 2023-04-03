@@ -14,6 +14,7 @@ koopa_install_all_binary_apps() {
     koopa_assert_has_no_args "$#"
     declare -A bool
     bool['bootstrap']=0
+    # FIXME Consider skipping this step if aws is installed but outdated.
     if [[ ! -d "$(koopa_app_prefix --allow-missing 'aws-cli')" ]]
     then
         bool['bootstrap']=1

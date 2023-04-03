@@ -9,7 +9,7 @@
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-04-03.
     #
     # Default LIBS:
     # - macOS: -lpcre2-8 -llzma -lbz2 -lz -licucore -ldl -lm -liconv
@@ -54,7 +54,7 @@ koopa_r_configure_makeconf() {
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
-    koopa_alert "Updating ${dict['file']}"
+    koopa_alert_info "Modifying '${dict['file']}'."
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \

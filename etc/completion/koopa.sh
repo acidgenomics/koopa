@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-03.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -276,6 +276,8 @@ _koopa_complete() {
                         'multiqc'
                         'nano'
                         'nanopolish'
+                        'ncbi-sra-tools'
+                        'ncbi-vdb'
                         'ncurses'
                         'neofetch'
                         'neovim'
@@ -359,7 +361,6 @@ _koopa_complete() {
                         'sox'
                         'spdlog'
                         'sqlite'
-                        'sra-tools'
                         'star'
                         'starship'
                         'stow'
@@ -501,7 +502,11 @@ _koopa_complete() {
                             args+=('r')
                             if _koopa_is_linux
                             then
-                                args+=('sshd')
+                                args+=(
+                                    'lmod'
+                                    'rstudio-server'
+                                    'sshd'
+                                )
                             fi
                             ;;
                         'user')

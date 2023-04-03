@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Allow '--build' and '--source' arguments.
+
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.

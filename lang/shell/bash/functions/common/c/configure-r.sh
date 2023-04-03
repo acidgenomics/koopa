@@ -3,20 +3,22 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-04-03.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    #
+    # @seealso
+    # - R CMD config
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    declare -A app dict
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['name']='r'
-        ['system']=0
-    )
+    app['r']="$(koopa_realpath "${app['r']}")"
+    dict['name']='r'
+    dict['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
@@ -24,7 +26,7 @@ koopa_configure_r() {
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
-    koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
@@ -71,6 +73,16 @@ koopa_configure_r() {
             ;;
     esac
     # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
-    koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
+    then
+        app['rstudio_server']="$( \
+            koopa_linux_locate_rstudio_server --allow-missing \
+        )"
+        if [[ -x "${app['rstudio_server']}" ]]
+        then
+            koopa_linux_configure_system_rstudio_server
+        fi
+    fi
     return 0
 }

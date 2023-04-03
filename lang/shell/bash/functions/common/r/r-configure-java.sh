@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-04-03.
     #
     # The default Java path differs depending on the system.
     #
@@ -59,7 +59,7 @@ koopa_r_configure_java() {
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    koopa_alert 'Updating R Java configuration.'
+    koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
     declare -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
         ['jar']="${app['jar']}"

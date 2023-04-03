@@ -1581,13 +1581,12 @@ koopa_aws_ec2_instance_id() {
 
 koopa_aws_ec2_suspend() {
     local app dict
-    declare -A app
+    declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    dict['id']="$(koopa_aws_ec2_instance_id)"
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in
@@ -1614,13 +1613,12 @@ koopa_aws_ec2_suspend() {
 
 koopa_aws_ec2_terminate() {
     local app dict
-    declare -A app
+    declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    dict['id']="$(koopa_aws_ec2_instance_id)"
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in
@@ -4616,14 +4614,13 @@ koopa_config_prefix() {
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    declare -A app dict
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['name']='r'
-        ['system']=0
-    )
+    app['r']="$(koopa_realpath "${app['r']}")"
+    dict['name']='r'
+    dict['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
@@ -4631,7 +4628,7 @@ koopa_configure_r() {
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
-    koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
@@ -4676,7 +4673,17 @@ koopa_configure_r() {
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
-    koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
+    then
+        app['rstudio_server']="$( \
+            koopa_linux_locate_rstudio_server --allow-missing \
+        )"
+        if [[ -x "${app['rstudio_server']}" ]]
+        then
+            koopa_linux_configure_system_rstudio_server
+        fi
+    fi
     return 0
 }
 
@@ -12101,6 +12108,18 @@ koopa_install_nanopolish() {
         "$@"
 }
 
+koopa_install_ncbi_sra_tools() {
+    koopa_install_app \
+        --name='ncbi-sra-tools' \
+        "$@"
+}
+
+koopa_install_ncbi_vdb() {
+    koopa_install_app \
+        --name='ncbi-vdb' \
+        "$@"
+}
+
 koopa_install_ncurses() {
     koopa_install_app \
         --name='ncurses' \
@@ -12646,12 +12665,6 @@ koopa_install_spdlog() {
 koopa_install_sqlite() {
     koopa_install_app \
         --name='sqlite' \
-        "$@"
-}
-
-koopa_install_sra_tools() {
-    koopa_install_app \
-        --name='sra-tools' \
         "$@"
 }
 
@@ -16166,6 +16179,17 @@ koopa_locate_system_r() {
     koopa_locate_app "$cmd"
 }
 
+koopa_locate_system_rscript() {
+    local cmd
+    if koopa_is_macos
+    then
+        cmd='/Library/Frameworks/R.framework/Resources/bin/Rscript'
+    else
+        cmd='/usr/bin/Rscript'
+    fi
+    koopa_locate_app "$cmd"
+}
+
 koopa_locate_tac() {
     koopa_locate_app \
         --app-name='coreutils' \
@@ -17727,7 +17751,7 @@ koopa_r_configure_environ() {
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     declare -A conf_dict
     lines=()
     lines+=(
@@ -17739,11 +17763,6 @@ koopa_r_configure_environ() {
         "TZ=\${TZ:-America/New_York}"
     )
     path_arr=()
-    case "${dict['system']}" in
-        '1')
-            path_arr+=('/usr/local/bin')
-            ;;
-    esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -17752,7 +17771,6 @@ koopa_r_configure_environ() {
     if koopa_is_macos
     then
         path_arr+=(
-            '/Applications/quarto/bin'
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
@@ -17829,10 +17847,6 @@ koopa_r_configure_environ() {
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         pc_path_arr=()
-        if [[ "${dict['system']}" -eq 1 ]]
-        then
-            pc_path_arr+=('/usr/local/lib/pkgconfig')
-        fi
         pc_path_arr+=("${app_pc_path_arr[@]}")
         if [[ "${dict['system']}" -eq 1 ]]
         then
@@ -17971,7 +17985,7 @@ koopa_r_configure_java() {
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    koopa_alert 'Updating R Java configuration.'
+    koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
     declare -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
         ['jar']="${app['jar']}"
@@ -18025,7 +18039,7 @@ koopa_r_configure_ldpaths() {
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     lines=()
     lines+=(
         ": \${JAVA_HOME=${dict['java_home']}}"
@@ -18084,6 +18098,10 @@ koopa_r_configure_ldpaths() {
     then
         keys+=('gettext')
     fi
+    if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+    then
+        keys+=('gcc')
+    fi
     for key in "${keys[@]}"
     do
         local prefix
@@ -18093,16 +18111,18 @@ koopa_r_configure_ldpaths() {
     done
     for i in "${!ld_lib_app_arr[@]}"
     do
-        ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+        case "$i" in
+            'gcc')
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
+                ;;
+            *)
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+                ;;
+        esac
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
-    case "${dict['system']}" in
-        '1')
-            ld_lib_arr+=('/usr/local/lib')
-            ;;
-    esac
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
@@ -18111,18 +18131,21 @@ koopa_r_configure_ldpaths() {
         koopa_assert_is_dir "$sys_libdir"
         ld_lib_arr+=("$sys_libdir")
     fi
-    ld_lib_arr+=(
-        '/usr/lib'
-        "\${R_JAVA_LD_LIBRARY_PATH}"
-    )
-    lines+=(
-        "LD_LIBRARY_PATH=\"$(printf '%s:' "${ld_lib_arr[@]}")\""
-        'export LD_LIBRARY_PATH'
-    )
-    if koopa_is_macos
+    [[ -d '/usr/lib' ]] && ld_lib_arr+=('/usr/lib')
+    [[ -d '/lib' ]] && ld_lib_arr+=('/lib')
+    ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
+    dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
+    lines+=("R_LD_LIBRARY_PATH=\"${dict['library_path']}\"")
+    if koopa_is_linux
     then
         lines+=(
-            "DYLD_FALLBACK_LIBRARY_PATH=\"\${LD_LIBRARY_PATH}\""
+            "LD_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
+            'export LD_LIBRARY_PATH'
+        )
+    elif koopa_is_macos
+    then
+        lines+=(
+            "DYLD_FALLBACK_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
     fi
@@ -18179,7 +18202,7 @@ koopa_r_configure_makeconf() {
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
-    koopa_alert "Updating ${dict['file']}"
+    koopa_alert_info "Modifying '${dict['file']}'."
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \
@@ -18292,11 +18315,8 @@ koopa_r_configure_makevars() {
         "${dict['libpng']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    if koopa_is_macos
+    if koopa_is_linux
     then
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-    else
         case "${dict['system']}" in
             '0')
                 app['cc']="$(koopa_locate_gcc --realpath)"
@@ -18307,19 +18327,17 @@ koopa_r_configure_makevars() {
                 app['cxx']='/usr/bin/g++'
                 ;;
         esac
+    elif koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
     fi
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
-    case "${dict['system']}" in
-        '1')
-            cppflags+=('-I/usr/local/include')
-            ldflags+=('-L/usr/local/lib')
-            ;;
-    esac
     if koopa_is_linux
     then
         local app_pc_path_arr i key keys pkg_config
@@ -18429,8 +18447,8 @@ koopa_r_configure_makevars() {
     then
         cppflags+=("-I${dict['gettext']}/include")
         ldflags+=("-L${dict['gettext']}/lib")
+        ldflags+=('-lomp')
     fi
-    koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
@@ -24545,6 +24563,18 @@ koopa_uninstall_nanopolish() {
         "$@"
 }
 
+koopa_uninstall_ncbi_sra_tools() {
+    koopa_uninstall_app \
+        --name='ncbi-sra-tools' \
+        "$@"
+}
+
+koopa_uninstall_ncbi_vdb() {
+    koopa_uninstall_app \
+        --name='ncbi-vdb' \
+        "$@"
+}
+
 koopa_uninstall_ncurses() {
     koopa_uninstall_app \
         --name='ncurses' \
@@ -25046,12 +25076,6 @@ koopa_uninstall_spdlog() {
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name='sqlite' \
-        "$@"
-}
-
-koopa_uninstall_sra_tools() {
-    koopa_uninstall_app \
-        --name='sra-tools' \
         "$@"
 }
 

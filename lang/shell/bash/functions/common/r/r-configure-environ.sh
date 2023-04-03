@@ -19,7 +19,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-04-03.
     #
     # @section Package library location:
     #
@@ -140,7 +140,7 @@ koopa_r_configure_environ() {
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     declare -A conf_dict
     lines=()
     lines+=(
@@ -155,11 +155,11 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    case "${dict['system']}" in
-        '1')
-            path_arr+=('/usr/local/bin')
-            ;;
-    esac
+    # > case "${dict['system']}" in
+    # >     '1')
+    # >         path_arr+=('/usr/local/bin')
+    # >         ;;
+    # > esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -168,10 +168,10 @@ koopa_r_configure_environ() {
     if koopa_is_macos
     then
         path_arr+=(
-            '/Applications/quarto/bin'
+            # > '/Applications/quarto/bin'
             # > '/Applications/RStudio.app/Contents/MacOS'
             # > '/Applications/RStudio.app/Contents/MacOS/quarto/bin'
-            # . '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
+            # > '/Applications/RStudio.app/Contents/MacOS/quarto/bin/tools'
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
@@ -251,10 +251,10 @@ koopa_r_configure_environ() {
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         pc_path_arr=()
-        if [[ "${dict['system']}" -eq 1 ]]
-        then
-            pc_path_arr+=('/usr/local/lib/pkgconfig')
-        fi
+        # > if [[ "${dict['system']}" -eq 1 ]]
+        # > then
+        # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
+        # > fi
         pc_path_arr+=("${app_pc_path_arr[@]}")
         if [[ "${dict['system']}" -eq 1 ]]
         then
@@ -317,8 +317,6 @@ koopa_r_configure_environ() {
     lines+=(
         # Ensure usage of system ICU, insteading of building bundle from source.
         'STRINGI_DISABLE_ICU_BUNDLE=1'
-        # Alternatively, ensure that ICU bundle is compiled from source.
-        # > 'STRINGI_DISABLE_PKG_CONFIG=1'
     )
     # tools
     # --------------------------------------------------------------------------
