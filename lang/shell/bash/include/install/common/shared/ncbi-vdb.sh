@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure that the installer doesn't do hacky root stuff.
+
 main() {
     # """
     # Install NCBI VDB.
@@ -38,6 +40,16 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    if koopa_is_root
+    then
+        # shellcheck disable=SC2016
+        koopa_replace_in_file \
+            --fixed \
+            --pattern='[ "$EUID" -eq 0 ]' \
+            --replacement='[ "$EUID" -eq -1 ]' \
+            'build/install-root.sh'
+    fi
+    koopa_stop "$PWD"
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
