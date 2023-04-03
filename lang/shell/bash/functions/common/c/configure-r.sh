@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-04-03.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -12,14 +12,12 @@ koopa_configure_r() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    declare -A app dict
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['name']='r'
-        ['system']=0
-    )
+    dict['name']='r'
+    dict['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
@@ -74,6 +72,12 @@ koopa_configure_r() {
             ;;
     esac
     # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
+    if [[ "${dict['system']}" -eq 1 ]] && \
+        koopa_is_linux && \
+        koopa_is_installed 'rstudio-server'
+    then
+        koopa_linux_configure_system_rstudio_server
+    fi
     koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
     return 0
 }

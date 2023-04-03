@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 main() {
     # """
     # Install RStudio Server binary.
@@ -18,16 +17,13 @@ main() {
     #
     # @seealso
     # - https://docs.rstudio.com/rsp/installation/
-    # - https://support.posit.co/hc/en-us/articles/
-    #     200552316-Configuring-RStudio-Workbench-RStudio-Server
+    # - https://rstudio.com/products/rstudio/download-server/
     # - https://rstudio.com/products/rstudio/download-commercial/
-    # - https://rstudio.com/products/rstudio/download-server/debian-ubuntu/
-    # - https://rstudio.com/products/rstudio/download-server/redhat-centos/
     # Docker recipes:
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local app conf_lines dict
+    local app dict
     declare -A app dict
     koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r --realpath)"
@@ -81,31 +77,6 @@ ${dict['arch']}/${dict['file']}"
     koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['fun']}" "${dict['file']}"
-
-    # FIXME Break this out into a separate configuration script.
-    app['rscript']="${app['r']}script"
-    [[ -x "${app['rscript']}" ]] || return 1
-    dict['ld_library_path']="$( \
-        "${app['rscript']}" -e \
-            'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
-    )"
-    [[ -n "${dict['ld_library_path']}" ]] || return 1
-    conf_lines=()
-    if koopa_is_root
-    then
-        conf_lines+=(
-            'auth-minimum-user-id=0'
-            'auth-none=1'
-        )
-    fi
-    conf_lines+=(
-        "rsession-ld-library-path=${dict['ld_library_path']}"
-        "rsession-which-r=${app['r']}"
-    )
-    dict['conf_string']="$(koopa_print "${conf_lines[@]}")"
-    dict['conf_file']='/etc/rstudio/rserver.conf'
-    koopa_sudo_write_string \
-        --file="${dict['conf_file']}" \
-        --string="${dict['conf_string']}"
+    koopa_linux_configure_system_rstudio_server
     return 0
 }
