@@ -139,21 +139,19 @@ koopa_r_configure_ldpaths() {
     [[ -d '/lib' ]] && ld_lib_arr+=('/lib')
     ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
     dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
-    lines+=(
-        "R_LD_LIBRARY_PATH=\"${dict['library_path']}\""
-        'export R_LD_LIBRARY_PATH'
-    )
-    if koopa_is_macos
+    lines+=("R_LD_LIBRARY_PATH=\"${dict['library_path']}\"")
+    if koopa_is_linux
+    then
+        lines+=(
+            "LD_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
+            'export LD_LIBRARY_PATH'
+        )
+    elif koopa_is_macos
     then
         lines+=(
             "DYLD_FALLBACK_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
-    # > else
-    # >     lines+=(
-    # >         "LD_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
-    # >         'export LD_LIBRARY_PATH'
-    # >     )
     fi
     dict['string']="$(koopa_print "${lines[@]}")"
     case "${dict['system']}" in
