@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Let's use apt instead of gdebi here.
 
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-04-03.
     #
-    # RStudio Server Pro was renamed to Workbench in 2021-06.
+    # Don't enclose values in quotes in the conf file.
     #
     # Verify install:
     # > sudo rstudio-server stop
@@ -19,6 +18,8 @@ main() {
     #
     # @seealso
     # - https://docs.rstudio.com/rsp/installation/
+    # - https://support.posit.co/hc/en-us/articles/
+    #     200552316-Configuring-RStudio-Workbench-RStudio-Server
     # - https://rstudio.com/products/rstudio/download-commercial/
     # - https://rstudio.com/products/rstudio/download-server/debian-ubuntu/
     # - https://rstudio.com/products/rstudio/download-server/redhat-centos/
@@ -27,14 +28,19 @@ main() {
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
     local app conf_lines dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['r']="$(koopa_locate_system_r --realpath)"
+    app['rscript']="${app['r']}script"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    [[ -x "${app['rscript']}" ]] || return 1
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['ld_library_path']="$( \
+        "${app['rscript']}" -e \
+            'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
+    )"
+    [[ -n "${dict['ld_library_path']}" ]] || return 1
     if koopa_is_debian_like
     then
         app['fun']='koopa_debian_gdebi_install'
@@ -82,12 +88,7 @@ ${dict['arch']}/${dict['file']}"
     koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['fun']}" "${dict['file']}"
-    # Don't enclose values in quotes in the conf file.
     conf_lines=()
-    # Ensure RStudio Server is using our recommended version of R.
-    conf_lines+=("rsession-which-r=${app['r']}")
-    # Allow root user to log in without password, when applicable. This is
-    # currently used by Latch Pods.
     if koopa_is_root
     then
         conf_lines+=(
@@ -95,6 +96,10 @@ ${dict['arch']}/${dict['file']}"
             'auth-none=1'
         )
     fi
+    conf_lines+=(
+        "rsession-ld-library-path=${dict['ld_library_path']}"
+        "rsession-which-r=${app['r']}"
+    )
     dict['conf_string']="$(koopa_print "${conf_lines[@]}")"
     dict['conf_file']='/etc/rstudio/rserver.conf'
     koopa_sudo_write_string \
