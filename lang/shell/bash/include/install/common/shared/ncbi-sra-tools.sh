@@ -59,6 +59,19 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    if koopa_is_root
+    then
+        # Disable creation of these files and directories:
+        # - /etc/ncbi/
+        # - /etc/profile.d/sra-tools.csh
+        # - /etc/profile.d/sra-tools.sh
+        # shellcheck disable=SC2016
+        koopa_find_and_replace_in_file \
+            --fixed \
+            --pattern='[ "$EUID" -eq 0 ]' \
+            --replacement='[ "$EUID" -eq -1 ]' \
+            'build/install.sh'
+    fi
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
