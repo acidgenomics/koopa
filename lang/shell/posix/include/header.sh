@@ -106,7 +106,6 @@ __koopa_activate_koopa() {
     then
         _koopa_macos_activate_cli_colors || return 1
     fi
-    _koopa_activate_conda || return 1
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \
         '/usr/local/bin' \
