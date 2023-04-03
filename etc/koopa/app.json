@@ -1652,6 +1652,25 @@
       "fedora": "gnupg2",
       "homebrew": true
     },
+    "bin": [
+      "dirmngr",
+      "dirmngr-client",
+      "gpg",
+      "gpg-agent",
+      "gpg-card",
+      "gpg-connect-agent",
+      "gpg-wks-client",
+      "gpg-wks-server",
+      "gpgconf",
+      "gpgparsemail",
+      "gpgscm",
+      "gpgsm",
+      "gpgsplit",
+      "gpgtar",
+      "gpgv",
+      "kbxutil",
+      "watchgnupg"
+    ],
     "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-02-08",
@@ -1669,6 +1688,24 @@
       "readline",
       "sqlite",
       "zlib"
+    ],
+    "man1": [
+      "dirmngr-client.1",
+      "gpg-agent.1",
+      "gpg-card.1",
+      "gpg-check-pattern.1",
+      "gpg-connect-agent.1",
+      "gpg-preset-passphrase.1",
+      "gpg-wks-client.1",
+      "gpg-wks-server.1",
+      "gpg.1",
+      "gpgconf.1",
+      "gpgparsemail.1",
+      "gpgsm.1",
+      "gpgtar.1",
+      "gpgv.1",
+      "scdaemon.1",
+      "watchgnupg.1"
     ],
     "url": ["https://gnupg.org/download/"],
     "version": "2.4.0"
@@ -3417,10 +3454,28 @@
     "aliases": {
       "homebrew": true
     },
+    "bin": [
+      "scp",
+      "sftp",
+      "ssh",
+      "ssh-add",
+      "ssh-agent",
+      "ssh-keygen",
+      "ssh-keyscan"
+    ],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-03-17",
     "dependencies": ["libedit", "openssl3", "zlib"],
+    "man1": [
+      "scp.1",
+      "sftp.1",
+      "ssh-add.1",
+      "ssh-agent.1",
+      "ssh-keygen.1",
+      "ssh-keyscan.1",
+      "ssh.1"
+    ],
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
   },
