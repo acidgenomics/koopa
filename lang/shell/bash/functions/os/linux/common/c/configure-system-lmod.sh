@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE Lmod activation is disabled by default for root user. Can override with
+# 'LMOD_ALLOW_ROOT_USE' environment variable in profile activation.
+
 # FIXME Need to rename this function to include "system".
 
-koopa_linux_configure_lmod() {
+koopa_linux_configure_system_lmod() {
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
     # @note Updated 2023-03-09.

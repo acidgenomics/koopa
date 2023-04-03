@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider also updating RStudio Server, if installed.
+
 koopa_configure_system_r() {
     local app
     declare -A app

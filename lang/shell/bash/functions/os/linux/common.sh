@@ -377,7 +377,7 @@ koopa_linux_bcl2fastq_indrops() {
     return 0
 }
 
-koopa_linux_configure_lmod() {
+koopa_linux_configure_system_lmod() {
     local dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
