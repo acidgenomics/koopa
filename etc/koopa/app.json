@@ -1406,10 +1406,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-03-07",
+    "date": "2023-04-02",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.38.0"
+    "version": "0.39.0"
   },
   "gatk": {
     "aliases": {
@@ -3386,10 +3386,10 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-04-01",
     "dependencies": ["gcc"],
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.22"
+    "version": "0.3.23"
   },
   "openjdk": {
     "aliases": {
@@ -3652,11 +3652,11 @@
     },
     "bin": ["poetry"],
     "conservative": true,
-    "date": "2023-03-20",
+    "date": "2023-04-02",
     "dependencies": ["python3.11"],
     "large": true,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "prelude-emacs": {
     "date": "2023-03-07",
