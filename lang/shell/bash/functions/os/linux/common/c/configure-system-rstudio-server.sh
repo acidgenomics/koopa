@@ -38,8 +38,7 @@ koopa_linux_configure_system_rstudio_server() {
     )
     dict['conf_string']="$(koopa_print "${conf_lines[@]}")"
     dict['conf_file']='/etc/rstudio/rserver.conf'
-    koopa_alert "Updating RStudio Server configuration \
-at '${dict['conf_file']}'."
+    koopa_alert "Configuring 'rstudio-server' at '${dict['conf_file']}'."
     koopa_sudo_write_string \
         --file="${dict['conf_file']}" \
         --string="${dict['conf_string']}"
