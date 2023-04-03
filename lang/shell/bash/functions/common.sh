@@ -4614,14 +4614,12 @@ koopa_config_prefix() {
 koopa_configure_r() {
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    declare -A app dict
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['name']='r'
-        ['system']=0
-    )
+    dict['name']='r'
+    dict['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
@@ -4674,6 +4672,12 @@ koopa_configure_r() {
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
+    if [[ "${dict['system']}" -eq 1 ]] && \
+        koopa_is_linux && \
+        koopa_is_installed 'rstudio-server'
+    then
+        koopa_linux_configure_system_rstudio_server
+    fi
     koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
     return 0
 }
@@ -16160,6 +16164,17 @@ koopa_locate_system_r() {
         cmd='/Library/Frameworks/R.framework/Resources/bin/R'
     else
         cmd='/usr/bin/R'
+    fi
+    koopa_locate_app "$cmd"
+}
+
+koopa_locate_system_rscript() {
+    local cmd
+    if koopa_is_macos
+    then
+        cmd='/Library/Frameworks/R.framework/Resources/bin/Rscript'
+    else
+        cmd='/usr/bin/Rscript'
     fi
     koopa_locate_app "$cmd"
 }
