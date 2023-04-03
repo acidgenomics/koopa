@@ -54,7 +54,7 @@ koopa_r_configure_makeconf() {
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \
