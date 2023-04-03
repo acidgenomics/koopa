@@ -108,7 +108,7 @@ koopa_r_configure_makevars() {
     fi
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
