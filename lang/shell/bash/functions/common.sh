@@ -17773,6 +17773,8 @@ koopa_r_configure_environ() {
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
+            '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
+            '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
         )
     fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
