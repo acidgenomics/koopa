@@ -42,6 +42,9 @@ ${dict['version']}.tar.gz"
     koopa_cd 'src'
     if koopa_is_root
     then
+        # Disable creation of these files:
+        # - /etc/profile.d/ncbi-vdb.csh
+        # - /etc/profile.d/ncbi-vdb.sh
         # shellcheck disable=SC2016
         koopa_find_and_replace_in_file \
             --fixed \
@@ -49,7 +52,6 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'build/install-root.sh'
     fi
-    koopa_stop "$PWD"
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
