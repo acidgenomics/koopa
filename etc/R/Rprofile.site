@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-03-31.
+#' @note Updated 2023-04-03.
 #'
 #' @section Restarting R:
 #'
@@ -541,6 +541,21 @@ local({  # nolint
     ## > if (isTRUE(flag[["rstudio"]])) {
     ## >     Sys.umask("0002")
     ## > }
+    ## Improve PATH consistency with base R {{{3
+    ## -------------------------------------------------------------------------
+    ## See also:
+    ## - https://github.com/rstudio/rstudio/blob/main/src/cpp/session/
+    ##     modules/SessionPath.cpp
+    ## - https://community.rstudio.com/t/how-to-get-rstudio-ide-to-use-the-
+    ##     correct-terminal-path-in-mac-os-x/131528
+    ## - https://github.com/rstudio/rstudio/issues/10551
+    if (isTRUE(flag[["rstudio"]]) && isInstalled("later")) {
+        Sys.setenv("KOOPA_R_PATH" = Sys.getenv("PATH"))
+        restorePath <- function() {
+            Sys.setenv("PATH" = Sys.getenv("KOOPA_R_PATH"))
+        }
+        later::later(func = restorePath, delay = 1L)
+    }
     ## Automatic dark/light theme handling (Experimental) {{{3
     ## -------------------------------------------------------------------------
     ## See also:
