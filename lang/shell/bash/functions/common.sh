@@ -17739,11 +17739,6 @@ koopa_r_configure_environ() {
         "TZ=\${TZ:-America/New_York}"
     )
     path_arr=()
-    case "${dict['system']}" in
-        '1')
-            path_arr+=('/usr/local/bin')
-            ;;
-    esac
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -17752,7 +17747,6 @@ koopa_r_configure_environ() {
     if koopa_is_macos
     then
         path_arr+=(
-            '/Applications/quarto/bin'
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
@@ -17829,10 +17823,6 @@ koopa_r_configure_environ() {
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         pc_path_arr=()
-        if [[ "${dict['system']}" -eq 1 ]]
-        then
-            pc_path_arr+=('/usr/local/lib/pkgconfig')
-        fi
         pc_path_arr+=("${app_pc_path_arr[@]}")
         if [[ "${dict['system']}" -eq 1 ]]
         then
@@ -18097,12 +18087,8 @@ koopa_r_configure_ldpaths() {
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
-    ld_lib_arr+=("\${R_HOME}/lib")
-    if [[ "${dict['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
-    then
-        ld_lib_arr+=('/usr/local/lib')
-    fi
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
+    ld_lib_arr+=("\${R_HOME}/lib")
     if koopa_is_linux
     then
         local sys_libdir
@@ -18312,12 +18298,6 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    case "${dict['system']}" in
-        '1')
-            cppflags+=('-I/usr/local/include')
-            ldflags+=('-L/usr/local/lib')
-            ;;
-    esac
     if koopa_is_linux
     then
         local app_pc_path_arr i key keys pkg_config
