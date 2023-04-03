@@ -502,7 +502,11 @@ _koopa_complete() {
                             args+=('r')
                             if _koopa_is_linux
                             then
-                                args+=('rstudio-server' 'sshd')
+                                args+=(
+                                    'lmod'
+                                    'rstudio-server'
+                                    'sshd'
+                                )
                             fi
                             ;;
                         'user')
