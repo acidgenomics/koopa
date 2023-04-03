@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-04-03.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -48,7 +48,7 @@ koopa_r_configure_ldpaths() {
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     lines=()
     lines+=(
         ": \${JAVA_HOME=${dict['java_home']}}"
@@ -109,6 +109,10 @@ koopa_r_configure_ldpaths() {
     then
         keys+=('gettext')
     fi
+    if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+    then
+        keys+=('gcc')
+    fi
     for key in "${keys[@]}"
     do
         local prefix
@@ -118,16 +122,22 @@ koopa_r_configure_ldpaths() {
     done
     for i in "${!ld_lib_app_arr[@]}"
     do
-        ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+        case "$i" in
+            'gcc')
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
+                ;;
+            *)
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+                ;;
+        esac
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
-    case "${dict['system']}" in
-        '1')
-            ld_lib_arr+=('/usr/local/lib')
-            ;;
-    esac
+    # > if [[ "${dict['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
+    # > then
+    # >     ld_lib_arr+=('/usr/local/lib')
+    # > fi
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
@@ -136,18 +146,21 @@ koopa_r_configure_ldpaths() {
         koopa_assert_is_dir "$sys_libdir"
         ld_lib_arr+=("$sys_libdir")
     fi
-    ld_lib_arr+=(
-        '/usr/lib'
-        "\${R_JAVA_LD_LIBRARY_PATH}"
-    )
-    lines+=(
-        "LD_LIBRARY_PATH=\"$(printf '%s:' "${ld_lib_arr[@]}")\""
-        'export LD_LIBRARY_PATH'
-    )
-    if koopa_is_macos
+    [[ -d '/usr/lib' ]] && ld_lib_arr+=('/usr/lib')
+    [[ -d '/lib' ]] && ld_lib_arr+=('/lib')
+    ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
+    dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
+    lines+=("R_LD_LIBRARY_PATH=\"${dict['library_path']}\"")
+    if koopa_is_linux
     then
         lines+=(
-            "DYLD_FALLBACK_LIBRARY_PATH=\"\${LD_LIBRARY_PATH}\""
+            "LD_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
+            'export LD_LIBRARY_PATH'
+        )
+    elif koopa_is_macos
+    then
+        lines+=(
+            "DYLD_FALLBACK_LIBRARY_PATH=\"\${R_LD_LIBRARY_PATH}\""
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
     fi
