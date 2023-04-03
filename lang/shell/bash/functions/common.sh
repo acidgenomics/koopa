@@ -4674,7 +4674,9 @@ koopa_configure_r() {
     esac
     if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
     then
-        app['rstudio_server']="$(koopa_locate_rstudio_server --allow-missing)"
+        app['rstudio_server']="$( \
+            koopa_linux_locate_rstudio_server --allow-missing \
+        )"
         if [[ -x "${app['rstudio_server']}" ]]
         then
             koopa_linux_configure_system_rstudio_server
@@ -17742,7 +17744,7 @@ koopa_r_configure_environ() {
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert "Modifying '${dict['file']}'."
     declare -A conf_dict
     lines=()
     lines+=(
@@ -18030,7 +18032,7 @@ koopa_r_configure_ldpaths() {
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert "Modifying '${dict['file']}'."
     lines=()
     lines+=(
         ": \${JAVA_HOME=${dict['java_home']}}"
@@ -18193,7 +18195,7 @@ koopa_r_configure_makeconf() {
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
-    koopa_alert "Updating ${dict['file']}"
+    koopa_alert "Modifying '${dict['file']}'."
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \
@@ -18325,7 +18327,7 @@ koopa_r_configure_makevars() {
     fi
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
