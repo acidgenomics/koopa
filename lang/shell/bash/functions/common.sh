@@ -4673,6 +4673,7 @@ koopa_configure_r() {
             koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
+    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
     then
         app['rstudio_server']="$( \
@@ -4683,7 +4684,6 @@ koopa_configure_r() {
             koopa_linux_configure_system_rstudio_server
         fi
     fi
-    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     return 0
 }
 
