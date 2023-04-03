@@ -31,16 +31,9 @@ main() {
     declare -A app dict
     koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r --realpath)"
-    app['rscript']="${app['r']}script"
     [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['ld_library_path']="$( \
-        "${app['rscript']}" -e \
-            'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
-    )"
-    [[ -n "${dict['ld_library_path']}" ]] || return 1
     if koopa_is_debian_like
     then
         app['fun']='koopa_debian_gdebi_install'
@@ -88,6 +81,15 @@ ${dict['arch']}/${dict['file']}"
     koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
     koopa_download "${dict['url']}" "${dict['file']}"
     "${app['fun']}" "${dict['file']}"
+
+    # FIXME Break this out into a separate configuration script.
+    app['rscript']="${app['r']}script"
+    [[ -x "${app['rscript']}" ]] || return 1
+    dict['ld_library_path']="$( \
+        "${app['rscript']}" -e \
+            'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
+    )"
+    [[ -n "${dict['ld_library_path']}" ]] || return 1
     conf_lines=()
     if koopa_is_root
     then
