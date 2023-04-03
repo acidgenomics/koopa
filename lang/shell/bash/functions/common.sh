@@ -18072,6 +18072,10 @@ koopa_r_configure_ldpaths() {
     then
         keys+=('gettext')
     fi
+    if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+    then
+        keys+=('gcc')
+    fi
     for key in "${keys[@]}"
     do
         local prefix
@@ -18081,7 +18085,14 @@ koopa_r_configure_ldpaths() {
     done
     for i in "${!ld_lib_app_arr[@]}"
     do
-        ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+        case "$i" in
+            'gcc')
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
+                ;;
+            *)
+                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+                ;;
+        esac
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
@@ -18278,11 +18289,8 @@ koopa_r_configure_makevars() {
         "${dict['libpng']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    if koopa_is_macos
+    if koopa_is_linux
     then
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-    else
         case "${dict['system']}" in
             '0')
                 app['cc']="$(koopa_locate_gcc --realpath)"
@@ -18293,6 +18301,10 @@ koopa_r_configure_makevars() {
                 app['cxx']='/usr/bin/g++'
                 ;;
         esac
+    elif koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
     fi
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
@@ -18409,8 +18421,8 @@ koopa_r_configure_makevars() {
     then
         cppflags+=("-I${dict['gettext']}/include")
         ldflags+=("-L${dict['gettext']}/lib")
+        ldflags+=('-lomp')
     fi
-    koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
