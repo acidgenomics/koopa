@@ -1581,13 +1581,12 @@ koopa_aws_ec2_instance_id() {
 
 koopa_aws_ec2_suspend() {
     local app dict
-    declare -A app
+    declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    dict['id']="$(koopa_aws_ec2_instance_id)"
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in
@@ -1614,13 +1613,12 @@ koopa_aws_ec2_suspend() {
 
 koopa_aws_ec2_terminate() {
     local app dict
-    declare -A app
+    declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['id']="$(koopa_aws_ec2_instance_id)"
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    dict['id']="$(koopa_aws_ec2_instance_id)"
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in
