@@ -20,7 +20,7 @@ koopa_linux_configure_system_rstudio_server() {
     [[ -x "${app['rscript']}" ]] || return 1
     [[ -x "${app['rstudio_server']}" ]] || return 1
     dict['name']='rstudio-server'
-    koopa_configure_start "${dict['name']}" "${app['rstudio_server']}"
+    koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \
         "${app['rscript']}" -e \
             'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
