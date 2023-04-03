@@ -43,7 +43,7 @@ ${dict['version']}.tar.gz"
     if koopa_is_root
     then
         # shellcheck disable=SC2016
-        koopa_replace_in_file \
+        koopa_find_and_replace_in_file \
             --fixed \
             --pattern='[ "$EUID" -eq 0 ]' \
             --replacement='[ "$EUID" -eq -1 ]' \
