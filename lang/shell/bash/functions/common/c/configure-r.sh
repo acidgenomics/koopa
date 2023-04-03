@@ -6,6 +6,9 @@ koopa_configure_r() {
     # @note Updated 2023-03-23.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
+    #
+    # @seealso
+    # - R CMD config
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
