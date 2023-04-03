@@ -72,11 +72,13 @@ koopa_configure_r() {
             ;;
     esac
     # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        koopa_is_installed 'rstudio-server'
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
     then
-        koopa_linux_configure_system_rstudio_server
+        app['rstudio_server']="$(koopa_locate_rstudio_server --allow-missing)"
+        if [[ -x "${app['rstudio_server']}" ]]
+        then
+            koopa_linux_configure_system_rstudio_server
+        fi
     fi
     koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
     return 0
