@@ -19,7 +19,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-04-03.
     #
     # @section Package library location:
     #
@@ -317,8 +317,6 @@ koopa_r_configure_environ() {
     lines+=(
         # Ensure usage of system ICU, insteading of building bundle from source.
         'STRINGI_DISABLE_ICU_BUNDLE=1'
-        # Alternatively, ensure that ICU bundle is compiled from source.
-        # > 'STRINGI_DISABLE_PKG_CONFIG=1'
     )
     # tools
     # --------------------------------------------------------------------------
