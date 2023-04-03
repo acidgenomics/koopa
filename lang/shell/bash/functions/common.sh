@@ -4618,6 +4618,7 @@ koopa_configure_r() {
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
+    app['r']="$(koopa_realpath "${app['r']}")"
     dict['name']='r'
     dict['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
@@ -4627,7 +4628,7 @@ koopa_configure_r() {
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
-    koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
@@ -4682,7 +4683,7 @@ koopa_configure_r() {
             koopa_linux_configure_system_rstudio_server
         fi
     fi
-    koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     return 0
 }
 
@@ -17744,7 +17745,7 @@ koopa_r_configure_environ() {
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     declare -A conf_dict
     lines=()
     lines+=(
@@ -17978,7 +17979,7 @@ koopa_r_configure_java() {
     [[ -x "${app['java']}" ]] || return 1
     [[ -x "${app['javac']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    koopa_alert 'Updating R Java configuration.'
+    koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
     declare -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
         ['jar']="${app['jar']}"
@@ -18032,7 +18033,7 @@ koopa_r_configure_ldpaths() {
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     lines=()
     lines+=(
         ": \${JAVA_HOME=${dict['java_home']}}"
@@ -18195,7 +18196,7 @@ koopa_r_configure_makeconf() {
         "${dict['pcre2']}" \
         "${dict['r_prefix']}" \
         "${dict['zlib']}"
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     koopa_assert_is_file "${dict['file']}"
     koopa_add_to_pkg_config_path \
         "${dict['icu4c']}/lib/pkgconfig" \
@@ -18327,7 +18328,7 @@ koopa_r_configure_makevars() {
     fi
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
