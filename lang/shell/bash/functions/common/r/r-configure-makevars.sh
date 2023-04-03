@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-04-03.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -89,16 +89,8 @@ koopa_r_configure_makevars() {
         "${dict['libpng']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    if koopa_is_macos
+    if koopa_is_linux
     then
-        # The system clang compiler stack is preferred on macOS. If you attempt
-        # to build with GCC, you'll run into a lot of compilation issues with
-        # Posit/RStudio packages, which are only optimized for clang currently.
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-    else
-        # Some Bioconductor packages (e.g. DiffBind) currently fail to compile
-        # unless we use the system GCC stack.
         case "${dict['system']}" in
             '0')
                 app['cc']="$(koopa_locate_gcc --realpath)"
@@ -109,19 +101,23 @@ koopa_r_configure_makevars() {
                 app['cxx']='/usr/bin/g++'
                 ;;
         esac
+    elif koopa_is_macos
+    then
+        app['cc']='/usr/bin/clang'
+        app['cxx']='/usr/bin/clang++'
     fi
     [[ -x "${app['cc']}" ]] || return 1
     [[ -x "${app['cxx']}" ]] || return 1
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
-    case "${dict['system']}" in
-        '1')
-            cppflags+=('-I/usr/local/include')
-            ldflags+=('-L/usr/local/lib')
-            ;;
-    esac
+    # > case "${dict['system']}" in
+    # >     '1')
+    # >         cppflags+=('-I/usr/local/include')
+    # >         ldflags+=('-L/usr/local/lib')
+    # >         ;;
+    # > esac
     # Custom pkg-config flags here are incompatible for macOS clang with these
     # packages: fs, httpuv, igraph, nloptr.
     if koopa_is_linux
@@ -243,10 +239,9 @@ koopa_r_configure_makevars() {
     then
         cppflags+=("-I${dict['gettext']}/include")
         ldflags+=("-L${dict['gettext']}/lib")
+        # libomp is installed at '/usr/local/lib' for macOS.
+        ldflags+=('-lomp')
     fi
-    # libomp is installed at '/usr/local/lib' for macOS.
-    # This is problematic for nloptr but required for data.table.
-    koopa_is_macos && ldflags+=('-lomp')
     declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"

@@ -1406,10 +1406,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-03-07",
+    "date": "2023-04-02",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.38.0"
+    "version": "0.39.0"
   },
   "gatk": {
     "aliases": {
@@ -2369,7 +2369,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-03-31",
+    "date": "2023-04-03",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2377,7 +2377,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.15.1"
+    "version": "2.16.0"
   },
   "less": {
     "aliases": {
@@ -2822,6 +2822,7 @@
     "conservative": true,
     "date": "2023-02-08",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
+    "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
@@ -3136,6 +3137,30 @@
     "url": ["https://bioconda.github.io/recipes/nanopolish/README.html"],
     "version": "0.14.0"
   },
+  "ncbi-sra-tools": {
+    "aliases": {
+      "bioconda": "sra-tools",
+      "homebrew": "sratoolkit"
+    },
+    "arch": "amd64",
+    "bin": ["fasterq-dump", "vdb-config"],
+    "build_dependencies": ["cmake"],
+    "date": "2023-04-03",
+    "dependencies": ["bison", "flex", "hdf5", "ncbi-vdb", "python3.11"],
+    "large": true,
+    "url": ["https://github.com/ncbi/sra-tools/"],
+    "version": "3.0.3"
+  },
+  "ncbi-vdb": {
+    "aliases": {
+      "bioconda": "ncbi-vdb"
+    },
+    "build_dependencies": ["cmake"],
+    "date": "2023-04-03",
+    "dependencies": ["bison", "flex", "hdf5", "openjdk", "python3.11"],
+    "url": ["https://github.com/ncbi/ncbi-vdb/"],
+    "version": "3.0.2"
+  },
   "ncurses": {
     "aliases": {
       "debian": "libncurses-dev",
@@ -3386,10 +3411,10 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-04-01",
     "dependencies": ["gcc"],
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.22"
+    "version": "0.3.23"
   },
   "openjdk": {
     "aliases": {
@@ -3652,11 +3677,11 @@
     },
     "bin": ["poetry"],
     "conservative": true,
-    "date": "2023-03-20",
+    "date": "2023-04-02",
     "dependencies": ["python3.11"],
     "large": true,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "prelude-emacs": {
     "date": "2023-03-07",
@@ -3775,10 +3800,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-03-23",
+    "date": "2023-04-03",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.1"
+    "version": "2.17.2"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -3913,6 +3938,7 @@
       "readline",
       "sed",
       "sqlite",
+      "tar",
       "tcl-tk",
       "texinfo",
       "udunits",
@@ -3924,6 +3950,7 @@
       "xorg-libxcb",
       "xorg-libxdmcp",
       "xorg-libxext",
+      "xorg-libxrandr",
       "xorg-libxrender",
       "xorg-libxt",
       "xorg-xcb-proto",
@@ -3941,7 +3968,7 @@
     "version": "4.2.3"
   },
   "r-devel": {
-    "date": "2023-03-20",
+    "date": "2023-04-03",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3986,6 +4013,7 @@
       "readline",
       "sed",
       "sqlite",
+      "tar",
       "tcl-tk",
       "texinfo",
       "udunits",
@@ -3997,6 +4025,7 @@
       "xorg-libxcb",
       "xorg-libxdmcp",
       "xorg-libxext",
+      "xorg-libxrandr",
       "xorg-libxrender",
       "xorg-libxt",
       "xorg-xcb-proto",
@@ -4014,7 +4043,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "83977"
+    "version": "84153"
   },
   "radian": {
     "bin": ["radian"],
@@ -4407,21 +4436,6 @@
     "outdated": true,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.41.0"
-  },
-  "sra-tools": {
-    "aliases": {
-      "homebrew": "sratoolkit"
-    },
-    "arch": "amd64",
-    "bin": ["fasterq-dump", "vdb-config"],
-    "build_dependencies": ["cmake"],
-    "date": "2023-01-03",
-    "dependencies": ["bison", "flex", "openjdk", "python3.11"],
-    "large": true,
-    "notes": ["ncbi-vdb is not yet tagged for 3.0.3."],
-    "outdated": true,
-    "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.2"
   },
   "star": {
     "arch": "amd64",

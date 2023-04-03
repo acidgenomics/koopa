@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-02-24.
+#' @note Updated 2023-03-31.
 #'
 #' @section Restarting R:
 #'
@@ -204,7 +204,7 @@ local({  # nolint
     ## >     "https://packagemanager.posit.co/cran/latest"
     ## > repos[["CRAN"]] <-
     ## >     "https://repo.miserver.it.umich.edu/cran"
-    snapshot <- "2023-02-22"
+    snapshot <- "2023-03-31"
     cran <- paste(
         "https://packagemanager.posit.co",
         "cran",
@@ -227,7 +227,7 @@ local({  # nolint
             split = ".",
             fixed = TRUE
         )[[1L]][[1L]]
-        ## FIXME Work on extracting this from '/etc' instead...
+        ## Can access codename with 'lsb_release -cs'.
         distro <- switch(
             EXPR = x,
             "18" = "bionic",
