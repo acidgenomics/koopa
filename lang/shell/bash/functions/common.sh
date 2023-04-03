@@ -290,23 +290,22 @@ koopa_add_to_user_profile() {
     dict['file']="$(koopa_find_user_profile)"
     koopa_alert "Adding koopa activation to '${dict['file']}'."
     read -r -d '' "dict[string]" << END || true
-_koopa_activate_user_profile() {
-    local script xdg_config_home
-    [ "\$#" -eq 0 ] || return 1
-    xdg_config_home="\${XDG_CONFIG_HOME:-}"
-    if [ -z "\$xdg_config_home" ]
+__koopa_activate_user_profile() {
+    __kvar_xdg_config_home="\${XDG_CONFIG_HOME:-}"
+    if [ -z "\$__kvar_xdg_config_home" ]
     then
-        xdg_config_home="\${HOME:?}/.config"
+        __kvar_xdg_config_home="\${HOME:?}/.config"
     fi
-    script="\${xdg_config_home}/koopa/activate"
-    if [ -r "\$script" ]
+    __kvar_script="\${__kvar_xdg_config_home}/koopa/activate"
+    if [ -r "\$__kvar_script" ]
     then
-        . "\$script"
+        . "\$__kvar_script"
     fi
+    unset -v __kvar_script __kvar_xdg_config_home
     return 0
 }
 
-_koopa_activate_user_profile
+__koopa_activate_user_profile
 END
     koopa_append_string \
         --file="${dict['file']}" \
@@ -17774,6 +17773,8 @@ koopa_r_configure_environ() {
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
+            '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
+            '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
         )
     fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
