@@ -140,7 +140,7 @@ koopa_r_configure_environ() {
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    koopa_alert "Configuring '${dict['file']}'."
+    koopa_alert "Modifying '${dict['file']}'."
     declare -A conf_dict
     lines=()
     lines+=(
