@@ -48,7 +48,7 @@ koopa_r_configure_ldpaths() {
         "${dict['java_home']}" \
         "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert_info "Modifying '${dict['file']}'."
     lines=()
     lines+=(
         ": \${JAVA_HOME=${dict['java_home']}}"

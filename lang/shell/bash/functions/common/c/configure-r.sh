@@ -16,6 +16,7 @@ koopa_configure_r() {
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || return 1
+    app['r']="$(koopa_realpath "${app['r']}")"
     dict['name']='r'
     dict['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
@@ -25,7 +26,7 @@ koopa_configure_r() {
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
-    koopa_alert_configure_start "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
@@ -82,6 +83,6 @@ koopa_configure_r() {
             koopa_linux_configure_system_rstudio_server
         fi
     fi
-    koopa_alert_configure_success "${dict['name']}" "${dict['r_prefix']}"
+    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     return 0
 }

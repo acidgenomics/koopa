@@ -19,7 +19,8 @@ koopa_linux_configure_system_rstudio_server() {
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['rscript']}" ]] || return 1
     [[ -x "${app['rstudio_server']}" ]] || return 1
-    koopa_alert "Configuring 'rstudio-server' at '${app['rstudio_server']}'."
+    dict['name']='rstudio-server'
+    koopa_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \
         "${app['rscript']}" -e \
             'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
@@ -39,9 +40,10 @@ koopa_linux_configure_system_rstudio_server() {
     )
     dict['conf_string']="$(koopa_print "${conf_lines[@]}")"
     dict['conf_file']='/etc/rstudio/rserver.conf'
-    koopa_alert "Modifying '${dict['conf_file']}'."
+    koopa_alert_info "Modifying '${dict['conf_file']}'."
     koopa_sudo_write_string \
         --file="${dict['conf_file']}" \
         --string="${dict['conf_string']}"
+    koopa_alert_configure_success "${dict['name']}" "${app['rstudio_server']}"
     return 0
 }
