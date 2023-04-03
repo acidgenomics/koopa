@@ -12108,6 +12108,18 @@ koopa_install_nanopolish() {
         "$@"
 }
 
+koopa_install_ncbi_sra_tools() {
+    koopa_install_app \
+        --name='ncbi-sra-tools' \
+        "$@"
+}
+
+koopa_install_ncbi_vdb() {
+    koopa_install_app \
+        --name='ncbi-vdb' \
+        "$@"
+}
+
 koopa_install_ncurses() {
     koopa_install_app \
         --name='ncurses' \
@@ -12653,12 +12665,6 @@ koopa_install_spdlog() {
 koopa_install_sqlite() {
     koopa_install_app \
         --name='sqlite' \
-        "$@"
-}
-
-koopa_install_sra_tools() {
-    koopa_install_app \
-        --name='sra-tools' \
         "$@"
 }
 
@@ -24557,6 +24563,18 @@ koopa_uninstall_nanopolish() {
         "$@"
 }
 
+koopa_uninstall_ncbi_sra_tools() {
+    koopa_uninstall_app \
+        --name='ncbi-sra-tools' \
+        "$@"
+}
+
+koopa_uninstall_ncbi_vdb() {
+    koopa_uninstall_app \
+        --name='ncbi-vdb' \
+        "$@"
+}
+
 koopa_uninstall_ncurses() {
     koopa_uninstall_app \
         --name='ncurses' \
@@ -25058,12 +25076,6 @@ koopa_uninstall_spdlog() {
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name='sqlite' \
-        "$@"
-}
-
-koopa_uninstall_sra_tools() {
-    koopa_uninstall_app \
-        --name='sra-tools' \
         "$@"
 }
 

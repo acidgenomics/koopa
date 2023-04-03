@@ -3137,6 +3137,29 @@
     "url": ["https://bioconda.github.io/recipes/nanopolish/README.html"],
     "version": "0.14.0"
   },
+  "ncbi-sra-tools": {
+    "aliases": {
+      "bioconda": "sra-tools",
+      "homebrew": "sratoolkit"
+    },
+    "arch": "amd64",
+    "bin": ["fasterq-dump", "vdb-config"],
+    "build_dependencies": ["cmake", "ncbi-vdb"],
+    "date": "2023-04-03",
+    "dependencies": ["bison", "flex", "openjdk", "python3.11"],
+    "large": true,
+    "url": ["https://github.com/ncbi/sra-tools/"],
+    "version": "3.0.3"
+  },
+  "ncbi-vdb": {
+    "aliases": {
+      "bioconda": "ncbi-vdb"
+    },
+    "build_dependencies": ["cmake"],
+    "date": "2023-04-03",
+    "url": ["https://github.com/ncbi/ncbi-vdb/"],
+    "version": "3.0.2"
+  },
   "ncurses": {
     "aliases": {
       "debian": "libncurses-dev",
@@ -4412,21 +4435,6 @@
     "outdated": true,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.41.0"
-  },
-  "sra-tools": {
-    "aliases": {
-      "homebrew": "sratoolkit"
-    },
-    "arch": "amd64",
-    "bin": ["fasterq-dump", "vdb-config"],
-    "build_dependencies": ["cmake"],
-    "date": "2023-01-03",
-    "dependencies": ["bison", "flex", "openjdk", "python3.11"],
-    "large": true,
-    "notes": ["ncbi-vdb is not yet tagged for 3.0.3."],
-    "outdated": true,
-    "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.2"
   },
   "star": {
     "arch": "amd64",
