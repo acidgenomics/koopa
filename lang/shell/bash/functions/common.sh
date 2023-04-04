@@ -11486,6 +11486,12 @@ koopa_install_htseq() {
         "$@"
 }
 
+koopa_install_htslib() {
+    koopa_install_app \
+        --name='htslib' \
+        "$@"
+}
+
 koopa_install_httpie() {
     koopa_install_app \
         --name='httpie' \
@@ -24088,6 +24094,12 @@ koopa_uninstall_htop() {
 koopa_uninstall_htseq() {
     koopa_uninstall_app \
         --name='htseq' \
+        "$@"
+}
+
+koopa_uninstall_htslib() {
+    koopa_uninstall_app \
+        --name='htslib' \
         "$@"
 }
 
