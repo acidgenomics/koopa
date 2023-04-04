@@ -12203,6 +12203,18 @@ koopa_install_oniguruma() {
         "$@"
 }
 
+koopa_install_ont_bonito() {
+    koopa_install_app \
+        --name='ont-bonito' \
+        "$@"
+}
+
+koopa_install_ont_dorado() {
+    koopa_install_app \
+        --name='ont-dorado' \
+        "$@"
+}
+
 koopa_install_ont_vbz_compression() {
     koopa_install_app \
         --name='ont-vbz-compression' \
@@ -24725,6 +24737,18 @@ koopa_uninstall_nushell() {
 koopa_uninstall_oniguruma() {
     koopa_uninstall_app \
         --name='oniguruma' \
+        "$@"
+}
+
+koopa_uninstall_ont_bonito() {
+    koopa_uninstall_app \
+        --name='ont-bonito' \
+        "$@"
+}
+
+koopa_uninstall_ont_dorado() {
+    koopa_uninstall_app \
+        --name='ont-dorado' \
         "$@"
 }
 
