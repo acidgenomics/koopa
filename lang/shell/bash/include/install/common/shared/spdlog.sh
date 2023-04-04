@@ -3,7 +3,7 @@
 main() {
     # """
     # Install spdlog.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-04.
     #
     # @seealso
     # - https://github.com/gabime/spdlog/
@@ -12,8 +12,8 @@ main() {
     # - https://raw.githubusercontent.com/archlinux/svntogit-community/
     #     packages/spdlog/trunk/PKGBUILD
     # """
-    local app cmake_args cmake_dict dict
-    declare -A app cmake_dict dict
+    local app cmake cmake_args dict
+    declare -A app cmake dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app 'fmt'
@@ -27,8 +27,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['fmt']}"
-    cmake_dict['fmt_dir']="${dict['fmt']}/lib/cmake/fmt"
-    koopa_assert_is_dir "${cmake_dict['fmt_dir']}"
+    cmake['fmt_dir']="${dict['fmt']}/lib/cmake/fmt"
+    koopa_assert_is_dir "${cmake['fmt_dir']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DSPDLOG_BUILD_BENCH=OFF'
@@ -36,7 +36,7 @@ main() {
         '-DSPDLOG_BUILD_TESTS=ON'
         '-DSPDLOG_FMT_EXTERNAL=ON'
         # Dependency paths -----------------------------------------------------
-        "-Dfmt_DIR=${cmake_dict['fmt_dir']}"
+        "-Dfmt_DIR=${cmake['fmt_dir']}"
     )
     dict['url']="https://github.com/gabime/spdlog/archive/\
 v${dict['version']}.tar.gz"
