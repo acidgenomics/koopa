@@ -7,7 +7,7 @@ koopa_r_install_packages_in_site_library() {
     # """
     local app dict
     declare -A app dict
-    koopa_assert_has_args_gt "$#" 1
+    koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"
     app['rscript']="${app['r']}script"
     [[ -x "${app['r']}" ]] || return 1
