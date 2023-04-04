@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Not currently working unless we clone git repo and use submodules
-#
-# -- Building htslib
-# CMake Error at /opt/koopa/app/cmake/3.25.2/share/cmake-3.25/Modules/ExternalProject.cmake:3115 (message):
-#   No download info given for 'htslib_project' and its source directory:
-
 main() {
     # """
     # Install ONT dorado basecaller.
@@ -31,11 +25,8 @@ main() {
 libzstd.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
-        '-DBUILD_KOI_FROM_SOURCE=OFF'
         '-DGIT_SUBMODULE=ON'
         # Dependency paths -----------------------------------------------------
-        # > "-DCUDAToolkit_NVCC_EXECUTABLE=FIXME"
-        # > "-DCUDAToolkit_SENTINEL_FILE=FIXME"
         # > "-DMKLDNN_DIR=FIXME"
         # > "-DMKL_DIR=FIXME"
         # > "-Dkineto_LIBRARY=FIXME"
@@ -43,6 +34,14 @@ libzstd.${dict['shared_ext']}"
         "-DZSTD_INCLUDE_DIR=${cmake_dict['zstd_include_dir']}"
         "-DZSTD_LIBRARY_RELEASE=${cmake_dict['zstd_library']}"
     )
+# How to build with CUDA toolkit on Linux.
+# >     if koopa_is_linux
+# >     then
+# >         cmake_args+=(
+# >             "-DCUDAToolkit_NVCC_EXECUTABLE=FIXME"
+# >             "-DCUDAToolkit_SENTINEL_FILE=FIXME"
+# >         )
+# >     fi
     "${app['git']}" clone \
         --depth 1 \
         --branch "v${dict['version']}" \

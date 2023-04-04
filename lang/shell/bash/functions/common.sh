@@ -4236,7 +4236,9 @@ koopa_cmake_build() {
     "${app['cmake']}" \
         --build "${dict['builddir']}" \
         --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install "${dict['builddir']}"
+    "${app['cmake']}" \
+        --install "${dict['builddir']}" \
+        --prefix "${dict['prefix']}"
     return 0
 }
 
