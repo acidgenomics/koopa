@@ -3,13 +3,15 @@
 koopa_r_koopa() {
     # """
     # Execute a function in koopa R package.
-    # @note Updated 2022-08-03.
+    # @note Updated 2023-04-04.
+    #
+    # The 'header' variable is currently used to simply load the shared R
+    # script header and check that the koopa R package is installed.
     # """
     local app code header_file fun pos rscript_args
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['rscript']="$(koopa_locate_rscript)"
-    )
+    app['rscript']="$(koopa_locate_rscript)"
     [[ -x "${app['rscript']}" ]] || return 1
     rscript_args=()
     pos=()
@@ -40,13 +42,10 @@ koopa_r_koopa() {
     header_file="$(koopa_koopa_prefix)/lang/r/include/header.R"
     koopa_assert_is_file "$header_file"
     code=("source('${header_file}');")
-    # The 'header' variable is currently used to simply load the shared R
-    # script header and check that the koopa R package is installed.
     if [[ "$fun" != 'header' ]]
     then
         code+=("koopa::${fun}();")
     fi
-    # Ensure positional arguments get properly quoted (escaped).
     pos=("$@")
     "${app['rscript']}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
     return 0

@@ -21,13 +21,11 @@ koopa_r_configure_makeconf() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local app dict libs
-    declare -A app
+    declare -A app dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \

@@ -561,7 +561,7 @@ local({  # nolint
         }
         later::later(func = restoreDefaultPath, delay = 1L)
     }
-    ## Automatic dark/light theme handling (Experimental) {{{3
+    ## Automatic dark/light theme handling {{{3
     ## -------------------------------------------------------------------------
     ## See also:
     ## - https://github.com/gadenbuie/rsthemes

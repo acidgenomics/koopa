@@ -4668,10 +4668,10 @@ koopa_configure_r() {
                     "${dict['user']}:${dict['group']}" \
                     "${dict['site_library_2']}"
             fi
-            koopa_r_configure_makeconf "${app['r']}"
-            koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
+    koopa_r_configure_makeconf "${app['r']}"
+    koopa_r_migrate_non_base_packages "${app['r']}"
     koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
     then
@@ -10020,14 +10020,12 @@ koopa_install_all_apps() {
 }
 
 koopa_install_all_binary_apps() {
-    local app_name app_names bool
+    local app app_name app_names bool
     koopa_assert_has_no_args "$#"
-    declare -A bool
+    declare -A app bool
+    app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
-    if [[ ! -d "$(koopa_app_prefix --allow-missing 'aws-cli')" ]]
-    then
-        bool['bootstrap']=1
-    fi
+    [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
@@ -10552,14 +10550,8 @@ ${dict['version2']}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
-            "LANG=${LANG:-}"
-            "LC_ALL=${LC_ALL:-}"
-            "LC_COLLATE=${LC_COLLATE:-}"
-            "LC_CTYPE=${LC_CTYPE:-}"
-            "LC_MESSAGES=${LC_MESSAGES:-}"
-            "LC_MONETARY=${LC_MONETARY:-}"
-            "LC_NUMERIC=${LC_NUMERIC:-}"
-            "LC_TIME=${LC_TIME:-}"
+            'LANG=C'
+            'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
@@ -17789,7 +17781,13 @@ koopa_r_configure_environ() {
         '/usr/bin'
         '/bin'
     )
-    if koopa_is_macos
+    if koopa_is_linux
+    then
+        path_arr+=(
+            '/usr/lib/rstudio-server/bin/quarto/bin'
+            '/usr/lib/rstudio-server/bin/postback'
+        )
+    elif koopa_is_macos
     then
         path_arr+=(
             '/Library/TeX/texbin'
@@ -18199,13 +18197,11 @@ koopa_r_configure_ldpaths() {
 
 koopa_r_configure_makeconf() {
     local app dict libs
-    declare -A app
+    declare -A app dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \
@@ -18279,14 +18275,12 @@ koopa_r_configure_makeconf() {
 koopa_r_configure_makevars() {
     local app conf_dict dict
     local cppflags ldflags lines
+    declare -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \
@@ -18599,12 +18593,27 @@ koopa_r_configure_makevars() {
     return 0
 }
 
+koopa_r_install_packages_in_site_library() {
+    local app dict
+    declare -A app dict
+    koopa_assert_has_args_ge "$#" 2
+    app['r']="${1:?}"
+    app['rscript']="${app['r']}script"
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
+    shift 1
+    dict['script']="$(koopa_koopa_prefix)/lang/r/\
+install-packages-in-site-library.R"
+    koopa_assert_is_file "${dict['script']}"
+    "${app['rscript']}" "${dict['script']}" "$@"
+    return 0
+}
+
 koopa_r_koopa() {
     local app code header_file fun pos rscript_args
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['rscript']="$(koopa_locate_rscript)"
-    )
+    app['rscript']="$(koopa_locate_rscript)"
     [[ -x "${app['rscript']}" ]] || return 1
     rscript_args=()
     pos=()
@@ -18706,6 +18715,22 @@ koopa_r_link_files_in_etc() {
     return 0
 }
 
+koopa_r_migrate_non_base_packages() {
+    local app pkgs
+    declare -A app
+    koopa_assert_has_args_eq "$#" 1
+    app['r']="${1:?}"
+    readarray -t pkgs <<< "$( \
+        koopa_r_system_packages_non_base "${app['r']}"
+    )"
+    koopa_is_array_non_empty "${pkgs[@]:-}" || return 0
+    koopa_alert_info 'Migrating non-base packages to site library.'
+    koopa_dl 'Packages' "$(koopa_to_string "${pkgs[@]}")"
+    koopa_r_install_packages_in_site_library "${app['r']}" "${pkgs[@]}"
+    koopa_r_remove_packages_in_system_library "${app['r']}" "${pkgs[@]}"
+    return 0
+}
+
 koopa_r_package_version() {
     local app str vec
     koopa_assert_has_args "$#"
@@ -18778,38 +18803,30 @@ koopa_r_prefix() {
     return 0
 }
 
-koopa_r_rebuild_docs() {
-    local app doc_dir html_dir pkg_index rscript_args
-    declare -A app=(
-        ['r']="${1:?}"
-    )
-    koopa_assert_is_installed "${app['r']}"
+koopa_r_remove_packages_in_system_library() {
+    local app dict
+    declare -A app dict
+    koopa_assert_has_args_ge "$#" 2
+    app['r']="${1:?}"
     app['rscript']="${app['r']}script"
-    koopa_assert_is_installed "${app['rscript']}"
-    koopa_is_koopa_app "${app['rscript']}" || return 0
-    declare -A dict
-    koopa_alert 'Updating HTML package index.'
-    rscript_args=('--vanilla')
-    dict['doc_dir']="$( \
-        "${app['rscript']}" "${rscript_args[@]}" -e 'cat(R.home("doc"))' \
-    )"
-    dict['html_dir']="${dict['doc_dir']}/html"
-    dict['pkg_index']="${dict['html_dir']}/packages.html"
-    dict['r_css']="${dict['html_dir']}/R.css"
-    if [[ ! -d "${dict['html_dir']}" ]]
-    then
-        koopa_mkdir "${dict['html_dir']}"
-    fi
-    if [[ ! -f "${dict['pkg_index']}" ]]
-    then
-        koopa_touch "${dict['pkg_index']}"
-    fi
-    if [[ ! -f "${dict['r_css']}" ]]
-    then
-        koopa_touch "${dict['r_css']}"
-    fi
-    koopa_sys_set_permissions "${dict['pkg_index']}"
-    "${app['rscript']}" "${rscript_args[@]}" -e 'utils::make.packages.html()'
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
+    shift 1
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    dict['script']="$(koopa_koopa_prefix)/lang/r/\
+remove-packages-in-system-library.R"
+    koopa_assert_is_file "${dict['script']}"
+    case "${dict['system']}" in
+        '0')
+            "${app['rscript']}" "${dict['script']}" "$@"
+            ;;
+        '1')
+            app['sudo']="$(koopa_locate_sudo)"
+            [[ -x "${app['sudo']}" ]] || return 1
+            "${app['sudo']}" "${app['rscript']}" "${dict['script']}" "$@"
+            ;;
+    esac
     return 0
 }
 
@@ -18849,6 +18866,22 @@ koopa_r_system_library_prefix() {
     )"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_print "${dict['prefix']}"
+    return 0
+}
+
+koopa_r_system_packages_non_base() {
+    local app dict
+    declare -A app dict
+    koopa_assert_has_args_eq "$#" 1
+    app['r']="${1:?}"
+    app['rscript']="${app['r']}script"
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
+    dict['script']="$(koopa_koopa_prefix)/lang/r/system-packages-non-base.R"
+    koopa_assert_is_file "${dict['script']}"
+    dict['string']="$("${app['rscript']}" --vanilla "${dict['script']}")"
+    [[ -n "${dict['string']}" ]] || return 0
+    koopa_print "${dict['string']}"
     return 0
 }
 
