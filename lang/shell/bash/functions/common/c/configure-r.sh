@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-04.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -68,10 +68,10 @@ koopa_configure_r() {
                     "${dict['user']}:${dict['group']}" \
                     "${dict['site_library_2']}"
             fi
-            koopa_r_configure_makeconf "${app['r']}"
-            koopa_r_rebuild_docs "${app['r']}"
             ;;
     esac
+    koopa_r_configure_makeconf "${app['r']}"
+    koopa_r_migrate_non_base_packages "${app['r']}"
     # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
     koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
