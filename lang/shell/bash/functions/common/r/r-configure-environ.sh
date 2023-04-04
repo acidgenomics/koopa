@@ -159,7 +159,13 @@ koopa_r_configure_environ() {
         '/usr/bin'
         '/bin'
     )
-    if koopa_is_macos
+    if koopa_is_linux
+    then
+        path_arr+=(
+            '/usr/lib/rstudio-server/bin/quarto/bin'
+            '/usr/lib/rstudio-server/bin/postback'
+        )
+    elif koopa_is_macos
     then
         path_arr+=(
             '/Library/TeX/texbin'
