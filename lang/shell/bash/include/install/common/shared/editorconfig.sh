@@ -3,7 +3,7 @@
 main() {
     # """
     # Install EditorConfig.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-04.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
@@ -14,8 +14,8 @@ main() {
     #     CMake_Modules/FindPCRE2.cmake
     # - https://git.alpinelinux.org/aports/tree/community/editorconfig/APKBUILD
     # """
-    local cmake_args cmake_dict dict
-    declare -A cmake_dict dict
+    local cmake cmake_args dict
+    declare -A cmake dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'pcre2'
@@ -23,18 +23,18 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    cmake_dict['cmake_library_path']="${dict['pcre2']}/lib"
-    cmake_dict['pcre2_include_dir']="${dict['pcre2']}/include"
-    cmake_dict['pcre2_library']="${dict['pcre2']}/lib/\
+    cmake['cmake_library_path']="${dict['pcre2']}/lib"
+    cmake['pcre2_include_dir']="${dict['pcre2']}/include"
+    cmake['pcre2_library']="${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
-    koopa_assert_is_dir "${cmake_dict['pcre2_include_dir']}"
-    koopa_assert_is_file "${cmake_dict['pcre2_library']}"
+    koopa_assert_is_dir "${cmake['pcre2_include_dir']}"
+    koopa_assert_is_file "${cmake['pcre2_library']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
-        "-DCMAKE_LIBRARY_PATH=${cmake_dict['cmake_library_path']}"
+        "-DCMAKE_LIBRARY_PATH=${cmake['cmake_library_path']}"
         # Dependency paths -----------------------------------------------------
-        "-DPCRE2_INCLUDE_DIR=${cmake_dict['pcre2_include_dir']}"
-        "-DPCRE2_LIBRARY=${cmake_dict['pcre2_library']}"
+        "-DPCRE2_INCLUDE_DIR=${cmake['pcre2_include_dir']}"
+        "-DPCRE2_LIBRARY=${cmake['pcre2_library']}"
     )
     dict['url']="https://github.com/editorconfig/editorconfig-core-c/\
 archive/v${dict['version']}.tar.gz"
