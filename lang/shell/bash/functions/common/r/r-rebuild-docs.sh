@@ -28,7 +28,7 @@ koopa_r_rebuild_docs() {
     )"
     koopa_assert_is_dir "${dict['doc_dir']}"
     koopa_alert_info "Updating documentation in '${dict['doc_dir']}'."
-    case "${dict['system'}" in
+    case "${dict['system']}" in
         '1')
             app['sudo']="$(koopa_locate_sudo)"
             [[ -x "${app['sudo']}" ]] || return 1
