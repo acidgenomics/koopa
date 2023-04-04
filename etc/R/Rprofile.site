@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-04-03.
+#' @note Updated 2023-04-04.
 #'
 #' @section Restarting R:
 #'
@@ -550,9 +550,11 @@ local({  # nolint
     ##     correct-terminal-path-in-mac-os-x/131528
     ## - https://github.com/rstudio/rstudio/issues/10551
     if (isTRUE(flag[["rstudio"]]) && isInstalled("later")) {
-        Sys.setenv("KOOPA_R_PATH" = Sys.getenv("PATH"))
+        Sys.setenv("_PATH" = Sys.getenv("PATH"))
         restorePath <- function() {
-            Sys.setenv("PATH" = Sys.getenv("KOOPA_R_PATH"))
+            Sys.setenv("RSTUDIO_PATH" = Sys.getenv("PATH"))
+            Sys.setenv("PATH" = Sys.getenv("_PATH"))
+            Sys.unsetenv("_PATH")
         }
         later::later(func = restorePath, delay = 1L)
     }
