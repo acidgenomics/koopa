@@ -10,18 +10,20 @@ main() {
     # - https://github.com/OSGeo/PROJ/issues/2084
     # - https://github.com/tesseract-ocr/tesseract/issues/786
     # """
-    local cmake_args dict
+    local cmake_args deps dict
     declare -A dict
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
-        'curl' \
-        'zlib' \
-        'zstd' \
-        'libjpeg-turbo' \
-        'libtiff' \
-        'python3.11' \
+    deps=(
+        'curl'
+        'zlib'
+        'zstd'
+        'libjpeg-turbo'
+        'libtiff'
+        'python3.11'
         'sqlite'
+    )
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app "${deps[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
