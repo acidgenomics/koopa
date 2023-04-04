@@ -356,14 +356,8 @@ ${dict['version2']}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
-            "LANG=${LANG:-}"
-            "LC_ALL=${LC_ALL:-}"
-            "LC_COLLATE=${LC_COLLATE:-}"
-            "LC_CTYPE=${LC_CTYPE:-}"
-            "LC_MESSAGES=${LC_MESSAGES:-}"
-            "LC_MONETARY=${LC_MONETARY:-}"
-            "LC_NUMERIC=${LC_NUMERIC:-}"
-            "LC_TIME=${LC_TIME:-}"
+            'LANG=C'
+            'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "TMPDIR=${TMPDIR:-/tmp}"
         )

@@ -10550,14 +10550,8 @@ ${dict['version2']}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
-            "LANG=${LANG:-}"
-            "LC_ALL=${LC_ALL:-}"
-            "LC_COLLATE=${LC_COLLATE:-}"
-            "LC_CTYPE=${LC_CTYPE:-}"
-            "LC_MESSAGES=${LC_MESSAGES:-}"
-            "LC_MONETARY=${LC_MONETARY:-}"
-            "LC_NUMERIC=${LC_NUMERIC:-}"
-            "LC_TIME=${LC_TIME:-}"
+            'LANG=C'
+            'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
@@ -18597,10 +18591,9 @@ koopa_r_configure_makevars() {
 
 koopa_r_koopa() {
     local app code header_file fun pos rscript_args
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['rscript']="$(koopa_locate_rscript)"
-    )
+    app['rscript']="$(koopa_locate_rscript)"
     [[ -x "${app['rscript']}" ]] || return 1
     rscript_args=()
     pos=()
@@ -18857,6 +18850,22 @@ koopa_r_system_library_prefix() {
     )"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_print "${dict['prefix']}"
+    return 0
+}
+
+koopa_r_system_packages_non_base() {
+    local app dict
+    declare -A app dict
+    koopa_assert_has_args_eq "$#" 1
+    app['r']="${1:?}"
+    app['rscript']="${app['r']}script"
+    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || return 1
+    dict['script']="$(koopa_koopa_prefix)/lang/r/system-packages-non-base.R"
+    koopa_assert_is_file "${dict['script']}"
+    dict['string']="$("${app['rscript']}" --vanilla "${dict['script']}")"
+    [[ -n "${dict['string']}" ]] || return 0
+    koopa_print "${dict['string']}"
     return 0
 }
 
