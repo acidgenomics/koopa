@@ -4212,10 +4212,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-03-17",
+    "date": "2023-04-04",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.256"
+    "version": "0.0.260"
   },
   "rust": {
     "aliases": {
