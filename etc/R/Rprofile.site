@@ -543,20 +543,23 @@ local({  # nolint
     ## > }
     ## Improve PATH consistency with base R {{{3
     ## -------------------------------------------------------------------------
+    ## RStudio PATH is now inconsistent with system R due to breaking changes in
+    ## internal 'SessionPath.cpp'.
     ## See also:
     ## - https://github.com/rstudio/rstudio/blob/main/src/cpp/session/
     ##     modules/SessionPath.cpp
     ## - https://community.rstudio.com/t/how-to-get-rstudio-ide-to-use-the-
     ##     correct-terminal-path-in-mac-os-x/131528
     ## - https://github.com/rstudio/rstudio/issues/10551
+    ## - https://github.com/rstudio/rstudio/issues/10311
     if (isTRUE(flag[["rstudio"]]) && isInstalled("later")) {
         Sys.setenv("_PATH" = Sys.getenv("PATH"))
-        restorePath <- function() {
+        restoreDefaultPath <- function() {
             Sys.setenv("RSTUDIO_PATH" = Sys.getenv("PATH"))
             Sys.setenv("PATH" = Sys.getenv("_PATH"))
             Sys.unsetenv("_PATH")
         }
-        later::later(func = restorePath, delay = 1L)
+        later::later(func = restoreDefaultPath, delay = 1L)
     }
     ## Automatic dark/light theme handling (Experimental) {{{3
     ## -------------------------------------------------------------------------
