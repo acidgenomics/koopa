@@ -5,8 +5,8 @@ main() {
     # Install ONT dorado basecaller.
     # @note Updated 2023-04-04.
     # """
-    local app build_deps cmake_dict deps dict
-    declare -A app cmake_dict dict
+    local app build_deps cmake deps dict
+    declare -A app cmake dict
     koopa_assert_has_no_args "$#"
     build_deps=('autoconf' 'automake' 'git')
     deps=('hdf5' 'openssl3' 'zstd')
@@ -19,9 +19,9 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
-    cmake_dict['openssl_root_dir']="${dict['openssl']}"
-    cmake_dict['zstd_include_dir']="${dict['zstd']}/include"
-    cmake_dict['zstd_library']="${dict['zstd']}/lib/\
+    cmake['openssl_root_dir']="${dict['openssl']}"
+    cmake['zstd_include_dir']="${dict['zstd']}/include"
+    cmake['zstd_library']="${dict['zstd']}/lib/\
 libzstd.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
@@ -30,9 +30,9 @@ libzstd.${dict['shared_ext']}"
         # > "-DMKLDNN_DIR=FIXME"
         # > "-DMKL_DIR=FIXME"
         # > "-Dkineto_LIBRARY=FIXME"
-        "-DOPENSSL_ROOT_DIR=${cmake_dict['openssl_root_dir']}"
-        "-DZSTD_INCLUDE_DIR=${cmake_dict['zstd_include_dir']}"
-        "-DZSTD_LIBRARY_RELEASE=${cmake_dict['zstd_library']}"
+        "-DOPENSSL_ROOT_DIR=${cmake['openssl_root_dir']}"
+        "-DZSTD_INCLUDE_DIR=${cmake['zstd_include_dir']}"
+        "-DZSTD_LIBRARY_RELEASE=${cmake['zstd_library']}"
     )
 # How to build with CUDA toolkit on Linux.
 # >     if koopa_is_linux
