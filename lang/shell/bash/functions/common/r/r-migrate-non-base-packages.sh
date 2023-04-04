@@ -13,10 +13,7 @@ koopa_r_migrate_non_base_packages() {
     readarray -t pkgs <<< "$( \
         koopa_r_system_packages_non_base "${app['r']}"
     )"
-    if koopa_array_is_empty "${pkgs[@]:-}"
-    then
-        return 0
-    fi
+    koopa_is_array_non_empty "${pkgs[@]:-}" || return 0
     koopa_alert_info 'Migrating non-base packages to site library.'
     koopa_dl 'Packages' "$(koopa_to_string "${pkgs[@]}")"
     koopa_r_install_packages_in_site_library "${app['r']}" "${pkgs[@]}"
