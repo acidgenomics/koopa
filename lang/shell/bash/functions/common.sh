@@ -18793,7 +18793,7 @@ koopa_r_rebuild_docs() {
         '1')
             app['sudo']="$(koopa_locate_sudo)"
             [[ -x "${app['sudo']}" ]] || return 1
-            "${app['sudo']]}" "${app['rscript']}" \
+            "${app['sudo']}" "${app['rscript']}" \
                 "${rscript_args[@]}" \
                 -e 'utils::make.packages.html()'
             ;;
