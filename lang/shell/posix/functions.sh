@@ -1264,6 +1264,8 @@ _koopa_alias_kdev() {
     "$__kvar_env" -i \
         HOME="${HOME:?}" \
         KOOPA_ACTIVATE=0 \
+        LANG='C' \
+        LC_ALL='C' \
         PATH='/usr/bin:/bin' \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \

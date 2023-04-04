@@ -156,6 +156,7 @@
     "bin": ["autodock4"],
     "date": "2022-10-19",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://autodock.scripps.edu/"],
     "version": "4.2.6"
@@ -177,6 +178,7 @@
     "bin": ["vina"],
     "date": "2022-10-19",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://vina.scripps.edu/",
@@ -211,14 +213,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-03-15",
+    "date": "2023-04-04",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.4"
+    "version": "2.11.9"
   },
   "azure-cli": {
     "aliases": {
@@ -227,6 +229,7 @@
     "bin": ["az"],
     "date": "2023-03-07",
     "dependencies": ["python3.11"],
+    "enabled": false,
     "large": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
     "version": "2.46.0"
@@ -1061,9 +1064,9 @@
     "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
   },
   "dotfiles": {
-    "date": "2023-03-28",
+    "date": "2023-04-04",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "45a0886abff2b871f619658d411ae1d56d5aa727"
+    "version": "667e63eac057760115e52a052af92dba89b031f4"
   },
   "du-dust": {
     "aliases": {
@@ -1703,6 +1706,7 @@
     "bin": ["gcloud"],
     "date": "2023-03-20",
     "dependencies": ["python3.10"],
+    "enabled": false,
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
     "version": "422.0.0"
@@ -1875,6 +1879,7 @@
     "bin": ["gseapy"],
     "date": "2023-02-08",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://gseapy.readthedocs.io/",
@@ -3144,6 +3149,7 @@
     "bin": ["nanopolish"],
     "date": "2022-10-11",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/nanopolish/README.html"],
     "version": "0.14.0"
@@ -3169,6 +3175,7 @@
     "build_dependencies": ["cmake"],
     "date": "2023-04-03",
     "dependencies": ["bison", "flex", "hdf5", "openjdk", "python3.11"],
+    "large": true,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
     "version": "3.0.2"
   },
@@ -3408,6 +3415,7 @@
     "bin": ["openbb"],
     "date": "2023-03-02",
     "dependencies": ["conda", "poetry"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://openbb.co/",
@@ -3628,6 +3636,7 @@
     "bin": ["picard"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
@@ -3782,6 +3791,7 @@
     "bin": ["pyenv"],
     "conservative": true,
     "date": "2023-03-24",
+    "enabled": false,
     "man1": ["pyenv.1"],
     "url": ["https://github.com/pyenv/pyenv/"],
     "version": "2.3.16"
@@ -4084,6 +4094,7 @@
     "bin": ["rbenv"],
     "conservative": true,
     "date": "2022-08-30",
+    "enabled": false,
     "url": ["https://github.com/rbenv/rbenv/"],
     "version": "1.2.0"
   },
@@ -4212,10 +4223,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-03-17",
+    "date": "2023-04-04",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.256"
+    "version": "0.0.260"
   },
   "rust": {
     "aliases": {
@@ -4468,6 +4479,7 @@
     "bin": ["STAR-Fusion"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/STAR-Fusion/STAR-Fusion/",
@@ -4731,6 +4743,7 @@
     "bin": ["umis"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/vals/umis/",
