@@ -3175,6 +3175,7 @@
     "build_dependencies": ["cmake"],
     "date": "2023-04-03",
     "dependencies": ["bison", "flex", "hdf5", "openjdk", "python3.11"],
+    "large": true,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
     "version": "3.0.2"
   },
