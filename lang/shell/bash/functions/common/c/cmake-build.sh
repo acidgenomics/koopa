@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Allow '--build' and '--source' arguments.
-
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-04.
     # """
     local app build_deps cmake_args dict pos
     declare -A app dict
@@ -71,6 +69,8 @@ koopa_cmake_build() {
     "${app['cmake']}" \
         --build "${dict['builddir']}" \
         --parallel "${dict['jobs']}"
-    "${app['cmake']}" --install "${dict['builddir']}"
+    "${app['cmake']}" \
+        --install "${dict['builddir']}" \
+        --prefix "${dict['prefix']}"
     return 0
 }
