@@ -1,25 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE RStudio PATH is now inconsistent with system R due to breaking changes in
-# internal 'SessionPath.cpp'.
-#
-# Consider filing an issue or pull request that looks for PATH defined
-# in system 'Renviron', 'Renviron.site', or user '~/.R/Renviron' config files.
-#
-# See related:
-# - https://github.com/rstudio/rstudio/blob/main/src/cpp/session/
-#     modules/SessionPath.cpp
-# - https://github.com/rstudio/rstudio/issues/10551
-# - https://github.com/rstudio/rstudio/issues/10311
-
-# NOTE Consider adding these to PATH on macOS:
-# - /Applications/RStudio.app/Contents/Resources/app/quarto/bin
-# - /Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools
-
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-04.
     #
     # @section Package library location:
     #
@@ -83,16 +67,14 @@ koopa_r_configure_environ() {
     # """
     local app conf_dict dict i key keys lines path_arr
     local app_pc_path_arr pc_path_arr
+    declare -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     [[ -x "${app['r']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \
@@ -110,19 +92,31 @@ koopa_r_configure_environ() {
         app['cat']="$(koopa_locate_cat)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
+        app['ln']="$(koopa_locate_ln)"
         app['lpr']="$(koopa_locate_lpr --allow-missing)"
+        app['make']="$(koopa_locate_make)"
         app['open']="$(koopa_locate_open --allow-missing)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
+        app['sed']="$(koopa_locate_sed)"
+        app['strip']="$(koopa_locate_strip)"
+        app['tar']="$(koopa_locate_tar)"
         app['texi2dvi']="$(koopa_locate_texi2dvi)"
         app['unzip']="$(koopa_locate_unzip)"
+        app['vim']="$(koopa_locate_vim)"
         app['zip']="$(koopa_locate_zip)"
         [[ -x "${app['bzip2']}" ]] || return 1
         [[ -x "${app['cat']}" ]] || return 1
         [[ -x "${app['gzip']}" ]] || return 1
         [[ -x "${app['less']}" ]] || return 1
+        [[ -x "${app['ln']}" ]] || return 1
+        [[ -x "${app['make']}" ]] || return 1
         [[ -x "${app['pkg_config']}" ]] || return 1
+        [[ -x "${app['sed']}" ]] || return 1
+        [[ -x "${app['strip']}" ]] || return 1
+        [[ -x "${app['tar']}" ]] || return 1
         [[ -x "${app['texi2dvi']}" ]] || return 1
         [[ -x "${app['unzip']}" ]] || return 1
+        [[ -x "${app['vim']}" ]] || return 1
         [[ -x "${app['zip']}" ]] || return 1
         if [[ ! -x "${app['lpr']}" ]]
         then
@@ -265,6 +259,9 @@ koopa_r_configure_environ() {
         fi
         conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
         lines+=(
+            "EDITOR=${app['vim']}"
+            "LN_S=${app['ln']} -s"
+            "MAKE=${app['make']}"
             "PAGER=${app['less']}"
             "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
             "R_BROWSER=${app['open']}"
@@ -272,9 +269,13 @@ koopa_r_configure_environ() {
             "R_GZIPCMD=${app['gzip']}"
             "R_PDFVIEWER=${app['open']}"
             "R_PRINTCMD=${app['lpr']}"
+            "R_STRIP_SHARED_LIB=${app['strip']} -x"
+            "R_STRIP_STATIC_LIB=${app['strip']} -S"
             "R_TEXI2DVICMD=${app['texi2dvi']}"
             "R_UNZIPCMD=${app['unzip']}"
             "R_ZIPCMD=${app['zip']}"
+            "SED=${app['sed']}"
+            "TAR=${app['tar']}"
         )
     fi
     if koopa_is_macos
