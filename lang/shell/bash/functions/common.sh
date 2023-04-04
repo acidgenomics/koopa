@@ -18269,14 +18269,12 @@ koopa_r_configure_makeconf() {
 koopa_r_configure_makevars() {
     local app conf_dict dict
     local cppflags ldflags lines
+    declare -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \
