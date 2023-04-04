@@ -2118,6 +2118,17 @@
     ],
     "version": "2.0.2"
   },
+  "htslib": {
+    "date": "2023-04-04",
+    "build_dependencies": ["make"],
+    "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
+    "large": true,
+    "url": [
+      "https://github.com/samtools/samtools/",
+      "https://bioconda.github.io/recipes/samtools/README.html"
+    ],
+    "version": "1.17"
+  },
   "httpie": {
     "aliases": {
       "homebrew": true
@@ -4250,17 +4261,16 @@
     "version": "1.0"
   },
   "samtools": {
-    "arch": "amd64",
     "bin": ["samtools"],
-    "date": "2022-04-07",
-    "dependencies": ["conda"],
+    "date": "2023-04-04",
+    "build_dependencies": ["make"],
+    "dependencies": ["htslib", "ncurses", "zlib"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.16.1"
+    "version": "1.17"
   },
   "scalene": {
     "arch": "amd64",
@@ -4677,13 +4687,13 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-09",
+    "date": "2023-04-04",
     "enabled": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.20.7"
+    "version": "0.20.8"
   },
   "tuc": {
     "aliases": {
