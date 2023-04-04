@@ -10020,14 +10020,12 @@ koopa_install_all_apps() {
 }
 
 koopa_install_all_binary_apps() {
-    local app_name app_names bool
+    local app app_name app_names bool
     koopa_assert_has_no_args "$#"
-    declare -A bool
+    declare -A app bool
+    app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
-    if [[ ! -d "$(koopa_app_prefix --allow-missing 'aws-cli')" ]]
-    then
-        bool['bootstrap']=1
-    fi
+    [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
