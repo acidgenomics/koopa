@@ -4687,13 +4687,13 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-09",
+    "date": "2023-04-04",
     "enabled": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.20.7"
+    "version": "0.20.8"
   },
   "tuc": {
     "aliases": {
