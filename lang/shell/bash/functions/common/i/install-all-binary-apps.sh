@@ -3,22 +3,19 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-04.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
     #
     # Need to install PCRE libraries before grep.
     # """
-    local app_name app_names bool
+    local app app_name app_names bool
     koopa_assert_has_no_args "$#"
-    declare -A bool
+    declare -A app bool
+    app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
-    # FIXME Consider skipping this step if aws is installed but outdated.
-    if [[ ! -d "$(koopa_app_prefix --allow-missing 'aws-cli')" ]]
-    then
-        bool['bootstrap']=1
-    fi
+    [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
