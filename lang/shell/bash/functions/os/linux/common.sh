@@ -29,19 +29,14 @@ in '${dict['passwd_file']}'."
 }
 
 koopa_linux_add_user_to_group() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
-    local -A app=(
-        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gpasswd']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    local -A dict=(
-        ['group']="${1:?}"
-        ['user']="${2:-}"
-    )
+    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group']="${1:?}"
+    dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
     "${app['sudo']}" "${app['gpasswd']}" \
@@ -50,26 +45,22 @@ koopa_linux_add_user_to_group() {
 }
 
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
-    local app dict indexes
+    local -A app dict
+    local -a indexes
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    local -A app=(
-        ['bcbio_setup_genome']='bcbio_setup_genome.py'
-        ['sed']="$(koopa_locate_sed)"
-        ['touch']="$(koopa_locate_touch)"
-    )
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['touch']}" ]] || exit 1
-    local -A dict=(
-        ['cores']="$(koopa_cpu_count)"
-        ['fasta_file']=''
-        ['genome_build']=''
-        ['gtf_file']=''
-        ['organism']=''
-        ['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
-        ['provider']='Ensembl'
-        ['release']=''
-    )
+    app['bcbio_setup_genome']="$(koopa_linux_locate_bcbio_setup_genome)"
+    app['sed']="$(koopa_locate_sed)"
+    app['touch']="$(koopa_locate_touch)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cores']="$(koopa_cpu_count)"
+    dict['fasta_file']=''
+    dict['genome_build']=''
+    dict['gtf_file']=''
+    dict['organism']=''
+    dict['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
+    dict['provider']='Ensembl'
+    dict['release']=''
     indexes=()
     while (("$#"))
     do
@@ -134,8 +125,6 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         '--index' "${indexes[*]}" \
         '--organism' "${dict['organism']}" \
         '--release' "${dict['release']}"
-    koopa_activate_bcbio_nextgen
-    koopa_assert_is_installed "${app['bcbio_setup_genome']}"
     koopa_assert_is_file "${dict['fasta_file']}" "${dict['gtf_file']}"
     dict['fasta_file']="$(koopa_realpath "${dict['fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
@@ -175,26 +164,21 @@ ${dict['provider']} ${dict['release']}"
 }
 
 koopa_linux_bcbio_nextgen_add_genome() {
-    local app bcbio_args dict genome genomes
+    local -A app dict
+    local -a bcbio_args
+    local genome
     koopa_assert_has_args "$#"
-    genomes=("$@")
-    local -A app=(
-        ['bcbio']="$(koopa_linux_locate_bcbio)"
-    )
-    local -A dict=(
-        ['cores']="$(koopa_cpu_count)"
-    )
+    app['bcbio']="$(koopa_linux_locate_bcbio)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cores']="$(koopa_cpu_count)"
     bcbio_args=(
         "--cores=${dict['cores']}"
         '--upgrade=skip'
     )
-    for genome in "${genomes[@]}"
+    for genome in "$@"
     do
         bcbio_args+=("--genomes=${genome}")
     done
-    koopa_dl \
-        'Genomes' "$(koopa_to_string "${genomes[@]}")" \
-        'Args' "${bcbio_args[@]}"
     "${app['bcbio']}" upgrade "${bcbio_args[@]}"
     return 0
 }
@@ -656,6 +640,13 @@ koopa_linux_java_update_alternatives() {
     "${app['update_alternatives']}" --display 'javac'
     "${app['update_alternatives']}" --display 'jar'
     return 0
+}
+
+koopa_linux_locate_bcbio_setup_genome() {
+    koopa_locate_app \
+        --app-name='bcbio-nextgen' \
+        --bin-name='bcbio_setup_genome.py' \
+        "$@"
 }
 
 koopa_linux_locate_bcbio() {
