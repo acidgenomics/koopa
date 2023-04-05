@@ -3,28 +3,21 @@
 koopa_sra_download_accession_list() {
     # """
     # Download SRA accession list.
-    # @note Updated 2022-02-11.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_sra_download_accession_list --srp-id='SRP049596'
     # # Downloads 'srp049596-accession-list.txt' to disk.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['efetch']="$(koopa_locate_efetch)"
-        ['esearch']="$(koopa_locate_esearch)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['efetch']}" ]] || exit 1
-    [[ -x "${app['esearch']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['acc_file']=''
-        ['srp_id']=''
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['efetch']="$(koopa_locate_efetch)"
+    app['esearch']="$(koopa_locate_esearch)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['acc_file']=''
+    dict['srp_id']=''
     while (("$#"))
     do
         case "$1" in

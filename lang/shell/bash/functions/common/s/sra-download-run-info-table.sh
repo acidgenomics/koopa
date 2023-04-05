@@ -3,24 +3,19 @@
 koopa_sra_download_run_info_table() {
     # """
     # Download SRA run info table.
-    # @note Updated 2022-02-11.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_sra_download_run_info_table --srp-id='SRP049596'
     # # Downloads 'srp049596-run-info-table.csv' to disk.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['efetch']="$(koopa_locate_efetch)"
-        ['esearch']="$(koopa_locate_esearch)"
-    )
-    [[ -x "${app['efetch']}" ]] || exit 1
-    [[ -x "${app['esearch']}" ]] || exit 1
-    local -A dict=(
-        ['run_info_file']=''
-        ['srp_id']=''
-    )
+    app['efetch']="$(koopa_locate_efetch)"
+    app['esearch']="$(koopa_locate_esearch)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['run_info_file']=''
+    dict['srp_id']=''
     while (("$#"))
     do
         case "$1" in

@@ -3,7 +3,7 @@
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2023-01-01.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
@@ -13,23 +13,19 @@ koopa_push_app_build() {
     #     cli-configure-retries.html
     # - https://www.gnu.org/software/tar/manual/html_section/verbose.html
     # """
-    local app dict name
+    local -A app dict
+    local name
     koopa_assert_has_args "$#"
     koopa_can_install_binary || return 1
-    local -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['tar']="$(koopa_locate_tar)"
-    )
-    [[ -x "${app['aws']}" ]] || exit 1
-    [[ -x "${app['tar']}" ]] || exit 1
-    local -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['os_string']="$(koopa_os_string)"
-        ['profile']='acidgenomics'
-        ['s3_bucket']='s3://private.koopa.acidgenomics.com/binaries'
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    app['aws']="$(koopa_locate_aws)"
+    app['tar']="$(koopa_locate_tar)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['os_string']="$(koopa_os_string)"
+    dict['profile']='acidgenomics'
+    dict['s3_bucket']='s3://private.koopa.acidgenomics.com/binaries'
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     # Attempt to avoid retry errors (default = 2) for CloudFront.
     # > export AWS_MAX_ATTEMPTS=5
     # > export AWS_RETRY_MODE='standard'
