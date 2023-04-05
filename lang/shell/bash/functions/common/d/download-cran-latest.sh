@@ -3,16 +3,16 @@
 koopa_download_cran_latest() {
     # """
     # Download CRAN latest.
-    # @note Updated 2021-10-25.
+    # @note Updated 2023-04-05.
     # """
-    local app file name pattern url
+    local -A app
+    local name
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
+    app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || exit 1
     for name in "$@"
     do
+        local file pattern url
         url="https://cran.r-project.org/web/packages/${name}/"
         pattern="${name}_[-.0-9]+.tar.gz"
         file="$( \
