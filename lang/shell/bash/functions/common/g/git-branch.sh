@@ -31,9 +31,8 @@ koopa_git_branch() {
         local repo
         for repo in "$@"
         do
-            local dict2
-            koopa_cd "$repo"
             local -A dict2
+            koopa_cd "$repo"
             dict2['branch']="$( \
                 "${app['git']}" branch --show-current \
                 2>/dev/null \

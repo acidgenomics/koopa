@@ -35,7 +35,6 @@ koopa_push_app_build() {
     # > export AWS_RETRY_MODE='standard'
     for name in "$@"
     do
-        local dict2
         local -A dict2
         dict2['name']="$name"
         dict2['prefix']="$( \
