@@ -6,8 +6,8 @@ koopa_install_app() {
     # @note Updated 2023-04-05.
     # """
     local -A app bool dict
-    local -a pos
-    local bash_vars bin_arr bool dict env_vars i man1_arr path_arr
+    local -a bash_vars bin_arr env_vars man1_arr path_arr pos
+    local i
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
