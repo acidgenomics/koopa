@@ -6,7 +6,7 @@
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # """
     # Install bcbio-nextgen genome from Ensembl.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-04-05.
     #
     # This script can fail on a clean bcbio install if this file is missing:
     # 'install/galaxy/tool-data/sam_fa_indices.loc'.
@@ -18,11 +18,10 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # (FASTA) and 'annotation.gtf.gz' (GTF) that we can pass to bcbio script.
     #
     # @examples
-    # > local -A dict=(
-    # >     [genome_build]='GRCh38'
-    # >     [organism]='Homo sapiens'
-    # >     [release]='102'
-    # > )
+    # > local -A dict
+    # > dict['genome_build']='GRCh38'
+    # > dict['organism']='Homo sapiens'
+    # > dict['release']='102'
     # > koopa_download_ensembl_genome \
     # >     --genome_build="${dict['genome_build']}" \
     # >     --organism="${dict['organism']}" \
@@ -46,29 +45,22 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # >     --organism="${dict['organism']}" \
     # >     --release="${dict['release']}"
     # """
-    local app dict indexes
+    local -A app dict
+    local -a indexes
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    local -A app=(
-        ['bcbio_setup_genome']='bcbio_setup_genome.py'
-        ['sed']="$(koopa_locate_sed)"
-        ['touch']="$(koopa_locate_touch)"
-    )
-    # FIXME Add step to harden against bcbio_setup_genome being present in
-    # path here.
-    # > [[ -x "${app['bcbio_setup_genome']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['touch']}" ]] || exit 1
-    local -A dict=(
-        ['cores']="$(koopa_cpu_count)"
-        ['fasta_file']=''
-        ['genome_build']=''
-        ['gtf_file']=''
-        ['organism']=''
-        ['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
-        ['provider']='Ensembl'
-        ['release']=''
-    )
+    app['bcbio_setup_genome']="$(koopa_linux_locate_bcbio_setup_genome)"
+    app['sed']="$(koopa_locate_sed)"
+    app['touch']="$(koopa_locate_touch)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cores']="$(koopa_cpu_count)"
+    dict['fasta_file']=''
+    dict['genome_build']=''
+    dict['gtf_file']=''
+    dict['organism']=''
+    dict['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
+    dict['provider']='Ensembl'
+    dict['release']=''
     indexes=()
     while (("$#"))
     do
@@ -135,10 +127,6 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         '--index' "${indexes[*]}" \
         '--organism' "${dict['organism']}" \
         '--release' "${dict['release']}"
-    # FIXME Rework this step.
-    koopa_activate_bcbio_nextgen
-    # FIXME Rework this step.
-    koopa_assert_is_installed "${app['bcbio_setup_genome']}"
     koopa_assert_is_file "${dict['fasta_file']}" "${dict['gtf_file']}"
     dict['fasta_file']="$(koopa_realpath "${dict['fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
