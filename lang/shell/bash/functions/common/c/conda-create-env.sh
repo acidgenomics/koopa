@@ -3,15 +3,16 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
     #     manage-environments.html#sharing-an-environment
     # - https://github.com/conda/conda/issues/6827
     # """
-    local app dict pos string
     local -A app dict
+    local -a pos
+    local string
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -96,7 +97,6 @@ koopa_conda_create_env() {
     [[ -z "${dict['yaml_file']}" ]] || return 1
     for string in "$@"
     do
-        local dict2
         local -A dict2
         # Note that we're using 'salmon@1.4.0' for the environment name but
         # must use 'salmon=1.4.0' in the call to conda below.

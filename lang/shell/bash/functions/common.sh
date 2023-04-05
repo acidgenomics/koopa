@@ -1354,7 +1354,8 @@ koopa_assert_is_writable() {
 }
 
 koopa_autopad_zeros() {
-    local files newname num padwidth oldname pos prefix stem
+    local -a pos
+    local files newname num padwidth oldname prefix stem
     koopa_assert_has_args "$#"
     prefix='sample'
     padwidth=2
@@ -2272,9 +2273,10 @@ koopa_aws_s3_mv_to_parent() {
 }
 
 koopa_aws_s3_sync() {
-    local aws dict exclude_args exclude_patterns pattern pos sync_args
+    local -A app dict
+    local -a exclude_args exclude_patterns pos sync_args
+    local pattern
     koopa_assert_has_args "$#"
-    local -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1
     local -A dict=(
@@ -2415,7 +2417,7 @@ koopa_basename() {
     local arg
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -2985,7 +2987,7 @@ koopa_camel_case_simple() {
     local str
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -3021,7 +3023,7 @@ koopa_capitalize() {
     [[ -x "${app['tr']}" ]] || exit 1
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -3191,13 +3193,11 @@ koopa_check_system() {
 }
 
 koopa_chgrp() {
-    local app chgrp dict pos
-    local -A app
+    local -A app dict
+    local -a chgrp pos
     app['chgrp']="$(koopa_locate_chgrp)"
     [[ -x "${app['chgrp']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-    )
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -3231,14 +3231,12 @@ koopa_chgrp() {
 }
 
 koopa_chmod() {
-    local app chmod dict pos
-    local -A app
+    local -A app dict
+    local -a chmod pos
     app['chmod']="$(koopa_locate_chmod)"
     [[ -x "${app['chmod']}" ]] || exit 1
-    local -A dict=(
-        ['recursive']=0
-        ['sudo']=0
-    )
+    dict['recursive']=0
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -3281,8 +3279,8 @@ koopa_chmod() {
 }
 
 koopa_chown() {
-    local app chown dict pos
-    local -A app
+    local -A app dict
+    local -a chown pos
     app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || exit 1
     local -A dict=(
@@ -3687,13 +3685,13 @@ koopa_cli_configure() {
 }
 
 koopa_cli_install() {
-    local app dict flags pos stem
+    local -A dict
+    local -a flags pos
+    local app
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['allow_custom']=0
-        ['custom_enabled']=0
-        ['stem']='install'
-    )
+    dict['allow_custom']=0
+    dict['custom_enabled']=0
+    dict['stem']='install'
     case "${1:-}" in
         'koopa')
             dict['allow_custom']=1
@@ -3760,7 +3758,6 @@ koopa_cli_install() {
     fi
     for app in "$@"
     do
-        local dict2
         local -A dict2
         dict2['app']="$app"
         dict2['key']="${dict['stem']}-${dict2['app']}"
@@ -3791,9 +3788,9 @@ Check autocompletion of supported arguments with <TAB>."
 }
 
 koopa_cli_reinstall() {
-    local dict pos
-    koopa_assert_has_args "$#"
     local -A dict
+    local -a pos
+    koopa_assert_has_args "$#"
     dict['mode']='default'
     pos=()
     while (("$#"))
@@ -4097,8 +4094,8 @@ koopa_clone() {
 }
 
 koopa_cmake_build() {
-    local app build_deps cmake_args dict pos
     local -A app dict
+    local -a build_deps cmake_args pos
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
@@ -4233,8 +4230,9 @@ koopa_conda_bin() {
 }
 
 koopa_conda_create_env() {
-    local app dict pos string
     local -A app dict
+    local -a pos
+    local string
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -4315,7 +4313,6 @@ koopa_conda_create_env() {
     [[ -z "${dict['yaml_file']}" ]] || return 1
     for string in "$@"
     do
-        local dict2
         local -A dict2
         dict2['env_string']="${string//@/=}"
         if [[ "${dict['latest']}" -eq 1 ]]

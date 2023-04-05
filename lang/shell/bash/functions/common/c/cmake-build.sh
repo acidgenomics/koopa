@@ -3,10 +3,10 @@
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-05.
     # """
-    local app build_deps cmake_args dict pos
     local -A app dict
+    local -a build_deps cmake_args pos
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
