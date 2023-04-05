@@ -3,15 +3,13 @@
 koopa_chgrp() {
     # """
     # Hardened version of coreutils chgrp (change user group).
-    # @note Updated 2021-10-29.
+    # @note Updated 2023-04-05.
     # """
-    local app chgrp dict pos
-    local -A app
+    local -A app dict
+    local -a chgrp pos
     app['chgrp']="$(koopa_locate_chgrp)"
     [[ -x "${app['chgrp']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-    )
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do

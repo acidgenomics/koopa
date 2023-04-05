@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to use dict.
+
 koopa_autopad_zeros() {
     # """
     # Autopad zeroes in sample names.
     # @note Updated 2021-09-21.
     # """
-    local files newname num padwidth oldname pos prefix stem
+    local -a pos
+    local files newname num padwidth oldname prefix stem
     koopa_assert_has_args "$#"
     prefix='sample'
     padwidth=2

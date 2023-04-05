@@ -3,10 +3,10 @@
 koopa_chown() {
     # """
     # Hardened version of coreutils chown (change ownership).
-    # @note Updated 2021-10-29.
+    # @note Updated 2023-04-05.
     # """
-    local app chown dict pos
-    local -A app
+    local -A app dict
+    local -a chown pos
     app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || exit 1
     local -A dict=(

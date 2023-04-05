@@ -3,16 +3,14 @@
 koopa_chmod() {
     # """
     # Hardened version of coreutils chmod (change file mode bits).
-    # @note Updated 2022-02-17.
+    # @note Updated 2023-04-05.
     # """
-    local app chmod dict pos
-    local -A app
+    local -A app dict
+    local -a chmod pos
     app['chmod']="$(koopa_locate_chmod)"
     [[ -x "${app['chmod']}" ]] || exit 1
-    local -A dict=(
-        ['recursive']=0
-        ['sudo']=0
-    )
+    dict['recursive']=0
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do

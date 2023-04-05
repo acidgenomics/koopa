@@ -39,9 +39,10 @@ koopa_aws_s3_sync() {
     # - '*.Rproj' directories.
     # - '*.swp' files (from vim).
     # """
-    local aws dict exclude_args exclude_patterns pattern pos sync_args
+    local -A app dict
+    local -a exclude_args exclude_patterns pos sync_args
+    local pattern
     koopa_assert_has_args "$#"
-    local -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1
     local -A dict=(
