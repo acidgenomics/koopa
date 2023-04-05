@@ -3,7 +3,7 @@
 koopa_debian_set_locale() {
     # """
     # Set locale to English US UTF-8.
-    # @note Updated 2022-03-09.
+    # @note Updated 2023-04-05.
     #
     # Refer to '/usr/share/i18n/SUPPORTED' for supported locales.
     #
@@ -13,27 +13,19 @@ koopa_debian_set_locale() {
     # @seealso
     # - https://wiki.debian.org/Locale
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-        ['locale']="$(koopa_locate_locale)"
-        ['locale_gen']="$(koopa_debian_locate_locale_gen)"
-        ['sudo']="$(koopa_locate_sudo)"
-        ['update_locale']="$(koopa_debian_locate_update_locale)" 
-    )
-    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
-    [[ -x "${app['locale']}" ]] || exit 1
-    [[ -x "${app['locale_gen']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['update_locale']}" ]] || exit 1
-    local -A dict=(
-        ['charset']='UTF-8'
-        ['country']='US'
-        ['lang']='en'
-        ['locale_file']='/etc/locale.gen'
-    )
+    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
+    app['locale']="$(koopa_locate_locale)"
+    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
+    app['sudo']="$(koopa_locate_sudo)"
+    app['update_locale']="$(koopa_debian_locate_update_locale)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['charset']='UTF-8'
+    dict['country']='US'
+    dict['lang']='en'
+    dict['locale_file']='/etc/locale.gen'
     dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."
     koopa_sudo_write_string \

@@ -3,20 +3,15 @@
 koopa_debian_install_from_deb() {
     # """
     # Install directly from a '.deb' file.
-    # @note Updated 2022-07-11.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
-    local -A app=(
-        ['gdebi']="$(koopa_debian_locate_gdebi)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gdebi']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    local -A dict=(
-        ['file']="${1:?}"
-    )
+    app['gdebi']="$(koopa_debian_locate_gdebi)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['file']="${1:?}"
     "${app['sudo']}" "${app['gdebi']}" --non-interactive "${dict['file']}"
     return 0
 }

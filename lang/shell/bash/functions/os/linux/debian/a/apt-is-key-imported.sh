@@ -3,23 +3,18 @@
 koopa_debian_apt_is_key_imported() {
     # """
     # Is a GPG key imported for apt?
-    # @note Updated 2021-11-02.
+    # @note Updated 2023-04-05.
     #
     # sed only supports up to 9 elements in replacement, even though our
     # input contains 10. Need to switch to awk or another approach to make
     # this matching even more exact.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['apt_key']="$(koopa_debian_locate_apt_key)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['apt_key']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['key']="${1:?}"
-    )
+    app['apt_key']="$(koopa_debian_locate_apt_key)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['key']="${1:?}"
     dict['key_pattern']="$( \
         koopa_print "${dict['key']}" \
         | "${app['sed']}" 's/ //g' \
