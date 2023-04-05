@@ -12,8 +12,8 @@ koopa_update_system_tex_packages() {
         ['sudo']="$(koopa_locate_sudo)"
         ['tlmgr']="$(koopa_locate_tlmgr)"
     )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['tlmgr']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['tlmgr']}" ]] || exit 1
     (
         koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
         "${app['sudo']}" "${app['tlmgr']}" update --self

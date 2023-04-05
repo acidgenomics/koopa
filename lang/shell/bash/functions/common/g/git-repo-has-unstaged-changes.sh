@@ -15,7 +15,7 @@ koopa_git_repo_has_unstaged_changes() {
     local app dict
     declare -A app dict
     app['git']="$(koopa_locate_git)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     "${app['git']}" update-index --refresh &>/dev/null
     dict['string']="$("${app['git']}" diff-index 'HEAD' -- 2>/dev/null)"
     [[ -n "${dict['string']}" ]]

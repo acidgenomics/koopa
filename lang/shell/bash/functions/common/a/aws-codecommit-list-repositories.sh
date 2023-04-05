@@ -11,8 +11,8 @@ koopa_aws_codecommit_list_repositories() {
     declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['jq']}" ]] || exit 1
     dict['string']="$( \
         "${app['aws']}" codecommit list-repositories \
             | "${app['jq']}" --raw-output '.repositories[].repositoryName' \

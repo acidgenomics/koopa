@@ -9,7 +9,7 @@ koopa_brew_cleanup() {
     declare -A app
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
-    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
     "${app['brew']}" autoremove || true

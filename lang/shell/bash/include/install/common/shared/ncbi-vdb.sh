@@ -19,8 +19,8 @@ main() {
     koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || exit 1
+    [[ -x "${app['python']}" ]] || exit 1
     dict['jobs']="$(koopa_cpu_count)"
     dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

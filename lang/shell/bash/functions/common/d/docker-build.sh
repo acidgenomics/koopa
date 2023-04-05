@@ -44,10 +44,10 @@ koopa_docker_build() {
         ['docker']="$(koopa_locate_docker)"
         ['sort']="$(koopa_locate_sort)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['date']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['date']}" ]] || exit 1
+    [[ -x "${app['docker']}" ]] || exit 1
+    [[ -x "${app['sort']}" ]] || exit 1
     declare -A dict=(
         ['default_tag']='latest'
         ['delete']=1
@@ -235,7 +235,7 @@ koopa_docker_build() {
         --name="${dict['build_name']}" \
         --use \
         >/dev/null
-    "${app['docker']}" buildx build "${build_args[@]}" || return 1
+    "${app['docker']}" buildx build "${build_args[@]}" || exit 1
     "${app['docker']}" buildx rm "${dict['build_name']}"
     "${app['docker']}" image ls \
         --filter \

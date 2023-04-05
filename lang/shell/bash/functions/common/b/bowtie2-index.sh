@@ -10,8 +10,8 @@ koopa_bowtie2_index() {
     koopa_assert_has_args "$#"
     app['bowtie2_build']="$(koopa_locate_bowtie2_build)"
     app['tee']="$(koopa_locate_tee)"
-    [[ -x "${app['bowtie2_build']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['bowtie2_build']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
     # e.g. 'bowtie2-index'.

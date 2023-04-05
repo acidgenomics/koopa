@@ -17,8 +17,8 @@ main() {
     declare -A app
     app['r']="$(koopa_locate_system_r)"
     app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['rscript']}" ]] || exit 1
     declare -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['arch2']="$(koopa_arch2)" # e.g. 'amd64'.

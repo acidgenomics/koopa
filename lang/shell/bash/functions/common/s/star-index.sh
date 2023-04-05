@@ -25,7 +25,7 @@ koopa_star_index() {
     declare -A app=(
         ['star']="$(koopa_locate_star)"
     )
-    [[ -x "${app['star']}" ]] || return 1
+    [[ -x "${app['star']}" ]] || exit 1
     declare -A dict=(
         ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'

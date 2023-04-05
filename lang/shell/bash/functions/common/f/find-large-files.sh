@@ -18,7 +18,7 @@ koopa_find_large_files() {
     koopa_assert_is_dir "$@"
     declare -A app
     app['head']="$(koopa_locate_head --allow-system)"
-    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || exit 1
     for prefix in "$@"
     do
         str="$( \

@@ -37,7 +37,7 @@ koopa_find_and_replace_in_file() {
     koopa_assert_has_args "$#"
     declare -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
-    [[ -x "${app['perl']}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || exit 1
     declare -A dict=(
         ['multiline']=0
         ['pattern']=''
@@ -121,7 +121,7 @@ koopa_find_and_replace_in_file() {
     then
         koopa_assert_is_admin
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
+        [[ -x "${app['sudo']}" ]] || exit 1
         perl_cmd+=("${app['sudo']}" "${app['perl']}")
     else
         perl_cmd=("${app['perl']}")

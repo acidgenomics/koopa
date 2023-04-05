@@ -11,8 +11,8 @@ koopa_rg_unique() {
         ['rg']="$(koopa_locate_rg)"
         ['sort']="$(koopa_locate_sort)"
     )
-    [[ -x "${app['rg']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['rg']}" ]] || exit 1
+    [[ -x "${app['sort']}" ]] || exit 1
     declare -A dict=(
         ['pattern']="${1:?}"
     )

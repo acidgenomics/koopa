@@ -37,7 +37,7 @@ koopa_rsync() {
     declare -A app=(
         ['rsync']="$(koopa_locate_rsync)"
     )
-    [[ -x "${app['rsync']}" ]] || return 1
+    [[ -x "${app['rsync']}" ]] || exit 1
     declare -A dict=(
         ['source_dir']=''
         ['target_dir']=''

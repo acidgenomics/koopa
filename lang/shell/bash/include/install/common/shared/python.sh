@@ -64,7 +64,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
@@ -108,7 +108,7 @@ ${dict['file']}"
     if koopa_is_macos
     then
         app['dtrace']='/usr/sbin/dtrace'
-        [[ -x "${app['dtrace']}" ]] || return 1
+        [[ -x "${app['dtrace']}" ]] || exit 1
         dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
         conf_args+=(
             "--enable-framework=${dict['libexec']}"

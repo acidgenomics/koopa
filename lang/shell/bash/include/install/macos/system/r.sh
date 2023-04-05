@@ -35,8 +35,8 @@ main() {
     fi
     app['installer']="$(koopa_macos_locate_installer)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['installer']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['installer']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     dict['arch']="$(koopa_arch)"
     dict['framework_prefix']='/Library/Frameworks/R.framework'
     dict['os']="$(koopa_kebab_case_simple "$(koopa_macos_os_codename)")"

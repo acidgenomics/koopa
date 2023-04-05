@@ -20,7 +20,7 @@ main() {
     declare -A app=(
         ['bash']="$(koopa_locate_bash --allow-system)"
     )
-    [[ -x "${app['bash']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

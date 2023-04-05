@@ -27,7 +27,7 @@ main() {
     declare -A app dict
     koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r --realpath)"
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_debian_like

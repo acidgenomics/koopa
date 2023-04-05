@@ -9,7 +9,7 @@ koopa_list_path_priority() {
     koopa_assert_has_args_le "$#" 1
     declare -A app
     app['awk']="$(koopa_locate_awk)"
-    [[ -x "${app['awk']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
     declare -A dict
     dict['string']="${1:-$PATH}"
     readarray -t all_arr <<< "$( \

@@ -27,7 +27,7 @@ koopa_r_configure_ldpaths() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
     declare -A dict=(
         ['system']=0
         ['use_apps']=1

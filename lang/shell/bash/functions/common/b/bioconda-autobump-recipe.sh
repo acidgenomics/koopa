@@ -10,8 +10,8 @@ koopa_bioconda_autobump_recipe() {
     koopa_assert_has_args_eq "$#" 1
     app['git']="$(koopa_locate_git --allow-system)"
     app['vim']="$(koopa_locate_vim --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['vim']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
+    [[ -x "${app['vim']}" ]] || exit 1
     dict['recipe']="${1:?}"
     dict['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
     dict['branch']="${dict['recipe']/-/_}"

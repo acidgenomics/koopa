@@ -18,8 +18,8 @@ main() {
         ['node']="$(koopa_locate_node)"
         ['npm']="$(koopa_locate_npm)"
     )
-    [[ -x "${app['node']}" ]] || return 1
-    [[ -x "${app['npm']}" ]] || return 1
+    [[ -x "${app['node']}" ]] || exit 1
+    [[ -x "${app['npm']}" ]] || exit 1
     app['node']="$(koopa_realpath "${app['node']}")"
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"

@@ -14,8 +14,8 @@ koopa_install_r_koopa() {
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['rscript']}" ]] || exit 1
     "${app['rscript']}" -e " \
         options(
             error = quote(quit(status = 1L)),

@@ -23,7 +23,7 @@ main() {
     koopa_activate_app 'ncurses'
     declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"
         ['jobs']="$(koopa_cpu_count)"

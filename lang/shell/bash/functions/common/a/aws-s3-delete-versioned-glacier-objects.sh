@@ -21,8 +21,8 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['jq']}" ]] || exit 1
     dict['bucket']=''
     dict['profile']="${AWS_PROFILE:-default}"
     dict['region']="${AWS_REGION:-us-east-1}"

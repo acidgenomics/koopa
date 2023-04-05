@@ -35,7 +35,7 @@ koopa_kallisto_quant_single_end_per_sample() {
     declare -A app=(
         ['kallisto']="$(koopa_locate_kallisto)"
     )
-    [[ -x "${app['kallisto']}" ]] || return 1
+    [[ -x "${app['kallisto']}" ]] || exit 1
     declare -A dict=(
         # Current recommendation in bcbio-nextgen.
         ['bootstraps']=30

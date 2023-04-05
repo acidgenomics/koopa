@@ -17,9 +17,9 @@ koopa_md5sum_check_parallel() {
         ['sh']="$(koopa_locate_sh)"
         ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app['md5sum']}" ]] || return 1
-    [[ -x "${app['sh']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['md5sum']}" ]] || exit 1
+    [[ -x "${app['sh']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
     )

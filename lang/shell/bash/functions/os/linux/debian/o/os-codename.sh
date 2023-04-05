@@ -8,7 +8,7 @@ koopa_debian_os_codename() {
     local app dict
     declare -A app dict
     app['lsb_release']="$(koopa_debian_locate_lsb_release)"
-    [[ -x "${app['lsb_release']}" ]] || return 1
+    [[ -x "${app['lsb_release']}" ]] || exit 1
     dict['string']="$("${app['lsb_release']}" -cs)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"

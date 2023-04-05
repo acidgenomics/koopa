@@ -20,8 +20,8 @@ koopa_push_app_build() {
         ['aws']="$(koopa_locate_aws)"
         ['tar']="$(koopa_locate_tar)"
     )
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['tar']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['tar']}" ]] || exit 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['opt_prefix']="$(koopa_opt_prefix)"

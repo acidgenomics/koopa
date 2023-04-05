@@ -15,8 +15,8 @@ koopa_debian_apt_is_key_imported() {
         ['apt_key']="$(koopa_debian_locate_apt_key)"
         ['sed']="$(koopa_locate_sed)"
     )
-    [[ -x "${app['apt_key']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['apt_key']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict=(
         ['key']="${1:?}"
     )

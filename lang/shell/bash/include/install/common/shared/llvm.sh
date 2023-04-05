@@ -54,13 +54,13 @@ main() {
         ['python']="$(koopa_locate_python311 --realpath)"
         ['swig']="$(koopa_locate_swig --realpath)"
     )
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['ninja']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
-    [[ -x "${app['swig']}" ]] || return 1
+    [[ -x "${app['cmake']}" ]] || exit 1
+    [[ -x "${app['git']}" ]] || exit 1
+    [[ -x "${app['ninja']}" ]] || exit 1
+    [[ -x "${app['perl']}" ]] || exit 1
+    [[ -x "${app['pkg_config']}" ]] || exit 1
+    [[ -x "${app['python']}" ]] || exit 1
+    [[ -x "${app['swig']}" ]] || exit 1
     declare -A dict=(
         ['libedit']="$(koopa_app_prefix 'libedit')"
         ['libffi']="$(koopa_app_prefix 'libffi')"

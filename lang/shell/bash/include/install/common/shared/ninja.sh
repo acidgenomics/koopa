@@ -13,7 +13,7 @@ main() {
     koopa_activate_app --build-only 'python3.11'
     declare -A app
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || exit 1
     declare -A dict=(
         ['name']='ninja'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

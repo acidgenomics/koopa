@@ -25,7 +25,7 @@ koopa_mktemp() {
     local app dict mktemp_args str
     declare -A app
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
-    [[ -x "${app['mktemp']}" ]] || return 1
+    [[ -x "${app['mktemp']}" ]] || exit 1
     declare -A dict=(
         ['date_id']="$(koopa_datetime)"
         ['user_id']="$(koopa_user_id)"

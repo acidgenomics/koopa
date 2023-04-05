@@ -35,7 +35,7 @@ koopa_salmon_index() {
     declare -A app=(
         ['salmon']="$(koopa_locate_salmon)"
     )
-    [[ -x "${app['salmon']}" ]] || return 1
+    [[ -x "${app['salmon']}" ]] || exit 1
     declare -A dict=(
         ['decoys']=1
         ['fasta_pattern']='\.(fa|fasta|fna)'

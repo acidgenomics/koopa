@@ -11,8 +11,8 @@ koopa_list_path_priority_unique() {
         ['awk']="$(koopa_locate_awk)"
         ['tac']="$(koopa_locate_tac)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['tac']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['tac']}" ]] || exit 1
     declare -A dict
     dict['string']="${1:-$PATH}"
     # shellcheck disable=SC2016

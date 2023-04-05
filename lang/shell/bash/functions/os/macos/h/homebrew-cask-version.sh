@@ -14,7 +14,7 @@ koopa_macos_homebrew_cask_version() {
     declare -A app=(
         ['brew']="$(koopa_locate_brew)"
     )
-    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
     for cask in "$@"
     do
         x="$("${app['brew']}" info --cask "$cask")"

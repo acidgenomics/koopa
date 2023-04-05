@@ -8,7 +8,7 @@ koopa_r_shiny_run_app() {
     local app dict
     declare -A app
     app['r']="$(koopa_locate_r)"
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
     declare -A dict
     dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"

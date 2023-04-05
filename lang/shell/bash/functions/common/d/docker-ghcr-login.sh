@@ -12,7 +12,7 @@ koopa_docker_ghcr_login() {
     declare -A app=(
         ['docker']="$(koopa_locate_docker)"
     )
-    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || exit 1
     declare -A dict=(
         ['pat']="${GHCR_PAT:?}"
         ['server']='ghcr.io'

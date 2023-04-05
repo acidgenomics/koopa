@@ -16,7 +16,7 @@ koopa_convert_line_endings_from_lf_to_crlf() {
     declare -A app=(
         ['perl']="$(koopa_locate_perl)"
     )
-    [[ -x "${app['perl']}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || exit 1
     for file in "$@"
     do
         "${app['perl']}" -pe 's/(?<!\r)\n/\r\n/g' < "$file" > "${file}.tmp"

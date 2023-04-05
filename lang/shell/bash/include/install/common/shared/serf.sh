@@ -34,9 +34,9 @@ main() {
         ['patch']="$(koopa_locate_patch)"
         ['scons']="$(koopa_locate_scons)"
     )
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['patch']}" ]] || return 1
-    [[ -x "${app['scons']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || exit 1
+    [[ -x "${app['patch']}" ]] || exit 1
+    [[ -x "${app['scons']}" ]] || exit 1
     declare -A dict=(
         ['name']='serf'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

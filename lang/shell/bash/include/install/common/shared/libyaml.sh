@@ -25,9 +25,9 @@ main() {
         ['autoupdate']="$(koopa_locate_autoupdate)"
         ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app['autoreconf']}" ]] || return 1
-    [[ -x "${app['autoupdate']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['autoreconf']}" ]] || exit 1
+    [[ -x "${app['autoupdate']}" ]] || exit 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['libtool']="$(koopa_app_prefix 'libtool')"
         ['jobs']="$(koopa_cpu_count)"

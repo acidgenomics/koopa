@@ -18,7 +18,7 @@ main() {
     deps=('libuv' 'luajit')
     koopa_activate_app "${deps[@]}"
     app['luajit']="$(koopa_locate_luajit)"
-    [[ -x "${app['luajit']}" ]] || return 1
+    [[ -x "${app['luajit']}" ]] || exit 1
     dict['libuv']="$(koopa_app_prefix 'libuv')"
     dict['luajit']="$(koopa_app_prefix 'luajit')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

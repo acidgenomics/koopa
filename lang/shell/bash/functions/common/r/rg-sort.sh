@@ -10,7 +10,7 @@ koopa_rg_sort() {
     declare -A app=(
         ['rg']="$(koopa_locate_rg)"
     )
-    [[ -x "${app['rg']}" ]] || return 1
+    [[ -x "${app['rg']}" ]] || exit 1
     declare -A dict=(
         ['pattern']="${1:?}"
     )

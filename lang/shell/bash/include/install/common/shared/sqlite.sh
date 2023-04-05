@@ -27,8 +27,8 @@ main() {
         ['make']="$(koopa_locate_make)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='sqlite'

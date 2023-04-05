@@ -23,7 +23,7 @@ koopa_mv() {
     )
     # macOS gmv currently has issues on NFS shares.
     koopa_is_macos && app['mv']='/bin/mv'
-    [[ -x "${app['mv']}" ]] || return 1
+    [[ -x "${app['mv']}" ]] || exit 1
     declare -A dict=(
         ['sudo']=0
         ['target_dir']=''

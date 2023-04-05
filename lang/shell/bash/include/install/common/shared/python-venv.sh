@@ -13,7 +13,7 @@ main() {
     local app bin_name bin_names dict man1_name man1_names pos
     declare -A app
     app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
     declare -A dict=(
         ['locate_python']='koopa_locate_python311'
         ['name']="${KOOPA_INSTALL_NAME:?}"
@@ -58,7 +58,7 @@ main() {
     fi
     koopa_assert_is_function "${dict['locate_python']}"
     app['python']="$("${dict['locate_python']}" --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || exit 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_no_args "$#"
     dict['libexec']="${dict['prefix']}/libexec"

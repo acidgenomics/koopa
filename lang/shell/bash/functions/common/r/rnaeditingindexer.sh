@@ -26,7 +26,7 @@ koopa_rnaeditingindexer() {
     declare -A app=(
         ['docker']="$(koopa_locate_docker)"
     )
-    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || exit 1
     declare -A dict=(
         ['bam_suffix']='.Aligned.sortedByCoord.out.bam'
         ['docker_image']='acidgenomics/rnaeditingindexer'

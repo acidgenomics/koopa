@@ -15,9 +15,9 @@ koopa_linux_proc_cmdline() {
         ['echo']="$(koopa_locate_echo --allow-system)"
         ['xargs']="$(koopa_locate_xargs --allow-system)"
     )
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || exit 1
+    [[ -x "${app['echo']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     declare -A dict
     dict['pid']="${1:?}"
     dict['cmdline']="/proc/${dict['pid']}/cmdline"

@@ -16,8 +16,8 @@ koopa_fastq_number_of_reads() {
         ['awk']="$(koopa_locate_awk)"
         ['wc']="$(koopa_locate_wc)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['wc']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['wc']}" ]] || exit 1
     for file in "$@"
     do
         local num

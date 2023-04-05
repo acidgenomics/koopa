@@ -10,8 +10,8 @@ koopa_macos_ifactive() {
         ['ifconfig']="$(koopa_macos_locate_ifconfig)"
         ['pcregrep']="$(koopa_locate_pcregrep)"
     )
-    [[ -x "${app['ifconfig']}" ]] || return 1
-    [[ -x "${app['pcregrep']}" ]] || return 1
+    [[ -x "${app['ifconfig']}" ]] || exit 1
+    [[ -x "${app['pcregrep']}" ]] || exit 1
     x="$( \
         "${app['ifconfig']}" \
             | "${app['pcregrep']}" -M -o \

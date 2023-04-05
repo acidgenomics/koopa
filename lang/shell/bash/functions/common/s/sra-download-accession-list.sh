@@ -17,10 +17,10 @@ koopa_sra_download_accession_list() {
         ['esearch']="$(koopa_locate_esearch)"
         ['sed']="$(koopa_locate_sed)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['efetch']}" ]] || return 1
-    [[ -x "${app['esearch']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['efetch']}" ]] || exit 1
+    [[ -x "${app['esearch']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict=(
         ['acc_file']=''
         ['srp_id']=''

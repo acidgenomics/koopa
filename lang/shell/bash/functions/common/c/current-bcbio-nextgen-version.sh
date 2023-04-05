@@ -16,7 +16,7 @@ koopa_current_bcbio_nextgen_version() {
     declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
     str="$( \
         koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
 bcbio-nextgen/master/requirements-conda.txt" \

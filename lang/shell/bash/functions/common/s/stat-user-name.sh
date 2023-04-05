@@ -14,7 +14,7 @@ koopa_stat_user_name() {
     koopa_assert_is_existing "$@"
     declare -A app dict
     app['stat']="$(koopa_locate_stat --allow-system)"
-    [[ -x "${app['stat']}" ]] || return 1
+    [[ -x "${app['stat']}" ]] || exit 1
     if koopa_is_gnu "${app['stat']}"
     then
         dict['format_flag']='--format'

@@ -16,7 +16,7 @@ koopa_switch_to_develop() {
     koopa_assert_is_owner
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     declare -A dict=(
         ['branch']='develop'
         ['origin']='origin'

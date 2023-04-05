@@ -36,8 +36,8 @@ koopa_linux_add_user_to_group() {
         ['gpasswd']="$(koopa_linux_locate_gpasswd)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['gpasswd']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['gpasswd']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['group']="${1:?}"
         ['user']="${2:-}"
@@ -58,8 +58,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         ['sed']="$(koopa_locate_sed)"
         ['touch']="$(koopa_locate_touch)"
     )
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['touch']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['touch']}" ]] || exit 1
     declare -A dict=(
         ['cores']="$(koopa_cpu_count)"
         ['fasta_file']=''
@@ -206,7 +206,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         ['bcbio_python']='bcbio_python'
         ['tee']="$(koopa_locate_tee)"
     )
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['git_dir']="${HOME:?}/git/bcbio-nextgen"
         ['install_dir']=''
@@ -364,8 +364,8 @@ koopa_linux_bcl2fastq_indrops() {
         ['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
         ['tee']="$(koopa_locate_tee)"
     )
-    [[ -x "${app['bcl2fastq']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['bcl2fastq']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['log_file']='bcl2fastq-indrops.log'
     )
@@ -425,9 +425,9 @@ koopa_linux_configure_system_rstudio_server() {
     app['r']="$(koopa_locate_system_r --realpath)"
     app['rscript']="$(koopa_locate_system_rscript)"
     app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
-    [[ -x "${app['rstudio_server']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['rscript']}" ]] || exit 1
+    [[ -x "${app['rstudio_server']}" ]] || exit 1
     dict['name']='rstudio-server'
     koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \
@@ -617,8 +617,8 @@ koopa_linux_java_update_alternatives() {
         ['sudo']="$(koopa_locate_sudo)"
         ['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
     )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['update_alternatives']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['update_alternatives']}" ]] || exit 1
     declare -A dict=(
         ['alt_prefix']='/var/lib/alternatives'
         ['prefix']="$(koopa_realpath "${1:?}")"
@@ -773,7 +773,7 @@ koopa_linux_oracle_instantclient_version() {
     declare -A app=(
         ['sqlplus']="$(koopa_linux_locate_sqlplus)"
     )
-    [[ -x "${app['sqlplus']}" ]] || return 1
+    [[ -x "${app['sqlplus']}" ]] || exit 1
     str="$( \
         "${app['sqlplus']}" -v \
             | koopa_grep --pattern='^Version' --regex \
@@ -791,8 +791,8 @@ koopa_linux_os_version() {
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['tr']="$(koopa_locate_tr --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['tr']}" ]] || exit 1
     declare -A dict=(
         ['key']='VERSION_ID'
         ['file']='/etc/os-release'
@@ -816,9 +816,9 @@ koopa_linux_proc_cmdline() {
         ['echo']="$(koopa_locate_echo --allow-system)"
         ['xargs']="$(koopa_locate_xargs --allow-system)"
     )
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || exit 1
+    [[ -x "${app['echo']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     declare -A dict
     dict['pid']="${1:?}"
     dict['cmdline']="/proc/${dict['pid']}/cmdline"
@@ -836,8 +836,8 @@ koopa_linux_remove_user_from_group() {
         ['gpasswd']="$(koopa_linux_locate_gpasswd)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['gpasswd']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['gpasswd']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['group']="${1:?}"
         ['user']="${2:-}"
@@ -968,8 +968,8 @@ koopa_linux_update_ldconfig() {
         ['ldconfig']="$(koopa_linux_locate_ldconfig)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['ldconfig']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['ldconfig']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }

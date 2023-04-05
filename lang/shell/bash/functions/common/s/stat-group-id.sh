@@ -14,7 +14,7 @@ koopa_stat_group_id() {
     koopa_assert_is_existing "$@"
     declare -A app dict
     app['stat']="$(koopa_locate_stat --allow-system)"
-    [[ -x "${app['stat']}" ]] || return 1
+    [[ -x "${app['stat']}" ]] || exit 1
     dict['format_string']='%g'
     if koopa_is_gnu "${app['stat']}"
     then

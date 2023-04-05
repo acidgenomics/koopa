@@ -13,7 +13,7 @@ main() {
     koopa_activate_app --build-only 'make' 'pkg-config'
     declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='jpeg'

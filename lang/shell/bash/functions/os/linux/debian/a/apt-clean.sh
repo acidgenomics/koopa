@@ -27,8 +27,8 @@ koopa_debian_apt_clean() {
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --yes autoremove
     "${app['sudo']}" "${app['apt_get']}" --yes clean
     # > koopa_rm --sudo '/var/lib/apt/lists/'*

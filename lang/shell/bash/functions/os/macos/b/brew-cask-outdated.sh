@@ -24,8 +24,8 @@ koopa_macos_brew_cask_outdated() {
         ['brew']="$(koopa_locate_brew)"
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
+    [[ -x "${app['cut']}" ]] || exit 1
     declare -A dict
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,

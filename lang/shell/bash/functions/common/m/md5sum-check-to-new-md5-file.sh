@@ -11,8 +11,8 @@ koopa_md5sum_check_to_new_md5_file() {
         ['md5sum']="$(koopa_locate_md5sum)"
         ['tee']="$(koopa_locate_tee)"
     )
-    [[ -x "${app['md5sum']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['md5sum']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['datetime']="$(koopa_datetime)"
     )

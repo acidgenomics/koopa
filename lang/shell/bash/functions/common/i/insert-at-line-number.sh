@@ -8,7 +8,7 @@ koopa_insert_at_line_number() {
     declare -A app=(
         ['perl']="$(koopa_locate_perl)"
     )
-    [[ -x "${app['perl']}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || exit 1
     declare -A dict=(
         ['file']=''
         ['line_number']=''

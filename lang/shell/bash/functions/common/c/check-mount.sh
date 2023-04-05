@@ -12,7 +12,7 @@ koopa_check_mount() {
     koopa_assert_has_args "$#"
     declare -A app dict
     app['wc']="$(koopa_locate_wc --allow-system)"
-    [[ -x "${app['wc']}" ]] || return 1
+    [[ -x "${app['wc']}" ]] || exit 1
     dict['prefix']="${1:?}"
     if [[ ! -r "${dict['prefix']}" ]] || [[ ! -d "${dict['prefix']}" ]]
     then

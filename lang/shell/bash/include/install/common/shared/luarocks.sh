@@ -13,8 +13,8 @@ main() {
         ['lua']="$(koopa_locate_lua)"
         ['make']="$(koopa_locate_make)"
     )
-    [[ -x "${app['lua']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['lua']}" ]] || exit 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['name']='luarocks'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

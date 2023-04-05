@@ -16,9 +16,9 @@ koopa_linux_configure_system_rstudio_server() {
     app['r']="$(koopa_locate_system_r --realpath)"
     app['rscript']="$(koopa_locate_system_rscript)"
     app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
-    [[ -x "${app['rstudio_server']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['rscript']}" ]] || exit 1
+    [[ -x "${app['rstudio_server']}" ]] || exit 1
     dict['name']='rstudio-server'
     koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \

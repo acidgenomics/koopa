@@ -9,7 +9,7 @@ koopa_rm() {
     declare -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
     # > koopa_is_macos && app['rm']='/bin/rm'
-    [[ -x "${app['rm']}" ]] || return 1
+    [[ -x "${app['rm']}" ]] || exit 1
     declare -A dict=(
         ['sudo']=0
         ['verbose']=0
@@ -51,7 +51,7 @@ koopa_rm() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
+        [[ -x "${app['sudo']}" ]] || exit 1
         rm+=("${app['sudo']}" "${app['rm']}")
     else
         rm=("${app['rm']}")

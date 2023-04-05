@@ -14,9 +14,9 @@ koopa_gfortran_libs() {
         ['sort']="$(koopa_locate_sort)"
         ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app['dirname']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['dirname']}" ]] || exit 1
+    [[ -x "${app['sort']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['gcc']="$(koopa_app_prefix 'gcc')"

@@ -21,7 +21,7 @@ koopa_sub() {
     local app dict pos
     declare -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
-    [[ -x "${app['perl']}" ]] || return 1
+    [[ -x "${app['perl']}" ]] || exit 1
     declare -A dict=(
         ['global']=0
         ['pattern']=''

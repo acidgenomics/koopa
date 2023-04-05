@@ -6,7 +6,7 @@ main() {
     local app files
     declare -A app
     app['bash']="$(koopa_locate_bash)"
-    [[ -x "${app['bash']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
     files=(
         '/usr/local/bin/bash'
         '/usr/local/bin/bashbug'

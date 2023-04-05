@@ -30,7 +30,7 @@ main() {
     else
         app['emacs']="$(koopa_locate_emacs)"
     fi
-    [[ -x "${app['emacs']}" ]] || return 1
+    [[ -x "${app['emacs']}" ]] || exit 1
     declare -A dict=(
         ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -71,8 +71,8 @@ koopa_r_configure_environ() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['sort']}" ]] || exit 1
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
@@ -104,20 +104,20 @@ koopa_r_configure_environ() {
         app['unzip']="$(koopa_locate_unzip)"
         app['vim']="$(koopa_locate_vim)"
         app['zip']="$(koopa_locate_zip)"
-        [[ -x "${app['bzip2']}" ]] || return 1
-        [[ -x "${app['cat']}" ]] || return 1
-        [[ -x "${app['gzip']}" ]] || return 1
-        [[ -x "${app['less']}" ]] || return 1
-        [[ -x "${app['ln']}" ]] || return 1
-        [[ -x "${app['make']}" ]] || return 1
-        [[ -x "${app['pkg_config']}" ]] || return 1
-        [[ -x "${app['sed']}" ]] || return 1
-        [[ -x "${app['strip']}" ]] || return 1
-        [[ -x "${app['tar']}" ]] || return 1
-        [[ -x "${app['texi2dvi']}" ]] || return 1
-        [[ -x "${app['unzip']}" ]] || return 1
-        [[ -x "${app['vim']}" ]] || return 1
-        [[ -x "${app['zip']}" ]] || return 1
+        [[ -x "${app['bzip2']}" ]] || exit 1
+        [[ -x "${app['cat']}" ]] || exit 1
+        [[ -x "${app['gzip']}" ]] || exit 1
+        [[ -x "${app['less']}" ]] || exit 1
+        [[ -x "${app['ln']}" ]] || exit 1
+        [[ -x "${app['make']}" ]] || exit 1
+        [[ -x "${app['pkg_config']}" ]] || exit 1
+        [[ -x "${app['sed']}" ]] || exit 1
+        [[ -x "${app['strip']}" ]] || exit 1
+        [[ -x "${app['tar']}" ]] || exit 1
+        [[ -x "${app['texi2dvi']}" ]] || exit 1
+        [[ -x "${app['unzip']}" ]] || exit 1
+        [[ -x "${app['vim']}" ]] || exit 1
+        [[ -x "${app['zip']}" ]] || exit 1
         if [[ ! -x "${app['lpr']}" ]]
         then
             app['lpr']='/usr/bin/lpr'

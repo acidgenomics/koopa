@@ -17,7 +17,7 @@ main() {
     declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
     declare -A dict
     dict['version']="$( \
         koopa_grep \

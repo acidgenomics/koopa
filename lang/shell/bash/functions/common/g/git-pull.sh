@@ -17,7 +17,7 @@ koopa_git_pull() {
     local app repos
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     repos=("$@")
     koopa_assert_is_git_repo "${repos[@]}"
     # Using a single subshell here to avoid performance hit during looping.

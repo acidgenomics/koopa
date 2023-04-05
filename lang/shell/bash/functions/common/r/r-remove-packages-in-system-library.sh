@@ -10,8 +10,8 @@ koopa_r_remove_packages_in_system_library() {
     koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"
     app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['rscript']}" ]] || exit 1
     shift 1
     dict['system']=0
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
@@ -24,7 +24,7 @@ remove-packages-in-system-library.R"
             ;;
         '1')
             app['sudo']="$(koopa_locate_sudo)"
-            [[ -x "${app['sudo']}" ]] || return 1
+            [[ -x "${app['sudo']}" ]] || exit 1
             "${app['sudo']}" "${app['rscript']}" "${dict['script']}" "$@"
             ;;
     esac

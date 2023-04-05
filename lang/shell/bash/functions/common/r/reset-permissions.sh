@@ -14,8 +14,8 @@ koopa_reset_permissions() {
         ['chmod']="$(koopa_locate_chmod)"
         ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app['chmod']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['chmod']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     declare -A dict=(
         ['group']="$(koopa_group_name)"
         ['prefix']="${1:?}"

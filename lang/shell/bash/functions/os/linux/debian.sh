@@ -28,8 +28,8 @@ koopa_debian_apt_add_key() {
         ['gpg']='/usr/bin/gpg'
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['gpg']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['gpg']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['name']=''
         ['prefix']="$(koopa_debian_apt_key_prefix)"
@@ -372,8 +372,8 @@ koopa_debian_apt_clean() {
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --yes autoremove
     "${app['sudo']}" "${app['apt_get']}" --yes clean
     return 0
@@ -387,9 +387,9 @@ koopa_debian_apt_configure_sources() {
         ['head']="$(koopa_locate_head --allow-system)"
         ['tee']="$(koopa_locate_tee --allow-system)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['os_codename']="$(koopa_debian_os_codename)"
         ['os_id']="$(koopa_os_id)"
@@ -497,9 +497,9 @@ koopa_debian_apt_disable_deb_src() {
         ['sed']="$(koopa_locate_sed)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['file']="${1:-}"
     )
@@ -532,9 +532,9 @@ koopa_debian_apt_enable_deb_src() {
         ['sed']="$(koopa_locate_sed)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['file']="${1:-}"
     )
@@ -564,7 +564,7 @@ koopa_debian_apt_enabled_repos() {
     declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
     declare -A dict=(
         ['file']="$(koopa_debian_apt_sources_file)"
         ['os']="$(koopa_debian_os_codename)"
@@ -589,8 +589,8 @@ koopa_debian_apt_get() {
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" update
     "${app['sudo']}" DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" \
@@ -613,8 +613,8 @@ koopa_debian_apt_is_key_imported() {
         ['apt_key']="$(koopa_debian_locate_apt_key)"
         ['sed']="$(koopa_locate_sed)"
     )
-    [[ -x "${app['apt_key']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['apt_key']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict=(
         ['key']="${1:?}"
     )
@@ -644,8 +644,8 @@ koopa_debian_apt_remove() {
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --yes remove --purge "$@"
     koopa_debian_apt_clean
     return 0
@@ -670,9 +670,9 @@ koopa_debian_apt_space_used_by_grep() {
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['sudo']="$(koopa_locate_sudo --allow-system)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     x="$( \
         "${app['sudo']}" "${app['apt_get']}" \
             --assume-no \
@@ -693,8 +693,8 @@ koopa_debian_apt_space_used_by_no_deps() {
         ['apt']="$(koopa_debian_locate_apt)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     x="$( \
         "${app['sudo']}" "${app['apt']}" show "$@" 2>/dev/null \
             | koopa_grep --pattern='Size' \
@@ -712,8 +712,8 @@ koopa_debian_apt_space_used_by() {
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --assume-no autoremove "$@"
     return 0
 }
@@ -736,9 +736,9 @@ koopa_debian_enable_unattended_upgrades() {
         ['sudo']="$(koopa_locate_sudo)"
         ['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
     )
-    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['unattended_upgrades']}" ]] || return 1
+    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['unattended_upgrades']}" ]] || exit 1
     koopa_debian_apt_install 'apt-listchanges' 'unattended-upgrades'
     "${app['sudo']}" "${app['dpkg_reconfigure']}" -plow 'unattended-upgrades'
     "${app['sudo']}" "${app['unattended_upgrades']}" -d
@@ -751,14 +751,14 @@ koopa_debian_gdebi_install() {
     koopa_assert_is_admin
     declare -A app
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     app['gdebi']="$(koopa_debian_locate_gdebi --allow-missing)"
     if [[ ! -x "${app['gdebi']}" ]]
     then
         koopa_debian_apt_install 'gdebi-core'
         app['gdebi']="$(koopa_debian_locate_gdebi)"
     fi
-    [[ -x "${app['gdebi']}" ]] || return 1
+    [[ -x "${app['gdebi']}" ]] || exit 1
     "${app['sudo']}" "${app['gdebi']}" --non-interactive "$@"
     return 0
 }
@@ -778,8 +778,8 @@ koopa_debian_install_from_deb() {
         ['gdebi']="$(koopa_debian_locate_gdebi)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['gdebi']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['gdebi']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['file']="${1:?}"
     )
@@ -798,11 +798,11 @@ koopa_debian_install_system_builder_base() {
         ['echo']="$(koopa_locate_echo --allow-system)"
         ['sudo']="$(koopa_locate_sudo --allow-system)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['debconf_set_selections']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['cat']}" ]] || exit 1
+    [[ -x "${app['debconf_set_selections']}" ]] || exit 1
+    [[ -x "${app['echo']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" update
     "${app['sudo']}" \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
@@ -843,10 +843,10 @@ END
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
-    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
-    [[ -x "${app['locale_gen']}" ]] || return 1
-    [[ -x "${app['timedatectl']}" ]] || return 1
-    [[ -x "${app['update_locale']}" ]] || return 1
+    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
+    [[ -x "${app['locale_gen']}" ]] || exit 1
+    [[ -x "${app['timedatectl']}" ]] || exit 1
+    [[ -x "${app['update_locale']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" autoremove --yes
     "${app['sudo']}" "${app['apt_get']}" clean
     "${app['sudo']}" "${app['timedatectl']}" set-timezone 'America/New_York'
@@ -984,7 +984,7 @@ koopa_debian_os_codename() {
     local app dict
     declare -A app dict
     app['lsb_release']="$(koopa_debian_locate_lsb_release)"
-    [[ -x "${app['lsb_release']}" ]] || return 1
+    [[ -x "${app['lsb_release']}" ]] || exit 1
     dict['string']="$("${app['lsb_release']}" -cs)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"
@@ -1002,11 +1002,11 @@ koopa_debian_set_locale() {
         ['sudo']="$(koopa_locate_sudo)"
         ['update_locale']="$(koopa_debian_locate_update_locale)" 
     )
-    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
-    [[ -x "${app['locale']}" ]] || return 1
-    [[ -x "${app['locale_gen']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['update_locale']}" ]] || return 1
+    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
+    [[ -x "${app['locale']}" ]] || exit 1
+    [[ -x "${app['locale_gen']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['update_locale']}" ]] || exit 1
     declare -A dict=(
         ['charset']='UTF-8'
         ['country']='US'
@@ -1035,8 +1035,8 @@ koopa_debian_set_timezone() {
         ['sudo']="$(koopa_locate_sudo)"
         ['timedatectl']="$(koopa_debian_locate_timedatectl)"
     )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['timedatectl']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['timedatectl']}" ]] || exit 1
     declare -A dict=(
         ['tz']="${1:-}"
     )

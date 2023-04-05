@@ -19,7 +19,7 @@ koopa_git_rm_submodule() {
     declare -A app=(
         ['git']="$(koopa_locate_git --allow-system)"
     )
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     for module in "$@"
     do
         # Remove the submodule entry from '.git/config'.

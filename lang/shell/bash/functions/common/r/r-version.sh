@@ -12,8 +12,8 @@ koopa_r_version() {
         ['r']="${1:-}"
     )
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['r']}" ]] || exit 1
     str="$( \
         R_HOME='' \
         "${app['r']}" --version 2>/dev/null \

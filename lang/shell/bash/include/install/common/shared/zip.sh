@@ -22,7 +22,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['name']='zip'
@@ -65,7 +65,7 @@ apply_debian_patch_set() {
     local app dict file
     declare -A app
     app['patch']="$(koopa_locate_patch)"
-    [[ -x "${app['patch']}" ]] || return 1
+    [[ -x "${app['patch']}" ]] || exit 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

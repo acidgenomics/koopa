@@ -11,7 +11,7 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         ['bcbio_python']='bcbio_python'
         ['tee']="$(koopa_locate_tee)"
     )
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['git_dir']="${HOME:?}/git/bcbio-nextgen"
         ['install_dir']=''

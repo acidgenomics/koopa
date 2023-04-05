@@ -13,7 +13,7 @@ koopa_gpg_download_key_from_keyserver() {
     declare -A app=(
         ['gpg']="$(koopa_locate_gpg --allow-system)"
     )
-    [[ -x "${app['gpg']}" ]] || return 1
+    [[ -x "${app['gpg']}" ]] || exit 1
     declare -A dict=(
         ['sudo']=0
         ['tmp_dir']="$(koopa_tmp_dir)"

@@ -13,8 +13,8 @@ koopa_aws_ecr_login_private() {
     declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     app['docker']="$(koopa_locate_docker)"
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['docker']}" ]] || exit 1
     dict['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
     dict['profile']="${AWS_ECR_PROFILE:?}" # FIXME
     dict['region']="${AWS_ECR_REGION:?}" # FIXME

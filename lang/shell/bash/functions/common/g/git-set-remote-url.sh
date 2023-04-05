@@ -14,7 +14,7 @@ koopa_git_set_remote_url() {
     koopa_assert_has_args_eq "$#" 2
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     declare -A dict=(
         ['origin']='origin'
         ['prefix']="${1:?}"

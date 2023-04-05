@@ -20,8 +20,8 @@ koopa_stat_modified() {
     declare -A app dict
     app['date']="$(koopa_locate_date)"
     app['stat']="$(koopa_locate_stat)"
-    [[ -x "${app['date']}" ]] || return 1
-    [[ -x "${app['stat']}" ]] || return 1
+    [[ -x "${app['date']}" ]] || exit 1
+    [[ -x "${app['stat']}" ]] || exit 1
     dict['format']=''
     pos=()
     while (("$#"))

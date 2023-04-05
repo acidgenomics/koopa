@@ -17,7 +17,7 @@ koopa_conda_remove_env() {
     declare -A app=(
         ['conda']="$(koopa_locate_conda)"
     )
-    [[ -x "${app['conda']}" ]] || return 1
+    [[ -x "${app['conda']}" ]] || exit 1
     declare -A dict=(
         ['nounset']="$(koopa_boolean_nounset)"
     )

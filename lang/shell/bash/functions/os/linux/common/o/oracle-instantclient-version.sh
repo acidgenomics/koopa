@@ -10,7 +10,7 @@ koopa_linux_oracle_instantclient_version() {
     declare -A app=(
         ['sqlplus']="$(koopa_linux_locate_sqlplus)"
     )
-    [[ -x "${app['sqlplus']}" ]] || return 1
+    [[ -x "${app['sqlplus']}" ]] || exit 1
     str="$( \
         "${app['sqlplus']}" -v \
             | koopa_grep --pattern='^Version' --regex \

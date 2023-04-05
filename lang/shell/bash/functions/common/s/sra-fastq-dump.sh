@@ -63,9 +63,9 @@ koopa_sra_fastq_dump() {
         ['gzip']="$(koopa_locate_gzip)"
         ['parallel']="$(koopa_locate_parallel)"
     )
-    [[ -x "${app['fasterq_dump']}" ]] || return 1
-    [[ -x "${app['gzip']}" ]] || return 1
-    [[ -x "${app['parallel']}" ]] || return 1
+    [[ -x "${app['fasterq_dump']}" ]] || exit 1
+    [[ -x "${app['gzip']}" ]] || exit 1
+    [[ -x "${app['parallel']}" ]] || exit 1
     declare -A dict=(
         ['acc_file']=''
         ['compress']=1

@@ -14,7 +14,7 @@ koopa_docker_prune_all_images() {
     declare -A app=(
         ['docker']="$(koopa_locate_docker)"
     )
-    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['docker']}" ]] || exit 1
     koopa_alert 'Pruning Docker images.'
     "${app['docker']}" system prune --all --force || true
     "${app['docker']}" images

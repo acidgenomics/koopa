@@ -42,18 +42,18 @@ main() {
     app['tar']="$(koopa_locate_tar --allow-system)"
     app['unzip']="$(koopa_locate_unzip --allow-system)"
     app['wget']="$(koopa_locate_wget --allow-system)"
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['bzip2']}" ]] || return 1
-    [[ -x "${app['cpan']}" ]] || return 1
-    [[ -x "${app['gpg']}" ]] || return 1
-    [[ -x "${app['gzip']}" ]] || return 1
-    [[ -x "${app['less']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['patch']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['tar']}" ]] || return 1
-    [[ -x "${app['unzip']}" ]] || return 1
-    [[ -x "${app['wget']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
+    [[ -x "${app['bzip2']}" ]] || exit 1
+    [[ -x "${app['cpan']}" ]] || exit 1
+    [[ -x "${app['gpg']}" ]] || exit 1
+    [[ -x "${app['gzip']}" ]] || exit 1
+    [[ -x "${app['less']}" ]] || exit 1
+    [[ -x "${app['make']}" ]] || exit 1
+    [[ -x "${app['patch']}" ]] || exit 1
+    [[ -x "${app['perl']}" ]] || exit 1
+    [[ -x "${app['tar']}" ]] || exit 1
+    [[ -x "${app['unzip']}" ]] || exit 1
+    [[ -x "${app['wget']}" ]] || exit 1
     dict['cpan_prefix']="$(koopa_init_dir 'cpan')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"

@@ -21,8 +21,8 @@ main() {
         app['python']='/usr/bin/python3'
         koopa_alert_note "Building against system Python at '${app['python']}'."
     fi
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
+    [[ -x "${app['python']}" ]] || exit 1
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -18,7 +18,7 @@ koopa_sambamba_filter_per_sample() {
     koopa_assert_has_args "$#"
     declare -A app
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || return 1
+    [[ -x "${app['sambamba']}" ]] || exit 1
     declare -A dict=(
         ['filter']=''
         ['input']=''
