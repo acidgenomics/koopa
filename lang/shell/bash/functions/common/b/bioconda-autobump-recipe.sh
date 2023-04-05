@@ -6,17 +6,14 @@ koopa_bioconda_autobump_recipe() {
     # @note Updated 2023-01-12.
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['vim']="$(koopa_locate_vim --allow-system)"
-    )
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['vim']="$(koopa_locate_vim --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1
-    declare -A dict=(
-        ['recipe']="${1:?}"
-        ['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
-    )
+    dict['recipe']="${1:?}"
+    dict['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
     dict['branch']="${dict['recipe']/-/_}"
     koopa_assert_is_dir "${dict['repo']}"
     (

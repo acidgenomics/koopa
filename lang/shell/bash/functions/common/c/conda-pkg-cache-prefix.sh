@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Locate conda python.
-
 koopa_conda_pkg_cache_prefix() {
     # """
     # Return conda package cache prefix.
@@ -11,14 +9,12 @@ koopa_conda_pkg_cache_prefix() {
     # - conda info --json
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-        ['python']="$(koopa_locate_conda_python)"
-    )
+    app['conda']="$(koopa_locate_conda)"
+    app['python']="$(koopa_locate_conda_python)"
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
     dict['prefix']="$( \
         "${app['conda']}" info --json \
         | "${app['python']}" -c \

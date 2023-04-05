@@ -14,26 +14,23 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config' 'patch'
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl --allow-system)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['make']="$(koopa_locate_make)"
-        ['patch']="$(koopa_locate_patch)"
-    )
+    app['curl']="$(koopa_locate_curl --allow-system)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['make']="$(koopa_locate_make)"
+    app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['cut']}" ]] || return 1
     [[ -x "${app['make']}" ]] || return 1
     [[ -x "${app['patch']}" ]] || return 1
-    declare -A dict=(
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='bash'
-        ['patch_prefix']='patches'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='bash'
+    dict['patch_prefix']='patches'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['patch_base_url']="https://ftp.gnu.org/gnu/${dict['name']}/\
 ${dict['name']}-${dict['maj_min_ver']}-patches"
