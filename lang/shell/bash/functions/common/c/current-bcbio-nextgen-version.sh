@@ -12,10 +12,9 @@ koopa_current_bcbio_nextgen_version() {
     # # 1.2.9
     # """
     local app str
+    local -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
     [[ -x "${app['cut']}" ]] || exit 1
     str="$( \
         koopa_parse_url "https://raw.githubusercontent.com/bcbio/\

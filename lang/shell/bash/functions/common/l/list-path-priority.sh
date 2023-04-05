@@ -7,10 +7,10 @@ koopa_list_path_priority() {
     # """
     local all_arr app dict unique_arr
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    local -A app
     app['awk']="$(koopa_locate_awk)"
     [[ -x "${app['awk']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['string']="${1:-$PATH}"
     readarray -t all_arr <<< "$( \
         koopa_print "${dict['string']//:/$'\n'}" \

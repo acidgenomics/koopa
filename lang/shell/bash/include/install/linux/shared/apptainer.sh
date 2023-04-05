@@ -10,7 +10,7 @@ main() {
     # - https://issueexplorer.com/issue/hpcng/singularity/6225
     # """
     local app conf_args dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go' 'make' 'pkg-config'
     app['make']="$(koopa_locate_make)"

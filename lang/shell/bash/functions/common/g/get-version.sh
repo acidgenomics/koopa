@@ -20,7 +20,7 @@ koopa_get_version() {
     for cmd in "$@"
     do
         local dict
-        declare -A dict
+        local -A dict
         dict['cmd']="$cmd"
         dict['bn']="$(koopa_basename "${dict['cmd']}")"
         dict['bn_snake']="$(koopa_snake_case_simple "${dict['bn']}")"

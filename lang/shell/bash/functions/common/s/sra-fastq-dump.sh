@@ -58,7 +58,7 @@ koopa_sra_fastq_dump() {
     # >     --fastq-directory='srp049596-fastq'
     # """
     local app dict sra_file sra_files
-    declare -A app=(
+    local -A app=(
         ['fasterq_dump']="$(koopa_locate_fasterq_dump)"
         ['gzip']="$(koopa_locate_gzip)"
         ['parallel']="$(koopa_locate_parallel)"
@@ -66,7 +66,7 @@ koopa_sra_fastq_dump() {
     [[ -x "${app['fasterq_dump']}" ]] || exit 1
     [[ -x "${app['gzip']}" ]] || exit 1
     [[ -x "${app['parallel']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['acc_file']=''
         ['compress']=1
         ['fastq_dir']='fastq'

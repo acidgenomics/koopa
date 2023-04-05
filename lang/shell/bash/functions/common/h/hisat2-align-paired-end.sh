@@ -15,7 +15,7 @@ koopa_hisat2_align_paired_end() {
     # """
     local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'fastq'.
         ['fastq_dir']=''
         # e.g. '_R1_001.fastq.gz'.

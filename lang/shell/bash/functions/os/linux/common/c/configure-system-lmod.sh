@@ -11,7 +11,7 @@ koopa_linux_configure_system_lmod() {
     local dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['etc_dir']='/etc/profile.d'
         ['prefix']="${1:-}"
     )

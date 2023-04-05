@@ -12,8 +12,8 @@ koopa_is_r_package_installed() {
     # """
     local app dict pkg
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict
+    local -A app
+    local -A dict
     app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || exit 1
     dict['prefix']="$(koopa_r_packages_prefix "${app['r']}")"

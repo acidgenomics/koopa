@@ -13,7 +13,7 @@ main() {
     #     recipes/ncbi-vdb
     # """
     local app cmake_args deps dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     deps=('bison' 'flex' 'hdf5' 'python3.11')
     koopa_activate_app "${deps[@]}"

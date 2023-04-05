@@ -10,10 +10,10 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/convmv.rb
     # """
     local app dict
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='convmv'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

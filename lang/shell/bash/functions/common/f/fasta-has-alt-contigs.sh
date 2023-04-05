@@ -35,7 +35,7 @@ koopa_fasta_has_alt_contigs() {
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
         ['file']="${1:?}"
         ['is_tmp_file']=0

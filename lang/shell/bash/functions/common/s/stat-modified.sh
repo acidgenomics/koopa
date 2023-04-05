@@ -17,7 +17,7 @@ koopa_stat_modified() {
     # """
     local app dict pos timestamp timestamps
     koopa_assert_has_args "$#"
-    declare -A app dict
+    local -A app dict
     app['date']="$(koopa_locate_date)"
     app['stat']="$(koopa_locate_stat)"
     [[ -x "${app['date']}" ]] || exit 1

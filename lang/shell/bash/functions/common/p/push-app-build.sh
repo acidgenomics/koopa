@@ -16,13 +16,13 @@ koopa_push_app_build() {
     local app dict name
     koopa_assert_has_args "$#"
     koopa_can_install_binary || return 1
-    declare -A app=(
+    local -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['tar']="$(koopa_locate_tar)"
     )
     [[ -x "${app['aws']}" ]] || exit 1
     [[ -x "${app['tar']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['os_string']="$(koopa_os_string)"
@@ -36,7 +36,7 @@ koopa_push_app_build() {
     for name in "$@"
     do
         local dict2
-        declare -A dict2
+        local -A dict2
         dict2['name']="$name"
         dict2['prefix']="$( \
             koopa_realpath "${dict['opt_prefix']}/${dict2['name']}" \

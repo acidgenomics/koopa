@@ -6,11 +6,11 @@ koopa_relink() {
     # @note Updated 2022-05-16.
     # """
     local app dict ln pos rm sudo
-    declare -A app=(
+    local -A app=(
         ['ln']='koopa_ln'
         ['rm']='koopa_rm'
     )
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
     )
     pos=()

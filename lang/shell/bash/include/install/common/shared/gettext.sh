@@ -25,7 +25,7 @@ main() {
         'libunistring' \
         'ncurses' \
         'libxml2'
-    declare -A dict=(
+    local -A dict=(
         ['bison']="$(koopa_app_prefix 'bison')"
         ['libiconv']="$(koopa_app_prefix 'libiconv')"
         ['libunistring']="$(koopa_app_prefix 'libunistring')"

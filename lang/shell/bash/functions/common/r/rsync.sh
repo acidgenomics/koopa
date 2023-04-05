@@ -34,11 +34,11 @@ koopa_rsync() {
     # """
     local app dict rsync_args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['rsync']="$(koopa_locate_rsync)"
     )
     [[ -x "${app['rsync']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['source_dir']=''
         ['target_dir']=''
     )

@@ -7,7 +7,7 @@ koopa_os_type() {
     # """
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['tr']="$(koopa_locate_tr --allow-system)"
         ['uname']="$(koopa_locate_uname --allow-system)"
     )

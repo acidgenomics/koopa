@@ -7,11 +7,11 @@ koopa_roff() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['ronn']="$(koopa_locate_ronn)"
     )
     [[ -x "${app['ronn']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['man_prefix']="$(koopa_man_prefix)"
     )
     (

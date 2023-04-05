@@ -10,15 +10,15 @@ koopa_uninstall_app() {
     # """
     local app bin_arr bool dict man1_arr
     koopa_assert_is_owner
-    declare -A app
-    declare -A bool=(
+    local -A app
+    local -A bool=(
         ['quiet']=0
         ['unlink_in_bin']=''
         ['unlink_in_man1']=''
         ['unlink_in_opt']=''
         ['verbose']=0
     )
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['mode']='shared'

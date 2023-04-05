@@ -45,7 +45,7 @@ main() {
     fi
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['cmake']="$(koopa_locate_cmake)"
         ['git']="$(koopa_locate_git --realpath)"
         ['ninja']="$(koopa_locate_ninja)"
@@ -61,7 +61,7 @@ main() {
     [[ -x "${app['pkg_config']}" ]] || exit 1
     [[ -x "${app['python']}" ]] || exit 1
     [[ -x "${app['swig']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['libedit']="$(koopa_app_prefix 'libedit')"
         ['libffi']="$(koopa_app_prefix 'libffi')"
         ['libxml2']="$(koopa_app_prefix 'libxml2')"

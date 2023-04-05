@@ -19,11 +19,11 @@ koopa_hisat2_align_single_end_per_sample() {
     # """
     local align_args app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['hisat2']="$(koopa_locate_hisat2)"
     )
     [[ -x "${app['hisat2']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'sample1_001.fastq.gz'.
         ['fastq_file']=''
         # e.g. '_001.fastq.gz'.

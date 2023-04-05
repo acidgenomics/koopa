@@ -11,7 +11,7 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='termcolor'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

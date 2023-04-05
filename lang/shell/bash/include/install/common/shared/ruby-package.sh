@@ -24,14 +24,14 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['bundle']="$(koopa_locate_bundle)"
         ['ruby']="$(koopa_locate_ruby)"
     )
     [[ -x "${app['bundle']}" ]] || exit 1
     [[ -x "${app['ruby']}" ]] || exit 1
     app['ruby']="$(koopa_realpath "${app['ruby']}")"
-    declare -A dict=(
+    local -A dict=(
         ['gemfile']='Gemfile'
         ['jobs']="$(koopa_cpu_count)"
         ['name']="${KOOPA_INSTALL_NAME:?}"

@@ -6,7 +6,7 @@ koopa_r_system_packages_non_base() {
     # @note Updated 2023-04-04.
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['rscript']="${app['r']}script"

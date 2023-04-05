@@ -6,7 +6,7 @@ koopa_init_dir() {
     # @note Updated 2021-11-04.
     # """
     local dict mkdir pos
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
     )
     pos=()

@@ -10,12 +10,11 @@ koopa_current_flybase_version() {
     # # FB2022_01
     # """
     local app str
+    local -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['tail']="$(koopa_locate_tail --allow-system)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['tail']="$(koopa_locate_tail --allow-system)"
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1
     [[ -x "${app['tail']}" ]] || exit 1

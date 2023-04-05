@@ -12,7 +12,7 @@ koopa_eol_lf() {
     local app file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    declare -A app
+    local -A app
     app['perl']="$(koopa_locate_perl)"
     [[ -x "${app['perl']}" ]] || exit 1
     for file in "$@"

@@ -15,7 +15,7 @@ koopa_git_pull() {
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
     local app repos
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     repos=("$@")

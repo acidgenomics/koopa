@@ -10,11 +10,11 @@ main() {
     #     software/downloads/latest
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"
     [[ -x "${app['aws']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['installers_base']="$(koopa_private_installers_s3_uri)"
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -11,7 +11,7 @@ koopa_is_file_type() {
     # > koopa_is_file_type --ext='csv' 'aaa.csv' 'bbb.csv'
     # """
     local dict file pos
-    declare -A dict=(
+    local -A dict=(
         ['ext']=''
     )
     pos=()

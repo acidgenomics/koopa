@@ -21,11 +21,11 @@ koopa_salmon_quant_single_end_per_sample() {
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['salmon']="$(koopa_locate_salmon)"
     )
     [[ -x "${app['salmon']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bootstraps']=30
         # e.g. 'sample1.fastq.gz'.
         ['fastq_file']=''

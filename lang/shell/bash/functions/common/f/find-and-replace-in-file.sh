@@ -35,10 +35,10 @@ koopa_find_and_replace_in_file() {
     # """
     local app dict flags perl_cmd pos
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['multiline']=0
         ['pattern']=''
         ['regex']=0

@@ -11,8 +11,7 @@ koopa_aws_batch_fetch_and_run() {
     # - https://github.com/FredHutch/url-fetch-and-run
     # - https://github.com/awslabs/aws-batch-helpers
     # """
-    local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_set 'BATCH_FILE_URL' "${BATCH_FILE_URL:-}"
     app['aws']="$(koopa_locate_aws)"

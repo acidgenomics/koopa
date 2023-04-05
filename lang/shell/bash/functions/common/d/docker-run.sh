@@ -14,10 +14,10 @@ koopa_docker_run() {
     # """
     local app dict pos run_args
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['docker']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arm']=0
         ['bash']=0
         ['bind']=0

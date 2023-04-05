@@ -6,7 +6,7 @@ koopa_assert_is_matching_regex() {
     # @note Updated 2023-03-12.
     # """
     local dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_args "$#"
     dict['pattern']=''
     dict['string']=''

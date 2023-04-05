@@ -5,11 +5,11 @@ koopa_insert_at_line_number() {
     # Insert a line of text into a file at a desired line number.
     # @note Updated 2022-06-22.
     # """
-    declare -A app=(
+    local -A app=(
         ['perl']="$(koopa_locate_perl)"
     )
     [[ -x "${app['perl']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']=''
         ['line_number']=''
         ['string']=''

@@ -15,11 +15,11 @@ koopa_kallisto_index() {
     # """
     local app dict index_args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['kallisto']="$(koopa_locate_kallisto)"
     )
     [[ -x "${app['kallisto']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['fasta_pattern']='\.(fa|fasta|fna)'
         ['kmer_size']=31
         ['mem_gb']="$(koopa_mem_gb)"

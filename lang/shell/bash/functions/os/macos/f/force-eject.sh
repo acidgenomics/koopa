@@ -11,13 +11,13 @@ koopa_macos_force_eject() {
     # """
     local app mount name
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['diskutil']="$(koopa_macos_locate_diskutil)"
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['diskutil']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['name']="${1:?}"
     dict['mount']="/Volumes/${dict['name']}"
     koopa_assert_is_dir "${dict['mount']}"

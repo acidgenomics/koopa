@@ -30,7 +30,7 @@ koopa_conda_activate_env() {
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['env_name']="${1:?}"
         ['nounset']="$(koopa_boolean_nounset)"
     )

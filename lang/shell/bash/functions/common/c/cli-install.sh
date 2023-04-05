@@ -11,7 +11,7 @@ koopa_cli_install() {
     # """
     local app dict flags pos stem
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['allow_custom']=0
         ['custom_enabled']=0
         ['stem']='install'
@@ -83,7 +83,7 @@ koopa_cli_install() {
     for app in "$@"
     do
         local dict2
-        declare -A dict2
+        local -A dict2
         dict2['app']="$app"
         dict2['key']="${dict['stem']}-${dict2['app']}"
         dict2['fun']="$(koopa_which_function "${dict2['key']}" || true)"

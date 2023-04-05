@@ -7,7 +7,7 @@ koopa_fasta_generate_chromosomes_file() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['grep']="$(koopa_locate_grep)"
         ['sed']="$(koopa_locate_sed)"
@@ -15,7 +15,7 @@ koopa_fasta_generate_chromosomes_file() {
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['grep']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''
         # e.g. 'chromosomes.txt'

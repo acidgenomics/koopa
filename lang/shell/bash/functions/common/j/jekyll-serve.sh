@@ -7,10 +7,10 @@ koopa_jekyll_serve() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    local -A app
     app['bundle']="$(koopa_locate_bundle)"
     [[ -x "${app['bundle']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
         ['prefix']="${1:-}"
     )

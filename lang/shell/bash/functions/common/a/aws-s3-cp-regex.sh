@@ -11,7 +11,7 @@ koopa_aws_s3_cp_regex() {
     # - aws s3 cp help
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1

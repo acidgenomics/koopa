@@ -7,12 +7,12 @@ koopa_touch() {
     # """
     local app mkdir pos touch
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['mkdir']='koopa_mkdir'
         ['touch']="$(koopa_locate_touch --allow-system)"
     )
     [[ -x "${app['touch']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
     )
     pos=()

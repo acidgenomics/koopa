@@ -6,7 +6,7 @@ koopa_ip_address() {
     # @note Updated 2022-02-09.
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['type']='public'
     )
     while (("$#"))

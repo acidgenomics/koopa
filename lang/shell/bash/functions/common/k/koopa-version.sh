@@ -6,8 +6,8 @@ koopa_koopa_version() {
     # @note Updated 2022-08-30.
     # """
     local app dict
-    declare -A app
-    declare -A dict
+    local -A app
+    local -A dict
     koopa_assert_has_no_args "$#"
     app['cat']="$(koopa_locate_cat --allow-system)"
     [[ -x "${app['cat']}" ]] || exit 1

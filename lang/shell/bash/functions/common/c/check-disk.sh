@@ -7,7 +7,7 @@ koopa_check_disk() {
     # """
     local dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['limit']=90
         ['used']="$(koopa_disk_pct_used "$@")"
     )

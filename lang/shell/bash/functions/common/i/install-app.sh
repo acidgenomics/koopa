@@ -9,8 +9,8 @@ koopa_install_app() {
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
-    declare -A app
-    declare -A bool=(
+    local -A app
+    local -A bool=(
         # When enabled, this will change permissions on the top level directory
         # of the automatically generated prefix.
         ['auto_prefix']=0
@@ -41,7 +41,7 @@ koopa_install_app() {
         ['update_ldconfig']=0
         ['verbose']=0
     )
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['cpu_count']="$(koopa_cpu_count)"
         ['installer']=''
@@ -459,7 +459,7 @@ include/header.sh"
                     for i in "${!bin_arr[@]}"
                     do
                         local dict2
-                        declare -A dict2
+                        local -A dict2
                         dict2['name']="${bin_arr[$i]}"
                         dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
                         koopa_link_in_bin \
@@ -479,7 +479,7 @@ include/header.sh"
                     for i in "${!man1_arr[@]}"
                     do
                         local dict2
-                        declare -A dict2
+                        local -A dict2
                         dict2['name']="${man1_arr[$i]}"
                         dict2['mf1']="${dict['prefix']}/share/man/\
 man1/${dict2['name']}"

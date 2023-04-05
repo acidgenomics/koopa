@@ -12,10 +12,10 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['gocache']="$(koopa_init_dir 'gocache')"
         ['gopath']="$(koopa_init_dir 'go')"
         ['jobs']="$(koopa_cpu_count)"

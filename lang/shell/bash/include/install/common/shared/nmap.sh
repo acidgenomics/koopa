@@ -31,11 +31,11 @@ main() {
         # > 'lua'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         # > ['libssh2']="$(koopa_app_prefix 'libssh2')"
         # > ['lua']="$(koopa_app_prefix 'lua')"

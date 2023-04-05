@@ -15,7 +15,7 @@ koopa_git_last_commit_remote() {
     # """
     local app dict url
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
@@ -23,7 +23,7 @@ koopa_git_last_commit_remote() {
     [[ -x "${app['awk']}" ]] || exit 1
     [[ -x "${app['git']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['ref']='HEAD'
     for url in "$@"
     do

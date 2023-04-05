@@ -9,11 +9,11 @@ koopa_r_link_files_in_etc() {
     # """
     local app dict file files
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['r']="${1:?}"
     )
     [[ -x "${app['r']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
         ['sudo']=0

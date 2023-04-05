@@ -7,10 +7,10 @@ koopa_help() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict
+    local -A dict
     dict['man_file']="${1:?}"
     [[ -f "${dict['man_file']}" ]] || return 1
-    declare -A app=(
+    local -A app=(
         ['head']="$(koopa_locate_head --allow-system)"
         ['man']="$(koopa_locate_man --allow-system)"
     )

@@ -21,7 +21,7 @@ koopa_is_variable_defined() {
     # """
     local dict var
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['nounset']="$(koopa_boolean_nounset)"
     )
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset

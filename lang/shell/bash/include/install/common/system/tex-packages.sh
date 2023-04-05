@@ -11,7 +11,7 @@ main() {
     local app package packages
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['tlmgr']="$(koopa_locate_tlmgr)"
     )

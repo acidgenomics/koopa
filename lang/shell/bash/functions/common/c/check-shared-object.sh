@@ -14,8 +14,8 @@ koopa_check_shared_object() {
     # """
     local app dict tool_args
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict=(
+    local -A app
+    local -A dict=(
         ['file']=''
         ['name']=''
         ['prefix']=''

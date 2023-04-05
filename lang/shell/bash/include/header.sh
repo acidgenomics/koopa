@@ -165,7 +165,7 @@ __koopa_bash_header() {
             ;;
     esac
     local app bool dict
-    declare -A app bool dict
+    local -A app bool dict
     bool['activate']=0
     bool['checks']=1
     bool['minimal']=0

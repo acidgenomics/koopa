@@ -10,7 +10,7 @@ koopa_test_true_color() {
     # """
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk)"
     )
     [[ -x "${app['awk']}" ]] || exit 1

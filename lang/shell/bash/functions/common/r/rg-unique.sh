@@ -7,13 +7,13 @@ koopa_rg_unique() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['rg']="$(koopa_locate_rg)"
         ['sort']="$(koopa_locate_sort)"
     )
     [[ -x "${app['rg']}" ]] || exit 1
     [[ -x "${app['sort']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['pattern']="${1:?}"
     )
     dict['str']="$( \

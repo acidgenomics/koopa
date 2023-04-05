@@ -10,10 +10,10 @@ koopa_r_packages_prefix() {
     # # /opt/koopa/app/r-packages/4.2
     # """
     local app dict
-    declare -A app
+    local -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['str']="${dict['r_prefix']}/site-library"
     [[ -d "${dict['str']}" ]] || return 1

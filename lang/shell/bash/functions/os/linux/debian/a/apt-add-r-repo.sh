@@ -7,7 +7,7 @@ koopa_debian_apt_add_r_repo() {
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='r'
         ['os_codename']="$(koopa_debian_os_codename)"
         ['version']="${1:-}"

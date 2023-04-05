@@ -11,7 +11,7 @@ main() {
     # - https://github.com/aws/aws-cli/issues/6785
     # """
     local app conf_args dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     app['make']="$(koopa_locate_make --allow-system)"
     app['python']="$(koopa_locate_python311 --allow-missing)"

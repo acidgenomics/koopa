@@ -6,7 +6,7 @@ koopa_conda_env_latest_version() {
     # @note Updated 2022-01-17.
     # """
     local app dict str
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk)"
     app['conda']="$(koopa_locate_conda)"

@@ -6,7 +6,7 @@ main() {
     # @note Updated 2023-03-27.
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_activate_app 'openjdk'
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['java']="$(koopa_locate_java)"

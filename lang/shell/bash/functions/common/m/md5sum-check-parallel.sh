@@ -12,7 +12,7 @@ koopa_md5sum_check_parallel() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['md5sum']="$(koopa_locate_md5sum)"
         ['sh']="$(koopa_locate_sh)"
         ['xargs']="$(koopa_locate_xargs)"
@@ -20,7 +20,7 @@ koopa_md5sum_check_parallel() {
     [[ -x "${app['md5sum']}" ]] || exit 1
     [[ -x "${app['sh']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
     )
     koopa_find \

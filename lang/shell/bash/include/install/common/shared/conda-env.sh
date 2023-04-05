@@ -14,7 +14,7 @@ main() {
     # - https://github.com/conda/conda/issues/7741
     # """
     local bin_names create_args dict pos
-    declare -A dict=(
+    local -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -78,7 +78,7 @@ main() {
         for bin_name in "${bin_names[@]}"
         do
             local dict2
-            declare -A dict2
+            local -A dict2
             dict2['name']="$bin_name"
             dict2['bin_source']="${dict['libexec']}/bin/${dict2['name']}"
             dict2['bin_target']="${dict['prefix']}/bin/${dict2['name']}"

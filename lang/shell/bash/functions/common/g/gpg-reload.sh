@@ -7,7 +7,7 @@ koopa_gpg_reload() {
     # """
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['gpg_connect_agent']="$(koopa_locate_gpg_connect_agent)"
     )
     [[ -x "${app['gpg_connect_agent']}" ]] || exit 1

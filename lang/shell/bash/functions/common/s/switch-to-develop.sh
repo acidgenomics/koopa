@@ -14,10 +14,10 @@ koopa_switch_to_develop() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['branch']='develop'
         ['origin']='origin'
         ['prefix']="$(koopa_koopa_prefix)"

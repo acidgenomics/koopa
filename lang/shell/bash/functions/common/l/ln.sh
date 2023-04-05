@@ -8,13 +8,13 @@ koopa_ln() {
     # Note that '-t' flag is not directly supported for BSD variant.
     # """
     local app dict ln ln_args mkdir pos rm
-    declare -A app=(
+    local -A app=(
         ['ln']="$(koopa_locate_ln --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
     [[ -x "${app['ln']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
         ['target_dir']=''
         ['verbose']=0

@@ -29,7 +29,7 @@ koopa_aws_s3_find() {
     # >     --recursive
     # """
     local dict exclude_arr include_arr ls_args pattern str
-    declare -A dict
+    local -A dict
     koopa_assert_has_args "$#"
     dict['exclude']=0
     dict['include']=0

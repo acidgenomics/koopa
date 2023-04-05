@@ -15,7 +15,7 @@ koopa_capitalize() {
     # # 'Hello world' 'Foo bar'
     # """
     local app str
-    declare -A app
+    local -A app
     app['tr']="$(koopa_locate_tr --allow-system)"
     [[ -x "${app['tr']}" ]] || exit 1
     if [[ "$#" -eq 0 ]]

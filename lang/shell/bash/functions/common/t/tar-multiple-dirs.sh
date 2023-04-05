@@ -7,10 +7,10 @@ koopa_tar_multiple_dirs() {
     # """
     local app dict dir dirs pos
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['tar']="$(koopa_locate_tar --allow-system)"
     [[ -x "${app['tar']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['delete']=0
     )
     pos=()

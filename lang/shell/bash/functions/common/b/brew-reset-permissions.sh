@@ -7,7 +7,7 @@ koopa_brew_reset_permissions() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         [group]="$(koopa_admin_group_name)"
         [prefix]="$(koopa_homebrew_prefix)"
         [user]="$(koopa_user_name)"

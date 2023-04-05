@@ -8,7 +8,7 @@ koopa_clone() {
     local dict rsync_args
     koopa_assert_has_args_eq "$#" 2
     koopa_assert_has_no_flags "$@"
-    declare -A dict=(
+    local -A dict=(
         ['source_dir']="${1:?}"
         ['target_dir']="${2:?}"
     )

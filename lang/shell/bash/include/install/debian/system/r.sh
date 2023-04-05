@@ -21,9 +21,9 @@ main() {
     # """
     local app dep_pkgs dict pkgs
     koopa_assert_has_no_args "$#"
-    declare -A app
+    local -A app
     app['r']='/usr/bin/R'
-    declare -A dict
+    local -A dict
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dep_pkgs=(
         'autoconf'

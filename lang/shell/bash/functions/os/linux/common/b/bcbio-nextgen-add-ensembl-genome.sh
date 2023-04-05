@@ -18,7 +18,7 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # (FASTA) and 'annotation.gtf.gz' (GTF) that we can pass to bcbio script.
     #
     # @examples
-    # > declare -A dict=(
+    # > local -A dict=(
     # >     [genome_build]='GRCh38'
     # >     [organism]='Homo sapiens'
     # >     [release]='102'
@@ -27,7 +27,7 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # >     --genome_build="${dict['genome_build']}" \
     # >     --organism="${dict['organism']}" \
     # >     --release="${dict['release']}"
-    # > declare -A dict2
+    # > local -A dict2
     # > dict2['genome_dir']='homo-sapiens-grch38-ensembl-102'
     # # bcbio expects the genome FASTA, not the transcriptome.
     # > dict2['fasta_file']="${genome_dir}/genome/
@@ -49,7 +49,7 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     local app dict indexes
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app=(
+    local -A app=(
         ['bcbio_setup_genome']='bcbio_setup_genome.py'
         ['sed']="$(koopa_locate_sed)"
         ['touch']="$(koopa_locate_touch)"
@@ -59,7 +59,7 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # > [[ -x "${app['bcbio_setup_genome']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
     [[ -x "${app['touch']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['cores']="$(koopa_cpu_count)"
         ['fasta_file']=''
         ['genome_build']=''

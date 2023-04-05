@@ -6,7 +6,7 @@ koopa_install_app_subshell() {
     # @note Updated 2022-11-04.
     # """
     local dict pos
-    declare -A dict=(
+    local -A dict=(
         ['installer_bn']=''
         ['installer_fun']='main'
         ['koopa_prefix']="$(koopa_koopa_prefix)"

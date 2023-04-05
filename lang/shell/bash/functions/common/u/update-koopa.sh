@@ -13,7 +13,7 @@ koopa_update_koopa() {
     local dict prefix prefixes
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
-    declare -A dict=(
+    local -A dict=(
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['user_id']="$(koopa_user_id)"
     )

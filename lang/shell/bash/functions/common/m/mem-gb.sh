@@ -13,10 +13,10 @@ koopa_mem_gb() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']='awk'
     )
-    declare -A dict
+    local -A dict
     if koopa_is_macos
     then
         app['sysctl']="$(koopa_macos_locate_sysctl)"

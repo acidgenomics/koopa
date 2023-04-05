@@ -32,7 +32,7 @@ koopa_decompress() {
     # """
     local cmd cmd_args dict pos
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
         ['stdout']=0
     )

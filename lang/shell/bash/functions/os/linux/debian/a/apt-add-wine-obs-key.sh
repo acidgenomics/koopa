@@ -7,7 +7,7 @@ koopa_debian_apt_add_wine_obs_key() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['name']='wine-obs'
         ['os_string']="$(koopa_os_string)"
     )

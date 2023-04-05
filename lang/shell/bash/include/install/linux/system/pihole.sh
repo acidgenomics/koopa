@@ -11,7 +11,7 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['file']='pihole.sh'
         ['url']='https://install.pi-hole.net'
     )

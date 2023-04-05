@@ -35,27 +35,23 @@ koopa_docker_build() {
     # > remote_url='public.ecr.aws/x3y6k8r3/koopa:debian'
     # > koopa app docker build --local="$local_dir" --remote="$remote_url"
     # """
-    local app dict
-    local build_args image_ids platforms tag tags
+    local app dict build_args dict image_ids platforms tag tags
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['date']="$(koopa_locate_date)"
-        ['docker']="$(koopa_locate_docker)"
-        ['sort']="$(koopa_locate_sort)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['date']="$(koopa_locate_date)"
+    app['docker']="$(koopa_locate_docker)"
+    app['sort']="$(koopa_locate_sort)"
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['date']}" ]] || exit 1
     [[ -x "${app['docker']}" ]] || exit 1
     [[ -x "${app['sort']}" ]] || exit 1
-    declare -A dict=(
-        ['default_tag']='latest'
-        ['delete']=1
-        ['local_dir']=''
-        ['memory']=''
-        ['push']=1
-        ['remote_url']=''
-    )
+    dict['default_tag']='latest'
+    dict['delete']=1
+    dict['local_dir']=''
+    dict['memory']=''
+    dict['push']=1
+    dict['remote_url']=''
     while (("$#"))
     do
         case "$1" in

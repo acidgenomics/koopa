@@ -23,7 +23,7 @@ main() {
     #   - https://github.com/bioconda/bioconda-recipes/issues/13958
     # """
     local app dict install_args
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'bzip2' 'python3.11'
     app['python']="$(koopa_locate_python311 --realpath)"

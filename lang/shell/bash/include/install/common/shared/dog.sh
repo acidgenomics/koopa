@@ -2,7 +2,7 @@
 
 main() {
     local dict
-    declare -A dict
+    local -A dict
     koopa_activate_app 'openssl1'
     dict['openssl']="$(koopa_app_prefix 'openssl1')"
     export OPENSSL_DIR="${dict['openssl']}"

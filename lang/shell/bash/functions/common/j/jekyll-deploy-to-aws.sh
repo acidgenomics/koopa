@@ -7,13 +7,13 @@ koopa_jekyll_deploy_to_aws() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['aws']="$(koopa_locate_aws)"
         ['bundle']="$(koopa_locate_bundle)"
     )
     [[ -x "${app['aws']}" ]] || exit 1
     [[ -x "${app['bundle']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bucket_prefix']=''
         ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
         ['distribution_id']=''

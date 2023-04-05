@@ -6,7 +6,7 @@ koopa_git_push_submodules() {
     # @note Updated 2023-03-12.
     # """
     local app
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"

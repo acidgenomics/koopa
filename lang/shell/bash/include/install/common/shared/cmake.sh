@@ -12,10 +12,10 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     koopa_activate_app 'ncurses' 'openssl3'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['mem_gb']="$(koopa_mem_gb)"
         ['mem_gb_cutoff']=7

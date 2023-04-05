@@ -8,7 +8,7 @@ koopa_debian_apt_space_used_by_no_deps() {
     local app x
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt']="$(koopa_debian_locate_apt)"
         ['sudo']="$(koopa_locate_sudo)"
     )

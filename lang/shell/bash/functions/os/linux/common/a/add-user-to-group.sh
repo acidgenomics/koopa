@@ -14,13 +14,13 @@ koopa_linux_add_user_to_group() {
     local app dict
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['gpasswd']="$(koopa_linux_locate_gpasswd)"
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['gpasswd']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['group']="${1:?}"
         ['user']="${2:-}"
     )

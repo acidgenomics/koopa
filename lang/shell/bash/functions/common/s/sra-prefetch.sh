@@ -15,13 +15,13 @@ koopa_sra_prefetch() {
     # >     --output-directory='srp049596-prefetch'
     # """
     local app cmd dict
-    declare -A app=(
+    local -A app=(
         ['parallel']="$(koopa_locate_parallel)"
         ['prefetch']="$(koopa_locate_prefetch)"
     )
     [[ -x "${app['parallel']}" ]] || exit 1
     [[ -x "${app['prefetch']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['acc_file']=''
         ['jobs']="$(koopa_cpu_count)"
         ['output_dir']='sra'

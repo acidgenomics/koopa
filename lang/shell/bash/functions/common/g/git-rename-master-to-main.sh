@@ -17,10 +17,10 @@ koopa_git_rename_master_to_main() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['origin']='origin'
         ['old_branch']='master'
         ['new_branch']='main'

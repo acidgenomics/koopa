@@ -3,14 +3,13 @@
 koopa_aws_ec2_instance_id() {
     # """
     # AWS EC2 instance identifier.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://stackoverflow.com/questions/625644/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app dict
     if koopa_is_ubuntu_like
     then
         app['ec2metadata']='/usr/bin/ec2metadata'

@@ -30,10 +30,10 @@ koopa_r_configure_java() {
     # """
     local app conf_dict dict java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
+    local -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['system']=0
         ['use_apps']=1
     )
@@ -60,7 +60,7 @@ koopa_r_configure_java() {
     [[ -x "${app['javac']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
-    declare -A conf_dict=(
+    local -A conf_dict=(
         ['java_home']="${dict['openjdk']}"
         ['jar']="${app['jar']}"
         ['java']="${app['java']}"

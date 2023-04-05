@@ -16,7 +16,7 @@ koopa_find_large_files() {
     local app prefix str
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    declare -A app
+    local -A app
     app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || exit 1
     for prefix in "$@"

@@ -7,10 +7,10 @@ koopa_macos_create_dmg() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['hdiutil']="$(koopa_macos_locate_hdiutil)"
     )
-    declare -A dict=(
+    local -A dict=(
         ['srcfolder']="${1:?}"
     )
     koopa_assert_is_dir "${dict['srcfolder']}"

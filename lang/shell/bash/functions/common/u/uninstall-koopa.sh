@@ -6,7 +6,7 @@ koopa_uninstall_koopa() {
     # @note Updated 2022-04-08.
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['config_prefix']="$(koopa_config_prefix)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"
     )

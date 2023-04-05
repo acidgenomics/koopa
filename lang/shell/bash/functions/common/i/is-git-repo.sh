@@ -10,7 +10,7 @@ koopa_is_git_repo() {
     # """
     local app repo
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     (

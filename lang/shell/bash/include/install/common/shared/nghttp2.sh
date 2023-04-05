@@ -28,13 +28,13 @@ main() {
         'boost'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
         ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['make']}" ]] || exit 1
     [[ -x "${app['python']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['boost']="$(koopa_app_prefix 'boost')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='nghttp2'

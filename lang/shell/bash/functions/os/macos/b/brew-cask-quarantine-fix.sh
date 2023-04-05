@@ -8,7 +8,7 @@ koopa_macos_brew_cask_quarantine_fix() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['xattr']="$(koopa_macos_locate_xattr)"
     )

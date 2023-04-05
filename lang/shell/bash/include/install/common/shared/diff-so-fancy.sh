@@ -8,7 +8,7 @@ main() {
     # @note Updated 2022-11-01.
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['name']='diff-so-fancy'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

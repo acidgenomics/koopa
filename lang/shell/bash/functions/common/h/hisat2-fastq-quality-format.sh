@@ -9,7 +9,7 @@ koopa_hisat2_fastq_quality_format() {
     # """
     local dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['fastq_file']="${1:?}"
     )
     koopa_assert_is_file "${dict['fastq_file']}"

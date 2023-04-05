@@ -14,12 +14,12 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
+    local -A app
     app['r']="$(koopa_locate_system_r)"
     app['rscript']="${app['r']}script"
     [[ -x "${app['r']}" ]] || exit 1
     [[ -x "${app['rscript']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['arch2']="$(koopa_arch2)" # e.g. 'amd64'.
         ['name']='shiny-server'

@@ -10,7 +10,7 @@ main() {
     # Be aware that symlink into bin currently won't work (2022-06-13).
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['name']='asdf'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

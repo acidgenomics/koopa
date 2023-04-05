@@ -2,7 +2,7 @@
 
 main() {
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['mpfr']="$(koopa_app_prefix 'mpfr')"
     )

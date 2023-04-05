@@ -13,10 +13,10 @@ koopa_sambamba_sort_per_sample() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['sambamba']="$(koopa_locate_sambamba)"
     [[ -x "${app['sambamba']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['input']="${1:?}"
         ['threads']="$(koopa_cpu_count)"
     )

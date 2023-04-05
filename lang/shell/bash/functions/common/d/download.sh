@@ -28,12 +28,12 @@ koopa_download() {
     # """
     local app bool dict download_args pos
     koopa_assert_has_args "$#"
-    declare -A bool=(
+    local -A bool=(
         ['decompress']=0
         ['extract']=0
         ['progress']=1
     )
-    declare -A dict=(
+    local -A dict=(
         ['user_agent']="Mozilla/5.0 \
 (Macintosh; Intel Mac OS X 10.15; rv:109.0) \
 Gecko/20100101 Firefox/111.0"
@@ -79,7 +79,7 @@ Gecko/20100101 Firefox/111.0"
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    declare -A app
+    local -A app
     app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
     [[ -x "${app['download']}" ]] || exit 1
     if [[ -z "${dict['file']}" ]]

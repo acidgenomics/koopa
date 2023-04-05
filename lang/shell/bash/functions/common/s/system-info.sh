@@ -7,13 +7,13 @@ koopa_system_info() {
     # """
     local app dict info nf_info
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['bash']="$(koopa_locate_bash --allow-system)"
         ['cat']="$(koopa_locate_cat --allow-system)"
     )
     [[ -x "${app['bash']}" ]] || exit 1
     [[ -x "${app['cat']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['arch']="$(koopa_arch)"
         ['arch2']="$(koopa_arch2)"

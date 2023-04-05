@@ -23,7 +23,7 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'chemacs'
-    declare -A app
+    local -A app
     if koopa_is_macos
     then
         app['emacs']="$(koopa_macos_emacs)"
@@ -31,7 +31,7 @@ main() {
         app['emacs']="$(koopa_locate_emacs)"
     fi
     [[ -x "${app['emacs']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/hlissner/doom-emacs.git'

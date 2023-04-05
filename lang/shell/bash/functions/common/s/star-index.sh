@@ -22,11 +22,11 @@ koopa_star_index() {
     # >     --output-dir='star-index'
     # """
     local app dict index_args
-    declare -A app=(
+    local -A app=(
         ['star']="$(koopa_locate_star)"
     )
     [[ -x "${app['star']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''
