@@ -22,12 +22,10 @@ koopa_fedora_dnf_remove() {
 }
 
 koopa_fedora_dnf() {
-    local -A app=(
-        ['dnf']="$(koopa_fedora_locate_dnf)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['dnf']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    local -A app
+    app['dnf']="$(koopa_fedora_locate_dnf)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['dnf']}" -y "$@"
     return 0
 }
@@ -95,22 +93,16 @@ koopa_fedora_locate_rpm() {
 }
 
 koopa_fedora_set_locale() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['locale']="$(koopa_locate_locale)"
-        ['localedef']="$(koopa_locate_localedef)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['locale']}" ]] || exit 1
-    [[ -x "${app['localedef']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    local -A dict=(
-        ['lang']='en'
-        ['country']='US'
-        ['charset']='UTF-8'
-    )
+    app['locale']="$(koopa_locate_locale)"
+    app['localedef']="$(koopa_locate_localedef)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['lang']='en'
+    dict['country']='US'
+    dict['charset']='UTF-8'
     dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."
     "${app['sudo']}" "${app['localedef']}" \
