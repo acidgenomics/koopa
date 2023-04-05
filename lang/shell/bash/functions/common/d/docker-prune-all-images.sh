@@ -9,7 +9,6 @@ koopa_docker_prune_all_images() {
     #
     # Use 'docker buildx rm XXX' to remove danging buildx nodes.
     # """
-    local app
     local -A app
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"

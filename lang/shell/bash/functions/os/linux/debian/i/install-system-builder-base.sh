@@ -11,7 +11,6 @@ koopa_debian_install_system_builder_base() {
     # - https://sleeplessbeastie.eu/2018/09/17/
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
-    local app
     local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['cat']="$(koopa_locate_cat --allow-system)"

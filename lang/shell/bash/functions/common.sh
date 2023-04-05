@@ -3959,7 +3959,7 @@ koopa_cli_system() {
 }
 
 koopa_cli_uninstall() {
-    local app
+    local app stem
     [[ "$#" -eq 0 ]] && set -- 'koopa'
     stem='uninstall'
     case "$1" in
@@ -3973,9 +3973,8 @@ koopa_cli_uninstall() {
     koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local -A dict=(
-            ['key']="${stem}-${app}"
-        )
+        local -A dict
+        dict['key']="${stem}-${app}"
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
@@ -4595,7 +4594,6 @@ koopa_configure_r() {
 }
 
 koopa_configure_system_r() {
-    local app
     local -A app
     app['r']="$(koopa_locate_system_r)"
     [[ -x "${app['r']}" ]] || exit 1
@@ -4816,7 +4814,6 @@ koopa_convert_sam_to_bam() {
 }
 
 koopa_convert_utf8_nfd_to_nfc() {
-    local app
     local -A app
     koopa_assert_has_args "$#"
     app['convmv']="$(koopa_locate_convmv)"
@@ -5326,7 +5323,6 @@ koopa_detab() {
 }
 
 koopa_df() {
-    local app
     local -A app
     app['df']="$(koopa_locate_df)"
     [[ -x "${app['df']}" ]] || exit 1
@@ -5837,7 +5833,6 @@ koopa_docker_prefix() {
 }
 
 koopa_docker_prune_all_images() {
-    local app
     local -A app
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"
@@ -5852,11 +5847,9 @@ koopa_docker_prune_all_images() {
 }
 
 koopa_docker_prune_old_images() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['docker']="$(koopa_locate_docker)"
-    )
+    app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['docker']}" ]] || exit 1
     koopa_alert 'Pruning Docker images older than 3 months.'
     "${app['docker']}" image prune \
@@ -7936,13 +7929,11 @@ koopa_gfortran_libs() {
 }
 
 koopa_git_branch() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['git']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1
@@ -8087,13 +8078,11 @@ koopa_git_clone() {
 }
 
 koopa_git_commit_date() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['date']="$(koopa_locate_date --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['xargs']="$(koopa_locate_xargs --allow-system)"
-    )
+    app['date']="$(koopa_locate_date --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['xargs']="$(koopa_locate_xargs --allow-system)"
     [[ -x "${app['date']}" ]] || exit 1
     [[ -x "${app['git']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1
@@ -8202,7 +8191,6 @@ koopa_git_last_commit_remote() {
 }
 
 koopa_git_latest_tag() {
-    local app
     local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
@@ -8243,7 +8231,6 @@ koopa_git_pull() {
 }
 
 koopa_git_push_submodules() {
-    local app
     local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
@@ -8262,7 +8249,6 @@ koopa_git_push_submodules() {
 }
 
 koopa_git_remote_url() {
-    local app
     local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
@@ -8355,9 +8341,8 @@ koopa_git_repo_needs_pull_or_push() {
 }
 
 koopa_git_reset_fork_to_upstream() {
-    local app
-    koopa_assert_has_args "$#"
     local -A app
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"
@@ -8646,11 +8631,9 @@ koopa_gpg_download_key_from_keyserver() {
 }
 
 koopa_gpg_prompt() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['gpg']="$(koopa_locate_gpg --allow-system)"
-    )
+    app['gpg']="$(koopa_locate_gpg --allow-system)"
     [[ -x "${app['gpg']}" ]] || exit 1
     printf '' | "${app['gpg']}" -s
     return 0
