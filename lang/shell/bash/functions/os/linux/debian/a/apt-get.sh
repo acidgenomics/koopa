@@ -9,13 +9,11 @@ koopa_debian_apt_get() {
     # - dist-upgrade
     # - install
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" update

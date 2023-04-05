@@ -365,13 +365,11 @@ koopa_debian_apt_add_wine_repo() {
 
 koopa_debian_apt_clean() {
 
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --yes autoremove
@@ -582,13 +580,11 @@ koopa_debian_apt_enabled_repos() {
 }
 
 koopa_debian_apt_get() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" update
@@ -637,13 +633,11 @@ koopa_debian_apt_key_prefix() {
 }
 
 koopa_debian_apt_remove() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --yes remove --purge "$@"
@@ -705,13 +699,11 @@ koopa_debian_apt_space_used_by_no_deps() {
 }
 
 koopa_debian_apt_space_used_by() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" --assume-no autoremove "$@"
@@ -728,14 +720,12 @@ koopa_debian_debian_version() {
 }
 
 koopa_debian_enable_unattended_upgrades() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-        ['sudo']="$(koopa_locate_sudo)"
-        ['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
-    )
+    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
+    app['sudo']="$(koopa_locate_sudo)"
+    app['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
     [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['unattended_upgrades']}" ]] || exit 1
@@ -746,19 +736,18 @@ koopa_debian_enable_unattended_upgrades() {
 }
 
 koopa_debian_gdebi_install() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app['sudo']}"
     app['gdebi']="$(koopa_debian_locate_gdebi --allow-missing)"
     if [[ ! -x "${app['gdebi']}" ]]
     then
         koopa_debian_apt_install 'gdebi-core'
         app['gdebi']="$(koopa_debian_locate_gdebi)"
     fi
-    [[ -x "${app['gdebi']}" ]] || exit 1
+    koopa_assert_is_executable "${app['gdebi']}"
     "${app['sudo']}" "${app['gdebi']}" --non-interactive "$@"
     return 0
 }

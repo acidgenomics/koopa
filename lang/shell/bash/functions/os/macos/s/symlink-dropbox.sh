@@ -5,13 +5,11 @@ koopa_macos_symlink_dropbox() {
     # Symlink Dropbox.
     # @note Updated 2021-11-16.
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['kill_all']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     koopa_rm --sudo "${HOME}/Desktop"

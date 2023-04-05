@@ -10,11 +10,9 @@ koopa_merge_pdf() {
     # @seealso
     # - https://github.com/mathiasbynens/dotfiles/blob/main/.aliases
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['gs']="$(koopa_locate_gs)"
-    )
+    app['gs']="$(koopa_locate_gs)"
     [[ -x "${app['gs']}" ]] || exit 1
     koopa_assert_is_file "$@"
     "${app['gs']}" \
