@@ -15,13 +15,13 @@ koopa_lowercase() {
     # > koopa_lowercase 'HELLO WORLD'
     # # hello world
     # """
-    local app str
     local -A app
+    local str
     app['tr']="$(koopa_locate_tr --allow-system)"
     [[ -x "${app['tr']}" ]] || exit 1
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi

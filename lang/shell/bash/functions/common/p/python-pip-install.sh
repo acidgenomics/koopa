@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-05.
     #
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     #
@@ -14,9 +14,10 @@ koopa_python_pip_install() {
     # - https://github.com/pypa/pip/issues/8063
     # - https://stackoverflow.com/a/43560499/3911732
     # """
-    local app dict dl_args pkg pkgs pos
-    koopa_assert_has_args "$#"
     local -A app dict
+    local -a dl_args pkgs pos
+    local pkg
+    koopa_assert_has_args "$#"
     dict['prefix']=''
     pos=()
     while (("$#"))
