@@ -3,7 +3,7 @@
 koopa_salmon_detect_fastq_library_type() {
     # """
     # Detect library type of input FASTQs.
-    # @note Updated 2022-07-27.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html#skipquant
@@ -22,25 +22,20 @@ koopa_salmon_detect_fastq_library_type() {
     # >     'DMSO-1_R1_001.fastq.gz'
     # # U
     # """
-    local app dict quant_args
+    local -A app dict
+    local -a quant_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['head']="$(koopa_locate_head)"
-        ['jq']="$(koopa_locate_jq)"
-        ['salmon']="$(koopa_locate_salmon)"
-    )
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['jq']}" ]] || exit 1
-    [[ -x "${app['salmon']}" ]] || exit 1
-    local -A dict=(
-        ['fastq_r1_file']=''
-        ['fastq_r2_file']=''
-        ['index_dir']=''
-        ['lib_type']='A'
-        ['n']='400000'
-        ['threads']="$(koopa_cpu_count)"
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['jq']="$(koopa_locate_jq --allow-system)"
+    app['salmon']="$(koopa_locate_salmon)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['fastq_r1_file']=''
+    dict['fastq_r2_file']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['n']='400000'
+    dict['threads']="$(koopa_cpu_count)"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))
     do

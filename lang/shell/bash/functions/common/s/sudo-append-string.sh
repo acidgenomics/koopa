@@ -3,24 +3,19 @@
 koopa_sudo_append_string() {
     # """
     # Append a string at end of file as root user.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-04-05.
     #
     # Alternative approach:
     # > sudo sh -c "printf '%s\n' '$string' >> '${file}'"
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['tee']="$(koopa_locate_tee --allow-system)"
-    )
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['tee']}" ]] || exit 1
-    local -A dict=(
-        ['file']=''
-        ['string']=''
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['file']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in

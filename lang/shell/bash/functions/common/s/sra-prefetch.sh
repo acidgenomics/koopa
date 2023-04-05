@@ -3,7 +3,7 @@
 koopa_sra_prefetch() {
     # """
     # Prefetch files from SRA (in parallel).
-    # @note Updated 2022-02-10.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - Conda build of sratools prefetch isn't currently working on macOS.
@@ -14,18 +14,14 @@ koopa_sra_prefetch() {
     # >     --accession-file='srp049596-accession-list.txt' \
     # >     --output-directory='srp049596-prefetch'
     # """
-    local app cmd dict
-    local -A app=(
-        ['parallel']="$(koopa_locate_parallel)"
-        ['prefetch']="$(koopa_locate_prefetch)"
-    )
-    [[ -x "${app['parallel']}" ]] || exit 1
-    [[ -x "${app['prefetch']}" ]] || exit 1
-    local -A dict=(
-        ['acc_file']=''
-        ['jobs']="$(koopa_cpu_count)"
-        ['output_dir']='sra'
-    )
+    local -A app dict
+    local cmd
+    app['parallel']="$(koopa_locate_parallel)"
+    app['prefetch']="$(koopa_locate_prefetch)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['acc_file']=''
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['output_dir']='sra'
     while (("$#"))
     do
         case "$1" in
