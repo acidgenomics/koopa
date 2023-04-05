@@ -3,7 +3,7 @@
 koopa_docker_run() {
     # """
     # Run Docker image.
-    # @note Updated 2023-03-15.
+    # @note Updated 2023-04-05.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -12,18 +12,16 @@ koopa_docker_run() {
     # - https://docs.docker.com/storage/volumes/
     # - https://docs.docker.com/storage/bind-mounts/
     # """
-    local app dict pos run_args
+    local -A app dict
+    local -a pos run_args
     koopa_assert_has_args "$#"
-    local -A app
     app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['docker']}" ]] || exit 1
-    local -A dict=(
-        ['arm']=0
-        ['bash']=0
-        ['bind']=0
-        ['workdir']='/mnt/work'
-        ['x86']=0
-    )
+    dict['arm']=0
+    dict['bash']=0
+    dict['bind']=0
+    dict['workdir']='/mnt/work'
+    dict['x86']=0
     pos=()
     while (("$#"))
     do
