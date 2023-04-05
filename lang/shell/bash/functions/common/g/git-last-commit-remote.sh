@@ -3,7 +3,7 @@
 koopa_git_last_commit_remote() {
     # """
     # Last git commit of remote repository.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > url='https://github.com/acidgenomics/koopa.git'
@@ -13,17 +13,13 @@ koopa_git_last_commit_remote() {
     # @seealso
     # > git ls-remote --help
     # """
-    local app dict url
+    local -A app dict
+    local url
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['git']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    local -A dict
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['ref']='HEAD'
     for url in "$@"
     do

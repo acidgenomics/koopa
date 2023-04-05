@@ -3,7 +3,7 @@
 koopa_git_default_branch() {
     # """
     # Default branch of Git repository.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-05.
     #
     # Alternate approach:
     # > x="$( \
@@ -18,15 +18,11 @@ koopa_git_default_branch() {
     # > koopa_git_default_branch "${HOME}/git/monorepo"
     # # main
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['remote']='origin'
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
