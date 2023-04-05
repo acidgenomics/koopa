@@ -3,21 +3,18 @@
 koopa_linux_bcbio_nextgen_patch_devel() {
     # """
     # Patch bcbio-nextgen development install.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-04-05.
     # """
-    local app cache_files dict
+    local -A app dict
+    local -a cache_files
     koopa_assert_has_no_envs
-    local -A app=(
-        ['bcbio_python']='bcbio_python'
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['tee']}" ]] || exit 1
-    local -A dict=(
-        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
-        ['install_dir']=''
-        ['name']='bcbio-nextgen'
-        ['tmp_log_file']="$(koopa_tmp_log_file)"
-    )
+    app['bcbio_python']="$(koopa_linux_locate_bcbio_python)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['git_dir']="${HOME:?}/git/bcbio-nextgen"
+    dict['install_dir']=''
+    dict['name']='bcbio-nextgen'
+    dict['tmp_log_file']="$(koopa_tmp_log_file)"
     while (("$#"))
     do
         case "$1" in
@@ -53,12 +50,6 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         esac
     done
     koopa_assert_is_dir "${dict['git_dir']}"
-    if [[ ! -x "${app['bcbio_python']}" ]]
-    then
-        koopa_locate_app "${app['bcbio_python']}"
-    fi
-    app['bcbio_python']="$(koopa_realpath "${app['bcbio_python']}")"
-    koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
         dict['install_dir']="$( \
