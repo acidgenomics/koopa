@@ -7,7 +7,6 @@ koopa_docker_ghcr_login() {
     #
     # User ('GHCR_USER') and PAT ('GHCR_PAT') are defined by exported globals.
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"

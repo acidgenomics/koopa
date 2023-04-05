@@ -5,7 +5,6 @@ main() {
     # Install BFG git repo cleaner.
     # @note Updated 2023-03-27.
     # """
-    local app dict
     local -A app dict
     koopa_activate_app 'openjdk'
     app['cat']="$(koopa_locate_cat --allow-system)"

@@ -7,7 +7,6 @@ koopa_docker_ghcr_push() {
     #
     # @usage koopa_docker_ghcr_push 'OWNER' 'IMAGE_NAME' 'VERSION'
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 3
     app['docker']="$(koopa_locate_docker)"

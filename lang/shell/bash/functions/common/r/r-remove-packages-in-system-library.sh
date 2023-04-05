@@ -5,7 +5,6 @@ koopa_r_remove_packages_in_system_library() {
     # Install packages into R site library.
     # @note Updated 2023-04-04.
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"

@@ -5,7 +5,6 @@ koopa_bowtie2_align_per_sample() {
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
     # @note Updated 2022-10-11.
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args "$#"
     app['bowtie2']="$(koopa_locate_bowtie2)"

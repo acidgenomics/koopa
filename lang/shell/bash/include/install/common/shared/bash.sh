@@ -13,7 +13,6 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bash.rb
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config' 'patch'

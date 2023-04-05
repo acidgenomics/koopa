@@ -1663,7 +1663,6 @@ koopa_aws_ecr_login_public() {
 }
 
 koopa_aws_s3_cp_regex() {
-    local app dict
     local -A app dict
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
@@ -1962,7 +1961,6 @@ koopa_aws_s3_find() {
 }
 
 koopa_aws_s3_list_large_files() {
-    local app dict
     local -A app dict
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
@@ -2436,7 +2434,6 @@ koopa_bin_prefix() {
 }
 
 koopa_bioconda_autobump_recipe() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['git']="$(koopa_locate_git --allow-system)"
@@ -2467,7 +2464,6 @@ koopa_boolean_nounset() {
 }
 
 koopa_bowtie2_align_per_sample() {
-    local app dict
     local -A app dict
     koopa_assert_has_args "$#"
     app['bowtie2']="$(koopa_locate_bowtie2)"
@@ -2790,7 +2786,6 @@ koopa_brew_outdated() {
 }
 
 koopa_brew_reset_core_repo() {
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
@@ -4432,7 +4427,6 @@ koopa_conda_env_list() {
 }
 
 koopa_conda_env_prefix() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     app['conda']="$(koopa_locate_conda)"
@@ -4482,7 +4476,6 @@ koopa_conda_env_prefix() {
 }
 
 koopa_conda_pkg_cache_prefix() {
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['conda']="$(koopa_locate_conda)"
@@ -5010,7 +5003,6 @@ koopa_current_flybase_version() {
 }
 
 koopa_current_gencode_version() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     app['curl']="$(koopa_locate_curl --allow-system)"
@@ -5062,7 +5054,6 @@ koopa_current_refseq_version() {
 }
 
 koopa_current_wormbase_version() {
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -5446,7 +5437,6 @@ koopa_disk_gb_free() {
 }
 
 koopa_disk_gb_total() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk --allow-system)"
@@ -5473,7 +5463,6 @@ koopa_disk_gb_total() {
 }
 
 koopa_disk_gb_used() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk --allow-system)"
@@ -5511,7 +5500,6 @@ koopa_disk_pct_free() {
 }
 
 koopa_disk_pct_used() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk --allow-system)"
@@ -5747,7 +5735,6 @@ koopa_docker_build() {
 }
 
 koopa_docker_ghcr_login() {
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"
@@ -5764,7 +5751,6 @@ koopa_docker_ghcr_login() {
 }
 
 koopa_docker_ghcr_push() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 3
     app['docker']="$(koopa_locate_docker)"
@@ -8339,7 +8325,6 @@ koopa_git_rename_master_to_main() {
 }
 
 koopa_git_repo_has_unstaged_changes() {
-    local app dict
     local -A app dict
     app['git']="$(koopa_locate_git)"
     [[ -x "${app['git']}" ]] || exit 1
@@ -18476,7 +18461,6 @@ koopa_r_configure_makevars() {
 }
 
 koopa_r_install_packages_in_site_library() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"
@@ -18686,7 +18670,6 @@ koopa_r_prefix() {
 }
 
 koopa_r_remove_packages_in_system_library() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"
@@ -18752,7 +18735,6 @@ koopa_r_system_library_prefix() {
 }
 
 koopa_r_system_packages_non_base() {
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
@@ -19604,7 +19586,6 @@ koopa_rsync() {
 }
 
 koopa_ruby_gem_user_install_prefix() {
-    local app dict
     local -A app dict
     app['ruby']="$(koopa_locate_ruby)"
     [[ -x "${app['ruby']}" ]] || exit 1

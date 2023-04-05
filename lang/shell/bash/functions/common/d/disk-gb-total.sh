@@ -9,7 +9,6 @@ koopa_disk_gb_total() {
     # > koopa_disk_gb_total '/'
     # # 466
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk --allow-system)"

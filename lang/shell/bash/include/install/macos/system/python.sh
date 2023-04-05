@@ -5,7 +5,6 @@ main() {
     # Install Python framework binary.
     # @note Updated 2022-12-08.
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['installer']="$(koopa_macos_locate_installer)"

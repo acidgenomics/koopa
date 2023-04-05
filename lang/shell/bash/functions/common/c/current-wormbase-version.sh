@@ -9,7 +9,6 @@ koopa_current_wormbase_version() {
     # > koopa_current_wormbase_version
     # # WS283
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"

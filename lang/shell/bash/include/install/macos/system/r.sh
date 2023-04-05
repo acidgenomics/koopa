@@ -24,7 +24,6 @@ main() {
     # - https://cran.r-project.org/bin/macosx/
     # - https://mac.r-project.org/tools/
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     if [[ ! -f '/usr/local/include/omp.h' ]]
