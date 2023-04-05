@@ -6,9 +6,8 @@ koopa_chown() {
     # @note Updated 2021-10-29.
     # """
     local app chown dict pos
-    declare -A app=(
-        ['chown']="$(koopa_locate_chown)"
-    )
+    declare -A app
+    app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || return 1
     declare -A dict=(
         ['dereference']=1

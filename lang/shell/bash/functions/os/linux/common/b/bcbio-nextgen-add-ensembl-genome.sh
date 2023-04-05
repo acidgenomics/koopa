@@ -27,9 +27,8 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # >     --genome_build="${dict['genome_build']}" \
     # >     --organism="${dict['organism']}" \
     # >     --release="${dict['release']}"
-    # > declare -A dict2=(
-    # >     [genome_dir]='homo-sapiens-grch38-ensembl-102'
-    # > )
+    # > declare -A dict2
+    # > dict2['genome_dir']='homo-sapiens-grch38-ensembl-102'
     # # bcbio expects the genome FASTA, not the transcriptome.
     # > dict2['fasta_file']="${genome_dir}/genome/
     # >     Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz"

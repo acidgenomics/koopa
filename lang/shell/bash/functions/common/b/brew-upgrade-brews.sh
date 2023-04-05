@@ -6,10 +6,9 @@ koopa_brew_upgrade_brews() {
     # @note Updated 2022-02-16.
     # """
     local app brew brews
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
+    app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || return 1
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0

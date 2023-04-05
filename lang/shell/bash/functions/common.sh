@@ -2274,10 +2274,9 @@ koopa_aws_s3_mv_to_parent() {
     for file in "${files[@]}"
     do
         local dict2
-        declare -A dict2=(
-            ['bn']="$(koopa_basename "$file")"
-            ['dn1']="$(koopa_dirname "$file")"
-        )
+        declare -A dict2
+        dict2['bn']="$(koopa_basename "$file")"
+        dict2['dn1']="$(koopa_dirname "$file")"
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
         dict2['target']="${dict2['dn2']}/${dict2['bn']}"
         "${app['aws']}" --profile="${dict['profile']}" \
@@ -2395,10 +2394,9 @@ koopa_aws_s3_sync() {
 
 koopa_basename_sans_ext_2() {
     local app file str
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
     [[ -x "${app['cut']}" ]] || return 1
     for file in "$@"
     do
@@ -2454,17 +2452,14 @@ koopa_bin_prefix() {
 
 koopa_bioconda_autobump_recipe() {
     local app dict
+    declare -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['vim']="$(koopa_locate_vim --allow-system)"
-    )
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['vim']="$(koopa_locate_vim --allow-system)"
     [[ -x "${app['git']}" ]] || return 1
     [[ -x "${app['vim']}" ]] || return 1
-    declare -A dict=(
-        ['recipe']="${1:?}"
-        ['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
-    )
+    dict['recipe']="${1:?}"
+    dict['repo']="${HOME:?}/git/github/bioconda/bioconda-recipes"
     dict['branch']="${dict['recipe']/-/_}"
     koopa_assert_is_dir "${dict['repo']}"
     (
@@ -2488,22 +2483,19 @@ koopa_boolean_nounset() {
 
 koopa_bowtie2_align_per_sample() {
     local app dict
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['bowtie2']="$(koopa_locate_bowtie2)"
-        ['tee']="$(koopa_locate_tee)"
-    )
+    app['bowtie2']="$(koopa_locate_bowtie2)"
+    app['tee']="$(koopa_locate_tee)"
     [[ -x "${app['bowtie2']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        ['fastq_r1_file']=''
-        ['fastq_r1_tail']=''
-        ['fastq_r2_file']=''
-        ['fastq_r2_tail']=''
-        ['index_dir']=''
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    dict['fastq_r1_file']=''
+    dict['fastq_r1_tail']=''
+    dict['fastq_r2_file']=''
+    dict['fastq_r2_tail']=''
+    dict['index_dir']=''
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
@@ -2723,18 +2715,15 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
 
 koopa_bowtie2_index() {
     local app dict index_args
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['bowtie2_build']="$(koopa_locate_bowtie2_build)"
-        ['tee']="$(koopa_locate_tee)"
-    )
+    app['bowtie2_build']="$(koopa_locate_bowtie2_build)"
+    app['tee']="$(koopa_locate_tee)"
     [[ -x "${app['bowtie2_build']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        ['genome_fasta_file']=''
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    dict['genome_fasta_file']=''
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
@@ -2782,10 +2771,9 @@ koopa_bowtie2_index() {
 
 koopa_brew_cleanup() {
     local app
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
+    app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || return 1
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
@@ -2795,10 +2783,9 @@ koopa_brew_cleanup() {
 
 koopa_brew_dump_brewfile() {
     local app today
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
+    app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || return 1
     today="$(koopa_today)"
     "${app['brew']}" bundle dump \
@@ -2809,10 +2796,9 @@ koopa_brew_dump_brewfile() {
 
 koopa_brew_outdated() {
     local app x
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
+    app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || return 1
     x="$("${app['brew']}" outdated --quiet)"
     koopa_print "$x"
@@ -2820,24 +2806,27 @@ koopa_brew_outdated() {
 }
 
 koopa_brew_reset_core_repo() {
-    local app branch origin prefix repo
+    local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
+    app['brew']="$(koopa_locate_brew)"
+    app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['git']}" ]] || return 1
-    repo='homebrew/core'
-    origin='origin'
+    dict['repo']='homebrew/core'
+    dict['origin']='origin'
+    dict['prefix']="$("${app['brew']}" --repo "${dict['repo']}")"
+    koopa_assert_is_dir "${dict['prefix']}"
     (
-        prefix="$("${app['brew']}" --repo "$repo")"
-        koopa_assert_is_dir "$prefix"
-        koopa_cd "$prefix"
+        koopa_cd "${dict['prefix']}"
         branch="$(koopa_git_default_branch "${PWD:?}")"
-        "${app['git']}" checkout -q "$branch"
-        "${app['git']}" branch -q "$branch" -u "${origin}/${branch}"
-        "${app['git']}" reset -q --hard "${origin}/${branch}"
+        "${app['git']}" checkout -q "${dict['branch']}"
+        "${app['git']}" branch -q \
+            "${dict['branch']}" \
+            -u "${dict['origin']}/${dict['branch']}"
+        "${app['git']}" reset -q \
+            --hard \
+            "${dict['origin']}/${dict['branch']}"
         "${app['git']}" branch -vv
     )
     return 0
@@ -2864,11 +2853,10 @@ koopa_brew_reset_permissions() {
 
 koopa_brew_uninstall_all_brews() {
     local app
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['wc']="$(koopa_locate_wc)"
-    )
+    app['brew']="$(koopa_locate_brew)"
+    app['wc']="$(koopa_locate_wc)"
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['wc']}" ]] || return 1
     while [[ "$("${app['brew']}" list --formulae | "${app['wc']}" -l)" -gt 0 ]]
@@ -2885,10 +2873,9 @@ koopa_brew_uninstall_all_brews() {
 
 koopa_brew_upgrade_brews() {
     local app brew brews
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
+    app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || return 1
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0
@@ -2920,11 +2907,10 @@ koopa_brew_upgrade_brews() {
 
 koopa_brew_version() {
     local app brew
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['jq']="$(koopa_locate_jq)"
-    )
+    app['brew']="$(koopa_locate_brew)"
+    app['jq']="$(koopa_locate_jq)"
     [[ -x "${app['brew']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     for brew in "$@"
@@ -2942,11 +2928,10 @@ koopa_brew_version() {
 
 koopa_cache_functions_dir() {
     local app prefix
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['grep']="$(koopa_locate_grep --allow-system)"
-        ['perl']="$(koopa_locate_perl --allow-system)"
-    )
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['grep']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
     for prefix in "$@"
@@ -3230,9 +3215,8 @@ koopa_check_system() {
 
 koopa_chgrp() {
     local app chgrp dict pos
-    declare -A app=(
-        ['chgrp']="$(koopa_locate_chgrp)"
-    )
+    declare -A app
+    app['chgrp']="$(koopa_locate_chgrp)"
     [[ -x "${app['chgrp']}" ]] || return 1
     declare -A dict=(
         ['sudo']=0
@@ -3271,9 +3255,8 @@ koopa_chgrp() {
 
 koopa_chmod() {
     local app chmod dict pos
-    declare -A app=(
-        ['chmod']="$(koopa_locate_chmod)"
-    )
+    declare -A app
+    app['chmod']="$(koopa_locate_chmod)"
     [[ -x "${app['chmod']}" ]] || return 1
     declare -A dict=(
         ['recursive']=0
@@ -3322,9 +3305,8 @@ koopa_chmod() {
 
 koopa_chown() {
     local app chown dict pos
-    declare -A app=(
-        ['chown']="$(koopa_locate_chown)"
-    )
+    declare -A app
+    app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || return 1
     declare -A dict=(
         ['dereference']=1
@@ -4277,20 +4259,17 @@ koopa_conda_bin() {
 
 koopa_conda_create_env() {
     local app dict pos string
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
+    app['conda']="$(koopa_locate_conda)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1
-    declare -A dict=(
-        ['env_prefix']="$(koopa_conda_env_prefix)"
-        ['force']=0
-        ['latest']=0
-        ['prefix']=''
-        ['yaml_file']=''
-    )
+    dict['env_prefix']="$(koopa_conda_env_prefix)"
+    dict['force']=0
+    dict['latest']=0
+    dict['prefix']=''
+    dict['yaml_file']=''
     pos=()
     while (("$#"))
     do
@@ -4441,18 +4420,15 @@ koopa_conda_deactivate() {
 
 koopa_conda_env_latest_version() {
     local app dict str
+    declare -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['conda']="$(koopa_locate_conda)"
-        ['tail']="$(koopa_locate_tail)"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['conda']="$(koopa_locate_conda)"
+    app['tail']="$(koopa_locate_tail)"
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1
-    declare -A dict=(
-        ['env_name']="${1:?}"
-    )
+    dict['env_name']="${1:?}"
     str="$( \
         "${app['conda']}" search --quiet "${dict['env_name']}" \
             | "${app['tail']}" -n 1 \
@@ -4465,10 +4441,9 @@ koopa_conda_env_latest_version() {
 
 koopa_conda_env_list() {
     local app str
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-    )
+    app['conda']="$(koopa_locate_conda)"
     [[ -x "${app['conda']}" ]] || return 1
     str="$("${app['conda']}" env list --json --quiet)"
     koopa_print "$str"
@@ -4477,18 +4452,16 @@ koopa_conda_env_list() {
 
 koopa_conda_env_prefix() {
     local app dict
+    declare -A app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-        ['python']="$(koopa_locate_conda_python)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
-        ['tail']="$(koopa_locate_tail --allow-system)"
-    )
+    app['conda']="$(koopa_locate_conda)"
+    app['python']="$(koopa_locate_conda_python)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    app['tail']="$(koopa_locate_tail --allow-system)"
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
     [[ -x "${app['tail']}" ]] || return 1
-    declare -A dict
     dict['env_name']="${1:-}"
     dict['env_prefix']="$( \
         "${app['conda']}" info --json \
@@ -4529,14 +4502,12 @@ koopa_conda_env_prefix() {
 
 koopa_conda_pkg_cache_prefix() {
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-        ['python']="$(koopa_locate_conda_python)"
-    )
+    app['conda']="$(koopa_locate_conda)"
+    app['python']="$(koopa_locate_conda_python)"
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict
     dict['prefix']="$( \
         "${app['conda']}" info --json \
         | "${app['python']}" -c \
@@ -5911,10 +5882,9 @@ koopa_docker_is_build_recent() {
     for image in "$@"
     do
         local dict2
-        declare -A dict2=(
-            ['current']="$("${app['date']}" -u '+%s')"
-            ['image']="$image"
-        )
+        declare -A dict2
+        dict['current']="$("${app['date']}" -u '+%s')"
+        dict['image']="$image"
         "${app['docker']}" pull "${dict2['image']}" >/dev/null
         dict2['json']="$( \
             "${app['docker']}" inspect \
