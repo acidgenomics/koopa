@@ -10037,40 +10037,37 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
 }
 
 koopa_install_app() {
-    local app bash_vars bin_arr bool dict env_vars i man1_arr path_arr pos
+    local -A app bool dict
+    local -a bash_vars bin_arr env_vars man1_arr path_arr pos
+    local i
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
-    local -A app
-    local -A bool=(
-        ['auto_prefix']=0
-        ['binary']=0
-        ['copy_log_files']=0
-        ['deps']=1
-        ['link_in_bin']=''
-        ['link_in_man1']=''
-        ['link_in_opt']=''
-        ['prefix_check']=1
-        ['private']=0
-        ['push']=0
-        ['quiet']=0
-        ['reinstall']=0
-        ['subshell']=1
-        ['update_ldconfig']=0
-        ['verbose']=0
-    )
-    local -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['cpu_count']="$(koopa_cpu_count)"
-        ['installer']=''
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['mode']='shared'
-        ['name']=''
-        ['platform']='common'
-        ['prefix']=''
-        ['version']=''
-        ['version_key']=''
-    )
+    bool['auto_prefix']=0
+    bool['binary']=0
+    bool['copy_log_files']=0
+    bool['deps']=1
+    bool['link_in_bin']=''
+    bool['link_in_man1']=''
+    bool['link_in_opt']=''
+    bool['prefix_check']=1
+    bool['private']=0
+    bool['push']=0
+    bool['quiet']=0
+    bool['reinstall']=0
+    bool['subshell']=1
+    bool['update_ldconfig']=0
+    bool['verbose']=0
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['cpu_count']="$(koopa_cpu_count)"
+    dict['installer']=''
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['mode']='shared'
+    dict['name']=''
+    dict['platform']='common'
+    dict['prefix']=''
+    dict['version']=''
+    dict['version_key']=''
     pos=()
     while (("$#"))
     do
