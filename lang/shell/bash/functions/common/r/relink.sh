@@ -3,16 +3,11 @@
 koopa_relink() {
     # """
     # Re-create a symbolic link dynamically, if broken.
-    # @note Updated 2022-05-16.
+    # @note Updated 2023-04-05.
     # """
-    local app dict ln pos rm sudo
-    local -A app=(
-        ['ln']='koopa_ln'
-        ['rm']='koopa_rm'
-    )
-    local -A dict=(
-        ['sudo']=0
-    )
+    local -A dict
+    local -a ln pos rm sudo
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -35,8 +30,8 @@ koopa_relink() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 2
-    ln=("${app['ln']}")
-    rm=("${app['rm']}")
+    ln=('koopa_ln')
+    rm=('koopa_rm')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         ln+=('--sudo')
@@ -44,7 +39,6 @@ koopa_relink() {
     fi
     dict['source_file']="${1:?}"
     dict['dest_file']="${2:?}"
-    # Keep this check relaxed (i.e. in case dotfiles haven't been cloned).
     [[ -e "${dict['source_file']}" ]] || return 0
     [[ -L "${dict['dest_file']}" ]] && return 0
     "${rm[@]}" "${dict['dest_file']}"

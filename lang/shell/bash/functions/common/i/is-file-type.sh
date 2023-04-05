@@ -3,17 +3,17 @@
 koopa_is_file_type() {
     # """
     # Does the input exist and match a file type extension?
-    # @note Updated 2022-02-17.
+    # @note Updated 2023-04-05.
     #
     # @usage koopa_is_file_type --ext=EXT FILE...
     #
     # @examples
     # > koopa_is_file_type --ext='csv' 'aaa.csv' 'bbb.csv'
     # """
-    local dict file pos
-    local -A dict=(
-        ['ext']=''
-    )
+    local -A dict
+    local -a pos
+    local file
+    dict['ext']=''
     pos=()
     while (("$#"))
     do

@@ -3,7 +3,7 @@
 koopa_mv() {
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-04-05.
     #
     # The '-t' flag is not supported for BSD variant.
     #
@@ -15,20 +15,15 @@ koopa_mv() {
     # * '--strip-trailing-slashes'
     #
     # """
-    local app dict mkdir mv mv_args pos rm
-    local -A app=(
-        ['mv']="$(koopa_locate_mv --allow-system)"
-        ['mkdir']='koopa_mkdir'
-        ['rm']='koopa_rm'
-    )
-    # macOS gmv currently has issues on NFS shares.
+    local -A app dict
+    local -a mkdir mv mv_args pos rm
+    app['mv']="$(koopa_locate_mv --allow-system)"
+    # GNU mv currently has issues with NFS shares on macOS.
     koopa_is_macos && app['mv']='/bin/mv'
-    [[ -x "${app['mv']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['target_dir']=''
-        ['verbose']=0
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
+    dict['target_dir']=''
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -74,13 +69,13 @@ koopa_mv() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        mkdir=("${app['mkdir']}" '--sudo')
+        mkdir=('koopa_mkdir' '--sudo')
         mv=("${app['sudo']}" "${app['mv']}")
-        rm=("${app['rm']}" '--sudo')
+        rm=('koopa_rm' '--sudo')
     else
-        mkdir=("${app['mkdir']}")
+        mkdir=('koopa_mkdir')
         mv=("${app['mv']}")
-        rm=("${app['rm']}")
+        rm=('koopa_rm')
     fi
     mv_args=('-f')
     [[ "${dict['verbose']}" -eq 1 ]] && mv_args+=('-v')
