@@ -3,7 +3,7 @@
 koopa_debian_apt_add_key() {
     # """
     # Add a GPG key (and/or keyring) for apt.
-    # @note Updated 2022-07-18.
+    # @note Updated 2023-04-05.
     #
     # @section Hardening against insecure URL failure:
     #
@@ -31,21 +31,15 @@ koopa_debian_apt_add_key() {
     # - https://github.com/docker/docker.github.io/issues/
     #     11625#issuecomment-751388087
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        # NOTE Will run into dirmngr missing issue if using koopa gpg here.
-        ['gpg']='/usr/bin/gpg'
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gpg']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    local -A dict=(
-        ['name']=''
-        ['prefix']="$(koopa_debian_apt_key_prefix)"
-        ['url']=''
-    )
+    app['gpg']="$(koopa_locate_gpg --only-system)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']=''
+    dict['prefix']="$(koopa_debian_apt_key_prefix)"
+    dict['url']=''
     while (("$#"))
     do
         case "$1" in
