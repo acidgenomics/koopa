@@ -135,16 +135,16 @@ koopa_grep() {
             then
                 dict['engine']='grep'
                 app['grep']="$(koopa_locate_grep --allow-system)"
-                [[ -x "${app['grep']}" ]] || return 1
+                [[ -x "${app['grep']}" ]] || exit 1
             fi
             ;;
         'grep')
             app['grep']="$(koopa_locate_grep --allow-system)"
-            [[ -x "${app['grep']}" ]] || return 1
+            [[ -x "${app['grep']}" ]] || exit 1
             ;;
         'rg')
             app['grep']="$(koopa_locate_ripgrep)"
-            [[ -x "${app['grep']}" ]] || return 1
+            [[ -x "${app['grep']}" ]] || exit 1
             ;;
     esac
     # Piped input using stdin (string mode).

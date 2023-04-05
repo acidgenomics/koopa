@@ -10,8 +10,8 @@ koopa_git_submodule_init() {
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['git']}" ]] || exit 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"

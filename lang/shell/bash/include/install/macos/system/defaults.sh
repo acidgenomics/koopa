@@ -23,16 +23,16 @@ main() {
     app['pmset']="$(koopa_macos_locate_pmset)"
     app['sudo']="$(koopa_locate_sudo)"
     app['tmutil']="$(koopa_macos_locate_tmutil)"
-    # > [[ -x "${app['scutil']}" ]] || return 1
-    # > [[ -x "${app['systemsetup']}" ]] || return 1
-    [[ -x "${app['chflags']}" ]] || return 1
-    [[ -x "${app['defaults']}" ]] || return 1
-    [[ -x "${app['kill_all']}" ]] || return 1
-    [[ -x "${app['mdutil']}" ]] || return 1
-    [[ -x "${app['nvram']}" ]] || return 1
-    [[ -x "${app['pmset']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['tmutil']}" ]] || return 1
+    # > [[ -x "${app['scutil']}" ]] || exit 1
+    # > [[ -x "${app['systemsetup']}" ]] || exit 1
+    [[ -x "${app['chflags']}" ]] || exit 1
+    [[ -x "${app['defaults']}" ]] || exit 1
+    [[ -x "${app['kill_all']}" ]] || exit 1
+    [[ -x "${app['mdutil']}" ]] || exit 1
+    [[ -x "${app['nvram']}" ]] || exit 1
+    [[ -x "${app['pmset']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['tmutil']}" ]] || exit 1
     koopa_h2 'Startup and Lock Screen'
     # For reference, here's how to set computer name from the command line.
     # > local comp_name

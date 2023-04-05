@@ -36,11 +36,11 @@ main() {
         ['python']="$(koopa_locate_python311)"
         ['vim']="$(koopa_locate_vim)"
     )
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['less']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
+    [[ -x "${app['less']}" ]] || exit 1
+    [[ -x "${app['make']}" ]] || exit 1
+    [[ -x "${app['perl']}" ]] || exit 1
+    [[ -x "${app['python']}" ]] || exit 1
     declare -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
         ['expat']="$(koopa_app_prefix 'expat')"

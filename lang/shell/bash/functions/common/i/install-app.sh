@@ -233,7 +233,7 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
             app['sudo']="$(koopa_locate_sudo)"
-            [[ -x "${app['sudo']}" ]] || return 1
+            [[ -x "${app['sudo']}" ]] || exit 1
             # -v, --validate
             "${app['sudo']}" -v
             ;;
@@ -339,9 +339,9 @@ ${dict['version2']}"
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
-        [[ -x "${app['bash']}" ]] || return 1
-        [[ -x "${app['env']}" ]] || return 1
-        [[ -x "${app['tee']}" ]] || return 1
+        [[ -x "${app['bash']}" ]] || exit 1
+        [[ -x "${app['env']}" ]] || exit 1
+        [[ -x "${app['tee']}" ]] || exit 1
         # Configure 'PATH' string.
         path_arr=(
             '/usr/bin'

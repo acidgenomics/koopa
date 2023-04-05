@@ -46,7 +46,7 @@ main() {
     )
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['python']}" ]] || exit 1
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['fmt']="$(koopa_app_prefix 'fmt')"

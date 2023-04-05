@@ -18,7 +18,7 @@ koopa_rsem_index() {
     declare -A app=(
         ['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     )
-    [[ -x "${app['rsem_prepare_reference']}" ]] || return 1
+    [[ -x "${app['rsem_prepare_reference']}" ]] || exit 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''

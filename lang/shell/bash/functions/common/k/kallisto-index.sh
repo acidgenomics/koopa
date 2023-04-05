@@ -18,7 +18,7 @@ koopa_kallisto_index() {
     declare -A app=(
         ['kallisto']="$(koopa_locate_kallisto)"
     )
-    [[ -x "${app['kallisto']}" ]] || return 1
+    [[ -x "${app['kallisto']}" ]] || exit 1
     declare -A dict=(
         ['fasta_pattern']='\.(fa|fasta|fna)'
         ['kmer_size']=31

@@ -11,7 +11,7 @@ koopa_is_anaconda() {
         ['conda']="${1:-}"
     )
     [[ -z "${app['conda']}" ]] && app['conda']="$(koopa_locate_conda)"
-    [[ -x "${app['conda']}" ]] || return 1
+    [[ -x "${app['conda']}" ]] || exit 1
     declare -A dict=(
         ['prefix']="$(koopa_parent_dir --num=2 "${app['conda']}")"
     )

@@ -24,8 +24,8 @@ main() {
         ['make']="$(koopa_locate_make)"
         ['python']="$(koopa_locate_python311 --realpath)"
     )
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
+    [[ -x "${app['python']}" ]] || exit 1
     declare -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libxcb'

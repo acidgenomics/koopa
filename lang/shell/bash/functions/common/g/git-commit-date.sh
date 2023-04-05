@@ -19,9 +19,9 @@ koopa_git_commit_date() {
         ['git']="$(koopa_locate_git --allow-system)"
         ['xargs']="$(koopa_locate_xargs --allow-system)"
     )
-    [[ -x "${app['date']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['date']}" ]] || exit 1
+    [[ -x "${app['git']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.

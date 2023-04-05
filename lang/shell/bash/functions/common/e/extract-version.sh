@@ -12,7 +12,7 @@ koopa_extract_version() {
     local app arg dict
     declare -A app
     app['head']="$(koopa_locate_head --allow-system)"
-    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || exit 1
     declare -A dict=(
         ['pattern']="$(koopa_version_pattern)"
     )

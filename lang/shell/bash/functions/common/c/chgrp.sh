@@ -8,7 +8,7 @@ koopa_chgrp() {
     local app chgrp dict pos
     declare -A app
     app['chgrp']="$(koopa_locate_chgrp)"
-    [[ -x "${app['chgrp']}" ]] || return 1
+    [[ -x "${app['chgrp']}" ]] || exit 1
     declare -A dict=(
         ['sudo']=0
     )
@@ -37,7 +37,7 @@ koopa_chgrp() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
+        [[ -x "${app['sudo']}" ]] || exit 1
         chgrp=("${app['sudo']}" "${app['chgrp']}")
     else
         chgrp=("${app['chgrp']}")

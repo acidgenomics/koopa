@@ -10,7 +10,7 @@ koopa_gpg_restart() {
     declare -A app=(
         ['gpgconf']="$(koopa_locate_gpgconf)"
     )
-    [[ -x "${app['gpgconf']}" ]] || return 1
+    [[ -x "${app['gpgconf']}" ]] || exit 1
     "${app['gpgconf']}" --kill 'gpg-agent'
     return 0
 }

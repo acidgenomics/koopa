@@ -46,7 +46,7 @@ koopa_is_admin() {
     # Note that this step is very slow for Active Directory domain accounts.
     declare -A app
     app['groups']="$(koopa_locate_groups --allow-system)"
-    [[ -x "${app['groups']}" ]] || return 1
+    [[ -x "${app['groups']}" ]] || exit 1
     declare -A dict=(
         ['groups']="$("${app['groups']}")"
         ['pattern']='\b(admin|root|sudo|wheel)\b'

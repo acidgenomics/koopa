@@ -14,8 +14,8 @@ main() {
         ['nim']="$(koopa_locate_nim)"
         ['nimble']="$(koopa_locate_nimble)"
     )
-    [[ -x "${app['nim']}" ]] || return 1
-    [[ -x "${app['nimble']}" ]] || return 1
+    [[ -x "${app['nim']}" ]] || exit 1
+    [[ -x "${app['nimble']}" ]] || exit 1
     declare -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -23,7 +23,7 @@ koopa_cp() {
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
     )
-    [[ -x "${app['cp']}" ]] || return 1
+    [[ -x "${app['cp']}" ]] || exit 1
     declare -A dict=(
         ['sudo']=0
         ['symlink']=0
@@ -81,7 +81,7 @@ koopa_cp() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
+        [[ -x "${app['sudo']}" ]] || exit 1
         cp=("${app['sudo']}" "${app['cp']}")
         mkdir=("${app['mkdir']}" '--sudo')
         rm=("${app['rm']}" '--sudo')

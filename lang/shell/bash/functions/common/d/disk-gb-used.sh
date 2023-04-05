@@ -17,10 +17,10 @@ koopa_disk_gb_used() {
         ['head']="$(koopa_locate_head --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['df']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['df']}" ]] || exit 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict
     dict['disk']="${1:?}"
     koopa_assert_is_readable "${dict['disk']}"

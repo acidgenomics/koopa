@@ -10,7 +10,7 @@ koopa_entab() {
     declare -A app=(
         ['vim']="$(koopa_locate_vim)"
     )
-    [[ -x "${app['vim']}" ]] || return 1
+    [[ -x "${app['vim']}" ]] || exit 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do

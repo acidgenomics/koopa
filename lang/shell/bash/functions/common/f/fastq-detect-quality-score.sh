@@ -26,9 +26,9 @@ koopa_fastq_detect_quality_score() {
         ['head']="$(koopa_locate_head --allow-system)"
         ['od']="$(koopa_locate_od --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['od']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['od']}" ]] || exit 1
     for file in "$@"
     do
         local str

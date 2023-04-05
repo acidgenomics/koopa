@@ -39,8 +39,8 @@ koopa_debian_apt_add_key() {
         ['gpg']='/usr/bin/gpg'
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['gpg']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['gpg']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['name']=''
         ['prefix']="$(koopa_debian_apt_key_prefix)"

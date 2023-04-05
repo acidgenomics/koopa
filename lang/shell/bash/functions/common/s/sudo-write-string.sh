@@ -15,8 +15,8 @@ koopa_sudo_write_string() {
         ['sudo']="$(koopa_locate_sudo)"
         ['tee']="$(koopa_locate_tee --allow-system)"
     )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['file']=''
         ['string']=''

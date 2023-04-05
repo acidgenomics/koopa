@@ -14,7 +14,7 @@ main() {
         'pkg-config'
     declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
     declare -A dict=(
         ['compress_ext']='bz2'
         ['gcrypt_url']="$(koopa_gcrypt_url)"
@@ -146,7 +146,7 @@ gnupg_patch_dirmngr() {
     local app
     declare -A app
     app['sed']="$(koopa_locate_sed)"
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['sed']}" ]] || exit 1
     "${app['sed']}" \
         -e '/ks_ldap_free_state/i #if USE_LDAP' \
         -e '/ks_get_state =/a #endif' \

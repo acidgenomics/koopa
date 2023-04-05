@@ -14,7 +14,7 @@ main() {
     koopa_activate_app --build-only 'go'
     declare -A app
     app['go']="$(koopa_locate_go)"
-    [[ -x "${app['go']}" ]] || return 1
+    [[ -x "${app['go']}" ]] || exit 1
     declare -A dict=(
         ['gocache']="$(koopa_init_dir 'gocache')"
         ['gopath']="$(koopa_init_dir 'go')"

@@ -56,9 +56,9 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     )
     # FIXME Add step to harden against bcbio_setup_genome being present in
     # path here.
-    # > [[ -x "${app['bcbio_setup_genome']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['touch']}" ]] || return 1
+    # > [[ -x "${app['bcbio_setup_genome']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['touch']}" ]] || exit 1
     declare -A dict=(
         ['cores']="$(koopa_cpu_count)"
         ['fasta_file']=''

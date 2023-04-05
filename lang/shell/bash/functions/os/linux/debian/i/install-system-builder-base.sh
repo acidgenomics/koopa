@@ -21,11 +21,11 @@ koopa_debian_install_system_builder_base() {
         ['echo']="$(koopa_locate_echo --allow-system)"
         ['sudo']="$(koopa_locate_sudo --allow-system)"
     )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['debconf_set_selections']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['apt_get']}" ]] || exit 1
+    [[ -x "${app['cat']}" ]] || exit 1
+    [[ -x "${app['debconf_set_selections']}" ]] || exit 1
+    [[ -x "${app['echo']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" update
     "${app['sudo']}" \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
@@ -74,10 +74,10 @@ END
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
-    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
-    [[ -x "${app['locale_gen']}" ]] || return 1
-    [[ -x "${app['timedatectl']}" ]] || return 1
-    [[ -x "${app['update_locale']}" ]] || return 1
+    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
+    [[ -x "${app['locale_gen']}" ]] || exit 1
+    [[ -x "${app['timedatectl']}" ]] || exit 1
+    [[ -x "${app['update_locale']}" ]] || exit 1
     "${app['sudo']}" "${app['apt_get']}" autoremove --yes
     "${app['sudo']}" "${app['apt_get']}" clean
     "${app['sudo']}" "${app['timedatectl']}" set-timezone 'America/New_York'

@@ -14,9 +14,9 @@ koopa_r_prefix() {
         ['r']="${1:-}"
     )
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
     app['rscript']="${app['r']}script"
-    [[ -x "${app['rscript']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || exit 1
     declare -A dict
     dict['prefix']="$( \
         "${app['rscript']}" \

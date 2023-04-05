@@ -39,9 +39,9 @@ main() {
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['cmake']="$(koopa_locate_cmake --realpath)"
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['cmake']}" ]] || exit 1
+    [[ -x "${app['make']}" ]] || exit 1
     dict['arch']="$(koopa_arch)"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"

@@ -20,9 +20,9 @@ koopa_git_last_commit_remote() {
         ['git']="$(koopa_locate_git --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['git']}" ]] || exit 1
+    [[ -x "${app['head']}" ]] || exit 1
     declare -A dict
     dict['ref']='HEAD'
     for url in "$@"

@@ -28,8 +28,8 @@ main() {
         ['bundle']="$(koopa_locate_bundle)"
         ['ruby']="$(koopa_locate_ruby)"
     )
-    [[ -x "${app['bundle']}" ]] || return 1
-    [[ -x "${app['ruby']}" ]] || return 1
+    [[ -x "${app['bundle']}" ]] || exit 1
+    [[ -x "${app['ruby']}" ]] || exit 1
     app['ruby']="$(koopa_realpath "${app['ruby']}")"
     declare -A dict=(
         ['gemfile']='Gemfile'

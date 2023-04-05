@@ -9,7 +9,7 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
-    [[ -x "${app['bash']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
     declare -A dict=(
         ['arch']="$(koopa_arch)"
         ['koopa_prefix']="$(koopa_koopa_prefix)"

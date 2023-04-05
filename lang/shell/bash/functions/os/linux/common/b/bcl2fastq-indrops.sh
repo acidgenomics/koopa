@@ -11,8 +11,8 @@ koopa_linux_bcl2fastq_indrops() {
         ['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
         ['tee']="$(koopa_locate_tee)"
     )
-    [[ -x "${app['bcl2fastq']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['bcl2fastq']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['log_file']='bcl2fastq-indrops.log'
     )

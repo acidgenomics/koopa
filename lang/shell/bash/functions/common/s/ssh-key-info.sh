@@ -13,8 +13,8 @@ koopa_ssh_key_info() {
         ['ssh_keygen']="$(koopa_locate_ssh_keygen)"
         ['uniq']="$(koopa_locate_uniq)"
     )
-    [[ -x "${app['ssh_keygen']}" ]] || return 1
-    [[ -x "${app['uniq']}" ]] || return 1
+    [[ -x "${app['ssh_keygen']}" ]] || exit 1
+    [[ -x "${app['uniq']}" ]] || exit 1
     declare -A dict=(
         ['prefix']="${HOME:?}/.ssh"
         ['stem']='id_'

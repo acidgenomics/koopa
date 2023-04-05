@@ -14,7 +14,7 @@ koopa_current_wormbase_version() {
     declare -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
     url="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
     str="$( \

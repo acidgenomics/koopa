@@ -14,8 +14,8 @@ koopa_github_latest_release() {
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['sed']="$(koopa_locate_sed)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     for repo in "$@"
     do
         local dict

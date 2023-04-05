@@ -32,7 +32,7 @@ koopa_star_align_paired_end_per_sample() {
     local align_args app dict
     declare -A app
     app['star']="$(koopa_locate_star)"
-    [[ -x "${app['star']}" ]] || return 1
+    [[ -x "${app['star']}" ]] || exit 1
     declare -A dict=(
         # e.g. 'default'
         ['aws_profile']=''
@@ -183,7 +183,7 @@ to '${dict['tmp_fastq_r2_file']}"
     if [[ -n "${dict['aws_s3_uri']}" ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
-        [[ -x "${app['aws']}" ]] || return 1
+        [[ -x "${app['aws']}" ]] || exit 1
         koopa_alert "Syncing '${dict['output_dir']}' \
 to '${dict['aws_s3_uri']}'."
         "${app['aws']}" --profile="${dict['aws_profile']}" \

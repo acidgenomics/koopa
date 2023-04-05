@@ -45,9 +45,9 @@ koopa_aws_s3_ls() {
     app['awk']="$(koopa_locate_awk)"
     app['aws']="$(koopa_locate_aws)"
     app['sed']="$(koopa_locate_sed)"
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
     dict['recursive']=0

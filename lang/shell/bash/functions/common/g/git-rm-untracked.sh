@@ -9,7 +9,7 @@ koopa_git_rm_untracked() {
     declare -A app=(
         ['git']="$(koopa_locate_git --allow-system)"
     )
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     repos=("$@")
     koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
     koopa_assert_is_dir "${repos[@]}"

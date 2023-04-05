@@ -14,7 +14,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go' 'make' 'pkg-config'
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
+    [[ -x "${app['make']}" ]] || exit 1
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['name']='apptainer'

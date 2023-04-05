@@ -12,7 +12,7 @@ koopa_r_packages_prefix() {
     local app dict
     declare -A app
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
     declare -A dict
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['str']="${dict['r_prefix']}/site-library"

@@ -12,7 +12,7 @@ koopa_git_latest_tag() {
     local app
     declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.

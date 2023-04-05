@@ -10,7 +10,7 @@ koopa_macos_finder_hide() {
     declare -A app=(
         ['setfile']="$(koopa_macos_locate_setfile)"
     )
-    [[ -x "${app['setfile']}" ]] || return 1
+    [[ -x "${app['setfile']}" ]] || exit 1
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a V "$@"
     return 0

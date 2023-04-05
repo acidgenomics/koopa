@@ -61,7 +61,7 @@ refs/tags/${dict['file']}"
         --prefix "${dict['conda_env_prefix']}"
     koopa_conda_deactivate
     app['poetry']="${dict['conda_env_prefix']}/bin/poetry"
-    [[ -x "${app['poetry']}" ]] || return 1
+    [[ -x "${app['poetry']}" ]] || exit 1
     dict['poetry_config_file']='poetry.toml'
     koopa_assert_is_not_file "${dict['poetry_config_file']}"
     "${app['poetry']}" config \

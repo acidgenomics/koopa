@@ -14,7 +14,7 @@ koopa_git_repo_needs_pull_or_push() {
     koopa_assert_has_args "$#"
     declare -A app
     app['git']="$(koopa_locate_git)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     (
         for prefix in "$@"
         do

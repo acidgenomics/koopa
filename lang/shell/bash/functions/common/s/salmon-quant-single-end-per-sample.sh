@@ -24,7 +24,7 @@ koopa_salmon_quant_single_end_per_sample() {
     declare -A app=(
         ['salmon']="$(koopa_locate_salmon)"
     )
-    [[ -x "${app['salmon']}" ]] || return 1
+    [[ -x "${app['salmon']}" ]] || exit 1
     declare -A dict=(
         ['bootstraps']=30
         # e.g. 'sample1.fastq.gz'.

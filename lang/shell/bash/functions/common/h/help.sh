@@ -14,8 +14,8 @@ koopa_help() {
         ['head']="$(koopa_locate_head --allow-system)"
         ['man']="$(koopa_locate_man --allow-system)"
     )
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['man']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['man']}" ]] || exit 1
     "${app['head']}" -n 10 "${dict['man_file']}" \
         | koopa_str_detect_fixed --pattern='.TH ' \
         || return 1

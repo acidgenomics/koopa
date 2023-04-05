@@ -17,7 +17,7 @@ main() {
     koopa_assert_has_no_args "$#"
     declare -A app
     app['brew']="$(koopa_locate_brew)"
-    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
     declare -A dict
     dict['brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
     koopa_assert_is_file "${dict['brewfile']}"

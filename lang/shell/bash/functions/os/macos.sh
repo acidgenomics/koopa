@@ -9,9 +9,9 @@ koopa_macos_app_version() {
         ['plutil']="$(koopa_macos_locate_plutil)"
         ['tr']="$(koopa_locate_tr --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['plutil']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['plutil']}" ]] || exit 1
+    [[ -x "${app['tr']}" ]] || exit 1
     for app in "$@"
     do
         plist="/Applications/${app}.app/Contents/Info.plist"
@@ -35,8 +35,8 @@ koopa_macos_brew_cask_outdated() {
         ['brew']="$(koopa_locate_brew)"
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
+    [[ -x "${app['cut']}" ]] || exit 1
     declare -A dict
     dict['keep_latest']=0
     dict['tmp_file']="$(koopa_tmp_file)"
@@ -68,8 +68,8 @@ koopa_macos_brew_cask_quarantine_fix() {
         ['sudo']="$(koopa_locate_sudo)"
         ['xattr']="$(koopa_macos_locate_xattr)"
     )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['xattr']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['xattr']}" ]] || exit 1
     "${app['sudo']}" "${app['xattr']}" -r -d \
         'com.apple.quarantine' \
         '/Applications/'*'.app'
@@ -82,7 +82,7 @@ koopa_macos_brew_upgrade_casks() {
     declare -A app=(
         ['brew']="$(koopa_locate_brew)"
     )
-    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
     koopa_is_array_non_empty "${casks[@]:-}" || return 0
     koopa_dl \
@@ -135,9 +135,9 @@ koopa_macos_clean_launch_services() {
         ['lsregister']="$(koopa_macos_locate_lsregister)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['kill_all']}" ]] || return 1
-    [[ -x "${app['lsregister']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['kill_all']}" ]] || exit 1
+    [[ -x "${app['lsregister']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_alert "Cleaning LaunchServices 'Open With' menu."
     "${app['lsregister']}" \
         -kill \
@@ -207,8 +207,8 @@ koopa_macos_disable_plist_file() {
         ['launchctl']="$(koopa_macos_locate_launchctl)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['launchctl']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['launchctl']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_assert_is_file "$@"
     for file in "$@"
     do
@@ -285,8 +285,8 @@ koopa_macos_disable_spotlight_indexing() {
         ['mdutil']="$(koopa_macos_locate_mdutil)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['mdutil']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['mdutil']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['mdutil']}" -a -i off
     "${app['mdutil']}" -a -s
     return 0
@@ -383,8 +383,8 @@ koopa_macos_enable_plist_file() {
         ['launchctl']="$(koopa_macos_locate_launchctl)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['launchctl']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['launchctl']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_assert_is_not_file "$@"
     for file in "$@"
     do
@@ -500,7 +500,7 @@ koopa_macos_finder_hide() {
     declare -A app=(
         ['setfile']="$(koopa_macos_locate_setfile)"
     )
-    [[ -x "${app['setfile']}" ]] || return 1
+    [[ -x "${app['setfile']}" ]] || exit 1
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a V "$@"
     return 0
@@ -512,7 +512,7 @@ koopa_macos_finder_unhide() {
     declare -A app=(
         ['setfile']="$(koopa_macos_locate_setfile)"
     )
-    [[ -x "${app['setfile']}" ]] || return 1
+    [[ -x "${app['setfile']}" ]] || exit 1
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a v "$@"
     return 0
@@ -527,9 +527,9 @@ koopa_macos_flush_dns() {
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['dscacheutil']}" ]] || return 1
-    [[ -x "${app['kill_all']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['dscacheutil']}" ]] || exit 1
+    [[ -x "${app['kill_all']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_alert 'Flushing DNS.'
     "${app['sudo']}" "${app['dscacheutil']}" -flushcache
     "${app['sudo']}" "${app['kill_all']}" -HUP 'mDNSResponder'
@@ -544,8 +544,8 @@ koopa_macos_force_eject() {
         ['diskutil']="$(koopa_macos_locate_diskutil)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['diskutil']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['diskutil']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict
     dict['name']="${1:?}"
     dict['mount']="/Volumes/${dict['name']}"
@@ -563,9 +563,9 @@ koopa_macos_force_reset_icloud_drive() {
         ['reboot']="$(koopa_macos_locate_reboot)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['kill_all']}" ]] || return 1
-    [[ -x "${app['reboot']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['kill_all']}" ]] || exit 1
+    [[ -x "${app['reboot']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['kill_all']}" bird
     koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
@@ -580,7 +580,7 @@ koopa_macos_homebrew_cask_version() {
     declare -A app=(
         ['brew']="$(koopa_locate_brew)"
     )
-    [[ -x "${app['brew']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
     for cask in "$@"
     do
         x="$("${app['brew']}" info --cask "$cask")"
@@ -597,8 +597,8 @@ koopa_macos_ifactive() {
         ['ifconfig']="$(koopa_macos_locate_ifconfig)"
         ['pcregrep']="$(koopa_locate_pcregrep)"
     )
-    [[ -x "${app['ifconfig']}" ]] || return 1
-    [[ -x "${app['pcregrep']}" ]] || return 1
+    [[ -x "${app['ifconfig']}" ]] || exit 1
+    [[ -x "${app['pcregrep']}" ]] || exit 1
     x="$( \
         "${app['ifconfig']}" \
             | "${app['pcregrep']}" -M -o \
@@ -653,8 +653,8 @@ koopa_macos_install_system_rosetta() {
         ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['softwareupdate']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['softwareupdate']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['softwareupdate']}" --install-rosetta
     return 0
 }
@@ -688,9 +688,9 @@ koopa_macos_list_app_store_apps() {
     app['find']="$(koopa_locate_find --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"
-    [[ -x "${app['find']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
+    [[ -x "${app['find']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['sort']}" ]] || exit 1
     string="$( \
         "${app['find']}" \
             '/Applications' \
@@ -713,7 +713,7 @@ koopa_macos_list_launch_agents() {
     declare -A app=(
         ['ls']="$(koopa_locate_ls)"
     )
-    [[ -x "${app['ls']}" ]] || return 1
+    [[ -x "${app['ls']}" ]] || exit 1
     "${app['ls']}" \
         --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \
@@ -1021,8 +1021,8 @@ koopa_macos_reload_autofs() {
         ['automount']="$(koopa_macos_locate_automount)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['automount']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['automount']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['automount']}" -vc
     return 0
 }
@@ -1054,8 +1054,8 @@ koopa_macos_spotlight_usage() {
         ['fs_usage']="$(koopa_macos_locate_fs_usage)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['fs_usage']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['fs_usage']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['fs_usage']}" -w -f filesys mds
     return 0
 }
@@ -1068,8 +1068,8 @@ koopa_macos_symlink_dropbox() {
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['kill_all']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['kill_all']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_rm --sudo "${HOME}/Desktop"
     koopa_ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa_rm --sudo "${HOME}/Documents"
@@ -1093,8 +1093,8 @@ koopa_macos_uninstall_brewfile_casks() {
         ['brew']="$(koopa_locate_brew)"
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['cut']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
+    [[ -x "${app['cut']}" ]] || exit 1
     declare -A dict=(
         ['brewfile']="${1:?}"
     )
@@ -1199,8 +1199,8 @@ koopa_macos_xcode_clt_version() {
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['pkgutil']="$(koopa_macos_locate_pkgutil)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['pkgutil']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['pkgutil']}" ]] || exit 1
     str="$( \
         "${app['pkgutil']}" --pkg-info='com.apple.pkg.CLTools_Executables' \
         | koopa_grep --pattern='^version:\s' --regex \

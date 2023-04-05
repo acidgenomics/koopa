@@ -24,8 +24,8 @@ koopa_git_default_branch() {
         ['git']="$(koopa_locate_git --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict
     dict['remote']='origin'
     koopa_assert_is_git_repo "$@"

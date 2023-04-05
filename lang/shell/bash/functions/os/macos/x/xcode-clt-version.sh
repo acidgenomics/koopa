@@ -15,8 +15,8 @@ koopa_macos_xcode_clt_version() {
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['pkgutil']="$(koopa_macos_locate_pkgutil)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['pkgutil']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['pkgutil']}" ]] || exit 1
     str="$( \
         "${app['pkgutil']}" --pkg-info='com.apple.pkg.CLTools_Executables' \
         | koopa_grep --pattern='^version:\s' --regex \

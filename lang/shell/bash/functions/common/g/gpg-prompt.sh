@@ -12,7 +12,7 @@ koopa_gpg_prompt() {
     declare -A app=(
         ['gpg']="$(koopa_locate_gpg --allow-system)"
     )
-    [[ -x "${app['gpg']}" ]] || return 1
+    [[ -x "${app['gpg']}" ]] || exit 1
     printf '' | "${app['gpg']}" -s
     return 0
 }

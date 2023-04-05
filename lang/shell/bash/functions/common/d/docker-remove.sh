@@ -17,9 +17,9 @@ koopa_docker_remove() {
         ['docker']="$(koopa_locate_docker)"
         ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['docker']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     for pattern in "$@"
     do
         # Previous awk approach:

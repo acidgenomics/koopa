@@ -23,11 +23,11 @@ koopa_debian_set_locale() {
         ['sudo']="$(koopa_locate_sudo)"
         ['update_locale']="$(koopa_debian_locate_update_locale)" 
     )
-    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
-    [[ -x "${app['locale']}" ]] || return 1
-    [[ -x "${app['locale_gen']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['update_locale']}" ]] || return 1
+    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
+    [[ -x "${app['locale']}" ]] || exit 1
+    [[ -x "${app['locale_gen']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['update_locale']}" ]] || exit 1
     declare -A dict=(
         ['charset']='UTF-8'
         ['country']='US'
