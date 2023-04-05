@@ -3,20 +3,20 @@
 koopa_find_files_without_line_ending() {
     # """
     # Find files without line ending.
-    # @note Updated 2022-02-16.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://stackoverflow.com/questions/4631068/
     # """
-    local app files prefix
+    local -A app
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    local -A app=(
-        ['pcregrep']="$(koopa_locate_pcregrep)"
-    )
-    [[ -x "${app['pcregrep']}" ]] || exit 1
+    app['pcregrep']="$(koopa_locate_pcregrep)"
+    koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
+        local -a files
         local str
         readarray -t files <<< "$(
             koopa_find \
