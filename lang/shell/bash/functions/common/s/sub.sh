@@ -19,10 +19,10 @@ koopa_sub() {
     # # |\|/\|
     # """
     local app dict pos
-    declare -A app
+    local -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['global']=0
         ['pattern']=''
         ['perl_tail']=''

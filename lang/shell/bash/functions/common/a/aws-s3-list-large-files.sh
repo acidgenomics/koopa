@@ -14,7 +14,7 @@ koopa_aws_s3_list_large_files() {
     # # testdata/bcbiornaseq/v0.5/gse65267.rds
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
     app['aws']="$(koopa_locate_aws)"

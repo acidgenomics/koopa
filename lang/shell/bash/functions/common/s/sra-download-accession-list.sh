@@ -11,7 +11,7 @@ koopa_sra_download_accession_list() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['efetch']="$(koopa_locate_efetch)"
         ['esearch']="$(koopa_locate_esearch)"
@@ -21,7 +21,7 @@ koopa_sra_download_accession_list() {
     [[ -x "${app['efetch']}" ]] || exit 1
     [[ -x "${app['esearch']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['acc_file']=''
         ['srp_id']=''
     )

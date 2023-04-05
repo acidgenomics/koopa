@@ -32,13 +32,13 @@ main() {
         'glib' \
         'freetype' \
         'icu4c'
-    declare -A app=(
+    local -A app=(
         ['meson']="$(koopa_locate_meson)"
         ['ninja']="$(koopa_locate_ninja)"
     )
     [[ -x "${app['meson']}" ]] || exit 1
     [[ -x "${app['ninja']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='harfbuzz'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

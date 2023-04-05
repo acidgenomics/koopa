@@ -17,7 +17,7 @@ koopa_find_symlinks() {
     # """
     local dict hits symlink symlinks
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['source_prefix']=''
         ['target_prefix']=''
         ['verbose']=0

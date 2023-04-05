@@ -10,7 +10,7 @@ main() {
     # """
     local dict repo repos
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )

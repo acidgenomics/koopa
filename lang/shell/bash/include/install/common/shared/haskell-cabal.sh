@@ -7,10 +7,10 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
+    local -A app
     app['ghcup']="$(koopa_locate_ghcup)"
     [[ -x "${app['ghcup']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='cabal'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

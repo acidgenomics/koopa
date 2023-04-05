@@ -20,8 +20,8 @@ main() {
     # """
     local app dict
     koopa_activate_app 'ca-certificates'
-    declare -A app
-    declare -A dict=(
+    local -A app
+    local -A dict=(
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['conda_prefix']="$(koopa_app_prefix 'conda')"
         ['name']='OpenBBTerminal'

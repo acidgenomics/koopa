@@ -6,7 +6,7 @@ koopa_git_rm_untracked() {
     # @note Updated 2022-09-24.
     # """
     local app repos
-    declare -A app=(
+    local -A app=(
         ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || exit 1

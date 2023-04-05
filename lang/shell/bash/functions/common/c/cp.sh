@@ -18,18 +18,15 @@ koopa_cp() {
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
     local app cp cp_args dict mkdir pos rm
-    declare -A app=(
-        ['cp']="$(koopa_locate_cp --allow-system)"
-        ['mkdir']='koopa_mkdir'
-        ['rm']='koopa_rm'
-    )
+    local -A app dict
+    app['cp']="$(koopa_locate_cp --allow-system)"
+    app['mkdir']='koopa_mkdir'
+    app['rm']='koopa_rm'
     [[ -x "${app['cp']}" ]] || exit 1
-    declare -A dict=(
-        ['sudo']=0
-        ['symlink']=0
-        ['target_dir']=''
-        ['verbose']=0
-    )
+    dict['sudo']=0
+    dict['symlink']=0
+    dict['target_dir']=''
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do

@@ -7,13 +7,13 @@ koopa_find_app_version() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['sort']="$(koopa_locate_sort)"
         ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['sort']}" ]] || exit 1
     [[ -x "${app['tail']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['name']="${1:?}"
     )

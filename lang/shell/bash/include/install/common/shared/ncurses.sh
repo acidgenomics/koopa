@@ -22,7 +22,7 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

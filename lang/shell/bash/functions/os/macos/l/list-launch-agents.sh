@@ -7,7 +7,7 @@ koopa_macos_list_launch_agents() {
     # """
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['ls']="$(koopa_locate_ls)"
     )
     [[ -x "${app['ls']}" ]] || exit 1

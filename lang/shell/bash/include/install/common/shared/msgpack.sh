@@ -12,7 +12,7 @@ main() {
     # """
     local cmake_args dict
     koopa_activate_app 'boost'
-    declare -A dict=(
+    local -A dict=(
         ['boost']="$(koopa_app_prefix 'boost')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"

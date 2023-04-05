@@ -7,7 +7,7 @@ koopa_hostname() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app dict
+    local -A app dict
     app['uname']="$(koopa_locate_uname)"
     [[ -x "${app['uname']}" ]] || exit 1
     dict['string']="$("${app['uname']}" -n)"

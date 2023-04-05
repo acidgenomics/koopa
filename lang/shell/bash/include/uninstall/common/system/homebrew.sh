@@ -18,7 +18,7 @@ main() {
     then
         koopa_stop 'Homebrew is not installed.'
     fi
-    declare -A dict
+    local -A dict
     dict['user']="$(koopa_user_name)"
     dict['file']='uninstall.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\

@@ -6,10 +6,9 @@ koopa_detab() {
     # @note Updated 2022-05-20.
     # """
     local app file
+    local -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['vim']="$(koopa_locate_vim)"
-    )
+    app['vim']="$(koopa_locate_vim)"
     [[ -x "${app['vim']}" ]] || exit 1
     koopa_assert_is_file "$@"
     for file in "$@"

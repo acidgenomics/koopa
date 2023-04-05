@@ -15,7 +15,7 @@ koopa_linux_add_user_to_etc_passwd() {
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['passwd_file']='/etc/passwd'
         ['user']="${1:-}"
     )

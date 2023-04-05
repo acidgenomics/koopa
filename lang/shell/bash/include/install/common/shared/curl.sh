@@ -24,10 +24,10 @@ main() {
         'zlib' \
         'zstd' \
         'openssl3'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='curl'

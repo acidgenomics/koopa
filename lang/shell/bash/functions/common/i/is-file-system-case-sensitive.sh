@@ -7,13 +7,13 @@ koopa_is_file_system_case_sensitive() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['find']="$(koopa_locate_find)"
         ['wc']="$(koopa_locate_wc)"
     )
     [[ -x "${app['find']}" ]] || exit 1
     [[ -x "${app['wc']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${PWD:?}"
         ['tmp_stem']='.koopa.tmp.'
     )

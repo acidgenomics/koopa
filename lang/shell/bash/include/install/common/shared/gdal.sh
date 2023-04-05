@@ -21,7 +21,7 @@ main() {
     # - https://stackoverflow.com/questions/53511533/
     # """
     local app build_deps cmake cmake_args deps dict
-    declare -A app cmake dict
+    local -A app cmake dict
     koopa_assert_has_no_args "$#"
     build_deps=('libtool' 'pkg-config')
     deps=(

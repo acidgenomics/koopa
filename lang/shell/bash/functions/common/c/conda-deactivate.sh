@@ -7,7 +7,7 @@ koopa_conda_deactivate() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['env_name']="${CONDA_DEFAULT_ENV:-}"
         ['nounset']="$(koopa_boolean_nounset)"
     )

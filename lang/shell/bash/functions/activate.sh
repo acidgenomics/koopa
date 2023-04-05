@@ -2,8 +2,7 @@
 # shellcheck disable=all
 
 _koopa_activate_bash_aliases() {
-    local dict
-    declare -A dict
+    local -A dict
     dict['user_aliases_file']="${HOME}/.bash_aliases"
     if [[ -f "${dict['user_aliases_file']}" ]]
     then
@@ -31,8 +30,7 @@ _koopa_activate_bash_prompt() {
 }
 
 _koopa_activate_bash_readline() {
-    local dict
-    declare -A dict
+    local -A dict
     [[ -n "${INPUTRC:-}" ]] && return 0
     dict['input_rc_file']="${HOME}/.inputrc"
     [[ -r "${dict['input_rc_file']}" ]] || return 0
@@ -46,8 +44,7 @@ _koopa_activate_bash_reverse_search() {
 }
 
 _koopa_bash_prompt_string() {
-    local dict
-    declare -A dict
+    local -A dict
     dict['newline']='\n'
     dict['prompt']='\$'
     dict['prompt_color']=35

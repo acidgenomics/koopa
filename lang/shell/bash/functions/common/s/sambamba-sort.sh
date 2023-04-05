@@ -7,7 +7,7 @@ koopa_sambamba_sort() {
     # """
     local bam_file bam_files dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict
+    local -A dict
     dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     readarray -t bam_files <<< "$( \

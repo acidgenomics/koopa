@@ -15,10 +15,10 @@ main() {
     # This step is only needed when installing from GitHub.
     koopa_activate_app --build-only 'autoconf' 'groff' 'make'
     koopa_activate_app 'ncurses' 'pcre2'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='less'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

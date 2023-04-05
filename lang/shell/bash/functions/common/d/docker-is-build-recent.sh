@@ -11,18 +11,15 @@ koopa_docker_is_build_recent() {
     # - https://unix.stackexchange.com/questions/27013/
     # """
     local app dict image pos
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['date']="$(koopa_locate_date)"
-        ['docker']="$(koopa_locate_docker)"
-        ['sed']="$(koopa_locate_sed)"
-    )
+    app['date']="$(koopa_locate_date)"
+    app['docker']="$(koopa_locate_docker)"
+    app['sed']="$(koopa_locate_sed)"
     [[ -x "${app['date']}" ]] || exit 1
     [[ -x "${app['docker']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict=(
-        ['days']=7
-    )
+    dict['days']=7
     pos=()
     while (("$#"))
     do
@@ -52,8 +49,7 @@ koopa_docker_is_build_recent() {
     dict['seconds']="$((dict[days] * 86400))"
     for image in "$@"
     do
-        local dict2
-        declare -A dict2
+        local -A dict2
         dict['current']="$("${app['date']}" -u '+%s')"
         dict['image']="$image"
         "${app['docker']}" pull "${dict2['image']}" >/dev/null

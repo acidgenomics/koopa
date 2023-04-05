@@ -20,7 +20,7 @@ koopa_move_into_dated_dirs_by_filename() {
     for file in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['file']="$file"
         )
         # NOTE Don't quote '$grep_string' here.

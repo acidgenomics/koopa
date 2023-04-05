@@ -26,8 +26,8 @@ koopa_grep() {
     # """
     local app dict grep_args grep_cmd
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict=(
+    local -A app
+    local -A dict=(
         ['boolean']=0
         ['engine']="${KOOPA_GREP_ENGINE:-}"
         ['file']=''

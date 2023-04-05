@@ -21,7 +21,7 @@ koopa_debian_apt_add_r_key() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['key_name']='r'
         # Alternatively, can use 'keys.gnupg.net' keyserver.
         ['keyserver']='keyserver.ubuntu.com'

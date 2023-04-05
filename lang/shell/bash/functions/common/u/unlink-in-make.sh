@@ -13,7 +13,7 @@ koopa_unlink_in_make() {
     # """
     local app_prefix dict files
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']=''
         ['make_prefix']="$(koopa_make_prefix)"
     )

@@ -25,10 +25,10 @@ koopa_r_configure_ldpaths() {
     # """
     local app dict key keys ld_lib_arr ld_lib_app_arr lines
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
+    local -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['system']=0
         ['use_apps']=1
     )
@@ -54,7 +54,7 @@ koopa_r_configure_ldpaths() {
         ": \${JAVA_HOME=${dict['java_home']}}"
         ": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}"
     )
-    declare -A ld_lib_app_arr
+    local -A ld_lib_app_arr
     keys=(
         'bzip2'
         'cairo'

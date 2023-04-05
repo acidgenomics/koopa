@@ -29,7 +29,7 @@ main() {
     # Error relocating /usr/glibc-compat/lib/...
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     app['apk']="$(koopa_alpine_locate_apk)"
     app['localedef']="$(koopa_alpine_locate_localedef)"

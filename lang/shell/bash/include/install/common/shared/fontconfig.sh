@@ -25,10 +25,10 @@ main() {
         'gperf' \
         'freetype' \
         'libxml2'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='fontconfig'
         ['jobs']="$(koopa_cpu_count)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

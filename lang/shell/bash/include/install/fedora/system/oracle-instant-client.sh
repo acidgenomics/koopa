@@ -28,7 +28,7 @@ main() {
     # """
     local dict stems
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)"
         ['platform']='linux'
         ['version']="${KOOPA_INSTALL_VERSION:?}"

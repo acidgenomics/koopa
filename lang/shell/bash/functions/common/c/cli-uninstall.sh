@@ -22,8 +22,7 @@ koopa_cli_uninstall() {
     koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local dict
-        declare -A dict=(
+        local -A dict=(
             ['key']="${stem}-${app}"
         )
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"

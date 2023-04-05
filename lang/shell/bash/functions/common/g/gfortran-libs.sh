@@ -9,7 +9,7 @@ koopa_gfortran_libs() {
     # 'lib64' subdirs. See also 'gcc --print-search-dirs'.
     # """
     local app dict flibs gcc_libs i
-    declare -A app=(
+    local -A app=(
         ['dirname']="$(koopa_locate_dirname)"
         ['sort']="$(koopa_locate_sort)"
         ['xargs']="$(koopa_locate_xargs)"
@@ -17,7 +17,7 @@ koopa_gfortran_libs() {
     [[ -x "${app['dirname']}" ]] || exit 1
     [[ -x "${app['sort']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)"
         ['gcc']="$(koopa_app_prefix 'gcc')"
     )

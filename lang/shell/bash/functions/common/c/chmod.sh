@@ -6,10 +6,10 @@ koopa_chmod() {
     # @note Updated 2022-02-17.
     # """
     local app chmod dict pos
-    declare -A app
+    local -A app
     app['chmod']="$(koopa_locate_chmod)"
     [[ -x "${app['chmod']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['recursive']=0
         ['sudo']=0
     )

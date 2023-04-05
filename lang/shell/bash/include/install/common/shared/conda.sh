@@ -12,10 +12,10 @@ main() {
     # - https://github.com/mamba-org/mamba
     # """
     local app dict
-    declare -A app
+    local -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
     [[ -x "${app['bash']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['from_latest']=0
         ['koopa_prefix']="$(koopa_koopa_prefix)"

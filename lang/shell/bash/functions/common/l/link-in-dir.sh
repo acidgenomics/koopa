@@ -19,7 +19,7 @@ koopa_link_in_dir() {
     # """
     local dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['name']=''
         ['prefix']=''
         ['source']=''

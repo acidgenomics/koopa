@@ -17,7 +17,7 @@ koopa_file_detect() {
     # """
     local dict grep_args
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['file']=''
         ['mode']=''
         ['pattern']=''

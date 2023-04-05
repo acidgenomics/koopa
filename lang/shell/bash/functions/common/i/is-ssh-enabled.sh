@@ -11,11 +11,11 @@ koopa_is_ssh_enabled() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 2
-    declare -A app=(
+    local -A app=(
         ['ssh']="$(koopa_locate_ssh)"
     )
     [[ -x "${app['ssh']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['url']="${1:?}"
         ['pattern']="${2:?}"
     )

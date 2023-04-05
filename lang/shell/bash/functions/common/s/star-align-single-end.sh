@@ -15,7 +15,7 @@ koopa_star_align_single_end() {
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['aws_bucket']=''
         ['aws_profile']="${AWS_PROFILE:-default}"
         # e.g. 'fastq'.

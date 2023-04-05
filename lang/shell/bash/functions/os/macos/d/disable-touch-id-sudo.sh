@@ -8,7 +8,7 @@ koopa_macos_disable_touch_id_sudo() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict
+    local -A dict
     dict['file']='/etc/pam.d/sudo'
     if [[ -f "${dict['file']}" ]] && \
         ! koopa_file_detect_fixed \

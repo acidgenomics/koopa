@@ -10,11 +10,11 @@ koopa_gpg_download_key_from_keyserver() {
     # """
     local app cp dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['gpg']="$(koopa_locate_gpg --allow-system)"
     )
     [[ -x "${app['gpg']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
         ['tmp_dir']="$(koopa_tmp_dir)"
     )

@@ -12,7 +12,7 @@ koopa_configure_r() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app dict
+    local -A app dict
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || exit 1

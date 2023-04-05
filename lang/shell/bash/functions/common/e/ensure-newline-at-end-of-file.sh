@@ -16,11 +16,11 @@ koopa_ensure_newline_at_end_of_file() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['tail']="$(koopa_locate_tail)"
     )
     [[ -x "${app['tail']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']="${1:?}"
     )
     [[ -n "$("${app['tail']}" --bytes=1 "${dict['file']}")" ]] || return 0

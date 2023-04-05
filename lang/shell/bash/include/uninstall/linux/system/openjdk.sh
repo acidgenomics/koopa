@@ -2,7 +2,7 @@
 
 main() {
     local dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     dict['default_java']='/usr/lib/jvm/default-java'
     if [[ -d "${dict['default_java']}" ]]

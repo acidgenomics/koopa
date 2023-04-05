@@ -23,7 +23,7 @@ koopa_fedora_dnf_remove() {
 
 koopa_fedora_dnf() {
     local app
-    declare -A app=(
+    local -A app=(
         ['dnf']="$(koopa_fedora_locate_dnf)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -48,7 +48,7 @@ bcl2fastq-conversion-software/downloads.html'."
 koopa_fedora_install_from_rpm() {
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['rpm']="$(koopa_fedora_locate_rpm)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -101,7 +101,7 @@ koopa_fedora_set_locale() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['locale']="$(koopa_locate_locale)"
         ['localedef']="$(koopa_locate_localedef)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -109,7 +109,7 @@ koopa_fedora_set_locale() {
     [[ -x "${app['locale']}" ]] || exit 1
     [[ -x "${app['localedef']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['lang']='en'
         ['country']='US'
         ['charset']='UTF-8'

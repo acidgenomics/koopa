@@ -17,7 +17,7 @@ main() {
         'groff' \
         'libpipeline' \
         'gdbm'
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     )
     koopa_install_app_subshell \

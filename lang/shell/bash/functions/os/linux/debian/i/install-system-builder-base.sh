@@ -12,7 +12,7 @@ koopa_debian_install_system_builder_base() {
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
     local app
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['cat']="$(koopa_locate_cat --allow-system)"
         ['debconf_set_selections']="$( \

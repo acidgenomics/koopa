@@ -20,13 +20,13 @@ koopa_git_default_branch() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['git']="$(koopa_locate_git --allow-system)"
         ['sed']="$(koopa_locate_sed --allow-system)"
     )
     [[ -x "${app['git']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['remote']='origin'
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.

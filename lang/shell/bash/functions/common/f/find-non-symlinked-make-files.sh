@@ -7,7 +7,7 @@ koopa_find_non_symlinked_make_files() {
     # """
     local dict find_args
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['brew_prefix']="$(koopa_homebrew_prefix)"
         ['make_prefix']="$(koopa_make_prefix)"
     )

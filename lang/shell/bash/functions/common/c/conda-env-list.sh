@@ -6,7 +6,7 @@ koopa_conda_env_list() {
     # @note Updated 2022-08-26.
     # """
     local app str
-    declare -A app
+    local -A app
     koopa_assert_has_no_args "$#"
     app['conda']="$(koopa_locate_conda)"
     [[ -x "${app['conda']}" ]] || exit 1

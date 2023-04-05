@@ -23,10 +23,10 @@ koopa_mktemp() {
     # - https://gist.github.com/earthgecko/3089509
     # """
     local app dict mktemp_args str
-    declare -A app
+    local -A app
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     [[ -x "${app['mktemp']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['date_id']="$(koopa_datetime)"
         ['user_id']="$(koopa_user_id)"
     )

@@ -18,9 +18,9 @@ koopa_python_create_venv() {
     local app dict pkgs pos venv_args
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app
+    local -A app
     app['python']=''
-    declare -A dict=(
+    local -A dict=(
         ['name']=''
         ['pip']=1
         ['prefix']=''

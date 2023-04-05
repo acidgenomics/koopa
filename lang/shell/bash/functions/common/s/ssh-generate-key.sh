@@ -19,11 +19,11 @@ koopa_ssh_generate_key() {
     # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
     local app dict ssh_args
-    declare -A app=(
+    local -A app=(
         ['ssh_keygen']="$(koopa_locate_ssh_keygen)"
     )
     [[ -x "${app['ssh_keygen']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['hostname']="$(koopa_hostname)"
         ['key_name']='id_rsa' # or 'id_ed25519'.
         ['prefix']="${HOME:?}/.ssh"

@@ -6,7 +6,7 @@ koopa_cli_system() {
     # @note Updated 2023-01-31.
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['key']=''
     )
     # Platform independent.

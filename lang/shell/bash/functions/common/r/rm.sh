@@ -6,11 +6,11 @@ koopa_rm() {
     # @note Updated 2022-09-02.
     # """
     local app dict pos rm rm_args
-    declare -A app
+    local -A app
     app['rm']="$(koopa_locate_rm --allow-system)"
     # > koopa_is_macos && app['rm']='/bin/rm'
     [[ -x "${app['rm']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
         ['verbose']=0
     )

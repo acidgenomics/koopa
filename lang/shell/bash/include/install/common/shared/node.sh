@@ -43,13 +43,13 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
         ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['make']}" ]] || exit 1
     [[ -x "${app['python']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # > [brotli]="$(koopa_app_prefix 'brotli')"
         ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
         ['cares']="$(koopa_app_prefix 'c-ares')"

@@ -10,7 +10,7 @@ koopa_install_all_apps() {
     # """
     local app_name app_names dict push_apps
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['mem_gb']="$(koopa_mem_gb)"
         ['mem_gb_cutoff']=6
     )

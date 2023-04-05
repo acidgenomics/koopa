@@ -30,7 +30,7 @@ main() {
             'Xcode Command Line Tools are not installed.' \
             "Run 'koopa install system xcode-clt' to resolve."
     fi
-    declare -A dict
+    local -A dict
     dict['file']='install.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"

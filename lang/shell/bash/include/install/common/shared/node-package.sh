@@ -14,14 +14,14 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['node']="$(koopa_locate_node)"
         ['npm']="$(koopa_locate_npm)"
     )
     [[ -x "${app['node']}" ]] || exit 1
     [[ -x "${app['npm']}" ]] || exit 1
     app['node']="$(koopa_realpath "${app['node']}")"
-    declare -A dict=(
+    local -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

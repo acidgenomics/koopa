@@ -12,7 +12,7 @@ main() {
     # """
     local dict
     koopa_activate_app --build-only 'python3.10'
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

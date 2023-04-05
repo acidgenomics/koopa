@@ -3,27 +3,21 @@
 koopa_current_gencode_version() {
     # """
     # Current GENCODE version.
-    # @note Updated 2022-02-25.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_current_gencode_version
     # # 39
     # """
     local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['curl']="$(koopa_locate_curl --allow-system)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['grep']="$(koopa_locate_grep --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['curl']}" ]] || exit 1
-    [[ -x "${app['grep']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    declare -A dict=(
-        ['organism']="${1:-}"
-    )
+    app['curl']="$(koopa_locate_curl --allow-system)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['organism']="${1:-}"
     [[ -z "${dict['organism']}" ]] && dict['organism']='Homo sapiens'
     case "${dict['organism']}" in
         'Homo sapiens' | \

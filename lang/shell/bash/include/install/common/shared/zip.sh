@@ -20,10 +20,10 @@ main() {
     deps=('bzip2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['name']='zip'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -63,10 +63,10 @@ apply_debian_patch_set() {
     # @note Updated 2022-10-12.
     # """
     local app dict file
-    declare -A app
+    local -A app
     app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['patch']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )

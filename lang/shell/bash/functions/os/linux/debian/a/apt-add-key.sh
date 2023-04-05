@@ -34,14 +34,14 @@ koopa_debian_apt_add_key() {
     local app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         # NOTE Will run into dirmngr missing issue if using koopa gpg here.
         ['gpg']='/usr/bin/gpg'
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['gpg']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']=''
         ['prefix']="$(koopa_debian_apt_key_prefix)"
         ['url']=''

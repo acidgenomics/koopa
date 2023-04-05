@@ -29,7 +29,7 @@ main() {
         'apr-util' \
         'openssl3' \
         'scons'
-    declare -A app=(
+    local -A app=(
         ['cat']="$(koopa_locate_cat)"
         ['patch']="$(koopa_locate_patch)"
         ['scons']="$(koopa_locate_scons)"
@@ -37,7 +37,7 @@ main() {
     [[ -x "${app['cat']}" ]] || exit 1
     [[ -x "${app['patch']}" ]] || exit 1
     [[ -x "${app['scons']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='serf'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

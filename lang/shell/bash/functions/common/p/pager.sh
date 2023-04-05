@@ -11,7 +11,7 @@ koopa_pager() {
     # """
     local app args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['less']="$(koopa_locate_less)"
     )
     [[ -x "${app['less']}" ]] || exit 1

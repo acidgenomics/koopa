@@ -11,10 +11,10 @@ main() {
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
     # """
     local app bin_name bin_names dict man1_name man1_names pos
-    declare -A app
+    local -A app
     app['cut']="$(koopa_locate_cut --allow-system)"
     [[ -x "${app['cut']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['locate_python']='koopa_locate_python311'
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

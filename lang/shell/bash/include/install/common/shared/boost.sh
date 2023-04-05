@@ -20,7 +20,7 @@ main() {
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A dict=(
+    local -A dict=(
         ['icu4c']="$(koopa_app_prefix 'icu4c')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='boost'

@@ -10,8 +10,8 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
-    declare -A dict=(
+    local -A app
+    local -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. "amd64".
         ['name']='go'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

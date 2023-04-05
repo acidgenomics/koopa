@@ -7,7 +7,7 @@ koopa_macos_enable_plist_file() {
     # """
     local app file
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['launchctl']="$(koopa_macos_locate_launchctl)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -17,7 +17,7 @@ koopa_macos_enable_plist_file() {
     for file in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['daemon']=0
             ['enabled_file']="$file"
             ['sudo']=1

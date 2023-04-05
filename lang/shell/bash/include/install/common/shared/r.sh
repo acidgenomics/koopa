@@ -98,7 +98,7 @@ main() {
         'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['ar']='/usr/bin/ar'
         ['awk']="$(koopa_locate_awk --realpath)"
         ['bash']="$(koopa_locate_bash --realpath)"
@@ -146,8 +146,8 @@ main() {
     [[ -x "${app['pkg_config']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
     [[ -x "${app['yacc']}" ]] || exit 1
-    declare -A conf_dict
-    declare -A dict=(
+    local -A conf_dict
+    local -A dict=(
         ['arch']="$(koopa_arch)"
         # > ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"

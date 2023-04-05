@@ -15,11 +15,11 @@ koopa_rsem_index() {
     # >     --output-dir='rsem-index'
     # """
     local app dict index_args
-    declare -A app=(
+    local -A app=(
         ['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     )
     [[ -x "${app['rsem_prepare_reference']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''
         # e.g. 'gencode.v39.annotation.gtf.gz'

@@ -7,13 +7,13 @@ koopa_list_path_priority_unique() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk)"
         ['tac']="$(koopa_locate_tac)"
     )
     [[ -x "${app['awk']}" ]] || exit 1
     [[ -x "${app['tac']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['string']="${1:-$PATH}"
     # shellcheck disable=SC2016
     dict['string']="$( \

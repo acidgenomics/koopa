@@ -7,7 +7,7 @@ koopa_delete_dotfile() {
     # """
     local dict name pos
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['config']=0
         ['xdg_config_home']="$(koopa_xdg_config_home)"
     )

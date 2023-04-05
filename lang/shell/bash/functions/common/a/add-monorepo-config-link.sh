@@ -3,10 +3,10 @@
 koopa_add_monorepo_config_link() {
     # """
     # Add koopa configuration link from user's git monorepo.
-    # @note Updated 2021-11-24.
+    # @note Updated 2023-04-05.
     # """
-    local dict subdir
-    declare -A dict
+    local -A dict
+    local subdir
     koopa_assert_has_args "$#"
     koopa_assert_has_monorepo
     dict['prefix']="$(koopa_monorepo_prefix)"

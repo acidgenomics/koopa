@@ -21,8 +21,7 @@ _koopa_bash_prompt_string() {
     # - https://misc.flogisoft.com/bash/tip_colors_and_formatting
     # - https://unix.stackexchange.com/questions/218174/
     # """
-    local dict
-    declare -A dict
+    local -A dict
     dict['newline']='\n'
     dict['prompt']='\$'
     dict['prompt_color']=35

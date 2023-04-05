@@ -8,8 +8,7 @@ koopa_activate_ensembl_perl_api() {
     # @seealso
     # - https://useast.ensembl.org/info/docs/api/api_installation.html
     # """
-    local dict
-    declare -A dict
+    local -A dict
     dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_add_to_path_start "${dict['prefix']}/ensembl-git-tools/bin"

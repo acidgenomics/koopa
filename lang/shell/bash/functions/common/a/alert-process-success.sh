@@ -5,8 +5,7 @@ koopa_alert_process_success() {
     # Inform the user about the successful completion of a process.
     # @note Updated 2022-10-06.
     # """
-    local dict
-    declare -A dict
+    local -A dict
     dict['word']="${1:?}"
     shift 1
     koopa_assert_has_args_le "$#" 2

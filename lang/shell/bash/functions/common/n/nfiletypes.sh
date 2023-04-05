@@ -10,7 +10,7 @@ koopa_nfiletypes() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['sed']="$(koopa_locate_sed)"
         ['sort']="$(koopa_locate_sort)"
         ['uniq']="$(koopa_locate_uniq)"
@@ -18,7 +18,7 @@ koopa_nfiletypes() {
     [[ -x "${app['sed']}" ]] || exit 1
     [[ -x "${app['sort']}" ]] || exit 1
     [[ -x "${app['uniq']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${1:?}"
     )
     koopa_assert_is_dir "${dict['prefix']}"

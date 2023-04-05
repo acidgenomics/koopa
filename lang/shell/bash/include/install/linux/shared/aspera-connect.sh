@@ -11,7 +11,7 @@ main() {
     # - https://www.ibm.com/aspera/connect/
     # """
     local dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     dict['aspera_user_prefix']="${HOME}/.aspera"
     dict['name']='ibm-aspera-connect'

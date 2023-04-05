@@ -12,7 +12,7 @@ koopa_linux_configure_system_rstudio_server() {
     local app conf_lines dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app dict
+    local -A app dict
     app['r']="$(koopa_locate_system_r --realpath)"
     app['rscript']="$(koopa_locate_system_rscript)"
     app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"

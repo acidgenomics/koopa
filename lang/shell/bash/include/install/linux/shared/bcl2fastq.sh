@@ -24,7 +24,7 @@ main() {
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local app conf_args deps dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'make'

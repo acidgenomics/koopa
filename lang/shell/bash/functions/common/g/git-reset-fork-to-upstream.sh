@@ -7,7 +7,7 @@ koopa_git_reset_fork_to_upstream() {
     # """
     local app
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"
@@ -19,7 +19,7 @@ koopa_git_reset_fork_to_upstream() {
         do
             local dict
             koopa_cd "$repo"
-            declare -A dict=(
+            local -A dict=(
                 ['branch']="$(koopa_git_default_branch "${PWD:?}")"
                 ['origin']='origin'
                 ['upstream']='upstream'

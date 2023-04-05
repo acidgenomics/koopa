@@ -9,13 +9,13 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'unzip'
     koopa_activate_app 'lua'
-    declare -A app=(
+    local -A app=(
         ['lua']="$(koopa_locate_lua)"
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['lua']}" ]] || exit 1
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='luarocks'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

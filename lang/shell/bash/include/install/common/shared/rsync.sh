@@ -36,10 +36,10 @@ main() {
         'xxhash'
     )
     koopa_activate_app  "${deps[@]}"
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='rsync'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

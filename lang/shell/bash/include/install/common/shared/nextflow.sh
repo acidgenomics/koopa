@@ -16,7 +16,7 @@ main() {
     # - https://nextflow.io/releases/v${dict['version']}/nextflow
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['openjdk']="$(koopa_app_prefix 'openjdk')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['script']='nextflow'

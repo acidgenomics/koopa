@@ -13,7 +13,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'lz4' 'zlib'
-    declare -A dict=(
+    local -A dict=(
         ['lz4']="$(koopa_app_prefix 'lz4')"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"

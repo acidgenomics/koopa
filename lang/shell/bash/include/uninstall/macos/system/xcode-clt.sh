@@ -9,7 +9,7 @@ main() {
     # - https://apple.stackexchange.com/questions/308943
     # """
     local dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     dict['prefix']='/Library/Developer/CommandLineTools'
     koopa_assert_is_dir "${dict['prefix']}"
