@@ -11,19 +11,18 @@ main() {
     #
     # """
     local app
+    declare -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        # > ['scutil']="$(koopa_macos_locate_scutil)"
-        # > ['systemsetup']="$(koopa_macos_locate_systemsetup)"
-        ['chflags']="$(koopa_macos_locate_chflags)"
-        ['defaults']="$(koopa_macos_locate_defaults)"
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['mdutil']="$(koopa_macos_locate_mdutil)"
-        ['nvram']="$(koopa_macos_locate_nvram)"
-        ['pmset']="$(koopa_macos_locate_pmset)"
-        ['sudo']="$(koopa_locate_sudo)"
-        ['tmutil']="$(koopa_macos_locate_tmutil)"
-    )
+    # > app['scutil']="$(koopa_macos_locate_scutil)"
+    # > app['systemsetup']="$(koopa_macos_locate_systemsetup)"
+    app['chflags']="$(koopa_macos_locate_chflags)"
+    app['defaults']="$(koopa_macos_locate_defaults)"
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['mdutil']="$(koopa_macos_locate_mdutil)"
+    app['nvram']="$(koopa_macos_locate_nvram)"
+    app['pmset']="$(koopa_macos_locate_pmset)"
+    app['sudo']="$(koopa_locate_sudo)"
+    app['tmutil']="$(koopa_macos_locate_tmutil)"
     # > [[ -x "${app['scutil']}" ]] || return 1
     # > [[ -x "${app['systemsetup']}" ]] || return 1
     [[ -x "${app['chflags']}" ]] || return 1

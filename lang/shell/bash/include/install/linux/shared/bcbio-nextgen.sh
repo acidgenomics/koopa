@@ -23,15 +23,13 @@ main() {
     #   - https://github.com/bioconda/bioconda-recipes/issues/13958
     # """
     local app dict install_args
+    declare -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'bzip2' 'python3.11'
-    declare -A app
     app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['install_dir']="${dict['prefix']}/libexec"
     dict['tools_dir']="${dict['prefix']}"
     dict['file']='bcbio_nextgen_install.py'
