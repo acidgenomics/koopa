@@ -3,7 +3,7 @@
 koopa_macos_brew_cask_outdated() {
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2022-07-26.
+    # @note Updated 2023-04-05.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -18,15 +18,11 @@ koopa_macos_brew_cask_outdated() {
     # - brew list --versions
     # - brew info
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['brew']}" ]] || exit 1
-    [[ -x "${app['cut']}" ]] || exit 1
-    local -A dict
+    app['brew']="$(koopa_locate_brew)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     # Whether we want to keep unversioned 'latest' casks returned with
     # '--greedy'. This tends to include font casks and the Google Cloud SDK,
     # which are annoying to have reinstall with each update, so disabling
