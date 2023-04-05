@@ -13,12 +13,10 @@ koopa_spell() {
     # @examples
     # koopa_spell 'berucracy' 'falsse' 'true'
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['aspell']="$(koopa_locate_aspell)"
-        ['tail']="$(koopa_locate_tail)"
-    )
+    app['aspell']="$(koopa_locate_aspell)"
+    app['tail']="$(koopa_locate_tail)"
     [[ -x "${app['aspell']}" ]] || exit 1
     [[ -x "${app['tail']}" ]] || exit 1
     koopa_print "$@" \

@@ -23,12 +23,10 @@ main() {
     # - https://gist.github.com/cschiewek/246a244ba23da8b9f0e7b11a68bf3285
     # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['dpkg']="$(koopa_debian_locate_dpkg)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['dpkg']="$(koopa_debian_locate_dpkg)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['dpkg']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     koopa_debian_apt_add_wine_repo

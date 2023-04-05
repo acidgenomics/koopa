@@ -5,13 +5,11 @@ koopa_linux_update_ldconfig() {
     # Update dynamic linker (LD) configuration.
     # @note Updated 2022-10-06.
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['ldconfig']="$(koopa_linux_locate_ldconfig)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['ldconfig']="$(koopa_linux_locate_ldconfig)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['ldconfig']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['ldconfig']}" || true

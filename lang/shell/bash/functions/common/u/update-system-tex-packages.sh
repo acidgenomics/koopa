@@ -5,13 +5,11 @@ koopa_update_system_tex_packages() {
     # Update TeX packages.
     # @note Updated 2023-02-28.
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['tlmgr']="$(koopa_locate_tlmgr)"
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['tlmgr']="$(koopa_locate_tlmgr)"
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['tlmgr']}" ]] || exit 1
     (

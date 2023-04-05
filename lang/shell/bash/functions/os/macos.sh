@@ -61,13 +61,11 @@ koopa_macos_brew_cask_outdated() {
 }
 
 koopa_macos_brew_cask_quarantine_fix() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['xattr']="$(koopa_macos_locate_xattr)"
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['xattr']="$(koopa_macos_locate_xattr)"
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['xattr']}" ]] || exit 1
     "${app['sudo']}" "${app['xattr']}" -r -d \
@@ -127,14 +125,12 @@ koopa_macos_brew_upgrade_casks() {
 }
 
 koopa_macos_clean_launch_services() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['lsregister']="$(koopa_macos_locate_lsregister)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['lsregister']="$(koopa_macos_locate_lsregister)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['kill_all']}" ]] || exit 1
     [[ -x "${app['lsregister']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
@@ -494,11 +490,9 @@ koopa_macos_enable_zoom_daemon() {
 }
 
 koopa_macos_finder_hide() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['setfile']="$(koopa_macos_locate_setfile)"
-    )
+    app['setfile']="$(koopa_macos_locate_setfile)"
     [[ -x "${app['setfile']}" ]] || exit 1
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a V "$@"
@@ -506,11 +500,9 @@ koopa_macos_finder_hide() {
 }
 
 koopa_macos_finder_unhide() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['setfile']="$(koopa_macos_locate_setfile)"
-    )
+    app['setfile']="$(koopa_macos_locate_setfile)"
     [[ -x "${app['setfile']}" ]] || exit 1
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a v "$@"
@@ -518,14 +510,12 @@ koopa_macos_finder_unhide() {
 }
 
 koopa_macos_flush_dns() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['dscacheutil']="$(koopa_macos_locate_dscacheutil)"
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['dscacheutil']="$(koopa_macos_locate_dscacheutil)"
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['dscacheutil']}" ]] || exit 1
     [[ -x "${app['kill_all']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
@@ -554,14 +544,12 @@ koopa_macos_force_eject() {
 }
 
 koopa_macos_force_reset_icloud_drive() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['reboot']="$(koopa_macos_locate_reboot)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['reboot']="$(koopa_macos_locate_reboot)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['kill_all']}" ]] || exit 1
     [[ -x "${app['reboot']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
@@ -706,11 +694,9 @@ koopa_macos_list_app_store_apps() {
 }
 
 koopa_macos_list_launch_agents() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['ls']="$(koopa_locate_ls)"
-    )
+    app['ls']="$(koopa_locate_ls)"
     [[ -x "${app['ls']}" ]] || exit 1
     "${app['ls']}" \
         --ignore='disabled' \
@@ -1012,13 +998,11 @@ koopa_macos_r_prefix() {
 }
 
 koopa_macos_reload_autofs() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['automount']="$(koopa_macos_locate_automount)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['automount']="$(koopa_macos_locate_automount)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['automount']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['automount']}" -vc
@@ -1059,13 +1043,11 @@ koopa_macos_spotlight_usage() {
 }
 
 koopa_macos_symlink_dropbox() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['kill_all']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     koopa_rm --sudo "${HOME}/Desktop"

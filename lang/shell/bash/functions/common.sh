@@ -8640,22 +8640,18 @@ koopa_gpg_prompt() {
 }
 
 koopa_gpg_reload() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['gpg_connect_agent']="$(koopa_locate_gpg_connect_agent)"
-    )
+    app['gpg_connect_agent']="$(koopa_locate_gpg_connect_agent)"
     [[ -x "${app['gpg_connect_agent']}" ]] || exit 1
     "${app['gpg_connect_agent']}" reloadagent '/bye'
     return 0
 }
 
 koopa_gpg_restart() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['gpgconf']="$(koopa_locate_gpgconf)"
-    )
+    app['gpgconf']="$(koopa_locate_gpgconf)"
     [[ -x "${app['gpgconf']}" ]] || exit 1
     "${app['gpgconf']}" --kill 'gpg-agent'
     return 0
@@ -8978,14 +8974,11 @@ koopa_has_no_environments() {
 }
 
 koopa_has_passwordless_sudo() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
+    app['sudo']="$(koopa_locate_sudo --allow-missing)"
+    [[ -x "${app['sudo']}" ]] || return 1
     koopa_is_root && return 0
-    koopa_is_installed 'sudo' || return 1
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" -n true 2>/dev/null && return 0
     return 1
 }
@@ -12295,9 +12288,8 @@ koopa_install_r_devel() {
 }
 
 koopa_install_r_koopa() {
-    local app
-    koopa_assert_has_args_le "$#" 1
     local -A app
+    koopa_assert_has_args_le "$#" 1
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     app['rscript']="${app['r']}script"
@@ -16414,11 +16406,9 @@ koopa_mem_gb() {
 }
 
 koopa_merge_pdf() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['gs']="$(koopa_locate_gs)"
-    )
+    app['gs']="$(koopa_locate_gs)"
     [[ -x "${app['gs']}" ]] || exit 1
     koopa_assert_is_file "$@"
     "${app['gs']}" \
@@ -19011,9 +19001,8 @@ koopa_relink() {
 }
 
 koopa_reload_shell() {
-    local app
-    koopa_assert_has_no_args "$#"
     local -A app
+    koopa_assert_has_no_args "$#"
     app['shell']="$(koopa_shell_name)"
     [[ -x "${app['shell']}" ]] || exit 1
     exec "${app['shell']}" -il
@@ -20712,12 +20701,10 @@ koopa_spacevim_prefix() {
 }
 
 koopa_spell() {
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['aspell']="$(koopa_locate_aspell)"
-        ['tail']="$(koopa_locate_tail)"
-    )
+    app['aspell']="$(koopa_locate_aspell)"
+    app['tail']="$(koopa_locate_tail)"
     [[ -x "${app['aspell']}" ]] || exit 1
     [[ -x "${app['tail']}" ]] || exit 1
     koopa_print "$@" \
@@ -22833,11 +22820,9 @@ koopa_test_grep() {
 }
 
 koopa_test_true_color() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk)"
-    )
+    app['awk']="$(koopa_locate_awk)"
     [[ -x "${app['awk']}" ]] || exit 1
     "${app['awk']}" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
@@ -25635,13 +25620,11 @@ koopa_update_system_homebrew() {
 }
 
 koopa_update_system_tex_packages() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['tlmgr']="$(koopa_locate_tlmgr)"
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['tlmgr']="$(koopa_locate_tlmgr)"
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['tlmgr']}" ]] || exit 1
     (
