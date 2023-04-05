@@ -5084,12 +5084,12 @@ koopa_datetime() {
 }
 
 koopa_decompress() {
-    local cmd cmd_args dict pos
+    local -A dict
+    local -a cmd_args pos
+    local cmd
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-        ['stdout']=0
-    )
+    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    dict['stdout']=0
     pos=()
     while (("$#"))
     do
@@ -5218,12 +5218,12 @@ koopa_delete_broken_symlinks() {
 }
 
 koopa_delete_dotfile() {
-    local dict name pos
+    local -A dict
+    local -a pos
+    local name
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['config']=0
-        ['xdg_config_home']="$(koopa_xdg_config_home)"
-    )
+    dict['config']=0
+    dict['xdg_config_home']="$(koopa_xdg_config_home)"
     pos=()
     while (("$#"))
     do
@@ -5339,7 +5339,7 @@ koopa_dirname() {
     local arg
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -5764,8 +5764,9 @@ ${dict['image_name']}:${dict['version']}"
 }
 
 koopa_docker_is_build_recent() {
-    local app dict image pos
     local -A app dict
+    local -a pos
+    local image
     koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
@@ -5884,18 +5885,16 @@ koopa_docker_remove() {
 }
 
 koopa_docker_run() {
-    local app dict pos run_args
+    local -A app dict
+    local -a pos run_args
     koopa_assert_has_args "$#"
-    local -A app
     app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['docker']}" ]] || exit 1
-    local -A dict=(
-        ['arm']=0
-        ['bash']=0
-        ['bind']=0
-        ['workdir']='/mnt/work'
-        ['x86']=0
-    )
+    dict['arm']=0
+    dict['bash']=0
+    dict['bind']=0
+    dict['workdir']='/mnt/work'
+    dict['x86']=0
     pos=()
     while (("$#"))
     do
@@ -6020,21 +6019,17 @@ koopa_download_github_latest() {
 }
 
 koopa_download() {
-    local app bool dict download_args pos
+    local -A app bool dict
+    local -a download_args pos
     koopa_assert_has_args "$#"
-    local -A bool=(
-        ['decompress']=0
-        ['extract']=0
-        ['progress']=1
-    )
-    local -A dict=(
-        ['user_agent']="Mozilla/5.0 \
-(Macintosh; Intel Mac OS X 10.15; rv:109.0) \
-Gecko/20100101 Firefox/111.0"
-        ['engine']='curl'
-        ['file']="${2:-}"
-        ['url']="${1:?}"
-    )
+    bool['decompress']=0
+    bool['extract']=0
+    bool['progress']=1
+    dict['engine']='curl'
+    dict['file']="${2:-}"
+    dict['url']="${1:?}"
+    dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
+rv:109.0) Gecko/20100101 Firefox/111.0"
     pos=()
     while (("$#"))
     do
@@ -6070,7 +6065,6 @@ Gecko/20100101 Firefox/111.0"
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    local -A app
     app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
     [[ -x "${app['download']}" ]] || exit 1
     if [[ -z "${dict['file']}" ]]
@@ -6966,18 +6960,16 @@ koopa_find_and_move_in_sequence() {
 }
 
 koopa_find_and_replace_in_file() {
-    local app dict flags perl_cmd pos
+    local -A app dict
+    local -a flags perl_cmd pos
     koopa_assert_has_args "$#"
-    local -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || exit 1
-    local -A dict=(
-        ['multiline']=0
-        ['pattern']=''
-        ['regex']=0
-        ['replacement']=''
-        ['sudo']=0
-    )
+    dict['multiline']=0
+    dict['pattern']=''
+    dict['regex']=0
+    dict['replacement']=''
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do

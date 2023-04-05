@@ -3,15 +3,16 @@
 koopa_docker_is_build_recent() {
     # """
     # Has the requested Docker image been built recently?
-    # @note Updated 2022-01-20.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - Corresponding 'isDockerBuildRecent()' R function.
     # - https://stackoverflow.com/questions/8903239/
     # - https://unix.stackexchange.com/questions/27013/
     # """
-    local app dict image pos
     local -A app dict
+    local -a pos
+    local image
     koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
