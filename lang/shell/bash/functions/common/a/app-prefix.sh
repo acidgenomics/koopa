@@ -13,10 +13,9 @@ koopa_app_prefix() {
     # # /opt/koopa/app/r/4.2.1
     # """
     local dict pos
-    declare -A dict=(
-        ['allow_missing']=0
-        ['app_prefix']="$(koopa_koopa_prefix)/app"
-    )
+    declare -A dict
+    dict['allow_missing']=0
+    dict['app_prefix']="$(koopa_koopa_prefix)/app"
     if [[ "$#" -eq 0 ]]
     then
         koopa_print "${dict['app_prefix']}"

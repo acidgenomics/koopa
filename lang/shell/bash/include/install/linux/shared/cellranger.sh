@@ -10,8 +10,8 @@ main() {
     #     software/downloads/latest
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['aws']="$(koopa_locate_aws --allow-system)"
     [[ -x "${app['aws']}" ]] || return 1
     declare -A dict=(

@@ -6,11 +6,10 @@ koopa_append_string() {
     # @note Updated 2022-03-01.
     # """
     local dict
+    declare -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']=''
-        ['string']=''
-    )
+    dict['file']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in

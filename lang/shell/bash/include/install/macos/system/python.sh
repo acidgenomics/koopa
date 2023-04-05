@@ -6,19 +6,16 @@ main() {
     # @note Updated 2022-12-08.
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['installer']="$(koopa_macos_locate_installer)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['installer']="$(koopa_macos_locate_installer)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['installer']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['framework_prefix']='/Library/Frameworks/Python.framework'
-        ['macos_version']="$(koopa_macos_os_version)"
-        ['name']='python'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['framework_prefix']='/Library/Frameworks/Python.framework'
+    dict['macos_version']="$(koopa_macos_os_version)"
+    dict['name']='python'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['macos_version']}" in
         '10'*)
             dict['macos_string']='macosx10.9'

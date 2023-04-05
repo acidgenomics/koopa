@@ -41,12 +41,10 @@ koopa_activate_app() {
     # """
     local app app_name dict pos
     koopa_assert_has_args "$#"
-    declare -A app
+    declare -A app dict
     app['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
-    declare -A dict=(
-        ['build_only']=0
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    dict['build_only']=0
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     pos=()
     while (("$#"))
     do

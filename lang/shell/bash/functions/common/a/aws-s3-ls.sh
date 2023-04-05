@@ -40,21 +40,18 @@ koopa_aws_s3_ls() {
     # >     --recursive
     # """
     local app dict ls_args str
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['aws']="$(koopa_locate_aws)"
-        ['sed']="$(koopa_locate_sed)"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['aws']="$(koopa_locate_aws)"
+    app['sed']="$(koopa_locate_sed)"
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['recursive']=0
-        ['type']=''
-    )
+    dict['prefix']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['recursive']=0
+    dict['type']=''
     ls_args=()
     while (("$#"))
     do
