@@ -184,19 +184,16 @@ koopa_linux_bcbio_nextgen_add_genome() {
 }
 
 koopa_linux_bcbio_nextgen_patch_devel() {
-    local app cache_files dict
+    local -A app dict
+    local -a cache_files
     koopa_assert_has_no_envs
-    local -A app=(
-        ['bcbio_python']='bcbio_python'
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['tee']}" ]] || exit 1
-    local -A dict=(
-        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
-        ['install_dir']=''
-        ['name']='bcbio-nextgen'
-        ['tmp_log_file']="$(koopa_tmp_log_file)"
-    )
+    app['bcbio_python']="$(koopa_linux_locate_bcbio_python)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['git_dir']="${HOME:?}/git/bcbio-nextgen"
+    dict['install_dir']=''
+    dict['name']='bcbio-nextgen'
+    dict['tmp_log_file']="$(koopa_tmp_log_file)"
     while (("$#"))
     do
         case "$1" in
@@ -230,12 +227,6 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         esac
     done
     koopa_assert_is_dir "${dict['git_dir']}"
-    if [[ ! -x "${app['bcbio_python']}" ]]
-    then
-        koopa_locate_app "${app['bcbio_python']}"
-    fi
-    app['bcbio_python']="$(koopa_realpath "${app['bcbio_python']}")"
-    koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
         dict['install_dir']="$( \
@@ -342,17 +333,12 @@ koopa_linux_bcbio_nextgen_run_tests() {
 }
 
 koopa_linux_bcl2fastq_indrops() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['bcl2fastq']}" ]] || exit 1
-    [[ -x "${app['tee']}" ]] || exit 1
-    local -A dict=(
-        ['log_file']='bcl2fastq-indrops.log'
-    )
+    app['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['log_file']='bcl2fastq-indrops.log'
     "${app['bcl2fastq']}" \
         --use-bases-mask 'y*,y*,y*,y*' \
         --mask-short-adapter-reads 0 \
@@ -593,21 +579,15 @@ koopa_linux_install_system_pivpn() {
 }
 
 koopa_linux_java_update_alternatives() {
-    local app dict
-    local prefix priority
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
-    )
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['update_alternatives']}" ]] || exit 1
-    local -A dict=(
-        ['alt_prefix']='/var/lib/alternatives'
-        ['prefix']="$(koopa_realpath "${1:?}")"
-        ['priority']=100
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['alt_prefix']='/var/lib/alternatives'
+    dict['prefix']="$(koopa_realpath "${1:?}")"
+    dict['priority']=100
     koopa_rm --sudo \
         "${dict['alt_prefix']}/java" \
         "${dict['alt_prefix']}/javac" \
@@ -640,6 +620,13 @@ koopa_linux_java_update_alternatives() {
     "${app['update_alternatives']}" --display 'javac'
     "${app['update_alternatives']}" --display 'jar'
     return 0
+}
+
+koopa_linux_locate_bcbio_python() {
+    koopa_locate_app \
+        --app-name='bcbio-nextgen' \
+        --bin-name='bcbio_python' \
+        "$@"
 }
 
 koopa_linux_locate_bcbio_setup_genome() {
