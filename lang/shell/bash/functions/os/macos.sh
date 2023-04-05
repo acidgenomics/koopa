@@ -280,7 +280,6 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
 }
 
 koopa_macos_disable_spotlight_indexing() {
-    local app
     local -A app=(
         ['mdutil']="$(koopa_macos_locate_mdutil)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -648,7 +647,6 @@ koopa_macos_install_system_r() {
 }
 
 koopa_macos_install_system_rosetta() {
-    local app
     local -A app=(
         ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
         ['sudo']="$(koopa_locate_sudo)"

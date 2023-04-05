@@ -5,7 +5,6 @@ koopa_git_push_submodules() {
     # Push Git submodules.
     # @note Updated 2023-03-12.
     # """
-    local app
     local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1

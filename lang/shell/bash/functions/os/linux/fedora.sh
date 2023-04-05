@@ -22,7 +22,6 @@ koopa_fedora_dnf_remove() {
 }
 
 koopa_fedora_dnf() {
-    local app
     local -A app=(
         ['dnf']="$(koopa_fedora_locate_dnf)"
         ['sudo']="$(koopa_locate_sudo)"

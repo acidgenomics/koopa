@@ -143,7 +143,6 @@ gnupg_patch_dirmngr() {
     # - https://gitlab.com/goeb/gnupg-static/-/commit/
     #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
     # """
-    local app
     local -A app
     app['sed']="$(koopa_locate_sed)"
     [[ -x "${app['sed']}" ]] || exit 1

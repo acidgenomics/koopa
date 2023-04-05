@@ -7,11 +7,9 @@ koopa_gpg_prompt() {
     #
     # Useful for building Docker images, etc. inside tmux.
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['gpg']="$(koopa_locate_gpg --allow-system)"
-    )
+    app['gpg']="$(koopa_locate_gpg --allow-system)"
     [[ -x "${app['gpg']}" ]] || exit 1
     printf '' | "${app['gpg']}" -s
     return 0

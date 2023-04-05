@@ -18,13 +18,11 @@ koopa_git_branch() {
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['git']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1

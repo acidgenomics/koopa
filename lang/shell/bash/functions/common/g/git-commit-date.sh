@@ -12,13 +12,11 @@ koopa_git_commit_date() {
     # > koopa_git_commit_date "${HOME}/git/monorepo"
     # # 2022-08-04
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['date']="$(koopa_locate_date --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['xargs']="$(koopa_locate_xargs --allow-system)"
-    )
+    app['date']="$(koopa_locate_date --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['xargs']="$(koopa_locate_xargs --allow-system)"
     [[ -x "${app['date']}" ]] || exit 1
     [[ -x "${app['git']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1

@@ -10,7 +10,6 @@ koopa_macos_disable_spotlight_indexing() {
     # Useful command to monitor mds usage:
     # > sudo fs_usage -w -f filesys mds
     # """
-    local app
     local -A app=(
         ['mdutil']="$(koopa_macos_locate_mdutil)"
         ['sudo']="$(koopa_locate_sudo)"

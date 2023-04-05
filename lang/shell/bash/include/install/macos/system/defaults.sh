@@ -10,7 +10,6 @@ main() {
     # @note Updated 2022-09-02.
     #
     # """
-    local app
     local -A app
     koopa_assert_has_no_args "$#"
     # > app['scutil']="$(koopa_macos_locate_scutil)"
