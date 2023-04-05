@@ -5864,16 +5864,13 @@ koopa_docker_prune_old_images() {
 }
 
 koopa_docker_remove() {
-    local app pattern
+    local -A app
+    local pattern
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['docker']="$(koopa_locate_docker)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['docker']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk)"
+    app['docker']="$(koopa_locate_docker)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
     for pattern in "$@"
     do
         "${app['docker']}" images \
@@ -5971,14 +5968,14 @@ koopa_dotfiles_prefix() {
 }
 
 koopa_download_cran_latest() {
-    local app file name pattern url
+    local -A app
+    local name
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
+    app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || exit 1
     for name in "$@"
     do
+        local file pattern url
         url="https://cran.r-project.org/web/packages/${name}/"
         pattern="${name}_[-.0-9]+.tar.gz"
         file="$( \
@@ -5995,16 +5992,15 @@ koopa_download_cran_latest() {
 }
 
 koopa_download_github_latest() {
-    local api_url app repo tag tarball_url
+    local -A app
+    local repo
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['tr']="$(koopa_locate_tr --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['tr']}" ]] || exit 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for repo in "$@"
     do
+        local api_url tag tarball_url
         api_url="https://api.github.com/repos/${repo}/releases/latest"
         tarball_url="$( \
             koopa_parse_url "$api_url" \
@@ -6205,27 +6201,22 @@ default shell."
 }
 
 koopa_ensure_newline_at_end_of_file() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['tail']="$(koopa_locate_tail)"
-    )
-    [[ -x "${app['tail']}" ]] || exit 1
-    local -A dict=(
-        ['file']="${1:?}"
-    )
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['file']="${1:?}"
     [[ -n "$("${app['tail']}" --bytes=1 "${dict['file']}")" ]] || return 0
     printf '\n' >> "${dict['file']}"
     return 0
 }
 
 koopa_entab() {
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['vim']="$(koopa_locate_vim)"
-    )
-    [[ -x "${app['vim']}" ]] || exit 1
+    app['vim']="$(koopa_locate_vim)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     for file in "$@"
     do
