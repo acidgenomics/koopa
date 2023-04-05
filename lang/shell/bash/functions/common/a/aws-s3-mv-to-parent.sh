@@ -61,7 +61,6 @@ koopa_aws_s3_mv_to_parent() {
     readarray -t files <<< "${dict['str']}"
     for file in "${files[@]}"
     do
-        local dict2
         local -A dict2
         dict2['bn']="$(koopa_basename "$file")"
         dict2['dn1']="$(koopa_dirname "$file")"

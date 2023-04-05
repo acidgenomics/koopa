@@ -455,7 +455,6 @@ include/header.sh"
                 then
                     for i in "${!bin_arr[@]}"
                     do
-                        local dict2
                         local -A dict2
                         dict2['name']="${bin_arr[$i]}"
                         dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
@@ -475,7 +474,6 @@ include/header.sh"
                 then
                     for i in "${!man1_arr[@]}"
                     do
-                        local dict2
                         local -A dict2
                         dict2['name']="${man1_arr[$i]}"
                         dict2['mf1']="${dict['prefix']}/share/man/\

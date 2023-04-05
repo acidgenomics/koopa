@@ -38,7 +38,6 @@ default '${dict['binary_prefix']}' location."
         koopa_cd "${dict['tmp_dir']}"
         for prefix in "$@"
         do
-            local dict2
             local -A dict2
             dict2['prefix']="$(koopa_realpath "$prefix")"
             dict2['name']="$( \

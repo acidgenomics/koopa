@@ -97,7 +97,6 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     )"
     for i in "${!keys[@]}"
     do
-        local dict2
         local -A dict2
         dict2['key']="${keys[$i]}"
         dict2['version_id']="${version_ids[$i]}"
