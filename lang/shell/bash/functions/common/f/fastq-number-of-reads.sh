@@ -3,21 +3,19 @@
 koopa_fastq_number_of_reads() {
     # """
     # Return the number of reads per FASTQ file.
-    # @note Updated 2022-05-18.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_fastq_number_of_reads 'sample_R1.fastq.gz'
     # # 27584960
     # """
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['wc']="$(koopa_locate_wc)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['wc']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk)"
+    app['wc']="$(koopa_locate_wc)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         local num

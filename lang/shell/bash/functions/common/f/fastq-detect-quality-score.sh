@@ -18,17 +18,14 @@ koopa_fastq_detect_quality_score() {
     # > koopa_fastq_detect_quality_score 'sample_R1.fastq.gz'
     # # Phred+33
     # """
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['od']="$(koopa_locate_od --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['od']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['od']="$(koopa_locate_od --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         local str

@@ -3,7 +3,7 @@
 koopa_fasta_generate_decoy_transcriptome_file() {
     # """
     # Generate decoy transcriptome "gentrome" (e.g. for salmon index).
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-05.
     #
     # This function generates aFASTA file named 'gentrome.fa.gz', containing
     # input from both the genome and transcriptome FASTA files.
@@ -27,17 +27,14 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     # - https://github.com/chapmanb/cloudbiolinux/blob/master/ggd-recipes/
     #     hg38/salmon-decoys.yaml
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
-    [[ -x "${app['cat']}" ]] || exit 1
-    local -A dict=(
-        ['genome_fasta_file']=''
-        ['output_file']='' # 'gentrome.fa.gz'
-        ['transcriptome_fasta_file']=''
-    )
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['genome_fasta_file']=''
+    # e.g. 'gentrome.fa.gz'.
+    dict['output_file']=''
+    dict['transcriptome_fasta_file']=''
     while (("$#"))
     do
         case "$1" in

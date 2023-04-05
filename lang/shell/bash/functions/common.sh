@@ -6475,20 +6475,14 @@ koopa_extract() {
 }
 
 koopa_fasta_generate_chromosomes_file() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['grep']="$(koopa_locate_grep)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['grep']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['genome_fasta_file']=''
-        ['output_file']=''
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['grep']="$(koopa_locate_grep)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['genome_fasta_file']=''
+    dict['output_file']=''
     while (("$#"))
     do
         case "$1" in
@@ -6533,17 +6527,13 @@ koopa_fasta_generate_chromosomes_file() {
 }
 
 koopa_fasta_generate_decoy_transcriptome_file() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
-    [[ -x "${app['cat']}" ]] || exit 1
-    local -A dict=(
-        ['genome_fasta_file']=''
-        ['output_file']='' # 'gentrome.fa.gz'
-        ['transcriptome_fasta_file']=''
-    )
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['genome_fasta_file']=''
+    dict['output_file']=''
+    dict['transcriptome_fasta_file']=''
     while (("$#"))
     do
         case "$1" in
@@ -6647,17 +6637,14 @@ koopa_fasta_has_alt_contigs() {
 }
 
 koopa_fastq_detect_quality_score() {
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['od']="$(koopa_locate_od --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['od']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['od']="$(koopa_locate_od --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         local str
@@ -6688,16 +6675,13 @@ koopa_fastq_detect_quality_score() {
 }
 
 koopa_fastq_lanepool() {
+    local -A app dict
     local app basenames dict fastq_files head i out tail
-    local -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
-    [[ -x "${app['cat']}" ]] || exit 1
-    local -A dict=(
-        ['prefix']='lanepool'
-        ['source_dir']="${PWD:?}"
-        ['target_dir']="${PWD:?}"
-    )
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']='lanepool'
+    dict['source_dir']="${PWD:?}"
+    dict['target_dir']="${PWD:?}"
     while (("$#"))
     do
         case "$1" in
@@ -6780,15 +6764,13 @@ koopa_fastq_lanepool() {
 }
 
 koopa_fastq_number_of_reads() {
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['wc']="$(koopa_locate_wc)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['wc']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk)"
+    app['wc']="$(koopa_locate_wc)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         local num
@@ -6904,24 +6886,24 @@ koopa_file_detect() {
 }
 
 koopa_file_ext_2() {
-    local app file x
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
+        local str
         if koopa_has_file_ext "$file"
         then
-            x="$( \
+            str="$( \
                 koopa_print "$file" \
                 | "${app['cut']}" -d '.' -f '2-' \
             )"
         else
-            x=''
+            str=''
         fi
-        koopa_print "$x"
+        koopa_print "$str"
     done
     return 0
 }
@@ -7038,18 +7020,13 @@ koopa_find_and_replace_in_file() {
 }
 
 koopa_find_app_version() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['sort']="$(koopa_locate_sort)"
-        ['tail']="$(koopa_locate_tail)"
-    )
-    [[ -x "${app['sort']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
-    local -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['name']="${1:?}"
-    )
+    app['sort']="$(koopa_locate_sort)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['name']="${1:?}"
     dict['prefix']="${dict['app_prefix']}/${dict['name']}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['hit']="$( \
@@ -7088,20 +7065,14 @@ koopa_find_broken_symlinks() {
 }
 
 koopa_find_dotfiles() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    local -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['basename']="$(koopa_locate_basename)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['basename']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
-    local -A dict=(
-        ['type']="${1:?}"
-        ['header']="${2:?}"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['basename']="$(koopa_locate_basename)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['type']="${1:?}"
+    dict['header']="${2:?}"
     dict['str']="$( \
         koopa_find \
             --max-depth=1 \
@@ -7140,15 +7111,15 @@ koopa_find_empty_dirs() {
 }
 
 koopa_find_files_without_line_ending() {
-    local app files prefix
+    local -A app
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    local -A app=(
-        ['pcregrep']="$(koopa_locate_pcregrep)"
-    )
-    [[ -x "${app['pcregrep']}" ]] || exit 1
+    app['pcregrep']="$(koopa_locate_pcregrep)"
+    koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
+        local -a files
         local str
         readarray -t files <<< "$(
             koopa_find \
@@ -7166,17 +7137,14 @@ koopa_find_files_without_line_ending() {
 }
 
 koopa_find_large_dirs() {
-    local app prefix
+    local -A app
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    local -A app=(
-        ['du']="$(koopa_locate_du)"
-        ['sort']="$(koopa_locate_sort)"
-        ['tail']="$(koopa_locate_tail)"
-    )
-    [[ -x "${app['du']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
+    app['du']="$(koopa_locate_du)"
+    app['sort']="$(koopa_locate_sort)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
         local str
@@ -7737,17 +7705,13 @@ koopa_find() {
 }
 
 koopa_ftp_mirror() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['wget']="$(koopa_locate_wget)"
-    )
-    [[ -x "${app['wget']}" ]] || exit 1
-    local -A dict=(
-        ['dir']=''
-        ['host']=''
-        ['user']=''
-    )
+    app['wget']="$(koopa_locate_wget)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['dir']=''
+    dict['host']=''
+    dict['user']=''
     while (("$#"))
     do
         case "$1" in
