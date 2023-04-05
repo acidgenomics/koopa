@@ -3,7 +3,7 @@
 koopa_is_recent() {
     # """
     # If the file exists and is more recent than 2 weeks old.
-    # @note Updated 2022-02-24.
+    # @note Updated 2023-04-05.
     #
     # Current approach uses find to filter based on modification date.
     #
@@ -20,15 +20,12 @@ koopa_is_recent() {
     # @examples
     # > koopa_is_recent ~/hello-world.txt
     # """
-    local app dict file
+    local -A app dict
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['find']="$(koopa_locate_find)"
-    )
-    [[ -x "${app['find']}" ]] || exit 1
-    local -A dict=(
-        ['days']=14
-    )
+    app['find']="$(koopa_locate_find)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['days']=14
     for file in "$@"
     do
         local exists

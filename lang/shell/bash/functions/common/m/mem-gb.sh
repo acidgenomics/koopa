@@ -11,15 +11,14 @@ koopa_mem_gb() {
     #
     # Usage of 'int()' in awk rounds down.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['awk']='awk'
-    )
-    local -A dict
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     if koopa_is_macos
     then
         app['sysctl']="$(koopa_macos_locate_sysctl)"
+        koopa_assert_is_executable "${app['sysctl']}"
         dict['mem']="$("${app['sysctl']}" -n 'hw.memsize')"
         dict['denom']=1073741824  # 1024^3; bytes
     elif koopa_is_linux
