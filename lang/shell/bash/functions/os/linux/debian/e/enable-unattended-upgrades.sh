@@ -17,14 +17,12 @@ koopa_debian_enable_unattended_upgrades() {
     # - /var/log/dpkg.log
     # - /var/log/unattended-upgrades/
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-        ['sudo']="$(koopa_locate_sudo)"
-        ['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
-    )
+    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
+    app['sudo']="$(koopa_locate_sudo)"
+    app['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
     [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['unattended_upgrades']}" ]] || exit 1

@@ -5,14 +5,12 @@ koopa_macos_clean_launch_services() {
     # Clean launch services.
     # @note Updated 2021-11-16.
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app=(
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['lsregister']="$(koopa_macos_locate_lsregister)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['lsregister']="$(koopa_macos_locate_lsregister)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['kill_all']}" ]] || exit 1
     [[ -x "${app['lsregister']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1

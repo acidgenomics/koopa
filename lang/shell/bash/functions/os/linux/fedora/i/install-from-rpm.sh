@@ -3,16 +3,14 @@
 koopa_fedora_install_from_rpm() {
     # """
     # Install directly from RPM file.
-    # @note Updated 2022-01-28.
+    # @note Updated 2023-04-05.
     #
     # Allowing passthrough of '--prefix' here.
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['rpm']="$(koopa_fedora_locate_rpm)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['rpm']="$(koopa_fedora_locate_rpm)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['rpm']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['rpm']}" -v \
