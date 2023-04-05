@@ -3,23 +3,23 @@
 koopa_r_link_files_in_etc() {
     # """
     # Link R config files inside 'etc/'.
-    # @note Updated 2022-07-28.
+    # @note Updated 2023-04-05.
     #
     # Don't copy Makevars file across machines.
     # """
-    local app dict file files
+    local -A app dict
+    local -a files
+    local file
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['r']="${1:?}"
-    )
-    [[ -x "${app['r']}" ]] || exit 1
-    local -A dict=(
-        ['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
-        ['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        ['sudo']=0
-        ['version']="$(koopa_r_version "${app['r']}")"
-    )
-    koopa_assert_is_dir "${dict['r_etc_source']}" "${dict['r_prefix']}"
+    app['r']="${1:?}"
+    koopa_assert_is_executable "${app[@]}"
+    dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['sudo']=0
+    dict['version']="$(koopa_r_version "${app['r']}")"
+    koopa_assert_is_dir \
+        "${dict['r_etc_source']}" \
+        "${dict['r_prefix']}"
     if koopa_is_linux && \
         ! koopa_is_koopa_app "${app['r']}" && \
         [[ -d '/etc/R' ]]
@@ -30,10 +30,7 @@ koopa_r_link_files_in_etc() {
     else
         dict['r_etc_target']="${dict['r_prefix']}/etc"
     fi
-    files=(
-        'Rprofile.site'
-        'repositories'
-    )
+    files=('Rprofile.site' 'repositories')
     for file in "${files[@]}"
     do
         if [[ "${dict['sudo']}" -eq 1 ]]

@@ -3,17 +3,15 @@
 koopa_r_version() {
     # """
     # R version.
-    # @note Updated 2022-09-06.
+    # @note Updated 2023-04-05.
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_args_le "$#" 1
-    local -A app=(
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['r']="${1:-}"
-    )
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         R_HOME='' \
         "${app['r']}" --version 2>/dev/null \

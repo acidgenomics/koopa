@@ -57,22 +57,18 @@ koopa_sra_fastq_dump() {
     # >     --prefetch-directory='srp049596-prefetch' \
     # >     --fastq-directory='srp049596-fastq'
     # """
-    local app dict sra_file sra_files
-    local -A app=(
-        ['fasterq_dump']="$(koopa_locate_fasterq_dump)"
-        ['gzip']="$(koopa_locate_gzip)"
-        ['parallel']="$(koopa_locate_parallel)"
-    )
-    [[ -x "${app['fasterq_dump']}" ]] || exit 1
-    [[ -x "${app['gzip']}" ]] || exit 1
-    [[ -x "${app['parallel']}" ]] || exit 1
-    local -A dict=(
-        ['acc_file']=''
-        ['compress']=1
-        ['fastq_dir']='fastq'
-        ['prefetch_dir']='sra'
-        ['threads']="$(koopa_cpu_count)"
-    )
+    local -A app dict
+    local -a sra_files
+    local sra_file
+    app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
+    app['gzip']="$(koopa_locate_gzip)"
+    app['parallel']="$(koopa_locate_parallel)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['acc_file']=''
+    dict['compress']=1
+    dict['fastq_dir']='fastq'
+    dict['prefetch_dir']='sra'
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in

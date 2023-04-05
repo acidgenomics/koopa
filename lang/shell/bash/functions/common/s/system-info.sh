@@ -3,27 +3,23 @@
 koopa_system_info() {
     # """
     # System information.
-    # @note Updated 2022-10-13.
+    # @note Updated 2023-04-05.
     # """
-    local app dict info nf_info
+    local -A app dict
+    local -a info nf_info
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['bash']="$(koopa_locate_bash --allow-system)"
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
-    [[ -x "${app['bash']}" ]] || exit 1
-    [[ -x "${app['cat']}" ]] || exit 1
-    local -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['arch']="$(koopa_arch)"
-        ['arch2']="$(koopa_arch2)"
-        ['bash_version']="$(koopa_get_version "${app['bash']}")"
-        ['config_prefix']="$(koopa_config_prefix)"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['koopa_url']="$(koopa_koopa_url)"
-        ['koopa_version']="$(koopa_koopa_version)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    app['bash']="$(koopa_locate_bash --allow-system)"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['arch']="$(koopa_arch)"
+    dict['arch2']="$(koopa_arch2)"
+    dict['bash_version']="$(koopa_get_version "${app['bash']}")"
+    dict['config_prefix']="$(koopa_config_prefix)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['koopa_url']="$(koopa_koopa_url)"
+    dict['koopa_version']="$(koopa_koopa_version)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
 koopa/ascii-turtle.txt"
     koopa_assert_is_file "${dict['ascii_turtle_file']}"

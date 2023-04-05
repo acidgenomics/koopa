@@ -5,7 +5,7 @@
 koopa_test_find_files_by_shebang() {
     # """
     # Find relevant test files by shebang.
-    # @note Updated 2022-10-07.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_test_find_files_by_shebang '^#!/.+\b(bash)$'
@@ -14,17 +14,14 @@ koopa_test_find_files_by_shebang() {
     # > koopa_test_find_files_by_shebang '^#!/.+\b(zsh)$'
     # > koopa_test_find_files_by_shebang '^#!/bin/sh$'
     # """
-    local all_files app dict file files
+    local -A app dict
+    local -a all_files files
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['head']="$(koopa_locate_head)"
-        ['tr']="$(koopa_locate_tr)"
-    )
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['tr']}" ]] || exit 1
-    local -A dict=(
-        ['pattern']="${1:?}"
-    )
+    app['head']="$(koopa_locate_head)"
+    app['tr']="$(koopa_locate_tr)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['pattern']="${1:?}"
     readarray -t all_files <<< "$(koopa_test_find_files)"
     files=()
     for file in "${all_files[@]}"

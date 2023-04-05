@@ -3,7 +3,7 @@
 koopa_wget_recursive() {
     # """
     # Download files with wget recursively.
-    # @note Updated 2022-02-10.
+    # @note Updated 2023-04-05.
     #
     # Note that we need to escape the wildcards in the password.
     # For direct input, can just use single quotes to escape.
@@ -17,18 +17,15 @@ koopa_wget_recursive() {
     # >     --user='user' \
     # >     --password='pass'
     # """
-    local app dict wget_args
+    local -A app dict
+    local -a wget_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['wget']="$(koopa_locate_wget)"
-    )
-    [[ -x "${app['wget']}" ]] || exit 1
-    local -A dict=(
-        ['datetime']="$(koopa_datetime)"
-        ['password']=''
-        ['url']=''
-        ['user']=''
-    )
+    app['wget']="$(koopa_locate_wget)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['datetime']="$(koopa_datetime)"
+    dict['password']=''
+    dict['url']=''
+    dict['user']=''
     while (("$#"))
     do
         case "$1" in

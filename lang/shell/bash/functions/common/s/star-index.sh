@@ -3,7 +3,7 @@
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2023-02-14.
+    # @note Updated 2023-04-05.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -21,25 +21,22 @@ koopa_star_index() {
     # >     --gtf-file='gencode.v39.annotation.gtf.gz' \
     # >     --output-dir='star-index'
     # """
-    local app dict index_args
-    local -A app=(
-        ['star']="$(koopa_locate_star)"
-    )
-    [[ -x "${app['star']}" ]] || exit 1
-    local -A dict=(
-        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        ['genome_fasta_file']=''
-        # e.g. 'gencode.v39.annotation.gtf.gz'
-        ['gtf_file']=''
-        ['is_tmp_genome_fasta_file']=0
-        ['is_tmp_gtf_file']=0
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=60
-        # e.g. 'star-index'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    local -A app dict
+    local -a index_args
+    app['star']="$(koopa_locate_star)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
+    dict['genome_fasta_file']=''
+    # e.g. 'gencode.v39.annotation.gtf.gz'
+    dict['gtf_file']=''
+    dict['is_tmp_genome_fasta_file']=0
+    dict['is_tmp_gtf_file']=0
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=60
+    # e.g. 'star-index'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     index_args=()
     while (("$#"))
     do

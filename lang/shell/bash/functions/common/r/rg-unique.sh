@@ -3,19 +3,14 @@
 koopa_rg_unique() {
     # """
     # ripgrep, but only return a summary of all unique matches.
-    # @note Updated 2022-01-20.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['rg']="$(koopa_locate_rg)"
-        ['sort']="$(koopa_locate_sort)"
-    )
-    [[ -x "${app['rg']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
-    local -A dict=(
-        ['pattern']="${1:?}"
-    )
+    app['rg']="$(koopa_locate_rg)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['pattern']="${1:?}"
     dict['str']="$( \
         "${app['rg']}" \
             --no-filename \

@@ -3,14 +3,13 @@
 koopa_sort_lines() {
     # """
     # Sort lines.
-    # @note Updated 2022-05-20.
+    # @note Updated 2023-04-05.
     # """
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['vim']="$(koopa_locate_vim)"
-    )
-    [[ -x "${app['vim']}" ]] || exit 1
+    app['vim']="$(koopa_locate_vim)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     for file in "$@"
     do

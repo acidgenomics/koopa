@@ -3,16 +3,14 @@
 koopa_os_type() {
     # """
     # Operating system type.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-05.
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['tr']="$(koopa_locate_tr --allow-system)"
-        ['uname']="$(koopa_locate_uname --allow-system)"
-    )
-    [[ -x "${app['tr']}" ]] || exit 1
-    [[ -x "${app['uname']}" ]] || exit 1
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    app['uname']="$(koopa_locate_uname --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['uname']}" -s \
         | "${app['tr']}" '[:upper:]' '[:lower:]' \
