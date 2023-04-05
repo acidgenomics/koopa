@@ -14,7 +14,7 @@ koopa_aws_s3_mv_to_parent() {
     declare -A app dict
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))

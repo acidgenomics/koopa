@@ -32,7 +32,7 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     declare -A app=(
         ['cat']="$(koopa_locate_cat --allow-system)"
     )
-    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || exit 1
     declare -A dict=(
         ['genome_fasta_file']=''
         ['output_file']='' # 'gentrome.fa.gz'

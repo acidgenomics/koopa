@@ -14,7 +14,7 @@ koopa_is_ssh_enabled() {
     declare -A app=(
         ['ssh']="$(koopa_locate_ssh)"
     )
-    [[ -x "${app['ssh']}" ]] || return 1
+    [[ -x "${app['ssh']}" ]] || exit 1
     declare -A dict=(
         ['url']="${1:?}"
         ['pattern']="${2:?}"

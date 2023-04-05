@@ -17,9 +17,9 @@ koopa_find_dotfiles() {
         ['basename']="$(koopa_locate_basename)"
         ['xargs']="$(koopa_locate_xargs)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['basename']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['basename']}" ]] || exit 1
+    [[ -x "${app['xargs']}" ]] || exit 1
     declare -A dict=(
         ['type']="${1:?}"
         ['header']="${2:?}"

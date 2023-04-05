@@ -25,7 +25,7 @@ koopa_is_recent() {
     declare -A app=(
         ['find']="$(koopa_locate_find)"
     )
-    [[ -x "${app['find']}" ]] || return 1
+    [[ -x "${app['find']}" ]] || exit 1
     declare -A dict=(
         ['days']=14
     )

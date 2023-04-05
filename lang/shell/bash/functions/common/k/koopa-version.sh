@@ -10,7 +10,7 @@ koopa_koopa_version() {
     declare -A dict
     koopa_assert_has_no_args "$#"
     app['cat']="$(koopa_locate_cat --allow-system)"
-    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || exit 1
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['version_file']="${dict['koopa_prefix']}/VERSION"
     koopa_assert_is_file "${dict['version_file']}"

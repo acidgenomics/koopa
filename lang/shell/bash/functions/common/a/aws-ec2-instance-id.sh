@@ -18,7 +18,7 @@ koopa_aws_ec2_instance_id() {
         # e.g. Amazon Linux 2.
         app['ec2metadata']='/usr/bin/ec2-metadata'
     fi
-    [[ -x "${app['ec2metadata']}" ]] || return 1
+    [[ -x "${app['ec2metadata']}" ]] || exit 1
     dict['string']="$("${app['ec2metadata']}" --instance-id)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"

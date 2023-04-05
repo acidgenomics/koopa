@@ -17,7 +17,7 @@ koopa_git_last_commit_local() {
     koopa_assert_has_args "$#"
     declare -A app dict
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['git']}" ]] || exit 1
     dict['ref']='HEAD'
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.

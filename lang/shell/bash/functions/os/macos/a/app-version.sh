@@ -15,9 +15,9 @@ koopa_macos_app_version() {
         ['plutil']="$(koopa_macos_locate_plutil)"
         ['tr']="$(koopa_locate_tr --allow-system)"
     )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['plutil']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['plutil']}" ]] || exit 1
+    [[ -x "${app['tr']}" ]] || exit 1
     for app in "$@"
     do
         plist="/Applications/${app}.app/Contents/Info.plist"

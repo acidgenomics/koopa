@@ -81,7 +81,7 @@ Gecko/20100101 Firefox/111.0"
     koopa_assert_has_args_le "$#" 2
     declare -A app
     app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
-    [[ -x "${app['download']}" ]] || return 1
+    [[ -x "${app['download']}" ]] || exit 1
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"

@@ -10,7 +10,7 @@ koopa_sambamba_index() {
     koopa_assert_is_file "$@"
     declare -A app
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || return 1
+    [[ -x "${app['sambamba']}" ]] || exit 1
     declare -A dict
     dict['threads']="$(koopa_cpu_count)"
     for bam_file in "$@"

@@ -12,8 +12,8 @@ koopa_linux_update_ldconfig() {
         ['ldconfig']="$(koopa_linux_locate_ldconfig)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['ldconfig']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['ldconfig']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }

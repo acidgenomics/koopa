@@ -15,8 +15,8 @@ main() {
         ['sudo']="$(koopa_locate_sudo)"
         ['tlmgr']="$(koopa_locate_tlmgr)"
     )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['tlmgr']}" ]] || return 1
+    [[ -x "${app['sudo']}" ]] || exit 1
+    [[ -x "${app['tlmgr']}" ]] || exit 1
     "${app['sudo']}" "${app['tlmgr']}" update --self
     packages=(
         # Priority ----

@@ -15,7 +15,7 @@ koopa_file_count() {
     koopa_assert_has_args_eq "$#" 1
     declare -A app dict
     app['wc']="$(koopa_locate_wc --allow-system)"
-    [[ -x "${app['wc']}" ]] || return 1
+    [[ -x "${app['wc']}" ]] || exit 1
     dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"

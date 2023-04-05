@@ -86,9 +86,9 @@ koopa_debian_apt_configure_sources() {
         ['head']="$(koopa_locate_head --allow-system)"
         ['tee']="$(koopa_locate_tee --allow-system)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['tee']}" ]] || exit 1
     declare -A dict=(
         ['os_codename']="$(koopa_debian_os_codename)"
         ['os_id']="$(koopa_os_id)"

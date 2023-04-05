@@ -12,9 +12,9 @@ koopa_fasta_generate_chromosomes_file() {
         ['grep']="$(koopa_locate_grep)"
         ['sed']="$(koopa_locate_sed)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['grep']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['grep']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
     declare -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''

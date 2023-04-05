@@ -10,8 +10,8 @@ koopa_brew_reset_core_repo() {
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
+    [[ -x "${app['git']}" ]] || exit 1
     dict['repo']='homebrew/core'
     dict['origin']='origin'
     dict['prefix']="$("${app['brew']}" --repo "${dict['repo']}")"

@@ -21,8 +21,8 @@ main() {
         ['meson']="$(koopa_locate_meson)"
         ['ninja']="$(koopa_locate_ninja)"
     )
-    [[ -x "${app['meson']}" ]] || return 1
-    [[ -x "${app['ninja']}" ]] || return 1
+    [[ -x "${app['meson']}" ]] || exit 1
+    [[ -x "${app['ninja']}" ]] || exit 1
     declare -A dict=(
         ['name']='glib'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

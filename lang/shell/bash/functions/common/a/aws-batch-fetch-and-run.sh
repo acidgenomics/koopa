@@ -16,7 +16,7 @@ koopa_aws_batch_fetch_and_run() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_set 'BATCH_FILE_URL' "${BATCH_FILE_URL:-}"
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
     dict['file']="$(koopa_tmp_file)"
     dict['profile']="${AWS_PROFILE:-default}"
     dict['url']="${BATCH_FILE_URL:?}"

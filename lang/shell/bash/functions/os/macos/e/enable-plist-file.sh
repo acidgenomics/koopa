@@ -11,8 +11,8 @@ koopa_macos_enable_plist_file() {
         ['launchctl']="$(koopa_macos_locate_launchctl)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['launchctl']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['launchctl']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_assert_is_not_file "$@"
     for file in "$@"
     do

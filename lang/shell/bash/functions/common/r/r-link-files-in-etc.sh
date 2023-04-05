@@ -12,7 +12,7 @@ koopa_r_link_files_in_etc() {
     declare -A app=(
         ['r']="${1:?}"
     )
-    [[ -x "${app['r']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
     declare -A dict=(
         ['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
         ['r_prefix']="$(koopa_r_prefix "${app['r']}")"

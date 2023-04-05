@@ -9,8 +9,8 @@ koopa_aws_ecr_login_public() {
     declare -A app dict
     app['aws']="$(koopa_locate_aws)"
     app['docker']="$(koopa_locate_docker)"
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['docker']}" ]] || exit 1
     dict['profile']="${AWS_ECR_PROFILE:?}" # FIXME
     dict['region']="${AWS_ECR_REGION:?}" # FIXME
     dict['repo_url']='public.ecr.aws'

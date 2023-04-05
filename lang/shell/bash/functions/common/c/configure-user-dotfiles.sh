@@ -29,7 +29,7 @@ koopa_configure_user_dotfiles() {
     then
         app['bash']='/usr/local/bin/bash'
     fi
-    [[ -x "${app['bash']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
     declare -A dict=(
         ['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
         ['name']='dotfiles'

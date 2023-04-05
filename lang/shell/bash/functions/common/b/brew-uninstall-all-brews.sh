@@ -13,8 +13,8 @@ koopa_brew_uninstall_all_brews() {
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     app['wc']="$(koopa_locate_wc)"
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['wc']}" ]] || return 1
+    [[ -x "${app['brew']}" ]] || exit 1
+    [[ -x "${app['wc']}" ]] || exit 1
     while [[ "$("${app['brew']}" list --formulae | "${app['wc']}" -l)" -gt 0 ]]
     do
         local brews

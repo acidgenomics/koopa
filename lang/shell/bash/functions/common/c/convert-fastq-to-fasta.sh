@@ -29,10 +29,10 @@ koopa_convert_fastq_to_fasta() {
         ['sed']="$(koopa_locate_sed)"
         ['tr']="$(koopa_locate_tr)"
     )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['paste']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
+    [[ -x "${app['cut']}" ]] || exit 1
+    [[ -x "${app['paste']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['tr']}" ]] || exit 1
     declare -A dict=(
         ['source_dir']=''
         ['target_dir']=''

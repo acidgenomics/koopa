@@ -11,8 +11,8 @@ koopa_system_info() {
         ['bash']="$(koopa_locate_bash --allow-system)"
         ['cat']="$(koopa_locate_cat --allow-system)"
     )
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['cat']}" ]] || return 1
+    [[ -x "${app['bash']}" ]] || exit 1
+    [[ -x "${app['cat']}" ]] || exit 1
     declare -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['arch']="$(koopa_arch)"
@@ -59,7 +59,7 @@ koopa/ascii-turtle.txt"
     if koopa_is_macos
     then
         app['sw_vers']="$(koopa_macos_locate_sw_vers)"
-        [[ -x "${app['sw_vers']}" ]] || return 1
+        [[ -x "${app['sw_vers']}" ]] || exit 1
         dict['os']="$( \
             printf '%s %s (%s)\n' \
                 "$("${app['sw_vers']}" -productName)" \
@@ -68,7 +68,7 @@ koopa/ascii-turtle.txt"
         )"
     else
         app['uname']="$(koopa_locate_uname --allow-system)"
-        [[ -x "${app['uname']}" ]] || return 1
+        [[ -x "${app['uname']}" ]] || exit 1
         dict['os']="$("${app['uname']}" --all)"
     fi
     info+=(
@@ -82,7 +82,7 @@ koopa/ascii-turtle.txt"
     if koopa_is_installed 'neofetch'
     then
         app['neofetch']="$(koopa_locate_neofetch)"
-        [[ -x "${app['neofetch']}" ]] || return 1
+        [[ -x "${app['neofetch']}" ]] || exit 1
         readarray -t nf_info <<< "$("${app['neofetch']}" --stdout)"
         info+=(
             ''

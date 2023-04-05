@@ -11,8 +11,8 @@ koopa_is_file_system_case_sensitive() {
         ['find']="$(koopa_locate_find)"
         ['wc']="$(koopa_locate_wc)"
     )
-    [[ -x "${app['find']}" ]] || return 1
-    [[ -x "${app['wc']}" ]] || return 1
+    [[ -x "${app['find']}" ]] || exit 1
+    [[ -x "${app['wc']}" ]] || exit 1
     declare -A dict=(
         ['prefix']="${PWD:?}"
         ['tmp_stem']='.koopa.tmp.'

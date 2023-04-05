@@ -131,21 +131,21 @@ main() {
         app['cc']="$(koopa_locate_gcc --realpath)"
         app['cxx']="$(koopa_locate_gcxx --realpath)"
     fi
-    [[ -x "${app['ar']}" ]] || return 1
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['cc']}" ]] || return 1
-    [[ -x "${app['cxx']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['gfortran']}" ]] || return 1
-    [[ -x "${app['jar']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
-    [[ -x "${app['javac']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['yacc']}" ]] || return 1
+    [[ -x "${app['ar']}" ]] || exit 1
+    [[ -x "${app['awk']}" ]] || exit 1
+    [[ -x "${app['bash']}" ]] || exit 1
+    [[ -x "${app['cc']}" ]] || exit 1
+    [[ -x "${app['cxx']}" ]] || exit 1
+    [[ -x "${app['echo']}" ]] || exit 1
+    [[ -x "${app['gfortran']}" ]] || exit 1
+    [[ -x "${app['jar']}" ]] || exit 1
+    [[ -x "${app['java']}" ]] || exit 1
+    [[ -x "${app['javac']}" ]] || exit 1
+    [[ -x "${app['make']}" ]] || exit 1
+    [[ -x "${app['perl']}" ]] || exit 1
+    [[ -x "${app['pkg_config']}" ]] || exit 1
+    [[ -x "${app['sed']}" ]] || exit 1
+    [[ -x "${app['yacc']}" ]] || exit 1
     declare -A conf_dict
     declare -A dict=(
         ['arch']="$(koopa_arch)"
@@ -299,7 +299,7 @@ main() {
     then
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
-        [[ -x "${app['svn']}" ]] || return 1
+        [[ -x "${app['svn']}" ]] || exit 1
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'

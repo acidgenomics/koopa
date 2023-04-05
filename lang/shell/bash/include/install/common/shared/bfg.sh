@@ -10,8 +10,8 @@ main() {
     koopa_activate_app 'openjdk'
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['java']="$(koopa_locate_java)"
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
+    [[ -x "${app['cat']}" ]] || exit 1
+    [[ -x "${app['java']}" ]] || exit 1
     dict['name']='bfg'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

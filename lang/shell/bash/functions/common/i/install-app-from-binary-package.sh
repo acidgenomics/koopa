@@ -16,8 +16,8 @@ koopa_install_app_from_binary_package() {
         ['aws']="$(koopa_locate_aws --allow-system)"
         ['tar']="$(koopa_locate_tar --allow-system)"
     )
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['tar']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
+    [[ -x "${app['tar']}" ]] || exit 1
     declare -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['aws_profile']="${AWS_PROFILE:-acidgenomics}"

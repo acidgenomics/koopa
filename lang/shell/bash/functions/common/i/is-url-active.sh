@@ -13,7 +13,7 @@ koopa_is_url_active() {
     #
     # @section wget approach:
     #
-    # > "${app['wget']}" --spider "$url" 2>/dev/null || return 1
+    # > "${app['wget']}" --spider "$url" 2>/dev/null || exit 1
     #
     # @seealso
     # - https://stackoverflow.com/questions/12199059/
@@ -30,7 +30,7 @@ koopa_is_url_active() {
     declare -A app
     declare -A dict
     app['curl']="$(koopa_locate_curl --allow-system)"
-    [[ -x "${app['curl']}" ]] || return 1
+    [[ -x "${app['curl']}" ]] || exit 1
     dict['url_pattern']='://'
     for url in "$@"
     do

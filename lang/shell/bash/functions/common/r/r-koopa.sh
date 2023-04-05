@@ -12,7 +12,7 @@ koopa_r_koopa() {
     declare -A app
     koopa_assert_has_args "$#"
     app['rscript']="$(koopa_locate_rscript)"
-    [[ -x "${app['rscript']}" ]] || return 1
+    [[ -x "${app['rscript']}" ]] || exit 1
     rscript_args=()
     pos=()
     while (("$#"))

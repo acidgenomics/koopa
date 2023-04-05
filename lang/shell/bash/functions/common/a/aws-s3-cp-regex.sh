@@ -14,7 +14,7 @@ koopa_aws_s3_cp_regex() {
     declare -A app dict
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
     dict['bucket_pattern']='^s3://.+/$'
     dict['pattern']=''
     dict['profile']="${AWS_PROFILE:-default}"

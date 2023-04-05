@@ -20,8 +20,8 @@ main() {
         ['cabal']="$(koopa_locate_cabal)"
         ['ghcup']="$(koopa_locate_ghcup)"
     )
-    [[ -x "${app['cabal']}" ]] || return 1
-    [[ -x "${app['ghcup']}" ]] || return 1
+    [[ -x "${app['cabal']}" ]] || exit 1
+    [[ -x "${app['ghcup']}" ]] || exit 1
     declare -A dict=(
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.2.5'

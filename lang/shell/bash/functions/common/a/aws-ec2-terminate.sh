@@ -10,7 +10,7 @@ koopa_aws_ec2_terminate() {
     local app dict
     declare -A app dict
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
+    [[ -x "${app['aws']}" ]] || exit 1
     dict['id']="$(koopa_aws_ec2_instance_id)"
     [[ -n "${dict['id']}" ]] || return 1
     dict['profile']="${AWS_PROFILE:-default}"

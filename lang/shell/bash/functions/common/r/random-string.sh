@@ -17,8 +17,8 @@ koopa_random_string() {
         ['head']="$(koopa_locate_head --allow-system)"
         ['md5sum']="$(koopa_locate_md5sum --allow-system)"
     )
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['md5sum']}" ]] || return 1
+    [[ -x "${app['head']}" ]] || exit 1
+    [[ -x "${app['md5sum']}" ]] || exit 1
     declare -A dict=(
         ['length']=10
         ['seed']="${RANDOM:?}"

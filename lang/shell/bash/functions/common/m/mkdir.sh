@@ -8,7 +8,7 @@ koopa_mkdir() {
     local app dict mkdir mkdir_args pos
     declare -A app
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
-    [[ -x "${app['mkdir']}" ]] || return 1
+    [[ -x "${app['mkdir']}" ]] || exit 1
     declare -A dict=(
         ['sudo']=0
         ['verbose']=0
@@ -50,7 +50,7 @@ koopa_mkdir() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
+        [[ -x "${app['sudo']}" ]] || exit 1
         mkdir=("${app['sudo']}" "${app['mkdir']}")
     else
         mkdir=("${app['mkdir']}")

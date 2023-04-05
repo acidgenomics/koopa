@@ -18,9 +18,9 @@ koopa_find_large_dirs() {
         ['sort']="$(koopa_locate_sort)"
         ['tail']="$(koopa_locate_tail)"
     )
-    [[ -x "${app['du']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['tail']}" ]] || return 1
+    [[ -x "${app['du']}" ]] || exit 1
+    [[ -x "${app['sort']}" ]] || exit 1
+    [[ -x "${app['tail']}" ]] || exit 1
     for prefix in "$@"
     do
         local str

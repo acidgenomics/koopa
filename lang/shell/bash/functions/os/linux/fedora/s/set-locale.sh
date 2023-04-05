@@ -13,9 +13,9 @@ koopa_fedora_set_locale() {
         ['localedef']="$(koopa_locate_localedef)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['locale']}" ]] || return 1
-    [[ -x "${app['localedef']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['locale']}" ]] || exit 1
+    [[ -x "${app['localedef']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['lang']='en'
         ['country']='US'

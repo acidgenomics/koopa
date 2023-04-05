@@ -10,8 +10,8 @@ koopa_r_system_packages_non_base() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
+    [[ -x "${app['r']}" ]] || exit 1
+    [[ -x "${app['rscript']}" ]] || exit 1
     dict['script']="$(koopa_koopa_prefix)/lang/r/system-packages-non-base.R"
     koopa_assert_is_file "${dict['script']}"
     dict['string']="$("${app['rscript']}" --vanilla "${dict['script']}")"

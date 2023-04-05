@@ -27,8 +27,8 @@ koopa_fedora_dnf() {
         ['dnf']="$(koopa_fedora_locate_dnf)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['dnf']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['dnf']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['dnf']}" -y "$@"
     return 0
 }
@@ -52,8 +52,8 @@ koopa_fedora_install_from_rpm() {
         ['rpm']="$(koopa_fedora_locate_rpm)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['rpm']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['rpm']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     "${app['sudo']}" "${app['rpm']}" -v \
         --force \
         --install \
@@ -106,9 +106,9 @@ koopa_fedora_set_locale() {
         ['localedef']="$(koopa_locate_localedef)"
         ['sudo']="$(koopa_locate_sudo)"
     )
-    [[ -x "${app['locale']}" ]] || return 1
-    [[ -x "${app['localedef']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    [[ -x "${app['locale']}" ]] || exit 1
+    [[ -x "${app['localedef']}" ]] || exit 1
+    [[ -x "${app['sudo']}" ]] || exit 1
     declare -A dict=(
         ['lang']='en'
         ['country']='US'
