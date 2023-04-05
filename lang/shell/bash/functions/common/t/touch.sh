@@ -3,18 +3,14 @@
 koopa_touch() {
     # """
     # Touch (create) a file on disk.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-05.
     # """
-    local app mkdir pos touch
+    local -A app dict
+    local -a mkdir pos touch
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['mkdir']='koopa_mkdir'
-        ['touch']="$(koopa_locate_touch --allow-system)"
-    )
-    [[ -x "${app['touch']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-    )
+    app['touch']="$(koopa_locate_touch --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -37,7 +33,7 @@ koopa_touch() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    mkdir=("${app['mkdir']}")
+    mkdir=('koopa_mkdir')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
