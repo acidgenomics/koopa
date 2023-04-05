@@ -6,7 +6,7 @@
 koopa_hisat2_index() {
     # """
     # Create a genome index for HISAT2 aligner.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-05.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -27,20 +27,17 @@ koopa_hisat2_index() {
     # - https://github.com/chapmanb/cloudbiolinux/blob/master/utils/
     #     prepare_tx_gff.py
     # """
-    local app dict index_args
-    local -A app=(
-        ['hisat2_build']="$(koopa_locate_hisat2_build)"
-    )
-    [[ -x "${app['hisat2_build']}" ]] || exit 1
-    local -A dict=(
-        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        ['genome_fasta_file']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=200
-        ['output_dir']=''
-        ['seed']=42
-        ['threads']="$(koopa_cpu_count)"
-    )
+    local -A app dict
+    local -a index_args
+    app['hisat2_build']="$(koopa_locate_hisat2_build)"
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
+    dict['genome_fasta_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=200
+    dict['output_dir']=''
+    dict['seed']=42
+    dict['threads']="$(koopa_cpu_count)"
     index_args=()
     while (("$#"))
     do

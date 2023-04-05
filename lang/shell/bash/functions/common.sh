@@ -9228,22 +9228,19 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
 }
 
 koopa_hisat2_align_single_end_per_sample() {
-    local align_args app dict
+    local -A app dict
+    local -a align_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['hisat2']="$(koopa_locate_hisat2)"
-    )
-    [[ -x "${app['hisat2']}" ]] || exit 1
-    local -A dict=(
-        ['fastq_file']=''
-        ['fastq_tail']=''
-        ['index_dir']=''
-        ['lib_type']='A'
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['hisat2']="$(koopa_locate_hisat2)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['fastq_file']=''
+    dict['fastq_tail']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     align_args=()
     while (("$#"))
     do
@@ -9507,19 +9504,16 @@ koopa_hisat2_fastq_quality_format() {
 }
 
 koopa_hisat2_index() {
-    local app dict index_args
-    local -A app=(
-        ['hisat2_build']="$(koopa_locate_hisat2_build)"
-    )
-    [[ -x "${app['hisat2_build']}" ]] || exit 1
-    local -A dict=(
-        ['genome_fasta_file']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=200
-        ['output_dir']=''
-        ['seed']=42
-        ['threads']="$(koopa_cpu_count)"
-    )
+    local -A app dict
+    local -a index_args
+    app['hisat2_build']="$(koopa_locate_hisat2_build)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['genome_fasta_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=200
+    dict['output_dir']=''
+    dict['seed']=42
+    dict['threads']="$(koopa_cpu_count)"
     index_args=()
     while (("$#"))
     do
@@ -9658,15 +9652,12 @@ koopa_init_dir() {
 }
 
 koopa_insert_at_line_number() {
-    local -A app=(
-        ['perl']="$(koopa_locate_perl)"
-    )
-    [[ -x "${app['perl']}" ]] || exit 1
-    local -A dict=(
-        ['file']=''
-        ['line_number']=''
-        ['string']=''
-    )
+    local -A app dict
+    app['perl']="$(koopa_locate_perl)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['file']=''
+    dict['line_number']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in
@@ -9806,23 +9797,18 @@ koopa_install_apache_spark() {
 }
 
 koopa_install_app_from_binary_package() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['aws']="$(koopa_locate_aws --allow-system)"
-        ['tar']="$(koopa_locate_tar --allow-system)"
-    )
-    [[ -x "${app['aws']}" ]] || exit 1
-    [[ -x "${app['tar']}" ]] || exit 1
-    local -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['aws_profile']="${AWS_PROFILE:-acidgenomics}"
-        ['binary_prefix']='/opt/koopa'
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['os_string']="$(koopa_os_string)"
-        ['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    app['aws']="$(koopa_locate_aws --allow-system)"
+    app['tar']="$(koopa_locate_tar --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['aws_profile']="${AWS_PROFILE:-acidgenomics}"
+    dict['binary_prefix']='/opt/koopa'
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['os_string']="$(koopa_os_string)"
+    dict['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
     then
         koopa_stop "Binary package installation not supported for koopa \
@@ -9831,6 +9817,7 @@ default '${dict['binary_prefix']}' location."
     fi
     koopa_assert_is_dir "$@"
     (
+        local prefix
         koopa_cd "${dict['tmp_dir']}"
         for prefix in "$@"
         do
@@ -12939,16 +12926,12 @@ koopa_is_alpine() {
 }
 
 koopa_is_anaconda() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    local -A app=(
-        ['conda']="${1:-}"
-    )
+    app['conda']="${1:-}"
     [[ -z "${app['conda']}" ]] && app['conda']="$(koopa_locate_conda)"
-    [[ -x "${app['conda']}" ]] || exit 1
-    local -A dict=(
-        ['prefix']="$(koopa_parent_dir --num=2 "${app['conda']}")"
-    )
+    [[ -x "${app['conda']}" ]] || return 1
+    dict['prefix']="$(koopa_parent_dir --num=2 "${app['conda']}")"
     [[ -x "${dict['prefix']}/bin/anaconda" ]] || return 1
     return 0
 }
@@ -13062,18 +13045,13 @@ koopa_is_fedora_like() {
 }
 
 koopa_is_file_system_case_sensitive() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['find']="$(koopa_locate_find)"
-        ['wc']="$(koopa_locate_wc)"
-    )
-    [[ -x "${app['find']}" ]] || exit 1
-    [[ -x "${app['wc']}" ]] || exit 1
-    local -A dict=(
-        ['prefix']="${PWD:?}"
-        ['tmp_stem']='.koopa.tmp.'
-    )
+    app['find']="$(koopa_locate_find)"
+    app['wc']="$(koopa_locate_wc)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${PWD:?}"
+    dict['tmp_stem']='.koopa.tmp.'
     dict['file1']="${dict['tmp_stem']}checkcase"
     dict['file2']="${dict['tmp_stem']}checkCase"
     koopa_touch "${dict['file1']}" "${dict['file2']}"
@@ -13280,15 +13258,12 @@ koopa_is_r_package_installed() {
 }
 
 koopa_is_recent() {
-    local app dict file
+    local -A app dict
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['find']="$(koopa_locate_find)"
-    )
-    [[ -x "${app['find']}" ]] || exit 1
-    local -A dict=(
-        ['days']=14
-    )
+    app['find']="$(koopa_locate_find)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['days']=14
     for file in "$@"
     do
         local exists
@@ -13332,16 +13307,12 @@ koopa_is_spacemacs_installed() {
 }
 
 koopa_is_ssh_enabled() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    local -A app=(
-        ['ssh']="$(koopa_locate_ssh)"
-    )
-    [[ -x "${app['ssh']}" ]] || exit 1
-    local -A dict=(
-        ['url']="${1:?}"
-        ['pattern']="${2:?}"
-    )
+    app['ssh']="$(koopa_locate_ssh)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['url']="${1:?}"
+    dict['pattern']="${2:?}"
     dict['str']="$( \
         "${app['ssh']}" -T \
             -o StrictHostKeyChecking='no' \
@@ -13425,21 +13396,16 @@ koopa_is_variable_defined() {
 }
 
 koopa_jekyll_deploy_to_aws() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['bundle']="$(koopa_locate_bundle)"
-    )
-    [[ -x "${app['aws']}" ]] || exit 1
-    [[ -x "${app['bundle']}" ]] || exit 1
-    local -A dict=(
-        ['bucket_prefix']=''
-        ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
-        ['distribution_id']=''
-        ['local_prefix']="${PWD:?}"
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    app['aws']="$(koopa_locate_aws)"
+    app['bundle']="$(koopa_locate_bundle)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bucket_prefix']=''
+    dict['bundle_prefix']="$(koopa_xdg_data_home)/gem"
+    dict['distribution_id']=''
+    dict['local_prefix']="${PWD:?}"
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in
@@ -13568,20 +13534,17 @@ koopa_kallisto_fastq_library_type() {
 }
 
 koopa_kallisto_index() {
-    local app dict index_args
+    local -A app dict
+    local -a index_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['kallisto']="$(koopa_locate_kallisto)"
-    )
-    [[ -x "${app['kallisto']}" ]] || exit 1
-    local -A dict=(
-        ['fasta_pattern']='\.(fa|fasta|fna)'
-        ['kmer_size']=31
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        ['output_dir']=''
-        ['transcriptome_fasta_file']=''
-    )
+    app['kallisto']="$(koopa_locate_kallisto)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['kmer_size']=31
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['output_dir']=''
+    dict['transcriptome_fasta_file']=''
     index_args=()
     while (("$#"))
     do
@@ -13638,22 +13601,19 @@ koopa_kallisto_index() {
 }
 
 koopa_kallisto_quant_paired_end_per_sample() {
-    local app dict quant_args
+    local -A app dict
+    local -a quant_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['kallisto']="$(koopa_locate_kallisto)"
-    )
-    [[ -x "${app['kallisto']}" ]] || exit 1
-    local -A dict=(
-        ['bootstraps']=30
-        ['fastq_r1_file']=''
-        ['fastq_r1_tail']=''
-        ['fastq_r2_file']=''
-        ['fastq_r2_tail']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['kallisto']="$(koopa_locate_kallisto)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bootstraps']=30
+    dict['fastq_r1_file']=''
+    dict['fastq_r1_tail']=''
+    dict['fastq_r2_file']=''
+    dict['fastq_r2_tail']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['threads']="$(koopa_cpu_count)"
     quant_args=()
     while (("$#"))
     do
@@ -13900,22 +13860,19 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
 }
 
 koopa_kallisto_quant_single_end_per_sample() {
-    local app dict quant_args
-    local -A app=(
-        ['kallisto']="$(koopa_locate_kallisto)"
-    )
-    [[ -x "${app['kallisto']}" ]] || exit 1
-    local -A dict=(
-        ['bootstraps']=30
-        ['fastq_file']=''
-        ['fastq_tail']=''
-        ['fragment_length']=200
-        ['index_dir']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        ['output_dir']=''
-        ['sd']=25
-    )
+    local -A app dict
+    local -a quant_args
+    app['kallisto']="$(koopa_locate_kallisto)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bootstraps']=30
+    dict['fastq_file']=''
+    dict['fastq_tail']=''
+    dict['fragment_length']=200
+    dict['index_dir']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['output_dir']=''
+    dict['sd']=25
     quant_args=()
     while (("$#"))
     do
@@ -14134,20 +14091,17 @@ koopa_kebab_case() {
 }
 
 koopa_local_ip_address() {
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['tail']="$(koopa_locate_tail --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['tail']="$(koopa_locate_tail --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     if koopa_is_macos
     then
         app['ifconfig']="$(koopa_macos_locate_ifconfig)"
-        [[ -x "${app['ifconfig']}" ]] || exit 1
+        koopa_assert_is_executable "${app['ifconfig']}"
         str="$( \
             "${app['ifconfig']}" \
             | koopa_grep --pattern='inet ' \
@@ -14157,7 +14111,7 @@ koopa_local_ip_address() {
         )"
     else
         app['hostname']="$(koopa_locate_hostname)"
-        [[ -x "${app['hostname']}" ]] || exit 1
+        koopa_assert_is_executable "${app['hostname']}"
         str="$( \
             "${app['hostname']}" -I \
             | "${app['awk']}" '{print $1}' \
@@ -14195,18 +14149,16 @@ koopa_koopa_version() {
 }
 
 koopa_line_count() {
-    local app file str
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['wc']="$(koopa_locate_wc)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['wc']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['wc']="$(koopa_locate_wc)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
+        local str
         str="$( \
             "${app['wc']}" --lines "$file" \
                 | "${app['xargs']}" \
@@ -14400,15 +14352,11 @@ koopa_list_dotfiles() {
 }
 
 koopa_list_path_priority_unique() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    local -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['tac']="$(koopa_locate_tac)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['tac']}" ]] || exit 1
-    local -A dict
+    app['awk']="$(koopa_locate_awk)"
+    app['tac']="$(koopa_locate_tac)"
+    koopa_assert_is_executable "${app[@]}"
     dict['string']="${1:-$PATH}"
     dict['string']="$( \
         koopa_print "${dict['string']//:/$'\n'}" \
@@ -16215,19 +16163,13 @@ koopa_man1_prefix() {
 }
 
 koopa_md5sum_check_parallel() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['md5sum']="$(koopa_locate_md5sum)"
-        ['sh']="$(koopa_locate_sh)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['md5sum']}" ]] || exit 1
-    [[ -x "${app['sh']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-    )
+    app['md5sum']="$(koopa_locate_md5sum)"
+    app['sh']="$(koopa_locate_sh)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
     koopa_find \
         --max-depth=1 \
         --min-depth=1 \
@@ -16245,17 +16187,12 @@ koopa_md5sum_check_parallel() {
 }
 
 koopa_md5sum_check_to_new_md5_file() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['md5sum']="$(koopa_locate_md5sum)"
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['md5sum']}" ]] || exit 1
-    [[ -x "${app['tee']}" ]] || exit 1
-    local -A dict=(
-        ['datetime']="$(koopa_datetime)"
-    )
+    app['md5sum']="$(koopa_locate_md5sum)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['datetime']="$(koopa_datetime)"
     dict['log_file']="md5sum-${dict['datetime']}.md5"
     koopa_assert_is_not_file "${dict['log_file']}"
     koopa_assert_is_file "$@"
@@ -16264,15 +16201,14 @@ koopa_md5sum_check_to_new_md5_file() {
 }
 
 koopa_mem_gb() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['awk']='awk'
-    )
-    local -A dict
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     if koopa_is_macos
     then
         app['sysctl']="$(koopa_macos_locate_sysctl)"
+        koopa_assert_is_executable "${app['sysctl']}"
         dict['mem']="$("${app['sysctl']}" -n 'hw.memsize')"
         dict['denom']=1073741824  # 1024^3; bytes
     elif koopa_is_linux
@@ -16394,17 +16330,14 @@ koopa_monorepo_prefix() {
 }
 
 koopa_move_files_in_batch() {
-    local app dict files
+    local -A app dict
+    local files
     koopa_assert_has_args_eq "$#" 3
-    local -A app=(
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['head']}" ]] || exit 1
-    local -A dict=(
-        ['num']=''
-        ['source_dir']=''
-        ['target_dir']=''
-    )
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['num']=''
+    dict['source_dir']=''
+    dict['target_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -16633,19 +16566,13 @@ koopa_mv() {
 }
 
 koopa_nfiletypes() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['sed']="$(koopa_locate_sed)"
-        ['sort']="$(koopa_locate_sort)"
-        ['uniq']="$(koopa_locate_uniq)"
-    )
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
-    [[ -x "${app['uniq']}" ]] || exit 1
-    local -A dict=(
-        ['prefix']="${1:?}"
-    )
+    app['sed']="$(koopa_locate_sed)"
+    app['sort']="$(koopa_locate_sort)"
+    app['uniq']="$(koopa_locate_uniq)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['out']="$( \
         koopa_find \
