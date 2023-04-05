@@ -140,14 +140,11 @@ koopa_macos_clean_launch_services() {
 }
 
 koopa_macos_create_dmg() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['hdiutil']="$(koopa_macos_locate_hdiutil)"
-    )
-    local -A dict=(
-        ['srcfolder']="${1:?}"
-    )
+    app['hdiutil']="$(koopa_macos_locate_hdiutil)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['srcfolder']="${1:?}"
     koopa_assert_is_dir "${dict['srcfolder']}"
     dict['srcfolder']="$(koopa_realpath "${dict['srcfolder']}")"
     dict['volname']="$(koopa_basename "${dict['volname']}")"
@@ -190,23 +187,19 @@ koopa_macos_disable_microsoft_teams_updater() { # {[[1
 }
 
 koopa_macos_disable_plist_file() {
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['launchctl']="$(koopa_macos_locate_launchctl)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['launchctl']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    app['launchctl']="$(koopa_macos_locate_launchctl)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     for file in "$@"
     do
-        local dict
-        local -A dict=(
-            ['daemon']=0
-            ['enabled_file']="$file"
-            ['sudo']=1
-        )
+        local -A dict
+        dict['daemon']=0
+        dict['enabled_file']="$file"
+        dict['sudo']=1
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_alert "Disabling '${dict['enabled_file']}'."
@@ -269,12 +262,10 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
 }
 
 koopa_macos_disable_spotlight_indexing() {
-    local -A app=(
-        ['mdutil']="$(koopa_macos_locate_mdutil)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['mdutil']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    local -A app
+    app['mdutil']="$(koopa_macos_locate_mdutil)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['mdutil']}" -a -i off
     "${app['mdutil']}" -a -s
     return 0
@@ -316,14 +307,11 @@ koopa_macos_disable_zoom_daemon() {
 }
 
 koopa_macos_download_macos() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
-    )
-    local -A dict=(
-        ['version']="${1:?}"
-    )
+    app['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['version']="${1:?}"
     "${app['softwareupdate']}" \
         --fetch-full-installer \
         --full-installer-version "${dict['version']}"
@@ -365,23 +353,20 @@ koopa_macos_enable_microsoft_teams_updater() {
 }
 
 koopa_macos_enable_plist_file() {
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['launchctl']="$(koopa_macos_locate_launchctl)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['launchctl']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    app['launchctl']="$(koopa_macos_locate_launchctl)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_not_file "$@"
     for file in "$@"
     do
-        local dict
-        local -A dict=(
-            ['daemon']=0
-            ['enabled_file']="$file"
-            ['sudo']=1
-        )
+
+        local -A dict
+        dict['daemon']=0
+        dict['enabled_file']="$file"
+        dict['sudo']=1
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_alert "Enabling '${dict['enabled_file']}'."
@@ -520,15 +505,11 @@ koopa_macos_flush_dns() {
 }
 
 koopa_macos_force_eject() {
-    local app mount name
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['diskutil']="$(koopa_macos_locate_diskutil)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['diskutil']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    local -A dict
+    app['diskutil']="$(koopa_macos_locate_diskutil)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     dict['name']="${1:?}"
     dict['mount']="/Volumes/${dict['name']}"
     koopa_assert_is_dir "${dict['mount']}"
@@ -555,37 +536,35 @@ koopa_macos_force_reset_icloud_drive() {
 }
 
 koopa_macos_homebrew_cask_version() {
-    local app cask x
+    local -A app
+    local cask
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
-    [[ -x "${app['brew']}" ]] || exit 1
+    app['brew']="$(koopa_locate_brew)"
+    koopa_assert_is_executable "${app[@]}"
     for cask in "$@"
     do
-        x="$("${app['brew']}" info --cask "$cask")"
-        x="$(koopa_extract_version "$x")"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
+        local str
+        str="$("${app['brew']}" info --cask "$cask")"
+        str="$(koopa_extract_version "$str")"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
     done
     return 0
 }
 
 koopa_macos_ifactive() {
-    local app x
-    local -A app=(
-        ['ifconfig']="$(koopa_macos_locate_ifconfig)"
-        ['pcregrep']="$(koopa_locate_pcregrep)"
-    )
-    [[ -x "${app['ifconfig']}" ]] || exit 1
-    [[ -x "${app['pcregrep']}" ]] || exit 1
-    x="$( \
+    local -A app
+    local str
+    app['ifconfig']="$(koopa_macos_locate_ifconfig)"
+    app['pcregrep']="$(koopa_locate_pcregrep)"
+    koopa_assert_is_executable "${app[@]}"
+    str="$( \
         "${app['ifconfig']}" \
             | "${app['pcregrep']}" -M -o \
                 '^[^\t:]+:([^\n]|\n\t)*status: active' \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa_print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
     return 0
 }
 
@@ -628,12 +607,10 @@ koopa_macos_install_system_r() {
 }
 
 koopa_macos_install_system_rosetta() {
-    local -A app=(
-        ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['softwareupdate']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    local -A app
+    app['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['softwareupdate']}" --install-rosetta
     return 0
 }
@@ -1025,12 +1002,10 @@ koopa_macos_spotlight_find() {
 }
 
 koopa_macos_spotlight_usage() {
-    local -A app=(
-        ['fs_usage']="$(koopa_macos_locate_fs_usage)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['fs_usage']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    local -A app
+    app['fs_usage']="$(koopa_macos_locate_fs_usage)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['fs_usage']}" -w -f filesys mds
     return 0
 }
@@ -1060,17 +1035,14 @@ koopa_macos_symlink_icloud_drive() {
 }
 
 koopa_macos_uninstall_brewfile_casks() {
-    local app cask casks dict
+    local -A app dict
+    local -a casks
+    local cask
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['brew']}" ]] || exit 1
-    [[ -x "${app['cut']}" ]] || exit 1
-    local -A dict=(
-        ['brewfile']="${1:?}"
-    )
+    app['brew']="$(koopa_locate_brew)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['brewfile']="${1:?}"
     readarray -t casks <<< "$( \
         koopa_grep \
             --file="${dict['brewfile']}" \
@@ -1166,14 +1138,12 @@ koopa_macos_uninstall_system_xcode_clt() {
 }
 
 koopa_macos_xcode_clt_version() {
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['pkgutil']="$(koopa_macos_locate_pkgutil)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['pkgutil']}" ]] || exit 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['pkgutil']="$(koopa_macos_locate_pkgutil)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['pkgutil']}" --pkg-info='com.apple.pkg.CLTools_Executables' \
         | koopa_grep --pattern='^version:\s' --regex \
