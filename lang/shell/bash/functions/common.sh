@@ -1817,7 +1817,6 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     )"
     for i in "${!keys[@]}"
     do
-        local dict2
         local -A dict2
         dict2['key']="${keys[$i]}"
         dict2['version_id']="${version_ids[$i]}"
@@ -2257,7 +2256,6 @@ koopa_aws_s3_mv_to_parent() {
     readarray -t files <<< "${dict['str']}"
     for file in "${files[@]}"
     do
-        local dict2
         local -A dict2
         dict2['bn']="$(koopa_basename "$file")"
         dict2['dn1']="$(koopa_dirname "$file")"
@@ -7926,9 +7924,8 @@ koopa_git_branch() {
         local repo
         for repo in "$@"
         do
-            local dict2
-            koopa_cd "$repo"
             local -A dict2
+            koopa_cd "$repo"
             dict2['branch']="$( \
                 "${app['git']}" branch --show-current \
                 2>/dev/null \
@@ -8467,7 +8464,6 @@ koopa_git_submodule_init() {
             fi
             for string in "${lines[@]}"
             do
-                local dict2
                 local -A dict2
                 dict2['target_key']="$( \
                     koopa_print "$string" \
@@ -9900,7 +9896,6 @@ default '${dict['binary_prefix']}' location."
         koopa_cd "${dict['tmp_dir']}"
         for prefix in "$@"
         do
-            local dict2
             local -A dict2
             dict2['prefix']="$(koopa_realpath "$prefix")"
             dict2['name']="$( \
@@ -10452,7 +10447,6 @@ include/header.sh"
                 then
                     for i in "${!bin_arr[@]}"
                     do
-                        local dict2
                         local -A dict2
                         dict2['name']="${bin_arr[$i]}"
                         dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
@@ -10472,7 +10466,6 @@ include/header.sh"
                 then
                     for i in "${!man1_arr[@]}"
                     do
-                        local dict2
                         local -A dict2
                         dict2['name']="${man1_arr[$i]}"
                         dict2['mf1']="${dict['prefix']}/share/man/\
@@ -17190,7 +17183,6 @@ koopa_push_app_build() {
     )
     for name in "$@"
     do
-        local dict2
         local -A dict2
         dict2['name']="$name"
         dict2['prefix']="$( \
@@ -20346,7 +20338,6 @@ pattern '${dict['pattern']}'."
     koopa_alert "Filtering BAM files in '${dict['prefix']}'."
     for bam_file in "${bam_files[@]}"
     do
-        local dict2
         local -A dict2
         dict2['input']="$bam_file"
         dict2['bn']="$(koopa_basename_sans_ext "${dict2['input']}")"
@@ -21324,7 +21315,6 @@ koopa_star_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local dict2
         local -A dict2
         dict2['fastq_r1_file']="$fastq_r1_file"
         dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\

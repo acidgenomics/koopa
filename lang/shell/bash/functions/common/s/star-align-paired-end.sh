@@ -150,7 +150,6 @@ koopa_star_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local dict2
         local -A dict2
         dict2['fastq_r1_file']="$fastq_r1_file"
         dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\

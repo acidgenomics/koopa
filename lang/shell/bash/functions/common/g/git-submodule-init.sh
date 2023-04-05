@@ -38,7 +38,6 @@ koopa_git_submodule_init() {
             fi
             for string in "${lines[@]}"
             do
-                local dict2
                 local -A dict2
                 # shellcheck disable=SC2016
                 dict2['target_key']="$( \
