@@ -14644,22 +14644,19 @@ koopa_locate_anaconda() {
 }
 
 koopa_locate_app() {
-    local bool dict pos
-    local -A bool=(
-        ['allow_koopa_bin']=1
-        ['allow_missing']=0
-        ['allow_system']=0
-        ['only_system']=0
-        ['realpath']=0
-    )
-    local -A dict=(
-        ['app']=''
-        ['app_name']=''
-        ['bin_name']=''
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['system_bin_name']=''
-    )
+    local -A bool dict
+    local -a pos
+    bool['allow_koopa_bin']=1
+    bool['allow_missing']=0
+    bool['allow_system']=0
+    bool['only_system']=0
+    bool['realpath']=0
+    dict['app']=''
+    dict['app_name']=''
+    dict['bin_name']=''
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['system_bin_name']=''
     pos=()
     while (("$#"))
     do
@@ -16221,13 +16218,13 @@ ${dict['datetime']}.log"
 }
 
 koopa_lowercase() {
-    local app str
     local -A app
+    local str
     app['tr']="$(koopa_locate_tr --allow-system)"
     [[ -x "${app['tr']}" ]] || exit 1
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -16399,14 +16396,12 @@ koopa_missing_arg() {
 }
 
 koopa_mkdir() {
-    local app dict mkdir mkdir_args pos
-    local -A app
+    local -A app dict
+    local -a mkdir mkdir_args pos
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
-    [[ -x "${app['mkdir']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['verbose']=0
-    )
+    koopa_assert_is_executable "${apps[@]}"
+    dict['sudo']=0
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -16881,15 +16876,13 @@ koopa_pager() {
 }
 
 koopa_parent_dir() {
-    local app dict file parent pos
-    local -A app=(
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['cd_tail']=''
-        ['n']=1
-    )
+    local -A app dict
+    local -a pos
+    local file
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cd_tail']=''
+    dict['n']=1
     pos=()
     while (("$#"))
     do
@@ -16925,6 +16918,7 @@ koopa_parent_dir() {
     fi
     for file in "$@"
     do
+        local parent
         [[ -e "$file" ]] || return 1
         parent="$(koopa_dirname "$file")"
         parent="${parent}${dict['cd_tail']}"
@@ -16935,13 +16929,13 @@ koopa_parent_dir() {
 }
 
 koopa_parse_url() {
-    local app curl_args pos
-    koopa_assert_has_args "$#"
     local -A app
+    local -a curl_args pos
+    koopa_assert_has_args "$#"
     app['curl']="$(koopa_locate_curl --allow-system)"
-    [[ -x "${app['curl']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     curl_args=(
-        '--disable' # Ignore '~/.curlrc'. Must come first.
+        '--disable'
         '--fail'
         '--location'
         '--retry' 5
@@ -16974,7 +16968,8 @@ koopa_parse_url() {
 }
 
 koopa_paste() {
-    local IFS pos sep str
+    local -a pos
+    local IFS sep str
     sep=''
     pos=()
     while (("$#"))
@@ -17264,17 +17259,15 @@ koopa_python_activate_venv() {
 }
 
 koopa_python_create_venv() {
-    local app dict pkgs pos venv_args
+    local -A app dict
+    local -a pkgs pos venv_args
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    local -A app
     app['python']=''
-    local -A dict=(
-        ['name']=''
-        ['pip']=1
-        ['prefix']=''
-        ['system_site_packages']=1
-    )
+    dict['name']=''
+    dict['pip']=1
+    dict['prefix']=''
+    dict['system_site_packages']=1
     pos=()
     while (("$#"))
     do
@@ -17400,9 +17393,10 @@ koopa_python_deactivate_venv() {
 }
 
 koopa_python_pip_install() {
-    local app dict dl_args pkg pkgs pos
-    koopa_assert_has_args "$#"
     local -A app dict
+    local -a dl_args pkgs pos
+    local pkg
+    koopa_assert_has_args "$#"
     dict['prefix']=''
     pos=()
     while (("$#"))
@@ -18417,11 +18411,12 @@ install-packages-in-site-library.R"
 }
 
 koopa_r_koopa() {
-    local app code header_file fun pos rscript_args
-    local -A app
+    local -A app dict
+    local -a code pos rscript_args
+    local header_file fun
     koopa_assert_has_args "$#"
     app['rscript']="$(koopa_locate_rscript)"
-    [[ -x "${app['rscript']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     rscript_args=()
     pos=()
     while (("$#"))
@@ -18446,14 +18441,14 @@ koopa_r_koopa() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    fun="${1:?}"
+    dict['fun']="${1:?}"
     shift 1
-    header_file="$(koopa_koopa_prefix)/lang/r/include/header.R"
-    koopa_assert_is_file "$header_file"
-    code=("source('${header_file}');")
-    if [[ "$fun" != 'header' ]]
+    dict['header_file']="$(koopa_koopa_prefix)/lang/r/include/header.R"
+    koopa_assert_is_file "${dict['header_file']}"
+    code=("source('${dict['header_file'}');")
+    if [[ "${dict['fun']}" != 'header' ]]
     then
-        code+=("koopa::${fun}();")
+        code+=("koopa::${dict['fun']}();")
     fi
     pos=("$@")
     "${app['rscript']}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
@@ -18837,7 +18832,8 @@ koopa_realpath() {
 }
 
 koopa_reinstall_all_revdeps() {
-    local app_name flags pos
+    local -a flags pos
+    local app_name
     koopa_assert_has_args "$#"
     flags=()
     pos=()
@@ -18858,7 +18854,7 @@ koopa_reinstall_all_revdeps() {
     koopa_assert_has_args "$#"
     for app_name in "$@"
     do
-        local install_args revdeps
+        local -a install_args revdeps
         install_args=()
         if koopa_is_array_non_empty "${flags[@]}"
         then
@@ -18881,7 +18877,8 @@ koopa_reinstall_all_revdeps() {
 }
 
 koopa_reinstall_only_revdeps() {
-    local app_name flags pos
+    local -a flags pos
+    local app_name
     koopa_assert_has_args "$#"
     flags=()
     pos=()
@@ -18902,7 +18899,7 @@ koopa_reinstall_only_revdeps() {
     koopa_assert_has_args "$#"
     for app_name in "$@"
     do
-        local install_args revdeps
+        local -a install_args revdeps
         install_args=()
         if koopa_is_array_non_empty "${flags[@]}"
         then
@@ -18992,18 +18989,14 @@ koopa_rename_from_csv() {
 }
 
 koopa_rename_lowercase() {
-    local app dict pos
+    local -A app dict
+    local -a pos
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['rename']="$(koopa_locate_rename)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['rename']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
-    local -A dict=(
-        ['pattern']='y/A-Z/a-z/'
-        ['recursive']=0
-    )
+    app['rename']="$(koopa_locate_rename)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['pattern']='y/A-Z/a-z/'
+    dict['recursive']=0
     pos=()
     while (("$#"))
     do
@@ -19153,14 +19146,12 @@ koopa_rg_unique() {
 }
 
 koopa_rm() {
-    local app dict pos rm rm_args
-    local -A app
+    local -A app dict
+    local -a pos rm rm_args
     app['rm']="$(koopa_locate_rm --allow-system)"
-    [[ -x "${app['rm']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['verbose']=0
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -20599,7 +20590,7 @@ koopa_snake_case_simple() {
     local str
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -21822,13 +21813,13 @@ koopa_stat_group_name() {
 }
 
 koopa_stat_modified() {
-    local app dict pos timestamp timestamps
-    koopa_assert_has_args "$#"
     local -A app dict
+    local -a pos timestamps
+    local timestamp
+    koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['stat']="$(koopa_locate_stat)"
-    [[ -x "${app['date']}" ]] || exit 1
-    [[ -x "${app['stat']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['format']=''
     pos=()
     while (("$#"))
@@ -22037,10 +22028,10 @@ koopa_str_detect() {
 }
 
 koopa_strip_left() {
-    local dict pos str
-    local -A dict=(
-        ['pattern']=''
-    )
+    local -A dict
+    local -a pos
+    local str
+    dict['pattern']=''
     pos=()
     while (("$#"))
     do
@@ -22076,10 +22067,10 @@ koopa_strip_left() {
 }
 
 koopa_strip_right() {
-    local dict pos str
-    local -A dict=(
-        ['pattern']=''
-    )
+    local -A dict
+    local -a pos
+    local str
+    dict['pattern']=''
     pos=()
     while (("$#"))
     do
@@ -22117,7 +22108,7 @@ koopa_strip_right() {
 koopa_strip_trailing_slash() {
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -22126,17 +22117,15 @@ koopa_strip_trailing_slash() {
 }
 
 koopa_sub() {
-    local app dict pos
-    local -A app
+    local -A app dict
+    local -a pos
     app['perl']="$(koopa_locate_perl --allow-system)"
-    [[ -x "${app['perl']}" ]] || exit 1
-    local -A dict=(
-        ['global']=0
-        ['pattern']=''
-        ['perl_tail']=''
-        ['regex']=0
-        ['replacement']=''
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['global']=0
+    dict['pattern']=''
+    dict['perl_tail']=''
+    dict['regex']=0
+    dict['replacement']=''
     pos=()
     while (("$#"))
     do
@@ -22376,13 +22365,13 @@ koopa_sys_mkdir() {
 }
 
 koopa_sys_set_permissions() {
+    local -A dict
+    local -a chmod_args chown_args pos
+    local arg
     koopa_assert_has_args "$#"
-    local arg chmod_args chown_args dict pos
-    local -A dict=(
-        ['dereference']=1
-        ['recursive']=0
-        ['shared']=1
-    )
+    dict['dereference']=1
+    dict['recursive']=0
+    dict['shared']=1
     chmod_args=()
     chown_args=()
     pos=()
@@ -22557,14 +22546,13 @@ koopa/ascii-turtle.txt"
 }
 
 koopa_tar_multiple_dirs() {
-    local app dict dir dirs pos
+    local -A app dict
+    local -a dirs pos
+    local dir
     koopa_assert_has_args "$#"
-    local -A app
     app['tar']="$(koopa_locate_tar --allow-system)"
-    [[ -x "${app['tar']}" ]] || exit 1
-    local -A dict=(
-        ['delete']=0
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['delete']=0
     pos=()
     while (("$#"))
     do
@@ -22696,16 +22684,15 @@ koopa_test_find_files() {
 }
 
 koopa_test_grep() {
-    local app dict failures file pos
+    local -A app dict
+    local -a failures pos
+    local file
     koopa_assert_has_args "$#"
-    local -A app
     app['grep']="$(koopa_locate_grep)"
-    [[ -x "${app['grep']}" ]] || exit 1
-    local -A dict=(
-        ['ignore']=''
-        ['name']=''
-        ['pattern']=''
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['ignore']=''
+    dict['name']=''
+    dict['pattern']=''
     pos=()
     while (("$#"))
     do
@@ -22749,7 +22736,6 @@ koopa_test_grep() {
         '--name' "${dict['name']}" \
         '--pattern' "${dict['pattern']}"
     failures=()
-
     for file in "$@"
     do
         local x
@@ -22942,7 +22928,7 @@ koopa_trim_ws() {
     local str
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -25358,12 +25344,12 @@ koopa_unlink_in_bin() {
 }
 
 koopa_unlink_in_dir() {
-    local dict name names pos
+    local -A dict
+    local -a names pos
+    local name
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['allow_missing']=0
-        ['prefix']=''
-    )
+    dict['allow_missing']=0
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do

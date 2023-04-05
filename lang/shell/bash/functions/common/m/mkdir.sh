@@ -5,14 +5,12 @@ koopa_mkdir() {
     # Create directories with parents automatically.
     # @note Updated 2023-03-28.
     # """
-    local app dict mkdir mkdir_args pos
-    local -A app
+    local -A app dict
+    local -a mkdir mkdir_args pos
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
-    [[ -x "${app['mkdir']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['verbose']=0
-    )
+    koopa_assert_is_executable "${apps[@]}"
+    dict['sudo']=0
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
