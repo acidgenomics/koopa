@@ -62,10 +62,9 @@ koopa_aws_s3_mv_to_parent() {
     for file in "${files[@]}"
     do
         local dict2
-        declare -A dict2=(
-            ['bn']="$(koopa_basename "$file")"
-            ['dn1']="$(koopa_dirname "$file")"
-        )
+        declare -A dict2
+        dict2['bn']="$(koopa_basename "$file")"
+        dict2['dn1']="$(koopa_dirname "$file")"
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
         dict2['target']="${dict2['dn2']}/${dict2['bn']}"
         "${app['aws']}" --profile="${dict['profile']}" \

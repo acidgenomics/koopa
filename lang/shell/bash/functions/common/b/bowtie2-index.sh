@@ -6,20 +6,17 @@ koopa_bowtie2_index() {
     # @note Updated 2022-10-11.
     # """
     local app dict index_args
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['bowtie2_build']="$(koopa_locate_bowtie2_build)"
-        ['tee']="$(koopa_locate_tee)"
-    )
+    app['bowtie2_build']="$(koopa_locate_bowtie2_build)"
+    app['tee']="$(koopa_locate_tee)"
     [[ -x "${app['bowtie2_build']}" ]] || return 1
     [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        ['genome_fasta_file']=''
-        # e.g. 'bowtie2-index'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
+    dict['genome_fasta_file']=''
+    # e.g. 'bowtie2-index'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in

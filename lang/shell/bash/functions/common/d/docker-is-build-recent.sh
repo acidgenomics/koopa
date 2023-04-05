@@ -53,10 +53,9 @@ koopa_docker_is_build_recent() {
     for image in "$@"
     do
         local dict2
-        declare -A dict2=(
-            ['current']="$("${app['date']}" -u '+%s')"
-            ['image']="$image"
-        )
+        declare -A dict2
+        dict['current']="$("${app['date']}" -u '+%s')"
+        dict['image']="$image"
         "${app['docker']}" pull "${dict2['image']}" >/dev/null
         dict2['json']="$( \
             "${app['docker']}" inspect \

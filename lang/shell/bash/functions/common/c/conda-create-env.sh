@@ -11,20 +11,17 @@ koopa_conda_create_env() {
     # - https://github.com/conda/conda/issues/6827
     # """
     local app dict pos string
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
+    app['conda']="$(koopa_locate_conda)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
     [[ -x "${app['conda']}" ]] || return 1
     [[ -x "${app['cut']}" ]] || return 1
-    declare -A dict=(
-        ['env_prefix']="$(koopa_conda_env_prefix)"
-        ['force']=0
-        ['latest']=0
-        ['prefix']=''
-        ['yaml_file']=''
-    )
+    dict['env_prefix']="$(koopa_conda_env_prefix)"
+    dict['force']=0
+    dict['latest']=0
+    dict['prefix']=''
+    dict['yaml_file']=''
     pos=()
     while (("$#"))
     do

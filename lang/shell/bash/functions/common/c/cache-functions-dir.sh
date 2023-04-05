@@ -11,11 +11,10 @@ koopa_cache_functions_dir() {
     # >     > "${dict['tmp_target_file']}"
     # """
     local app prefix
+    declare -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['grep']="$(koopa_locate_grep --allow-system)"
-        ['perl']="$(koopa_locate_perl --allow-system)"
-    )
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['grep']}" ]] || return 1
     [[ -x "${app['perl']}" ]] || return 1
     for prefix in "$@"
