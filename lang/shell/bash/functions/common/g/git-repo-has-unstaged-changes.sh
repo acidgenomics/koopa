@@ -12,7 +12,6 @@ koopa_git_repo_has_unstaged_changes() {
     # - https://stackoverflow.com/questions/3878624/
     # - https://stackoverflow.com/questions/28296130/
     # """
-    local app dict
     local -A app dict
     app['git']="$(koopa_locate_git)"
     [[ -x "${app['git']}" ]] || exit 1

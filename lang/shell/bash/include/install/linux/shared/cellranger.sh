@@ -9,7 +9,6 @@ main() {
     # https://support.10xgenomics.com/single-cell-gene-expression/
     #     software/downloads/latest
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"

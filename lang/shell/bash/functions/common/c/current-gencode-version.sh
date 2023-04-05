@@ -9,7 +9,6 @@ koopa_current_gencode_version() {
     # > koopa_current_gencode_version
     # # 39
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     app['curl']="$(koopa_locate_curl --allow-system)"
