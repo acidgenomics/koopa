@@ -8,7 +8,7 @@ koopa_mkdir() {
     local -A app dict
     local -a mkdir mkdir_args pos
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
-    koopa_assert_is_executable "${apps[@]}"
+    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
