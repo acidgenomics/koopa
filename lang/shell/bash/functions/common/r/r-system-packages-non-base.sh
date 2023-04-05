@@ -5,7 +5,6 @@ koopa_r_system_packages_non_base() {
     # Print non-base packages (i.e. "recommended") installed in system library.
     # @note Updated 2023-04-04.
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"

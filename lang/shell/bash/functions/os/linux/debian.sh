@@ -981,7 +981,6 @@ koopa_debian_locate_update_locale() {
 }
 
 koopa_debian_os_codename() {
-    local app dict
     local -A app dict
     app['lsb_release']="$(koopa_debian_locate_lsb_release)"
     [[ -x "${app['lsb_release']}" ]] || exit 1

@@ -23,7 +23,6 @@ main() {
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r --realpath)"

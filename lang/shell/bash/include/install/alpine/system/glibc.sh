@@ -28,7 +28,6 @@ main() {
     # Don't want to see:
     # Error relocating /usr/glibc-compat/lib/...
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['apk']="$(koopa_alpine_locate_apk)"

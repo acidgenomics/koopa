@@ -8,7 +8,6 @@ koopa_conda_pkg_cache_prefix() {
     # @seealso
     # - conda info --json
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['conda']="$(koopa_locate_conda)"

@@ -13,7 +13,6 @@ koopa_ruby_gem_user_install_prefix() {
     # @seealso
     # - https://guides.rubygems.org/faqs/
     # """
-    local app dict
     local -A app dict
     app['ruby']="$(koopa_locate_ruby)"
     [[ -x "${app['ruby']}" ]] || exit 1

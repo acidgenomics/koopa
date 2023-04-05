@@ -18,7 +18,6 @@ koopa_conda_env_prefix() {
     # - conda info --envs
     # - conda info --json
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     app['conda']="$(koopa_locate_conda)"

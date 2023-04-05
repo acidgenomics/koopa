@@ -5,7 +5,6 @@ koopa_brew_reset_core_repo() {
     # Ensure internal 'homebrew-core' repo is clean.
     # @note Updated 2023-04-04.
     # """
-    local app dict
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
