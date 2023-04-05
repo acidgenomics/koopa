@@ -3,7 +3,7 @@
 koopa_move_files_in_batch() {
     # """
     # Batch move a limited number of files.
-    # @note Updated 2022-02-16.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_touch \
@@ -19,17 +19,14 @@ koopa_move_files_in_batch() {
     # # target/aaa.txt
     # # target/bbb.txt
     # """
-    local app dict files
+    local -A app dict
+    local files
     koopa_assert_has_args_eq "$#" 3
-    local -A app=(
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['head']}" ]] || exit 1
-    local -A dict=(
-        ['num']=''
-        ['source_dir']=''
-        ['target_dir']=''
-    )
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['num']=''
+    dict['source_dir']=''
+    dict['target_dir']=''
     while (("$#"))
     do
         case "$1" in

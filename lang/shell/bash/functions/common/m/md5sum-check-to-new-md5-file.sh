@@ -3,19 +3,14 @@
 koopa_md5sum_check_to_new_md5_file() {
     # """
     # Perform md5sum check on specified files to a new log file.
-    # @note Updated 2021-11-04.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['md5sum']="$(koopa_locate_md5sum)"
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['md5sum']}" ]] || exit 1
-    [[ -x "${app['tee']}" ]] || exit 1
-    local -A dict=(
-        ['datetime']="$(koopa_datetime)"
-    )
+    app['md5sum']="$(koopa_locate_md5sum)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['datetime']="$(koopa_datetime)"
     dict['log_file']="md5sum-${dict['datetime']}.md5"
     koopa_assert_is_not_file "${dict['log_file']}"
     koopa_assert_is_file "$@"

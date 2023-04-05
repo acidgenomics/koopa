@@ -3,26 +3,23 @@
 koopa_local_ip_address() {
     # """
     # Local IP address.
-    # @note Updated 2022-02-09.
+    # @note Updated 2023-04-05.
     #
     # Some systems (e.g. macOS) will return multiple IP address matches for
     # Ethernet and WiFi. Here we're simplying returning the first match, which
     # corresponds to the default on macOS.
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['tail']="$(koopa_locate_tail --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['tail']="$(koopa_locate_tail --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     if koopa_is_macos
     then
         app['ifconfig']="$(koopa_macos_locate_ifconfig)"
-        [[ -x "${app['ifconfig']}" ]] || exit 1
+        koopa_assert_is_executable "${app['ifconfig']}"
         # shellcheck disable=SC2016
         str="$( \
             "${app['ifconfig']}" \
@@ -33,7 +30,7 @@ koopa_local_ip_address() {
         )"
     else
         app['hostname']="$(koopa_locate_hostname)"
-        [[ -x "${app['hostname']}" ]] || exit 1
+        koopa_assert_is_executable "${app['hostname']}"
         # shellcheck disable=SC2016
         str="$( \
             "${app['hostname']}" -I \

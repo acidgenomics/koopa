@@ -3,22 +3,20 @@
 koopa_line_count() {
     # """
     # Return the number of lines in a file.
-    # @note Updated 2022-02-16.
+    # @note Updated 2023-04-05.
     #
     # Example: koopa_line_count 'tx2gene.csv'
     # """
-    local app file str
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['wc']="$(koopa_locate_wc)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['wc']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['wc']="$(koopa_locate_wc)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
+        local str
         str="$( \
             "${app['wc']}" --lines "$file" \
                 | "${app['xargs']}" \

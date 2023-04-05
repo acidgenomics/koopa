@@ -3,7 +3,7 @@
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - kallisto index --help
@@ -13,22 +13,19 @@ koopa_kallisto_index() {
     # >     --output-dir='salmon-index' \
     # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
     # """
-    local app dict index_args
+    local -A app dict
+    local -a index_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['kallisto']="$(koopa_locate_kallisto)"
-    )
-    [[ -x "${app['kallisto']}" ]] || exit 1
-    local -A dict=(
-        ['fasta_pattern']='\.(fa|fasta|fna)'
-        ['kmer_size']=31
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        # e.g. 'kallisto-index'.
-        ['output_dir']=''
-        # e.g. 'gencode.v39.transcripts.fa.gz'.
-        ['transcriptome_fasta_file']=''
-    )
+    app['kallisto']="$(koopa_locate_kallisto)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['kmer_size']=31
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    # e.g. 'kallisto-index'.
+    dict['output_dir']=''
+    # e.g. 'gencode.v39.transcripts.fa.gz'.
+    dict['transcriptome_fasta_file']=''
     index_args=()
     while (("$#"))
     do

@@ -52,27 +52,24 @@ koopa_kallisto_quant_paired_end_per_sample() {
     # >     --index-dir='kallisto-index' \
     # >     --output-dir='kallisto'
     # """
-    local app dict quant_args
+    local -A app dict
+    local -a quant_args
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['kallisto']="$(koopa_locate_kallisto)"
-    )
-    [[ -x "${app['kallisto']}" ]] || exit 1
-    local -A dict=(
-        # Current recommendation in bcbio-nextgen.
-        ['bootstraps']=30
-        # e.g. 'sample1_R1_001.fastq.gz'
-        ['fastq_r1_file']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. 'sample1_R2_001.fastq.gz'.
-        ['fastq_r2_file']=''
-        # e.g. '_R2_001.fastq.gz'.
-        ['fastq_r2_tail']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['kallisto']="$(koopa_locate_kallisto)"
+    koopa_assert_is_executable "${app[@]}"
+    # Current recommendation in bcbio-nextgen.
+    dict['bootstraps']=30
+    # e.g. 'sample1_R1_001.fastq.gz'
+    dict['fastq_r1_file']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. 'sample1_R2_001.fastq.gz'.
+    dict['fastq_r2_file']=''
+    # e.g. '_R2_001.fastq.gz'.
+    dict['fastq_r2_tail']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['threads']="$(koopa_cpu_count)"
     quant_args=()
     while (("$#"))
     do
