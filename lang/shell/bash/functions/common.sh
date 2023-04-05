@@ -13168,10 +13168,10 @@ koopa_is_file_system_case_sensitive() {
 }
 
 koopa_is_file_type() {
-    local dict file pos
-    local -A dict=(
-        ['ext']=''
-    )
+    local -A dict
+    local -a pos
+    local file
+    dict['ext']=''
     pos=()
     while (("$#"))
     do
@@ -14186,7 +14186,7 @@ koopa_kebab_case_simple() {
     local str
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
@@ -14533,18 +14533,13 @@ koopa_list_path_priority() {
 }
 
 koopa_ln() {
-    local app dict ln ln_args mkdir pos rm
-    local -A app=(
-        ['ln']="$(koopa_locate_ln --allow-system)"
-        ['mkdir']='koopa_mkdir'
-        ['rm']='koopa_rm'
-    )
-    [[ -x "${app['ln']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['target_dir']=''
-        ['verbose']=0
-    )
+    local -A app dict
+    local -a ln ln_args mkdir pos rm
+    app['ln']="$(koopa_locate_ln --allow-system)"
+    koopa_assert_is_executable "${apps[@]}"
+    dict['sudo']=0
+    dict['target_dir']=''
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -14589,12 +14584,12 @@ koopa_ln() {
         app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || exit 1
         ln=("${app['sudo']}" "${app['ln']}")
-        mkdir=("${app['mkdir']}" '--sudo')
-        rm=("${app['rm']}" '--sudo')
+        mkdir=('koopa_mkdir' '--sudo')
+        rm=('koopa_rm' '--sudo')
     else
         ln=("${app['ln']}")
-        mkdir=("${app['mkdir']}")
-        rm=("${app['rm']}")
+        mkdir=('koopa_mkdir')
+        rm=('koopa_rm')
     fi
     ln_args=('-f' '-n' '-s')
     [[ "${dict['verbose']}" -eq 1 ]] && ln_args+=('-v')
@@ -16629,19 +16624,14 @@ ${dict['c2']}${string}${dict['nc']}"
 }
 
 koopa_mv() {
-    local app dict mkdir mv mv_args pos rm
-    local -A app=(
-        ['mv']="$(koopa_locate_mv --allow-system)"
-        ['mkdir']='koopa_mkdir'
-        ['rm']='koopa_rm'
-    )
+    local -A app dict
+    local -a mkdir mv mv_args pos rm
+    app['mv']="$(koopa_locate_mv --allow-system)"
     koopa_is_macos && app['mv']='/bin/mv'
-    [[ -x "${app['mv']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['target_dir']=''
-        ['verbose']=0
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
+    dict['target_dir']=''
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -16684,13 +16674,13 @@ koopa_mv() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        mkdir=("${app['mkdir']}" '--sudo')
+        mkdir=('koopa_mkdir' '--sudo')
         mv=("${app['sudo']}" "${app['mv']}")
-        rm=("${app['rm']}" '--sudo')
+        rm=('koopa_rm' '--sudo')
     else
-        mkdir=("${app['mkdir']}")
+        mkdir=('koopa_mkdir')
         mv=("${app['mv']}")
-        rm=("${app['rm']}")
+        rm=('koopa_rm')
     fi
     mv_args=('-f')
     [[ "${dict['verbose']}" -eq 1 ]] && mv_args+=('-v')
@@ -18934,14 +18924,9 @@ koopa_reinstall_only_revdeps() {
 }
 
 koopa_relink() {
-    local app dict ln pos rm sudo
-    local -A app=(
-        ['ln']='koopa_ln'
-        ['rm']='koopa_rm'
-    )
-    local -A dict=(
-        ['sudo']=0
-    )
+    local -A dict
+    local -a ln pos rm sudo
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -18962,8 +18947,8 @@ koopa_relink() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 2
-    ln=("${app['ln']}")
-    rm=("${app['rm']}")
+    ln=('koopa_ln')
+    rm=('koopa_rm')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         ln+=('--sudo')
@@ -22897,16 +22882,12 @@ koopa_today() {
 }
 
 koopa_touch() {
-    local app mkdir pos touch
+    local -A app dict
+    local -a mkdir pos touch
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['mkdir']='koopa_mkdir'
-        ['touch']="$(koopa_locate_touch --allow-system)"
-    )
-    [[ -x "${app['touch']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-    )
+    app['touch']="$(koopa_locate_touch --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -22927,7 +22908,7 @@ koopa_touch() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    mkdir=("${app['mkdir']}")
+    mkdir=('koopa_mkdir')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
