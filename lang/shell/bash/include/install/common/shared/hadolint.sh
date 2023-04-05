@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -13,24 +13,20 @@ main() {
     #     hadolint.rb
     # - https://github.com/hadolint/hadolint/issues/904
     # """
-    local app build_deps dict
+    local -A app dict
+    local -a build_deps
     build_deps=('git' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    local -A app=(
-        ['cabal']="$(koopa_locate_cabal)"
-        ['ghcup']="$(koopa_locate_ghcup)"
-    )
-    [[ -x "${app['cabal']}" ]] || exit 1
-    [[ -x "${app['ghcup']}" ]] || exit 1
-    local -A dict=(
-        ['cabal_dir']="$(koopa_init_dir 'cabal')"
-        ['ghc_version']='9.2.5'
-        ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['cabal']="$(koopa_locate_cabal)"
+    app['ghcup']="$(koopa_locate_ghcup)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cabal_dir']="$(koopa_init_dir 'cabal')"
+    dict['ghc_version']='9.2.5'
+    dict['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['cabal_store_dir']="$(\
         koopa_init_dir "${dict['prefix']}/libexec/cabal/store" \
     )"

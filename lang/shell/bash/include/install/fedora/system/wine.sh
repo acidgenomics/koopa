@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Wine.
-    # @note Updated 2022-02-23.
+    # @note Updated 2023-04-05.
     #
     # Note that 'winehq-stable' is currently only available on Fedora 31.
     # Can use 'winehq-devel' on Fedora 32.
@@ -11,14 +11,11 @@ main() {
     # @seealso
     # - https://wiki.winehq.org/Fedora
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_asset_is_admin
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    local -A dict
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['version']="$( \
         koopa_grep \
             --file='/etc/os-release' \
