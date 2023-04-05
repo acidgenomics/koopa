@@ -3,7 +3,7 @@
 koopa_find_and_replace_in_file() {
     # """
     # Find and replace inside files.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-05.
     #
     # Parameterized, supporting multiple files.
     #
@@ -33,18 +33,16 @@ koopa_find_and_replace_in_file() {
     # >     --replacement='YYY' \
     # >     'file1' 'file2' 'file3'
     # """
-    local app dict flags perl_cmd pos
+    local -A app dict
+    local -a flags perl_cmd pos
     koopa_assert_has_args "$#"
-    local -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
     [[ -x "${app['perl']}" ]] || exit 1
-    local -A dict=(
-        ['multiline']=0
-        ['pattern']=''
-        ['regex']=0
-        ['replacement']=''
-        ['sudo']=0
-    )
+    dict['multiline']=0
+    dict['pattern']=''
+    dict['regex']=0
+    dict['replacement']=''
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -104,7 +102,6 @@ koopa_find_and_replace_in_file() {
     koopa_assert_is_file "$@"
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        # FIXME Need to improve the regex escaping here.
         dict['expr']="s|${dict['pattern']}|${dict['replacement']}|g"
     else
         dict['expr']=" \
