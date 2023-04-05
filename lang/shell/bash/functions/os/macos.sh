@@ -2,42 +2,35 @@
 # shellcheck disable=all
 
 koopa_macos_app_version() {
-    local app x
+    local -A app
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['plutil']="$(koopa_macos_locate_plutil)"
-        ['tr']="$(koopa_locate_tr --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['plutil']}" ]] || exit 1
-    [[ -x "${app['tr']}" ]] || exit 1
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['plutil']="$(koopa_macos_locate_plutil)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for app in "$@"
     do
+        local plist str
         plist="/Applications/${app}.app/Contents/Info.plist"
         [[ -f "$plist" ]] || return 1
-        x="$( \
+        str="$( \
             "${app['plutil']}" -p "$plist" \
                 | koopa_grep --pattern='CFBundleShortVersionString' - \
                 | "${app['awk']}" -F ' => ' '{print $2}' \
                 | "${app['tr']}" --delete '\"' \
         )"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
     done
     return 0
 }
 
 koopa_macos_brew_cask_outdated() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['brew']}" ]] || exit 1
-    [[ -x "${app['cut']}" ]] || exit 1
-    local -A dict
+    app['brew']="$(koopa_locate_brew)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['keep_latest']=0
     dict['tmp_file']="$(koopa_tmp_file)"
     script -q "${dict['tmp_file']}" \
@@ -75,12 +68,12 @@ koopa_macos_brew_cask_quarantine_fix() {
 }
 
 koopa_macos_brew_upgrade_casks() {
-    local app cask casks
+    local -A app
+    local -a casks
+    local cask
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
-    [[ -x "${app['brew']}" ]] || exit 1
+    app['brew']="$(koopa_locate_brew)"
+    koopa_assert_is_executable "${app[@]}"
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
     koopa_is_array_non_empty "${casks[@]:-}" || return 0
     koopa_dl \
