@@ -3,14 +3,14 @@
 koopa_unlink_in_dir() {
     # """
     # Unlink multiple symlinks in a directory.
-    # @note Updated 2022-08-03.
+    # @note Updated 2023-04-05.
     # """
-    local dict name names pos
+    local -A dict
+    local -a names pos
+    local name
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['allow_missing']=0
-        ['prefix']=''
-    )
+    dict['allow_missing']=0
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do

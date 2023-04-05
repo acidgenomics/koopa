@@ -3,7 +3,7 @@
 koopa_paste() {
     # """
     # Paste arguments into a string separated by delimiter.
-    # @note Updated 2022-02-24.
+    # @note Updated 2023-04-05.
     #
     # NB Don't harden against '-*' input here, as we want to be able to pass in
     # arguments that begin with '-'. This is useful in some edge cases, such as
@@ -18,7 +18,8 @@ koopa_paste() {
     # > koopa_paste --sep=', ' 'aaa bbb' 'ccc ddd'
     # # aaa bbb, ccc ddd
     # """
-    local IFS pos sep str
+    local -a pos
+    local IFS sep str
     sep=''
     pos=()
     while (("$#"))

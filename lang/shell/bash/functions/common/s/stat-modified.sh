@@ -3,7 +3,7 @@
 koopa_stat_modified() {
     # """
     # Get file modification time.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - Convert seconds since Epoch into a useful format.
@@ -15,13 +15,13 @@ koopa_stat_modified() {
     # # 2023-02-09
     # # 2023-03-26
     # """
-    local app dict pos timestamp timestamps
-    koopa_assert_has_args "$#"
     local -A app dict
+    local -a pos timestamps
+    local timestamp
+    koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['stat']="$(koopa_locate_stat)"
-    [[ -x "${app['date']}" ]] || exit 1
-    [[ -x "${app['stat']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['format']=''
     pos=()
     while (("$#"))

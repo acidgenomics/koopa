@@ -3,19 +3,17 @@
 koopa_parent_dir() {
     # """
     # Get the parent directory path.
-    # @note Updated 2021-09-21.
+    # @note Updated 2023-04-05.
     #
     # This requires file to exist and resolves symlinks.
     # """
-    local app dict file parent pos
-    local -A app=(
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['cd_tail']=''
-        ['n']=1
-    )
+    local -A app dict
+    local -a pos
+    local file
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cd_tail']=''
+    dict['n']=1
     pos=()
     while (("$#"))
     do
@@ -53,6 +51,7 @@ koopa_parent_dir() {
     fi
     for file in "$@"
     do
+        local parent
         [[ -e "$file" ]] || return 1
         parent="$(koopa_dirname "$file")"
         parent="${parent}${dict['cd_tail']}"

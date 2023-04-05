@@ -3,18 +3,18 @@
 koopa_sys_set_permissions() {
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2022-04-07.
+    # @note Updated 2023-04-05.
     #
     # Consider ensuring that nested directories are also executable.
     # e.g. 'app/julia-packages/1.6/registries/General'.
     # """
+    local -A dict
+    local -a chmod_args chown_args pos
+    local arg
     koopa_assert_has_args "$#"
-    local arg chmod_args chown_args dict pos
-    local -A dict=(
-        ['dereference']=1
-        ['recursive']=0
-        ['shared']=1
-    )
+    dict['dereference']=1
+    dict['recursive']=0
+    dict['shared']=1
     chmod_args=()
     chown_args=()
     pos=()

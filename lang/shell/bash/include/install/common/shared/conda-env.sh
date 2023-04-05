@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-05.
     #
     # Be sure to excluded nested directories that may exist in libexec bin, such
     # as 'bin/scripts' for bowtie2.
@@ -13,13 +13,13 @@ main() {
     # @seealso
     # - https://github.com/conda/conda/issues/7741
     # """
-    local bin_names create_args dict pos
-    local -A dict=(
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['yaml_file']=''
-    )
+    local -A dict
+    local -a bin_names create_args pos
+    local bin_name
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['yaml_file']=''
     pos=()
     while (("$#"))
     do
@@ -77,7 +77,6 @@ main() {
     then
         for bin_name in "${bin_names[@]}"
         do
-            local dict2
             local -A dict2
             dict2['name']="$bin_name"
             dict2['bin_source']="${dict['libexec']}/bin/${dict2['name']}"

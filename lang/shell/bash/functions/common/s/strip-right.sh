@@ -3,7 +3,7 @@
 koopa_strip_right() {
     # """
     # Strip pattern from right side (end) of string.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-04-05.
     #
     # @usage koopa_strip_right --pattern=PATTERN STRING...
     #
@@ -15,10 +15,10 @@ koopa_strip_right() {
     # # The Quick Brown
     # # Michael J.
     # """
-    local dict pos str
-    local -A dict=(
-        ['pattern']=''
-    )
+    local -A dict
+    local -a pos
+    local str
+    dict['pattern']=''
     pos=()
     while (("$#"))
     do

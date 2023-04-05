@@ -15,22 +15,19 @@ koopa_locate_app() {
     #
     # Resolving the full executable path can cause BusyBox coreutils to error.
     # """
-    local bool dict pos
-    local -A bool=(
-        ['allow_koopa_bin']=1
-        ['allow_missing']=0
-        ['allow_system']=0
-        ['only_system']=0
-        ['realpath']=0
-    )
-    local -A dict=(
-        ['app']=''
-        ['app_name']=''
-        ['bin_name']=''
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['system_bin_name']=''
-    )
+    local -A bool dict
+    local -a pos
+    bool['allow_koopa_bin']=1
+    bool['allow_missing']=0
+    bool['allow_system']=0
+    bool['only_system']=0
+    bool['realpath']=0
+    dict['app']=''
+    dict['app_name']=''
+    dict['bin_name']=''
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['system_bin_name']=''
     pos=()
     while (("$#"))
     do

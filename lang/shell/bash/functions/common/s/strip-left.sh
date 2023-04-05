@@ -15,10 +15,10 @@ koopa_strip_left() {
     # # Quick Brown Fox
     # # White Lady
     # """
-    local dict pos str
-    local -A dict=(
-        ['pattern']=''
-    )
+    local -A dict
+    local -a pos
+    local str
+    dict['pattern']=''
     pos=()
     while (("$#"))
     do

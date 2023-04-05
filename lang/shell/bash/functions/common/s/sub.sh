@@ -5,6 +5,11 @@ koopa_sub() {
     # Single substitution.
     # @note Updated 2022-08-29.
     #
+    # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
+    # matching line break characters. Additionally, using 'LANG=C' helps avoid
+    # locale issues on machines with non-standard configurations, such as the
+    # current biocontainers Docker image.
+    #
     # @seealso
     # - https://perldoc.perl.org/functions/quotemeta
     #
@@ -18,17 +23,15 @@ koopa_sub() {
     # # koopa_sub --pattern='/' --replacement='|' '/\|/\|'
     # # |\|/\|
     # """
-    local app dict pos
-    local -A app
+    local -A app dict
+    local -a pos
     app['perl']="$(koopa_locate_perl --allow-system)"
-    [[ -x "${app['perl']}" ]] || exit 1
-    local -A dict=(
-        ['global']=0
-        ['pattern']=''
-        ['perl_tail']=''
-        ['regex']=0
-        ['replacement']=''
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['global']=0
+    dict['pattern']=''
+    dict['perl_tail']=''
+    dict['regex']=0
+    dict['replacement']=''
     pos=()
     while (("$#"))
     do
@@ -84,7 +87,6 @@ koopa_sub() {
     [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        # FIXME Need to improve the regex escaping here.
         dict['expr']="s|${dict['pattern']}|${dict['replacement']}|\
 ${dict['perl_tail']}"
     else
@@ -94,10 +96,6 @@ ${dict['perl_tail']}"
             s/\$pattern/\$replacement/${dict['perl_tail']}; \
         "
     fi
-    # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
-    # matching line break characters. Additionally, using 'LANG=C' helps avoid
-    # locale issues on machines with non-standard configurations, such as the
-    # current biocontainers Docker image.
     printf '%s' "$@" | \
         LANG=C "${app['perl']}" -p -e "${dict['expr']}"
     return 0
