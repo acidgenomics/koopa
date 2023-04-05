@@ -3,24 +3,20 @@
 koopa_gfortran_libs() {
     # """
     # Define FLIBS for our gfortran configuration.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-04-05.
     #
     # Locate gfortran library paths (from GCC). This will cover 'lib' and
     # 'lib64' subdirs. See also 'gcc --print-search-dirs'.
     # """
-    local app dict flibs gcc_libs i
-    local -A app=(
-        ['dirname']="$(koopa_locate_dirname)"
-        ['sort']="$(koopa_locate_sort)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['dirname']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
-    local -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['gcc']="$(koopa_app_prefix 'gcc')"
-    )
+    local -A app dict
+    local -a flibs gcc_libs
+    local i
+    app['dirname']="$(koopa_locate_dirname)"
+    app['sort']="$(koopa_locate_sort)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    dict['gcc']="$(koopa_app_prefix 'gcc')"
     koopa_assert_is_dir "${dict['gcc']}"
     readarray -t gcc_libs <<< "$( \
         koopa_find \

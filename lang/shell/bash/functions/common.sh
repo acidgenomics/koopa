@@ -7837,19 +7837,15 @@ koopa_get_version() {
 }
 
 koopa_gfortran_libs() {
-    local app dict flibs gcc_libs i
-    local -A app=(
-        ['dirname']="$(koopa_locate_dirname)"
-        ['sort']="$(koopa_locate_sort)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['dirname']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
-    local -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['gcc']="$(koopa_app_prefix 'gcc')"
-    )
+    local -A app dict
+    local -a flibs gcc_libs
+    local i
+    app['dirname']="$(koopa_locate_dirname)"
+    app['sort']="$(koopa_locate_sort)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    dict['gcc']="$(koopa_app_prefix 'gcc')"
     koopa_assert_is_dir "${dict['gcc']}"
     readarray -t gcc_libs <<< "$( \
         koopa_find \
@@ -8053,15 +8049,11 @@ koopa_git_commit_date() {
 }
 
 koopa_git_default_branch() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['remote']='origin'
     koopa_assert_is_git_repo "$@"
     (
@@ -8108,17 +8100,13 @@ koopa_git_last_commit_local() {
 }
 
 koopa_git_last_commit_remote() {
-    local app dict url
+    local -A app dict
+    local url
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['git']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    local -A dict
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['ref']='HEAD'
     for url in "$@"
     do
@@ -8339,13 +8327,12 @@ koopa_git_reset() {
 }
 
 koopa_git_rm_submodule() {
-    local app module
+    local -A app
+    local module
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
-    local -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || exit 1
+    app['git']="$(koopa_locate_git --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for module in "$@"
     do
         "${app['git']}" submodule deinit -f "$module"
@@ -8456,17 +8443,14 @@ koopa_git_submodule_init() {
 }
 
 koopa_github_latest_release() {
-    local app repo
+    local -A app
+    local repo
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
     for repo in "$@"
     do
-        local dict
         local -A dict
         dict['repo']="$repo"
         dict['url']="https://api.github.com/repos/${dict['repo']}/\
@@ -8492,16 +8476,13 @@ koopa_gnu_mirror_url() {
 }
 
 koopa_gpg_download_key_from_keyserver() {
-    local app cp dict
+    local -A app dict
+    local -a cp
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['gpg']="$(koopa_locate_gpg --allow-system)"
-    )
-    [[ -x "${app['gpg']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    app['gpg']="$(koopa_locate_gpg --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     dict['tmp_file']="${dict['tmp_dir']}/export.gpg"
     while (("$#"))
     do
@@ -8969,17 +8950,13 @@ man1/${dict['script_name']}.1"
 }
 
 koopa_help() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict
     dict['man_file']="${1:?}"
     [[ -f "${dict['man_file']}" ]] || return 1
-    local -A app=(
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['man']="$(koopa_locate_man --allow-system)"
-    )
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['man']}" ]] || exit 1
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['man']="$(koopa_locate_man --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['head']}" -n 10 "${dict['man_file']}" \
         | koopa_str_detect_fixed --pattern='.TH ' \
         || return 1
@@ -8988,23 +8965,20 @@ koopa_help() {
 }
 
 koopa_hisat2_align_paired_end_per_sample() {
-    local align_args app dict
-    local -A app=(
-        ['hisat2']="$(koopa_locate_hisat2)"
-    )
-    [[ -x "${app['hisat2']}" ]] || exit 1
-    local -A dict=(
-        ['fastq_r1_file']=''
-        ['fastq_r1_tail']=''
-        ['fastq_r2_file']=''
-        ['fastq_r2_tail']=''
-        ['index_dir']=''
-        ['lib_type']='A'
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    local -A app dict
+    local -a align_args
+    app['hisat2']="$(koopa_locate_hisat2)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['fastq_r1_file']=''
+    dict['fastq_r1_tail']=''
+    dict['fastq_r2_file']=''
+    dict['fastq_r2_tail']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     align_args=()
     while (("$#"))
     do
