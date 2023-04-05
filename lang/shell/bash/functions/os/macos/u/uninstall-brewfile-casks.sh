@@ -3,7 +3,7 @@
 koopa_macos_uninstall_brewfile_casks() {
     # """
     # Delete macOS applications installed by Homebrew cask.
-    # @note 2022-05-18.
+    # @note 2023-04-05.
     #
     # This step is useful for reinstalling Homebrew on a system with
     # casks previously installed, which don't get cleaned up currently.
@@ -14,17 +14,14 @@ koopa_macos_uninstall_brewfile_casks() {
     # > koopa_macos_homebrew_uninstall_brewfile_casks \
     #>      /opt/koopa/os/macos/etc/homebrew/brewfile
     # """
-    local app cask casks dict
+    local -A app dict
+    local -a casks
+    local cask
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['brew']}" ]] || exit 1
-    [[ -x "${app['cut']}" ]] || exit 1
-    local -A dict=(
-        ['brewfile']="${1:?}"
-    )
+    app['brew']="$(koopa_locate_brew)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['brewfile']="${1:?}"
     readarray -t casks <<< "$( \
         koopa_grep \
             --file="${dict['brewfile']}" \
