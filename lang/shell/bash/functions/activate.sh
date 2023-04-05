@@ -3,9 +3,8 @@
 
 _koopa_activate_bash_aliases() {
     local dict
-    declare -A dict=(
-        ['user_aliases_file']="${HOME}/.bash_aliases"
-    )
+    declare -A dict
+    dict['user_aliases_file']="${HOME}/.bash_aliases"
     if [[ -f "${dict['user_aliases_file']}" ]]
     then
         source "${dict['user_aliases_file']}"
@@ -33,10 +32,9 @@ _koopa_activate_bash_prompt() {
 
 _koopa_activate_bash_readline() {
     local dict
+    declare -A dict
     [[ -n "${INPUTRC:-}" ]] && return 0
-    declare -A dict=(
-        ['input_rc_file']="${HOME}/.inputrc"
-    )
+    dict['input_rc_file']="${HOME}/.inputrc"
     [[ -r "${dict['input_rc_file']}" ]] || return 0
     export INPUTRC="${dict['input_rc_file']}"
     return 0
@@ -49,15 +47,14 @@ _koopa_activate_bash_reverse_search() {
 
 _koopa_bash_prompt_string() {
     local dict
-    declare -A dict=(
-        ['newline']='\n'
-        ['prompt']='\$'
-        ['prompt_color']=35
-        ['user']='\u@\h'
-        ['user_color']=36
-        ['wd']='\w'
-        ['wd_color']=34
-    )
+    declare -A dict
+    dict['newline']='\n'
+    dict['prompt']='\$'
+    dict['prompt_color']=35
+    dict['user']='\u@\h'
+    dict['user_color']=36
+    dict['wd']='\w'
+    dict['wd_color']=34
     printf '%s%s%s%s%s%s ' \
         "${dict['newline']}" \
         "\[\033[${dict['user_color']}m\]${dict['user']}\[\033[00m\]" \

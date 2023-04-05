@@ -11,14 +11,13 @@ main() {
     # - https://www.ibm.com/aspera/connect/
     # """
     local dict
+    declare -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['aspera_user_prefix']="${HOME}/.aspera"
-        ['name']='ibm-aspera-connect'
-        ['platform']='linux'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['aspera_user_prefix']="${HOME}/.aspera"
+    dict['name']='ibm-aspera-connect'
+    dict['platform']='linux'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['file']="${dict['name']}_${dict['version']}_${dict['platform']}.tar.gz"
     dict['url']="https://d3gcli72yxqn2z.cloudfront.net/downloads/connect/\

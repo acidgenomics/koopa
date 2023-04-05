@@ -12,16 +12,14 @@ koopa_aws_batch_fetch_and_run() {
     # - https://github.com/awslabs/aws-batch-helpers
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_set 'BATCH_FILE_URL' "${BATCH_FILE_URL:-}"
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['file']="$(koopa_tmp_file)"
-        ['profile']="${AWS_PROFILE:-default}"
-        ['url']="${BATCH_FILE_URL:?}"
-    )
+    dict['file']="$(koopa_tmp_file)"
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['url']="${BATCH_FILE_URL:?}"
     case "${dict['url']}" in
         'ftp://'* | \
         'http://'*)

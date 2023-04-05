@@ -9,13 +9,12 @@ koopa_add_make_prefix_link() {
     # This approach works nicely inside a hardened R environment.
     # """
     local dict
+    declare -A dict
     koopa_assert_has_args_le "$#" 1
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    declare -A dict=(
-        ['koopa_prefix']="${1:-}"
-        ['make_prefix']='/usr/local'
-    )
+    dict['koopa_prefix']="${1:-}"
+    dict['make_prefix']='/usr/local'
     if [[ -z "${dict['koopa_prefix']}" ]]
     then
         dict['koopa_prefix']="$(koopa_koopa_prefix)"

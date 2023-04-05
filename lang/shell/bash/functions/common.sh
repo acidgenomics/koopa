@@ -8,12 +8,10 @@ koopa_acid_emoji() {
 koopa_activate_app() {
     local app app_name dict pos
     koopa_assert_has_args "$#"
-    declare -A app
+    declare -A app dict
     app['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
-    declare -A dict=(
-        ['build_only']=0
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    dict['build_only']=0
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     pos=()
     while (("$#"))
     do
@@ -207,13 +205,12 @@ koopa_add_config_link() {
 
 koopa_add_make_prefix_link() {
     local dict
+    declare -A dict
     koopa_assert_has_args_le "$#" 1
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    declare -A dict=(
-        ['koopa_prefix']="${1:-}"
-        ['make_prefix']='/usr/local'
-    )
+    dict['koopa_prefix']="${1:-}"
+    dict['make_prefix']='/usr/local'
     if [[ -z "${dict['koopa_prefix']}" ]]
     then
         dict['koopa_prefix']="$(koopa_koopa_prefix)"
@@ -229,11 +226,10 @@ koopa_add_make_prefix_link() {
 
 koopa_add_monorepo_config_link() {
     local dict subdir
+    declare -A dict
     koopa_assert_has_args "$#"
     koopa_assert_has_monorepo
-    declare -A dict=(
-        ['prefix']="$(koopa_monorepo_prefix)"
-    )
+    dict['prefix']="$(koopa_monorepo_prefix)"
     for subdir in "$@"
     do
         koopa_add_config_link \
@@ -602,10 +598,9 @@ koopa_app_json() {
 
 koopa_app_prefix() {
     local dict pos
-    declare -A dict=(
-        ['allow_missing']=0
-        ['app_prefix']="$(koopa_koopa_prefix)/app"
-    )
+    declare -A dict
+    dict['allow_missing']=0
+    dict['app_prefix']="$(koopa_koopa_prefix)/app"
     if [[ "$#" -eq 0 ]]
     then
         koopa_print "${dict['app_prefix']}"
@@ -673,11 +668,10 @@ koopa_app_reverse_dependencies() {
 
 koopa_app_version() {
     local dict
+    declare -A dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
-        ['name']="${1:?}"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    dict['name']="${1:?}"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['symlink']="${dict['opt_prefix']}/${dict['name']}"
     koopa_assert_is_symlink "${dict['symlink']}"
     dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
@@ -688,11 +682,10 @@ koopa_app_version() {
 
 koopa_append_string() {
     local dict
+    declare -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']=''
-        ['string']=''
-    )
+    dict['file']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in
@@ -1086,11 +1079,10 @@ koopa_assert_is_macos() {
 
 koopa_assert_is_matching_fixed() {
     local dict
+    declare -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['pattern']=''
-        ['string']=''
-    )
+    dict['pattern']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in
@@ -1129,11 +1121,10 @@ koopa_assert_is_matching_fixed() {
 
 koopa_assert_is_matching_regex() {
     local dict
+    declare -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['pattern']=''
-        ['string']=''
-    )
+    dict['pattern']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in
@@ -1271,13 +1262,12 @@ koopa_assert_is_not_symlink() {
 
 koopa_assert_is_owner() {
     local dict
+    declare -A dict
     koopa_assert_has_no_args "$#"
     if ! koopa_is_owner
     then
-        declare -A dict=(
-            ['prefix']="$(koopa_koopa_prefix)"
-            ['user']="$(koopa_user_name)"
-        )
+        dict['prefix']="$(koopa_koopa_prefix)"
+        dict['user']="$(koopa_user_name)"
         koopa_stop "Koopa installation at '${dict['prefix']}' is not \
 owned by '${dict['user']}'."
     fi
@@ -1429,16 +1419,14 @@ koopa_autopad_zeros() {
 
 koopa_aws_batch_fetch_and_run() {
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_set 'BATCH_FILE_URL' "${BATCH_FILE_URL:-}"
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['file']="$(koopa_tmp_file)"
-        ['profile']="${AWS_PROFILE:-default}"
-        ['url']="${BATCH_FILE_URL:?}"
-    )
+    dict['file']="$(koopa_tmp_file)"
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['url']="${BATCH_FILE_URL:?}"
     case "${dict['url']}" in
         'ftp://'* | \
         'http://'*)
@@ -1545,13 +1533,11 @@ koopa_aws_batch_list_jobs() {
 
 koopa_aws_codecommit_list_repositories() {
     local app dict
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['jq']="$(koopa_locate_jq)"
-    )
+    declare -A app dict
+    app['aws']="$(koopa_locate_aws)"
+    app['jq']="$(koopa_locate_jq)"
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
-    declare -A dict
     dict['string']="$( \
         "${app['aws']}" codecommit list-repositories \
             | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
@@ -1643,17 +1629,14 @@ koopa_aws_ec2_terminate() {
 
 koopa_aws_ecr_login_private() {
     local app dict
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['docker']="$(koopa_locate_docker)"
-    )
+    declare -A app dict
+    app['aws']="$(koopa_locate_aws)"
+    app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1
-    declare -A dict=(
-        ['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
-        ['profile']="${AWS_ECR_PROFILE:?}" # FIXME
-        ['region']="${AWS_ECR_REGION:?}" # FIXME
-    )
+    dict['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
+    dict['profile']="${AWS_ECR_PROFILE:?}" # FIXME
+    dict['region']="${AWS_ECR_REGION:?}" # FIXME
     dict['repo_url']="${dict['account_id']}.dkr.ecr.\
 ${dict['region']}.amazonaws.com"
     koopa_alert "Logging into '${dict['repo_url']}'."
@@ -1672,17 +1655,14 @@ ${dict['region']}.amazonaws.com"
 
 koopa_aws_ecr_login_public() {
     local app dict
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['docker']="$(koopa_locate_docker)"
-    )
+    declare -A app dict
+    app['aws']="$(koopa_locate_aws)"
+    app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['docker']}" ]] || return 1
-    declare -A dict=(
-        ['profile']="${AWS_ECR_PROFILE:?}" # FIXME
-        ['region']="${AWS_ECR_REGION:?}" # FIXME
-        ['repo_url']='public.ecr.aws'
-    )
+    dict['profile']="${AWS_ECR_PROFILE:?}" # FIXME
+    dict['region']="${AWS_ECR_REGION:?}" # FIXME
+    dict['repo_url']='public.ecr.aws'
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
     "${app['aws']}" --profile="${dict['profile']}" \
@@ -1699,17 +1679,15 @@ koopa_aws_ecr_login_public() {
 
 koopa_aws_s3_cp_regex() {
     local app dict
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['bucket_pattern']='^s3://.+/$'
-        ['pattern']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['source_prefix']=''
-        ['target_prefix']=''
-    )
+    dict['bucket_pattern']='^s3://.+/$'
+    dict['pattern']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['source_prefix']=''
+    dict['target_prefix']=''
     while (("$#"))
     do
         case "$1" in
@@ -1777,17 +1755,14 @@ koopa_aws_s3_cp_regex() {
 
 koopa_aws_s3_delete_versioned_glacier_objects() {
     local app dict i keys version_ids
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['jq']="$(koopa_locate_jq)"
-    )
+    declare -A app dict
+    app['aws']="$(koopa_locate_aws)"
+    app['jq']="$(koopa_locate_jq)"
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
-    declare -A dict=(
-        ['bucket']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['region']="${AWS_REGION:-us-east-1}"
-    )
+    dict['bucket']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['region']="${AWS_REGION:-us-east-1}"
     while (("$#"))
     do
         case "$1" in
@@ -1858,10 +1833,9 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     for i in "${!keys[@]}"
     do
         local dict2
-        declare -A dict2=(
-            ['key']="${keys[$i]}"
-            ['version_id']="${version_ids[$i]}"
-        )
+        declare -A dict2
+        dict2['key']="${keys[$i]}"
+        dict2['version_id']="${version_ids[$i]}"
         koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
         "${app['aws']}" --profile "${dict['profile']}" \
             s3api delete-object \
@@ -1876,14 +1850,13 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
 
 koopa_aws_s3_find() {
     local dict exclude_arr include_arr ls_args pattern str
+    declare -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['exclude']=0
-        ['include']=0
-        ['prefix']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['recursive']=0
-    )
+    dict['exclude']=0
+    dict['include']=0
+    dict['prefix']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['recursive']=0
     exclude_arr=()
     include_arr=()
     while (("$#"))
@@ -2005,23 +1978,20 @@ koopa_aws_s3_find() {
 
 koopa_aws_s3_list_large_files() {
     local app dict
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['aws']="$(koopa_locate_aws)"
-        ['jq']="$(koopa_locate_jq)"
-        ['sort']="$(koopa_locate_sort)"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['aws']="$(koopa_locate_aws)"
+    app['jq']="$(koopa_locate_jq)"
+    app['sort']="$(koopa_locate_sort)"
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['jq']}" ]] || return 1
     [[ -x "${app['sort']}" ]] || return 1
-    declare -A dict=(
-        ['bucket']=''
-        ['num']='20'
-        ['profile']="${AWS_PROFILE:-default}"
-        ['region']="${AWS_REGION:-us-east-1}"
-    )
+    dict['bucket']=''
+    dict['num']='20'
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['region']="${AWS_REGION:-us-east-1}"
     while (("$#"))
     do
         case "$1" in
@@ -2096,21 +2066,18 @@ koopa_aws_s3_list_large_files() {
 
 koopa_aws_s3_ls() {
     local app dict ls_args str
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['aws']="$(koopa_locate_aws)"
-        ['sed']="$(koopa_locate_sed)"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['aws']="$(koopa_locate_aws)"
+    app['sed']="$(koopa_locate_sed)"
     [[ -x "${app['awk']}" ]] || return 1
     [[ -x "${app['aws']}" ]] || return 1
     [[ -x "${app['sed']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['recursive']=0
-        ['type']=''
-    )
+    dict['prefix']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['recursive']=0
+    dict['type']=''
     ls_args=()
     while (("$#"))
     do
@@ -2257,16 +2224,13 @@ koopa_aws_s3_ls() {
 }
 
 koopa_aws_s3_mv_to_parent() {
-    local app dict
-    local file files prefix
+    local app dict file files prefix
+    declare -A app dict
     koopa_assert_has_args "$#"
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    dict['prefix']=''
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in

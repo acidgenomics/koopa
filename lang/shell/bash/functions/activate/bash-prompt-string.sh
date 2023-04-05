@@ -22,15 +22,14 @@ _koopa_bash_prompt_string() {
     # - https://unix.stackexchange.com/questions/218174/
     # """
     local dict
-    declare -A dict=(
-        ['newline']='\n'
-        ['prompt']='\$'
-        ['prompt_color']=35
-        ['user']='\u@\h'
-        ['user_color']=36
-        ['wd']='\w'
-        ['wd_color']=34
-    )
+    declare -A dict
+    dict['newline']='\n'
+    dict['prompt']='\$'
+    dict['prompt_color']=35
+    dict['user']='\u@\h'
+    dict['user_color']=36
+    dict['wd']='\w'
+    dict['wd_color']=34
     printf '%s%s%s%s%s%s ' \
         "${dict['newline']}" \
         "\[\033[${dict['user_color']}m\]${dict['user']}\[\033[00m\]" \

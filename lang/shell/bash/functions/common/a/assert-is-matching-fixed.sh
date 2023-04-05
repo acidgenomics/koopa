@@ -6,11 +6,10 @@ koopa_assert_is_matching_fixed() {
     # @note Updated 2023-03-12.
     # """
     local dict
+    declare -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['pattern']=''
-        ['string']=''
-    )
+    dict['pattern']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in

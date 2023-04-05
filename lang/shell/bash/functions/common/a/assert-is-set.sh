@@ -6,10 +6,9 @@ koopa_assert_is_set() {
     # @note Updated 2021-11-05.
     #
     # @examples
-    # > declare -A dict=(
-    # >     [aaa]='AAA'
-    # >     [bbb]='BBB'
-    # > )
+    # > declare -A dict
+    # > dict[aaa]='AAA'
+    # > dict[bbb]='BBB'
     # > koopa_assert_is_set \
     # >     '--aaa' "${dict['aaa']:-}" \
     # >     '--bbb' "${dict['bbb']:-}"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-04-04.
     #
     # @section Intel:
     #
@@ -25,6 +25,7 @@ main() {
     # - https://mac.r-project.org/tools/
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
     if [[ ! -f '/usr/local/include/omp.h' ]]
     then
@@ -32,19 +33,15 @@ main() {
             "'libomp' is not installed." \
             "Run 'koopa install system openmp' to resolve."
     fi
-    declare -A app=(
-        ['installer']="$(koopa_macos_locate_installer)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
+    app['installer']="$(koopa_macos_locate_installer)"
+    app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['installer']}" ]] || return 1
     [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['framework_prefix']='/Library/Frameworks/R.framework'
-        ['os']="$(koopa_kebab_case_simple "$(koopa_macos_os_codename)")"
-        ['url_stem']='https://cran.r-project.org/bin/macosx'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch)"
+    dict['framework_prefix']='/Library/Frameworks/R.framework'
+    dict['os']="$(koopa_kebab_case_simple "$(koopa_macos_os_codename)")"
+    dict['url_stem']='https://cran.r-project.org/bin/macosx'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     case "${dict['arch']}" in
         'arm64')

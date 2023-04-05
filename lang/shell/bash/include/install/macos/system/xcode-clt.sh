@@ -23,18 +23,15 @@ main() {
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
     # """
     local app dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['xcode_select']="$(koopa_macos_locate_xcode_select)"
-        ['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['xcode_select']="$(koopa_macos_locate_xcode_select)"
+    app['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
     [[ -x "${app['sudo']}" ]] || return 1
     [[ -x "${app['xcode_select']}" ]] || return 1
     [[ -x "${app['xcodebuild']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="$("${app['xcode_select']}" -p 2>/dev/null || true)"
-    )
+    dict['prefix']="$("${app['xcode_select']}" -p 2>/dev/null || true)"
     if [[ -d "${dict['prefix']}" ]]
     then
         koopa_alert "Removing previous install at '${dict['prefix']}'."

@@ -33,20 +33,18 @@ main() {
     # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
     # """
     local app app_name apps dict
+    declare -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['chflags']="$(koopa_macos_locate_chflags)"
-        ['defaults']="$(koopa_macos_locate_defaults)"
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['lsregister']="$(koopa_macos_locate_lsregister)"
-        ['plistbuddy']="$(koopa_macos_locate_plistbuddy)"
-    )
+    app['chflags']="$(koopa_macos_locate_chflags)"
+    app['defaults']="$(koopa_macos_locate_defaults)"
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['lsregister']="$(koopa_macos_locate_lsregister)"
+    app['plistbuddy']="$(koopa_macos_locate_plistbuddy)"
     [[ -x "${app['chflags']}" ]] || return 1
     [[ -x "${app['defaults']}" ]] || return 1
     [[ -x "${app['kill_all']}" ]] || return 1
     [[ -x "${app['lsregister']}" ]] || return 1
     [[ -x "${app['plistbuddy']}" ]] || return 1
-    declare -A dict
     dict['screenshots_dir']="${HOME}/Pictures/screenshots"
     koopa_alert_note "If you encounter permission errors when attempting to \
 write defaults, ensure that your terminal app has full disk access enabled." \

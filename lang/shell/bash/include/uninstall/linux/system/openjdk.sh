@@ -2,11 +2,9 @@
 
 main() {
     local dict
+    declare -A dict
     koopa_assert_has_no_args "$#"
-    koopa_is_admin || return 0
-    declare -A dict=(
-        ['default_java']='/usr/lib/jvm/default-java'
-    )
+    dict['default_java']='/usr/lib/jvm/default-java'
     if [[ -d "${dict['default_java']}" ]]
     then
         koopa_linux_java_update_alternatives "${dict['default_java']}"
