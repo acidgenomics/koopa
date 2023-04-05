@@ -5,9 +5,8 @@ koopa_git_reset_fork_to_upstream() {
     # Reset Git fork to upstream.
     # @note Updated 2023-03-12.
     # """
-    local app
-    koopa_assert_has_args "$#"
     local -A app
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"

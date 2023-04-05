@@ -7,7 +7,6 @@ koopa_fedora_dnf() {
     #
     # Previously defined as 'yum' in versions prior to RHEL 8.
     # """
-    local app
     local -A app=(
         ['dnf']="$(koopa_fedora_locate_dnf)"
         ['sudo']="$(koopa_locate_sudo)"

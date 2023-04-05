@@ -9,7 +9,6 @@ koopa_git_latest_tag() {
     # > koopa_git_latest_tag '/opt/koopa'
     # # v0.12.1
     # """
-    local app
     local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1

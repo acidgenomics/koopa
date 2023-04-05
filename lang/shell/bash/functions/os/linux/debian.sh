@@ -788,7 +788,6 @@ koopa_debian_install_from_deb() {
 }
 
 koopa_debian_install_system_builder_base() {
-    local app
     local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['cat']="$(koopa_locate_cat --allow-system)"

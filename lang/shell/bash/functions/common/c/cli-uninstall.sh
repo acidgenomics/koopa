@@ -3,12 +3,12 @@
 koopa_cli_uninstall() {
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2023-03-14.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # > koopa_cli_uninstall 'python3.10'
     # """
-    local app
+    local app stem
     [[ "$#" -eq 0 ]] && set -- 'koopa'
     stem='uninstall'
     case "$1" in
@@ -22,9 +22,8 @@ koopa_cli_uninstall() {
     koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local -A dict=(
-            ['key']="${stem}-${app}"
-        )
+        local -A dict
+        dict['key']="${stem}-${app}"
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then

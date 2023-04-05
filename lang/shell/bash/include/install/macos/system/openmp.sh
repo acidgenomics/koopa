@@ -11,7 +11,6 @@ main() {
     # - https://mac.r-project.org/openmp/
     # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
-    local app
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['sudo']="$(koopa_locate_sudo)"
