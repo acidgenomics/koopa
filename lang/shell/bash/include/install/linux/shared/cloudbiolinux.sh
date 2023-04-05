@@ -7,7 +7,7 @@ main() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['commit']="${KOOPA_INSTALL_VERSION:?}"
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['url']='https://github.com/chapmanb/cloudbiolinux.git'

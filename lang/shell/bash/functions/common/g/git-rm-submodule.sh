@@ -16,7 +16,7 @@ koopa_git_rm_submodule() {
     local app module
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
-    declare -A app=(
+    local -A app=(
         ['git']="$(koopa_locate_git --allow-system)"
     )
     [[ -x "${app['git']}" ]] || exit 1

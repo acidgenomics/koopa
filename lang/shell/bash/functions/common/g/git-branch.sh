@@ -20,7 +20,7 @@ koopa_git_branch() {
     # """
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
@@ -35,7 +35,7 @@ koopa_git_branch() {
         do
             local dict2
             koopa_cd "$repo"
-            declare -A dict2
+            local -A dict2
             dict2['branch']="$( \
                 "${app['git']}" branch --show-current \
                 2>/dev/null \

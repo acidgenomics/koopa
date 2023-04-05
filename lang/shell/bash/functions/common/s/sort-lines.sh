@@ -7,7 +7,7 @@ koopa_sort_lines() {
     # """
     local app file
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['vim']="$(koopa_locate_vim)"
     )
     [[ -x "${app['vim']}" ]] || exit 1

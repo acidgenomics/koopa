@@ -11,10 +11,10 @@ koopa_linux_bcbio_nextgen_add_genome() {
     local app bcbio_args dict genome genomes
     koopa_assert_has_args "$#"
     genomes=("$@")
-    declare -A app=(
+    local -A app=(
         ['bcbio']="$(koopa_linux_locate_bcbio)"
     )
-    declare -A dict=(
+    local -A dict=(
         ['cores']="$(koopa_cpu_count)"
     )
     bcbio_args=(

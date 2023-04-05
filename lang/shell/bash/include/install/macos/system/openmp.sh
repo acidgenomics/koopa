@@ -12,7 +12,7 @@ main() {
     # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
     local app
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     app['sudo']="$(koopa_locate_sudo)"
     app['tar']="$(koopa_locate_tar --allow-system)"

@@ -12,7 +12,7 @@ koopa_find_dotfiles() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 2
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk)"
         ['basename']="$(koopa_locate_basename)"
         ['xargs']="$(koopa_locate_xargs)"
@@ -20,7 +20,7 @@ koopa_find_dotfiles() {
     [[ -x "${app['awk']}" ]] || exit 1
     [[ -x "${app['basename']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['type']="${1:?}"
         ['header']="${2:?}"
     )

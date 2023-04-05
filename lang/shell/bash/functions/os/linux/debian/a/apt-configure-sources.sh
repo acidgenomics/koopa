@@ -81,7 +81,7 @@ koopa_debian_apt_configure_sources() {
     # """
     local app codenames repos urls
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['tee']="$(koopa_locate_tee --allow-system)"
@@ -89,7 +89,7 @@ koopa_debian_apt_configure_sources() {
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1
     [[ -x "${app['tee']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['os_codename']="$(koopa_debian_os_codename)"
         ['os_id']="$(koopa_os_id)"
         ['sources_list']="$(koopa_debian_apt_sources_file)"
@@ -97,12 +97,12 @@ koopa_debian_apt_configure_sources() {
     )
     koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
     koopa_assert_is_file "${dict['sources_list']}"
-    declare -A codenames=(
+    local -A codenames=(
         ['main']="${dict['os_codename']}"
         ['security']="${dict['os_codename']}-security"
         ['updates']="${dict['os_codename']}-updates"
     )
-    declare -A urls=(
+    local -A urls=(
         ['main']="$( \
             koopa_grep \
                 --file="${dict['sources_list']}" \

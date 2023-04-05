@@ -6,7 +6,7 @@ koopa_bioconda_autobump_recipe() {
     # @note Updated 2023-01-12.
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['git']="$(koopa_locate_git --allow-system)"
     app['vim']="$(koopa_locate_vim --allow-system)"

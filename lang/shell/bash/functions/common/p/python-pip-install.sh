@@ -16,7 +16,7 @@ koopa_python_pip_install() {
     # """
     local app dict dl_args pkg pkgs pos
     koopa_assert_has_args "$#"
-    declare -A app dict
+    local -A app dict
     dict['prefix']=''
     pos=()
     while (("$#"))

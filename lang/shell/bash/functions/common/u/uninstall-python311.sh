@@ -2,7 +2,7 @@
 
 koopa_uninstall_python311() {
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['opt_prefix']="$(koopa_opt_prefix)"

@@ -7,7 +7,7 @@ koopa_write_string() {
     # """
     local dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['file']=''
         ['string']=''
     )

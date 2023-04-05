@@ -9,13 +9,13 @@ koopa_ssh_key_info() {
     # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
     local app dict keyfile
-    declare -A app=(
+    local -A app=(
         ['ssh_keygen']="$(koopa_locate_ssh_keygen)"
         ['uniq']="$(koopa_locate_uniq)"
     )
     [[ -x "${app['ssh_keygen']}" ]] || exit 1
     [[ -x "${app['uniq']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${HOME:?}/.ssh"
         ['stem']='id_'
     )

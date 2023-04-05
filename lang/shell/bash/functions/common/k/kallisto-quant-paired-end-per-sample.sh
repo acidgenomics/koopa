@@ -54,11 +54,11 @@ koopa_kallisto_quant_paired_end_per_sample() {
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['kallisto']="$(koopa_locate_kallisto)"
     )
     [[ -x "${app['kallisto']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # Current recommendation in bcbio-nextgen.
         ['bootstraps']=30
         # e.g. 'sample1_R1_001.fastq.gz'

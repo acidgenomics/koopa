@@ -11,13 +11,13 @@ koopa_sudo_append_string() {
     local app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['tee']="$(koopa_locate_tee --allow-system)"
     )
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['tee']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']=''
         ['string']=''
     )

@@ -27,7 +27,7 @@ main() {
     # - https://stackoverflow.com/questions/540640/
     # """
     local app bin_file bin_files dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'perl'
     app['bash']="$(koopa_locate_bash --allow-system)"

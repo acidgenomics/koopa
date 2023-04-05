@@ -10,7 +10,7 @@ koopa_git_remote_url() {
     # # https://github.com/acidgenomics/koopa.git
     # """
     local app
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     koopa_assert_is_git_repo "$@"

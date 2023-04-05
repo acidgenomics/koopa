@@ -21,7 +21,7 @@ koopa_r_configure_makeconf() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local app dict libs
-    declare -A app dict
+    local -A app dict
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || exit 1
     dict['system']=0

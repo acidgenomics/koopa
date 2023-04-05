@@ -13,7 +13,7 @@ koopa_sambamba_filter() {
     # """
     local bam_file bam_files dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['pattern']='*.sorted.bam'
         ['prefix']="${1:?}"
     )
@@ -37,7 +37,7 @@ pattern '${dict['pattern']}'."
     for bam_file in "${bam_files[@]}"
     do
         local dict2
-        declare -A dict2
+        local -A dict2
         dict2['input']="$bam_file"
         dict2['bn']="$(koopa_basename_sans_ext "${dict2['input']}")"
         dict2['prefix']="$(koopa_parent_dir "${dict['input']}")"

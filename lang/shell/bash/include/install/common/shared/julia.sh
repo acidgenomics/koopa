@@ -20,10 +20,10 @@ main() {
     koopa_assert_has_no_args "$#"
     build_deps=('bzip2' 'cmake' 'make' 'tar' 'xz')
     koopa_activate_app --build-only "${build_deps[@]}"
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='julia'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

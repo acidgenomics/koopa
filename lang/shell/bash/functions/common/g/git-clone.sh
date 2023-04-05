@@ -13,10 +13,10 @@ koopa_git_clone() {
     # """
     local app clone_args dict
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['branch']=''
         ['commit']=''
         ['prefix']=''

@@ -12,7 +12,7 @@ koopa_stat_user_id() {
     # """
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
-    declare -A app dict
+    local -A app dict
     app['stat']="$(koopa_locate_stat --allow-system)"
     [[ -x "${app['stat']}" ]] || exit 1
     dict['format_string']='%u'

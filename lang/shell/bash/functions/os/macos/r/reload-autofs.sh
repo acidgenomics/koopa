@@ -8,7 +8,7 @@ koopa_macos_reload_autofs() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['automount']="$(koopa_macos_locate_automount)"
         ['sudo']="$(koopa_locate_sudo)"
     )

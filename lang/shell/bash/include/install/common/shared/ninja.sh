@@ -11,10 +11,10 @@ main() {
     # """
     local app dict
     koopa_activate_app --build-only 'python3.11'
-    declare -A app
+    local -A app
     app['python']="$(koopa_locate_python311 --realpath)"
     [[ -x "${app['python']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='ninja'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

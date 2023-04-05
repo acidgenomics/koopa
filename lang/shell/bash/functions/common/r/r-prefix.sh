@@ -10,14 +10,14 @@ koopa_r_prefix() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
+    local -A app=(
         ['r']="${1:-}"
     )
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     [[ -x "${app['r']}" ]] || exit 1
     app['rscript']="${app['r']}script"
     [[ -x "${app['rscript']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['prefix']="$( \
         "${app['rscript']}" \
             --vanilla \

@@ -28,11 +28,11 @@ koopa_hisat2_index() {
     #     prepare_tx_gff.py
     # """
     local app dict index_args
-    declare -A app=(
+    local -A app=(
         ['hisat2_build']="$(koopa_locate_hisat2_build)"
     )
     [[ -x "${app['hisat2_build']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
         ['genome_fasta_file']=''
         ['mem_gb']="$(koopa_mem_gb)"

@@ -11,7 +11,7 @@ koopa_local_ip_address() {
     # """
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['tail']="$(koopa_locate_tail --allow-system)"

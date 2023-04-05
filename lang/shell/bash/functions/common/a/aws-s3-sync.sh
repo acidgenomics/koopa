@@ -41,10 +41,10 @@ koopa_aws_s3_sync() {
     # """
     local aws dict exclude_args exclude_patterns pattern pos sync_args
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['profile']="${AWS_PROFILE:-default}"
     )
     # Include common file system and Git cruft that we don't want on S3.

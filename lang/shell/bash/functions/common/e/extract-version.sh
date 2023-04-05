@@ -10,10 +10,10 @@ koopa_extract_version() {
     # # 5.1.16
     # """
     local app arg dict
-    declare -A app
+    local -A app
     app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['pattern']="$(koopa_version_pattern)"
     )
     if [[ "$#" -eq 0 ]]

@@ -7,7 +7,7 @@ koopa_configure_user_chemacs() {
     # """
     local dict
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['source_prefix']="${1:-}"
         ['opt_prefix']="$(koopa_opt_prefix)"
         ['target_prefix']="${HOME:?}/.emacs.d"

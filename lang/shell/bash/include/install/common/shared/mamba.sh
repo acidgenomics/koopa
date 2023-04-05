@@ -25,7 +25,7 @@ main() {
     #     Homebrew/formula.rb#L1539
     # """
     local app cmake_args deps dict
-    declare -A app dict
+    local -A app dict
     deps=(
         'bzip2'
         'zstd'

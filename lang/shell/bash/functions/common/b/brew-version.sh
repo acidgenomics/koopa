@@ -11,7 +11,7 @@ koopa_brew_version() {
     # # 4.9.0
     # """
     local app brew
-    declare -A app
+    local -A app
     koopa_assert_has_args "$#"
     app['brew']="$(koopa_locate_brew)"
     app['jq']="$(koopa_locate_jq)"

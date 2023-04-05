@@ -14,7 +14,7 @@ koopa_debian_apt_add_wine_obs_repo() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['base_url']="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
         ['distribution']='./'

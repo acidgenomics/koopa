@@ -7,7 +7,7 @@ koopa_download_cran_latest() {
     # """
     local app file name pattern url
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['head']="$(koopa_locate_head --allow-system)"
     )
     [[ -x "${app['head']}" ]] || exit 1

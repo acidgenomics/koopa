@@ -12,7 +12,7 @@ koopa_has_passwordless_sudo() {
     koopa_assert_has_no_args "$#"
     koopa_is_root && return 0
     koopa_is_installed 'sudo' || return 1
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['sudo']}" ]] || exit 1

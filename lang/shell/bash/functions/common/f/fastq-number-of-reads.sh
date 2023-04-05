@@ -12,7 +12,7 @@ koopa_fastq_number_of_reads() {
     local app file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk)"
         ['wc']="$(koopa_locate_wc)"
     )

@@ -6,7 +6,7 @@ koopa_brew_outdated() {
     # @note Updated 2021-10-27.
     # """
     local app x
-    declare -A app
+    local -A app
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || exit 1

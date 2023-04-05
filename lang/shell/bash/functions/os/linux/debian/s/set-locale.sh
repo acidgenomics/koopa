@@ -16,7 +16,7 @@ koopa_debian_set_locale() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
         ['locale']="$(koopa_locate_locale)"
         ['locale_gen']="$(koopa_debian_locate_locale_gen)"
@@ -28,7 +28,7 @@ koopa_debian_set_locale() {
     [[ -x "${app['locale_gen']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['update_locale']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['charset']='UTF-8'
         ['country']='US'
         ['lang']='en'

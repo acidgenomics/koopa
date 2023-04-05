@@ -7,7 +7,7 @@ koopa_read_prompt_yn() {
     # """
     local dict
     koopa_assert_has_args_eq "$#" 2
-    declare -A dict=(
+    local -A dict=(
         ['input']="${2:?}"
         ['no']="$(koopa_print_red 'no')"
         ['no_default']="$(koopa_print_red_bold 'NO')"

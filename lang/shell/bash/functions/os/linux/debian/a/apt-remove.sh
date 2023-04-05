@@ -8,7 +8,7 @@ koopa_debian_apt_remove() {
     local app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )

@@ -2,7 +2,7 @@
 
 koopa_install_python311() {
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['app_prefix']="$(koopa_app_prefix)"
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['man1_prefix']="$(koopa_man1_prefix)"

@@ -8,7 +8,7 @@ koopa_push_all_app_builds() {
     # Intentionally match only apps built from source within the last 48 hours.
     # """
     local app_names dict
-    declare -A dict
+    local -A dict
     dict['opt_prefix']="$(koopa_opt_prefix)"
     readarray -t app_names <<< "$( \
         koopa_find \

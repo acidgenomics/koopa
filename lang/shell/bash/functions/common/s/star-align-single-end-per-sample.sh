@@ -16,11 +16,11 @@ koopa_star_align_single_end_per_sample() {
     # """
     local align_args app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['star']="$(koopa_locate_star)"
     )
     [[ -x "${app['star']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'fastq'.
         ['fastq_file']=''
         # e.g. '_001.fastq.gz'.

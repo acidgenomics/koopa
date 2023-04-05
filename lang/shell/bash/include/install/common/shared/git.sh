@@ -28,7 +28,7 @@ main() {
         'curl' \
         'pcre2' \
         'libiconv'
-    declare -A app=(
+    local -A app=(
         ['bash']="$(koopa_locate_bash)"
         ['less']="$(koopa_locate_less)"
         ['make']="$(koopa_locate_make)"
@@ -41,7 +41,7 @@ main() {
     [[ -x "${app['make']}" ]] || exit 1
     [[ -x "${app['perl']}" ]] || exit 1
     [[ -x "${app['python']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['curl']="$(koopa_app_prefix 'curl')"
         ['expat']="$(koopa_app_prefix 'expat')"
         ['jobs']="$(koopa_cpu_count)"

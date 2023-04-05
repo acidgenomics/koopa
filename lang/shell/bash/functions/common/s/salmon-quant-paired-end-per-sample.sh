@@ -69,11 +69,11 @@ koopa_salmon_quant_paired_end_per_sample() {
     # """
     local app dict quant_args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['salmon']="$(koopa_locate_salmon)"
     )
     [[ -x "${app['salmon']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         # Current recommendation in bcbio-nextgen.
         ['bootstraps']=30
         # e.g. 'sample1_R1_001.fastq.gz'.

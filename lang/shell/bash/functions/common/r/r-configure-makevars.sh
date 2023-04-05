@@ -23,7 +23,7 @@ koopa_r_configure_makevars() {
     # """
     local app conf_dict dict
     local cppflags ldflags lines
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || exit 1
@@ -122,7 +122,7 @@ koopa_r_configure_makevars() {
     then
         # Ensure these values are in sync with Renviron.site file.
         local app_pc_path_arr i key keys pkg_config
-        declare -A app_pc_path_arr
+        local -A app_pc_path_arr
         keys=(
             'cairo'
             'curl7'
@@ -240,7 +240,7 @@ koopa_r_configure_makevars() {
         # libomp is installed at '/usr/local/lib' for macOS.
         ldflags+=('-lomp')
     fi
-    declare -A conf_dict
+    local -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
     conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"

@@ -17,10 +17,10 @@ main() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
+    local -A app
     app['yes']="$(koopa_locate_yes)"
     [[ -x "${app['yes']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         ['name']='ADFRsuite'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

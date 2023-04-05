@@ -8,7 +8,7 @@ koopa_which_function() {
     local dict
     koopa_assert_has_args_eq "$#" 1
     [[ -z "${1:-}" ]] && return 1
-    declare -A dict=(
+    local -A dict=(
         ['input_key']="${1:?}"
     )
     if koopa_is_function "${dict['input_key']}"

@@ -12,7 +12,7 @@ main() {
     # - https://github.com/libgit2/libgit2/issues/5079
     # """
     local build_deps cmake cmake_args deps dict
-    declare -A cmake dict
+    local -A cmake dict
     koopa_assert_has_no_args "$#"
     build_deps=('cmake' 'pkg-config')
     deps=('zlib' 'pcre')

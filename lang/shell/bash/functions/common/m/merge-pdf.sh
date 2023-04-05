@@ -12,7 +12,7 @@ koopa_merge_pdf() {
     # """
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['gs']="$(koopa_locate_gs)"
     )
     [[ -x "${app['gs']}" ]] || exit 1

@@ -29,11 +29,11 @@ koopa_fasta_generate_decoy_transcriptome_file() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cat']="$(koopa_locate_cat --allow-system)"
     )
     [[ -x "${app['cat']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['genome_fasta_file']=''
         ['output_file']='' # 'gentrome.fa.gz'
         ['transcriptome_fasta_file']=''

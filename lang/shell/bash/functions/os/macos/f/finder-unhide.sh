@@ -7,7 +7,7 @@ koopa_macos_finder_unhide() {
     # """
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['setfile']="$(koopa_macos_locate_setfile)"
     )
     [[ -x "${app['setfile']}" ]] || exit 1

@@ -11,7 +11,7 @@ koopa_macos_brew_upgrade_casks() {
     # """
     local app cask casks
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || exit 1

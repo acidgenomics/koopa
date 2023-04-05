@@ -19,7 +19,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gcc'
-    declare -A app=(
+    local -A app=(
         ['cc']='/usr/bin/gcc'
         ['fc']="$(koopa_locate_gfortran --realpath)"
         ['make']="$(koopa_locate_make)"
@@ -27,7 +27,7 @@ main() {
     [[ -x "${app['cc']}" ]] || exit 1
     [[ -x "${app['fc']}" ]] || exit 1
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='OpenBLAS'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"

@@ -9,13 +9,13 @@ koopa_install_koopa() {
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
         'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
-    declare -A bool=(
+    local -A bool=(
         ['add_to_user_profile']=1
         ['interactive']=1
         ['passwordless_sudo']=0
         ['shared']=0
     )
-    declare -A dict=(
+    local -A dict=(
         ['config_prefix']="$(koopa_config_prefix)"
         ['prefix']=''
         ['source_prefix']="$(koopa_koopa_prefix)"

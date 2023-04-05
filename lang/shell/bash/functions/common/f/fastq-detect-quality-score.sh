@@ -21,7 +21,7 @@ koopa_fastq_detect_quality_score() {
     local app file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['od']="$(koopa_locate_od --allow-system)"

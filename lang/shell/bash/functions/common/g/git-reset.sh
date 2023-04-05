@@ -12,7 +12,7 @@ koopa_git_reset() {
     # https://gist.github.com/nicktoumpelis/11214362
     # """
     local app repos
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     repos=("$@")

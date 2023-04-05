@@ -23,11 +23,11 @@ koopa_rnaeditingindexer() {
     # > koopa_run_rnaeditingindexer --example
     # """
     local app dict run_args
-    declare -A app=(
+    local -A app=(
         ['docker']="$(koopa_locate_docker)"
     )
     [[ -x "${app['docker']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bam_suffix']='.Aligned.sortedByCoord.out.bam'
         ['docker_image']='acidgenomics/rnaeditingindexer'
         ['example']=0

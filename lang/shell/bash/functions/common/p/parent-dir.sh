@@ -8,11 +8,11 @@ koopa_parent_dir() {
     # This requires file to exist and resolves symlinks.
     # """
     local app dict file parent pos
-    declare -A app=(
+    local -A app=(
         ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['cd_tail']=''
         ['n']=1
     )

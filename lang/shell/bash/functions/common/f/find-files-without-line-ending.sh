@@ -11,7 +11,7 @@ koopa_find_files_without_line_ending() {
     local app files prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    declare -A app=(
+    local -A app=(
         ['pcregrep']="$(koopa_locate_pcregrep)"
     )
     [[ -x "${app['pcregrep']}" ]] || exit 1

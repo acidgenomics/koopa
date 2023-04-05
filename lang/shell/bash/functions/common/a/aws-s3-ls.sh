@@ -40,7 +40,7 @@ koopa_aws_s3_ls() {
     # >     --recursive
     # """
     local app dict ls_args str
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
     app['aws']="$(koopa_locate_aws)"

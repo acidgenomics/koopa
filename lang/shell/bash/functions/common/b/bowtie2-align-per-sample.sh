@@ -6,7 +6,7 @@ koopa_bowtie2_align_per_sample() {
     # @note Updated 2022-10-11.
     # """
     local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     app['bowtie2']="$(koopa_locate_bowtie2)"
     app['tee']="$(koopa_locate_tee)"

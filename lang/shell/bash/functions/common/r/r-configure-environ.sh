@@ -67,7 +67,7 @@ koopa_r_configure_environ() {
     # """
     local app conf_dict dict i key keys lines path_arr
     local app_pc_path_arr pc_path_arr
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
@@ -135,7 +135,7 @@ koopa_r_configure_environ() {
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
     koopa_alert_info "Modifying '${dict['file']}'."
-    declare -A conf_dict
+    local -A conf_dict
     lines=()
     lines+=(
         'R_BATCHSAVE=--no-save --no-restore'
@@ -180,7 +180,7 @@ koopa_r_configure_environ() {
     if [[ "${dict['use_apps']}" -eq 1 ]]
     then
         # Set the 'PKG_CONFIG_PATH' string.
-        declare -A app_pc_path_arr
+        local -A app_pc_path_arr
         keys=(
             'cairo'
             'curl7'

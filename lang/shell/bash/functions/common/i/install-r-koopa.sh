@@ -10,7 +10,7 @@ koopa_install_r_koopa() {
     # """
     local app
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    local -A app
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     app['rscript']="${app['r']}script"

@@ -17,10 +17,10 @@ main() {
     local app dict loc_macros make_args
     koopa_activate_app --build-only 'make'
     koopa_activate_app 'bzip2'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['name']='unzip'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -95,10 +95,10 @@ apply_ubuntu_patch_set() {
     # @note Updated 2022-10-12.
     # """
     local app dict file
-    declare -A app
+    local -A app
     app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['patch']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']="${KOOPA_INSTALL_NAME:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )

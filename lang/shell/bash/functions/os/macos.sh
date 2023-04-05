@@ -4,7 +4,7 @@
 koopa_macos_app_version() {
     local app x
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['plutil']="$(koopa_macos_locate_plutil)"
         ['tr']="$(koopa_locate_tr --allow-system)"
@@ -31,13 +31,13 @@ koopa_macos_app_version() {
 koopa_macos_brew_cask_outdated() {
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['brew']="$(koopa_locate_brew)"
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['brew']}" ]] || exit 1
     [[ -x "${app['cut']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['keep_latest']=0
     dict['tmp_file']="$(koopa_tmp_file)"
     script -q "${dict['tmp_file']}" \
@@ -64,7 +64,7 @@ koopa_macos_brew_cask_quarantine_fix() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['xattr']="$(koopa_macos_locate_xattr)"
     )
@@ -79,7 +79,7 @@ koopa_macos_brew_cask_quarantine_fix() {
 koopa_macos_brew_upgrade_casks() {
     local app cask casks
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || exit 1
@@ -130,7 +130,7 @@ koopa_macos_clean_launch_services() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['lsregister']="$(koopa_macos_locate_lsregister)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -153,10 +153,10 @@ koopa_macos_clean_launch_services() {
 koopa_macos_create_dmg() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['hdiutil']="$(koopa_macos_locate_hdiutil)"
     )
-    declare -A dict=(
+    local -A dict=(
         ['srcfolder']="${1:?}"
     )
     koopa_assert_is_dir "${dict['srcfolder']}"
@@ -203,7 +203,7 @@ koopa_macos_disable_microsoft_teams_updater() { # {[[1
 koopa_macos_disable_plist_file() {
     local app file
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['launchctl']="$(koopa_macos_locate_launchctl)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -213,7 +213,7 @@ koopa_macos_disable_plist_file() {
     for file in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['daemon']=0
             ['enabled_file']="$file"
             ['sudo']=1
@@ -266,7 +266,7 @@ koopa_macos_disable_privileged_helper_tool() {
     for bn in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['enabled_file']="/Library/PrivilegedHelperTools/${bn}"
         )
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
@@ -281,7 +281,7 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
 
 koopa_macos_disable_spotlight_indexing() {
     local app
-    declare -A app=(
+    local -A app=(
         ['mdutil']="$(koopa_macos_locate_mdutil)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -296,7 +296,7 @@ koopa_macos_disable_touch_id_sudo() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict
+    local -A dict
     dict['file']='/etc/pam.d/sudo'
     if [[ -f "${dict['file']}" ]] && \
         ! koopa_file_detect_fixed \
@@ -330,10 +330,10 @@ koopa_macos_disable_zoom_daemon() {
 koopa_macos_download_macos() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
     )
-    declare -A dict=(
+    local -A dict=(
         ['version']="${1:?}"
     )
     "${app['softwareupdate']}" \
@@ -379,7 +379,7 @@ koopa_macos_enable_microsoft_teams_updater() {
 koopa_macos_enable_plist_file() {
     local app file
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['launchctl']="$(koopa_macos_locate_launchctl)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -389,7 +389,7 @@ koopa_macos_enable_plist_file() {
     for file in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['daemon']=0
             ['enabled_file']="$file"
             ['sudo']=1
@@ -442,7 +442,7 @@ koopa_macos_enable_privileged_helper_tool() {
     for bn in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['enabled_file']="/Library/PrivilegedHelperTools/${bn}"
         )
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
@@ -459,7 +459,7 @@ koopa_macos_enable_touch_id_sudo() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict
+    local -A dict
     dict['file']='/etc/pam.d/sudo'
     if [[ -f "${dict['file']}" ]] && \
         koopa_file_detect_fixed \
@@ -497,7 +497,7 @@ koopa_macos_enable_zoom_daemon() {
 koopa_macos_finder_hide() {
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['setfile']="$(koopa_macos_locate_setfile)"
     )
     [[ -x "${app['setfile']}" ]] || exit 1
@@ -509,7 +509,7 @@ koopa_macos_finder_hide() {
 koopa_macos_finder_unhide() {
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['setfile']="$(koopa_macos_locate_setfile)"
     )
     [[ -x "${app['setfile']}" ]] || exit 1
@@ -522,7 +522,7 @@ koopa_macos_flush_dns() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['dscacheutil']="$(koopa_macos_locate_dscacheutil)"
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -540,13 +540,13 @@ koopa_macos_flush_dns() {
 koopa_macos_force_eject() {
     local app mount name
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['diskutil']="$(koopa_macos_locate_diskutil)"
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['diskutil']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['name']="${1:?}"
     dict['mount']="/Volumes/${dict['name']}"
     koopa_assert_is_dir "${dict['mount']}"
@@ -558,7 +558,7 @@ koopa_macos_force_reset_icloud_drive() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['reboot']="$(koopa_macos_locate_reboot)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -577,7 +577,7 @@ koopa_macos_force_reset_icloud_drive() {
 koopa_macos_homebrew_cask_version() {
     local app cask x
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['brew']="$(koopa_locate_brew)"
     )
     [[ -x "${app['brew']}" ]] || exit 1
@@ -593,7 +593,7 @@ koopa_macos_homebrew_cask_version() {
 
 koopa_macos_ifactive() {
     local app x
-    declare -A app=(
+    local -A app=(
         ['ifconfig']="$(koopa_macos_locate_ifconfig)"
         ['pcregrep']="$(koopa_locate_pcregrep)"
     )
@@ -649,7 +649,7 @@ koopa_macos_install_system_r() {
 
 koopa_macos_install_system_rosetta() {
     local app
-    declare -A app=(
+    local -A app=(
         ['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -684,7 +684,7 @@ koopa_macos_is_xcode_clt_installed() {
 
 koopa_macos_list_app_store_apps() {
     local app string
-    declare -A app
+    local -A app
     app['find']="$(koopa_locate_find --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"
@@ -710,7 +710,7 @@ koopa_macos_list_app_store_apps() {
 koopa_macos_list_launch_agents() {
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['ls']="$(koopa_locate_ls)"
     )
     [[ -x "${app['ls']}" ]] || exit 1
@@ -930,7 +930,7 @@ koopa_macos_locate_xcrun() {
 
 koopa_macos_os_codename() {
     local dict
-    declare -A dict
+    local -A dict
     dict['version']="$(koopa_macos_os_version)"
     case "${dict['version']}" in
         '13.'*)
@@ -1017,7 +1017,7 @@ koopa_macos_reload_autofs() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['automount']="$(koopa_macos_locate_automount)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -1050,7 +1050,7 @@ koopa_macos_spotlight_find() {
 }
 
 koopa_macos_spotlight_usage() {
-    declare -A app=(
+    local -A app=(
         ['fs_usage']="$(koopa_macos_locate_fs_usage)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -1064,7 +1064,7 @@ koopa_macos_symlink_dropbox() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -1089,13 +1089,13 @@ koopa_macos_symlink_icloud_drive() {
 koopa_macos_uninstall_brewfile_casks() {
     local app cask casks dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['brew']="$(koopa_locate_brew)"
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['brew']}" ]] || exit 1
     [[ -x "${app['cut']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['brewfile']="${1:?}"
     )
     readarray -t casks <<< "$( \
@@ -1195,7 +1195,7 @@ koopa_macos_uninstall_system_xcode_clt() {
 koopa_macos_xcode_clt_version() {
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['pkgutil']="$(koopa_macos_locate_pkgutil)"
     )

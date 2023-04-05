@@ -9,7 +9,7 @@ koopa_r_koopa() {
     # script header and check that the koopa R package is installed.
     # """
     local app code header_file fun pos rscript_args
-    declare -A app
+    local -A app
     koopa_assert_has_args "$#"
     app['rscript']="$(koopa_locate_rscript)"
     [[ -x "${app['rscript']}" ]] || exit 1

@@ -7,13 +7,13 @@ koopa_linux_bcl2fastq_indrops() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
         ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['bcl2fastq']}" ]] || exit 1
     [[ -x "${app['tee']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['log_file']='bcl2fastq-indrops.log'
     )
     "${app['bcl2fastq']}" \

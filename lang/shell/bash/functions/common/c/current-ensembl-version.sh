@@ -10,11 +10,10 @@ koopa_current_ensembl_version() {
     # # 105
     # """
     local app str
+    local -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['sed']="$(koopa_locate_sed)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
     str="$( \

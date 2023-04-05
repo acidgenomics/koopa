@@ -12,13 +12,13 @@ koopa_linux_java_update_alternatives() {
     local prefix priority
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
     )
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['update_alternatives']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['alt_prefix']='/var/lib/alternatives'
         ['prefix']="$(koopa_realpath "${1:?}")"
         ['priority']=100

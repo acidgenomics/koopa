@@ -59,7 +59,7 @@ koopa_debian_apt_add_repo() {
     local components dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['distribution']=''
         ['key_name']=''

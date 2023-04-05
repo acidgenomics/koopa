@@ -20,7 +20,7 @@ koopa_star_align_paired_end() {
     # """
     local dict fastq_r1_files fastq_r1_file
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['aws_profile']="${AWS_PROFILE:-default}"
         ['aws_s3_uri']=''
         # e.g. 'fastq'.
@@ -151,7 +151,7 @@ koopa_star_align_paired_end() {
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
         local dict2
-        declare -A dict2
+        local -A dict2
         dict2['fastq_r1_file']="$fastq_r1_file"
         dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"

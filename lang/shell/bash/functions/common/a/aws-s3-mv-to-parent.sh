@@ -11,7 +11,7 @@ koopa_aws_s3_mv_to_parent() {
     # storage.
     # """
     local app dict file files prefix
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1
@@ -62,7 +62,7 @@ koopa_aws_s3_mv_to_parent() {
     for file in "${files[@]}"
     do
         local dict2
-        declare -A dict2
+        local -A dict2
         dict2['bn']="$(koopa_basename "$file")"
         dict2['dn1']="$(koopa_dirname "$file")"
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"

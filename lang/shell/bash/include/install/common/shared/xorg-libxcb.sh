@@ -20,13 +20,13 @@ main() {
         'xorg-libpthread-stubs' \
         'xorg-libxau' \
         'xorg-libxdmcp'
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
         ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['make']}" ]] || exit 1
     [[ -x "${app['python']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='libxcb'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

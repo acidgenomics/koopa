@@ -3,8 +3,8 @@
 # NOTE This is causing shell to exit when bash is installed at /usr/local.
 
 main() {
-    local app files
-    declare -A app
+    local -A app
+    local -a files
     app['bash']="$(koopa_locate_bash)"
     [[ -x "${app['bash']}" ]] || exit 1
     files=(

@@ -6,7 +6,7 @@ koopa_git_submodule_init() {
     # @note Updated 2022-09-24.
     # """
     local app repos
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
     )
@@ -22,7 +22,7 @@ koopa_git_submodule_init() {
         for repo in "${repos[@]}"
         do
             local dict lines string
-            declare -A dict=(
+            local -A dict=(
                 ['module_file']='.gitmodules'
             )
             repo="$(koopa_realpath "$repo")"
@@ -43,7 +43,7 @@ koopa_git_submodule_init() {
             for string in "${lines[@]}"
             do
                 local dict2
-                declare -A dict2
+                local -A dict2
                 # shellcheck disable=SC2016
                 dict2['target_key']="$( \
                     koopa_print "$string" \

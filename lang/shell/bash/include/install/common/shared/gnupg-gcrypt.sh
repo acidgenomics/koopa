@@ -12,10 +12,10 @@ main() {
         'automake' \
         'make' \
         'pkg-config'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['compress_ext']='bz2'
         ['gcrypt_url']="$(koopa_gcrypt_url)"
         ['jobs']="$(koopa_cpu_count)"
@@ -144,7 +144,7 @@ gnupg_patch_dirmngr() {
     #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
     # """
     local app
-    declare -A app
+    local -A app
     app['sed']="$(koopa_locate_sed)"
     [[ -x "${app['sed']}" ]] || exit 1
     "${app['sed']}" \

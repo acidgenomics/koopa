@@ -26,7 +26,7 @@ main() {
         'm4' \
         'gettext' \
         'oniguruma'
-    declare -A app=(
+    local -A app=(
         ['autoreconf']="$(koopa_locate_autoreconf)"
         ['libtoolize']="$(koopa_locate_libtoolize)"
         ['make']="$(koopa_locate_make)"
@@ -34,7 +34,7 @@ main() {
     [[ -x "${app['autoreconf']}" ]] || exit 1
     [[ -x "${app['libtoolize']}" ]] || exit 1
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='jq'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

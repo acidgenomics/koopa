@@ -16,10 +16,10 @@ main() {
         'git' \
         'pkg-config' \
         'rust'
-    declare -A app
+    local -A app
     app['cargo']="$(koopa_locate_cargo)"
     [[ -x "${app['cargo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['cargo_home']="$(koopa_init_dir 'cargo')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='vscode'

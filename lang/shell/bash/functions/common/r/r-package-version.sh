@@ -10,7 +10,7 @@ koopa_r_package_version() {
     # """
     local app str vec
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['rscript']="$(koopa_locate_rscript)"
     )
     [[ -x "${app['rscript']}" ]] || exit 1

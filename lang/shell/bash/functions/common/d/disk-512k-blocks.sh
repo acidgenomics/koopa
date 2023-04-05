@@ -10,18 +10,17 @@ koopa_disk_512k_blocks() {
     # # 976490576 (for 512 GB SSD)
     # """
     local app dict
+    local -A app
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['df']="$(koopa_locate_df --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
-    )
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['df']="$(koopa_locate_df --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     [[ -x "${app['awk']}" ]] || exit 1
     [[ -x "${app['df']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['disk']="${1:?}"
     )
     # shellcheck disable=SC2016

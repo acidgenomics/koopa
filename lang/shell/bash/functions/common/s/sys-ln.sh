@@ -13,7 +13,7 @@ koopa_sys_ln() {
     # """
     local dict
     koopa_assert_has_args_eq "$#" 2
-    declare -A dict=(
+    local -A dict=(
         ['source']="${1:?}"
         ['target']="${2:?}"
     )

@@ -8,10 +8,10 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_is_macos && koopa_assert_is_not_aarch64
-    declare -A app
+    local -A app
     app['aws']="$(koopa_locate_aws --allow-system)"
     [[ -x "${app['aws']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['core_type']='cpu' # or 'gpu'.
         ['installers_base']="$(koopa_private_installers_s3_uri)"

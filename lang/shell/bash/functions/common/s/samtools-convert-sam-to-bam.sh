@@ -23,7 +23,7 @@ koopa_samtools_convert_sam_to_bam() {
     # """
     local app bam_bn input_sam output_bam sam_bn threads
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     koopa_assert_is_installed 'samtools'
     while (("$#"))
     do

@@ -11,7 +11,7 @@ main() {
     # - https://github.com/tesseract-ocr/tesseract/issues/786
     # """
     local cmake_args deps dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     deps=(
         'curl'

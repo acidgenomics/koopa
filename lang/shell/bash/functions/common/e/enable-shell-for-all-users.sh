@@ -16,7 +16,7 @@ koopa_enable_shell_for_all_users() {
     local app apps dict
     koopa_assert_has_args "$#"
     koopa_is_admin || return 0
-    declare -A dict=(
+    local -A dict=(
         ['etc_file']='/etc/shells'
         ['user']="$(koopa_user_name)"
     )

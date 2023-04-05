@@ -12,7 +12,7 @@ koopa_test_find_files_by_ext() {
     # """
     local all_files dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['ext']="${1:?}"
     )
     dict['pattern']="\.${dict['ext']}$"

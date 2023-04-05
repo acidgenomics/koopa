@@ -11,7 +11,7 @@ main() {
     # - https://spark.apache.org/downloads.html
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['name']='spark'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

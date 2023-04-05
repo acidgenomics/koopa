@@ -12,14 +12,14 @@ koopa_git_repo_needs_pull_or_push() {
     # """
     local app prefix
     koopa_assert_has_args "$#"
-    declare -A app
+    local -A app
     app['git']="$(koopa_locate_git)"
     [[ -x "${app['git']}" ]] || exit 1
     (
         for prefix in "$@"
         do
             local dict
-            declare -A dict
+            local -A dict
             dict['prefix']="$prefix"
             koopa_cd "${dict['prefix']}"
             dict['rev1']="$("${app['git']}" rev-parse 'HEAD' 2>/dev/null)"

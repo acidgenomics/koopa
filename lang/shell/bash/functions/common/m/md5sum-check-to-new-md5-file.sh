@@ -7,13 +7,13 @@ koopa_md5sum_check_to_new_md5_file() {
     # """
     local app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['md5sum']="$(koopa_locate_md5sum)"
         ['tee']="$(koopa_locate_tee)"
     )
     [[ -x "${app['md5sum']}" ]] || exit 1
     [[ -x "${app['tee']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['datetime']="$(koopa_datetime)"
     )
     dict['log_file']="md5sum-${dict['datetime']}.md5"

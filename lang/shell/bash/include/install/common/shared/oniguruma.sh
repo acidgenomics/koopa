@@ -18,13 +18,13 @@ main() {
         'm4' \
         'make' \
         'pkg-config'
-    declare -A app=(
+    local -A app=(
         ['autoreconf']="$(koopa_locate_autoreconf)"
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['autoreconf']}" ]] || exit 1
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name1']='oniguruma'
         ['name2']='onig'

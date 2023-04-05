@@ -10,7 +10,7 @@ main() {
     # - https://noknow.info/it/os/install_libzip_from_source?lang=en
     # """
     local cmake cmake_args deps dict
-    declare -A cmake dict
+    local -A cmake dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     deps=(

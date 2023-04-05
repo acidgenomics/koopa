@@ -7,7 +7,7 @@ koopa_download_github_latest() {
     # """
     local api_url app repo tag tarball_url
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['tr']="$(koopa_locate_tr --allow-system)"
     )

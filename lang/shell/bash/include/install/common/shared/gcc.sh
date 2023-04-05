@@ -73,10 +73,10 @@ main() {
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch)"
         ['gmp']="$(koopa_app_prefix 'gmp')"
         ['gnu_mirror']="$(koopa_gnu_mirror_url)"

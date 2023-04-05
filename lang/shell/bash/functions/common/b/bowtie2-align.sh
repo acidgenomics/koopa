@@ -6,7 +6,7 @@ koopa_bowtie2_align() {
     # @note Updated 2022-10-11.
     # """
     local dict fastq_r1_file fastq_r1_files
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'fastq'.
         ['fastq_dir']=''
         # e.g. '_R1_001.fastq.gz'.

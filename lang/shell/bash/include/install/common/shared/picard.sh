@@ -2,7 +2,7 @@
 
 main() {
     local dict
-    declare -A dict
+    local -A dict
     koopa_install_app_subshell \
         --installer='conda-env' \
         --name='picard' \

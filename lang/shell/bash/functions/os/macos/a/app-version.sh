@@ -10,7 +10,7 @@ koopa_macos_app_version() {
     # """
     local app x
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['plutil']="$(koopa_macos_locate_plutil)"
         ['tr']="$(koopa_locate_tr --allow-system)"

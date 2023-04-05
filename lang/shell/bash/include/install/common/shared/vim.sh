@@ -15,13 +15,13 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'ncurses' 'python3.11'
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
         ['python']="$(koopa_locate_python311 --realpath)"
     )
     [[ -x "${app['make']}" ]] || exit 1
     [[ -x "${app['python']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='vim'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

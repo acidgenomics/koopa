@@ -6,7 +6,7 @@ koopa_log_file() {
     # @note Updated 2022-08-23.
     # """
     local dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     dict['datetime']="$(koopa_datetime)"
     dict['hostname']="$(koopa_hostname)"

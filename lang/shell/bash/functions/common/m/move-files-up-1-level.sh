@@ -14,7 +14,7 @@ koopa_move_files_up_1_level() {
     # """
     local dict files
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${1:-}"
     )
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"

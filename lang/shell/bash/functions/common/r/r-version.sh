@@ -7,7 +7,7 @@ koopa_r_version() {
     # """
     local app str
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
+    local -A app=(
         ['head']="$(koopa_locate_head --allow-system)"
         ['r']="${1:-}"
     )

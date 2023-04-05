@@ -5,10 +5,9 @@
 koopa_aws_codecommit_list_repositories() {
     # """
     # List AWS CodeCommit repositories.
-    # @note Updated 2022-11-17.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
-    declare -A app dict
+    local -A app dict
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
     [[ -x "${app['aws']}" ]] || exit 1

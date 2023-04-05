@@ -12,13 +12,13 @@ main() {
     local app dict
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
         ['pkg_config']="$(koopa_locate_pkg_config)"
     )
     [[ -x "${app['make']}" ]] || exit 1
     [[ -x "${app['pkg_config']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='LuaJIT'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['shared_ext']="$(koopa_shared_ext)"

@@ -12,7 +12,7 @@ koopa_install_all_binary_apps() {
     # """
     local app app_name app_names bool
     koopa_assert_has_no_args "$#"
-    declare -A app bool
+    local -A app bool
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
     [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1

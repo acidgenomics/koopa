@@ -11,7 +11,7 @@ koopa_linux_update_etc_profile_d() {
     koopa_assert_has_no_args "$#"
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['koopa_prefix']="$(koopa_koopa_prefix)"
         ['file']='/etc/profile.d/zzz-koopa.sh'
     )

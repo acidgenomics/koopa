@@ -7,7 +7,7 @@ koopa_reload_shell() {
     # """
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app
+    local -A app
     app['shell']="$(koopa_shell_name)"
     [[ -x "${app['shell']}" ]] || exit 1
     # shellcheck disable=SC2093

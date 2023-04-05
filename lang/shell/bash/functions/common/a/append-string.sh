@@ -5,8 +5,7 @@ koopa_append_string() {
     # Append a string at end of file.
     # @note Updated 2022-03-01.
     # """
-    local dict
-    declare -A dict
+    local -A dict
     koopa_assert_has_args "$#"
     dict['file']=''
     dict['string']=''

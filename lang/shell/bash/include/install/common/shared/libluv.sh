@@ -14,7 +14,7 @@ main() {
     # - cmake/Modules/FindLuaJIT.cmake
     # """
     local app cmake cmake_args deps dict
-    declare -A app cmake dict
+    local -A app cmake dict
     deps=('libuv' 'luajit')
     koopa_activate_app "${deps[@]}"
     app['luajit']="$(koopa_locate_luajit)"

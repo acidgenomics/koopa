@@ -23,14 +23,14 @@ koopa_configure_user_dotfiles() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app
+    local -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
     if [[ "${app['bash']}" == '/bin/bash' ]] && koopa_is_macos
     then
         app['bash']='/usr/local/bin/bash'
     fi
     [[ -x "${app['bash']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
         ['name']='dotfiles'
         ['prefix']="${1:-}"

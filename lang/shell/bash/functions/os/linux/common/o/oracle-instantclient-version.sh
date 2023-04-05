@@ -7,7 +7,7 @@ koopa_linux_oracle_instantclient_version() {
     # """
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['sqlplus']="$(koopa_linux_locate_sqlplus)"
     )
     [[ -x "${app['sqlplus']}" ]] || exit 1

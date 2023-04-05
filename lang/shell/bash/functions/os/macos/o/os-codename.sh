@@ -10,7 +10,7 @@ koopa_macos_os_codename() {
     # - https://unix.stackexchange.com/questions/234104/
     # """
     local dict
-    declare -A dict
+    local -A dict
     dict['version']="$(koopa_macos_os_version)"
     case "${dict['version']}" in
         '13.'*)

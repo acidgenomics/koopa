@@ -8,7 +8,7 @@ koopa_debian_apt_delete_repo() {
     local dict name
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="$(koopa_debian_apt_sources_prefix)"
     )
     for name in "$@"

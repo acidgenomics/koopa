@@ -16,7 +16,7 @@ koopa_mv() {
     #
     # """
     local app dict mkdir mv mv_args pos rm
-    declare -A app=(
+    local -A app=(
         ['mv']="$(koopa_locate_mv --allow-system)"
         ['mkdir']='koopa_mkdir'
         ['rm']='koopa_rm'
@@ -24,7 +24,7 @@ koopa_mv() {
     # macOS gmv currently has issues on NFS shares.
     koopa_is_macos && app['mv']='/bin/mv'
     [[ -x "${app['mv']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
         ['target_dir']=''
         ['verbose']=0

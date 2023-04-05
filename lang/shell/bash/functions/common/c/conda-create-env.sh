@@ -11,7 +11,7 @@ koopa_conda_create_env() {
     # - https://github.com/conda/conda/issues/6827
     # """
     local app dict pos string
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -97,7 +97,7 @@ koopa_conda_create_env() {
     for string in "$@"
     do
         local dict2
-        declare -A dict2
+        local -A dict2
         # Note that we're using 'salmon@1.4.0' for the environment name but
         # must use 'salmon=1.4.0' in the call to conda below.
         dict2['env_string']="${string//@/=}"

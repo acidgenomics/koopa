@@ -7,7 +7,7 @@ koopa_read_yn() {
     # """
     local dict read_args
     koopa_assert_has_args_eq "$#" 2
-    declare -A dict
+    local -A dict
     dict['prompt']="$(koopa_read_prompt_yn "$@")"
     dict['default']="$(koopa_int_to_yn "${2:?}")"
     read_args=(

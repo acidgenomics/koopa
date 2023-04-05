@@ -6,7 +6,7 @@ koopa_cmake_build() {
     # @note Updated 2023-04-04.
     # """
     local app build_deps cmake_args dict pos
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"

@@ -10,13 +10,13 @@ koopa_reset_permissions() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['chmod']="$(koopa_locate_chmod)"
         ['xargs']="$(koopa_locate_xargs)"
     )
     [[ -x "${app['chmod']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['group']="$(koopa_group_name)"
         ['prefix']="${1:?}"
         ['user']="$(koopa_user_name)"

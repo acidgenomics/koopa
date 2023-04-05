@@ -16,13 +16,13 @@ koopa_test_find_files_by_shebang() {
     # """
     local all_files app dict file files
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['head']="$(koopa_locate_head)"
         ['tr']="$(koopa_locate_tr)"
     )
     [[ -x "${app['head']}" ]] || exit 1
     [[ -x "${app['tr']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['pattern']="${1:?}"
     )
     readarray -t all_files <<< "$(koopa_test_find_files)"

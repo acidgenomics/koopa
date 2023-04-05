@@ -5,8 +5,7 @@ koopa_brew_cleanup() {
     # Clean up Homebrew.
     # @note Updated 2022-07-15.
     # """
-    local app
-    declare -A app
+    local -A app
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || exit 1

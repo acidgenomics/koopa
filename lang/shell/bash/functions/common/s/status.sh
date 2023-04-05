@@ -7,7 +7,7 @@ koopa_status() {
     # """
     local dict string
     koopa_assert_has_args_ge "$#" 3
-    declare -A dict=(
+    local -A dict=(
         ['label']="$(printf '%10s\n' "${1:?}")"
         ['color']="$(koopa_ansi_escape "${2:?}")"
         ['nocolor']="$(koopa_ansi_escape 'nocolor')"

@@ -7,7 +7,7 @@ koopa_python_system_packages_prefix() {
     # """
     local app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app dict
+    local -A app dict
     app['python']="${1:?}"
     [[ -x "${app['python']}" ]] || exit 1
     dict['prefix']="$( \

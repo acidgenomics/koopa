@@ -8,7 +8,7 @@ koopa_debian_apt_disable_deb_src() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sed']="$(koopa_locate_sed)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -16,7 +16,7 @@ koopa_debian_apt_disable_deb_src() {
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']="${1:-}"
     )
     [[ -z "${dict['file']}" ]] && \

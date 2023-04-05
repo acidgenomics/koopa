@@ -62,10 +62,10 @@ main() {
         'sqlite'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bzip2']="$(koopa_app_prefix 'bzip2')"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='python'

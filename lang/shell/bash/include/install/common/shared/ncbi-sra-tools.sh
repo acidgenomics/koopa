@@ -23,7 +23,7 @@ main() {
     #     Formula/sratoolkit.rb
     # """
     local app deps cmake_args dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     deps=(
         'bison'

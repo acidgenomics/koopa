@@ -8,8 +8,7 @@ koopa_brew_uninstall_all_brews() {
     # @seealso
     # - https://apple.stackexchange.com/questions/198623
     # """
-    local app
-    declare -A app
+    local -A app
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     app['wc']="$(koopa_locate_wc)"

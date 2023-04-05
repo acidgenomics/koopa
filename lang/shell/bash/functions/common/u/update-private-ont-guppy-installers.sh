@@ -11,10 +11,10 @@ koopa_update_private_ont_guppy_installers() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_has_private_access
-    declare -A app
+    local -A app
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['base_url']='https://cdn.oxfordnanoportal.com/software/analysis'
         ['name']='ont-guppy'
         ['prefix']="$(koopa_tmp_dir)"

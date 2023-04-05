@@ -26,7 +26,7 @@ koopa_linux_configure_system_sshd() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict
+    local -A dict
     dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
     read -r -d '' "dict[string]" << END || true
 AcceptEnv KOOPA_COLOR_MODE

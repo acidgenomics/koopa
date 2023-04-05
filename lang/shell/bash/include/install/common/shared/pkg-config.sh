@@ -14,10 +14,10 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='pkg-config'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

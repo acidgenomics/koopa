@@ -8,7 +8,7 @@ koopa_linux_update_ldconfig() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['ldconfig']="$(koopa_linux_locate_ldconfig)"
         ['sudo']="$(koopa_locate_sudo)"
     )

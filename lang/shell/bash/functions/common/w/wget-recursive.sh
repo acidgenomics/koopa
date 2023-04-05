@@ -19,11 +19,11 @@ koopa_wget_recursive() {
     # """
     local app dict wget_args
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['wget']="$(koopa_locate_wget)"
     )
     [[ -x "${app['wget']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['datetime']="$(koopa_datetime)"
         ['password']=''
         ['url']=''

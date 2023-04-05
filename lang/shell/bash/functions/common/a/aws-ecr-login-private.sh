@@ -9,8 +9,7 @@ koopa_aws_ecr_login_private() {
     # - https://docs.aws.amazon.com/AmazonECR/latest/
     #     userguide/registry_auth.html
     # """
-    local app dict
-    declare -A app dict
+    local -A app dict
     app['aws']="$(koopa_locate_aws)"
     app['docker']="$(koopa_locate_docker)"
     [[ -x "${app['aws']}" ]] || exit 1

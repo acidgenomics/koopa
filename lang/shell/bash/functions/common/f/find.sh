@@ -36,8 +36,8 @@ koopa_find() {
     #   https://unix.stackexchange.com/questions/247655/
     # """
     local app dict exclude_arg exclude_arr find find_args results sorted_results
-    declare -A app
-    declare -A dict=(
+    local -A app
+    local -A dict=(
         ['days_modified_gt']=''
         ['days_modified_lt']=''
         ['empty']=0

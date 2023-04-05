@@ -10,7 +10,7 @@ koopa_github_latest_release() {
     # """
     local app repo
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['sed']="$(koopa_locate_sed)"
     )
@@ -19,7 +19,7 @@ koopa_github_latest_release() {
     for repo in "$@"
     do
         local dict
-        declare -A dict
+        local -A dict
         dict['repo']="$repo"
         dict['url']="https://api.github.com/repos/${dict['repo']}/\
 releases/latest"

@@ -6,10 +6,10 @@ koopa_chgrp() {
     # @note Updated 2021-10-29.
     # """
     local app chgrp dict pos
-    declare -A app
+    local -A app
     app['chgrp']="$(koopa_locate_chgrp)"
     [[ -x "${app['chgrp']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
     )
     pos=()

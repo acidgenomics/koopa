@@ -6,7 +6,7 @@ main() {
     # @note Updated 2023-04-04.
     # """
     local app build_deps cmake deps dict
-    declare -A app cmake dict
+    local -A app cmake dict
     koopa_assert_has_no_args "$#"
     build_deps=('autoconf' 'automake' 'git')
     deps=('hdf5' 'openssl3' 'zstd')

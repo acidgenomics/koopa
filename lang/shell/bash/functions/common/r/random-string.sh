@@ -13,13 +13,13 @@ koopa_random_string() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['head']="$(koopa_locate_head --allow-system)"
         ['md5sum']="$(koopa_locate_md5sum --allow-system)"
     )
     [[ -x "${app['head']}" ]] || exit 1
     [[ -x "${app['md5sum']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['length']=10
         ['seed']="${RANDOM:?}"
     )

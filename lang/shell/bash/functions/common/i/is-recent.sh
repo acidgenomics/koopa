@@ -22,11 +22,11 @@ koopa_is_recent() {
     # """
     local app dict file
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['find']="$(koopa_locate_find)"
     )
     [[ -x "${app['find']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['days']=14
     )
     for file in "$@"

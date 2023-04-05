@@ -20,7 +20,7 @@ koopa_debian_enable_unattended_upgrades() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
         ['sudo']="$(koopa_locate_sudo)"
         ['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"

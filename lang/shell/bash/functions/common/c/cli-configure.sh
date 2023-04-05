@@ -21,7 +21,7 @@ koopa_cli_configure() {
     for app in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['key']="${stem}-${app}"
         )
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"

@@ -7,7 +7,7 @@ koopa_delete_named_subdirs() {
     # """
     local dict matches
     koopa_assert_has_args_eq "$#" 2
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${1:?}"
         ['subdir_name']="${2:?}"
     )

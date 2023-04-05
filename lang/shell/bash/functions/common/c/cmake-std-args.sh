@@ -10,7 +10,7 @@ koopa_cmake_std_args() {
     # """
     local dict prefix
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict
+    local -A dict
     dict['prefix']="${1:?}"
     args=(
         '-DCMAKE_BUILD_TYPE=Release'

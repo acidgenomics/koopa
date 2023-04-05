@@ -6,9 +6,8 @@ koopa_df() {
     # @note Updated 2021-10-29.
     # """
     local app
-    declare -A app=(
-        ['df']="$(koopa_locate_df)"
-    )
+    local -A app
+    app['df']="$(koopa_locate_df)"
     [[ -x "${app['df']}" ]] || exit 1
     "${app['df']}" \
         --portability \

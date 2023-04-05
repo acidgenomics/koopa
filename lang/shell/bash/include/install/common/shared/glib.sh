@@ -17,13 +17,13 @@ main() {
     deps+=('libffi' 'pcre2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['meson']="$(koopa_locate_meson)"
         ['ninja']="$(koopa_locate_ninja)"
     )
     [[ -x "${app['meson']}" ]] || exit 1
     [[ -x "${app['ninja']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='glib'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"

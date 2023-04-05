@@ -14,11 +14,11 @@ main() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_asset_is_admin
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['version']="$( \
         koopa_grep \
             --file='/etc/os-release' \

@@ -10,7 +10,7 @@ koopa_linux_bcbio_nextgen_run_tests() {
     # - https://github.com/bcbio/bcbio-nextgen/issues/3372
     # """
     local dict test tests
-    declare -A dict=(
+    local -A dict=(
         ['git_dir']="${HOME:?}/git/bcbio-nextgen"
         ['output_dir']="${PWD:?}/bcbio-tests"
         ['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"

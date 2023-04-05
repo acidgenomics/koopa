@@ -7,7 +7,7 @@ koopa_h() {
     # """
     local dict
     koopa_assert_has_args_ge "$#" 2
-    declare -A dict=(
+    local -A dict=(
         ['emoji']="$(koopa_acid_emoji)"
         ['level']="${1:?}"
     )

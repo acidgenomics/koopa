@@ -14,7 +14,7 @@ koopa_git_commit_date() {
     # """
     local app
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['date']="$(koopa_locate_date --allow-system)"
         ['git']="$(koopa_locate_git --allow-system)"
         ['xargs']="$(koopa_locate_xargs --allow-system)"

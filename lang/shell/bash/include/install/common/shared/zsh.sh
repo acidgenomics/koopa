@@ -33,10 +33,10 @@ main() {
         'ncurses' \
         'pcre' \
         'texinfo'
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['bin_prefix']="$(koopa_bin_prefix)"
         ['jobs']="$(koopa_cpu_count)"
         ['name']='zsh'

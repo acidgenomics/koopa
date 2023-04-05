@@ -13,7 +13,7 @@ main() {
     # - https://gist.github.com/fnichol/867550#the-manual-way-boring
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
         ['version']="${KOOPA_INSTALL_VERSION:?}"
     )

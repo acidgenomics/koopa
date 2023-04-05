@@ -15,7 +15,7 @@ koopa_file_ext_2() {
     # """
     local app file x
     koopa_assert_has_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || exit 1

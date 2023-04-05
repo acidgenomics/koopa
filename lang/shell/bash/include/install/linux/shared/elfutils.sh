@@ -9,7 +9,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
     local app conf_args deps dict
-    declare -A app dict
+    local -A app dict
     deps=(
         'bzip2'
         'xz'

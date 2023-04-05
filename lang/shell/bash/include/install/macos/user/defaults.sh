@@ -33,7 +33,7 @@ main() {
     # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
     # """
     local app app_name apps dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     app['chflags']="$(koopa_macos_locate_chflags)"
     app['defaults']="$(koopa_macos_locate_defaults)"

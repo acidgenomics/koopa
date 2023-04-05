@@ -13,7 +13,7 @@ koopa_file_count() {
     # """
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app dict
+    local -A app dict
     app['wc']="$(koopa_locate_wc --allow-system)"
     [[ -x "${app['wc']}" ]] || exit 1
     dict['prefix']="${1:?}"

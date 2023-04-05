@@ -15,7 +15,7 @@ koopa_update_system_homebrew() {
     # """
     local app dict
     koopa_assert_is_admin
-    declare -A app dict
+    local -A app dict
     app['brew']="$(koopa_locate_brew)"
     [[ -x "${app['brew']}" ]] || exit 1
     dict['reset']=0

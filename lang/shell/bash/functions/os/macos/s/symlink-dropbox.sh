@@ -8,7 +8,7 @@ koopa_macos_symlink_dropbox() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['kill_all']="$(koopa_macos_locate_kill_all)"
         ['sudo']="$(koopa_locate_sudo)"
     )

@@ -24,13 +24,13 @@ koopa_debian_apt_add_key() {
     local app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['gpg']='/usr/bin/gpg'
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['gpg']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['name']=''
         ['prefix']="$(koopa_debian_apt_key_prefix)"
         ['url']=''
@@ -93,7 +93,7 @@ koopa_debian_apt_add_r_key() {
     local dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['key_name']='r'
         ['keyserver']='keyserver.ubuntu.com'
         ['prefix']="$(koopa_debian_apt_key_prefix)"
@@ -117,7 +117,7 @@ koopa_debian_apt_add_r_key() {
 koopa_debian_apt_add_r_repo() {
     local dict
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
+    local -A dict=(
         ['name']='r'
         ['os_codename']="$(koopa_debian_os_codename)"
         ['version']="${1:-}"
@@ -163,7 +163,7 @@ koopa_debian_apt_add_repo() {
     local components dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
         ['distribution']=''
         ['key_name']=''
@@ -288,7 +288,7 @@ koopa_debian_apt_add_wine_key() {
 koopa_debian_apt_add_wine_obs_key() {
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['name']='wine-obs'
         ['os_string']="$(koopa_os_string)"
     )
@@ -320,7 +320,7 @@ Emulators:/Wine:/Debian/${dict['subdir']}/Release.key"
 koopa_debian_apt_add_wine_obs_repo() {
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['base_url']="https://download.opensuse.org/repositories/\
 Emulators:/Wine:/Debian"
         ['distribution']='./'
@@ -368,7 +368,7 @@ koopa_debian_apt_clean() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -382,7 +382,7 @@ koopa_debian_apt_clean() {
 koopa_debian_apt_configure_sources() {
     local app codenames repos urls
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['head']="$(koopa_locate_head --allow-system)"
         ['tee']="$(koopa_locate_tee --allow-system)"
@@ -390,7 +390,7 @@ koopa_debian_apt_configure_sources() {
     [[ -x "${app['cut']}" ]] || exit 1
     [[ -x "${app['head']}" ]] || exit 1
     [[ -x "${app['tee']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['os_codename']="$(koopa_debian_os_codename)"
         ['os_id']="$(koopa_os_id)"
         ['sources_list']="$(koopa_debian_apt_sources_file)"
@@ -398,12 +398,12 @@ koopa_debian_apt_configure_sources() {
     )
     koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
     koopa_assert_is_file "${dict['sources_list']}"
-    declare -A codenames=(
+    local -A codenames=(
         ['main']="${dict['os_codename']}"
         ['security']="${dict['os_codename']}-security"
         ['updates']="${dict['os_codename']}-updates"
     )
-    declare -A urls=(
+    local -A urls=(
         ['main']="$( \
             koopa_grep \
                 --file="${dict['sources_list']}" \
@@ -471,7 +471,7 @@ koopa_debian_apt_delete_repo() {
     local dict name
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A dict=(
+    local -A dict=(
         ['prefix']="$(koopa_debian_apt_sources_prefix)"
     )
     for name in "$@"
@@ -492,7 +492,7 @@ koopa_debian_apt_disable_deb_src() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sed']="$(koopa_locate_sed)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -500,7 +500,7 @@ koopa_debian_apt_disable_deb_src() {
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']="${1:-}"
     )
     [[ -z "${dict['file']}" ]] && \
@@ -527,7 +527,7 @@ koopa_debian_apt_enable_deb_src() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sed']="$(koopa_locate_sed)"
         ['sudo']="$(koopa_locate_sudo)"
@@ -535,7 +535,7 @@ koopa_debian_apt_enable_deb_src() {
     [[ -x "${app['apt_get']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']="${1:-}"
     )
     [[ -z "${dict['file']}" ]] && \
@@ -561,11 +561,11 @@ koopa_debian_apt_enable_deb_src() {
 koopa_debian_apt_enabled_repos() {
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['cut']="$(koopa_locate_cut --allow-system)"
     )
     [[ -x "${app['cut']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']="$(koopa_debian_apt_sources_file)"
         ['os']="$(koopa_debian_os_codename)"
     )
@@ -585,7 +585,7 @@ koopa_debian_apt_get() {
     local app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -609,13 +609,13 @@ koopa_debian_apt_install() {
 koopa_debian_apt_is_key_imported() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['apt_key']="$(koopa_debian_locate_apt_key)"
         ['sed']="$(koopa_locate_sed)"
     )
     [[ -x "${app['apt_key']}" ]] || exit 1
     [[ -x "${app['sed']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['key']="${1:?}"
     )
     dict['key_pattern']="$( \
@@ -640,7 +640,7 @@ koopa_debian_apt_remove() {
     local app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -665,7 +665,7 @@ koopa_debian_apt_space_used_by_grep() {
     local app x
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['cut']="$(koopa_locate_cut --allow-system)"
         ['sudo']="$(koopa_locate_sudo --allow-system)"
@@ -689,7 +689,7 @@ koopa_debian_apt_space_used_by_no_deps() {
     local app x
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt']="$(koopa_debian_locate_apt)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -708,7 +708,7 @@ koopa_debian_apt_space_used_by() {
     local app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['sudo']="$(koopa_locate_sudo)"
     )
@@ -731,7 +731,7 @@ koopa_debian_enable_unattended_upgrades() {
     local app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
         ['sudo']="$(koopa_locate_sudo)"
         ['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
@@ -749,7 +749,7 @@ koopa_debian_gdebi_install() {
     local app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app
+    local -A app
     app['sudo']="$(koopa_locate_sudo)"
     [[ -x "${app['sudo']}" ]] || exit 1
     app['gdebi']="$(koopa_debian_locate_gdebi --allow-missing)"
@@ -774,13 +774,13 @@ koopa_debian_install_from_deb() {
     local app dict
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['gdebi']="$(koopa_debian_locate_gdebi)"
         ['sudo']="$(koopa_locate_sudo)"
     )
     [[ -x "${app['gdebi']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['file']="${1:?}"
     )
     "${app['sudo']}" "${app['gdebi']}" --non-interactive "${dict['file']}"
@@ -789,7 +789,7 @@ koopa_debian_install_from_deb() {
 
 koopa_debian_install_system_builder_base() {
     local app
-    declare -A app=(
+    local -A app=(
         ['apt_get']="$(koopa_debian_locate_apt_get)"
         ['cat']="$(koopa_locate_cat --allow-system)"
         ['debconf_set_selections']="$( \
@@ -982,7 +982,7 @@ koopa_debian_locate_update_locale() {
 
 koopa_debian_os_codename() {
     local app dict
-    declare -A app dict
+    local -A app dict
     app['lsb_release']="$(koopa_debian_locate_lsb_release)"
     [[ -x "${app['lsb_release']}" ]] || exit 1
     dict['string']="$("${app['lsb_release']}" -cs)"
@@ -995,7 +995,7 @@ koopa_debian_set_locale() {
     local app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
+    local -A app=(
         ['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
         ['locale']="$(koopa_locate_locale)"
         ['locale_gen']="$(koopa_debian_locate_locale_gen)"
@@ -1007,7 +1007,7 @@ koopa_debian_set_locale() {
     [[ -x "${app['locale_gen']}" ]] || exit 1
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['update_locale']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['charset']='UTF-8'
         ['country']='US'
         ['lang']='en'
@@ -1031,13 +1031,13 @@ koopa_debian_set_timezone() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     koopa_is_docker && return 0
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['timedatectl']="$(koopa_debian_locate_timedatectl)"
     )
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['timedatectl']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['tz']="${1:-}"
     )
     [[ -z "${dict['tz']}" ]] && dict['tz']='America/New_York'

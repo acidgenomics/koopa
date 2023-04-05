@@ -9,7 +9,7 @@ koopa_cli_app() {
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
     # """
     local dict
-    declare -A dict=(
+    local -A dict=(
         ['key']=''
     )
     case "${1:-}" in

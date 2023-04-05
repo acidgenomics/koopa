@@ -10,7 +10,7 @@ koopa_linux_proc_cmdline() {
     # """
     local app pid
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
+    local -A app=(
         ['cat']="$(koopa_locate_cat --allow-system)"
         ['echo']="$(koopa_locate_echo --allow-system)"
         ['xargs']="$(koopa_locate_xargs --allow-system)"
@@ -18,7 +18,7 @@ koopa_linux_proc_cmdline() {
     [[ -x "${app['cat']}" ]] || exit 1
     [[ -x "${app['echo']}" ]] || exit 1
     [[ -x "${app['xargs']}" ]] || exit 1
-    declare -A dict
+    local -A dict
     dict['pid']="${1:?}"
     dict['cmdline']="/proc/${dict['pid']}/cmdline"
     koopa_assert_is_file "${dict['cmdline']}"

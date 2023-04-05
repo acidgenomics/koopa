@@ -11,7 +11,7 @@ koopa_macos_enable_privileged_helper_tool() {
     for bn in "$@"
     do
         local dict
-        declare -A dict=(
+        local -A dict=(
             ['enabled_file']="/Library/PrivilegedHelperTools/${bn}"
         )
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\

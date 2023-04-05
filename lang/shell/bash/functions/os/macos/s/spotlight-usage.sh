@@ -8,7 +8,7 @@ koopa_macos_spotlight_usage() {
     # Useful for debugging out of control mds_stores that makes my laptop
     # sound like a jet engine.
     # """
-    declare -A app=(
+    local -A app=(
         ['fs_usage']="$(koopa_macos_locate_fs_usage)"
         ['sudo']="$(koopa_locate_sudo)"
     )

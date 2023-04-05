@@ -15,7 +15,7 @@ koopa_extract() {
     # """
     local app cmd_args dict
     koopa_assert_has_args_le "$#" 2
-    declare -A app dict
+    local -A app dict
     dict['file']="${1:?}"
     dict['target']="${2:-}"
     dict['wd']="${PWD:?}"

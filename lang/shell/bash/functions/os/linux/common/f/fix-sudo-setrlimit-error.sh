@@ -15,7 +15,7 @@ koopa_linux_fix_sudo_setrlimit_error() {
     # """
     local dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['file']='/etc/sudo.conf'
         ['string']='Set disable_coredump false'
     )

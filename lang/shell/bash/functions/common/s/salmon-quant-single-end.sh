@@ -13,7 +13,7 @@ koopa_salmon_quant_single_end() {
     # """
     local dict fastq_file fastq_files
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         # e.g. 'fastq'.
         ['fastq_dir']=''
         # e.g. '.fastq.gz'.

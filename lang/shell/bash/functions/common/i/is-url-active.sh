@@ -27,8 +27,8 @@ koopa_is_url_active() {
     # """
     local app url
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict
+    local -A app
+    local -A dict
     app['curl']="$(koopa_locate_curl --allow-system)"
     [[ -x "${app['curl']}" ]] || exit 1
     dict['url_pattern']='://'

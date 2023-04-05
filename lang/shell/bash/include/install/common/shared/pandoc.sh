@@ -23,13 +23,13 @@ main() {
     local app build_deps dict
     build_deps=('git' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    declare -A app=(
+    local -A app=(
         ['cabal']="$(koopa_locate_cabal)"
         ['ghcup']="$(koopa_locate_ghcup)"
     )
     [[ -x "${app['cabal']}" ]] || exit 1
     [[ -x "${app['ghcup']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['cabal_dir']="$(koopa_init_dir 'cabal')"
         ['ghc_version']='9.4.4'
         ['ghcup_prefix']="$(koopa_init_dir 'ghcup')"

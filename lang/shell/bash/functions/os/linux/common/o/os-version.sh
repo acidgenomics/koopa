@@ -10,13 +10,13 @@ koopa_linux_os_version() {
     # """
     local app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['awk']="$(koopa_locate_awk --allow-system)"
         ['tr']="$(koopa_locate_tr --allow-system)"
     )
     [[ -x "${app['awk']}" ]] || exit 1
     [[ -x "${app['tr']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['key']='VERSION_ID'
         ['file']='/etc/os-release'
     )

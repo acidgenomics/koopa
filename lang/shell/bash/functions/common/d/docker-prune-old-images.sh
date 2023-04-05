@@ -14,7 +14,7 @@ koopa_docker_prune_old_images() {
     # """
     local app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
+    local -A app=(
         ['docker']="$(koopa_locate_docker)"
     )
     [[ -x "${app['docker']}" ]] || exit 1

@@ -10,7 +10,7 @@ koopa_rsync_ignore() {
     # """
     local dict rsync_args
     koopa_assert_has_args "$#"
-    declare -A dict=(
+    local -A dict=(
         ['ignore_local']='.gitignore'
         ['ignore_global']="${HOME}/.gitignore"
     )

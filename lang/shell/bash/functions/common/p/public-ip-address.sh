@@ -20,7 +20,7 @@ koopa_public_ip_address() {
     # """
     local app str
     koopa_assert_has_no_args "$#"
-    declare -A app
+    local -A app
     app['dig']="$(koopa_locate_dig --allow-missing)"
     if [[ -x "${app['dig']}" ]]
     then

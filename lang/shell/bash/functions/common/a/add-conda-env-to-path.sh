@@ -3,14 +3,14 @@
 koopa_add_conda_env_to_path() {
     # """
     # Add conda environment(s) to PATH.
-    # @note Updated 2020-06-30.
+    # @note Updated 2023-04-04.
     # """
-    local bin_dir name
+    local name
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'conda'
     [[ -z "${CONDA_PREFIX:-}" ]] || return 1
     for name in "$@"
     do
+        local bin_dir
         bin_dir="${CONDA_PREFIX}/envs/${name}/bin"
         if [[ ! -d "$bin_dir" ]]
         then

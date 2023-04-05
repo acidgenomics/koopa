@@ -16,7 +16,7 @@ koopa_strip_left() {
     # # White Lady
     # """
     local dict pos str
-    declare -A dict=(
+    local -A dict=(
         ['pattern']=''
     )
     pos=()

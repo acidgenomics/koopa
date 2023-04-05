@@ -6,10 +6,10 @@ koopa_chown() {
     # @note Updated 2021-10-29.
     # """
     local app chown dict pos
-    declare -A app
+    local -A app
     app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['dereference']=1
         ['recursive']=0
         ['sudo']=0

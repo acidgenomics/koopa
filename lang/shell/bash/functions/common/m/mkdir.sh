@@ -6,10 +6,10 @@ koopa_mkdir() {
     # @note Updated 2023-03-28.
     # """
     local app dict mkdir mkdir_args pos
-    declare -A app
+    local -A app
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
     [[ -x "${app['mkdir']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['sudo']=0
         ['verbose']=0
     )

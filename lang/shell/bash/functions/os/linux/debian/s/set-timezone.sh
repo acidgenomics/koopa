@@ -12,13 +12,13 @@ koopa_debian_set_timezone() {
     local app dict
     koopa_assert_has_args_le "$#" 1
     koopa_is_docker && return 0
-    declare -A app=(
+    local -A app=(
         ['sudo']="$(koopa_locate_sudo)"
         ['timedatectl']="$(koopa_debian_locate_timedatectl)"
     )
     [[ -x "${app['sudo']}" ]] || exit 1
     [[ -x "${app['timedatectl']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['tz']="${1:-}"
     )
     [[ -z "${dict['tz']}" ]] && dict['tz']='America/New_York'

@@ -25,11 +25,11 @@ main() {
         'zlib' \
         'libedit' \
         'openssl3'
-    declare -A app=(
+    local -A app=(
         ['make']="$(koopa_locate_make)"
     )
     [[ -x "${app['make']}" ]] || exit 1
-    declare -A dict=(
+    local -A dict=(
         ['jobs']="$(koopa_cpu_count)"
         ['name']='openssh'
         ['prefix']="${KOOPA_INSTALL_PREFIX:?}"

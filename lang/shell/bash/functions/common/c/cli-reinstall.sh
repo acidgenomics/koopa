@@ -7,7 +7,7 @@ koopa_cli_reinstall() {
     # """
     local dict pos
     koopa_assert_has_args "$#"
-    declare -A dict
+    local -A dict
     dict['mode']='default'
     pos=()
     while (("$#"))
