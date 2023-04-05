@@ -746,12 +746,11 @@ koopa_linux_locate_usermod() {
 }
 
 koopa_linux_oracle_instantclient_version() {
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['sqlplus']="$(koopa_linux_locate_sqlplus)"
-    )
-    [[ -x "${app['sqlplus']}" ]] || exit 1
+    app['sqlplus']="$(koopa_linux_locate_sqlplus)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['sqlplus']}" -v \
             | koopa_grep --pattern='^Version' --regex \
@@ -763,18 +762,13 @@ koopa_linux_oracle_instantclient_version() {
 }
 
 koopa_linux_os_version() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['tr']="$(koopa_locate_tr --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['tr']}" ]] || exit 1
-    local -A dict=(
-        ['key']='VERSION_ID'
-        ['file']='/etc/os-release'
-    )
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['key']='VERSION_ID'
+    dict['file']='/etc/os-release'
     dict['string']="$( \
         "${app['awk']}" -F= \
             "\$1==\"${dict['key']}\" { print \$2 ;}" \
@@ -787,17 +781,12 @@ koopa_linux_os_version() {
 }
 
 koopa_linux_proc_cmdline() {
-    local app pid
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    local -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-        ['echo']="$(koopa_locate_echo --allow-system)"
-        ['xargs']="$(koopa_locate_xargs --allow-system)"
-    )
-    [[ -x "${app['cat']}" ]] || exit 1
-    [[ -x "${app['echo']}" ]] || exit 1
-    [[ -x "${app['xargs']}" ]] || exit 1
-    local -A dict
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['echo']="$(koopa_locate_echo --allow-system)"
+    app['xargs']="$(koopa_locate_xargs --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['pid']="${1:?}"
     dict['cmdline']="/proc/${dict['pid']}/cmdline"
     koopa_assert_is_file "${dict['cmdline']}"
@@ -807,19 +796,14 @@ koopa_linux_proc_cmdline() {
 }
 
 koopa_linux_remove_user_from_group() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
-    local -A app=(
-        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gpasswd']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    local -A dict=(
-        ['group']="${1:?}"
-        ['user']="${2:-}"
-    )
+    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group']="${1:?}"
+    dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     "${app['sudo']}" "${app['gpasswd']}" \
         --delete "${dict['user']}" "${dict['group']}"
