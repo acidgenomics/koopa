@@ -14520,7 +14520,7 @@ koopa_ln() {
     local -A app dict
     local -a ln ln_args mkdir pos rm
     app['ln']="$(koopa_locate_ln --allow-system)"
-    koopa_assert_is_executable "${apps[@]}"
+    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['target_dir']=''
     dict['verbose']=0
@@ -16383,7 +16383,7 @@ koopa_mkdir() {
     local -A app dict
     local -a mkdir mkdir_args pos
     app['mkdir']="$(koopa_locate_mkdir --allow-system)"
-    koopa_assert_is_executable "${apps[@]}"
+    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
