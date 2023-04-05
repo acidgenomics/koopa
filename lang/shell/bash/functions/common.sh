@@ -4752,14 +4752,16 @@ koopa_convert_line_endings_from_lf_to_crlf() {
 }
 
 koopa_convert_sam_to_bam() {
-    local bam_file keep_sam pos sam_file sam_files
-    keep_sam=0
+    local -A dict
+    local -a pos sam_files
+    local sam_file
+    dict['keep_sam']=0
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--keep-sam')
-                keep_sam=1
+                dict['keep_sam']=1
                 shift 1
                 ;;
             '-'*)
@@ -4772,11 +4774,11 @@ koopa_convert_sam_to_bam() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    dir="${1:-.}"
+    dict['dir']="${1:-${PWD:?}}"
     koopa_assert_is_dir "$dir"
-    dir="$(koopa_realpath "$dir")"
+    dict['dir']="$(koopa_realpath "${dict['dir']}")"
     readarray -t sam_files <<< "$( \
-        find "$dir" \
+        find "${dict['dir']}" \
             -maxdepth 3 \
             -mindepth 1 \
             -type f \
@@ -4786,11 +4788,11 @@ koopa_convert_sam_to_bam() {
     )"
     if ! koopa_is_array_non_empty "${sam_files[@]:-}"
     then
-        koopa_stop "No SAM files detected in '${dir}'."
+        koopa_stop "No SAM files detected in '${dict['dir']}'."
     fi
-    koopa_h1 "Converting SAM files in '${dir}' to BAM format."
+    koopa_h1 "Converting SAM files in '${dict['dir']}' to BAM format."
     koopa_conda_activate_env 'samtools'
-    case "$keep_sam" in
+    case "${dict['keep_sam']}" in
         '0')
             koopa_alert_note 'SAM files will be deleted.'
             ;;
@@ -4800,11 +4802,15 @@ koopa_convert_sam_to_bam() {
     esac
     for sam_file in "${sam_files[@]}"
     do
+        local bam_file
         bam_file="${sam_file%.sam}.bam"
         koopa_samtools_convert_sam_to_bam \
             --input-sam="$sam_file" \
             --output-bam="$bam_file"
-        [[ "$keep_sam" -eq 0 ]] && koopa_rm "$sam_file"
+        if [[ "${dict['keep_sam']}" -eq 0 ]]
+        then
+            koopa_rm "$sam_file"
+        fi
     done
     koopa_conda_deactivate
     return 0
@@ -4827,12 +4833,10 @@ koopa_convert_utf8_nfd_to_nfc() {
 }
 
 koopa_cp() {
-    local app cp cp_args dict mkdir pos rm
     local -A app dict
+    local -a cp cp_args mkdir pos rm
     app['cp']="$(koopa_locate_cp --allow-system)"
-    app['mkdir']='koopa_mkdir'
-    app['rm']='koopa_rm'
-    [[ -x "${app['cp']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['symlink']=0
     dict['target_dir']=''
@@ -4887,12 +4891,12 @@ koopa_cp() {
         app['sudo']="$(koopa_locate_sudo)"
         [[ -x "${app['sudo']}" ]] || exit 1
         cp=("${app['sudo']}" "${app['cp']}")
-        mkdir=("${app['mkdir']}" '--sudo')
-        rm=("${app['rm']}" '--sudo')
+        mkdir=('koopa_mkdir' '--sudo')
+        rm=('koopa_rm' '--sudo')
     else
         cp=("${app['cp']}")
-        mkdir=("${app['mkdir']}")
-        rm=("${app['rm']}")
+        mkdir=('koopa_mkdir')
+        rm=('koopa_rm')
     fi
     cp_args=('-a' '-f')
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
