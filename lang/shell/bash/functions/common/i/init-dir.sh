@@ -3,12 +3,11 @@
 koopa_init_dir() {
     # """
     # Initialize (create) a directory and return the real path on disk.
-    # @note Updated 2021-11-04.
+    # @note Updated 2023-04-05.
     # """
-    local dict mkdir pos
-    local -A dict=(
-        ['sudo']=0
-    )
+    local -A dict
+    local -a mkdir pos
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do

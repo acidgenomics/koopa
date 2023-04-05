@@ -3,7 +3,7 @@
 koopa_git_pull() {
     # """
     # Pull (update) a git repository.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-05.
     #
     # Can quiet down with 'git submodule --quiet' here.
     # Note that git checkout, fetch, and pull also support '--quiet'.
@@ -14,16 +14,16 @@ koopa_git_pull() {
     # @seealso
     # - https://git-scm.com/docs/git-submodule/2.10.2
     # """
-    local app repos
     local -A app
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || exit 1
-    repos=("$@")
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
-        for repo in "${repos[@]}"
+        local repo
+        for repo in "$@"
         do
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Pulling Git repo at '${repo}'."

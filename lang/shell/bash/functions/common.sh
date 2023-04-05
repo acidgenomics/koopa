@@ -8131,9 +8131,8 @@ koopa_git_default_branch() {
 }
 
 koopa_git_last_commit_local() {
-    local app dict
-    koopa_assert_has_args "$#"
     local -A app dict
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
     dict['ref']='HEAD'
@@ -8204,14 +8203,14 @@ koopa_git_latest_tag() {
 }
 
 koopa_git_pull() {
-    local app repos
     local -A app
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || exit 1
-    repos=("$@")
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     (
-        for repo in "${repos[@]}"
+        local repo
+        for repo in "$@"
         do
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Pulling Git repo at '${repo}'."
@@ -8360,16 +8359,14 @@ koopa_git_reset_fork_to_upstream() {
 }
 
 koopa_git_reset() {
-    local app repos
     local -A app
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || exit 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Resetting Git repo at '${repo}'."
@@ -8409,17 +8406,14 @@ koopa_git_rm_submodule() {
 }
 
 koopa_git_rm_untracked() {
-    local app repos
-    local -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || exit 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    local -A app
+    koopa_assert_has_args "$#"
+    app['git']="$(koopa_locate_git --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Removing untracked files in '${repo}'."
@@ -8451,19 +8445,15 @@ koopa_git_set_remote_url() {
 }
 
 koopa_git_submodule_init() {
-    local app repos
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['git']}" ]] || exit 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    local -A app
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             local dict lines string
             local -A dict=(
@@ -9696,10 +9686,9 @@ koopa_info_box() {
 }
 
 koopa_init_dir() {
-    local dict mkdir pos
-    local -A dict=(
-        ['sudo']=0
-    )
+    local -A dict
+    local -a mkdir pos
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -9948,18 +9937,17 @@ ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
 }
 
 koopa_install_app_subshell() {
-    local dict pos
-    local -A dict=(
-        ['installer_bn']=''
-        ['installer_fun']='main'
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['mode']='shared'
-        ['name']="${KOOPA_INSTALL_NAME:-}"
-        ['platform']='common'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:-}"
-        ['tmp_dir']="$(koopa_tmp_dir)"
-        ['version']="${KOOPA_INSTALL_VERSION:-}"
-    )
+    local -A dict
+    local -a pos
+    dict['installer_bn']=''
+    dict['installer_fun']='main'
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['mode']='shared'
+    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['platform']='common'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
+    dict['version']="${KOOPA_INSTALL_VERSION:-}"
     pos=()
     while (("$#"))
     do

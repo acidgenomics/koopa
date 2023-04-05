@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE This is intentionally linking to system bzip2 on macOS.
+
 main() {
     # """
     # Install R.

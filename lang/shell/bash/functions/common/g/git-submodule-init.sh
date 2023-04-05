@@ -3,23 +3,19 @@
 koopa_git_submodule_init() {
     # """
     # Initialize git submodules.
-    # @note Updated 2022-09-24.
+    # @note Updated 2023-04-05.
     # """
-    local app repos
-    local -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['git']}" ]] || exit 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_dir "${repos[@]}"
+    local -A app
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             local dict lines string
             local -A dict=(
