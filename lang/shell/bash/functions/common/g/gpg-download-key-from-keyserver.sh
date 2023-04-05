@@ -3,21 +3,18 @@
 koopa_gpg_download_key_from_keyserver() {
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
-    # @note Updated 2022-05-20.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://superuser.com/a/1643115/589630
     # """
-    local app cp dict
+    local -A app dict
+    local -a cp
     koopa_assert_has_args "$#"
-    local -A app=(
-        ['gpg']="$(koopa_locate_gpg --allow-system)"
-    )
-    [[ -x "${app['gpg']}" ]] || exit 1
-    local -A dict=(
-        ['sudo']=0
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    app['gpg']="$(koopa_locate_gpg --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['sudo']=0
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     dict['tmp_file']="${dict['tmp_dir']}/export.gpg"
     while (("$#"))
     do

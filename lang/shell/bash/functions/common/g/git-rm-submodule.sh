@@ -3,7 +3,7 @@
 koopa_git_rm_submodule() {
     # """
     # Remove a git submodule from current repository.
-    # @note Updated 2022-09-24.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://stackoverflow.com/questions/1260748/
@@ -13,13 +13,12 @@ koopa_git_rm_submodule() {
     # > cd "${HOME}/git/monorepo"
     # > koopa_git_rm_submodule 'XXX' 'YYY'
     # """
-    local app module
+    local -A app
+    local module
     koopa_assert_has_args "$#"
     koopa_assert_is_git_repo
-    local -A app=(
-        ['git']="$(koopa_locate_git --allow-system)"
-    )
-    [[ -x "${app['git']}" ]] || exit 1
+    app['git']="$(koopa_locate_git --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for module in "$@"
     do
         # Remove the submodule entry from '.git/config'.
