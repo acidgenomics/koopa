@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
 # FIXME This currently fails to build on Apple Silicon.
+# Workaround to allow clang/aarch64 build to use the gcc/arm64 directory
+# Issue ref: https://github.com/ncbi/ncbi-vdb/issues/65
+# ln_s "../gcc/arm64", buildpath/"ncbi-vdb-source/interfaces/cc/clang/arm64" if Hardware::CPU.arm?
 
 main() {
     # """
     # Install NCBI VDB.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-06.
     #
     # VDB is the database engine that all SRA tools use.
     #
