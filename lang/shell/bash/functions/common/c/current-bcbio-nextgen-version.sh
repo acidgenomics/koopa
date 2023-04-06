@@ -15,7 +15,7 @@ koopa_current_bcbio_nextgen_version() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
 bcbio-nextgen/master/requirements-conda.txt" \

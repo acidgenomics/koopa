@@ -8,7 +8,7 @@ koopa_brew_cleanup() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
-    [[ -x "${app['brew']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
     "${app['brew']}" autoremove || true

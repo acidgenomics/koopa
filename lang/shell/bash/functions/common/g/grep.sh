@@ -133,16 +133,13 @@ koopa_grep() {
             then
                 dict['engine']='grep'
                 app['grep']="$(koopa_locate_grep --allow-system)"
-                [[ -x "${app['grep']}" ]] || exit 1
             fi
             ;;
         'grep')
             app['grep']="$(koopa_locate_grep --allow-system)"
-            [[ -x "${app['grep']}" ]] || exit 1
             ;;
         'rg')
             app['grep']="$(koopa_locate_ripgrep)"
-            [[ -x "${app['grep']}" ]] || exit 1
             ;;
     esac
     # Piped input using stdin (string mode).
@@ -158,7 +155,8 @@ koopa_grep() {
     grep_cmd=("${app['grep']}")
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        grep_cmd=('sudo' "${grep_cmd[@]}")
+        app['sudo']="$(koopa_locate_sudo)"
+        grep_cmd=("${app['sudo']}" "${grep_cmd[@]}")
     fi
     grep_args=()
     case "${dict['engine']}" in
@@ -211,6 +209,7 @@ koopa_grep() {
             ;;
     esac
     grep_args+=("${dict['pattern']}")
+    koopa_assert_is_executable "${app[@]}"
     if [[ -n "${dict['file']}" ]]
     then
         # File mode.

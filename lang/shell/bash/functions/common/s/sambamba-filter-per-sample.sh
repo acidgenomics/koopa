@@ -17,7 +17,7 @@ koopa_sambamba_filter_per_sample() {
     local -A app dict
     koopa_assert_has_args "$#"
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['filter']=''
     dict['input']=''
     dict['output']=''

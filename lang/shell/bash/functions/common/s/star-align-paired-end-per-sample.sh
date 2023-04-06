@@ -32,7 +32,7 @@ koopa_star_align_paired_end_per_sample() {
     local -A app dict
     local -a align_args
     app['star']="$(koopa_locate_star)"
-    [[ -x "${app['star']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     # e.g. 'default'
     dict['aws_profile']=''
     # e.g. 's3://bioinfo/rnaseq/sample1'
@@ -181,7 +181,7 @@ to '${dict['tmp_fastq_r2_file']}"
     if [[ -n "${dict['aws_s3_uri']}" ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
-        [[ -x "${app['aws']}" ]] || exit 1
+        koopa_assert_is_executable "${app['aws']}"
         koopa_alert "Syncing '${dict['output_dir']}' \
 to '${dict['aws_s3_uri']}'."
         "${app['aws']}" --profile="${dict['aws_profile']}" \

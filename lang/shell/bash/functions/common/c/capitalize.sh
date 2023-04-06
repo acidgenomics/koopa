@@ -17,7 +17,7 @@ koopa_capitalize() {
     local app str
     local -A app
     app['tr']="$(koopa_locate_tr --allow-system)"
-    [[ -x "${app['tr']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     if [[ "$#" -eq 0 ]]
     then
         local -a pos

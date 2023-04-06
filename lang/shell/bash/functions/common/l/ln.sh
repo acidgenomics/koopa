@@ -3,14 +3,13 @@
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-06.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     # """
     local -A app dict
     local -a ln ln_args mkdir pos rm
     app['ln']="$(koopa_locate_ln --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['target_dir']=''
     dict['verbose']=0
@@ -59,7 +58,6 @@ koopa_ln() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || exit 1
         ln=("${app['sudo']}" "${app['ln']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
@@ -97,6 +95,7 @@ koopa_ln() {
             "${mkdir[@]}" "${dict['target_parent']}"
         fi
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${ln[@]}" "${ln_args[@]}"
     return 0
 }

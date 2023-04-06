@@ -3,7 +3,7 @@
 koopa_aws_ec2_instance_id() {
     # """
     # AWS EC2 instance identifier.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://stackoverflow.com/questions/625644/
@@ -17,7 +17,7 @@ koopa_aws_ec2_instance_id() {
         # e.g. Amazon Linux 2.
         app['ec2metadata']='/usr/bin/ec2-metadata'
     fi
-    [[ -x "${app['ec2metadata']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['string']="$("${app['ec2metadata']}" --instance-id)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"

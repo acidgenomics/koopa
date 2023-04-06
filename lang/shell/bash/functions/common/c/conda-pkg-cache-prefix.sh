@@ -12,8 +12,7 @@ koopa_conda_pkg_cache_prefix() {
     koopa_assert_has_no_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['python']="$(koopa_locate_conda_python)"
-    [[ -x "${app['conda']}" ]] || exit 1
-    [[ -x "${app['python']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$( \
         "${app['conda']}" info --json \
         | "${app['python']}" -c \

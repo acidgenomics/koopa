@@ -10,7 +10,7 @@ koopa_gpg_prompt() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['gpg']="$(koopa_locate_gpg --allow-system)"
-    [[ -x "${app['gpg']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     printf '' | "${app['gpg']}" -s
     return 0
 }

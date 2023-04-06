@@ -17,9 +17,7 @@ koopa_docker_is_build_recent() {
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
     app['sed']="$(koopa_locate_sed)"
-    [[ -x "${app['date']}" ]] || exit 1
-    [[ -x "${app['docker']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['days']=7
     pos=()
     while (("$#"))

@@ -10,7 +10,7 @@ koopa_docker_ghcr_push() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 3
     app['docker']="$(koopa_locate_docker)"
-    [[ -x "${app['docker']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['image_name']="${2:?}"
     dict['owner']="${1:?}"
     dict['server']='ghcr.io'

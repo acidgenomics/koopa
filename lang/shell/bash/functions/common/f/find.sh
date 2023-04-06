@@ -176,23 +176,19 @@ koopa_find() {
             then
                 dict['engine']='find'
                 app['find']="$(koopa_locate_find --allow-system)"
-                [[ -x "${app['find']}" ]] || exit 1
             fi
             ;;
         'fd')
             app['find']="$(koopa_locate_fd)"
-            [[ -x "${app['find']}" ]] || exit 1
             ;;
         'find')
             app['find']="$(koopa_locate_find --allow-system)"
-            [[ -x "${app['find']}" ]] || exit 1
             ;;
     esac
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || exit 1
         find+=("${app['sudo']}")
     fi
     find+=("${app['find']}")
@@ -392,8 +388,8 @@ koopa_find() {
     if [[ "${dict['sort']}" -eq 1 ]]
     then
         app['sort']="$(koopa_locate_sort --allow-system)"
-        [[ -x "${app['sort']}" ]] || exit 1
     fi
+    koopa_assert_is_executable "${app[@]}"
     if [[ "${dict['print0']}" -eq 1 ]]
     then
         # NULL-byte ('\0') approach (non-POSIX).

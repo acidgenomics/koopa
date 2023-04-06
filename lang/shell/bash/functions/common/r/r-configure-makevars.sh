@@ -26,7 +26,7 @@ koopa_r_configure_makevars() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
@@ -50,19 +50,6 @@ koopa_r_configure_makevars() {
     app['strip']='/usr/bin/strip'
     app['tar']="$(koopa_locate_tar --realpath)"
     app['yacc']="$(koopa_locate_yacc --realpath)"
-    [[ -x "${app['ar']}" ]] || exit 1
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['bash']}" ]] || exit 1
-    [[ -x "${app['echo']}" ]] || exit 1
-    [[ -x "${app['gfortran']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
-    [[ -x "${app['pkg_config']}" ]] || exit 1
-    [[ -x "${app['ranlib']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
-    [[ -x "${app['strip']}" ]] || exit 1
-    [[ -x "${app['tar']}" ]] || exit 1
-    [[ -x "${app['yacc']}" ]] || exit 1
     dict['arch']="$(koopa_arch)"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
@@ -104,8 +91,7 @@ koopa_r_configure_makevars() {
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
     fi
-    [[ -x "${app['cc']}" ]] || exit 1
-    [[ -x "${app['cxx']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()

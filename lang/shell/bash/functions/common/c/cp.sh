@@ -19,7 +19,6 @@ koopa_cp() {
     local -A app dict
     local -a cp cp_args mkdir pos rm
     app['cp']="$(koopa_locate_cp --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['symlink']=0
     dict['target_dir']=''
@@ -75,7 +74,6 @@ koopa_cp() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || exit 1
         cp=("${app['sudo']}" "${app['cp']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
@@ -114,6 +112,7 @@ koopa_cp() {
             "${mkdir[@]}" "${dict['target_parent']}"
         fi
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${cp[@]}" "${cp_args[@]}"
     return 0
 }

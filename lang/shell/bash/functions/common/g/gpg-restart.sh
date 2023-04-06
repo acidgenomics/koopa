@@ -8,7 +8,7 @@ koopa_gpg_restart() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['gpgconf']="$(koopa_locate_gpgconf)"
-    [[ -x "${app['gpgconf']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['gpgconf']}" --kill 'gpg-agent'
     return 0
 }

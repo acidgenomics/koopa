@@ -15,7 +15,7 @@ koopa_switch_to_develop() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['branch']='develop'
     dict['origin']='origin'
     dict['prefix']="$(koopa_koopa_prefix)"

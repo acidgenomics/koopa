@@ -15,7 +15,7 @@ koopa_basename_sans_ext_2() {
     local -A app
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         str="$(koopa_basename "$file")"

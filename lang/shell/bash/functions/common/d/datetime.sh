@@ -9,7 +9,7 @@ koopa_datetime() {
     koopa_assert_has_no_args "$#"
     local -A app
     app['date']="$(koopa_locate_date --allow-system)"
-    [[ -x "${app['date']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     str="$("${app['date']}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

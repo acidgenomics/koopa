@@ -13,7 +13,7 @@ koopa_merge_pdf() {
     local -A app
     koopa_assert_has_args "$#"
     app['gs']="$(koopa_locate_gs)"
-    [[ -x "${app['gs']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     "${app['gs']}" \
         -dBATCH \

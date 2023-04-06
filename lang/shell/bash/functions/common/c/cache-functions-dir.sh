@@ -15,8 +15,7 @@ koopa_cache_functions_dir() {
     koopa_assert_has_args "$#"
     app['grep']="$(koopa_locate_grep --allow-system)"
     app['perl']="$(koopa_locate_perl --allow-system)"
-    [[ -x "${app['grep']}" ]] || exit 1
-    [[ -x "${app['perl']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
         local dict file files header

@@ -13,7 +13,7 @@ koopa_git_set_remote_url() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['origin']='origin'
     dict['prefix']="${1:?}"
     dict['url']="${2:?}"

@@ -3,13 +3,13 @@
 koopa_aws_batch_list_jobs() {
     # """
     # List AWS Batch jobs.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-06.
     # """
     local -A app dict
     local -a job_queue_array status_array
     local status
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['account_id']="${AWS_BATCH_ACCOUNT_ID:-}"
     dict['profile']="${AWS_PROFILE:-default}"
     dict['queue']="${AWS_BATCH_QUEUE:-}"

@@ -19,10 +19,7 @@ koopa_aws_s3_list_large_files() {
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
     app['sort']="$(koopa_locate_sort)"
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['aws']}" ]] || exit 1
-    [[ -x "${app['jq']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['bucket']=''
     dict['num']='20'
     dict['profile']="${AWS_PROFILE:-default}"
