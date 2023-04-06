@@ -3,18 +3,17 @@
 main() {
     # """
     # Install pybind11.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://pybind11.readthedocs.io/en/stable/compiling.html
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'python3.11'
-    local -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
         '-DPYBIND11_NOPYTHON=ON'
         '-DPYBIND11_TEST=OFF'

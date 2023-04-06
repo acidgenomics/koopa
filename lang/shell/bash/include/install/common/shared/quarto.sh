@@ -3,20 +3,18 @@
 main() {
     # """
     # Install Quarto.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://quarto.org/docs/download/
     # - https://github.com/quarto-dev/quarto-cli/
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. "amd64".
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch2)" # e.g. "amd64".
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_linux
     then
         dict['slug']="linux-${dict['arch']}"
