@@ -5,10 +5,8 @@ koopa_ip_address() {
     # IP address.
     # @note Updated 2022-02-09.
     # """
-    local dict
-    declare -A dict=(
-        ['type']='public'
-    )
+    local -A dict
+    dict['type']='public'
     while (("$#"))
     do
         case "$1" in

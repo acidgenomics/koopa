@@ -5,11 +5,9 @@ koopa_df() {
     # Human friendly version of GNU df.
     # @note Updated 2021-10-29.
     # """
-    local app
-    declare -A app=(
-        ['df']="$(koopa_locate_df)"
-    )
-    [[ -x "${app['df']}" ]] || return 1
+    local -A app
+    app['df']="$(koopa_locate_df)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['df']}" \
         --portability \
         --print-type \

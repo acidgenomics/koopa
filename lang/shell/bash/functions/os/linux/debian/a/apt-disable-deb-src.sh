@@ -3,22 +3,16 @@
 koopa_debian_apt_disable_deb_src() {
     # """
     # Disable 'deb-src' source packages.
-    # @note Updated 2022-02-17.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sed']="$(koopa_locate_sed)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['file']="${1:-}"
-    )
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sed']="$(koopa_locate_sed)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['file']="${1:-}"
     [[ -z "${dict['file']}" ]] && \
         dict['file']="$(koopa_debian_apt_sources_file)"
     koopa_assert_is_file "${dict['file']}"

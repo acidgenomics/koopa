@@ -3,16 +3,14 @@
 koopa_header() {
     # """
     # Shared language-specific header file.
-    # @note Updated 2022-02-15.
+    # @note Updated 2023-04-06.
     #
     # Useful for private scripts using koopa code outside of package.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
-        ['lang']="$(koopa_lowercase "${1:?}")"
-        ['prefix']="$(koopa_koopa_prefix)/lang"
-    )
+    dict['lang']="$(koopa_lowercase "${1:?}")"
+    dict['prefix']="$(koopa_koopa_prefix)/lang"
     case "${dict['lang']}" in
         'bash' | \
         'posix' | \

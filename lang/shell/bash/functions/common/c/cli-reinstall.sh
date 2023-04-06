@@ -3,11 +3,11 @@
 koopa_cli_reinstall() {
     # """
     # Parse user input to 'koopa reinstall'
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-05.
     # """
-    local dict pos
+    local -A dict
+    local -a pos
     koopa_assert_has_args "$#"
-    declare -A dict
     dict['mode']='default'
     pos=()
     while (("$#"))

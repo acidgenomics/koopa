@@ -10,12 +10,11 @@ koopa_is_r_package_installed() {
     # @examples
     # > koopa_is_r_package_installed 'BiocGenerics' 'S4Vectors'
     # """
-    local app dict pkg
+    local -A app dict
+    local pkg
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict
     app['r']="$(koopa_locate_r)"
-    [[ -x "${app['r']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$(koopa_r_packages_prefix "${app['r']}")"
     for pkg in "$@"
     do

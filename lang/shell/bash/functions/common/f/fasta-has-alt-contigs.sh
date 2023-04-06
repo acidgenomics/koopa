@@ -33,14 +33,12 @@ koopa_fasta_has_alt_contigs() {
     # - https://groups.google.com/g/rna-star/c/mo1QZ-7QPkc
     # - https://groups.google.com/g/rna-star/c/rVzRipcCLIA/m/6e2d3pBkx-wJ
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
-        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-        ['file']="${1:?}"
-        ['is_tmp_file']=0
-        ['status']=1
-    )
+    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    dict['file']="${1:?}"
+    dict['is_tmp_file']=0
+    dict['status']=1
     koopa_assert_is_file "${dict['file']}"
     if koopa_str_detect_regex \
         --string="${dict['file']}" \

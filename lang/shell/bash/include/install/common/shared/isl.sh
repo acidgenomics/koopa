@@ -3,26 +3,24 @@
 main() {
     # """
     # Install isl.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://libisl.sourceforge.io/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/isl.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gmp'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['gmp']="$(koopa_app_prefix 'gmp')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['gmp']="$(koopa_app_prefix 'gmp')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://libisl.sourceforge.io/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

@@ -3,23 +3,22 @@
 main() {
     # """
     # Install zstd.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zstd.rb
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'lz4' 'zlib'
-    declare -A dict=(
-        ['lz4']="$(koopa_app_prefix 'lz4')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    dict['lz4']="$(koopa_app_prefix 'lz4')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     cmake_args=(
         # CMake options --------------------------------------------------------
         '-DCMAKE_CXX_STANDARD=11'

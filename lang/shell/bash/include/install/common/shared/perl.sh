@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Perl.
-    # @note Updated 2022-11-16.
+    # @note Updated 2023-04-06.
     #
     # @section Regarding parallel build failures on Ubunutu:
     # make can error at this step when running in parallel.
@@ -21,18 +21,15 @@ main() {
     # - https://perlmaven.com/how-to-build-perl-from-source-code
     #
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='perl'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='perl'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # Deparallelize on Linux to avoid error at "Updating 'mktables.lst'".
     koopa_is_linux && dict['jobs']=1
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"

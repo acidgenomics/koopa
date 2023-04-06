@@ -9,14 +9,12 @@ koopa_current_ensembl_version() {
     # > koopa_current_ensembl_version
     # # 105
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         koopa_parse_url 'ftp://ftp.ensembl.org/pub/README' \
         | "${app['sed']}" -n '3p' \

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This check is breaking when bootstrapping koopa.
-
 koopa_is_url_active() {
     # """
     # Check if input is a URL and is active.
-    # @note Updated 2022-09-01.
+    # @note Updated 2023-04-06.
     #
     # @section cURL approach:
     #
@@ -25,12 +23,11 @@ koopa_is_url_active() {
     # # FALSE:
     # > koopa_is_url_active 'https://google.com/asdf'
     # """
-    local app url
+    local -A app dict
+    local url
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict
     app['curl']="$(koopa_locate_curl --allow-system)"
-    [[ -x "${app['curl']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['url_pattern']='://'
     for url in "$@"
     do

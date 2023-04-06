@@ -1,12 +1,10 @@
 #!/usr/bin/env bash
 
 koopa_uninstall_python311() {
-    local dict
-    declare -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    local -A dict
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     koopa_uninstall_app \
         --name='python3.11' \
         "$@"

@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Ghostscript.
-    # @note Updated 2023-01-05.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/ArtifexSoftware/ghostpdl-downloads
@@ -15,17 +15,15 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/ghostscript.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_activate_app --build-only 'pkg-config'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='ghostpdl'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='ghostpdl'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # e.g. '10.0.0' to '1000'.
     dict['version2']="$( \
             koopa_gsub \

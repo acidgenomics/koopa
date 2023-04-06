@@ -3,19 +3,17 @@
 main() {
     # """
     # Install rbenv.
-    # @note Updated 2022-07-14.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/rbenv/rbenv
     # - https://github.com/rbenv/ruby-build
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['name']='rbenv'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']='rbenv'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/archive/\
 refs/tags/${dict['file']}"

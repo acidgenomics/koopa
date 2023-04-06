@@ -3,19 +3,19 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2023-03-14.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'python3.10' 'tmux'
     # > koopa_cli_install user 'doom-emacs' 'spacemacs'
     # """
-    local app dict flags pos stem
+    local -A dict
+    local -a flags pos
+    local app
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['allow_custom']=0
-        ['custom_enabled']=0
-        ['stem']='install'
-    )
+    dict['allow_custom']=0
+    dict['custom_enabled']=0
+    dict['stem']='install'
     case "${1:-}" in
         'koopa')
             dict['allow_custom']=1
@@ -82,8 +82,7 @@ koopa_cli_install() {
     fi
     for app in "$@"
     do
-        local dict2
-        declare -A dict2
+        local -A dict2
         dict2['app']="$app"
         dict2['key']="${dict['stem']}-${dict2['app']}"
         dict2['fun']="$(koopa_which_function "${dict2['key']}" || true)"

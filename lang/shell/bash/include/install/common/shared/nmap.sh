@@ -3,7 +3,7 @@
 main() {
     # """
     # Install nmap.
-    # @note Updated 2022-08-31.
+    # @note Updated 2023-04-06.
     #
     # Attempting to bundle zlib fails on Ubuntu.
     # Attempting to bundle pcre fails on macOS.
@@ -18,7 +18,8 @@ main() {
     # - Check supported Lua version at:
     #   https://github.com/nmap/nmap/tree/master/liblua
     # """
-    local app conf_args deps dict
+    local -A app dict 
+    local -a conf_args deps
     koopa_activate_app --build-only \
         'bison' \
         'flex' \
@@ -31,21 +32,17 @@ main() {
         # > 'lua'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        # > ['libssh2']="$(koopa_app_prefix 'libssh2')"
-        # > ['lua']="$(koopa_app_prefix 'lua')"
-        ['name']='nmap'
-        ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['pcre']="$(koopa_app_prefix 'pcre')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    # > dict['libssh2']="$(koopa_app_prefix 'libssh2')"
+    # > dict['lua']="$(koopa_app_prefix 'lua')"
+    dict['name']='nmap'
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['pcre']="$(koopa_app_prefix 'pcre')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://nmap.org/dist/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

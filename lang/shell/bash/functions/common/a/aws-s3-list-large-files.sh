@@ -13,24 +13,17 @@ koopa_aws_s3_list_large_files() {
     # # testdata/bcbiornaseq/v0.5/bcb.rda
     # # testdata/bcbiornaseq/v0.5/gse65267.rds
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['aws']="$(koopa_locate_aws)"
-        ['jq']="$(koopa_locate_jq)"
-        ['sort']="$(koopa_locate_sort)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    declare -A dict=(
-        ['bucket']=''
-        ['num']='20'
-        ['profile']="${AWS_PROFILE:-default}"
-        ['region']="${AWS_REGION:-us-east-1}"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['aws']="$(koopa_locate_aws)"
+    app['jq']="$(koopa_locate_jq)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bucket']=''
+    dict['num']='20'
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['region']="${AWS_REGION:-us-east-1}"
     while (("$#"))
     do
         case "$1" in

@@ -3,23 +3,21 @@
 main() {
     # """
     # Install aspell.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - http://aspell.net/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/aspell.rb
     # - https://tylercipriani.com/blog/2017/08/14/offline-spelling-with-aspell/
     # """
-    local dict key lang
+    local -A app dict lang
+    local key
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='aspell'
@@ -27,17 +25,15 @@ main() {
     app['prezip']="${dict['prefix']}/bin/prezip"
     koopa_assert_is_installed "${app['aspell']}" "${app['prezip']}"
     koopa_add_to_path_start "${dict['prefix']}/bin"
-    declare -A lang=(
-        ['de']='aspell6-de-20161207-7-0'
-        ['en']='aspell6-en-2020.12.07-0'
-        ['es']='aspell6-es-1.11-2'
-        ['fr']='aspell-fr-0.50-3'
-    )
+    lang['de']='aspell6-de-20161207-7-0'
+    lang['en']='aspell6-en-2020.12.07-0'
+    lang['es']='aspell6-es-1.11-2'
+    lang['fr']='aspell-fr-0.50-3'
     koopa_print_env
     for key in "${!lang[@]}"
     do
-        local conf_args dict2
-        declare -A dict2
+        local -A dict2
+        local -a conf_args
         dict2['bn']="${lang[$key]}"
         dict2['file']="${dict2['bn']}.tar.bz2"
         dict2['url']="${dict['lang_base_url']}/${key}/${dict2['file']}"

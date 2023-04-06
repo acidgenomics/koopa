@@ -3,22 +3,18 @@
 koopa_rename_lowercase() {
     # """
     # Rename files to lowercase.
-    # @note Updated 2022-02-24.
+    # @note Updated 2023-04-05.
     #
     # @usage koopa_rename_lowercase FILE...
     # """
-    local app dict pos
+    local -A app dict
+    local -a pos
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['rename']="$(koopa_locate_rename)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['rename']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
-    declare -A dict=(
-        ['pattern']='y/A-Z/a-z/'
-        ['recursive']=0
-    )
+    app['rename']="$(koopa_locate_rename)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['pattern']='y/A-Z/a-z/'
+    dict['recursive']=0
     pos=()
     while (("$#"))
     do

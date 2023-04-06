@@ -10,16 +10,13 @@ koopa_docker_remove() {
     # @examples
     # > koopa_docker_remove 'debian' 'ubuntu'
     # """
-    local app pattern
+    local -A app
+    local pattern
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['docker']="$(koopa_locate_docker)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
+    app['awk']="$(koopa_locate_awk)"
+    app['docker']="$(koopa_locate_docker)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
     for pattern in "$@"
     do
         # Previous awk approach:

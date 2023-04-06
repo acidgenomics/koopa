@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rebuild Docker image to get this to work.
+
 koopa_rnaeditingindexer() {
     # """
     # Run dockerized RNAEditingIndexer pipeline.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-04-05.
     #
     # Genome must be indexed by BEDGenomeIndexer.
     # Note that '--verbose' flag includes more output in summary CSV.
@@ -22,21 +24,19 @@ koopa_rnaeditingindexer() {
     # @examples
     # > koopa_run_rnaeditingindexer --example
     # """
-    local app dict run_args
-    declare -A app=(
-        ['docker']="$(koopa_locate_docker)"
-    )
-    [[ -x "${app['docker']}" ]] || return 1
-    declare -A dict=(
-        ['bam_suffix']='.Aligned.sortedByCoord.out.bam'
-        ['docker_image']='acidgenomics/rnaeditingindexer'
-        ['example']=0
-        ['genome']='hg38'
-        ['local_bam_dir']='bam'
-        ['local_output_dir']='rnaedit'
-        ['mnt_bam_dir']='/mnt/bam'
-        ['mnt_output_dir']='/mnt/output'
-    )
+    local -A app dict
+    local -a run_args
+    app['docker']="$(koopa_locate_docker)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bam_suffix']='.Aligned.sortedByCoord.out.bam'
+    # FIXME Need to update this to Amazon ECR image.
+    dict['docker_image']='acidgenomics/rnaeditingindexer'
+    dict['example']=0
+    dict['genome']='hg38'
+    dict['local_bam_dir']='bam'
+    dict['local_output_dir']='rnaedit'
+    dict['mnt_bam_dir']='/mnt/bam'
+    dict['mnt_output_dir']='/mnt/output'
     while (("$#"))
     do
         case "$1" in

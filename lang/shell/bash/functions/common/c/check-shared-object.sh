@@ -12,14 +12,12 @@ koopa_check_shared_object() {
     # >     --name='libR' \
     # >     --prefix='/opt/koopa/opt/r/lib/R/lib'
     # """
-    local app dict tool_args
+    local -A app dict
+    local -a tool_args
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict=(
-        ['file']=''
-        ['name']=''
-        ['prefix']=''
-    )
+    dict['file']=''
+    dict['name']=''
+    dict['prefix']=''
     while (("$#"))
     do
         case "$1" in
@@ -77,7 +75,7 @@ koopa_check_shared_object() {
         app['tool']="$(koopa_macos_locate_otool)"
         tool_args+=('-L')
     fi
-    [[ -x "${app['tool']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     tool_args+=("${dict['file']}")
     "${app['tool']}" "${tool_args[@]}"
     return 0

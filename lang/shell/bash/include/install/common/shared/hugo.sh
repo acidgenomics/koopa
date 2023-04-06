@@ -6,7 +6,7 @@
 main() {
     # """
     # Install hugo.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-04-06.
     #
     # The '-s' and '-w' ldflags help shrink the size of the binary.
     # Refer to 'go tool link' for details.
@@ -18,19 +18,16 @@ main() {
     # - https://gohugo.io/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/hugo.rb
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
-    declare -A app
     app['go']="$(koopa_locate_go)"
-    [[ -x "${app['go']}" ]] || return 1
-    declare -A dict=(
-        ['gocache']="$(koopa_init_dir 'gocache')"
-        ['gopath']="$(koopa_init_dir 'go')"
-        ['name']='hugo'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['gocache']="$(koopa_init_dir 'gocache')"
+    dict['gopath']="$(koopa_init_dir 'go')"
+    dict['name']='hugo'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['file']="v${dict['version']}.tar.gz"

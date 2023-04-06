@@ -3,20 +3,15 @@
 koopa_is_file_system_case_sensitive() {
     # """
     # Is the file system case sensitive?
-    # @note Updated 2022-02-24.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['find']="$(koopa_locate_find)"
-        ['wc']="$(koopa_locate_wc)"
-    )
-    [[ -x "${app['find']}" ]] || return 1
-    [[ -x "${app['wc']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="${PWD:?}"
-        ['tmp_stem']='.koopa.tmp.'
-    )
+    app['find']="$(koopa_locate_find)"
+    app['wc']="$(koopa_locate_wc)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${PWD:?}"
+    dict['tmp_stem']='.koopa.tmp.'
     dict['file1']="${dict['tmp_stem']}checkcase"
     dict['file2']="${dict['tmp_stem']}checkCase"
     koopa_touch "${dict['file1']}" "${dict['file2']}"

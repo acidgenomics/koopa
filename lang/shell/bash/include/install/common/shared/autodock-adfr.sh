@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ADFR suite.
-    # @note Updated 2022-10-19.
+    # @note Updated 2023-04-06.
     #
     # Linux:
     # - ADFRsuite_x86_64Linux_1.0.tar.gz
@@ -15,17 +15,14 @@ main() {
     # @seealso
     # - https://ccsb.scripps.edu/adfr/downloads/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['yes']="$(koopa_locate_yes)"
-    [[ -x "${app['yes']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-        ['name']='ADFRsuite'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+    dict['name']='ADFRsuite'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     if koopa_is_macos
     then

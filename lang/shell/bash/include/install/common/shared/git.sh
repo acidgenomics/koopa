@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-04-05.
     #
     # If system doesn't have gettext (msgfmt) installed:
     # Note that this doesn't work on Ubuntu 18 LTS.
@@ -17,7 +17,8 @@ main() {
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'autoconf' 'make'
     koopa_activate_app \
@@ -28,32 +29,24 @@ main() {
         'curl' \
         'pcre2' \
         'libiconv'
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash)"
-        ['less']="$(koopa_locate_less)"
-        ['make']="$(koopa_locate_make)"
-        ['perl']="$(koopa_locate_perl)"
-        ['python']="$(koopa_locate_python311)"
-        ['vim']="$(koopa_locate_vim)"
-    )
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['less']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['curl']="$(koopa_app_prefix 'curl')"
-        ['expat']="$(koopa_app_prefix 'expat')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['libiconv']="$(koopa_app_prefix 'libiconv')"
-        ['mirror_url']='https://mirrors.edge.kernel.org/pub/software/scm'
-        ['name']='git'
-        ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['pcre2']="$(koopa_app_prefix 'pcre2')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    app['bash']="$(koopa_locate_bash)"
+    app['less']="$(koopa_locate_less)"
+    app['make']="$(koopa_locate_make)"
+    app['perl']="$(koopa_locate_perl)"
+    app['python']="$(koopa_locate_python311)"
+    app['vim']="$(koopa_locate_vim)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['expat']="$(koopa_app_prefix 'expat')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['mirror_url']='https://mirrors.edge.kernel.org/pub/software/scm'
+    dict['name']='git'
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     koopa_assert_is_dir \
         "${dict['curl']}" \
         "${dict['expat']}" \

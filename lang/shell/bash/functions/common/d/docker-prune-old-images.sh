@@ -12,12 +12,10 @@ koopa_docker_prune_old_images() {
     # - https://docs.docker.com/engine/reference/commandline/image_prune/
     # - https://stackoverflow.com/questions/32723111
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['docker']="$(koopa_locate_docker)"
-    )
-    [[ -x "${app['docker']}" ]] || return 1
+    app['docker']="$(koopa_locate_docker)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert 'Pruning Docker images older than 3 months.'
     "${app['docker']}" image prune \
         --all \

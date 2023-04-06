@@ -3,16 +3,12 @@
 koopa_chgrp() {
     # """
     # Hardened version of coreutils chgrp (change user group).
-    # @note Updated 2021-10-29.
+    # @note Updated 2023-04-05.
     # """
-    local app chgrp dict pos
-    declare -A app=(
-        ['chgrp']="$(koopa_locate_chgrp)"
-    )
-    [[ -x "${app['chgrp']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-    )
+    local -A app dict
+    local -a chgrp pos
+    app['chgrp']="$(koopa_locate_chgrp)"
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -38,11 +34,11 @@ koopa_chgrp() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         chgrp=("${app['sudo']}" "${app['chgrp']}")
     else
         chgrp=("${app['chgrp']}")
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${chgrp[@]}" "$@"
     return 0
 }

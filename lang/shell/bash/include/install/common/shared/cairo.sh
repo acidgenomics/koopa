@@ -3,13 +3,14 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
     # - https://cairographics.org/releases/
     # """
-    local app build_deps conf_args deps dict
+    local -A app dict
+    local -a build_deps conf_args deps
     koopa_assert_has_no_args "$#"
     build_deps=('make' 'pkg-config')
     deps=(
@@ -37,15 +38,12 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://cairographics.org/releases/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

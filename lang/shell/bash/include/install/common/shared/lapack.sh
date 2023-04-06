@@ -3,21 +3,20 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
     # - https://github.com/Reference-LAPACK/lapack
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/lapack.rb
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'gcc'
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # Temporary fix for 3.11.0 download link.
     case "${dict['version']}" in
         '3.11.0')

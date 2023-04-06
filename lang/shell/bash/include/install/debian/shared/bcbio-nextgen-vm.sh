@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bcbio-nextgen-vm.
-    # @note Updated 2022-07-14.
+    # @note Updated 2023-04-05.
     #
     # Install pinned bcbio-nextgen v1.2.4:
     # > data_dir="${prefix}/v1.2.4"
@@ -15,17 +15,13 @@ main() {
     # > "${bin_dir}/bcbio_vm.py" --datadir="$data_dir" saveconfig
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash --allow-system)"
-    )
-    [[ -x "${app['bash']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['bash']="$(koopa_locate_bash --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # ARM is not yet supported. Check for Intel x86.
     case "${dict['arch']}" in
         'x86_64')

@@ -3,22 +3,16 @@
 koopa_ln() {
     # """
     # Hardened version of coreutils ln (symbolic link generator).
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-04-06.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     # """
-    local app dict ln ln_args mkdir pos rm
-    declare -A app=(
-        ['ln']="$(koopa_locate_ln --allow-system)"
-        ['mkdir']='koopa_mkdir'
-        ['rm']='koopa_rm'
-    )
-    [[ -x "${app['ln']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-        ['target_dir']=''
-        ['verbose']=0
-    )
+    local -A app dict
+    local -a ln ln_args mkdir pos rm
+    app['ln']="$(koopa_locate_ln --allow-system)"
+    dict['sudo']=0
+    dict['target_dir']=''
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -64,14 +58,13 @@ koopa_ln() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         ln=("${app['sudo']}" "${app['ln']}")
-        mkdir=("${app['mkdir']}" '--sudo')
-        rm=("${app['rm']}" '--sudo')
+        mkdir=('koopa_mkdir' '--sudo')
+        rm=('koopa_rm' '--sudo')
     else
         ln=("${app['ln']}")
-        mkdir=("${app['mkdir']}")
-        rm=("${app['rm']}")
+        mkdir=('koopa_mkdir')
+        rm=('koopa_rm')
     fi
     ln_args=('-f' '-n' '-s')
     [[ "${dict['verbose']}" -eq 1 ]] && ln_args+=('-v')
@@ -102,6 +95,7 @@ koopa_ln() {
             "${mkdir[@]}" "${dict['target_parent']}"
         fi
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${ln[@]}" "${ln_args[@]}"
     return 0
 }

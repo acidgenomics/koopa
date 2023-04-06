@@ -8,8 +8,8 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
-    local app conf_args deps dict
-    koopa_activate_app --build-only 'm4' 'make'
+    local -A app dict
+    local -a conf_args deps
     deps=(
         'bzip2'
         'xz'
@@ -17,22 +17,17 @@ main() {
         # > 'zstd'
     )
     koopa_is_macos && deps+=('gettext')
-    deps+=(
-        'libiconv'
-    )
+    deps+=('libiconv')
+    koopa_activate_app --build-only 'm4' 'make'
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['libiconv']="$(koopa_app_prefix 'libiconv')"
-        ['name']='elfutils'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['name']='elfutils'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
         "${dict['gettext']}" \
         "${dict['libiconv']}"

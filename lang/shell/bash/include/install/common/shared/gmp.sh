@@ -3,25 +3,23 @@
 main() {
     # """
     # Install GMP.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gmp.rb
     # - https://gmplib.org/manual/Build-Options
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'm4'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='gmp'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='gmp'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://gmplib.org/download/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

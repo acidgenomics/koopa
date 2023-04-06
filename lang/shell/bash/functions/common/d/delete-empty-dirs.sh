@@ -16,7 +16,7 @@ koopa_delete_empty_dirs() {
     # > koopa_mkdir 'a/aa/aaa/aaaa' 'b/bb/bbb/bbbb'
     # > koopa_delete_empty_dirs 'a' 'b'
     # """
-    local dir dirs prefix
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
     for prefix in "$@"
@@ -24,6 +24,8 @@ koopa_delete_empty_dirs() {
         while [[ -d "$prefix" ]] && \
             [[ -n "$(koopa_find_empty_dirs "$prefix")" ]]
         do
+            local -a dirs
+            local dir
             readarray -t dirs <<< "$(koopa_find_empty_dirs "$prefix")"
             koopa_is_array_non_empty "${dirs[@]:-}" || continue
             for dir in "${dirs[@]}"

@@ -9,16 +9,13 @@ koopa_current_flybase_version() {
     # > koopa_current_flybase_version
     # # FB2022_01
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['tail']="$(koopa_locate_tail --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['tail']}" ]] || return 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['tail']="$(koopa_locate_tail --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         koopa_parse_url --list-only "ftp://ftp.flybase.net/releases/" \
         | koopa_grep --pattern='^FB[0-9]{4}_[0-9]{2}$' --regex \

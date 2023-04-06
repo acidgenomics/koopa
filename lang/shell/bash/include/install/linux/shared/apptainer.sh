@@ -9,20 +9,18 @@ main() {
     # - https://github.com/apptainer/apptainer
     # - https://issueexplorer.com/issue/hpcng/singularity/6225
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go' 'make' 'pkg-config'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['gocache']="$(koopa_init_dir 'gocache')"
-        ['gopath']="$(koopa_init_dir 'go')"
-        ['name']='apptainer'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['version_file']='VERSION'
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['gocache']="$(koopa_init_dir 'gocache')"
+    dict['gopath']="$(koopa_init_dir 'go')"
+    dict['name']='apptainer'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['version_file']='VERSION'
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['file']="v${dict['version']}.tar.gz"

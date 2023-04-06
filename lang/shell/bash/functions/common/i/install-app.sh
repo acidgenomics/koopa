@@ -3,56 +3,53 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-05.
     # """
-    local app bash_vars bin_arr bool dict env_vars i man1_arr path_arr pos
+    local -A app bool dict
+    local -a bash_vars bin_arr env_vars man1_arr path_arr pos
+    local i
     koopa_assert_has_args "$#"
     koopa_assert_is_owner
     koopa_assert_has_no_envs
-    declare -A app
-    declare -A bool=(
-        # When enabled, this will change permissions on the top level directory
-        # of the automatically generated prefix.
-        ['auto_prefix']=0
-        # Download pre-built binary from our S3 bucket. Inspired by the
-        # Homebrew bottle approach.
-        ['binary']=0
-        # Should we copy the log files into the install prefix?
-        ['copy_log_files']=0
-        # Automatically install required dependencies (shared apps only).
-        ['deps']=1
-        # Will any individual programs be linked into koopa 'bin/'?
-        ['link_in_bin']=''
-        # Link corresponding man1 documentation files for app in bin.
-        ['link_in_man1']=''
-        # Create an unversioned symlink in koopa 'opt/' directory.
-        ['link_in_opt']=''
-        # This override is useful for app packages configuration.
-        ['prefix_check']=1
-        # Whether current user has access to our private AWS S3 bucket.
-        ['private']=0
-        # Push completed build to AWS S3 bucket (shared apps only).
-        ['push']=0
-        # This is useful for avoiding duplicate alert messages inside of
-        # nested install calls (e.g. Emacs installer handoff to GNU app).
-        ['quiet']=0
-        ['reinstall']=0
-        ['subshell']=1
-        ['update_ldconfig']=0
-        ['verbose']=0
-    )
-    declare -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['cpu_count']="$(koopa_cpu_count)"
-        ['installer']=''
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['mode']='shared'
-        ['name']=''
-        ['platform']='common'
-        ['prefix']=''
-        ['version']=''
-        ['version_key']=''
-    )
+    # When enabled, this will change permissions on the top level directory
+    # of the automatically generated prefix.
+    bool['auto_prefix']=0
+    # Download pre-built binary from our S3 bucket. Inspired by the
+    # Homebrew bottle approach.
+    bool['binary']=0
+    # Should we copy the log files into the install prefix?
+    bool['copy_log_files']=0
+    # Automatically install required dependencies (shared apps only).
+    bool['deps']=1
+    # Will any individual programs be linked into koopa 'bin/'?
+    bool['link_in_bin']=''
+    # Link corresponding man1 documentation files for app in bin.
+    bool['link_in_man1']=''
+    # Create an unversioned symlink in koopa 'opt/' directory.
+    bool['link_in_opt']=''
+    # This override is useful for app packages configuration.
+    bool['prefix_check']=1
+    # Whether current user has access to our private AWS S3 bucket.
+    bool['private']=0
+    # Push completed build to AWS S3 bucket (shared apps only).
+    bool['push']=0
+    # This is useful for avoiding duplicate alert messages inside of
+    # nested install calls (e.g. Emacs installer handoff to GNU app).
+    bool['quiet']=0
+    bool['reinstall']=0
+    bool['subshell']=1
+    bool['update_ldconfig']=0
+    bool['verbose']=0
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['cpu_count']="$(koopa_cpu_count)"
+    dict['installer']=''
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['mode']='shared'
+    dict['name']=''
+    dict['platform']='common'
+    dict['prefix']=''
+    dict['version']=''
+    dict['version_key']=''
     pos=()
     while (("$#"))
     do
@@ -233,7 +230,7 @@ ${dict['version2']}"
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
             app['sudo']="$(koopa_locate_sudo)"
-            [[ -x "${app['sudo']}" ]] || return 1
+            koopa_assert_is_executable "${app['sudo']}"
             # -v, --validate
             "${app['sudo']}" -v
             ;;
@@ -339,9 +336,7 @@ ${dict['version2']}"
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
-        [[ -x "${app['bash']}" ]] || return 1
-        [[ -x "${app['env']}" ]] || return 1
-        [[ -x "${app['tee']}" ]] || return 1
+        koopa_assert_is_executable "${app[@]}"
         # Configure 'PATH' string.
         path_arr=(
             '/usr/bin'
@@ -458,8 +453,7 @@ include/header.sh"
                 then
                     for i in "${!bin_arr[@]}"
                     do
-                        local dict2
-                        declare -A dict2
+                        local -A dict2
                         dict2['name']="${bin_arr[$i]}"
                         dict2['source']="${dict['prefix']}/bin/${dict2['name']}"
                         koopa_link_in_bin \
@@ -478,8 +472,7 @@ include/header.sh"
                 then
                     for i in "${!man1_arr[@]}"
                     do
-                        local dict2
-                        declare -A dict2
+                        local -A dict2
                         dict2['name']="${man1_arr[$i]}"
                         dict2['mf1']="${dict['prefix']}/share/man/\
 man1/${dict2['name']}"

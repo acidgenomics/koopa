@@ -3,7 +3,7 @@
 main() {
     # """
     # Install readline.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # Check linkage on Linux with:
     # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
@@ -17,20 +17,18 @@ main() {
     # - https://www.linuxfromscratch.org/lfs/view/11.1-systemd/chapter08/
     #     readline.html
     # """
-    local app conf_args dict make_args
+    local -A app dict
+    local -a conf_args make_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'ncurses'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='readline'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='readline'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

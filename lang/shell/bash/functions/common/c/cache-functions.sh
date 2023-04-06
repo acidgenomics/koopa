@@ -5,11 +5,9 @@ koopa_cache_functions() {
     # Cache all koopa functions.
     # @note Updated 2022-05-23.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['shell_prefix']="${dict['koopa_prefix']}/lang/shell"
     koopa_cache_functions_dir \
         "${dict['shell_prefix']}/bash/functions/activate" \

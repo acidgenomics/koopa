@@ -3,21 +3,19 @@
 koopa_fastq_lanepool() {
     # """
     # Pool lane-split FASTQ files.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_fastq_lanepool --source-dir='fastq/'
     # """
-    local app basenames dict fastq_files head i out tail
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
-    [[ -x "${app['cat']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']='lanepool'
-        ['source_dir']="${PWD:?}"
-        ['target_dir']="${PWD:?}"
-    )
+    local -A app dict
+    local -a basenames fastq_files head out tail
+    local i
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']='lanepool'
+    dict['source_dir']="${PWD:?}"
+    dict['target_dir']="${PWD:?}"
     while (("$#"))
     do
         case "$1" in

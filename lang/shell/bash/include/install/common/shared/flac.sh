@@ -3,25 +3,22 @@
 main() {
     # """
     # Install FLAC.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://xiph.org/flac/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/flac.rb
     # - https://www.linuxfromscratch.org/blfs/view/svn/multimedia/flac.html
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='flac'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='flac'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://downloads.xiph.org/releases/\
 ${dict['name']}/${dict['file']}"

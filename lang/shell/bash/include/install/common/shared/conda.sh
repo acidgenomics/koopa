@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -11,19 +11,16 @@ main() {
     # - https://github.com/conda/conda-libmamba-solver
     # - https://github.com/mamba-org/mamba
     # """
-    local app dict
-    declare -A app
+    local -A app dict
     app['bash']="$(koopa_locate_bash --allow-system)"
-    [[ -x "${app['bash']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-        ['from_latest']=0
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['os_type']="$(koopa_os_type)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['py_version']="3.10"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+    dict['from_latest']=0
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['os_type']="$(koopa_os_type)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['py_version']="3.10"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in
         'darwin'*)

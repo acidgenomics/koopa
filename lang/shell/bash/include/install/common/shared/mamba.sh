@@ -24,8 +24,8 @@ main() {
     # - https://github.com/Homebrew/brew/blob/3.6.14/Library/
     #     Homebrew/formula.rb#L1539
     # """
-    local app cmake_args deps dict
-    declare -A app dict
+    local -A app dict
+    local -a cmake_args deps
     deps=(
         'bzip2'
         'zstd'
@@ -46,7 +46,7 @@ main() {
     )
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['fmt']="$(koopa_app_prefix 'fmt')"

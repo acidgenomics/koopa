@@ -3,18 +3,14 @@
 koopa_view_latest_tmp_log_file() {
     # """
     # View the latest temporary log file.
-    # @note Updated 2022-01-17.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['tail']="$(koopa_locate_tail)"
-    )
-    [[ -x "${app['tail']}" ]] || return 1
-    declare -A dict=(
-        ['tmp_dir']="${TMPDIR:-/tmp}"
-        ['user_id']="$(koopa_user_id)"
-    )
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['tmp_dir']="${TMPDIR:-/tmp}"
+    dict['user_id']="$(koopa_user_id)"
     dict['log_file']="$( \
         koopa_find \
             --max-depth=1 \

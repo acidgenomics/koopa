@@ -3,20 +3,20 @@
 koopa_update_koopa() {
     # """
     # Update koopa installation.
-    # @note Updated 2023-02-27.
+    # @note Updated 2023-04-06.
     #
     # Update of pinned stable releases is intentionally not supported.
     #
     # This handles updates to Zsh functions that are changed to group
     # non-writable permissions, so Zsh passes 'compaudit' checks.
     # """
-    local dict prefix prefixes
+    local -A dict
+    local -a prefixes
+    local prefix
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
-    declare -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['user_id']="$(koopa_user_id)"
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['user_id']="$(koopa_user_id)"
     if ! koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
         koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."

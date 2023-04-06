@@ -3,15 +3,20 @@
 koopa_parse_url() {
     # """
     # Parse a URL using cURL.
-    # @note Updated 2022-09-01.
+    # @note Updated 2023-04-05.
+    #
+    # Don't use 'koopa_print' here, since we need to pass binary output
+    # in some cases for GPG key configuration.
+    #
+    # Keep in mind that '--disable' must come first in curl args.
     # """
-    local app curl_args pos
+    local -A app
+    local -a curl_args pos
     koopa_assert_has_args "$#"
-    declare -A app
     app['curl']="$(koopa_locate_curl --allow-system)"
-    [[ -x "${app['curl']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     curl_args=(
-        '--disable' # Ignore '~/.curlrc'. Must come first.
+        '--disable'
         '--fail'
         '--location'
         '--retry' 5
@@ -41,8 +46,6 @@ koopa_parse_url() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
     curl_args+=("${1:?}")
-    # NOTE Don't use 'koopa_print' here, since we need to pass binary output
-    # in some cases for GPG key configuration.
     "${app['curl']}" "${curl_args[@]}"
     return 0
 }

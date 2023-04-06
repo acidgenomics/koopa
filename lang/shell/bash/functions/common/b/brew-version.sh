@@ -10,14 +10,12 @@ koopa_brew_version() {
     # # 9.1
     # # 4.9.0
     # """
-    local app brew
+    local -A app
+    local brew
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['jq']="$(koopa_locate_jq)"
-    )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
+    app['brew']="$(koopa_locate_brew)"
+    app['jq']="$(koopa_locate_jq)"
+    koopa_assert_is_executable "${app[@]}"
     for brew in "$@"
     do
         local str

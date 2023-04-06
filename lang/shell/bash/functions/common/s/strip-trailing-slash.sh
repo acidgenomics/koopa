@@ -17,7 +17,7 @@ koopa_strip_trailing_slash() {
     # """
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi

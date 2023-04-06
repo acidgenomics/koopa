@@ -3,12 +3,13 @@
 main() {
     # """
     # Install xorg-libxcb.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'make' \
@@ -20,18 +21,13 @@ main() {
         'xorg-libpthread-stubs' \
         'xorg-libxau' \
         'xorg-libxdmcp'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-    )
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libxcb'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['make']="$(koopa_locate_make)"
+    app['python']="$(koopa_locate_python311 --realpath)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='libxcb'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://xcb.freedesktop.org/dist/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

@@ -6,23 +6,20 @@
 main() {
     # """
     # Install Lua.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - http://www.lua.org/manual/
     # - https://github.com/Homebrew/legacy-homebrew/pull/5043
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['name']='lua'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='lua'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="http://www.lua.org/ftp/${dict['file']}"
     if koopa_is_macos

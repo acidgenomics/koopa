@@ -3,7 +3,7 @@
 koopa_git_rename_master_to_main() {
     # """
     # Rename default branch from "master" to "main".
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://hackernoon.com/how-to-rename-your-git-repositories-
@@ -15,16 +15,13 @@ koopa_git_rename_master_to_main() {
     # @examples
     # > koopa_git_rename_master_to_main "${HOME}/git/example"
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
-    declare -A dict=(
-        ['origin']='origin'
-        ['old_branch']='master'
-        ['new_branch']='main'
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['origin']='origin'
+    dict['old_branch']='master'
+    dict['new_branch']='main'
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.

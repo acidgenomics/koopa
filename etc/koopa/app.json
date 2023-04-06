@@ -1045,17 +1045,6 @@
     "url": ["https://github.com/docker/docker-credential-helpers/"],
     "version": "0.7.0"
   },
-  "dog": {
-    "aliases": {
-      "homebrew": true
-    },
-    "bin": ["dog"],
-    "build_dependencies": ["git", "rust"],
-    "date": "2022-09-26",
-    "dependencies": ["openssl1"],
-    "url": ["https://github.com/ogham/dog/"],
-    "version": "0.1.0"
-  },
   "doom-emacs": {
     "date": "2023-03-30",
     "dependencies": ["chemacs", "emacs"],
@@ -2830,6 +2819,7 @@
       "zlib"
     ],
     "large": true,
+    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "16.0.0"
   },
@@ -2950,7 +2940,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
     "conservative": true,
-    "date": "2023-03-28",
+    "date": "2023-04-06",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -2976,7 +2966,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.03.28"
+    "version": "2023.04.06"
   },
   "man-db": {
     "aliases": {
@@ -3159,7 +3149,6 @@
       "bioconda": "sra-tools",
       "homebrew": "sratoolkit"
     },
-    "arch": "amd64",
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["cmake"],
     "date": "2023-04-03",
@@ -3369,10 +3358,10 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-03-17",
+    "date": "2023-04-05",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.77.1"
+    "version": "0.78.0"
   },
   "oniguruma": {
     "aliases": {
@@ -3390,6 +3379,26 @@
     "date": "2022-08-30",
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
+  },
+  "ont-bonito": {
+    "bin": ["bonito"],
+    "date": "2024-04-04",
+    "dependencies": ["python3.11"],
+    "enabled": false,
+    "large": true,
+    "url": ["https://github.com/nanoporetech/bonito/"],
+    "version": "0.7.0"
+  },
+  "ont-dorado": {
+    "bin": ["dorado"],
+    "build_dependencies": ["autoconf", "automake", "cmake", "git"],
+    "date": "2024-04-04",
+    "dependencies": ["hdf5", "openssl3", "zstd"],
+    "enabled": false,
+    "large": true,
+    "notes": ["Need to add support for nvidia-cuda-toolkit."],
+    "url": ["https://github.com/nanoporetech/dorado/"],
+    "version": "0.2.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -3467,18 +3476,6 @@
     "dependencies": ["libedit", "openssl3", "zlib"],
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
-  },
-  "openssl1": {
-    "aliases": {
-      "fedora": "openssl11-devel",
-      "homebrew": "openssl@1.1"
-    },
-    "build_dependencies": ["make", "pkg-config"],
-    "conservative": true,
-    "date": "2023-02-08",
-    "dependencies": ["ca-certificates"],
-    "url": ["https://www.openssl.org/source/"],
-    "version": "1.1.1t"
   },
   "openssl3": {
     "aliases": {
@@ -3854,7 +3851,7 @@
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-13",
+    "date": "2023-04-06",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3871,7 +3868,7 @@
     ],
     "man1": ["python3.10.1"],
     "url": ["https://www.python.org/"],
-    "version": "3.10.10"
+    "version": "3.10.11"
   },
   "python3.11": {
     "aliases": {
@@ -3880,7 +3877,7 @@
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-13",
+    "date": "2023-04-06",
     "dependencies": [
       "bzip2",
       "expat",
@@ -3897,7 +3894,7 @@
     ],
     "man1": ["python3.11.1"],
     "url": ["https://www.python.org/"],
-    "version": "3.11.2"
+    "version": "3.11.3"
   },
   "quarto": {
     "aliases": {
@@ -4215,11 +4212,11 @@
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-04-06",
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.2.1"
+    "version": "3.2.2"
   },
   "ruff": {
     "bin": ["ruff"],
@@ -4784,7 +4781,7 @@
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
     "build_dependencies": ["make", "patch"],
     "conservative": true,
-    "date": "2022-09-01",
+    "date": "2023-04-06",
     "dependencies": ["bzip2"],
     "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
     "url": ["http://infozip.sourceforge.net/UnZip.html"],
@@ -5202,7 +5199,7 @@
     "bin": ["zip"],
     "build_dependencies": ["gcc", "make", "patch"],
     "conservative": true,
-    "date": "2022-10-12",
+    "date": "2023-04-06",
     "dependencies": ["bzip2"],
     "man1": ["zip.1"],
     "url": ["http://infozip.sourceforge.net/Zip.html"],

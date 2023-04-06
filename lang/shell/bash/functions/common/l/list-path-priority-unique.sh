@@ -3,17 +3,13 @@
 koopa_list_path_priority_unique() {
     # """
     # Split PATH string by ':' delim into lines but only return uniques.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['tac']="$(koopa_locate_tac)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['tac']}" ]] || return 1
-    declare -A dict
+    app['awk']="$(koopa_locate_awk)"
+    app['tac']="$(koopa_locate_tac)"
+    koopa_assert_is_executable "${app[@]}"
     dict['string']="${1:-$PATH}"
     # shellcheck disable=SC2016
     dict['string']="$( \

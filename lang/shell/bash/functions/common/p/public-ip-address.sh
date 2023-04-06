@@ -18,9 +18,9 @@ koopa_public_ip_address() {
     # - https://dev.to/adityathebe/a-handy-way-to-know-your-public-ip-address-
     #     with-dns-servers-4nmn
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['dig']="$(koopa_locate_dig --allow-missing)"
     if [[ -x "${app['dig']}" ]]
     then

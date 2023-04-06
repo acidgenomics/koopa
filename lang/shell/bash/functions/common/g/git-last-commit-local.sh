@@ -13,11 +13,10 @@ koopa_git_last_commit_local() {
     # > koopa_git_last_commit_local "${HOME}/git/monorepo"
     # # 9b7217c27858dd7ebffdf5a8ba66a6ea56ac5e1d
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app dict
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['ref']='HEAD'
     koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.

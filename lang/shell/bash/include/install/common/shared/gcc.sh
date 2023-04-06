@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-04-06.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -62,7 +62,8 @@ main() {
     #   https://www.linuxquestions.org/questions/linux-software-2/
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     deps=(
@@ -73,22 +74,19 @@ main() {
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['gmp']="$(koopa_app_prefix 'gmp')"
-        ['gnu_mirror']="$(koopa_gnu_mirror_url)"
-        ['isl']="$(koopa_app_prefix 'isl')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['mpc']="$(koopa_app_prefix 'mpc')"
-        ['mpfr']="$(koopa_app_prefix 'mpfr')"
-        ['name']='gcc'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    dict['gmp']="$(koopa_app_prefix 'gmp')"
+    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
+    dict['isl']="$(koopa_app_prefix 'isl')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['mpc']="$(koopa_app_prefix 'mpc')"
+    dict['mpfr']="$(koopa_app_prefix 'mpfr')"
+    dict['name']='gcc'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     koopa_assert_is_dir \
         "${dict['gmp']}" \
         "${dict['isl']}" \

@@ -3,7 +3,7 @@
 koopa_sambamba_sort_per_sample() {
     # """
     # Sort a BAM file by genomic coordinates.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-04-06.
     #
     # Sorts by genomic coordinates by default.
     # Use '-n' flag to sort by read name instead.
@@ -11,15 +11,12 @@ koopa_sambamba_sort_per_sample() {
     # @seealso
     # - https://lomereiter.github.io/sambamba/docs/sambamba-sort.html
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || return 1
-    declare -A dict=(
-        ['input']="${1:?}"
-        ['threads']="$(koopa_cpu_count)"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['input']="${1:?}"
+    dict['threads']="$(koopa_cpu_count)"
     koopa_assert_is_file "${dict['input']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \

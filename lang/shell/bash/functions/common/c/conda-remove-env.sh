@@ -12,15 +12,12 @@ koopa_conda_remove_env() {
     # @examples
     # > koopa_conda_remove_env 'kallisto' 'salmon'
     # """
-    local app dict name
+    local -A app dict
+    local name
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-    )
-    [[ -x "${app['conda']}" ]] || return 1
-    declare -A dict=(
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['nounset']="$(koopa_boolean_nounset)"
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     for name in "$@"
     do

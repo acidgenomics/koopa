@@ -8,20 +8,18 @@
 main() {
     # """
     # Install Nextflow.
-    # @note Updated 2022-12-15.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/nextflow-io/nextflow/
     # - https://get.nextflow.io/
     # - https://nextflow.io/releases/v${dict['version']}/nextflow
     # """
-    local dict
-    declare -A dict=(
-        ['openjdk']="$(koopa_app_prefix 'openjdk')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['script']='nextflow'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    local -A dict
+    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['script']='nextflow'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['openjdk']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     koopa_download 'https://get.nextflow.io' "${dict['script']}"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_install_openssl1() {
+koopa_install_ont_bonito() {
     koopa_install_app \
-        --name='openssl1' \
+        --name='ont-bonito' \
         "$@"
 }
