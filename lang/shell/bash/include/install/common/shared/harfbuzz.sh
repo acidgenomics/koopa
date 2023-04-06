@@ -8,7 +8,7 @@
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2023-01-03.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -17,7 +17,7 @@ main() {
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/harfbuzz.html
     # - https://github.com/harfbuzz/harfbuzz/blob/main/.circleci/config.yml
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'cmake' \
@@ -32,18 +32,13 @@ main() {
         'glib' \
         'freetype' \
         'icu4c'
-    local -A app=(
-        ['meson']="$(koopa_locate_meson)"
-        ['ninja']="$(koopa_locate_ninja)"
-    )
-    [[ -x "${app['meson']}" ]] || exit 1
-    [[ -x "${app['ninja']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='harfbuzz'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['meson']="$(koopa_locate_meson)"
+    app['ninja']="$(koopa_locate_ninja)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='harfbuzz'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
