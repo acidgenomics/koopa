@@ -3,14 +3,13 @@
 koopa_debian_apt_delete_repo() {
     # """
     # Delete an apt repo file.
-    # @note Updated 2022-07-19.
+    # @note Updated 2023-04-06.
     # """
-    local dict name
+    local -A dict
+    local name
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A dict=(
-        ['prefix']="$(koopa_debian_apt_sources_prefix)"
-    )
+    dict['prefix']="$(koopa_debian_apt_sources_prefix)"
     for name in "$@"
     do
         local file
