@@ -384,16 +384,14 @@ koopa_linux_configure_system_lmod() {
 }
 
 koopa_linux_configure_system_rstudio_server() {
-    local app conf_lines dict
+    local -A app dict
+    local -a conf_lines
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app dict
     app['r']="$(koopa_locate_system_r --realpath)"
     app['rscript']="$(koopa_locate_system_rscript)"
     app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"
-    [[ -x "${app['r']}" ]] || exit 1
-    [[ -x "${app['rscript']}" ]] || exit 1
-    [[ -x "${app['rstudio_server']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name']='rstudio-server'
     koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \
@@ -920,8 +918,7 @@ koopa_linux_update_ldconfig() {
     koopa_assert_is_admin
     app['ldconfig']="$(koopa_linux_locate_ldconfig)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['ldconfig']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }

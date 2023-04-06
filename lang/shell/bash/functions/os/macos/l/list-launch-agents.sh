@@ -8,7 +8,7 @@ koopa_macos_list_launch_agents() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['ls']="$(koopa_locate_ls)"
-    [[ -x "${app['ls']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['ls']}" \
         --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \

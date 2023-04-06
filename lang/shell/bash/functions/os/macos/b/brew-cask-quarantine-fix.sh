@@ -10,8 +10,7 @@ koopa_macos_brew_cask_quarantine_fix() {
     koopa_assert_is_admin
     app['sudo']="$(koopa_locate_sudo)"
     app['xattr']="$(koopa_macos_locate_xattr)"
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['xattr']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['xattr']}" -r -d \
         'com.apple.quarantine' \
         '/Applications/'*'.app'
