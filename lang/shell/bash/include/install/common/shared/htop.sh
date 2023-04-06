@@ -3,9 +3,9 @@
 main() {
     # """
     # Install htop.
-    # @note Updated 2022-07-11.
+    # @note Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'autoconf' \
@@ -14,15 +14,12 @@ main() {
     koopa_activate_app \
         'ncurses' \
         'python3.11'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='htop'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='htop'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}-dev/${dict['name']}/\
 archive/${dict['file']}"

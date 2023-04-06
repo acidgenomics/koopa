@@ -3,20 +3,17 @@
 main() {
     # """
     # Install Go.
-    # @note Updated 2022-08-02.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/go.rb
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app
-    local -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. "amd64".
-        ['name']='go'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch2)" # e.g. "amd64".
+    dict['name']='go'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_macos
     then
         dict['os_id']='darwin'

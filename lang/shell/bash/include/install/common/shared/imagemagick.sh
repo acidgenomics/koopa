@@ -6,7 +6,7 @@
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # Also consider requiring:
     # - ghostscript
@@ -30,7 +30,8 @@ main() {
     # - https://imagemagick.org/script/advanced-linux-installation.php
     # - https://download.imagemagick.org/ImageMagick/download/releases/
     # """
-    local app conf_args deps dict
+    local -A app dict
+    local -a conf_args deps
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
@@ -67,14 +68,11 @@ main() {
         deps+=('gcc')
     fi
     koopa_activate_app "${deps[@]}"
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     dict['file']="ImageMagick-${dict['version']}.tar.xz"
     dict['url']="https://imagemagick.org/archive/releases/${dict['file']}"

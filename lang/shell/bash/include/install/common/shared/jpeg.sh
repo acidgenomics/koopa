@@ -3,23 +3,21 @@
 main() {
     # """
     # Install jpeg.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/jpeg.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='jpeg'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='jpeg'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="jpegsrc.v${dict['version']}.tar.gz"
     dict['url']="https://www.ijg.org/files/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2022-12-01.
+    # @note Updated 2023-04-06.
     #
     # @section Required system dependencies:
     #
@@ -41,17 +41,15 @@ main() {
     # - GHCup may help with install support on ARM.
     #   https://github.com/haskell/ghcup-metadata/blob/master/ghcup-0.0.7.yaml
     # """
-    local app dict stack_args
+    local -A app dict
+    local -a stack_args
     koopa_assert_is_not_aarch64
     koopa_assert_has_no_args "$#"
-    local -A app
-    local -A dict=(
-        ['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='stack'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='stack'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     app['stack']="${dict['prefix']}/bin/stack"
     if koopa_is_linux
     then
