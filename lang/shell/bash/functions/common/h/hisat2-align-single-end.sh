@@ -3,7 +3,7 @@
 koopa_hisat2_align_single_end() {
     # """
     # Run HISAT2 aligner on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-06.
     #
     # > koopa_hisat2_align_single_end \
     # >     --fastq-dir='fastq' \
@@ -11,21 +11,21 @@ koopa_hisat2_align_single_end() {
     # >     --index-dir='hisat2-index' \
     # >     --output-dir='hisat2'
     # """
-    local dict fastq_file fastq_files
+    local -A dict
+    local -a fastq_files
+    local fastq_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        # e.g. 'fastq'
-        ['fastq_dir']=''
-        # e.g. '.fastq.gz'
-        ['fastq_tail']=''
-        # e.g. 'hisat2-index'.
-        ['index_dir']=''
-        # Using salmon fragment library type conventions here.
-        ['lib_type']='A'
-        ['mode']='single-end'
-        # e.g. 'hisat2'.
-        ['output_dir']=''
-    )
+    # e.g. 'fastq'
+    dict['fastq_dir']=''
+    # e.g. '.fastq.gz'
+    dict['fastq_tail']=''
+    # e.g. 'hisat2-index'.
+    dict['index_dir']=''
+    # Using salmon fragment library type conventions here.
+    dict['lib_type']='A'
+    dict['mode']='single-end'
+    # e.g. 'hisat2'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

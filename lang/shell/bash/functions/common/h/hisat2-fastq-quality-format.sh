@@ -3,15 +3,13 @@
 koopa_hisat2_fastq_quality_format() {
     # """
     # Determine whether we should set FASTQ quality score (Phred) flag.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-04-06.
     #
     # Consider adding support for Solexa sequencing here.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['fastq_file']="${1:?}"
-    )
+    dict['fastq_file']="${1:?}"
     koopa_assert_is_file "${dict['fastq_file']}"
     dict['format']="$( \
         koopa_fastq_detect_quality_format "${dict['fastq_file']}" \

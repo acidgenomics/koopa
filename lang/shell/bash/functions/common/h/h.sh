@@ -3,14 +3,12 @@
 koopa_h() {
     # """
     # Header message generator.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_ge "$#" 2
-    local -A dict=(
-        ['emoji']="$(koopa_acid_emoji)"
-        ['level']="${1:?}"
-    )
+    dict['emoji']="$(koopa_acid_emoji)"
+    dict['level']="${1:?}"
     shift 1
     case "${dict['level']}" in
         '1')

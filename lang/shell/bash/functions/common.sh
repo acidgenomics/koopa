@@ -8156,16 +8156,13 @@ koopa_git_remote_url() {
 }
 
 koopa_git_rename_master_to_main() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    local -A dict=(
-        ['origin']='origin'
-        ['old_branch']='master'
-        ['new_branch']='main'
-    )
+    dict['origin']='origin'
+    dict['old_branch']='master'
+    dict['new_branch']='main'
     koopa_assert_is_git_repo "$@"
     (
         local repo
@@ -8235,13 +8232,11 @@ koopa_git_reset_fork_to_upstream() {
         local repo
         for repo in "$@"
         do
-            local dict
+            local -A dict
             koopa_cd "$repo"
-            local -A dict=(
-                ['branch']="$(koopa_git_default_branch "${PWD:?}")"
-                ['origin']='origin'
-                ['upstream']='upstream'
-            )
+            dict['branch']="$(koopa_git_default_branch "${PWD:?}")"
+            dict['origin']='origin'
+            dict['upstream']='upstream'
             "${app['git']}" checkout "${dict['branch']}"
             "${app['git']}" fetch "${dict['upstream']}"
             "${app['git']}" reset --hard "${dict['upstream']}/${dict['branch']}"
@@ -8318,16 +8313,13 @@ koopa_git_rm_untracked() {
 }
 
 koopa_git_set_remote_url() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    local -A dict=(
-        ['origin']='origin'
-        ['prefix']="${1:?}"
-        ['url']="${2:?}"
-    )
+    dict['origin']='origin'
+    dict['prefix']="${1:?}"
+    dict['url']="${2:?}"
     koopa_assert_is_git_repo "${dict['prefix']}"
     (
         koopa_cd "${dict['prefix']}"
@@ -8347,10 +8339,10 @@ koopa_git_submodule_init() {
         local repo
         for repo in "$@"
         do
-            local dict lines string
-            local -A dict=(
-                ['module_file']='.gitmodules'
-            )
+            local -A dict
+            local -a lines
+            local string
+            dict['module_file']='.gitmodules'
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Initializing submodules in '${repo}'."
             koopa_cd "$repo"
@@ -8526,21 +8518,19 @@ koopa_gpg_restart() {
 }
 
 koopa_grep() {
-    local app dict grep_args grep_cmd
+    local -A app dict
+    local -a grep_args grep_cmd
     koopa_assert_has_args "$#"
-    local -A app
-    local -A dict=(
-        ['boolean']=0
-        ['engine']="${KOOPA_GREP_ENGINE:-}"
-        ['file']=''
-        ['invert_match']=0
-        ['only_matching']=0
-        ['mode']='fixed' # or 'regex'.
-        ['pattern']=''
-        ['stdin']=1
-        ['string']=''
-        ['sudo']=0
-    )
+    dict['boolean']=0
+    dict['engine']="${KOOPA_GREP_ENGINE:-}"
+    dict['file']=''
+    dict['invert_match']=0
+    dict['only_matching']=0
+    dict['mode']='fixed' # or 'regex'.
+    dict['pattern']=''
+    dict['stdin']=1
+    dict['string']=''
+    dict['sudo']=0
     while (("$#"))
     do
         case "$1" in
@@ -8740,12 +8730,10 @@ koopa_gsub() {
 }
 
 koopa_h() {
-    local dict
+    local -A dict
     koopa_assert_has_args_ge "$#" 2
-    local -A dict=(
-        ['emoji']="$(koopa_acid_emoji)"
-        ['level']="${1:?}"
-    )
+    dict['emoji']="$(koopa_acid_emoji)"
+    dict['level']="${1:?}"
     shift 1
     case "${dict['level']}" in
         '1')
@@ -8861,12 +8849,10 @@ koopa_has_private_access() {
 }
 
 koopa_header() {
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['lang']="$(koopa_lowercase "${1:?}")"
-        ['prefix']="$(koopa_koopa_prefix)/lang"
-    )
+    dict['lang']="$(koopa_lowercase "${1:?}")"
+    dict['prefix']="$(koopa_koopa_prefix)/lang"
     case "${dict['lang']}" in
         'bash' | \
         'posix' | \
@@ -9057,17 +9043,17 @@ koopa_hisat2_align_paired_end_per_sample() {
 }
 
 koopa_hisat2_align_paired_end() {
-    local dict fastq_r1_files fastq_r1_file
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['fastq_dir']=''
-        ['fastq_r1_tail']=''
-        ['fastq_r2_tail']=''
-        ['index_dir']=''
-        ['lib_type']='A'
-        ['mode']='paired-end'
-        ['output_dir']=''
-    )
+    dict['fastq_dir']=''
+    dict['fastq_r1_tail']=''
+    dict['fastq_r2_tail']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['mode']='paired-end'
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -9296,16 +9282,16 @@ koopa_hisat2_align_single_end_per_sample() {
 }
 
 koopa_hisat2_align_single_end() {
-    local dict fastq_file fastq_files
+    local -A dict
+    local -a fastq_files
+    local fastq_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['fastq_dir']=''
-        ['fastq_tail']=''
-        ['index_dir']=''
-        ['lib_type']='A'
-        ['mode']='single-end'
-        ['output_dir']=''
-    )
+    dict['fastq_dir']=''
+    dict['fastq_tail']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['mode']='single-end'
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -9432,11 +9418,9 @@ koopa_hisat2_fastq_library_type() {
 }
 
 koopa_hisat2_fastq_quality_format() {
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['fastq_file']="${1:?}"
-    )
+    dict['fastq_file']="${1:?}"
     koopa_assert_is_file "${dict['fastq_file']}"
     dict['format']="$( \
         koopa_fastq_detect_quality_format "${dict['fastq_file']}" \
@@ -9667,12 +9651,12 @@ koopa_install_agat() {
 }
 
 koopa_install_all_apps() {
-    local app_name app_names dict push_apps
+    local -A dict
+    local -a app_names push_apps
+    local app_name
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=6
-    )
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=6
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
@@ -11240,23 +11224,19 @@ koopa_install_kallisto() {
 }
 
 koopa_install_koopa() {
-    local bool dict
+    local -A bool dict
     koopa_assert_is_installed \
-        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
-        'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
-    local -A bool=(
-        ['add_to_user_profile']=1
-        ['interactive']=1
-        ['passwordless_sudo']=0
-        ['shared']=0
-    )
-    local -A dict=(
-        ['config_prefix']="$(koopa_config_prefix)"
-        ['prefix']=''
-        ['source_prefix']="$(koopa_koopa_prefix)"
-        ['user_profile']="$(koopa_find_user_profile)"
-        ['xdg_data_home']="$(koopa_xdg_data_home)"
-    )
+        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
+        'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
+    bool['add_to_user_profile']=1
+    bool['interactive']=1
+    bool['passwordless_sudo']=0
+    bool['shared']=0
+    dict['config_prefix']="$(koopa_config_prefix)"
+    dict['prefix']=''
+    dict['source_prefix']="$(koopa_koopa_prefix)"
+    dict['user_profile']="$(koopa_find_user_profile)"
+    dict['xdg_data_home']="$(koopa_xdg_data_home)"
     dict['koopa_prefix_system']='/opt/koopa'
     dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
     koopa_is_admin && bool['shared']=1
@@ -12090,13 +12070,11 @@ koopa_install_python310() {
 }
 
 koopa_install_python311() {
-    local dict
-    local -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['man1_prefix']="$(koopa_man1_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    local -A dict
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['man1_prefix']="$(koopa_man1_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     koopa_install_app \
         --installer='python' \
         --name='python3.11' \
@@ -12799,10 +12777,8 @@ koopa_invalid_arg() {
 }
 
 koopa_ip_address() {
-    local dict
-    local -A dict=(
-        ['type']='public'
-    )
+    local -A dict
+    dict['type']='public'
     while (("$#"))
     do
         case "$1" in

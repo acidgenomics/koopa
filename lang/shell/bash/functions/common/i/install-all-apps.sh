@@ -3,17 +3,17 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
     # """
-    local app_name app_names dict push_apps
+    local -A dict
+    local -a app_names push_apps
+    local app_name
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=6
-    )
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=6
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
