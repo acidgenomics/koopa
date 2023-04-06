@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2022-08-11.
+    # @note Updated 2023-04-06.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -20,7 +20,8 @@ main() {
     # - https://docs.moodle.org/dev/How_to_create_a_patch
     # - https://docs.moodle.org/dev/How_to_apply_a_patch
     # """
-    local app dict scons_args
+    local -A app dict
+    local -a scons_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app \
@@ -29,19 +30,13 @@ main() {
         'apr-util' \
         'openssl3' \
         'scons'
-    local -A app=(
-        ['cat']="$(koopa_locate_cat)"
-        ['patch']="$(koopa_locate_patch)"
-        ['scons']="$(koopa_locate_scons)"
-    )
-    [[ -x "${app['cat']}" ]] || exit 1
-    [[ -x "${app['patch']}" ]] || exit 1
-    [[ -x "${app['scons']}" ]] || exit 1
-    local -A dict=(
-        ['name']='serf'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['cat']="$(koopa_locate_cat)"
+    app['patch']="$(koopa_locate_patch)"
+    app['scons']="$(koopa_locate_scons)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='serf'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://www.apache.org/dist/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

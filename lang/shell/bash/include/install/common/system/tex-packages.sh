@@ -3,22 +3,21 @@
 main() {
     # """
     # Install TeX packages.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-04-06.
     #
     # Including both curl and wget here is useful, to avoid SSH certificate
     # check timeouts and/or other issues.
     # """
-    local app package packages
+    local -A app
+    local -a pkgs
+    local pkg
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
-    local -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['tlmgr']="$(koopa_locate_tlmgr)"
-    )
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['tlmgr']}" ]] || exit 1
+    app['sudo']="$(koopa_locate_sudo)"
+    app['tlmgr']="$(koopa_locate_tlmgr)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['tlmgr']}" update --self
-    packages=(
+    pkgs=(
         # Priority ----
         'collection-fontsrecommended'
         'collection-latexrecommended'
@@ -53,10 +52,10 @@ main() {
         'wasysym'
         'xstring'
     )
-    for package in "${packages[@]}"
+    for pkg in "${pkgs[@]}"
     do
-        koopa_alert "$package"
-        "${app['sudo']}" "${app['tlmgr']}" install "$package"
+        koopa_alert "$pkg"
+        "${app['sudo']}" "${app['tlmgr']}" install "$pkg"
     done
     return 0
 }

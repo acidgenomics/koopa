@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SQLite.
-    # @note Updated 2023-03-07.
+    # @note Updated 2023-04-06.
     #
     # Use autoconf instead of amalgamation.
     #
@@ -19,22 +19,18 @@ main() {
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/server/sqlite.html
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'zlib' 'readline'
-    local -A app=(
-        ['make']="$(koopa_locate_make)"
-        ['sed']="$(koopa_locate_sed --allow-system)"
-    )
-    [[ -x "${app['make']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='sqlite'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['make']="$(koopa_locate_make)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='sqlite'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
         '3.41.'*)
             dict['year']='2023'
