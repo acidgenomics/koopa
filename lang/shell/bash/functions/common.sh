@@ -17880,8 +17880,8 @@ koopa_r_configure_makeconf() {
 
 koopa_r_configure_makevars() {
     local -A app app_pc_path_arr conf_dict dict
-    local -a app_pc_path_arr cppflags keys libintl ldflags lines pkg_config
-    local i key    
+    local -a cppflags keys libintl ldflags lines pkg_config
+    local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
@@ -22719,7 +22719,7 @@ koopa_uninstall_app() {
         if [[ ! -d "${dict['prefix']}" ]]
         then
             koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
-            return 1
+            return 0
         fi
         dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
