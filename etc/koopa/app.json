@@ -3159,7 +3159,6 @@
       "bioconda": "sra-tools",
       "homebrew": "sratoolkit"
     },
-    "arch": "amd64",
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["cmake"],
     "date": "2023-04-03",
