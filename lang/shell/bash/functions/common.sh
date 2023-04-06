@@ -22709,7 +22709,7 @@ koopa_uninstall_app() {
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             app['sudo']="$(koopa_locate_sudo)"
-            [[ -x "${app['sudo']}" ]] || exit 1
+            koopa_assert_is_executable "${app['sudo']}"
             "${app['sudo']}" -v
             ;;
         'user')
@@ -25102,7 +25102,7 @@ koopa_update_private_ont_guppy_installers() {
     koopa_assert_has_no_args "$#"
     koopa_assert_has_private_access
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['base_url']='https://cdn.oxfordnanoportal.com/software/analysis'
     dict['name']='ont-guppy'
     dict['prefix']="$(koopa_tmp_dir)"
@@ -25135,11 +25135,10 @@ cuda10.tar.gz" \
 }
 
 koopa_update_system_homebrew() {
-    local app dict
-    koopa_assert_is_admin
     local -A app dict
+    koopa_assert_is_admin
     app['brew']="$(koopa_locate_brew)"
-    [[ -x "${app['brew']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['reset']=0
     while (("$#"))
     do
@@ -25184,8 +25183,7 @@ koopa_update_system_tex_packages() {
     koopa_assert_is_admin
     app['sudo']="$(koopa_locate_sudo)"
     app['tlmgr']="$(koopa_locate_tlmgr)"
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['tlmgr']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     (
         koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
         "${app['sudo']}" "${app['tlmgr']}" update --self
