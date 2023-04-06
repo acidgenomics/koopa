@@ -26,7 +26,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
         '6.0')
-            dict['patch_version']='27'
+            dict['patch_version']='28'
             ;;
         *)
             koopa_stop 'Unsupported version.'
@@ -45,8 +45,7 @@ UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
 unzip${dict['version2']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    # FIXME Consider switching to Debian patch set here, to match zip.
-    koopa_apply_ubuntu_patch_set \
+    koopa_apply_debian_patch_set \
         --name="${dict['name']}" \
         --patch-version="${dict['patch_version']}" \
         --target='src' \
