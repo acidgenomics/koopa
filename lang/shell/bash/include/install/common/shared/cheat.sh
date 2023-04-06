@@ -9,19 +9,16 @@ main() {
     # - https://github.com/cheat/cheat/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/cheat.rb
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
-    local -A app
     app['go']="$(koopa_locate_go)"
     [[ -x "${app['go']}" ]] || exit 1
-    local -A dict=(
-        ['gocache']="$(koopa_init_dir 'gocache')"
-        ['gopath']="$(koopa_init_dir 'go')"
-        ['name']='cheat'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['gocache']="$(koopa_init_dir 'gocache')"
+    dict['gopath']="$(koopa_init_dir 'go')"
+    dict['name']='cheat'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['file']="${dict['version']}.tar.gz"
