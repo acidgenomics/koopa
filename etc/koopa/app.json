@@ -1045,17 +1045,6 @@
     "url": ["https://github.com/docker/docker-credential-helpers/"],
     "version": "0.7.0"
   },
-  "dog": {
-    "aliases": {
-      "homebrew": true
-    },
-    "bin": ["dog"],
-    "build_dependencies": ["git", "rust"],
-    "date": "2022-09-26",
-    "dependencies": ["openssl1"],
-    "url": ["https://github.com/ogham/dog/"],
-    "version": "0.1.0"
-  },
   "doom-emacs": {
     "date": "2023-03-30",
     "dependencies": ["chemacs", "emacs"],
@@ -3487,18 +3476,6 @@
     "dependencies": ["libedit", "openssl3", "zlib"],
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
-  },
-  "openssl1": {
-    "aliases": {
-      "fedora": "openssl11-devel",
-      "homebrew": "openssl@1.1"
-    },
-    "build_dependencies": ["make", "pkg-config"],
-    "conservative": true,
-    "date": "2023-02-08",
-    "dependencies": ["ca-certificates"],
-    "url": ["https://www.openssl.org/source/"],
-    "version": "1.1.1t"
   },
   "openssl3": {
     "aliases": {
