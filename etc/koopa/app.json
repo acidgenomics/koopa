@@ -2804,7 +2804,7 @@
       "fedora": "llvm-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "git", "make", "perl", "pkg-config"],
+    "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
     "conservative": true,
     "date": "2023-04-06",
     "dependencies": [
@@ -2818,8 +2818,8 @@
       "swig",
       "zlib"
     ],
+    "enabled": false,
     "large": true,
-    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "16.0.1"
   },
