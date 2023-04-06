@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
 koopa_install_python311() {
-    local dict
-    local -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['man1_prefix']="$(koopa_man1_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    local -A dict
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['man1_prefix']="$(koopa_man1_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     koopa_install_app \
         --installer='python' \
         --name='python3.11' \
