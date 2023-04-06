@@ -2,7 +2,7 @@
 
 main() {
     # Install gettext.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-04-06.
     #
     # Note that 'libintl.h' is included with glibc.
     #
@@ -18,22 +18,20 @@ main() {
     # - https://gcc-help.gcc.gnu.narkive.com/CYebbZqg/
     #     cc1-undefined-reference-to-libintl-textdomain
     # """
-    local dict
+    local -A dict
     koopa_activate_app \
         'bison' \
         'libiconv' \
         'libunistring' \
         'ncurses' \
         'libxml2'
-    local -A dict=(
-        ['bison']="$(koopa_app_prefix 'bison')"
-        ['libiconv']="$(koopa_app_prefix 'libiconv')"
-        ['libunistring']="$(koopa_app_prefix 'libunistring')"
-        ['libxml2']="$(koopa_app_prefix 'libxml2')"
-        ['ncurses']="$(koopa_app_prefix 'ncurses')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-    )
+    dict['bison']="$(koopa_app_prefix 'bison')"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['libunistring']="$(koopa_app_prefix 'libunistring')"
+    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['ncurses']="$(koopa_app_prefix 'ncurses')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='gettext' \
