@@ -55,7 +55,7 @@ koopa/ascii-turtle.txt"
     if koopa_is_macos
     then
         app['sw_vers']="$(koopa_macos_locate_sw_vers)"
-        [[ -x "${app['sw_vers']}" ]] || exit 1
+        koopa_assert_is_executable "${app['sw_vers']}"
         dict['os']="$( \
             printf '%s %s (%s)\n' \
                 "$("${app['sw_vers']}" -productName)" \
@@ -64,7 +64,7 @@ koopa/ascii-turtle.txt"
         )"
     else
         app['uname']="$(koopa_locate_uname --allow-system)"
-        [[ -x "${app['uname']}" ]] || exit 1
+        koopa_assert_is_executable "${app['uname']}"
         dict['os']="$("${app['uname']}" --all)"
     fi
     info+=(
@@ -75,10 +75,9 @@ koopa/ascii-turtle.txt"
         "Architecture: ${dict['arch']} / ${dict['arch2']}"
         "Bash: ${dict['bash_version']}"
     )
-    if koopa_is_installed 'neofetch'
+    app['neofetch']="$(koopa_locate_neofetch --allow-missing)"
+    if [[ -x "${app['neofetch']}" ]]
     then
-        app['neofetch']="$(koopa_locate_neofetch)"
-        [[ -x "${app['neofetch']}" ]] || exit 1
         readarray -t nf_info <<< "$("${app['neofetch']}" --stdout)"
         info+=(
             ''

@@ -9,7 +9,7 @@ koopa_detab() {
     local -A app
     koopa_assert_has_args "$#"
     app['vim']="$(koopa_locate_vim)"
-    [[ -x "${app['vim']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     for file in "$@"
     do

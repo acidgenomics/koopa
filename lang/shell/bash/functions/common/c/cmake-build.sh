@@ -10,7 +10,7 @@ koopa_cmake_build() {
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
-    [[ -x "${app['cmake']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['builddir']="builddir-$(koopa_random_string)"
     dict['generator']='Unix Makefiles'
     dict['jobs']="$(koopa_cpu_count)"

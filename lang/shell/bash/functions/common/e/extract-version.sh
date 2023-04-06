@@ -13,7 +13,7 @@ koopa_extract_version() {
     local -a args
     local arg
     app['head']="$(koopa_locate_head --allow-system)"
-    [[ -x "${app['head']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['pattern']="$(koopa_version_pattern)"
     if [[ "$#" -eq 0 ]]
     then

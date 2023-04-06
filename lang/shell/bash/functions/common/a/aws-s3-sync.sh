@@ -44,7 +44,7 @@ koopa_aws_s3_sync() {
     local pattern
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['profile']="${AWS_PROFILE:-default}"
     # Include common file system and Git cruft that we don't want on S3.
     # FIXME Only set this if the user doesn't pass in exclude?

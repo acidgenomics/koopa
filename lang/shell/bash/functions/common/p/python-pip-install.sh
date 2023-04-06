@@ -52,9 +52,9 @@ koopa_python_pip_install() {
     done
     [[ -z "${app['python']}" ]] && \
         app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || exit 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    koopa_assert_is_executable "${app[@]}"
     pkgs=("$@")
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
@@ -82,7 +82,7 @@ koopa_python_pip_install() {
             'pytaglib=='*)
                 local pkg_name
                 app['cut']="$(koopa_locate_cut --allow-system)"
-                [[ -x "${app['cut']}" ]] || exit 1
+                koopa_assert_is_executable "${app['cut']}"
                 pkg_name="$( \
                     koopa_print "$pkg" \
                     | "${app['cut']}" -d '=' -f 1 \

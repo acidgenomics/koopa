@@ -12,7 +12,7 @@ koopa_docker_prune_all_images() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"
-    [[ -x "${app['docker']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert 'Pruning Docker images.'
     "${app['docker']}" system prune --all --force || true
     "${app['docker']}" images

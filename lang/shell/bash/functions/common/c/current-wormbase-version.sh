@@ -12,7 +12,7 @@ koopa_current_wormbase_version() {
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['url']="ftp://ftp.wormbase.org/pub/wormbase/\
 releases/current-production-release"
     dict['string']="$( \

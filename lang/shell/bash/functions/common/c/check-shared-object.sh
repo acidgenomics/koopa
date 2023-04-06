@@ -75,7 +75,7 @@ koopa_check_shared_object() {
         app['tool']="$(koopa_macos_locate_otool)"
         tool_args+=('-L')
     fi
-    [[ -x "${app['tool']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     tool_args+=("${dict['file']}")
     "${app['tool']}" "${tool_args[@]}"
     return 0

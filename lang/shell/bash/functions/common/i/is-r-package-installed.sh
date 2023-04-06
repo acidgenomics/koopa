@@ -15,7 +15,7 @@ koopa_is_r_package_installed() {
     local -A app
     local -A dict
     app['r']="$(koopa_locate_r)"
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$(koopa_r_packages_prefix "${app['r']}")"
     for pkg in "$@"
     do

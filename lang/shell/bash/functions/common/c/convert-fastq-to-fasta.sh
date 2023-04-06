@@ -28,10 +28,7 @@ koopa_convert_fastq_to_fasta() {
     app['paste']="$(koopa_locate_paste)"
     app['sed']="$(koopa_locate_sed)"
     app['tr']="$(koopa_locate_tr)"
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['paste']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['tr']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['source_dir']=''
     dict['target_dir']=''
     while (("$#"))

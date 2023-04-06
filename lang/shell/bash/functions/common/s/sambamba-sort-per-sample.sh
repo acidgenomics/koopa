@@ -14,7 +14,7 @@ koopa_sambamba_sort_per_sample() {
     local -A app dict
     koopa_assert_has_args "$#"
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['input']="${1:?}"
     dict['threads']="$(koopa_cpu_count)"
     koopa_assert_is_file "${dict['input']}"

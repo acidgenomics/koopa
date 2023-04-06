@@ -8,7 +8,7 @@ koopa_reload_shell() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['shell']="$(koopa_shell_name)"
-    [[ -x "${app['shell']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     # shellcheck disable=SC2093
     exec "${app['shell']}" -il
     return 0

@@ -8,7 +8,6 @@ koopa_chmod() {
     local -A app dict
     local -a chmod pos
     app['chmod']="$(koopa_locate_chmod)"
-    [[ -x "${app['chmod']}" ]] || exit 1
     dict['recursive']=0
     dict['sudo']=0
     pos=()
@@ -41,7 +40,6 @@ koopa_chmod() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || exit 1
         chmod=("${app['sudo']}" "${app['chmod']}")
     else
         chmod=("${app['chmod']}")
@@ -50,6 +48,7 @@ koopa_chmod() {
     then
         chmod+=('-R')
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${chmod[@]}" "$@"
     return 0
 }

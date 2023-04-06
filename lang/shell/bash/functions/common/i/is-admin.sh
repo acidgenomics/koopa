@@ -45,7 +45,7 @@ koopa_is_admin() {
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
     app['groups']="$(koopa_locate_groups --allow-system)"
-    [[ -x "${app['groups']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['groups']="$("${app['groups']}")"
     dict['pattern']='\b(admin|root|sudo|wheel)\b'
     [[ -n "${dict['groups']}" ]] || return 1

@@ -26,7 +26,7 @@ koopa_mktemp() {
     local -a mktemp_args
     local str
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
-    [[ -x "${app['mktemp']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['date_id']="$(koopa_datetime)"
     dict['user_id']="$(koopa_user_id)"
     dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"

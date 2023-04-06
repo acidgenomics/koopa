@@ -24,10 +24,7 @@ koopa_conda_env_prefix() {
     app['python']="$(koopa_locate_conda_python)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['tail']="$(koopa_locate_tail --allow-system)"
-    [[ -x "${app['conda']}" ]] || exit 1
-    [[ -x "${app['python']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['env_name']="${1:-}"
     dict['env_prefix']="$( \
         "${app['conda']}" info --json \

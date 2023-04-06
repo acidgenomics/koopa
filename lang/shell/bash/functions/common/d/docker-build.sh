@@ -229,7 +229,7 @@ koopa_docker_build() {
         --name="${dict['build_name']}" \
         --use \
         >/dev/null
-    "${app['docker']}" buildx build "${build_args[@]}" || exit 1
+    "${app['docker']}" buildx build "${build_args[@]}"
     "${app['docker']}" buildx rm "${dict['build_name']}"
     "${app['docker']}" image ls \
         --filter \

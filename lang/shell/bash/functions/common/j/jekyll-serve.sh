@@ -8,7 +8,7 @@ koopa_jekyll_serve() {
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     app['bundle']="$(koopa_locate_bundle)"
-    [[ -x "${app['bundle']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['bundle_prefix']="$(koopa_xdg_data_home)/gem"
     dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"

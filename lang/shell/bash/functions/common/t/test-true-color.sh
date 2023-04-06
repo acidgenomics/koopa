@@ -11,7 +11,7 @@ koopa_test_true_color() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['awk']="$(koopa_locate_awk)"
-    [[ -x "${app['awk']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['awk']}" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
         for (colnum = 0; colnum<77; colnum++) {

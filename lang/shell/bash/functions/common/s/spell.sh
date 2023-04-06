@@ -17,8 +17,7 @@ koopa_spell() {
     koopa_assert_has_args "$#"
     app['aspell']="$(koopa_locate_aspell)"
     app['tail']="$(koopa_locate_tail)"
-    [[ -x "${app['aspell']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_print "$@" \
         | "${app['aspell']}" pipe \
         | "${app['tail']}" -n '+2'

@@ -15,7 +15,7 @@ koopa_configure_r() {
     local -A app dict
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     app['r']="$(koopa_realpath "${app['r']}")"
     dict['name']='r'
     dict['system']=0

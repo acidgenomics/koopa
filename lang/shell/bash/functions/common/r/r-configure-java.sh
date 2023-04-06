@@ -32,7 +32,7 @@ koopa_r_configure_java() {
     local -a java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
@@ -53,10 +53,6 @@ koopa_r_configure_java() {
     app['java']="${dict['openjdk']}/bin/java"
     app['javac']="${dict['openjdk']}/bin/javac"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['jar']}" ]] || exit 1
-    [[ -x "${app['java']}" ]] || exit 1
-    [[ -x "${app['javac']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
     koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
     conf_dict['java_home']="${dict['openjdk']}"
     conf_dict['jar']="${app['jar']}"
@@ -79,6 +75,7 @@ koopa_r_configure_java() {
             r_cmd=("${app['sudo']}" "${app['r']}")
             ;;
     esac
+    koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
 }

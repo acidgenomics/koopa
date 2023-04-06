@@ -16,7 +16,7 @@ koopa_docker_run() {
     local -a pos run_args
     koopa_assert_has_args "$#"
     app['docker']="$(koopa_locate_docker)"
-    [[ -x "${app['docker']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['arm']=0
     dict['bash']=0
     dict['bind']=0

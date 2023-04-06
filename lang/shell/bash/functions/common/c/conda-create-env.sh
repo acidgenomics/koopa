@@ -16,8 +16,7 @@ koopa_conda_create_env() {
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['conda']}" ]] || exit 1
-    [[ -x "${app['cut']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['env_prefix']="$(koopa_conda_env_prefix)"
     dict['force']=0
     dict['latest']=0

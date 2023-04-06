@@ -76,7 +76,7 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
     app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
-    [[ -x "${app['download']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"

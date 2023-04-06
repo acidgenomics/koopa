@@ -28,7 +28,7 @@ koopa_r_configure_ldpaths() {
     local key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1

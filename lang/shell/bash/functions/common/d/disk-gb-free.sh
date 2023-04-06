@@ -16,10 +16,7 @@ koopa_disk_gb_free() {
     app['df']="$(koopa_locate_df --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['df']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     local -A dict
     dict['disk']="${1:?}"
     koopa_assert_is_readable "${dict['disk']}"

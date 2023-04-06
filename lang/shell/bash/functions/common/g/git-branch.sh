@@ -23,9 +23,7 @@ koopa_git_branch() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['git']="$(koopa_locate_git --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['git']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_git_repo "$@"
     (
         local repo
