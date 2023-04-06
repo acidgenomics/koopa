@@ -3,14 +3,12 @@
 koopa_debian_apt_add_wine_obs_key() {
     # """
     # Add the Wine OBS openSUSE key.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['name']='wine-obs'
-        ['os_string']="$(koopa_os_string)"
-    )
+    dict['name']='wine-obs'
+    dict['os_string']="$(koopa_os_string)"
     case "${dict['os_string']}" in
         'debian-10')
             dict['subdir']='Debian_10'

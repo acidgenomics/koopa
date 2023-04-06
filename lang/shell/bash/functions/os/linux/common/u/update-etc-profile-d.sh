@@ -5,16 +5,14 @@
 koopa_linux_update_etc_profile_d() {
     # """
     # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2021-11-16.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    local -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['file']='/etc/profile.d/zzz-koopa.sh'
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['file']='/etc/profile.d/zzz-koopa.sh'
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]

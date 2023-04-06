@@ -85,14 +85,12 @@ koopa_debian_apt_add_microsoft_key() {
 }
 
 koopa_debian_apt_add_r_key() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A dict=(
-        ['key_name']='r'
-        ['keyserver']='keyserver.ubuntu.com'
-        ['prefix']="$(koopa_debian_apt_key_prefix)"
-    )
+    dict['key_name']='r'
+    dict['keyserver']='keyserver.ubuntu.com'
+    dict['prefix']="$(koopa_debian_apt_key_prefix)"
     dict['file']="${dict['prefix']}/koopa-${dict['key_name']}.gpg"
     if koopa_is_ubuntu_like
     then
@@ -110,13 +108,11 @@ koopa_debian_apt_add_r_key() {
 }
 
 koopa_debian_apt_add_r_repo() {
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
-    local -A dict=(
-        ['name']='r'
-        ['os_codename']="$(koopa_debian_os_codename)"
-        ['version']="${1:-}"
-    )
+    dict['name']='r'
+    dict['os_codename']="$(koopa_debian_os_codename)"
+    dict['version']="${1:-}"
     if koopa_is_ubuntu_like
     then
         dict['os_id']='ubuntu'
@@ -155,19 +151,18 @@ koopa_debian_apt_add_r_repo() {
 }
 
 koopa_debian_apt_add_repo() {
-    local components dict
+    local -A dict
+    local -a components
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['distribution']=''
-        ['key_name']=''
-        ['key_prefix']="$(koopa_debian_apt_key_prefix)"
-        ['name']=''
-        ['prefix']="$(koopa_debian_apt_sources_prefix)"
-        ['signed_by']=''
-        ['url']=''
-    )
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['distribution']=''
+    dict['key_name']=''
+    dict['key_prefix']="$(koopa_debian_apt_key_prefix)"
+    dict['name']=''
+    dict['prefix']="$(koopa_debian_apt_sources_prefix)"
+    dict['signed_by']=''
+    dict['url']=''
     components=()
     while (("$#"))
     do
@@ -281,12 +276,10 @@ koopa_debian_apt_add_wine_key() {
 }
 
 koopa_debian_apt_add_wine_obs_key() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['name']='wine-obs'
-        ['os_string']="$(koopa_os_string)"
-    )
+    dict['name']='wine-obs'
+    dict['os_string']="$(koopa_os_string)"
     case "${dict['os_string']}" in
         'debian-10')
             dict['subdir']='Debian_10'
@@ -313,15 +306,13 @@ Emulators:/Wine:/Debian/${dict['subdir']}/Release.key"
 }
 
 koopa_debian_apt_add_wine_obs_repo() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['base_url']="https://download.opensuse.org/repositories/\
-Emulators:/Wine:/Debian"
-        ['distribution']='./'
-        ['name']='wine-obs'
-        ['os_string']="$(koopa_os_string)"
-    )
+    dict['base_url']="https://download.opensuse.org/repositories/Emulators:\
+/Wine:/Debian"
+    dict['distribution']='./'
+    dict['name']='wine-obs'
+    dict['os_string']="$(koopa_os_string)"
     case "${dict['os_string']}" in
         'debian-10')
             dict['url']="${dict['base_url']}/Debian_10/"
@@ -452,12 +443,11 @@ END
 }
 
 koopa_debian_apt_delete_repo() {
-    local dict name
+    local -A dict
+    local name
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A dict=(
-        ['prefix']="$(koopa_debian_apt_sources_prefix)"
-    )
+    dict['prefix']="$(koopa_debian_apt_sources_prefix)"
     for name in "$@"
     do
         local file
