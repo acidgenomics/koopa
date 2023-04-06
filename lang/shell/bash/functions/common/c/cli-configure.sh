@@ -20,10 +20,8 @@ koopa_cli_configure() {
     koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local dict
-        local -A dict=(
-            ['key']="${stem}-${app}"
-        )
+        local -A dict
+        dict['key']="${stem}-${app}"
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then

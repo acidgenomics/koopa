@@ -28,12 +28,10 @@ koopa_conda_activate_env() {
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['env_name']="${1:?}"
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
+    dict['env_name']="${1:?}"
+    dict['nounset']="$(koopa_boolean_nounset)"
     dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     if [[ ! -d "${dict['env_prefix']}" ]]
     then

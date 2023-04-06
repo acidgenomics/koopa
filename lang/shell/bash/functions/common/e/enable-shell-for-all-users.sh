@@ -13,13 +13,13 @@ koopa_enable_shell_for_all_users() {
     # >     '/opt/koopa/bin/bash' \
     # >     /opt/koopa/bin/zsh'
     # """
-    local app apps dict
+    local -A dict
+    local -a apps
+    local app
     koopa_assert_has_args "$#"
     koopa_is_admin || return 0
-    local -A dict=(
-        ['etc_file']='/etc/shells'
-        ['user']="$(koopa_user_name)"
-    )
+    dict['etc_file']='/etc/shells'
+    dict['user']="$(koopa_user_name)"
     apps=("$@")
     # Intentionally not checking to see whether file exists here.
     # > koopa_assert_is_executable "${apps[@]}"

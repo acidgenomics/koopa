@@ -2281,9 +2281,7 @@ koopa_aws_s3_sync() {
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
     [[ -x "${app['aws']}" ]] || exit 1
-    local -A dict=(
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    dict['profile']="${AWS_PROFILE:-default}"
     exclude_patterns=(
         '*.Rproj/*'
         '*.swp'
@@ -2588,14 +2586,14 @@ koopa_bowtie2_align_per_sample() {
 }
 
 koopa_bowtie2_align() {
-    local dict fastq_r1_file fastq_r1_files
-    local -A dict=(
-        ['fastq_dir']=''
-        ['fastq_r1_tail']=''
-        ['fastq_r2_tail']=''
-        ['index_dir']=''
-        ['output_dir']=''
-    )
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
+    dict['fastq_dir']=''
+    dict['fastq_r1_tail']=''
+    dict['fastq_r2_tail']=''
+    dict['index_dir']=''
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -2816,13 +2814,11 @@ koopa_brew_reset_core_repo() {
 }
 
 koopa_brew_reset_permissions() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        [group]="$(koopa_admin_group_name)"
-        [prefix]="$(koopa_homebrew_prefix)"
-        [user]="$(koopa_user_name)"
-    )
+    dict['group']="$(koopa_admin_group_name)"
+    dict['prefix']="$(koopa_homebrew_prefix)"
+    dict['user']="$(koopa_user_name)"
     koopa_alert "Resetting ownership of files in \
 '${dict['prefix']}' to '${dict['user']}:${dict['group']}'."
     koopa_chown \
@@ -2964,11 +2960,9 @@ in '${dict['target_file']}'."
 }
 
 koopa_cache_functions() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['shell_prefix']="${dict['koopa_prefix']}/lang/shell"
     koopa_cache_functions_dir \
         "${dict['shell_prefix']}/bash/functions/activate" \
@@ -3047,12 +3041,10 @@ koopa_cd() {
 }
 
 koopa_check_disk() {
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['limit']=90
-        ['used']="$(koopa_disk_pct_used "$@")"
-    )
+    dict['limit']=90
+    dict['used']="$(koopa_disk_pct_used "$@")"
     if [[ "${dict['used']}" -gt "${dict['limit']}" ]]
     then
         koopa_warn "Disk usage is ${dict['used']}%."
@@ -3103,14 +3095,12 @@ koopa_check_mount() {
 }
 
 koopa_check_shared_object() {
-    local app dict tool_args
+    local -A app dict
+    local -a tool_args
     koopa_assert_has_args "$#"
-    local -A app
-    local -A dict=(
-        ['file']=''
-        ['name']=''
-        ['prefix']=''
-    )
+    dict['file']=''
+    dict['name']=''
+    dict['prefix']=''
     while (("$#"))
     do
         case "$1" in
@@ -3285,11 +3275,9 @@ koopa_chown() {
     local -a chown pos
     app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || exit 1
-    local -A dict=(
-        ['dereference']=1
-        ['recursive']=0
-        ['sudo']=0
-    )
+    dict['dereference']=1
+    dict['recursive']=0
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -3346,10 +3334,8 @@ koopa_chown() {
 }
 
 koopa_cli_app() {
-    local dict
-    local -A dict=(
-        ['key']=''
-    )
+    local -A dict
+    dict['key']=''
     case "${1:-}" in
         '--help' | \
         '-h')
@@ -3672,10 +3658,8 @@ koopa_cli_configure() {
     koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local dict
-        local -A dict=(
-            ['key']="${stem}-${app}"
-        )
+        local -A dict
+        dict['key']="${stem}-${app}"
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
@@ -3833,10 +3817,8 @@ koopa_cli_reinstall() {
 }
 
 koopa_cli_system() {
-    local dict
-    local -A dict=(
-        ['key']=''
-    )
+    local -A dict
+    dict['key']=''
     case "${1:-}" in
         'check')
             dict['key']='check-system'
@@ -3998,10 +3980,8 @@ koopa_cli_update() {
     koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local dict
-        local -A dict=(
-            ['key']="${stem}-${app}"
-        )
+        local -A dict
+        dict['key']="${stem}-${app}"
         dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
         if ! koopa_is_function "${dict['fun']}"
         then
@@ -4013,11 +3993,9 @@ koopa_cli_update() {
 }
 
 koopa_cli() {
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['nested']=0
-    )
+    dict['nested']=0
     case "${1:?}" in
         '--help' | \
         '-h')
@@ -4066,13 +4044,12 @@ koopa_cli() {
 }
 
 koopa_clone() {
-    local dict rsync_args
+    local -A dict
+    local -a rsync_args
     koopa_assert_has_args_eq "$#" 2
     koopa_assert_has_no_flags "$@"
-    local -A dict=(
-        ['source_dir']="${1:?}"
-        ['target_dir']="${2:?}"
-    )
+    dict['source_dir']="${1:?}"
+    dict['target_dir']="${2:?}"
     koopa_assert_is_dir "${dict['source_dir']}" "${dict['target_dir']}"
     dict['source_dir']="$( \
         koopa_realpath "${dict['source_dir']}" \
@@ -4191,12 +4168,10 @@ koopa_compress_ext_pattern() {
 }
 
 koopa_conda_activate_env() {
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['env_name']="${1:?}"
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
+    dict['env_name']="${1:?}"
+    dict['nounset']="$(koopa_boolean_nounset)"
     dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
     if [[ ! -d "${dict['env_prefix']}" ]]
     then
@@ -4375,12 +4350,10 @@ exists at '${dict2['env_prefix']}'."
 }
 
 koopa_conda_deactivate() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['env_name']="${CONDA_DEFAULT_ENV:-}"
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
+    dict['env_name']="${CONDA_DEFAULT_ENV:-}"
+    dict['nounset']="$(koopa_boolean_nounset)"
     if [[ -z "${dict['env_name']}" ]]
     then
         koopa_stop 'conda is not active.'
@@ -4601,13 +4574,11 @@ koopa_configure_system_r() {
 }
 
 koopa_configure_user_chemacs() {
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
-    local -A dict=(
-        ['source_prefix']="${1:-}"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['target_prefix']="${HOME:?}/.emacs.d"
-    )
+    dict['source_prefix']="${1:-}"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['target_prefix']="${HOME:?}/.emacs.d"
     if [[ -z "${dict['source_prefix']}" ]]
     then
         dict['source_prefix']="${dict['opt_prefix']}/chemacs"
@@ -4619,20 +4590,17 @@ koopa_configure_user_chemacs() {
 }
 
 koopa_configure_user_dotfiles() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    local -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
     if [[ "${app['bash']}" == '/bin/bash' ]] && koopa_is_macos
     then
         app['bash']='/usr/local/bin/bash'
     fi
-    [[ -x "${app['bash']}" ]] || exit 1
-    local -A dict=(
-        ['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
-        ['name']='dotfiles'
-        ['prefix']="${1:-}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
+    dict['name']='dotfiles'
+    dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['script']="${dict['prefix']}/install"
@@ -5289,12 +5257,11 @@ koopa_delete_empty_dirs() {
 }
 
 koopa_delete_named_subdirs() {
-    local dict matches
+    local -A dict
+    local -a matches
     koopa_assert_has_args_eq "$#" 2
-    local -A dict=(
-        ['prefix']="${1:?}"
-        ['subdir_name']="${2:?}"
-    )
+    dict['prefix']="${1:?}"
+    dict['subdir_name']="${2:?}"
     readarray -t matches <<< "$( \
         koopa_find \
             --pattern="${dict['subdir_name']}" \
@@ -5381,20 +5348,14 @@ koopa_disable_passwordless_sudo() {
 }
 
 koopa_disk_512k_blocks() {
-    local app dict
-    local -A app
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk --allow-system)"
     app['df']="$(koopa_locate_df --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['df']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    local -A dict=(
-        ['disk']="${1:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['disk']="${1:?}"
     dict['str']="$( \
         POSIXLY_CORRECT=1 \
         "${app['df']}" -P "${dict['disk']}" \
@@ -5541,17 +5502,15 @@ koopa_docker_build_all_tags() {
 }
 
 koopa_docker_build() {
-    local app dict build_args dict image_ids platforms tag tags
     local -A app dict
+    local -a build_args image_ids platforms tags
+    local tag
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
     app['sort']="$(koopa_locate_sort)"
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['date']}" ]] || exit 1
-    [[ -x "${app['docker']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['default_tag']='latest'
     dict['delete']=1
     dict['local_dir']=''
@@ -6176,13 +6135,13 @@ at '${dict['file']}'."
 }
 
 koopa_enable_shell_for_all_users() {
-    local app apps dict
+    local -A dict
+    local -a apps
+    local app
     koopa_assert_has_args "$#"
     koopa_is_admin || return 0
-    local -A dict=(
-        ['etc_file']='/etc/shells'
-        ['user']="$(koopa_user_name)"
-    )
+    dict['etc_file']='/etc/shells'
+    dict['user']="$(koopa_user_name)"
     apps=("$@")
     for app in "${apps[@]}"
     do
@@ -6277,13 +6236,12 @@ koopa_extract_all() {
 }
 
 koopa_extract_version() {
-    local app arg dict
-    local -A app
+    local -A app dict
+    local -a args
+    local arg
     app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || exit 1
-    local -A dict=(
-        ['pattern']="$(koopa_version_pattern)"
-    )
+    dict['pattern']="$(koopa_version_pattern)"
     if [[ "$#" -eq 0 ]]
     then
         args=("$(</dev/stdin)")
@@ -6605,14 +6563,12 @@ at '${dict['output_file']}'."
 }
 
 koopa_fasta_has_alt_contigs() {
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-        ['file']="${1:?}"
-        ['is_tmp_file']=0
-        ['status']=1
-    )
+    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    dict['file']="${1:?}"
+    dict['is_tmp_file']=0
+    dict['status']=1
     koopa_assert_is_file "${dict['file']}"
     if koopa_str_detect_regex \
         --string="${dict['file']}" \
@@ -6820,15 +6776,14 @@ koopa_file_detect_regex() {
 }
 
 koopa_file_detect() {
-    local dict grep_args
+    local -A dict
+    local -a grep_args
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['file']=''
-        ['mode']=''
-        ['pattern']=''
-        ['stdin']=1
-        ['sudo']=0
-    )
+    dict['file']=''
+    dict['mode']=''
+    dict['pattern']=''
+    dict['stdin']=1
+    dict['sudo']=0
     while (("$#"))
     do
         case "$1" in
@@ -7194,12 +7149,11 @@ koopa_find_large_files() {
 }
 
 koopa_find_non_symlinked_make_files() {
-    local dict find_args
+    local -A dict
+    local -a find_args
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['brew_prefix']="$(koopa_homebrew_prefix)"
-        ['make_prefix']="$(koopa_make_prefix)"
-    )
+    dict['brew_prefix']="$(koopa_homebrew_prefix)"
+    dict['make_prefix']="$(koopa_make_prefix)"
     find_args=(
         '--min-depth' 1
         '--prefix' "${dict['make_prefix']}"
@@ -7236,13 +7190,13 @@ koopa_find_non_symlinked_make_files() {
 }
 
 koopa_find_symlinks() {
-    local dict hits symlink symlinks
+    local -A dict
+    local -a hits symlinks
+    local symlink
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['source_prefix']=''
-        ['target_prefix']=''
-        ['verbose']=0
-    )
+    dict['source_prefix']=''
+    dict['target_prefix']=''
+    dict['verbose']=0
     hits=()
     while (("$#"))
     do
@@ -7305,11 +7259,9 @@ koopa_find_symlinks() {
 }
 
 koopa_find_user_profile() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['shell']="$(koopa_default_shell_name)"
-    )
+    dict['shell']="$(koopa_default_shell_name)"
     case "${dict['shell']}" in
         'bash')
             dict['file']="${HOME}/.bashrc"
@@ -7327,24 +7279,23 @@ koopa_find_user_profile() {
 }
 
 koopa_find() {
-    local app dict exclude_arg exclude_arr find find_args results sorted_results
-    local -A app
-    local -A dict=(
-        ['days_modified_gt']=''
-        ['days_modified_lt']=''
-        ['empty']=0
-        ['engine']="${KOOPA_FIND_ENGINE:-}"
-        ['exclude']=0
-        ['max_depth']=''
-        ['min_depth']=1
-        ['pattern']=''
-        ['print0']=0
-        ['size']=''
-        ['sort']=0
-        ['sudo']=0
-        ['type']=''
-        ['verbose']=0
-    )
+    local -A app dict
+    local -a exclude_arr find find_args results sorted_results
+    local exclude_arg
+    dict['days_modified_gt']=''
+    dict['days_modified_lt']=''
+    dict['empty']=0
+    dict['engine']="${KOOPA_FIND_ENGINE:-}"
+    dict['exclude']=0
+    dict['max_depth']=''
+    dict['min_depth']=1
+    dict['pattern']=''
+    dict['print0']=0
+    dict['size']=''
+    dict['sort']=0
+    dict['sudo']=0
+    dict['type']=''
+    dict['verbose']=0
     exclude_arr=()
     while (("$#"))
     do
@@ -7910,18 +7861,16 @@ koopa_git_branch() {
 }
 
 koopa_git_clone() {
-    local app clone_args dict
+    local -A app dict
+    local -a clone_args
     koopa_assert_has_args "$#"
-    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    local -A dict=(
-        ['branch']=''
-        ['commit']=''
-        ['prefix']=''
-        ['tag']=''
-        ['url']=''
-    )
+    dict['branch']=''
+    dict['commit']=''
+    dict['prefix']=''
+    dict['tag']=''
+    dict['url']=''
     while (("$#"))
     do
         case "$1" in

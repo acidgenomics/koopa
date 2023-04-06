@@ -5,12 +5,11 @@ koopa_delete_named_subdirs() {
     # Delete named subdirectories.
     # @note Updated 2021-11-04.
     # """
-    local dict matches
+    local -A dict
+    local -a matches
     koopa_assert_has_args_eq "$#" 2
-    local -A dict=(
-        ['prefix']="${1:?}"
-        ['subdir_name']="${2:?}"
-    )
+    dict['prefix']="${1:?}"
+    dict['subdir_name']="${2:?}"
     readarray -t matches <<< "$( \
         koopa_find \
             --pattern="${dict['subdir_name']}" \

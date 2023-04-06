@@ -3,7 +3,7 @@
 koopa_git_reset_fork_to_upstream() {
     # """
     # Reset Git fork to upstream.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-06.
     # """
     local -A app
     koopa_assert_has_args "$#"
@@ -16,13 +16,11 @@ koopa_git_reset_fork_to_upstream() {
         local repo
         for repo in "$@"
         do
-            local dict
+            local -A dict
             koopa_cd "$repo"
-            local -A dict=(
-                ['branch']="$(koopa_git_default_branch "${PWD:?}")"
-                ['origin']='origin'
-                ['upstream']='upstream'
-            )
+            dict['branch']="$(koopa_git_default_branch "${PWD:?}")"
+            dict['origin']='origin'
+            dict['upstream']='upstream'
             "${app['git']}" checkout "${dict['branch']}"
             "${app['git']}" fetch "${dict['upstream']}"
             "${app['git']}" reset --hard "${dict['upstream']}/${dict['branch']}"

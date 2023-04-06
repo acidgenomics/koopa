@@ -17,10 +17,10 @@ koopa_git_submodule_init() {
         local repo
         for repo in "$@"
         do
-            local dict lines string
-            local -A dict=(
-                ['module_file']='.gitmodules'
-            )
+            local -A dict
+            local -a lines
+            local string
+            dict['module_file']='.gitmodules'
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Initializing submodules in '${repo}'."
             koopa_cd "$repo"

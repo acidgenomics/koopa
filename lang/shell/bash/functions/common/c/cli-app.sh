@@ -8,10 +8,8 @@ koopa_cli_app() {
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
     # """
-    local dict
-    local -A dict=(
-        ['key']=''
-    )
+    local -A dict
+    dict['key']=''
     case "${1:-}" in
         # Help documentation ---------------------------------------------------
         '--help' | \
