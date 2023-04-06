@@ -5,19 +5,17 @@
 main() {
     # """
     # Install msgpack.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # - @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/msgpack.rb
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_activate_app 'boost'
-    local -A dict=(
-        ['boost']="$(koopa_app_prefix 'boost')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['boost']="$(koopa_app_prefix 'boost')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['boost']}"
     cmake_args=(
         "-DBoost_INCLUDE_DIR=${dict['boost']}/include"

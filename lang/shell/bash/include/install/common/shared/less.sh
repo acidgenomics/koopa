@@ -3,7 +3,7 @@
 main() {
     # """
     # Install less.
-    # @note Updated 2022-12-16.
+    # @note Updated 2023-04-06.
     #
     # Need to include autoconf and groff when building from GitHub.
     #
@@ -11,18 +11,16 @@ main() {
     # - https://www.greenwoodsoftware.com/less/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/less.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     # This step is only needed when installing from GitHub.
     koopa_activate_app --build-only 'autoconf' 'groff' 'make'
     koopa_activate_app 'ncurses' 'pcre2'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['name']='less'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']='less'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/gwsw/${dict['name']}/archive/refs/\
 tags/${dict['file']}"

@@ -3,13 +3,14 @@
 main() {
     # """
     # Install libarchive.
-    # @note Updated 2022-12-15.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
     #     Formula/libarchive.rb
     # """
-    local app conf_args deps dict
+    local -A app dict
+    local -a conf_args deps
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
@@ -22,15 +23,12 @@ main() {
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libarchive'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='libarchive'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://www.libarchive.org/downloads/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -27,7 +27,8 @@ main() {
     # - https://github.com/neovim/neovim/blob/master/runtime/CMakeLists.txt
     # - https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_RPATH.html
     # """
-    local app build_deps deps dict
+    local -A app dict
+    local -a build_deps deps
     koopa_assert_has_no_args "$#"
     build_deps=(
         'cmake'
@@ -46,18 +47,15 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['gettext']="$(koopa_app_prefix 'gettext')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['libiconv']="$(koopa_app_prefix 'libiconv')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     read -r -d '' "dict[local_mk]" << END || true
 CMAKE_BUILD_TYPE := Release
 DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
