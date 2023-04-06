@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Ruby package.
-    # @note Updated 2022-07-11.
+    # @note Updated 2023-04-06.
     #
     # Alternative approach using gem:
     # > "${app['gem']}" install \
@@ -22,22 +22,16 @@ main() {
     # - https://www.justinweiss.com/articles/3-quick-gem-tricks/
     # - https://stackoverflow.com/questions/16098757/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['bundle']="$(koopa_locate_bundle)"
-        ['ruby']="$(koopa_locate_ruby)"
-    )
-    [[ -x "${app['bundle']}" ]] || exit 1
-    [[ -x "${app['ruby']}" ]] || exit 1
-    app['ruby']="$(koopa_realpath "${app['ruby']}")"
-    local -A dict=(
-        ['gemfile']='Gemfile'
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['bundle']="$(koopa_locate_bundle)"
+    app['ruby']="$(koopa_locate_ruby --realpath)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['gemfile']='Gemfile'
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     read -r -d '' "dict[gemfile_string]" << END || true
 source "https://rubygems.org"
 gem "${dict['name']}", "${dict['version']}"

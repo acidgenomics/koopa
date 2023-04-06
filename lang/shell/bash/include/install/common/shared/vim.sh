@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Vim.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # On Ubuntu, '--enable-rubyinterp' currently causing a false positive error
     # related to ncurses, even when '--with-tlib' is correctly set.
@@ -11,22 +11,17 @@ main() {
     # @seealso
     # - https://github.com/vim/vim/issues/1081
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'ncurses' 'python3.11'
-    local -A app=(
-        ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-    )
-    [[ -x "${app['make']}" ]] || exit 1
-    [[ -x "${app['python']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='vim'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['make']="$(koopa_locate_make)"
+    app['python']="$(koopa_locate_python311 --realpath)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='vim'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['vim_rpath']="${dict['prefix']}/lib"
     dict['python']="$(koopa_app_prefix 'python3.11')"
     app['python_config']="${app['python']}-config"
