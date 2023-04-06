@@ -111,7 +111,7 @@ koopa_uninstall_app() {
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             app['sudo']="$(koopa_locate_sudo)"
-            [[ -x "${app['sudo']}" ]] || exit 1
+            koopa_assert_is_executable "${app['sudo']}"
             "${app['sudo']}" -v
             ;;
         'user')

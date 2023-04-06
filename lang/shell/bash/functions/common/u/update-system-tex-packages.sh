@@ -10,8 +10,7 @@ koopa_update_system_tex_packages() {
     koopa_assert_is_admin
     app['sudo']="$(koopa_locate_sudo)"
     app['tlmgr']="$(koopa_locate_tlmgr)"
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['tlmgr']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     (
         koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
         "${app['sudo']}" "${app['tlmgr']}" update --self
