@@ -5,7 +5,6 @@ koopa_log_file() {
     # Create log file.
     # @note Updated 2022-08-23.
     # """
-    local dict
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['datetime']="$(koopa_datetime)"

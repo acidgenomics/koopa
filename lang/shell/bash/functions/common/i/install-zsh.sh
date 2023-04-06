@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 koopa_install_zsh() {
-    local dict
     local -A dict
     koopa_install_app --name='zsh' "$@"
     dict['zsh']="$(koopa_app_prefix 'zsh')"

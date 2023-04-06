@@ -17,7 +17,6 @@ main() {
     #     gawk/Portfile
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gawk.rb
     # """
-    local dict
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_activate_app \

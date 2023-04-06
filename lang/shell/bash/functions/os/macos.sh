@@ -870,7 +870,6 @@ koopa_macos_locate_xcrun() {
 }
 
 koopa_macos_os_codename() {
-    local dict
     local -A dict
     dict['version']="$(koopa_macos_os_version)"
     case "${dict['version']}" in

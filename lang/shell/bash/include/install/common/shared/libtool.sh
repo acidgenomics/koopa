@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    local dict
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_activate_app 'm4'
