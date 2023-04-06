@@ -3,15 +3,13 @@
 main() {
     # """
     # Install pyenv.
-    # @note Updated 2022-04-26.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['name']='pyenv'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']='pyenv'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/archive/\
 refs/tags/${dict['file']}"
