@@ -5,8 +5,7 @@ koopa_alert_process_start() {
     # Inform the user about the start of a process.
     # @note Updated 2022-04-08.
     # """
-    local dict
-    declare -A dict
+    local -A dict
     dict['word']="${1:?}"
     shift 1
     koopa_assert_has_args_le "$#" 3

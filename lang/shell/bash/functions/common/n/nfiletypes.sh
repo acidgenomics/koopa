@@ -3,24 +3,18 @@
 koopa_nfiletypes() {
     # """
     # Return the number of file types in a specific directory.
-    # @note Updated 2022-02-27.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_nfiletypes "${PWD:?}"
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['sed']="$(koopa_locate_sed)"
-        ['sort']="$(koopa_locate_sort)"
-        ['uniq']="$(koopa_locate_uniq)"
-    )
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['uniq']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']="${1:?}"
-    )
+    app['sed']="$(koopa_locate_sed)"
+    app['sort']="$(koopa_locate_sort)"
+    app['uniq']="$(koopa_locate_uniq)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['out']="$( \
         koopa_find \

@@ -5,12 +5,10 @@ koopa_assert_is_matching_regex() {
     # Assert that input matches a regular expression pattern.
     # @note Updated 2023-03-12.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['pattern']=''
-        ['string']=''
-    )
+    dict['pattern']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in

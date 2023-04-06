@@ -3,7 +3,7 @@
 koopa_link_in_dir() {
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2022-08-02.
+    # @note Updated 2023-04-06.
     #
     # @usage
     # > koopa_link_in_dir \
@@ -17,13 +17,11 @@ koopa_link_in_dir() {
     # >     --prefix="$(koopa_bin_prefix)" \
     # >     --source='/usr/local/bin/emacs'
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['name']=''
-        ['prefix']=''
-        ['source']=''
-    )
+    dict['name']=''
+    dict['prefix']=''
+    dict['source']=''
     while (("$#"))
     do
         case "$1" in

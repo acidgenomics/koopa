@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-04-05.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -26,21 +26,17 @@ koopa_download() {
     # > wget -q -O - url (piped to stdout)
     # > wget -qO-
     # """
-    local app bool dict download_args pos
+    local -A app bool dict
+    local -a download_args pos
     koopa_assert_has_args "$#"
-    declare -A bool=(
-        ['decompress']=0
-        ['extract']=0
-        ['progress']=1
-    )
-    declare -A dict=(
-        ['user_agent']="Mozilla/5.0 \
-(Macintosh; Intel Mac OS X 10.15; rv:109.0) \
-Gecko/20100101 Firefox/111.0"
-        ['engine']='curl'
-        ['file']="${2:-}"
-        ['url']="${1:?}"
-    )
+    bool['decompress']=0
+    bool['extract']=0
+    bool['progress']=1
+    dict['engine']='curl'
+    dict['file']="${2:-}"
+    dict['url']="${1:?}"
+    dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
+rv:109.0) Gecko/20100101 Firefox/111.0"
     pos=()
     while (("$#"))
     do
@@ -79,9 +75,8 @@ Gecko/20100101 Firefox/111.0"
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    declare -A app
     app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
-    [[ -x "${app['download']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"

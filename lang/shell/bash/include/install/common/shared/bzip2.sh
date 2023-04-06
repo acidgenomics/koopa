@@ -19,18 +19,15 @@ main() {
     #     3278c17bcee41c0c8b59a41ada8c0d35/raw/
     #     3bf890e2ad40d0af358e153395c228326f0b44d5/Makefile-libbz2_dylib
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['name']='bzip2'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='bzip2'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://sourceware.org/pub/${dict['name']}/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

@@ -3,18 +3,14 @@
 koopa_debian_apt_enabled_repos() {
     # """
     # Get a list of enabled default apt repos.
-    # @note Updated 2023-01-10.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    declare -A dict=(
-        ['file']="$(koopa_debian_apt_sources_file)"
-        ['os']="$(koopa_debian_os_codename)"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['file']="$(koopa_debian_apt_sources_file)"
+    dict['os']="$(koopa_debian_os_codename)"
     dict['pattern']="^deb\s.+\s${dict['os']}\s.+$"
     dict['str']="$( \
         koopa_grep \
@@ -25,4 +21,5 @@ koopa_debian_apt_enabled_repos() {
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
+    return 0
 }

@@ -3,26 +3,24 @@
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-04-06.
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'autoconf' \
         'automake' \
         'make' \
         'pkg-config'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['compress_ext']='bz2'
-        ['gcrypt_url']="$(koopa_gcrypt_url)"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['compress_ext']='bz2'
+    dict['gcrypt_url']="$(koopa_gcrypt_url)"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         # > '--enable-maintainer-mode'
         "--prefix=${dict['prefix']}"
@@ -143,10 +141,9 @@ gnupg_patch_dirmngr() {
     # - https://gitlab.com/goeb/gnupg-static/-/commit/
     #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
     # """
-    local app
-    declare -A app
+    local -A app
     app['sed']="$(koopa_locate_sed)"
-    [[ -x "${app['sed']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sed']}" \
         -e '/ks_ldap_free_state/i #if USE_LDAP' \
         -e '/ks_get_state =/a #endif' \

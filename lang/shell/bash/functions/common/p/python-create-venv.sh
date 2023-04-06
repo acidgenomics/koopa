@@ -15,17 +15,15 @@ koopa_python_create_venv() {
     # @examples
     # > koopa_python_create_venv --name='pandas' 'pandas'
     # """
-    local app dict pkgs pos venv_args
+    local -A app dict
+    local -a pkgs pos venv_args
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app
     app['python']=''
-    declare -A dict=(
-        ['name']=''
-        ['pip']=1
-        ['prefix']=''
-        ['system_site_packages']=1
-    )
+    dict['name']=''
+    dict['pip']=1
+    dict['prefix']=''
+    dict['system_site_packages']=1
     pos=()
     while (("$#"))
     do

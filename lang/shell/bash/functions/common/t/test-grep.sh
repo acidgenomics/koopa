@@ -12,22 +12,21 @@
 koopa_test_grep() {
     # """
     # Grep illegal patterns.
-    # @note Updated 2022-10-07.
+    # @note Updated 2023-04-05.
     #
     # Requires Perl-compatible regular expression (PCRE) support (-P).
     #
     # This doesn't currently ignore commented lines.
     # """
-    local app dict failures file pos
+    local -A app dict
+    local -a failures pos
+    local file
     koopa_assert_has_args "$#"
-    declare -A app
     app['grep']="$(koopa_locate_grep)"
-    [[ -x "${app['grep']}" ]] || return 1
-    declare -A dict=(
-        ['ignore']=''
-        ['name']=''
-        ['pattern']=''
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['ignore']=''
+    dict['name']=''
+    dict['pattern']=''
     pos=()
     while (("$#"))
     do
@@ -73,9 +72,6 @@ koopa_test_grep() {
         '--name' "${dict['name']}" \
         '--pattern' "${dict['pattern']}"
     failures=()
-
-    # FIXME How to set the different
-
     for file in "$@"
     do
         local x

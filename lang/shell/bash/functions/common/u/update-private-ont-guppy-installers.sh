@@ -3,23 +3,20 @@
 koopa_update_private_ont_guppy_installers() {
     # """
     # Download and push Oxford Nanopore guppy installers to our private bucket.
-    # @note Updated 2023-03-14.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://community.nanoporetech.com/downloads
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_has_private_access
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['base_url']='https://cdn.oxfordnanoportal.com/software/analysis'
-        ['name']='ont-guppy'
-        ['prefix']="$(koopa_tmp_dir)"
-        ['s3_profile']='acidgenomics'
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['base_url']='https://cdn.oxfordnanoportal.com/software/analysis'
+    dict['name']='ont-guppy'
+    dict['prefix']="$(koopa_tmp_dir)"
+    dict['s3_profile']='acidgenomics'
     dict['s3_target']="$(koopa_private_installers_s3_uri)/${dict['name']}"
     dict['version']="$(koopa_app_json_version "${dict['name']}")"
     koopa_mkdir \

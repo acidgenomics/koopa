@@ -3,31 +3,26 @@
 koopa_linux_bcbio_nextgen_add_genome() {
     # """
     # Install a natively supported bcbio-nextgen genome (e.g. hg38).
-    # @note Updated 2022-01-29.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_linux_bcbio_nextgen_add_genome 'hg38' 'mm10'
     # """
-    local app bcbio_args dict genome genomes
+    local -A app dict
+    local -a bcbio_args
+    local genome
     koopa_assert_has_args "$#"
-    genomes=("$@")
-    declare -A app=(
-        ['bcbio']="$(koopa_linux_locate_bcbio)"
-    )
-    declare -A dict=(
-        ['cores']="$(koopa_cpu_count)"
-    )
+    app['bcbio']="$(koopa_linux_locate_bcbio)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cores']="$(koopa_cpu_count)"
     bcbio_args=(
         "--cores=${dict['cores']}"
         '--upgrade=skip'
     )
-    for genome in "${genomes[@]}"
+    for genome in "$@"
     do
         bcbio_args+=("--genomes=${genome}")
     done
-    koopa_dl \
-        'Genomes' "$(koopa_to_string "${genomes[@]}")" \
-        'Args' "${bcbio_args[@]}"
     "${app['bcbio']}" upgrade "${bcbio_args[@]}"
     return 0
 }

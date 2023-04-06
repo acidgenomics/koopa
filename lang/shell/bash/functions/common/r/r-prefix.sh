@@ -3,21 +3,17 @@
 koopa_r_prefix() {
     # """
     # R prefix.
-    # @note Updated 2022-01-31.
+    # @note Updated 2023-04-05.
     #
     # We're suppressing errors here that can pop up if 'etc' isn't linked yet
     # after a clean install. Can warn about ldpaths missing.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['r']="${1:-}"
-    )
+    app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    [[ -x "${app['r']}" ]] || return 1
     app['rscript']="${app['r']}script"
-    [[ -x "${app['rscript']}" ]] || return 1
-    declare -A dict
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$( \
         "${app['rscript']}" \
             --vanilla \

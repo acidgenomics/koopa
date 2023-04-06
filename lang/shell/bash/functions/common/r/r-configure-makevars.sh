@@ -21,12 +21,12 @@ koopa_r_configure_makevars() {
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
-    local app conf_dict dict
-    local cppflags ldflags lines
-    declare -A app dict
+    local -A app app_pc_path_arr conf_dict dict
+    local -a app_pc_path_arr cppflags keys libintl ldflags lines pkg_config
+    local i key    
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
@@ -50,19 +50,6 @@ koopa_r_configure_makevars() {
     app['strip']='/usr/bin/strip'
     app['tar']="$(koopa_locate_tar --realpath)"
     app['yacc']="$(koopa_locate_yacc --realpath)"
-    [[ -x "${app['ar']}" ]] || return 1
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['gfortran']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['ranlib']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['strip']}" ]] || return 1
-    [[ -x "${app['tar']}" ]] || return 1
-    [[ -x "${app['yacc']}" ]] || return 1
     dict['arch']="$(koopa_arch)"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
@@ -104,8 +91,7 @@ koopa_r_configure_makevars() {
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
     fi
-    [[ -x "${app['cc']}" ]] || return 1
-    [[ -x "${app['cxx']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
@@ -121,8 +107,6 @@ koopa_r_configure_makevars() {
     if koopa_is_linux
     then
         # Ensure these values are in sync with Renviron.site file.
-        local app_pc_path_arr i key keys pkg_config
-        declare -A app_pc_path_arr
         keys=(
             'cairo'
             'curl7'
@@ -240,7 +224,6 @@ koopa_r_configure_makevars() {
         # libomp is installed at '/usr/local/lib' for macOS.
         ldflags+=('-lomp')
     fi
-    declare -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
     conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
@@ -335,7 +318,6 @@ koopa_r_configure_makevars() {
     then
         # R CRAN binary has 'Makeconf' containing (no '-lintl'):
         # > LIBINTL = -Wl,-framework -Wl,CoreFoundation
-        local libintl
         libintl=(
             # > '-lintl'
             # > '-liconv'

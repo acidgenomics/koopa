@@ -3,17 +3,17 @@
 main() {
     # """
     # Install Ensembl Perl API.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://useast.ensembl.org/info/docs/api/api_installation.html
     # """
-    local dict repo repos
+    local -A dict
+    local -a repos
+    local repo
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_git_clone \
         --branch='release-1-6-924' \
         --prefix="${dict['prefix']}/bioperl-live" \

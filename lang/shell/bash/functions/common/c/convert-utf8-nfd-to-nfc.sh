@@ -5,12 +5,10 @@ koopa_convert_utf8_nfd_to_nfc() {
     # Convert UTF-8 NFD to NFC.
     # @note Updated 2021-11-04.
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['convmv']="$(koopa_locate_convmv)"
-    )
-    [[ -x "${app['convmv']}" ]] || return 1
+    app['convmv']="$(koopa_locate_convmv)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     "${app['convmv']}" \
         -r \

@@ -5,29 +5,24 @@ koopa_bowtie2_align_per_sample() {
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
     # @note Updated 2022-10-11.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['bowtie2']="$(koopa_locate_bowtie2)"
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['bowtie2']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'sample1_R1_001.fastq.gz'.
-        ['fastq_r1_file']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. 'sample1_R2_001.fastq.gz'.
-        ['fastq_r2_file']=''
-        # e.g. '_R2_001.fastq.gz'.
-        ['fastq_r2_tail']=''
-        # e.g. 'bowtie2-index'.
-        ['index_dir']=''
-        # e.g. 'bowtie2'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['bowtie2']="$(koopa_locate_bowtie2)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'sample1_R1_001.fastq.gz'.
+    dict['fastq_r1_file']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. 'sample1_R2_001.fastq.gz'.
+    dict['fastq_r2_file']=''
+    # e.g. '_R2_001.fastq.gz'.
+    dict['fastq_r2_tail']=''
+    # e.g. 'bowtie2-index'.
+    dict['index_dir']=''
+    # e.g. 'bowtie2'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in

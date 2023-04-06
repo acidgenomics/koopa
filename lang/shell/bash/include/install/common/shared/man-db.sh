@@ -3,7 +3,7 @@
 main() {
     # """
     # Install man-db.
-    # @note Updated 2022-08-25.
+    # @note Updated 2023-04-06.
     #
     # Potentially useful:
     # > --program-prefix=g
@@ -12,14 +12,12 @@ main() {
     # - https://man-db.nongnu.org/development.html
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/man-db.rb
     # """
-    local dict
+    local -A dict
     koopa_activate_app \
         'groff' \
         'libpipeline' \
         'gdbm'
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='man-db' \

@@ -5,11 +5,9 @@ koopa_find_user_profile() {
     # Find current user's shell profile configuration file.
     # @note Updated 2022-11-28.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['shell']="$(koopa_default_shell_name)"
-    )
+    dict['shell']="$(koopa_default_shell_name)"
     case "${dict['shell']}" in
         'bash')
             dict['file']="${HOME}/.bashrc"

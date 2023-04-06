@@ -5,11 +5,13 @@ koopa_delete_broken_symlinks() {
     # Delete broken symlinks.
     # @note Updated 2020-11-18.
     # """
-    local prefix file files
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
     for prefix in "$@"
     do
+        local -a files
+        local file
         readarray -t files <<< "$(koopa_find_broken_symlinks "$prefix")"
         koopa_is_array_non_empty "${files[@]:-}" || continue
         koopa_alert_note "Removing ${#files[@]} broken symlinks."

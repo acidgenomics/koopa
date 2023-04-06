@@ -3,7 +3,7 @@
 koopa_find_and_replace_in_file() {
     # """
     # Find and replace inside files.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-05.
     #
     # Parameterized, supporting multiple files.
     #
@@ -33,18 +33,15 @@ koopa_find_and_replace_in_file() {
     # >     --replacement='YYY' \
     # >     'file1' 'file2' 'file3'
     # """
-    local app dict flags perl_cmd pos
+    local -A app dict
+    local -a flags perl_cmd pos
     koopa_assert_has_args "$#"
-    declare -A app
     app['perl']="$(koopa_locate_perl --allow-system)"
-    [[ -x "${app['perl']}" ]] || return 1
-    declare -A dict=(
-        ['multiline']=0
-        ['pattern']=''
-        ['regex']=0
-        ['replacement']=''
-        ['sudo']=0
-    )
+    dict['multiline']=0
+    dict['pattern']=''
+    dict['regex']=0
+    dict['replacement']=''
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -104,7 +101,6 @@ koopa_find_and_replace_in_file() {
     koopa_assert_is_file "$@"
     if [[ "${dict['regex']}" -eq 1 ]]
     then
-        # FIXME Need to improve the regex escaping here.
         dict['expr']="s|${dict['pattern']}|${dict['replacement']}|g"
     else
         dict['expr']=" \
@@ -121,11 +117,11 @@ koopa_find_and_replace_in_file() {
     then
         koopa_assert_is_admin
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         perl_cmd+=("${app['sudo']}" "${app['perl']}")
     else
         perl_cmd=("${app['perl']}")
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${perl_cmd[@]}" "${flags[@]}" -e "${dict['expr']}" "$@"
     return 0
 }

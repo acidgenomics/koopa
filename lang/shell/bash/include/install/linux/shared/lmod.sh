@@ -8,8 +8,9 @@ main() {
     # @seealso
     # - https://lmod.readthedocs.io/en/latest/030_installing.html
     # """
-    local app dict rock rocks
-    declare -A app dict
+    local -A app dict
+    local -a rocks
+    local rock
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
         'zlib' \
@@ -20,9 +21,7 @@ main() {
     app['luac']="$(koopa_locate_luac --realpath)"
     app['luarocks']="$(koopa_locate_luarocks --realpath)"
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['lua']}" ]] || return 1
-    [[ -x "${app['luarocks']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['lua']="$(koopa_app_prefix 'lua')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

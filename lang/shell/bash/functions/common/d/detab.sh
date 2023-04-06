@@ -5,12 +5,11 @@ koopa_detab() {
     # Detab files.
     # @note Updated 2022-05-20.
     # """
-    local app file
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['vim']="$(koopa_locate_vim)"
-    )
-    [[ -x "${app['vim']}" ]] || return 1
+    app['vim']="$(koopa_locate_vim)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     for file in "$@"
     do

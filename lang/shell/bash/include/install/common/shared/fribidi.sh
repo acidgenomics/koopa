@@ -3,23 +3,21 @@
 main() {
     # """
     # Install fribidi.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/fribidi/fribidi
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/fribidi.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_activate_app --build-only 'make' 'pkg-config'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='fribidi'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='fribidi'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
 download/v${dict['version']}/${dict['file']}"

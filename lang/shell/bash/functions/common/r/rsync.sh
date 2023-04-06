@@ -3,7 +3,7 @@
 koopa_rsync() {
     # """
     # GNU rsync wrapper.
-    # @note Updated 2022-08-23.
+    # @note Updated 2023-04-05.
     #
     # Useful arguments:
     #     --delete-before         receiver deletes before xfer, not during
@@ -32,16 +32,13 @@ koopa_rsync() {
     # See also:
     # - https://unix.stackexchange.com/questions/165423
     # """
-    local app dict rsync_args
+    local -A app dict
+    local -a rsync_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['rsync']="$(koopa_locate_rsync)"
-    )
-    [[ -x "${app['rsync']}" ]] || return 1
-    declare -A dict=(
-        ['source_dir']=''
-        ['target_dir']=''
-    )
+    app['rsync']="$(koopa_locate_rsync)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['source_dir']=''
+    dict['target_dir']=''
     rsync_args=(
         # > '--one-file-system'
         '--human-readable'

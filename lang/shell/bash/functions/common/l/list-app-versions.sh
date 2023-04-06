@@ -3,13 +3,11 @@
 koopa_list_app_versions() {
     # """
     # List installed application versions.
-    # @note Updated 2022-02-11.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['prefix']="$(koopa_app_prefix)"
-    )
+    dict['prefix']="$(koopa_app_prefix)"
     if [[ ! -d "${dict['prefix']}" ]]
     then
         koopa_alert_note "No apps are installed in '${dict['prefix']}'."

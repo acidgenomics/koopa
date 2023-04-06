@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Switch to a dict approach here.
 # FIXME Rework our location of conda environment tool here instead.
 # FIXME Also add bam sorting and indexing wrappers.
 # FIXME Add minimap2 index function.
@@ -21,9 +22,9 @@ koopa_samtools_convert_sam_to_bam() {
     # -o FILE               output file name [stdout]
     # -u                    uncompressed BAM output (implies -b)
     # """
-    local app bam_bn input_sam output_bam sam_bn threads
+    local -A app
+    local bam_bn input_sam output_bam sam_bn threads
     koopa_assert_has_args "$#"
-    declare -A app
     koopa_assert_is_installed 'samtools'
     while (("$#"))
     do

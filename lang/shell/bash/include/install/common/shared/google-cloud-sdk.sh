@@ -3,20 +3,18 @@
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
     # - https://github.com/Homebrew/homebrew-cask/blob/master/
     #     Casks/google-cloud-sdk.rb
     # """
-    local dict
+    local -A dict
     koopa_activate_app --build-only 'python3.10'
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_linux
     then
         dict['os']='linux'

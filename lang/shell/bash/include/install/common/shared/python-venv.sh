@@ -1,26 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Do we need to disable Python caching here?
-
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-02-13.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
     # """
-    local app bin_name bin_names dict man1_name man1_names pos
-    declare -A app
+    local -A app dict
+    local -a bin_names man1_names pos
+    local bin_name man1_name
     app['cut']="$(koopa_locate_cut --allow-system)"
-    [[ -x "${app['cut']}" ]] || return 1
-    declare -A dict=(
-        ['locate_python']='koopa_locate_python311'
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['py_maj_ver']=''
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['locate_python']='koopa_locate_python311'
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['py_maj_ver']=''
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     pos=()
     while (("$#"))
     do
@@ -58,7 +55,7 @@ main() {
     fi
     koopa_assert_is_function "${dict['locate_python']}"
     app['python']="$("${dict['locate_python']}" --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_no_args "$#"
     dict['libexec']="${dict['prefix']}/libexec"

@@ -3,24 +3,18 @@
 koopa_fasta_generate_chromosomes_file() {
     # """
     # Generate chromosomes text file from genome FASTA.
-    # @note Updated 2022-07-25.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['grep']="$(koopa_locate_grep)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['grep']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        ['genome_fasta_file']=''
-        # e.g. 'chromosomes.txt'
-        ['output_file']=''
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['grep']="$(koopa_locate_grep)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
+    dict['genome_fasta_file']=''
+    # e.g. 'chromosomes.txt'
+    dict['output_file']=''
     while (("$#"))
     do
         case "$1" in

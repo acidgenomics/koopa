@@ -3,7 +3,7 @@
 koopa_ssh_generate_key() {
     # """
     # Generate SSH key.
-    # @note Updated 2022-05-18.
+    # @note Updated 2023-04-05.
     #
     # This script is called inside our Linux VM configuration function, so
     # don't use assert here.
@@ -18,17 +18,14 @@ koopa_ssh_generate_key() {
     # @seealso
     # - https://blog.g3rt.nl/upgrade-your-ssh-keys.html
     # """
-    local app dict ssh_args
-    declare -A app=(
-        ['ssh_keygen']="$(koopa_locate_ssh_keygen)"
-    )
-    [[ -x "${app['ssh_keygen']}" ]] || return 1
-    declare -A dict=(
-        ['hostname']="$(koopa_hostname)"
-        ['key_name']='id_rsa' # or 'id_ed25519'.
-        ['prefix']="${HOME:?}/.ssh"
-        ['user']="$(koopa_user_name)"
-    )
+    local -A app dict
+    local -a ssh_args
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['hostname']="$(koopa_hostname)"
+    dict['key_name']='id_rsa' # or 'id_ed25519'.
+    dict['prefix']="${HOME:?}/.ssh"
+    dict['user']="$(koopa_user_name)"
     while (("$#"))
     do
         case "$1" in

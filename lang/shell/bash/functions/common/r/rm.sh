@@ -3,17 +3,13 @@
 koopa_rm() {
     # """
     # Remove files/directories quietly with GNU rm.
-    # @note Updated 2022-09-02.
+    # @note Updated 2023-04-05.
     # """
-    local app dict pos rm rm_args
-    declare -A app
+    local -A app dict
+    local -a pos rm rm_args
     app['rm']="$(koopa_locate_rm --allow-system)"
-    # > koopa_is_macos && app['rm']='/bin/rm'
-    [[ -x "${app['rm']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-        ['verbose']=0
-    )
+    dict['sudo']=0
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -51,11 +47,11 @@ koopa_rm() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         rm+=("${app['sudo']}" "${app['rm']}")
     else
         rm=("${app['rm']}")
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${rm[@]}" "${rm_args[@]}" "$@"
     return 0
 }

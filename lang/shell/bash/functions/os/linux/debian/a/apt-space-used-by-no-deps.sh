@@ -3,22 +3,20 @@
 koopa_debian_apt_space_used_by_no_deps() {
     # """
     # Check install apt package size, without dependencies.
-    # @note Updated 2021-11-02.
+    # @note Updated 2023-04-05.
     # """
-    local app x
+    local -A app
+    local str
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
-        ['apt']="$(koopa_debian_locate_apt)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['apt']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    x="$( \
+    app['apt']="$(koopa_debian_locate_apt)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    str="$( \
         "${app['sudo']}" "${app['apt']}" show "$@" 2>/dev/null \
             | koopa_grep --pattern='Size' \
     )"
-    [[ -n "$x" ]] || return 1
-    koopa_print "$x"
+    [[ -n "$str" ]] || return 1
+    koopa_print "$str"
     return 0
 }

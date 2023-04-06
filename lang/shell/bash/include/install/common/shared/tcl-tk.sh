@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -12,7 +12,8 @@ main() {
     # - https://github.com/macports/macports-ports/blob/master/lang/tcl/Portfile
     # - https://github.com/macports/macports-ports/blob/master/x11/tk/Portfile
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app 'zlib'
     if koopa_is_linux
@@ -27,15 +28,13 @@ main() {
             'xorg-libxcb' \
             'xorg-libx11'
     fi
-    declare -A app
+    local -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['url_stem']='https://prdownloads.sourceforge.net/tcl'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['url_stem']='https://prdownloads.sourceforge.net/tcl'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     conf_args=(
         "--prefix=${dict['prefix']}"

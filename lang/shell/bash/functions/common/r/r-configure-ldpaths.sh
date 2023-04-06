@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-06.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -23,15 +23,14 @@ koopa_r_configure_ldpaths() {
     #
     # https://r-spatial.org/r/2022/04/12/evolution.html
     # """
-    local app dict key keys ld_lib_arr ld_lib_app_arr lines
+    local -A app dict ld_lib_app_arr
+    local -a keys ld_lib_arr lines
+    local key
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \
@@ -54,7 +53,6 @@ koopa_r_configure_ldpaths() {
         ": \${JAVA_HOME=${dict['java_home']}}"
         ": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}"
     )
-    declare -A ld_lib_app_arr
     keys=(
         'bzip2'
         'cairo'
@@ -141,10 +139,9 @@ koopa_r_configure_ldpaths() {
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
-        local sys_libdir
-        sys_libdir="/usr/lib/${dict['arch']}-linux-gnu"
-        koopa_assert_is_dir "$sys_libdir"
-        ld_lib_arr+=("$sys_libdir")
+        dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
+        koopa_assert_is_dir "${dict['sys_libdir']}"
+        ld_lib_arr+=("${dict['sys_libdir']}")
     fi
     [[ -d '/usr/lib' ]] && ld_lib_arr+=('/usr/lib')
     [[ -d '/lib' ]] && ld_lib_arr+=('/lib')

@@ -3,27 +3,23 @@
 koopa_system_info() {
     # """
     # System information.
-    # @note Updated 2022-10-13.
+    # @note Updated 2023-04-05.
     # """
-    local app dict info nf_info
+    local -A app dict
+    local -a info nf_info
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['bash']="$(koopa_locate_bash --allow-system)"
-        ['cat']="$(koopa_locate_cat --allow-system)"
-    )
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['cat']}" ]] || return 1
-    declare -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['arch']="$(koopa_arch)"
-        ['arch2']="$(koopa_arch2)"
-        ['bash_version']="$(koopa_get_version "${app['bash']}")"
-        ['config_prefix']="$(koopa_config_prefix)"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['koopa_url']="$(koopa_koopa_url)"
-        ['koopa_version']="$(koopa_koopa_version)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    app['bash']="$(koopa_locate_bash --allow-system)"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['arch']="$(koopa_arch)"
+    dict['arch2']="$(koopa_arch2)"
+    dict['bash_version']="$(koopa_get_version "${app['bash']}")"
+    dict['config_prefix']="$(koopa_config_prefix)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['koopa_url']="$(koopa_koopa_url)"
+    dict['koopa_version']="$(koopa_koopa_version)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
 koopa/ascii-turtle.txt"
     koopa_assert_is_file "${dict['ascii_turtle_file']}"
@@ -59,7 +55,7 @@ koopa/ascii-turtle.txt"
     if koopa_is_macos
     then
         app['sw_vers']="$(koopa_macos_locate_sw_vers)"
-        [[ -x "${app['sw_vers']}" ]] || return 1
+        koopa_assert_is_executable "${app['sw_vers']}"
         dict['os']="$( \
             printf '%s %s (%s)\n' \
                 "$("${app['sw_vers']}" -productName)" \
@@ -68,7 +64,7 @@ koopa/ascii-turtle.txt"
         )"
     else
         app['uname']="$(koopa_locate_uname --allow-system)"
-        [[ -x "${app['uname']}" ]] || return 1
+        koopa_assert_is_executable "${app['uname']}"
         dict['os']="$("${app['uname']}" --all)"
     fi
     info+=(
@@ -79,10 +75,9 @@ koopa/ascii-turtle.txt"
         "Architecture: ${dict['arch']} / ${dict['arch2']}"
         "Bash: ${dict['bash_version']}"
     )
-    if koopa_is_installed 'neofetch'
+    app['neofetch']="$(koopa_locate_neofetch --allow-missing)"
+    if [[ -x "${app['neofetch']}" ]]
     then
-        app['neofetch']="$(koopa_locate_neofetch)"
-        [[ -x "${app['neofetch']}" ]] || return 1
         readarray -t nf_info <<< "$("${app['neofetch']}" --stdout)"
         info+=(
             ''

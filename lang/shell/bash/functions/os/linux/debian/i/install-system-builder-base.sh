@@ -3,7 +3,7 @@
 koopa_debian_install_system_builder_base() {
     # """
     # Bootstrap the Debian/Ubuntu builder AMI.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
@@ -11,21 +11,15 @@ koopa_debian_install_system_builder_base() {
     # - https://sleeplessbeastie.eu/2018/09/17/
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
-    local app
-    declare -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['cat']="$(koopa_locate_cat --allow-system)"
-        ['debconf_set_selections']="$( \
-            koopa_debian_locate_debconf_set_selections \
-        )"
-        ['echo']="$(koopa_locate_echo --allow-system)"
-        ['sudo']="$(koopa_locate_sudo --allow-system)"
-    )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['debconf_set_selections']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    local -A app
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['debconf_set_selections']="$( \
+        koopa_debian_locate_debconf_set_selections \
+    )"
+    app['echo']="$(koopa_locate_echo --allow-system)"
+    app['sudo']="$(koopa_locate_sudo --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" update
     "${app['sudo']}" \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
@@ -74,10 +68,7 @@ END
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
-    [[ -x "${app['dpkg_reconfigure']}" ]] || return 1
-    [[ -x "${app['locale_gen']}" ]] || return 1
-    [[ -x "${app['timedatectl']}" ]] || return 1
-    [[ -x "${app['update_locale']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" autoremove --yes
     "${app['sudo']}" "${app['apt_get']}" clean
     "${app['sudo']}" "${app['timedatectl']}" set-timezone 'America/New_York'

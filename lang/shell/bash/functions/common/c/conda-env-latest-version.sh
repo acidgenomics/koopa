@@ -5,19 +5,14 @@ koopa_conda_env_latest_version() {
     # Get the latest version of a conda environment available.
     # @note Updated 2022-01-17.
     # """
-    local app dict str
+    local -A app dict
+    local str
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['conda']="$(koopa_locate_conda)"
-        ['tail']="$(koopa_locate_tail)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['conda']}" ]] || return 1
-    [[ -x "${app['tail']}" ]] || return 1
-    declare -A dict=(
-        ['env_name']="${1:?}"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['conda']="$(koopa_locate_conda)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['env_name']="${1:?}"
     # shellcheck disable=SC2016
     str="$( \
         "${app['conda']}" search --quiet "${dict['env_name']}" \

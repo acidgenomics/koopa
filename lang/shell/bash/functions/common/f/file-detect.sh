@@ -15,15 +15,14 @@ koopa_file_detect() {
     # echo FILE | koopa_file_detect_fixed --pattern='PATTERN'
     # echo FILE | koopa_file_detect_regex --pattern='^PATTERN.+$'
     # """
-    local dict grep_args
+    local -A dict
+    local -a grep_args
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['file']=''
-        ['mode']=''
-        ['pattern']=''
-        ['stdin']=1
-        ['sudo']=0
-    )
+    dict['file']=''
+    dict['mode']=''
+    dict['pattern']=''
+    dict['stdin']=1
+    dict['sudo']=0
     while (("$#"))
     do
         case "$1" in

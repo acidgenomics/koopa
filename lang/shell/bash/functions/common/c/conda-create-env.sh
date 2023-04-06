@@ -3,28 +3,25 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
     #     manage-environments.html#sharing-an-environment
     # - https://github.com/conda/conda/issues/6827
     # """
-    local app dict pos string
+    local -A app dict
+    local -a pos
+    local string
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['conda']}" ]] || return 1
-    [[ -x "${app['cut']}" ]] || return 1
-    declare -A dict=(
-        ['env_prefix']="$(koopa_conda_env_prefix)"
-        ['force']=0
-        ['latest']=0
-        ['prefix']=''
-        ['yaml_file']=''
-    )
+    app['conda']="$(koopa_locate_conda)"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['env_prefix']="$(koopa_conda_env_prefix)"
+    dict['force']=0
+    dict['latest']=0
+    dict['prefix']=''
+    dict['yaml_file']=''
     pos=()
     while (("$#"))
     do
@@ -99,8 +96,7 @@ koopa_conda_create_env() {
     [[ -z "${dict['yaml_file']}" ]] || return 1
     for string in "$@"
     do
-        local dict2
-        declare -A dict2
+        local -A dict2
         # Note that we're using 'salmon@1.4.0' for the environment name but
         # must use 'salmon=1.4.0' in the call to conda below.
         dict2['env_string']="${string//@/=}"

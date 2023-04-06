@@ -5,9 +5,10 @@ koopa_sambamba_sort() {
     # Sort multiple BAM files in a directory.
     # @note Updated 2022-10-11.
     # """
-    local bam_file bam_files dict
+    local -A dict
+    local -a bam_files
+    local bam_file
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict
     dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     readarray -t bam_files <<< "$( \

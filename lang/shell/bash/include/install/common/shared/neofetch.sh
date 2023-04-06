@@ -3,19 +3,15 @@
 main() {
     # """
     # Install neofetch.
-    # @note Updated 2021-12-14.
+    # @note Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['name']='neofetch'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='neofetch'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/dylanaraps/${dict['name']}/\
 archive/${dict['file']}"

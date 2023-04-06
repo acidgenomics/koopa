@@ -3,18 +3,14 @@
 koopa_chown() {
     # """
     # Hardened version of coreutils chown (change ownership).
-    # @note Updated 2021-10-29.
+    # @note Updated 2023-04-05.
     # """
-    local app chown dict pos
-    declare -A app=(
-        ['chown']="$(koopa_locate_chown)"
-    )
-    [[ -x "${app['chown']}" ]] || return 1
-    declare -A dict=(
-        ['dereference']=1
-        ['recursive']=0
-        ['sudo']=0
-    )
+    local -A app dict
+    local -a chown pos
+    app['chown']="$(koopa_locate_chown)"
+    dict['dereference']=1
+    dict['recursive']=0
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do
@@ -55,7 +51,6 @@ koopa_chown() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         chown=("${app['sudo']}" "${app['chown']}")
     else
         chown=("${app['chown']}")
@@ -68,6 +63,7 @@ koopa_chown() {
     then
         chown+=('-h')
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${chown[@]}" "$@"
     return 0
 }

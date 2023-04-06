@@ -8,7 +8,7 @@
 koopa_hisat2_align_single_end_per_sample() {
     # """
     # Run HISAT2 aligner on a single-end sample.
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-04-05.
     #
     # @examples
     # > koopa_hisat2_align_single_end_per_sample \
@@ -17,27 +17,24 @@ koopa_hisat2_align_single_end_per_sample() {
     # >     --index-dir='hisat2-index' \
     # >     --output-dir='hisat2'
     # """
-    local align_args app dict
+    local -A app dict
+    local -a align_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['hisat2']="$(koopa_locate_hisat2)"
-    )
-    [[ -x "${app['hisat2']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'sample1_001.fastq.gz'.
-        ['fastq_file']=''
-        # e.g. '_001.fastq.gz'.
-        ['fastq_tail']=''
-        # e.g. 'hisat2-index'.
-        ['index_dir']=''
-        # Using salmon fragment library type conventions here.
-        ['lib_type']='A'
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        # e.g. 'hisat2'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['hisat2']="$(koopa_locate_hisat2)"
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'sample1_001.fastq.gz'.
+    dict['fastq_file']=''
+    # e.g. '_001.fastq.gz'.
+    dict['fastq_tail']=''
+    # e.g. 'hisat2-index'.
+    dict['index_dir']=''
+    # Using salmon fragment library type conventions here.
+    dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    # e.g. 'hisat2'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     align_args=()
     while (("$#"))
     do
@@ -138,6 +135,6 @@ koopa_hisat2_align_single_end_per_sample() {
     fi
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    # FIXME Convert the SAM file to BAM file here.
+    # FIXME Convert the SAM file to BAM file here?
     return 0
 }

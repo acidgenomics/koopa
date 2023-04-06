@@ -3,7 +3,7 @@
 main() {
     # """
     # Install NCBI VDB.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-06.
     #
     # VDB is the database engine that all SRA tools use.
     #
@@ -12,15 +12,14 @@ main() {
     # - https://github.com/bioconda/bioconda-recipes/tree/master/
     #     recipes/ncbi-vdb
     # """
-    local app cmake_args deps dict
-    declare -A app dict
+    local -A app dict
+    local -a cmake_args deps
     koopa_assert_has_no_args "$#"
     deps=('bison' 'flex' 'hdf5' 'python3.11')
     koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -38,6 +37,15 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    # Workaround to allow 'clang/aarch64' build to use 'gcc/arm64' directory.
+    # Issue ref: https://github.com/ncbi/ncbi-vdb/issues/65
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        (
+            koopa_cd 'interfaces/cc/clang'
+            koopa_ln '../gcc/arm64' 'arm64'
+        )
+    fi
     if koopa_is_root
     then
         # Disable creation of these files:

@@ -13,9 +13,9 @@ koopa_extract() {
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local app cmd_args dict
+    local -A app dict
+    local -a cmd_args
     koopa_assert_has_args_le "$#" 2
-    declare -A app dict
     dict['file']="${1:?}"
     dict['target']="${2:-}"
     dict['wd']="${PWD:?}"
@@ -49,13 +49,12 @@ koopa_extract() {
             *'.tar' | \
             *'.tar.'* | \
             *'.tgz')
-                local tar_cmd_args
+                local -a tar_cmd_args
                 tar_cmd_args=(
                     '-f' "${dict['file']}" # '--file'.
                     '-x' # '--extract'.
                 )
                 app['tar']="$(koopa_locate_tar --allow-system)"
-                [[ -x "${app['tar']}" ]] || return 1
                 if koopa_is_root && koopa_is_gnu "${app['tar']}"
                 then
                     tar_cmd_args+=(
@@ -77,28 +76,24 @@ koopa_extract() {
                 case "${dict['file']}" in
                     *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
-                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-j') # '--bzip2'.
                         ;;
                     *'.gz' | *'.tgz')
                         app['cmd2']="$(koopa_locate_gzip --allow-system)"
-                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-z') # '--gzip'.
                         ;;
                     *'.lz')
                         app['cmd2']="$(koopa_locate_lzip --allow-system)"
-                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('--lzip')
                         ;;
                     *'.xz')
                         app['cmd2']="$(koopa_locate_xz --allow-system)"
-                        [[ -x "${app['cmd2']}" ]] || return 1
                         koopa_add_to_path_start \
                             "$(koopa_dirname "${app['cmd2']}")"
                         cmd_args+=('-J') # '--xz'.
@@ -149,14 +144,14 @@ koopa_extract() {
                 koopa_stop 'Unsupported file type.'
                 ;;
         esac
-        [[ -x "${app['cmd']}" ]] || return 1
+        koopa_assert_is_executable "${app[@]}"
         "${app['cmd']}" "${cmd_args[@]}" 2>/dev/null
     )
     if [[ "${dict['move_into_target']}" -eq 1 ]]
     then
         koopa_rm "${dict['tmpfile']}"
         app['wc']="$(koopa_locate_wc --allow-system)"
-        [[ -x "${app['wc']}" ]] || return 1
+        koopa_assert_is_executable "${app['wc']}"
         dict['count']="$( \
             koopa_find \
                 --max-depth=1 \

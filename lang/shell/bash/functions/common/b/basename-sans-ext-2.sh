@@ -11,14 +11,14 @@ koopa_basename_sans_ext_2() {
     #
     # See also: koopa_file_ext_2
     # """
-    local app file str
+    local -A app
+    local file
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
+        local str
         str="$(koopa_basename "$file")"
         if koopa_has_file_ext "$str"
         then

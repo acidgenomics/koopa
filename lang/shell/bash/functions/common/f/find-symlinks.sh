@@ -5,7 +5,7 @@
 koopa_find_symlinks() {
     # """
     # Find symlinks matching a specified source prefix.
-    # @note Updated 2022-04-01.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_find_symlinks \
@@ -15,13 +15,13 @@ koopa_find_symlinks() {
     # >     --source-prefix="$(koopa_macos_r_prefix)" \
     # >     --target-prefix="$(koopa_koopa_prefix)/bin"
     # """
-    local dict hits symlink symlinks
+    local -A dict
+    local -a hits symlinks
+    local symlink
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['source_prefix']=''
-        ['target_prefix']=''
-        ['verbose']=0
-    )
+    dict['source_prefix']=''
+    dict['target_prefix']=''
+    dict['verbose']=0
     hits=()
     while (("$#"))
     do

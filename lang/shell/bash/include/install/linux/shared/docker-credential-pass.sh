@@ -7,16 +7,14 @@
 main() {
     # """
     # Install docker-credential-pass.
-    # @note Updated 2022-11-15.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['name']='docker-credential-pass'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['name']='docker-credential-pass'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-v${dict['version']}.linux-${dict['arch']}"
     dict['url']="https://github.com/docker/docker-credential-helpers/releases/\
 download/v${dict['version']}/${dict['file']}"

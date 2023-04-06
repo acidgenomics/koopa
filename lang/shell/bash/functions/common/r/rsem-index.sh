@@ -3,7 +3,7 @@
 koopa_rsem_index() {
     # """
     # Create a genome index for RSEM aligner.
-    # @note Updated 2023-03-01.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/rsem.py
@@ -14,23 +14,20 @@ koopa_rsem_index() {
     # >     --gtf-file='gencode.v39.annotation.gtf.gz' \
     # >     --output-dir='rsem-index'
     # """
-    local app dict index_args
-    declare -A app=(
-        ['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
-    )
-    [[ -x "${app['rsem_prepare_reference']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
-        ['genome_fasta_file']=''
-        # e.g. 'gencode.v39.annotation.gtf.gz'
-        ['gtf_file']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=10
-        # e.g. 'rsem-index'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    local -A app dict
+    local -a index_args
+    app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
+    dict['genome_fasta_file']=''
+    # e.g. 'gencode.v39.annotation.gtf.gz'
+    dict['gtf_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=10
+    # e.g. 'rsem-index'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     index_args=()
     while (("$#"))
     do

@@ -11,7 +11,7 @@ koopa_is_array_non_empty() {
     # @seealso
     # - https://serverfault.com/questions/477503/
     # """
-    local arr
+    local -a arr
     [[ "$#" -gt 0 ]] || return 1
     arr=("$@")
     [[ "${#arr[@]}" -gt 0 ]] || return 1

@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 
-# When zstd is enabled, we're hitting these errors on macOS:
-#
-# In file included from cleanup.c:23:
-# ./rsync.h:604:3: error: Could not find a 32-bit integer variable
-# # error Could not find a 32-bit integer variable
-# ./rsync.h:673:2: error: unknown type name 'int32'
-#         int32 size, entries;
-# ./rsync.h:674:8: error: expected ';' at end of declaration list
-#         uint32 node_size;
+# FIXME Include support for popt here.
 
 main() {
     # """
     # Install rsync.
-    # @note Updated 2022-08-11.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://download.samba.org/pub/rsync/INSTALL
@@ -21,36 +13,28 @@ main() {
     # - https://download.samba.org/pub/rsync/NEWS
     # - https://bugs.gentoo.org/729186
     # """
-    local app deps dict
+    local -A app dict
+    local -a deps
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    deps=()
-    if koopa_is_linux
-    then
-        deps+=('zstd')
-    fi
-    deps+=(
+    deps=(
         'zlib'
+        'zstd'
         'lz4'
         'openssl3'
         'xxhash'
     )
     koopa_activate_app  "${deps[@]}"
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='rsync'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://download.samba.org/pub/${dict['name']}/src/\
-${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['url']="https://download.samba.org/pub/rsync/src/\
+rsync-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-debug'

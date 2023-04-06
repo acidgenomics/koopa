@@ -13,11 +13,10 @@ koopa_update_system_homebrew() {
     # - https://thecoatlessprofessor.com/programming/
     #       macos/updating-a-homebrew-formula/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_is_admin
-    declare -A app dict
     app['brew']="$(koopa_locate_brew)"
-    [[ -x "${app['brew']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['reset']=0
     while (("$#"))
     do

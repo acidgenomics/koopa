@@ -31,31 +31,25 @@ koopa_docker_build() {
     #       on-an-m1-mac/
     #
     # @examples
-    # > local_dir="${HOME}/.config/koopa/docker/acidgenomics/koopa/debian"
-    # > remote_url='public.ecr.aws/x3y6k8r3/koopa:debian'
-    # > koopa app docker build --local="$local_dir" --remote="$remote_url"
+    # > local="${HOME}/.config/koopa/docker/acidgenomics/koopa/debian"
+    # > remote='public.ecr.aws/x3y6k8r3/koopa:debian'
+    # > koopa app docker build --local="$local" --remote="$remote"
     # """
-    local app dict
-    local build_args image_ids platforms tag tags
+    local -A app dict
+    local -a build_args image_ids platforms tags
+    local tag
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['date']="$(koopa_locate_date)"
-        ['docker']="$(koopa_locate_docker)"
-        ['sort']="$(koopa_locate_sort)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['date']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    declare -A dict=(
-        ['default_tag']='latest'
-        ['delete']=1
-        ['local_dir']=''
-        ['memory']=''
-        ['push']=1
-        ['remote_url']=''
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['date']="$(koopa_locate_date)"
+    app['docker']="$(koopa_locate_docker)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['default_tag']='latest'
+    dict['delete']=1
+    dict['local_dir']=''
+    dict['memory']=''
+    dict['push']=1
+    dict['remote_url']=''
     while (("$#"))
     do
         case "$1" in
@@ -235,7 +229,7 @@ koopa_docker_build() {
         --name="${dict['build_name']}" \
         --use \
         >/dev/null
-    "${app['docker']}" buildx build "${build_args[@]}" || return 1
+    "${app['docker']}" buildx build "${build_args[@]}"
     "${app['docker']}" buildx rm "${dict['build_name']}"
     "${app['docker']}" image ls \
         --filter \

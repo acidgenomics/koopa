@@ -3,18 +3,18 @@
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2022-08-27.
+    # @note Updated 2023-04-05.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
     # function.
     # """
-    local app cask casks
+    local -A app
+    local -a casks
+    local cask
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
-    [[ -x "${app['brew']}" ]] || return 1
+    app['brew']="$(koopa_locate_brew)"
+    koopa_assert_is_executable "${app[@]}"
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
     koopa_is_array_non_empty "${casks[@]:-}" || return 0
     koopa_dl \

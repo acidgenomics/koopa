@@ -5,12 +5,10 @@ koopa_conda_deactivate() {
     # Deactivate Conda environment.
     # @note Updated 2023-03-09.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['env_name']="${CONDA_DEFAULT_ENV:-}"
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
+    dict['env_name']="${CONDA_DEFAULT_ENV:-}"
+    dict['nounset']="$(koopa_boolean_nounset)"
     if [[ -z "${dict['env_name']}" ]]
     then
         koopa_stop 'conda is not active.'

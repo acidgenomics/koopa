@@ -3,24 +3,24 @@
 koopa_macos_homebrew_cask_version() {
     # """
     # Get Homebrew Cask version.
-    # @note Updated 2022-05-19.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_macos_homebrew_cask_version 'gpg-suite'
     # # 2019.2
     # """
-    local app cask x
+    local -A app
+    local cask
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-    )
-    [[ -x "${app['brew']}" ]] || return 1
+    app['brew']="$(koopa_locate_brew)"
+    koopa_assert_is_executable "${app[@]}"
     for cask in "$@"
     do
-        x="$("${app['brew']}" info --cask "$cask")"
-        x="$(koopa_extract_version "$x")"
-        [[ -n "$x" ]] || return 1
-        koopa_print "$x"
+        local str
+        str="$("${app['brew']}" info --cask "$cask")"
+        str="$(koopa_extract_version "$str")"
+        [[ -n "$str" ]] || return 1
+        koopa_print "$str"
     done
     return 0
 }
