@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2022-09-12.
+    # @note Updated 2023-04-06.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -26,23 +26,21 @@ main() {
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     koopa_activate_app \
         'ncurses' \
         'pcre' \
         'texinfo'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['bin_prefix']="$(koopa_bin_prefix)"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='zsh'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='zsh'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://downloads.sourceforge.net/project/\
 ${dict['name']}/${dict['name']}/${dict['version']}/${dict['file']}"
