@@ -6,7 +6,7 @@
 koopa_decompress() {
     # """
     # Decompress a compressed file.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-04-05.
     #
     # This function currently allows uncompressed files to pass through.
     #
@@ -30,12 +30,12 @@ koopa_decompress() {
     # # head -n 1 <(koopa_decompress --stdout 'sample.fastq')
     # # @A01587:114:GW2203131905th:2:1101:5791:1031 1:N:0:CGATCAGT+TTAGAGAG
     # """
-    local cmd cmd_args dict pos
+    local -A dict
+    local -a cmd_args pos
+    local cmd
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-        ['stdout']=0
-    )
+    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    dict['stdout']=0
     pos=()
     while (("$#"))
     do

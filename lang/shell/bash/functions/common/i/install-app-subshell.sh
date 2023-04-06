@@ -3,20 +3,19 @@
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2022-11-04.
+    # @note Updated 2023-04-05.
     # """
-    local dict pos
-    declare -A dict=(
-        ['installer_bn']=''
-        ['installer_fun']='main'
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['mode']='shared'
-        ['name']="${KOOPA_INSTALL_NAME:-}"
-        ['platform']='common'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:-}"
-        ['tmp_dir']="$(koopa_tmp_dir)"
-        ['version']="${KOOPA_INSTALL_VERSION:-}"
-    )
+    local -A dict
+    local -a pos
+    dict['installer_bn']=''
+    dict['installer_fun']='main'
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['mode']='shared'
+    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['platform']='common'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
+    dict['version']="${KOOPA_INSTALL_VERSION:-}"
     pos=()
     while (("$#"))
     do

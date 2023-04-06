@@ -10,11 +10,11 @@ koopa_stat_group_id() {
     # # 0
     # # 20
     # """
+    local -A app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
-    declare -A app dict
     app['stat']="$(koopa_locate_stat --allow-system)"
-    [[ -x "${app['stat']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['format_string']='%g'
     if koopa_is_gnu "${app['stat']}"
     then

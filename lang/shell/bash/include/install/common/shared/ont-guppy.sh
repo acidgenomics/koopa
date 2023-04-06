@@ -3,22 +3,22 @@
 main() {
     # """
     # Install Oxford Nanopore guppy caller.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    koopa_is_macos && koopa_assert_is_not_aarch64
-    declare -A app
+    if koopa_is_macos
+    then
+        koopa_assert_is_not_aarch64
+    fi
     app['aws']="$(koopa_locate_aws --allow-system)"
-    [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['core_type']='cpu' # or 'gpu'.
-        ['installers_base']="$(koopa_private_installers_s3_uri)"
-        ['name']='ont-guppy'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['core_type']='cpu' # or 'gpu'.
+    dict['installers_base']="$(koopa_private_installers_s3_uri)"
+    dict['name']='ont-guppy'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     if koopa_is_macos
     then

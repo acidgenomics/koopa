@@ -10,11 +10,11 @@ koopa_stat_user_name() {
     # # root
     # # mike
     # """
+    local -A app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_existing "$@"
-    declare -A app dict
     app['stat']="$(koopa_locate_stat --allow-system)"
-    [[ -x "${app['stat']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     if koopa_is_gnu "${app['stat']}"
     then
         dict['format_flag']='--format'

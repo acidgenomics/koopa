@@ -3,7 +3,7 @@
 koopa_salmon_quant_single_end_per_sample() {
     # """
     # Run salmon quant on a single-end sample.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-05.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -19,28 +19,25 @@ koopa_salmon_quant_single_end_per_sample() {
     # >     --index-dir='salmon-index' \
     # >     --output-dir='salmon'
     # """
-    local app dict quant_args
+    local -A app dict
+    local -a quant_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['salmon']="$(koopa_locate_salmon)"
-    )
-    [[ -x "${app['salmon']}" ]] || return 1
-    declare -A dict=(
-        ['bootstraps']=30
-        # e.g. 'sample1.fastq.gz'.
-        ['fastq_file']=''
-        # e.g. '.fastq.gz'.
-        ['fastq_tail']=''
-        # e.g. 'salmon-index'.
-        ['index_dir']=''
-        # Detect library fragment type (strandedness) automatically.
-        ['lib_type']='A'
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        # e.g. 'salmon'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['salmon']="$(koopa_locate_salmon)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bootstraps']=30
+    # e.g. 'sample1.fastq.gz'.
+    dict['fastq_file']=''
+    # e.g. '.fastq.gz'.
+    dict['fastq_tail']=''
+    # e.g. 'salmon-index'.
+    dict['index_dir']=''
+    # Detect library fragment type (strandedness) automatically.
+    dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    # e.g. 'salmon'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     quant_args=()
     while (("$#"))
     do

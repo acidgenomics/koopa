@@ -11,7 +11,8 @@ koopa_reinstall_only_revdeps() {
     # @examples
     # > koopa_reinstall_only_revdeps --push 'node' 'python3.11'
     # """
-    local app_name flags pos
+    local -a flags pos
+    local app_name
     koopa_assert_has_args "$#"
     flags=()
     pos=()
@@ -33,7 +34,7 @@ koopa_reinstall_only_revdeps() {
     koopa_assert_has_args "$#"
     for app_name in "$@"
     do
-        local install_args revdeps
+        local -a install_args revdeps
         install_args=()
         if koopa_is_array_non_empty "${flags[@]}"
         then

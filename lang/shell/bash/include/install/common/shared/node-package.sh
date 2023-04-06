@@ -5,27 +5,22 @@
 main() {
     # """
     # Install Node.js package using npm.
-    # @note Updated 2022-11-23.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - npm help config
     # - npm help install
     # - npm config get prefix
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['node']="$(koopa_locate_node)"
-        ['npm']="$(koopa_locate_npm)"
-    )
-    [[ -x "${app['node']}" ]] || return 1
-    [[ -x "${app['npm']}" ]] || return 1
+    app['node']="$(koopa_locate_node)"
+    app['npm']="$(koopa_locate_npm)"
+    koopa_assert_is_executable "${app[@]}"
     app['node']="$(koopa_realpath "${app['node']}")"
-    declare -A dict=(
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"
     export NPM_CONFIG_UPDATE_NOTIFIER=false

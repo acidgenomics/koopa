@@ -13,8 +13,8 @@ main() {
     # - https://cmake.org/pipermail/cmake/2012-June/050792.html
     # - https://github.com/gabime/spdlog/issues/1190
     # """
-    local cmake_args cmake_dict dict
-    declare -A cmake_dict dict
+    local -A cmake dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'zlib'
@@ -23,18 +23,18 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     koopa_assert_is_dir "${dict['zlib']}"
-    cmake_dict['zlib_include_dir']="${dict['zlib']}/include"
-    cmake_dict['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    koopa_assert_is_dir "${cmake_dict['zlib_include_dir']}"
-    koopa_assert_is_file "${cmake_dict['zlib_library']}"
+    cmake['zlib_include_dir']="${dict['zlib']}/include"
+    cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_assert_is_dir "${cmake['zlib_include_dir']}"
+    koopa_assert_is_file "${cmake['zlib_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTS=OFF'
         '-DWITH_ZLIB=ON'
         # Dependency paths -----------------------------------------------------
-        "-DZLIB_INCLUDE_DIR=${cmake_dict['zlib_include_dir']}"
-        "-DZLIB_LIBRARY=${cmake_dict['zlib_library']}"
+        "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
     dict['url']="https://github.com/taglib/taglib/archive/refs/tags/\
 v${dict['version']}.tar.gz"

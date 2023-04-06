@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -13,14 +13,13 @@ main() {
     #     Formula/armadillo.rb
     # - https://git.alpinelinux.org/aports/tree/community/armadillo/APKBUILD
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'hdf5'
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=('-DALLOW_OPENBLAS_MACOS=ON')
     dict['url']="http://sourceforge.net/projects/arma/files/\
 armadillo-${dict['version']}.tar.xz"

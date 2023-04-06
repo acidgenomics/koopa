@@ -3,23 +3,20 @@
 koopa_github_latest_release() {
     # """
     # Get the latest release version from GitHub.
-    # @note Updated 2022-03-21.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_github_latest_release 'acidgenomics/koopa'
     # """
-    local app repo
+    local -A app
+    local repo
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
     for repo in "$@"
     do
-        local dict
-        declare -A dict
+        local -A dict
         dict['repo']="$repo"
         dict['url']="https://api.github.com/repos/${dict['repo']}/\
 releases/latest"

@@ -3,14 +3,13 @@
 koopa_linux_oracle_instantclient_version() {
     # """
     # Oracle InstantClient version.
-    # @note Updated 2022-08-26.
+    # @note Updated 2023-04-05.
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['sqlplus']="$(koopa_linux_locate_sqlplus)"
-    )
-    [[ -x "${app['sqlplus']}" ]] || return 1
+    app['sqlplus']="$(koopa_linux_locate_sqlplus)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['sqlplus']}" -v \
             | koopa_grep --pattern='^Version' --regex \

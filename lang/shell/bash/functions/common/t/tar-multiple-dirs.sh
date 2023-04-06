@@ -3,16 +3,15 @@
 koopa_tar_multiple_dirs() {
     # """
     # Compress (tar) multiple directories in a single call.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-05.
     # """
-    local app dict dir dirs pos
+    local -A app dict
+    local -a dirs pos
+    local dir
     koopa_assert_has_args "$#"
-    declare -A app
     app['tar']="$(koopa_locate_tar --allow-system)"
-    [[ -x "${app['tar']}" ]] || return 1
-    declare -A dict=(
-        ['delete']=0
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['delete']=0
     pos=()
     while (("$#"))
     do

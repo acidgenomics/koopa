@@ -3,15 +3,14 @@
 koopa_msg() {
     # """
     # Standard message generator.
-    # @note Updated 2023-03-13.
+    # @note Updated 2023-04-06.
     # """
-    local dict string
-    declare -A dict=(
-        ['c1']="$(koopa_ansi_escape "${1:?}")"
-        ['c2']="$(koopa_ansi_escape "${2:?}")"
-        ['nc']="$(koopa_ansi_escape 'nocolor')"
-        ['prefix']="${3:?}"
-    )
+    local -A dict
+    local string
+    dict['c1']="$(koopa_ansi_escape "${1:?}")"
+    dict['c2']="$(koopa_ansi_escape "${2:?}")"
+    dict['nc']="$(koopa_ansi_escape 'nocolor')"
+    dict['prefix']="${3:?}"
     shift 3
     for string in "$@"
     do

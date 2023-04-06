@@ -3,18 +3,17 @@
 main() {
     # """
     # Install CLI11.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cli11.rb
     # """
-    local dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
         '-DCLI11_BUILD_DOCS=OFF'
         '-DCLI11_BUILD_TESTS=OFF'

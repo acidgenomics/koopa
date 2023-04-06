@@ -25,17 +25,13 @@ koopa_macos_force_reset_icloud_drive() {
     # Remove bird?
     # > sudo launchctl remove 'com.apple.bird'
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
-        ['kill_all']="$(koopa_macos_locate_kill_all)"
-        ['reboot']="$(koopa_macos_locate_reboot)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['kill_all']}" ]] || return 1
-    [[ -x "${app['reboot']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    app['kill_all']="$(koopa_macos_locate_kill_all)"
+    app['reboot']="$(koopa_macos_locate_reboot)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['kill_all']}" bird
     koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \

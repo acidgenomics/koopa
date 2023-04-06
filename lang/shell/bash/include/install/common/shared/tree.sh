@@ -3,23 +3,20 @@
 main() {
     # """
     # Install tree.
-    # @note Updated 2022-04-10.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/tree.html
     # - https://gist.github.com/fscm/9eee2784f101f21515d66321180aef0f
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['name']='tree'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='tree'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tgz"
     dict['url']="http://mama.indstate.edu/users/ice/${dict['name']}/src/\
 ${dict['file']}"

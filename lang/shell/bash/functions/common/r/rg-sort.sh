@@ -3,17 +3,13 @@
 koopa_rg_sort() {
     # """
     # ripgrep sorted.
-    # @note Updated 2022-01-20.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['rg']="$(koopa_locate_rg)"
-    )
-    [[ -x "${app['rg']}" ]] || return 1
-    declare -A dict=(
-        ['pattern']="${1:?}"
-    )
+    app['rg']="$(koopa_locate_rg)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['pattern']="${1:?}"
     dict['str']="$( \
         "${app['rg']}" \
             --pretty \

@@ -3,7 +3,7 @@
 koopa_grep() {
     # """
     # grep matching: print lines that match patterns in a string or file.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-06.
     #
     # Uses ripgrep instead of grep when possible (faster).
     # Consider passing short flags to 'grep' for BSD compatibility.
@@ -24,21 +24,19 @@ koopa_grep() {
     # @examples
     # > koopa_grep --pattern='aaa' --string='aaabbb'
     # """
-    local app dict grep_args grep_cmd
+    local -A app dict
+    local -a grep_args grep_cmd
     koopa_assert_has_args "$#"
-    declare -A app
-    declare -A dict=(
-        ['boolean']=0
-        ['engine']="${KOOPA_GREP_ENGINE:-}"
-        ['file']=''
-        ['invert_match']=0
-        ['only_matching']=0
-        ['mode']='fixed' # or 'regex'.
-        ['pattern']=''
-        ['stdin']=1
-        ['string']=''
-        ['sudo']=0
-    )
+    dict['boolean']=0
+    dict['engine']="${KOOPA_GREP_ENGINE:-}"
+    dict['file']=''
+    dict['invert_match']=0
+    dict['only_matching']=0
+    dict['mode']='fixed' # or 'regex'.
+    dict['pattern']=''
+    dict['stdin']=1
+    dict['string']=''
+    dict['sudo']=0
     while (("$#"))
     do
         case "$1" in
@@ -135,16 +133,13 @@ koopa_grep() {
             then
                 dict['engine']='grep'
                 app['grep']="$(koopa_locate_grep --allow-system)"
-                [[ -x "${app['grep']}" ]] || return 1
             fi
             ;;
         'grep')
             app['grep']="$(koopa_locate_grep --allow-system)"
-            [[ -x "${app['grep']}" ]] || return 1
             ;;
         'rg')
             app['grep']="$(koopa_locate_ripgrep)"
-            [[ -x "${app['grep']}" ]] || return 1
             ;;
     esac
     # Piped input using stdin (string mode).
@@ -160,7 +155,8 @@ koopa_grep() {
     grep_cmd=("${app['grep']}")
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        grep_cmd=('sudo' "${grep_cmd[@]}")
+        app['sudo']="$(koopa_locate_sudo)"
+        grep_cmd=("${app['sudo']}" "${grep_cmd[@]}")
     fi
     grep_args=()
     case "${dict['engine']}" in
@@ -213,6 +209,7 @@ koopa_grep() {
             ;;
     esac
     grep_args+=("${dict['pattern']}")
+    koopa_assert_is_executable "${app[@]}"
     if [[ -n "${dict['file']}" ]]
     then
         # File mode.

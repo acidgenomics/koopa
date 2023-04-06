@@ -14,8 +14,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     jpeg-turbo.rb
     # """
-    local cmake_args dict
-    declare -A dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

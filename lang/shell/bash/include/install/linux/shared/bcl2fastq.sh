@@ -23,7 +23,8 @@ main() {
     # - Potential method for disabling ICU in Boost build (if necessary):
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
-    local app conf_args deps dict
+    local -A app dict
+    local -a conf_args deps
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'make'
@@ -35,23 +36,17 @@ main() {
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws --allow-system)"
-        ['cmake']="$(koopa_locate_cmake --realpath)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['installers_base']="$(koopa_private_installers_s3_uri)"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='bcl2fastq'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['aws']="$(koopa_locate_aws --allow-system)"
+    app['cmake']="$(koopa_locate_cmake --realpath)"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['installers_base']="$(koopa_private_installers_s3_uri)"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='bcl2fastq'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_macos
     then
         dict['toolset']='clang'
@@ -71,7 +66,7 @@ main() {
     # Install Boost 1.54.0 from 'redist'.
     # Refer to 'src/cmake/bootstrap/installBoost.sh'.
     (
-        local b2_args bootstrap_args
+        local -a b2_args bootstrap_args
         bootstrap_args=(
             "--prefix=${dict['libexec']}/boost"
             "--libdir=${dict['libexec']}/boost/lib"

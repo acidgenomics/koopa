@@ -5,10 +5,8 @@ koopa_cli_system() {
     # Parse user input to 'koopa system'.
     # @note Updated 2023-01-31.
     # """
-    local dict
-    declare -A dict=(
-        ['key']=''
-    )
+    local -A dict
+    dict['key']=''
     # Platform independent.
     case "${1:-}" in
         'check')

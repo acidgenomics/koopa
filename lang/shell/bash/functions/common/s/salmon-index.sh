@@ -30,28 +30,25 @@ koopa_salmon_index() {
     # >     --output-dir='salmon-index' \
     # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
     # """
-    local app dict index_args
+    local -A app dict
+    local -a index_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['salmon']="$(koopa_locate_salmon)"
-    )
-    [[ -x "${app['salmon']}" ]] || return 1
-    declare -A dict=(
-        ['decoys']=1
-        ['fasta_pattern']='\.(fa|fasta|fna)'
-        ['gencode']=0
-        # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
-        ['genome_fasta_file']=''
-        ['kmer_length']=31
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        # e.g. 'salmon-index'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-        # e.g. 'gencode.v39.transcripts.fa.gz'.
-        ['transcriptome_fasta_file']=''
-        ['type']='puff'
-    )
+    app['salmon']="$(koopa_locate_salmon)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['decoys']=1
+    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['gencode']=0
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
+    dict['genome_fasta_file']=''
+    dict['kmer_length']=31
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    # e.g. 'salmon-index'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
+    # e.g. 'gencode.v39.transcripts.fa.gz'.
+    dict['transcriptome_fasta_file']=''
+    dict['type']='puff'
     index_args=()
     while (("$#"))
     do

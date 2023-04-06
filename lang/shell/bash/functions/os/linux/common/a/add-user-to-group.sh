@@ -3,27 +3,22 @@
 koopa_linux_add_user_to_group() {
     # """
     # Add user to group.
-    # @note Updated 2021-11-16.
+    # @note Updated 2023-04-05.
     #
     # Alternate approach:
-    # > "${app['usermod']}" -a -G group user
+    # > "${app['sudo']}" "${app['usermod']}" -a -G <GROUP> <USER>
     #
     # @examples
     # > koopa_linux_add_user_to_group 'docker'
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
-    declare -A app=(
-        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gpasswd']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['group']="${1:?}"
-        ['user']="${2:-}"
-    )
+    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group']="${1:?}"
+    dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
     "${app['sudo']}" "${app['gpasswd']}" \

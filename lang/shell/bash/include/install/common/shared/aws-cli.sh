@@ -10,26 +10,22 @@ main() {
     #     getting-started-source-install.html
     # - https://github.com/aws/aws-cli/issues/6785
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['make']="$(koopa_locate_make --allow-system)"
-        ['python']="$(koopa_locate_python311 --allow-missing)"
-    )
+    app['make']="$(koopa_locate_make --allow-system)"
+    app['python']="$(koopa_locate_python311 --allow-missing)"
     # Allow edge case building against system Python, for system bootstrapping.
     if [[ ! -x "${app['python']}" ]]
     then
         app['python']='/usr/bin/python3'
         koopa_alert_note "Building against system Python at '${app['python']}'."
     fi
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['file']="${dict['version']}.tar.gz"
     dict['url']="https://github.com/aws/${dict['name']}/archive/refs/\

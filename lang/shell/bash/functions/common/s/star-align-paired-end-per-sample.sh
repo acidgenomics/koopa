@@ -29,27 +29,25 @@ koopa_star_align_paired_end_per_sample() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local align_args app dict
-    declare -A app
+    local -A app dict
+    local -a align_args
     app['star']="$(koopa_locate_star)"
-    [[ -x "${app['star']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'default'
-        ['aws_profile']=''
-        # e.g. 's3://bioinfo/rnaseq/sample1'
-        ['aws_s3_uri']=''
-        # e.g. 'sample1_R1_001.fastq.gz'.
-        ['fastq_r1_file']=''
-        # e.g. 'sample1_R2_001.fastq.gz'.
-        ['fastq_r2_file']=''
-        # e.g. 'star-index'.
-        ['index_dir']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=60
-        # e.g. 'star/sample1'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'default'
+    dict['aws_profile']=''
+    # e.g. 's3://bioinfo/rnaseq/sample1'
+    dict['aws_s3_uri']=''
+    # e.g. 'sample1_R1_001.fastq.gz'.
+    dict['fastq_r1_file']=''
+    # e.g. 'sample1_R2_001.fastq.gz'.
+    dict['fastq_r2_file']=''
+    # e.g. 'star-index'.
+    dict['index_dir']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=60
+    # e.g. 'star/sample1'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     align_args=()
     while (("$#"))
     do
@@ -183,7 +181,7 @@ to '${dict['tmp_fastq_r2_file']}"
     if [[ -n "${dict['aws_s3_uri']}" ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
-        [[ -x "${app['aws']}" ]] || return 1
+        koopa_assert_is_executable "${app['aws']}"
         koopa_alert "Syncing '${dict['output_dir']}' \
 to '${dict['aws_s3_uri']}'."
         "${app['aws']}" --profile="${dict['aws_profile']}" \

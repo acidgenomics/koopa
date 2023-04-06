@@ -12,11 +12,10 @@ koopa_app_prefix() {
     # # /opt/koopa/app/python3.10/3.10.6
     # # /opt/koopa/app/r/4.2.1
     # """
-    local dict pos
-    declare -A dict=(
-        ['allow_missing']=0
-        ['app_prefix']="$(koopa_koopa_prefix)/app"
-    )
+    local -A dict
+    local -a pos
+    dict['allow_missing']=0
+    dict['app_prefix']="$(koopa_koopa_prefix)/app"
     if [[ "$#" -eq 0 ]]
     then
         koopa_print "${dict['app_prefix']}"
@@ -44,8 +43,7 @@ koopa_app_prefix() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     for app_name in "$@"
     do
-        local dict2
-        declare -A dict2
+        local -A dict2
         dict2['app_name']="$app_name"
         dict2['version']="$( \
             koopa_app_json_version "${dict2['app_name']}" \

@@ -3,18 +3,16 @@
 main() {
     # """
     # Install libdeflate.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/ebiggers/libdeflate
     # - https://github.com/conda-forge/libdeflate-feedstock/tree/main/recipe
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/ebiggers/libdeflate/archive/\
 v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"

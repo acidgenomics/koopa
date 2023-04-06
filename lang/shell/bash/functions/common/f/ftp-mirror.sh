@@ -3,19 +3,15 @@
 koopa_ftp_mirror() {
     # """
     # Mirror contents from an FTP server.
-    # @note Updated 2022-02-10.
+    # @note Updated 2023-04-05.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['wget']="$(koopa_locate_wget)"
-    )
-    [[ -x "${app['wget']}" ]] || return 1
-    declare -A dict=(
-        ['dir']=''
-        ['host']=''
-        ['user']=''
-    )
+    app['wget']="$(koopa_locate_wget)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['dir']=''
+    dict['host']=''
+    dict['user']=''
     while (("$#"))
     do
         case "$1" in

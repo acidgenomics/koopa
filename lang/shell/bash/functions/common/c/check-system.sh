@@ -5,8 +5,7 @@ koopa_check_system() {
     # Check system.
     # @note Updated 2023-03-29.
     # """
-    local app
-    declare -A app
+    local -A app
     koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_r --allow-missing)"
     if [[ ! -x "${app['r']}" ]]

@@ -3,7 +3,7 @@
 koopa_star_align_single_end() {
     # """
     # Run STAR aligner on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_star_align_single_end \
@@ -13,21 +13,21 @@ koopa_star_align_single_end() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local dict fastq_file fastq_files
+    local -A dict
+    local -a fastq_files
+    local fastq_file 
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['aws_bucket']=''
-        ['aws_profile']="${AWS_PROFILE:-default}"
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '_001.fastq.gz'.
-        ['fastq_tail']=''
-        # e.g. 'star-index'.
-        ['index_dir']=''
-        ['mode']='single-end'
-        # e.g. 'star'.
-        ['output_dir']=''
-    )
+    dict['aws_bucket']=''
+    dict['aws_profile']="${AWS_PROFILE:-default}"
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '_001.fastq.gz'.
+    dict['fastq_tail']=''
+    # e.g. 'star-index'.
+    dict['index_dir']=''
+    dict['mode']='single-end'
+    # e.g. 'star'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

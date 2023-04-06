@@ -8,12 +8,10 @@ koopa_test_true_color() {
     # @seealso
     # https://jdhao.github.io/2018/10/19/tmux_nvim_true_color/
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
+    app['awk']="$(koopa_locate_awk)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['awk']}" 'BEGIN{
         s="/\\/\\/\\/\\/\\"; s=s s s s s s s s;
         for (colnum = 0; colnum<77; colnum++) {

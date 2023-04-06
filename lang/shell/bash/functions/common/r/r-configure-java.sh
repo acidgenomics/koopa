@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-06.
     #
     # The default Java path differs depending on the system.
     #
@@ -28,15 +28,13 @@ koopa_r_configure_java() {
     # - JAVAH deprecated in JDK 9.
     #   https://docs.oracle.com/javase/9/tools/javah.htm#JSWOR687
     # """
-    local app conf_dict dict java_args r_cmd
+    local -A app conf_dict dict
+    local -a java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
-    declare -A app
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || return 1
-    declare -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \
@@ -55,18 +53,12 @@ koopa_r_configure_java() {
     app['java']="${dict['openjdk']}/bin/java"
     app['javac']="${dict['openjdk']}/bin/javac"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['jar']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
-    [[ -x "${app['javac']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
     koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
-    declare -A conf_dict=(
-        ['java_home']="${dict['openjdk']}"
-        ['jar']="${app['jar']}"
-        ['java']="${app['java']}"
-        ['javac']="${app['javac']}"
-        ['javah']=''
-    )
+    conf_dict['java_home']="${dict['openjdk']}"
+    conf_dict['jar']="${app['jar']}"
+    conf_dict['java']="${app['java']}"
+    conf_dict['javac']="${app['javac']}"
+    conf_dict['javah']=''
     java_args=(
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
@@ -83,6 +75,7 @@ koopa_r_configure_java() {
             r_cmd=("${app['sudo']}" "${app['r']}")
             ;;
     esac
+    koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
 }

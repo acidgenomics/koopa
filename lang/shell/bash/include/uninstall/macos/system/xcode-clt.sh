@@ -8,11 +8,9 @@ main() {
     # @seealso
     # - https://apple.stackexchange.com/questions/308943
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['prefix']='/Library/Developer/CommandLineTools'
-    )
+    dict['prefix']='/Library/Developer/CommandLineTools'
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_rm --sudo "${dict['prefix']}"
     return 0

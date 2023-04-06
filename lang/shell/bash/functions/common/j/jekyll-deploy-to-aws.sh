@@ -5,21 +5,16 @@ koopa_jekyll_deploy_to_aws() {
     # Deploy Jekyll website to AWS S3 and CloudFront.
     # @note Updated 2023-02-17.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['bundle']="$(koopa_locate_bundle)"
-    )
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['bundle']}" ]] || return 1
-    declare -A dict=(
-        ['bucket_prefix']=''
-        ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
-        ['distribution_id']=''
-        ['local_prefix']="${PWD:?}"
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    app['aws']="$(koopa_locate_aws)"
+    app['bundle']="$(koopa_locate_bundle)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bucket_prefix']=''
+    dict['bundle_prefix']="$(koopa_xdg_data_home)/gem"
+    dict['distribution_id']=''
+    dict['local_prefix']="${PWD:?}"
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in

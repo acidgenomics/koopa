@@ -3,18 +3,18 @@
 koopa_linux_bcbio_nextgen_run_tests() {
     # """
     # Run bcbio-nextgen unit tests.
-    # @note Updated 2021-09-21.
+    # @note Updated 2023-04-06.
     #
     # See issues regarding unit tests inside Docker images:
     # - https://github.com/bcbio/bcbio-nextgen/issues/3371
     # - https://github.com/bcbio/bcbio-nextgen/issues/3372
     # """
-    local dict test tests
-    declare -A dict=(
-        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
-        ['output_dir']="${PWD:?}/bcbio-tests"
-        ['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
-    )
+    local -A dict
+    local -a tests
+    local test
+    dict['git_dir']="${HOME:?}/git/bcbio-nextgen"
+    dict['output_dir']="${PWD:?}/bcbio-tests"
+    dict['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
     while (("$#"))
     do
         case "$1" in

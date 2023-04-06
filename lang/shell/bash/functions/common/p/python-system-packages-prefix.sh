@@ -5,11 +5,10 @@ koopa_python_system_packages_prefix() {
     # Python system site packages library prefix.
     # @note Updated 2023-02-13.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    declare -A app dict
     app['python']="${1:?}"
-    [[ -x "${app['python']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$( \
         "${app['python']}" -c 'import site; print(site.getsitepackages()[0])' \
     )"

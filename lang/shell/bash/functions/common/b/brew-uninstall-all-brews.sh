@@ -8,14 +8,11 @@ koopa_brew_uninstall_all_brews() {
     # @seealso
     # - https://apple.stackexchange.com/questions/198623
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['brew']="$(koopa_locate_brew)"
-        ['wc']="$(koopa_locate_wc)"
-    )
-    [[ -x "${app['brew']}" ]] || return 1
-    [[ -x "${app['wc']}" ]] || return 1
+    app['brew']="$(koopa_locate_brew)"
+    app['wc']="$(koopa_locate_wc)"
+    koopa_assert_is_executable "${app[@]}"
     while [[ "$("${app['brew']}" list --formulae | "${app['wc']}" -l)" -gt 0 ]]
     do
         local brews

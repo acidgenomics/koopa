@@ -3,7 +3,7 @@
 koopa_hisat2_align_paired_end() {
     # """
     # Run HISAT2 aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_hisat2_align_paired_end \
@@ -13,23 +13,23 @@ koopa_hisat2_align_paired_end() {
     # >     --index-dir='hisat2-index' \
     # >     --output-dir='hisat2'
     # """
-    local dict fastq_r1_files fastq_r1_file
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. '_R2_001.fastq.gz'.
-        ['fastq_r2_tail']=''
-        # e.g. 'hisat2-index'.
-        ['index_dir']=''
-        # Using salmon fragment library type conventions here.
-        ['lib_type']='A'
-        ['mode']='paired-end'
-        # e.g. 'hisat2'.
-        ['output_dir']=''
-    )
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. '_R2_001.fastq.gz'.
+    dict['fastq_r2_tail']=''
+    # e.g. 'hisat2-index'.
+    dict['index_dir']=''
+    # Using salmon fragment library type conventions here.
+    dict['lib_type']='A'
+    dict['mode']='paired-end'
+    # e.g. 'hisat2'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

@@ -3,30 +3,25 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2023-01-10.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
     # >     '/opt/koopa/app/aws-cli/2.7.7' \
     # >     '/opt/koopa/app/bash/5.1.16'
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws --allow-system)"
-        ['tar']="$(koopa_locate_tar --allow-system)"
-    )
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['tar']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['aws_profile']="${AWS_PROFILE:-acidgenomics}"
-        ['binary_prefix']='/opt/koopa'
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['os_string']="$(koopa_os_string)"
-        ['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
-        ['tmp_dir']="$(koopa_tmp_dir)"
-    )
+    app['aws']="$(koopa_locate_aws --allow-system)"
+    app['tar']="$(koopa_locate_tar --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['aws_profile']="${AWS_PROFILE:-acidgenomics}"
+    dict['binary_prefix']='/opt/koopa'
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['os_string']="$(koopa_os_string)"
+    dict['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
     if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
     then
         koopa_stop "Binary package installation not supported for koopa \
@@ -35,11 +30,11 @@ default '${dict['binary_prefix']}' location."
     fi
     koopa_assert_is_dir "$@"
     (
+        local prefix
         koopa_cd "${dict['tmp_dir']}"
         for prefix in "$@"
         do
-            local dict2
-            declare -A dict2
+            local -A dict2
             dict2['prefix']="$(koopa_realpath "$prefix")"
             dict2['name']="$( \
                 koopa_print "${dict2['prefix']}" \

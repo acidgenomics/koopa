@@ -3,16 +3,16 @@
 koopa_is_git_repo() {
     # """
     # Is the working directory a git repository?
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
-    local app repo
+    local -A app
+    local repo
     koopa_assert_has_args "$#"
-    declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     (
         for repo in "$@"
         do

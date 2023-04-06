@@ -5,12 +5,11 @@ koopa_conda_env_list() {
     # Return a list of conda environments in JSON format.
     # @note Updated 2022-08-26.
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['conda']="$(koopa_locate_conda)"
-    )
-    [[ -x "${app['conda']}" ]] || return 1
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
     str="$("${app['conda']}" env list --json --quiet)"
     koopa_print "$str"
     return 0

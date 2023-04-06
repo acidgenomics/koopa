@@ -5,10 +5,9 @@ koopa_enable_passwordless_sudo() {
     # Enable passwordless sudo access for all admin users.
     # @note Updated 2023-03-26.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict
     dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]

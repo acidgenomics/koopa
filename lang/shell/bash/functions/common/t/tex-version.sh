@@ -3,7 +3,7 @@
 koopa_tex_version() {
     # """
     # TeX version (release year).
-    # @note Updated 2022-03-18.
+    # @note Updated 2023-04-05.
     #
     # @section Release year parsing:
     #
@@ -11,17 +11,14 @@ koopa_tex_version() {
     # Here's what it looks like on Debian/Ubuntu:
     # TeX 3.14159265 (TeX Live 2017/Debian)
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_args_le "$#" 1
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-        ['tex']="${1:-}"
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['tex']="${1:-}"
     [[ -z "${app['tex']}" ]] && app['tex']="$(koopa_locate_tex)"
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    [[ -x "${app['tex']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['tex']}" --version \
             | "${app['head']}" -n 1 \

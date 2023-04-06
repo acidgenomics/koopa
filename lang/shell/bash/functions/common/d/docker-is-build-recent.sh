@@ -3,26 +3,22 @@
 koopa_docker_is_build_recent() {
     # """
     # Has the requested Docker image been built recently?
-    # @note Updated 2022-01-20.
+    # @note Updated 2023-04-05.
     #
     # @seealso
     # - Corresponding 'isDockerBuildRecent()' R function.
     # - https://stackoverflow.com/questions/8903239/
     # - https://unix.stackexchange.com/questions/27013/
     # """
-    local app dict image pos
+    local -A app dict
+    local -a pos
+    local image
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['date']="$(koopa_locate_date)"
-        ['docker']="$(koopa_locate_docker)"
-        ['sed']="$(koopa_locate_sed)"
-    )
-    [[ -x "${app['date']}" ]] || return 1
-    [[ -x "${app['docker']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    declare -A dict=(
-        ['days']=7
-    )
+    app['date']="$(koopa_locate_date)"
+    app['docker']="$(koopa_locate_docker)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['days']=7
     pos=()
     while (("$#"))
     do
@@ -52,11 +48,9 @@ koopa_docker_is_build_recent() {
     dict['seconds']="$((dict[days] * 86400))"
     for image in "$@"
     do
-        local dict2
-        declare -A dict2=(
-            ['current']="$("${app['date']}" -u '+%s')"
-            ['image']="$image"
-        )
+        local -A dict2
+        dict['current']="$("${app['date']}" -u '+%s')"
+        dict['image']="$image"
         "${app['docker']}" pull "${dict2['image']}" >/dev/null
         dict2['json']="$( \
             "${app['docker']}" inspect \

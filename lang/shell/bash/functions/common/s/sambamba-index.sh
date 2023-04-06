@@ -5,13 +5,12 @@ koopa_sambamba_index() {
     # Index BAM file with sambamba.
     # @note Updated 2022-10-11.
     # """
-    local app bam_file dict
+    local -A app dict
+    local bam_file
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
-    declare -A app
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || return 1
-    declare -A dict
+    koopa_assert_is_executable "${app[@]}"
     dict['threads']="$(koopa_cpu_count)"
     for bam_file in "$@"
     do

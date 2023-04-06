@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
 
+# FIXME Allow the user to specify which R.
+
 koopa_r_package_version() {
     # """
     # R package version.
-    # @note Updated 2022-07-11.
+    # @note Updated 2023-04-05.
     #
     # @examples
-    # > koopa_r_package_version 'basejump'
+    # > koopa_r_package_version 'koopa'
     # """
-    local app str vec
+    local -A app
+    local str vec
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['rscript']="$(koopa_locate_rscript)"
-    )
-    [[ -x "${app['rscript']}" ]] || return 1
+    app['rscript']="$(koopa_locate_rscript)"
+    koopa_assert_is_executable "${app[@]}"
     pkgs=("$@")
     koopa_is_r_package_installed "${pkgs[@]}" || return 1
     vec="$(koopa_r_paste_to_vector "${pkgs[@]}")"

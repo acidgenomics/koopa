@@ -5,19 +5,16 @@ main() {
     # Install full Anaconda distribution.
     # @note Updated 2022-12-01.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['bash']="$(koopa_locate_bash --allow-system)"
-    [[ -x "${app['bash']}" ]] || return 1
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['os_type']="$(koopa_os_type)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['py_maj_ver']='3'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['os_type']="$(koopa_os_type)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['py_maj_ver']='3'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['os_type']}" in
         'darwin'*)
             dict['os_type']='MacOSX'

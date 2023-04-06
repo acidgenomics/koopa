@@ -21,22 +21,17 @@ koopa_convert_fastq_to_fasta() {
     # >     --source-dir='fastq/' \
     # >     --target-dir='fasta/'
     # """
-    local app dict fastq_file fastq_files
+    local -A app dict
+    local -a fastq_files
+    local fastq_file
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['paste']="$(koopa_locate_paste)"
-        ['sed']="$(koopa_locate_sed)"
-        ['tr']="$(koopa_locate_tr)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['paste']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
-    declare -A dict=(
-        ['source_dir']=''
-        ['target_dir']=''
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['paste']="$(koopa_locate_paste)"
+    app['sed']="$(koopa_locate_sed)"
+    app['tr']="$(koopa_locate_tr)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['source_dir']=''
+    dict['target_dir']=''
     while (("$#"))
     do
         case "$1" in

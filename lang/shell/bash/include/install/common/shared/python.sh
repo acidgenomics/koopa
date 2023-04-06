@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -44,7 +44,8 @@ main() {
     #   https://stackoverflow.com/questions/45954528/
     #   https://stackoverflow.com/questions/41328451/
     # """
-    local app deps dict
+    local -A app dict
+    local -a deps
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
@@ -62,17 +63,14 @@ main() {
         'sqlite'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='python'
-        ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='python'
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
         "${dict['openssl']}"
@@ -108,7 +106,7 @@ ${dict['file']}"
     if koopa_is_macos
     then
         app['dtrace']='/usr/sbin/dtrace'
-        [[ -x "${app['dtrace']}" ]] || return 1
+        koopa_assert_is_executable "${app['dtrace']}"
         dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
         conf_args+=(
             "--enable-framework=${dict['libexec']}"

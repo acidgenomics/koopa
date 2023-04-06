@@ -3,9 +3,10 @@
 koopa_move_into_dated_dirs_by_filename() {
     # """
     # Move into dated directories by filename.
-    # @note Updated 2022-02-16.
+    # @note Updated 2023-04-06.
     # """
-    local file grep_array grep_string
+    local -a grep_array
+    local file grep_string
     koopa_assert_has_args "$#"
     grep_array=(
         '^([0-9]{4})'
@@ -19,10 +20,8 @@ koopa_move_into_dated_dirs_by_filename() {
     grep_string="$(koopa_paste0 "${grep_array[@]}")"
     for file in "$@"
     do
-        local dict
-        declare -A dict=(
-            ['file']="$file"
-        )
+        local -A dict
+        dict['file']="$file"
         # NOTE Don't quote '$grep_string' here.
         if [[ "${dict['file']}" =~ $grep_string ]]
         then

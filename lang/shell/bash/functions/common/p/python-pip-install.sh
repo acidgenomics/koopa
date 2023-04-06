@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-05.
     #
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     #
@@ -14,9 +14,10 @@ koopa_python_pip_install() {
     # - https://github.com/pypa/pip/issues/8063
     # - https://stackoverflow.com/a/43560499/3911732
     # """
-    local app dict dl_args pkg pkgs pos
+    local -A app dict
+    local -a dl_args pkgs pos
+    local pkg
     koopa_assert_has_args "$#"
-    declare -A app dict
     dict['prefix']=''
     pos=()
     while (("$#"))
@@ -51,9 +52,9 @@ koopa_python_pip_install() {
     done
     [[ -z "${app['python']}" ]] && \
         app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    koopa_assert_is_executable "${app[@]}"
     pkgs=("$@")
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
@@ -81,7 +82,7 @@ koopa_python_pip_install() {
             'pytaglib=='*)
                 local pkg_name
                 app['cut']="$(koopa_locate_cut --allow-system)"
-                [[ -x "${app['cut']}" ]] || return 1
+                koopa_assert_is_executable "${app['cut']}"
                 pkg_name="$( \
                     koopa_print "$pkg" \
                     | "${app['cut']}" -d '=' -f 1 \

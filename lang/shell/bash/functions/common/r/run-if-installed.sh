@@ -5,6 +5,7 @@ koopa_run_if_installed() {
     # Run program(s) if installed.
     # @note Updated 2020-06-30.
     # """
+    local arg
     koopa_assert_has_args "$#"
     for arg in "$@"
     do

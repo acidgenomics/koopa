@@ -31,29 +31,26 @@ koopa_kallisto_quant_single_end_per_sample() {
     # >     --index-dir='kallisto-index' \
     # >     --output-dir='kallisto'
     # """
-    local app dict quant_args
-    declare -A app=(
-        ['kallisto']="$(koopa_locate_kallisto)"
-    )
-    [[ -x "${app['kallisto']}" ]] || return 1
-    declare -A dict=(
-        # Current recommendation in bcbio-nextgen.
-        ['bootstraps']=30
-        # e.g. 'sample1_001.fastq.gz'.
-        ['fastq_file']=''
-        # e.g. '_001.fastq.gz'.
-        ['fastq_tail']=''
-        # Current recommendation in bcbio-nextgen.
-        ['fragment_length']=200
-        # e.g. 'kallisto-index'.
-        ['index_dir']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=14
-        # e.g. 'kallisto'.
-        ['output_dir']=''
-        # Current recommendation in bcbio-nextgen.
-        ['sd']=25
-    )
+    local -A app dict
+    local -a quant_args
+    app['kallisto']="$(koopa_locate_kallisto)"
+    koopa_assert_is_executable "${app[@]}"
+    # Current recommendation in bcbio-nextgen.
+    dict['bootstraps']=30
+    # e.g. 'sample1_001.fastq.gz'.
+    dict['fastq_file']=''
+    # e.g. '_001.fastq.gz'.
+    dict['fastq_tail']=''
+    # Current recommendation in bcbio-nextgen.
+    dict['fragment_length']=200
+    # e.g. 'kallisto-index'.
+    dict['index_dir']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    # e.g. 'kallisto'.
+    dict['output_dir']=''
+    # Current recommendation in bcbio-nextgen.
+    dict['sd']=25
     quant_args=()
     while (("$#"))
     do

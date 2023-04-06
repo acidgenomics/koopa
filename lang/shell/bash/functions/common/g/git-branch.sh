@@ -18,24 +18,19 @@ koopa_git_branch() {
     # - https://git.kernel.org/pub/scm/git/git.git/tree/contrib/completion/
     #       git-completion.bash?id=HEAD
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['git']="$(koopa_locate_git --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_git_repo "$@"
     (
         local repo
         for repo in "$@"
         do
-            local dict2
+            local -A dict2
             koopa_cd "$repo"
-            declare -A dict2
             dict2['branch']="$( \
                 "${app['git']}" branch --show-current \
                 2>/dev/null \

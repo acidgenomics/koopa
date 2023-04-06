@@ -3,7 +3,7 @@
 koopa_sambamba_filter() {
     # """
     # Apply multi-step filtering to multiple BAM files in a directory.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
@@ -11,12 +11,12 @@ koopa_sambamba_filter() {
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
     #       chipseq/__init__.py
     # """
-    local bam_file bam_files dict
+    local -A dict
+    local -a bam_files
+    local bam_file
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
-        ['pattern']='*.sorted.bam'
-        ['prefix']="${1:?}"
-    )
+    dict['pattern']='*.sorted.bam'
+    dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     # We're allowing 3 levels down here to match bcbio-nextgen output.
     readarray -t bam_files <<< "$( \
@@ -36,8 +36,7 @@ pattern '${dict['pattern']}'."
     koopa_alert "Filtering BAM files in '${dict['prefix']}'."
     for bam_file in "${bam_files[@]}"
     do
-        local dict2
-        declare -A dict2
+        local -A dict2
         dict2['input']="$bam_file"
         dict2['bn']="$(koopa_basename_sans_ext "${dict2['input']}")"
         dict2['prefix']="$(koopa_parent_dir "${dict['input']}")"

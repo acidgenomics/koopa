@@ -5,11 +5,9 @@ main() {
     # Install agat.
     # @note Updated 2023-03-27.
     # """
-    local app dict
-    declare -A app
+    local -A app dict
     app['patch']="$(koopa_locate_patch)"
-    [[ -x "${app['patch']}" ]] || return 1
-    declare -A dict
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_app_subshell \
         --installer='conda-env' \

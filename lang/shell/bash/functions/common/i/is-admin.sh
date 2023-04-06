@@ -3,7 +3,7 @@
 koopa_is_admin() {
     # """
     # Check that current user has administrator permissions.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-04-06.
     #
     # This check can hang on some systems with domain user accounts.
     #
@@ -26,7 +26,7 @@ koopa_is_admin() {
     # - https://serverfault.com/questions/364334
     # - https://linuxhandbook.com/check-if-user-has-sudo-rights/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     case "${KOOPA_ADMIN:-}" in
         '0')
@@ -44,13 +44,10 @@ koopa_is_admin() {
     koopa_has_passwordless_sudo && return 0
     # Check if user is any accepted admin group.
     # Note that this step is very slow for Active Directory domain accounts.
-    declare -A app
     app['groups']="$(koopa_locate_groups --allow-system)"
-    [[ -x "${app['groups']}" ]] || return 1
-    declare -A dict=(
-        ['groups']="$("${app['groups']}")"
-        ['pattern']='\b(admin|root|sudo|wheel)\b'
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['groups']="$("${app['groups']}")"
+    dict['pattern']='\b(admin|root|sudo|wheel)\b'
     [[ -n "${dict['groups']}" ]] || return 1
     koopa_str_detect_regex \
         --string="${dict['groups']}" \

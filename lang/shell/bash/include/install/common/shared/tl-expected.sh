@@ -3,17 +3,16 @@
 main() {
     # """
     # Install TartanLlama expected (tl-expected).
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/TartanLlama/expected
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=('-DEXPECTED_ENABLE_TESTS=OFF')
     dict['url']="https://github.com/TartanLlama/expected/archive/\
 refs/tags/v${dict['version']}.tar.gz"

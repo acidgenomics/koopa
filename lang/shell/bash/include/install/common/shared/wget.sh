@@ -8,8 +8,7 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/wget.rb
     # """
-    local dict
-    declare -A dict
+    local -A dict
     koopa_activate_app --build-only \
         'autoconf' \
         'automake'

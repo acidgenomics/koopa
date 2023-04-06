@@ -11,18 +11,16 @@ koopa_git_reset() {
     # See also:
     # https://gist.github.com/nicktoumpelis/11214362
     # """
-    local app repos
-    declare -A app
+    local -A app
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
-    repos=("$@")
-    koopa_is_array_empty "${repos[@]}" && repos[0]="${PWD:?}"
-    koopa_assert_is_git_repo "${repos[@]}"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_git_repo "$@"
     # Using a single subshell here to avoid performance hit during looping.
     # This single subshell is necessary so we don't change working directory.
     (
         local repo
-        for repo in "${repos[@]}"
+        for repo in "$@"
         do
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Resetting Git repo at '${repo}'."

@@ -3,7 +3,7 @@
 koopa_sambamba_filter_per_sample() {
     # """
     # Perform filtering on a BAM file with sambamba.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-04-06.
     #
     # sambamba prints version information into stderr.
     #
@@ -14,17 +14,14 @@ koopa_sambamba_filter_per_sample() {
     # - https://hbctraining.github.io/In-depth-NGS-Data-Analysis-Course/
     #       sessionV/lessons/03_align_and_filtering.html
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args "$#"
-    declare -A app
     app['sambamba']="$(koopa_locate_sambamba)"
-    [[ -x "${app['sambamba']}" ]] || return 1
-    declare -A dict=(
-        ['filter']=''
-        ['input']=''
-        ['output']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['filter']=''
+    dict['input']=''
+    dict['output']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in

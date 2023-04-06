@@ -5,7 +5,7 @@
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2022-02-14.
+    # @note Updated 2023-04-05.
     #
     # @examples
     # > koopa_star_align_single_end_per_sample \
@@ -14,25 +14,22 @@ koopa_star_align_single_end_per_sample() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local align_args app dict
+    local -A app dict
+    local -a align_args
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['star']="$(koopa_locate_star)"
-    )
-    [[ -x "${app['star']}" ]] || return 1
-    declare -A dict=(
-        # e.g. 'fastq'.
-        ['fastq_file']=''
-        # e.g. '_001.fastq.gz'.
-        ['fastq_tail']=''
-        # e.g. 'star-index'.
-        ['index_dir']=''
-        ['mem_gb']="$(koopa_mem_gb)"
-        ['mem_gb_cutoff']=60
-        # e.g. 'star'.
-        ['output_dir']=''
-        ['threads']="$(koopa_cpu_count)"
-    )
+    app['star']="$(koopa_locate_star)"
+    koopa_assert_is_executable "${app[@]}"
+    # e.g. 'fastq'.
+    dict['fastq_file']=''
+    # e.g. '_001.fastq.gz'.
+    dict['fastq_tail']=''
+    # e.g. 'star-index'.
+    dict['index_dir']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=60
+    # e.g. 'star'.
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     align_args=()
     while (("$#"))
     do

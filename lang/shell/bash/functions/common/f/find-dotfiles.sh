@@ -10,20 +10,14 @@ koopa_find_dotfiles() {
     # 1. Type ('f' file; or 'd' directory).
     # 2. Header message (e.g. 'Files')
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk)"
-        ['basename']="$(koopa_locate_basename)"
-        ['xargs']="$(koopa_locate_xargs)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['basename']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
-    declare -A dict=(
-        ['type']="${1:?}"
-        ['header']="${2:?}"
-    )
+    app['awk']="$(koopa_locate_awk)"
+    app['basename']="$(koopa_locate_basename)"
+    app['xargs']="$(koopa_locate_xargs)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['type']="${1:?}"
+    dict['header']="${2:?}"
     # shellcheck disable=SC2016
     dict['str']="$( \
         koopa_find \

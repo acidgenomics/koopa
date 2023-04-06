@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE This is intentionally linking to system bzip2 on macOS.
+
 main() {
     # """
     # Install R.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -33,7 +35,8 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local app build_deps conf_args conf_dict deps dict
+    local -A app conf_dict dict
+    local -a build_deps conf_args deps
     koopa_assert_has_no_args "$#"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
@@ -43,12 +46,7 @@ main() {
     fi
     build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    deps=(
-        'zlib'
-        'zstd'
-        'gcc'
-    )
-    # bzip2 deps: none.
+    deps=('zlib' 'zstd' 'gcc')
     # R currently has configuration issues with libbz2.dylib on macOS.
     koopa_is_linux && deps+=('bzip2')
     deps+=(
@@ -98,22 +96,20 @@ main() {
         'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['ar']='/usr/bin/ar'
-        ['awk']="$(koopa_locate_awk --realpath)"
-        ['bash']="$(koopa_locate_bash --realpath)"
-        ['echo']="$(koopa_locate_echo --realpath)"
-        ['gfortran']="$(koopa_locate_gfortran --realpath)"
-        ['jar']="$(koopa_locate_jar --realpath)"
-        ['java']="$(koopa_locate_java --realpath)"
-        ['javac']="$(koopa_locate_javac --realpath)"
-        ['make']="$(koopa_locate_make --realpath)"
-        ['perl']="$(koopa_locate_perl --realpath)"
-        ['pkg_config']="$(koopa_locate_pkg_config)"
-        ['sed']="$(koopa_locate_sed --realpath)"
-        ['tar']="$(koopa_locate_tar --realpath)"
-        ['yacc']="$(koopa_locate_yacc --realpath)"
-    )
+    app['ar']='/usr/bin/ar'
+    app['awk']="$(koopa_locate_awk --realpath)"
+    app['bash']="$(koopa_locate_bash --realpath)"
+    app['echo']="$(koopa_locate_echo --realpath)"
+    app['gfortran']="$(koopa_locate_gfortran --realpath)"
+    app['jar']="$(koopa_locate_jar --realpath)"
+    app['java']="$(koopa_locate_java --realpath)"
+    app['javac']="$(koopa_locate_javac --realpath)"
+    app['make']="$(koopa_locate_make --realpath)"
+    app['perl']="$(koopa_locate_perl --realpath)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
+    app['sed']="$(koopa_locate_sed --realpath)"
+    app['tar']="$(koopa_locate_tar --realpath)"
+    app['yacc']="$(koopa_locate_yacc --realpath)"
     # The system clang compiler stack is preferred on macOS. If you attempt to
     # build with GCC, you'll run into a lot of compilation issues with
     # Posit/RStudio packages, which are only optimized for clang currently.
@@ -131,33 +127,16 @@ main() {
         app['cc']="$(koopa_locate_gcc --realpath)"
         app['cxx']="$(koopa_locate_gcxx --realpath)"
     fi
-    [[ -x "${app['ar']}" ]] || return 1
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['bash']}" ]] || return 1
-    [[ -x "${app['cc']}" ]] || return 1
-    [[ -x "${app['cxx']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['gfortran']}" ]] || return 1
-    [[ -x "${app['jar']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
-    [[ -x "${app['javac']}" ]] || return 1
-    [[ -x "${app['make']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['yacc']}" ]] || return 1
-    declare -A conf_dict
-    declare -A dict=(
-        ['arch']="$(koopa_arch)"
-        # > ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['lapack']="$(koopa_app_prefix 'lapack')"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['openjdk']="$(koopa_app_prefix 'openjdk')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    # > dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['lapack']="$(koopa_app_prefix 'lapack')"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
         "${dict['lapack']}" \
         "${dict['openjdk']}" \
@@ -299,7 +278,7 @@ main() {
     then
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
-        [[ -x "${app['svn']}" ]] || return 1
+        koopa_assert_is_executable "${app[@]}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'

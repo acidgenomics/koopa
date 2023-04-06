@@ -7,10 +7,9 @@ koopa_aws_ec2_terminate() {
     # Terminate current AWS EC2 instance.
     # @note Updated 2023-04-03.
     # """
-    local app dict
-    declare -A app dict
+    local -A app dict
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['id']="$(koopa_aws_ec2_instance_id)"
     [[ -n "${dict['id']}" ]] || return 1
     dict['profile']="${AWS_PROFILE:-default}"

@@ -39,14 +39,13 @@ koopa_aws_s3_sync() {
     # - '*.Rproj' directories.
     # - '*.swp' files (from vim).
     # """
-    local aws dict exclude_args exclude_patterns pattern pos sync_args
+    local -A app dict
+    local -a exclude_args exclude_patterns pos sync_args
+    local pattern
     koopa_assert_has_args "$#"
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['profile']="${AWS_PROFILE:-default}"
     # Include common file system and Git cruft that we don't want on S3.
     # FIXME Only set this if the user doesn't pass in exclude?
     # FIXME Can we use '**' glob patterns here? Is that the key?

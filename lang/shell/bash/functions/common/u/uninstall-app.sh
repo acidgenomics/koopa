@@ -6,29 +6,25 @@
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-04-06.
     # """
-    local app bin_arr bool dict man1_arr
+    local -A app bool dict
+    local -a bin_arr man1_arr
     koopa_assert_is_owner
-    declare -A app
-    declare -A bool=(
-        ['quiet']=0
-        ['unlink_in_bin']=''
-        ['unlink_in_man1']=''
-        ['unlink_in_opt']=''
-        ['verbose']=0
-    )
-    declare -A dict=(
-        ['app_prefix']="$(koopa_app_prefix)"
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['mode']='shared'
-        ['name']=''
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['platform']='common'
-        ['prefix']=''
-        ['uninstaller_bn']=''
-        ['uninstaller_fun']='main'
-    )
+    bool['quiet']=0
+    bool['unlink_in_bin']=''
+    bool['unlink_in_man1']=''
+    bool['unlink_in_opt']=''
+    bool['verbose']=0
+    dict['app_prefix']="$(koopa_app_prefix)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['mode']='shared'
+    dict['name']=''
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['platform']='common'
+    dict['prefix']=''
+    dict['uninstaller_bn']=''
+    dict['uninstaller_fun']='main'
     while (("$#"))
     do
         case "$1" in
@@ -115,7 +111,7 @@ koopa_uninstall_app() {
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
             app['sudo']="$(koopa_locate_sudo)"
-            [[ -x "${app['sudo']}" ]] || return 1
+            koopa_assert_is_executable "${app['sudo']}"
             "${app['sudo']}" -v
             ;;
         'user')

@@ -3,25 +3,21 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2022-11-28.
+    # @note Updated 2023-04-06.
     # """
-    local bool dict
+    local -A bool dict
     koopa_assert_is_installed \
-        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' \
-        'mktemp' 'mv' 'perl' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
-    declare -A bool=(
-        ['add_to_user_profile']=1
-        ['interactive']=1
-        ['passwordless_sudo']=0
-        ['shared']=0
-    )
-    declare -A dict=(
-        ['config_prefix']="$(koopa_config_prefix)"
-        ['prefix']=''
-        ['source_prefix']="$(koopa_koopa_prefix)"
-        ['user_profile']="$(koopa_find_user_profile)"
-        ['xdg_data_home']="$(koopa_xdg_data_home)"
-    )
+        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
+        'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
+    bool['add_to_user_profile']=1
+    bool['interactive']=1
+    bool['passwordless_sudo']=0
+    bool['shared']=0
+    dict['config_prefix']="$(koopa_config_prefix)"
+    dict['prefix']=''
+    dict['source_prefix']="$(koopa_koopa_prefix)"
+    dict['user_profile']="$(koopa_find_user_profile)"
+    dict['xdg_data_home']="$(koopa_xdg_data_home)"
     dict['koopa_prefix_system']='/opt/koopa'
     dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
     koopa_is_admin && bool['shared']=1

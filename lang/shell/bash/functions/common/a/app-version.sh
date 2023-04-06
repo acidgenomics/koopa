@@ -8,12 +8,10 @@ koopa_app_version() {
     # @examples
     # > koopa_app_version 'vim'
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A dict=(
-        ['name']="${1:?}"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    dict['name']="${1:?}"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['symlink']="${dict['opt_prefix']}/${dict['name']}"
     koopa_assert_is_symlink "${dict['symlink']}"
     dict['realpath']="$(koopa_realpath "${dict['symlink']}")"

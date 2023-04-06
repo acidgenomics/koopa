@@ -3,39 +3,36 @@
 main() {
     # """
     # Install Oxford Nanopore Technologies VBZ compression.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-04.
     #
     # @seealso
     # - https://github.com/nanoporetech/vbz_compression
     # - https://github.com/nanoporetech/vbz_compression/blob/master/
     #     cmake/Findzstd.cmake
     # """
-    local cmake_args cmake_dict dict
+    local -A cmake dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app 'zstd' 'hdf5'
-    declare -A dict=(
-        ['hdf5']="$(koopa_app_prefix 'hdf5')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['streamvbyte_version']='0.5.2'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
-    )
+    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['streamvbyte_version']='0.5.2'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     koopa_assert_is_dir "${dict['hdf5']}" "${dict['zstd']}"
-    declare -A cmake_dict=(
-        ['zstd_include_dir']="${dict['zstd']}/include"
-        ['zstd_library']="${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
-    )
-    koopa_assert_is_dir "${cmake_dict['zstd_include_dir']}"
-    koopa_assert_is_file "${cmake_dict['zstd_library']}"
+    cmake['zstd_include_dir']="${dict['zstd']}/include"
+    cmake['zstd_library']="${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
+    koopa_assert_is_dir "${cmake['zstd_include_dir']}"
+    koopa_assert_is_file "${cmake['zstd_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DENABLE_CONAN=OFF'
         '-DENABLE_PERF_TESTING=OFF'
         '-DENABLE_PYTHON=OFF'
         # Dependency paths -----------------------------------------------------
-        "-DZSTD_INCLUDE_DIR=${cmake_dict['zstd_include_dir']}"
-        "-DZSTD_LIBRARY_RELEASE=${cmake_dict['zstd_library']}"
+        "-DZSTD_INCLUDE_DIR=${cmake['zstd_include_dir']}"
+        "-DZSTD_LIBRARY_RELEASE=${cmake['zstd_library']}"
     )
     dict['url']="https://github.com/nanoporetech/vbz_compression/archive/\
 refs/tags/${dict['version']}.tar.gz"

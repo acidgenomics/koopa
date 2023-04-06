@@ -5,11 +5,11 @@ koopa_datetime() {
     # Datetime string.
     # @note Updated 2022-08-29.
     # """
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['date']="$(koopa_locate_date --allow-system)"
-    [[ -x "${app['date']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     str="$("${app['date']}" '+%Y%m%d-%H%M%S')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"

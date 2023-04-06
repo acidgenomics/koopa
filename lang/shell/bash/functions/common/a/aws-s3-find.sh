@@ -28,15 +28,15 @@ koopa_aws_s3_find() {
     # >     --profile='acidgenomics'
     # >     --recursive
     # """
-    local dict exclude_arr include_arr ls_args pattern str
+    local -A dict
+    local -a exclude_arr include_arr ls_args
+    local pattern str
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['exclude']=0
-        ['include']=0
-        ['prefix']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['recursive']=0
-    )
+    dict['exclude']=0
+    dict['include']=0
+    dict['prefix']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['recursive']=0
     exclude_arr=()
     include_arr=()
     while (("$#"))

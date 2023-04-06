@@ -2,12 +2,10 @@
 # shellcheck disable=all
 
 koopa_linux_add_user_to_etc_passwd() {
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
-    declare -A dict=(
-        ['passwd_file']='/etc/passwd'
-        ['user']="${1:-}"
-    )
+    dict['passwd_file']='/etc/passwd'
+    dict['user']="${1:-}"
     koopa_assert_is_file "${dict['passwd_file']}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     if ! koopa_file_detect_fixed \
@@ -29,19 +27,14 @@ in '${dict['passwd_file']}'."
 }
 
 koopa_linux_add_user_to_group() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
-    declare -A app=(
-        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gpasswd']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['group']="${1:?}"
-        ['user']="${2:-}"
-    )
+    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group']="${1:?}"
+    dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
     "${app['sudo']}" "${app['gpasswd']}" \
@@ -50,26 +43,22 @@ koopa_linux_add_user_to_group() {
 }
 
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
-    local app dict indexes
+    local -A app dict
+    local -a indexes
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    declare -A app=(
-        ['bcbio_setup_genome']='bcbio_setup_genome.py'
-        ['sed']="$(koopa_locate_sed)"
-        ['touch']="$(koopa_locate_touch)"
-    )
-    [[ -x "${app['sed']}" ]] || return 1
-    [[ -x "${app['touch']}" ]] || return 1
-    declare -A dict=(
-        ['cores']="$(koopa_cpu_count)"
-        ['fasta_file']=''
-        ['genome_build']=''
-        ['gtf_file']=''
-        ['organism']=''
-        ['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
-        ['provider']='Ensembl'
-        ['release']=''
-    )
+    app['bcbio_setup_genome']="$(koopa_linux_locate_bcbio_setup_genome)"
+    app['sed']="$(koopa_locate_sed)"
+    app['touch']="$(koopa_locate_touch)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cores']="$(koopa_cpu_count)"
+    dict['fasta_file']=''
+    dict['genome_build']=''
+    dict['gtf_file']=''
+    dict['organism']=''
+    dict['organism_pattern']='^([A-Z][a-z]+)(\s|_)([a-z]+)$'
+    dict['provider']='Ensembl'
+    dict['release']=''
     indexes=()
     while (("$#"))
     do
@@ -134,8 +123,6 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
         '--index' "${indexes[*]}" \
         '--organism' "${dict['organism']}" \
         '--release' "${dict['release']}"
-    koopa_activate_bcbio_nextgen
-    koopa_assert_is_installed "${app['bcbio_setup_genome']}"
     koopa_assert_is_file "${dict['fasta_file']}" "${dict['gtf_file']}"
     dict['fasta_file']="$(koopa_realpath "${dict['fasta_file']}")"
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
@@ -175,44 +162,36 @@ ${dict['provider']} ${dict['release']}"
 }
 
 koopa_linux_bcbio_nextgen_add_genome() {
-    local app bcbio_args dict genome genomes
+    local -A app dict
+    local -a bcbio_args
+    local genome
     koopa_assert_has_args "$#"
-    genomes=("$@")
-    declare -A app=(
-        ['bcbio']="$(koopa_linux_locate_bcbio)"
-    )
-    declare -A dict=(
-        ['cores']="$(koopa_cpu_count)"
-    )
+    app['bcbio']="$(koopa_linux_locate_bcbio)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['cores']="$(koopa_cpu_count)"
     bcbio_args=(
         "--cores=${dict['cores']}"
         '--upgrade=skip'
     )
-    for genome in "${genomes[@]}"
+    for genome in "$@"
     do
         bcbio_args+=("--genomes=${genome}")
     done
-    koopa_dl \
-        'Genomes' "$(koopa_to_string "${genomes[@]}")" \
-        'Args' "${bcbio_args[@]}"
     "${app['bcbio']}" upgrade "${bcbio_args[@]}"
     return 0
 }
 
 koopa_linux_bcbio_nextgen_patch_devel() {
-    local app cache_files dict
+    local -A app dict
+    local -a cache_files
     koopa_assert_has_no_envs
-    declare -A app=(
-        ['bcbio_python']='bcbio_python'
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
-        ['install_dir']=''
-        ['name']='bcbio-nextgen'
-        ['tmp_log_file']="$(koopa_tmp_log_file)"
-    )
+    app['bcbio_python']="$(koopa_linux_locate_bcbio_python)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['git_dir']="${HOME:?}/git/bcbio-nextgen"
+    dict['install_dir']=''
+    dict['name']='bcbio-nextgen'
+    dict['tmp_log_file']="$(koopa_tmp_log_file)"
     while (("$#"))
     do
         case "$1" in
@@ -246,12 +225,6 @@ koopa_linux_bcbio_nextgen_patch_devel() {
         esac
     done
     koopa_assert_is_dir "${dict['git_dir']}"
-    if [[ ! -x "${app['bcbio_python']}" ]]
-    then
-        koopa_locate_app "${app['bcbio_python']}"
-    fi
-    app['bcbio_python']="$(koopa_realpath "${app['bcbio_python']}")"
-    koopa_assert_is_installed "${app['bcbio_python']}"
     if [[ -z "${dict['install_dir']}" ]]
     then
         dict['install_dir']="$( \
@@ -294,12 +267,12 @@ site-packages/bcbio'*
 }
 
 koopa_linux_bcbio_nextgen_run_tests() {
-    local dict test tests
-    declare -A dict=(
-        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
-        ['output_dir']="${PWD:?}/bcbio-tests"
-        ['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
-    )
+    local -A dict
+    local -a tests
+    local test
+    dict['git_dir']="${HOME:?}/git/bcbio-nextgen"
+    dict['output_dir']="${PWD:?}/bcbio-tests"
+    dict['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
     while (("$#"))
     do
         case "$1" in
@@ -358,17 +331,12 @@ koopa_linux_bcbio_nextgen_run_tests() {
 }
 
 koopa_linux_bcl2fastq_indrops() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
-        ['tee']="$(koopa_locate_tee)"
-    )
-    [[ -x "${app['bcl2fastq']}" ]] || return 1
-    [[ -x "${app['tee']}" ]] || return 1
-    declare -A dict=(
-        ['log_file']='bcl2fastq-indrops.log'
-    )
+    app['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
+    app['tee']="$(koopa_locate_tee)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['log_file']='bcl2fastq-indrops.log'
     "${app['bcl2fastq']}" \
         --use-bases-mask 'y*,y*,y*,y*' \
         --mask-short-adapter-reads 0 \
@@ -378,13 +346,11 @@ koopa_linux_bcl2fastq_indrops() {
 }
 
 koopa_linux_configure_system_lmod() {
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    declare -A dict=(
-        ['etc_dir']='/etc/profile.d'
-        ['prefix']="${1:-}"
-    )
+    dict['etc_dir']='/etc/profile.d'
+    dict['prefix']="${1:-}"
     if [[ -z "${dict['prefix']}" ]]
     then
         dict['prefix']="$(koopa_app_prefix 'lmod')"
@@ -418,16 +384,14 @@ koopa_linux_configure_system_lmod() {
 }
 
 koopa_linux_configure_system_rstudio_server() {
-    local app conf_lines dict
+    local -A app dict
+    local -a conf_lines
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app dict
     app['r']="$(koopa_locate_system_r --realpath)"
     app['rscript']="$(koopa_locate_system_rscript)"
     app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
-    [[ -x "${app['rstudio_server']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name']='rstudio-server'
     koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \
@@ -458,10 +422,9 @@ koopa_linux_configure_system_rstudio_server() {
 }
 
 koopa_linux_configure_system_sshd() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A dict
     dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
     read -r -d '' "dict[string]" << END || true
 AcceptEnv KOOPA_COLOR_MODE
@@ -492,12 +455,10 @@ koopa_linux_delete_cache() {
 }
 
 koopa_linux_fix_sudo_setrlimit_error() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['file']='/etc/sudo.conf'
-        ['string']='Set disable_coredump false'
-    )
+    dict['file']='/etc/sudo.conf'
+    dict['string']='Set disable_coredump false'
     koopa_sudo_append_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
@@ -609,21 +570,15 @@ koopa_linux_install_system_pivpn() {
 }
 
 koopa_linux_java_update_alternatives() {
-    local app dict
-    local prefix priority
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     koopa_assert_is_admin
-    declare -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
-    )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['update_alternatives']}" ]] || return 1
-    declare -A dict=(
-        ['alt_prefix']='/var/lib/alternatives'
-        ['prefix']="$(koopa_realpath "${1:?}")"
-        ['priority']=100
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['alt_prefix']='/var/lib/alternatives'
+    dict['prefix']="$(koopa_realpath "${1:?}")"
+    dict['priority']=100
     koopa_rm --sudo \
         "${dict['alt_prefix']}/java" \
         "${dict['alt_prefix']}/javac" \
@@ -656,6 +611,20 @@ koopa_linux_java_update_alternatives() {
     "${app['update_alternatives']}" --display 'javac'
     "${app['update_alternatives']}" --display 'jar'
     return 0
+}
+
+koopa_linux_locate_bcbio_python() {
+    koopa_locate_app \
+        --app-name='bcbio-nextgen' \
+        --bin-name='bcbio_python' \
+        "$@"
+}
+
+koopa_linux_locate_bcbio_setup_genome() {
+    koopa_locate_app \
+        --app-name='bcbio-nextgen' \
+        --bin-name='bcbio_setup_genome.py' \
+        "$@"
 }
 
 koopa_linux_locate_bcbio() {
@@ -768,12 +737,11 @@ koopa_linux_locate_usermod() {
 }
 
 koopa_linux_oracle_instantclient_version() {
-    local app str
+    local -A app
+    local str
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['sqlplus']="$(koopa_linux_locate_sqlplus)"
-    )
-    [[ -x "${app['sqlplus']}" ]] || return 1
+    app['sqlplus']="$(koopa_linux_locate_sqlplus)"
+    koopa_assert_is_executable "${app[@]}"
     str="$( \
         "${app['sqlplus']}" -v \
             | koopa_grep --pattern='^Version' --regex \
@@ -785,18 +753,13 @@ koopa_linux_oracle_instantclient_version() {
 }
 
 koopa_linux_os_version() {
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['awk']="$(koopa_locate_awk --allow-system)"
-        ['tr']="$(koopa_locate_tr --allow-system)"
-    )
-    [[ -x "${app['awk']}" ]] || return 1
-    [[ -x "${app['tr']}" ]] || return 1
-    declare -A dict=(
-        ['key']='VERSION_ID'
-        ['file']='/etc/os-release'
-    )
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['key']='VERSION_ID'
+    dict['file']='/etc/os-release'
     dict['string']="$( \
         "${app['awk']}" -F= \
             "\$1==\"${dict['key']}\" { print \$2 ;}" \
@@ -809,17 +772,12 @@ koopa_linux_os_version() {
 }
 
 koopa_linux_proc_cmdline() {
-    local app pid
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-        ['echo']="$(koopa_locate_echo --allow-system)"
-        ['xargs']="$(koopa_locate_xargs --allow-system)"
-    )
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['echo']}" ]] || return 1
-    [[ -x "${app['xargs']}" ]] || return 1
-    declare -A dict
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['echo']="$(koopa_locate_echo --allow-system)"
+    app['xargs']="$(koopa_locate_xargs --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['pid']="${1:?}"
     dict['cmdline']="/proc/${dict['pid']}/cmdline"
     koopa_assert_is_file "${dict['cmdline']}"
@@ -829,19 +787,14 @@ koopa_linux_proc_cmdline() {
 }
 
 koopa_linux_remove_user_from_group() {
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 2
     koopa_assert_is_admin
-    declare -A app=(
-        ['gpasswd']="$(koopa_linux_locate_gpasswd)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['gpasswd']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
-    declare -A dict=(
-        ['group']="${1:?}"
-        ['user']="${2:-}"
-    )
+    app['gpasswd']="$(koopa_linux_locate_gpasswd)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group']="${1:?}"
+    dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     "${app['sudo']}" "${app['gpasswd']}" \
         --delete "${dict['user']}" "${dict['group']}"
@@ -932,14 +885,12 @@ koopa_linux_uninstall_private_cellranger() {
 }
 
 koopa_linux_update_etc_profile_d() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    declare -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['file']='/etc/profile.d/zzz-koopa.sh'
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['file']='/etc/profile.d/zzz-koopa.sh'
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
         return 0
@@ -961,15 +912,12 @@ END
 }
 
 koopa_linux_update_ldconfig() {
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
-        ['ldconfig']="$(koopa_linux_locate_ldconfig)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['ldconfig']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    app['ldconfig']="$(koopa_linux_locate_ldconfig)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }

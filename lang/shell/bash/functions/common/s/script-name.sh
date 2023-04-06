@@ -3,19 +3,15 @@
 koopa_script_name() {
     # """
     # Get the calling script name.
-    # @note Updated 2022-02-09.
+    # @note Updated 2023-04-05.
     #
     # Note that we're using 'caller' approach, which is Bash-specific.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || return 1
-    [[ -x "${app['head']}" ]] || return 1
-    declare -A dict
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['file']="$( \
         caller \
         | "${app['head']}" -n 1 \

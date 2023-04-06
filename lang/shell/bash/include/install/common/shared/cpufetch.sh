@@ -3,19 +3,16 @@
 main() {
     # """
     # Install cpufetch.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='cpufetch'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='cpufetch'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/Dr-Noob/${dict['name']}/archive/refs/\
 tags/${dict['file']}"

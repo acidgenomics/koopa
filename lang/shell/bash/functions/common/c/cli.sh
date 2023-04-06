@@ -8,11 +8,9 @@ koopa_cli() {
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['nested']=0
-    )
+    dict['nested']=0
     case "${1:?}" in
         '--help' | \
         '-h')

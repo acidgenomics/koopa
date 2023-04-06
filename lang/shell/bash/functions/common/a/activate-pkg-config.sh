@@ -10,11 +10,12 @@ koopa_activate_pkg_config() {
     # > koopa_activate_pkg_config '/opt/koopa/bin/pkg-config'
     # > echo "$PKG_CONFIG_PATH"
     # """
-    local app str
+    local app
     koopa_assert_has_args "$#"
     PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for app in "$@"
     do
+        local str
         [[ -x "$app" ]] || continue
         str="$("$app" --variable 'pc_path' 'pkg-config')"
         PKG_CONFIG_PATH="$( \

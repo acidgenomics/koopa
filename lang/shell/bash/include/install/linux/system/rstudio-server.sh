@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-05.
     #
     # Don't enclose values in quotes in the conf file.
     #
@@ -23,16 +23,15 @@ main() {
     # - https://hub.docker.com/r/rocker/rstudio/dockerfile
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
-    local app dict
-    declare -A app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r --realpath)"
-    [[ -x "${app['r']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_debian_like
     then
-        app['fun']='koopa_debian_gdebi_install'
+        dict['fun']='koopa_debian_gdebi_install'
         dict['arch']="$(koopa_arch2)" # e.g 'amd64'.
         dict['distro']="$(koopa_debian_os_codename)"
         case "${dict['distro']}" in
@@ -45,7 +44,7 @@ main() {
         dict['file_ext']='deb'
     elif koopa_is_fedora_like
     then
-        app['fun']='koopa_fedora_dnf_install'
+        dict['fun']='koopa_fedora_dnf_install'
         dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         dict['distro']='centos8'
         dict['file_ext']='rpm'
@@ -62,10 +61,9 @@ main() {
     then
         dict['file_stem']="${dict['file_stem']}-rhel"
     fi
-    dict['file']="${dict['file_stem']}-${dict['version']}-\
-${dict['arch']}.${dict['file_ext']}"
     dict['url']="https://download2.rstudio.org/server/${dict['distro']}/\
-${dict['arch']}/${dict['file']}"
+${dict['arch']}/${dict['file_stem']}-${dict['version']}-${dict['arch']}.\
+${dict['file_ext']}"
     # Ensure '+' gets converted to '-'.
     dict['url']="$( \
         koopa_gsub \
@@ -75,8 +73,8 @@ ${dict['arch']}/${dict['file']}"
             "${dict['url']}" \
     )"
     koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    "${app['fun']}" "${dict['file']}"
+    koopa_download "${dict['url']}"
+    "${dict['fun']}" "$(koopa_basename "${dict['url']}")"
     koopa_linux_configure_system_rstudio_server
     return 0
 }

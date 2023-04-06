@@ -20,15 +20,12 @@ koopa_debian_apt_clean() {
     # - https://askubuntu.com/questions/3167/
     # - https://github.com/hadolint/hadolint/wiki/DL3009
     # """
-    local app
+    local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    declare -A app=(
-        ['apt_get']="$(koopa_debian_locate_apt_get)"
-        ['sudo']="$(koopa_locate_sudo)"
-    )
-    [[ -x "${app['apt_get']}" ]] || return 1
-    [[ -x "${app['sudo']}" ]] || return 1
+    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" --yes autoremove
     "${app['sudo']}" "${app['apt_get']}" --yes clean
     # > koopa_rm --sudo '/var/lib/apt/lists/'*

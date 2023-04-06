@@ -10,12 +10,10 @@ koopa_merge_pdf() {
     # @seealso
     # - https://github.com/mathiasbynens/dotfiles/blob/main/.aliases
     # """
-    local app
+    local -A app
     koopa_assert_has_args "$#"
-    declare -A app=(
-        ['gs']="$(koopa_locate_gs)"
-    )
-    [[ -x "${app['gs']}" ]] || return 1
+    app['gs']="$(koopa_locate_gs)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     "${app['gs']}" \
         -dBATCH \

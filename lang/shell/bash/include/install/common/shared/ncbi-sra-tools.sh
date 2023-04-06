@@ -22,8 +22,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
     # """
-    local app deps cmake_args dict
-    declare -A app dict
+    local -A app dict
+    local -a deps cmake_args
     koopa_assert_has_no_args "$#"
     deps=(
         'bison'
@@ -35,7 +35,7 @@ main() {
     )
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"

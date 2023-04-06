@@ -8,14 +8,12 @@ koopa_install_r_koopa() {
     # Install koopa R package.
     # @note Updated 2023-03-31.
     # """
-    local app
+    local -A app
     koopa_assert_has_args_le "$#" 1
-    declare -A app
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     app['rscript']="${app['r']}script"
-    [[ -x "${app['r']}" ]] || return 1
-    [[ -x "${app['rscript']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['rscript']}" -e " \
         options(
             error = quote(quit(status = 1L)),

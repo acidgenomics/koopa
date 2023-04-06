@@ -3,7 +3,7 @@
 koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-04-05.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     #
@@ -12,24 +12,17 @@ koopa_cp() {
     #   https://man7.org/linux/man-pages/man1/cp.1.html
     # - BSD cp man:
     #   https://www.freebsd.org/cgi/man.cgi?cp
-    #
     # getopts info:
     # - http://mywiki.wooledge.org/BashFAQ/035#getopts
     # - https://wiki.bash-hackers.org/howto/getopts_tutorial
     # """
-    local app cp cp_args dict mkdir pos rm
-    declare -A app=(
-        ['cp']="$(koopa_locate_cp --allow-system)"
-        ['mkdir']='koopa_mkdir'
-        ['rm']='koopa_rm'
-    )
-    [[ -x "${app['cp']}" ]] || return 1
-    declare -A dict=(
-        ['sudo']=0
-        ['symlink']=0
-        ['target_dir']=''
-        ['verbose']=0
-    )
+    local -A app dict
+    local -a cp cp_args mkdir pos rm
+    app['cp']="$(koopa_locate_cp --allow-system)"
+    dict['sudo']=0
+    dict['symlink']=0
+    dict['target_dir']=''
+    dict['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -81,14 +74,13 @@ koopa_cp() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         cp=("${app['sudo']}" "${app['cp']}")
-        mkdir=("${app['mkdir']}" '--sudo')
-        rm=("${app['rm']}" '--sudo')
+        mkdir=('koopa_mkdir' '--sudo')
+        rm=('koopa_rm' '--sudo')
     else
         cp=("${app['cp']}")
-        mkdir=("${app['mkdir']}")
-        rm=("${app['rm']}")
+        mkdir=('koopa_mkdir')
+        rm=('koopa_rm')
     fi
     cp_args=('-a' '-f')
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
@@ -120,6 +112,7 @@ koopa_cp() {
             "${mkdir[@]}" "${dict['target_parent']}"
         fi
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${cp[@]}" "${cp_args[@]}"
     return 0
 }

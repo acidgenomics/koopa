@@ -17,18 +17,15 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     # >     --profile='default' \
     # >     --region='us-east-1'
     # """
-    local app dict i keys version_ids
-    declare -A app=(
-        ['aws']="$(koopa_locate_aws)"
-        ['jq']="$(koopa_locate_jq)"
-    )
-    [[ -x "${app['aws']}" ]] || return 1
-    [[ -x "${app['jq']}" ]] || return 1
-    declare -A dict=(
-        ['bucket']=''
-        ['profile']="${AWS_PROFILE:-default}"
-        ['region']="${AWS_REGION:-us-east-1}"
-    )
+    local -A app dict
+    local -a keys version_ids
+    local i
+    app['aws']="$(koopa_locate_aws)"
+    app['jq']="$(koopa_locate_jq)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bucket']=''
+    dict['profile']="${AWS_PROFILE:-default}"
+    dict['region']="${AWS_REGION:-us-east-1}"
     while (("$#"))
     do
         case "$1" in
@@ -100,11 +97,9 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     )"
     for i in "${!keys[@]}"
     do
-        local dict2
-        declare -A dict2=(
-            ['key']="${keys[$i]}"
-            ['version_id']="${version_ids[$i]}"
-        )
+        local -A dict2
+        dict2['key']="${keys[$i]}"
+        dict2['version_id']="${version_ids[$i]}"
         koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
         "${app['aws']}" --profile "${dict['profile']}" \
             s3api delete-object \

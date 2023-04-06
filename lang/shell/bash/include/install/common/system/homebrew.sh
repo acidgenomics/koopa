@@ -18,7 +18,7 @@ main() {
     # Linux:
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     if [[ -x "$(koopa_locate_brew --allow-missing)" ]]
     then
@@ -30,7 +30,6 @@ main() {
             'Xcode Command Line Tools are not installed.' \
             "Run 'koopa install system xcode-clt' to resolve."
     fi
-    declare -A dict
     dict['file']='install.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"

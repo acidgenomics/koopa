@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
@@ -23,7 +23,8 @@ main() {
     #     Modules/LibomptargetGetDependencies.cmake
     # - https://stackoverflow.com/questions/6077414/
     # """
-    local app build_deps cmake_args dict deps projects
+    local -A app dict
+    local -a build_deps cmake_args deps projects
     build_deps=('git' 'perl' 'pkg-config')
     deps=(
         'zlib'
@@ -45,33 +46,23 @@ main() {
     fi
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    declare -A app=(
-        ['cmake']="$(koopa_locate_cmake)"
-        ['git']="$(koopa_locate_git --realpath)"
-        ['ninja']="$(koopa_locate_ninja)"
-        ['perl']="$(koopa_locate_perl --realpath)"
-        ['pkg_config']="$(koopa_locate_pkg_config --realpath)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-        ['swig']="$(koopa_locate_swig --realpath)"
-    )
-    [[ -x "${app['cmake']}" ]] || return 1
-    [[ -x "${app['git']}" ]] || return 1
-    [[ -x "${app['ninja']}" ]] || return 1
-    [[ -x "${app['perl']}" ]] || return 1
-    [[ -x "${app['pkg_config']}" ]] || return 1
-    [[ -x "${app['python']}" ]] || return 1
-    [[ -x "${app['swig']}" ]] || return 1
-    declare -A dict=(
-        ['libedit']="$(koopa_app_prefix 'libedit')"
-        ['libffi']="$(koopa_app_prefix 'libffi')"
-        ['libxml2']="$(koopa_app_prefix 'libxml2')"
-        ['ncurses']="$(koopa_app_prefix 'ncurses')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['python']="$(koopa_app_prefix 'python3.11')"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    app['cmake']="$(koopa_locate_cmake)"
+    app['git']="$(koopa_locate_git --realpath)"
+    app['ninja']="$(koopa_locate_ninja)"
+    app['perl']="$(koopa_locate_perl --realpath)"
+    app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
+    app['python']="$(koopa_locate_python311 --realpath)"
+    app['swig']="$(koopa_locate_swig --realpath)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['libedit']="$(koopa_app_prefix 'libedit')"
+    dict['libffi']="$(koopa_app_prefix 'libffi')"
+    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['ncurses']="$(koopa_app_prefix 'ncurses')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['python']="$(koopa_app_prefix 'python3.11')"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     koopa_assert_is_dir \
         "${dict['libedit']}" \
         "${dict['libffi']}" \

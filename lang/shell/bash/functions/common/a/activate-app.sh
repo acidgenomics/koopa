@@ -39,14 +39,13 @@ koopa_activate_app() {
     # @examples
     # > koopa_activate_app 'cmake' 'make'
     # """
-    local app app_name dict pos
+    local -A app dict
+    local -a pos
+    local app_name
     koopa_assert_has_args "$#"
-    declare -A app
     app['pkg_config']="$(koopa_locate_pkg_config --allow-missing)"
-    declare -A dict=(
-        ['build_only']=0
-        ['opt_prefix']="$(koopa_opt_prefix)"
-    )
+    dict['build_only']=0
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     pos=()
     while (("$#"))
     do
@@ -75,8 +74,7 @@ koopa_activate_app() {
     LDLIBS="${LDLIBS:-}"
     for app_name in "$@"
     do
-        local dict2
-        declare -A dict2
+        local -A dict2
         dict2['app_name']="$app_name"
         dict2['prefix']="${dict['opt_prefix']}/${dict2['app_name']}"
         koopa_assert_is_dir "${dict2['prefix']}"
@@ -127,7 +125,7 @@ koopa_activate_app() {
             fi
             # Loop across 'pkgconfig' dirs, find '*.pc' files, and ensure we
             # configure 'make' implicit variables correctly.
-            local pc_files
+            local -a pc_files
             readarray -t pc_files <<< "$( \
                 koopa_find \
                     --prefix="${dict2['prefix']}" \

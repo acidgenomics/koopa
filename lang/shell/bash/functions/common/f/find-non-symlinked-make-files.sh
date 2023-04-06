@@ -5,12 +5,11 @@ koopa_find_non_symlinked_make_files() {
     # Find non-symlinked make files.
     # @note Updated 2022-02-24.
     # """
-    local dict find_args
+    local -A dict
+    local -a find_args
     koopa_assert_has_no_args "$#"
-    declare -A dict=(
-        ['brew_prefix']="$(koopa_homebrew_prefix)"
-        ['make_prefix']="$(koopa_make_prefix)"
-    )
+    dict['brew_prefix']="$(koopa_homebrew_prefix)"
+    dict['make_prefix']="$(koopa_make_prefix)"
     find_args=(
         '--min-depth' 1
         '--prefix' "${dict['make_prefix']}"

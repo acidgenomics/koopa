@@ -10,17 +10,14 @@ koopa_find_large_dirs() {
     # @examples
     # > koopa_find_large_dirs "${HOME}/monorepo"
     # """
-    local app prefix
+    local -A app
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    declare -A app=(
-        ['du']="$(koopa_locate_du)"
-        ['sort']="$(koopa_locate_sort)"
-        ['tail']="$(koopa_locate_tail)"
-    )
-    [[ -x "${app['du']}" ]] || return 1
-    [[ -x "${app['sort']}" ]] || return 1
-    [[ -x "${app['tail']}" ]] || return 1
+    app['du']="$(koopa_locate_du)"
+    app['sort']="$(koopa_locate_sort)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
         local str

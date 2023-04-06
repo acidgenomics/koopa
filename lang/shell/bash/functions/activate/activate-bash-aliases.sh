@@ -7,10 +7,8 @@ _koopa_activate_bash_aliases() {
     #
     # See /usr/share/doc/bash-doc/examples in the bash-doc package.
     # """
-    local dict
-    declare -A dict=(
-        ['user_aliases_file']="${HOME}/.bash_aliases"
-    )
+    local -A dict
+    dict['user_aliases_file']="${HOME}/.bash_aliases"
     if [[ -f "${dict['user_aliases_file']}" ]]
     then
         # shellcheck source=/dev/null

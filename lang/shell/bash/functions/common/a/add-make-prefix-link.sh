@@ -3,19 +3,17 @@
 koopa_add_make_prefix_link() {
     # """
     # Ensure 'koopa' is linked inside make prefix.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-04-05.
     #
     # This is particularly useful for external scripts that source koopa header.
     # This approach works nicely inside a hardened R environment.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
-    koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    declare -A dict=(
-        ['koopa_prefix']="${1:-}"
-        ['make_prefix']='/usr/local'
-    )
+    koopa_assert_is_shared_install
+    dict['koopa_prefix']="${1:-}"
+    dict['make_prefix']='/usr/local'
     if [[ -z "${dict['koopa_prefix']}" ]]
     then
         dict['koopa_prefix']="$(koopa_koopa_prefix)"

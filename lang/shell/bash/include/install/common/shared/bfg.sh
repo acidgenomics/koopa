@@ -5,19 +5,14 @@ main() {
     # Install BFG git repo cleaner.
     # @note Updated 2023-03-27.
     # """
-    local app dict
+    local -A app dict
     koopa_activate_app 'openjdk'
-    declare -A app=(
-        ['cat']="$(koopa_locate_cat --allow-system)"
-        ['java']="$(koopa_locate_java)"
-    )
-    [[ -x "${app['cat']}" ]] || return 1
-    [[ -x "${app['java']}" ]] || return 1
-    declare -A dict=(
-        ['name']='bfg'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['java']="$(koopa_locate_java)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='bfg'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['file']="${dict['name']}-${dict['version']}.jar"
     dict['url']="https://search.maven.org/remotecontent?filepath=com/madgag/\

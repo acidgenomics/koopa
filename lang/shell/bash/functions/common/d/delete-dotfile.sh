@@ -3,14 +3,14 @@
 koopa_delete_dotfile() {
     # """
     # Delete a dot file.
-    # @note Updated 2022-01-31.
+    # @note Updated 2023-04-05.
     # """
-    local dict name pos
+    local -A dict
+    local -a pos
+    local name
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['config']=0
-        ['xdg_config_home']="$(koopa_xdg_config_home)"
-    )
+    dict['config']=0
+    dict['xdg_config_home']="$(koopa_xdg_config_home)"
     pos=()
     while (("$#"))
     do

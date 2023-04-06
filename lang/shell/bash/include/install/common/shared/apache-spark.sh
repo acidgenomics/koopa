@@ -3,19 +3,17 @@
 main() {
     # """
     # Install Apache Spark.
-    # @note Updated 2022-10-07.
+    # @note Updated 2023-04-06.
     #
     # Consider including 'JAVA_HOME' in our binary wrappers.
     #
     # @seealso
     # - https://spark.apache.org/downloads.html
     # """
-    local dict
-    declare -A dict=(
-        ['name']='spark'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    local -A dict
+    dict['name']='spark'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}-bin-\

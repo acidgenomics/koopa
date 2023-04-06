@@ -18,7 +18,7 @@ koopa_kebab_case_simple() {
     local str
     if [[ "$#" -eq 0 ]]
     then
-        local pos
+        local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi

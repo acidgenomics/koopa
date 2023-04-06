@@ -11,25 +11,15 @@ main() {
     # - https://mac.r-project.org/openmp/
     # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
-    local app
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    # > if [[ -f '/usr/local/include/omp.h' ]]
-    # > then
-    # >     koopa_alert_note "libomp is already installed in '/usr/local'."
-    # >     return 0
-    # > fi
-    declare -A app=(
-        ['sudo']="$(koopa_locate_sudo)"
-        ['tar']="$(koopa_locate_tar --allow-system)"
-    )
-    [[ -x "${app['sudo']}" ]] || return 1
-    [[ -x "${app['tar']}" ]] || return 1
-    declare -A dict=(
-        ['name']='openmp'
-        ['platform']='darwin'
-        ['release']='Release' # or 'Debug'.
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['sudo']="$(koopa_locate_sudo)"
+    app['tar']="$(koopa_locate_tar --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='openmp'
+    dict['platform']='darwin'
+    dict['release']='Release' # or 'Debug'.
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
         '13.0.0')
             dict['platform_version']='21'

@@ -3,7 +3,7 @@
 koopa_git_clone() {
     # """
     # Quietly clone a git repository.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-
@@ -11,18 +11,16 @@ koopa_git_clone() {
     # - https://stackoverflow.com/questions/8932389/
     # - https://devconnected.com/how-to-checkout-git-tags/
     # """
-    local app clone_args dict
+    local -A app dict
+    local -a clone_args
     koopa_assert_has_args "$#"
-    declare -A app
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || return 1
-    declare -A dict=(
-        ['branch']=''
-        ['commit']=''
-        ['prefix']=''
-        ['tag']=''
-        ['url']=''
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['branch']=''
+    dict['commit']=''
+    dict['prefix']=''
+    dict['tag']=''
+    dict['url']=''
     while (("$#"))
     do
         case "$1" in

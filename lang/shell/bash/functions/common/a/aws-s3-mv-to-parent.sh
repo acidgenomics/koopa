@@ -10,16 +10,14 @@ koopa_aws_s3_mv_to_parent() {
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    local app dict
-    local file files prefix
+    local -A app dict
+    local -a files
+    local file prefix
     koopa_assert_has_args "$#"
-    declare -A app
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || return 1
-    declare -A dict=(
-        ['prefix']=''
-        ['profile']="${AWS_PROFILE:-default}"
-    )
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']=''
+    dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
         case "$1" in
@@ -64,11 +62,9 @@ koopa_aws_s3_mv_to_parent() {
     readarray -t files <<< "${dict['str']}"
     for file in "${files[@]}"
     do
-        local dict2
-        declare -A dict2=(
-            ['bn']="$(koopa_basename "$file")"
-            ['dn1']="$(koopa_dirname "$file")"
-        )
+        local -A dict2
+        dict2['bn']="$(koopa_basename "$file")"
+        dict2['dn1']="$(koopa_dirname "$file")"
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
         dict2['target']="${dict2['dn2']}/${dict2['bn']}"
         "${app['aws']}" --profile="${dict['profile']}" \

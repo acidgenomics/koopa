@@ -3,12 +3,13 @@
 main() {
     # """
     # Install Ruby.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
     # """
-    local app conf_args deps dict
+    local -A app dict
+    local -a conf_args deps
     koopa_assert_has_no_args "$#"
     deps=(
         'zlib'
@@ -18,25 +19,19 @@ main() {
     )
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app "${deps[@]}"
-    declare -A app
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='ruby'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    # > koopa_assert_is_dir "${dict['openssl']}" "${dict['readline']}"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
     dict['version']="$(koopa_sanitize_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://cache.ruby-lang.org/pub/${dict['name']}/\
-${dict['maj_min_ver']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://cache.ruby-lang.org/pub/ruby/${dict['maj_min_ver']}/\
+ruby-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-silent-rules'

@@ -3,7 +3,7 @@
 koopa_link_in_make() {
     # """
     # Symlink application into make directory.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-04-06.
     #
     # If you run into permissions issues during link, check the build prefix
     # permissions. Ensure group is not 'root', and that group has write access.
@@ -25,12 +25,12 @@ koopa_link_in_make() {
     # >     --include='bin/conda' \
     # >     --prefix='/opt/koopa/app/conda/4.11.0'
     # """
-    local cp_args dict exclude_arr files_arr find_args i include_arr
+    local -A dict
+    local -a cp_args exclude_arr files_arr find_args include_arr
+    local i
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        ['app_prefix']=''
-        ['make_prefix']="$(koopa_make_prefix)"
-    )
+    dict['app_prefix']=''
+    dict['make_prefix']="$(koopa_make_prefix)"
     exclude_arr=('libexec')
     include_arr=()
     while (("$#"))

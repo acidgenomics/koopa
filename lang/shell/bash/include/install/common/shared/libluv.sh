@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libluv.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-04.
     #
     # Currently only using this in Neovim installer with LuaJIT.
     #
@@ -13,12 +13,12 @@ main() {
     # - cmake/Modules/FindLua.cmake
     # - cmake/Modules/FindLuaJIT.cmake
     # """
-    local app cmake_args cmake_dict deps dict
-    declare -A app cmake_dict dict
+    local -A app cmake dict
+    local -a cmake_args deps
     deps=('libuv' 'luajit')
     koopa_activate_app "${deps[@]}"
     app['luajit']="$(koopa_locate_luajit)"
-    [[ -x "${app['luajit']}" ]] || return 1
+    koopa_assert_is_executable "${app[@]}"
     dict['libuv']="$(koopa_app_prefix 'libuv')"
     dict['luajit']="$(koopa_app_prefix 'luajit')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -31,19 +31,19 @@ main() {
     koopa_assert_is_dir \
         "${dict['libuv']}" \
         "${dict['luajit']}"
-    cmake_dict['libuv_include_dir']="${dict['libuv']}/include"
-    cmake_dict['libuv_libraries']="${dict['libuv']}/lib/\
+    cmake['libuv_include_dir']="${dict['libuv']}/include"
+    cmake['libuv_libraries']="${dict['libuv']}/lib/\
 libuv.${dict['shared_ext']}"
-    cmake_dict['luajit_include_dir']="${dict['luajit']}/include/\
+    cmake['luajit_include_dir']="${dict['luajit']}/include/\
 luajit-${dict['luajit_maj_min_ver']}"
-    cmake_dict['luajit_libraries']="${dict['luajit']}/lib/\
+    cmake['luajit_libraries']="${dict['luajit']}/lib/\
 libluajit.${dict['shared_ext']}"
     koopa_assert_is_dir \
-        "${cmake_dict['libuv_include_dir']}" \
-        "${cmake_dict['luajit_include_dir']}"
+        "${cmake['libuv_include_dir']}" \
+        "${cmake['luajit_include_dir']}"
     koopa_assert_is_file \
-        "${cmake_dict['libuv_libraries']}" \
-        "${cmake_dict['luajit_libraries']}"
+        "${cmake['libuv_libraries']}" \
+        "${cmake['luajit_libraries']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DBUILD_MODULE=ON'
@@ -54,10 +54,10 @@ libluajit.${dict['shared_ext']}"
         '-DWITH_LUA_ENGINE=LuaJIT'
         '-DWITH_SHARED_LIBUV=ON'
         # Dependency paths -----------------------------------------------------
-        "-DLIBUV_INCLUDE_DIR=${cmake_dict['libuv_include_dir']}"
-        "-DLIBUV_LIBRARIES=${cmake_dict['libuv_libraries']}"
-        "-DLUAJIT_INCLUDE_DIR=${cmake_dict['luajit_include_dir']}"
-        "-DLUAJIT_LIBRARIES=${cmake_dict['luajit_libraries']}"
+        "-DLIBUV_INCLUDE_DIR=${cmake['libuv_include_dir']}"
+        "-DLIBUV_LIBRARIES=${cmake['libuv_libraries']}"
+        "-DLUAJIT_INCLUDE_DIR=${cmake['luajit_include_dir']}"
+        "-DLUAJIT_LIBRARIES=${cmake['luajit_libraries']}"
     )
     # Download libluv source code.
     dict['luv_url']="https://github.com/luvit/luv/archive/\

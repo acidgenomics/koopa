@@ -3,7 +3,7 @@
 koopa_kallisto_quant_paired_end() {
     # """
     # Run kallisto quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_kallisto_quant_paired_end \
@@ -12,23 +12,23 @@ koopa_kallisto_quant_paired_end() {
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
     # >     --output-dir='kallisto'
     # """
-    local dict fastq_r1_files fastq_r1_file
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
     koopa_assert_has_args "$#"
-    declare -A dict=(
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. "_R2_001.fastq.gz'
-        ['fastq_r2_tail']=''
-        # e.g. 'kallisto-index'.
-        ['index_dir']=''
-        # Using salmon fragment library type conventions here.
-        ['lib_type']='A'
-        ['mode']='paired-end'
-        # e.g. 'kallisto'.
-        ['output_dir']=''
-    )
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. "_R2_001.fastq.gz'
+    dict['fastq_r2_tail']=''
+    # e.g. 'kallisto-index'.
+    dict['index_dir']=''
+    # Using salmon fragment library type conventions here.
+    dict['lib_type']='A'
+    dict['mode']='paired-end'
+    # e.g. 'kallisto'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

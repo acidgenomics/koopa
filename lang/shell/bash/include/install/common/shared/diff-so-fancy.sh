@@ -5,14 +5,13 @@
 main() {
     # """
     # Install diff-so-fancy.
-    # @note Updated 2022-11-01.
+    # @note Updated 2023-04-06.
     # """
-    local dict
-    declare -A dict=(
-        ['name']='diff-so-fancy'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    local -A dict
+    koopa_assert_has_no_args "$#"
+    dict['name']='diff-so-fancy'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/so-fancy/${dict['name']}/archive/refs/\

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa_locate_ssh_add() {
-    local args
+    local -a args
     args=()
     if koopa_is_macos
     then

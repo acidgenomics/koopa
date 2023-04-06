@@ -3,20 +3,19 @@
 main() {
     # """
     # Install nlohmann-json.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/nlohmann/json
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/
     #     nlohmann-json.rb
     # """
-    local cmake_args dict
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
-    declare -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
         '-DJSON_BuildTests=OFF'
         '-DJSON_MultipleHeaders=ON'

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2022-08-11.
+    # @note Updated 2023-04-06.
     #
     # @section Privilege separation:
     #
@@ -18,23 +18,20 @@ main() {
     # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # - https://stackoverflow.com/questions/11841919/
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'libedit' \
         'openssl3'
-    declare -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['make']}" ]] || return 1
-    declare -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='openssh'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='openssh'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
 portable/${dict['file']}"

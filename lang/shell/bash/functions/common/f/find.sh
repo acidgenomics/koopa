@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-04-06.
     #
     # @section Supported regex types for GNU find:
     #
@@ -35,24 +35,23 @@ koopa_find() {
     #   https://stackoverflow.com/questions/7442417/
     #   https://unix.stackexchange.com/questions/247655/
     # """
-    local app dict exclude_arg exclude_arr find find_args results sorted_results
-    declare -A app
-    declare -A dict=(
-        ['days_modified_gt']=''
-        ['days_modified_lt']=''
-        ['empty']=0
-        ['engine']="${KOOPA_FIND_ENGINE:-}"
-        ['exclude']=0
-        ['max_depth']=''
-        ['min_depth']=1
-        ['pattern']=''
-        ['print0']=0
-        ['size']=''
-        ['sort']=0
-        ['sudo']=0
-        ['type']=''
-        ['verbose']=0
-    )
+    local -A app dict
+    local -a exclude_arr find find_args results sorted_results
+    local exclude_arg
+    dict['days_modified_gt']=''
+    dict['days_modified_lt']=''
+    dict['empty']=0
+    dict['engine']="${KOOPA_FIND_ENGINE:-}"
+    dict['exclude']=0
+    dict['max_depth']=''
+    dict['min_depth']=1
+    dict['pattern']=''
+    dict['print0']=0
+    dict['size']=''
+    dict['sort']=0
+    dict['sudo']=0
+    dict['type']=''
+    dict['verbose']=0
     exclude_arr=()
     while (("$#"))
     do
@@ -177,23 +176,19 @@ koopa_find() {
             then
                 dict['engine']='find'
                 app['find']="$(koopa_locate_find --allow-system)"
-                [[ -x "${app['find']}" ]] || return 1
             fi
             ;;
         'fd')
             app['find']="$(koopa_locate_fd)"
-            [[ -x "${app['find']}" ]] || return 1
             ;;
         'find')
             app['find']="$(koopa_locate_find --allow-system)"
-            [[ -x "${app['find']}" ]] || return 1
             ;;
     esac
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || return 1
         find+=("${app['sudo']}")
     fi
     find+=("${app['find']}")
@@ -306,7 +301,8 @@ koopa_find() {
                     # Usage of '-O' here refers to array index origin.
                     # This is a really useful way to append an array.
                     readarray -O "${#find_args[@]}" -t find_args <<< "$( \
-                        local globs1 globs2 globs3 str
+                        local -a globs1 globs2 globs3
+                        local str
                         readarray -d ',' -t globs1 <<< "$( \
                             koopa_gsub \
                                 --pattern='[{}]' \
@@ -393,8 +389,8 @@ koopa_find() {
     if [[ "${dict['sort']}" -eq 1 ]]
     then
         app['sort']="$(koopa_locate_sort --allow-system)"
-        [[ -x "${app['sort']}" ]] || return 1
     fi
+    koopa_assert_is_executable "${app[@]}"
     if [[ "${dict['print0']}" -eq 1 ]]
     then
         # NULL-byte ('\0') approach (non-POSIX).
