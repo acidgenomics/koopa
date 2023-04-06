@@ -11,6 +11,7 @@ main() {
     # @seealso
     # - http://infozip.sourceforge.net/UnZip.html
     # - https://sourceforge.net/projects/infozip/files/
+    # - http://ftp.debian.org/debian/pool/main/u/unzip/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/unzip.rb
     # - https://git.alpinelinux.org/aports/tree/main/unzip
     # """
@@ -26,6 +27,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
         '6.0')
+            # 2023-02-19.
             dict['patch_version']='28'
             ;;
         *)

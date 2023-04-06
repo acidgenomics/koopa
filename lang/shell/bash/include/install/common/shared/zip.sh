@@ -10,6 +10,7 @@ main() {
     #
     # @seealso
     # - http://infozip.sourceforge.net/Zip.html
+    # - http://ftp.debian.org/debian/pool/main/z/zip/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zip.rb
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
@@ -30,7 +31,8 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
         '3.0')
-            dict['patch_version']='11'
+            # 2023-02-19.
+            dict['patch_version']='13'
             ;;
         *)
             koopa_stop 'Unsupported version.'
