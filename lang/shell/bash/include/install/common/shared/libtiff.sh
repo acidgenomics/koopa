@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libtiff.
-    # @note Updated 2022-08-16.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libtiff.rb
@@ -14,18 +14,16 @@ main() {
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libtiff.html
     # - https://github.com/opentoonz/opentoonz/issues/1566
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'libjpeg-turbo' 'zstd'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="tiff-${dict['version']}.tar.gz"
     dict['url']="http://download.osgeo.org/libtiff/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"

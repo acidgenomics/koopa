@@ -3,27 +3,24 @@
 main() {
     # """
     # Install miller.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://miller.readthedocs.io/en/latest/
     # - https://github.com/johnkerl/miller/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/miller.rb
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['gocache']="$(koopa_init_dir 'gocache')"
-        ['gopath']="$(koopa_init_dir 'go')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['gocache']="$(koopa_init_dir 'gocache')"
+    dict['gopath']="$(koopa_init_dir 'go')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['file']="v${dict['version']}.tar.gz"

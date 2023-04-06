@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Nim.
-    # @note Updated 2022-03-29.
+    # @note Updated 2022-04-06.
     #
     # Build script currently is not optimized for multiple cores.
     #
@@ -11,14 +11,11 @@ main() {
     # - https://nim-lang.org/docs/koch.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/nim.rb
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app
-    local -A dict=(
-        ['name']='nim'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']='nim'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://nim-lang.org/download/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
