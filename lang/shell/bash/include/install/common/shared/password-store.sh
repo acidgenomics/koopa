@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Password Store.
-    # @note Updated 2022-07-18.
+    # @note Updated 2023-04-06.
     # @seealso
     # - https://www.passwordstore.org/
     # - https://git.zx2c4.com/password-store/

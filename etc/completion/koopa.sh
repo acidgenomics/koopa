@@ -301,7 +301,6 @@ _koopa_complete() {
                         'openblas'
                         'openjdk'
                         'openssh'
-                        'openssl1'
                         'openssl3'
                         'pandoc'
                         'parallel'

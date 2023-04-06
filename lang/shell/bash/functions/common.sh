@@ -10711,12 +10711,6 @@ koopa_install_difftastic() {
         "$@"
 }
 
-koopa_install_dog() {
-    koopa_install_app \
-        --name='dog' \
-        "$@"
-}
-
 koopa_install_dotfiles() {
     koopa_install_app \
         --name='dotfiles' \
@@ -11893,12 +11887,6 @@ koopa_install_openjdk() {
 koopa_install_openssh() {
     koopa_install_app \
         --name='openssh' \
-        "$@"
-}
-
-koopa_install_openssl1() {
-    koopa_install_app \
-        --name='openssl1' \
         "$@"
 }
 
@@ -23103,12 +23091,6 @@ koopa_uninstall_difftastic() {
         "$@"
 }
 
-koopa_uninstall_dog() {
-    koopa_uninstall_app \
-        --name='dog' \
-        "$@"
-}
-
 koopa_uninstall_dotfiles() {
     koopa_uninstall_app \
         --name='dotfiles' \
@@ -24135,12 +24117,6 @@ koopa_uninstall_openjdk() {
 koopa_uninstall_openssh() {
     koopa_uninstall_app \
         --name='openssh' \
-        "$@"
-}
-
-koopa_uninstall_openssl1() {
-    koopa_uninstall_app \
-        --name='openssl1' \
         "$@"
 }
 
