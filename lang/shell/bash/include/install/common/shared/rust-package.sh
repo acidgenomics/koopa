@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install Rust packages.
-    # @note Updated 2023-02-25.
+    # Install Rust package.
+    # @note Updated 2023-04-06.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -18,19 +18,17 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ripgrep.rb
     # """
-    local app dict install_args
+    local -A app dict
+    local -a install_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'git' 'rust'
-    local -A app
     app['cargo']="$(koopa_locate_cargo)"
     [[ -x "${app['cargo']}" ]] || exit 1
-    local -A dict=(
-        ['cargo_home']="$(koopa_init_dir 'cargo')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['cargo_home']="$(koopa_init_dir 'cargo')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
     install_args=(

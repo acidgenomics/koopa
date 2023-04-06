@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Subversion.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -18,7 +18,8 @@ main() {
     #   https://serverfault.com/questions/522646/
     # - https://lists.apache.org/thread/3qbhp66woztkgzq8sx6vfb7cjn6mcl9y
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
@@ -31,17 +32,14 @@ main() {
         'ruby' \
         'serf' \
         'sqlite'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        # > [mirror]='https://mirrors.ocf.berkeley.edu/apache'
-        ['mirror']='https://archive.apache.org/dist'
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='subversion'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    # > dict['mirror']='https://mirrors.ocf.berkeley.edu/apache'
+    dict['mirror']='https://archive.apache.org/dist'
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='subversion'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['apr']="$(koopa_app_prefix 'apr')"
     dict['apr_util']="$(koopa_app_prefix 'apr-util')"
     dict['serf']="$(koopa_app_prefix 'serf')"
