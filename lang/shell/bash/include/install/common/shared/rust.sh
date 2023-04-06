@@ -3,21 +3,16 @@
 main() {
     # """
     # Install Rust (via rustup).
-    # @note Updated 2022-11-03.
+    # @note Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['cut']="$(koopa_locate_cut --allow-system)"
-        ['head']="$(koopa_locate_head --allow-system)"
-    )
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['head']}" ]] || exit 1
-    local -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['tmp_prefix']='rustup'
-        ['version']="${KOOPA_INSTALL_VERSION:?}" # or 'stable' toolchain
-    )
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['tmp_prefix']='rustup'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['cargo_home']="${dict['tmp_prefix']}"
     dict['rustup_home']="${dict['tmp_prefix']}"
     CARGO_HOME="${dict['cargo_home']}"
