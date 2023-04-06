@@ -3,7 +3,10 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
+    #
+    # Check supported platforms with:
+    # > ./Configure LIST
     #
     # @seealso
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
@@ -13,36 +16,26 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/openssl@3.rb
     # - https://gist.github.com/fumiyas/b4aaee83e113e061d1ee8ab95b35608b
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'ca-certificates'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='openssl'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://www.openssl.org/source/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    # https://wiki.openssl.org/index.php/
-    #   Compilation_and_Installation#Configure_Options
-    # Check supported platforms with:
-    # > ./Configure LIST
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['url']="https://www.openssl.org/source/\
+openssl-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     conf_args=(
-        # Avoid 'lib64' inconsistency on Linux.
         '--libdir=lib'
         "--openssldir=${dict['prefix']}"
         "--prefix=${dict['prefix']}"
         "-Wl,-rpath,${dict['prefix']}/lib"
-        # > 'no-ssl3'
-        # > 'no-ssl3-method'
         'no-zlib'
         'shared'
     )
@@ -50,16 +43,13 @@ main() {
     then
         conf_args+=('-Wl,--enable-new-dtags')
     fi
-    # The '-fPIC' flag is required for non-prefixed configuration arguments,
-    # such as 'no-shared' or 'shared' to be detected correctly.
-    export CPPFLAGS="${CPPFLAGS:-} -fPIC"
+    export CPPFLAGS="-fPIC ${CPPFLAGS:-}"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./config --help
     ./config "${conf_args[@]}"
     "${app['make']}" --jobs=1 depend
     "${app['make']}" --jobs="${dict['jobs']}"
-    # > "${app['make']}" test
     "${app['make']}" install_sw
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
