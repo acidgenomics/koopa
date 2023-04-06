@@ -9,15 +9,13 @@ koopa_disk_gb_free() {
     # > koopa_disk_gb_free '/'
     # # 226
     # """
-    local app dict
-    local -A app
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['awk']="$(koopa_locate_awk --allow-system)"
     app['df']="$(koopa_locate_df --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    local -A dict
     dict['disk']="${1:?}"
     koopa_assert_is_readable "${dict['disk']}"
     # shellcheck disable=SC2016

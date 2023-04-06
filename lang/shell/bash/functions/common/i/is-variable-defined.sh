@@ -24,7 +24,7 @@ koopa_is_variable_defined() {
     koopa_assert_has_args "$#"
     dict['nounset']="$(koopa_boolean_nounset)"
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
-    for var
+    for var in "$@"
     do
         local x value
         # Check if variable is defined.

@@ -7,11 +7,12 @@ koopa_find_broken_symlinks() {
     #
     # Currently requires GNU findutils to be installed.
     # """
-    local prefix str
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
     for prefix in "$@"
     do
+        local str
         str="$( \
             koopa_find \
                 --engine='find' \

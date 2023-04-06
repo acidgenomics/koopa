@@ -21,9 +21,9 @@ koopa_r_configure_makevars() {
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
-    local app conf_dict dict
-    local cppflags ldflags lines
-    local -A app dict
+    local -A app app_pc_path_arr conf_dict dict
+    local -a app_pc_path_arr cppflags keys libintl ldflags lines pkg_config
+    local i key    
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
@@ -107,8 +107,6 @@ koopa_r_configure_makevars() {
     if koopa_is_linux
     then
         # Ensure these values are in sync with Renviron.site file.
-        local app_pc_path_arr i key keys pkg_config
-        local -A app_pc_path_arr
         keys=(
             'cairo'
             'curl7'
@@ -226,7 +224,6 @@ koopa_r_configure_makevars() {
         # libomp is installed at '/usr/local/lib' for macOS.
         ldflags+=('-lomp')
     fi
-    local -A conf_dict
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
     conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
@@ -321,7 +318,6 @@ koopa_r_configure_makevars() {
     then
         # R CRAN binary has 'Makeconf' containing (no '-lintl'):
         # > LIBINTL = -Wl,-framework -Wl,CoreFoundation
-        local libintl
         libintl=(
             # > '-lintl'
             # > '-liconv'

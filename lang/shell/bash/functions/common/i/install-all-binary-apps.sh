@@ -10,9 +10,10 @@ koopa_install_all_binary_apps() {
     #
     # Need to install PCRE libraries before grep.
     # """
-    local app app_name app_names bool
-    koopa_assert_has_no_args "$#"
     local -A app bool
+    local -a app_names
+    local app_name
+    koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
     [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1

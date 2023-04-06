@@ -19,11 +19,11 @@ main() {
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/README.html
     # """
-    local app dep_pkgs dict pkgs
+    local -A app dict
+    local -a dep_pkgs pkgs
     koopa_assert_has_no_args "$#"
-    local -A app
     app['r']='/usr/bin/R'
-    local -A dict
+    koopa_assert_is_executable "${app[@]}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dep_pkgs=(
         'autoconf'

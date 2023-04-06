@@ -13,8 +13,8 @@ main() {
     # - https://cmake.org/pipermail/cmake/2012-June/050792.html
     # - https://github.com/gabime/spdlog/issues/1190
     # """
-    local cmake cmake_args dict
     local -A cmake dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'zlib'

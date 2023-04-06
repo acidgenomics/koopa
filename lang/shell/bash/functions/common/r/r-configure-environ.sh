@@ -240,7 +240,7 @@ koopa_r_configure_environ() {
         pc_path_arr+=("${app_pc_path_arr[@]}")
         if [[ "${dict['system']}" -eq 1 ]]
         then
-            local sys_pc_path_arr
+            local -a sys_pc_path_arr
             # NOTE Likely want to include '/usr/bin/pkg-config' here also.
             readarray -t sys_pc_path_arr <<< "$( \
                 "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \

@@ -13,12 +13,11 @@ main() {
     # - ranger
     # - vim
     # """
-    local app dict install_args
+    local -A app dict
+    local -a install_args
     koopa_assert_has_no_args "$#"
-    local -A app
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
-    local -A dict
     dict['brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"
     koopa_assert_is_file "${dict['brewfile']}"
     # Note that cask specific args are handled by 'HOMEBREW_CASK_OPTS' global

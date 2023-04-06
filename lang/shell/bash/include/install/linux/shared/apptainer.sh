@@ -9,8 +9,8 @@ main() {
     # - https://github.com/apptainer/apptainer
     # - https://issueexplorer.com/issue/hpcng/singularity/6225
     # """
-    local app conf_args dict
     local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go' 'make' 'pkg-config'
     app['make']="$(koopa_locate_make)"

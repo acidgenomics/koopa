@@ -13,14 +13,15 @@ koopa_find_large_files() {
     # @examples
     # > koopa_find_large_files "${HOME}/monorepo"
     # """
-    local app prefix str
+    local -A app
+    local prefix
     koopa_assert_has_args "$#"
     koopa_assert_is_dir "$@"
-    local -A app
     app['head']="$(koopa_locate_head --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
+        local str
         str="$( \
             koopa_find \
                 --min-depth=1 \

@@ -267,10 +267,9 @@ koopa_macos_disable_spotlight_indexing() {
 }
 
 koopa_macos_disable_touch_id_sudo() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A dict
     dict['file']='/etc/pam.d/sudo'
     if [[ -f "${dict['file']}" ]] && \
         ! koopa_file_detect_fixed \
@@ -628,8 +627,8 @@ koopa_macos_is_xcode_clt_installed() {
 }
 
 koopa_macos_list_app_store_apps() {
-    local app string
     local -A app
+    local string
     app['find']="$(koopa_locate_find --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"

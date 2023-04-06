@@ -10,7 +10,6 @@ koopa_r_koopa() {
     # """
     local -A app dict
     local -a code pos rscript_args
-    local header_file fun
     koopa_assert_has_args "$#"
     app['rscript']="$(koopa_locate_rscript)"
     koopa_assert_is_executable "${app[@]}"

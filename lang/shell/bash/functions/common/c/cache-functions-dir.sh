@@ -10,16 +10,17 @@ koopa_cache_functions_dir() {
     # >     < "${dict['target_file']}" \
     # >     > "${dict['tmp_target_file']}"
     # """
-    local app prefix
     local -A app
+    local prefix
     koopa_assert_has_args "$#"
     app['grep']="$(koopa_locate_grep --allow-system)"
     app['perl']="$(koopa_locate_perl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
-        local dict file files header
         local -A dict
+        local -a files header
+        local file
         dict['prefix']="$prefix"
         koopa_assert_is_dir "${dict['prefix']}"
         dict['target_file']="${dict['prefix']}.sh"
