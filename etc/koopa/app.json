@@ -2818,8 +2818,8 @@
       "swig",
       "zlib"
     ],
+    "enabled": false,
     "large": true,
-    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "16.0.1"
   },
