@@ -27,7 +27,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'bzip2' 'python3.11'
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['install_dir']="${dict['prefix']}/libexec"

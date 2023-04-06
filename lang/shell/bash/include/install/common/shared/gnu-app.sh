@@ -23,7 +23,7 @@ main() {
             app['make']="$(koopa_locate_make)"
             ;;
     esac
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name2']="${dict['name']}"
     conf_args=("--prefix=${dict['prefix']}" "$@")
     # Alternative URLs:

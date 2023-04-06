@@ -13,7 +13,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
     app['go']="$(koopa_locate_go)"
-    [[ -x "${app['go']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['name']='gum'

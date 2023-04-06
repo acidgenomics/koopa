@@ -75,7 +75,7 @@ main() {
     )
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"

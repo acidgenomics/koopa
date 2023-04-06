@@ -29,7 +29,7 @@ main() {
     else
         app['emacs']="$(koopa_locate_emacs)"
     fi
-    [[ -x "${app['emacs']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/hlissner/doom-emacs.git'

@@ -21,7 +21,7 @@ main() {
     koopa_activate_app --build-only 'm4' 'make'
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"

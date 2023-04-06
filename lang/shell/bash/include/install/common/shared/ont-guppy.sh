@@ -12,7 +12,7 @@ main() {
         koopa_assert_is_not_aarch64
     fi
     app['aws']="$(koopa_locate_aws --allow-system)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['core_type']='cpu' # or 'gpu'.
     dict['installers_base']="$(koopa_private_installers_s3_uri)"

@@ -18,7 +18,7 @@ main() {
         'pkg-config' \
         'rust'
     app['cargo']="$(koopa_locate_cargo)"
-    [[ -x "${app['cargo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

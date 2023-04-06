@@ -35,7 +35,7 @@ main() {
     )
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
-    [[ -x "${app['python']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"

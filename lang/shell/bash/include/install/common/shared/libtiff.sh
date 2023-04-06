@@ -20,7 +20,7 @@ main() {
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'libjpeg-turbo' 'zstd'
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

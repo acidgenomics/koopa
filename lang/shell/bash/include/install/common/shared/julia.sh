@@ -22,7 +22,7 @@ main() {
     build_deps=('bzip2' 'cmake' 'make' 'tar' 'xz')
     koopa_activate_app --build-only "${build_deps[@]}"
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']='julia'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
