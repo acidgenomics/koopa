@@ -3,25 +3,23 @@
 main() {
     # """
     # Install ICU4C.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://unicode-org.github.io/icu/userguide/icu4c/build.html
     # - https://github.com/unicode-org/icu/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/icu4c.rb
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='icu4c'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='icu4c'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['kebab_version']="$(koopa_kebab_case_simple "${dict['version']}")"
     dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['snake_version']}-src.tgz"
