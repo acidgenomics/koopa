@@ -3,18 +3,15 @@
 main() {
     # """
     # Install mpdecimal.
-    # @note Updated 2022-09-26.
+    # @note Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_activate_app --build-only 'make'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['name']='mpdecimal'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']='mpdecimal'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://www.bytereef.org/software/${dict['name']}/\
 releases/${dict['file']}"

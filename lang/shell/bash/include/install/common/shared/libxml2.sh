@@ -3,26 +3,24 @@
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
     # """
-    local app build_deps conf_args deps dict
+    local -A app dict
+    local -a build_deps conf_args deps
     koopa_assert_has_no_args "$#"
     build_deps=('make' 'pkg-config')
     deps=('zlib' 'icu4c' 'readline')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libxml2'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='libxml2'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"
     dict['url']="https://download.gnome.org/sources/${dict['name']}/\

@@ -5,13 +5,13 @@
 main() {
     # """
     # Install libuv.
-    # @note Updated 2022-08-25.
+    # @note Updated 2023-06-07.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libuv.rb
     # - https://cran.r-project.org/web/packages/httpuv/index.html
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'autoconf' \
@@ -20,15 +20,12 @@ main() {
         'm4' \
         'make' \
         'pkg-config'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='libuv'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='libuv'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
 archive/${dict['file']}"
