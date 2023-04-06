@@ -3,20 +3,19 @@
 main() {
     # """
     # Install fmt library.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/fmtlib/fmt
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fmt.rb
     # - https://github.com/conda-forge/fmt-feedstock
     # """
-    local dict cmake_args
+    local -A dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
-    local -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
         # > '-DFMT_PEDANTIC=ON'
         # > '-DFMT_SYSTEM_HEADERS=ON'
