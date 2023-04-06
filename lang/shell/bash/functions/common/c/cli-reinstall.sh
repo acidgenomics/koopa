@@ -34,14 +34,14 @@ koopa_cli_reinstall() {
     case "${dict['mode']}" in
         'all-revdeps' | \
         'all-reverse-dependencies')
-            koopa_reinstall_all_reverse_dependencies "$@"
+            koopa_reinstall_all_revdeps "$@"
             ;;
         'default')
             koopa_cli_install --reinstall "$@"
             ;;
         'only-revdeps' | \
         'only-reverse-dependencies')
-            koopa_reinstall_only_reverse_dependencies "$@"
+            koopa_reinstall_only_revdeps "$@"
             ;;
     esac
     return 0
