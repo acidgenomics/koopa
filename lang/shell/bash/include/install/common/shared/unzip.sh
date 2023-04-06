@@ -3,7 +3,7 @@
 main() {
     # """
     # Install unzip.
-    # @note Updated 2022-09-01.
+    # @note Updated 2023-04-06.
     #
     # Upstream is unmaintained so we use the Ubuntu patchset:
     # https://packages.ubuntu.com/kinetic/unzip
@@ -14,18 +14,15 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/unzip.rb
     # - https://git.alpinelinux.org/aports/tree/main/unzip
     # """
-    local app dict loc_macros make_args
+    local -A app dict
+    local -a loc_macros make_args
     koopa_activate_app --build-only 'make'
     koopa_activate_app 'bzip2'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['name']='unzip'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['bzip2']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['version2']="$( \
@@ -35,24 +32,13 @@ main() {
             --replacement='' \
             "${dict['version']}"
     )"
-    # Potential alternative URL:
-    # http://archive.ubuntu.com/ubuntu/pool/main/u/unzip/unzip_6.0.orig.tar.gz
-    # > dict['file']="${dict['name']}${dict['version2']}.tgz"
-    # This FTP server doesn't work currently.
-    # > dict['url']="ftp://ftp.info-zip.org/pub/infozip/src/${dict['file']}"
-    # This is a copy from 'ftp.info-zip.org'.
-    # > dict['url']="https://dev.alpinelinux.org/archive/unzip/${dict['file']}"
-    # Use the canonical SourceForge URL instead.
-    dict['file']="${dict['name']}${dict['version2']}.tar.gz"
     dict['url']="https://downloads.sourceforge.net/project/infozip/\
 UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
-${dict['file']}"
-
-
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
+unzip${dict['version2']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     apply_ubuntu_patch_set
-    koopa_cd "${dict['name']}${dict['version2']}"
+    koopa_cd 'src'
     # These macros also follow Ubuntu, and are required to:
     # - Correctly handle large archives (> 4GB).
     # - Extract & print archive contents with non-latin characters.
@@ -89,20 +75,22 @@ ${dict['file']}"
     return 0
 }
 
+# FIXME Rework this to take arguments.
+
 apply_ubuntu_patch_set() {
     # """
     # Apply Ubuntu patch set (to 6.0 release).
-    # @note Updated 2022-10-12.
+    # @note Updated 2023-04-06.
     # """
-    local app dict file
-    local -A app
+    local -A app dict
+    local -a patch_series
+    local file
+    koopa_assert_is_dir 'src'
     app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['patch']}" ]] || exit 1
-    local -A dict=(
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
-    # FIXME This needs to take input, as a global variable?
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    # FIXME This needs to support input as a variable.
     case "${dict['version']}" in
         '6.0')
             dict['patch_ver']='27'
@@ -118,19 +106,18 @@ apply_ubuntu_patch_set() {
             --replacement='' \
             "${dict['version']}"
     )"
-    dict['file']="${dict['name']}_${dict['version']}-\
-${dict['patch_ver']}ubuntu1.debian.tar.xz"
-    # FIXME Get the first letter of the name.
+    # FIXME Get the first letter of the name as a variable.
     dict['url']="http://archive.ubuntu.com/ubuntu/pool/main/u/\
-${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
+${dict['name']}/${dict['name']}_${dict['version']}-\
+${dict['patch_ver']}ubuntu1.debian.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")"
     koopa_assert_is_dir 'debian/patches'
-    local patch_series
+    koopa_assert_is_file 'debian/patches/series'
     readarray -t patch_series < 'debian/patches/series'
     (
-        koopa_cd "${dict['name']}${dict['version2']}"
         local patch
+        koopa_cd 'src'
         for patch in "${patch_series[@]}"
         do
             local input

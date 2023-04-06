@@ -3,26 +3,24 @@
 main() {
     # """
     # Install Tmux.
-    # @note Updated 2022-08-16.
+    # @note Updated 2023-04-06.
     #
     # Consider adding tmux to enabled login shells in a future update.
     # """
-    local app conf_args dict
+    local -A app dict 
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
         'libevent' \
         'ncurses' \
         'utf8proc'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='tmux'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='tmux'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
 download/${dict['version']}/${dict['file']}"
@@ -39,9 +37,5 @@ download/${dict['version']}/${dict['file']}"
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
-    # This can kill system tmux server, so keep disabled.
-    # > app['tmux']="${dict['prefix']}/bin/tmux"
-    # > koopa_assert_is_installed "${app['tmux']}"
-    # > "${app['tmux']}" kill-server &>/dev/null || true
     return 0
 }

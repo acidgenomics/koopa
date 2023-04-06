@@ -3,20 +3,18 @@
 main() {
     # """
     # Install termcolor.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/ikalnytskyi/termcolor
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/termcolor.rb
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='termcolor'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='termcolor'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/ikalnytskyi/termcolor/archive/\
 v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
