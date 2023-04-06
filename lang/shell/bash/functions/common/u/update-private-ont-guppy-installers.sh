@@ -12,7 +12,7 @@ koopa_update_private_ont_guppy_installers() {
     koopa_assert_has_no_args "$#"
     koopa_assert_has_private_access
     app['aws']="$(koopa_locate_aws)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['base_url']='https://cdn.oxfordnanoportal.com/software/analysis'
     dict['name']='ont-guppy'
     dict['prefix']="$(koopa_tmp_dir)"
