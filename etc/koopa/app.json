@@ -15,6 +15,7 @@
     "build_dependencies": ["patch"],
     "date": "2022-11-14",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/NBISweden/AGAT/"],
     "version": "1.0.0"
@@ -29,6 +30,7 @@
     "bin": ["airflow"],
     "date": "2023-03-15",
     "dependencies": ["python3.11"],
+    "enabled": false,
     "large": true,
     "url": ["https://airflow.apache.org/"],
     "version": "2.5.2"
@@ -40,6 +42,7 @@
     "bin": ["pyspark", "sparkR"],
     "date": "2023-03-07",
     "dependencies": ["openjdk", "python3.11", "r"],
+    "enabled": false,
     "large": true,
     "url": ["https://spark.apache.org/"],
     "version": "3.3.2"
@@ -47,6 +50,7 @@
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2023-03-29",
+    "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
@@ -94,6 +98,7 @@
     "bin": ["asdf"],
     "conservative": true,
     "date": "2023-03-16",
+    "enabled": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
     "version": "0.11.3"
   },
@@ -287,6 +292,7 @@
     "bin": ["bashcov"],
     "date": "2022-09-26",
     "dependencies": ["ruby"],
+    "enabled": false,
     "url": [
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
@@ -388,6 +394,7 @@
     "bin": ["bioawk"],
     "date": "2019-10-26",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/lh3/bioawk"],
     "version": "1.0"
@@ -1135,6 +1142,7 @@
   },
   "ensembl-perl-api": {
     "date": "2023-02-09",
+    "enabled": false,
     "large": true,
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
     "version": "109"
@@ -1257,6 +1265,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-03-26",
     "dependencies": ["ncurses", "pcre2"],
+    "enabled": false,
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
@@ -1362,6 +1371,7 @@
     "bin": ["fqtk"],
     "date": "2023-03-05",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/fulcrumgenomics/fqtk/",
@@ -1707,6 +1717,7 @@
     },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-02-08",
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/google/googletest/"],
     "version": "1.13.0"
@@ -1909,6 +1920,7 @@
     "bin": ["gum"],
     "build_dependencies": ["go"],
     "date": "2023-01-12",
+    "enabled": false,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
     "version": "0.10.0"
@@ -2138,6 +2150,7 @@
     "bin": ["hugo"],
     "build_dependencies": ["go"],
     "date": "2023-03-05",
+    "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
     "version": "0.111.2"
@@ -4062,6 +4075,7 @@
       "zlib",
       "zstd"
     ],
+    "enabled": false,
     "large": true,
     "url": [
       "https://svn.r-project.org/R/",
@@ -4349,6 +4363,7 @@
     "bin": ["seqkit"],
     "date": "2023-03-21",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "outdated": true,
     "url": [
@@ -4869,6 +4884,7 @@
     "bin": ["vulture"],
     "date": "2023-01-09",
     "dependencies": ["python3.11"],
+    "enabled": false,
     "url": [
       "https://github.com/jendrikseipp/vulture/",
       "https://pypi.org/project/vulture/"
