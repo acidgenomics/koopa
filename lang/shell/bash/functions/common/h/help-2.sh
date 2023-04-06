@@ -7,7 +7,6 @@ koopa_help_2() {
     #
     # Currently used inside shared Bash header.
     # """
-    local dict
     local -A dict
     dict['script_file']="$(koopa_realpath "$0")"
     dict['script_name']="$(koopa_basename "${dict['script_file']}")"
