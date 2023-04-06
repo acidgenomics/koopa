@@ -9,16 +9,14 @@ koopa_linux_configure_system_rstudio_server() {
     # - https://support.posit.co/hc/en-us/articles/
     #     200552316-Configuring-RStudio-Workbench-RStudio-Server
     # """
-    local app conf_lines dict
+    local -A app dict
+    local -a conf_lines
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A app dict
     app['r']="$(koopa_locate_system_r --realpath)"
     app['rscript']="$(koopa_locate_system_rscript)"
     app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"
-    [[ -x "${app['r']}" ]] || exit 1
-    [[ -x "${app['rscript']}" ]] || exit 1
-    [[ -x "${app['rstudio_server']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name']='rstudio-server'
     koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
     dict['ld_library_path']="$( \

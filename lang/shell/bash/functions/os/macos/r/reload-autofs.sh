@@ -10,8 +10,7 @@ koopa_macos_reload_autofs() {
     koopa_assert_is_admin
     app['automount']="$(koopa_macos_locate_automount)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['automount']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['automount']}" -vc
     return 0
 }

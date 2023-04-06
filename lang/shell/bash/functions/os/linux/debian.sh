@@ -356,8 +356,7 @@ koopa_debian_apt_clean() {
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['apt_get']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" --yes autoremove
     "${app['sudo']}" "${app['apt_get']}" --yes clean
     return 0
@@ -546,8 +545,7 @@ koopa_debian_apt_get() {
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['apt_get']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" update
     "${app['sudo']}" DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" \
@@ -594,8 +592,7 @@ koopa_debian_apt_remove() {
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['apt_get']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" --yes remove --purge "$@"
     koopa_debian_apt_clean
     return 0
@@ -655,8 +652,7 @@ koopa_debian_apt_space_used_by() {
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['apt_get']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['apt_get']}" --assume-no autoremove "$@"
     return 0
 }
@@ -677,9 +673,7 @@ koopa_debian_enable_unattended_upgrades() {
     app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
     app['sudo']="$(koopa_locate_sudo)"
     app['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
-    [[ -x "${app['dpkg_reconfigure']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['unattended_upgrades']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_install 'apt-listchanges' 'unattended-upgrades'
     "${app['sudo']}" "${app['dpkg_reconfigure']}" -plow 'unattended-upgrades'
     "${app['sudo']}" "${app['unattended_upgrades']}" -d
@@ -909,7 +903,7 @@ koopa_debian_locate_update_locale() {
 koopa_debian_os_codename() {
     local -A app dict
     app['lsb_release']="$(koopa_debian_locate_lsb_release)"
-    [[ -x "${app['lsb_release']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['string']="$("${app['lsb_release']}" -cs)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"

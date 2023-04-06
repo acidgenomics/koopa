@@ -10,8 +10,7 @@ koopa_linux_update_ldconfig() {
     koopa_assert_is_admin
     app['ldconfig']="$(koopa_linux_locate_ldconfig)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['ldconfig']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['ldconfig']}" || true
     return 0
 }

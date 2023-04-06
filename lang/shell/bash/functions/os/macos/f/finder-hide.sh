@@ -8,7 +8,7 @@ koopa_macos_finder_hide() {
     local -A app
     koopa_assert_has_args "$#"
     app['setfile']="$(koopa_macos_locate_setfile)"
-    [[ -x "${app['setfile']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a V "$@"
     return 0
