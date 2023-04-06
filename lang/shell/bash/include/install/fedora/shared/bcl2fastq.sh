@@ -9,7 +9,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     app['aws']="$(koopa_locate_aws --allow-system)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"

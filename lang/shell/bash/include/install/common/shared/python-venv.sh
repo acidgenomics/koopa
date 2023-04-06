@@ -55,7 +55,7 @@ main() {
     fi
     koopa_assert_is_function "${dict['locate_python']}"
     app['python']="$("${dict['locate_python']}" --realpath)"
-    [[ -x "${app['python']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_no_args "$#"
     dict['libexec']="${dict['prefix']}/libexec"
