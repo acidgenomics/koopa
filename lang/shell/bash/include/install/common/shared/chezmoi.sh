@@ -3,7 +3,7 @@
 main() {
     # """
     # Install chezmoi.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.chezmoi.io/
@@ -11,19 +11,16 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/chezmoi.rb
     # - https://ports.macports.org/port/chezmoi/details/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
-    local -A app
     app['go']="$(koopa_locate_go)"
     [[ -x "${app['go']}" ]] || exit 1
-    local -A dict=(
-        ['gocache']="$(koopa_init_dir 'gocache')"
-        ['gopath']="$(koopa_init_dir 'go')"
-        ['name']='chezmoi'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['gocache']="$(koopa_init_dir 'gocache')"
+    dict['gopath']="$(koopa_init_dir 'go')"
+    dict['name']='chezmoi'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['file']="v${dict['version']}.tar.gz"

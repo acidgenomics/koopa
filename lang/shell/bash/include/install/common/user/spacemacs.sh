@@ -3,18 +3,16 @@
 main() {
     # """
     # Install Spacemacs.
-    # @note Updated 2022-11-09.
+    # @note Updated 2023-04-06.
     #
     # Installation is not entirely non-interactive, and currently asks to
     # compile vterm. Not sure how to improve this.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['commit']="${KOOPA_INSTALL_VERSION:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['url']='https://github.com/syl20bnr/spacemacs.git'
-    )
+    dict['commit']="${KOOPA_INSTALL_VERSION:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['url']='https://github.com/syl20bnr/spacemacs.git'
     koopa_git_clone \
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \

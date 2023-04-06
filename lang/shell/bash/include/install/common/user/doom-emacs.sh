@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2022-09-16.
+    # @note Updated 2023-04-06.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -20,10 +20,9 @@ main() {
     # - octicons.ttf
     # - weathericons.ttf
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'chemacs'
-    local -A app
     if koopa_is_macos
     then
         app['emacs']="$(koopa_macos_emacs)"
@@ -31,11 +30,9 @@ main() {
         app['emacs']="$(koopa_locate_emacs)"
     fi
     [[ -x "${app['emacs']}" ]] || exit 1
-    local -A dict=(
-        ['commit']="${KOOPA_INSTALL_VERSION:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['url']='https://github.com/hlissner/doom-emacs.git'
-    )
+    dict['commit']="${KOOPA_INSTALL_VERSION:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['url']='https://github.com/hlissner/doom-emacs.git'
     koopa_git_clone \
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -16,7 +16,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/curl.rb
     # - https://stackoverflow.com/questions/30017397
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
@@ -24,19 +24,16 @@ main() {
         'zlib' \
         'zstd' \
         'openssl3'
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='curl'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['ssl']="$(koopa_app_prefix 'openssl3')"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-        ['zstd']="$(koopa_app_prefix 'zstd')"
-    )
+    dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='curl'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['ssl']="$(koopa_app_prefix 'openssl3')"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacert']}"
     dict['file']="${dict['name']}-${dict['version']}.tar.xz"

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Oracle Instant Client.
-    # @note Updated 2022-07-23.
+    # @note Updated 2023-04-06.
     #
     # @section ROracle R package:
     #
@@ -26,13 +26,13 @@ main() {
     # - https://docs.oracle.com/cd/E83411_01/OREAD/
     #       installing-rstudio-server.htm#OREAD223
     # """
-    local dict stems
+    local -A dict
+    local -a stems
+    local stem
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['platform']='linux'
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch)"
+    dict['platform']='linux'
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # e.g. '21.1.0.0.0-1' to '211000'.
     dict['version2']="$( \
         koopa_sub \
