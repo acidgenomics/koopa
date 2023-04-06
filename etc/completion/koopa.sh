@@ -295,7 +295,7 @@ _koopa_complete() {
                         'oniguruma'
                         'ont-bonito'
                         'ont-dorado'
-                        'ont-pod5-file-format'
+                        # > 'ont-pod5-file-format'
                         'ont-vbz-compression'
                         'openbb'
                         'openblas'
