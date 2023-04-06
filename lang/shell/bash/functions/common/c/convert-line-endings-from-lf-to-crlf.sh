@@ -11,8 +11,8 @@ koopa_convert_line_endings_from_lf_to_crlf() {
     # @examples
     # > koopa_convert_line_endings_from_lf_to_crlf 'metadata.csv'
     # """
-    local app file
     local -A app
+    local file
     koopa_assert_has_ars "$#"
     app['perl']="$(koopa_locate_perl)"
     koopa_assert_is_executable "${app[@]}"

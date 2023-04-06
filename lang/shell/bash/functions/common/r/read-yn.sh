@@ -3,18 +3,18 @@
 koopa_read_yn() {
     # """
     # Read a yes/no choice from the user.
-    # @note Updated 2022-02-01.
+    # @note Updated 2023-04-06.
     # """
-    local dict read_args
-    koopa_assert_has_args_eq "$#" 2
     local -A dict
+    local -a read_args
+    koopa_assert_has_args_eq "$#" 2
     dict['prompt']="$(koopa_read_prompt_yn "$@")"
     dict['default']="$(koopa_int_to_yn "${2:?}")"
     read_args=(
-        -e
-        -i "${dict['default']}"
-        -p "${dict['prompt']}"
-        -r
+        '-e'
+        '-i' "${dict['default']}"
+        '-p' "${dict['prompt']}"
+        '-r'
     )
     # shellcheck disable=SC2162
     read "${read_args[@]}" "dict[choice]"

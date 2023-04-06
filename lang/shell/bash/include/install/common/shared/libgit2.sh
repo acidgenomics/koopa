@@ -11,8 +11,8 @@ main() {
     # - https://github.com/libgit2/libgit2/blob/main/CMakeLists.txt
     # - https://github.com/libgit2/libgit2/issues/5079
     # """
-    local build_deps cmake cmake_args deps dict
     local -A cmake dict
+    local -a build_deps cmake_args deps
     koopa_assert_has_no_args "$#"
     build_deps=('cmake' 'pkg-config')
     deps=('zlib' 'pcre')

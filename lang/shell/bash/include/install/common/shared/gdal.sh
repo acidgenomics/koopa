@@ -20,8 +20,8 @@ main() {
     # - https://github.com/OSGeo/gdal/issues/1708
     # - https://stackoverflow.com/questions/53511533/
     # """
-    local app build_deps cmake cmake_args deps dict
     local -A app cmake dict
+    local -a build_deps cmake_args deps
     koopa_assert_has_no_args "$#"
     build_deps=('libtool' 'pkg-config')
     deps=(

@@ -14,8 +14,8 @@ main() {
     #     CMake_Modules/FindPCRE2.cmake
     # - https://git.alpinelinux.org/aports/tree/community/editorconfig/APKBUILD
     # """
-    local cmake cmake_args dict
     local -A cmake dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'pcre2'

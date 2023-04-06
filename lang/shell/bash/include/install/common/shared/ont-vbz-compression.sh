@@ -10,8 +10,8 @@ main() {
     # - https://github.com/nanoporetech/vbz_compression/blob/master/
     #     cmake/Findzstd.cmake
     # """
-    local cmake cmake_args dict
     local -A cmake dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app 'zstd' 'hdf5'
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"

@@ -22,8 +22,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
     # """
-    local app deps cmake_args dict
     local -A app dict
+    local -a deps cmake_args
     koopa_assert_has_no_args "$#"
     deps=(
         'bison'

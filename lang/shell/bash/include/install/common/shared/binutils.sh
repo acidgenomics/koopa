@@ -22,7 +22,7 @@ main() {
     # - https://tracker.debian.org/pkg/binutils
     # - https://salsa.debian.org/toolchain-team/binutils/-/tree/master/debian
     # """
-    local build_deps deps install_args
+    local -a build_deps deps install_args
     build_deps=('bison' 'flex')
     deps=('zlib' 'texinfo')
     koopa_activate_app --build-only "${build_deps[@]}"

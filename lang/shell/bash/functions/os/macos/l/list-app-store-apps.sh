@@ -8,8 +8,8 @@ koopa_macos_list_app_store_apps() {
     # @seealso
     # - https://osxdaily.com/2013/09/28/list-mac-app-store-apps-terminal/
     # """
-    local app string
     local -A app
+    local string
     app['find']="$(koopa_locate_find --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"

@@ -4,11 +4,11 @@
 
 koopa_autopad_zeros() {
     # """
-    # Autopad zeroes in sample names.
-    # @note Updated 2021-09-21.
+    # Autopad zeroes in file names.
+    # @note Updated 2023-04-06.
     # """
-    local -a pos
-    local files newname num padwidth oldname prefix stem
+    local -a files pos
+    local newname num padwidth oldname prefix stem
     koopa_assert_has_args "$#"
     prefix='sample'
     padwidth=2
@@ -54,10 +54,10 @@ koopa_autopad_zeros() {
         if [[ "$file" =~ ^([0-9]+)(.*)$ ]]
         then
             oldname="${BASH_REMATCH[0]}"
-            num=${BASH_REMATCH[1]}
+            num="${BASH_REMATCH[1]}"
             # Now pad the number prefix.
-            num=$(printf "%.${padwidth}d" "$num")
-            stem=${BASH_REMATCH[2]}
+            num="$(printf "%.${padwidth}d" "$num")"
+            stem="${BASH_REMATCH[2]}"
             # Combine with prefix to create desired file name.
             newname="${prefix}_${num}${stem}"
             koopa_mv "$oldname" "$newname"

@@ -10,8 +10,9 @@ koopa_aws_s3_mv_to_parent() {
     # Empty directory will be removed automatically, since S3 uses object
     # storage.
     # """
-    local app dict file files prefix
     local -A app dict
+    local -a files
+    local file prefix
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws)"
     koopa_assert_is_executable "${app[@]}"

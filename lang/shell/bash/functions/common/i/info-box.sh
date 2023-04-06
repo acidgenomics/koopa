@@ -8,10 +8,10 @@ koopa_info_box() {
     # Using unicode box drawings here.
     # Note that we're truncating lines inside the box to 68 characters.
     # """
+    local -a array
+    local barpad i
     koopa_assert_has_args "$#"
-    local array
     array=("$@")
-    local barpad
     barpad="$(printf '━%.0s' {1..70})"
     printf '  %s%s%s  \n' '┏' "$barpad" '┓'
     for i in "${array[@]}"

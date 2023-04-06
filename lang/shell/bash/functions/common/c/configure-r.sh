@@ -10,9 +10,8 @@ koopa_configure_r() {
     # @seealso
     # - R CMD config
     # """
-    local app dict
-    koopa_assert_has_args_le "$#" 1
     local -A app dict
+    koopa_assert_has_args_le "$#" 1
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     koopa_assert_is_executable "${app[@]}"

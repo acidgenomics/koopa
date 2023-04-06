@@ -8,9 +8,9 @@ koopa_is_git_repo() {
     # @seealso
     # - https://stackoverflow.com/questions/2180270
     # """
-    local app repo
-    koopa_assert_has_args "$#"
     local -A app
+    local repo
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     (

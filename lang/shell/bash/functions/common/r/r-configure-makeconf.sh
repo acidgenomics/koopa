@@ -20,8 +20,8 @@ koopa_r_configure_makeconf() {
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
-    local app dict libs
     local -A app dict
+    local -a libs
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
     dict['system']=0

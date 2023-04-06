@@ -13,9 +13,9 @@ koopa_extract() {
     # See also:
     # - https://github.com/stephenturner/oneliners
     # """
-    local app cmd_args dict
-    koopa_assert_has_args_le "$#" 2
     local -A app dict
+    local -a cmd_args
+    koopa_assert_has_args_le "$#" 2
     dict['file']="${1:?}"
     dict['target']="${2:-}"
     dict['wd']="${PWD:?}"
@@ -49,7 +49,7 @@ koopa_extract() {
             *'.tar' | \
             *'.tar.'* | \
             *'.tgz')
-                local tar_cmd_args
+                local -a tar_cmd_args
                 tar_cmd_args=(
                     '-f' "${dict['file']}" # '--file'.
                     '-x' # '--extract'.

@@ -8,9 +8,9 @@ koopa_cmake_std_args() {
     # Potentially useful:
     # - CMAKE_STATIC_LINKER_FLAGS
     # """
-    local dict prefix
-    koopa_assert_has_args_eq "$#" 1
     local -A dict
+    local -a args
+    koopa_assert_has_args_eq "$#" 1
     dict['prefix']="${1:?}"
     args=(
         '-DCMAKE_BUILD_TYPE=Release'

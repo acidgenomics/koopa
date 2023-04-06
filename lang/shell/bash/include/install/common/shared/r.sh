@@ -36,7 +36,7 @@ main() {
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
     local -A app conf_dict dict
-    local build_deps conf_args deps
+    local -a build_deps conf_args deps
     koopa_assert_has_no_args "$#"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then

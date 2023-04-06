@@ -39,8 +39,9 @@ koopa_aws_s3_ls() {
     # >     --profile="$profile" \
     # >     --recursive
     # """
-    local app dict ls_args str
     local -A app dict
+    local -a ls_args
+    local str
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
     app['aws']="$(koopa_locate_aws)"

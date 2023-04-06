@@ -301,7 +301,8 @@ koopa_find() {
                     # Usage of '-O' here refers to array index origin.
                     # This is a really useful way to append an array.
                     readarray -O "${#find_args[@]}" -t find_args <<< "$( \
-                        local globs1 globs2 globs3 str
+                        local -a globs1 globs2 globs3
+                        local str
                         readarray -d ',' -t globs1 <<< "$( \
                             koopa_gsub \
                                 --pattern='[{}]' \

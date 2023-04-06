@@ -6,8 +6,8 @@ koopa_r_migrate_non_base_packages() {
     # to site library.
     # @note Updated 2023-04-04.
     # """
-    local app pkgs
     local -A app
+    local -a pkgs
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     readarray -t pkgs <<< "$( \

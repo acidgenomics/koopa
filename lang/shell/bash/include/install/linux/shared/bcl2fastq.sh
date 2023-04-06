@@ -23,8 +23,8 @@ main() {
     # - Potential method for disabling ICU in Boost build (if necessary):
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
-    local app conf_args deps dict
     local -A app dict
+    local -a conf_args deps
     koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'make'
@@ -66,7 +66,7 @@ main() {
     # Install Boost 1.54.0 from 'redist'.
     # Refer to 'src/cmake/bootstrap/installBoost.sh'.
     (
-        local b2_args bootstrap_args
+        local -a b2_args bootstrap_args
         bootstrap_args=(
             "--prefix=${dict['libexec']}/boost"
             "--libdir=${dict['libexec']}/boost/lib"

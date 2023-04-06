@@ -74,7 +74,8 @@ binaries/releases/download/jdk-${dict['version3']}/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cp "jdk-${dict['version']}" "${dict['prefix']}/libexec"
     (
-        local libexec name names
+        local -a names
+        local libexec name
         koopa_cd "${dict['prefix']}"
         if koopa_is_macos
         then

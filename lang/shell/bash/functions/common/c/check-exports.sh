@@ -7,7 +7,7 @@ koopa_check_exports() {
     #
     # Warn the user if they are setting unrecommended values.
     # """
-    local vars
+    local -a vars
     koopa_assert_has_no_args "$#"
     koopa_is_rstudio && return 0
     vars=(

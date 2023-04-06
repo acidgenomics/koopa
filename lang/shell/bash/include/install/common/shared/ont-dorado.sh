@@ -5,8 +5,8 @@ main() {
     # Install ONT dorado basecaller.
     # @note Updated 2023-04-04.
     # """
-    local app build_deps cmake deps dict
     local -A app cmake dict
+    local -a build_deps deps
     koopa_assert_has_no_args "$#"
     build_deps=('autoconf' 'automake' 'git')
     deps=('hdf5' 'openssl3' 'zstd')

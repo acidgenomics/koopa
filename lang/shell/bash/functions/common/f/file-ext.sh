@@ -14,10 +14,11 @@ koopa_file_ext() {
     #
     # See also: koopa_basename_sans_ext
     # """
-    local file x
+    local file
     koopa_assert_has_args "$#"
     for file in "$@"
     do
+        local x
         if koopa_has_file_ext "$file"
         then
             x="${file##*.}"

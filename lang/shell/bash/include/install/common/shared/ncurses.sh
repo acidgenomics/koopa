@@ -49,7 +49,8 @@ main() {
             "ncurses${dict['maj_ver']}-config"
     )
     (
-        local name names
+        local -a names
+        local name
         koopa_cd "${dict['prefix']}/include"
         koopa_ln 'ncursesw' 'ncurses'
         names=('curses' 'form' 'ncurses' 'panel' 'term' 'termcap')
@@ -59,7 +60,8 @@ main() {
         done
     )
     (
-        local name names
+        local -a names
+        local name
         koopa_cd "${dict['prefix']}/lib"
         names=('form' 'menu' 'ncurses' 'ncurses++' 'panel')
         for name in "${names[@]}"
@@ -99,7 +101,8 @@ main() {
         fi
     )
     (
-        local name names
+        local -a names
+        local name
         koopa_cd "${dict['prefix']}/lib/pkgconfig"
         names=('form' 'menu' 'ncurses++' 'ncurses' 'panel')
         for name in "${names[@]}"

@@ -21,8 +21,9 @@ koopa_convert_fastq_to_fasta() {
     # >     --source-dir='fastq/' \
     # >     --target-dir='fasta/'
     # """
-    local app dict fastq_file fastq_files
     local -A app dict
+    local -a fastq_files
+    local fastq_file
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['paste']="$(koopa_locate_paste)"

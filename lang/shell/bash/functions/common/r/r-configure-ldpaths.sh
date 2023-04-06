@@ -23,8 +23,8 @@ koopa_r_configure_ldpaths() {
     #
     # https://r-spatial.org/r/2022/04/12/evolution.html
     # """
-    local -A app dict
-    local -a keys ld_lib_arr ld_lib_app_arr lines
+    local -A app dict ld_lib_app_arr
+    local -a keys ld_lib_arr lines
     local key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
@@ -53,7 +53,6 @@ koopa_r_configure_ldpaths() {
         ": \${JAVA_HOME=${dict['java_home']}}"
         ": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}"
     )
-    local -A ld_lib_app_arr
     keys=(
         'bzip2'
         'cairo'
@@ -140,10 +139,9 @@ koopa_r_configure_ldpaths() {
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
-        local sys_libdir
-        sys_libdir="/usr/lib/${dict['arch']}-linux-gnu"
-        koopa_assert_is_dir "$sys_libdir"
-        ld_lib_arr+=("$sys_libdir")
+        dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
+        koopa_assert_is_dir "${dict['sys_libdir']}"
+        ld_lib_arr+=("${dict['sys_libdir']}")
     fi
     [[ -d '/usr/lib' ]] && ld_lib_arr+=('/usr/lib')
     [[ -d '/lib' ]] && ld_lib_arr+=('/lib')

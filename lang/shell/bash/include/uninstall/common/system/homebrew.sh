@@ -12,13 +12,12 @@ main() {
     # @seealso
     # - https://docs.brew.sh/FAQ
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     if [[ ! -x "$(koopa_locate_brew --allow-missing)" ]]
     then
         koopa_stop 'Homebrew is not installed.'
     fi
-    local -A dict
     dict['user']="$(koopa_user_name)"
     dict['file']='uninstall.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\

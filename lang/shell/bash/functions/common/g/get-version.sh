@@ -19,7 +19,6 @@ koopa_get_version() {
     koopa_assert_has_args "$#"
     for cmd in "$@"
     do
-        local dict
         local -A dict
         dict['cmd']="$cmd"
         dict['bn']="$(koopa_basename "${dict['cmd']}")"
