@@ -12245,6 +12245,12 @@ koopa_install_rbenv() {
         "$@"
 }
 
+koopa_install_rclone() {
+    koopa_install_app \
+        --name='rclone' \
+        "$@"
+}
+
 koopa_install_readline() {
     koopa_install_app \
         --name='readline' \
@@ -24371,6 +24377,12 @@ koopa_uninstall_ranger_fm() {
 koopa_uninstall_rbenv() {
     koopa_uninstall_app \
         --name='rbenv' \
+        "$@"
+}
+
+koopa_uninstall_rclone() {
+    koopa_uninstall_app \
+        --name='rclone' \
         "$@"
 }
 
