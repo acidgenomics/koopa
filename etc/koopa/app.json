@@ -4212,11 +4212,11 @@
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-04-06",
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.2.1"
+    "version": "3.2.2"
   },
   "ruff": {
     "bin": ["ruff"],
