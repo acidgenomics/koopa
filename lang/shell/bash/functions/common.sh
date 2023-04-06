@@ -18187,7 +18187,7 @@ koopa_r_koopa() {
     shift 1
     dict['header_file']="$(koopa_koopa_prefix)/lang/r/include/header.R"
     koopa_assert_is_file "${dict['header_file']}"
-    code=("source('${dict['header_file'}');")
+    code=("source('${dict['header_file']}');")
     if [[ "${dict['fun']}" != 'header' ]]
     then
         code+=("koopa::${dict['fun']}();")

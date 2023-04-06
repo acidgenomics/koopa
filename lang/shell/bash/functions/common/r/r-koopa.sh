@@ -3,7 +3,7 @@
 koopa_r_koopa() {
     # """
     # Execute a function in koopa R package.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-06.
     #
     # The 'header' variable is currently used to simply load the shared R
     # script header and check that the koopa R package is installed.
@@ -42,7 +42,7 @@ koopa_r_koopa() {
     shift 1
     dict['header_file']="$(koopa_koopa_prefix)/lang/r/include/header.R"
     koopa_assert_is_file "${dict['header_file']}"
-    code=("source('${dict['header_file'}');")
+    code=("source('${dict['header_file']}');")
     if [[ "${dict['fun']}" != 'header' ]]
     then
         code+=("koopa::${dict['fun']}();")
