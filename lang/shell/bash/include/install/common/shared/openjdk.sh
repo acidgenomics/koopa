@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Adoptium Temurin OpenJDK.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-04-06.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -21,13 +21,11 @@ main() {
     # - https://projects.eclipse.org/projects/adoptium.temurin
     # - https://www.oracle.com/technetwork/java/javase/downloads/index.html
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['arch']="$(koopa_arch)"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['arch']="$(koopa_arch)"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_macos
     then
         dict['platform']='mac'

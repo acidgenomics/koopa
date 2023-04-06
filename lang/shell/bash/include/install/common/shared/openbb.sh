@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This is now hitting a conda enviroment error:
-# > Error: conda is not active.
-
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-03-02.
+    # @note Updated 2023-04-06.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -18,16 +15,13 @@ main() {
     # - https://python-poetry.org/docs/configuration/
     # - https://github.com/conda/conda/issues/7741
     # """
-    local app dict
+    local -A app dict
     koopa_activate_app 'ca-certificates'
-    local -A app
-    local -A dict=(
-        ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        ['conda_prefix']="$(koopa_app_prefix 'conda')"
-        ['name']='OpenBBTerminal'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
+    dict['conda_prefix']="$(koopa_app_prefix 'conda')"
+    dict['name']='OpenBBTerminal'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
         "${dict['ca_certificates']}" \
         "${dict['conda_prefix']}"
