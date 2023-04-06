@@ -12,8 +12,8 @@ main() {
     # - https://raw.githubusercontent.com/archlinux/svntogit-community/
     #     packages/spdlog/trunk/PKGBUILD
     # """
-    local app cmake cmake_args dict
     local -A app cmake dict
+    local -a cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app 'fmt'

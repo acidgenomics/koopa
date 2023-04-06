@@ -5,11 +5,9 @@ koopa_r_shiny_run_app() {
     # Run an R/Shiny application.
     # @note Updated 2022-07-11.
     # """
-    local app dict
-    local -A app
+    local -A app dict
     app['r']="$(koopa_locate_r)"
     koopa_assert_is_executable "${app[@]}"
-    local -A dict
     dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
     koopa_assert_is_dir "${dict['prefix']}"

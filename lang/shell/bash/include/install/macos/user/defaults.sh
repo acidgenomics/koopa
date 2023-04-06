@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to disable Handoff by default.
+
 main() {
     # """
     # Install macOS user defaults.
-    # @note Updated 2023-01-11.
+    # @note Updated 2023-04-06.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -32,8 +34,9 @@ main() {
     #       main/macos-config.sh
     # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
     # """
-    local app app_name apps dict
     local -A app dict
+    local -a app_names
+    local app_name
     koopa_assert_has_no_args "$#"
     app['chflags']="$(koopa_macos_locate_chflags)"
     app['defaults']="$(koopa_macos_locate_defaults)"
@@ -1369,7 +1372,7 @@ WebKit2AllowsInlineMediaPlayback" \
     # >     -domain 'system' \
     # >     -domain 'user'
     # Kill affected apps.
-    apps=(
+    app_names=(
         # > 'Activity Monitor'
         # > 'Disk Utility'
         # > 'GPGMail'
@@ -1388,7 +1391,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'cfprefsd'
     )
     koopa_alert "Reloading affected apps: $(koopa_to_string "${apps[@]}")"
-    for app_name in "${apps[@]}"
+    for app_name in "${app_names[@]}"
     do
         "${app['kill_all']}" "${app_name}" &>/dev/null || true
     done

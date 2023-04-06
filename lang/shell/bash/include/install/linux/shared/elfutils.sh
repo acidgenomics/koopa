@@ -8,8 +8,8 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
-    local app conf_args deps dict
     local -A app dict
+    local -a conf_args deps
     deps=(
         'bzip2'
         'xz'

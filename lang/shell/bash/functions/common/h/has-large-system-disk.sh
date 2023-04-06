@@ -7,10 +7,9 @@ koopa_has_large_system_disk() {
     #
     # Can manually override with 'KOOPA_BUIDLER' variable.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
     [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] && return 0
-    local -A dict
     dict['disk']="${1:-/}"
     dict['blocks']="$(koopa_disk_512k_blocks "${dict['disk']}")"
     [[ "${dict['blocks']}" -ge 500000000 ]] && return 0

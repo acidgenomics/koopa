@@ -111,7 +111,8 @@ __koopa_source_functions() {
     # Note that macOS ships with an ancient version of Bash by default that
     # doesn't support readarray/mapfile.
     # """
-    local cache_file file files prefix
+    local -a files
+    local cache_file file prefix
     prefix="$(_koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     cache_file="${prefix}.sh"
@@ -164,7 +165,6 @@ __koopa_bash_header() {
             return 1
             ;;
     esac
-    local app bool dict
     local -A app bool dict
     bool['activate']=0
     bool['checks']=1

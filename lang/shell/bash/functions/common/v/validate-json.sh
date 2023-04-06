@@ -8,9 +8,7 @@ koopa_validate_json() {
     # @examples
     # koopa_validate_json 'app.json'
     # """
-    local app dict
-    local -A app
-    local -A dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['python']="$(koopa_locate_python311)"
     dict['file']="${1:?}"

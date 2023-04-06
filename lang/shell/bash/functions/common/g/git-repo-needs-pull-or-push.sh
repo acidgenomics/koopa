@@ -10,15 +10,14 @@ koopa_git_repo_needs_pull_or_push() {
     # This will return an expected fatal warning when no upstream exists.
     # We're handling this case by piping errors to '/dev/null'.
     # """
-    local app prefix
-    koopa_assert_has_args "$#"
     local -A app
+    local prefix
+    koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git)"
     koopa_assert_is_executable "${app[@]}"
     (
         for prefix in "$@"
         do
-            local dict
             local -A dict
             dict['prefix']="$prefix"
             koopa_cd "${dict['prefix']}"

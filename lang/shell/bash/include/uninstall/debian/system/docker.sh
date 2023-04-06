@@ -5,7 +5,7 @@ main() {
     # Uninstall Docker.
     # @note Updated 2021-12-09.
     # """
-    local pkgs
+    local -a pkgs
     koopa_assert_has_no_args "$#"
     pkgs=(
         'containerd.io'

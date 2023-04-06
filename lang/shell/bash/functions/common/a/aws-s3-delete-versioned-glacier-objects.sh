@@ -17,8 +17,9 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     # >     --profile='default' \
     # >     --region='us-east-1'
     # """
-    local app dict i keys version_ids
     local -A app dict
+    local -a keys version_ids
+    local i
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"

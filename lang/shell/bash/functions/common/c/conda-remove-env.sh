@@ -12,8 +12,8 @@ koopa_conda_remove_env() {
     # @examples
     # > koopa_conda_remove_env 'kallisto' 'salmon'
     # """
-    local app dict name
     local -A app dict
+    local name
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     koopa_assert_is_executable "${app[@]}"

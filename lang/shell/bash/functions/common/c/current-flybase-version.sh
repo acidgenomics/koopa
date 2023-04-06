@@ -9,8 +9,8 @@ koopa_current_flybase_version() {
     # > koopa_current_flybase_version
     # # FB2022_01
     # """
-    local app str
     local -A app
+    local str
     koopa_assert_has_no_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"

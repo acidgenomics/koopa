@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 main() {
-    local deps
+    local -a deps
     koopa_activate_app --build-only 'gperf'
     deps=()
     koopa_is_linux && deps+=('attr')

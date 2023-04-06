@@ -9,7 +9,8 @@ koopa_fastq_lanepool() {
     # > koopa_fastq_lanepool --source-dir='fastq/'
     # """
     local -A app dict
-    local app basenames dict fastq_files head i out tail
+    local -a basenames fastq_files head out tail
+    local i
     app['cat']="$(koopa_locate_cat --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']='lanepool'

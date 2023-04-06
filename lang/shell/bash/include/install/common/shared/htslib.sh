@@ -10,8 +10,8 @@ main() {
     # @seealso
     # - https://github.com/samtools/htslib/
     # """
-    local app conf_args deps
     local -A app dict
+    local -a conf_args deps
     koopa_activate_app --build-only 'make'
     deps=(
         'bzip2'

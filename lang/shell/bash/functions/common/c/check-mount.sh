@@ -8,9 +8,8 @@ koopa_check_mount() {
     # @examples
     # > koopa_check_mount '/mnt/scratch'
     # """
-    local app dict
-    koopa_assert_has_args "$#"
     local -A app dict
+    koopa_assert_has_args "$#"
     app['wc']="$(koopa_locate_wc --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${1:?}"

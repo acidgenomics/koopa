@@ -5,8 +5,8 @@ koopa_bowtie2_index() {
     # Generate bowtie2 index.
     # @note Updated 2022-10-11.
     # """
-    local app dict index_args
     local -A app dict
+    local -a index_args
     koopa_assert_has_args "$#"
     app['bowtie2_build']="$(koopa_locate_bowtie2_build)"
     app['tee']="$(koopa_locate_tee)"
