@@ -3,7 +3,7 @@
 koopa_kallisto_quant_single_end() {
     # """
     # Run kallisto on multiple single-end FASTQ files.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_kallisto_quant_single_end \
@@ -11,19 +11,19 @@ koopa_kallisto_quant_single_end() {
     # >     --fastq-tail='_001.fastq.gz' \
     # >     --output-dir='kallisto'
     # """
-    local dict fastq_file fastq_files
+    local -A dict
+    local -a fastq_files
+    local fastq_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        # e.g. 'fastq'
-        ['fastq_dir']=''
-        # e.g. "_001.fastq.gz'.
-        ['fastq_tail']=''
-        # e.g. 'kallisto-index'.
-        ['index_dir']=''
-        ['mode']='single-end'
-        # e.g. 'kallisto'.
-        ['output_dir']=''
-    )
+    # e.g. 'fastq'
+    dict['fastq_dir']=''
+    # e.g. "_001.fastq.gz'.
+    dict['fastq_tail']=''
+    # e.g. 'kallisto-index'.
+    dict['index_dir']=''
+    dict['mode']='single-end'
+    # e.g. 'kallisto'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

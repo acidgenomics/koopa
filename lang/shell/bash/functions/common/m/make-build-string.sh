@@ -3,18 +3,16 @@
 koopa_make_build_string() {
     # """
     # OS build string for 'make' configuration.
-    # @note Updated 2022-02-09.
+    # @note Updated 2023-04-06.
     #
     # Use this for 'configure --build' flag.
     #
     # - macOS: x86_64-darwin15.6.0
     # - Linux: x86_64-linux-gnu
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['arch']="$(koopa_arch)"
-    )
+    dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
         dict['os_type']='linux-gnu'

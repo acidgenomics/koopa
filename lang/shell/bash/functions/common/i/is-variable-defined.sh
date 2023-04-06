@@ -3,7 +3,7 @@
 koopa_is_variable_defined() {
     # """
     # Is the variable defined (and non-empty)?
-    # @note Updated 2022-02-04.
+    # @note Updated 2023-04-06.
     #
     # Passthrough of empty strings is bad practice in shell scripting.
     #
@@ -19,11 +19,10 @@ koopa_is_variable_defined() {
     # @examples
     # > koopa_is_variable_defined 'PATH'
     # """
-    local dict var
+    local -A dict
+    local var
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['nounset']="$(koopa_boolean_nounset)"
-    )
+    dict['nounset']="$(koopa_boolean_nounset)"
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     for var
     do

@@ -3,17 +3,14 @@
 koopa_jekyll_serve() {
     # """
     # Render Jekyll website.
-    # Updated 2023-02-17.
+    # Updated 2023-04-06.
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_le "$#" 1
-    local -A app
     app['bundle']="$(koopa_locate_bundle)"
     [[ -x "${app['bundle']}" ]] || exit 1
-    local -A dict=(
-        ['bundle_prefix']="$(koopa_xdg_data_home)/gem"
-        ['prefix']="${1:-}"
-    )
+    dict['bundle_prefix']="$(koopa_xdg_data_home)/gem"
+    dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="${PWD:?}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     koopa_alert "Serving Jekyll website in '${dict['prefix']}'."
