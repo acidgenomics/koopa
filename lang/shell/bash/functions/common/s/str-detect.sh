@@ -3,7 +3,7 @@
 koopa_str_detect() {
     # """
     # Does the input pattern match a string?
-    # @note Updated 2022-02-23.
+    # @note Updated 2023-04-06.
     #
     # @usage
     # koopa_str_detect_fixed --string=STRING --pattern='PATTERN'
@@ -17,15 +17,14 @@ koopa_str_detect() {
     # - https://bugzilla.redhat.com/show_bug.cgi?id=1589997
     # - https://unix.stackexchange.com/questions/233987
     # """
-    local dict grep_args
+    local -A dict
+    local -a grep_args
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['mode']=''
-        ['pattern']=''
-        ['stdin']=1
-        ['string']=''
-        ['sudo']=0
-    )
+    dict['mode']=''
+    dict['pattern']=''
+    dict['stdin']=1
+    dict['string']=''
+    dict['sudo']=0
     while (("$#"))
     do
         case "$1" in

@@ -6,23 +6,20 @@
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://stackoverflow.com/questions/49297153/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
-    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    local -A dict=(
-        ['branch']='develop'
-        ['origin']='origin'
-        ['prefix']="$(koopa_koopa_prefix)"
-        ['user']="$(koopa_user_name)"
-    )
+    dict['branch']='develop'
+    dict['origin']='origin'
+    dict['prefix']="$(koopa_koopa_prefix)"
+    dict['user']="$(koopa_user_name)"
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
         koopa_cd "${dict['prefix']}"

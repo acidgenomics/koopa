@@ -8,7 +8,7 @@
 koopa_star_align_paired_end() {
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2023-02-15.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_star_align_paired_end \
@@ -18,23 +18,23 @@ koopa_star_align_paired_end() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local dict fastq_r1_files fastq_r1_file
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['aws_profile']="${AWS_PROFILE:-default}"
-        ['aws_s3_uri']=''
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. '_R2_001.fastq.gz'.
-        ['fastq_r2_tail']=''
-        # e.g. 'star-index'.
-        ['index_dir']=''
-        ['mode']='paired-end'
-        # e.g. 'star', or AWS S3 URI.
-        ['output_dir']=''
-    )
+    dict['aws_profile']="${AWS_PROFILE:-default}"
+    dict['aws_s3_uri']=''
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. '_R2_001.fastq.gz'.
+    dict['fastq_r2_tail']=''
+    # e.g. 'star-index'.
+    dict['index_dir']=''
+    dict['mode']='paired-end'
+    # e.g. 'star', or AWS S3 URI.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

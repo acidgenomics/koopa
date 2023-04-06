@@ -3,20 +3,20 @@
 koopa_zsh_compaudit_set_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass during 'compinit'.
-    # @note Updated 2023-03-25.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - echo "$FPATH" (string) or echo "$fpath" (array)
     # - https://github.com/ohmyzsh/ohmyzsh/blob/master/oh-my-zsh.sh
     # """
-    local dict prefix prefixes
+    local -A dict
+    local -a prefixes
+    local prefix
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
-    local -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['opt_prefix']="$(koopa_opt_prefix)"
-        ['user_id']="$(koopa_user_id)"
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['user_id']="$(koopa_user_id)"
     prefixes=(
         "${dict['koopa_prefix']}/lang/shell/zsh"
         "${dict['opt_prefix']}/zsh/share/zsh"
