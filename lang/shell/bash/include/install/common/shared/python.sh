@@ -106,7 +106,7 @@ ${dict['file']}"
     if koopa_is_macos
     then
         app['dtrace']='/usr/sbin/dtrace'
-        [[ -x "${app['dtrace']}" ]] || exit 1
+        koopa_assert_is_executable "${app['dtrace']}"
         dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
         conf_args+=(
             "--enable-framework=${dict['libexec']}"

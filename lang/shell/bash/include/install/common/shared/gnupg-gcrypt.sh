@@ -14,7 +14,7 @@ main() {
         'make' \
         'pkg-config'
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['compress_ext']='bz2'
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -143,7 +143,7 @@ gnupg_patch_dirmngr() {
     # """
     local -A app
     app['sed']="$(koopa_locate_sed)"
-    [[ -x "${app['sed']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sed']}" \
         -e '/ks_ldap_free_state/i #if USE_LDAP' \
         -e '/ks_get_state =/a #endif' \
