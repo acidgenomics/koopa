@@ -20,9 +20,7 @@ main() {
     app['luac']="$(koopa_locate_luac --realpath)"
     app['luarocks']="$(koopa_locate_luarocks --realpath)"
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['lua']}" ]] || exit 1
-    [[ -x "${app['luarocks']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['lua']="$(koopa_app_prefix 'lua')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

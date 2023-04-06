@@ -20,9 +20,7 @@ main() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
-    [[ -x "${app['cut']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
-    [[ -x "${app['patch']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['bin_prefix']="$(koopa_bin_prefix)"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['jobs']="$(koopa_cpu_count)"

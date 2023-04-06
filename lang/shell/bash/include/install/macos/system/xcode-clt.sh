@@ -27,9 +27,7 @@ main() {
     app['sudo']="$(koopa_locate_sudo)"
     app['xcode_select']="$(koopa_macos_locate_xcode_select)"
     app['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['xcode_select']}" ]] || exit 1
-    [[ -x "${app['xcodebuild']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$("${app['xcode_select']}" -p 2>/dev/null || true)"
     if [[ -d "${dict['prefix']}" ]]
     then

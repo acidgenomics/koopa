@@ -9,8 +9,7 @@ main() {
     koopa_assert_has_no_args "$#"
     app['installer']="$(koopa_macos_locate_installer)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['installer']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['framework_prefix']='/Library/Frameworks/Python.framework'
     dict['macos_version']="$(koopa_macos_os_version)"
     dict['name']='python'

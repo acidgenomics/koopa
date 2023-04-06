@@ -26,8 +26,9 @@ main() {
     # - https://blogs.iu.edu/ncgas/2019/05/30/installing-perl-modules-locally/
     # - https://stackoverflow.com/questions/540640/
     # """
-    local app bin_file bin_files dict
     local -A app dict
+    local -a bin_files
+    local bin_file
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'perl'
     app['bash']="$(koopa_locate_bash --allow-system)"
@@ -42,18 +43,7 @@ main() {
     app['tar']="$(koopa_locate_tar --allow-system)"
     app['unzip']="$(koopa_locate_unzip --allow-system)"
     app['wget']="$(koopa_locate_wget --allow-system)"
-    [[ -x "${app['bash']}" ]] || exit 1
-    [[ -x "${app['bzip2']}" ]] || exit 1
-    [[ -x "${app['cpan']}" ]] || exit 1
-    [[ -x "${app['gpg']}" ]] || exit 1
-    [[ -x "${app['gzip']}" ]] || exit 1
-    [[ -x "${app['less']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
-    [[ -x "${app['patch']}" ]] || exit 1
-    [[ -x "${app['perl']}" ]] || exit 1
-    [[ -x "${app['tar']}" ]] || exit 1
-    [[ -x "${app['unzip']}" ]] || exit 1
-    [[ -x "${app['wget']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['cpan_prefix']="$(koopa_init_dir 'cpan')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"

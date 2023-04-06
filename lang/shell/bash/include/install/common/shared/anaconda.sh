@@ -8,7 +8,7 @@ main() {
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['bash']="$(koopa_locate_bash --allow-system)"
-    [[ -x "${app['bash']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['os_type']="$(koopa_os_type)"
