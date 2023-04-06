@@ -2940,7 +2940,7 @@
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
     "conservative": true,
-    "date": "2023-03-28",
+    "date": "2023-04-06",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -2966,7 +2966,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.03.28"
+    "version": "2023.04.06"
   },
   "man-db": {
     "aliases": {
