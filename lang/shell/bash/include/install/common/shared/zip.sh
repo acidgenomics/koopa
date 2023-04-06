@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zip.
-    # @note Updated 2022-10-12.
+    # @note Updated 2023-04-08.
     #
     # Upstream is unmaintained so we use the Debian patchset:
     # https://packages.debian.org/sid/zip
@@ -13,7 +13,8 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zip.rb
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
-    local build_deps app deps dict
+    local -A app dict
+    local -a build_deps deps
     build_deps=('make')
     # Currently hitting build issues when using Clang on macOS.
     koopa_is_macos && build_deps+=('gcc')
@@ -23,12 +24,9 @@ main() {
     local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['bzip2']="$(koopa_app_prefix 'bzip2')"
-        ['name']='zip'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['bzip2']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['version2']="$( \
@@ -38,13 +36,13 @@ main() {
             --replacement='' \
             "${dict['version']}"
     )"
-    dict['file']="${dict['name']}${dict['version2']}.tar.gz"
     dict['url']="https://downloads.sourceforge.net/project/infozip/\
-Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
+Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/\
+zip${dict['version2']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     apply_debian_patch_set
-    koopa_cd "${dict['name']}${dict['version2']}"
+    koopa_cd 'src'
     koopa_print_env
     "${app['make']}" -f 'unix/Makefile' \
         'CC=gcc' \
@@ -57,19 +55,22 @@ Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/${dict['file']}"
     return 0
 }
 
+# FIXME Make this a shared function, similar to apply_ubuntu_patch_set.
+# FIXME Rework this to support a patch version variable.
+# FIXME Consider using this for unzip as well.
+
 apply_debian_patch_set() {
     # """
-    # Apply Debian patch set (to 3.0 release).
-    # @note Updated 2022-10-12.
+    # Apply Debian patch set.
+    # @note Updated 2023-04-06.
     # """
-    local app dict file
-    local -A app
+    local -A app dict
+    local -a patch_series
+    local file
     app['patch']="$(koopa_locate_patch)"
     [[ -x "${app['patch']}" ]] || exit 1
-    local -A dict=(
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
         '3.0')
             dict['patch_ver']='11'
@@ -85,19 +86,17 @@ apply_debian_patch_set() {
             --replacement='' \
             "${dict['version']}"
     )"
-    dict['file']="${dict['name']}_${dict['version']}-\
-${dict['patch_ver']}.debian.tar.xz"
     # FIXME Get the first letter of the name.
-    dict['url']="https://deb.debian.org/debian/pool/main/z/\
-${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
+    dict['url']="https://deb.debian.org/debian/pool/main/z/${dict['name']}/\
+${dict['name']}_${dict['version']}-${dict['patch_ver']}.debian.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")"
     koopa_assert_is_dir 'debian/patches'
-    local patch_series
+    koopa_assert_is_file 'debian/patches/series'
     readarray -t patch_series < 'debian/patches/series'
     (
-        koopa_cd "${dict['name']}${dict['version2']}"
         local patch
+        koopa_cd 'src'
         for patch in "${patch_series[@]}"
         do
             local input
