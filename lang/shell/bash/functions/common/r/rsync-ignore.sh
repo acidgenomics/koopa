@@ -3,17 +3,16 @@
 koopa_rsync_ignore() {
     # """
     # Run rsync with automatic ignore.
-    # @note Updated 2022-04-04.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://stackoverflow.com/questions/13713101/
     # """
-    local dict rsync_args
+    local -A dict
+    local -a rsync_args
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['ignore_local']='.gitignore'
-        ['ignore_global']="${HOME}/.gitignore"
-    )
+    dict['ignore_local']='.gitignore'
+    dict['ignore_global']="${HOME}/.gitignore"
     rsync_args=(
         '--archive'
         '--exclude=.*'

@@ -3,7 +3,7 @@
 koopa_salmon_quant_single_end() {
     # """
     # Run salmon quant on multiple single-end FASTQs in a directory.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_salmon_quant_single_end \
@@ -11,21 +11,21 @@ koopa_salmon_quant_single_end() {
     # >     --fastq-tail='_001.fastq.gz' \
     # >     --output-dir='salmon'
     # """
-    local dict fastq_file fastq_files
+    local -A dict
+    local -a fastq_files
+    local fastq_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '.fastq.gz'.
-        ['fastq_tail']=''
-        # e.g. 'salmon-index'.
-        ['index_dir']=''
-        # Detect library fragment type (strandedness) automatically.
-        ['lib_type']='A'
-        ['mode']='single-end'
-        # e.g. 'salmon'.
-        ['output_dir']=''
-    )
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '.fastq.gz'.
+    dict['fastq_tail']=''
+    # e.g. 'salmon-index'.
+    dict['index_dir']=''
+    # Detect library fragment type (strandedness) automatically.
+    dict['lib_type']='A'
+    dict['mode']='single-end'
+    # e.g. 'salmon'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

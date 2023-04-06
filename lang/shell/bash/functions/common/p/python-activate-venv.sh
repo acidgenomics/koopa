@@ -3,7 +3,7 @@
 koopa_python_activate_venv() {
     # """
     # Activate Python virtual environment.
-    # @note Updated 2022-03-30.
+    # @note Updated 2023-04-06.
     #
     # Note that we're using this instead of conda as our default interactive
     # Python environment, so we can easily use pip.
@@ -21,14 +21,12 @@ koopa_python_activate_venv() {
     # @examples
     # > koopa_python_activate_venv 'pandas'
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
-    local -A dict=(
-        ['active_env']="${VIRTUAL_ENV:-}"
-        ['name']="${1:?}"
-        ['nounset']="$(koopa_boolean_nounset)"
-        ['prefix']="$(koopa_python_virtualenvs_prefix)"
-    )
+    dict['active_env']="${VIRTUAL_ENV:-}"
+    dict['name']="${1:?}"
+    dict['nounset']="$(koopa_boolean_nounset)"
+    dict['prefix']="$(koopa_python_virtualenvs_prefix)"
     dict['script']="${dict['prefix']}/${dict['name']}/bin/activate"
     koopa_assert_is_readable "${dict['script']}"
     if [[ -n "${dict['active_env']}" ]]

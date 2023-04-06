@@ -3,7 +3,7 @@
 koopa_salmon_quant_paired_end() {
     # """
     # Run salmon quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_salmon_quant_paired_end \
@@ -13,23 +13,23 @@ koopa_salmon_quant_paired_end() {
     # >     --index-dir='salmon-index' \
     # >     --output-dir='salmon'
     # """
-    local dict fastq_r1_files fastq_r1_file
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
     koopa_assert_has_args "$#"
-    local -A dict=(
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. "_R2_001.fastq.gz'.
-        ['fastq_r2_tail']=''
-        # e.g. 'salmon-index'.
-        ['index_dir']=''
-        # Detect library fragment type (strandedness) automatically.
-        ['lib_type']='A'
-        ['mode']='paired-end'
-        # e.g. 'salmon'.
-        ['output_dir']=''
-    )
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. "_R2_001.fastq.gz'.
+    dict['fastq_r2_tail']=''
+    # e.g. 'salmon-index'.
+    dict['index_dir']=''
+    # Detect library fragment type (strandedness) automatically.
+    dict['lib_type']='A'
+    dict['mode']='paired-end'
+    # e.g. 'salmon'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

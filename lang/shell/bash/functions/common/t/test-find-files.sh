@@ -3,15 +3,14 @@
 koopa_test_find_files() {
     # """
     # Find relevant files for unit tests.
-    # @note Updated 2022-10-12.
+    # @note Updated 2023-04-06.
     #
     # Not sorting here can speed the function up.
     # """
-    local dict files
+    local -A dict
+    local -a files
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['prefix']="$(koopa_koopa_prefix)"
-    )
+    dict['prefix']="$(koopa_koopa_prefix)"
     readarray -t files <<< "$( \
         koopa_find \
             --exclude='*.swp' \

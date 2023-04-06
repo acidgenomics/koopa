@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-06.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -23,15 +23,14 @@ koopa_r_configure_ldpaths() {
     #
     # https://r-spatial.org/r/2022/04/12/evolution.html
     # """
-    local app dict key keys ld_lib_arr ld_lib_app_arr lines
+    local -A app dict
+    local -a keys ld_lib_arr ld_lib_app_arr lines
+    local key
     koopa_assert_has_args_eq "$#" 1
-    local -A app
     app['r']="${1:?}"
     [[ -x "${app['r']}" ]] || exit 1
-    local -A dict=(
-        ['system']=0
-        ['use_apps']=1
-    )
+    dict['system']=0
+    dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     if [[ "${dict['system']}" -eq 1 ]] && \
         koopa_is_linux && \

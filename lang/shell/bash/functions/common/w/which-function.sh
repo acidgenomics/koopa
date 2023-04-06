@@ -3,14 +3,12 @@
 koopa_which_function() {
     # """
     # Locate a koopa function automatically.
-    # @note Updated 2022-10-26.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_eq "$#" 1
     [[ -z "${1:-}" ]] && return 1
-    local -A dict=(
-        ['input_key']="${1:?}"
-    )
+    dict['input_key']="${1:?}"
     if koopa_is_function "${dict['input_key']}"
     then
         koopa_print "${dict['input_key']}"
