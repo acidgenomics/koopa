@@ -25,6 +25,7 @@ main() {
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
