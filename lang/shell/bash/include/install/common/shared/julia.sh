@@ -48,7 +48,6 @@ END
     koopa_print_env
     koopa_print "${dict['make_user_string']}"
     "${app['make']}" --jobs="${dict['jobs']}"
-    # > "${app['make']}" test
     "${app['make']}" install
     return 0
 }
