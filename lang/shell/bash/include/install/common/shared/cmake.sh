@@ -14,7 +14,7 @@ main() {
     koopa_activate_app --build-only 'make'
     koopa_activate_app 'ncurses' 'openssl3'
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=7

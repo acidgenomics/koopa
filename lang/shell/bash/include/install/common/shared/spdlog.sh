@@ -20,9 +20,7 @@ main() {
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['ctest']="$(koopa_locate_ctest)"
     app['patch']="$(koopa_locate_patch)"
-    [[ -x "${app['cat']}" ]] || exit 1
-    [[ -x "${app['ctest']}" ]] || exit 1
-    [[ -x "${app['patch']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['fmt']="$(koopa_app_prefix 'fmt')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

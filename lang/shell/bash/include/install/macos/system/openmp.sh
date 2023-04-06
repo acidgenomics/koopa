@@ -15,8 +15,7 @@ main() {
     koopa_assert_has_no_args "$#"
     app['sudo']="$(koopa_locate_sudo)"
     app['tar']="$(koopa_locate_tar --allow-system)"
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['tar']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name']='openmp'
     dict['platform']='darwin'
     dict['release']='Release' # or 'Debug'.

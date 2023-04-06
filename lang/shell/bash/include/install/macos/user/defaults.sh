@@ -40,11 +40,7 @@ main() {
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['lsregister']="$(koopa_macos_locate_lsregister)"
     app['plistbuddy']="$(koopa_macos_locate_plistbuddy)"
-    [[ -x "${app['chflags']}" ]] || exit 1
-    [[ -x "${app['defaults']}" ]] || exit 1
-    [[ -x "${app['kill_all']}" ]] || exit 1
-    [[ -x "${app['lsregister']}" ]] || exit 1
-    [[ -x "${app['plistbuddy']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['screenshots_dir']="${HOME}/Pictures/screenshots"
     koopa_alert_note "If you encounter permission errors when attempting to \
 write defaults, ensure that your terminal app has full disk access enabled." \
