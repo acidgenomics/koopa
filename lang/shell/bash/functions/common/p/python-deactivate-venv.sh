@@ -3,12 +3,10 @@
 koopa_python_deactivate_venv() {
     # """
     # Deactivate Python virtual environment.
-    # @note Updated 2022-03-09.
+    # @note Updated 2023-04-06.
     # """
-    local dict
-    local -A dict=(
-        ['prefix']="${VIRTUAL_ENV:-}"
-    )
+    local -A dict
+    dict['prefix']="${VIRTUAL_ENV:-}"
     if [[ -z "${dict['prefix']}" ]]
     then
         koopa_stop 'Python virtual environment is not active.'

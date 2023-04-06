@@ -3,7 +3,7 @@
 koopa_unlink_in_make() {
     # """
     # Unlink a program symlinked in koopa 'make/' directory.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_unlink_in_make '/opt/koopa/app/autoconf'
@@ -11,15 +11,16 @@ koopa_unlink_in_make() {
     # Unlink all koopa apps with:
     # > koopa_unlink_in_make '/opt/koopa/app'
     # """
-    local app_prefix dict files
+    local -A dict
+    local app_prefix
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['app_prefix']=''
-        ['make_prefix']="$(koopa_make_prefix)"
-    )
+    dict['app_prefix']=''
+    dict['make_prefix']="$(koopa_make_prefix)"
     koopa_assert_is_dir "${dict['make_prefix']}"
     for app_prefix in "$@"
     do
+        local -a files
+        local file
         dict['app_prefix']="$app_prefix"
         koopa_assert_is_dir "${dict['app_prefix']}"
         dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"

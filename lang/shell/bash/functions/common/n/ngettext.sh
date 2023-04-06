@@ -3,7 +3,7 @@
 koopa_ngettext() {
     # """
     # Translate a text message.
-    # @note Updated 2022-02-16.
+    # @note Updated 2023-04-06.
     #
     # A function to dynamically handle singular/plural words.
     #
@@ -19,17 +19,15 @@ koopa_ngettext() {
     # - https://www.oreilly.com/library/view/bash-cookbook/
     #       0596526784/ch13s08.html
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['middle']=' '
-        ['msg1']=''
-        ['msg2']=''
-        ['num']=''
-        ['prefix']=''
-        ['str']=''
-        ['suffix']=''
-    )
+    dict['middle']=' '
+    dict['msg1']=''
+    dict['msg2']=''
+    dict['num']=''
+    dict['prefix']=''
+    dict['str']=''
+    dict['suffix']=''
     while (("$#"))
     do
         case "$1" in

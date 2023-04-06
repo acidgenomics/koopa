@@ -3,14 +3,12 @@
 koopa_write_string() {
     # """
     # Write a string to disk.
-    # @note Updated 2022-07-29.
+    # @note Updated 2023-04-06.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args "$#"
-    local -A dict=(
-        ['file']=''
-        ['string']=''
-    )
+    dict['file']=''
+    dict['string']=''
     while (("$#"))
     do
         case "$1" in
