@@ -14,7 +14,7 @@ koopa_eol_lf() {
     koopa_assert_is_file "$@"
     local -A app
     app['perl']="$(koopa_locate_perl)"
-    [[ -x "${app['perl']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         koopa_alert "Setting EOL as LF in '${file}'."

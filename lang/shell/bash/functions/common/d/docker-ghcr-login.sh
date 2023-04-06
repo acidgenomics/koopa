@@ -10,7 +10,7 @@ koopa_docker_ghcr_login() {
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"
-    [[ -x "${app['docker']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['pat']="${GHCR_PAT:?}"
     dict['server']='ghcr.io'
     dict['user']="${GHCR_USER:?}"

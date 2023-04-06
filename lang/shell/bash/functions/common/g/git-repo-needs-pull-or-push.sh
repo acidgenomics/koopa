@@ -14,7 +14,7 @@ koopa_git_repo_needs_pull_or_push() {
     koopa_assert_has_args "$#"
     local -A app
     app['git']="$(koopa_locate_git)"
-    [[ -x "${app['git']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     (
         for prefix in "$@"
         do

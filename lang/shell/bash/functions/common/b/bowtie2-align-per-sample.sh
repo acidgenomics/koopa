@@ -9,8 +9,7 @@ koopa_bowtie2_align_per_sample() {
     koopa_assert_has_args "$#"
     app['bowtie2']="$(koopa_locate_bowtie2)"
     app['tee']="$(koopa_locate_tee)"
-    [[ -x "${app['bowtie2']}" ]] || exit 1
-    [[ -x "${app['tee']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     # e.g. 'sample1_R1_001.fastq.gz'.
     dict['fastq_r1_file']=''
     # e.g. '_R1_001.fastq.gz'.

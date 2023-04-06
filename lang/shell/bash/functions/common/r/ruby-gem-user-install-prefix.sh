@@ -15,7 +15,7 @@ koopa_ruby_gem_user_install_prefix() {
     # """
     local -A app dict
     app['ruby']="$(koopa_locate_ruby)"
-    [[ -x "${app['ruby']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['str']="$("${app['ruby']}" -r rubygems -e 'puts Gem.user_dir')"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"

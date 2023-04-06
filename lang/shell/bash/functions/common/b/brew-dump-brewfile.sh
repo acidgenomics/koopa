@@ -9,7 +9,7 @@ koopa_brew_dump_brewfile() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
-    [[ -x "${app['brew']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     today="$(koopa_today)"
     "${app['brew']}" bundle dump \
         --file="brewfile-${today}" \

@@ -8,7 +8,6 @@ koopa_rm() {
     local -A app dict
     local -a pos rm rm_args
     app['rm']="$(koopa_locate_rm --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
@@ -48,11 +47,11 @@ koopa_rm() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || exit 1
         rm+=("${app['sudo']}" "${app['rm']}")
     else
         rm=("${app['rm']}")
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${rm[@]}" "${rm_args[@]}" "$@"
     return 0
 }

@@ -9,7 +9,7 @@ koopa_conda_env_list() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['conda']="$(koopa_locate_conda)"
-    [[ -x "${app['conda']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     str="$("${app['conda']}" env list --json --quiet)"
     koopa_print "$str"
     return 0

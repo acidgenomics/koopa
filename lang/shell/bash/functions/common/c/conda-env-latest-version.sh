@@ -11,9 +11,7 @@ koopa_conda_env_latest_version() {
     app['awk']="$(koopa_locate_awk)"
     app['conda']="$(koopa_locate_conda)"
     app['tail']="$(koopa_locate_tail)"
-    [[ -x "${app['awk']}" ]] || exit 1
-    [[ -x "${app['conda']}" ]] || exit 1
-    [[ -x "${app['tail']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['env_name']="${1:?}"
     # shellcheck disable=SC2016
     str="$( \

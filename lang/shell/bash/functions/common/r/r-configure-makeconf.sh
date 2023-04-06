@@ -23,7 +23,7 @@ koopa_r_configure_makeconf() {
     local app dict libs
     local -A app dict
     app['r']="${1:?}"
-    [[ -x "${app['r']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
@@ -35,7 +35,7 @@ koopa_r_configure_makeconf() {
         return 0
     fi
     app['pkg_config']="$(koopa_locate_pkg_config)"
-    [[ -x "${app['pkg_config']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"

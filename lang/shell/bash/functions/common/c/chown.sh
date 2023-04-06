@@ -8,7 +8,6 @@ koopa_chown() {
     local -A app dict
     local -a chown pos
     app['chown']="$(koopa_locate_chown)"
-    [[ -x "${app['chown']}" ]] || exit 1
     dict['dereference']=1
     dict['recursive']=0
     dict['sudo']=0
@@ -52,7 +51,6 @@ koopa_chown() {
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
         app['sudo']="$(koopa_locate_sudo)"
-        [[ -x "${app['sudo']}" ]] || exit 1
         chown=("${app['sudo']}" "${app['chown']}")
     else
         chown=("${app['chown']}")
@@ -65,6 +63,7 @@ koopa_chown() {
     then
         chown+=('-h')
     fi
+    koopa_assert_is_executable "${app[@]}"
     "${chown[@]}" "$@"
     return 0
 }

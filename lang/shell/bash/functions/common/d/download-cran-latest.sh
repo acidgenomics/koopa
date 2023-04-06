@@ -9,7 +9,7 @@ koopa_download_cran_latest() {
     local name
     koopa_assert_has_args "$#"
     app['head']="$(koopa_locate_head --allow-system)"
-    [[ -x "${app['head']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     for name in "$@"
     do
         local file pattern url

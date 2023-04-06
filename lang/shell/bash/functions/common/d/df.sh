@@ -7,7 +7,7 @@ koopa_df() {
     # """
     local -A app
     app['df']="$(koopa_locate_df)"
-    [[ -x "${app['df']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['df']}" \
         --portability \
         --print-type \

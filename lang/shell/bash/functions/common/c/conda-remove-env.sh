@@ -16,7 +16,7 @@ koopa_conda_remove_env() {
     local -A app dict
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
-    [[ -x "${app['conda']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['nounset']="$(koopa_boolean_nounset)"
     [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
     for name in "$@"

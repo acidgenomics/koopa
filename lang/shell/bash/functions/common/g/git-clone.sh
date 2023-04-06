@@ -15,7 +15,7 @@ koopa_git_clone() {
     local -a clone_args
     koopa_assert_has_args "$#"
     app['git']="$(koopa_locate_git --allow-system)"
-    [[ -x "${app['git']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['branch']=''
     dict['commit']=''
     dict['prefix']=''
