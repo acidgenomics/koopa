@@ -3,24 +3,19 @@
 main() {
     # """
     # Install Nim package using nimble.
-    # @note Updated 2022-07-08.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/nim-lang/nimble/issues/734
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['nim']="$(koopa_locate_nim)"
-        ['nimble']="$(koopa_locate_nimble)"
-    )
-    [[ -x "${app['nim']}" ]] || exit 1
-    [[ -x "${app['nimble']}" ]] || exit 1
-    local -A dict=(
-        ['name']="${KOOPA_INSTALL_NAME:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['nim']="$(koopa_locate_nim)"
+    app['nimble']="$(koopa_locate_nimble)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export NIMBLE_DIR="${dict['prefix']}"
     "${app['nimble']}" \
         --accept \

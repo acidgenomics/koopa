@@ -3,7 +3,7 @@
 main() {
     # """
     # Install jq.
-    # @note Updated 2022-07-12.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/jq.rb
@@ -14,7 +14,8 @@ main() {
     # - https://github.com/stedolan/jq/pull/2196
     # - https://stackoverflow.com/questions/18978252/
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'autoconf' \
@@ -26,20 +27,14 @@ main() {
         'm4' \
         'gettext' \
         'oniguruma'
-    local -A app=(
-        ['autoreconf']="$(koopa_locate_autoreconf)"
-        ['libtoolize']="$(koopa_locate_libtoolize)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['autoreconf']}" ]] || exit 1
-    [[ -x "${app['libtoolize']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='jq'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['autoreconf']="$(koopa_locate_autoreconf)"
+    app['libtoolize']="$(koopa_locate_libtoolize)"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='jq'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url_stem']="https://github.com/stedolan/${dict['name']}"
     case "${dict['version']}" in
         '1.6')
@@ -51,7 +46,7 @@ main() {
             ;;
         *)
             dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-        dict['url']="${dict['url_stem']}/releases/\
+            dict['url']="${dict['url_stem']}/releases/\
 download/${dict['name']}-${dict['version']}/${dict['file']}"
             dict['dirname']="${dict['name']}-${dict['version']}"
             ;;

@@ -3,23 +3,19 @@
 main() {
     # """
     # Install Luarocks.
-    # @note Updated 2022-09-10.
+    # @note Updated 2023-04-06.
     # """
-    local app conf_args dict
+    local -A app dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'unzip'
     koopa_activate_app 'lua'
-    local -A app=(
-        ['lua']="$(koopa_locate_lua)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['lua']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['name']='luarocks'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['lua']="$(koopa_locate_lua)"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='luarocks'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['lua_version']="$(koopa_get_version "${app['lua']}")"
     dict['lua_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['lua_version']}" \

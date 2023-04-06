@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-04-06.
     #
     # Attempting to make in parallel can cause installer to crash.
     #
@@ -15,24 +15,18 @@ main() {
     #     OpenBLAS/Portfile
     # - https://iq.opengenus.org/install-openblas-from-source/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gcc'
-    local -A app=(
-        ['cc']='/usr/bin/gcc'
-        ['fc']="$(koopa_locate_gfortran --realpath)"
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['cc']}" ]] || exit 1
-    [[ -x "${app['fc']}" ]] || exit 1
-    [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['name']='OpenBLAS'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    app['cc']='/usr/bin/gcc'
+    app['fc']="$(koopa_locate_gfortran --realpath)"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']='OpenBLAS'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_macos
     then
         # clang doesn't support this currently.

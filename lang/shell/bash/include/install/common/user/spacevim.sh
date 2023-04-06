@@ -3,29 +3,27 @@
 main() {
     # """
     # Install SpaceVim.
-    # @note Updated 2022-09-16.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://spacevim.org
     # - https://spacevim.org/quick-start-guide/
     # - https://spacevim.org/faq/
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
-    local -A app=(
-        ['make']="$(koopa_locate_make)"
-    )
-    [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['commit']="${KOOPA_INSTALL_VERSION:?}"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['url']='https://github.com/SpaceVim/SpaceVim.git'
-        ['xdg_data_home']="$(koopa_xdg_data_home)"
-    )
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['commit']="${KOOPA_INSTALL_VERSION:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['url']='https://github.com/SpaceVim/SpaceVim.git'
+    dict['xdg_data_home']="$(koopa_xdg_data_home)"
     # Symlink the font cache, to avoid unnecessary copy step.
     if koopa_is_macos
     then
-        koopa_ln "${HOME:?}/Library/Fonts" "${dict['xdg_data_home']}/fonts"
+        koopa_ln \
+            "${HOME:?}/Library/Fonts" \
+            "${dict['xdg_data_home']}/fonts"
     fi
     koopa_git_clone \
         --commit="${dict['commit']}" \
