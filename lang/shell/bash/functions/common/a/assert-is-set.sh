@@ -7,8 +7,8 @@ koopa_assert_is_set() {
     #
     # @examples
     # > local -A dict
-    # > dict[aaa]='AAA'
-    # > dict[bbb]='BBB'
+    # > dict['aaa']='AAA'
+    # > dict['bbb']='BBB'
     # > koopa_assert_is_set \
     # >     '--aaa' "${dict['aaa']:-}" \
     # >     '--bbb' "${dict['bbb']:-}"
