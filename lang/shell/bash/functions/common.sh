@@ -1235,7 +1235,6 @@ koopa_assert_is_macos() {
 }
 
 koopa_assert_is_matching_fixed() {
-    local dict
     local -A dict
     koopa_assert_has_args "$#"
     dict['pattern']=''
@@ -1277,7 +1276,6 @@ koopa_assert_is_matching_fixed() {
 }
 
 koopa_assert_is_matching_regex() {
-    local dict
     local -A dict
     koopa_assert_has_args "$#"
     dict['pattern']=''
@@ -1418,7 +1416,6 @@ koopa_assert_is_not_symlink() {
 }
 
 koopa_assert_is_owner() {
-    local dict
     local -A dict
     koopa_assert_has_no_args "$#"
     if ! koopa_is_owner
@@ -8974,7 +8971,6 @@ header.${dict['ext']}"
 }
 
 koopa_help_2() {
-    local dict
     local -A dict
     dict['script_file']="$(koopa_realpath "$0")"
     dict['script_name']="$(koopa_basename "${dict['script_file']}")"
@@ -12815,7 +12811,6 @@ koopa_install_zoxide() {
 }
 
 koopa_install_zsh() {
-    local dict
     local -A dict
     koopa_install_app --name='zsh' "$@"
     dict['zsh']="$(koopa_app_prefix 'zsh')"
@@ -13232,7 +13227,6 @@ koopa_is_opensuse() {
 }
 
 koopa_is_owner() {
-    local dict
     local -A dict
     dict['prefix']="$(koopa_koopa_prefix)"
     dict['owner_id']="$(koopa_stat_user_id "${dict['prefix']}")"
@@ -16074,7 +16068,6 @@ koopa_locate_zip() {
 }
 
 koopa_log_file() {
-    local dict
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['datetime']="$(koopa_datetime)"

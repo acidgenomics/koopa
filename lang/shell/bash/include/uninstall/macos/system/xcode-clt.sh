@@ -8,7 +8,6 @@ main() {
     # @seealso
     # - https://apple.stackexchange.com/questions/308943
     # """
-    local dict
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['prefix']='/Library/Developer/CommandLineTools'
