@@ -3,7 +3,7 @@
 koopa_debian_apt_add_r_key() {
     # """
     # Add the R key.
-    # @note Updated 2022-01-28.
+    # @note Updated 2023-04-06.
     #
     # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
     # file is deprecated in Debian, but currently the only supported method for
@@ -18,15 +18,13 @@ koopa_debian_apt_add_r_key() {
     # - https://cran.r-project.org/bin/linux/debian/
     # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A dict=(
-        ['key_name']='r'
-        # Alternatively, can use 'keys.gnupg.net' keyserver.
-        ['keyserver']='keyserver.ubuntu.com'
-        ['prefix']="$(koopa_debian_apt_key_prefix)"
-    )
+    dict['key_name']='r'
+    # Alternatively, can use 'keys.gnupg.net' keyserver.
+    dict['keyserver']='keyserver.ubuntu.com'
+    dict['prefix']="$(koopa_debian_apt_key_prefix)"
     dict['file']="${dict['prefix']}/koopa-${dict['key_name']}.gpg"
     if koopa_is_ubuntu_like
     then

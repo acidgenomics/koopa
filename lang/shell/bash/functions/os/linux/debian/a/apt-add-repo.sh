@@ -3,7 +3,7 @@
 koopa_debian_apt_add_repo() {
     # """
     # Add an apt repo.
-    # @note Updated 2022-07-15.
+    # @note Updated 2023-04-06.
     #
     # @section Debian Repository Format:
     #
@@ -56,19 +56,18 @@ koopa_debian_apt_add_repo() {
     # @seealso
     # - https://wiki.debian.org/DebianRepository/Format
     # """
-    local components dict
+    local -A dict
+    local -a components
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    local -A dict=(
-        ['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-        ['distribution']=''
-        ['key_name']=''
-        ['key_prefix']="$(koopa_debian_apt_key_prefix)"
-        ['name']=''
-        ['prefix']="$(koopa_debian_apt_sources_prefix)"
-        ['signed_by']=''
-        ['url']=''
-    )
+    dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
+    dict['distribution']=''
+    dict['key_name']=''
+    dict['key_prefix']="$(koopa_debian_apt_key_prefix)"
+    dict['name']=''
+    dict['prefix']="$(koopa_debian_apt_sources_prefix)"
+    dict['signed_by']=''
+    dict['url']=''
     components=()
     while (("$#"))
     do

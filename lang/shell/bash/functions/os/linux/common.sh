@@ -2,12 +2,10 @@
 # shellcheck disable=all
 
 koopa_linux_add_user_to_etc_passwd() {
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
-    local -A dict=(
-        ['passwd_file']='/etc/passwd'
-        ['user']="${1:-}"
-    )
+    dict['passwd_file']='/etc/passwd'
+    dict['user']="${1:-}"
     koopa_assert_is_file "${dict['passwd_file']}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     if ! koopa_file_detect_fixed \
@@ -269,12 +267,12 @@ site-packages/bcbio'*
 }
 
 koopa_linux_bcbio_nextgen_run_tests() {
-    local dict test tests
-    local -A dict=(
-        ['git_dir']="${HOME:?}/git/bcbio-nextgen"
-        ['output_dir']="${PWD:?}/bcbio-tests"
-        ['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
-    )
+    local -A dict
+    local -a tests
+    local test
+    dict['git_dir']="${HOME:?}/git/bcbio-nextgen"
+    dict['output_dir']="${PWD:?}/bcbio-tests"
+    dict['tools_dir']="$(koopa_bcbio_nextgen_tools_prefix)"
     while (("$#"))
     do
         case "$1" in
@@ -348,13 +346,11 @@ koopa_linux_bcl2fastq_indrops() {
 }
 
 koopa_linux_configure_system_lmod() {
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    local -A dict=(
-        ['etc_dir']='/etc/profile.d'
-        ['prefix']="${1:-}"
-    )
+    dict['etc_dir']='/etc/profile.d'
+    dict['prefix']="${1:-}"
     if [[ -z "${dict['prefix']}" ]]
     then
         dict['prefix']="$(koopa_app_prefix 'lmod')"
@@ -462,12 +458,10 @@ koopa_linux_delete_cache() {
 }
 
 koopa_linux_fix_sudo_setrlimit_error() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
-    local -A dict=(
-        ['file']='/etc/sudo.conf'
-        ['string']='Set disable_coredump false'
-    )
+    dict['file']='/etc/sudo.conf'
+    dict['string']='Set disable_coredump false'
     koopa_sudo_append_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
@@ -894,14 +888,12 @@ koopa_linux_uninstall_private_cellranger() {
 }
 
 koopa_linux_update_etc_profile_d() {
-    local dict
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
-    local -A dict=(
-        ['koopa_prefix']="$(koopa_koopa_prefix)"
-        ['file']='/etc/profile.d/zzz-koopa.sh'
-    )
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['file']='/etc/profile.d/zzz-koopa.sh'
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
         return 0

@@ -3,18 +3,16 @@
 koopa_linux_configure_system_lmod() {
     # """
     # Link lmod configuration files in '/etc/profile.d/'.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-06.
     #
     # Lmod activation is disabled by default for root user. Can override with
     # 'LMOD_ALLOW_ROOT_USE' environment variable in profile activation.
     # """
-    local dict
+    local -A dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    local -A dict=(
-        ['etc_dir']='/etc/profile.d'
-        ['prefix']="${1:-}"
-    )
+    dict['etc_dir']='/etc/profile.d'
+    dict['prefix']="${1:-}"
     if [[ -z "${dict['prefix']}" ]]
     then
         dict['prefix']="$(koopa_app_prefix 'lmod')"
