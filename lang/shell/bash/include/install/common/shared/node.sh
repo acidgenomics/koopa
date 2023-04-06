@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2022-11-07.
+    # @note Updated 2023-04-06.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -26,7 +26,8 @@ main() {
     #     recipe/build.sh
     # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
     # """
-    local app build_deps conf_args deps dict
+    local -A app dict
+    local -a build_deps conf_args deps
     koopa_assert_has_no_args "$#"
     build_deps=('make' 'ninja' 'pkg-config')
     deps=(
@@ -43,26 +44,21 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    local -A app=(
-        ['make']="$(koopa_locate_make)"
-        ['python']="$(koopa_locate_python311 --realpath)"
-    )
-    [[ -x "${app['make']}" ]] || exit 1
-    [[ -x "${app['python']}" ]] || exit 1
-    local -A dict=(
-        # > [brotli]="$(koopa_app_prefix 'brotli')"
-        ['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-        ['cares']="$(koopa_app_prefix 'c-ares')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['libuv']="$(koopa_app_prefix 'libuv')"
-        ['name']='node'
-        ['nghttp2']="$(koopa_app_prefix 'nghttp2')"
-        ['openssl']="$(koopa_app_prefix 'openssl3')"
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['shared_ext']="$(koopa_shared_ext)"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-        ['zlib']="$(koopa_app_prefix 'zlib')"
-    )
+    app['make']="$(koopa_locate_make)"
+    app['python']="$(koopa_locate_python311 --realpath)"
+    koopa_assert_is_executable "${app[@]}"
+    # > dict['brotli']="$(koopa_app_prefix 'brotli')"
+    dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
+    dict['cares']="$(koopa_app_prefix 'c-ares')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['libuv']="$(koopa_app_prefix 'libuv')"
+    dict['name']='node'
+    dict['nghttp2']="$(koopa_app_prefix 'nghttp2')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/\
 cacert.pem"
     koopa_assert_is_file "${dict['cacerts']}"
