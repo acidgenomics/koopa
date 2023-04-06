@@ -24,7 +24,7 @@ main() {
     # - https://stackoverflow.com/questions/6077414/
     # """
     local -A app dict
-    local -a build_deps cmake_args deps projects
+    local -a build_deps cmake_args deps projects runtimes
     build_deps=('git' 'perl' 'pkg-config')
     deps=(
         'zlib'
@@ -48,7 +48,6 @@ main() {
     koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['git']="$(koopa_locate_git --realpath)"
-    app['ninja']="$(koopa_locate_ninja)"
     app['perl']="$(koopa_locate_perl --realpath)"
     app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
     app['python']="$(koopa_locate_python311 --realpath)"
@@ -187,13 +186,12 @@ libelf.${dict['shared_ext']}"
         )
     fi
     dict['url']="https://github.com/llvm/llvm-project/releases/download/\
-llvmorg-${dict['version']}/llvm-${dict['version']}.src.tar.xz"
+llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    koopa_cd 'src/llvm'
     koopa_cmake_build \
-        --ninja \
-        --prefix="${dict['prefix']}" \
+        --prefix="${dict['prefix']}"
         "${cmake_args[@]}"
     return 0
 }

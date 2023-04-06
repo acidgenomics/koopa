@@ -2804,9 +2804,9 @@
       "fedora": "llvm-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "git", "ninja", "perl", "pkg-config"],
+    "build_dependencies": ["cmake", "git", "make", "perl", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-18",
+    "date": "2023-04-06",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -2821,7 +2821,7 @@
     "large": true,
     "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.0"
+    "version": "16.0.1"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -4095,6 +4095,17 @@
     "url": ["https://github.com/rbenv/rbenv/"],
     "version": "1.2.0"
   },
+  "rclone": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["rclone"],
+    "build_dependencies": ["go"],
+    "date": "2023-04-06",
+    "man1": ["rclone.1"],
+    "url": ["https://rclone.org/"],
+    "version": "1.62.2"
+  },
   "readline": {
     "aliases": {
       "debian": "libreadline-dev",
@@ -4197,7 +4208,7 @@
     },
     "bin": ["rsync"],
     "build_dependencies": ["make"],
-    "date": "2022-11-08",
+    "date": "2023-04-06",
     "dependencies": ["lz4", "openssl3", "xxhash", "zlib", "zstd"],
     "man1": ["rsync.1"],
     "url": ["https://download.samba.org/pub/rsync/src/?C=M;O=D"],
