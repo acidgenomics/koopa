@@ -47,8 +47,7 @@ koopa_fedora_install_from_rpm() {
     koopa_assert_has_args "$#"
     app['rpm']="$(koopa_fedora_locate_rpm)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['rpm']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['rpm']}" -v \
         --force \
         --install \

@@ -8,7 +8,7 @@ main() {
     local app dict
     local -A app
     app['patch']="$(koopa_locate_patch)"
-    [[ -x "${app['patch']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_app_subshell \

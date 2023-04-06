@@ -10,8 +10,7 @@ koopa_macos_symlink_dropbox() {
     koopa_assert_is_admin
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['kill_all']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_rm --sudo "${HOME}/Desktop"
     koopa_ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa_rm --sudo "${HOME}/Documents"

@@ -33,9 +33,7 @@ main() {
     app['apk']="$(koopa_alpine_locate_apk)"
     app['localedef']="$(koopa_alpine_locate_localedef)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['apk']}" ]] || exit 1
-    [[ -x "${app['localedef']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['base_url']="https://github.com/sgerrand/alpine-pkg-glibc/\
 releases/download/${dict['version']}"

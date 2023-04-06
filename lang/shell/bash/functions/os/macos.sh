@@ -59,8 +59,7 @@ koopa_macos_brew_cask_quarantine_fix() {
     koopa_assert_is_admin
     app['sudo']="$(koopa_locate_sudo)"
     app['xattr']="$(koopa_macos_locate_xattr)"
-    [[ -x "${app['sudo']}" ]] || exit 1
-    [[ -x "${app['xattr']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['xattr']}" -r -d \
         'com.apple.quarantine' \
         '/Applications/'*'.app'
@@ -124,9 +123,7 @@ koopa_macos_clean_launch_services() {
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['lsregister']="$(koopa_macos_locate_lsregister)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['kill_all']}" ]] || exit 1
-    [[ -x "${app['lsregister']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert "Cleaning LaunchServices 'Open With' menu."
     "${app['lsregister']}" \
         -kill \
@@ -467,7 +464,7 @@ koopa_macos_finder_hide() {
     local -A app
     koopa_assert_has_args "$#"
     app['setfile']="$(koopa_macos_locate_setfile)"
-    [[ -x "${app['setfile']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a V "$@"
     return 0
@@ -477,7 +474,7 @@ koopa_macos_finder_unhide() {
     local -A app
     koopa_assert_has_args "$#"
     app['setfile']="$(koopa_macos_locate_setfile)"
-    [[ -x "${app['setfile']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_existing "$@"
     "${app['setfile']}" -a v "$@"
     return 0
@@ -490,9 +487,7 @@ koopa_macos_flush_dns() {
     app['dscacheutil']="$(koopa_macos_locate_dscacheutil)"
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['dscacheutil']}" ]] || exit 1
-    [[ -x "${app['kill_all']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert 'Flushing DNS.'
     "${app['sudo']}" "${app['dscacheutil']}" -flushcache
     "${app['sudo']}" "${app['kill_all']}" -HUP 'mDNSResponder'
@@ -520,9 +515,7 @@ koopa_macos_force_reset_icloud_drive() {
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['reboot']="$(koopa_macos_locate_reboot)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['kill_all']}" ]] || exit 1
-    [[ -x "${app['reboot']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['kill_all']}" bird
     koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
@@ -640,9 +633,7 @@ koopa_macos_list_app_store_apps() {
     app['find']="$(koopa_locate_find --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"
-    [[ -x "${app['find']}" ]] || exit 1
-    [[ -x "${app['sed']}" ]] || exit 1
-    [[ -x "${app['sort']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     string="$( \
         "${app['find']}" \
             '/Applications' \
@@ -663,7 +654,7 @@ koopa_macos_list_launch_agents() {
     local -A app
     koopa_assert_has_no_args "$#"
     app['ls']="$(koopa_locate_ls)"
-    [[ -x "${app['ls']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['ls']}" \
         --ignore='disabled' \
         "${HOME}/Library/LaunchAgents" \
@@ -969,8 +960,7 @@ koopa_macos_reload_autofs() {
     koopa_assert_is_admin
     app['automount']="$(koopa_macos_locate_automount)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['automount']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     "${app['sudo']}" "${app['automount']}" -vc
     return 0
 }
@@ -1012,8 +1002,7 @@ koopa_macos_symlink_dropbox() {
     koopa_assert_is_admin
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['sudo']="$(koopa_locate_sudo)"
-    [[ -x "${app['kill_all']}" ]] || exit 1
-    [[ -x "${app['sudo']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     koopa_rm --sudo "${HOME}/Desktop"
     koopa_ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa_rm --sudo "${HOME}/Documents"
