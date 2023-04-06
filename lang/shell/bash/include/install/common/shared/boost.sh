@@ -3,14 +3,15 @@
 main() {
     # """
     # Install Boost library.
-    # @note Updated 2023-03-14.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://www.boost.org/users/download/
     # - https://github.com/conda-forge/boost-feedstock/blob/main/recipe/build.sh
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/boost.rb
     # """
-    local b2_args bootstrap_args deps dict
+    local -A dict
+    local -a b2_args bootstrap_args deps
     koopa_assert_has_no_args "$#"
     deps=(
         'bzip2'
@@ -20,13 +21,11 @@ main() {
         'zstd'
     )
     koopa_activate_app "${deps[@]}"
-    local -A dict=(
-        ['icu4c']="$(koopa_app_prefix 'icu4c')"
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='boost'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='boost'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_macos
     then
         dict['toolset']='clang'

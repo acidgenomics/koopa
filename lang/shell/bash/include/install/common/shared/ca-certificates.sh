@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Mozilla CA certificate store.
-    # @note Updated 2022-07-22.
+    # @note Updated 2023-04-06.
     #
     # Consider exporting 'SSL_CERT_FILE' as a global variable in shell session.
     #
@@ -12,11 +12,9 @@ main() {
     #     ca-certificates.rb
     # - https://gist.github.com/fnichol/867550#the-manual-way-boring
     # """
-    local dict
-    local -A dict=(
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    local -A dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="cacert-${dict['version']}.pem"
     dict['url']="https://curl.se/ca/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
