@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Julia (from source).
-    # @note Updated 2022-09-30.
+    # @note Updated 2023-04-06.
     #
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
@@ -16,19 +16,17 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/community/
     #     julia/APKBUILD?h=3.6-stable
     # """
-    local app build_deps dict
+    local -A app dict
+    local -a build_deps
     koopa_assert_has_no_args "$#"
     build_deps=('bzip2' 'cmake' 'make' 'tar' 'xz')
     koopa_activate_app --build-only "${build_deps[@]}"
-    local -A app
     app['make']="$(koopa_locate_make)"
     [[ -x "${app['make']}" ]] || exit 1
-    local -A dict=(
-        ['jobs']="$(koopa_cpu_count)"
-        ['name']='julia'
-        ['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-        ['version']="${KOOPA_INSTALL_VERSION:?}"
-    )
+    dict['jobs']="$(koopa_cpu_count)"
+    dict['name']='julia'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['file']="${dict['name']}-${dict['version']}-full.tar.gz"
     dict['url']="https://github.com/JuliaLang/julia/releases/download/\
 v${dict['version']}/${dict['file']}"
