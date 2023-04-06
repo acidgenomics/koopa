@@ -12,7 +12,7 @@ main() {
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"
-    [[ -x "${app['aws']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

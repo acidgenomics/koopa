@@ -8,7 +8,7 @@ main() {
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['ghcup']="$(koopa_locate_ghcup)"
-    [[ -x "${app['ghcup']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['name']='cabal'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

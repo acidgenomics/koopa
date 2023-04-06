@@ -278,7 +278,7 @@ main() {
     then
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
-        [[ -x "${app['svn']}" ]] || exit 1
+        koopa_assert_is_executable "${app[@]}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'

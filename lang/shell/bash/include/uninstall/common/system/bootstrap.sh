@@ -6,7 +6,7 @@ main() {
     local -A app
     local -a files
     app['bash']="$(koopa_locate_bash)"
-    [[ -x "${app['bash']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     files=(
         '/usr/local/bin/bash'
         '/usr/local/bin/bashbug'

@@ -35,7 +35,7 @@ main() {
         'pcre' \
         'texinfo'
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['bin_prefix']="$(koopa_bin_prefix)"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']='zsh'

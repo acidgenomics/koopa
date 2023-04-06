@@ -15,7 +15,7 @@ main() {
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     app['make']="$(koopa_locate_make)"
-    [[ -x "${app['make']}" ]] || exit 1
+    koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']='icu4c'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
