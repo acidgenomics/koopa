@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This currently fails to build on Apple Silicon.
+
 main() {
     # """
     # Install NCBI VDB.
