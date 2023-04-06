@@ -3,19 +3,18 @@
 koopa_extract_version() {
     # """
     # Extract version number.
-    # @note Updated 2022-08-30.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > koopa_extract_version "$(bash --version)"
     # # 5.1.16
     # """
-    local app arg dict
-    local -A app
+    local -A app dict
+    local -a args
+    local arg
     app['head']="$(koopa_locate_head --allow-system)"
     [[ -x "${app['head']}" ]] || exit 1
-    local -A dict=(
-        ['pattern']="$(koopa_version_pattern)"
-    )
+    dict['pattern']="$(koopa_version_pattern)"
     if [[ "$#" -eq 0 ]]
     then
         args=("$(</dev/stdin)")

@@ -3,21 +3,21 @@
 koopa_bowtie2_align() {
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-04-06.
     # """
-    local dict fastq_r1_file fastq_r1_files
-    local -A dict=(
-        # e.g. 'fastq'.
-        ['fastq_dir']=''
-        # e.g. '_R1_001.fastq.gz'.
-        ['fastq_r1_tail']=''
-        # e.g. '_R2_001.fastq.gz'.
-        ['fastq_r2_tail']=''
-        # e.g. 'bowtie2-index'.
-        ['index_dir']=''
-        # e.g. 'bowtie2'.
-        ['output_dir']=''
-    )
+    local -A dict
+    local -a fastq_r1_files
+    local fastq_r1_file
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. '_R1_001.fastq.gz'.
+    dict['fastq_r1_tail']=''
+    # e.g. '_R2_001.fastq.gz'.
+    dict['fastq_r2_tail']=''
+    # e.g. 'bowtie2-index'.
+    dict['index_dir']=''
+    # e.g. 'bowtie2'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

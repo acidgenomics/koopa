@@ -12,14 +12,12 @@ koopa_check_shared_object() {
     # >     --name='libR' \
     # >     --prefix='/opt/koopa/opt/r/lib/R/lib'
     # """
-    local app dict tool_args
+    local -A app dict
+    local -a tool_args
     koopa_assert_has_args "$#"
-    local -A app
-    local -A dict=(
-        ['file']=''
-        ['name']=''
-        ['prefix']=''
-    )
+    dict['file']=''
+    dict['name']=''
+    dict['prefix']=''
     while (("$#"))
     do
         case "$1" in
