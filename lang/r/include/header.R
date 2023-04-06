@@ -4,11 +4,11 @@
 local({
     #' Check if r-koopa package is installed, and meets dependency requirements.
     #'
-    #' @note Updated 2023-03-27.
+    #' @note Updated 2023-04-06.
     #' @noRd
     checkInstall <- function() {
         ## Minimum version of koopa R package.
-        minVersion <- package_version("0.4.0")
+        minVersion <- package_version("0.4.1")
         stopifnot(requireNamespace("utils", quietly = TRUE))
         isInstalled <- function(pkgs) {
             basename(pkgs) %in% rownames(utils::installed.packages())
