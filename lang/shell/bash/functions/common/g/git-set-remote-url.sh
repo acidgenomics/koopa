@@ -3,23 +3,20 @@
 koopa_git_set_remote_url() {
     # """
     # Set (or change) the remote URL of a git repo.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-04-06.
     #
     # @examples
     # > repo='/opt/koopa'
     # > url='https://github.com/acidgenomics/koopa.git'
     # > koopa_git_set_remote_url "$repo" "$url"
     # """
-    local app dict
+    local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    local -A app
     app['git']="$(koopa_locate_git --allow-system)"
     [[ -x "${app['git']}" ]] || exit 1
-    local -A dict=(
-        ['origin']='origin'
-        ['prefix']="${1:?}"
-        ['url']="${2:?}"
-    )
+    dict['origin']='origin'
+    dict['prefix']="${1:?}"
+    dict['url']="${2:?}"
     koopa_assert_is_git_repo "${dict['prefix']}"
     (
         koopa_cd "${dict['prefix']}"

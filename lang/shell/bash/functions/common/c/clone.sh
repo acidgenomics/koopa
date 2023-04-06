@@ -5,13 +5,12 @@ koopa_clone() {
     # Clone files using rsync (with saner defaults).
     # @note Updated 2022-04-04.
     # """
-    local dict rsync_args
+    local -A dict
+    local -a rsync_args
     koopa_assert_has_args_eq "$#" 2
     koopa_assert_has_no_flags "$@"
-    local -A dict=(
-        ['source_dir']="${1:?}"
-        ['target_dir']="${2:?}"
-    )
+    dict['source_dir']="${1:?}"
+    dict['target_dir']="${2:?}"
     koopa_assert_is_dir "${dict['source_dir']}" "${dict['target_dir']}"
     dict['source_dir']="$( \
         koopa_realpath "${dict['source_dir']}" \

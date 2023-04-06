@@ -9,11 +9,9 @@ koopa_chown() {
     local -a chown pos
     app['chown']="$(koopa_locate_chown)"
     [[ -x "${app['chown']}" ]] || exit 1
-    local -A dict=(
-        ['dereference']=1
-        ['recursive']=0
-        ['sudo']=0
-    )
+    dict['dereference']=1
+    dict['recursive']=0
+    dict['sudo']=0
     pos=()
     while (("$#"))
     do

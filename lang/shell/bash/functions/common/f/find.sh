@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-04-06.
     #
     # @section Supported regex types for GNU find:
     #
@@ -35,24 +35,23 @@ koopa_find() {
     #   https://stackoverflow.com/questions/7442417/
     #   https://unix.stackexchange.com/questions/247655/
     # """
-    local app dict exclude_arg exclude_arr find find_args results sorted_results
-    local -A app
-    local -A dict=(
-        ['days_modified_gt']=''
-        ['days_modified_lt']=''
-        ['empty']=0
-        ['engine']="${KOOPA_FIND_ENGINE:-}"
-        ['exclude']=0
-        ['max_depth']=''
-        ['min_depth']=1
-        ['pattern']=''
-        ['print0']=0
-        ['size']=''
-        ['sort']=0
-        ['sudo']=0
-        ['type']=''
-        ['verbose']=0
-    )
+    local -A app dict
+    local -a exclude_arr find find_args results sorted_results
+    local exclude_arg
+    dict['days_modified_gt']=''
+    dict['days_modified_lt']=''
+    dict['empty']=0
+    dict['engine']="${KOOPA_FIND_ENGINE:-}"
+    dict['exclude']=0
+    dict['max_depth']=''
+    dict['min_depth']=1
+    dict['pattern']=''
+    dict['print0']=0
+    dict['size']=''
+    dict['sort']=0
+    dict['sudo']=0
+    dict['type']=''
+    dict['verbose']=0
     exclude_arr=()
     while (("$#"))
     do
