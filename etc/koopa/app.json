@@ -188,13 +188,14 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
-    "date": "2023-02-08",
+    "date": "2023-04-06",
     "dependencies": ["python3.11"],
+    "enabled": false,
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.0.1"
+    "version": "2.0.2"
   },
   "automake": {
     "aliases": {
