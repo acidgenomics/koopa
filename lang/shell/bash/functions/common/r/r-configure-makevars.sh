@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-06.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -22,8 +22,8 @@ koopa_r_configure_makevars() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local -A app app_pc_path_arr conf_dict dict
-    local -a app_pc_path_arr cppflags keys libintl ldflags lines pkg_config
-    local i key    
+    local -a cppflags keys libintl ldflags lines pkg_config
+    local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"

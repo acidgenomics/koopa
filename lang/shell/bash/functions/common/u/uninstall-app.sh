@@ -125,7 +125,7 @@ koopa_uninstall_app() {
         if [[ ! -d "${dict['prefix']}" ]]
         then
             koopa_alert_is_not_installed "${dict['name']}" "${dict['prefix']}"
-            return 1
+            return 0
         fi
         dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     fi
