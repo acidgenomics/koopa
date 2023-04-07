@@ -1835,6 +1835,12 @@ _koopa_macos_activate_cli_colors() {
     return 0
 }
 
+_koopa_macos_activate_egnyte() {
+    _koopa_add_to_path_end "${HOME}/Library/Group Containers/\
+FELUD555VC.group.com.egnyte.DesktopApp/CLI"
+    return 0
+}
+
 _koopa_macos_emacs() {
     _koopa_print '/usr/local/bin/emacs'
     return 0
