@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-04-07.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -105,6 +105,7 @@ __koopa_activate_koopa() {
     if _koopa_is_macos
     then
         _koopa_macos_activate_cli_colors || return 1
+        _koopa_macos_activate_egnyte || return 1
     fi
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \
