@@ -646,9 +646,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-03-24",
+    "date": "2023-04-09",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.0"
+    "version": "2.33.1"
   },
   "cli11": {
     "aliases": {
@@ -3853,14 +3853,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-03-03",
+    "date": "2023-04-09",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.2.2"
+    "version": "7.3.0"
   },
   "python3.10": {
     "aliases": {
