@@ -17,6 +17,7 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
         '--enable-build-mode=production'
         '--enable-cxx'
         '--enable-fortran'

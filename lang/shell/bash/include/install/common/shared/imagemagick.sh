@@ -71,6 +71,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
+        '--disable-static'
         "--prefix=${dict['prefix']}"
         '--with-modules'
     )
