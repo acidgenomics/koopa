@@ -15,8 +15,6 @@ main() {
     koopa_activate_app --build-only 'go'
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=("--prefix=${dict['prefix']}")
