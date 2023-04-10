@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -19,7 +19,7 @@ main() {
             app['make']="$(koopa_locate_make --allow-system)"
             ;;
         *)
-            koopa_activate_app --build-only 'pkg-config'
+            koopa_activate_app --build-only 'make' 'pkg-config'
             app['make']="$(koopa_locate_make)"
             ;;
     esac
@@ -105,7 +105,6 @@ main() {
             ;;
     esac
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    # > "${app['make']}" check || true
     "${app['make']}" install
     return 0
 }
