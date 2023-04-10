@@ -3,16 +3,16 @@
 main() {
     # """
     # Install Cairo.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
     # - https://cairographics.org/releases/
     # """
-    local -A app dict
+    local -A dict
     local -a build_deps conf_args deps
     koopa_assert_has_no_args "$#"
-    build_deps=('make' 'pkg-config')
+    build_deps=('pkg-config')
     deps=(
         'zlib'
         'gettext'
@@ -38,18 +38,8 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="https://cairographics.org/releases/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_print_env
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
@@ -66,10 +56,11 @@ main() {
     then
         conf_args+=('--enable-quartz-image')
     fi
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://cairographics.org/releases/\
+cairo-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
