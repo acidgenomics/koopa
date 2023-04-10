@@ -28,7 +28,6 @@ main() {
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['boost']="$(koopa_app_prefix 'boost')"
-    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
