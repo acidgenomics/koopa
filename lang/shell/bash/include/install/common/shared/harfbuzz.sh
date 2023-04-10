@@ -8,7 +8,7 @@
 main() {
     # """
     # Install HarfBuzz.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://harfbuzz.github.io/building.html
@@ -47,7 +47,7 @@ archive/${dict['file']}"
     meson_args=(
         "--prefix=${dict['prefix']}"
         '--buildtype=release'
-        '--default-library=both'
+        '--default-library=shared'
         '-Dcairo=disabled'
         '-Dcoretext=enabled'
         '-Dfreetype=enabled'
@@ -56,16 +56,13 @@ archive/${dict['file']}"
         '-Dgraphite=disabled'
         '-Dicu=enabled'
         '-Dintrospection=disabled'
-        # Avoid 'lib64' inconsistency on Linux.
         '-Dlibdir=lib'
     )
     "${app['meson']}" setup "${meson_args[@]}" 'build'
-    # Alternate build approach using meson.
+    "${app['ninja']}" -j "${dict['jobs']}" -C 'build'
+    "${app['ninja']}" -C 'build' install
+    # Alternate build approach using meson:
     # > "${app['meson']}" compile -C 'build'
     # > "${app['meson']}" test -C 'build'
-    # Using ninja instead, as it's faster.
-    "${app['ninja']}" -j "${dict['jobs']}" -C 'build'
-    # > "${app['ninja']}" test
-    "${app['ninja']}" -C 'build' install
     return 0
 }
