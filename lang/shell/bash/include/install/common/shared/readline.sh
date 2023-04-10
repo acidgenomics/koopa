@@ -3,12 +3,13 @@
 main() {
     # """
     # Install readline.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Check linkage on Linux with:
     # ldd -r /opt/koopa/opt/readline/lib/libreadline.so
     #
     # @seealso
+    # - https://github.com/conda-forge/readline-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     readline.rb
     # - https://stackoverflow.com/a/34723695/3911732
@@ -25,22 +26,25 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='readline'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
+        '--disable-static'
         '--enable-shared'
-        '--enable-static'
+        "--prefix=${dict['prefix']}"
         '--with-curses'
+    )
+    make_args=(
+        'SHLIB_LIBS=-lncursesw'
+        'VERBOSE=1'
     )
     CFLAGS="-fPIC ${CFLAGS:-}"
     export CFLAGS
+    dict['url']="${dict['gnu_mirror']}/readline/\
+readline-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     # There is no termcap.pc in the base system, so we have to comment out the
     # corresponding 'Requires.private' line. Otherwise, pkg-config will consider
     # the readline module unusable.
@@ -53,10 +57,6 @@ main() {
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    make_args=(
-        'SHLIB_LIBS=-lncursesw'
-        'VERBOSE=1'
-    )
     "${app['make']}" "${make_args[@]}" --jobs="${dict['jobs']}"
     "${app['make']}" "${make_args[@]}" install
     koopa_check_shared_object \
