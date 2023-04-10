@@ -32,9 +32,7 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    CFLAGS="${CFLAGS:-}"
     CPPFLAGS="${CPPFLAGS:-}"
-    CXXFLAGS="${CXXFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
     for app_name in "$@"
@@ -104,9 +102,7 @@ koopa_activate_app() {
             )"
             if [[ -n "${dict2['cflags']}" ]]
             then
-                CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
                 CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
-                CXXFLAGS="${CXXFLAGS:-} ${dict2['cflags']}"
             fi
             if [[ -n "${dict2['ldflags']}" ]]
             then
@@ -119,9 +115,7 @@ koopa_activate_app() {
         else
             if [[ -d "${dict2['prefix']}/include" ]]
             then
-                CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
                 CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
-                CXXFLAGS="${CXXFLAGS:-} -I${dict2['prefix']}/include"
             fi
             if [[ -d "${dict2['prefix']}/lib" ]]
             then
@@ -136,12 +130,9 @@ koopa_activate_app() {
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
     done
-    export \
-        CFLAGS \
-        CPPFLAGS \
-        CXXFLAGS \
-        LDFLAGS \
-        LDLIBS
+    export CPPFLAGS
+    export LDFLAGS
+    export LDLIBS
     return 0
 }
 
@@ -4291,8 +4282,8 @@ koopa_cmake_std_args() {
     dict['prefix']="${1:?}"
     args=(
         '-DCMAKE_BUILD_TYPE=Release'
-        "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+        "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
+        "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INSTALL_INCLUDEDIR=${dict['prefix']}/include"
         "-DCMAKE_INSTALL_LIBDIR=${dict['prefix']}/lib"
