@@ -27,6 +27,7 @@ lzmautils/${dict['file']}"
         '--disable-debug'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
