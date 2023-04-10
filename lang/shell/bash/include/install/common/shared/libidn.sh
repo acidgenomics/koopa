@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
-        --name='libidn'
+        --name='libidn' \
+        -D '--disable-static'
 }
