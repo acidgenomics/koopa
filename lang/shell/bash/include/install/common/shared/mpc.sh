@@ -9,6 +9,5 @@ main() {
         --installer='gnu-app' \
         --name='mpc' \
         -D "--with-gmp=${dict['gmp']}" \
-        -D "--with-mpfr=${dict['mpfr']}" \
-        "$@"
+        -D "--with-mpfr=${dict['mpfr']}"
 }

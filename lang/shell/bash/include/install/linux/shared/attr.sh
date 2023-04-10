@@ -11,6 +11,5 @@ main() {
         --name='attr' \
        -D '--disable-debug' \
        -D '--disable-dependency-tracking' \
-       -D '--disable-silent-rules' \
-        "$@"
+       -D '--disable-silent-rules'
 }

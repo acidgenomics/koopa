@@ -3,6 +3,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='python-venv' \
-        --name='isort' \
-        "$@"
+        --name='isort'
 }

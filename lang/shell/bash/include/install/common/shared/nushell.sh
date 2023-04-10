@@ -19,6 +19,5 @@ main() {
     export OPENSSL_DIR="${dict['openssl']}"
     koopa_install_app_subshell \
         --installer='rust-package' \
-        --name='nushell' \
-        "$@"
+        --name='nushell'
 }

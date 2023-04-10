@@ -25,7 +25,8 @@ main() {
     esac
     koopa_assert_is_executable "${app[@]}"
     dict['name2']="${dict['name']}"
-    conf_args=("--prefix=${dict['prefix']}" "$@")
+    conf_args=("--prefix=${dict['prefix']}")
+    [[ "$#" -gt 0 ]] && conf_args+=("$@")
     # Alternative URLs:
     # - https://download.savannah.gnu.org/releases
     # - https://download.savannah.nongnu.org/releases
@@ -79,6 +80,9 @@ main() {
             ;;
     esac
     case "${dict['name']}" in
+        'binutils')
+            koopa_is_linux && dict['jobs']=1
+            ;;
         'libidn')
             dict['name2']='libidn2'
             ;;
@@ -86,24 +90,16 @@ main() {
             dict['version']="$(koopa_major_minor_version "${dict['version']}")"
             ;;
     esac
-    dict['file']="${dict['name2']}-${dict['version']}.tar.${dict['suffix']}"
-    dict['url']="${dict['gnu_mirror']}/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name2']}-${dict['version']}"
-    # This is necessary to install some apps (e.g. tar) from root user. This
-    # is very useful for Latch Pods configuration.
     export FORCE_UNSAFE_CONFIGURE=1
+    dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
+${dict['name2']}-${dict['version']}.tar.${dict['suffix']}"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
-    # Ensure we deparallize any problematic programs (e.g. binutils).
-    case "${dict['name']}" in
-        'binutils')
-            koopa_is_linux && dict['jobs']=1
-            ;;
-    esac
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0

@@ -5,6 +5,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='conda-env' \
-        --name='misopy' \
-        "$@"
+        --name='misopy'
 }

@@ -28,6 +28,5 @@ main() {
         -D '--with-ssl=openssl' \
         -D "--with-libssl-prefix=${dict['ssl']}" \
         -D '--without-included-regex' \
-        -D '--without-libpsl' \
-        "$@"
+        -D '--without-libpsl'
 }

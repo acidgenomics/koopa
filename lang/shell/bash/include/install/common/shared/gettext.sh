@@ -2,7 +2,7 @@
 
 main() {
     # Install gettext.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Note that 'libintl.h' is included with glibc.
     #
@@ -40,6 +40,7 @@ main() {
         -D '--disable-dependency-tracking' \
         -D '--disable-java' \
         -D '--disable-silent-rules' \
+        -D '--disable-static' \
         -D '--enable-nls' \
         -D '--with-emacs' \
         -D "--with-included-gettext" \
@@ -47,12 +48,9 @@ main() {
         -D "--with-libiconv-prefix=${dict['libiconv']}" \
         -D "--with-libncurses-prefix=${dict['ncurses']}" \
         -D "--with-libunistring-prefix=${dict['libunistring']}" \
-        -D "--with-libxml2-prefix=${dict['libxml2']}" \
-        "$@"
+        -D "--with-libxml2-prefix=${dict['libxml2']}"
     koopa_assert_is_file \
         "${dict['prefix']}/include/libintl.h" \
-        "${dict['prefix']}/lib/libintl.a" \
-        "${dict['prefix']}/lib/libintl.la" \
         "${dict['prefix']}/lib/libintl.${dict['shared_ext']}"
     return 0
 }

@@ -7,8 +7,7 @@ main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='libtool' \
-        -D '--program-prefix=g' \
-        "$@"
+        -D '--program-prefix=g'
     (
         koopa_cd "${dict['prefix']}/bin"
         koopa_ln 'glibtool' 'libtool'

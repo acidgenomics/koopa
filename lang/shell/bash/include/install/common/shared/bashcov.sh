@@ -3,6 +3,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='ruby-package' \
-        --name='bashcov' \
-        "$@"
+        --name='bashcov'
 }

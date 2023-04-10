@@ -4,8 +4,7 @@ main() {
     local -A dict
     koopa_install_app_subshell \
         --installer='conda-env' \
-        --name='picard' \
-        "$@"
+        --name='picard'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['jvm_prefix']="${dict['prefix']}/libexec/lib/jvm"
     koopa_assert_is_dir "${dict['jvm_prefix']}"

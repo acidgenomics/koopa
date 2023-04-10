@@ -32,6 +32,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-cairo'
+        '--disable-static'
         '--disable-xft'
         '--enable-shared'
         '--enable-threads'

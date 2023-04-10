@@ -6,6 +6,5 @@ main() {
         --installer='gnu-app' \
         --name='texinfo' \
         -D '--disable-dependency-tracking' \
-        -D '--disable-install-warnings' \
-        "$@"
+        -D '--disable-install-warnings'
 }
