@@ -16139,7 +16139,7 @@ koopa_make_build() {
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     koopa_assert_is_executable './configure'
-    ./configure --help
+    ./configure --help || true
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
