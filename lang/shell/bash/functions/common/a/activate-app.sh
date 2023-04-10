@@ -3,7 +3,7 @@
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
-    # @note Updated 2023-03-28.
+    # @note Updated 2023-04-10.
     #
     # Consider using 'pkg-config' to manage CFLAGS, CPPFLAGS, and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -67,9 +67,9 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    CFLAGS="${CFLAGS:-}"
+    # > CFLAGS="${CFLAGS:-}"
+    # > CXXFLAGS="${CXXFLAGS:-}"
     CPPFLAGS="${CPPFLAGS:-}"
-    CXXFLAGS="${CXXFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
     for app_name in "$@"
@@ -144,9 +144,9 @@ koopa_activate_app() {
             )"
             if [[ -n "${dict2['cflags']}" ]]
             then
-                CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
+                # > CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
+                # > CXXFLAGS="${CXXFLAGS:-} ${dict2['cflags']}"
                 CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
-                CXXFLAGS="${CXXFLAGS:-} ${dict2['cflags']}"
             fi
             if [[ -n "${dict2['ldflags']}" ]]
             then
@@ -159,9 +159,9 @@ koopa_activate_app() {
         else
             if [[ -d "${dict2['prefix']}/include" ]]
             then
-                CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
+                # > CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
+                # > CXXFLAGS="${CXXFLAGS:-} -I${dict2['prefix']}/include"
                 CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
-                CXXFLAGS="${CXXFLAGS:-} -I${dict2['prefix']}/include"
             fi
             if [[ -d "${dict2['prefix']}/lib" ]]
             then
@@ -176,11 +176,10 @@ koopa_activate_app() {
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
     done
-    export \
-        CFLAGS \
-        CPPFLAGS \
-        CXXFLAGS \
-        LDFLAGS \
-        LDLIBS
+    # > export CFLAGS
+    # > export CXXFLAGS
+    export CPPFLAGS
+    export LDFLAGS
+    export LDLIBS
     return 0
 }
