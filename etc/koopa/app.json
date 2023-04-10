@@ -2666,7 +2666,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
-    "dependencies": ["openssl3"],
+    "dependencies": ["openssl3", "zlib"],
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
