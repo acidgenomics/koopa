@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libyaml.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libyaml.rb
@@ -17,36 +17,24 @@ main() {
         'automake' \
         'libtool' \
         'm4' \
-        'make' \
         'pkg-config'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['autoupdate']="$(koopa_locate_autoupdate)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
     dict['libtool']="$(koopa_app_prefix 'libtool')"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='libyaml'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir "${dict['libtool']}"
-    dict['file']="${dict['version']}.tar.gz"
-    dict['url']="https://github.com/yaml/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
+        "--prefix=${dict['prefix']}"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
+    dict['url']="https://github.com/yaml/libyaml/archive/\
+${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     "${app['autoupdate']}" --verbose
     ACLOCAL_PATH="${dict['libtool']}/share/aclocal" \
         "${app['autoreconf']}" -fvi
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
