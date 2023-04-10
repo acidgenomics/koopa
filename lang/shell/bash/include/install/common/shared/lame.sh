@@ -15,6 +15,7 @@ main() {
     conf_args=(
         '--disable-debug'
         '--disable-dependency-tracking'
+        '--disable-static'
         '--enable-nasm'
         "--prefix=${dict['prefix']}"
     )
