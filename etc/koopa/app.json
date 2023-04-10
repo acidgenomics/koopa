@@ -3489,8 +3489,9 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-17",
+    "date": "2023-04-10",
     "dependencies": ["libedit", "openssl3", "zlib"],
+    "enabled": false,
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
   },

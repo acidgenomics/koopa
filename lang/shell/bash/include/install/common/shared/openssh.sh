@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting segfault on macOS:
+#/usr/bin/install -c -m 644 ssh-sk-helper.8.out /opt/koopa/app/openssh/9.3p1/share/man/man8/ssh-sk-helper.8
+#./install-sh -c -d /opt/koopa/app/openssh/9.3p1/etc
+#/bin/bash: line 2: 23486 Segmentation fault: 11  ./ssh-keygen -A
+#gmake: *** [Makefile:447: host-key] Error 139
+
 main() {
     # """
     # Install OpenSSH.
@@ -12,27 +18,34 @@ main() {
     # separation.  See README.privsep for details.
     #
     # @seealso
+    # - https://github.com/conda-forge/openssh-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     openssh.rb
     # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/openssh.html
     # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # - https://stackoverflow.com/questions/11841919/
     # """
-    local -A dict
+    local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'libedit' \
         'openssl3'
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_installed "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict['prefix']}"
+        "--sbindir=${dict['prefix']}/bin"
         '--with-libedit'
         "--with-ssl-dir=${dict['openssl']}"
+        "--with-zlib=${dict['zlib']}"
         '--without-kerberos5'
         '--without-ldns'
         '--without-pam'
@@ -48,6 +61,8 @@ portable/openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    ./configure "${conf_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install-nokeys
     return 0
 }
