@@ -21,9 +21,9 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-lzma'
+        '--disable-static'
         '--disable-webp'
         '--enable-shared=yes'
-        '--enable-static=yes'
         "--prefix=${dict['prefix']}"
         '--without-x'
     )

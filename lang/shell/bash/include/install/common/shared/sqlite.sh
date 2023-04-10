@@ -3,31 +3,22 @@
 main() {
     # """
     # Install SQLite.
-    # @note Updated 2023-04-06.
-    #
-    # Use autoconf instead of amalgamation.
+    # @note Updated 2023-04-10.
     #
     # Year mappings for installers are here:
     # https://www.sqlite.org/chronology.html
     #
-    # The '--enable-static' flag is required, otherwise you'll hit a version
-    # mismatch error:
-    # > sqlite3 --version
-    # ## SQLite header and source version mismatch
-    # https://askubuntu.com/questions/443379
-    #
     # @seealso
+    # - https://github.com/conda-forge/sqlite-feedstock
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/sqlite.rb
     # - https://www.linuxfromscratch.org/blfs/view/svn/server/sqlite.html
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'zlib' 'readline'
-    app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='sqlite'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -54,24 +45,22 @@ main() {
         koopa_print "${dict['version']}" \
         | "${app['sed']}" -E 's/^([0-9]+)\.([0-9]+)\.([0-9]+)$/\1\20\300/'
     )"
-    dict['file']="${dict['name']}-autoconf-${dict['file_version']}.tar.gz"
-    dict['url']="https://www.sqlite.org/${dict['year']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-autoconf-${dict['file_version']}"
     conf_args=(
+        '--disable-dependency-tracking'
+        '--disable-editline'
+        '--disable-silent-rules'
+        '--disable-static'
+        '--enable-readline'
+        '--enable-shared=yes'
+        '--enable-threadsafe'
         "--prefix=${dict['prefix']}"
-        # > '--disable-dynamic-extensions'
-        # > '--disable-shared'
-        '--enable-static'
-        '--enable-shared'
     )
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://www.sqlite.org/${dict['year']}/\
+sqlite-autoconf-${dict['file_version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -31,8 +31,8 @@ main() {
     conf_args=(
         '--disable-debug'
         '--disable-man-pdfs'
+        '--disable-static'
         '--enable-shared'
-        '--enable-static'
         "--prefix=${dict['prefix']}"
     )
     koopa_mkdir "${dict['prefix']}/lib"

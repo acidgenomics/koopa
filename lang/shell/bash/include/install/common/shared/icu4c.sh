@@ -19,10 +19,10 @@ main() {
     dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
     conf_args=(
         '--disable-samples'
+        '--disable-static'
         '--disable-tests'
         '--enable-rpath'
         '--enable-shared'
-        '--enable-static'
         "--prefix=${dict['prefix']}"
         '--with-library-bits=64'
     )

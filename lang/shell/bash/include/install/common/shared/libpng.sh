@@ -27,8 +27,8 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
         '--enable-shared=yes'
-        '--enable-static=yes'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://downloads.sourceforge.net/project/libpng/\
