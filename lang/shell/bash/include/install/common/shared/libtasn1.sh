@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
-        --name='libtasn1'
+        --name='libtasn1' \
+        -D '--disable-static'
 }
