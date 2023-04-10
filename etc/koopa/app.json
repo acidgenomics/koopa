@@ -676,7 +676,6 @@
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
     "date": "2023-04-10",
-    "dependencies": ["ncurses", "openssl3"],
     "url": ["https://cmake.org/download/"],
     "version": "3.26.3"
   },

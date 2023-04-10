@@ -14,17 +14,14 @@ main() {
     local -a bootstrap_args cmake_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
-    koopa_activate_app 'ncurses' 'openssl3'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=7
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
-    cmake_args+=("-DCMAKE_PREFIX_PATH=${dict['openssl']}")
     bootstrap_args=(
         '--no-system-libs'
         "--parallel=${dict['jobs']}"
