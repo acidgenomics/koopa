@@ -1,41 +1,38 @@
 #!/usr/bin/env bash
 
+# NOTE Consider switching to CMake build approach. Refer to conda-forge
+# recipe for details.
+
 main() {
     # """
     # Install libssh2.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
+    # - https://github.com/conda-forge/libssh2-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libssh2.rb
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app 'openssl3'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='libssh2'
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app 'zlib' 'openssl3'
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://www.libssh2.org/download/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-silent-rules'
         '--disable-examples-build'
+        "--prefix=${dict['prefix']}"
+        '--with-crypto=openssl'
         "--with-libssl-prefix=${dict['openssl']}"
-        '--without-libz'
+        "--with-libz-prefix=${dict['zlib']}"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://www.libssh2.org/download/\
+libssh2-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
