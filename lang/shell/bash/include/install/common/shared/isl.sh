@@ -19,6 +19,7 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
         '--with-gmp=system'
         "--with-gmp-prefix=${dict['gmp']}"
