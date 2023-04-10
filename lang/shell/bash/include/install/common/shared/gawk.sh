@@ -26,8 +26,7 @@ main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='gawk' \
-        -D '--disable-pma' \
-        "$@"
+        -D '--disable-pma'
     (
         koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln 'gawk.1' 'awk.1'

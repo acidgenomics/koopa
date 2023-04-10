@@ -7,6 +7,5 @@ main() {
     koopa_activate_app 'perl'
     koopa_install_app_subshell \
         --installer='gnu-app' \
-        --name='stow' \
-        "$@"
+        --name='stow'
 }

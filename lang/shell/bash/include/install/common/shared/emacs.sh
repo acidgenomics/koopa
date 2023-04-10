@@ -25,6 +25,5 @@ main() {
         '-D' '--without-imagemagick' \
         '-D' '--without-ns' \
         '-D' '--without-selinux' \
-        '-D' '--without-x' \
-        "$@"
+        '-D' '--without-x'
 }
