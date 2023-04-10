@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zstd.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://facebook.github.io/zstd/
@@ -23,6 +23,7 @@ main() {
         '-DCMAKE_CXX_STANDARD=11'
         # Build options --------------------------------------------------------
         '-DZSTD_BUILD_CONTRIB=ON'
+        '-DZSTD_BUILD_STATIC=OFF'
         '-DZSTD_LEGACY_SUPPORT=ON'
         '-DZSTD_LZ4_SUPPORT=ON'
         '-DZSTD_LZMA_SUPPORT=OFF'
