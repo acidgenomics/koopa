@@ -20,7 +20,6 @@ main() {
     #     3bf890e2ad40d0af358e153395c228326f0b44d5/Makefile-libbz2_dylib
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"

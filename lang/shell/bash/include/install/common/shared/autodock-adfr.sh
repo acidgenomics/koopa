@@ -16,7 +16,6 @@ main() {
     # - https://ccsb.scripps.edu/adfr/downloads/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['yes']="$(koopa_locate_yes)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.

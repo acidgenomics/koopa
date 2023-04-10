@@ -18,7 +18,6 @@ main() {
     # - https://help.webex.com/en-us/WBX38280/
     #       How-Do-I-Uninstall-Webex-Software-on-a-Mac
     # """
-    koopa_assert_has_no_args "$#"
     koopa_rm --sudo \
         '/Applications/Cisco Webex Meetings.app'
     koopa_rm \

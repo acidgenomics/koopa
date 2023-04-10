@@ -9,7 +9,6 @@ main() {
     # - https://www.pivpn.io
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['file']='pivpn.sh'
     dict['url']='https://install.pivpn.io'
     koopa_download "${dict['url']}" "${dict['file']}"

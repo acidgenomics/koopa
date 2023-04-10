@@ -8,7 +8,6 @@ main() {
     # @note Updated 2023-04-06.
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['name']='diff-so-fancy'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

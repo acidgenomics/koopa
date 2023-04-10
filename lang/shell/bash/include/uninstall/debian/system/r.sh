@@ -5,7 +5,6 @@ main() {
     # Uninstall R CRAN binary.
     # @note Updated 2022-10-13.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_rm --sudo \
         '/etc/R' \
         '/usr/lib/R/etc'

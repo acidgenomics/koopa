@@ -16,7 +16,6 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'pcre2'
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"

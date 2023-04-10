@@ -11,7 +11,6 @@ main() {
     # """
     local -A dict
     local -a build_deps conf_args deps
-    koopa_assert_has_no_args "$#"
     build_deps=('pkg-config')
     deps=(
         'zlib'

@@ -29,7 +29,6 @@ main() {
     # """
     local -A app dict
     local -a build_deps deps
-    koopa_assert_has_no_args "$#"
     build_deps=(
         'cmake'
         'libtool'

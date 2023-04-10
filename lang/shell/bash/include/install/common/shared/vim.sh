@@ -12,7 +12,6 @@ main() {
     # - https://github.com/vim/vim/issues/1081
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'ncurses' 'python3.11'
     app['make']="$(koopa_locate_make)"

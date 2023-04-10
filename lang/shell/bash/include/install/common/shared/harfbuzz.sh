@@ -18,7 +18,6 @@ main() {
     # - https://github.com/harfbuzz/harfbuzz/blob/main/.circleci/config.yml
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'cmake' \
         'meson' \

@@ -16,7 +16,6 @@ main() {
     # - https://iq.opengenus.org/install-openblas-from-source/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gcc'
     app['cc']='/usr/bin/gcc'

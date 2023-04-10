@@ -11,7 +11,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config' 'python3.11'
     app['make']="$(koopa_locate_make)"
     app['python']="$(koopa_locate_python311 --realpath)"

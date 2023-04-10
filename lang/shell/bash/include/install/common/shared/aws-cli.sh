@@ -12,7 +12,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     app['python']="$(koopa_locate_python311 --allow-missing)"
     # Allow edge case building against system Python, for system bootstrapping.
     if [[ ! -x "${app['python']}" ]]

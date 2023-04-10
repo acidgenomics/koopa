@@ -7,7 +7,6 @@ main() {
     # """
     local -A app cmake dict
     local -a build_deps deps
-    koopa_assert_has_no_args "$#"
     build_deps=('autoconf' 'automake' 'git')
     deps=('hdf5' 'openssl3' 'zstd')
     koopa_activate_app --build-only "${build_deps[@]}"

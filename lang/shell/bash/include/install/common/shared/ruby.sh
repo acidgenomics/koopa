@@ -10,7 +10,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args deps
-    koopa_assert_has_no_args "$#"
     deps=(
         'zlib'
         'openssl3'

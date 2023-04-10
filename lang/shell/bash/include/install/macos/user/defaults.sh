@@ -37,7 +37,6 @@ main() {
     local -A app dict
     local -a app_names
     local app_name
-    koopa_assert_has_no_args "$#"
     app['chflags']="$(koopa_macos_locate_chflags)"
     app['defaults']="$(koopa_macos_locate_defaults)"
     app['kill_all']="$(koopa_macos_locate_kill_all)"
