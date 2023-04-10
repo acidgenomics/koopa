@@ -18,6 +18,7 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://thrysoee.dk/editline/libedit-${dict['version']}.tar.gz"

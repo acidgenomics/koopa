@@ -14,6 +14,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="http://dist.schmorp.de/libev/Attic/\

@@ -18,6 +18,7 @@ main() {
     conf_args=(
         '--disable-debug-mode'
         '--disable-dependency-tracking'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://github.com/libevent/libevent/releases/download/\
