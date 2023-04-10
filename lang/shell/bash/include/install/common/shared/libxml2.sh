@@ -11,17 +11,28 @@ main() {
     local -A dict
     local -a build_deps conf_args deps
     build_deps=('make' 'pkg-config')
-    deps=('zlib' 'icu4c' 'readline')
+    deps=(
+        'zlib'
+        'icu4c'
+        'readline'
+        'libiconv'
+    )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
         "--prefix=${dict['prefix']}"
         '--with-history'
+        "--with-iconv=${dict['libiconv']}"
         '--with-icu'
+        "--with-readline=${dict['readline']}"
+        "--with-zlib=${dict['zlib']}"
         '--without-lzma'
         '--without-python'
     )
