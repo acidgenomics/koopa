@@ -16,6 +16,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
+        '--disable-static'
         '--enable-cxx'
         "--prefix=${dict['prefix']}"
         '--with-pic'

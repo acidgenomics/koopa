@@ -7,6 +7,5 @@ main() {
         -D '--disable-static' \
         -D '--enable-freetype-config' \
         -D '--enable-shared=yes' \
-        -D '--without-harfbuzz' \
-        "$@"
+        -D '--without-harfbuzz'
 }

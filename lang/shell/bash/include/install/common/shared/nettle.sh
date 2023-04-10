@@ -15,6 +15,5 @@ main() {
         --name='nettle' \
         -D '--disable-dependency-tracking' \
         -D '--enable-mini-gmp' \
-        -D '--enable-shared' \
-        "$@"
+        -D '--enable-shared'
 }

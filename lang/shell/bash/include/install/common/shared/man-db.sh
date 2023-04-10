@@ -29,6 +29,5 @@ main() {
         -D '--program-prefix=g' \
         -D "--with-config-file=${dict['prefix']}/etc/man_db.conf" \
         -D "--with-systemdsystemunitdir=${dict['prefix']}/etc/systemd/system" \
-        -D "--with-systemdtmpfilesdir=${dict['prefix']}/etc/tmpfiles.d" \
-        "$@"
+        -D "--with-systemdtmpfilesdir=${dict['prefix']}/etc/tmpfiles.d"
 }
