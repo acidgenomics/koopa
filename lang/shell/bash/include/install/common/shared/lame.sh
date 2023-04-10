@@ -3,42 +3,32 @@
 main() {
     # """
     # Install LAME.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/lame.rb
     # """
-    local -A app dict
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='lame'
+    local -A dict
+    local -a conf_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://downloads.sourceforge.net/project/${dict['name']}/\
-${dict['name']}/${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    conf_args=(
+        '--disable-debug'
+        '--disable-dependency-tracking'
+        '--enable-nasm'
+        "--prefix=${dict['prefix']}"
+    )
+    dict['url']="https://downloads.sourceforge.net/project/lame/lame/\
+${dict['version']}/lame-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_find_and_replace_in_file \
         --multiline \
         --pattern='lame_init_old\n' \
         --regex \
         --replacement='' \
         'include/libmp3lame.sym'
-    conf_args=(
-        "--prefix=${dict['prefix']}"
-        '--disable-debug'
-        '--disable-dependency-tracking'
-        '--enable-nasm'
-    )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
