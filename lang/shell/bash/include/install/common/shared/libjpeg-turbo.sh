@@ -6,7 +6,7 @@
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -19,7 +19,10 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    cmake_args=('-DWITH_JPEG8=1')
+    cmake_args=(
+        '-DENABLE_STATIC=OFF'
+        '-DWITH_JPEG8=ON'
+    )
     dict['url']="https://downloads.sourceforge.net/project/libjpeg-turbo/\
 ${dict['version']}/libjpeg-turbo-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
