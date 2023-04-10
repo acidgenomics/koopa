@@ -16136,6 +16136,24 @@ koopa_make_build_string() {
     return 0
 }
 
+koopa_make_build() {
+    local -A app dict
+    local -a conf_args
+    koopa_assert_has_args "$#"
+    koopa_activate_app --build-only 'make'
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    conf_args+=("$@")
+    koopa_print_env
+    koopa_dl 'configure args' "${conf_args[*]}"
+    ./configure --help
+    ./configure "${conf_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install
+    return 0
+}
+
 koopa_make_prefix() {
     local prefix
     prefix="${KOOPA_MAKE_PREFIX:-}"
