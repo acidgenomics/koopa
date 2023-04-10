@@ -23,6 +23,7 @@ main() {
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'ncurses'
     app['make']="$(koopa_locate_make)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
     koopa_assert_is_executable "${app[@]}"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -35,11 +36,9 @@ main() {
         '--with-curses'
     )
     make_args=(
-        'SHLIB_LIBS=-lncursesw'
+        "SHLIB_LIBS=$("${app['pkg_config']}" --libs 'ncurses')"
         'VERBOSE=1'
     )
-    CFLAGS="-fPIC ${CFLAGS:-}"
-    export CFLAGS
     dict['url']="${dict['gnu_mirror']}/readline/\
 readline-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
