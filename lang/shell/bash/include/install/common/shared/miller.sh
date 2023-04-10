@@ -3,7 +3,7 @@
 main() {
     # """
     # Install miller.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://miller.readthedocs.io/en/latest/
