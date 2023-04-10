@@ -16,6 +16,7 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://www.ijg.org/files/jpegsrc.v${dict['version']}.tar.gz"

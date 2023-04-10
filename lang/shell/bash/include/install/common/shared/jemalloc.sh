@@ -16,6 +16,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-debug'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
         '--with-jemalloc-prefix='
     )
