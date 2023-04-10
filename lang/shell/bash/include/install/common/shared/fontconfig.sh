@@ -5,7 +5,7 @@
 main() {
     # """
     # Install fontconfig.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://www.freedesktop.org/wiki/Software/fontconfig/
@@ -16,36 +16,25 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/master/fontconfig/
     #     trunk/PKGBUILD
     # """
-    local -A app dict
+    local -A dict
+    local -a conf_args
     koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only \
-        'make' \
-        'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'gperf' \
         'freetype' \
         'libxml2'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['name']='fontconfig'
-    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="https://www.freedesktop.org/software/${dict['name']}/\
-release/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--enable-libxml2'
+        "--prefix=${dict['prefix']}"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://www.freedesktop.org/software/fontconfig/release/\
+fontconfig-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
