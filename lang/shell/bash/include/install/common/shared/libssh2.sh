@@ -21,8 +21,9 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
-        '--disable-silent-rules'
         '--disable-examples-build'
+        '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
         '--with-crypto=openssl'
         "--with-libssl-prefix=${dict['openssl']}"

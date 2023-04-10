@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libluv.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-10.
     #
     # Currently only using this in Neovim installer with LuaJIT.
     #
@@ -48,7 +48,7 @@ libluajit.${dict['shared_ext']}"
         # Build options --------------------------------------------------------
         '-DBUILD_MODULE=ON'
         '-DBUILD_SHARED_LIBS=ON'
-        '-DBUILD_STATIC_LIBS=ON'
+        '-DBUILD_STATIC_LIBS=OFF'
         '-DLUA_BUILD_TYPE=System'
         '-DLUA_COMPAT53_DIR=deps/lua-compat-5.3'
         '-DWITH_LUA_ENGINE=LuaJIT'
