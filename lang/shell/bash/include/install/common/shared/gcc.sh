@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
