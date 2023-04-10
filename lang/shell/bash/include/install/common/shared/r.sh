@@ -224,7 +224,7 @@ main() {
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
+        '--disable-static'
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-byte-compiled-packages'
@@ -232,7 +232,7 @@ main() {
         '--enable-java'
         '--enable-memory-profiling'
         '--enable-shared'
-        '--enable-static'
+        "--prefix=${dict['prefix']}"
         "--with-ICU=${conf_dict['with_icu']}"
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"

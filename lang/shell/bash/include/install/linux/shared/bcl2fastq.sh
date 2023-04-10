@@ -82,7 +82,7 @@ main() {
             "--libdir=${dict['prefix']}/lib"
             "toolset=${dict['toolset']}"
             'variant=release'
-            'link=shared,static'
+            'link=shared'
             'threading=multi'
             'runtime-link=shared'
             # This is 'koopa_activate_app' 'pkg-config --cflags' return.
