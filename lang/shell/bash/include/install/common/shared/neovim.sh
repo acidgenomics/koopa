@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -59,8 +59,8 @@ main() {
     read -r -d '' "dict[local_mk]" << END || true
 CMAKE_BUILD_TYPE := Release
 DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
-CMAKE_EXTRA_FLAGS += "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-}"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_C_FLAGS=${CFLAGS:-}"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
+CMAKE_EXTRA_FLAGS += "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
 CMAKE_EXTRA_FLAGS += "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
 CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
 CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
