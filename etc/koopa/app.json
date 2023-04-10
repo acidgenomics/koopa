@@ -2772,7 +2772,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "dependencies": ["icu4c", "readline", "zlib"],
+    "dependencies": ["icu4c", "libiconv", "readline", "zlib"],
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
