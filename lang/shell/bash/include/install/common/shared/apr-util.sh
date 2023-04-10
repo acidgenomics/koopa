@@ -2,7 +2,7 @@
 
 main() {
     # """
-    # Companion library to apr, the Apache Portable Runtime library.
+    # Install apr-util, companion library to apr.
     # @note Updated 2023-04-10.
     #
     # @seealso
