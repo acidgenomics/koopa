@@ -76,8 +76,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
-    "dependencies": ["sqlite"],
+    "date": "2023-04-10",
     "url": ["https://apr.apache.org/"],
     "version": "1.7.2"
   },
