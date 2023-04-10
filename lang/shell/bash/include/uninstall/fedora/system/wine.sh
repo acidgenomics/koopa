@@ -5,7 +5,6 @@ main() {
     # Uninstall Wine.
     # @note Updated 2022-01-27.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_fedora_dnf_remove \
         'winehq-stable' \
         'xorg-x11-apps' \

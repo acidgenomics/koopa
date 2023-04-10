@@ -10,7 +10,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app \
         'xorg-xorgproto' \

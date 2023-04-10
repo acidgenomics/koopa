@@ -23,7 +23,6 @@ main() {
     # - https://stackoverflow.com/questions/16098757/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['bundle']="$(koopa_locate_bundle)"
     app['ruby']="$(koopa_locate_ruby --realpath)"
     koopa_assert_is_executable "${app[@]}"

@@ -11,7 +11,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args deps
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
         # > 'libb2'

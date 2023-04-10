@@ -64,7 +64,6 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
     koopa_activate_app "${deps[@]}"
     dict['gmp']="$(koopa_app_prefix 'gmp')"

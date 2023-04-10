@@ -19,7 +19,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'autoconf' 'make'
     koopa_activate_app \
         'expat' \

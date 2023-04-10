@@ -24,7 +24,6 @@ main() {
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['name']="${KOOPA_INSTALL_NAME:?}"

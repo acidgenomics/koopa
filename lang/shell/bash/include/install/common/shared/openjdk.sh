@@ -22,7 +22,6 @@ main() {
     # - https://www.oracle.com/technetwork/java/javase/downloads/index.html
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

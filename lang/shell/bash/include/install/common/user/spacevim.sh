@@ -11,7 +11,6 @@ main() {
     # - https://spacevim.org/faq/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"

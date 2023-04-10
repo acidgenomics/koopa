@@ -17,7 +17,6 @@ main() {
     # Configures at '/var/lib/docker/'.
     # """
     local pkgs
-    koopa_assert_has_no_args "$#"
     koopa_debian_apt_add_docker_repo
     pkgs=(
         'docker-ce'

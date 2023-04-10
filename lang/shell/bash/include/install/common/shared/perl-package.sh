@@ -29,7 +29,6 @@ main() {
     local -A app dict
     local -a bin_files
     local bin_file
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'perl'
     app['bash']="$(koopa_locate_bash --allow-system)"
     app['bzip2']="$(koopa_locate_bzip2 --allow-system)"

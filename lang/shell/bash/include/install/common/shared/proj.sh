@@ -12,7 +12,6 @@ main() {
     # """
     local cmake_args deps dict
     local -A dict
-    koopa_assert_has_no_args "$#"
     deps=(
         'curl'
         'zlib'

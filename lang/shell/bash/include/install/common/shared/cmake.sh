@@ -12,7 +12,6 @@ main() {
     # """
     local -A app dict
     local -a bootstrap_args cmake_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     koopa_activate_app 'openssl3'
     app['make']="$(koopa_locate_make)"

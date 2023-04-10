@@ -28,7 +28,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     koopa_activate_app \
         'ncurses' \

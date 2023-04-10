@@ -11,7 +11,6 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'lame'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

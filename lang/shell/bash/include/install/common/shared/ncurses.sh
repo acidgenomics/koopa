@@ -21,7 +21,6 @@ main() {
     # - https://stackoverflow.com/questions/6562403/
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

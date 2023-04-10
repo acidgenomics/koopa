@@ -10,7 +10,6 @@ main() {
     # - https://gist.github.com/fscm/9eee2784f101f21515d66321180aef0f
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"

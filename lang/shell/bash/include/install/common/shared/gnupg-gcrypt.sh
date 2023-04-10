@@ -7,7 +7,6 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'autoconf' 'automake' 'pkg-config'
     dict['compress_ext']='bz2'
     dict['gcrypt_url']="$(koopa_gcrypt_url)"

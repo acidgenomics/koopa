@@ -28,7 +28,6 @@ main() {
     # """
     local -A app dict
     local -a build_deps conf_args deps
-    koopa_assert_has_no_args "$#"
     build_deps=('make' 'ninja' 'pkg-config')
     deps=(
         'ca-certificates'

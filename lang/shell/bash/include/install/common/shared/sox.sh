@@ -9,7 +9,6 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/sox.rb
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'flac'
     app['make']="$(koopa_locate_make)"

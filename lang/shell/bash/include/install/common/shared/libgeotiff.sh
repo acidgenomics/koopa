@@ -11,7 +11,6 @@ main() {
     #     libgeotiff.rb
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'libtool' \
         'make' \

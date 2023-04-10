@@ -6,7 +6,6 @@ main() {
     # @note Updated 2023-04-06.
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     if koopa_is_macos
     then
         koopa_assert_is_not_aarch64

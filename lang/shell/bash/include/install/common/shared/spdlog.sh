@@ -14,7 +14,6 @@ main() {
     # """
     local -A app cmake dict
     local -a cmake_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app 'fmt'
     app['cat']="$(koopa_locate_cat --allow-system)"

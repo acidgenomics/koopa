@@ -10,7 +10,6 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/cheat.rb
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
     app['go']="$(koopa_locate_go)"
     koopa_assert_is_executable "${app[@]}"

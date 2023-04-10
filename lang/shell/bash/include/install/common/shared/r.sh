@@ -37,7 +37,6 @@ main() {
     # """
     local -A app conf_dict dict
     local -a build_deps conf_args deps
-    koopa_assert_has_no_args "$#"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_stop \

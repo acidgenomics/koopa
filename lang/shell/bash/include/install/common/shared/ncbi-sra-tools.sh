@@ -24,7 +24,6 @@ main() {
     # """
     local -A app dict
     local -a deps cmake_args
-    koopa_assert_has_no_args "$#"
     deps=(
         'bison'
         'flex'

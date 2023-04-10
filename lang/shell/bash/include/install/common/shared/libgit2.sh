@@ -13,7 +13,6 @@ main() {
     # """
     local -A cmake dict
     local -a build_deps cmake_args deps
-    koopa_assert_has_no_args "$#"
     build_deps=('cmake' 'pkg-config')
     deps=('zlib' 'pcre')
     koopa_is_macos && deps+=('openssl3' 'libssh2')

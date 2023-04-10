@@ -44,7 +44,6 @@ main() {
     local -A app dict
     local -a stack_args
     koopa_assert_is_not_aarch64
-    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']='stack'

@@ -11,7 +11,6 @@ main() {
     local -A dict
     local -a repos
     local repo
-    koopa_assert_has_no_args "$#"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_git_clone \

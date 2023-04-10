@@ -12,7 +12,6 @@ main() {
     # """
     local -A dict
     local -a b2_args bootstrap_args deps
-    koopa_assert_has_no_args "$#"
     deps=(
         'bzip2'
         'icu4c'

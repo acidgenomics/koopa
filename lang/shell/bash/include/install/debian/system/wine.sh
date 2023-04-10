@@ -24,7 +24,6 @@ main() {
     # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
     # """
     local -A app
-    koopa_assert_has_no_args "$#"
     app['dpkg']="$(koopa_debian_locate_dpkg)"
     app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"

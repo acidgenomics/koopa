@@ -13,7 +13,6 @@ main() {
     # - https://www.rstudio.com/products/shiny/download-server/redhat-centos/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['r']="$(koopa_locate_system_r)"
     app['rscript']="${app['r']}script"
     koopa_assert_is_executable "${app[@]}"

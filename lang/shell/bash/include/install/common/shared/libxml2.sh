@@ -10,7 +10,6 @@ main() {
     # """
     local -A app dict
     local -a build_deps conf_args deps
-    koopa_assert_has_no_args "$#"
     build_deps=('make' 'pkg-config')
     deps=('zlib' 'icu4c' 'readline')
     koopa_activate_app --build-only "${build_deps[@]}"

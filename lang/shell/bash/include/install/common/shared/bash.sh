@@ -15,7 +15,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     app['curl']="$(koopa_locate_curl --allow-system)"
     app['cut']="$(koopa_locate_cut --allow-system)"

@@ -5,7 +5,6 @@ main() {
     # Uninstall R framework binary.
     # @note Updated 2022-03-23.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_rm --sudo \
         '/Applications/R.app' \
         '/Library/Frameworks/R.framework'
