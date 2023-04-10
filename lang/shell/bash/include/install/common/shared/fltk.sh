@@ -6,14 +6,14 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fltk.rb
     # - https://courses.cs.washington.edu/courses/csep557/14au/tools/
     #     fltk_install.html
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
     koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
@@ -29,24 +29,14 @@ main() {
             'xorg-libxcb' \
             'xorg-libx11'
     fi
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='fltk'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}-source.tar.gz"
-    dict['url']="https://www.${dict['name']}.org/pub/${dict['name']}/\
-${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-cairo'
         '--disable-xft'
         '--enable-shared'
         '--enable-threads'
+        "--prefix=${dict['prefix']}"
     )
     if koopa_is_linux
     then
@@ -60,11 +50,11 @@ ${dict['version']}/${dict['file']}"
     then
         conf_args+=('--disable-x11')
     fi
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://www.fltk.org/pub/fltk/${dict['version']}/\
+fltk-${dict['version']}-source.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
