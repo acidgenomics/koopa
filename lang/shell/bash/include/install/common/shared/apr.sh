@@ -15,7 +15,10 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    conf_args=("--prefix=${dict['prefix']}")
+    conf_args=(
+        '--disable-static'
+        "--prefix=${dict['prefix']}"
+    )
     dict['url']="https://archive.apache.org/dist/apr/\
 apr-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
