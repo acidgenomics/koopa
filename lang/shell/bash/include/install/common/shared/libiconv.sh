@@ -9,7 +9,7 @@ main() {
         --name='libiconv' \
         -D '--disable-debug' \
         -D '--disable-dependency-tracking' \
+        -D '--disable-static' \
         -D '--enable-extra-encodings' \
-        -D '--enable-static' \
         "$@"
 }

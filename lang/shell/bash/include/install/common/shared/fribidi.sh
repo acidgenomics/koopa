@@ -18,7 +18,7 @@ main() {
         '--disable-debug'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
-        '--enable-static'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://github.com/fribidi/fribidi/releases/download/\
