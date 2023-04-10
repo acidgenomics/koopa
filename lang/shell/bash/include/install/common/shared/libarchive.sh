@@ -13,7 +13,6 @@ main() {
     local -a conf_args deps
     koopa_activate_app --build-only 'pkg-config'
     deps=(
-        # > 'libb2'
         'bzip2'
         'expat'
         'lz4'
@@ -25,7 +24,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
-        # > '--with-expat'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
         '--without-lzma'
         '--without-lzo2'
