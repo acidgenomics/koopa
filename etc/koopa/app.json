@@ -3825,10 +3825,10 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2023-01-03",
+    "date": "2023-04-10",
     "dependencies": ["python3.11"],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.14.0"
+    "version": "2.15.0"
   },
   "pylint": {
     "aliases": {
