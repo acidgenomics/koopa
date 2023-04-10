@@ -14,7 +14,10 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['version2']="${dict['version']//./_}"
-    conf_args=("--prefix=${dict['prefix']}")
+    conf_args=(
+        '--disable-static'
+        "--prefix=${dict['prefix']}"
+    )
     dict['url']="https://github.com/libexpat/libexpat/releases/download/\
 R_${dict['version2']}/expat-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"

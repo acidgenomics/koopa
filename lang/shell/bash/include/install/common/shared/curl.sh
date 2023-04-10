@@ -39,6 +39,7 @@ cacert.pem"
         '--disable-dependency-tracking'
         '--disable-ldap'
         '--disable-silent-rules'
+        '--disable-static'
         '--enable-versioned-symbols'
         "--prefix=${dict['prefix']}"
         "--with-ca-bundle=${dict['ca_bundle']}"
