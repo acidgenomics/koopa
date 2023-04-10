@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @section Privilege separation:
     #
@@ -18,31 +18,21 @@ main() {
     # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # - https://stackoverflow.com/questions/11841919/
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'libedit' \
         'openssl3'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='openssh'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
-portable/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    dict['ssl']="$(koopa_app_prefix 'openssl3')"
     conf_args=(
         # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict['prefix']}"
         '--with-libedit'
-        "--with-ssl-dir=${dict['ssl']}"
+        "--with-ssl-dir=${dict['openssl']}"
         '--without-kerberos5'
         '--without-ldns'
         '--without-pam'
@@ -53,11 +43,11 @@ portable/${dict['file']}"
             "--with-privsep-path=${dict['prefix']}/var/lib/sshd"
         )
     fi
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
+portable/openssh-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
