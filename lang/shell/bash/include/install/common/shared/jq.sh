@@ -36,6 +36,7 @@ main() {
         '--disable-docs'
         '--disable-maintainer-mode'
         '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     case "${dict['version']}" in
