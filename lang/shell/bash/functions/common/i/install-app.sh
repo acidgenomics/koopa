@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Harden against argument passthrough.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
