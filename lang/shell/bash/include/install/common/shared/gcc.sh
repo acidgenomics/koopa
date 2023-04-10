@@ -67,7 +67,6 @@ main() {
     koopa_assert_has_no_args "$#"
     deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
     koopa_activate_app "${deps[@]}"
-    dict['arch']="$(koopa_arch)"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['isl']="$(koopa_app_prefix 'isl')"
@@ -111,7 +110,7 @@ main() {
             '--with-system-zlib'
         )
     fi
-    if koopa_is_macos && [[ "${dict['arch']}" == 'arm64' ]]
+    if koopa_is_macos && koopa_is_aarch64
     then
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
         dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
