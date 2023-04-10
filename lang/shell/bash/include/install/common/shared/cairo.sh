@@ -6,8 +6,9 @@ main() {
     # @note Updated 2023-04-10.
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
     # - https://cairographics.org/releases/
+    # - https://github.com/conda-forge/cairo-feedstock
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
     # """
     local -A dict
     local -a build_deps conf_args deps
@@ -40,8 +41,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
+        '--disable-static'
         '--disable-valgrind'
         '--enable-gobject'
         '--enable-svg'
@@ -50,6 +51,7 @@ main() {
         '--enable-xlib'
         '--enable-xlib-xcb'
         '--enable-xlib-xrender'
+        "--prefix=${dict['prefix']}"
     )
     if koopa_is_macos
     then
