@@ -12,7 +12,6 @@ main() {
     # - https://superuser.com/questions/565988/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'autoconf' \
         'automake' \

@@ -15,7 +15,6 @@ main() {
     # """
     local -A app dict
     local -a install_args
-    koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
     dict['brewfile']="$(koopa_xdg_config_home)/homebrew/brewfile"

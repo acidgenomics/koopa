@@ -29,7 +29,6 @@ main() {
     # Error relocating /usr/glibc-compat/lib/...
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['apk']="$(koopa_alpine_locate_apk)"
     app['localedef']="$(koopa_alpine_locate_localedef)"
     app['sudo']="$(koopa_locate_sudo)"

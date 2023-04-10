@@ -10,7 +10,6 @@ main() {
     # - https://github.com/conda-forge/libdeflate-feedstock/tree/main/recipe
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/ebiggers/libdeflate/archive/\

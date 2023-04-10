@@ -6,7 +6,6 @@ main() {
     # @note Updated 2021-12-09.
     # """
     local -a pkgs
-    koopa_assert_has_no_args "$#"
     pkgs=(
         'containerd.io'
         'docker-ce'

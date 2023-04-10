@@ -12,7 +12,6 @@ main() {
     # - https://cran.r-project.org/web/packages/httpuv/index.html
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only \
         'autoconf' \
         'automake' \

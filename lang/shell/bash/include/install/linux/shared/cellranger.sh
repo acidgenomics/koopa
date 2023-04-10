@@ -10,7 +10,6 @@ main() {
     #     software/downloads/latest
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"

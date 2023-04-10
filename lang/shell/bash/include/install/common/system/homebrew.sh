@@ -19,7 +19,6 @@ main() {
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     if [[ -x "$(koopa_locate_brew --allow-missing)" ]]
     then
         koopa_stop 'Homebrew is already installed.'

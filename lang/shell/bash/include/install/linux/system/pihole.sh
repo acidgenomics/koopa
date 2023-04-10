@@ -10,7 +10,6 @@ main() {
     # - https://github.com/pi-hole/pi-hole/#one-step-automated-install
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['file']='pihole.sh'
     dict['url']='https://install.pi-hole.net'
     koopa_download "${dict['url']}" "${dict['file']}"

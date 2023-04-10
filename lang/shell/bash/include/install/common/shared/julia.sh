@@ -18,7 +18,6 @@ main() {
     # """
     local -A app dict
     local -a build_deps
-    koopa_assert_has_no_args "$#"
     build_deps=('bzip2' 'cmake' 'make' 'tar' 'xz')
     koopa_activate_app --build-only "${build_deps[@]}"
     app['make']="$(koopa_locate_make)"

@@ -14,7 +14,6 @@ main() {
     # """
     local -A app dict
     local -a cmake_args deps
-    koopa_assert_has_no_args "$#"
     deps=('bison' 'flex' 'hdf5' 'python3.11')
     koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"

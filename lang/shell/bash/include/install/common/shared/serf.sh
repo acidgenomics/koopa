@@ -22,7 +22,6 @@ main() {
     # """
     local -A app dict
     local -a scons_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app \
         'zlib' \

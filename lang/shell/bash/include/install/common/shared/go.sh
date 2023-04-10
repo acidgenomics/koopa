@@ -9,7 +9,6 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/go.rb
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch2)" # e.g. "amd64".
     dict['name']='go'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

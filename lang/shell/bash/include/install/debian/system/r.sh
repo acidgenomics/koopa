@@ -21,7 +21,6 @@ main() {
     # """
     local -A app dict
     local -a dep_pkgs pkgs
-    koopa_assert_has_no_args "$#"
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app[@]}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

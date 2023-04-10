@@ -9,7 +9,6 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app 'zlib' 'gcc'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
