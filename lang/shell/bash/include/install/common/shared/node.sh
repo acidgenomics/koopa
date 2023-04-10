@@ -3,9 +3,12 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Inclusion of shared brotli currently causes the installer to error.
+    #
+    # conda-forge currently uses shared libuv, openssl, and zlib, but not
+    # brotli, c-cares, and nghttp2.
     #
     # @seealso
     # - https://github.com/nodejs/release#release-schedule
@@ -32,26 +35,22 @@ main() {
     deps=(
         'ca-certificates'
         'zlib'
-        # > 'bzip2'
         'icu4c'
         'libuv'
         'openssl3'
         'python3.11'
         'c-ares'
         'nghttp2'
-        # > 'brotli'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    # > dict['brotli']="$(koopa_app_prefix 'brotli')"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['cares']="$(koopa_app_prefix 'c-ares')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libuv']="$(koopa_app_prefix 'libuv')"
-    dict['name']='node'
     dict['nghttp2']="$(koopa_app_prefix 'nghttp2')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -61,27 +60,12 @@ main() {
     dict['cacerts']="${dict['ca_certificates']}/share/ca-certificates/\
 cacert.pem"
     koopa_assert_is_file "${dict['cacerts']}"
-    dict['file']="${dict['name']}-v${dict['version']}.tar.xz"
-    dict['url']="https://nodejs.org/dist/v${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-v${dict['version']}"
-    export LDFLAGS_host="${LDFLAGS:?}"
-    export PYTHON="${app['python']}"
-    # conda-forge currently uses shared libuv, openssl, and zlib, but not
-    # brotli, c-cares, and nghttp2.
     conf_args=(
-        # > '--cross-compiling'
-        # > '--enable-lto'
-        # > '--error-on-warn'
-        "--prefix=${dict['prefix']}"
         '--ninja'
         "--openssl-system-ca-path=${dict['cacerts']}"
         '--openssl-use-def-ca-store'
+        "--prefix=${dict['prefix']}"
         '--shared'
-        # > '--shared-brotli'
-        # > "--shared-brotli-includes=${dict['brotli']}/include"
-        # > "--shared-brotli-libpath=${dict['brotli']}/lib"
         '--shared-cares'
         "--shared-cares-includes=${dict['cares']}/include"
         "--shared-cares-libpath=${dict['cares']}/lib"
@@ -102,12 +86,19 @@ cacert.pem"
         '--without-node-snapshot'
         '--verbose'
     )
+    export LDFLAGS_host="${LDFLAGS:?}"
+    export PYTHON="${app['python']}"
     # This is needed to put sysctl into PATH.
     koopa_is_macos && koopa_add_to_path_end '/usr/sbin'
+    dict['url']="https://nodejs.org/dist/v${dict['version']}/\
+node-v${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" --jobs="${dict['jobs']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # Need to fix installer path for 'libnode.so' on Ubuntu 22.
     # https://github.com/nodejs/node/issues/30111
     if koopa_is_linux
