@@ -3,7 +3,7 @@
 main() {
     # """
     # Install oniguruma regular expressions library.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -24,6 +24,7 @@ main() {
     dict['version2']="$(koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://github.com/kkos/oniguruma/releases/download/\
