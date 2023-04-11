@@ -4567,8 +4567,8 @@
     "bin": ["swig"],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2023-01-03",
-    "dependencies": ["pcre2", "zlib"],
+    "date": "2023-04-11",
+    "dependencies": ["pcre2"],
     "url": ["http://www.swig.org/"],
     "version": "4.1.1"
   },
