@@ -3620,7 +3620,7 @@
       "homebrew": true
     },
     "bin": ["cpan", "perl"],
-    "build_dependencies": ["groff", "make"],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-04-11",
     "man1": ["cpan.1", "perl.1"],
