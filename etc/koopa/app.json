@@ -130,6 +130,7 @@
     },
     "bin": ["ascp"],
     "date": "2023-02-08",
+    "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
