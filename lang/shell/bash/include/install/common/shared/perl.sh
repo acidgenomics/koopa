@@ -37,8 +37,8 @@ main() {
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['man1dir']="$(koopa_man1_prefix)"
-    dict['man3dir']="$(koopa_man3_prefix)"
+    dict['man1dir']="${dict['prefix']}/share/man/man1"
+    dict['man3dir']="${dict['prefix']}/share/man/man3"
     dict['sysman']="${dict['prefix']}/share/man/man1"
     conf_args=(
         '-d'
@@ -68,7 +68,10 @@ perl-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
-    koopa_mkdir "${dict['sysman']}"
+    koopa_mkdir \
+        "${dict['man1dir']}" \
+        "${dict['man3dir']}" \
+        "${dict['sysman']}"
     ./Configure -h || true
     ./Configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
