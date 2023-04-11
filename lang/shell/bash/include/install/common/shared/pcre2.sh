@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PCRE2.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://www.pcre.org/
@@ -23,6 +23,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-static'
         '--enable-jit'
         '--enable-pcre2-16'
         '--enable-pcre2-32'
