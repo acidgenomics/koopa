@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -35,6 +35,7 @@ main() {
         '--disable-hpack-tools'
         '--disable-python-bindings'
         '--disable-silent-rules'
+        '--disable-static'
         '--enable-app'
         "--prefix=${dict['prefix']}"
         "--with-boost=${dict['boost']}"

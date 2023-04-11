@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libyaml.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libyaml.rb
@@ -25,6 +25,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://github.com/yaml/libyaml/archive/\
