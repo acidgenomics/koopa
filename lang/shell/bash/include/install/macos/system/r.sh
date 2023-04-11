@@ -25,7 +25,7 @@ main() {
     # - https://mac.r-project.org/tools/
     # """
     local -A app dict
-    local -a files
+    local -a rm_files
     if [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_stop \
@@ -80,8 +80,9 @@ base/${dict['pkg_file']}"
     koopa_assert_is_dir "${dict['prefix']}"
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
+    koopa_macos_install_system_xcode_openmp
     koopa_configure_r "${app['r']}"
-    files=(
+    rm_files=(
         '/usr/local/bin/info'
         '/usr/local/bin/install-info'
         '/usr/local/bin/makeinfo'
@@ -156,7 +157,7 @@ base/${dict['pkg_file']}"
         '/usr/local/share/info/texinfo.info-2'
         '/usr/local/share/info/texinfo.info-3'
     )
-    koopa_rm --sudo "${files[@]}"
+    koopa_rm --sudo "${rm_files[@]}"
     koopa_rm --sudo \
         '/usr/local/man/man3/TCL_'* \
         '/usr/local/man/man3/Tcl_'* \
