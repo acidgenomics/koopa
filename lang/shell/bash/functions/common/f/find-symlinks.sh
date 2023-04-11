@@ -10,10 +10,7 @@ koopa_find_symlinks() {
     # @examples
     # > koopa_find_symlinks \
     # >     --source-prefix="$(koopa_app_prefix)/python3.10" \
-    # >     --target-prefix="$(koopa_make_prefix)"
-    # > koopa_find_symlinks \
-    # >     --source-prefix="$(koopa_macos_r_prefix)" \
-    # >     --target-prefix="$(koopa_koopa_prefix)/bin"
+    # >     --target-prefix="$(koopa_bin_prefix)"
     # """
     local -A dict
     local -a hits symlinks
