@@ -14,6 +14,7 @@ main() {
         --installer='gnu-app' \
         --name='nettle' \
         -D '--disable-dependency-tracking' \
+        -D '--disable-static' \
         -D '--enable-mini-gmp' \
         -D '--enable-shared'
 }
