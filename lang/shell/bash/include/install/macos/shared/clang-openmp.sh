@@ -11,12 +11,9 @@ main() {
     # - https://mac.r-project.org/openmp/
     # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
-    local -A app dict
-    app['sudo']="$(koopa_locate_sudo)"
-    app['tar']="$(koopa_locate_tar --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['name']='openmp'
+    local -A dict
     dict['platform']='darwin'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['release']='Release' # or 'Debug'.
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -38,15 +35,12 @@ main() {
             koopa_stop "Unsupported version: '${dict['version']}'."
             ;;
     esac
-    dict['file']="${dict['name']}-${dict['version']}-\
+    dict['url']="https://mac.r-project.org/openmp/openmp-${dict['version']}-\
 ${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
-    dict['url']="https://mac.r-project.org/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    "${app['sudo']}" "${app['tar']}" -vxz -f "${dict['file']}" -C /
-    koopa_assert_is_file \
-        '/usr/local/include/omp-tools.h' \
-        '/usr/local/include/omp.h' \
-        '/usr/local/include/ompt.h' \
-        '/usr/local/lib/libomp.dylib'
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_mv \
+        --target-directory="${dict['prefix']}" \
+        'src/local/'*
     return 0
 }

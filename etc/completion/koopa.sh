@@ -438,6 +438,11 @@ _koopa_complete() {
                             'lmod'
                             'pinentry'
                         )
+                    elif _koopa_is_macos
+                    then
+                        args+=(
+                            'clang-openmp'
+                        )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'install')
@@ -578,7 +583,6 @@ _koopa_complete() {
                             elif _koopa_is_macos
                             then
                                 args+=(
-                                    'openmp'
                                     'python'
                                     'r'
                                     # NOTE No uninstaller currently.
