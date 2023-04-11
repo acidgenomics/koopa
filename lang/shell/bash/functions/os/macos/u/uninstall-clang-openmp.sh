@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_macos_uninstall_system_openmp() {
+koopa_macos_uninstall_clang_openmp() {
     koopa_uninstall_app \
-        --name='openmp' \
+        --name='clang-openmp' \
         --platform='macos' \
-        --system \
         "$@"
 }
