@@ -36,9 +36,10 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     conf_args=(
-        "--prefix=${dict['prefix']}"
+        '--disable-static'
         '--enable-shared'
         '--enable-threads'
+        "--prefix=${dict['prefix']}"
     )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
