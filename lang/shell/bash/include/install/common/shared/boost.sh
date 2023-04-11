@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Boost library.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://www.boost.org/users/download/
@@ -12,7 +12,6 @@ main() {
     # """
     local -A dict
     local -a b2_args bootstrap_args deps
-    koopa_assert_has_no_args "$#"
     deps=(
         'bzip2'
         'icu4c'
@@ -55,7 +54,7 @@ ${dict['version']}/source/${dict['file']}"
         "--libdir=${dict['prefix']}/lib"
         "toolset=${dict['toolset']}"
         'variant=release'
-        'link=shared,static'
+        'link=shared'
         'threading=multi'
         'runtime-link=shared'
         "cxxflags=${CPPFLAGS:?}"

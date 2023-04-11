@@ -9,7 +9,6 @@ main() {
     # - https://prelude.emacsredux.com/en/latest/
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/bbatsov/prelude.git'

@@ -22,7 +22,6 @@ main() {
     # """
     local -A app cmake dict
     local -a build_deps cmake_args deps
-    koopa_assert_has_no_args "$#"
     build_deps=('libtool' 'pkg-config')
     deps=(
         'curl'

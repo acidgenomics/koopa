@@ -3,6 +3,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='conda-env' \
-        --name='vina' \
-        "$@"
+        --name='vina'
 }

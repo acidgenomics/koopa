@@ -25,7 +25,6 @@ main() {
     # - https://mac.r-project.org/tools/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     if [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_stop \

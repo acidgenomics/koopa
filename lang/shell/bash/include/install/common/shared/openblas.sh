@@ -16,7 +16,6 @@ main() {
     # - https://iq.opengenus.org/install-openblas-from-source/
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'make' 'pkg-config'
     koopa_activate_app 'gcc'
     app['cc']='/usr/bin/gcc'
@@ -57,6 +56,8 @@ END
     "${app['make']}" "PREFIX=${dict['prefix']}" install
     (
         koopa_cd "${dict['prefix']}/lib"
+        # Manually delete static libraries.
+        koopa_rm ./*.a
         koopa_ln \
             "libopenblas.${dict['shared_ext']}" \
             "libblas.${dict['shared_ext']}"

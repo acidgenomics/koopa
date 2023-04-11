@@ -16,7 +16,6 @@ main() {
     # > "${bin_dir}/bcbio_vm.py" install --tools --image "$image"
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['bash']="$(koopa_locate_bash --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"

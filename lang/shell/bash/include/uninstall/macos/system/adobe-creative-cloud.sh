@@ -5,7 +5,6 @@ main() {
     # Uninstall Adobe Creative Cloud preferences.
     # @note Updated 2021-10-30.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_rm --sudo \
         '/Library/Application Support/Adobe'* \
         '/Library/Application Support/regid.'*'.com.adobe' \

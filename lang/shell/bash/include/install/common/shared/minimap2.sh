@@ -3,6 +3,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='conda-env' \
-        --name='minimap2' \
-        "$@"
+        --name='minimap2'
 }

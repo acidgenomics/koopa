@@ -8,7 +8,7 @@ main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='mpc' \
+        -D '--disable-static' \
         -D "--with-gmp=${dict['gmp']}" \
-        -D "--with-mpfr=${dict['mpfr']}" \
-        "$@"
+        -D "--with-mpfr=${dict['mpfr']}"
 }

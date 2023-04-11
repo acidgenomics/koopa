@@ -12,6 +12,5 @@ main() {
         --name='coreutils' \
         -D '--program-prefix=g' \
         -D '--with-gmp' \
-        -D '--without-selinux' \
-        "$@"
+        -D '--without-selinux'
 }

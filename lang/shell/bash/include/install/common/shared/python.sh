@@ -45,8 +45,7 @@ main() {
     #   https://stackoverflow.com/questions/41328451/
     # """
     local -A app dict
-    local -a deps
-    koopa_assert_has_no_args "$#"
+    local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps=(
         'zlib'
@@ -67,7 +66,6 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='python'
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -76,16 +74,10 @@ main() {
         "${dict['openssl']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-    dict['file']="Python-${dict['version']}.tar.xz"
-    dict['url']="https://www.python.org/ftp/${dict['name']}/${dict['version']}/\
-${dict['file']}"
     koopa_mkdir \
         "${dict['prefix']}/bin" \
         "${dict['prefix']}/lib"
     koopa_add_to_path_start "${dict['prefix']}/bin"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "Python-${dict['version']}"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--enable-ipv6'
@@ -153,6 +145,11 @@ ${dict['file']}"
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
         "${dict['bzip2']}/lib"
+    dict['url']="https://www.python.org/ftp/python/${dict['version']}/\
+Python-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
@@ -172,10 +169,9 @@ ${dict['file']}"
             koopa_ln "${framework}/share" 'share'
         )
     else
-        # > "${app['make']}" test
         "${app['make']}" altinstall
     fi
-    app['python']="${dict['prefix']}/bin/${dict['name']}${dict['maj_min_ver']}"
+    app['python']="${dict['prefix']}/bin/python${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     case "${dict['version']}" in
         '3.11.'*)

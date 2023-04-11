@@ -9,6 +9,5 @@ main() {
     koopa_activate_app 'ed'
     koopa_install_app_subshell \
         --installer='gnu-app' \
-        --name='bc' \
-        "$@"
+        --name='bc'
 }

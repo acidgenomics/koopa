@@ -5,5 +5,5 @@ main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='gdbm' \
-        "$@"
+        -D '--disable-static'
 }

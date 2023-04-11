@@ -3,44 +3,44 @@
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
     # """
-    local -A app dict
+    local -A dict
     local -a build_deps conf_args deps
-    koopa_assert_has_no_args "$#"
     build_deps=('make' 'pkg-config')
-    deps=('zlib' 'icu4c' 'readline')
+    deps=(
+        'zlib'
+        'icu4c'
+        'readline'
+        'libiconv'
+    )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='libxml2'
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="https://download.gnome.org/sources/${dict['name']}/\
-${dict['maj_min_ver']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
+        "--prefix=${dict['prefix']}"
         '--with-history'
+        "--with-iconv=${dict['libiconv']}"
         '--with-icu'
+        "--with-readline=${dict['readline']}"
+        "--with-zlib=${dict['zlib']}"
         '--without-lzma'
         '--without-python'
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://download.gnome.org/sources/libxml2/\
+${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
