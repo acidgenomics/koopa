@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -62,13 +62,18 @@ main() {
     #   https://www.linuxquestions.org/questions/linux-software-2/
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
-    local -A dict
-    local -a conf_args
+    local -A app dict
+    local -a build_deps conf_args deps
+    build_deps=('make')
     deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['isl']="$(koopa_app_prefix 'isl')"
+    dict['jobs']="$(koopa_cpu_count)"
     dict['mpc']="$(koopa_app_prefix 'mpc')"
     dict['mpfr']="$(koopa_app_prefix 'mpfr')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -124,7 +129,9 @@ gcc-${dict['version']}.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_mkdir 'build'
     koopa_cd 'build'
-    koopa_ln '../src/configure' 'configure'
-    koopa_make_build "${conf_args[@]}"
+    ../src/configure --help
+    ../src/configure "${conf_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }
