@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libuv.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libuv.rb
@@ -24,6 +24,7 @@ main() {
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://github.com/libuv/libuv/archive/\
