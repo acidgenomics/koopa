@@ -556,13 +556,6 @@ koopa_macos_ifactive() {
     return 0
 }
 
-koopa_macos_install_clang_openmp() {
-    koopa_install_app \
-        --name='clang-openmp' \
-        --platform='macos' \
-        "$@"
-}
-
 koopa_macos_install_system_defaults() {
     koopa_install_app \
         --name='defaults' \
@@ -607,6 +600,14 @@ koopa_macos_install_system_xcode_clt() {
         --no-prefix-check \
         --platform='macos' \
         --prefix='/Library/Developer/CommandLineTools' \
+        --system \
+        "$@"
+}
+
+koopa_macos_install_system_xcode_openmp() {
+    koopa_install_app \
+        --name='xcode-openmp' \
+        --platform='macos' \
         --system \
         "$@"
 }
@@ -1038,13 +1039,6 @@ koopa_macos_uninstall_brewfile_casks() {
     return 0
 }
 
-koopa_macos_uninstall_clang_openmp() {
-    koopa_uninstall_app \
-        --name='clang-openmp' \
-        --platform='macos' \
-        "$@"
-}
-
 koopa_macos_uninstall_system_adobe_creative_cloud() {
     koopa_uninstall_app \
         --name='adobe-creative-cloud' \
@@ -1113,6 +1107,14 @@ koopa_macos_uninstall_ringcentral() {
 koopa_macos_uninstall_system_xcode_clt() {
     koopa_uninstall_app \
         --name='xcode-clt' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_uninstall_system_xcode_openmp() {
+    koopa_uninstall_app \
+        --name='xcode-openmp' \
         --platform='macos' \
         --system \
         "$@"
