@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install OpenMP library.
-    # @note Updated 2023-02-08.
+    # Install OpenMP for Xcode library.
+    # @note Updated 2023-04-11.
     #
     # Useful for optimizing performance of 'data.table' package.
     #
@@ -15,7 +15,6 @@ main() {
     app['sudo']="$(koopa_locate_sudo)"
     app['tar']="$(koopa_locate_tar --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='openmp'
     dict['platform']='darwin'
     dict['release']='Release' # or 'Debug'.
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -38,11 +37,13 @@ main() {
             koopa_stop "Unsupported version: '${dict['version']}'."
             ;;
     esac
-    dict['file']="${dict['name']}-${dict['version']}-\
+    dict['url']="https://mac.r-project.org/openmp/openmp-${dict['version']}-\
 ${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
-    dict['url']="https://mac.r-project.org/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    "${app['sudo']}" "${app['tar']}" -vxz -f "${dict['file']}" -C /
+    koopa_download "${dict['url']}"
+    "${app['sudo']}" "${app['tar']}" \
+        -vxz \
+        -f "$(koopa_basename "${dict['url']}")" \
+        -C '/'
     koopa_assert_is_file \
         '/usr/local/include/omp-tools.h' \
         '/usr/local/include/omp.h' \
@@ -50,3 +51,4 @@ ${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
         '/usr/local/lib/libomp.dylib'
     return 0
 }
+
