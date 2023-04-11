@@ -79,13 +79,14 @@ main() {
         "${dict['prefix']}/lib"
     koopa_add_to_path_start "${dict['prefix']}/bin"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
         '--enable-optimizations'
+        '--enable-shared'
+        "--prefix=${dict['prefix']}"
         '--with-computed-gotos'
         '--with-dbmliborder=gdbm:ndbm'
-        '--with-ensurepip=install' # or 'upgrade'.
+        '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
         '--with-readline=editline'
         '--with-system-expat'
@@ -100,6 +101,27 @@ main() {
             "--with-dtrace=${app['dtrace']}"
             '--with-lto'
         )
+    fi
+    conf_args+=(
+        'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
+        # This is defined in the MacPorts recipe.
+        # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
+        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
+        # https://github.com/python/cpython/issues/98673
+        'ac_cv_working_openssl_hashlib=yes'
+        'ac_cv_working_openssl_ssl=yes'
+        'py_cv_module__tkinter=disabled'
+    )
+    koopa_add_rpath_to_ldflags \
+        "${dict['prefix']}/lib" \
+        "${dict['bzip2']}/lib"
+    dict['url']="https://www.python.org/ftp/python/${dict['version']}/\
+Python-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    if koopa_is_macos
+    then
         # Override auto-detection of libmpdec, which assumes a universal build.
         # https://github.com/python/cpython/issues/98557.
         dict['arch']="$(koopa_arch)"
@@ -124,27 +146,7 @@ main() {
                     'configure'
                 ;;
         esac
-    else
-        conf_args+=('--enable-shared')
     fi
-    conf_args+=(
-        'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
-        # This is defined in the MacPorts recipe.
-        # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
-        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
-        # https://github.com/python/cpython/issues/98673
-        'ac_cv_working_openssl_hashlib=yes'
-        'ac_cv_working_openssl_ssl=yes'
-        'py_cv_module__tkinter=disabled'
-    )
-    koopa_add_rpath_to_ldflags \
-        "${dict['prefix']}/lib" \
-        "${dict['bzip2']}/lib"
-    dict['url']="https://www.python.org/ftp/python/${dict['version']}/\
-Python-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
