@@ -5,6 +5,17 @@
     },
     "bin": ["ack"],
     "date": "2023-04-11",
+    "build_dependencies": [
+      "bash",
+      "bzip2",
+      "gnupg",
+      "gzip",
+      "less",
+      "patch",
+      "tar",
+      "unzip",
+      "wget"
+    ],
     "dependencies": ["perl"],
     "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
