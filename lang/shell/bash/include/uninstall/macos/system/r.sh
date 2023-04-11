@@ -5,9 +5,9 @@ main() {
     # Uninstall R framework binary.
     # @note Updated 2023-04-11.
     # """
-    local -a files
+    local -a rm_files
     [[ -d '/Library/Frameworks/R.framework' ]] || return 0
-    files=(
+    rm_files=(
         '/Applications/R.app'
         '/Library/Frameworks/R.framework'
         '/usr/local/bin/R'
@@ -86,7 +86,7 @@ main() {
         '/usr/local/share/info/texinfo.info-2'
         '/usr/local/share/info/texinfo.info-3'
     )
-    koopa_rm --sudo "${files[@]}"
+    koopa_rm --sudo "${rm_files[@]}"
     koopa_rm --sudo \
         '/usr/local/man/man3/TCL_'* \
         '/usr/local/man/man3/Tcl_'* \
