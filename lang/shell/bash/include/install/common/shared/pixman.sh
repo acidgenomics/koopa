@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pixman.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/macports/macports-ports/blob/master/graphics/
@@ -19,6 +19,7 @@ main() {
         '--disable-dependency-tracking'
         '--disable-gtk'
         '--disable-silent-rules'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     if koopa_is_macos
