@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Perl package.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-11.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -87,7 +87,7 @@ main() {
   'make_arg' => q[-j${dict['jobs']}],
   'make_install_arg' => q[-j${dict['jobs']}],
   'make_install_make_command' => q[${app['make']}],
-  'makepl_arg' => q[INSTALL_BASE=${dict['prefix']}],
+  'makepl_arg' => q[INSTALL_BASE=${dict['prefix']} INSTALLMAN1DIR=${dict['prefix']}/share/man/man1 INSTALLMAN3DIR=${dict['prefix']}/share/man/man3],
   'mbuild_arg' => q[],
   'mbuild_install_arg' => q[],
   'mbuild_install_build_command' => q[./Build],
