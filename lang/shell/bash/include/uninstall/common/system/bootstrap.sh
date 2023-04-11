@@ -12,7 +12,7 @@ main() {
         '/usr/local/bin/bashbug'
         '/usr/local/include/bash'
         '/usr/local/lib/bash'
-        '/usr/local/pkgconfig/bash.pc'
+        '/usr/local/lib/pkgconfig/bash.pc'
         '/usr/local/share/doc/bash'
         '/usr/local/share/info/bash.info'
         '/usr/local/share/locale/af/LC_MESSAGES/bash.mo'

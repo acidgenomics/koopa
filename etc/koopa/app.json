@@ -130,6 +130,7 @@
     },
     "bin": ["ascp"],
     "date": "2023-02-08",
+    "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
@@ -3498,15 +3499,6 @@
     "url": ["https://adoptium.net/"],
     "version": "17.0.6+10"
   },
-  "openmp": {
-    "conservative": true,
-    "date": "2023-02-08",
-    "notes": ["Need to add version check for this."],
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
-  },
   "openssh": {
     "aliases": {
       "homebrew": true
@@ -4944,6 +4936,14 @@
     "man1": ["gwhich.1"],
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
+  },
+  "xcode-openmp": {
+    "conservative": true,
+    "date": "2023-04-11",
+    "platform": "macos",
+    "system": true,
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "14.0.6"
   },
   "xorg-libice": {
     "aliases": {

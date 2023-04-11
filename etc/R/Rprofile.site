@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-04-04.
+#' @note Updated 2023-04-11.
 #'
 #' @section Restarting R:
 #'
@@ -160,7 +160,7 @@ local({  # nolint
         ))))) {
             stop(paste(
                 "OpenMP for Xcode is not installed.",
-                "Run 'koopa install system r-openmp' to resolve.",
+                "Run 'koopa install system xcode-openmp' to resolve.",
                 sep = "\n"
             ))
         }
