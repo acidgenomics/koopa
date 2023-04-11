@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -87,9 +87,6 @@ main() {
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install' # or 'upgrade'.
         "--with-openssl=${dict['openssl']}"
-        # NOTE Currently uses '-Wl,-rpath=' instead of '-Wl,-rpath,' on macOS,
-        # which is incorrect for clang.
-        # '--with-openssl-rpath=auto'
         '--with-readline=editline'
         '--with-system-expat'
         '--with-system-ffi'
@@ -99,9 +96,7 @@ main() {
     then
         app['dtrace']='/usr/sbin/dtrace'
         koopa_assert_is_executable "${app['dtrace']}"
-        dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
         conf_args+=(
-            "--enable-framework=${dict['libexec']}"
             "--with-dtrace=${app['dtrace']}"
             '--with-lto'
         )
@@ -155,22 +150,7 @@ Python-${dict['version']}.tar.xz"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    if koopa_is_macos
-    then
-        "${app['make']}" altinstall PYTHONAPPSDIR="${dict['libexec']}"
-        (
-            local framework
-            koopa_cd "${dict['prefix']}"
-            framework="libexec/Python.framework/Versions/${dict['maj_min_ver']}"
-            koopa_assert_is_dir "$framework"
-            koopa_ln "${framework}/bin" 'bin'
-            koopa_ln "${framework}/include" 'include'
-            koopa_ln "${framework}/lib" 'lib'
-            koopa_ln "${framework}/share" 'share'
-        )
-    else
-        "${app['make']}" altinstall
-    fi
+    "${app['make']}" altinstall
     app['python']="${dict['prefix']}/bin/python${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     case "${dict['version']}" in
