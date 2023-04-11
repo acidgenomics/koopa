@@ -7254,47 +7254,6 @@ koopa_find_large_files() {
     return 0
 }
 
-koopa_find_non_symlinked_make_files() {
-    local -A dict
-    local -a find_args
-    koopa_assert_has_no_args "$#"
-    dict['brew_prefix']="$(koopa_homebrew_prefix)"
-    dict['make_prefix']="$(koopa_make_prefix)"
-    find_args=(
-        '--min-depth' 1
-        '--prefix' "${dict['make_prefix']}"
-        '--sort'
-        '--type' 'f'
-    )
-    if koopa_is_linux
-    then
-        find_args+=(
-            '--exclude' 'share/applications/**'
-            '--exclude' 'share/emacs/site-lisp/**'
-            '--exclude' 'share/zsh/site-functions/**'
-        )
-    elif koopa_is_macos
-    then
-        find_args+=(
-            '--exclude' 'MacGPG2/**'
-            '--exclude' 'gfortran/**'
-            '--exclude' 'texlive/**'
-        )
-    fi
-    if [[ "${dict['brew_prefix']}" == "${dict['make_prefix']}" ]]
-    then
-        find_args+=(
-            '--exclude' 'Caskroom/**'
-            '--exclude' 'Cellar/**'
-            '--exclude' 'Homebrew/**'
-            '--exclude' 'var/homebrew/**'
-        )
-    fi
-    dict['out']="$(koopa_find "${find_args[@]}")"
-    koopa_print "${dict['out']}"
-    return 0
-}
-
 koopa_find_symlinks() {
     local -A dict
     local -a hits symlinks
@@ -14225,91 +14184,6 @@ koopa_link_in_dir() {
     return 0
 }
 
-koopa_link_in_make() {
-    local -A dict
-    local -a cp_args exclude_arr files_arr find_args include_arr
-    local i
-    koopa_assert_has_args "$#"
-    dict['app_prefix']=''
-    dict['make_prefix']="$(koopa_make_prefix)"
-    exclude_arr=('libexec')
-    include_arr=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--exclude='*)
-                exclude_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--exclude')
-                exclude_arr+=("${2:?}")
-                shift 2
-                ;;
-            '--include='*)
-                include_arr+=("${1#*=}")
-                shift 1
-                ;;
-            '--include')
-                include_arr+=("${2:?}")
-                shift 2
-                ;;
-            '--prefix='*)
-                dict['app_prefix']="${1#*=}"
-                shift 1
-                ;;
-            '--prefix')
-                dict['app_prefix']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set '--prefix' "${dict['app_prefix']}"
-    koopa_assert_is_dir "${dict['app_prefix']}" "${dict['make_prefix']}"
-    dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
-    if koopa_is_array_non_empty "${include_arr[@]:-}"
-    then
-        for i in "${!include_arr[@]}"
-        do
-            files_arr[$i]="${dict['app_prefix']}/${include_arr[$i]}"
-        done
-    else
-        find_args=(
-            '--max-depth=1'
-            '--min-depth=1'
-            "--prefix=${dict['app_prefix']}"
-            '--sort'
-            '--type=d'
-        )
-        if koopa_is_array_non_empty "${exclude_arr[@]:-}"
-        then
-            for i in "${!exclude_arr[@]}"
-            do
-                find_args+=("--exclude=${exclude_arr[$i]}")
-            done
-        fi
-        readarray -t files_arr <<< "$(koopa_find "${find_args[@]}")"
-    fi
-    if koopa_is_array_empty "${files_arr[@]:-}"
-    then
-        koopa_stop "No files from '${dict['app_prefix']}' to link \
-into '${dict['make_prefix']}'."
-    fi
-    koopa_assert_is_existing "${files_arr[@]}"
-    koopa_sys_set_permissions --recursive "${dict['app_prefix']}"
-    koopa_delete_broken_symlinks "${dict['app_prefix']}"
-    cp_args=('--symbolic-link')
-    koopa_is_shared_install && cp_args+=('--sudo')
-    cp_args+=(
-        "--target-directory=${dict['make_prefix']}"
-        "${files_arr[@]}"
-    )
-    koopa_cp "${cp_args[@]}"
-    return 0
-}
-
 koopa_link_in_man1() {
     koopa_link_in_dir --prefix="$(koopa_man_prefix)/man1" "$@"
 }
@@ -16143,23 +16017,6 @@ koopa_make_build() {
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
-    return 0
-}
-
-koopa_make_prefix() {
-    local prefix
-    prefix="${KOOPA_MAKE_PREFIX:-}"
-    if [[ -z "$prefix" ]]
-    then
-        if koopa_is_user_install
-        then
-            prefix="$(koopa_xdg_local_home)"
-        else
-            prefix='/usr/local'
-        fi
-    fi
-    [[ -n "$prefix" ]] || return 1
-    koopa_print "$prefix"
     return 0
 }
 
@@ -25023,46 +24880,6 @@ koopa_unlink_in_dir() {
             koopa_assert_is_symlink "$file"
             koopa_rm "$file"
         fi
-    done
-    return 0
-}
-
-koopa_unlink_in_make() {
-    local -A dict
-    local app_prefix
-    koopa_assert_has_args "$#"
-    dict['app_prefix']=''
-    dict['make_prefix']="$(koopa_make_prefix)"
-    koopa_assert_is_dir "${dict['make_prefix']}"
-    for app_prefix in "$@"
-    do
-        local -a files
-        local file
-        dict['app_prefix']="$app_prefix"
-        koopa_assert_is_dir "${dict['app_prefix']}"
-        dict['app_prefix']="$(koopa_realpath "${dict['app_prefix']}")"
-        readarray -t files <<< "$( \
-            koopa_find_symlinks \
-                --source-prefix="${dict['app_prefix']}" \
-                --target-prefix="${dict['make_prefix']}" \
-                --verbose \
-        )"
-        if koopa_is_array_empty "${files[@]:-}"
-        then
-            koopa_stop "No files from '${dict['app_prefix']}' detected."
-        fi
-        koopa_alert "$(koopa_ngettext \
-            --prefix='Unlinking ' \
-            --num="${#files[@]}" \
-            --msg1='file' \
-            --msg2='files' \
-            --suffix=" from '${dict['app_prefix']}' in \
-'${dict['make_prefix']}'." \
-        )"
-        for file in "${files[@]}"
-        do
-            koopa_rm "$file"
-        done
     done
     return 0
 }
