@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -177,5 +177,6 @@ END
     )
     "${app['scons']}" "${scons_args[@]}"
     "${app['scons']}" "${scons_args[@]}" install
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
