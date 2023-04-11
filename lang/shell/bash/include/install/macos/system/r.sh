@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Install OpenMP for R automatically here.
-# FIXME Can we install it to a custom location?
-
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-11.
     #
     # @section Intel:
     #
@@ -87,6 +84,7 @@ base/${dict['pkg_file']}"
     files=(
         '/usr/local/bin/info'
         '/usr/local/bin/install-info'
+        '/usr/local/bin/makeinfo'
         '/usr/local/bin/pdftexi2dvi'
         '/usr/local/bin/pod2texi'
         '/usr/local/bin/sqlite3_analyzer'

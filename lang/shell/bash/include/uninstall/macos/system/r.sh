@@ -3,7 +3,7 @@
 main() {
     # """
     # Uninstall R framework binary.
-    # @note Updated 2022-03-23.
+    # @note Updated 2023-04-11.
     # """
     local -a files
     files=(
@@ -13,6 +13,7 @@ main() {
         '/usr/local/bin/Rscript'
         '/usr/local/bin/info'
         '/usr/local/bin/install-info'
+        '/usr/local/bin/makeinfo'
         '/usr/local/bin/pdftexi2dvi'
         '/usr/local/bin/pod2texi'
         '/usr/local/bin/sqlite3_analyzer'
