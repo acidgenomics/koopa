@@ -5,6 +5,17 @@
     },
     "bin": ["ack"],
     "date": "2023-04-11",
+    "build_dependencies": [
+      "bash",
+      "bzip2",
+      "gnupg",
+      "gzip",
+      "less",
+      "patch",
+      "tar",
+      "unzip",
+      "wget"
+    ],
     "dependencies": ["perl"],
     "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
@@ -1174,6 +1185,17 @@
       "homebrew": true
     },
     "bin": ["exiftool"],
+    "build_dependencies": [
+      "bash",
+      "bzip2",
+      "gnupg",
+      "gzip",
+      "less",
+      "patch",
+      "tar",
+      "unzip",
+      "wget"
+    ],
     "date": "2023-04-11",
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
@@ -3620,7 +3642,7 @@
       "homebrew": true
     },
     "bin": ["cpan", "perl"],
-    "build_dependencies": ["groff", "make"],
+    "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-04-11",
     "man1": ["cpan.1", "perl.1"],
@@ -4125,6 +4147,17 @@
   },
   "rename": {
     "bin": ["rename"],
+    "build_dependencies": [
+      "bash",
+      "bzip2",
+      "gnupg",
+      "gzip",
+      "less",
+      "patch",
+      "tar",
+      "unzip",
+      "wget"
+    ],
     "date": "2023-04-11",
     "dependencies": ["perl"],
     "man1": ["rename.1"],
