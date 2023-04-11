@@ -578,12 +578,11 @@ _koopa_complete() {
                             elif _koopa_is_macos
                             then
                                 args+=(
-                                    'openmp'
                                     'python'
                                     'r'
-                                    # NOTE No uninstaller currently.
-                                    'rosetta'
+                                    'rosetta' # no installer
                                     'xcode-clt'
+                                    'xcode-openmp'
                                 )
                             fi
                             ;;

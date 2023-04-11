@@ -564,15 +564,6 @@ koopa_macos_install_system_defaults() {
         "$@"
 }
 
-koopa_macos_install_system_openmp() {
-    koopa_install_app \
-        --name='openmp' \
-        --no-prefix-check \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
@@ -609,6 +600,14 @@ koopa_macos_install_system_xcode_clt() {
         --no-prefix-check \
         --platform='macos' \
         --prefix='/Library/Developer/CommandLineTools' \
+        --system \
+        "$@"
+}
+
+koopa_macos_install_system_xcode_openmp() {
+    koopa_install_app \
+        --name='xcode-openmp' \
+        --platform='macos' \
         --system \
         "$@"
 }
@@ -1072,14 +1071,6 @@ koopa_macos_uninstall_system_microsoft_onedrive() {
         "$@"
 }
 
-koopa_macos_uninstall_system_openmp() {
-    koopa_uninstall_app \
-        --name='openmp' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_uninstall_system_oracle_java() {
     koopa_uninstall_app \
         --name='oracle-java' \
@@ -1093,6 +1084,7 @@ koopa_macos_uninstall_system_python() {
         --name='python3.11' \
         --platform='macos' \
         --system \
+        --uninstaller='python' \
         "$@"
 }
 
@@ -1115,6 +1107,14 @@ koopa_macos_uninstall_ringcentral() {
 koopa_macos_uninstall_system_xcode_clt() {
     koopa_uninstall_app \
         --name='xcode-clt' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_uninstall_system_xcode_openmp() {
+    koopa_uninstall_app \
+        --name='xcode-openmp' \
         --platform='macos' \
         --system \
         "$@"
