@@ -1174,8 +1174,9 @@
       "homebrew": true
     },
     "bin": ["exiftool"],
-    "date": "2022-11-08",
+    "date": "2023-04-11",
     "dependencies": ["perl"],
+    "man1": ["exiftool.1"],
     "url": [
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
@@ -4124,8 +4125,9 @@
   },
   "rename": {
     "bin": ["rename"],
-    "date": "2023-02-08",
+    "date": "2023-04-11",
     "dependencies": ["perl"],
+    "man1": ["rename.1"],
     "url": ["https://metacpan.org/dist/File-Rename/"],
     "version": "2.01"
   },
