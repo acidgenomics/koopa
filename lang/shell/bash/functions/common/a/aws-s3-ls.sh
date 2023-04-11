@@ -45,7 +45,7 @@ koopa_aws_s3_ls() {
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
     app['aws']="$(koopa_locate_aws)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"

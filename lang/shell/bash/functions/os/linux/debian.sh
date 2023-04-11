@@ -466,7 +466,7 @@ koopa_debian_apt_disable_deb_src() {
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']="${1:-}"
@@ -495,7 +495,7 @@ koopa_debian_apt_enable_deb_src() {
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']="${1:-}"
@@ -565,7 +565,7 @@ koopa_debian_apt_is_key_imported() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['apt_key']="$(koopa_debian_locate_apt_key)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['key']="${1:?}"
     dict['key_pattern']="$( \
