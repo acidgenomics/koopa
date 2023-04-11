@@ -661,6 +661,13 @@
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
     "version": "2.33.1"
   },
+  "clang-openmp": {
+    "conservative": true,
+    "date": "2023-04-11",
+    "platform": "macos",
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "14.0.6"
+  },
   "cli11": {
     "aliases": {
       "homebrew": true
@@ -3497,15 +3504,6 @@
     "notes": ["Tracking the LTS release series."],
     "url": ["https://adoptium.net/"],
     "version": "17.0.6+10"
-  },
-  "openmp": {
-    "conservative": true,
-    "date": "2023-02-08",
-    "notes": ["Need to add version check for this."],
-    "platform": "macos",
-    "system": true,
-    "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
   },
   "openssh": {
     "aliases": {

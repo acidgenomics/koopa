@@ -556,18 +556,16 @@ koopa_macos_ifactive() {
     return 0
 }
 
-koopa_macos_install_system_defaults() {
+koopa_macos_install_clang_openmp() {
     koopa_install_app \
-        --name='defaults' \
+        --name='clang-openmp' \
         --platform='macos' \
-        --system \
         "$@"
 }
 
-koopa_macos_install_system_openmp() {
+koopa_macos_install_system_defaults() {
     koopa_install_app \
-        --name='openmp' \
-        --no-prefix-check \
+        --name='defaults' \
         --platform='macos' \
         --system \
         "$@"
@@ -1040,6 +1038,13 @@ koopa_macos_uninstall_brewfile_casks() {
     return 0
 }
 
+koopa_macos_uninstall_clang_openmp() {
+    koopa_uninstall_app \
+        --name='clang-openmp' \
+        --platform='macos' \
+        "$@"
+}
+
 koopa_macos_uninstall_system_adobe_creative_cloud() {
     koopa_uninstall_app \
         --name='adobe-creative-cloud' \
@@ -1067,14 +1072,6 @@ koopa_macos_uninstall_system_docker() {
 koopa_macos_uninstall_system_microsoft_onedrive() {
     koopa_uninstall_app \
         --name='microsoft-onedrive' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_uninstall_system_openmp() {
-    koopa_uninstall_app \
-        --name='openmp' \
         --platform='macos' \
         --system \
         "$@"

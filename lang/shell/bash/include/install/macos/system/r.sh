@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Install OpenMP for R automatically here.
+# FIXME Can we install it to a custom location?
+
 main() {
     # """
     # Install R framework binary.
@@ -25,6 +28,7 @@ main() {
     # - https://mac.r-project.org/tools/
     # """
     local -A app dict
+    local -a files
     if [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_stop \
@@ -80,5 +84,41 @@ base/${dict['pkg_file']}"
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
     koopa_configure_r "${app['r']}"
+    files=(
+        '/usr/local/include/fakemysql.h'
+        '/usr/local/include/fakepq.h'
+        '/usr/local/include/fakesql.h'
+        '/usr/local/include/itcl.h'
+        '/usr/local/include/itcl2TclOO.h'
+        '/usr/local/include/itclDecls.h'
+        '/usr/local/include/itclInt.h'
+        '/usr/local/include/itclIntDecls.h'
+        '/usr/local/include/itclMigrate2TclCore.h'
+        '/usr/local/include/itclTclIntStubsFcn.h'
+        '/usr/local/include/mysqlStubs.h'
+        '/usr/local/include/odbcStubs.h'
+        '/usr/local/include/pqStubs.h'
+        '/usr/local/include/tcl.h'
+        '/usr/local/include/tclDecls.h'
+        '/usr/local/include/tclOO.h'
+        '/usr/local/include/tclOODecls.h'
+        '/usr/local/include/tclPlatDecls.h'
+        '/usr/local/include/tclThread.h'
+        '/usr/local/include/tclTomMath.h'
+        '/usr/local/include/tclTomMathDecls.h'
+        '/usr/local/include/tdbc.h'
+        '/usr/local/include/tdbcDecls.h'
+        '/usr/local/include/tdbcInt.h'
+        '/usr/local/include/tk.h'
+        '/usr/local/include/tkDecls.h'
+        '/usr/local/include/tkPlatDecls.h'
+        '/usr/local/lib/libtcl8.6.dylib'
+        '/usr/local/lib/libtclstub8.6.a'
+        '/usr/local/lib/libtk8.6.dylib'
+        '/usr/local/lib/libtkstub8.6.a'
+        '/usr/local/lib/pkgconfig/tcl.pc'
+        '/usr/local/lib/pkgconfig/tk.pc'
+    )
+    koopa_rm --sudo "${files[@]}"
     return 0
 }
