@@ -7,6 +7,7 @@ main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='libtool' \
+        -D '--disable-static' \
         -D '--program-prefix=g'
     (
         koopa_cd "${dict['prefix']}/bin"
