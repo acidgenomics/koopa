@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Disable more stuff here...Perl, Ruby, etc...
-
 main() {
     # """
     # Install swig.
