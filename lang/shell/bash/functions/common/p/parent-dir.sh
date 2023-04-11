@@ -10,7 +10,7 @@ koopa_parent_dir() {
     local -A app dict
     local -a pos
     local file
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['cd_tail']=''
     dict['n']=1
