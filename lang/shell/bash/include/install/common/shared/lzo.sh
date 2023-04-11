@@ -3,7 +3,7 @@
 main() {
     # """
     # Install lzo.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/lzo.rb
@@ -15,6 +15,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-static'
         '--enable-shared'
         "--prefix=${dict['prefix']}"
     )
