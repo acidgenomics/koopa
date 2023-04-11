@@ -3,13 +3,16 @@
 main() {
     # """
     # Install mpdecimal.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     # """
     local -A dict
     local -a conf_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    conf_args=("--prefix=${dict['prefix']}")
+    conf_args=(
+        '--disable-static'
+        "--prefix=${dict['prefix']}"
+    )
     dict['url']="https://www.bytereef.org/software/mpdecimal/releases/\
 mpdecimal-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
