@@ -3,37 +3,28 @@
 main() {
     # """
     # Install xz.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
 
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/xz.rb
     # """
-    local -A app dict
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='xz'
+    local -A dict
+    local -a conf_args
+    koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://downloads.sourceforge.net/project/\
-lzmautils/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
         '--disable-static'
+        "--prefix=${dict['prefix']}"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://downloads.sourceforge.net/project/lzmautils/\
+xz-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

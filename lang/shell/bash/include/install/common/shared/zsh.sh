@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -26,28 +26,15 @@ main() {
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'make'
     koopa_activate_app \
         'ncurses' \
         'pcre' \
         'texinfo'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['bin_prefix']="$(koopa_bin_prefix)"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='zsh'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['url']="https://downloads.sourceforge.net/project/\
-${dict['name']}/${dict['name']}/${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--enable-cap'
         '--enable-etcdir=/etc'
         '--enable-maildir-support'
@@ -55,22 +42,14 @@ ${dict['name']}/${dict['name']}/${dict['version']}/${dict['file']}"
         '--enable-pcre'
         '--enable-unicode9'
         '--enable-zsh-secure-free'
+        "--prefix=${dict['prefix']}"
         '--with-tcsetpgrp'
     )
-    # Work around configure issues with Xcode 12.
-    # https://www.zsh.org/mla/workers/2020/index.html
-    # https://github.com/Homebrew/homebrew-core/issues/64921
-    if koopa_is_macos
-    then
-        CFLAGS="-Wno-implicit-function-declaration ${CFLAGS:-}"
-        export CFLAGS
-    fi
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
-    "${app['make']}" install.info
+    dict['url']="https://downloads.sourceforge.net/project/zsh/zsh/\
+${dict['version']}/zsh-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

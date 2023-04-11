@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zlib.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://www.zlib.net/
