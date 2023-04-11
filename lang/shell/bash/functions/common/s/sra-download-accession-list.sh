@@ -14,7 +14,7 @@ koopa_sra_download_accession_list() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['efetch']="$(koopa_locate_efetch)"
     app['esearch']="$(koopa_locate_esearch)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
     dict['srp_id']=''

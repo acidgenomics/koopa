@@ -94,7 +94,7 @@ koopa_r_configure_environ() {
         app['ln']="$(koopa_locate_ln)"
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
-        app['sed']="$(koopa_locate_sed)"
+        app['sed']="$(koopa_locate_sed --allow-system)"
         app['strip']="$(koopa_locate_strip)"
         app['tar']="$(koopa_locate_tar)"
         app['texi2dvi']="$(koopa_locate_texi2dvi)"
