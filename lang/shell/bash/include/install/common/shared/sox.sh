@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SoX.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/sox.rb
@@ -17,6 +17,7 @@ main() {
     conf_args=(
         '--disable-debug'
         '--disable-dependency-tracking'
+        '--disable-static'
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://downloads.sourceforge.net/project/sox/sox/\
