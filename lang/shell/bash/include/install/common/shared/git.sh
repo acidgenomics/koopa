@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-10.
     #
     # If system doesn't have gettext (msgfmt) installed:
     # Note that this doesn't work on Ubuntu 18 LTS.
@@ -19,7 +19,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'autoconf' 'make'
     koopa_activate_app \
         'expat' \
@@ -47,13 +46,21 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    koopa_assert_is_dir \
-        "${dict['curl']}" \
-        "${dict['expat']}" \
-        "${dict['libiconv']}" \
-        "${dict['openssl']}" \
-        "${dict['pcre2']}" \
-        "${dict['zlib']}"
+    conf_args=(
+        "--prefix=${dict['prefix']}"
+        "--with-curl=${dict['curl']}"
+        "--with-editor=${app['vim']}"
+        "--with-expat=${dict['expat']}"
+        "--with-iconv=${dict['libiconv']}"
+        "--with-libpcre2=${dict['pcre2']}"
+        "--with-openssl=${dict['openssl']}"
+        "--with-pager=${app['less']}"
+        "--with-perl=${app['perl']}"
+        "--with-python=${app['python']}"
+        "--with-shell=${app['bash']}"
+        "--with-zlib=${dict['zlib']}"
+        '--without-tcltk'
+    )
     dict['url']="${dict['mirror_url']}/${dict['name']}/\
 ${dict['name']}-${dict['version']}.tar.gz"
     dict['htmldocs_url']="${dict['mirror_url']}/${dict['name']}/\
@@ -73,21 +80,6 @@ ${dict['name']}/${dict['name']}-manpages-${dict['version']}.tar.xz"
         "$(koopa_basename "${dict['manpages_url']}")" \
         "${dict['prefix']}/share/man"
     koopa_cd 'src'
-    conf_args=(
-        "--prefix=${dict['prefix']}"
-        "--with-curl=${dict['curl']}"
-        "--with-editor=${app['vim']}"
-        "--with-expat=${dict['expat']}"
-        "--with-iconv=${dict['libiconv']}"
-        "--with-libpcre2=${dict['pcre2']}"
-        "--with-openssl=${dict['openssl']}"
-        "--with-pager=${app['less']}"
-        "--with-perl=${app['perl']}"
-        "--with-python=${app['python']}"
-        "--with-shell=${app['bash']}"
-        "--with-zlib=${dict['zlib']}"
-        '--without-tcltk'
-    )
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     "${app['make']}" configure

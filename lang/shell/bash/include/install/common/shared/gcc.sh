@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -62,58 +62,20 @@ main() {
     #   https://www.linuxquestions.org/questions/linux-software-2/
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make'
-    deps=(
-        'gmp'
-        'mpfr'
-        'mpc'
-        'isl'
-        'zstd'
-    )
+    deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['isl']="$(koopa_app_prefix 'isl')"
-    dict['jobs']="$(koopa_cpu_count)"
     dict['mpc']="$(koopa_app_prefix 'mpc')"
     dict['mpfr']="$(koopa_app_prefix 'mpfr')"
-    dict['name']='gcc'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
-    koopa_assert_is_dir \
-        "${dict['gmp']}" \
-        "${dict['isl']}" \
-        "${dict['mpc']}" \
-        "${dict['mpfr']}" \
-        "${dict['zstd']}"
-    # GCC 12 requires custom patches by iains to build on Apple Silicon.
-    if koopa_is_macos && \
-        [[ "${dict['arch']}" == 'arm64' ]] && \
-        [[ "${dict['version']}" == '12.2.0' ]]
-    then
-        dict['file']="gcc-12-2-darwin.tar.gz"
-        dict['url']="https://github.com/iains/gcc-12-branch/archive/refs/\
-heads/${dict['file']}"
-    else
-        dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-        dict['url']="${dict['gnu_mirror']}/${dict['name']}/\
-${dict['name']}-${dict['version']}/${dict['file']}"
-    fi
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_mv "${dict['name']}-"*'/' 'src/'
-    koopa_mkdir 'build'
-    koopa_cd 'build'
     conf_args=(
         '-v'
-        "--prefix=${dict['prefix']}"
         '--disable-multilib'
         '--disable-nls'
         '--enable-checking=release'
@@ -121,6 +83,7 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         '--enable-libstdcxx-time'
         '--enable-lto'
+        "--prefix=${dict['prefix']}"
         '--with-build-config=bootstrap-debug'
         # Required dependencies.
         "--with-gmp=${dict['gmp']}"
@@ -146,11 +109,22 @@ ${dict['name']}-${dict['version']}/${dict['file']}"
             '--with-system-zlib'
         )
     fi
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ../src/configure --help
-    ../src/configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+        dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+        dict['maj_min_ver2']="${dict['maj_min_ver2']//./-}"
+        dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
+archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
+    else
+        dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
+gcc-${dict['version']}.tar.xz"
+    fi
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_mkdir 'build'
+    koopa_cd 'build'
+    koopa_ln '../src/configure' 'configure'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

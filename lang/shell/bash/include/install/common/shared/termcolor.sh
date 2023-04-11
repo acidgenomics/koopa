@@ -10,7 +10,6 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/termcolor.rb
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']='termcolor'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

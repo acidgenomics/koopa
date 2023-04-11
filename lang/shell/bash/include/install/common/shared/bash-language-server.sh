@@ -3,6 +3,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='node-package' \
-        --name='bash-language-server' \
-        "$@"
+        --name='bash-language-server'
 }

@@ -3,18 +3,11 @@
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only \
-        'autoconf' \
-        'automake' \
-        'make' \
-        'pkg-config'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
+    koopa_activate_app --build-only 'autoconf' 'automake' 'pkg-config'
     dict['compress_ext']='bz2'
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -23,9 +16,9 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         # > '--enable-maintainer-mode'
-        "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
         '--disable-silent-rules'
+        "--prefix=${dict['prefix']}"
     )
     case "${dict['name']}" in
         'libgpg-error')
@@ -110,24 +103,18 @@ main() {
             dict['base_url']="${dict['base_url']}/v${dict['maj_min_ver']}"
             ;;
     esac
-    dict['tar_file']="${dict['name']}-${dict['version']}.\
+    dict['url']="${dict['base_url']}/${dict['name']}-${dict['version']}.\
 tar.${dict['compress_ext']}"
-    dict['tar_url']="${dict['base_url']}/${dict['tar_file']}"
-    koopa_download "${dict['tar_url']}" "${dict['tar_file']}"
-    koopa_extract "${dict['tar_file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_print_env
+    koopa_download "${dict['tar_url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     case "${dict['name']}" in
         'gnupg')
-            # May only need to apply this to 2.3.8.
+            # NOTE We may only need to apply this to 2.3.8.
             gnupg_patch_dirmngr
             ;;
     esac
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
 

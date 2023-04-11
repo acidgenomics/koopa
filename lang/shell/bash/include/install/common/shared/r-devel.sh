@@ -3,6 +3,5 @@
 main() {
     koopa_install_app_subshell \
         --installer='r' \
-        --name='r-devel' \
-        "$@"
+        --name='r-devel'
 }

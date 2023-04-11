@@ -4,7 +4,5 @@ main() {
     koopa_activate_app 'm4'
     koopa_install_app_subshell \
         --installer='gnu-app' \
-        --name='bison' \
-        -D '--enable-relocatable' \
-        "$@"
+        --name='bison'
 }

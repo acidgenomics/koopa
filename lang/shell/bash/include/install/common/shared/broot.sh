@@ -17,6 +17,5 @@ main() {
     # """
     koopa_install_app_subshell \
         --installer='rust-package' \
-        --name='broot' \
-        "$@"
+        --name='broot'
 }

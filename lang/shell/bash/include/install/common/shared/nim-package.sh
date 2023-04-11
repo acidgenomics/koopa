@@ -9,7 +9,6 @@ main() {
     # - https://github.com/nim-lang/nimble/issues/734
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['nim']="$(koopa_locate_nim)"
     app['nimble']="$(koopa_locate_nimble)"
     koopa_assert_is_executable "${app[@]}"

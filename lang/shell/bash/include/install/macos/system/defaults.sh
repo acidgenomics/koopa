@@ -11,7 +11,6 @@ main() {
     #
     # """
     local -A app
-    koopa_assert_has_no_args "$#"
     # > app['scutil']="$(koopa_macos_locate_scutil)"
     # > app['systemsetup']="$(koopa_macos_locate_systemsetup)"
     app['chflags']="$(koopa_macos_locate_chflags)"

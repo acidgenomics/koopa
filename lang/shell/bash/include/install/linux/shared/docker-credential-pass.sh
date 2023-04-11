@@ -10,7 +10,6 @@ main() {
     # @note Updated 2023-04-06.
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['name']='docker-credential-pass'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

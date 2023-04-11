@@ -6,7 +6,6 @@ main() {
     # @note Updated 2022-12-08.
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['installer']="$(koopa_macos_locate_installer)"
     app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"

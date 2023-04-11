@@ -6,7 +6,6 @@ main() {
     # @note Updated 2023-04-06.
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['name']='neofetch'

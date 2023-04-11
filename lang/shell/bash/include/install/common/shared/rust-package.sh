@@ -20,7 +20,6 @@ main() {
     # """
     local -A app dict
     local -a install_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'git' 'rust'
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"

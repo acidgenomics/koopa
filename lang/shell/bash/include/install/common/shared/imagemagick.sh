@@ -6,7 +6,7 @@
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # Also consider requiring:
     # - ghostscript
@@ -30,10 +30,9 @@ main() {
     # - https://imagemagick.org/script/advanced-linux-installation.php
     # - https://download.imagemagick.org/ImageMagick/download/releases/
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args deps
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     deps=(
         'zlib'
         'zstd'
@@ -68,26 +67,19 @@ main() {
         deps+=('gcc')
     fi
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
-    dict['file']="ImageMagick-${dict['version']}.tar.xz"
-    dict['url']="https://imagemagick.org/archive/releases/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "ImageMagick-${dict['mmp_ver']}"
     conf_args=(
+        '--disable-static'
         "--prefix=${dict['prefix']}"
         '--with-modules'
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://imagemagick.org/archive/releases/\
+ImageMagick-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

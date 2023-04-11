@@ -15,6 +15,5 @@ main() {
     # """
     koopa_install_app_subshell \
         --installer='python-venv' \
-        --name='apache-airflow' \
-        "$@"
+        --name='apache-airflow'
 }

@@ -13,7 +13,6 @@ main() {
     #     bootstrap/bootstrap-haskell
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'curl'
     dict['build_prefix']="$(koopa_init_dir 'build')"
     dict['jobs']="$(koopa_cpu_count)"

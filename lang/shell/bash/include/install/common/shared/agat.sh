@@ -11,8 +11,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_app_subshell \
         --installer='conda-env' \
-        --name='agat' \
-        "$@"
+        --name='agat'
     # Generated using 'diff -u agat agat-1 > agat.patch'.
     dict['patch_file']='agat.patch'
     read -r -d '' "dict[patch_string]" << END || true

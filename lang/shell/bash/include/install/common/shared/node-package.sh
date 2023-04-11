@@ -13,7 +13,6 @@ main() {
     # - npm config get prefix
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['node']="$(koopa_locate_node)"
     app['npm']="$(koopa_locate_npm)"
     koopa_assert_is_executable "${app[@]}"

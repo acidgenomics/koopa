@@ -3,47 +3,51 @@
 main() {
     # """
     # Install Ruby.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - https://www.ruby-lang.org/en/downloads/
+    # - https://github.com/conda-forge/ruby-feedstock
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ruby.rb
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args deps
-    koopa_assert_has_no_args "$#"
     deps=(
         'zlib'
         'openssl3'
-        # > 'readline'
+        'readline'
         'libyaml'
+        'libffi'
     )
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    dict['libffi']="$(koopa_app_prefix 'libffi')"
+    dict['libyaml']="$(koopa_app_prefix 'libyaml')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    # Ensure '2.7.1p83' becomes '2.7.1' here, for example.
-    dict['version']="$(koopa_sanitize_version "${dict['version']}")"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    conf_args=(
+        '--disable-install-doc'
+        '--disable-silent-rules'
+        '--enable-load-relative'
+        '--enable-shared'
+        "--prefix=${dict['prefix']}"
+        "--with-libffi-dir=${dict['libffi']}"
+        "--with-libyaml-dir=${dict['libyaml']}"
+        "--with-openssl-dir=${dict['openssl']}"
+        "--with-readline-dir=${dict['readline']}"
+        "--with-zlib-dir=${dict['zlib']}"
+        '--without-gmp'
+    )
+    koopa_is_macos && conf_args+=('--enable-dtrace')
     dict['url']="https://cache.ruby-lang.org/pub/ruby/${dict['maj_min_ver']}/\
 ruby-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    conf_args=(
-        "--prefix=${dict['prefix']}"
-        '--disable-silent-rules'
-        '--enable-shared'
-        '--without-gmp'
-    )
-    koopa_is_macos && conf_args+=('--enable-dtrace')
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

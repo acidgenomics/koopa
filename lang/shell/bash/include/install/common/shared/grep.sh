@@ -7,6 +7,5 @@ main() {
         --name='grep' \
         -D '--disable-dependency-tracking' \
         -D '--disable-nls' \
-        -D '--program-prefix=g' \
-        "$@"
+        -D '--program-prefix=g'
 }

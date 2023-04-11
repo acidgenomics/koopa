@@ -15,7 +15,6 @@ main() {
     # """
     local -A dict
     local -a cmake_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'hdf5'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

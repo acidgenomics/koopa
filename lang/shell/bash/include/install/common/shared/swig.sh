@@ -3,36 +3,29 @@
 main() {
     # """
     # Install swig.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # @seealso
+    # - https://github.com/conda-forge/swig-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/swig.rb
     # """
-    local -A app dict
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make'
-    koopa_activate_app 'zlib' 'pcre2'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='swig'
+    local -A dict
+    local -a conf_args
+    koopa_activate_app 'pcre2'
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://downloads.sourceforge.net/project/${dict['name']}/\
-${dict['name']}/${dict['name']}-${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-dependency-tracking'
+        "--prefix=${dict['prefix']}"
+        "--with-pcre2-prefix=${dict['pcre2']}"
+        '--without-alllang'
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://downloads.sourceforge.net/project/swig/swig/\
+swig-${dict['version']}/swig-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -6,7 +6,6 @@ main() {
     # @note Updated 2023-04-06.
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     app['aws']="$(koopa_locate_aws --allow-system)"
     koopa_assert_is_executable "${app[@]}"

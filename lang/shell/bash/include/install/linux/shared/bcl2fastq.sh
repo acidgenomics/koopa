@@ -25,7 +25,6 @@ main() {
     # """
     local -A app dict
     local -a conf_args deps
-    koopa_assert_has_no_args "$#"
     koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'make'
     deps=(
@@ -83,7 +82,7 @@ main() {
             "--libdir=${dict['prefix']}/lib"
             "toolset=${dict['toolset']}"
             'variant=release'
-            'link=shared,static'
+            'link=shared'
             'threading=multi'
             'runtime-link=shared'
             # This is 'koopa_activate_app' 'pkg-config --cflags' return.

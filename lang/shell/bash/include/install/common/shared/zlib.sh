@@ -3,36 +3,25 @@
 main() {
     # """
     # Install zlib.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://www.zlib.net/
+    # - https://github.com/conda-forge/zlib-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zlib.rb
     # - https://github.com/archlinux/svntogit-packages/blob/master/zlib/
     #     trunk/PKGBUILD
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['name']='zlib'
+    koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://www.zlib.net/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    conf_args=(
-        # > '--enable-static=no'
-        "--prefix=${dict['prefix']}"
-    )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" install
+    conf_args=("--prefix=${dict['prefix']}")
+    dict['url']="https://www.zlib.net/zlib-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

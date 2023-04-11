@@ -5,7 +5,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -37,7 +37,6 @@ main() {
     # """
     local -A app conf_dict dict
     local -a build_deps conf_args deps
-    koopa_assert_has_no_args "$#"
     if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
     then
         koopa_stop \
@@ -225,7 +224,7 @@ main() {
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
+        '--disable-static'
         '--enable-R-profiling'
         '--enable-R-shlib'
         '--enable-byte-compiled-packages'
@@ -233,7 +232,7 @@ main() {
         '--enable-java'
         '--enable-memory-profiling'
         '--enable-shared'
-        '--enable-static'
+        "--prefix=${dict['prefix']}"
         "--with-ICU=${conf_dict['with_icu']}"
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
@@ -295,12 +294,11 @@ main() {
         koopa_print "Revision: ${dict['version']}" > 'SVNINFO'
     else
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-        dict['file']="R-${dict['version']}.tar.gz"
         dict['url']="https://cloud.r-project.org/src/base/\
-R-${dict['maj_ver']}/${dict['file']}"
-        koopa_download "${dict['url']}" "${dict['file']}"
-        koopa_extract "${dict['file']}"
-        koopa_cd "R-${dict['version']}"
+R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
+        koopa_download "${dict['url']}"
+        koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+        koopa_cd 'src'
     fi
     # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
     koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"

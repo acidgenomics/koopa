@@ -44,7 +44,6 @@ main() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_no_args "$#"
     create_args=()
     dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
     export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"

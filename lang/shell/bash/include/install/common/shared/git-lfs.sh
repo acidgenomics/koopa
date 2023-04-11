@@ -12,7 +12,6 @@ main() {
     # - https://github.com/git-lfs/git-lfs/wiki/Installation
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go' 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"

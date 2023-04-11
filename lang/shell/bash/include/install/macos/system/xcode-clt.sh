@@ -23,7 +23,6 @@ main() {
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['sudo']="$(koopa_locate_sudo)"
     app['xcode_select']="$(koopa_macos_locate_xcode_select)"
     app['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
