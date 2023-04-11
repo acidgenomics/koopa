@@ -6,6 +6,7 @@ main() {
     # @note Updated 2023-04-11.
     # """
     local -a files
+    [[ -d '/Library/Frameworks/R.framework' ]] || return 0
     files=(
         '/Applications/R.app'
         '/Library/Frameworks/R.framework'
