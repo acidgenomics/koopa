@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GnuPG gcrypt library.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-11.
     # """
     local -A dict
     local -a conf_args
@@ -105,7 +105,7 @@ main() {
     esac
     dict['url']="${dict['base_url']}/${dict['name']}-${dict['version']}.\
 tar.${dict['compress_ext']}"
-    koopa_download "${dict['tar_url']}"
+    koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     case "${dict['name']}" in
