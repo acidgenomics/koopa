@@ -87,7 +87,7 @@ main() {
   'make_arg' => q[-j${dict['jobs']}],
   'make_install_arg' => q[-j${dict['jobs']}],
   'make_install_make_command' => q[${app['make']}],
-  'makepl_arg' => q[INSTALL_BASE=${dict['prefix']} INSTALLMAN1DIR=${dict['prefix']}/share/man/man1 INSTALLMAN3DIR=${dict['prefix']}/share/man/man3],
+  'makepl_arg' => q[INSTALL_BASE=${dict['prefix']}],
   'mbuild_arg' => q[],
   'mbuild_install_arg' => q[],
   'mbuild_install_build_command' => q[./Build],
