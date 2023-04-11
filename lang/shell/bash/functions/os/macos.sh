@@ -1090,6 +1090,7 @@ koopa_macos_uninstall_system_python() {
         --name='python3.11' \
         --platform='macos' \
         --system \
+        --uninstaller='python' \
         "$@"
 }
 
