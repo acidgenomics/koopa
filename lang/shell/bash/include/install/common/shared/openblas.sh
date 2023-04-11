@@ -56,6 +56,8 @@ END
     "${app['make']}" "PREFIX=${dict['prefix']}" install
     (
         koopa_cd "${dict['prefix']}/lib"
+        # Manually delete static libraries.
+        koopa_rm ./*.a
         koopa_ln \
             "libopenblas.${dict['shared_ext']}" \
             "libblas.${dict['shared_ext']}"
