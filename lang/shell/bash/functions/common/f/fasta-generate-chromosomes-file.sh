@@ -9,7 +9,7 @@ koopa_fasta_generate_chromosomes_file() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['grep']="$(koopa_locate_grep)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''

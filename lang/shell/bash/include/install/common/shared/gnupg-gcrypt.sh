@@ -129,7 +129,7 @@ gnupg_patch_dirmngr() {
     #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
     # """
     local -A app
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     "${app['sed']}" \
         -e '/ks_ldap_free_state/i #if USE_LDAP' \

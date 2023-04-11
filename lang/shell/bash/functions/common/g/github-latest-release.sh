@@ -12,7 +12,7 @@ koopa_github_latest_release() {
     local repo
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for repo in "$@"
     do
