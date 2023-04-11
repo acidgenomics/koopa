@@ -170,9 +170,7 @@ END
         -j "${dict['cpan_config_file']}" \
         "${dict['author']}/${dict['name2']}-${dict['version2']}.tar.gz"
     koopa_assert_is_dir "${dict['lib_prefix']}"
-    # Ensure we burn Perl library path into executables. This will add a line
-    # directly under the shebang.
-    # > dict['lib_string']="BEGIN { unshift @INC, \"${dict['lib_prefix']}\"; }"
+    # Ensure we burn Perl library path into executables.
     dict['lib_string']="use lib \"${dict['lib_prefix']}\";"
     readarray -t bin_files <<< "$( \
         koopa_find \

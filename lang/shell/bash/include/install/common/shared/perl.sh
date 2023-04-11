@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 # NOTE Consider including 'expat', 'gdbm', and possibly 'zlib' here.
+#
 # FIXME This is no longer building Perl documentation files.
+# Seeing 'Manual disabled by Configure' message.
+
+# FIXME Restrict /usr/local here:
+# [-fno-common -DPERL_DARWIN -mmacosx-version-min=13.3 -fno-strict-aliasing -pipe -fstack-protector-strong -I/usr/local/include]
+# [ -mmacosx-version-min=13.3 -fstack-protector-strong -L/usr/local/lib]
 
 main() {
     # """
@@ -17,17 +23,38 @@ main() {
     #
     # @seealso
     # - https://www.cpan.org/src/
+    # - https://metacpan.org/dist/perl/view/INSTALL
     # - https://metacpan.org/pod/distribution/perl/INSTALL
     # - https://perlmaven.com/how-to-build-perl-from-source-code
-    #
+    # - https://github.com/conda-forge/perl-feedstock
+    # - https://github.com/Perl/perl5/blob/blead/Configure
     # """
     local -A app dict
+    local -a conf_args
     koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['sysman']="${dict['prefix']}/share/man/man1"
+    conf_args=(
+        '-d'
+        '-e'
+        '-s'
+        '-Dcf_by=koopa'
+        '-Dcf_email=koopa'
+        '-Dinc_version_list=none'
+        '-Dman1dir=.../../man/man1'
+        '-Dman3dir=.../../man/man3'
+        '-Dmydomain=.koopa'
+        '-Dmyhostname=koopa'
+        '-Dperladmin=koopa'
+        "-Dprefix=${dict['prefix']}"
+        "-Dsysman=${dict['sysman']}"
+        '-Duse64bitall'
+        '-Dusethreads'
+    )
     koopa_is_linux && dict['jobs']=1
     # All Perl 5 releases are currently organized under '5.0'.
     dict['src_maj_min_ver']="$(koopa_major_version "${dict['version']}").0"
@@ -37,7 +64,9 @@ perl-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
-    ./Configure -des -Dprefix="${dict['prefix']}"
+    koopa_mkdir "${dict['sysman']}"
+    ./Configure -h || true
+    ./Configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0
