@@ -3636,13 +3636,9 @@
       "ptardiff",
       "ptargrep"
     ],
-    "build_dependencies": ["make"],
+    "build_dependencies": ["groff", "make"],
     "conservative": true,
-    "date": "2022-08-29",
-    "dependencies": ["make"],
-    "notes": [
-      "Extra dependencies defined here for our Perl package installer."
-    ],
+    "date": "2023-04-11",
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
   },

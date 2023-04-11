@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Likely need to override man1dir and man3dir here.
+
 main() {
     # """
     # Install Perl package.

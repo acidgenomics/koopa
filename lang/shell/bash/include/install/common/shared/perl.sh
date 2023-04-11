@@ -31,12 +31,14 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'make'
+    koopa_activate_app --build-only 'groff' 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['man1dir']="$(koopa_man1_prefix)"
+    dict['man3dir']="$(koopa_man3_prefix)"
     dict['sysman']="${dict['prefix']}/share/man/man1"
     conf_args=(
         '-d'
@@ -45,14 +47,16 @@ main() {
         '-Dcf_by=koopa'
         '-Dcf_email=koopa'
         '-Dinc_version_list=none'
-        '-Dman1dir=.../../man/man1'
-        '-Dman3dir=.../../man/man3'
+        "-Dman1dir=${dict['man1dir']}"
+        "-Dman3dir=${dict['man3dir']}"
         '-Dmydomain=.koopa'
         '-Dmyhostname=koopa'
         '-Dperladmin=koopa'
         "-Dprefix=${dict['prefix']}"
         "-Dsysman=${dict['sysman']}"
         '-Duse64bitall'
+        '-Duselargefiles'
+        '-Duseshrplib'
         '-Dusethreads'
     )
     koopa_is_linux && dict['jobs']=1
