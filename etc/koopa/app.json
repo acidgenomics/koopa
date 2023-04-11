@@ -4508,9 +4508,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-02-27",
+    "date": "2023-04-11",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.13.1"
+    "version": "1.14.1"
   },
   "stow": {
     "aliases": {
@@ -5183,9 +5183,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-31",
+    "date": "2023-04-11",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.33.2"
+    "version": "4.33.3"
   },
   "yt-dlp": {
     "aliases": {

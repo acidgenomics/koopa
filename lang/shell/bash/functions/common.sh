@@ -16173,11 +16173,6 @@ koopa_man1_prefix() {
     return 0
 }
 
-koopa_man3_prefix() {
-    koopa_print "$(koopa_man_prefix)/man3"
-    return 0
-}
-
 koopa_md5sum_check_parallel() {
     local -A app dict
     koopa_assert_has_no_args "$#"
