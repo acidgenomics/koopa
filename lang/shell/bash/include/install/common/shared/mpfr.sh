@@ -4,5 +4,6 @@ main() {
     koopa_activate_app 'gmp'
     koopa_install_app_subshell \
         --installer='gnu-app' \
-        --name='mpfr'
+        --name='mpfr' \
+        -D '--disable-static'
 }
