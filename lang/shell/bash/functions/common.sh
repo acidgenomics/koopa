@@ -2201,7 +2201,7 @@ koopa_aws_s3_ls() {
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
     app['aws']="$(koopa_locate_aws)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
@@ -4759,7 +4759,7 @@ koopa_convert_fastq_to_fasta() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['paste']="$(koopa_locate_paste)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     app['tr']="$(koopa_locate_tr)"
     koopa_assert_is_executable "${app[@]}"
     dict['source_dir']=''
@@ -5062,7 +5062,7 @@ koopa_current_ensembl_version() {
     local str
     koopa_assert_has_no_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     str="$( \
         koopa_parse_url 'ftp://ftp.ensembl.org/pub/README' \
@@ -5842,7 +5842,7 @@ koopa_docker_is_build_recent() {
     koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['days']=7
     pos=()
@@ -6545,7 +6545,7 @@ koopa_fasta_generate_chromosomes_file() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['grep']="$(koopa_locate_grep)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['genome_fasta_file']=''
     dict['output_file']=''
@@ -8448,7 +8448,7 @@ koopa_github_latest_release() {
     local repo
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for repo in "$@"
     do
@@ -16431,7 +16431,7 @@ koopa_mv() {
 koopa_nfiletypes() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort)"
     app['uniq']="$(koopa_locate_uniq)"
     koopa_assert_is_executable "${app[@]}"
@@ -16586,7 +16586,7 @@ koopa_parent_dir() {
     local -A app dict
     local -a pos
     local file
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['cd_tail']=''
     dict['n']=1
@@ -17223,7 +17223,7 @@ koopa_r_configure_environ() {
         app['ln']="$(koopa_locate_ln)"
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
-        app['sed']="$(koopa_locate_sed)"
+        app['sed']="$(koopa_locate_sed --allow-system)"
         app['strip']="$(koopa_locate_strip)"
         app['tar']="$(koopa_locate_tar)"
         app['texi2dvi']="$(koopa_locate_texi2dvi)"
@@ -20238,7 +20238,7 @@ koopa_sra_download_accession_list() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['efetch']="$(koopa_locate_efetch)"
     app['esearch']="$(koopa_locate_esearch)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
     dict['srp_id']=''

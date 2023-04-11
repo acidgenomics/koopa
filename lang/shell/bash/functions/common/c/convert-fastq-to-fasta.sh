@@ -27,7 +27,7 @@ koopa_convert_fastq_to_fasta() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['paste']="$(koopa_locate_paste)"
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     app['tr']="$(koopa_locate_tr)"
     koopa_assert_is_executable "${app[@]}"
     dict['source_dir']=''

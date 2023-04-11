@@ -10,7 +10,7 @@ koopa_nfiletypes() {
     # """
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    app['sed']="$(koopa_locate_sed)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     app['sort']="$(koopa_locate_sort)"
     app['uniq']="$(koopa_locate_uniq)"
     koopa_assert_is_executable "${app[@]}"
