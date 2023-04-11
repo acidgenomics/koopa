@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Likely need to override man1dir and man3dir here.
-
 main() {
     # """
     # Install Perl package.
@@ -32,18 +30,18 @@ main() {
     local -a bin_files
     local bin_file
     koopa_activate_app --build-only 'perl'
-    app['bash']="$(koopa_locate_bash --allow-system)"
-    app['bzip2']="$(koopa_locate_bzip2 --allow-system)"
+    app['bash']="$(koopa_locate_bash)"
+    app['bzip2']="$(koopa_locate_bzip2)"
     app['cpan']="$(koopa_locate_cpan)"
-    app['gpg']="$(koopa_locate_gpg --allow-system)"
-    app['gzip']="$(koopa_locate_gzip --allow-system)"
-    app['less']="$(koopa_locate_less --allow-system)"
-    app['make']="$(koopa_locate_make --allow-system)"
-    app['patch']="$(koopa_locate_patch --allow-system)"
+    app['gpg']="$(koopa_locate_gpg)"
+    app['gzip']="$(koopa_locate_gzip)"
+    app['less']="$(koopa_locate_less)"
+    app['make']="$(koopa_locate_make)"
+    app['patch']="$(koopa_locate_patch)"
     app['perl']="$(koopa_locate_perl)"
-    app['tar']="$(koopa_locate_tar --allow-system)"
-    app['unzip']="$(koopa_locate_unzip --allow-system)"
-    app['wget']="$(koopa_locate_wget --allow-system)"
+    app['tar']="$(koopa_locate_tar)"
+    app['unzip']="$(koopa_locate_unzip)"
+    app['wget']="$(koopa_locate_wget)"
     koopa_assert_is_executable "${app[@]}"
     dict['cpan_prefix']="$(koopa_init_dir 'cpan')"
     dict['jobs']="$(koopa_cpu_count)"
