@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-10.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -13,50 +13,60 @@ main() {
     # @seealso
     # - https://curl.haxx.se/docs/install.html
     # - https://curl.se/docs/sslcerts.html
+    # - https://github.com/conda-forge/curl-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/curl.rb
     # - https://stackoverflow.com/questions/30017397
     # """
-    local -A app dict
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    local -A dict
+    local -a conf_args
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'ca-certificates' \
         'zlib' \
         'zstd' \
         'openssl3'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='curl'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['ssl']="$(koopa_app_prefix 'openssl3')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
-    dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
-    koopa_assert_is_file "${dict['cacert']}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.xz"
-    dict['version2']="${dict['version']//./_}"
-    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
-download/${dict['name']}-${dict['version2']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['ca_bundle']="${dict['ca_certificates']}/share/ca-certificates/\
+cacert.pem"
+    koopa_assert_is_file "${dict['ca_bundle']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
+        '--disable-debug'
+        '--disable-dependency-tracking'
+        '--disable-ldap'
+        '--disable-silent-rules'
+        '--disable-static'
         '--enable-versioned-symbols'
-        "--with-ca-bundle=${dict['cacert']}"
+        "--prefix=${dict['prefix']}"
+        "--with-ca-bundle=${dict['ca_bundle']}"
         "--with-ssl=${dict['ssl']}"
         "--with-zlib=${dict['zlib']}"
         "--with-zstd=${dict['zstd']}"
         '--without-ca-path'
+        '--without-gssapi'
+        '--without-libidn2'
+        '--without-libpsl'
+        '--without-librtmp'
+        '--without-libssh2'
+        '--without-nghttp2'
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    if koopa_is_macos
+    then
+        conf_args+=(
+            '--with-default-ssl-backend=openssl'
+            '--with-secure-transport'
+        )
+    fi
+    dict['version2']="${dict['version']//./_}"
+    dict['url']="https://github.com/curl/curl/releases/download/\
+curl-${dict['version2']}/curl-${dict['version']}.tar.xz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

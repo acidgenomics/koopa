@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -22,7 +22,6 @@ main() {
     # """
     local -A app dict
     local -a scons_args
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app \
         'zlib' \
@@ -178,5 +177,6 @@ END
     )
     "${app['scons']}" "${scons_args[@]}"
     "${app['scons']}" "${scons_args[@]}" install
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }

@@ -11,7 +11,6 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args deps
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     deps=(
         'zlib'

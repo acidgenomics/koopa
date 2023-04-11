@@ -8,7 +8,6 @@ main() {
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'go'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"

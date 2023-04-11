@@ -4,8 +4,9 @@
       "homebrew": true
     },
     "bin": ["ack"],
-    "date": "2023-03-07",
+    "date": "2023-04-11",
     "dependencies": ["perl"],
+    "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
     "version": "3.7.0"
   },
@@ -76,8 +77,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
-    "dependencies": ["sqlite"],
+    "date": "2023-04-10",
     "url": ["https://apr.apache.org/"],
     "version": "1.7.2"
   },
@@ -219,14 +219,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-04-04",
+    "date": "2023-04-10",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.9"
+    "version": "2.11.11"
   },
   "azure-cli": {
     "aliases": {
@@ -646,9 +646,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-03-24",
+    "date": "2023-04-09",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.0"
+    "version": "2.33.1"
   },
   "cli11": {
     "aliases": {
@@ -676,10 +676,10 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-02-08",
-    "dependencies": ["ncurses", "openssl3"],
+    "date": "2023-04-10",
+    "dependencies": ["openssl3"],
     "url": ["https://cmake.org/download/"],
-    "version": "3.25.2"
+    "version": "3.26.3"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1174,13 +1174,14 @@
       "homebrew": true
     },
     "bin": ["exiftool"],
-    "date": "2022-11-08",
+    "date": "2023-04-11",
     "dependencies": ["perl"],
+    "man1": ["exiftool.1"],
     "url": [
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
     ],
-    "version": "12.50"
+    "version": "12.60"
   },
   "expat": {
     "aliases": {
@@ -2405,12 +2406,16 @@
       "homebrew": true
     },
     "bin": ["less"],
-    "build_dependencies": ["autoconf", "groff", "make"],
-    "date": "2023-03-07",
+    "build_dependencies": ["make"],
+    "date": "2023-04-10",
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["less.1"],
-    "url": ["https://github.com/gwsw/less/", "https://ftp.gnu.org/gnu/less/"],
-    "version": "629"
+    "url": [
+      "https://www.greenwoodsoftware.com/less/index.html",
+      "https://github.com/gwsw/less/",
+      "https://ftp.gnu.org/gnu/less/"
+    ],
+    "version": "608"
   },
   "lesspipe": {
     "aliases": {
@@ -2663,7 +2668,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-08-29",
-    "dependencies": ["openssl3"],
+    "dependencies": ["openssl3", "zlib"],
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
@@ -2769,7 +2774,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-11-08",
-    "dependencies": ["icu4c", "readline", "zlib"],
+    "dependencies": ["icu4c", "libiconv", "readline", "zlib"],
     "man1": ["xml2-config.1"],
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.3"
@@ -3036,10 +3041,10 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-02-24",
+    "date": "2023-04-10",
     "dependencies": ["python3.11"],
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.0.1"
+    "version": "1.1.0"
   },
   "miller": {
     "aliases": {
@@ -3371,8 +3376,8 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "build_dependencies": ["git", "rust"],
-    "date": "2023-04-05",
+    "build_dependencies": ["git", "pkg-config", "rust"],
+    "date": "2023-04-10",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
     "version": "0.78.0"
@@ -3486,8 +3491,9 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-17",
+    "date": "2023-04-10",
     "dependencies": ["libedit", "openssl3", "zlib"],
+    "enabled": false,
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
   },
@@ -3613,32 +3619,11 @@
       "debian": ["libperl-dev", "perl"],
       "homebrew": true
     },
-    "bin": [
-      "cpan",
-      "perl",
-      "perlbug",
-      "perldoc",
-      "perlivp",
-      "perlthanks",
-      "piconv",
-      "pl2pm",
-      "pod2html",
-      "pod2man",
-      "pod2text",
-      "pod2usage",
-      "podchecker",
-      "prove",
-      "ptar",
-      "ptardiff",
-      "ptargrep"
-    ],
-    "build_dependencies": ["make"],
+    "bin": ["cpan", "perl"],
+    "build_dependencies": ["groff", "make"],
     "conservative": true,
-    "date": "2022-08-29",
-    "dependencies": ["make"],
-    "notes": [
-      "Extra dependencies defined here for our Perl package installer."
-    ],
+    "date": "2023-04-11",
+    "man1": ["cpan.1", "perl.1"],
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.0"
   },
@@ -3826,10 +3811,10 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2023-01-03",
+    "date": "2023-04-10",
     "dependencies": ["python3.11"],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.14.0"
+    "version": "2.15.0"
   },
   "pylint": {
     "aliases": {
@@ -3853,14 +3838,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-03-03",
+    "date": "2023-04-09",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.2.2"
+    "version": "7.3.0"
   },
   "python3.10": {
     "aliases": {
@@ -4140,8 +4125,9 @@
   },
   "rename": {
     "bin": ["rename"],
-    "date": "2023-02-08",
+    "date": "2023-04-11",
     "dependencies": ["perl"],
+    "man1": ["rename.1"],
     "url": ["https://metacpan.org/dist/File-Rename/"],
     "version": "2.01"
   },
@@ -4522,9 +4508,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-02-27",
+    "date": "2023-04-11",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.13.1"
+    "version": "1.14.1"
   },
   "stow": {
     "aliases": {
@@ -4581,8 +4567,8 @@
     "bin": ["swig"],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2023-01-03",
-    "dependencies": ["pcre2", "zlib"],
+    "date": "2023-04-11",
+    "dependencies": ["pcre2"],
     "url": ["http://www.swig.org/"],
     "version": "4.1.1"
   },
@@ -5197,9 +5183,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-03-31",
+    "date": "2023-04-11",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.33.2"
+    "version": "4.33.3"
   },
   "yt-dlp": {
     "aliases": {

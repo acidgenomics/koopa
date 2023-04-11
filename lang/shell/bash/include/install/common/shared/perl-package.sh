@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Likely need to override man1dir and man3dir here.
+
 main() {
     # """
     # Install Perl package.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-04-11.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -29,7 +31,6 @@ main() {
     local -A app dict
     local -a bin_files
     local bin_file
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'perl'
     app['bash']="$(koopa_locate_bash --allow-system)"
     app['bzip2']="$(koopa_locate_bzip2 --allow-system)"
@@ -171,9 +172,7 @@ END
         -j "${dict['cpan_config_file']}" \
         "${dict['author']}/${dict['name2']}-${dict['version2']}.tar.gz"
     koopa_assert_is_dir "${dict['lib_prefix']}"
-    # Ensure we burn Perl library path into executables. This will add a line
-    # directly under the shebang.
-    # > dict['lib_string']="BEGIN { unshift @INC, \"${dict['lib_prefix']}\"; }"
+    # Ensure we burn Perl library path into executables.
     dict['lib_string']="use lib \"${dict['lib_prefix']}\";"
     readarray -t bin_files <<< "$( \
         koopa_find \

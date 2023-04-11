@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Subversion.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # Requires Apache Portable Runtime (APR) library and Apache Portable Runtime
     # Utility (APRUTIL) library.
@@ -18,10 +18,9 @@ main() {
     #   https://serverfault.com/questions/522646/
     # - https://lists.apache.org/thread/3qbhp66woztkgzq8sx6vfb7cjn6mcl9y
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'apr' \
@@ -32,24 +31,19 @@ main() {
         'ruby' \
         'serf' \
         'sqlite'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    # > dict['mirror']='https://mirrors.ocf.berkeley.edu/apache'
-    dict['mirror']='https://archive.apache.org/dist'
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='subversion'
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['apr']="$(koopa_app_prefix 'apr')"
     dict['apr_util']="$(koopa_app_prefix 'apr-util')"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['serf']="$(koopa_app_prefix 'serf')"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-debug'
         '--disable-mod-activation'
         '--disable-plaintext-password-storage'
+        '--disable-static'
         '--enable-optimize'
+        "--prefix=${dict['prefix']}"
         "--with-apr=${dict['apr']}"
         "--with-apr-util=${dict['apr_util']}"
         '--with-apxs=no'
@@ -62,16 +56,11 @@ main() {
         '--without-gpg-agent'
         '--without-jikes'
     )
-    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
-    dict['url']="${dict['mirror']}/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://archive.apache.org/dist/subversion/\
+subversion-${dict['version']}.tar.bz2"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -10,7 +10,6 @@ main() {
     # - https://github.com/rbenv/ruby-build
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['name']='rbenv'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

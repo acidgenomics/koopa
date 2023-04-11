@@ -9,7 +9,6 @@ main() {
     # compile vterm. Not sure how to improve this.
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/syl20bnr/spacemacs.git'

@@ -5,7 +5,6 @@ main() {
     # Uninstall Microsoft OneDrive.
     # @note Updated 2021-10-30.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_rm --sudo \
         '/Applications/OneDrive.app'
     koopa_rm \

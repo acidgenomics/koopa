@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -14,11 +14,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args deps
-    koopa_assert_has_no_args "$#"
-    koopa_activate_app --build-only \
-        'make' \
-        'pkg-config' \
-        'python3.11'
+    koopa_activate_app --build-only 'pkg-config' 'python3.11'
     deps=(
         'c-ares'
         'jemalloc'
@@ -29,27 +25,19 @@ main() {
         'boost'
     )
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['boost']="$(koopa_app_prefix 'boost')"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='nghttp2'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
-download/v${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
     conf_args=(
-        "--prefix=${dict['prefix']}"
         '--disable-examples'
         '--disable-hpack-tools'
         '--disable-python-bindings'
         '--disable-silent-rules'
+        '--disable-static'
         '--enable-app'
+        "--prefix=${dict['prefix']}"
         "--with-boost=${dict['boost']}"
         '--with-jemalloc'
         '--with-libcares'
@@ -60,11 +48,11 @@ download/v${dict['version']}/${dict['file']}"
         '--without-systemd'
         "PYTHON=${app['python']}"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    dict['url']="https://github.com/nghttp2/nghttp2/releases/download/\
+v${dict['version']}/nghttp2-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

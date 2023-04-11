@@ -10,7 +10,6 @@ main() {
     # - https://github.com/quarto-dev/quarto-cli/
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch2)" # e.g. "amd64".
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

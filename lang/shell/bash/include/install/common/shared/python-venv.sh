@@ -57,7 +57,6 @@ main() {
     app['python']="$("${dict['locate_python']}" --realpath)"
     koopa_assert_is_executable "${app[@]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_no_args "$#"
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
     case "${dict['name']}" in

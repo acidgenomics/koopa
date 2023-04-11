@@ -3,23 +3,21 @@
 main() {
     # """
     # Install mpdecimal.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-11.
     # """
-    local -A app dict
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['name']='mpdecimal'
+    local -A dict
+    local -a conf_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://www.bytereef.org/software/${dict['name']}/\
-releases/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    ./configure --prefix="${dict['prefix']}"
-    "${app['make']}"
-    "${app['make']}" install
+    conf_args=(
+        '--disable-static'
+        "--prefix=${dict['prefix']}"
+    )
+    dict['url']="https://www.bytereef.org/software/mpdecimal/releases/\
+mpdecimal-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

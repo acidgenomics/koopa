@@ -10,7 +10,6 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/c-ares.rb
     # """
     local -A dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

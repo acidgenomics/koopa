@@ -21,7 +21,6 @@ main() {
     # - weathericons.ttf
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_activate_app --build-only 'chemacs'
     if koopa_is_macos
     then

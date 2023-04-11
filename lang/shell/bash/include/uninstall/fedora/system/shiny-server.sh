@@ -7,7 +7,6 @@ main() {
     #
     # Consider deleting 'shiny' user.
     # """
-    koopa_assert_has_no_args "$#"
     koopa_fedora_dnf_remove 'shiny-server'
     return 0
 }

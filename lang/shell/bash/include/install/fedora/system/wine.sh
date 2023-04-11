@@ -12,7 +12,6 @@ main() {
     # - https://wiki.winehq.org/Fedora
     # """
     local -A app dict
-    koopa_assert_has_no_args "$#"
     koopa_asset_is_admin
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
