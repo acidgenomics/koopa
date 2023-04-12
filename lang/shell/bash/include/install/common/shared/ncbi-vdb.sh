@@ -3,7 +3,7 @@
 main() {
     # """
     # Install NCBI VDB.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-12.
     #
     # VDB is the database engine that all SRA tools use.
     #
