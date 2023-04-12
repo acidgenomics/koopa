@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_nushell() {
+koopa_install_ksh93() {
     koopa_install_app \
-        --name='nushell' \
+        --name='ksh93' \
         "$@"
     return 0
 }

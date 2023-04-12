@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Just do this with samtools...simpler.
+
 koopa_sambamba_sort() {
     # """
     # Sort multiple BAM files in a directory.
