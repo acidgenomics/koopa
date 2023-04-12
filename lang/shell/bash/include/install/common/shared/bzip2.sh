@@ -43,7 +43,8 @@ main() {
     elif koopa_is_macos
     then
         # This is the approach used by conda-forge recipe.
-        app['cc']='gcc'
+        app['cc']="$(koopa_locate_gcc --only-system)"
+        koopa_assert_is_executable "${app['cc']}"
         "${app['cc']}" \
             '-shared' \
             '-Wl,-install_name' \
@@ -55,8 +56,8 @@ main() {
             'randtable.o' \
             'compress.o' \
             'decompress.o' \
-            'bzlib.o'
-            # > "${LDFLAGS:-}"
+            'bzlib.o' \
+            "${LDFLAGS:-}"
     fi
     if koopa_is_linux
     then
@@ -87,5 +88,6 @@ main() {
                 "libbz2.${dict['shared_ext']}"
         )
     fi
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
