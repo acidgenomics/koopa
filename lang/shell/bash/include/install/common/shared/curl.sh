@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-12.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -15,6 +15,7 @@ main() {
     # - https://curl.se/docs/sslcerts.html
     # - https://github.com/conda-forge/curl-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/curl.rb
+    # - https://www.linuxfromscratch.org/blfs/view/svn/basicnet/curl.html
     # - https://stackoverflow.com/questions/30017397
     # """
     local -A dict
@@ -40,10 +41,11 @@ cacert.pem"
         '--disable-ldap'
         '--disable-silent-rules'
         '--disable-static'
+        '--enable-threaded-resolver'
         '--enable-versioned-symbols'
         "--prefix=${dict['prefix']}"
         "--with-ca-bundle=${dict['ca_bundle']}"
-        "--with-ssl=${dict['ssl']}"
+        "--with-openssl=${dict['ssl']}"
         "--with-zlib=${dict['zlib']}"
         "--with-zstd=${dict['zstd']}"
         '--without-ca-path'

@@ -32,7 +32,6 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
         '--disable-cairo'
-        '--disable-static'
         '--disable-xft'
         '--enable-shared'
         '--enable-threads'
@@ -56,5 +55,6 @@ fltk-${dict['version']}-source.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_make_build "${conf_args[@]}"
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
