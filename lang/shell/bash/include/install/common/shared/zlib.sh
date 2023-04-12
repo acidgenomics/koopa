@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zlib.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-04-12.
     #
     # @seealso
     # - https://www.zlib.net/
@@ -23,5 +23,6 @@ main() {
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_make_build "${conf_args[@]}"
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
