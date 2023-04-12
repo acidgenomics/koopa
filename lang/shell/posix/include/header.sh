@@ -99,7 +99,6 @@ __koopa_activate_koopa() {
     _koopa_activate_gcc_colors || return 1
     _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1
-    _koopa_activate_secrets || return 1
     _koopa_activate_ssh_key || return 1
     _koopa_activate_tealdeer || return 1
     if _koopa_is_macos
@@ -129,6 +128,8 @@ __koopa_activate_koopa() {
             || return 1
         _koopa_activate_today_bucket || return 1
     fi
+    _koopa_activate_profile_private || return 1
+    _koopa_activate_secrets || return 1
     _koopa_activate_aliases || return 1
     return 0
 }
