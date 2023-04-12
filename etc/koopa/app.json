@@ -2399,6 +2399,17 @@
     ],
     "version": "0.48.0"
   },
+  "ksh93": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["ksh"],
+    "build_dependencies": ["make"],
+    "date": "2023-04-12",
+    "enabled": false,
+    "man1": ["ksh.1"],
+    "version": "1.0.4"
+  },
   "lame": {
     "aliases": {
       "homebrew": true

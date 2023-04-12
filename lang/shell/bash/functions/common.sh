@@ -11437,6 +11437,13 @@ koopa_install_koopa() {
     return 0
 }
 
+koopa_install_ksh93() {
+    koopa_install_app \
+        --name='ksh93' \
+        "$@"
+    return 0
+}
+
 koopa_install_lame() {
     koopa_install_app \
         --name='lame' \
@@ -23533,6 +23540,12 @@ koopa_uninstall_koopa() {
         "${dict['config_prefix']}" \
         "${dict['koopa_prefix']}"
     return 0
+}
+
+koopa_uninstall_ksh93() {
+    koopa_uninstall_app \
+        --name='ksh93' \
+        "$@"
 }
 
 koopa_uninstall_lame() {
