@@ -2596,6 +2596,7 @@
     "conservative": true,
     "date": "2023-03-21",
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
+    "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.6.3"
   },
