@@ -4559,9 +4559,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-04-11",
+    "date": "2023-04-12",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.14.1"
+    "version": "1.14.2"
   },
   "stow": {
     "aliases": {
