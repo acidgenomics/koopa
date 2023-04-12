@@ -3,14 +3,14 @@
 main() {
     # """
     # Install ShellCheck.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-12.
     #
     # @seealso
     # - https://hackage.haskell.org/package/ShellCheck
     # - https://github.com/koalaman/shellcheck/blob/master/ShellCheck.cabal
     # """
     local -A app dict
-    loacl -a build_deps
+    local -a build_deps
     build_deps=('git' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     app['cabal']="$(koopa_locate_cabal)"
