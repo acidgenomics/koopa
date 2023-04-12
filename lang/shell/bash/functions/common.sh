@@ -10526,7 +10526,6 @@ koopa_install_bash() {
     koopa_install_app \
         --name='bash' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/bash"
     return 0
 }
 
@@ -10745,7 +10744,6 @@ koopa_install_dash() {
     koopa_install_app \
         --name='dash' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/dash"
     return 0
 }
 
@@ -10873,7 +10871,6 @@ koopa_install_fish() {
     koopa_install_app \
         --name='fish' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/fish"
     return 0
 }
 
@@ -11900,7 +11897,6 @@ koopa_install_nushell() {
     koopa_install_app \
         --name='nushell' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/nu"
     return 0
 }
 
@@ -12790,7 +12786,6 @@ koopa_install_zsh() {
     koopa_install_app --name='zsh' "$@"
     dict['zsh']="$(koopa_app_prefix 'zsh')"
     koopa_chmod --recursive 'g-w' "${dict['zsh']}/share/zsh"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/zsh"
     return 0
 }
 
