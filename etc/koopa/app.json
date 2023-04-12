@@ -1013,6 +1013,16 @@
     "url": ["https://curl.se/"],
     "version": "7.88.1"
   },
+  "dash": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["dash"],
+    "build_dependencies": ["make"],
+    "date": "2023-04-12",
+    "dependencies": ["libedit"],
+    "version": "0.5.12"
+  },
   "deeptools": {
     "arch": "amd64",
     "bin": ["deeptools"],

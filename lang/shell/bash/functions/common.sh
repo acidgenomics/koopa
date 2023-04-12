@@ -10741,6 +10741,14 @@ koopa_install_curl7() {
         "$@"
 }
 
+koopa_install_dash() {
+    koopa_install_app \
+        --name='dash' \
+        "$@"
+    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/dash"
+    return 0
+}
+
 koopa_install_deeptools() {
     koopa_install_app \
         --name='deeptools' \
@@ -22980,6 +22988,12 @@ koopa_uninstall_curl() {
 koopa_uninstall_curl7() {
     koopa_uninstall_app \
         --name='curl7' \
+        "$@"
+}
+
+koopa_uninstall_dash() {
+    koopa_uninstall_app \
+        --name='dash' \
         "$@"
 }
 
