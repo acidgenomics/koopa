@@ -3,7 +3,7 @@
 main() {
     # """
     # Install mpdecimal.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-04-12.
     # """
     local -A dict
     local -a conf_args
@@ -19,5 +19,6 @@ mpdecimal-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_make_build "${conf_args[@]}"
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }

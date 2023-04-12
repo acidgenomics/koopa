@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-04-12.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -72,5 +72,6 @@ ${dict['version']}.tar.gz"
             'build/install.sh'
     fi
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
