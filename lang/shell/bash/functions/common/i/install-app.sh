@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Harden against argument passthrough.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-11.
     # """
     local -A app bool dict
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
@@ -275,24 +273,10 @@ ${dict['version2']}"
                 return 0
             fi
         fi
-        case "${dict['mode']}" in
-            'system')
-                dict['prefix']="$(koopa_init_dir --sudo "${dict['prefix']}")"
-                ;;
-            *)
-                dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
-                ;;
-        esac
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
-        then
-            # FIXME Rework this to support empty prefix.
-            koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_install_start "${dict['name']}"
-        fi
+        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
     fi
     if [[ "${bool['deps']}" -eq 1 ]]
     then
@@ -305,19 +289,39 @@ ${dict['version2']}"
                 "$(koopa_to_string "${deps[@]}")"
             for dep in "${deps[@]}"
             do
+                local -a dep_install_args
                 if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
                 then
                     continue
                 fi
+                dep_install_args=()
                 if [[ "${bool['binary']}" -eq 1 ]]
                 then
-                    koopa_cli_install --binary "$dep"
-                else
-                    # FIXME If '--push' is enabled, also need to set it here.
-                    koopa_cli_install "$dep"
+                    dep_install_args+=('--binary')
                 fi
+                if [[ "${bool['push']}" -eq 1 ]]
+                then
+                    dep_install_args+=('--push')
+                fi
+                if [[ "${bool['verbose']}" -eq 1 ]]
+                then
+                    dep_install_args+=('--verbose')
+                fi
+                dep_install_args+=("$dep")
+                koopa_cli_install "${dep_install_args[@]}"
             done
         fi
+    fi
+    if [[ -n "${dict['prefix']}" ]] && [[ ! -d "${dict['prefix']}" ]]
+    then
+        case "${dict['mode']}" in
+            'system')
+                dict['prefix']="$(koopa_init_dir --sudo "${dict['prefix']}")"
+                ;;
+            *)
+                dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
+                ;;
+        esac
     fi
     if [[ "${bool['binary']}" -eq 1 ]]
     then
@@ -508,13 +512,7 @@ man1/${dict2['name']}"
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        # FIXME Rework this to support empty prefix.
-        if [[ -d "${dict['prefix']}" ]]
-        then
-            koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_install_success "${dict['name']}"
-        fi
+        koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"
     fi
     return 0
 }
