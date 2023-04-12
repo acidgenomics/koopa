@@ -3358,6 +3358,7 @@
     "build_dependencies": ["bison", "flex", "make"],
     "date": "2022-09-29",
     "dependencies": ["openssl3", "pcre", "zlib"],
+    "enabled": false,
     "url": "https://nmap.org/",
     "version": "7.93"
   },
