@@ -3,7 +3,7 @@
 main() {
     # """
     # Install NCBI VDB.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-12.
     #
     # VDB is the database engine that all SRA tools use.
     #
@@ -65,5 +65,6 @@ ${dict['version']}.tar.gz"
             'libs/kfg/install.sh'
     fi
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
