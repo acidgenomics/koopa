@@ -10526,7 +10526,6 @@ koopa_install_bash() {
     koopa_install_app \
         --name='bash' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/bash"
     return 0
 }
 
@@ -10741,6 +10740,13 @@ koopa_install_curl7() {
         "$@"
 }
 
+koopa_install_dash() {
+    koopa_install_app \
+        --name='dash' \
+        "$@"
+    return 0
+}
+
 koopa_install_deeptools() {
     koopa_install_app \
         --name='deeptools' \
@@ -10865,7 +10871,6 @@ koopa_install_fish() {
     koopa_install_app \
         --name='fish' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/fish"
     return 0
 }
 
@@ -11432,6 +11437,13 @@ koopa_install_koopa() {
     return 0
 }
 
+koopa_install_ksh93() {
+    koopa_install_app \
+        --name='ksh93' \
+        "$@"
+    return 0
+}
+
 koopa_install_lame() {
     koopa_install_app \
         --name='lame' \
@@ -11892,7 +11904,6 @@ koopa_install_nushell() {
     koopa_install_app \
         --name='nushell' \
         "$@"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/nu"
     return 0
 }
 
@@ -12782,7 +12793,6 @@ koopa_install_zsh() {
     koopa_install_app --name='zsh' "$@"
     dict['zsh']="$(koopa_app_prefix 'zsh')"
     koopa_chmod --recursive 'g-w' "${dict['zsh']}/share/zsh"
-    koopa_enable_shell_for_all_users "$(koopa_bin_prefix)/zsh"
     return 0
 }
 
@@ -22983,6 +22993,12 @@ koopa_uninstall_curl7() {
         "$@"
 }
 
+koopa_uninstall_dash() {
+    koopa_uninstall_app \
+        --name='dash' \
+        "$@"
+}
+
 koopa_uninstall_deeptools() {
     koopa_uninstall_app \
         --name='deeptools' \
@@ -23524,6 +23540,12 @@ koopa_uninstall_koopa() {
         "${dict['config_prefix']}" \
         "${dict['koopa_prefix']}"
     return 0
+}
+
+koopa_uninstall_ksh93() {
+    koopa_uninstall_app \
+        --name='ksh93' \
+        "$@"
 }
 
 koopa_uninstall_lame() {

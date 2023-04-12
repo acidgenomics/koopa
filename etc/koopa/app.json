@@ -1013,6 +1013,18 @@
     "url": ["https://curl.se/"],
     "version": "7.88.1"
   },
+  "dash": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["dash"],
+    "build_dependencies": ["make"],
+    "date": "2023-04-12",
+    "dependencies": ["libedit"],
+    "enabled": false,
+    "man1": ["dash.1"],
+    "version": "0.5.12"
+  },
   "deeptools": {
     "arch": "amd64",
     "bin": ["deeptools"],
@@ -1073,9 +1085,9 @@
     "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
   },
   "dotfiles": {
-    "date": "2023-04-07",
+    "date": "2023-04-12",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "2e6e7a0841161968072c64d22c8ffa30b4962e23"
+    "version": "e513ca02cd29e2cb0de9480653c7c6dcd50d58bf"
   },
   "du-dust": {
     "aliases": {
@@ -2387,6 +2399,17 @@
     ],
     "version": "0.48.0"
   },
+  "ksh93": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["ksh"],
+    "build_dependencies": ["make"],
+    "date": "2023-04-12",
+    "enabled": false,
+    "man1": ["ksh.1"],
+    "version": "1.0.4"
+  },
   "lame": {
     "aliases": {
       "homebrew": true
@@ -2573,6 +2596,7 @@
     "conservative": true,
     "date": "2023-03-21",
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
+    "outdated": true,
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.6.3"
   },
@@ -3358,6 +3382,7 @@
     "build_dependencies": ["bison", "flex", "make"],
     "date": "2022-09-29",
     "dependencies": ["openssl3", "pcre", "zlib"],
+    "enabled": false,
     "url": "https://nmap.org/",
     "version": "7.93"
   },
