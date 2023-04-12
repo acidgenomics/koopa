@@ -674,6 +674,18 @@ _koopa_activate_pipx() {
     return 0
 }
 
+_koopa_activate_profile_private() {
+    __kvar_file="${HOME:?}/.profile-private"
+    if [ ! -r "$__kvar_file" ]
+    then
+        unset -v __kvar_file
+        return 0
+    fi
+    . "$__kvar_file"
+    unset -v __kvar_file
+    return 0
+}
+
 _koopa_activate_pyenv() {
     [ -n "${PYENV_ROOT:-}" ] && return 0
     __kvar_prefix="$(_koopa_pyenv_prefix)"
