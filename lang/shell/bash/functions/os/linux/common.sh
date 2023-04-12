@@ -522,6 +522,13 @@ koopa_linux_install_lmod() {
         "$@"
 }
 
+koopa_linux_install_ont_bonito() {
+    koopa_install_app \
+        --name='ont-bonito' \
+        --platform='linux' \
+        "$@"
+}
+
 koopa_linux_install_pinentry() {
     koopa_install_app \
         --name='pinentry' \
@@ -859,6 +866,13 @@ koopa_linux_uninstall_elfutils() {
 koopa_linux_uninstall_lmod() {
     koopa_uninstall_app \
         --name='lmod' \
+        --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_ont_bonito() {
+    koopa_uninstall_app \
+        --name='ont-bonito' \
         --platform='linux' \
         "$@"
 }
