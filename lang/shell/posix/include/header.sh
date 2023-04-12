@@ -55,7 +55,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa in interactive shell.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-04-12.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -71,6 +71,7 @@ __koopa_activate_koopa() {
         HOME="$(pwd)"
         export HOME
     fi
+    _koopa_activate_profile_private || return 1
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
     # Edge case for RStudio Server terminal to support dircolors.
