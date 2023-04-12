@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Just do this with samtools...more common.
+
 koopa_sambamba_index() {
     # """
     # Index BAM file with sambamba.
