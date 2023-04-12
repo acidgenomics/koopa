@@ -72,6 +72,5 @@ ${dict['version']}.tar.gz"
             'build/install.sh'
     fi
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
