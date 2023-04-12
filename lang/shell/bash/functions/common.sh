@@ -396,11 +396,11 @@ koopa_alert_process_start() {
     dict['prefix']=''
     if [[ "$#" -eq 2 ]]
     then
-        dict['prefix']="${2:?}"
+        dict['prefix']="${2:-}"
     elif [[ "$#" -eq 3 ]]
     then
-        dict['version']="${2:?}"
-        dict['prefix']="${3:?}"
+        dict['version']="${2:-}"
+        dict['prefix']="${3:-}"
     fi
     if [[ -n "${dict['prefix']}" ]] && [[ -n "${dict['version']}" ]]
     then
@@ -10184,23 +10184,10 @@ ${dict['version2']}"
                 return 0
             fi
         fi
-        case "${dict['mode']}" in
-            'system')
-                dict['prefix']="$(koopa_init_dir --sudo "${dict['prefix']}")"
-                ;;
-            *)
-                dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
-                ;;
-        esac
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
-        then
-            koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_install_start "${dict['name']}"
-        fi
+        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
     fi
     if [[ "${bool['deps']}" -eq 1 ]]
     then
@@ -10213,18 +10200,39 @@ ${dict['version2']}"
                 "$(koopa_to_string "${deps[@]}")"
             for dep in "${deps[@]}"
             do
+                local -a dep_install_args
                 if [[ -d "$(koopa_app_prefix --allow-missing "$dep")" ]]
                 then
                     continue
                 fi
+                dep_install_args=()
                 if [[ "${bool['binary']}" -eq 1 ]]
                 then
-                    koopa_cli_install --binary "$dep"
-                else
-                    koopa_cli_install "$dep"
+                    dep_install_args+=('--binary')
                 fi
+                if [[ "${bool['push']}" -eq 1 ]]
+                then
+                    dep_install_args+=('--push')
+                fi
+                if [[ "${bool['verbose']}" -eq 1 ]]
+                then
+                    dep_install_args+=('--verbose')
+                fi
+                dep_install_args+=("$dep")
+                koopa_cli_install "${dep_install_args[@]}"
             done
         fi
+    fi
+    if [[ -n "${dict['prefix']}" ]] && [[ ! -d "${dict['prefix']}" ]]
+    then
+        case "${dict['mode']}" in
+            'system')
+                dict['prefix']="$(koopa_init_dir --sudo "${dict['prefix']}")"
+                ;;
+            *)
+                dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
+                ;;
+        esac
     fi
     if [[ "${bool['binary']}" -eq 1 ]]
     then
@@ -10413,12 +10421,7 @@ man1/${dict2['name']}"
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -d "${dict['prefix']}" ]]
-        then
-            koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_install_success "${dict['name']}"
-        fi
+        koopa_alert_install_success "${dict['name']}" "${dict['prefix']}"
     fi
     return 0
 }

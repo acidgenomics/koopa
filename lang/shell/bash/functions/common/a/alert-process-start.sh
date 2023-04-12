@@ -3,7 +3,7 @@
 koopa_alert_process_start() {
     # """
     # Inform the user about the start of a process.
-    # @note Updated 2022-04-08.
+    # @note Updated 2023-04-11.
     # """
     local -A dict
     dict['word']="${1:?}"
@@ -14,11 +14,11 @@ koopa_alert_process_start() {
     dict['prefix']=''
     if [[ "$#" -eq 2 ]]
     then
-        dict['prefix']="${2:?}"
+        dict['prefix']="${2:-}"
     elif [[ "$#" -eq 3 ]]
     then
-        dict['version']="${2:?}"
-        dict['prefix']="${3:?}"
+        dict['version']="${2:-}"
+        dict['prefix']="${3:-}"
     fi
     if [[ -n "${dict['prefix']}" ]] && [[ -n "${dict['version']}" ]]
     then

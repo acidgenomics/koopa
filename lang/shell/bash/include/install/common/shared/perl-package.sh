@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME How to save man1, man3 to share/man instead of man?
+
 main() {
     # """
     # Install Perl package.
