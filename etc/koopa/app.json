@@ -4705,7 +4705,7 @@
     "build_dependencies": ["make"],
     "conservative": true,
     "date": "2023-04-13",
-    "dependencies": ["gettext", "ncurses", "perl"],
+    "dependencies": ["gettext", "libiconv", "ncurses", "perl"],
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
