@@ -3406,6 +3406,7 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
+    "outdated": true,
     "url": ["https://nodejs.org/"],
     "version": "18.15.0"
   },
@@ -3449,23 +3450,24 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2024-04-04",
+    "date": "2024-04-12",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
+    "platform": "linux",
     "url": ["https://github.com/nanoporetech/bonito/"],
     "version": "0.7.0"
   },
   "ont-dorado": {
     "bin": ["dorado"],
     "build_dependencies": ["autoconf", "automake", "cmake", "git"],
-    "date": "2024-04-04",
+    "date": "2024-04-12",
     "dependencies": ["hdf5", "openssl3", "zstd"],
     "enabled": false,
     "large": true,
     "notes": ["Need to add support for nvidia-cuda-toolkit."],
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.2.2"
+    "version": "0.2.4"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4558,9 +4560,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-04-11",
+    "date": "2023-04-12",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.14.1"
+    "version": "1.14.2"
   },
   "stow": {
     "aliases": {
@@ -4703,8 +4705,8 @@
     ],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2023-02-08",
-    "dependencies": ["gettext", "ncurses", "perl"],
+    "date": "2023-04-13",
+    "dependencies": ["gettext", "libiconv", "ncurses", "perl"],
     "man1": [
       "pdftexi2dvi.1",
       "pod2texi.1",
@@ -4714,7 +4716,7 @@
       "texindex.1"
     ],
     "url": ["https://ftp.gnu.org/gnu/texinfo/"],
-    "version": "7.0.2"
+    "version": "7.0.3"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
