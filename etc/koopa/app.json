@@ -4704,7 +4704,7 @@
     ],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-04-13",
     "dependencies": ["gettext", "ncurses", "perl"],
     "man1": [
       "pdftexi2dvi.1",
@@ -4715,7 +4715,7 @@
       "texindex.1"
     ],
     "url": ["https://ftp.gnu.org/gnu/texinfo/"],
-    "version": "7.0.2"
+    "version": "7.0.3"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
