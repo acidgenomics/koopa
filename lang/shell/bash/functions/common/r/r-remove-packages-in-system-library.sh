@@ -3,7 +3,7 @@
 koopa_r_remove_packages_in_system_library() {
     # """
     # Install packages into R site library.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-13.
     # """
     local -A app dict
     local -a rscript_cmd
@@ -25,6 +25,6 @@ remove-packages-in-system-library.R"
     fi
     rscript_cmd+=("${app['rscript']}")
     koopa_assert_is_executable "${app[@]}"
-    "${r_cmd[@]}" "${dict['script']}" "$@"
+    "${rscript_cmd[@]}" "${dict['script']}" "$@"
     return 0
 }

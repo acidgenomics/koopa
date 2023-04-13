@@ -18270,7 +18270,7 @@ remove-packages-in-system-library.R"
     fi
     rscript_cmd+=("${app['rscript']}")
     koopa_assert_is_executable "${app[@]}"
-    "${r_cmd[@]}" "${dict['script']}" "$@"
+    "${rscript_cmd[@]}" "${dict['script']}" "$@"
     return 0
 }
 
