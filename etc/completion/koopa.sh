@@ -295,7 +295,6 @@ _koopa_complete() {
                         'npth'
                         'nushell'
                         'oniguruma'
-                        'ont-bonito'
                         'ont-dorado'
                         # > 'ont-pod5-file-format'
                         'ont-vbz-compression'
@@ -438,6 +437,7 @@ _koopa_complete() {
                             'docker-credential-pass'
                             'elfutils'
                             'lmod'
+                            'ont-bonito'
                             'pinentry'
                         )
                     fi

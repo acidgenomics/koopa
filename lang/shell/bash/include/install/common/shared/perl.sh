@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider including 'expat', 'gdbm', and possibly 'zlib' here.
-#
-# FIXME This is no longer building Perl documentation files.
-# Seeing 'Manual disabled by Configure' message.
-
-# FIXME Restrict /usr/local here:
-# [-fno-common -DPERL_DARWIN -mmacosx-version-min=13.3 -fno-strict-aliasing -pipe -fstack-protector-strong -I/usr/local/include]
-# [ -mmacosx-version-min=13.3 -fstack-protector-strong -L/usr/local/lib]
-
 main() {
     # """
     # Install Perl.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-04-13.
     #
     # @section Regarding parallel build failures on Ubunutu:
     # make can error at this step when running in parallel.
@@ -54,7 +45,6 @@ main() {
         '-Dperladmin=koopa'
         "-Dprefix=${dict['prefix']}"
         "-Dsysman=${dict['sysman']}"
-        '-Duse64bitall'
         '-Duselargefiles'
         '-Duseshrplib'
         '-Dusethreads'
