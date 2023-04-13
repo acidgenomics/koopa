@@ -324,6 +324,7 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     then
         koopa_install_r_koopa "${app['r']}"
         koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
+        # FIXME Also add check that koopa R package loads successfully.
     fi
     return 0
 }
