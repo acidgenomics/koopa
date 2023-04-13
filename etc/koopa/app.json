@@ -3406,6 +3406,7 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
+    "outdated": true,
     "url": ["https://nodejs.org/"],
     "version": "18.15.0"
   },
