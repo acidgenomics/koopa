@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting this error due to install wrapper:
+# !! Error: Required arguments missing.
+
 # FIXME Need to disable Handoff by default.
 
 main() {
