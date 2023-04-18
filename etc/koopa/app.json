@@ -231,14 +231,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-04-14",
+    "date": "2023-04-18",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.12"
+    "version": "2.11.13"
   },
   "azure-cli": {
     "aliases": {
@@ -2435,7 +2435,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-04-03",
+    "date": "2023-04-18",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2443,7 +2443,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.16.0"
+    "version": "2.19.0"
   },
   "less": {
     "aliases": {
@@ -3879,14 +3879,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-04-09",
+    "date": "2023-04-14",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.3.0"
+    "version": "7.3.1"
   },
   "python3.10": {
     "aliases": {
