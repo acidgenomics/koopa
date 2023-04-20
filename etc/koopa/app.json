@@ -4309,10 +4309,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-03-28",
+    "date": "2023-04-20",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.68.2"
+    "version": "1.69.0"
   },
   "salmon": {
     "arch": "amd64",
