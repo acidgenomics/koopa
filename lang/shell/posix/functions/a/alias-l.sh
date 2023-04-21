@@ -3,7 +3,7 @@
 _koopa_alias_l() {
     # """
     # List files alias that uses 'exa' instead of 'ls', when possible.
-    # @note Updated 2022-04-14.
+    # @note Updated 2023-04-21.
     #
     # Use exa instead of ls, when possible.
     # https://the.exa.website/docs/command-line-options
@@ -32,15 +32,19 @@ _koopa_alias_l() {
     # * -h, --human-readable
     #         with -l and -s, print sizes like 1K 234M 2G etc.
     # """
-    if _koopa_is_installed 'exa'
+    if [ -x "$(_koopa_bin_prefix)/exa" ]
     then
-        exa \
+        "$(_koopa_bin_prefix)/exa" \
             --classify \
             --group \
             --group-directories-first \
+            --numeric \
             --sort='Name' \
             "$@"
+    elif [ -x "$(_koopa_bin_prefix)/gls" ]
+    then
+        "$(_koopa_bin_prefix)/gls" -BFhn "$@"
     else
-        ls -BFh "$@"
+        ls -BFhn "$@"
     fi
 }
