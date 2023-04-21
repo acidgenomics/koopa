@@ -1206,16 +1206,20 @@ _koopa_alias_kp() {
 }
 
 _koopa_alias_l() {
-    if _koopa_is_installed 'exa'
+    if [ -x "$(_koopa_bin_prefix)/exa" ]
     then
-        exa \
+        "$(_koopa_bin_prefix)/exa" \
             --classify \
             --group \
             --group-directories-first \
+            --numeric \
             --sort='Name' \
             "$@"
+    elif [ -x "$(_koopa_bin_prefix)/gls" ]
+    then
+        "$(_koopa_bin_prefix)/gls" -BFhn "$@"
     else
-        ls -BFh "$@"
+        ls -BFhn "$@"
     fi
 }
 
