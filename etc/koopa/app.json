@@ -2872,7 +2872,7 @@
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
     "conservative": true,
-    "date": "2023-04-06",
+    "date": "2023-04-19",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -2887,7 +2887,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.1"
+    "version": "16.0.2"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3852,10 +3852,10 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2023-04-10",
+    "date": "2023-04-18",
     "dependencies": ["python3.11"],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.15.0"
+    "version": "2.15.1"
   },
   "pylint": {
     "aliases": {
@@ -3955,7 +3955,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-20",
+    "date": "2023-04-21",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -4032,7 +4032,7 @@
     "version": "4.2.3"
   },
   "r-devel": {
-    "date": "2023-04-03",
+    "date": "2023-04-21",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -4110,7 +4110,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "84153"
+    "version": "84296"
   },
   "radian": {
     "bin": ["radian"],
@@ -4309,10 +4309,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-03-28",
+    "date": "2023-04-20",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.68.2"
+    "version": "1.69.0"
   },
   "salmon": {
     "arch": "amd64",
