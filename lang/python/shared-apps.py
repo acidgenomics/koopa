@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# FIXME This needs to pick up apps that are already installed.
+
 """
 Return supported shared applications defined in 'app.json' file.
 @note Updated 2023-03-29.
