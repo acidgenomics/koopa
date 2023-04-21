@@ -1499,7 +1499,7 @@
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-14",
+    "date": "2023-04-21",
     "dependencies": [
       "curl",
       "geos",
@@ -1519,7 +1519,7 @@
     ],
     "man1": ["gdal-config.1"],
     "url": ["https://gdal.org/download.html"],
-    "version": "3.6.3"
+    "version": "3.6.4"
   },
   "gdbm": {
     "aliases": {
