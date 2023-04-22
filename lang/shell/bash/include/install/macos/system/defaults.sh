@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME How to disable "Play sound on startup"
+
 # FIXME How to set disable sleep when screen is off while plugged in:
 # Displays > Advanced > Prevent automatic sleeping on power adapter when the
 # display is off
@@ -32,7 +34,13 @@ main() {
     # >     /Library/Preferences/SystemConfiguration/com.apple.smb.server \
     # >     NetBIOSName -string "$comp_name"
     koopa_alert 'Disabling startup chime on boot.'
+    # Can reenable with: 'sudo nvram -d SystemAudioVolume'.
+    # Alternative disables: '%80', '%01', '%00'.
     "${app['sudo']}" "${app['nvram']}" SystemAudioVolume=' '
+    # Can use this approach for Macs from 2016-2020.
+    # https://www.howtogeek.com/260693/
+    #   how-to-disable-the-boot-sound-or-startup-chime-on-a-mac/
+    # > "${app['sudo']}" "${app['nvram']}" StartupMute='%00'
     # NOTE This doesn't appear to work in 12.5+, so disabling.
     # Reveal IP address, hostname, OS version, etc. when clicking the clock
     # in the login window.
