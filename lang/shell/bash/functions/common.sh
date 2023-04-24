@@ -16843,6 +16843,7 @@ koopa_private_installers_s3_uri() {
 koopa_progress_bar() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
+    [[ "${COLUMNS:?}" -lt 40 ]] && return 0
     app['bc']="$(koopa_locate_bc)"
     app['echo']="$(koopa_locate_echo)"
     app['tr']="$(koopa_locate_tr)"
@@ -16850,13 +16851,16 @@ koopa_progress_bar() {
     dict['bar_char_done']='#'
     dict['bar_char_todo']='-'
     dict['bar_pct_scale']=1
-    dict['bar_size']=40
+    dict['bar_size']="$((COLUMNS-20))"
     dict['current']="${1:?}"
     dict['total']="${2:?}"
     dict['percent']="$( \
         "${app['bc']}" <<< \
             "scale=${dict['bar_pct_scale']}; \
             100 * ${dict['current']} / ${dict['total']}" \
+    )"
+    dict['percent_str']="$( \
+        printf "%0.${dict['bar_pct_scale']}f" "${dict['percent']}"
     )"
     dict['done']="$( \
         "${app['bc']}" <<< \
@@ -16875,11 +16879,11 @@ koopa_progress_bar() {
         printf "%${dict['todo']}s" \
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
-    "${app['echo']}" -ne "\rProgress : \
-[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent']}%"
+    >&2 "${app['echo']}" -ne "\rProgress \
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%\n"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
-        "${app['echo']}" -e '\nDONE'
+        >&2 "${app['echo']}" -e '\nDONE'
     fi
     return 0
 }
