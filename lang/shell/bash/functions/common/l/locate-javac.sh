@@ -2,7 +2,7 @@
 
 koopa_locate_javac() {
     koopa_locate_app \
-        --app-name='openjdk' \
+        --app-name='temurin' \
         --bin-name='javac' \
         "$@"
 }

@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install Adoptium Temurin OpenJDK.
-    # @note Updated 2023-04-06.
+    # Install Adoptium Eclipse Temurin JDK.
+    # @note Updated 2023-04-24.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -88,9 +88,5 @@ binaries/releases/download/jdk-${dict['version3']}/${dict['file']}"
             koopa_ln "${libexec}/${name}" "$name"
         done
     )
-    # > if koopa_is_shared_install && koopa_is_linux
-    # > then
-    # >     koopa_linux_java_update_alternatives "${dict['prefix']}"
-    # > fi
     return 0
 }
