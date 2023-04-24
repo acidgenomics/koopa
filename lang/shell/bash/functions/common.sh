@@ -16840,6 +16840,50 @@ koopa_private_installers_s3_uri() {
     koopa_print 's3://private.koopa.acidgenomics.com/installers'
 }
 
+koopa_progress_bar() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 2
+    app['bc']="$(koopa_locate_bc)"
+    app['echo']="$(koopa_locate_echo)"
+    app['tr']="$(koopa_locate_tr)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bar_char_done']='#'
+    dict['bar_char_todo']='-'
+    dict['bar_pct_scale']=1
+    dict['bar_size']=40
+    dict['current']="${1:?}"
+    dict['total']="${2:?}"
+    dict['percent']="$( \
+        "${app['bc']}" <<< \
+            "scale=${dict['bar_pct_scale']}; \
+            100 * ${dict['current']} / ${dict['total']}" \
+    )"
+    dict['done']="$( \
+        "${app['bc']}" <<< \
+            "scale=0; \
+            ${dict['bar_size']} * ${dict['percent']} / 100" \
+    )"
+    dict['todo']="$( \
+        "${app['bc']}" <<< \
+            "scale=0; ${dict['bar_size']} - ${dict['done']}" \
+    )"
+    dict['done_sub_bar']=$( \
+        printf "%${dict['done']}s" | \
+        "${app['tr']}" ' ' "${dict['bar_char_done']}" \
+    )
+    dict['todo_sub_bar']=$( \
+        printf "%${dict['todo']}s" \
+        | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
+    )
+    "${app['echo']}" -ne "\rProgress : \
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent']}%"
+    if [[ "${dict['total']}" -eq "${dict['current']}" ]]
+    then
+        "${app['echo']}" -e '\nDONE'
+    fi
+    return 0
+}
+
 koopa_prune_app_binaries() {
     koopa_r_koopa 'cliPruneAppBinaries' "$@"
     return 0
