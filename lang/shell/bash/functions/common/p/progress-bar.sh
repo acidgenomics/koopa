@@ -30,6 +30,10 @@ koopa_progress_bar() {
             "scale=${dict['bar_pct_scale']}; \
             100 * ${dict['current']} / ${dict['total']}" \
     )"
+    # Ensure decimals contain a leading zero when applicable.
+    dict['percent_str']="$( \
+        printf "%0.${dict['bar_pct_scale']}f" "${dict['percent']}"
+    )"
     # The number of 'done' and 'todo' characters.
     dict['done']="$( \
         "${app['bc']}" <<< \
@@ -49,12 +53,12 @@ koopa_progress_bar() {
         printf "%${dict['todo']}s" \
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
-    # Output the bar.
-    "${app['echo']}" -ne "\rProgress : \
-[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent']}%"
+    # Print the progress bar in stderr.
+    >&2 "${app['echo']}" -ne "\rProgress : \
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%\n"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
-        "${app['echo']}" -e '\nDONE'
+        >&2 "${app['echo']}" -e '\nDONE'
     fi
     return 0
 }
