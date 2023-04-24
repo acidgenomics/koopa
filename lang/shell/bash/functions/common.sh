@@ -16879,11 +16879,14 @@ koopa_progress_bar() {
         printf "%${dict['todo']}s" \
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
-    >&2 "${app['echo']}" -ne "\rProgress \
-[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%"
+    >&2 printf '\n\n'
+    >&2 "${app['echo']}" -ne "\e[2A\e[K\
+Progress \
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] \
+${dict['percent_str']}%\n"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
-        koopa_alert_success '\nDONE!'
+        koopa_alert_success 'DONE!'
     fi
     return 0
 }
