@@ -5,8 +5,11 @@ koopa_progress_bar() {
     # Progress bar.
     # @note Updated 2023-04-24.
     #
+    # Using '\e[1A\e[K' approach instead of '\r'.
+    #
     # @seealso
     # - https://www.baeldung.com/linux/command-line-progress-bar
+    # - https://stackoverflow.com/questions/11283625/
     #
     # @examples
     # > koopa_progress_bar 25 100
@@ -14,6 +17,7 @@ koopa_progress_bar() {
     # """
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
+    # Don't show the progress bar in small terminal windows.
     [[ "${COLUMNS:?}" -lt 40 ]] && return 0
     app['bc']="$(koopa_locate_bc)"
     app['echo']="$(koopa_locate_echo)"
@@ -55,8 +59,6 @@ koopa_progress_bar() {
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
     # Print the progress bar in stderr.
-    # Alternatively, can consider '\e[1A\e[K' approach instead of '\r'.
-    # https://stackoverflow.com/questions/11283625/
     >&2 printf '\n\n'
     >&2 "${app['echo']}" -ne "\e[2A\e[K\
 Progress \
