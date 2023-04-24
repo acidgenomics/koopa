@@ -3653,10 +3653,10 @@
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2023-04-11",
+    "date": "2023-04-24",
     "man1": ["cpan.1", "perl.1"],
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.36.0"
+    "version": "5.36.1"
   },
   "picard": {
     "arch": "amd64",
