@@ -2,10 +2,13 @@
 
 # FIXME How to save man1, man3 to share/man instead of man?
 
+# FIXME How to disable version update notice?
+# New CPAN.pm version (v2.34) available.
+
 main() {
     # """
     # Install Perl package.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-04-24.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
