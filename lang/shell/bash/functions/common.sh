@@ -11937,12 +11937,6 @@ koopa_install_openblas() {
         "$@"
 }
 
-koopa_install_openjdk() {
-    koopa_install_app \
-        --name='openjdk' \
-        "$@"
-}
-
 koopa_install_openssh() {
     koopa_install_app \
         --name='openssh' \
@@ -12471,6 +12465,12 @@ koopa_install_tcl_tk() {
 koopa_install_tealdeer() {
     koopa_install_app \
         --name='tealdeer' \
+        "$@"
+}
+
+koopa_install_temurin() {
+    koopa_install_app \
+        --name='temurin' \
         "$@"
 }
 
@@ -15086,21 +15086,21 @@ koopa_locate_id() {
 
 koopa_locate_jar() {
     koopa_locate_app \
-        --app-name='openjdk' \
+        --app-name='temurin' \
         --bin-name='jar' \
         "$@"
 }
 
 koopa_locate_java() {
     koopa_locate_app \
-        --app-name='openjdk' \
+        --app-name='temurin' \
         --bin-name='java' \
         "$@"
 }
 
 koopa_locate_javac() {
     koopa_locate_app \
-        --app-name='openjdk' \
+        --app-name='temurin' \
         --bin-name='javac' \
         "$@"
 }
@@ -17488,17 +17488,17 @@ koopa_r_configure_java() {
     fi
     if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+        dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
-        dict['openjdk']='/usr/lib/jvm/default-java'
+        dict['java_home']='/usr/lib/jvm/default-java'
     fi
-    koopa_assert_is_dir "${dict['openjdk']}"
-    app['jar']="${dict['openjdk']}/bin/jar"
-    app['java']="${dict['openjdk']}/bin/java"
-    app['javac']="${dict['openjdk']}/bin/javac"
+    koopa_assert_is_dir "${dict['java_home']}"
+    app['jar']="${dict['java_home']}/bin/jar"
+    app['java']="${dict['java_home']}/bin/java"
+    app['javac']="${dict['java_home']}/bin/javac"
     app['sudo']="$(koopa_locate_sudo)"
-    koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
-    conf_dict['java_home']="${dict['openjdk']}"
+    koopa_alert_info "Using Java SDK at '${dict['java_home']}'."
+    conf_dict['java_home']="${dict['java_home']}"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['javac']="${app['javac']}"
@@ -17542,7 +17542,7 @@ koopa_r_configure_ldpaths() {
         return 0
     fi
     dict['arch']="$(koopa_arch)"
-    dict['java_home']="$(koopa_app_prefix 'openjdk')"
+    dict['java_home']="$(koopa_app_prefix 'temurin')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
@@ -24038,12 +24038,6 @@ koopa_uninstall_openblas() {
         "$@"
 }
 
-koopa_uninstall_openjdk() {
-    koopa_uninstall_app \
-        --name='openjdk' \
-        "$@"
-}
-
 koopa_uninstall_openssh() {
     koopa_uninstall_app \
         --name='openssh' \
@@ -24515,6 +24509,12 @@ koopa_uninstall_tcl_tk() {
 koopa_uninstall_tealdeer() {
     koopa_uninstall_app \
         --name='tealdeer' \
+        "$@"
+}
+
+koopa_uninstall_temurin() {
+    koopa_uninstall_app \
+        --name='temurin' \
         "$@"
 }
 
