@@ -658,9 +658,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-04-21",
+    "date": "2023-04-24",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.2"
+    "version": "2.33.3"
   },
   "cli11": {
     "aliases": {
@@ -2435,7 +2435,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-04-18",
+    "date": "2023-04-24",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2443,7 +2443,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.19.0"
+    "version": "2.19.1"
   },
   "less": {
     "aliases": {
@@ -3753,10 +3753,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-03-24",
+    "date": "2023-04-24",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.7"
+    "version": "2.8.8"
   },
   "procs": {
     "aliases": {
