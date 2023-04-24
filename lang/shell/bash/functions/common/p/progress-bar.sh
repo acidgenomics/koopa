@@ -55,12 +55,16 @@ koopa_progress_bar() {
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
     # Print the progress bar in stderr.
-    >&2 printf '\n'
-    >&2 "${app['echo']}" -ne "\rProgress \
-[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%"
+    # Alternatively, can consider '\e[1A\e[K' approach instead of '\r'.
+    # https://stackoverflow.com/questions/11283625/
+    >&2 printf '\n\n'
+    >&2 "${app['echo']}" -ne "\e[2A\e[K\
+Progress \
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] \
+${dict['percent_str']}%\n"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
-        koopa_alert_success '\nDONE!'
+        koopa_alert_success 'DONE!'
     fi
     return 0
 }
