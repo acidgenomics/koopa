@@ -55,6 +55,7 @@ koopa_progress_bar() {
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
     # Print the progress bar in stderr.
+    >&2 printf '\n'
     >&2 "${app['echo']}" -ne "\rProgress \
 [${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
