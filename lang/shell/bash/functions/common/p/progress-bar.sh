@@ -10,11 +10,11 @@ koopa_progress_bar() {
     #
     # @examples
     # > koopa_progress_bar 25 100
-    # # progress [##########------------------------------] 25.0%
+    # # Progress [##########------------------------------] 25.0%
     # """
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    [[ "${WIDTH:?}" -lt 40 ]] && return 0
+    [[ "${COLUMNS:?}" -lt 40 ]] && return 0
     app['bc']="$(koopa_locate_bc)"
     app['echo']="$(koopa_locate_echo)"
     app['tr']="$(koopa_locate_tr)"
@@ -22,7 +22,7 @@ koopa_progress_bar() {
     dict['bar_char_done']='#'
     dict['bar_char_todo']='-'
     dict['bar_pct_scale']=1
-    dict['bar_size']="$((WIDTH-20))"
+    dict['bar_size']="$((COLUMNS-20))"
     dict['current']="${1:?}"
     dict['total']="${2:?}"
     # Calculate the progress in percentage.
@@ -55,7 +55,7 @@ koopa_progress_bar() {
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
     # Print the progress bar in stderr.
-    >&2 "${app['echo']}" -ne "\rprogress \
+    >&2 "${app['echo']}" -ne "\rProgress \
 [${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%\n"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
