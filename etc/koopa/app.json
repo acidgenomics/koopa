@@ -53,7 +53,7 @@
     },
     "bin": ["pyspark", "sparkR"],
     "date": "2023-03-07",
-    "dependencies": ["openjdk", "python3.11", "r"],
+    "dependencies": ["python3.11", "r", "temurin"],
     "enabled": false,
     "large": true,
     "url": ["https://spark.apache.org/"],
@@ -386,7 +386,7 @@
     },
     "bin": ["bfg"],
     "date": "2022-09-22",
-    "dependencies": ["openjdk"],
+    "dependencies": ["temurin"],
     "enabled": false,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
     "version": "1.14.0"
@@ -658,9 +658,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-04-21",
+    "date": "2023-04-24",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.2"
+    "version": "2.33.3"
   },
   "cli11": {
     "aliases": {
@@ -1507,12 +1507,12 @@
       "libjpeg-turbo",
       "libtiff",
       "libxml2",
-      "openjdk",
       "openssl3",
       "pcre2",
       "proj",
       "python3.11",
       "sqlite",
+      "temurin",
       "xz",
       "zlib",
       "zstd"
@@ -2435,7 +2435,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-04-18",
+    "date": "2023-04-24",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2443,7 +2443,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.19.0"
+    "version": "2.19.1"
   },
   "less": {
     "aliases": {
@@ -3229,7 +3229,7 @@
     },
     "build_dependencies": ["cmake"],
     "date": "2023-04-03",
-    "dependencies": ["bison", "flex", "hdf5", "openjdk", "python3.11"],
+    "dependencies": ["bison", "flex", "hdf5", "python3.11", "temurin"],
     "large": true,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
     "version": "3.0.2"
@@ -3317,10 +3317,13 @@
     "arch": "amd64",
     "bin": ["nextflow"],
     "date": "2023-03-07",
-    "dependencies": ["conda"],
+    "dependencies": ["temurin"],
     "large": true,
-    "url": ["https://bioconda.github.io/recipes/nextflow/README.html"],
-    "version": "22.10.6"
+    "url": [
+      "https://www.nextflow.io/",
+      "https://github.com/nextflow-io/nextflow/"
+    ],
+    "version": "23.04.1"
   },
   "nghttp2": {
     "aliases": {
@@ -3512,19 +3515,6 @@
     "dependencies": ["gcc"],
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.23"
-  },
-  "openjdk": {
-    "aliases": {
-      "homebrew-cask": "temurin"
-    },
-    "bin": ["jar", "java", "javac"],
-    "conservative": true,
-    "date": "2023-02-08",
-    "lts": true,
-    "man1": ["jar.1", "java.1", "javac.1"],
-    "notes": ["Tracking the LTS release series."],
-    "url": ["https://adoptium.net/"],
-    "version": "17.0.6+10"
   },
   "openssh": {
     "aliases": {
@@ -3753,10 +3743,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-03-24",
+    "date": "2023-04-24",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.7"
+    "version": "2.8.8"
   },
   "procs": {
     "aliases": {
@@ -3955,7 +3945,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-21",
+    "date": "2023-04-24",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -3991,7 +3981,6 @@
       "lzo",
       "ncurses",
       "openblas",
-      "openjdk",
       "openssl3",
       "pcre",
       "pcre2",
@@ -4003,6 +3992,7 @@
       "sqlite",
       "tar",
       "tcl-tk",
+      "temurin",
       "texinfo",
       "udunits",
       "vim",
@@ -4029,10 +4019,10 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.2.3"
+    "version": "4.3.0"
   },
   "r-devel": {
-    "date": "2023-04-21",
+    "date": "2023-04-24",
     "dependencies": [
       "bzip2",
       "cairo",
@@ -4068,7 +4058,6 @@
       "lzo",
       "ncurses",
       "openblas",
-      "openjdk",
       "openssl3",
       "pcre",
       "pcre2",
@@ -4080,6 +4069,7 @@
       "sqlite",
       "tar",
       "tcl-tk",
+      "temurin",
       "texinfo",
       "udunits",
       "vim",
@@ -4110,7 +4100,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "84296"
+    "version": "84313"
   },
   "radian": {
     "bin": ["radian"],
@@ -4678,6 +4668,19 @@
     "date": "2022-11-04",
     "url": ["https://github.com/dbrgn/tealdeer/"],
     "version": "1.6.1"
+  },
+  "temurin": {
+    "aliases": {
+      "homebrew-cask": "temurin"
+    },
+    "bin": ["jar", "java", "javac"],
+    "conservative": true,
+    "date": "2023-04-24",
+    "lts": true,
+    "man1": ["jar.1", "java.1", "javac.1"],
+    "notes": ["Tracking the LTS release series."],
+    "url": ["https://adoptium.net/"],
+    "version": "17.0.7+7"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],

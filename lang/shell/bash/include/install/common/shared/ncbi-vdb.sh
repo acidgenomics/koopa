@@ -3,7 +3,7 @@
 main() {
     # """
     # Install NCBI VDB.
-    # @note Updated 2023-04-12.
+    # @note Updated 2023-04-24.
     #
     # VDB is the database engine that all SRA tools use.
     #
@@ -20,11 +20,11 @@ main() {
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir "${dict['openjdk']}"
-    export JAVA_HOME="${dict['openjdk']}"
+    koopa_assert_is_dir "${dict['temurin']}"
+    export JAVA_HOME="${dict['temurin']}"
     CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
     export CFLAGS
     cmake_args=(

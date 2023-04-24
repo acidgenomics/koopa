@@ -576,50 +576,6 @@ koopa_linux_install_system_pivpn() {
         "$@"
 }
 
-koopa_linux_java_update_alternatives() {
-    local -A app dict
-    koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_admin
-    app['sudo']="$(koopa_locate_sudo)"
-    app['update_alternatives']="$(koopa_linux_locate_update_alternatives)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['alt_prefix']='/var/lib/alternatives'
-    dict['prefix']="$(koopa_realpath "${1:?}")"
-    dict['priority']=100
-    koopa_rm --sudo \
-        "${dict['alt_prefix']}/java" \
-        "${dict['alt_prefix']}/javac" \
-        "${dict['alt_prefix']}/jar"
-    "${app['sudo']}" "${app['update_alternatives']}" --install \
-        '/usr/bin/java' \
-        'java' \
-        "${dict['prefix']}/bin/java" \
-        "${dict['priority']}"
-    "${app['sudo']}" "${app['update_alternatives']}" --install \
-        '/usr/bin/javac' \
-        'javac' \
-        "${dict['prefix']}/bin/javac" \
-        "${dict['priority']}"
-    "${app['sudo']}" "${app['update_alternatives']}" --install \
-        '/usr/bin/jar' \
-        'jar' \
-        "${dict['prefix']}/bin/jar" \
-        "${dict['priority']}"
-    "${app['sudo']}" "${app['update_alternatives']}" --set \
-        'java' \
-        "${dict['prefix']}/bin/java"
-    "${app['sudo']}" "${app['update_alternatives']}" --set \
-        'javac' \
-        "${dict['prefix']}/bin/javac"
-    "${app['sudo']}" "${app['update_alternatives']}" --set \
-        'jar' \
-        "${dict['prefix']}/bin/jar"
-    "${app['update_alternatives']}" --display 'java'
-    "${app['update_alternatives']}" --display 'javac'
-    "${app['update_alternatives']}" --display 'jar'
-    return 0
-}
-
 koopa_linux_locate_bcbio_python() {
     koopa_locate_app \
         --app-name='bcbio-nextgen' \
@@ -716,18 +672,6 @@ koopa_linux_locate_systemctl() {
             args+=('/usr/bin/systemctl')
             ;;
     esac
-    koopa_locate_app "${args[@]}" "$@"
-}
-
-koopa_linux_locate_update_alternatives() {
-    local args
-    args=()
-    if koopa_is_fedora_like
-    then
-        args+=('/usr/sbin/update-alternatives')
-    else
-        str+=('/usr/bin/update-alternatives')
-    fi
     koopa_locate_app "${args[@]}" "$@"
 }
 
@@ -873,13 +817,6 @@ koopa_linux_uninstall_lmod() {
 koopa_linux_uninstall_ont_bonito() {
     koopa_uninstall_app \
         --name='ont-bonito' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_uninstall_openjdk() {
-    koopa_uninstall_app \
-        --name='openjdk' \
         --platform='linux' \
         "$@"
 }

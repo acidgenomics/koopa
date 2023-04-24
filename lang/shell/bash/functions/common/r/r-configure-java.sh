@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-24.
     #
     # The default Java path differs depending on the system.
     #
@@ -44,17 +44,17 @@ koopa_r_configure_java() {
     fi
     if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        dict['openjdk']="$(koopa_app_prefix 'openjdk')"
+        dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
-        dict['openjdk']='/usr/lib/jvm/default-java'
+        dict['java_home']='/usr/lib/jvm/default-java'
     fi
-    koopa_assert_is_dir "${dict['openjdk']}"
-    app['jar']="${dict['openjdk']}/bin/jar"
-    app['java']="${dict['openjdk']}/bin/java"
-    app['javac']="${dict['openjdk']}/bin/javac"
+    koopa_assert_is_dir "${dict['java_home']}"
+    app['jar']="${dict['java_home']}/bin/jar"
+    app['java']="${dict['java_home']}/bin/java"
+    app['javac']="${dict['java_home']}/bin/javac"
     app['sudo']="$(koopa_locate_sudo)"
-    koopa_alert_info "Using Java SDK at '${dict['openjdk']}'."
-    conf_dict['java_home']="${dict['openjdk']}"
+    koopa_alert_info "Using Java SDK at '${dict['java_home']}'."
+    conf_dict['java_home']="${dict['java_home']}"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['javac']="${app['javac']}"

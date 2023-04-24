@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to install from https://get.nextflow.io, rather than using
-# bioconda, which is often out of date.
-# FIXME Can pin to our internal openjdk.
-# FIXME OpenJDK > 18 is not currently supported.
-
 main() {
     # """
     # Install Nextflow.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-24.
     #
     # @seealso
     # - https://github.com/nextflow-io/nextflow/
@@ -16,28 +11,28 @@ main() {
     # - https://nextflow.io/releases/v${dict['version']}/nextflow
     # """
     local -A dict
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['script']='nextflow'
+    dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir "${dict['openjdk']}"
+    koopa_assert_is_dir "${dict['temurin']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    koopa_download 'https://get.nextflow.io' "${dict['script']}"
-    koopa_chmod +x "${dict['script']}"
+    koopa_download 'https://get.nextflow.io' 'nextflow'
     export NXF_HOME="${dict['prefix']}/libexec"
-    export NXF_JAVA_HOME="${dict['openjdk']}"
+    export NXF_JAVA_HOME="${dict['temurin']}"
     export NXF_VER="${dict['version']}"
-    ."/${dict['script']}"
-    koopa_cp --target-directory="${dict['libexec']}" "${dict['script']}"
+    koopa_chmod +x 'nextflow'
+    ./nextflow
+    koopa_cp --target-directory="${dict['libexec']}" 'nextflow'
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
 
-export NXF_JAVA_HOME='${dict['openjdk']}'
-'${dict['libexec']}/${dict['script']}' "\$@"
+export NXF_JAVA_HOME='${dict['temurin']}'
+'${dict['libexec']}/nextflow' "\$@"
 END
     koopa_write_string \
         --file="${dict['prefix']}/bin/nextflow" \
         --string="${dict['bin_string']}"
     koopa_chmod +x "${dict['prefix']}/bin/nextflow"
+    "${dict['prefix']}/bin/nextflow" -version
     return 0
 }

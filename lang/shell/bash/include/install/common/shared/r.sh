@@ -5,7 +5,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-04-24.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -65,10 +65,10 @@ main() {
         'libpng'
         'libtiff'
         'openblas'
-        'openjdk'
         'pcre'
         'pcre2'
         'perl'
+        'temurin'
         'texinfo'
         'glib'
         'freetype'
@@ -132,14 +132,14 @@ main() {
     dict['jobs']="$(koopa_cpu_count)"
     dict['lapack']="$(koopa_app_prefix 'lapack')"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
+    dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
         "${dict['lapack']}" \
-        "${dict['openjdk']}" \
-        "${dict['tcl_tk']}"
+        "${dict['tcl_tk']}" \
+        "${dict['temurin']}"
     # This step can error unless we have run
     # 'koopa install system tex-packages', so disabling at the moment.
     # > if koopa_is_macos
@@ -210,7 +210,7 @@ main() {
     conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
-    conf_dict['java_home']="${dict['openjdk']}"
+    conf_dict['java_home']="${dict['temurin']}"
     conf_dict['javac']="${app['javac']}"
     conf_dict['javah']=''
     conf_dict['libnn']='lib'

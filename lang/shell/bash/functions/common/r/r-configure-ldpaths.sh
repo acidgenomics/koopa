@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-04-24.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -40,7 +40,7 @@ koopa_r_configure_ldpaths() {
         return 0
     fi
     dict['arch']="$(koopa_arch)"
-    dict['java_home']="$(koopa_app_prefix 'openjdk')"
+    dict['java_home']="$(koopa_app_prefix 'temurin')"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \

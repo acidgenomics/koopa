@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for: expat, fontconfig, freetype2, openjdk,
-# tcl-tk, zlib, X11.
+# NOTE Consider adding support for: expat, fontconfig, freetype2, tcl-tk,
+# temurin, zlib, X11.
 #
 # > options:
 # >   fontconfig:    No (missing fontconfig-config)
