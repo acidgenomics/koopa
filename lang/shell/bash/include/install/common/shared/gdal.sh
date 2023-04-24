@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-24.
     #
     # Use 'configure --help' for build options.
     #
@@ -38,7 +38,7 @@ main() {
         'proj'
         'xz'
         'python3.11'
-        'openjdk'
+        'temurin'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -48,13 +48,13 @@ main() {
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
-    dict['openjdk']="$(koopa_app_prefix 'openjdk')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['proj']="$(koopa_app_prefix 'proj')"
     dict['python']="$(koopa_app_prefix 'python3.11')"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
+    dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
@@ -62,7 +62,7 @@ main() {
     cmake['curl_library']="${dict['curl']}/lib/\
 libcurl.${dict['shared_ext']}"
     cmake['hdf5_root']="${dict['hdf5']}"
-    cmake['java_home']="${dict['openjdk']}"
+    cmake['java_home']="${dict['temurin']}"
     cmake['libxml2_include_dir']="${dict['libxml2']}/include"
     cmake['libxml2_library']="${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
     cmake['pcre2_include_dir']="${dict['pcre2']}/include"
