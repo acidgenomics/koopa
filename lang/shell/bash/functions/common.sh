@@ -16880,10 +16880,10 @@ koopa_progress_bar() {
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
     >&2 "${app['echo']}" -ne "\rProgress \
-[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%\n"
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] ${dict['percent_str']}%"
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
-        >&2 "${app['echo']}" -e '\nDONE'
+        koopa_alert_success '\nDONE!'
     fi
     return 0
 }
