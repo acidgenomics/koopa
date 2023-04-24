@@ -5,8 +5,6 @@ koopa_progress_bar() {
     # Progress bar.
     # @note Updated 2023-04-24.
     #
-    # Using '\e[1A\e[K' approach instead of '\r'.
-    #
     # @seealso
     # - https://www.baeldung.com/linux/command-line-progress-bar
     # - https://stackoverflow.com/questions/11283625/
@@ -59,13 +57,13 @@ koopa_progress_bar() {
         | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
     )
     # Print the progress bar in stderr.
-    >&2 printf '\n\n'
-    >&2 "${app['echo']}" -ne "\e[2A\e[K\
+    >&2 "${app['echo']}" -en "\r\
 Progress \
 [${dict['done_sub_bar']}${dict['todo_sub_bar']}] \
-${dict['percent_str']}%\n"
+${dict['percent_str']}% "
     if [[ "${dict['total']}" -eq "${dict['current']}" ]]
     then
+        printf '\n'
         koopa_alert_success 'DONE!'
     fi
     return 0
