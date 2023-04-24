@@ -3852,10 +3852,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-04-03",
+    "date": "2023-04-24",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.2"
+    "version": "2.17.3"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
