@@ -20139,6 +20139,10 @@ koopa_script_name() {
     return 0
 }
 
+koopa_scripts_private_prefix() {
+    _koopa_scripts_private_prefix "$@"
+}
+
 koopa_shared_apps() {
     local cmd
     koopa_assert_has_no_args "$#"
