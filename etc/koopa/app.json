@@ -2435,7 +2435,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-04-24",
+    "date": "2023-04-25",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2443,7 +2443,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.19.1"
+    "version": "2.19.2"
   },
   "less": {
     "aliases": {
@@ -3653,10 +3653,10 @@
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2023-04-11",
+    "date": "2023-04-24",
     "man1": ["cpan.1", "perl.1"],
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.36.0"
+    "version": "5.36.1"
   },
   "picard": {
     "arch": "amd64",
@@ -3852,10 +3852,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-04-03",
+    "date": "2023-04-24",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.2"
+    "version": "2.17.3"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4278,10 +4278,17 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-04-21",
+    "date": "2023-04-25",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.262"
+    "version": "0.0.263"
+  },
+  "ruff-lsp": {
+    "bin": ["ruff-lsp"],
+    "date": "2023-04-25",
+    "dependencies": ["python3.11"],
+    "url": ["https://pypi.org/project/ruff-lsp/"],
+    "version": "0.0.24"
   },
   "rust": {
     "aliases": {

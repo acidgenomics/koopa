@@ -12263,6 +12263,12 @@ koopa_install_ruby() {
         "$@"
 }
 
+koopa_install_ruff_lsp() {
+    koopa_install_app \
+        --name='ruff-lsp' \
+        "$@"
+}
+
 koopa_install_ruff() {
     koopa_install_app \
         --name='ruff' \
@@ -16838,6 +16844,57 @@ koopa_print() {
 koopa_private_installers_s3_uri() {
     koopa_assert_has_no_args "$#"
     koopa_print 's3://private.koopa.acidgenomics.com/installers'
+}
+
+koopa_progress_bar() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 2
+    [[ "${COLUMNS:?}" -lt 40 ]] && return 0
+    app['bc']="$(koopa_locate_bc)"
+    app['echo']="$(koopa_locate_echo)"
+    app['tr']="$(koopa_locate_tr)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bar_char_done']='#'
+    dict['bar_char_todo']='-'
+    dict['bar_pct_scale']=1
+    dict['bar_size']="$((COLUMNS-20))"
+    dict['current']="${1:?}"
+    dict['total']="${2:?}"
+    dict['percent']="$( \
+        "${app['bc']}" <<< \
+            "scale=${dict['bar_pct_scale']}; \
+            100 * ${dict['current']} / ${dict['total']}" \
+    )"
+    dict['percent_str']="$( \
+        printf "%0.${dict['bar_pct_scale']}f" "${dict['percent']}"
+    )"
+    dict['done']="$( \
+        "${app['bc']}" <<< \
+            "scale=0; \
+            ${dict['bar_size']} * ${dict['percent']} / 100" \
+    )"
+    dict['todo']="$( \
+        "${app['bc']}" <<< \
+            "scale=0; ${dict['bar_size']} - ${dict['done']}" \
+    )"
+    dict['done_sub_bar']=$( \
+        printf "%${dict['done']}s" | \
+        "${app['tr']}" ' ' "${dict['bar_char_done']}" \
+    )
+    dict['todo_sub_bar']=$( \
+        printf "%${dict['todo']}s" \
+        | "${app['tr']}" ' ' "${dict['bar_char_todo']}" \
+    )
+    >&2 "${app['echo']}" -en "\r\
+Progress \
+[${dict['done_sub_bar']}${dict['todo_sub_bar']}] \
+${dict['percent_str']}% "
+    if [[ "${dict['total']}" -eq "${dict['current']}" ]]
+    then
+        printf '\n'
+        koopa_alert_success 'DONE!'
+    fi
+    return 0
 }
 
 koopa_prune_app_binaries() {
@@ -24321,6 +24378,12 @@ koopa_uninstall_rsync() {
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name='ruby' \
+        "$@"
+}
+
+koopa_uninstall_ruff_lsp() {
+    koopa_uninstall_app \
+        --name='ruff-lsp' \
         "$@"
 }
 
