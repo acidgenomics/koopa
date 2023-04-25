@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-04-25.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -64,6 +64,7 @@ main() {
         'azure-cli' | \
         'py-spy' | \
         'ranger-fm' | \
+        'ruff-lsp' | \
         'yt-dlp')
             dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
             ;;

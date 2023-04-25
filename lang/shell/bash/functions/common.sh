@@ -12263,6 +12263,12 @@ koopa_install_ruby() {
         "$@"
 }
 
+koopa_install_ruff_lsp() {
+    koopa_install_app \
+        --name='ruff-lsp' \
+        "$@"
+}
+
 koopa_install_ruff() {
     koopa_install_app \
         --name='ruff' \
@@ -24372,6 +24378,12 @@ koopa_uninstall_rsync() {
 koopa_uninstall_ruby() {
     koopa_uninstall_app \
         --name='ruby' \
+        "$@"
+}
+
+koopa_uninstall_ruff_lsp() {
+    koopa_uninstall_app \
+        --name='ruff-lsp' \
         "$@"
 }
 

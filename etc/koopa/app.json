@@ -4283,6 +4283,13 @@
     "url": ["https://pypi.org/project/ruff/"],
     "version": "0.0.263"
   },
+  "ruff-lsp": {
+    "bin": ["ruff-lsp"],
+    "date": "2023-04-25",
+    "dependencies": ["python3.11"],
+    "url": ["https://pypi.org/project/ruff-lsp/"],
+    "version": "0.0.24"
+  },
   "rust": {
     "aliases": {
       "homebrew": true
