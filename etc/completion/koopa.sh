@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-04-25.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -348,6 +348,7 @@ _koopa_complete() {
                         'rsync'
                         'ruby'
                         'ruff'
+                        'ruff-lsp'
                         'rust'
                         'salmon'
                         'sambamba'
