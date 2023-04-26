@@ -61,12 +61,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-03-29",
+    "date": "2023-04-26",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.1.7"
+    "version": "1.1.8"
   },
   "apr-util": {
     "aliases": {
@@ -3430,10 +3430,10 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-04-10",
+    "date": "2023-04-26",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.78.0"
+    "version": "0.79.0"
   },
   "oniguruma": {
     "aliases": {
