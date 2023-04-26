@@ -17688,7 +17688,7 @@ koopa_r_configure_ldpaths() {
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
-    ld_lib_arr+=("\${R_HOME}/lib")
+    ld_lib_arr+=("${dict['r_prefix']}/lib")
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
     if koopa_is_linux
     then
