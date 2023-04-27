@@ -2379,12 +2379,12 @@
   "jupyterlab": {
     "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-02-03",
-    "dependencies": ["conda"],
+    "date": "2023-04-27",
+    "dependencies": ["python3.11"],
     "large": true,
     "outdated": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "3.6.1"
+    "version": "3.6.3"
   },
   "kallisto": {
     "arch": "amd64",
