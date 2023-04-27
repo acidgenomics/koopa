@@ -3109,15 +3109,14 @@
   "minimap2": {
     "arch": "amd64",
     "bin": ["minimap2"],
-    "date": "2023-01-10",
+    "date": "2023-04-27",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.24"
+    "version": "2.25"
   },
   "misopy": {
     "bin": ["miso"],
