@@ -61,12 +61,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-03-29",
+    "date": "2023-04-26",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.1.7"
+    "version": "1.1.8"
   },
   "apr-util": {
     "aliases": {
@@ -2024,7 +2024,7 @@
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
     "conservative": true,
-    "date": "2023-03-03",
+    "date": "2023-04-27",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2035,7 +2035,7 @@
       "zlib"
     ],
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "7.1.0"
+    "version": "7.2.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3109,14 +3109,14 @@
   "minimap2": {
     "arch": "amd64",
     "bin": ["minimap2"],
-    "date": "2023-01-10",
+    "date": "2023-04-27",
     "dependencies": ["conda"],
     "large": true,
     "url": [
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.24"
+    "version": "2.25"
   },
   "misopy": {
     "bin": ["miso"],
@@ -3429,10 +3429,10 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-04-10",
+    "date": "2023-04-26",
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.78.0"
+    "version": "0.79.0"
   },
   "oniguruma": {
     "aliases": {
@@ -3494,7 +3494,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-03-02",
+    "date": "2023-04-26",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3502,7 +3502,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "2.5.1"
+    "version": "3.0.0"
   },
   "openblas": {
     "aliases": {
