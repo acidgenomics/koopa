@@ -19,6 +19,8 @@ main() {
     local -A app dict
     local -a conf_args
     # FIXME This may be too lax, and can lead to the error commented above.
+    # FIXME Consider erroring here unless we pass a '--bootstrap' flag or some
+    # kind of override variable defined during our binary install script.
     app['python']="$(koopa_locate_python311 --allow-missing)"
     # Allow edge case building against system Python, for system bootstrapping.
     if [[ ! -x "${app['python']}" ]]
