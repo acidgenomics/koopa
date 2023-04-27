@@ -1485,10 +1485,10 @@
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
     "conservative": true,
-    "date": "2022-08-29",
+    "date": "2023-04-27",
     "dependencies": ["gmp", "isl", "mpc", "mpfr", "zstd"],
     "url": ["https://gcc.gnu.org/"],
-    "version": "12.2.0"
+    "version": "13.1.0"
   },
   "gdal": {
     "aliases": {
