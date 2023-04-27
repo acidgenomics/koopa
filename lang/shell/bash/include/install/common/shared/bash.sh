@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Is this picking up gettext installed in /usr/local by Homebrew?
+
 main() {
     # """
     # Install Bash.

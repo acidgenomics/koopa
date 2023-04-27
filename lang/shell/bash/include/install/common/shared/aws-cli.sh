@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to address this edge case on macOS:
+#
+# dyld[61266]: Library not loaded: @executable_path/../Python3
+#  Referenced from: <68CB1594-35C5-3C88-A97A-504048CC29EC> /opt/koopa/app/aws-cli/2.11.13/lib/aws-cli/bin/python
+#  Reason: tried: '/opt/koopa/app/aws-cli/2.11.13/lib/aws-cli/Python3' (no such file), '/System/Volumes/Preboot/Cryptexes/OS@executable_path/../Python3' (no such file), '/opt/koopa/app/aws-cli/2.11.13/lib/aws-cli/Python3' (no such file), '/usr/local/lib/Python3' (no such file), '/usr/lib/Python3' (no such file, not in dyld cache)
+
 main() {
     # """
     # Install AWS CLI.
@@ -12,6 +18,9 @@ main() {
     # """
     local -A app dict
     local -a conf_args
+    # FIXME This may be too lax, and can lead to the error commented above.
+    # FIXME Consider erroring here unless we pass a '--bootstrap' flag or some
+    # kind of override variable defined during our binary install script.
     app['python']="$(koopa_locate_python311 --allow-missing)"
     # Allow edge case building against system Python, for system bootstrapping.
     if [[ ! -x "${app['python']}" ]]
