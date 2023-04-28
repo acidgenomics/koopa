@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-04-27.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -18,6 +18,8 @@ koopa_install_all_binary_apps() {
     bool['bootstrap']=0
     [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
     readarray -t app_names <<< "$(koopa_shared_apps)"
+    # FIXME Need to avoid installing Python 3.11 and other dependencies here.
+    # Consider exporting 'KOOPA_INSTALL_APP_NO_SOLVER' or something of the sort.
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
         koopa_cli_install 'aws-cli'
