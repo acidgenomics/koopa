@@ -17608,10 +17608,15 @@ koopa_r_configure_ldpaths() {
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
     koopa_alert_info "Modifying '${dict['file']}'."
     lines=()
-    lines+=(
-        ": \${JAVA_HOME=${dict['java_home']}}"
-        ": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/libexec/lib/server}"
-    )
+    lines+=(": \${JAVA_HOME=${dict['java_home']}}")
+    if koopa_is_macos
+    then
+        lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
+libexec/Contents/Home/lib/server}")
+    else
+        lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
+libexec/lib/server}")
+    fi
     keys=(
         'bzip2'
         'cairo'
@@ -17700,7 +17705,10 @@ koopa_r_configure_ldpaths() {
     [[ -d '/lib' ]] && ld_lib_arr+=('/lib')
     ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
     dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
-    lines+=("R_LD_LIBRARY_PATH=\"${dict['library_path']}\"")
+    lines+=(
+        "R_LD_LIBRARY_PATH=\"${dict['library_path']}\""
+        'export R_LD_LIBRARY_PATH'
+    )
     if koopa_is_linux
     then
         lines+=(

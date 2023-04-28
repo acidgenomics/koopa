@@ -374,6 +374,7 @@
     "date": "2021-08-12",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
@@ -1085,9 +1086,9 @@
     "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
   },
   "dotfiles": {
-    "date": "2023-04-12",
+    "date": "2023-04-28",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "e513ca02cd29e2cb0de9480653c7c6dcd50d58bf"
+    "version": "2ecd7ef24717a7ab9f41e916a3db18105f405caf"
   },
   "du-dust": {
     "aliases": {
@@ -4465,15 +4466,15 @@
   "snakemake": {
     "arch": "amd64",
     "bin": ["snakemake"],
-    "date": "2023-03-14",
-    "dependencies": ["conda"],
+    "date": "2023-04-28",
+    "dependencies": ["python3.11"],
     "large": true,
     "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.24.2"
+    "version": "7.25.1"
   },
   "sox": {
     "aliases": {
