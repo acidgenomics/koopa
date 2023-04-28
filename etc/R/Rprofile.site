@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-04-13.
+#' @note Updated 2023-04-28.
 #'
 #' @section Restarting R:
 #'
@@ -408,10 +408,13 @@ local({  # nolint
             "crayon.colors" = 256L
         )
     }
-    ## This informs the user about the number of cores, so keep enabled.
-    ## > if (isInstalled("data.table")) {
-    ## >     options("datatable.quiet" = TRUE)
-    ## > }
+    if (isInstalled("data.table")) {
+        options(
+            "datatable.print.class" = TRUE,
+            "datatable.print.keys" = TRUE,
+            "datatable.quiet" = FALSE
+        )
+    }
     if (isInstalled("formatR")) {
         options(
             "formatR.args.newline" = FALSE,
