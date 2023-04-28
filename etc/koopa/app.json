@@ -374,6 +374,7 @@
     "date": "2021-08-12",
     "dependencies": ["conda"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
