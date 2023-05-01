@@ -15,7 +15,7 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
-    koopa_activate_app 'bzip2' 'xz' 'zlib'
+    koopa_activate_app 'bzip2' 'curl' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"
