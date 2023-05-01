@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME How to link zlib correctly here?
-
 main() {
     # """
     # Install minimap2.

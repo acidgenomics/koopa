@@ -370,9 +370,9 @@
   },
   "bedtools": {
     "bin": ["bedtools"],
-    "build_dependencies": ["make"],
+    "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2023-05-01",
-    "dependencies": ["bzip2", "xz", "zlib"],
+    "dependencies": ["bzip2", "curl", "xz", "zlib"],
     "enabled": false,
     "large": true,
     "url": [
