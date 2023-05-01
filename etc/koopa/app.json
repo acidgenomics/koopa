@@ -2399,7 +2399,7 @@
   "kallisto": {
     "arch": "amd64",
     "bin": ["kallisto"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "make"],
+    "build_dependencies": ["autoconf", "automake", "cmake", "make", "sed"],
     "date": "2023-05-01",
     "dependencies": ["hdf5", "zlib"],
     "large": true,
