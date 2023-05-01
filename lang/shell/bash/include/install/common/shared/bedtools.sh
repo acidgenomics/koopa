@@ -32,7 +32,9 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_print_env
     (
         koopa_cd 'utils/htslib'
+        koopa_warn 'FIXME AAA'
         "${app['autoreconf']}" -fiv
+        koopa_warn 'FIXME BBB'
         # FIXME Need to ensure bundled htslib can locate zlib.
     )
     "${app['make']}" \
