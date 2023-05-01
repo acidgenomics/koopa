@@ -25,7 +25,6 @@ main() {
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['version2']="$(koopa_kebab_case_simple "${dict['version']}")"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
@@ -36,11 +35,10 @@ main() {
         '--disable-static'
         '--enable-shared'
         "--prefix=${dict['prefix']}"
-        "--with-libcurl=${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
-        "--with-libdeflate=${dict['libdeflate']}/lib/\
-libdeflate.${dict['shared_ext']}"
-        "--with-zlib=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-        "--with-zstd=${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
+        "--with-libcurl=${dict['curl']}"
+        "--with-libdeflate=${dict['libdeflate']}"
+        "--with-zlib=${dict['zlib']}"
+        "--with-zstd=${dict['zstd']}"
     )
     dict['url']="https://github.com/jkbonfield/io_lib/releases/download/\
 io_lib-${dict['version2']}/io_lib-${dict['version']}.tar.gz"
