@@ -4314,15 +4314,16 @@
   "salmon": {
     "arch": "amd64",
     "bin": ["salmon"],
-    "date": "2023-02-27",
-    "dependencies": ["conda"],
+    "build_dependencies": ["cmake", "make"],
+    "date": "2023-05-01",
+    "dependencies": ["boost", "zlib"],
     "large": true,
     "outdated": true,
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "1.10.0"
+    "version": "1.10.1"
   },
   "sambamba": {
     "arch": "amd64",
