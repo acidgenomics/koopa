@@ -20,10 +20,12 @@ main() {
     app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['curl']="$(koopa_app_prefix 'curl')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/arq5x/bedtools2/releases/download/\
 v${dict['version']}/bedtools-${dict['version']}.tar.gz"
@@ -41,9 +43,14 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         "${app['autoreconf']}" -fiv
         ./configure
     )
+    libs=(
+        "${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
+        "${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
+        "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
-        LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}" \
+        LIBS="${libs[*]}" \
         VERBOSE=1 \
         install prefix="${dict['prefix']}"
     return 0
