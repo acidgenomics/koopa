@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME How to link zlib correctly here?
+
 main() {
     # """
     # Install minimap2.
@@ -13,7 +15,7 @@ main() {
     # """
     #
     local -A app dict
-    local -a libs
+    local -a includes libs
     koopa_activate_app 'zlib'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
@@ -28,11 +30,15 @@ v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
+    includes=(
+        "-I${dict['zlib']}/include"
+    )
     libs=(
         "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
+        INCLUDES="${includes[*]}" \
         LIBS="${libs[*]}" \
         VERBOSE=1
     koopa_cp --target-directory="${dict['prefix']}/bin" 'minimap2'
