@@ -32,6 +32,7 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:-}"
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
@@ -129,7 +130,12 @@ koopa_activate_app() {
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
+        if [[ -d "${dict2['prefix']}/lib/cmake" ]]
+        then
+            CMAKE_PREFIX_PATH="${dict2['prefix']};${CMAKE_PREFIX_PATH}"
+        fi
     done
+    export CMAKE_PREFIX_PATH
     export CPPFLAGS
     export LDFLAGS
     export LDLIBS
@@ -4290,6 +4296,7 @@ koopa_cmake_std_args() {
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
