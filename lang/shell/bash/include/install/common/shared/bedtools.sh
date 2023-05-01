@@ -6,6 +6,7 @@ main() {
     # @note Updated 2023-05-01.
     #
     # @seealso
+    # - https://bedtools.readthedocs.io/en/latest/content/faq.html
     # - https://github.com/arq5x/bedtools2
     # - https://github.com/bioconda/bioconda-recipes/tree/master/
     #     recipes/bedtools
@@ -17,7 +18,9 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/arq5x/bedtools2/releases/download/\
 v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
@@ -27,6 +30,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     "${app['make']}" \
         VERBOSE=1 \
         --jobs="${dict['jobs']}" \
+        LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}" \
         install prefix="${dict['prefix']}"
     return 0
 }
