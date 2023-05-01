@@ -373,6 +373,7 @@
     "bin": ["bedtools"],
     "build_dependencies": ["make"],
     "date": "2023-05-01",
+    "dependencies": ["bzip2", "xz", "zlib"],
     "large": true,
     "url": [
       "https://bedtools.readthedocs.io/",
