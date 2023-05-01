@@ -388,6 +388,7 @@ _koopa_complete() {
                         'tokei'
                         'tree'
                         'tree-sitter'
+                        'tryceratops'
                         'tuc'
                         'udunits'
                         'umis'
