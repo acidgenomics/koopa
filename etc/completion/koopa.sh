@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-04-25.
+    # @note Updated 2023-05-01.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -116,6 +116,7 @@ _koopa_complete() {
                         'c-ares'
                         'ca-certificates'
                         'cairo'
+                        'cereal'
                         'cheat'
                         'chemacs'
                         'chezmoi'
@@ -366,6 +367,7 @@ _koopa_complete() {
                         'sox'
                         'spdlog'
                         'sqlite'
+                        'staden-io-lib'
                         'star'
                         'starship'
                         'stow'
@@ -375,6 +377,7 @@ _koopa_complete() {
                         'system'
                         'taglib'
                         'tar'
+                        'tbb'
                         'tcl-tk'
                         'tealdeer'
                         'temurin'

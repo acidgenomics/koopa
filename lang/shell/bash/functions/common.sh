@@ -32,6 +32,7 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:-}"
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
@@ -129,7 +130,12 @@ koopa_activate_app() {
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
+        if [[ -d "${dict2['prefix']}/lib/cmake" ]]
+        then
+            CMAKE_PREFIX_PATH="${dict2['prefix']};${CMAKE_PREFIX_PATH}"
+        fi
     done
+    export CMAKE_PREFIX_PATH
     export CPPFLAGS
     export LDFLAGS
     export LDLIBS
@@ -4290,6 +4296,7 @@ koopa_cmake_std_args() {
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
@@ -10655,6 +10662,12 @@ koopa_install_cairo() {
         "$@"
 }
 
+koopa_install_cereal() {
+    koopa_install_app \
+        --name='cereal' \
+        "$@"
+}
+
 koopa_install_cheat() {
     koopa_install_app \
         --name='cheat' \
@@ -12377,6 +12390,12 @@ koopa_install_sqlite() {
         "$@"
 }
 
+koopa_install_staden_io_lib() {
+    koopa_install_app \
+        --name='staden-io-lib' \
+        "$@"
+}
+
 koopa_install_star_fusion() {
     koopa_install_app \
         --name='star-fusion' \
@@ -12459,6 +12478,12 @@ koopa_install_taglib() {
 koopa_install_tar() {
     koopa_install_app \
         --name='tar' \
+        "$@"
+}
+
+koopa_install_tbb() {
+    koopa_install_app \
+        --name='tbb' \
         "$@"
 }
 
@@ -22972,6 +22997,12 @@ koopa_uninstall_cairo() {
         "$@"
 }
 
+koopa_uninstall_cereal() {
+    koopa_uninstall_app \
+        --name='cereal' \
+        "$@"
+}
+
 koopa_uninstall_cheat() {
     koopa_uninstall_app \
         --name='cheat' \
@@ -24503,6 +24534,12 @@ koopa_uninstall_sqlite() {
         "$@"
 }
 
+koopa_uninstall_staden_io_lib() {
+    koopa_uninstall_app \
+        --name='staden-io-lib' \
+        "$@"
+}
+
 koopa_uninstall_star_fusion() {
     koopa_uninstall_app \
         --name='star-fusion' \
@@ -24568,6 +24605,12 @@ koopa_uninstall_taglib() {
 koopa_uninstall_tar() {
     koopa_uninstall_app \
         --name='tar' \
+        "$@"
+}
+
+koopa_uninstall_tbb() {
+    koopa_uninstall_app \
+        --name='tbb' \
         "$@"
 }
 
