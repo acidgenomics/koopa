@@ -58,6 +58,7 @@ main() {
     dict['jemalloc']="$(koopa_app_prefix 'jemalloc')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
+    dict['tbb']="$(koopa_app_prefix 'tbb')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
@@ -71,6 +72,8 @@ main() {
 libjemalloc.${dict['shared_ext']}"
     cmake['liblzma_include_dirs']="${dict['xz']}/include"
     cmake['liblzma_libraries']="${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
+    cmake['tbb_include_dirs']="${dict['tbb']}/include"
+    cmake['tbb_libraries']="${dict['tbb']}/lib/libtbb.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     cmake_args=(
@@ -99,8 +102,8 @@ libjemalloc.${dict['shared_ext']}"
         "-DLIBLZMA_LIBRARIES=${cmake['liblzma_libraries']}"
         "-DSTADEN_INCLUDE_DIR=FIXME"
         "-DSTADEN_LIBRARIES=FIXME"
-        "-DTBB_INCLUDE_DIRS=FIXME"
-        "-DTBB_LIBRARIES=FIXME"
+        "-DTBB_INCLUDE_DIRS=${cmake['tbb_include_dirs']}"
+        "-DTBB_LIBRARIES=${cmake['tbb_libraries']}"
     )
     dict['url']="https://github.com/COMBINE-lab/salmon/archive/refs/tags/\
 v${dict['version']}.tar.gz"
