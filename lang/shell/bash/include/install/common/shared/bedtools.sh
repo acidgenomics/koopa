@@ -10,6 +10,7 @@ main() {
     # - https://github.com/arq5x/bedtools2
     # - https://github.com/bioconda/bioconda-recipes/tree/master/
     #     recipes/bedtools
+    # - https://github.com/arq5x/bedtools2/issues/494
     # """
     local -A app dict
     koopa_activate_app --build-only 'make'
@@ -31,6 +32,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         VERBOSE=1 \
         --jobs="${dict['jobs']}" \
         LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_stop 'FIXME'
     "${app['make']}" install prefix="${dict['prefix']}"
     return 0
 }
