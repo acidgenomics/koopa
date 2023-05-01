@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Handle CMAKE_PREFIX_PATH configuration automatically. Use semicolon!
-#  add_subdirectory given source "external/pufferfish" which is not an
-#  existing directory.
-
 main() {
     # """
     # Install salmon.
@@ -17,7 +13,7 @@ main() {
     # """
     local -A app cmake dict
     local -a build_deps cmake_args deps
-    build_deps=('pkg-config')
+    build_deps=('patch' 'pkg-config')
     deps=(
         'boost'
         'bzip2'
@@ -33,6 +29,8 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['patch']="$(koopa_locate_patch)"
     app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
@@ -69,10 +67,6 @@ libstaden-read.${dict['shared_ext']}"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
-        '-DBoost_NO_BOOST_CMAKE=ON'
-        '-DFETCHED_PUFFERFISH=FALSE'
-        '-DFETCH_BOOST=FALSE'
-        '-DNO_IPO=TRUE'
         '-DUSE_SHARED_LIBS=ON'
         # Dependency paths -----------------------------------------------------
         "-DBZIP2_INCLUDE_DIR=${cmake['bzip2_include_dir']}"
@@ -102,6 +96,36 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    # Patch diff created with:
+    # > diff -u \
+    # >     'Findlibstadenio.cmake' \
+    # >     'Findlibstadenio.cmake-1' \
+    # >     > 'staden.patch'
+    "${app['cat']}" << END > 'staden.patch'
+--- Findlibstadenio.cmake	2023-05-01 11:11:46
++++ Findlibstadenio.cmake-1	2023-05-01 11:13:01
+@@ -16,15 +16,6 @@
+ find_library(HTSCODEC_LIBRARY NAMES htscodecs libhtscodecs
+   HINTS \${STADEN_ROOT} ENV STADEN_ROOT PATH_SUFFIXES lib lib64)
+ 
+-if(STADEN_INCLUDE_DIR)
+-  set(_version_regex "^#define[ \\t]+PACKAGE_VERSION[ \\t]+\"([^\\"]+)\\".*")
+-  file(STRINGS "\${STADEN_INCLUDE_DIR}/io_lib/io_lib_config.h"
+-    STADEN_VERSION REGEX "\${_version_regex}")
+-  string(REGEX REPLACE "\${_version_regex}" "\\\1"
+-    STADEN_VERSION "\${STADEN_VERSION}")
+-  unset(_version_regex)
+-endif()
+-
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(libstadenio DEFAULT_MSG
+                                   STADEN_LIBRARY 
+END
+    "${app['patch']}" \
+        --unified \
+        --verbose \
+        'cmake/Modules/Findlibstadenio.cmake' \
+        'staden.patch'
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

@@ -4323,7 +4323,7 @@
   "salmon": {
     "arch": "amd64",
     "bin": ["salmon"],
-    "build_dependencies": ["cmake", "make"],
+    "build_dependencies": ["cmake", "make", "patch"],
     "date": "2023-05-01",
     "dependencies": [
       "boost",
