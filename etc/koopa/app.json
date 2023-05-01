@@ -369,7 +369,6 @@
     "version": "2.20"
   },
   "bedtools": {
-    "arch": "amd64",
     "bin": ["bedtools"],
     "build_dependencies": ["make"],
     "date": "2023-05-01",
@@ -2397,7 +2396,6 @@
     "version": "3.6.3"
   },
   "kallisto": {
-    "arch": "amd64",
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make"],
     "date": "2023-05-01",
@@ -4323,7 +4321,6 @@
     "version": "1.69.0"
   },
   "salmon": {
-    "arch": "amd64",
     "bin": ["salmon"],
     "build_dependencies": ["cmake", "make", "patch"],
     "date": "2023-05-01",
