@@ -8,9 +8,6 @@ main() {
     # Install micromamba.
     # @note Updated 2023-03-31.
     #
-    # Consider setting 'CMAKE_PREFIX_PATH' for CMake configuration.
-    # bzip2 and zstd requirement added in 1.2.0 release.
-    #
     # @seealso
     # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
     # - https://mamba.readthedocs.io/en/latest/developer_zone/build_locally.html
