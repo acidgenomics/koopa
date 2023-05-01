@@ -20,6 +20,7 @@ main() {
     app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -44,6 +45,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         ./configure
     )
     libs=(
+        "${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
         "${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
         "${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
         "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
