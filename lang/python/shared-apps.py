@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-# FIXME This needs to pick up apps that are already installed.
-
 """
 Return supported shared applications defined in 'app.json' file.
-@note Updated 2023-03-29.
+@note Updated 2023-05-01.
 
 @examples
 ./shared-apps.py
@@ -12,7 +10,7 @@ Return supported shared applications defined in 'app.json' file.
 
 from json import load
 from os import getenv
-from os.path import abspath, dirname, join
+from os.path import abspath, dirname, isdir, join
 from platform import machine, system
 from shutil import disk_usage
 
@@ -35,6 +33,24 @@ def arch2() -> str:
     if string == "x86_64":
         string = "amd64"
     return string
+
+
+def koopa_opt_prefix() -> bool:
+    """
+    koopa opt prefix.
+    @note Updated 2023-05-01.
+    """
+    prefix = abspath(join(koopa_prefix(), "opt"))
+    return prefix
+
+
+def koopa_prefix() -> bool:
+    """
+    koopa prefix.
+    @note Updated 2023-05-01.
+    """
+    prefix = abspath(join(dirname(__file__), "../.."))
+    return prefix
 
 
 def large() -> bool:
@@ -69,8 +85,12 @@ def print_apps(app_names: list, json_data: dict) -> bool:
     sys_dict = {}
     sys_dict["arch"] = arch2()
     sys_dict["large"] = large()
+    sys_dict["opt_prefix"] = koopa_opt_prefix()
     sys_dict["platform"] = platform()
     for val in app_names:
+        if isdir(join(sys_dict["opt_prefix"], val)):
+            print(val)
+            continue
         json = json_data[val]
         keys = json.keys()
         if "arch" in keys:
