@@ -18,6 +18,7 @@ main() {
     koopa_activate_app 'bzip2' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -32,6 +33,10 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_print_env
     (
         koopa_cd 'src/utils/htslib'
+        "${app['sed']}" \
+            -i.bak \
+            '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
+            'configure.ac'
         "${app['autoreconf']}" -fiv
         ./configure
     )
