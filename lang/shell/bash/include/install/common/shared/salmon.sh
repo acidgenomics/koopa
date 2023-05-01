@@ -25,6 +25,7 @@
 # HTSCODEC_LIBRARY:FILEPATH=HTSCODEC_LIBRARY-NOTFOUND
 # TBB_DIR:PATH=TBB_DIR-NOTFOUND
 # libgff_DIR:PATH=libgff_DIR-NOTFOUND
+# LIBSTADEN?
 
 main() {
     # """
@@ -36,8 +37,20 @@ main() {
     # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/salmon
     # """
     local -A cmake dict
-    local -a cmake_args
-    koopa_activate_app 'boost' 'zlib'
+    local -a cmake_args deps
+    deps=(
+        'boost'
+        'bzip'
+        'cereal'
+        'icu4c'
+        'jemalloc'
+        'libgff'
+        'libstaden'
+        'tbb'
+        'xz'
+        'zlib'
+    )
+    koopa_activate_app "${deps[@]}"
     dict['boost']="$(koopa_app_prefix 'boost')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
@@ -50,12 +63,22 @@ main() {
         # Build options --------------------------------------------------------
         '-DBoost_NO_BOOST_CMAKE=ON'
         '-DFETCHED_PUFFERFISH=TRUE'
+        '-DFETCH_BOOST=FALSE'
         '-DNO_IPO=TRUE'
         '-DUSE_SHARED_LIBS=ON'
         # Dependency paths -----------------------------------------------------
         "-DBoost_INCLUDE_DIR=${cmake['boost_include_dir']}"
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
         "-DZLIB_LIBRARY=${cmake['zlib_library']}"
+        # > FIXME -DBZIP2_LIBRARIES
+        # > FIXME -DICU_INCLUDE_DIRS
+        # > FIXME -DICU_LIBRARIES
+        # > FIXME CEREAL
+        # > FIXME JEMALLOC
+        # > FIXME LIBGFF
+        # > FIXME LIBLZMA (xz)
+        # > FIXME LIBSTADEN
+        # > FIXME TBB
     )
     dict['url']="https://github.com/COMBINE-lab/salmon/archive/refs/tags/\
 v${dict['version']}.tar.gz"
