@@ -3,7 +3,7 @@
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-01.
     #
     # Consider using 'pkg-config' to manage CFLAGS, CPPFLAGS, and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -67,8 +67,7 @@ koopa_activate_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    # > CFLAGS="${CFLAGS:-}"
-    # > CXXFLAGS="${CXXFLAGS:-}"
+    CMAKE_PREFIX_PATH="${CMAKE_PREFIX_PATH:-}"
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
@@ -144,8 +143,6 @@ koopa_activate_app() {
             )"
             if [[ -n "${dict2['cflags']}" ]]
             then
-                # > CFLAGS="${CFLAGS:-} ${dict2['cflags']}"
-                # > CXXFLAGS="${CXXFLAGS:-} ${dict2['cflags']}"
                 CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
             fi
             if [[ -n "${dict2['ldflags']}" ]]
@@ -159,8 +156,6 @@ koopa_activate_app() {
         else
             if [[ -d "${dict2['prefix']}/include" ]]
             then
-                # > CFLAGS="${CFLAGS:-} -I${dict2['prefix']}/include"
-                # > CXXFLAGS="${CXXFLAGS:-} -I${dict2['prefix']}/include"
                 CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
             fi
             if [[ -d "${dict2['prefix']}/lib" ]]
@@ -175,9 +170,13 @@ koopa_activate_app() {
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
             "${dict2['prefix']}/lib64"
+        # Ensure we configure CMake correctly for find_package.
+        if [[ -d "${dict2['prefix']}/lib/cmake" ]]
+        then
+            CMAKE_PREFIX_PATH="${dict2['prefix']};${CMAKE_PREFIX_PATH}"
+        fi
     done
-    # > export CFLAGS
-    # > export CXXFLAGS
+    export CMAKE_PREFIX_PATH
     export CPPFLAGS
     export LDFLAGS
     export LDLIBS
