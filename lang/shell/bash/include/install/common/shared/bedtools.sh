@@ -14,8 +14,9 @@ main() {
     # - https://github.com/arq5x/bedtools2/tree/master/src/utils/htslib
     # """
     local -A app dict
-    koopa_activate_app --build-only 'make'
+    koopa_activate_app --build-only 'autoconf' 'automake' 'make'
     koopa_activate_app 'bzip2' 'xz' 'zlib'
+    app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
@@ -29,8 +30,15 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/bedtools2'
     koopa_print_env
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}" \
-        install prefix="${dict['prefix']}" \
-        LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    (
+        koopa_cd 'utils/htslib'
+        "${app['autoreconf']}" -fiv
+        # FIXME Need to ensure bundled htslib can locate zlib.
+    )
+    "${app['make']}" \
+        --jobs="${dict['jobs']}" \
+        LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}" \
+        VERBOSE=1 \
+        install prefix="${dict['prefix']}"
     return 0
 }
