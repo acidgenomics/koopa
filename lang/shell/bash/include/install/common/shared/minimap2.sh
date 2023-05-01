@@ -35,6 +35,7 @@ v${dict['version']}.tar.gz"
     libs=(
         '-lm' '-lz' '-lpthread'
         "-L${dict['zlib']}/lib"
+        "-Wl,-rpath,${dict['zlib']}/lib"
     )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
