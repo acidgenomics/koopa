@@ -12383,6 +12383,12 @@ koopa_install_sqlite() {
         "$@"
 }
 
+koopa_install_staden_io_lib() {
+    koopa_install_app \
+        --name='staden-io-lib' \
+        "$@"
+}
+
 koopa_install_star_fusion() {
     koopa_install_app \
         --name='star-fusion' \
@@ -24518,6 +24524,12 @@ koopa_uninstall_spdlog() {
 koopa_uninstall_sqlite() {
     koopa_uninstall_app \
         --name='sqlite' \
+        "$@"
+}
+
+koopa_uninstall_staden_io_lib() {
+    koopa_uninstall_app \
+        --name='staden-io-lib' \
         "$@"
 }
 
