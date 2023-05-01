@@ -40,12 +40,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-03-15",
+    "date": "2023-05-01",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.5.2"
+    "version": "2.6.0"
   },
   "apache-spark": {
     "aliases": {
@@ -371,15 +371,14 @@
   "bedtools": {
     "arch": "amd64",
     "bin": ["bedtools"],
-    "date": "2021-08-12",
-    "dependencies": ["conda"],
+    "build_dependencies": ["make"],
+    "date": "2023-05-01",
     "large": true,
-    "outdated": true,
     "url": [
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
     ],
-    "version": "2.30.0"
+    "version": "2.31.0"
   },
   "bfg": {
     "aliases": {
@@ -1446,10 +1445,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-04-02",
+    "date": "2023-05-01",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.39.0"
+    "version": "0.40.0"
   },
   "gatk": {
     "aliases": {
@@ -3056,10 +3055,10 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2023-01-09",
+    "date": "2023-05-01",
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.33.0"
+    "version": "0.34.0"
   },
   "mcfly": {
     "aliases": {
@@ -3110,14 +3109,14 @@
   "minimap2": {
     "arch": "amd64",
     "bin": ["minimap2"],
-    "date": "2023-04-27",
+    "date": "2023-05-01",
     "dependencies": ["conda"],
     "large": true,
     "url": [
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.25"
+    "version": "2.26"
   },
   "misopy": {
     "bin": ["miso"],
@@ -4466,7 +4465,7 @@
   "snakemake": {
     "arch": "amd64",
     "bin": ["snakemake"],
-    "date": "2023-04-28",
+    "date": "2023-05-01",
     "dependencies": ["python3.11"],
     "large": true,
     "outdated": true,
@@ -4474,7 +4473,7 @@
       "https://bioconda.github.io/recipes/snakemake/README.html",
       "https://github.com/snakemake/snakemake/"
     ],
-    "version": "7.25.1"
+    "version": "7.25.2"
   },
   "sox": {
     "aliases": {
