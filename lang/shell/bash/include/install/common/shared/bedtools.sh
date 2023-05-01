@@ -31,7 +31,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_cd 'src/bedtools2'
     koopa_print_env
     (
-        koopa_cd 'utils/htslib'
+        koopa_cd 'src/utils/htslib'
         koopa_warn 'FIXME AAA'
         "${app['autoreconf']}" -fiv
         koopa_warn 'FIXME BBB'
