@@ -14,6 +14,7 @@ main() {
     # - https://github.com/arq5x/bedtools2/tree/master/src/utils/htslib
     # """
     local -A app dict
+    local -a libs
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
     koopa_activate_app 'bzip2' 'curl' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
@@ -44,8 +45,19 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         "${app['autoreconf']}" -fiv
         ./configure
     )
+    libs=(
+        "-L${dict['bzip2']}/lib"
+        "-L${dict['curl']}/lib"
+        "-L${dict['xz']}/lib"
+        "-L${dict['zlib']}/lib"
+        "-Wl,-rpath,${dict['bzip2']}/lib"
+        "-Wl,-rpath,${dict['curl']}/lib"
+        "-Wl,-rpath,${dict['xz']}/lib"
+        "-Wl,-rpath,${dict['zlib']}/lib"
+    )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
+        LIBS="${libs[*]}" \
         VERBOSE=1 \
         install prefix="${dict['prefix']}"
     return 0
