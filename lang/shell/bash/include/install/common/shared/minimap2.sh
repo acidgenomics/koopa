@@ -22,7 +22,6 @@ main() {
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/lh3/minimap2/archive/refs/tags/\
 v${dict['version']}.tar.gz"
@@ -36,7 +35,6 @@ v${dict['version']}.tar.gz"
     libs=(
         '-lm' '-lz' '-lpthread'
         "-L${dict['zlib']}/lib"
-        "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
