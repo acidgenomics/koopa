@@ -10655,6 +10655,12 @@ koopa_install_cairo() {
         "$@"
 }
 
+koopa_install_cereal() {
+    koopa_install_app \
+        --name='cereal' \
+        "$@"
+}
+
 koopa_install_cheat() {
     koopa_install_app \
         --name='cheat' \
@@ -22969,6 +22975,12 @@ koopa_uninstall_ca_certificates() {
 koopa_uninstall_cairo() {
     koopa_uninstall_app \
         --name='cairo' \
+        "$@"
+}
+
+koopa_uninstall_cereal() {
+    koopa_uninstall_app \
+        --name='cereal' \
         "$@"
 }
 
