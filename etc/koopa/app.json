@@ -2399,13 +2399,14 @@
   "kallisto": {
     "arch": "amd64",
     "bin": ["kallisto"],
-    "date": "2022-01-17",
-    "dependencies": ["conda"],
+    "build_dependencies": ["autoconf", "automake", "cmake", "make"],
+    "date": "2023-05-01",
+    "dependencies": ["hdf5", "zlib"],
     "large": true,
     "url": [
-      "https://bioconda.github.io/recipes/kallisto/README.html",
       "https://pachterlab.github.io/kallisto/",
-      "https://github.com/pachterlab/kallisto/"
+      "https://github.com/pachterlab/kallisto/",
+      "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
     "version": "0.48.0"
   },
