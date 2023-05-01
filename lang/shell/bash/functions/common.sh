@@ -12547,6 +12547,12 @@ koopa_install_tree() {
         "$@"
 }
 
+koopa_install_tryceratops() {
+    koopa_install_app \
+        --name='tryceratops' \
+        "$@"
+}
+
 koopa_install_tuc() {
     koopa_install_app \
         --name='tuc' \
@@ -24671,6 +24677,12 @@ koopa_uninstall_tree_sitter() {
 koopa_uninstall_tree() {
     koopa_uninstall_app \
         --name='tree' \
+        "$@"
+}
+
+koopa_uninstall_tryceratops() {
+    koopa_uninstall_app \
+        --name='tryceratops' \
         "$@"
 }
 
