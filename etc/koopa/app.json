@@ -4835,6 +4835,13 @@
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.0.0"
   },
+  "tryceratops": {
+    "bin": ["tryceratops"],
+    "date": "2023-05-01",
+    "dependencies": ["python3.11"],
+    "url": ["https://pypi.org/project/tryceratops/"],
+    "version": "2.0.0"
+  },
   "udunits": {
     "aliases": {
       "debian": "libudunits2-dev",
