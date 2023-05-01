@@ -14,6 +14,7 @@ main() {
     # - https://github.com/arq5x/bedtools2/tree/master/src/utils/htslib
     # """
     local -A app dict
+    local -a libs
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
     koopa_activate_app 'bzip2' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
