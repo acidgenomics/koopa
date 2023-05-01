@@ -33,6 +33,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_print_env
     (
         koopa_cd 'src/utils/htslib'
+        # This is needed to provide compatibility with autoconf 2.69.
         "${app['sed']}" \
             -i.bak \
             '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
