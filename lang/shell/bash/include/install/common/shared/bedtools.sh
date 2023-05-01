@@ -25,7 +25,6 @@ main() {
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
@@ -46,6 +45,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         ./configure
     )
     libs=(
+        '-lbz2' '-lcurl' '-llzma' '-lz'
         "-L${dict['bzip2']}/lib"
         "-L${dict['curl']}/lib"
         "-L${dict['xz']}/lib"
