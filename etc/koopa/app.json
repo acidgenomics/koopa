@@ -4331,8 +4331,7 @@
       "cereal",
       "icu4c",
       "jemalloc",
-      "libgff",
-      "libstaden",
+      "staden-io-lib",
       "tbb",
       "xz",
       "zlib"
@@ -4545,6 +4544,15 @@
     "outdated": true,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.41.0"
+  },
+  "staden-io-lib": {
+    "aliases": {
+      "conda": "staden_io_lib"
+    },
+    "build_dependencies": ["make"],
+    "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
+    "url": ["https://github.com/jkbonfield/io_lib"],
+    "version": "1.15.0"
   },
   "star": {
     "arch": "amd64",
