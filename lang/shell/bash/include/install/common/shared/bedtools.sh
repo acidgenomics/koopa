@@ -30,7 +30,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     "${app['make']}" \
         VERBOSE=1 \
         --jobs="${dict['jobs']}" \
-        LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}" \
-        install prefix="${dict['prefix']}"
+        LIBS="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    "${app['make']}" install prefix="${dict['prefix']}"
     return 0
 }
