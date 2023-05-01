@@ -4908,8 +4908,8 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2023-03-13",
-    "dependencies": ["conda"],
+    "date": "2023-05-01",
+    "dependencies": ["python3.11"],
     "man1": ["vd.1", "visidata.1"],
     "url": ["https://github.com/saulpw/visidata/"],
     "version": "2.11"
