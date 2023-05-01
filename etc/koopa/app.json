@@ -4331,6 +4331,7 @@
       "cereal",
       "icu4c",
       "jemalloc",
+      "libiconv",
       "staden-io-lib",
       "tbb",
       "xz",
