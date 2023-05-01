@@ -35,6 +35,7 @@ v${dict['version']}.tar.gz"
     )
     libs=(
         "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        '-lm'
     )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
