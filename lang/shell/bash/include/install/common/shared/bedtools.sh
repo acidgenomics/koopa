@@ -15,6 +15,7 @@ main() {
     koopa_activate_app 'bzip2' 'xz' 'zlib'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/arq5x/bedtools2/releases/download/\
@@ -23,6 +24,9 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/bedtools2'
     koopa_print_env
-    "${app['make']}" install prefix="${dict['prefix']}"
+    "${app['make']}" \
+        VERBOSE=1 \
+        --jobs="${dict['jobs']}" \
+        install prefix="${dict['prefix']}"
     return 0
 }
