@@ -34,8 +34,10 @@ v${dict['version']}.tar.gz"
         "-I${dict['zlib']}/include"
     )
     libs=(
-        "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
         '-lm'
+        '-lz'
+        '-lpthread'
+        "-L${dict['zlib']}/lib"
     )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
