@@ -12468,6 +12468,12 @@ koopa_install_tar() {
         "$@"
 }
 
+koopa_install_tbb() {
+    koopa_install_app \
+        --name='tbb' \
+        "$@"
+}
+
 koopa_install_tcl_tk() {
     koopa_install_app \
         --name='tcl-tk' \
@@ -24580,6 +24586,12 @@ koopa_uninstall_taglib() {
 koopa_uninstall_tar() {
     koopa_uninstall_app \
         --name='tar' \
+        "$@"
+}
+
+koopa_uninstall_tbb() {
+    koopa_uninstall_app \
+        --name='tbb' \
         "$@"
 }
 
