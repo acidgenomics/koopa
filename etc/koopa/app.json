@@ -4552,6 +4552,7 @@
     },
     "build_dependencies": ["make"],
     "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
+    "outdated": true,
     "url": ["https://github.com/jkbonfield/io_lib"],
     "version": "1.15.0"
   },

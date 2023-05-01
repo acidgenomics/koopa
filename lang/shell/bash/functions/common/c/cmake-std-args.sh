@@ -3,7 +3,7 @@
 koopa_cmake_std_args() {
     # """
     # Standard CMake arguments.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-01.
     #
     # Potentially useful:
     # - CMAKE_STATIC_LINKER_FLAGS
@@ -22,6 +22,7 @@ koopa_cmake_std_args() {
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
