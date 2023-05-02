@@ -468,7 +468,7 @@ _koopa_activate_dircolors() {
 }
 
 _koopa_activate_docker() {
-    _koopa_add_to_path_start "${HOME:?}/docker/bin"
+    _koopa_add_to_path_start "${HOME:?}/.docker/bin"
     return 0
 }
 
