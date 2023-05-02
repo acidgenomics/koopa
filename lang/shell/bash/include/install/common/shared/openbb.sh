@@ -47,6 +47,7 @@ refs/tags/${dict['file']}"
     koopa_assert_is_file "${dict['conda_env_file']}"
     export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
     export PIP_REQUIRE_VIRTUALENV=false
+    export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
     koopa_activate_conda "${dict['conda_prefix']}"
     conda env create \
