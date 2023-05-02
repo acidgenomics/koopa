@@ -4113,10 +4113,10 @@
   },
   "radian": {
     "bin": ["radian"],
-    "date": "2022-10-18",
+    "date": "2023-05-02",
     "dependencies": ["python3.11"],
     "url": ["https://github.com/randy3k/radian/"],
-    "version": "0.6.4"
+    "version": "0.6.5"
   },
   "ranger-fm": {
     "aliases": {
