@@ -62,7 +62,8 @@ refs/tags/${dict['file']}"
         cache-dir "${dict['poetry_prefix']}" --local
     koopa_assert_is_file "${dict['poetry_config_file']}"
     "${app['poetry']}" config --list
-    "${app['poetry']}" install -vvv --no-interaction
+    # Can use '-vvv' here for more verbose logging.
+    "${app['poetry']}" install --no-interaction
     # > conda install --yes 'tensorflow'
     koopa_rm 'tests' 'website'
     koopa_cp ./* --target-directory="${dict['src_prefix']}"
