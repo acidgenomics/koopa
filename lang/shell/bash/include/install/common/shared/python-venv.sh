@@ -86,17 +86,6 @@ main() {
         koopa_major_minor_version "${dict['py_version']}" \
     )"
     dict['venv_cmd']="${dict['pkg_name']}==${dict['version']}"
-    # Overrides to install from GitHub, for package versions not on PyPi.
-# >     case "${dict['pkg_name']}" in
-# >         'latch')
-# >             case "${dict['version']}" in
-# >                 '3.0.0')
-# >                     dict['venv_cmd']="${dict['pkg_name']} @ \
-# > git+https://github.com/latchbio/latch@${dict['version']}"
-# >                     ;;
-# >             esac
-# >             ;;
-# >     esac
     koopa_print_env
     koopa_python_create_venv \
         --prefix="${dict['libexec']}" \
