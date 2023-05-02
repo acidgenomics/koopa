@@ -12,7 +12,6 @@ main() {
     # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
     local -A app dict
-    app['sudo']="$(koopa_locate_sudo)"
     app['tar']="$(koopa_locate_tar --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['platform']='darwin'
@@ -40,10 +39,11 @@ main() {
     dict['url']="https://mac.r-project.org/openmp/openmp-${dict['version']}-\
 ${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
     koopa_download "${dict['url']}"
-    "${app['sudo']}" "${app['tar']}" \
-        -vxz \
-        -f "$(koopa_basename "${dict['url']}")" \
-        -C '/'
+    koopa_sudo \
+        "${app['tar']}" \
+            -vxz \
+            -f "$(koopa_basename "${dict['url']}")" \
+            -C '/'
     koopa_assert_is_file \
         '/usr/local/include/omp-tools.h' \
         '/usr/local/include/omp.h' \

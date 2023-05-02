@@ -39,8 +39,7 @@ koopa_chmod() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        chmod=("${app['sudo']}" "${app['chmod']}")
+        chmod=('koopa_sudo' "${app['chmod']}")
     else
         chmod=("${app['chmod']}")
     fi

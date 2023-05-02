@@ -29,16 +29,15 @@ in '${dict['passwd_file']}'."
 koopa_linux_add_user_to_group() {
     local -A app dict
     koopa_assert_has_args_le "$#" 2
-    koopa_assert_is_admin
     app['gpasswd']="$(koopa_linux_locate_gpasswd)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['group']="${1:?}"
     dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
     koopa_alert "Adding user '${dict['user']}' to group '${dict['group']}'."
-    "${app['sudo']}" "${app['gpasswd']}" \
-        --add "${dict['user']}" "${dict['group']}"
+    koopa_sudo \
+        "${app['gpasswd']}" \
+            --add "${dict['user']}" "${dict['group']}"
     return 0
 }
 
@@ -740,15 +739,14 @@ koopa_linux_proc_cmdline() {
 koopa_linux_remove_user_from_group() {
     local -A app dict
     koopa_assert_has_args_le "$#" 2
-    koopa_assert_is_admin
     app['gpasswd']="$(koopa_linux_locate_gpasswd)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['group']="${1:?}"
     dict['user']="${2:-}"
     [[ -z "${dict['user']}" ]] && dict['user']="$(koopa_user_name)"
-    "${app['sudo']}" "${app['gpasswd']}" \
-        --delete "${dict['user']}" "${dict['group']}"
+    koopa_sudo \
+        "${app['gpasswd']}" \
+            --delete "${dict['user']}" "${dict['group']}"
     return 0
 }
 
@@ -865,10 +863,8 @@ END
 koopa_linux_update_ldconfig() {
     local -A app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     app['ldconfig']="$(koopa_linux_locate_ldconfig)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['ldconfig']}" || true
+    koopa_sudo "${app['ldconfig']}" || true
     return 0
 }

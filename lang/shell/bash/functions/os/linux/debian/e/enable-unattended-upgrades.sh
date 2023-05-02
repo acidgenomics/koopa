@@ -3,7 +3,7 @@
 koopa_debian_enable_unattended_upgrades() {
     # """
     # Enable unattended upgrades.
-    # @note Updated 2021-11-02.
+    # @note Updated 2023-05-01.
     #
     # @seealso
     # - https://wiki.debian.org/UnattendedUpgrades
@@ -21,14 +21,10 @@ koopa_debian_enable_unattended_upgrades() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-    app['sudo']="$(koopa_locate_sudo)"
     app['unattended_upgrades']="$(koopa_debian_locate_unattended_upgrades)"
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_install 'apt-listchanges' 'unattended-upgrades'
-    # The file '/etc/apt/apt.conf.d/20auto-upgrades' can be created manually or
-    # by running the following command as root.
-    "${app['sudo']}" "${app['dpkg_reconfigure']}" -plow 'unattended-upgrades'
-    # Check status.
-    "${app['sudo']}" "${app['unattended_upgrades']}" -d
+    koopa_sudo "${app['dpkg_reconfigure']}" -plow 'unattended-upgrades'
+    koopa_sudo "${app['unattended_upgrades']}" -d
     return 0
 }
