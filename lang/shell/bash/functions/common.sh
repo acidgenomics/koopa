@@ -204,7 +204,6 @@ koopa_add_make_prefix_link() {
     local -A dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    koopa_assert_is_shared_install
     dict['koopa_prefix']="${1:-}"
     dict['make_prefix']='/usr/local'
     if [[ -z "${dict['koopa_prefix']}" ]]
