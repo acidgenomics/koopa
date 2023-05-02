@@ -228,13 +228,7 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            if ! koopa_is_root
-            then
-                koopa_assert_is_admin
-                app['sudo']="$(koopa_locate_sudo)"
-                koopa_assert_is_executable "${app['sudo']}"
-                "${app['sudo']}" -v
-            fi
+            koopa_sudo_trigger
             ;;
         'user')
             bool['link_in_bin']=0

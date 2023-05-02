@@ -10142,13 +10142,7 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            if ! koopa_is_root
-            then
-                koopa_assert_is_admin
-                app['sudo']="$(koopa_locate_sudo)"
-                koopa_assert_is_executable "${app['sudo']}"
-                "${app['sudo']}" -v
-            fi
+            koopa_sudo_trigger
             ;;
         'user')
             bool['link_in_bin']=0
@@ -21864,6 +21858,17 @@ koopa_sudo_append_string() {
     return 0
 }
 
+koopa_sudo_trigger() {
+    local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_is_root && return 0
+    koopa_assert_is_admin
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app['sudo']}"
+    "${app['sudo']}" -v
+    return 0
+}
+
 koopa_sudo_write_string() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -22587,7 +22592,7 @@ koopa_uninstall_apache_spark() {
 }
 
 koopa_uninstall_app() {
-    local -A app bool dict
+    local -A bool dict
     local -a bin_arr man1_arr
     koopa_assert_is_owner
     bool['quiet']=0
@@ -22686,13 +22691,7 @@ koopa_uninstall_app() {
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            if ! koopa_is_root
-            then
-                koopa_assert_is_admin
-                app['sudo']="$(koopa_locate_sudo)"
-                koopa_assert_is_executable "${app['sudo']}"
-                "${app['sudo']}" -v
-            fi
+            koopa_sudo_trigger
             ;;
         'user')
             bool['unlink_in_bin']=0
