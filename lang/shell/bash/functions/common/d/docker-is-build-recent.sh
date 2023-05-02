@@ -16,7 +16,7 @@ koopa_docker_is_build_recent() {
     koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
     koopa_assert_is_executable "${app[@]}"
     dict['days']=7
     pos=()
