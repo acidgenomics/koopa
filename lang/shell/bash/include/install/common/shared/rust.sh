@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This is hanging on LatchBio Ubuntu 20 instance.
+#   1.69.0-x86_64-unknown-linux-gnu unchanged - rustc 1.69.0 (84c898d65 2023-04-16)
+
 main() {
     # """
     # Install Rust (via rustup).
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-01.
     # """
     local -A app dict
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -30,6 +33,7 @@ main() {
     koopa_assert_is_installed "${app['rustup']}"
     koopa_add_to_path_start "$(koopa_realpath "${dict['tmp_prefix']}/bin")"
     koopa_print_env
+    set -x # FIXME
     "${app['rustup']}" install "${dict['version']}"
     "${app['rustup']}" default "${dict['version']}"
     dict['toolchain']="$( \
