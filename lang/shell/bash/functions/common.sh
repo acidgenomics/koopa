@@ -5001,6 +5001,7 @@ koopa_cp() {
     fi
     cp_args=(
         '-f'
+        '-r'
     )
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
     [[ "${dict['verbose']}" -eq 1 ]] && cp_args+=('-v')
