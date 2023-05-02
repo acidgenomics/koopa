@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# FIXME Our builder instances need to skip the "large" check here.
+
 """
 Return supported shared applications defined in 'app.json' file.
 @note Updated 2023-05-01.
