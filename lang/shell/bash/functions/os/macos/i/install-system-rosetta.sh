@@ -6,9 +6,10 @@ koopa_macos_install_system_rosetta() {
     # @note Updated 2023-04-05.
     # """
     local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     app['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['softwareupdate']}" --install-rosetta
+    koopa_sudo "${app['softwareupdate']}" --install-rosetta
     return 0
 }

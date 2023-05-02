@@ -33,8 +33,7 @@ koopa_chgrp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        chgrp=("${app['sudo']}" "${app['chgrp']}")
+        chgrp=('koopa_sudo' "${app['chgrp']}")
     else
         chgrp=("${app['chgrp']}")
     fi

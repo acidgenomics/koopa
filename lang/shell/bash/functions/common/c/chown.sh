@@ -50,8 +50,7 @@ koopa_chown() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        chown=("${app['sudo']}" "${app['chown']}")
+        chown=('koopa_sudo' "${app['chown']}")
     else
         chown=("${app['chown']}")
     fi

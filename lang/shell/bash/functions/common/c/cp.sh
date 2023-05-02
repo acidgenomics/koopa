@@ -3,7 +3,7 @@
 koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-01.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     #
@@ -73,8 +73,7 @@ koopa_cp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        cp=("${app['sudo']}" "${app['cp']}")
+        cp=('koopa_sudo' "${app['cp']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
     else
@@ -82,7 +81,11 @@ koopa_cp() {
         mkdir=('koopa_mkdir')
         rm=('koopa_rm')
     fi
-    cp_args=('-a' '-f')
+    cp_args=(
+        # > '-a'
+        '-f'
+        '-r'
+    )
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
     [[ "${dict['verbose']}" -eq 1 ]] && cp_args+=('-v')
     cp_args+=("$@")

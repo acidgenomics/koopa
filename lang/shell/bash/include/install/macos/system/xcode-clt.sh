@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Xcode CLT.
-    # @note Updated 2022-09-26.
+    # @note Updated 2023-05-01.
     #
     # This currently requires user interaction.
     #
@@ -23,7 +23,6 @@ main() {
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
     # """
     local -A app dict
-    app['sudo']="$(koopa_locate_sudo)"
     app['xcode_select']="$(koopa_macos_locate_xcode_select)"
     app['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
     koopa_assert_is_executable "${app[@]}"
@@ -36,8 +35,8 @@ main() {
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
     "${app['xcode_select']}" --install
-    "${app['sudo']}" "${app['xcodebuild']}" -license 'accept'
-    "${app['sudo']}" "${app['xcode_select']}" -r
+    koopa_sudo "${app['xcodebuild']}" -license 'accept'
+    koopa_sudo "${app['xcode_select']}" -r
     prefix="$("${app['xcode_select']}" -p)"
     koopa_assert_is_dir "${dict['prefix']}"
     return 0

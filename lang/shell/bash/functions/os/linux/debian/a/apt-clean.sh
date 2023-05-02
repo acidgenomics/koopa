@@ -22,12 +22,10 @@ koopa_debian_apt_clean() {
     # """
     local -A app
     koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['apt_get']}" --yes autoremove
-    "${app['sudo']}" "${app['apt_get']}" --yes clean
+    koopa_sudo "${app['apt_get']}" --yes autoremove
+    koopa_sudo "${app['apt_get']}" --yes clean
     # > koopa_rm --sudo '/var/lib/apt/lists/'*
     return 0
 }

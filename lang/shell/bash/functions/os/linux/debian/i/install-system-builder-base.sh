@@ -3,7 +3,7 @@
 koopa_debian_install_system_builder_base() {
     # """
     # Bootstrap the Debian/Ubuntu builder AMI.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-01.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
@@ -18,27 +18,21 @@ koopa_debian_install_system_builder_base() {
         koopa_debian_locate_debconf_set_selections \
     )"
     app['echo']="$(koopa_locate_echo --allow-system)"
-    app['sudo']="$(koopa_locate_sudo --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['apt_get']}" update
-    "${app['sudo']}" \
+    koopa_sudo "${app['apt_get']}" update
+    koopa_sudo \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" upgrade --yes
-    # Using 'dist-upgrade' can be too aggressive.
-    # > "${app['sudo']}" \
-    # >     DEBCONF_NONINTERACTIVE_SEEN='true' \
-    # >     DEBIAN_FRONTEND='noninteractive' \
-    # >     "${app['apt_get']}" dist-upgrade --yes
+        "${app['apt_get']}" full-upgrade --yes
     "${app['cat']}" << END \
-        | "${app['sudo']}" "${app['debconf_set_selections']}"
+        | koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
     # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'. Don't
     # include 'zlib1g-dev' here. We want to ensure that our build recipes are
     # hardened with a local copy of zlib.
-    "${app['sudo']}" \
+    koopa_sudo \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" \
@@ -69,16 +63,16 @@ END
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['apt_get']}" autoremove --yes
-    "${app['sudo']}" "${app['apt_get']}" clean
-    "${app['sudo']}" "${app['timedatectl']}" set-timezone 'America/New_York'
+    koopa_sudo "${app['apt_get']}" autoremove --yes
+    koopa_sudo "${app['apt_get']}" clean
+    koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
     koopa_sudo_write_string \
         --file='/etc/locale.gen' \
         --string='en_US.UTF-8 UTF-8'
-    "${app['sudo']}" "${app['locale_gen']}" --purge
-    "${app['sudo']}" "${app['dpkg_reconfigure']}" \
+    koopa_sudo "${app['locale_gen']}" --purge
+    koopa_sudo "${app['dpkg_reconfigure']}" \
         --frontend='noninteractive' locales
-    "${app['sudo']}" "${app['update_locale']}" LANG='en_US.UTF-8'
+    koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
     koopa_enable_passwordless_sudo
     return 0
 }

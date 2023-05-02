@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Rust (via rustup).
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-01.
     # """
     local -A app dict
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -40,6 +40,6 @@ main() {
     dict['toolchain_prefix']="${dict['tmp_prefix']}/toolchains/\
 ${dict['toolchain']}"
     koopa_assert_is_dir "${dict['toolchain_prefix']}"
-    koopa_cp "${dict['toolchain_prefix']}" "${dict['prefix']}"
+    koopa_cp --verbose "${dict['toolchain_prefix']}" "${dict['prefix']}"
     return 0
 }
