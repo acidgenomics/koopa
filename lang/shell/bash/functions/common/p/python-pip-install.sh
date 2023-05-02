@@ -66,6 +66,9 @@ koopa_python_pip_install() {
         '--no-cache-dir'
         '--no-warn-script-location'
         '--progress-bar=on'
+        # > '--trusted-host=files.pythonhosted.org'
+        # > '--trusted-host=pypi.org'
+        # > '--trusted-host=pypi.python.org'
     )
     if [[ -n "${dict['prefix']}" ]]
     then
