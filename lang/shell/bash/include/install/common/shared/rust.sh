@@ -3,6 +3,9 @@
 # FIXME This is hanging on LatchBio Ubuntu 20 instance.
 #   1.69.0-x86_64-unknown-linux-gnu unchanged - rustc 1.69.0 (84c898d65 2023-04-16)
 
+# FIXME This step is the problem on Ubuntu 20:
+# /opt/koopa/bin/gcp -a -f rustup/toolchains/1.69.0-x86_64-unknown-linux-gnu /opt/koopa/app/rust/1.69.0
+
 main() {
     # """
     # Install Rust (via rustup).
@@ -44,6 +47,7 @@ main() {
     dict['toolchain_prefix']="${dict['tmp_prefix']}/toolchains/\
 ${dict['toolchain']}"
     koopa_assert_is_dir "${dict['toolchain_prefix']}"
-    koopa_cp "${dict['toolchain_prefix']}" "${dict['prefix']}"
+    # FIXME This step is hanging on Ubuntu 20.
+    koopa_cp --verbose "${dict['toolchain_prefix']}" "${dict['prefix']}"
     return 0
 }
