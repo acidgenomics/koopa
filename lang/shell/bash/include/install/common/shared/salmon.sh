@@ -3,13 +3,14 @@
 main() {
     # """
     # Install salmon.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-02.
     #
     # @seealso
     # - https://github.com/COMBINE-lab/salmon/
     # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/salmon
     # - https://cmake.org/cmake/help/latest/module/FindICU.html
     # - https://cmake.org/cmake/help/latest/module/FindLibLZMA.html
+    # - https://github.com/COMBINE-lab/salmon/issues/664
     # """
     local -A app cmake dict
     local -a build_deps cmake_args deps
@@ -67,6 +68,7 @@ libstaden-read.${dict['shared_ext']}"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
+        '-DNO_IPO=TRUE'
         '-DUSE_SHARED_LIBS=ON'
         # Dependency paths -----------------------------------------------------
         "-DBZIP2_INCLUDE_DIR=${cmake['bzip2_include_dir']}"
