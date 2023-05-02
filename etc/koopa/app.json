@@ -502,12 +502,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2022-03-31",
+    "date": "2023-05-02",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.21.2"
+    "version": "1.21.3"
   },
   "brotli": {
     "aliases": {
