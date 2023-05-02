@@ -3356,8 +3356,7 @@ koopa_chgrp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        chgrp=("${app['sudo']}" "${app['chgrp']}")
+        chgrp=('koopa_sudo' "${app['chgrp']}")
     else
         chgrp=("${app['chgrp']}")
     fi
@@ -3399,8 +3398,7 @@ koopa_chmod() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        chmod=("${app['sudo']}" "${app['chmod']}")
+        chmod=('koopa_sudo' "${app['chmod']}")
     else
         chmod=("${app['chmod']}")
     fi
@@ -3457,8 +3455,7 @@ koopa_chown() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        chown=("${app['sudo']}" "${app['chown']}")
+        chown=('koopa_sudo' "${app['chown']}")
     else
         chown=("${app['chown']}")
     fi
@@ -4990,8 +4987,7 @@ koopa_cp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        cp=("${app['sudo']}" "${app['cp']}")
+        cp=('koopa_sudo' "${app['cp']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
     else
@@ -7081,9 +7077,7 @@ koopa_find_and_replace_in_file() {
     [[ "${dict['multiline']}" -eq 1 ]] && flags+=('-0')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        koopa_assert_is_admin
-        app['sudo']="$(koopa_locate_sudo)"
-        perl_cmd+=("${app['sudo']}" "${app['perl']}")
+        perl_cmd+=('koopa_sudo' "${app['perl']}")
     else
         perl_cmd=("${app['perl']}")
     fi
@@ -7504,8 +7498,7 @@ koopa_find() {
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        find+=("${app['sudo']}")
+        find+=('koopa_sudo')
     fi
     find+=("${app['find']}")
     case "${dict['engine']}" in
@@ -8709,8 +8702,7 @@ koopa_grep() {
     grep_cmd=("${app['grep']}")
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        grep_cmd=("${app['sudo']}" "${grep_cmd[@]}")
+        grep_cmd=('koopa_sudo' "${grep_cmd[@]}")
     fi
     grep_args=()
     case "${dict['engine']}" in
@@ -10146,14 +10138,17 @@ ${dict['version2']}"
             fi
             ;;
         'system')
-            koopa_assert_is_admin
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            app['sudo']="$(koopa_locate_sudo)"
-            koopa_assert_is_executable "${app['sudo']}"
-            "${app['sudo']}" -v
+            if ! koopa_is_root
+            then
+                koopa_assert_is_admin
+                app['sudo']="$(koopa_locate_sudo)"
+                koopa_assert_is_executable "${app['sudo']}"
+                "${app['sudo']}" -v
+            fi
             ;;
         'user')
             bool['link_in_bin']=0
@@ -14367,8 +14362,7 @@ koopa_ln() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        ln=("${app['sudo']}" "${app['ln']}")
+        ln=('koopa_sudo' "${app['ln']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
     else
@@ -16208,8 +16202,7 @@ koopa_mkdir() {
     [[ "${dict['verbose']}" -eq 1 ]] && mkdir_args+=('-v')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        mkdir=("${app['sudo']}" "${app['mkdir']}")
+        mkdir=('koopa_sudo' "${app['mkdir']}")
     else
         mkdir=("${app['mkdir']}")
     fi
@@ -16433,9 +16426,8 @@ koopa_mv() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
         mkdir=('koopa_mkdir' '--sudo')
-        mv=("${app['sudo']}" "${app['mv']}")
+        mv=('koopa_sudo' "${app['mv']}")
         rm=('koopa_rm' '--sudo')
     else
         mkdir=('koopa_mkdir')
@@ -17586,7 +17578,6 @@ koopa_r_configure_java() {
     app['jar']="${dict['java_home']}/bin/jar"
     app['java']="${dict['java_home']}/bin/java"
     app['javac']="${dict['java_home']}/bin/javac"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_alert_info "Using Java SDK at '${dict['java_home']}'."
     conf_dict['java_home']="${dict['java_home']}"
     conf_dict['jar']="${app['jar']}"
@@ -17605,8 +17596,7 @@ koopa_r_configure_java() {
             r_cmd=("${app['r']}")
             ;;
         '1')
-            koopa_assert_is_admin
-            r_cmd=("${app['sudo']}" "${app['r']}")
+            r_cmd=('koopa_sudo' "${app['r']}")
             ;;
     esac
     koopa_assert_is_executable "${app[@]}"
@@ -18363,8 +18353,7 @@ remove-packages-in-system-library.R"
     rscript_cmd=()
     if [[ "${dict['system']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        rscript_cmd+=("${app['sudo']}")
+        rscript_cmd+=('koopa_sudo')
     fi
     rscript_cmd+=("${app['rscript']}")
     koopa_assert_is_executable "${app[@]}"
@@ -18896,8 +18885,7 @@ koopa_rm() {
     [[ "${dict['verbose']}" -eq 1 ]] && rm_args+=('-v')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        rm+=("${app['sudo']}" "${app['rm']}")
+        rm+=('koopa_sudo' "${app['rm']}")
     else
         rm=("${app['rm']}")
     fi
@@ -21831,7 +21819,6 @@ koopa_sudo_append_string() {
     local -A app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    app['sudo']="$(koopa_locate_sudo)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']=''
@@ -21873,7 +21860,7 @@ koopa_sudo_append_string() {
         koopa_touch --sudo "${dict['file']}"
     fi
     koopa_print "${dict['string']}" \
-        | "${app['sudo']}" "${app['tee']}" -a "${dict['file']}" >/dev/null
+        | koopa_sudo "${app['tee']}" -a "${dict['file']}" >/dev/null
     return 0
 }
 
@@ -21881,7 +21868,6 @@ koopa_sudo_write_string() {
     local -A app dict
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    app['sudo']="$(koopa_locate_sudo)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']=''
@@ -21923,16 +21909,23 @@ koopa_sudo_write_string() {
         koopa_touch --sudo "${dict['file']}"
     fi
     koopa_print "${dict['string']}" \
-        | "${app['sudo']}" "${app['tee']}" "${dict['file']}" >/dev/null
+        | koopa_sudo "${app['tee']}" "${dict['file']}" >/dev/null
     return 0
 }
 
 koopa_sudo() {
     local -A app
     local -a cmd
+    if [[ "$#" -eq 0 ]]
+    then
+        local -a pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     koopa_assert_has_args "$#"
     if ! koopa_is_root
     then
+        koopa_assert_is_admin
         app['sudo']="$(koopa_locate_sudo)"
         koopa_assert_is_executable "${app[@]}"
         cmd+=("${app['sudo']}")
@@ -22520,9 +22513,8 @@ koopa_touch() {
     mkdir=('koopa_mkdir')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
         mkdir+=('--sudo')
-        touch=("${app['sudo']}" "${app['touch']}")
+        touch=('koopa_sudo' "${app['touch']}")
     else
         touch=("${app['touch']}")
     fi
@@ -22691,13 +22683,16 @@ koopa_uninstall_app() {
             [[ -z "${bool['unlink_in_opt']}" ]] && bool['unlink_in_opt']=1
             ;;
         'system')
-            koopa_assert_is_admin
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            app['sudo']="$(koopa_locate_sudo)"
-            koopa_assert_is_executable "${app['sudo']}"
-            "${app['sudo']}" -v
+            if ! koopa_is_root
+            then
+                koopa_assert_is_admin
+                app['sudo']="$(koopa_locate_sudo)"
+                koopa_assert_is_executable "${app['sudo']}"
+                "${app['sudo']}" -v
+            fi
             ;;
         'user')
             bool['unlink_in_bin']=0
@@ -25170,14 +25165,13 @@ koopa_update_system_tex_packages() {
     local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    app['sudo']="$(koopa_locate_sudo)"
     app['tlmgr']="$(koopa_locate_tlmgr)"
     koopa_assert_is_executable "${app[@]}"
     (
         koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
-        "${app['sudo']}" "${app['tlmgr']}" update --self
-        "${app['sudo']}" "${app['tlmgr']}" update --list
-        "${app['sudo']}" "${app['tlmgr']}" update --all
+        koopa_sudo "${app['tlmgr']}" update --self
+        koopa_sudo "${app['tlmgr']}" update --list
+        koopa_sudo "${app['tlmgr']}" update --all
     )
     return 0
 }

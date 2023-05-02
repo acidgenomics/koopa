@@ -73,8 +73,7 @@ koopa_cp() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        cp=("${app['sudo']}" "${app['cp']}")
+        cp=('koopa_sudo' "${app['cp']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
     else

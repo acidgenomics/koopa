@@ -26,7 +26,6 @@ main() {
     # """
     local -A app dict
     app['installer']="$(koopa_macos_locate_installer)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['framework_prefix']='/Library/Frameworks/R.framework'
@@ -53,9 +52,10 @@ ${dict['maj_min_ver']}-${dict['arch']}/Resources"
     dict['url']="https://cran.r-project.org/bin/macosx/\
 ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     koopa_download "${dict['url']}"
-    "${app['sudo']}" "${app['installer']}" \
-        -pkg "$(koopa_basename "${dict['url']}")" \
-        -target '/'
+    koopa_sudo \
+        "${app['installer']}" \
+            -pkg "$(koopa_basename "${dict['url']}")" \
+            -target '/'
     koopa_assert_is_dir "${dict['prefix']}"
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
