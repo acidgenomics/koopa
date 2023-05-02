@@ -2,7 +2,7 @@
 
 main() {
     # """
-    # Install radian with patch for ldpaths handling on macOS.
+    # Install radian with patch for improved 'ldpaths' handling on macOS.
     # @note Updated 2023-05-02.
     #
     # @seealso
