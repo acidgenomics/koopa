@@ -16,7 +16,7 @@ main() {
     local -A app dict
     local -a libs
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
-    koopa_activate_app 'bzip2' 'curl' 'xz' 'zlib'
+    koopa_activate_app 'bzip2' 'curl' 'openssl3' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"
@@ -24,6 +24,7 @@ main() {
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['jobs']="$(koopa_cpu_count)"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"
@@ -45,13 +46,20 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         ./configure
     )
     libs=(
-        '-lbz2' '-lcurl' '-llzma' '-lz'
+        '-lbz2'
+        '-lcrypto'
+        '-lcurl'
+        '-llzma'
+        '-lssl'
+        '-lz'
         "-L${dict['bzip2']}/lib"
         "-L${dict['curl']}/lib"
+        "-L${dict['openssl']}/lib"
         "-L${dict['xz']}/lib"
         "-L${dict['zlib']}/lib"
         "-Wl,-rpath,${dict['bzip2']}/lib"
         "-Wl,-rpath,${dict['curl']}/lib"
+        "-Wl,-rpath,${dict['openssl']}/lib"
         "-Wl,-rpath,${dict['xz']}/lib"
         "-Wl,-rpath,${dict['zlib']}/lib"
     )

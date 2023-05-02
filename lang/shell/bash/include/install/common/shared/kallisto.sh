@@ -50,6 +50,7 @@ v${dict['version']}.tar.gz"
             '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
             'configure.ac'
         "${app['autoreconf']}" -fiv
+        ./configure
     )
     koopa_cd 'src'
     export KOOPA_CPU_COUNT=1
