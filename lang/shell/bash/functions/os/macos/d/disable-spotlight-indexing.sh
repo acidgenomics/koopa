@@ -3,7 +3,7 @@
 koopa_macos_disable_spotlight_indexing() {
     # """
     # Disable spotlight indexing.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-01.
     #
     # Conversely, use 'on' instead of 'off' to re-enable.
     #
@@ -11,10 +11,11 @@ koopa_macos_disable_spotlight_indexing() {
     # > sudo fs_usage -w -f filesys mds
     # """
     local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     app['mdutil']="$(koopa_macos_locate_mdutil)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['mdutil']}" -a -i off
+    koopa_sudo "${app['mdutil']}" -a -i off
     "${app['mdutil']}" -a -s
     return 0
 }

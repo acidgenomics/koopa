@@ -155,8 +155,7 @@ koopa_grep() {
     grep_cmd=("${app['grep']}")
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        grep_cmd=("${app['sudo']}" "${grep_cmd[@]}")
+        grep_cmd=('koopa_sudo' "${grep_cmd[@]}")
     fi
     grep_args=()
     case "${dict['engine']}" in

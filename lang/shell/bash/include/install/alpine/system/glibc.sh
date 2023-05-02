@@ -31,7 +31,6 @@ main() {
     local -A app dict
     app['apk']="$(koopa_alpine_locate_apk)"
     app['localedef']="$(koopa_alpine_locate_localedef)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['base_url']="https://github.com/sgerrand/alpine-pkg-glibc/\
@@ -55,11 +54,12 @@ releases/download/${dict['version']}"
     koopa_cp --sudo \
         "${dict['pub_key_file']}" \
         "${dict['apk_key_prefix']}/${dict['pub_key_file']}"
-    "${app['sudo']}" "${app['apk']}" add \
-        "${dict['apk_bin_file']}" \
-        "${dict['apk_dev_file']}" \
-        "${dict['apk_i18n_file']}" \
-        "${dict['apk_main_file']}"
+    koopa_sudo \
+        "${app['apk']}" add \
+            "${dict['apk_bin_file']}" \
+            "${dict['apk_dev_file']}" \
+            "${dict['apk_i18n_file']}" \
+            "${dict['apk_main_file']}"
     # Setting 'en_US.UTF-8', as recommended by alpine-pkg-glibc repo.
     "${app['localedef']}" -f 'UTF-8' -i 'en_US' 'en_US.UTF-8' || true
     # docker-alpine-glibc approach for setting 'C.UTF-8' locale as default.

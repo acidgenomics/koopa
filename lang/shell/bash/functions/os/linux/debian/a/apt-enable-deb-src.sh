@@ -3,14 +3,12 @@
 koopa_debian_apt_enable_deb_src() {
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-01.
     # """
     local -A app dict
     koopa_assert_has_args_le "$#" 1
-    koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     app['sed']="$(koopa_locate_sed --allow-system)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']="${1:-}"
     [[ -z "${dict['file']}" ]] && \
@@ -24,11 +22,12 @@ koopa_debian_apt_enable_deb_src() {
         koopa_alert_note "No lines to uncomment in '${dict['file']}'."
         return 0
     fi
-    "${app['sudo']}" "${app['sed']}" \
-        -E \
-        -i.bak \
-        's/^# deb-src /deb-src /' \
-        "${dict['file']}"
-    "${app['sudo']}" "${app['apt_get']}" update
+    koopa_sudo \
+        "${app['sed']}" \
+            -E \
+            -i.bak \
+            's/^# deb-src /deb-src /' \
+            "${dict['file']}"
+    koopa_sudo "${app['apt_get']}" update
     return 0
 }
