@@ -17230,7 +17230,6 @@ koopa_python_pip_install() {
     koopa_assert_is_executable "${app[@]}"
     pkgs=("$@")
     install_args=(
-        '-vvv'
         '--default-timeout=300'
         '--disable-pip-version-check'
         '--ignore-installed'
