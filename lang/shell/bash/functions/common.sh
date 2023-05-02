@@ -5623,7 +5623,7 @@ koopa_docker_build() {
     local -a build_args image_ids platforms tags
     local tag
     koopa_assert_has_args "$#"
-    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['cut']="$(koopa_locate_cut)"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
     app['sort']="$(koopa_locate_sort)"
@@ -5848,7 +5848,7 @@ koopa_docker_is_build_recent() {
     koopa_assert_has_args "$#"
     app['date']="$(koopa_locate_date)"
     app['docker']="$(koopa_locate_docker)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
     koopa_assert_is_executable "${app[@]}"
     dict['days']=7
     pos=()
@@ -14833,7 +14833,7 @@ koopa_locate_docker() {
     args=()
     if koopa_is_macos
     then
-        args+=('/usr/local/bin/docker')
+        args+=("${HOME:?}/.docker/bin/docker")
     else
         args+=('/usr/bin/docker')
     fi

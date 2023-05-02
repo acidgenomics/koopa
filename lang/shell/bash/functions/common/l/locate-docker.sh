@@ -5,7 +5,7 @@ koopa_locate_docker() {
     args=()
     if koopa_is_macos
     then
-        args+=('/usr/local/bin/docker')
+        args+=("${HOME:?}/.docker/bin/docker")
     else
         args+=('/usr/bin/docker')
     fi

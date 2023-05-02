@@ -8,6 +8,6 @@ _koopa_activate_docker() {
     # @seealso
     # - https://docs.docker.com/engine/release-notes/23.0/
     # """
-    _koopa_add_to_path_start "${HOME:?}/docker/bin"
+    _koopa_add_to_path_start "${HOME:?}/.docker/bin"
     return 0
 }
