@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2023-04-07.
+    # @note Updated 2023-05-01.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -55,7 +55,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa in interactive shell.
-    # @note Updated 2023-04-12.
+    # @note Updated 2023-05-01.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -96,6 +96,7 @@ __koopa_activate_koopa() {
     _koopa_activate_delta || return 1
     _koopa_activate_difftastic || return 1
     _koopa_activate_dircolors || return 1
+    _koopa_activate_docker || return 1
     _koopa_activate_fzf || return 0
     _koopa_activate_gcc_colors || return 1
     _koopa_activate_kitty || return 1

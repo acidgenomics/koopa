@@ -467,6 +467,11 @@ _koopa_activate_dircolors() {
     return 0
 }
 
+_koopa_activate_docker() {
+    _koopa_add_to_path_start "${HOME:?}/.docker/bin"
+    return 0
+}
+
 _koopa_activate_fzf() {
     [ -x "$(_koopa_bin_prefix)/fzf" ] || return 0
     if [ -z "${FZF_DEFAULT_OPTS:-}" ]
