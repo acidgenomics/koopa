@@ -3,7 +3,7 @@
 koopa_cp() {
     # """
     # Hardened version of coreutils cp (copy).
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-01.
     #
     # Note that '-t' flag is not directly supported for BSD variant.
     #
@@ -82,7 +82,10 @@ koopa_cp() {
         mkdir=('koopa_mkdir')
         rm=('koopa_rm')
     fi
-    cp_args=('-a' '-f')
+    cp_args=(
+        # > '-a'
+        '-f'
+    )
     [[ "${dict['symlink']}" -eq 1 ]] && cp_args+=('-s')
     [[ "${dict['verbose']}" -eq 1 ]] && cp_args+=('-v')
     cp_args+=("$@")
