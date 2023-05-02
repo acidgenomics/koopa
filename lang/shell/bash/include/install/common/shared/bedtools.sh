@@ -14,8 +14,9 @@ main() {
     # - https://github.com/arq5x/bedtools2/tree/master/src/utils/htslib
     # """
     local -A app dict
+    local -a libs
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
-    koopa_activate_app 'bzip2' 'xz' 'zlib'
+    koopa_activate_app 'bzip2' 'curl' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"
@@ -24,7 +25,6 @@ main() {
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
@@ -45,10 +45,15 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         ./configure
     )
     libs=(
-        "${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
-        "${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
-        "${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
-        "${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        '-lbz2' '-lcurl' '-llzma' '-lz'
+        "-L${dict['bzip2']}/lib"
+        "-L${dict['curl']}/lib"
+        "-L${dict['xz']}/lib"
+        "-L${dict['zlib']}/lib"
+        "-Wl,-rpath,${dict['bzip2']}/lib"
+        "-Wl,-rpath,${dict['curl']}/lib"
+        "-Wl,-rpath,${dict['xz']}/lib"
+        "-Wl,-rpath,${dict['zlib']}/lib"
     )
     "${app['make']}" \
         --jobs="${dict['jobs']}" \

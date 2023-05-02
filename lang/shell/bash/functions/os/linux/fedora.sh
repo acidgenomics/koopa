@@ -23,10 +23,11 @@ koopa_fedora_dnf_remove() {
 
 koopa_fedora_dnf() {
     local -A app
+    koopa_assert_has_args "$#"
+    koopa_assert_is_admin
     app['dnf']="$(koopa_fedora_locate_dnf)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['dnf']}" -y "$@"
+    koopa_sudo "${app['dnf']}" -y "$@"
     return 0
 }
 
@@ -45,13 +46,15 @@ bcl2fastq-conversion-software/downloads.html'."
 koopa_fedora_install_from_rpm() {
     local -A app
     koopa_assert_has_args "$#"
+    koopa_assert_is_admin
     app['rpm']="$(koopa_fedora_locate_rpm)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['rpm']}" -v \
-        --force \
-        --install \
-        "$@"
+    koopa_sudo \
+        "${app['rpm']}" \
+            -v \
+            --force \
+            --install \
+            "$@"
     return 0
 }
 
@@ -97,17 +100,17 @@ koopa_fedora_set_locale() {
     koopa_assert_is_admin
     app['locale']="$(koopa_locate_locale)"
     app['localedef']="$(koopa_locate_localedef)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['lang']='en'
     dict['country']='US'
     dict['charset']='UTF-8'
     dict['lang_string']="${dict['lang']}_${dict['country']}.${dict['charset']}"
     koopa_alert "Setting locale to '${dict['lang_string']}'."
-    "${app['sudo']}" "${app['localedef']}" \
-        -i "${dict['lang']}_${dict['country']}" \
-        -f "${dict['charset']}" \
-        "${dict['lang_string']}"
+    koopa_sudo \
+        "${app['localedef']}" \
+            -i "${dict['lang']}_${dict['country']}" \
+            -f "${dict['charset']}" \
+            "${dict['lang_string']}"
     "${app['locale']}"
     koopa_alert_success "Locale is defined as '${dict['lang_string']}'."
     return 0

@@ -57,12 +57,12 @@ koopa_macos_brew_cask_quarantine_fix() {
     local -A app
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    app['sudo']="$(koopa_locate_sudo)"
     app['xattr']="$(koopa_macos_locate_xattr)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['xattr']}" -r -d \
-        'com.apple.quarantine' \
-        '/Applications/'*'.app'
+    koopa_sudo \
+        "${app['xattr']}" -r -d \
+            'com.apple.quarantine' \
+            '/Applications/'*'.app'
     return 0
 }
 
@@ -122,7 +122,6 @@ koopa_macos_clean_launch_services() {
     koopa_assert_is_admin
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['lsregister']="$(koopa_macos_locate_lsregister)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     koopa_alert "Cleaning LaunchServices 'Open With' menu."
     "${app['lsregister']}" \
@@ -131,7 +130,7 @@ koopa_macos_clean_launch_services() {
         -domain 'local' \
         -domain 'system' \
         -domain 'user'
-    "${app['sudo']}" "${app['kill_all']}" 'Finder'
+    koopa_sudo "${app['kill_all']}" 'Finder'
     koopa_alert_success 'Clean up was successful.'
     return 0
 }
@@ -188,7 +187,6 @@ koopa_macos_disable_plist_file() {
     local file
     koopa_assert_has_args "$#"
     app['launchctl']="$(koopa_macos_locate_launchctl)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_file "$@"
     for file in "$@"
@@ -216,8 +214,7 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
             '0')
                 if [[ "${dict['daemon']}" -eq 1 ]]
                 then
-                    "${app['launchctl']}" \
-                        unload "${dict['enabled_file']}"
+                    "${app['launchctl']}" unload "${dict['enabled_file']}"
                 fi
                 koopa_mv \
                     "${dict['enabled_file']}" \
@@ -226,8 +223,8 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
             '1')
                 if [[ "${dict['daemon']}" -eq 1 ]]
                 then
-                    "${app['sudo']}" "${app['launchctl']}" \
-                        unload "${dict['enabled_file']}"
+                    koopa_sudo \
+                        "${app['launchctl']}" unload "${dict['enabled_file']}"
                 fi
                 koopa_mv --sudo \
                     "${dict['enabled_file']}" \
@@ -258,10 +255,11 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
 
 koopa_macos_disable_spotlight_indexing() {
     local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     app['mdutil']="$(koopa_macos_locate_mdutil)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['mdutil']}" -a -i off
+    koopa_sudo "${app['mdutil']}" -a -i off
     "${app['mdutil']}" -a -s
     return 0
 }
@@ -351,7 +349,6 @@ koopa_macos_enable_plist_file() {
     local file
     koopa_assert_has_args "$#"
     app['launchctl']="$(koopa_macos_locate_launchctl)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_not_file "$@"
     for file in "$@"
@@ -383,18 +380,18 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
                     "${dict['enabled_file']}"
                 if [[ "${dict['daemon']}" -eq 1 ]]
                 then
-                    "${app['launchctl']}" \
-                        load "${dict['enabled_file']}"
+                    "${app['launchctl']}" load "${dict['enabled_file']}"
                 fi
                 ;;
             '1')
+                koopa_assert_is_admin
                 koopa_mv --sudo \
                     "${dict['disabled_file']}" \
                     "${dict['enabled_file']}"
                 if [[ "${dict['daemon']}" -eq 1 ]]
                 then
-                    "${app['sudo']}" "${app['launchctl']}" \
-                        load "${dict['enabled_file']}"
+                    koopa_sudo \
+                        "${app['launchctl']}" load "${dict['enabled_file']}"
                 fi
                 ;;
         esac
@@ -485,11 +482,10 @@ koopa_macos_flush_dns() {
     koopa_assert_is_admin
     app['dscacheutil']="$(koopa_macos_locate_dscacheutil)"
     app['kill_all']="$(koopa_macos_locate_kill_all)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     koopa_alert 'Flushing DNS.'
-    "${app['sudo']}" "${app['dscacheutil']}" -flushcache
-    "${app['sudo']}" "${app['kill_all']}" -HUP 'mDNSResponder'
+    koopa_sudo "${app['dscacheutil']}" -flushcache
+    koopa_sudo "${app['kill_all']}" -HUP 'mDNSResponder'
     koopa_alert_success 'DNS flush was successful.'
     return 0
 }
@@ -497,13 +493,13 @@ koopa_macos_flush_dns() {
 koopa_macos_force_eject() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
+    koopa_assert_is_admin
     app['diskutil']="$(koopa_macos_locate_diskutil)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['name']="${1:?}"
     dict['mount']="/Volumes/${dict['name']}"
     koopa_assert_is_dir "${dict['mount']}"
-    "${app['sudo']}" "${app['diskutil']}" unmount force "${dict['mount']}"
+    koopa_sudo "${app['diskutil']}" unmount force "${dict['mount']}"
     return 0
 }
 
@@ -513,13 +509,12 @@ koopa_macos_force_reset_icloud_drive() {
     koopa_assert_is_admin
     app['kill_all']="$(koopa_macos_locate_kill_all)"
     app['reboot']="$(koopa_macos_locate_reboot)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['kill_all']}" bird
+    koopa_sudo "${app['kill_all']}" bird
     koopa_rm \
         "${HOME:?}/Library/Application Support/CloudDocs" \
         "${HOME:?}/Library/Caches/"*
-    "${app['sudo']}" "${app['reboot']}" now
+    koopa_sudo "${app['reboot']}" now
     return 0
 }
 
@@ -587,10 +582,11 @@ koopa_macos_install_system_r() {
 
 koopa_macos_install_system_rosetta() {
     local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     app['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['softwareupdate']}" --install-rosetta
+    koopa_sudo "${app['softwareupdate']}" --install-rosetta
     return 0
 }
 
@@ -956,9 +952,8 @@ koopa_macos_reload_autofs() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     app['automount']="$(koopa_macos_locate_automount)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['automount']}" -vc
+    koopa_sudo "${app['automount']}" -vc
     return 0
 }
 
@@ -986,10 +981,11 @@ koopa_macos_spotlight_find() {
 
 koopa_macos_spotlight_usage() {
     local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
     app['fs_usage']="$(koopa_macos_locate_fs_usage)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['fs_usage']}" -w -f filesys mds
+    koopa_sudo "${app['fs_usage']}" -w -f filesys mds
     return 0
 }
 
@@ -998,13 +994,12 @@ koopa_macos_symlink_dropbox() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     app['kill_all']="$(koopa_macos_locate_kill_all)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     koopa_rm --sudo "${HOME}/Desktop"
     koopa_ln "${HOME}/Dropbox/Desktop" "${HOME}/."
     koopa_rm --sudo "${HOME}/Documents"
     koopa_ln "${HOME}/Dropbox/Documents" "${HOME}/."
-    "${app['sudo']}" "${app['kill_all']}" 'Finder'
+    koopa_sudo "${app['kill_all']}" 'Finder'
     return 0
 }
 

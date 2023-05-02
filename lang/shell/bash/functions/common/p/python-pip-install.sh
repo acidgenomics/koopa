@@ -58,7 +58,8 @@ koopa_python_pip_install() {
     pkgs=("$@")
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
-        '-vvv'
+        # Can enable this for more verbose logging.
+        # > '-vvv'
         '--default-timeout=300'
         '--disable-pip-version-check'
         '--ignore-installed'

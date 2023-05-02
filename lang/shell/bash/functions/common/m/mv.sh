@@ -68,9 +68,8 @@ koopa_mv() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
         mkdir=('koopa_mkdir' '--sudo')
-        mv=("${app['sudo']}" "${app['mv']}")
+        mv=('koopa_sudo' "${app['mv']}")
         rm=('koopa_rm' '--sudo')
     else
         mkdir=('koopa_mkdir')
