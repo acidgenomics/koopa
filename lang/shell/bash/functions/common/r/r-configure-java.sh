@@ -52,7 +52,6 @@ koopa_r_configure_java() {
     app['jar']="${dict['java_home']}/bin/jar"
     app['java']="${dict['java_home']}/bin/java"
     app['javac']="${dict['java_home']}/bin/javac"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_alert_info "Using Java SDK at '${dict['java_home']}'."
     conf_dict['java_home']="${dict['java_home']}"
     conf_dict['jar']="${app['jar']}"
@@ -71,8 +70,7 @@ koopa_r_configure_java() {
             r_cmd=("${app['r']}")
             ;;
         '1')
-            koopa_assert_is_admin
-            r_cmd=("${app['sudo']}" "${app['r']}")
+            r_cmd=('koopa_sudo' "${app['r']}")
             ;;
     esac
     koopa_assert_is_executable "${app[@]}"

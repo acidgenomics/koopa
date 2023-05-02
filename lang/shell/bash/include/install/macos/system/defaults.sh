@@ -21,42 +21,41 @@ main() {
     app['mdutil']="$(koopa_macos_locate_mdutil)"
     app['nvram']="$(koopa_macos_locate_nvram)"
     app['pmset']="$(koopa_macos_locate_pmset)"
-    app['sudo']="$(koopa_locate_sudo)"
     app['tmutil']="$(koopa_macos_locate_tmutil)"
     koopa_assert_is_executable "${app[@]}"
     koopa_h2 'Startup and Lock Screen'
     # For reference, here's how to set computer name from the command line.
     # > local comp_name
-    # > "${app['sudo']}" "${app['scutil']}" --set ComputerName "$comp_name"
-    # > "${app['sudo']}" "${app['scutil']}" --set HostName "$comp_name"
-    # > "${app['sudo']}" "${app['scutil']}" --set LocalHostName "$comp_name"
-    # > "${app['sudo']}" "${app['defaults']}" write \
+    # > koopa_sudo "${app['scutil']}" --set ComputerName "$comp_name"
+    # > koopa_sudo "${app['scutil']}" --set HostName "$comp_name"
+    # > koopa_sudo "${app['scutil']}" --set LocalHostName "$comp_name"
+    # > koopa_sudo "${app['defaults']}" write \
     # >     /Library/Preferences/SystemConfiguration/com.apple.smb.server \
     # >     NetBIOSName -string "$comp_name"
     koopa_alert 'Disabling startup chime on boot.'
     # Can reenable with: 'sudo nvram -d SystemAudioVolume'.
     # Alternative disables: '%80', '%01', '%00'.
-    "${app['sudo']}" "${app['nvram']}" SystemAudioVolume=' '
+    koopa_sudo "${app['nvram']}" SystemAudioVolume=' '
     # Can use this approach for Macs from 2016-2020.
     # https://www.howtogeek.com/260693/
     #   how-to-disable-the-boot-sound-or-startup-chime-on-a-mac/
-    # > "${app['sudo']}" "${app['nvram']}" StartupMute='%00'
+    # > koopa_sudo "${app['nvram']}" StartupMute='%00'
     # NOTE This doesn't appear to work in 12.5+, so disabling.
     # Reveal IP address, hostname, OS version, etc. when clicking the clock
     # in the login window.
     # > koopa_alert 'Enabling admin mode for lock screen (click on the clock).'
-    # > "${app['sudo']}" "${app['defaults']}" write \
+    # > koopa_sudo "${app['defaults']}" write \
     # >     '/Library/Preferences/com.apple.loginwindow' \
     # >     'AdminHostInfo'\
     # >     'HostName'
     koopa_h2 'Locale'
     # Set the timezone.
     # See 'sudo systemsetup -listtimezones' for other values.
-    # > "${app['sudo']}" "${app['systemsetup']}" \
+    # > koopa_sudo "${app['systemsetup']}" \
     # >     -settimezone 'America/New_York' \
     # >     > /dev/null
     # Show language menu in the top right corner of the boot screen.
-    # > "${app['sudo']}" "${app['defaults']}" write \
+    # > koopa_sudo "${app['defaults']}" write \
     # >     '/Library/Preferences/com.apple.loginwindow' \
     # >     'showInputMenu' \
     # >     -bool true
@@ -65,33 +64,33 @@ main() {
     # How to restore power management defaults.
     # > "${app['pmset']}" -c 2 -b 1 -u 1
     # Sleep the display after 15 minutes when connected to power.
-    "${app['sudo']}" "${app['pmset']}" -c 'displaysleep' 15
+    koopa_sudo "${app['pmset']}" -c 'displaysleep' 15
     # Check current settings.
     "${app['pmset']}" -g
     koopa_h2 'Screen'
     # Enable HiDPI display modes (requires restart).
-    # > "${app['sudo']}" "${app['defaults']}" write \
+    # > koopa_sudo "${app['defaults']}" write \
     # >     '/Library/Preferences/com.apple.windowserver' \
     # >     'DisplayResolutionEnabled' \
     # >     -bool true
     koopa_h2 'Finder'
     koopa_alert "Enabling visibility of '/Volumes' in Finder."
-    "${app['sudo']}" "${app['chflags']}" nohidden '/Volumes'
+    koopa_sudo "${app['chflags']}" nohidden '/Volumes'
     koopa_h2 'Spotlight'
     koopa_alert 'Disabling Spotlight.'
     # Load new settings before rebuilding the index.
     # > "${app['killall']" 'mds' > /dev/null 2>&1
     # Ensure indexing is disabled for the main volume.
-    "${app['sudo']}" "${app['mdutil']}" -i off '/'
+    koopa_sudo "${app['mdutil']}" -i off '/'
     # For reference, how to rebuild the index from scratch.
-    # > "${app['sudo']}" "${app['mdutil']}" -E '/'
+    # > koopa_sudo "${app['mdutil']}" -E '/'
     # > "${app['mdutil']}" -s '/'
     # Hide Spotlight tray-icon (and subsequent helper).
     # > koopa_chmod --sudo '0600' \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
     koopa_h2 'Time Machine'
     koopa_alert 'Disabling Time Machine backups.'
-    "${app['sudo']}" "${app['tmutil']}" disable
+    koopa_sudo "${app['tmutil']}" disable
     "${app['tmutil']}" listlocalsnapshotdates '/'
     koopa_alert_note 'Some of these changes require logout to take effect.'
     return 0

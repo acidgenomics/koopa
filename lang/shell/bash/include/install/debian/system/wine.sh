@@ -25,13 +25,12 @@ main() {
     # """
     local -A app
     app['dpkg']="$(koopa_debian_locate_dpkg)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
     koopa_debian_apt_add_wine_obs_repo
     # Enable 32-bit packages.
-    "${app['sudo']}" "${app['dpkg']}" --add-architecture 'i386'
+    koopa_sudo "${app['dpkg']}" --add-architecture 'i386'
     # Old stable version: Use wine, wine32 here.
     koopa_debian_apt_get install \
         'winbind' \

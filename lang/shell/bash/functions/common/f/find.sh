@@ -188,8 +188,7 @@ koopa_find() {
     find=()
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        find+=("${app['sudo']}")
+        find+=('koopa_sudo')
     fi
     find+=("${app['find']}")
     case "${dict['engine']}" in

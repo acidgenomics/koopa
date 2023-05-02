@@ -115,9 +115,7 @@ koopa_find_and_replace_in_file() {
     [[ "${dict['multiline']}" -eq 1 ]] && flags+=('-0')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        koopa_assert_is_admin
-        app['sudo']="$(koopa_locate_sudo)"
-        perl_cmd+=("${app['sudo']}" "${app['perl']}")
+        perl_cmd+=('koopa_sudo' "${app['perl']}")
     else
         perl_cmd=("${app['perl']}")
     fi

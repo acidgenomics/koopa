@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TeX packages.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-01.
     #
     # Including both curl and wget here is useful, to avoid SSH certificate
     # check timeouts and/or other issues.
@@ -12,10 +12,9 @@ main() {
     local -a pkgs
     local pkg
     koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
-    app['sudo']="$(koopa_locate_sudo)"
     app['tlmgr']="$(koopa_locate_tlmgr)"
     koopa_assert_is_executable "${app[@]}"
-    "${app['sudo']}" "${app['tlmgr']}" update --self
+    koopa_sudo "${app['tlmgr']}" update --self
     pkgs=(
         # Priority ----
         'collection-fontsrecommended'
@@ -54,7 +53,7 @@ main() {
     for pkg in "${pkgs[@]}"
     do
         koopa_alert "$pkg"
-        "${app['sudo']}" "${app['tlmgr']}" install "$pkg"
+        koopa_sudo "${app['tlmgr']}" install "$pkg"
     done
     return 0
 }

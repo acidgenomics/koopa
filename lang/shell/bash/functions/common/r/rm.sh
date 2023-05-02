@@ -46,8 +46,7 @@ koopa_rm() {
     [[ "${dict['verbose']}" -eq 1 ]] && rm_args+=('-v')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        rm+=("${app['sudo']}" "${app['rm']}")
+        rm+=('koopa_sudo' "${app['rm']}")
     else
         rm=("${app['rm']}")
     fi

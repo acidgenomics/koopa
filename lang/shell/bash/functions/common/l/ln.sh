@@ -57,8 +57,7 @@ koopa_ln() {
     koopa_assert_has_args "$#"
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        ln=("${app['sudo']}" "${app['ln']}")
+        ln=('koopa_sudo' "${app['ln']}")
         mkdir=('koopa_mkdir' '--sudo')
         rm=('koopa_rm' '--sudo')
     else

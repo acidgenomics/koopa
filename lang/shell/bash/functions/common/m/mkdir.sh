@@ -46,8 +46,7 @@ koopa_mkdir() {
     [[ "${dict['verbose']}" -eq 1 ]] && mkdir_args+=('-v')
     if [[ "${dict['sudo']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        mkdir=("${app['sudo']}" "${app['mkdir']}")
+        mkdir=('koopa_sudo' "${app['mkdir']}")
     else
         mkdir=("${app['mkdir']}")
     fi

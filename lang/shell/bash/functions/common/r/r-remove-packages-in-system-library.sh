@@ -20,8 +20,7 @@ remove-packages-in-system-library.R"
     rscript_cmd=()
     if [[ "${dict['system']}" -eq 1 ]]
     then
-        app['sudo']="$(koopa_locate_sudo)"
-        rscript_cmd+=("${app['sudo']}")
+        rscript_cmd+=('koopa_sudo')
     fi
     rscript_cmd+=("${app['rscript']}")
     koopa_assert_is_executable "${app[@]}"

@@ -106,13 +106,16 @@ koopa_uninstall_app() {
             [[ -z "${bool['unlink_in_opt']}" ]] && bool['unlink_in_opt']=1
             ;;
         'system')
-            koopa_assert_is_admin
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            app['sudo']="$(koopa_locate_sudo)"
-            koopa_assert_is_executable "${app['sudo']}"
-            "${app['sudo']}" -v
+            if ! koopa_is_root
+            then
+                koopa_assert_is_admin
+                app['sudo']="$(koopa_locate_sudo)"
+                koopa_assert_is_executable "${app['sudo']}"
+                "${app['sudo']}" -v
+            fi
             ;;
         'user')
             bool['unlink_in_bin']=0

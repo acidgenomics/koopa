@@ -3,7 +3,7 @@
 koopa_debian_apt_add_key() {
     # """
     # Add a GPG key (and/or keyring) for apt.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-01.
     #
     # @section Hardening against insecure URL failure:
     #
@@ -22,7 +22,7 @@ koopa_debian_apt_add_key() {
     #
     # > koopa_parse_url --insecure "${dict['url']}" \
     # >     | "${app['gpg']}" --dearmor \
-    # >     | "${app['sudo']}" "${app['tee']}" "${dict['file']}" \
+    # >     | koopa_sudo "${app['tee']}" "${dict['file']}" \
     # >         >/dev/null 2>&1 \
     # >     || true
     #
@@ -33,9 +33,7 @@ koopa_debian_apt_add_key() {
     # """
     local -A app dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_admin
     app['gpg']="$(koopa_locate_gpg --only-system)"
-    app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app[@]}"
     dict['name']=''
     dict['prefix']="$(koopa_debian_apt_key_prefix)"
@@ -79,7 +77,7 @@ koopa_debian_apt_add_key() {
     [[ -f "${dict['file']}" ]] && return 0
     koopa_alert "Adding '${dict['name']}' key at '${dict['file']}'."
     koopa_parse_url --insecure "${dict['url']}" \
-        | "${app['sudo']}" "${app['gpg']}" \
+        | koopa_sudo "${app['gpg']}" \
             --dearmor \
             --output "${dict['file']}" \
             >/dev/null 2>&1 \
