@@ -17871,6 +17871,7 @@ koopa_r_configure_makevars() {
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
     dict['libpng']="$(koopa_app_prefix 'libpng')"
     dict['openblas']="$(koopa_app_prefix 'openblas')"
+    dict['openssl3']="$(koopa_app_prefix 'openssl3')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
         "${dict['bzip2']}" \
@@ -18005,12 +18006,14 @@ koopa_r_configure_makevars() {
         "-I${dict['hdf5']}/include"
         "-I${dict['libjpeg']}/include"
         "-I${dict['libpng']}/include"
+        "-I${dict['openssl3']}/include"
     )
     ldflags+=(
         "-L${dict['bzip2']}/lib"
         "-L${dict['hdf5']}/lib"
         "-L${dict['libjpeg']}/lib"
         "-L${dict['libpng']}/lib"
+        "-L${dict['openssl3']}/lib"
     )
     if koopa_is_macos
     then
