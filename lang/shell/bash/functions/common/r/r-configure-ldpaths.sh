@@ -22,6 +22,9 @@ koopa_r_configure_ldpaths() {
     # gdal) as dependencies here.
     #
     # https://r-spatial.org/r/2022/04/12/evolution.html
+    #
+    # @seealso
+    # - https://github.com/wch/r-source/blob/HEAD/etc/ldpaths.in
     # """
     local -A app dict ld_lib_app_arr
     local -a keys ld_lib_arr lines
