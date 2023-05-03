@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-05-03.
     # """
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
@@ -42,7 +42,7 @@ _koopa_activate_aliases() {
     alias l='_koopa_alias_l'
     alias la='l -a'
     alias lh='l | head'
-    alias ll='la -l'
+    alias ll='l -l'
     alias lt='l | tail'
     # Defining this conditionally in POSIX header instead.
     # > alias mamba='_koopa_alias_mamba'
