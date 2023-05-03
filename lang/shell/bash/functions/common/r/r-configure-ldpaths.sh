@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-05-02.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -155,7 +155,6 @@ libexec/lib/server}")
     dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
     lines+=(
         "R_LD_LIBRARY_PATH=\"${dict['library_path']}\""
-        'export R_LD_LIBRARY_PATH'
     )
     if koopa_is_linux
     then
