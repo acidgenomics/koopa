@@ -65,16 +65,8 @@ main() {
             --replacement='' \
             "$(koopa_major_minor_version "${dict['py_version']}")" \
     )"
-    case "${dict['version']}" in
-        '23.'* | '22.'*)
-            dict['version2']="${dict['version']}-1"
-            ;;
-        *)
-            dict['version2']="${dict['version']}"
-            ;;
-    esac
     dict['script']="Miniconda${dict['py_major_version']}-\
-py${dict['py_version2']}_${dict['version2']}-${dict['os_type2']}\
+py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
 # >     # Workaround for installing newer versions that aren't yet available
 # >     # at 'https://repo.anaconda.com/miniconda/'.
