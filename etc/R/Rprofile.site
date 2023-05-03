@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-05-01.
+#' @note Updated 2023-05-03.
 #'
 #' @section Restarting R:
 #'
@@ -251,7 +251,7 @@ local({  # nolint
         cran <- "https://cloud.r-project.org"
         options(
             "pkgType" = "both",
-            "install.packages.compile.from.source" = "always"
+            "install.packages.compile.from.source" = "never"
         )
     }
     repos <- getOption("repos")
