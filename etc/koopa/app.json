@@ -2880,7 +2880,7 @@
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
     "conservative": true,
-    "date": "2023-04-19",
+    "date": "2023-05-03",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -2895,7 +2895,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.2"
+    "version": "16.0.3"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
