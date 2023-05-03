@@ -17723,7 +17723,6 @@ libexec/lib/server}")
     dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
     lines+=(
         "R_LD_LIBRARY_PATH=\"${dict['library_path']}\""
-        'export R_LD_LIBRARY_PATH'
     )
     if koopa_is_linux
     then

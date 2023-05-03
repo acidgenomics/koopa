@@ -81,7 +81,7 @@ _koopa_activate_aliases() {
     alias l='_koopa_alias_l'
     alias la='l -a'
     alias lh='l | head'
-    alias ll='la -l'
+    alias ll='l -l'
     alias lt='l | tail'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
