@@ -526,6 +526,7 @@
     "bin": ["bustools"],
     "date": "2022-01-05",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://bustools.github.io/",
@@ -1040,6 +1041,7 @@
     "bin": ["deeptools"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "outdated": true,
     "url": [
@@ -1275,6 +1277,7 @@
     "bin": ["ffq"],
     "date": "2022-11-08",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/pachterlab/ffq/",
@@ -1573,6 +1576,7 @@
     "bin": ["gffutils-cli"],
     "date": "2022-06-05",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/daler/gffutils/",
@@ -2163,6 +2167,7 @@
     "bin": ["htseq-count"],
     "date": "2022-07-02",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://htseq.readthedocs.io/",
@@ -3193,6 +3198,7 @@
     "bin": ["multiqc"],
     "date": "2023-01-09",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.14"
@@ -4243,6 +4249,7 @@
     "bin": ["rsem-calculate-expression", "rsem-prepare-reference"],
     "date": "2023-02-01",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/deweylab/RSEM/",
@@ -4348,6 +4355,7 @@
     "bin": ["sambamba"],
     "date": "2023-02-08",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "notes": ["0.8.2 is available but only 0.8.0 supports macOS."],
     "url": [
@@ -4606,6 +4614,7 @@
     "bin": ["featureCounts"],
     "date": "2023-02-13",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "outdated": true,
     "url": [
