@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-05-02.
+    # @note Updated 2023-05-03.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -139,8 +139,9 @@ libexec/lib/server}")
     done
     koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
-    # > ld_lib_arr+=("\${R_HOME}/lib")
-    ld_lib_arr+=("${dict['r_prefix']}/lib")
+    # Alternative approach, that uses absolute path:
+    # > ld_lib_arr+=("${dict['r_prefix']}/lib")
+    ld_lib_arr+=("\${R_HOME}/lib")
     # > if [[ "${dict['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
     # > then
     # >     ld_lib_arr+=('/usr/local/lib')
