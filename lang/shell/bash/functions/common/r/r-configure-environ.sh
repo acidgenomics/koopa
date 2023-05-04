@@ -179,7 +179,6 @@ koopa_r_configure_environ() {
             'icu4c'
             'imagemagick'
             # > 'jpeg'
-            'lapack'
             'libffi'
             'libgit2'
             'libjpeg-turbo'

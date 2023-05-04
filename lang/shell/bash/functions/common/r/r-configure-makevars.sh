@@ -54,7 +54,6 @@ koopa_r_configure_makevars() {
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
-    dict['lapack']="$(koopa_app_prefix 'lapack')"
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
     dict['libpng']="$(koopa_app_prefix 'libpng')"
     dict['openblas']="$(koopa_app_prefix 'openblas')"
@@ -64,13 +63,11 @@ koopa_r_configure_makevars() {
         "${dict['bzip2']}" \
         "${dict['gettext']}" \
         "${dict['hdf5']}" \
-        "${dict['lapack']}" \
         "${dict['libjpeg']}" \
         "${dict['libpng']}" \
         "${dict['openblas']}" \
         "${dict['r_prefix']}"
     koopa_add_to_pkg_config_path \
-        "${dict['lapack']}/lib/pkgconfig" \
         "${dict['libjpeg']}/lib/pkgconfig" \
         "${dict['libpng']}/lib/pkgconfig" \
         "${dict['openblas']}/lib/pkgconfig"
@@ -122,7 +119,6 @@ koopa_r_configure_makevars() {
             'icu4c'
             'imagemagick'
             # > 'jpeg'
-            'lapack'
             'libffi'
             'libgit2'
             'libjpeg-turbo'
@@ -240,7 +236,6 @@ koopa_r_configure_makevars() {
     conf_dict['fc']="${app['gfortran']}"
     conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
     conf_dict['flibs']="$(koopa_gfortran_libs)"
-    conf_dict['lapack_libs']="$("${app['pkg_config']}" --libs 'lapack')"
     conf_dict['ldflags']="${ldflags[*]}"
     conf_dict['make']="${app['make']}"
     conf_dict['objc_libs']='-lobjc'
@@ -301,7 +296,6 @@ koopa_r_configure_makevars() {
         "FCFLAGS = ${conf_dict['fcflags']}"
         "FFLAGS = ${conf_dict['fflags']}"
         "FLIBS = ${conf_dict['flibs']}"
-        "LAPACK_LIBS = ${conf_dict['lapack_libs']}"
         "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
         "MAKE = ${conf_dict['make']}"
         "OBJC = ${conf_dict['objc']}"
