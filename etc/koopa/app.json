@@ -2443,6 +2443,7 @@
     "conservative": true,
     "date": "2022-11-11",
     "dependencies": ["gcc"],
+    "enabled": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.11.0"
   },
@@ -3982,7 +3983,6 @@
       "icu4c",
       "imagemagick",
       "jpeg",
-      "lapack",
       "less",
       "libffi",
       "libgit2",
@@ -4059,7 +4059,6 @@
       "icu4c",
       "imagemagick",
       "jpeg",
-      "lapack",
       "less",
       "libffi",
       "libgit2",
