@@ -77,7 +77,6 @@ libexec/lib/server}")
         'icu4c'
         'imagemagick'
         # > 'jpeg'
-        'lapack'
         'libffi'
         'libgit2'
         'libiconv'
