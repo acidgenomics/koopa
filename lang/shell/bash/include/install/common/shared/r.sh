@@ -5,7 +5,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-05-04.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -59,7 +59,6 @@ main() {
         'openssl3'
         # NOTE cURL 8 currently fails build checks.
         'curl7'
-        'lapack'
         'libffi'
         'libjpeg-turbo'
         'libpng'
@@ -130,14 +129,12 @@ main() {
     dict['arch']="$(koopa_arch)"
     # > dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['lapack']="$(koopa_app_prefix 'lapack')"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
-        "${dict['lapack']}" \
         "${dict['tcl_tk']}" \
         "${dict['temurin']}"
     # This step can error unless we have run
@@ -175,9 +172,6 @@ main() {
     )"
     conf_dict['with_jpeglib']="$( \
         "${app['pkg_config']}" --libs 'libjpeg' \
-    )"
-    conf_dict['with_lapack']="$( \
-        "${app['pkg_config']}" --libs 'lapack' \
     )"
     conf_dict['with_libpng']="$( \
         "${app['pkg_config']}" --libs 'libpng' \
@@ -237,7 +231,6 @@ main() {
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
-        "--with-lapack=${conf_dict['with_lapack']}"
         "--with-libpng=${conf_dict['with_libpng']}"
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
@@ -300,8 +293,6 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
         koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
         koopa_cd 'src'
     fi
-    # Need to burn LAPACK in rpath, otherwise grDevices can fail to build.
-    koopa_add_rpath_to_ldflags "${dict['lapack']}/lib"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
