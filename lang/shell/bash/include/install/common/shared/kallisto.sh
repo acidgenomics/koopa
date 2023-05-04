@@ -19,7 +19,7 @@ main() {
     local -A app dict
     local -a cmake_args
     koopa_activate_app --build-only 'autoconf' 'automake'
-    koopa_activate_app 'hdf5' 'zlib'
+    koopa_activate_app 'hdf5' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['cmake']="$(koopa_locate_cmake)"
     app['make']="$(koopa_locate_cmake)"
