@@ -3122,6 +3122,7 @@
     "version": "6.7.0"
   },
   "minimap2": {
+    "arch": "amd64",
     "bin": ["minimap2"],
     "build_dependencies": ["make"],
     "date": "2023-05-01",
