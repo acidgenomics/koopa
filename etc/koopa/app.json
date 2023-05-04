@@ -2403,7 +2403,7 @@
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make"],
     "date": "2023-05-01",
-    "dependencies": ["hdf5", "zlib"],
+    "dependencies": ["hdf5", "xz", "zlib"],
     "large": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
