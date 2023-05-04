@@ -46,6 +46,7 @@ main() {
     build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=(
+        'gcc'
         'zlib'
         'zstd'
     )
