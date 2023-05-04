@@ -45,7 +45,10 @@ main() {
     fi
     build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    deps=('zlib' 'zstd' 'gcc')
+    deps=(
+        'zlib'
+        'zstd'
+    )
     # R currently has configuration issues with libbz2.dylib on macOS.
     koopa_is_linux && deps+=('bzip2')
     deps+=(
