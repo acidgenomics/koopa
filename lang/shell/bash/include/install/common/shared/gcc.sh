@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-05-04.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -118,7 +118,7 @@ main() {
     then
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
         dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-        dict['maj_min_ver2']="${dict['maj_min_ver2']//./-}"
+        dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
         dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
 archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
     else
