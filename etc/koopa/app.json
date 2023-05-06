@@ -966,10 +966,10 @@
     },
     "bin": ["cpufetch"],
     "build_dependencies": ["make"],
-    "date": "2023-01-09",
+    "date": "2023-05-06",
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
-    "version": "1.03"
+    "version": "1.04"
   },
   "csvkit": {
     "bin": [
@@ -1107,12 +1107,12 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-03-14",
+    "date": "2023-05-06",
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.5"
+    "version": "0.8.6"
   },
   "ed": {
     "aliases": {
@@ -2449,7 +2449,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-05-01",
+    "date": "2023-05-06",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2457,7 +2457,7 @@
       "https://github.com/latchbio/latch/",
       "https://pypi.org/project/latch/"
     ],
-    "version": "2.19.3"
+    "version": "2.19.4"
   },
   "less": {
     "aliases": {
@@ -4294,10 +4294,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-05-01",
+    "date": "2023-05-06",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.264"
+    "version": "0.0.265"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
