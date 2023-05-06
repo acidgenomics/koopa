@@ -1090,11 +1090,11 @@
     "version": "0.7.0"
   },
   "doom-emacs": {
-    "date": "2023-03-30",
+    "date": "2023-05-06",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "4e105a95af9c4c7e86471e5566eb7a5ff776ec92"
+    "version": "042fe0c43831c8575abfdec4196ebd7305fa16ac"
   },
   "dotfiles": {
     "date": "2023-05-01",
