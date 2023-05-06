@@ -44,6 +44,7 @@ main() {
         # > '--no-install'
         '--no-env'
         '--no-fonts'
+        '--verbose'
     )
     "${app['doom']}" install "${install_args[@]}"
     "${app['doom']}" sync
