@@ -5366,9 +5366,9 @@
     },
     "bin": ["zoxide"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-01-09",
+    "date": "2023-05-07",
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
-    "version": "0.9.0"
+    "version": "0.9.1"
   },
   "zsh": {
     "aliases": {
