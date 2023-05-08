@@ -52,27 +52,24 @@ ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
         --fixed \
         --pattern='xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS)' \
         --replacement='xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS) $(ICONV_CFLAGS)' \
-        'Makefile.am' \
         'Makefile.in'
     # shellcheck disable=SC2016
     koopa_find_and_replace_in_file \
         --fixed \
         --pattern='-L$ICONV_DIR/libs' \
         --replacement='-L$ICONV_DIR/lib' \
-        'configure' \
-        'configure.ac'
+        'configure'
     # shellcheck disable=SC2016
     koopa_find_and_replace_in_file \
         --fixed \
         --pattern='-L$ICU_DIR/libs' \
         --replacement='-L$ICU_DIR/lib' \
-        'configure' \
-        'configure.ac'
-    koopa_find_and_replace_in_file \
-        --regex \
-        --pattern='^AC_SUBST\(WITH_ICONV\)$' \
-        --replacement='AC_SUBST(WITH_ICONV)\nAC_SUBST(ICONV_CFLAGS)' \
-        'configure.ac'
+        'configure'
+    # > koopa_find_and_replace_in_file \
+    # >     --regex \
+    # >     --pattern='^AC_SUBST\(WITH_ICONV\)$' \
+    # >     --replacement='AC_SUBST(WITH_ICONV)\nAC_SUBST(ICONV_CFLAGS)' \
+    # >     'configure.ac'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
