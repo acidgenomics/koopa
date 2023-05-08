@@ -12,7 +12,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config' 'sed'
     koopa_activate_app \
         'zlib' \
         'bzip2' \
@@ -27,7 +27,7 @@ main() {
         'libksba' \
         'npth' \
         'pinentry'
-    app['sed']="$(koopa_locate_sed --allow-system)"
+    app['sed']="$(koopa_locate_sed)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
@@ -64,7 +64,8 @@ main() {
     "${app['sed']}" \
         -e '/ks_ldap_free_state/i #if USE_LDAP' \
         -e '/ks_get_state =/a #endif' \
-        -i 'dirmngr/server.c'
+        -i'.bak' \
+        'dirmngr/server.c'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
