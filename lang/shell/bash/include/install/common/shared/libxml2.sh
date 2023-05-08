@@ -65,11 +65,11 @@ ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
         --pattern='-L$ICU_DIR/libs' \
         --replacement='-L$ICU_DIR/lib' \
         'configure'
-    # > koopa_find_and_replace_in_file \
-    # >     --regex \
-    # >     --pattern='^AC_SUBST\(WITH_ICONV\)$' \
-    # >     --replacement='AC_SUBST(WITH_ICONV)\nAC_SUBST(ICONV_CFLAGS)' \
-    # >     'configure.ac'
+    koopa_find_and_replace_in_file \
+        --regex \
+        --pattern='^WITH_ICONV$' \
+        --replacement='WITH_ICONV\nICONV_CFLAGS' \
+        'configure'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
