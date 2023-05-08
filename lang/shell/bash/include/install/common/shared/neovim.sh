@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-08.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -55,6 +55,11 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
+    # NOTE Consider also including these standard CMake variables:
+    # - CMAKE_INSTALL_INCLUDEDIR
+    # - CMAKE_INSTALL_LIBDIR
+    # - CMAKE_PREFIX_PATH
+    # - CMAKE_VERBOSE_MAKEFILE
     read -r -d '' "dict[local_mk]" << END || true
 CMAKE_BUILD_TYPE := Release
 DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
@@ -67,8 +72,8 @@ CMAKE_EXTRA_FLAGS += "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
 CMAKE_EXTRA_FLAGS += "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
 CMAKE_EXTRA_FLAGS += "-DICONV_INCLUDE_DIR=${dict['libiconv']}/include"
 CMAKE_EXTRA_FLAGS += "-DICONV_LIBRARY=${dict['libiconv']}/lib/libiconv.${dict['shared_ext']}"
-CMAKE_EXTRA_FLAGS += "-DLibIntl_INCLUDE_DIR=${dict['gettext']}/include"
-CMAKE_EXTRA_FLAGS += "-DLibIntl_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
+CMAKE_EXTRA_FLAGS += "-DLIBINTL_INCLUDE_DIR=${dict['gettext']}/include"
+CMAKE_EXTRA_FLAGS += "-DLIBINTL_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
 CMAKE_EXTRA_FLAGS += "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
 CMAKE_EXTRA_FLAGS += "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
 END
