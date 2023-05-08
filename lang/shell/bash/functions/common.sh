@@ -16062,8 +16062,13 @@ koopa_make_build() {
     local -A app dict
     local -a conf_args
     koopa_assert_has_args "$#"
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
+    if [[ -d "${dict['make']}" ]]
+    then
+        koopa_activate_app --build-only 'make'
+        app['make']="$(koopa_locate_make)"
+    else
+        app['make']="$(koopa_locate_make --only-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     conf_args+=("$@")
