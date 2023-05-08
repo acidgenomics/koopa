@@ -32,7 +32,7 @@ v${dict['version']}/onig-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    "${app['autoreconf']}" -vfi
+    "${app['autoreconf']}" --force --install --verbose
     koopa_make_build "${conf_args[@]}"
     return 0
 }

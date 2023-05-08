@@ -10477,6 +10477,14 @@ koopa_install_autoconf() {
         "$@"
 }
 
+koopa_install_autoconf265() {
+    koopa_install_app \
+        --installer='autoconf' \
+        --name='autoconf2.65' \
+        --version='2.65' \
+        "$@"
+}
+
 koopa_install_autodock_adfr() {
     koopa_install_app \
         --name='autodock-adfr' \
@@ -10504,6 +10512,14 @@ koopa_install_autoflake() {
 koopa_install_automake() {
     koopa_install_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_install_automake1163() {
+    koopa_install_app \
+        --installer='automake' \
+        --name='automake1.16.3' \
+        --version='1.16.3' \
         "$@"
 }
 
@@ -22844,6 +22860,12 @@ koopa_uninstall_autoconf() {
         "$@"
 }
 
+koopa_uninstall_autoconf265() {
+    koopa_uninstall_app \
+        --name='autoconf2.65' \
+        "$@"
+}
+
 koopa_uninstall_autodock_adfr() {
     koopa_uninstall_app \
         --name='autodock-adfr' \
@@ -22871,6 +22893,12 @@ koopa_uninstall_autoflake() {
 koopa_uninstall_automake() {
     koopa_uninstall_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_uninstall_automake1163() {
+    koopa_uninstall_app \
+        --name='automake1.16.3' \
         "$@"
 }
 
