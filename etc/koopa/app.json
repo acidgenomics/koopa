@@ -2388,9 +2388,8 @@
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "date": "2023-05-08",
     "large": true,
-    "outdated": true,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.8.5"
+    "version": "1.9.0"
   },
   "jupyterlab": {
     "arch": "amd64",
