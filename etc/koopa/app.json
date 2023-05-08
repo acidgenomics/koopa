@@ -2619,7 +2619,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["bzip2", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-05-08",
     "url": ["https://gnupg.org/download/"],
