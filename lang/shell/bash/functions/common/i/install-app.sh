@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't passing '--verbose' correctly through.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.

@@ -221,7 +221,7 @@
     "bin": ["aclocal", "aclocal-1.16", "automake", "automake-1.16"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
-    "dependencies": ["autoconf"],
+    "dependencies": ["autoconf2.63"],
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
@@ -2840,7 +2840,7 @@
     "man1": ["xml2-config.1"],
     "outdated": true,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.10.4"
+    "version": "2.11.2"
   },
   "libyaml": {
     "aliases": {

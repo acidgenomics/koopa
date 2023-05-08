@@ -44,6 +44,7 @@ main() {
     case "${dict['name']}" in
         'aspell' | \
         'attr' | \
+        'autoconf' | \
         'bc' | \
         'gdbm' | \
         'gperf' | \
