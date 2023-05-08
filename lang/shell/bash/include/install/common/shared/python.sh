@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Python 3.12 no longer installs setuptools by default:
+# https://twitter.com/VictorStinner/status/1654124014632321025
+
 main() {
     # """
     # Install Python.
