@@ -24,7 +24,7 @@ koopa_install_all_binary_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install --no-dependencies 'aws-cli'
+        koopa_install_aws_cli --no-dependencies
     fi
     for app_name in "${app_names[@]}"
     do
