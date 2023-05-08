@@ -9,7 +9,7 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'autoconf' 'automake' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     dict['compress_ext']='bz2'
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -17,41 +17,11 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
-        # > '--enable-maintainer-mode'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
         "--prefix=${dict['prefix']}"
     )
     case "${dict['name']}" in
-        'libgpg-error')
-            # NOTE: gpg-error-config is deprecated upstream.
-            # https://dev.gnupg.org/T5683
-            conf_args+=('--enable-install-gpg-error-config')
-            ;;
-        'libassuan' | \
-        'libgcrypt' | \
-        'libksba')
-            koopa_activate_app 'libgpg-error'
-            dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
-            conf_args+=(
-                "--with-libgpg-error-prefix=${dict['libgpg_error']}"
-            )
-            ;;
-        'gnutls')
-            koopa_activate_app \
-                'gmp' \
-                'libtasn1' \
-                'libunistring' \
-                'nettle'
-            conf_args+=('--without-p11-kit')
-            ;;
-        'pinentry')
-            koopa_activate_app \
-                'fltk' \
-                'ncurses' \
-                'libgpg-error' \
-                'libassuan'
-            ;;
         'gnupg')
             koopa_activate_app \
                 'zlib' \

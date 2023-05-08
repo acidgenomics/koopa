@@ -2506,9 +2506,9 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2022-09-26",
+    "date": "2023-05-08",
     "dependencies": ["libgpg-error"],
     "url": ["https://gnupg.org/download/"],
     "version": "2.5.5"
@@ -2666,9 +2666,9 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
-    "date": "2023-02-08",
+    "date": "2023-05-08",
     "dependencies": ["libgpg-error"],
     "url": ["https://gnupg.org/download/"],
     "version": "1.6.3"
