@@ -528,13 +528,6 @@ koopa_linux_install_ont_bonito() {
         "$@"
 }
 
-koopa_linux_install_pinentry() {
-    koopa_install_app \
-        --name='pinentry' \
-        --platform='linux' \
-        "$@"
-}
-
 koopa_linux_install_private_bcl2fastq() {
     koopa_install_app \
         --name='bcl2fastq' \
@@ -815,13 +808,6 @@ koopa_linux_uninstall_lmod() {
 koopa_linux_uninstall_ont_bonito() {
     koopa_uninstall_app \
         --name='ont-bonito' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_uninstall_pinentry() {
-    koopa_uninstall_app \
-        --name='pinentry' \
         --platform='linux' \
         "$@"
 }
