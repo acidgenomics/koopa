@@ -13,8 +13,6 @@ main() {
     local -A app dict
     local -a conf_args
     app['python']="$(koopa_locate_python311 --allow-missing)"
-    # Allow edge case building against system Python, for system bootstrapping.
-    # FIXME Require a global variable to be set here.
     if [[ ! -x "${app['python']}" ]]
     then
         app['python']='/usr/bin/python3'
