@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Library paths are currently incorrect for 2.11.2.
+# https://github.com/GNOME/libxml2/commit/3463063001f36c16e5f6ce9ad33cd12a376fc874
+
 main() {
     # """
     # Install libxml2.
