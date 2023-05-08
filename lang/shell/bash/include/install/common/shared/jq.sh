@@ -54,7 +54,7 @@ jq-${dict['version']}/jq-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     "${app['libtoolize']}"
-    "${app['autoreconf']}" -iv
+    "${app['autoreconf']}" --force --install --verbose
     koopa_make_build "${conf_args[@]}"
     return 0
 }

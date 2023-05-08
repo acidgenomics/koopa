@@ -42,7 +42,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
             -i.bak \
             '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
             'configure.ac'
-        "${app['autoreconf']}" -fiv
+        "${app['autoreconf']}" --force --install --verbose
         ./configure
     )
     libs=(

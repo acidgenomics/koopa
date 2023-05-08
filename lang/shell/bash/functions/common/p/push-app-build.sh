@@ -3,7 +3,7 @@
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-08.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
@@ -16,7 +16,7 @@ koopa_push_app_build() {
     local -A app dict
     local name
     koopa_assert_has_args "$#"
-    koopa_can_install_binary || return 1
+    koopa_can_push_binary || return 1
     app['aws']="$(koopa_locate_aws)"
     app['tar']="$(koopa_locate_tar)"
     koopa_assert_is_executable "${app[@]}"
