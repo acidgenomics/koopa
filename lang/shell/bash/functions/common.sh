@@ -3155,8 +3155,14 @@ koopa_camel_case() {
 
 koopa_can_install_binary() {
     local -A dict
+    dict['config']="${HOME:?}/.aws/config"
     dict['credentials']="${HOME:?}/.aws/credentials"
+    [[ -f "${dict['config']}" ]] || return 1
     [[ -f "${dict['credentials']}" ]] || return 1
+    koopa_file_detect_fixed \
+        --file="${dict['config']}" \
+        --pattern='acidgenomics' \
+        || return 1
     koopa_file_detect_fixed \
         --file="${dict['credentials']}" \
         --pattern='acidgenomics' \
@@ -9766,7 +9772,7 @@ koopa_install_all_binary_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install --no-dependencies 'aws-cli'
+        koopa_install_aws_cli --no-dependencies
     fi
     for app_name in "${app_names[@]}"
     do
@@ -10051,16 +10057,6 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
-            '--deps' | \
-            '--dependencies')
-                bool['deps']=1
-                shift 1
-                ;;
-            '--no-deps' | \
-            '--no-dependencies')
-                bool['deps']=0
-                shift 1
-                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -10071,6 +10067,10 @@ koopa_install_app() {
                 ;;
             '--verbose')
                 bool['verbose']=1
+                shift 1
+                ;;
+            '--no-dependencies')
+                bool['deps']=0
                 shift 1
                 ;;
             '--no-link-in-bin')

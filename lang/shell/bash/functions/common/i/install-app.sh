@@ -116,16 +116,6 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
-            '--deps' | \
-            '--dependencies')
-                bool['deps']=1
-                shift 1
-                ;;
-            '--no-deps' | \
-            '--no-dependencies')
-                bool['deps']=0
-                shift 1
-                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -139,6 +129,10 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
+            '--no-dependencies')
+                bool['deps']=0
+                shift 1
+                ;;
             '--no-link-in-bin')
                 bool['link_in_bin']=0
                 shift 1
