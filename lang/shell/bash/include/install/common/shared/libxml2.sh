@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to fix iconv library paths
-# https://github.com/GNOME/libxml2/commit/3463063001f36c16e5f6ce9ad33cd12a376fc874
-
-# FIXME Hitting this autoreconf issue:
-# autoreconf: running: /opt/koopa/app/autoconf/2.71/bin/autoconf --force
-# configure.ac:1075: error: possibly undefined macro: m4_ifdef
-#       If this token and others are legitimate, please use m4_pattern_allow.
-#       See the Autoconf documentation.
-# autoreconf: error: /opt/koopa/app/autoconf/2.71/bin/autoconf failed with exit status: 1
-
 main() {
     # """
     # Install libxml2.
@@ -57,44 +47,32 @@ ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_activate_app --build-only autoconf automake libtool m4
-    dict['automake']="$(koopa_app_prefix 'automake')"
-    aclocal "-I${dict['automake']}/share/aclocal-1.16"
-    aclocal --print
-    # FIXME This needs to include:
-    # /opt/koopa/app/automake/1.16.5/share/aclocal
-    # /opt/koopa/app/automake/1.16.5/share/aclocal
-    autoreconf \
-        --include="${dict['automake']}/share/aclocal-1.16" \
-        --force \
-        --install \
-        --verbose
-    # FIXME Need to patch Makefile.
-    # FIXME Need to patch configure.
-    koopa_stop 'FIXME'
-
-    # Makefile.in
-    # from:
-    # 'xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS)'
-    # to:
-    # 'xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS) $(ICONV_CFLAGS)'
-
-    # configure
-    # from:
-    # LIBS="$LIBS -L$ICONV_DIR/libs"
-    # to:
-    # LIBS="$LIBS -L$ICONV_DIR/lib"
-    #
-    # from:
-    # AC_SUBST(WITH_ICONV)
-    # to:
-    # AC_SUBST(WITH_ICONV)
-    # AC_SUBST(ICONV_CFLAGS)
-    #
-    # from:
-    # ICU_LIBS="-L$ICU_DIR/libs $ICU_LIBS"
-    # to:
-    # ICU_LIBS="-L$ICU_DIR/lib $ICU_LIBS"
-
+    # shellcheck disable=SC2016
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern='xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS)' \
+        --replacement='xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS) $(ICONV_CFLAGS)' \
+        'Makefile.am' \
+        'Makefile.in'
+    # shellcheck disable=SC2016
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern='-L$ICONV_DIR/libs' \
+        --replacement='-L$ICONV_DIR/lib' \
+        'configure' \
+        'configure.ac'
+    # shellcheck disable=SC2016
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern='-L$ICU_DIR/libs' \
+        --replacement='-L$ICU_DIR/lib' \
+        'configure' \
+        'configure.ac'
+    koopa_find_and_replace_in_file \
+        --regex \
+        --pattern='^AC_SUBST\(WITH_ICONV\)$' \
+        --replacement='AC_SUBST(WITH_ICONV)\nAC_SUBST(ICONV_CFLAGS)' \
+        'configure.ac'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
