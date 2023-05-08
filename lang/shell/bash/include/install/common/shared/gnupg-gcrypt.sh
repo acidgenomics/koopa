@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Split this out into separate installers.
+
 main() {
     # """
     # Install GnuPG gcrypt library.
