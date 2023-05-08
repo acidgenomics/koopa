@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Our app pruner will currently break some applications that have conservative dependencies. Need to rethink how to handle this.
 ** TODO The '--only-revdeps' flag should combine all reverse dependencies from the input apps, rather than looping.
 ** TODO Make apt sources configuration accessible to user on Debian.
 ** TODO Add install support for Quarto (on Linux).
