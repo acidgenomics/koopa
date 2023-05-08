@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is now failing to build on macOS.
-# Need to apply patch documented here:
-# https://dev.gnupg.org/T6442
-# https://github.com/Homebrew/homebrew-core/blob/master/Formula/libgcrypt.rb
-
 main() {
     # """
     # Install libgcrypt.
@@ -13,9 +8,11 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
     #     libgcrypt.rb
+    #
+    # - https://dev.gnupg.org/T6442
     # """
     local -A app dict
-    koopa_activate_app --build-only 'autoconf' 'automake' 'pkg-config'
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'libgpg-error'
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['patch']="$(koopa_locate_patch)"
@@ -25,10 +22,10 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
+        # > '--disable-static'
         '--disable-asm'
         '--disable-dependency-tracking'
         '--disable-silent-rules'
-        '--disable-static'
         "--prefix=${dict['prefix']}"
         "--with-libgpg-error-prefix=${dict['libgpg_error']}"
     )
