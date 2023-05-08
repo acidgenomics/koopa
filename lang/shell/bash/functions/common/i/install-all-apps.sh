@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-08.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -31,7 +31,7 @@ koopa_install_all_apps() {
         koopa_cli_install "$app_name"
         push_apps+=("$app_name")
     done
-    if koopa_can_install_binary && \
+    if koopa_can_push_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
