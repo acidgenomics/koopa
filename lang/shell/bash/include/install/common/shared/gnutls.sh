@@ -34,8 +34,8 @@ main() {
         "--prefix=${dict['prefix']}"
         '--with-idn'
         '--with-included-unistring'
-        '--with-p11-kit'
         '--without-brotli'
+        '--without-p11-kit'
         '--without-zlib'
         '--without-zstd'
     )
