@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-06.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -22,13 +22,6 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'chemacs'
-    if koopa_is_macos
-    then
-        app['emacs']="$(koopa_macos_emacs)"
-    else
-        app['emacs']="$(koopa_locate_emacs)"
-    fi
-    koopa_assert_is_executable "${app[@]}"
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/hlissner/doom-emacs.git'
@@ -38,14 +31,16 @@ main() {
         --url="${dict['url']}"
     app['doom']="${dict['prefix']}/bin/doom"
     koopa_assert_is_installed "${app['doom']}"
-    koopa_add_to_path_start "$(koopa_dirname "${app['emacs']}")"
-    install_args=(
-        # > '--no-config'
-        # > '--no-install'
-        '--no-env'
-        '--no-fonts'
-    )
-    "${app['doom']}" install "${install_args[@]}"
+    if koopa_is_macos
+    then
+        koopa_add_to_path_start "$(koopa_homebrew_prefix)/bin"
+    fi
+    "${app['doom']}" install \
+        --debug \
+        --force \
+        --no-env \
+        --no-fonts \
+        --verbose
     "${app['doom']}" sync
     # > "${app['doom']}" doctor
     return 0
