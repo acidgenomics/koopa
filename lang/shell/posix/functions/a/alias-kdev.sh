@@ -28,10 +28,21 @@ _koopa_alias_kdev() {
         then
             __kvar_bash='/usr/local/bin/bash'
         fi
+    fi
+    if [ ! -x "$__kvar_bash" ]
+    then
+        __koopa_print 'Failed to locate bash.'
+        return 1
+    fi
+    if [ ! -x "$__kvar_env" ]
+    then
         __kvar_env='/usr/bin/env'
     fi
-    [ -x "$__kvar_bash" ] || return 1
-    [ -x "$__kvar_env" ] || return 1
+    if [ ! -x "$__kvar_env" ]
+    then
+        __koopa_print 'Failed to locate env.'
+        return 1
+    fi
     __kvar_rcfile="${__kvar_koopa_prefix}/lang/shell/bash/include/header.sh"
     [ -f "$__kvar_rcfile" ] || return 1
     "$__kvar_env" -i \
