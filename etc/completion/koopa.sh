@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-08.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -311,6 +311,7 @@ _koopa_complete() {
                         'pcre2'
                         'perl'
                         'picard'
+                        'pinentry'
                         'pipx'
                         'pixman'
                         'pkg-config'
@@ -443,7 +444,6 @@ _koopa_complete() {
                             'elfutils'
                             'lmod'
                             'ont-bonito'
-                            'pinentry'
                         )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in

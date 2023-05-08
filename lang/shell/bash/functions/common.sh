@@ -12001,6 +12001,12 @@ koopa_install_picard() {
         "$@"
 }
 
+koopa_install_pinentry() {
+    koopa_install_app \
+        --name='pinentry' \
+        "$@"
+}
+
 koopa_install_pipx() {
     koopa_install_app \
         --name='pipx' \
@@ -24201,6 +24207,12 @@ koopa_uninstall_perl() {
 koopa_uninstall_picard() {
     koopa_uninstall_app \
         --name='picard' \
+        "$@"
+}
+
+koopa_uninstall_pinentry() {
+    koopa_uninstall_app \
+        --name='pinentry' \
         "$@"
 }
 
