@@ -2838,8 +2838,9 @@
     "date": "2023-05-08",
     "dependencies": ["icu4c", "libiconv", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
+    "outdated": true,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.11.2"
+    "version": "2.11.1"
   },
   "libyaml": {
     "aliases": {
