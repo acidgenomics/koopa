@@ -23701,7 +23701,7 @@ koopa_uninstall_latch() {
 
 koopa_uninstall_less() {
     koopa_uninstall_app \
-        --name='autoconf' \
+        --name='less' \
         "$@"
 }
 
