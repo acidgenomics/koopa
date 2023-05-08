@@ -2840,7 +2840,7 @@
     "man1": ["xml2-config.1"],
     "outdated": true,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.11.1"
+    "version": "2.10.4"
   },
   "libyaml": {
     "aliases": {
