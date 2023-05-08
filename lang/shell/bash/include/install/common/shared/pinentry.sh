@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider depending on libsecret for Linux.
-
 main() {
     # """
     # Install pinentry.
