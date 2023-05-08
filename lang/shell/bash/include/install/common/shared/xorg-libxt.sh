@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xorg-libxt.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-05-08.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxt.rb
@@ -30,7 +30,7 @@ main() {
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://www.x.org/archive/individual/lib/\
-libXt-${dict['version']}.tar.bz2"
+libXt-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
