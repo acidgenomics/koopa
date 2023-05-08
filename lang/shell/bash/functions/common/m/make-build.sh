@@ -8,6 +8,7 @@ koopa_make_build() {
     local -A app dict
     local -a conf_args
     koopa_assert_has_args "$#"
+    dict['make']="$(koopa_app_prefix 'make' --allow-missing)"
     if [[ -d "${dict['make']}" ]]
     then
         koopa_activate_app --build-only 'make'
