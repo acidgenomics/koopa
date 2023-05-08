@@ -3,7 +3,7 @@
 koopa_locate_app() {
     # """
     # Locate file system path to an application.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-05-08.
     #
     # Mode 1: direct executable file path input.
     # Mode 2: '--app-name' and '--bin-name' input.
@@ -144,6 +144,12 @@ bin/${dict['bin_name']}"
         elif [[ -x "/bin/${dict['system_bin_name']}" ]]
         then
             dict['app']="/bin/${dict['system_bin_name']}"
+        elif [[ -x "/usr/sbin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/usr/sbin/${dict['system_bin_name']}"
+        elif [[ -x "/sbin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/sbin/${dict['system_bin_name']}"
         fi
     fi
     if [[ -x "${dict['app']}" ]]
