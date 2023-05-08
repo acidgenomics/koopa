@@ -1732,7 +1732,7 @@
       "fedora": "gnutls-devel",
       "homebrew": true
     },
-    "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-05-08",
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
