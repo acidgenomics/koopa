@@ -2388,9 +2388,8 @@
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "date": "2023-05-08",
     "large": true,
-    "outdated": true,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.8.5"
+    "version": "1.9.0"
   },
   "jupyterlab": {
     "arch": "amd64",
@@ -2620,7 +2619,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["bzip2", "make", "pkg-config"],
     "conservative": true,
     "date": "2023-05-08",
     "url": ["https://gnupg.org/download/"],
@@ -2837,10 +2836,12 @@
     "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2023-05-08",
-    "dependencies": ["icu4c", "libiconv", "readline", "zlib"],
+    "dependencies": ["icu4c", "libiconv", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
+    "notes": ["2.11 release series doesn't link libiconv correctly."],
+    "outdated": true,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.11.2"
+    "version": "2.10.4"
   },
   "libyaml": {
     "aliases": {
