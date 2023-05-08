@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE Library paths are currently incorrect for 2.11.2.
+# https://github.com/GNOME/libxml2/commit/3463063001f36c16e5f6ce9ad33cd12a376fc874
+
 main() {
     # """
     # Install libxml2.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-08.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
@@ -16,6 +19,7 @@ main() {
         'icu4c'
         'readline'
         'libiconv'
+        'xz'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -23,17 +27,21 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
+        '--enable-static=no'
         "--prefix=${dict['prefix']}"
+        '--with-ftp'
         '--with-history'
         "--with-iconv=${dict['libiconv']}"
         '--with-icu'
+        '--with-legacy'
+        "--with-lzma=${dict['xz']}"
         "--with-readline=${dict['readline']}"
         "--with-zlib=${dict['zlib']}"
-        '--without-lzma'
         '--without-python'
     )
     dict['url']="https://download.gnome.org/sources/libxml2/\

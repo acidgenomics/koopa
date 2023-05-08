@@ -35,7 +35,7 @@ ${dict['version']}.tar.gz"
     koopa_cd 'src'
     "${app['autoupdate']}" --verbose
     ACLOCAL_PATH="${dict['libtool']}/share/aclocal" \
-        "${app['autoreconf']}" -fvi
+        "${app['autoreconf']}" --force --install --verbose
     koopa_make_build "${conf_args[@]}"
     return 0
 }

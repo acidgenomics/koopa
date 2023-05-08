@@ -3154,7 +3154,26 @@ koopa_camel_case() {
 }
 
 koopa_can_install_binary() {
-    [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]]
+    local -A dict
+    dict['config']="${HOME:?}/.aws/config"
+    dict['credentials']="${HOME:?}/.aws/credentials"
+    [[ -f "${dict['config']}" ]] || return 1
+    [[ -f "${dict['credentials']}" ]] || return 1
+    koopa_file_detect_fixed \
+        --file="${dict['config']}" \
+        --pattern='acidgenomics' \
+        || return 1
+    koopa_file_detect_fixed \
+        --file="${dict['credentials']}" \
+        --pattern='acidgenomics' \
+        || return 1
+    return 0
+}
+
+koopa_can_push_binary() {
+    [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
+    koopa_can_install_binary || return 1
+    return 0
 }
 
 koopa_capitalize() {
@@ -9727,7 +9746,7 @@ koopa_install_all_apps() {
         koopa_cli_install "$app_name"
         push_apps+=("$app_name")
     done
-    if koopa_can_install_binary && \
+    if koopa_can_push_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
@@ -9742,6 +9761,10 @@ koopa_install_all_binary_apps() {
     local -A app bool
     local -a app_names
     local app_name
+    if ! koopa_can_install_binary
+    then
+        koopa_stop 'No binary file access.'
+    fi
     koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
@@ -9749,7 +9772,7 @@ koopa_install_all_binary_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install 'aws-cli'
+        koopa_install_aws_cli --no-dependencies
     fi
     for app_name in "${app_names[@]}"
     do
@@ -10034,16 +10057,6 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
-            '--deps' | \
-            '--dependencies')
-                bool['deps']=1
-                shift 1
-                ;;
-            '--no-deps' | \
-            '--no-dependencies')
-                bool['deps']=0
-                shift 1
-                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -10054,6 +10067,10 @@ koopa_install_app() {
                 ;;
             '--verbose')
                 bool['verbose']=1
+                shift 1
+                ;;
+            '--no-dependencies')
+                bool['deps']=0
                 shift 1
                 ;;
             '--no-link-in-bin')
@@ -14549,6 +14566,12 @@ bin/${dict['bin_name']}"
         elif [[ -x "/bin/${dict['system_bin_name']}" ]]
         then
             dict['app']="/bin/${dict['system_bin_name']}"
+        elif [[ -x "/usr/sbin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/usr/sbin/${dict['system_bin_name']}"
+        elif [[ -x "/sbin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/sbin/${dict['system_bin_name']}"
         fi
     fi
     if [[ -x "${dict['app']}" ]]
@@ -15291,10 +15314,17 @@ koopa_locate_man() {
 }
 
 koopa_locate_md5sum() {
+    local system_bin_name
+    if koopa_is_macos
+    then
+        system_bin_name='md5'
+    else
+        system_bin_name='md5sum'
+    fi
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gmd5sum' \
-        --system-bin-name='md5sum' \
+        --system-bin-name="$system_bin_name" \
         "$@"
 }
 
@@ -16045,8 +16075,14 @@ koopa_make_build() {
     local -A app dict
     local -a conf_args
     koopa_assert_has_args "$#"
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
+    dict['make']="$(koopa_app_prefix 'make' --allow-missing)"
+    if [[ -d "${dict['make']}" ]]
+    then
+        koopa_activate_app --build-only 'make'
+        app['make']="$(koopa_locate_make)"
+    else
+        app['make']="$(koopa_locate_make --only-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     conf_args+=("$@")
@@ -16979,7 +17015,7 @@ koopa_push_app_build() {
     local -A app dict
     local name
     koopa_assert_has_args "$#"
-    koopa_can_install_binary || return 1
+    koopa_can_push_binary || return 1
     app['aws']="$(koopa_locate_aws)"
     app['tar']="$(koopa_locate_tar)"
     koopa_assert_is_executable "${app[@]}"
@@ -23678,7 +23714,7 @@ koopa_uninstall_latch() {
 
 koopa_uninstall_less() {
     koopa_uninstall_app \
-        --name='autoconf' \
+        --name='less' \
         "$@"
 }
 

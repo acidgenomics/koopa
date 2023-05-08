@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to use our 'make_build' function.
+
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-08.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -16,7 +18,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['name']}" in
         'make')
-            app['make']="$(koopa_locate_make --allow-system)"
+            app['make']="$(koopa_locate_make --only-system)"
             ;;
         *)
             koopa_activate_app --build-only 'make' 'pkg-config'
@@ -42,6 +44,7 @@ main() {
     case "${dict['name']}" in
         'aspell' | \
         'attr' | \
+        'autoconf' | \
         'bc' | \
         'gdbm' | \
         'gperf' | \
