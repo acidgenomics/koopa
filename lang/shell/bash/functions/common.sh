@@ -10477,14 +10477,6 @@ koopa_install_autoconf() {
         "$@"
 }
 
-koopa_install_autoconf265() {
-    koopa_install_app \
-        --installer='autoconf' \
-        --name='autoconf2.65' \
-        --version='2.65' \
-        "$@"
-}
-
 koopa_install_autodock_adfr() {
     koopa_install_app \
         --name='autodock-adfr' \
@@ -10512,14 +10504,6 @@ koopa_install_autoflake() {
 koopa_install_automake() {
     koopa_install_app \
         --name='automake' \
-        "$@"
-}
-
-koopa_install_automake1163() {
-    koopa_install_app \
-        --installer='automake' \
-        --name='automake1.16.3' \
-        --version='1.16.3' \
         "$@"
 }
 
@@ -14582,6 +14566,12 @@ bin/${dict['bin_name']}"
         elif [[ -x "/bin/${dict['system_bin_name']}" ]]
         then
             dict['app']="/bin/${dict['system_bin_name']}"
+        elif [[ -x "/usr/sbin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/usr/sbin/${dict['system_bin_name']}"
+        elif [[ -x "/sbin/${dict['system_bin_name']}" ]]
+        then
+            dict['app']="/sbin/${dict['system_bin_name']}"
         fi
     fi
     if [[ -x "${dict['app']}" ]]
@@ -15324,10 +15314,17 @@ koopa_locate_man() {
 }
 
 koopa_locate_md5sum() {
+    local system_bin_name
+    if koopa_is_macos
+    then
+        system_bin_name='md5'
+    else
+        system_bin_name='md5sum'
+    fi
     koopa_locate_app \
         --app-name='coreutils' \
         --bin-name='gmd5sum' \
-        --system-bin-name='md5sum' \
+        --system-bin-name="$system_bin_name" \
         "$@"
 }
 
@@ -22860,12 +22857,6 @@ koopa_uninstall_autoconf() {
         "$@"
 }
 
-koopa_uninstall_autoconf265() {
-    koopa_uninstall_app \
-        --name='autoconf2.65' \
-        "$@"
-}
-
 koopa_uninstall_autodock_adfr() {
     koopa_uninstall_app \
         --name='autodock-adfr' \
@@ -22893,12 +22884,6 @@ koopa_uninstall_autoflake() {
 koopa_uninstall_automake() {
     koopa_uninstall_app \
         --name='automake' \
-        "$@"
-}
-
-koopa_uninstall_automake1163() {
-    koopa_uninstall_app \
-        --name='automake1.16.3' \
         "$@"
 }
 
