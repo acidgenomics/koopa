@@ -49,30 +49,6 @@ ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_activate_app --build-only autoconf automake libtool m4
-    # shellcheck disable=SC2016
-    koopa_find_and_replace_in_file \
-        --fixed \
-        --pattern='xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS)' \
-        --replacement='xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS) $(ICONV_CFLAGS)' \
-        'Makefile.in'
-    # shellcheck disable=SC2016
-    koopa_find_and_replace_in_file \
-        --fixed \
-        --pattern='-L$ICONV_DIR/libs' \
-        --replacement='-L$ICONV_DIR/lib' \
-        'configure'
-    # shellcheck disable=SC2016
-    koopa_find_and_replace_in_file \
-        --fixed \
-        --pattern='-L$ICU_DIR/libs' \
-        --replacement='-L$ICU_DIR/lib' \
-        'configure'
-    koopa_find_and_replace_in_file \
-        --regex \
-        --pattern='^WITH_ICONV$' \
-        --replacement='WITH_ICONV\nICONV_CFLAGS' \
-        'configure'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
