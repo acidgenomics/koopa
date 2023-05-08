@@ -221,7 +221,7 @@
     "bin": ["aclocal", "aclocal-1.16", "automake", "automake-1.16"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
-    "dependencies": ["autoconf2.63"],
+    "dependencies": ["autoconf"],
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
