@@ -3695,11 +3695,10 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["autoconf", "automake", "make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "conservative": true,
     "date": "2022-09-30",
-    "dependencies": ["fltk", "libassuan", "libgpg-error", "ncurses"],
-    "platform": "linux",
+    "dependencies": ["libassuan", "libgpg-error", "libiconv", "ncurses"],
     "url": ["https://gnupg.org/download/"],
     "version": "1.2.1"
   },

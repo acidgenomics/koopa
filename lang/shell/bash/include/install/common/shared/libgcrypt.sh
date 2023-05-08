@@ -19,9 +19,7 @@ main() {
     koopa_activate_app 'libgpg-error'
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['patch']="$(koopa_locate_patch)"
-    dict['compress_ext']='bz2'
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
-    dict['jobs']="$(koopa_cpu_count)"
     dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -34,7 +32,6 @@ main() {
         "--prefix=${dict['prefix']}"
         "--with-libgpg-error-prefix=${dict['libgpg_error']}"
     )
-    dict['base_url']="${dict['gcrypt_url']}/${dict['name']}"
     dict['url']="${dict['gcrypt_url']}/libgcrypt/\
 libgcrypt-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
