@@ -3154,7 +3154,20 @@ koopa_camel_case() {
 }
 
 koopa_can_install_binary() {
-    [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]]
+    local -A dict
+    dict['credentials']="${HOME:?}/.aws/credentials"
+    [[ -f "${dict['credentials']}" ]] || return 1
+    koopa_file_detect_fixed \
+        --file="${dict['credentials']}" \
+        --pattern='acidgenomics' \
+        || return 1
+    return 0
+}
+
+koopa_can_push_binary() {
+    [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
+    koopa_can_install_binary || return 1
+    return 0
 }
 
 koopa_capitalize() {
@@ -9727,7 +9740,7 @@ koopa_install_all_apps() {
         koopa_cli_install "$app_name"
         push_apps+=("$app_name")
     done
-    if koopa_can_install_binary && \
+    if koopa_can_push_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
@@ -9742,6 +9755,10 @@ koopa_install_all_binary_apps() {
     local -A app bool
     local -a app_names
     local app_name
+    if ! koopa_can_install_binary
+    then
+        koopa_stop 'No binary file access.'
+    fi
     koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
@@ -9749,7 +9766,7 @@ koopa_install_all_binary_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install 'aws-cli'
+        koopa_cli_install --no-dependencies 'aws-cli'
     fi
     for app_name in "${app_names[@]}"
     do
@@ -16979,7 +16996,7 @@ koopa_push_app_build() {
     local -A app dict
     local name
     koopa_assert_has_args "$#"
-    koopa_can_install_binary || return 1
+    koopa_can_push_binary || return 1
     app['aws']="$(koopa_locate_aws)"
     app['tar']="$(koopa_locate_tar)"
     koopa_assert_is_executable "${app[@]}"
