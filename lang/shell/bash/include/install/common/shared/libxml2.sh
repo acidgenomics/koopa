@@ -3,6 +3,13 @@
 # FIXME Need to fix iconv library paths
 # https://github.com/GNOME/libxml2/commit/3463063001f36c16e5f6ce9ad33cd12a376fc874
 
+# FIXME Hitting this autoreconf issue:
+# autoreconf: running: /opt/koopa/app/autoconf/2.71/bin/autoconf --force
+# configure.ac:1075: error: possibly undefined macro: m4_ifdef
+#       If this token and others are legitimate, please use m4_pattern_allow.
+#       See the Autoconf documentation.
+# autoreconf: error: /opt/koopa/app/autoconf/2.71/bin/autoconf failed with exit status: 1
+
 main() {
     # """
     # Install libxml2.
@@ -44,43 +51,50 @@ main() {
         "--with-zlib=${dict['zlib']}"
         '--without-python'
     )
-    case "${dict['version']}" in
-        '2.11.2')
-            # FIXME This is expecting autoconf 2.63.
-            # FIXME This is expecting automake 1.16.3.
-            local -A app
-            # FIXME Need to rework this.
-            # > app['autoreconf']='/opt/koopa/app/autoconf2.65/2.65/bin/autoreconf'
-            app['libtoolize']="$(koopa_locate_libtoolize)"
-            koopa_assert_is_executable "${app[@]}"
-            koopa_activate_app --build-only \
-                'autoconf' \
-                'automake' \
-                'libtool'
-            dict['commit']='3463063001f36c16e5f6ce9ad33cd12a376fc874'
-            dict['url']='https://github.com/GNOME/libxml2'
-            koopa_git_clone \
-                --commit="${dict['commit']}" \
-                --prefix='src' \
-                --url="${dict['url']}"
-            koopa_cd 'src'
-            # > "${app['libtoolize']}"
-            # > "${app['autoreconf']}" --force --install --verbose
-            # > libtoolize --force
-            libtoolize
-            aclocal
-            autoheader
-            automake --force-missing --add-missing
-            autoconf
-            ;;
-        *)
-            dict['url']="https://download.gnome.org/sources/libxml2/\
+    dict['url']="https://download.gnome.org/sources/libxml2/\
 ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
-            koopa_download "${dict['url']}"
-            koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-            koopa_cd 'src'
-            ;;
-    esac
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_activate_app --build-only autoconf automake libtool m4
+    dict['automake']="$(koopa_app_prefix 'automake')"
+    aclocal "-I${dict['automake']}/share/aclocal-1.16"
+    aclocal --print
+    # FIXME This needs to include:
+    # /opt/koopa/app/automake/1.16.5/share/aclocal
+    # /opt/koopa/app/automake/1.16.5/share/aclocal
+    autoreconf \
+        --include="${dict['automake']}/share/aclocal-1.16" \
+        --force \
+        --install \
+        --verbose
+    # FIXME Need to patch Makefile.
+    # FIXME Need to patch configure.
+    koopa_stop 'FIXME'
+
+    # Makefile.in
+    # from:
+    # 'xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS)'
+    # to:
+    # 'xmllint_CFLAGS = $(AM_CFLAGS) $(RDL_CFLAGS) $(ICONV_CFLAGS)'
+
+    # configure
+    # from:
+    # LIBS="$LIBS -L$ICONV_DIR/libs"
+    # to:
+    # LIBS="$LIBS -L$ICONV_DIR/lib"
+    #
+    # from:
+    # AC_SUBST(WITH_ICONV)
+    # to:
+    # AC_SUBST(WITH_ICONV)
+    # AC_SUBST(ICONV_CFLAGS)
+    #
+    # from:
+    # ICU_LIBS="-L$ICU_DIR/libs $ICU_LIBS"
+    # to:
+    # ICU_LIBS="-L$ICU_DIR/lib $ICU_LIBS"
+
     koopa_make_build "${conf_args[@]}"
     return 0
 }
