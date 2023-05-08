@@ -1705,7 +1705,7 @@
       "fedora": "gnupg2",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "sed"],
     "conservative": true,
     "date": "2023-05-08",
     "dependencies": [
@@ -3003,6 +3003,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["xz"],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/m4/"],
