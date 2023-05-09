@@ -9,6 +9,9 @@ main() {
     # @note Updated 2023-05-08.
     #
     # @seealso
+    # - https://github.com/conda-forge/libxml2-feedstock
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxml2.rb
+    # - https://ports.macports.org/port/libxml2/details/
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
     # """
     local -A dict
@@ -18,12 +21,10 @@ main() {
         'zlib'
         'icu4c'
         'readline'
-        'libiconv'
         'xz'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -36,12 +37,12 @@ main() {
         "--prefix=${dict['prefix']}"
         '--with-ftp'
         '--with-history'
-        "--with-iconv=${dict['libiconv']}"
         '--with-icu'
         '--with-legacy'
         "--with-lzma=${dict['xz']}"
         "--with-readline=${dict['readline']}"
         "--with-zlib=${dict['zlib']}"
+        '--without-iconv'
         '--without-python'
     )
     dict['url']="https://download.gnome.org/sources/libxml2/\
