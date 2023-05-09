@@ -1246,6 +1246,7 @@
     "bin": ["fastqc"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/s-andrews/FastQC/"],
     "version": "0.12.1"
@@ -1289,6 +1290,7 @@
     "arch": "amd64",
     "date": "2023-02-08",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
     "version": "2.1.0"
@@ -1589,6 +1591,7 @@
     "bin": ["gget"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
@@ -1705,7 +1708,7 @@
       "fedora": "gnupg2",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "sed"],
     "conservative": true,
     "date": "2023-05-08",
     "dependencies": [
@@ -2403,7 +2406,7 @@
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make"],
     "date": "2023-05-01",
-    "dependencies": ["hdf5", "xz", "zlib"],
+    "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
@@ -3003,6 +3006,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["xz"],
     "conservative": true,
     "date": "2022-08-29",
     "url": ["https://www.gnu.org/software/m4/"],
