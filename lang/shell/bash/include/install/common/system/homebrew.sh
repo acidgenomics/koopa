@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure current user owns Homebrew.
+# FIXME Ensure that permissions are correct in homebrew prefix.
+# FIXME Do we need to check /usr/local on Apple Silicon?
+
 main() {
     # """
     # Install Homebrew.
