@@ -3,7 +3,7 @@
 koopa_brew_upgrade_brews() {
     # """
     # Upgrade outdated Homebrew brews.
-    # @note Updated 2022-02-16.
+    # @note Updated 2023-05-09.
     # """
     local -A app
     local -a brews
@@ -11,6 +11,7 @@ koopa_brew_upgrade_brews() {
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_alert 'Checking brews.'
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0
     koopa_dl \
