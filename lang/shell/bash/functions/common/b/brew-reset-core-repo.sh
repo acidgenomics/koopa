@@ -3,7 +3,7 @@
 koopa_brew_reset_core_repo() {
     # """
     # Ensure internal 'homebrew-core' repo is clean.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-05-09.
     # """
     local -A app dict
     koopa_assert_has_no_args "$#"
@@ -11,20 +11,21 @@ koopa_brew_reset_core_repo() {
     app['git']="$(koopa_locate_git --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['repo']='homebrew/core'
-    dict['origin']='origin'
     dict['prefix']="$("${app['brew']}" --repo "${dict['repo']}")"
     koopa_assert_is_dir "${dict['prefix']}"
+    koopa_alert "Resetting git repo at '${dict['prefix']}'."
     (
+        local -A dict2
         koopa_cd "${dict['prefix']}"
-        branch="$(koopa_git_default_branch "${PWD:?}")"
-        "${app['git']}" checkout -q "${dict['branch']}"
+        dict2['branch']="$(koopa_git_default_branch "${PWD:?}")"
+        dict2['origin']='origin'
+        "${app['git']}" checkout -q "${dict2['branch']}"
         "${app['git']}" branch -q \
-            "${dict['branch']}" \
-            -u "${dict['origin']}/${dict['branch']}"
-        "${app['git']}" reset -q \
-            --hard \
-            "${dict['origin']}/${dict['branch']}"
-        "${app['git']}" branch -vv
+            "${dict2['branch']}" \
+            -u "${dict2['origin']}/${dict2['branch']}"
+        "${app['git']}" reset -q --hard \
+            "${dict2['origin']}/${dict2['branch']}"
+        # > "${app['git']}" branch -vv
     )
     return 0
 }
