@@ -23,13 +23,8 @@ main() {
         'readline'
         'xz'
     )
-    if koopa_is_macos
-    then
-        deps+=('libiconv')
-    fi
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -47,14 +42,9 @@ main() {
         "--with-lzma=${dict['xz']}"
         "--with-readline=${dict['readline']}"
         "--with-zlib=${dict['zlib']}"
+        '--without-iconv'
         '--without-python'
     )
-    if koopa_is_macos
-    then
-        conf_args+=("--with-iconv=${dict['libiconv']}")
-    else
-        conf_args+=('--without-iconv')
-    fi
     dict['url']="https://download.gnome.org/sources/libxml2/\
 ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
