@@ -2847,14 +2847,14 @@
     },
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
-    "dependencies": ["icu4c", "libiconv", "readline", "xz", "zlib"],
+    "date": "2023-05-09",
+    "dependencies": ["icu4c", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "notes": ["2.11 release series doesn't link libiconv correctly."],
     "outdated": true,
     "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.10.4"
+    "version": "2.11.2"
   },
   "libyaml": {
     "aliases": {
