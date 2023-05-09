@@ -68,6 +68,17 @@
     "url": ["https://github.com/apptainer/apptainer/"],
     "version": "1.1.8"
   },
+  "apr": {
+    "aliases": {
+      "fedora": "apr-devel",
+      "homebrew": true
+    },
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-05-08",
+    "prune": false,
+    "url": ["https://apr.apache.org/"],
+    "version": "1.7.4"
+  },
   "apr-util": {
     "aliases": {
       "debian": "libaprutil1-dev",
@@ -80,17 +91,6 @@
     "prune": false,
     "url": ["https://apr.apache.org/"],
     "version": "1.6.3"
-  },
-  "apr": {
-    "aliases": {
-      "fedora": "apr-devel",
-      "homebrew": true
-    },
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
-    "prune": false,
-    "url": ["https://apr.apache.org/"],
-    "version": "1.7.4"
   },
   "armadillo": {
     "aliases": {
@@ -4209,16 +4209,6 @@
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
     "version": "14.2.4"
   },
-  "ripgrep-all": {
-    "aliases": {
-      "homebrew": true
-    },
-    "bin": ["rga"],
-    "build_dependencies": ["git", "rust"],
-    "date": "2022-09-26",
-    "url": ["https://github.com/phiresky/ripgrep-all/"],
-    "version": "0.9.7"
-  },
   "ripgrep": {
     "aliases": {
       "homebrew": true
@@ -4229,6 +4219,16 @@
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
     "version": "13.0.0"
+  },
+  "ripgrep-all": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["rga"],
+    "build_dependencies": ["git", "rust"],
+    "date": "2022-09-26",
+    "url": ["https://github.com/phiresky/ripgrep-all/"],
+    "version": "0.9.7"
   },
   "rmate": {
     "aliases": {
@@ -4843,6 +4843,13 @@
     ],
     "version": "0.20.8"
   },
+  "tryceratops": {
+    "bin": ["tryceratops"],
+    "date": "2023-05-01",
+    "dependencies": ["python3.11"],
+    "url": ["https://pypi.org/project/tryceratops/"],
+    "version": "2.0.0"
+  },
   "tuc": {
     "aliases": {
       "homebrew": true
@@ -4852,13 +4859,6 @@
     "date": "2023-02-27",
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.0.0"
-  },
-  "tryceratops": {
-    "bin": ["tryceratops"],
-    "date": "2023-05-01",
-    "dependencies": ["python3.11"],
-    "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.0.0"
   },
   "udunits": {
     "aliases": {
