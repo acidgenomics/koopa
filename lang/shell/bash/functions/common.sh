@@ -2941,20 +2941,20 @@ koopa_brew_reset_core_repo() {
     app['git']="$(koopa_locate_git --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['repo']='homebrew/core'
-    dict['origin']='origin'
     dict['prefix']="$("${app['brew']}" --repo "${dict['repo']}")"
     koopa_assert_is_dir "${dict['prefix']}"
+    koopa_alert "Resetting git repo at '${dict['prefix']}'."
     (
+        local -A dict2
         koopa_cd "${dict['prefix']}"
-        branch="$(koopa_git_default_branch "${PWD:?}")"
-        "${app['git']}" checkout -q "${dict['branch']}"
+        dict2['branch']="$(koopa_git_default_branch "${PWD:?}")"
+        dict2['origin']='origin'
+        "${app['git']}" checkout -q "${dict2['branch']}"
         "${app['git']}" branch -q \
-            "${dict['branch']}" \
-            -u "${dict['origin']}/${dict['branch']}"
-        "${app['git']}" reset -q \
-            --hard \
-            "${dict['origin']}/${dict['branch']}"
-        "${app['git']}" branch -vv
+            "${dict2['branch']}" \
+            -u "${dict2['origin']}/${dict2['branch']}"
+        "${app['git']}" reset -q --hard \
+            "${dict2['origin']}/${dict2['branch']}"
     )
     return 0
 }
@@ -25159,45 +25159,74 @@ cuda10.tar.gz" \
 }
 
 koopa_update_system_homebrew() {
-    local -A app dict
+    local -A app bool dict
+    local -a dirs
+    local dir
     koopa_assert_is_admin
+    koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
-    dict['reset']=0
-    while (("$#"))
-    do
-        case "$1" in
-            '--reset')
-                dict['reset']=1
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    if koopa_is_macos && \
-        ! koopa_macos_is_xcode_clt_installed
+    bool['reset']=0
+    dict['prefix']="$(koopa_homebrew_prefix)"
+    dict['user_id']="$(koopa_user_id)"
+    koopa_assert_is_dir "${dict['prefix']}"
+    koopa_alert_update_start 'Homebrew' "${dict['prefix']}"
+    if koopa_is_macos
     then
-        koopa_stop 'Need to reinstall Xcode CLT.'
+        koopa_assert_is_dir "${dict['prefix']}/Homebrew"
+        if [[ "$(koopa_stat_user_id "${dict['prefix']}/Homebrew")" \
+            != "${dict['user_id']}" ]]
+        then
+            koopa_stop 'Homebrew is not managed by current user.'
+        fi
+        if ! koopa_macos_is_xcode_clt_installed
+        then
+            koopa_stop \
+                'Xcode Command Line Tools are missing.' \
+                "Run 'koopa install system xcode-clt' to resolve."
+        fi
+        dirs=(
+            "${dict['prefix']}/bin"
+            "${dict['prefix']}/etc"
+            "${dict['prefix']}/etc/bash_completion.d"
+            "${dict['prefix']}/include"
+            "${dict['prefix']}/lib"
+            "${dict['prefix']}/lib/pkgconfig"
+            "${dict['prefix']}/sbin"
+            "${dict['prefix']}/share"
+            "${dict['prefix']}/share/doc"
+            "${dict['prefix']}/share/info"
+            "${dict['prefix']}/share/locale"
+            "${dict['prefix']}/share/man"
+            "${dict['prefix']}/share/man/man1"
+            "${dict['prefix']}/share/zsh"
+            "${dict['prefix']}/share/zsh/site-functions"
+            "${dict['prefix']}/var/homebrew/linked"
+            "${dict['prefix']}/var/homebrew/locks"
+        )
+        for dir in "${dirs[@]}"
+        do
+            [[ "${bool['reset']}" -eq 1 ]] && continue
+            [[ -d "$dir" ]] || continue
+            [[ "$(koopa_stat_user_id "$dir")" == "${dict['user_id']}" ]] \
+                && continue
+            bool['reset']=1
+        done
     fi
-    if [[ "${dict['reset']}" -eq 1 ]]
+    if [[ "${bool['reset']}" -eq 1 ]]
     then
         koopa_brew_reset_permissions
         koopa_brew_reset_core_repo
     fi
     "${app['brew']}" analytics off
-    "${app['brew']}" update &>/dev/null
+    "${app['brew']}" update # &>/dev/null
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
     fi
     koopa_brew_upgrade_brews
     koopa_brew_cleanup
-    if [[ "${dict['reset']}" -eq 1 ]]
-    then
-        koopa_brew_reset_permissions
-    fi
+    koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
     return 0
 }
 

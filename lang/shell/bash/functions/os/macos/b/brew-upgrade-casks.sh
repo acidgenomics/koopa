@@ -3,7 +3,7 @@
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-09.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
