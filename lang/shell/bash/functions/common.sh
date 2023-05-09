@@ -25206,7 +25206,6 @@ koopa_update_system_homebrew() {
         )
         for dir in "${dirs[@]}"
         do
-            koopa_alert "$dir"
             [[ "${bool['reset']}" -eq 1 ]] && continue
             [[ -d "$dir" ]] || continue
             [[ "$(koopa_stat_user_id "$dir")" == "${dict['user_id']}" ]] \
@@ -25220,7 +25219,7 @@ koopa_update_system_homebrew() {
         koopa_brew_reset_core_repo
     fi
     "${app['brew']}" analytics off
-    "${app['brew']}" update &>/dev/null
+    "${app['brew']}" update # &>/dev/null
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
