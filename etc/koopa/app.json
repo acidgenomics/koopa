@@ -2854,7 +2854,7 @@
     "outdated": true,
     "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.10.4"
+    "version": "2.11.2"
   },
   "libyaml": {
     "aliases": {

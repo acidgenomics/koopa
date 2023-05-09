@@ -9,6 +9,9 @@ main() {
     # @note Updated 2023-05-08.
     #
     # @seealso
+    # - https://github.com/conda-forge/libxml2-feedstock
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxml2.rb
+    # - https://ports.macports.org/port/libxml2/details/
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/libxml2.html
     # """
     local -A dict
