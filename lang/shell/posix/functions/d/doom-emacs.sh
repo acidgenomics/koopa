@@ -3,9 +3,13 @@
 _koopa_doom_emacs() {
     # """
     # Doom Emacs.
-    # @note Updated 2023-03-11.
+    # @note Updated 2023-05-09.
     # """
-    [ -d "$(_koopa_doom_emacs_prefix)" ] || return 1
+    if [ ! -d "$(_koopa_doom_emacs_prefix)" ]
+    then
+        _koopa_print 'Doom Emacs is not installed.'
+        return 1
+    fi
     _koopa_emacs --with-profile 'doom' "$@"
     return 0
 }
