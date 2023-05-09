@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reworking this in Python for simpler updating.
+
 koopa_prune_apps() {
     # """
     # Prune applications.
