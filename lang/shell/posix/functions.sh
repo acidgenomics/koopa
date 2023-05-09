@@ -1429,7 +1429,11 @@ _koopa_doom_emacs_prefix() {
 }
 
 _koopa_doom_emacs() {
-    [ -d "$(_koopa_doom_emacs_prefix)" ] || return 1
+    if [ ! -d "$(_koopa_doom_emacs_prefix)" ]
+    then
+        _koopa_print 'Doom Emacs is not installed.'
+        return 1
+    fi
     _koopa_emacs --with-profile 'doom' "$@"
     return 0
 }
@@ -2022,7 +2026,11 @@ _koopa_prelude_emacs_prefix() {
 }
 
 _koopa_prelude_emacs() {
-    [ -d "$(_koopa_prelude_emacs_prefix)" ] || return 1
+    if [ ! -d "$(_koopa_prelude_emacs_prefix)" ]
+    then
+        _koopa_print 'Prelude Emacs is not installed.'
+        return 1
+    fi
     _koopa_emacs --with-profile 'prelude' "$@"
     return 0
 }
@@ -2127,7 +2135,11 @@ _koopa_spacemacs_prefix() {
 }
 
 _koopa_spacemacs() {
-    [ -d "$(_koopa_spacemacs_prefix)" ] || return 1
+    if [ ! -d "$(_koopa_spacemacs_prefix)" ]
+    then
+        _koopa_print 'Spacemacs is not installed.'
+        return 1
+    fi
     _koopa_emacs --with-profile 'spacemacs' "$@"
     return 0
 }
@@ -2146,7 +2158,11 @@ _koopa_spacevim() {
         unset -v __kvar_gvim
     fi
     __kvar_vimrc="$(_koopa_spacevim_prefix)/vimrc"
-    [ -f "$__kvar_vimrc" ] || return 1
+    if [ ! -f "$__kvar_vimrc" ]
+    then
+        _koopa_print 'SpaceVim is not installed.'
+        return 1
+    fi
     _koopa_is_alias 'vim' && unalias 'vim'
     "$__kvar_vim" -u "$__kvar_vimrc" "$@"
     unset -v __kvar_vim __kvar_vimrc
