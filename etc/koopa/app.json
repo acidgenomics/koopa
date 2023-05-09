@@ -99,6 +99,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-05-08",
     "dependencies": ["hdf5"],
+    "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "12.2.0"
   },
@@ -165,6 +166,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
     "dependencies": ["m4"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/autoconf/"],
     "version": "2.71"
   },
@@ -222,6 +224,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
     "dependencies": ["autoconf"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/automake/"],
     "version": "1.16.5"
   },
@@ -233,7 +236,6 @@
     "build_dependencies": ["make"],
     "date": "2023-05-08",
     "dependencies": ["python3.11"],
-    "large": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
@@ -332,7 +334,6 @@
     "date": "2022-08-30",
     "dependencies": ["ed"],
     "man1": ["bc.1"],
-    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/bc/"],
     "version": "1.07.1"
   },
@@ -645,6 +646,7 @@
     },
     "build_dependencies": ["cmake", "make"],
     "large": true,
+    "prune": false,
     "url": ["https://uscilab.github.io/cereal/"],
     "version": "1.3.2"
   },
@@ -701,6 +703,7 @@
     "build_dependencies": ["make"],
     "date": "2023-04-10",
     "dependencies": ["openssl3"],
+    "prune": false,
     "url": ["https://cmake.org/download/"],
     "version": "3.26.3"
   },
@@ -1173,6 +1176,7 @@
       "texinfo"
     ],
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
     "version": "28.2"
   },
@@ -1490,6 +1494,7 @@
     "date": "2023-01-03",
     "dependencies": ["gettext", "mpfr", "readline"],
     "man1": ["awk.1", "gawk.1"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/"],
     "version": "5.2.1"
   },
@@ -1641,6 +1646,7 @@
       "vim",
       "zlib"
     ],
+    "prune": false,
     "url": ["https://git-scm.com/"],
     "version": "2.40.1"
   },
@@ -2184,6 +2190,7 @@
     "date": "2023-04-04",
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "large": true,
+    "prune": false,
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -2474,6 +2481,7 @@
     "date": "2023-05-08",
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["less.1"],
+    "prune": false,
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
       "https://github.com/gwsw/less/",
@@ -2521,6 +2529,7 @@
     },
     "build_dependencies": ["cmake"],
     "date": "2023-03-30",
+    "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
     "version": "1.18"
   },
@@ -2786,6 +2795,7 @@
     "date": "2022-08-29",
     "dependencies": ["m4"],
     "man1": ["glibtool.1", "glibtoolize.1"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/libtool/"],
     "version": "2.4.7"
   },
@@ -2905,7 +2915,6 @@
     ],
     "enabled": false,
     "large": true,
-    "prune": false,
     "url": ["https://llvm.org/"],
     "version": "16.0.3"
   },
@@ -3020,6 +3029,7 @@
     "bin": ["gmake"],
     "date": "2023-03-07",
     "man1": ["gmake.1"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/make/"],
     "version": "4.4.1"
   },
@@ -3047,8 +3057,6 @@
     "enabled": false,
     "large": true,
     "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
-    "outdated": true,
-    "prune": false,
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -3112,6 +3120,7 @@
     "bin": ["meson"],
     "date": "2023-04-10",
     "dependencies": ["python3.11"],
+    "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
     "version": "1.1.0"
   },
@@ -3390,6 +3399,7 @@
     "bin": ["ninja"],
     "date": "2022-09-29",
     "dependencies": ["python3.11"],
+    "prune": false,
     "url": ["https://ninja-build.org/", "https://pypi.org/project/ninja/"],
     "version": "1.11.1"
   },
@@ -3548,7 +3558,6 @@
     "date": "2023-04-10",
     "dependencies": ["libedit", "openssl3", "zlib"],
     "enabled": false,
-    "prune": false,
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
   },
@@ -3569,7 +3578,6 @@
   "oracle-instant-client": {
     "date": "2023-03-07",
     "platform": "linux",
-    "prune": false,
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
     "version": "21.9.0.0.0-1"
@@ -3624,6 +3632,7 @@
     "date": "2022-08-29",
     "dependencies": ["attr"],
     "man1": ["patch.1"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/patch/"],
     "version": "2.7.6"
   },
@@ -3739,6 +3748,7 @@
     "build_dependencies": ["make"],
     "date": "2022-08-29",
     "man1": ["pkg-config.1"],
+    "prune": false,
     "url": ["https://pkg-config.freedesktop.org/"],
     "version": "0.29.2"
   },
@@ -4427,6 +4437,7 @@
     "build_dependencies": ["make"],
     "date": "2022-11-08",
     "man1": ["gsed.1"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/sed/"],
     "version": "4.9"
   },
@@ -4569,6 +4580,7 @@
     "build_dependencies": ["make"],
     "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
     "outdated": true,
+    "prune": false,
     "url": ["https://github.com/jkbonfield/io_lib"],
     "version": "1.15.0"
   },
@@ -4698,6 +4710,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
+    "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
     "version": "2021.9.0"
   },
@@ -4962,6 +4975,7 @@
       "vimtutor.1",
       "xxd.1"
     ],
+    "prune": false,
     "url": ["https://github.com/vim/vim/"],
     "version": "9.0.1500"
   },
@@ -5035,14 +5049,12 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-25",
     "man1": ["gwhich.1"],
-    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
   },
   "xcode-openmp": {
     "date": "2023-04-11",
     "platform": "macos",
-    "prune": false,
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
     "version": "14.0.6"
