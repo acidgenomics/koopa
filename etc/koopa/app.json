@@ -1246,6 +1246,7 @@
     "bin": ["fastqc"],
     "date": "2023-03-07",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://github.com/s-andrews/FastQC/"],
     "version": "0.12.1"
@@ -1289,6 +1290,7 @@
     "arch": "amd64",
     "date": "2023-02-08",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
     "version": "2.1.0"
