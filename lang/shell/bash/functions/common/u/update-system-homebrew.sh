@@ -24,6 +24,7 @@ koopa_update_system_homebrew() {
     dict['prefix']="$(koopa_homebrew_prefix)"
     dict['user_id']="$(koopa_user_id)"
     koopa_assert_is_dir "${dict['prefix']}"
+    koopa_alert_update_start 'Homebrew' "${dict['prefix']}"
     if koopa_is_macos
     then
         koopa_assert_is_dir "${dict['prefix']}/Homebrew"
@@ -72,12 +73,13 @@ koopa_update_system_homebrew() {
         koopa_brew_reset_core_repo
     fi
     "${app['brew']}" analytics off
-    "${app['brew']}" update &>/dev/null
+    "${app['brew']}" update # &>/dev/null
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
     fi
     koopa_brew_upgrade_brews
     koopa_brew_cleanup
+    koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
     return 0
 }
