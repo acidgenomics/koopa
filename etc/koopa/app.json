@@ -4,7 +4,6 @@
       "homebrew": true
     },
     "bin": ["ack"],
-    "date": "2023-04-11",
     "build_dependencies": [
       "bash",
       "bzip2",
@@ -16,6 +15,7 @@
       "unzip",
       "wget"
     ],
+    "date": "2023-04-11",
     "dependencies": ["perl"],
     "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
@@ -68,6 +68,17 @@
     "url": ["https://github.com/apptainer/apptainer/"],
     "version": "1.1.8"
   },
+  "apr": {
+    "aliases": {
+      "fedora": "apr-devel",
+      "homebrew": true
+    },
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-05-08",
+    "prune": false,
+    "url": ["https://apr.apache.org/"],
+    "version": "1.7.4"
+  },
   "apr-util": {
     "aliases": {
       "debian": "libaprutil1-dev",
@@ -80,17 +91,6 @@
     "prune": false,
     "url": ["https://apr.apache.org/"],
     "version": "1.6.3"
-  },
-  "apr": {
-    "aliases": {
-      "fedora": "apr-devel",
-      "homebrew": true
-    },
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
-    "prune": false,
-    "url": ["https://apr.apache.org/"],
-    "version": "1.7.4"
   },
   "armadillo": {
     "aliases": {
@@ -428,9 +428,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
     "dependencies": ["m4"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/bison/"],
     "version": "3.8.2"
   },
@@ -458,9 +458,9 @@
       ],
       "homebrew": true
     },
-    "prune": false,
     "date": "2023-02-08",
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
+    "prune": false,
     "url": ["https://www.boost.org/"],
     "version": "1.81.0"
   },
@@ -515,9 +515,9 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make"],
-    "prune": false,
     "date": "2022-09-26",
     "enabled": false,
+    "prune": false,
     "url": ["https://github.com/google/brotli/"],
     "version": "1.0.9"
   },
@@ -554,7 +554,6 @@
       "bzmore"
     ],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-09-26",
     "man1": [
       "bzcmp.1",
@@ -566,6 +565,7 @@
       "bzless.1",
       "bzmore.1"
     ],
+    "prune": false,
     "url": ["https://www.sourceware.org/bzip2/"],
     "version": "1.0.8"
   },
@@ -575,8 +575,8 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2023-02-08",
+    "prune": false,
     "url": ["https://c-ares.org/"],
     "version": "1.19.0"
   },
@@ -585,8 +585,8 @@
       "debian": true,
       "homebrew": true
     },
-    "prune": false,
     "date": "2023-02-08",
+    "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
     "version": "2023-01-10"
   },
@@ -597,7 +597,6 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-26",
     "dependencies": [
       "expat",
@@ -622,6 +621,7 @@
       "xorg-xorgproto",
       "zlib"
     ],
+    "prune": false,
     "url": [
       "https://www.cairographics.org/releases/",
       "https://cairographics.org/",
@@ -678,10 +678,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2023-02-08",
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/CLIUtils/CLI11/"],
     "version": "2.3.2"
   },
@@ -717,9 +717,9 @@
   "conda": {
     "arch": "amd64",
     "bin": ["conda"],
-    "prune": false,
     "date": "2023-05-03",
     "large": true,
+    "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.3.1-0"
   },
@@ -848,7 +848,6 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -957,6 +956,7 @@
       "gwhoami.1",
       "gyes.1"
     ],
+    "prune": false,
     "url": ["https://www.gnu.org/software/coreutils/"],
     "version": "9.3"
   },
@@ -1009,18 +1009,18 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-20",
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
+    "prune": false,
     "url": ["https://curl.se/"],
     "version": "8.0.1"
   },
   "curl7": {
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-20",
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
+    "prune": false,
     "url": ["https://curl.se/"],
     "version": "7.88.1"
   },
@@ -1122,9 +1122,9 @@
     },
     "bin": ["ed"],
     "build_dependencies": ["lzip", "make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-22",
     "man1": ["ed.1"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/ed/ed.html"],
     "version": "1.19"
   },
@@ -1147,10 +1147,10 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "prune": false,
     "date": "2023-03-07",
     "dependencies": ["bzip2", "xz", "zlib"],
     "platform": "linux",
+    "prune": false,
     "url": ["https://fedorahosted.org/elfutils/"],
     "version": "0.189"
   },
@@ -1236,8 +1236,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
+    "prune": false,
     "url": ["https://libexpat.github.io/"],
     "version": "2.5.0"
   },
@@ -1355,9 +1355,9 @@
       "homebrew": true
     },
     "build_dependencies": ["bison", "make"],
-    "prune": false,
     "date": "2022-09-26",
     "dependencies": ["gettext", "m4"],
+    "prune": false,
     "url": ["https://github.com/westes/flex/"],
     "version": "2.6.4"
   },
@@ -1366,7 +1366,6 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
     "dependencies": [
       "freetype",
@@ -1378,6 +1377,7 @@
       "xorg-xorgproto",
       "xorg-xtrans"
     ],
+    "prune": false,
     "url": ["https://www.fltk.org/"],
     "version": "1.3.8"
   },
@@ -1399,9 +1399,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-02-08",
     "dependencies": ["gperf", "freetype", "libxml2"],
+    "prune": false,
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
     "version": "2.14.2"
   },
@@ -1437,8 +1437,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-07",
+    "prune": false,
     "url": ["https://www.freetype.org/"],
     "version": "2.13.0"
   },
@@ -1449,8 +1449,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
+    "prune": false,
     "url": ["https://github.com/fribidi/fribidi/"],
     "version": "1.0.12"
   },
@@ -1499,9 +1499,9 @@
     },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-04-27",
     "dependencies": ["gmp", "isl", "mpc", "mpfr", "zstd"],
+    "prune": false,
     "url": ["https://gcc.gnu.org/"],
     "version": "13.1.0"
   },
@@ -1513,7 +1513,6 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "prune": false,
     "date": "2023-04-21",
     "dependencies": [
       "curl",
@@ -1533,6 +1532,7 @@
       "zstd"
     ],
     "man1": ["gdal-config.1"],
+    "prune": false,
     "url": ["https://gdal.org/download.html"],
     "version": "3.6.4"
   },
@@ -1541,9 +1541,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-09-26",
     "dependencies": ["readline"],
+    "prune": false,
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.23"
   },
@@ -1555,8 +1555,8 @@
     },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-17",
+    "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.11.2"
   },
@@ -1567,9 +1567,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-11-08",
     "dependencies": ["bison", "libiconv", "libunistring", "libxml2", "ncurses"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/gettext/"],
     "version": "0.21.1"
   },
@@ -1680,9 +1680,9 @@
       "pkg-config",
       "python3.11"
     ],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["gettext", "libffi", "pcre2", "zlib"],
+    "prune": false,
     "url": [
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/"
@@ -1696,9 +1696,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
     "dependencies": ["m4"],
+    "prune": false,
     "url": ["https://gmplib.org/"],
     "version": "6.2.1"
   },
@@ -1709,7 +1709,6 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": [
       "bzip2",
@@ -1726,6 +1725,7 @@
       "sqlite",
       "zlib"
     ],
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "2.4.1"
   },
@@ -1736,9 +1736,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
+    "prune": false,
     "url": ["https://www.gnutls.org/"],
     "version": "3.8.0"
   },
@@ -1781,8 +1781,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-08-29",
+    "prune": false,
     "url": ["https://www.gnu.org/software/gperf/"],
     "version": "3.1"
   },
@@ -1792,8 +1792,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
+    "prune": false,
     "url": [
       "https://www.graphviz.org/download/source/",
       "https://gitlab.com/graphviz/graphviz/"
@@ -1948,8 +1948,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["https://www.gnu.org/software/gsl/"],
     "version": "2.7.1"
   },
@@ -2040,7 +2040,6 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "prune": false,
     "date": "2023-04-27",
     "dependencies": [
       "freetype",
@@ -2051,6 +2050,7 @@
       "pcre2",
       "zlib"
     ],
+    "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "7.2.0"
   },
@@ -2124,9 +2124,9 @@
       "h5watch"
     ],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["gcc", "zlib"],
+    "prune": false,
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.14.0"
   },
@@ -2180,8 +2180,8 @@
     "version": "2.0.2"
   },
   "htslib": {
-    "date": "2023-04-04",
     "build_dependencies": ["make"],
+    "date": "2023-04-04",
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "large": true,
     "url": [
@@ -2239,7 +2239,6 @@
       "uconv"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "man1": [
       "derb.1",
@@ -2254,6 +2253,7 @@
       "pkgdata.1",
       "uconv.1"
     ],
+    "prune": false,
     "url": ["https://icu.unicode.org/"],
     "version": "73.1"
   },
@@ -2270,7 +2270,6 @@
       "magick-script"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": [
       "bzip2",
@@ -2306,6 +2305,7 @@
       "magick.1",
       "magick-script.1"
     ],
+    "prune": false,
     "url": ["https://imagemagick.org/"],
     "version": "7.1.1-8"
   },
@@ -2324,9 +2324,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["gmp"],
+    "prune": false,
     "url": ["https://libisl.sourceforge.io/"],
     "version": "0.26"
   },
@@ -2348,8 +2348,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-26",
+    "prune": false,
     "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
     "version": "5.3.0"
   },
@@ -2358,8 +2358,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
+    "prune": false,
     "url": ["https://www.ijg.org/"],
     "version": "9e"
   },
@@ -2444,10 +2444,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2022-11-11",
     "dependencies": ["gcc"],
     "enabled": false,
+    "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.11.0"
   },
@@ -2496,11 +2496,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-12-09",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://www.libarchive.org/"],
     "version": "3.6.2"
   },
@@ -2509,9 +2509,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["libgpg-error"],
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "2.5.5"
   },
@@ -2530,9 +2530,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
     "dependencies": ["ncurses"],
+    "prune": false,
     "url": ["https://thrysoee.dk/editline/"],
     "version": "20221030-3.1"
   },
@@ -2541,8 +2541,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-09-26",
+    "prune": false,
     "url": [
       "http://software.schmorp.de/pkg/libev.html",
       "http://dist.schmorp.de/libev/"
@@ -2556,9 +2556,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
     "dependencies": ["openssl3"],
+    "prune": false,
     "url": ["https://libevent.org/", "https://github.com/libevent/libevent/"],
     "version": "2.1.12"
   },
@@ -2569,8 +2569,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
+    "prune": false,
     "url": ["https://sourceware.org/libffi/"],
     "version": "3.4.4"
   },
@@ -2579,9 +2579,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["libgpg-error"],
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "1.10.2"
   },
@@ -2590,7 +2590,6 @@
       "homebrew": true
     },
     "build_dependencies": ["libtool", "make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
     "dependencies": [
       "curl",
@@ -2601,6 +2600,7 @@
       "zlib",
       "zstd"
     ],
+    "prune": false,
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
   },
@@ -2611,10 +2611,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "outdated": true,
+    "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.6.4"
   },
@@ -2623,8 +2623,8 @@
       "homebrew": true
     },
     "build_dependencies": ["bzip2", "make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "1.47"
   },
@@ -2633,8 +2633,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-09-08",
+    "prune": false,
     "url": ["https://www.gnu.org/software/libiconv/"],
     "version": "1.17"
   },
@@ -2643,8 +2643,8 @@
       "homebrew": "libidn2"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
+    "prune": false,
     "url": ["https://www.gnu.org/software/libidn/"],
     "version": "2.3.4"
   },
@@ -2655,8 +2655,8 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-07",
+    "prune": false,
     "url": [
       "https://www.libjpeg-turbo.org/",
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
@@ -2669,9 +2669,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["libgpg-error"],
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "1.6.3"
   },
@@ -2680,10 +2680,10 @@
       "homebrew": "luv"
     },
     "build_dependencies": ["cmake"],
-    "prune": false,
     "date": "2022-09-09",
     "dependencies": ["libuv", "luajit"],
     "enabled": false,
+    "prune": false,
     "url": ["https://github.com/luvit/luv/"],
     "version": "1.44.2-1"
   },
@@ -2692,8 +2692,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
+    "prune": false,
     "url": [
       "https://libpipeline.nongnu.org/",
       "https://gitlab.com/libpipeline/libpipeline/"
@@ -2708,19 +2708,19 @@
     },
     "bin": ["libpng-config", "libpng16-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["zlib"],
+    "prune": false,
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
     "version": "1.6.39"
   },
   "libsolv": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["zlib"],
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/openSUSE/libsolv/"],
     "version": "0.7.24"
   },
@@ -2731,9 +2731,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
     "dependencies": ["openssl3", "zlib"],
+    "prune": false,
     "url": ["https://www.libssh2.org/"],
     "version": "1.10.0"
   },
@@ -2742,8 +2742,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["https://www.gnu.org/software/libtasn1/"],
     "version": "4.19.0"
   },
@@ -2752,10 +2752,10 @@
       "homebrew": true
     },
     "build_dependencies": ["libtool", "make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-09",
     "dependencies": ["ncurses", "unibilium"],
     "enabled": false,
+    "prune": false,
     "url": ["https://www.leonerd.org.uk/code/libtermkey/"],
     "version": "0.22"
   },
@@ -2766,9 +2766,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["libjpeg-turbo", "zstd"],
+    "prune": false,
     "url": [
       "https://download.osgeo.org/libtiff/",
       "https://libtiff.gitlab.io/libtiff/"
@@ -2794,8 +2794,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-11-08",
+    "prune": false,
     "url": ["https://www.gnu.org/software/libunistring/"],
     "version": "1.1"
   },
@@ -2811,8 +2811,8 @@
       "make",
       "pkg-config"
     ],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
     "version": "1.44.2"
   },
@@ -2821,11 +2821,11 @@
       "homebrew": true
     },
     "build_dependencies": ["libtool", "make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-29",
     "enabled": false,
     "notes": ["0.2.0 is incompatible with neovim."],
     "outdated": true,
+    "prune": false,
     "url": ["https://www.leonerd.org.uk/code/libvterm/"],
     "version": "0.1.4"
   },
@@ -2837,12 +2837,12 @@
     },
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["icu4c", "libiconv", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "notes": ["2.11 release series doesn't link libiconv correctly."],
     "outdated": true,
+    "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.10.4"
   },
@@ -2858,8 +2858,8 @@
       "make",
       "pkg-config"
     ],
-    "prune": false,
     "date": "2023-01-04",
+    "prune": false,
     "url": "https://github.com/yaml/libyaml/",
     "version": "0.2.5"
   },
@@ -2868,9 +2868,9 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
     "dependencies": ["bzip2", "nettle", "openssl3", "perl", "zlib", "zstd"],
+    "prune": false,
     "url": ["https://libzip.org/"],
     "version": "1.9.2"
   },
@@ -2891,7 +2891,6 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "prune": false,
     "date": "2023-05-03",
     "dependencies": [
       "binutils",
@@ -2906,17 +2905,18 @@
     ],
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://llvm.org/"],
     "version": "16.0.3"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
+    "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
     "version": "8.7.24"
   },
@@ -2937,8 +2937,8 @@
     },
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.4"
   },
@@ -2948,9 +2948,9 @@
     },
     "bin": ["luajit"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-09",
     "enabled": false,
+    "prune": false,
     "url": ["https://luajit.org/"],
     "version": "2.1.0-beta3"
   },
@@ -2960,9 +2960,9 @@
     },
     "bin": ["luarocks"],
     "build_dependencies": ["make", "unzip"],
-    "prune": false,
     "date": "2023-02-08",
     "dependencies": ["lua"],
+    "prune": false,
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.2"
   },
@@ -2973,8 +2973,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
   },
@@ -2986,9 +2986,9 @@
     },
     "bin": ["lzip"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-03-22",
     "man1": ["lzip.1"],
+    "prune": false,
     "url": ["https://www.nongnu.org/lzip/"],
     "version": "1.23"
   },
@@ -2997,8 +2997,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
+    "prune": false,
     "url": ["https://www.oberhumer.com/opensource/lzo/"],
     "version": "2.10"
   },
@@ -3007,8 +3007,8 @@
       "homebrew": true
     },
     "build_dependencies": ["xz"],
-    "prune": false,
     "date": "2022-08-29",
+    "prune": false,
     "url": ["https://www.gnu.org/software/m4/"],
     "version": "1.4.19"
   },
@@ -3026,7 +3026,6 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "prune": false,
     "date": "2023-04-06",
     "dependencies": [
       "bzip2",
@@ -3049,6 +3048,7 @@
     "large": true,
     "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
     "outdated": true,
+    "prune": false,
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -3161,9 +3161,9 @@
       "homebrew": "libmpc"
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["gmp", "mpfr"],
+    "prune": false,
     "url": ["http://www.multiprecision.org/mpc/"],
     "version": "1.3.1"
   },
@@ -3172,8 +3172,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-09-26",
+    "prune": false,
     "url": ["https://www.bytereef.org/mpdecimal/"],
     "version": "2.5.1"
   },
@@ -3184,9 +3184,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-07",
     "dependencies": ["gmp"],
+    "prune": false,
     "url": ["https://www.mpfr.org/"],
     "version": "4.2.0"
   },
@@ -3195,10 +3195,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake"],
-    "prune": false,
     "date": "2023-03-05",
     "dependencies": ["boost"],
     "enabled": false,
+    "prune": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
     "version": "6.0.0"
   },
@@ -3279,7 +3279,6 @@
       "tset"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "man1": [
       "captoinfo.1",
@@ -3294,6 +3293,7 @@
       "tput.1",
       "tset.1"
     ],
+    "prune": false,
     "url": ["https://ftp.gnu.org/pub/gnu/ncurses/"],
     "version": "6.4"
   },
@@ -3331,9 +3331,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-29",
     "dependencies": ["gmp", "m4"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/nettle/"],
     "version": "3.8.1"
   },
@@ -3355,7 +3355,6 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.11"],
-    "prune": false,
     "date": "2023-03-07",
     "dependencies": [
       "boost",
@@ -3366,6 +3365,7 @@
       "openssl3",
       "zlib"
     ],
+    "prune": false,
     "url": ["https://nghttp2.org/"],
     "version": "1.52.0"
   },
@@ -3419,7 +3419,6 @@
     },
     "bin": ["node", "npm", "npx"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": [
       "ca-certificates",
@@ -3434,6 +3433,7 @@
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
     "outdated": true,
+    "prune": false,
     "url": ["https://nodejs.org/"],
     "version": "18.16.0"
   },
@@ -3442,8 +3442,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "1.6"
   },
@@ -3470,8 +3470,8 @@
       "make",
       "pkg-config"
     ],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["https://github.com/kkos/oniguruma/"],
     "version": "6.9.8"
   },
@@ -3534,9 +3534,9 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-04-01",
     "dependencies": ["gcc"],
+    "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.23"
   },
@@ -3545,10 +3545,10 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-04-10",
     "dependencies": ["libedit", "openssl3", "zlib"],
     "enabled": false,
+    "prune": false,
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
   },
@@ -3560,16 +3560,16 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-14",
     "dependencies": ["ca-certificates"],
+    "prune": false,
     "url": ["https://www.openssl.org/source/"],
     "version": "3.1.0"
   },
   "oracle-instant-client": {
-    "prune": false,
     "date": "2023-03-07",
     "platform": "linux",
+    "prune": false,
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
     "version": "21.9.0.0.0-1"
@@ -3641,10 +3641,10 @@
       "make",
       "pkg-config"
     ],
-    "prune": false,
     "date": "2022-08-29",
     "dependencies": ["bzip2", "zlib"],
     "man1": ["pcre-config.1", "pcregrep.1", "pcretest.1"],
+    "prune": false,
     "url": ["https://sourceforge.net/projects/pcre/"],
     "version": "8.45"
   },
@@ -3662,10 +3662,10 @@
       "make",
       "pkg-config"
     ],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["bzip2", "zlib"],
     "man1": ["pcre2-config.1", "pcre2grep.1", "pcre2test.1"],
+    "prune": false,
     "url": ["https://github.com/PCRE2Project/pcre2/", "https://www.pcre.org/"],
     "version": "10.42"
   },
@@ -3676,9 +3676,9 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-04-24",
     "man1": ["cpan.1", "perl.1"],
+    "prune": false,
     "url": ["https://www.perl.org/get.html"],
     "version": "5.36.1"
   },
@@ -3701,9 +3701,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-30",
     "dependencies": ["libassuan", "libgpg-error", "libiconv", "ncurses"],
+    "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "1.2.1"
   },
@@ -3712,11 +3712,11 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["python3.11"],
     "enabled": false,
     "outdated": true,
+    "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.2.0"
   },
@@ -3725,8 +3725,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-07",
+    "prune": false,
     "url": ["https://cairographics.org/releases/", "http://www.pixman.org/"],
     "version": "0.42.2"
   },
@@ -3747,11 +3747,11 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "prune": false,
     "date": "2023-04-02",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.4.2"
   },
@@ -3789,7 +3789,6 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "prune": false,
     "date": "2023-03-14",
     "dependencies": [
       "curl",
@@ -3801,6 +3800,7 @@
       "zstd"
     ],
     "man1": ["proj.1", "projinfo.1"],
+    "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.2.0"
   },
@@ -3817,10 +3817,10 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.11"],
-    "prune": false,
     "date": "2023-03-17",
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
     "version": "2.10.4"
   },
@@ -3843,10 +3843,10 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "prune": false,
     "date": "2023-04-06",
     "enabled": false,
     "man1": ["pyenv.1"],
+    "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
     "version": "2.3.17"
   },
@@ -3907,7 +3907,6 @@
     },
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-04-06",
     "dependencies": [
       "bzip2",
@@ -3924,6 +3923,7 @@
       "zlib"
     ],
     "man1": ["python3.10.1"],
+    "prune": false,
     "url": ["https://www.python.org/"],
     "version": "3.10.11"
   },
@@ -3933,7 +3933,6 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-04-06",
     "dependencies": [
       "bzip2",
@@ -3950,6 +3949,7 @@
       "zlib"
     ],
     "man1": ["python3.11.1"],
+    "prune": false,
     "url": ["https://www.python.org/"],
     "version": "3.11.3"
   },
@@ -4148,9 +4148,9 @@
       "homebrew": true
     },
     "bin": ["rbenv"],
-    "prune": false,
     "date": "2022-08-30",
     "enabled": false,
+    "prune": false,
     "url": ["https://github.com/rbenv/rbenv/"],
     "version": "1.2.0"
   },
@@ -4172,9 +4172,9 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
     "dependencies": ["ncurses"],
+    "prune": false,
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
     "version": "8.2"
   },
@@ -4202,22 +4202,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2022-11-03",
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
     "version": "14.2.4"
-  },
-  "ripgrep-all": {
-    "aliases": {
-      "homebrew": true
-    },
-    "bin": ["rga"],
-    "build_dependencies": ["git", "rust"],
-    "date": "2022-09-26",
-    "url": ["https://github.com/phiresky/ripgrep-all/"],
-    "version": "0.9.7"
   },
   "ripgrep": {
     "aliases": {
@@ -4229,6 +4219,16 @@
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
     "version": "13.0.0"
+  },
+  "ripgrep-all": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["rga"],
+    "build_dependencies": ["git", "rust"],
+    "date": "2022-09-26",
+    "url": ["https://github.com/phiresky/ripgrep-all/"],
+    "version": "0.9.7"
   },
   "rmate": {
     "aliases": {
@@ -4295,10 +4295,10 @@
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-04-06",
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
+    "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.2.2"
   },
@@ -4376,8 +4376,8 @@
   },
   "samtools": {
     "bin": ["samtools"],
-    "date": "2023-04-04",
     "build_dependencies": ["make"],
+    "date": "2023-04-04",
     "dependencies": ["htslib", "ncurses", "zlib"],
     "large": true,
     "url": [
@@ -4403,9 +4403,9 @@
     "aliases": {
       "homebrew": true
     },
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["python3.11"],
+    "prune": false,
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
     "version": "4.5.2"
   },
@@ -4450,9 +4450,9 @@
       "homebrew": false
     },
     "build_dependencies": ["patch"],
-    "prune": false,
     "date": "2022-09-26",
     "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
+    "prune": false,
     "url": ["https://serf.apache.org/"],
     "version": "1.3.9"
   },
@@ -4538,11 +4538,11 @@
   },
   "spdlog": {
     "build_dependencies": ["cmake", "patch", "pkg-config"],
-    "prune": false,
     "date": "2022-11-04",
     "dependencies": ["fmt"],
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.11.0"
   },
@@ -4554,11 +4554,11 @@
     },
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "outdated": true,
+    "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.41.2"
   },
@@ -4639,7 +4639,6 @@
     },
     "bin": ["svn"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
     "dependencies": [
       "apr",
@@ -4653,6 +4652,7 @@
       "zlib"
     ],
     "man1": ["svn.1"],
+    "prune": false,
     "url": ["https://subversion.apache.org/"],
     "version": "1.14.2"
   },
@@ -4662,9 +4662,9 @@
     },
     "bin": ["swig"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-04-11",
     "dependencies": ["pcre2"],
+    "prune": false,
     "url": ["http://www.swig.org/"],
     "version": "4.1.1"
   },
@@ -4674,9 +4674,9 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "date": "2023-03-31",
     "dependencies": ["zlib"],
+    "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
     "version": "1.13"
   },
@@ -4687,9 +4687,9 @@
     },
     "bin": ["gtar"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-08-30",
     "man1": ["gtar.1"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/tar/"],
     "version": "1.34"
   },
@@ -4707,7 +4707,6 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -4718,6 +4717,7 @@
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
+    "prune": false,
     "url": ["https://www.tcl-lang.org/"],
     "version": "8.6.13"
   },
@@ -4736,11 +4736,11 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "prune": false,
     "date": "2023-04-24",
     "lts": true,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
+    "prune": false,
     "url": ["https://adoptium.net/"],
     "version": "17.0.7+7"
   },
@@ -4769,7 +4769,6 @@
       "texindex"
     ],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2023-04-13",
     "dependencies": ["gettext", "libiconv", "ncurses", "perl"],
     "man1": [
@@ -4780,15 +4779,16 @@
       "texi2pdf.1",
       "texindex.1"
     ],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/texinfo/"],
     "version": "7.0.3"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
-    "prune": false,
     "date": "2023-03-15",
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/TartanLlama/expected/"],
     "version": "1.1.0"
   },
@@ -4834,14 +4834,21 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-04-04",
     "enabled": false,
+    "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
     "version": "0.20.8"
+  },
+  "tryceratops": {
+    "bin": ["tryceratops"],
+    "date": "2023-05-01",
+    "dependencies": ["python3.11"],
+    "url": ["https://pypi.org/project/tryceratops/"],
+    "version": "2.0.0"
   },
   "tuc": {
     "aliases": {
@@ -4853,13 +4860,6 @@
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.0.0"
   },
-  "tryceratops": {
-    "bin": ["tryceratops"],
-    "date": "2023-05-01",
-    "dependencies": ["python3.11"],
-    "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.0.0"
-  },
   "udunits": {
     "aliases": {
       "debian": "libudunits2-dev",
@@ -4868,9 +4868,9 @@
     },
     "bin": ["udunits2"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-08-30",
     "dependencies": ["expat"],
+    "prune": false,
     "url": [
       "https://www.unidata.ucar.edu/software/udunits/",
       "https://downloads.unidata.ucar.edu/udunits/"
@@ -4895,9 +4895,9 @@
       "homebrew": true
     },
     "build_dependencies": ["libtool", "make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-09",
     "enabled": false,
+    "prune": false,
     "url": ["https://github.com/neovim/unibilium/"],
     "version": "2.1.1"
   },
@@ -4907,10 +4907,10 @@
     },
     "bin": ["gunits"],
     "build_dependencies": ["make"],
-    "prune": false,
     "date": "2022-09-30",
     "dependencies": ["readline"],
     "man1": ["gunits.1"],
+    "prune": false,
     "url": ["https://www.gnu.org/software/units/"],
     "version": "2.22"
   },
@@ -4922,10 +4922,10 @@
     },
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
     "build_dependencies": ["make", "patch"],
-    "prune": false,
     "date": "2023-04-06",
     "dependencies": ["bzip2"],
     "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
+    "prune": false,
     "url": ["http://infozip.sourceforge.net/UnZip.html"],
     "version": "6.0"
   },
@@ -4934,8 +4934,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
+    "prune": false,
     "url": [
       "https://juliastrings.github.io/utf8proc/",
       "https://github.com/JuliaStrings/utf8proc/"
@@ -5033,16 +5033,16 @@
     },
     "bin": ["gwhich"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-25",
     "man1": ["gwhich.1"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
   },
   "xcode-openmp": {
-    "prune": false,
     "date": "2023-04-11",
     "platform": "macos",
+    "prune": false,
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
     "version": "14.0.6"
@@ -5052,9 +5052,9 @@
       "homebrew": "libice"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["xorg-xorgproto", "xorg-xtrans"],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/"],
     "version": "1.1.1"
   },
@@ -5063,8 +5063,8 @@
       "homebrew": "libpthread-stubs"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-26",
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/"],
     "version": "0.4"
   },
@@ -5073,9 +5073,9 @@
       "homebrew": "libsm"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["xorg-libice", "xorg-xorgproto", "xorg-xtrans"],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/"],
     "version": "1.2.4"
   },
@@ -5084,7 +5084,6 @@
       "homebrew": "libx11"
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "prune": false,
     "date": "2023-03-07",
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -5094,6 +5093,7 @@
       "xorg-xorgproto",
       "xorg-xtrans"
     ],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/"],
     "version": "1.8.4"
   },
@@ -5102,9 +5102,9 @@
       "homebrew": "libxau"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["xorg-xorgproto"],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/"],
     "version": "1.0.11"
   },
@@ -5113,7 +5113,6 @@
       "homebrew": "libxcb"
     },
     "build_dependencies": ["make", "pkg-config", "python3.11"],
-    "prune": false,
     "date": "2022-09-26",
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -5122,6 +5121,7 @@
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/"],
     "version": "1.15"
   },
@@ -5130,9 +5130,9 @@
       "homebrew": "libxdmcp"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": ["xorg-xorgproto"],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/"],
     "version": "1.1.4"
   },
@@ -5141,7 +5141,6 @@
       "homebrew": "libxext"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -5151,6 +5150,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext/"],
     "version": "1.3.5"
   },
@@ -5159,7 +5159,6 @@
       "homebrew": "libxrandr"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-01-03",
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -5171,6 +5170,7 @@
       "xorg-libxrender",
       "xorg-xorgproto"
     ],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/"],
     "version": "1.5.3"
   },
@@ -5179,7 +5179,6 @@
       "homebrew": "libxrender"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -5189,6 +5188,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender/"],
     "version": "0.9.11"
   },
@@ -5197,7 +5197,6 @@
       "homebrew": "libxt"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "dependencies": [
       "xorg-libice",
@@ -5209,6 +5208,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt/"],
     "version": "1.3.0"
   },
@@ -5217,8 +5217,8 @@
       "homebrew": "xcb-proto"
     },
     "build_dependencies": ["make", "pkg-config", "python3.11"],
-    "prune": false,
     "date": "2022-09-26",
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto/"],
     "version": "1.15.2"
   },
@@ -5227,8 +5227,8 @@
       "homebrew": "xorgproto"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-30",
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto/"],
     "version": "2022.2"
   },
@@ -5237,9 +5237,9 @@
       "homebrew": "xtrans"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-09-26",
     "dependencies": ["xorg-xorgproto"],
+    "prune": false,
     "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans/"],
     "version": "1.4.0"
   },
@@ -5260,8 +5260,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-08-30",
+    "prune": false,
     "url": ["https://github.com/Cyan4973/xxHash/"],
     "version": "0.8.1"
   },
@@ -5273,17 +5273,17 @@
     },
     "bin": ["xz"],
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2023-05-08",
     "man1": ["xz.1"],
+    "prune": false,
     "url": ["https://tukaani.org/xz/"],
     "version": "5.4.3"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "prune": false,
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.7.0"
   },
@@ -5353,10 +5353,10 @@
     },
     "bin": ["zip"],
     "build_dependencies": ["gcc", "make", "patch"],
-    "prune": false,
     "date": "2023-04-06",
     "dependencies": ["bzip2"],
     "man1": ["zip.1"],
+    "prune": false,
     "url": ["http://infozip.sourceforge.net/Zip.html"],
     "version": "3.0"
   },
@@ -5367,8 +5367,8 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "prune": false,
     "date": "2022-11-08",
+    "prune": false,
     "url": ["https://www.zlib.net/"],
     "version": "1.2.13"
   },
