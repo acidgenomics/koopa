@@ -2904,6 +2904,7 @@ koopa_brew_cleanup() {
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_alert 'Cleaning up.'
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
     "${app['brew']}" autoremove || true
@@ -3001,6 +3002,7 @@ koopa_brew_upgrade_brews() {
     koopa_assert_has_no_args "$#"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_alert 'Checking brews.'
     readarray -t brews <<< "$(koopa_brew_outdated)"
     koopa_is_array_non_empty "${brews[@]:-}" || return 0
     koopa_dl \
@@ -25171,6 +25173,7 @@ koopa_update_system_homebrew() {
     dict['user_id']="$(koopa_user_id)"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_alert_update_start 'Homebrew' "${dict['prefix']}"
+    koopa_alert 'Checking Homebrew installation.'
     if koopa_is_macos
     then
         koopa_assert_is_dir "${dict['prefix']}/Homebrew"
