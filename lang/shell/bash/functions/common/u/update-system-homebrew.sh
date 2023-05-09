@@ -25,6 +25,7 @@ koopa_update_system_homebrew() {
     dict['user_id']="$(koopa_user_id)"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_alert_update_start 'Homebrew' "${dict['prefix']}"
+    koopa_alert 'Checking Homebrew installation.'
     if koopa_is_macos
     then
         koopa_assert_is_dir "${dict['prefix']}/Homebrew"
