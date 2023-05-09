@@ -21,9 +21,12 @@ main() {
         'zlib'
         'icu4c'
         'readline'
-        'libiconv'
         'xz'
     )
+    if koopa_is_macos
+    then
+        deps+=('libiconv')
+    fi
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
@@ -39,7 +42,6 @@ main() {
         "--prefix=${dict['prefix']}"
         '--with-ftp'
         '--with-history'
-        "--with-iconv=${dict['libiconv']}"
         '--with-icu'
         '--with-legacy'
         "--with-lzma=${dict['xz']}"
@@ -47,6 +49,10 @@ main() {
         "--with-zlib=${dict['zlib']}"
         '--without-python'
     )
+    if koopa_is_macos
+    then
+        conf_args+=("--with-iconv=${dict['libiconv']}")
+    fi
     dict['url']="https://download.gnome.org/sources/libxml2/\
 ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
