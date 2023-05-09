@@ -1589,6 +1589,7 @@
     "bin": ["gget"],
     "date": "2023-03-14",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
