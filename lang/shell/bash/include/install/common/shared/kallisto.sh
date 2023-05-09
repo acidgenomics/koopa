@@ -3,7 +3,7 @@
 main() {
     # """
     # Install kallisto.
-    # @note updated 2023-05-01.
+    # @note updated 2023-05-09.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -16,25 +16,32 @@ main() {
     # - https://github.com/pachterlab/kallisto/issues/161
     # - https://github.com/pachterlab/kallisto/issues/303
     # """
-    local -A app dict
+    local -A app cmake dict
     local -a cmake_args
     koopa_activate_app --build-only 'autoconf' 'automake'
-    koopa_activate_app 'hdf5' 'xz' 'zlib'
+    koopa_activate_app 'bzip2' 'hdf5' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['cmake']="$(koopa_locate_cmake)"
     app['make']="$(koopa_locate_cmake)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
+    cmake['bzip2_include_dir']="${dict['bzip2']}/include"
+    cmake['bzip2_libraries']="${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
+    cmake['zlib_include_dir']="${dict['zlib']}/include"
+    cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DUSE_HDF5=ON'
         # Dependency paths -----------------------------------------------------
-        "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
-        "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+        "-DBZIP2_INCLUDE_DIR=${cmake['bzip2_include_dir']}"
+        "-DBZIP2_LIBRARIES=${cmake['bzip2_libraries']}"
+        "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
     dict['url']="https://github.com/pachterlab/kallisto/archive/refs/tags/\
 v${dict['version']}.tar.gz"
