@@ -10187,7 +10187,6 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            koopa_sudo_trigger
             ;;
         'user')
             bool['link_in_bin']=0
@@ -22773,7 +22772,6 @@ koopa_uninstall_app() {
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            koopa_sudo_trigger
             ;;
         'user')
             bool['unlink_in_bin']=0
