@@ -350,7 +350,7 @@ ${dict['version2']}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
-            "KOOPA_VERBOSE=${dict['verbose']}"
+            "KOOPA_VERBOSE=${bool['verbose']}"
             'LANG=C'
             'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
