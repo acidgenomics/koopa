@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-05-10.
     #
     # @section Package library location:
     #
@@ -187,7 +187,6 @@ koopa_r_configure_environ() {
             'libtiff'
             # > 'libuv'
             'libxml2'
-            'openblas'
             'openssl3'
             'pcre'
             'pcre2'
