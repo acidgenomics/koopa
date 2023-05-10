@@ -226,7 +226,7 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            koopa_sudo_trigger
+            # > koopa_sudo_trigger
             ;;
         'user')
             bool['link_in_bin']=0
