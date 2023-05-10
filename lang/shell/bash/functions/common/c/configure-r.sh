@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-05-10.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -33,7 +33,7 @@ koopa_configure_r() {
             "'libomp' is not installed." \
             "Run 'koopa install system openmp' to resolve."
     fi
-    koopa_r_link_files_in_etc "${app['r']}"
+    koopa_r_copy_files_into_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"

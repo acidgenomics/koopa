@@ -123,11 +123,10 @@ koopa_debian_apt_add_r_repo() {
     fi
     dict['version2']="$(koopa_major_minor_version "${dict['version']}")"
     case "${dict['version2']}" in
-        '4.1' | \
-        '4.2')
+        '4.'*)
             dict['version2']='4.0'
             ;;
-        '3.6')
+        '3.'*)
             dict['version2']='3.5'
             ;;
     esac
@@ -460,7 +459,7 @@ koopa_debian_apt_delete_repo() {
 koopa_debian_apt_disable_deb_src() {
     local -A app dict
     koopa_assert_has_args_le "$#" 1
-    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    koopa_assert_is_admin
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']="${1:-}"
@@ -481,14 +480,14 @@ koopa_debian_apt_disable_deb_src() {
             -i.bak \
             's/^deb-src /# deb-src /' \
             "${dict['file']}"
-    koopa_sudo "${app['apt_get']}" update
+    koopa_debian_apt_get update
     return 0
 }
 
 koopa_debian_apt_enable_deb_src() {
     local -A app dict
     koopa_assert_has_args_le "$#" 1
-    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    koopa_assert_is_admin
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']="${1:-}"
@@ -509,7 +508,7 @@ koopa_debian_apt_enable_deb_src() {
             -i.bak \
             's/^# deb-src /deb-src /' \
             "${dict['file']}"
-    koopa_sudo "${app['apt_get']}" update
+    koopa_debian_apt_get update
     return 0
 }
 
@@ -535,23 +534,29 @@ koopa_debian_apt_enabled_repos() {
 
 koopa_debian_apt_get() {
     local -A app
+    local -a apt_args
     koopa_assert_has_args "$#"
+    koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['apt_get']}" update
+    apt_args=(
+        '--assume-yes'
+        '--no-install-recommends'
+        '--quiet'
+    )
     koopa_sudo \
+        DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            "$@"
+        "${app['apt_get']}" "${apt_args[@]}" \
+        "$@"
     return 0
 }
 
 koopa_debian_apt_install() {
     koopa_assert_has_args "$#"
+    koopa_debian_apt_get update
     koopa_debian_apt_get install "$@"
+    return 0
 }
 
 koopa_debian_apt_is_key_imported() {
@@ -580,12 +585,8 @@ koopa_debian_apt_key_prefix() {
 }
 
 koopa_debian_apt_remove() {
-    local -A app
     koopa_assert_has_args "$#"
-    app['apt_get']="$(koopa_debian_locate_apt_get)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_sudo \
-        "${app['apt_get']}" --yes remove --purge "$@"
+    koopa_debian_apt_get purge "$@"
     koopa_debian_apt_clean
     return 0
 }
@@ -705,56 +706,46 @@ koopa_debian_install_from_deb() {
 
 koopa_debian_install_system_builder_base() {
     local -A app
-    app['apt_get']="$(koopa_debian_locate_apt_get)"
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
         koopa_debian_locate_debconf_set_selections \
     )"
     app['echo']="$(koopa_locate_echo --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['apt_get']}" update
-    koopa_sudo \
-        DEBCONF_NONINTERACTIVE_SEEN='true' \
-        DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" full-upgrade --yes
+    koopa_debian_apt_get update
+    koopa_debian_apt_get full-upgrade
     "${app['cat']}" << END \
         | koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
-    koopa_sudo \
-        DEBCONF_NONINTERACTIVE_SEEN='true' \
-        DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" \
-        --no-install-recommends \
-        --yes \
-        install \
-            'bash' \
-            'ca-certificates' \
-            'coreutils' \
-            'curl' \
-            'findutils' \
-            'g++' \
-            'gcc' \
-            'git' \
-            'libc-dev' \
-            'libgmp-dev' \
-            'locales' \
-            'lsb-release' \
-            'make' \
-            'perl' \
-            'procps' \
-            'sudo' \
-            'systemd' \
-            'tzdata' \
-            'unzip'
+    koopa_debian_apt_install \
+        'bash' \
+        'ca-certificates' \
+        'coreutils' \
+        'curl' \
+        'findutils' \
+        'g++' \
+        'gcc' \
+        'git' \
+        'libc-dev' \
+        'libgmp-dev' \
+        'locales' \
+        'lsb-release' \
+        'make' \
+        'perl' \
+        'procps' \
+        'sudo' \
+        'systemd' \
+        'tzdata' \
+        'unzip'
     app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['apt_get']}" autoremove --yes
-    koopa_sudo "${app['apt_get']}" clean
+    koopa_debian_apt_get autoremove
+    koopa_debian_apt_get clean
     koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
     koopa_sudo_write_string \
         --file='/etc/locale.gen' \
@@ -763,6 +754,7 @@ END
     koopa_sudo "${app['dpkg_reconfigure']}" \
         --frontend='noninteractive' locales
     koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
+    koopa_debian_needrestart_noninteractive
     koopa_enable_passwordless_sudo
     return 0
 }
@@ -884,6 +876,30 @@ koopa_debian_locate_update_locale() {
     koopa_locate_app \
         '/usr/sbin/update-locale' \
         "$@"
+}
+
+koopa_debian_needrestart_noninteractive() {
+    local -A dict
+    koopa_assert_has_no_args "$#"
+    dict['file']='/etc/needrestart/needrestart.conf'
+    dict['replacement']="\$nrconf{restart} = \'l\';"
+    [[ -f "${dict['file']}" ]] || return 0
+    if koopa_file_detect_fixed \
+        --file="${dict['file']}" \
+        --pattern="\$nrconf{restart} = 'l';"
+    then
+        return 0
+    fi
+    koopa_assert_is_admin
+    koopa_alert "Replacing '${dict['pattern']}' with '${dict['replacement']}' \
+in '${dict['file']}'."
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern="#\$nrconf{restart} = \'i\';" \
+        --replacement="\$nrconf{restart} = \'l\';" \
+        --sudo \
+        "${dict['file']}"
+    return 0
 }
 
 koopa_debian_os_codename() {

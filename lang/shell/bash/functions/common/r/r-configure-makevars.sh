@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-05-02.
+    # @note Updated 2023-05-10.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -56,21 +56,11 @@ koopa_r_configure_makevars() {
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
     dict['libpng']="$(koopa_app_prefix 'libpng')"
-    dict['openblas']="$(koopa_app_prefix 'openblas')"
     dict['openssl3']="$(koopa_app_prefix 'openssl3')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['bzip2']}" \
-        "${dict['gettext']}" \
-        "${dict['hdf5']}" \
-        "${dict['libjpeg']}" \
-        "${dict['libpng']}" \
-        "${dict['openblas']}" \
-        "${dict['r_prefix']}"
     koopa_add_to_pkg_config_path \
         "${dict['libjpeg']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig"
+        "${dict['libpng']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     if koopa_is_linux
     then
@@ -127,7 +117,6 @@ koopa_r_configure_makevars() {
             'libtiff'
             # > 'libuv'
             'libxml2'
-            'openblas'
             'openssl3'
             'pcre'
             'pcre2'
@@ -225,7 +214,6 @@ koopa_r_configure_makevars() {
     fi
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
-    conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
     conf_dict['cc']="${app['cc']}"
     # NOTE Consider using '-O3' instead of '-O2' here.
     conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
@@ -275,7 +263,6 @@ koopa_r_configure_makevars() {
     lines+=(
         "AR = ${conf_dict['ar']}"
         "AWK = ${conf_dict['awk']}"
-        "BLAS_LIBS = ${conf_dict['blas_libs']}"
         "CC = ${conf_dict['cc']}"
         "CFLAGS = ${conf_dict['cflags']}"
         "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_r_link_files_in_etc() {
+koopa_r_copy_files_into_etc() {
     # """
-    # Link R config files inside 'etc/'.
-    # @note Updated 2023-04-05.
+    # Copy R config files into 'etc/'.
+    # @note Updated 2023-05-10.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -35,11 +35,11 @@ koopa_r_link_files_in_etc() {
     do
         if [[ "${dict['sudo']}" -eq 1 ]]
         then
-            koopa_ln --sudo \
+            koopa_cp --sudo \
                 "${dict['r_etc_source']}/${file}" \
                 "${dict['r_etc_target']}/${file}"
         else
-            koopa_sys_ln \
+            koopa_cp \
                 "${dict['r_etc_source']}/${file}" \
                 "${dict['r_etc_target']}/${file}"
         fi
