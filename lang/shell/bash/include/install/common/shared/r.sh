@@ -5,7 +5,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-05-04.
+    # @note Updated 2023-05-10.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -67,7 +67,6 @@ main() {
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        'openblas'
         'pcre'
         'pcre2'
         'perl'
@@ -149,9 +148,6 @@ main() {
     # >     koopa_assert_is_dir "${dict['texbin']}"
     # >     koopa_add_to_path_start "${dict['texbin']}"
     # > fi
-    conf_dict['with_blas']="$( \
-        "${app['pkg_config']}" --libs 'openblas' \
-    )"
     # On macOS, consider including: 'cairo-quartz', 'cairo-quartz-font'.
     conf_dict['with_cairo']="$( \
         "${app['pkg_config']}" --libs \
@@ -232,7 +228,6 @@ main() {
         '--enable-shared'
         "--prefix=${dict['prefix']}"
         "--with-ICU=${conf_dict['with_icu']}"
-        "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
         "--with-libpng=${conf_dict['with_libpng']}"
