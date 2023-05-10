@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This step is erroring out for 'r-base' and 'r-base-dev'.
+
 koopa_debian_apt_install() {
     # """
     # Install Debian apt package.
