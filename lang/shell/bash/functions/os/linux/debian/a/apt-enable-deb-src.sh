@@ -3,11 +3,11 @@
 koopa_debian_apt_enable_deb_src() {
     # """
     # Enable 'deb-src' source packages.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-10.
     # """
     local -A app dict
     koopa_assert_has_args_le "$#" 1
-    app['apt_get']="$(koopa_debian_locate_apt_get)"
+    koopa_assert_is_admin
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['file']="${1:-}"
@@ -28,6 +28,6 @@ koopa_debian_apt_enable_deb_src() {
             -i.bak \
             's/^# deb-src /deb-src /' \
             "${dict['file']}"
-    koopa_sudo "${app['apt_get']}" update
+    koopa_debian_apt_get update
     return 0
 }
