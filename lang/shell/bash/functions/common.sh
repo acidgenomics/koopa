@@ -18113,7 +18113,6 @@ koopa_r_configure_makevars() {
     lines+=(
         "AR = ${conf_dict['ar']}"
         "AWK = ${conf_dict['awk']}"
-        "BLAS_LIBS = ${conf_dict['blas_libs']}"
         "CC = ${conf_dict['cc']}"
         "CFLAGS = ${conf_dict['cflags']}"
         "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"
@@ -18149,6 +18148,12 @@ koopa_r_configure_makevars() {
         "TAR = ${conf_dict['tar']}"
         "YACC = ${conf_dict['yacc']}"
     )
+    if ! koopa_is_linux
+    then
+        lines+=(
+            "BLAS_LIBS = ${conf_dict['blas_libs']}"
+        )
+    fi
     if koopa_is_macos
     then
         libintl=(
