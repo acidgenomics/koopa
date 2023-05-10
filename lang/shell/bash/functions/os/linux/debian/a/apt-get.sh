@@ -3,7 +3,7 @@
 koopa_debian_apt_get() {
     # """
     # Non-interactive variant of apt-get, with saner defaults.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-10.
     #
     # Currently intended for:
     # - dist-upgrade
@@ -20,6 +20,7 @@ koopa_debian_apt_get() {
             --no-install-recommends \
             --quiet \
             --yes \
-            "$@"
+            "$@" \
+        || true
     return 0
 }
