@@ -87,12 +87,16 @@ main() {
         'xz-utils'
         'zlib1g-dev'
     )
+    koopa_warn 'FIXME AAA'
     koopa_debian_apt_install "${dep_pkgs[@]}"
+    koopa_warn 'FIXME BBB'
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
+    koopa_warn 'FIXME CCC'
     koopa_debian_apt_install "${pkgs[@]}"
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
+    koopa_warn 'FIXME DDD'
     koopa_configure_r "${app['r']}"
     return 0
 }
