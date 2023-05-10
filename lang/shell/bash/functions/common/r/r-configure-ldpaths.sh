@@ -117,10 +117,6 @@ libexec/lib/server}")
     then
         keys+=('gcc')
     fi
-    if ! koopa_is_linux
-    then
-        keys+=('openblas')
-    fi
     for key in "${keys[@]}"
     do
         local prefix

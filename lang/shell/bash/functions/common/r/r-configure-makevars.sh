@@ -61,12 +61,6 @@ koopa_r_configure_makevars() {
     koopa_add_to_pkg_config_path \
         "${dict['libjpeg']}/lib/pkgconfig" \
         "${dict['libpng']}/lib/pkgconfig"
-    if ! koopa_is_linux
-    then
-        dict['openblas']="$(koopa_app_prefix 'openblas')"
-        koopa_add_to_pkg_config_path \
-            "${dict['openblas']}/lib/pkgconfig"
-    fi
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     if koopa_is_linux
     then
@@ -123,7 +117,6 @@ koopa_r_configure_makevars() {
             'libtiff'
             # > 'libuv'
             'libxml2'
-            # > 'openblas'
             'openssl3'
             'pcre'
             'pcre2'
@@ -221,10 +214,6 @@ koopa_r_configure_makevars() {
     fi
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
-    if ! koopa_is_linux
-    then
-        conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
-    fi
     conf_dict['cc']="${app['cc']}"
     # NOTE Consider using '-O3' instead of '-O2' here.
     conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
@@ -309,12 +298,6 @@ koopa_r_configure_makevars() {
         "TAR = ${conf_dict['tar']}"
         "YACC = ${conf_dict['yacc']}"
     )
-    if ! koopa_is_linux
-    then
-        lines+=(
-            "BLAS_LIBS = ${conf_dict['blas_libs']}"
-        )
-    fi
     if koopa_is_macos
     then
         # R CRAN binary has 'Makeconf' containing (no '-lintl'):

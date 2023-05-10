@@ -211,10 +211,6 @@ koopa_r_configure_environ() {
             'zlib'
             'zstd'
         )
-        if ! koopa_is_linux
-        then
-            keys+=('openblas')
-        fi
         for key in "${keys[@]}"
         do
             local prefix
