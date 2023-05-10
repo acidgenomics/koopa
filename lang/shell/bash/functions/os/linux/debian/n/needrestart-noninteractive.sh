@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is erroring out with Perl, argh.
-
 koopa_debian_needrestart_noninteractive() {
     # """
     # Ensure that needrestart runs non-interactively, so that apt-get doesn't
@@ -19,12 +17,11 @@ koopa_debian_needrestart_noninteractive() {
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['file']='/etc/needrestart/needrestart.conf'
-    dict['pattern']="#\$nrconf{restart} = \'i\';"
     dict['replacement']="\$nrconf{restart} = \'l\';"
     [[ -f "${dict['file']}" ]] || return 0
     if koopa_file_detect_fixed \
         --file="${dict['file']}" \
-        --pattern="${dict['replacement']}"
+        --pattern="\$nrconf{restart} = 'l';"
     then
         return 0
     fi
@@ -33,8 +30,8 @@ koopa_debian_needrestart_noninteractive() {
 in '${dict['file']}'."
     koopa_find_and_replace_in_file \
         --fixed \
-        --pattern="${dict['pattern']}" \
-        --replacement="${dict['replacement']}" \
+        --pattern="#\$nrconf{restart} = \'i\';" \
+        --replacement="\$nrconf{restart} = \'l\';" \
         --sudo \
         "${dict['file']}"
     return 0
