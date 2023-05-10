@@ -534,18 +534,25 @@ koopa_debian_apt_enabled_repos() {
 
 koopa_debian_apt_get() {
     local -A app
+    local -a apt_args
     koopa_assert_has_args "$#"
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['apt_get']}" update
+    apt_args=(
+        '--assume-yes'
+        '--no-install-recommends'
+        '--quiet'
+        '-o' 'Dpkg::Options::=--force-confdef'
+        '-o' 'Dpkg::Options::=--force-confold'
+    )
     koopa_sudo \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            "$@" \
-        || true
+        update
+    koopa_sudo \
+        DEBIAN_FRONTEND='noninteractive' \
+        "${app['apt_get']}" "${apt_args[@]}" \
+        "$@"
     return 0
 }
 
