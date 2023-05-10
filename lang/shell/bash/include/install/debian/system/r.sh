@@ -90,8 +90,8 @@ main() {
     koopa_debian_apt_install "${dep_pkgs[@]}"
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
-    koopa_stop 'FIXME'
-    koopa_debian_apt_install "${pkgs[@]}" || true
+    # FIXME This step is erroring out...need to debug.
+    koopa_debian_apt_install "${pkgs[@]}"
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
     koopa_configure_r "${app['r']}"
