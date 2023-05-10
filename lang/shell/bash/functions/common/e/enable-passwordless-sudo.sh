@@ -14,7 +14,7 @@ koopa_enable_passwordless_sudo() {
     koopa_assert_is_admin
     dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
-    if [[ -f "${dict['file']}" ]]
+    if [[ -e "${dict['file']}" ]]
     then
         koopa_alert_success "Passwordless sudo for '${dict['group']}' group \
 already enabled at '${dict['file']}'."
