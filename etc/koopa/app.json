@@ -1608,9 +1608,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-05-08",
+    "date": "2023-05-10",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.28.0"
+    "version": "2.29.0"
   },
   "ghostscript": {
     "aliases": {
