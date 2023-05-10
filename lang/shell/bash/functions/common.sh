@@ -4094,7 +4094,31 @@ koopa_cli_system() {
 
 koopa_cli_uninstall() {
     local app stem
-    [[ "$#" -eq 0 ]] && set -- 'koopa'
+    local -a flags pos
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--verbose')
+                flags+=("$1")
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+    else
+        set -- 'koopa'
+    fi
     stem='uninstall'
     case "$1" in
         'private' | \
@@ -4114,7 +4138,12 @@ koopa_cli_uninstall() {
         then
             koopa_stop "Unsupported app: '${app}'."
         fi
-        "${dict['fun']}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
+        then
+            "${dict['fun']}" "${flags[@]:-}"
+        else
+            "${dict['fun']}"
+        fi
     done
     return 0
 }
@@ -4660,7 +4689,7 @@ koopa_configure_r() {
             "'libomp' is not installed." \
             "Run 'koopa install system openmp' to resolve."
     fi
-    koopa_r_link_files_in_etc "${app['r']}"
+    koopa_r_copy_files_into_etc "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"
@@ -6245,14 +6274,14 @@ koopa_enable_passwordless_sudo() {
     koopa_assert_is_admin
     dict['group']="$(koopa_admin_group_name)"
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
-    if [[ -f "${dict['file']}" ]]
+    if [[ -e "${dict['file']}" ]]
     then
         koopa_alert_success "Passwordless sudo for '${dict['group']}' group \
 already enabled at '${dict['file']}'."
         return 0
     fi
     koopa_alert "Modifying '${dict['file']}' to include '${dict['group']}'."
-    dict['string']="%${dict['group']} ALL=(ALL) NOPASSWD: ALL"
+    dict['string']="%${dict['group']} ALL=(ALL:ALL) NOPASSWD:ALL"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
@@ -10119,7 +10148,11 @@ koopa_install_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict['name']}"
-    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        export KOOPA_VERBOSE=1
+        set -o xtrace
+    fi
     [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
@@ -10154,7 +10187,6 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            koopa_sudo_trigger
             ;;
         'user')
             bool['link_in_bin']=0
@@ -10276,7 +10308,7 @@ ${dict['version2']}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
-            "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
+            "KOOPA_VERBOSE=${bool['verbose']}"
             'LANG=C'
             'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
@@ -17430,7 +17462,6 @@ koopa_r_configure_environ() {
             'libssh2'
             'libtiff'
             'libxml2'
-            'openblas'
             'openssl3'
             'pcre'
             'pcre2'
@@ -17698,7 +17729,6 @@ libexec/lib/server}")
         'libssh2'
         'libtiff'
         'libxml2'
-        'openblas'
         'openssl3'
         'pcre'
         'pcre2'
@@ -17909,21 +17939,11 @@ koopa_r_configure_makevars() {
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
     dict['libpng']="$(koopa_app_prefix 'libpng')"
-    dict['openblas']="$(koopa_app_prefix 'openblas')"
     dict['openssl3']="$(koopa_app_prefix 'openssl3')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['bzip2']}" \
-        "${dict['gettext']}" \
-        "${dict['hdf5']}" \
-        "${dict['libjpeg']}" \
-        "${dict['libpng']}" \
-        "${dict['openblas']}" \
-        "${dict['r_prefix']}"
     koopa_add_to_pkg_config_path \
         "${dict['libjpeg']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig" \
-        "${dict['openblas']}/lib/pkgconfig"
+        "${dict['libpng']}/lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     if koopa_is_linux
     then
@@ -17969,7 +17989,6 @@ koopa_r_configure_makevars() {
             'libssh2'
             'libtiff'
             'libxml2'
-            'openblas'
             'openssl3'
             'pcre'
             'pcre2'
@@ -18059,7 +18078,6 @@ koopa_r_configure_makevars() {
     fi
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
-    conf_dict['blas_libs']="$("${app['pkg_config']}" --libs 'openblas')"
     conf_dict['cc']="${app['cc']}"
     conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
     conf_dict['cppflags']="${cppflags[*]}"
@@ -18105,7 +18123,6 @@ koopa_r_configure_makevars() {
     lines+=(
         "AR = ${conf_dict['ar']}"
         "AWK = ${conf_dict['awk']}"
-        "BLAS_LIBS = ${conf_dict['blas_libs']}"
         "CC = ${conf_dict['cc']}"
         "CFLAGS = ${conf_dict['cflags']}"
         "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"
@@ -18170,6 +18187,46 @@ koopa_r_configure_makevars() {
             ;;
     esac
     unset -v PKG_CONFIG_PATH
+    return 0
+}
+
+koopa_r_copy_files_into_etc() {
+    local -A app dict
+    local -a files
+    local file
+    koopa_assert_has_args_eq "$#" 1
+    app['r']="${1:?}"
+    koopa_assert_is_executable "${app[@]}"
+    dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['sudo']=0
+    dict['version']="$(koopa_r_version "${app['r']}")"
+    koopa_assert_is_dir \
+        "${dict['r_etc_source']}" \
+        "${dict['r_prefix']}"
+    if koopa_is_linux && \
+        ! koopa_is_koopa_app "${app['r']}" && \
+        [[ -d '/etc/R' ]]
+    then
+        dict['r_etc_target']='/etc/R'
+        dict['sudo']=1
+    else
+        dict['r_etc_target']="${dict['r_prefix']}/etc"
+    fi
+    files=('Rprofile.site' 'repositories')
+    for file in "${files[@]}"
+    do
+        if [[ "${dict['sudo']}" -eq 1 ]]
+        then
+            koopa_cp --sudo \
+                "${dict['r_etc_source']}/${file}" \
+                "${dict['r_etc_target']}/${file}"
+        else
+            koopa_cp \
+                "${dict['r_etc_source']}/${file}" \
+                "${dict['r_etc_target']}/${file}"
+        fi
+    done
     return 0
 }
 
@@ -18243,46 +18300,6 @@ koopa_r_library_prefix() {
     )"
     koopa_assert_is_dir "${dict['prefix']}"
     koopa_print "${dict['prefix']}"
-    return 0
-}
-
-koopa_r_link_files_in_etc() {
-    local -A app dict
-    local -a files
-    local file
-    koopa_assert_has_args_eq "$#" 1
-    app['r']="${1:?}"
-    koopa_assert_is_executable "${app[@]}"
-    dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['sudo']=0
-    dict['version']="$(koopa_r_version "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['r_etc_source']}" \
-        "${dict['r_prefix']}"
-    if koopa_is_linux && \
-        ! koopa_is_koopa_app "${app['r']}" && \
-        [[ -d '/etc/R' ]]
-    then
-        dict['r_etc_target']='/etc/R'
-        dict['sudo']=1
-    else
-        dict['r_etc_target']="${dict['r_prefix']}/etc"
-    fi
-    files=('Rprofile.site' 'repositories')
-    for file in "${files[@]}"
-    do
-        if [[ "${dict['sudo']}" -eq 1 ]]
-        then
-            koopa_ln --sudo \
-                "${dict['r_etc_source']}/${file}" \
-                "${dict['r_etc_target']}/${file}"
-        else
-            koopa_sys_ln \
-                "${dict['r_etc_source']}/${file}" \
-                "${dict['r_etc_target']}/${file}"
-        fi
-    done
     return 0
 }
 
@@ -22680,6 +22697,10 @@ koopa_uninstall_app() {
                 dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             '--no-unlink-in-bin')
                 bool['unlink_in_bin']=0
                 shift 1
@@ -22704,17 +22725,17 @@ koopa_uninstall_app() {
                 dict['mode']='user'
                 shift 1
                 ;;
-            '--verbose')
-                bool['verbose']=1
-                shift 1
-                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
     koopa_assert_is_set '--name' "${dict['name']}"
-    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        export KOOPA_VERBOSE=1
+        set -o xtrace
+    fi
     case "${dict['mode']}" in
         'shared')
             [[ -z "${dict['prefix']}" ]] && \
@@ -22727,7 +22748,6 @@ koopa_uninstall_app() {
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            koopa_sudo_trigger
             ;;
         'user')
             bool['unlink_in_bin']=0

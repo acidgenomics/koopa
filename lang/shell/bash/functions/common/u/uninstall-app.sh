@@ -60,6 +60,11 @@ koopa_uninstall_app() {
                 dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
+            # CLI-accessible flags ---------------------------------------------
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             # Flags ------------------------------------------------------------
             '--no-unlink-in-bin')
                 bool['unlink_in_bin']=0
@@ -85,10 +90,6 @@ koopa_uninstall_app() {
                 dict['mode']='user'
                 shift 1
                 ;;
-            '--verbose')
-                bool['verbose']=1
-                shift 1
-                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -96,7 +97,11 @@ koopa_uninstall_app() {
         esac
     done
     koopa_assert_is_set '--name' "${dict['name']}"
-    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        export KOOPA_VERBOSE=1
+        set -o xtrace
+    fi
     case "${dict['mode']}" in
         'shared')
             [[ -z "${dict['prefix']}" ]] && \
@@ -109,7 +114,7 @@ koopa_uninstall_app() {
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            koopa_sudo_trigger
+            # > koopa_sudo_trigger
             ;;
         'user')
             bool['unlink_in_bin']=0

@@ -1608,9 +1608,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-05-08",
+    "date": "2023-05-10",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.28.0"
+    "version": "2.29.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3546,6 +3546,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-04-01",
     "dependencies": ["gcc"],
+    "enabled": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.23"
@@ -4012,7 +4013,6 @@
       "libxml2",
       "lzo",
       "ncurses",
-      "openblas",
       "openssl3",
       "pcre",
       "pcre2",
@@ -4088,7 +4088,6 @@
       "libxml2",
       "lzo",
       "ncurses",
-      "openblas",
       "openssl3",
       "pcre",
       "pcre2",

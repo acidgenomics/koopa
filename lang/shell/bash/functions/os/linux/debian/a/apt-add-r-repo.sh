@@ -3,7 +3,7 @@
 koopa_debian_apt_add_r_repo() {
     # """
     # Add R apt repo.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-10.
     # """
     local -A dict
     koopa_assert_has_args_le "$#" 1
@@ -22,11 +22,10 @@ koopa_debian_apt_add_r_repo() {
     fi
     dict['version2']="$(koopa_major_minor_version "${dict['version']}")"
     case "${dict['version2']}" in
-        '4.1' | \
-        '4.2')
+        '4.'*)
             dict['version2']='4.0'
             ;;
-        '3.6')
+        '3.'*)
             dict['version2']='3.5'
             ;;
     esac
