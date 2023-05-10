@@ -24,16 +24,26 @@ koopa_debian_apt_get() {
     #     +bug/2004203
     # """
     local -A app
+    local -a apt_args
     koopa_assert_has_args "$#"
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['apt_get']}" update
+    apt_args=(
+        # > '--allow-unauthenticated'
+        # > '--yes'
+        '--assume-yes'
+        '--no-install-recommends'
+        '--quiet'
+        '-o' 'Dpkg::Options::=--force-confdef'
+        '-o' 'Dpkg::Options::=--force-confold'
+    )
     koopa_sudo \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" \
-            --no-install-recommends \
-            --quiet \
-            --yes \
-            "$@"
+        update
+    koopa_sudo \
+        DEBIAN_FRONTEND='noninteractive' \
+        "${app['apt_get']}" "${apt_args[@]}" \
+        "$@"
     return 0
 }
