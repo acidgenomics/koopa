@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is erroring out with Perl, argh.
+
 koopa_debian_needrestart_noninteractive() {
     # """
     # Ensure that needrestart runs non-interactively, so that apt-get doesn't
@@ -27,7 +29,8 @@ koopa_debian_needrestart_noninteractive() {
         return 0
     fi
     koopa_assert_is_admin
-    koopa_alert "Modifying '${dict['file']}'."
+    koopa_alert "Replacing '${dict['pattern']}' with '${dict['replacement']}' \
+in '${dict['file']}'."
     koopa_find_and_replace_in_file \
         --fixed \
         --pattern="${dict['pattern']}" \
