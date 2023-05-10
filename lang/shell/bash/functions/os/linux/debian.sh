@@ -543,7 +543,6 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '--verbose-versions'
     )
     koopa_sudo \
         DEBCONF_NONINTERACTIVE_SEEN='true' \
