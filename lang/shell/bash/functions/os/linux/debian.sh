@@ -543,8 +543,8 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '-o' 'Dpkg::Options::="--force-confdef"'
-        '-o' 'Dpkg::Options::="--force-confold"'
+        '-o' 'Dpkg::Options::=--force-confdef'
+        '-o' 'Dpkg::Options::=--force-confold'
     )
     koopa_sudo \
         DEBIAN_FRONTEND='noninteractive' \
