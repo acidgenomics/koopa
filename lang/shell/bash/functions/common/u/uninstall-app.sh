@@ -60,6 +60,11 @@ koopa_uninstall_app() {
                 dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
+            # CLI-accessible flags ---------------------------------------------
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             # Flags ------------------------------------------------------------
             '--no-unlink-in-bin')
                 bool['unlink_in_bin']=0
@@ -83,10 +88,6 @@ koopa_uninstall_app() {
                 ;;
             '--user')
                 dict['mode']='user'
-                shift 1
-                ;;
-            '--verbose')
-                bool['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

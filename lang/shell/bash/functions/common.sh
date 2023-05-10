@@ -4094,7 +4094,31 @@ koopa_cli_system() {
 
 koopa_cli_uninstall() {
     local app stem
-    [[ "$#" -eq 0 ]] && set -- 'koopa'
+    local -a flags pos
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--verbose')
+                flags+=("$1")
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+    else
+        set -- 'koopa'
+    fi
     stem='uninstall'
     case "$1" in
         'private' | \
@@ -4114,7 +4138,12 @@ koopa_cli_uninstall() {
         then
             koopa_stop "Unsupported app: '${app}'."
         fi
-        "${dict['fun']}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
+        then
+            "${dict['fun']}" "${flags[@]:-}"
+        else
+            "${dict['fun']}"
+        fi
     done
     return 0
 }
@@ -22693,6 +22722,10 @@ koopa_uninstall_app() {
                 dict['uninstaller_bn']="${2:?}"
                 shift 2
                 ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             '--no-unlink-in-bin')
                 bool['unlink_in_bin']=0
                 shift 1
@@ -22715,10 +22748,6 @@ koopa_uninstall_app() {
                 ;;
             '--user')
                 dict['mode']='user'
-                shift 1
-                ;;
-            '--verbose')
-                bool['verbose']=1
                 shift 1
                 ;;
             *)
