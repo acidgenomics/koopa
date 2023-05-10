@@ -45,7 +45,6 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '--verbose-versions'
         # > '-o' 'Dpkg::Options::=--force-confdef'
         # > '-o' 'Dpkg::Options::=--force-confold'
     )
