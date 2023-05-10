@@ -19,8 +19,8 @@ koopa_debian_needrestart_noninteractive() {
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['file']='/etc/needrestart/needrestart.conf'
-    dict['pattern']="#\$nrconf{restart} = 'i'\;"
-    dict['replacement']="\$nrconf{restart} = 'l'\;"
+    dict['pattern']="#\$nrconf{restart} = \'i\';"
+    dict['replacement']="\$nrconf{restart} = \'l\';"
     [[ -f "${dict['file']}" ]] || return 0
     if koopa_file_detect_fixed \
         --file="${dict['file']}" \
