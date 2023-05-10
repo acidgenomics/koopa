@@ -1,13 +1,27 @@
 #!/usr/bin/env bash
 
+# FIXME R system install is erroring out here:
+# Processing triggers for install-info (6.8-4build1) ...
+# NEEDRESTART-VER: 3.5
+# NEEDRESTART-KCUR: 5.19.0-1024-aws
+# NEEDRESTART-KEXP: 5.19.0-1024-aws
+# NEEDRESTART-KSTA: 1
+
 koopa_debian_apt_get() {
     # """
     # Non-interactive variant of apt-get, with saner defaults.
     # @note Updated 2023-05-10.
     #
+    # Ubuntu 22 is annoying about 'NEEDRESTART' triggers breaking
+    # non-interactive scripts.
+    #
     # Currently intended for:
     # - dist-upgrade
     # - install
+    #
+    # @seealso
+    # - https://bugs.launchpad.net/ubuntu/+source/ubuntu-advantage-tools/
+    #     +bug/2004203
     # """
     local -A app
     koopa_assert_has_args "$#"
@@ -20,7 +34,6 @@ koopa_debian_apt_get() {
             --no-install-recommends \
             --quiet \
             --yes \
-            "$@" \
-        || true
+            "$@"
     return 0
 }
