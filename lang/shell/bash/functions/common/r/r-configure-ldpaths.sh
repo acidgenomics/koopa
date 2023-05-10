@@ -145,6 +145,8 @@ libexec/lib/server}")
     # >     ld_lib_arr+=('/usr/local/lib')
     # > fi
     ld_lib_arr+=("${ld_lib_app_arr[@]}")
+    # NOTE This currently configuration may be problematic with Linux binary
+    # packages from RSPM. Consider reworking to not include these for system R.
     if koopa_is_linux
     then
         dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
