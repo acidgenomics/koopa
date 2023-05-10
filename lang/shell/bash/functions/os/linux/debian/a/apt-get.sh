@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME R system install is erroring out here:
-# Processing triggers for install-info (6.8-4build1) ...
-# NEEDRESTART-VER: 3.5
-# NEEDRESTART-KCUR: 5.19.0-1024-aws
-# NEEDRESTART-KEXP: 5.19.0-1024-aws
-# NEEDRESTART-KSTA: 1
+# FIXME This step is erroring out for 'r-base' and 'r-base-dev'.
+
+# FIXME Fix needrestart automatically if necessary.
+# /etc/needrestart/needrestart.conf
+# > #$nrconf{restart} = 'i';
+# > $nrconf{restart} = 'l';
 
 koopa_debian_apt_get() {
     # """
@@ -20,29 +20,37 @@ koopa_debian_apt_get() {
     # - install
     #
     # @seealso
-    # - https://bugs.launchpad.net/ubuntu/+source/needrestart/+bug/1941716
-    # - https://bugs.launchpad.net/ubuntu/+source/ubuntu-advantage-tools/
-    #     +bug/2004203
+    # - man apt-get
+    # - https://manpages.ubuntu.com/manpages/jammy/en/man8/apt-get.8.html
+    # - https://manpages.ubuntu.com/manpages/jammy/man7/debconf.7.html
+    # - https://manpages.ubuntu.com/manpages/xenial/man1/dpkg.1.html
+    #
+    # - Issues with needrestart not working non-interactively with 22:
+    #   - https://bugs.launchpad.net/ubuntu/+source/ubuntu-advantage-tools/
+    #       +bug/2004203
+    #   - https://bugs.launchpad.net/ubuntu/+source/needrestart/+bug/1941716
+    #   - https://stackoverflow.com/questions/73397110/
+    #   - https://github.com/liske/needrestart/issues/129
+    #   - https://askubuntu.com/questions/1367139/
+    #   - /etc/needrestart/needrestart.conf
     # """
     local -A app
     local -a apt_args
     koopa_assert_has_args "$#"
+    koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     koopa_assert_is_executable "${app[@]}"
     apt_args=(
-        # > '--yes'
-        '--allow-unauthenticated'
+        # > '--allow-unauthenticated'
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '-o' 'Dpkg::Options::=--force-confdef'
-        '-o' 'Dpkg::Options::=--force-confold'
+        '--verbose-versions'
+        # > '-o' 'Dpkg::Options::=--force-confdef'
+        # > '-o' 'Dpkg::Options::=--force-confold'
     )
     koopa_sudo \
-        DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" \
-        update
-    koopa_sudo \
+        DEBCONF_NONINTERACTIVE_SEEN='true' \
         DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" "${apt_args[@]}" \
         "$@"
