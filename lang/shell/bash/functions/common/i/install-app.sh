@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't passing '--verbose' correctly through.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-05-10.
     # """
     local -A app bool dict
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
@@ -188,7 +186,11 @@ koopa_install_app() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--name' "${dict['name']}"
-    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        export KOOPA_VERBOSE=1
+        set -o xtrace
+    fi
     [[ "${dict['mode']}" != 'shared' ]] && bool['deps']=0
     [[ -z "${dict['version_key']}" ]] && dict['version_key']="${dict['name']}"
     dict['current_version']="$(\
@@ -348,7 +350,7 @@ ${dict['version2']}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
-            "KOOPA_VERBOSE=${KOOPA_VERBOSE:-0}"
+            "KOOPA_VERBOSE=${dict['verbose']}"
             'LANG=C'
             'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"

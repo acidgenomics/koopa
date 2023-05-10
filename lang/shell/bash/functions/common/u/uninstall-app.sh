@@ -96,7 +96,11 @@ koopa_uninstall_app() {
         esac
     done
     koopa_assert_is_set '--name' "${dict['name']}"
-    [[ "${bool['verbose']}" -eq 1 ]] && set -o xtrace
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        export KOOPA_VERBOSE=1
+        set -o xtrace
+    fi
     case "${dict['mode']}" in
         'shared')
             [[ -z "${dict['prefix']}" ]] && \
