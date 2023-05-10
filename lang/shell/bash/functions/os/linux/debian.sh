@@ -754,6 +754,7 @@ END
     koopa_sudo "${app['dpkg_reconfigure']}" \
         --frontend='noninteractive' locales
     koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
+    koopa_debian_needrestart_noninteractive
     koopa_enable_passwordless_sudo
     return 0
 }
@@ -875,6 +876,30 @@ koopa_debian_locate_update_locale() {
     koopa_locate_app \
         '/usr/sbin/update-locale' \
         "$@"
+}
+
+koopa_debian_needrestart_noninteractive() {
+    local -A dict
+    koopa_assert_has_no_args "$#"
+    dict['file']='/etc/needrestart/needrestart.conf'
+    dict['pattern']="#\$nrconf{restart} = 'i';"
+    dict['replacement']="\$nrconf{restart} = 'l';"
+    [[ -f "${dict['file']}" ]] || return 0
+    if koopa_file_detect_fixed \
+        --file="${dict['file']}" \
+        --pattern="${dict['replacement']}"
+    then
+        return 0
+    fi
+    koopa_assert_is_admin
+    koopa_alert "Modifying '${dict['file']}'."
+    koopa_find_and_replace_in_file \
+        --fixed \
+        --pattern="${dict['pattern']}" \
+        --replacement="${dict['replacement']}" \
+        --sudo \
+        "${dict['file']}"
+    return 0
 }
 
 koopa_debian_os_codename() {
