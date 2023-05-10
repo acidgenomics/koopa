@@ -3546,6 +3546,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-04-01",
     "dependencies": ["gcc"],
+    "enabled": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.23"
@@ -4012,7 +4013,6 @@
       "libxml2",
       "lzo",
       "ncurses",
-      "openblas",
       "openssl3",
       "pcre",
       "pcre2",
@@ -4088,7 +4088,6 @@
       "libxml2",
       "lzo",
       "ncurses",
-      "openblas",
       "openssl3",
       "pcre",
       "pcre2",
