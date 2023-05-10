@@ -25,7 +25,6 @@ koopa_debian_apt_get() {
     app['apt_get']="$(koopa_debian_locate_apt_get)"
     koopa_assert_is_executable "${app[@]}"
     apt_args=(
-        # > '--allow-unauthenticated'
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
