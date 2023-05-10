@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Include apt dependencies here.
-# FIXME Configuration doesn't work when only apt packages are installed.
-
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2023-03-21.
+    # @note Updated 2023-05-10.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -21,8 +18,6 @@ main() {
     # """
     local -A app dict
     local -a dep_pkgs pkgs
-    app['r']='/usr/bin/R'
-    koopa_assert_is_executable "${app[@]}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dep_pkgs=(
         'autoconf'
@@ -96,7 +91,8 @@ main() {
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
-    koopa_assert_is_installed "${app['r']}"
+    app['r']='/usr/bin/R'
+    koopa_assert_is_executable "${app['r']}"
     koopa_configure_r "${app['r']}"
     return 0
 }
