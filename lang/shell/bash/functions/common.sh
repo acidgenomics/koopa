@@ -6281,7 +6281,7 @@ already enabled at '${dict['file']}'."
         return 0
     fi
     koopa_alert "Modifying '${dict['file']}' to include '${dict['group']}'."
-    dict['string']="%${dict['group']} ALL=(ALL) NOPASSWD: ALL"
+    dict['string']="%${dict['group']} ALL=(ALL:ALL) NOPASSWD:ALL"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
