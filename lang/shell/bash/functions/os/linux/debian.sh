@@ -544,7 +544,8 @@ koopa_debian_apt_get() {
             --no-install-recommends \
             --quiet \
             --yes \
-            "$@"
+            "$@" \
+        || true
     return 0
 }
 
