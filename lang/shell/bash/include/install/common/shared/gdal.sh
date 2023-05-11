@@ -24,10 +24,12 @@ main() {
     # - https://github.com/OSGeo/gdal/issues/1708
     # - https://stackoverflow.com/questions/53511533/
     # """
-    local -A app cmake dict
+    local -A cmake dict
     local -a build_deps cmake_args deps
     build_deps=('libtool' 'pkg-config')
     deps=(
+        'zlib'
+        'zstd'
         'bison'
         'curl'
         'expat'
@@ -51,7 +53,6 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['expat']="$(koopa_app_prefix 'expat')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
@@ -226,8 +227,8 @@ libtiff.${dict['shared_ext']}"
         "-DDeflate_LIBRARY=${cmake['deflate_library']}"
         "-DEXPAT_DIR=${cmake['expat_dir']}"
         "-DHDF5_ROOT=${cmake['hdf5_root']}"
-        "-DICONV_INCLUDE_DIR=${cmake['iconv_include_dir']}"
-        "-DICONV_LIBRARY=${cmake['iconv_library']}"
+        "-DIconv_INCLUDE_DIR=${cmake['iconv_include_dir']}"
+        "-DIconv_LIBRARY=${cmake['iconv_library']}"
         "-DLIBLZMA_INCLUDE_DIR=${cmake['liblzma_include_dir']}"
         "-DLIBLZMA_LIBRARY=${cmake['liblzma_library']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
