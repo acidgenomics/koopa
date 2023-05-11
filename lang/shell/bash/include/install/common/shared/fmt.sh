@@ -19,7 +19,6 @@ main() {
         # > '-DFMT_PEDANTIC=ON'
         # > '-DFMT_SYSTEM_HEADERS=ON'
         # > '-DFMT_WERROR=ON'
-        '-DBUILD_PYTHON_BINDINGS=OFF'
         '-DBUILD_SHARED_LIBS=ON'
         '-DFMT_DOC=OFF'
         '-DFMT_INSTALL=ON'

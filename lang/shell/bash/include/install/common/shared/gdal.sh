@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# Python bindings now require swig.
+
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-05-11.
     #
     # Use 'configure --help' for build options.
     #
