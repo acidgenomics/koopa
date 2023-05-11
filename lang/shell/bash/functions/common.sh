@@ -25195,8 +25195,8 @@ koopa_update_system_homebrew() {
     koopa_alert 'Checking Homebrew installation.'
     if koopa_is_macos
     then
-        koopa_assert_is_dir "${dict['prefix']}/Homebrew"
-        if [[ "$(koopa_stat_user_id "${dict['prefix']}/Homebrew")" \
+        koopa_assert_is_dir "${dict['prefix']}/Cellar"
+        if [[ "$(koopa_stat_user_id "${dict['prefix']}/Cellar")" \
             != "${dict['user_id']}" ]]
         then
             koopa_stop 'Homebrew is not managed by current user.'
