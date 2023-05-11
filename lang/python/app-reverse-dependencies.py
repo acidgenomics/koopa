@@ -39,9 +39,10 @@ def arch2() -> str:
 def get_deps(app_name: str, json_data: dict) -> list:
     """
     Get unique dependencies in an ordered list.
-    @note Updated 2023-03-27.
+    @note Updated 2023-05-11.
     """
-    assert app_name in json_data
+    if app_name not in json_data:
+        raise NameError("Unsupported app: '" + app_name + "'.")
     deps = []
     if "dependencies" in json_data[app_name]:
         deps = json_data[app_name]["dependencies"]
@@ -113,12 +114,13 @@ def print_apps(app_names: list, json_data: dict) -> bool:
 def main(app_name: str, json_file: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-29.
+    @note Updated 2023-05-11.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
     keys = list(json_data.keys())
-    assert app_name in keys
+    if app_name not in keys:
+        raise NameError("Unsupported app: '" + app_name + "'.")
     all_deps = []
     for key in keys:
         key_deps = get_deps(app_name=key, json_data=json_data)
