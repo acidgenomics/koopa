@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-05-11.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -301,6 +301,7 @@ _koopa_complete() {
                         'ont-vbz-compression'
                         'openbb'
                         'openblas'
+                        'openjpeg'
                         'openssh'
                         'openssl3'
                         'pandoc'
