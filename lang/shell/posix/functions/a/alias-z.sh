@@ -3,9 +3,13 @@
 _koopa_alias_z() {
     # """
     # Zoxide alias.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-05-11.
     # """
     _koopa_activate_zoxide
-    _koopa_is_function 'z' || return 1
-    z "$@"
+    if ! _koopa_is_function '__zoxide_z'
+    then
+        _koopa_print 'zoxide is not active.'
+        return 1
+    fi
+    __zoxide_z "$@"
 }
