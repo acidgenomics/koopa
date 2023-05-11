@@ -1543,7 +1543,7 @@
     ],
     "man1": ["gdal-config.1"],
     "prune": false,
-    "url": ["https://gdal.org/download.html"],
+    "url": ["https://gdal.org/"],
     "version": "3.7.0"
   },
   "gdbm": {
