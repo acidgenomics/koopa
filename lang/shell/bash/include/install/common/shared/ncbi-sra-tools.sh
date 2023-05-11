@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using a cmake dict.
+
 main() {
     # """
     # Install SRA toolkit.

@@ -4704,7 +4704,7 @@ koopa_configure_r() {
             ;;
         '1')
             dict['group']="$(koopa_admin_group_name)"
-            dict['user']="$(koopa_user_name)"
+            dict['user']='root'
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
@@ -4714,6 +4714,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
+            koopa_chmod --sudo --recursive \
+                'g+rw' "${dict['site_library']}"
             dict['site_library_2']='/usr/local/lib/R/site-library'
             if [[ -d "${dict['site_library_2']}" ]]
             then
@@ -4721,6 +4723,8 @@ koopa_configure_r() {
                 koopa_chown --sudo --recursive \
                     "${dict['user']}:${dict['group']}" \
                     "${dict['site_library_2']}"
+                koopa_chmod --sudo --recursive \
+                    'g+rw' "${dict['site_library_2']}"
             fi
             ;;
     esac
@@ -11986,6 +11990,12 @@ koopa_install_openblas() {
         "$@"
 }
 
+koopa_install_openjpeg() {
+    koopa_install_app \
+        --name='openjpeg' \
+        "$@"
+}
+
 koopa_install_openssh() {
     koopa_install_app \
         --name='openssh' \
@@ -18197,26 +18207,25 @@ koopa_r_copy_files_into_etc() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
-    dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
+    dict['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['sudo']=0
-    dict['version']="$(koopa_r_version "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['r_etc_source']}" \
-        "${dict['r_prefix']}"
+    dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
+    dict['r_etc_target']="${dict['r_prefix']}/etc"
     if koopa_is_linux && \
-        ! koopa_is_koopa_app "${app['r']}" && \
+        [[ "${dict['system']}" -eq 1 ]] && \
         [[ -d '/etc/R' ]]
     then
         dict['r_etc_target']='/etc/R'
-        dict['sudo']=1
-    else
-        dict['r_etc_target']="${dict['r_prefix']}/etc"
     fi
+    koopa_assert_is_dir \
+        "${dict['r_etc_source']}" \
+        "${dict['r_etc_target']}" \
+        "${dict['r_prefix']}"
     files=('Rprofile.site' 'repositories')
     for file in "${files[@]}"
     do
-        if [[ "${dict['sudo']}" -eq 1 ]]
+        if [[ "${dict['system']}" -eq 1 ]]
         then
             koopa_cp --sudo \
                 "${dict['r_etc_source']}/${file}" \
@@ -24207,6 +24216,12 @@ koopa_uninstall_openblas() {
         "$@"
 }
 
+koopa_uninstall_openjpeg() {
+    koopa_uninstall_app \
+        --name='openjpeg' \
+        "$@"
+}
+
 koopa_uninstall_openssh() {
     koopa_uninstall_app \
         --name='openssh' \
@@ -25195,8 +25210,8 @@ koopa_update_system_homebrew() {
     koopa_alert 'Checking Homebrew installation.'
     if koopa_is_macos
     then
-        koopa_assert_is_dir "${dict['prefix']}/Homebrew"
-        if [[ "$(koopa_stat_user_id "${dict['prefix']}/Homebrew")" \
+        koopa_assert_is_dir "${dict['prefix']}/Cellar"
+        if [[ "$(koopa_stat_user_id "${dict['prefix']}/Cellar")" \
             != "${dict['user_id']}" ]]
         then
             koopa_stop 'Homebrew is not managed by current user.'

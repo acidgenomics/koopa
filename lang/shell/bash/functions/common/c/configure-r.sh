@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-11.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -48,7 +48,8 @@ koopa_configure_r() {
             ;;
         '1')
             dict['group']="$(koopa_admin_group_name)"
-            dict['user']="$(koopa_user_name)"
+            dict['user']='root'
+            # > dict['user']="$(koopa_user_name)"
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
@@ -58,6 +59,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
+            koopa_chmod --sudo --recursive \
+                'g+rw' "${dict['site_library']}"
             # Ensure default site-library for Debian/Ubuntu is writable.
             dict['site_library_2']='/usr/local/lib/R/site-library'
             if [[ -d "${dict['site_library_2']}" ]]
@@ -66,6 +69,8 @@ koopa_configure_r() {
                 koopa_chown --sudo --recursive \
                     "${dict['user']}:${dict['group']}" \
                     "${dict['site_library_2']}"
+                koopa_chmod --sudo --recursive \
+                    'g+rw' "${dict['site_library_2']}"
             fi
             ;;
     esac
