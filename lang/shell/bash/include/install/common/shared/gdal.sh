@@ -1,6 +1,30 @@
 #!/usr/bin/env bash
 
-# Python bindings now require swig.
+# FIXME Need to improve linkage of these:
+#
+# -- Could NOT find EXPAT (missing: EXPAT_DIR)
+# -- Found Iconv: 
+# -- Could NOT find Deflate (missing: Deflate_LIBRARY Deflate_INCLUDE_DIR)
+# -- Found PNG: /usr/X11R6/lib/libpng.dylib (found version "1.6.39")
+# -- Could NOT find GIF (missing: GIF_LIBRARY GIF_INCLUDE_DIR)
+# -- Could NOT find LibLZMA (missing: LIBLZMA_INCLUDE_DIR)
+# -- Could NOT find LZ4 (missing: LZ4_LIBRARY LZ4_INCLUDE_DIR LZ4_VERSION)
+# -- Could NOT find OpenJPEG (missing: OPENJPEG_LIBRARY OPENJPEG_INCLUDE_DIR)
+# -- Found BISON: /usr/bin/bison (found version "2.3")
+#
+# -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12
+# -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12 - Failed
+#
+# FIXME Work on including:
+# - bison
+# - expat
+# - libdeflate
+# - libiconv
+# - libjpeg-turbo
+# - libpng
+# - lz4
+# - openjpeg
+# - xz (liblzma)
 
 main() {
     # """
@@ -39,12 +63,9 @@ main() {
         'libtiff'
         'proj'
         'xz'
-        'python3.11'
-        'temurin'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
@@ -53,7 +74,6 @@ main() {
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['proj']="$(koopa_app_prefix 'proj')"
-    dict['python']="$(koopa_app_prefix 'python3.11')"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
@@ -64,7 +84,6 @@ main() {
     cmake['curl_library']="${dict['curl']}/lib/\
 libcurl.${dict['shared_ext']}"
     cmake['hdf5_root']="${dict['hdf5']}"
-    cmake['java_home']="${dict['temurin']}"
     cmake['libxml2_include_dir']="${dict['libxml2']}/include"
     cmake['libxml2_library']="${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
     cmake['pcre2_include_dir']="${dict['pcre2']}/include"
@@ -74,8 +93,6 @@ libpcre2-8.${dict['shared_ext']}"
     cmake['proj_include_dir']="${dict['proj']}/include"
     cmake['proj_library']="${dict['proj']}/lib/\
 libproj.${dict['shared_ext']}"
-    cmake['python_executable']="${app['python']}"
-    cmake['python_root']="${dict['python']}"
     cmake['sqlite3_include_dir']="${dict['sqlite']}/include"
     cmake['sqlite3_library']="${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
@@ -88,18 +105,14 @@ libtiff.${dict['shared_ext']}"
     koopa_assert_is_dir \
         "${cmake['curl_include_dir']}" \
         "${cmake['hdf5_root']}" \
-        "${cmake['java_home']}" \
         "${cmake['libxml2_include_dir']}" \
         "${cmake['pcre2_include_dir']}" \
         "${cmake['proj_dir']}" \
         "${cmake['proj_include_dir']}" \
-        "${cmake['python_root']}" \
         "${cmake['sqlite3_include_dir']}" \
         "${cmake['tiff_include_dir']}" \
         "${cmake['zlib_include_dir']}" \
         "${cmake['zstd_dir']}"
-    koopa_assert_is_executable \
-        "${cmake['python_executable']}"
     koopa_assert_is_file \
         "${cmake['curl_library']}" \
         "${cmake['libxml2_library']}" \
@@ -111,8 +124,8 @@ libtiff.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DBUILD_APPS=ON'
-        '-DBUILD_JAVA_BINDINGS=ON'
-        '-DBUILD_PYTHON_BINDINGS=ON'
+        '-DBUILD_JAVA_BINDINGS=OFF'
+        '-DBUILD_PYTHON_BINDINGS=OFF'
         '-DBUILD_SHARED_LIBS=ON'
         '-DGDAL_USE_ARMADILLO=OFF'
         '-DGDAL_USE_ARROW=OFF'
@@ -188,7 +201,6 @@ libtiff.${dict['shared_ext']}"
         "-DCURL_INCLUDE_DIR=${cmake['curl_include_dir']}"
         "-DCURL_LIBRARY=${cmake['curl_library']}"
         "-DHDF5_ROOT=${cmake['hdf5_root']}"
-        "-DJAVA_HOME=${cmake['java_home']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARY=${cmake['libxml2_library']}"
         "-DPCRE2_INCLUDE_DIR=${cmake['pcre2_include_dir']}"
@@ -196,8 +208,6 @@ libtiff.${dict['shared_ext']}"
         "-DPROJ_DIR=${cmake['proj_dir']}"
         "-DPROJ_INCLUDE_DIR=${cmake['proj_include_dir']}"
         "-DPROJ_LIBRARY=${cmake['proj_library']}"
-        "-DPython_EXECUTABLE=${cmake['python_executable']}"
-        "-DPython_ROOT=${cmake['python_root']}"
         "-DSQLite3_INCLUDE_DIR=${cmake['sqlite3_include_dir']}"
         "-DSQLite3_LIBRARY=${cmake['sqlite3_library']}"
         "-DTIFF_INCLUDE_DIR=${cmake['tiff_include_dir']}"
