@@ -3,7 +3,7 @@
 _koopa_activate_zoxide() {
     # """
     # Activate zoxide.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-05-11.
     #
     # Highly recommended to use along with fzf.
     #
@@ -16,7 +16,7 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
-    _koopa_is_alias 'zoxide' && unalias 'zoxide'
+    _koopa_is_alias 'z' && unalias 'z'
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
