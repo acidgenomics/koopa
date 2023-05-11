@@ -18205,19 +18205,19 @@ koopa_r_copy_files_into_etc() {
     koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['version']="$(koopa_r_version "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['r_etc_source']}" \
-        "${dict['r_prefix']}"
     if koopa_is_linux && \
         [[ "${dict['system']}" -eq 1 ]] && \
         [[ -d '/etc/R' ]]
     then
         dict['r_etc_target']='/etc/R'
     fi
+    koopa_assert_is_dir \
+        "${dict['r_etc_source']}" \
+        "${dict['r_etc_target']}" \
+        "${dict['r_prefix']}"
     files=('Rprofile.site' 'repositories')
     for file in "${files[@]}"
     do
