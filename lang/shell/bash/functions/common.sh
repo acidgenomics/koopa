@@ -18225,6 +18225,7 @@ koopa_r_copy_files_into_etc() {
     files=('Rprofile.site' 'repositories')
     for file in "${files[@]}"
     do
+        koopa_alert "Updating '${dict['r_etc_target']}/${file}'."
         if [[ "${dict['system']}" -eq 1 ]]
         then
             koopa_cp --sudo \
