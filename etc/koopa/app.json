@@ -2148,6 +2148,7 @@
     "bin": ["hexyl"],
     "build_dependencies": ["git", "rust"],
     "date": "2023-05-11",
+    "enabled": false,
     "url": ["https://github.com/sharkdp/hexyl/"],
     "version": "0.13.0"
   },
