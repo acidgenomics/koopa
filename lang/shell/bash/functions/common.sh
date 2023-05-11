@@ -4714,6 +4714,8 @@ koopa_configure_r() {
             koopa_chown --sudo --recursive \
                 "${dict['user']}:${dict['group']}" \
                 "${dict['site_library']}"
+            koopa_chmod --sudo --recursive \
+                'g+rw' "${dict['site_library']}"
             dict['site_library_2']='/usr/local/lib/R/site-library'
             if [[ -d "${dict['site_library_2']}" ]]
             then
@@ -4721,6 +4723,8 @@ koopa_configure_r() {
                 koopa_chown --sudo --recursive \
                     "${dict['user']}:${dict['group']}" \
                     "${dict['site_library_2']}"
+                koopa_chmod --sudo --recursive \
+                    'g+rw' "${dict['site_library_2']}"
             fi
             ;;
     esac
