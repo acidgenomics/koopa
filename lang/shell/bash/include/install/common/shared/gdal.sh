@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# NOTE May need to address this:
+# -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12
+# -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12 - Failed
+
 main() {
     # """
     # Install GDAL.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-05-11.
     #
     # Use 'configure --help' for build options.
     #
@@ -20,60 +24,85 @@ main() {
     # - https://github.com/OSGeo/gdal/issues/1708
     # - https://stackoverflow.com/questions/53511533/
     # """
-    local -A app cmake dict
+    local -A cmake dict
     local -a build_deps cmake_args deps
     build_deps=('libtool' 'pkg-config')
     deps=(
+        'zlib'
+        'zstd'
+        'bison'
         'curl'
+        'expat'
         'geos'
         'hdf5'
+        'libdeflate'
+        'libiconv'
+        'libjpeg-turbo'
+        'libpng'
+        'libtiff'
         'libxml2'
+        'lz4'
+        'openjpeg'
         'openssl3'
         'pcre2'
         'sqlite'
+        'xz'
         'zlib'
         'zstd'
-        'libjpeg-turbo'
-        'libtiff'
         'proj'
-        'xz'
-        'python3.11'
-        'temurin'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['python']="$(koopa_locate_python311 --realpath)"
-    koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['expat']="$(koopa_app_prefix 'expat')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['libpng']="$(koopa_app_prefix 'libpng')"
     dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['lz4']="$(koopa_app_prefix 'lz4')"
+    dict['openjpeg']="$(koopa_app_prefix 'openjpeg')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['proj']="$(koopa_app_prefix 'proj')"
-    dict['python']="$(koopa_app_prefix 'python3.11')"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake['curl_include_dir']="${dict['curl']}/include"
     cmake['curl_library']="${dict['curl']}/lib/\
 libcurl.${dict['shared_ext']}"
+    cmake['deflate_include_dir']="${dict['libdeflate']}/include"
+    cmake['deflate_library']="${dict['libdeflate']}/lib/\
+libdeflate.${dict['shared_ext']}"
+    cmake['expat_dir']="${dict['expat']}"
     cmake['hdf5_root']="${dict['hdf5']}"
-    cmake['java_home']="${dict['temurin']}"
+    cmake['iconv_include_dir']="${dict['libiconv']}/include"
+    cmake['iconv_library']="${dict['libiconv']}/lib/\
+libiconv.${dict['shared_ext']}"
+    cmake['liblzma_include_dir']="${dict['xz']}/include"
+    cmake['liblzma_library']="${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
     cmake['libxml2_include_dir']="${dict['libxml2']}/include"
-    cmake['libxml2_library']="${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+    cmake['libxml2_library']="${dict['libxml2']}/lib/\
+libxml2.${dict['shared_ext']}"
+    cmake['lz4_include_dir']="${dict['lz4']}/include"
+    cmake['lz4_library']="${dict['lz4']}/lib/liblz4.${dict['shared_ext']}"
+    cmake['openjpeg_include_dir']="${dict['openjpeg']}/include"
+    cmake['openjpeg_library']="${dict['openjpeg']}/lib/\
+libopenjp2.${dict['shared_ext']}"
     cmake['pcre2_include_dir']="${dict['pcre2']}/include"
     cmake['pcre2_8_library']="${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
+    cmake['png_include_dir']="${dict['libpng']}/include"
+    cmake['png_library']="${dict['libpng']}/lib/libpng.${dict['shared_ext']}"
     cmake['proj_dir']="${dict['proj']}/lib/cmake/proj"
     cmake['proj_include_dir']="${dict['proj']}/include"
     cmake['proj_library']="${dict['proj']}/lib/\
 libproj.${dict['shared_ext']}"
-    cmake['python_executable']="${app['python']}"
-    cmake['python_root']="${dict['python']}"
     cmake['sqlite3_include_dir']="${dict['sqlite']}/include"
     cmake['sqlite3_library']="${dict['sqlite']}/lib/\
 libsqlite3.${dict['shared_ext']}"
@@ -85,23 +114,32 @@ libtiff.${dict['shared_ext']}"
     cmake['zstd_dir']="${dict['zstd']}/lib/cmake/zstd"
     koopa_assert_is_dir \
         "${cmake['curl_include_dir']}" \
+        "${cmake['deflate_include_dir']}" \
+        "${cmake['expat_dir']}" \
         "${cmake['hdf5_root']}" \
-        "${cmake['java_home']}" \
+        "${cmake['iconv_include_dir']}" \
+        "${cmake['liblzma_include_dir']}" \
         "${cmake['libxml2_include_dir']}" \
+        "${cmake['lz4_include_dir']}" \
+        "${cmake['openjpeg_include_dir']}" \
         "${cmake['pcre2_include_dir']}" \
+        "${cmake['png_include_dir']}" \
         "${cmake['proj_dir']}" \
         "${cmake['proj_include_dir']}" \
-        "${cmake['python_root']}" \
         "${cmake['sqlite3_include_dir']}" \
         "${cmake['tiff_include_dir']}" \
         "${cmake['zlib_include_dir']}" \
         "${cmake['zstd_dir']}"
-    koopa_assert_is_executable \
-        "${cmake['python_executable']}"
     koopa_assert_is_file \
         "${cmake['curl_library']}" \
+        "${cmake['deflate_library']}" \
+        "${cmake['iconv_library']}" \
+        "${cmake['liblzma_library']}" \
         "${cmake['libxml2_library']}" \
+        "${cmake['lz4_library']}" \
+        "${cmake['openjpeg_library']}" \
         "${cmake['pcre2_8_library']}" \
+        "${cmake['png_library']}" \
         "${cmake['proj_library']}" \
         "${cmake['sqlite3_library']}" \
         "${cmake['tiff_library_release']}" \
@@ -109,8 +147,8 @@ libtiff.${dict['shared_ext']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DBUILD_APPS=ON'
-        '-DBUILD_JAVA_BINDINGS=ON'
-        '-DBUILD_PYTHON_BINDINGS=ON'
+        '-DBUILD_JAVA_BINDINGS=OFF'
+        '-DBUILD_PYTHON_BINDINGS=OFF'
         '-DBUILD_SHARED_LIBS=ON'
         '-DGDAL_USE_ARMADILLO=OFF'
         '-DGDAL_USE_ARROW=OFF'
@@ -185,17 +223,27 @@ libtiff.${dict['shared_ext']}"
         # Dependency paths -----------------------------------------------------
         "-DCURL_INCLUDE_DIR=${cmake['curl_include_dir']}"
         "-DCURL_LIBRARY=${cmake['curl_library']}"
+        "-DDeflate_INCLUDE_DIR=${cmake['deflate_include_dir']}"
+        "-DDeflate_LIBRARY=${cmake['deflate_library']}"
+        "-DEXPAT_DIR=${cmake['expat_dir']}"
         "-DHDF5_ROOT=${cmake['hdf5_root']}"
-        "-DJAVA_HOME=${cmake['java_home']}"
+        "-DIconv_INCLUDE_DIR=${cmake['iconv_include_dir']}"
+        "-DIconv_LIBRARY=${cmake['iconv_library']}"
+        "-DLIBLZMA_INCLUDE_DIR=${cmake['liblzma_include_dir']}"
+        "-DLIBLZMA_LIBRARY=${cmake['liblzma_library']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARY=${cmake['libxml2_library']}"
-        "-DPCRE2_INCLUDE_DIR=${cmake['pcre2_include_dir']}"
+        "-DLZ4_INCLUDE_DIR=${cmake['lz4_include_dir']}"
+        "-DLZ4_LIBRARY=${cmake['lz4_library']}"
+        "-DOPENJPEG_INCLUDE_DIR=${cmake['openjpeg_include_dir']}"
+        "-DOPENJPEG_LIBRARY=${cmake['openjpeg_library']}"
         "-DPCRE2-8_LIBRARY=${cmake['pcre2_8_library']}"
+        "-DPCRE2_INCLUDE_DIR=${cmake['pcre2_include_dir']}"
+        "-DPNG_INCLUDE_DIR=${cmake['png_include_dir']}"
+        "-DPNG_LIBRARY=${cmake['png_library']}"
         "-DPROJ_DIR=${cmake['proj_dir']}"
         "-DPROJ_INCLUDE_DIR=${cmake['proj_include_dir']}"
         "-DPROJ_LIBRARY=${cmake['proj_library']}"
-        "-DPython_EXECUTABLE=${cmake['python_executable']}"
-        "-DPython_ROOT=${cmake['python_root']}"
         "-DSQLite3_INCLUDE_DIR=${cmake['sqlite3_include_dir']}"
         "-DSQLite3_LIBRARY=${cmake['sqlite3_library']}"
         "-DTIFF_INCLUDE_DIR=${cmake['tiff_include_dir']}"

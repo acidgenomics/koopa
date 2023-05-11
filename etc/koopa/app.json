@@ -1390,11 +1390,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-11-08",
+    "date": "2023-05-11",
     "enabled": false,
     "large": true,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "9.1.0"
+    "version": "10.0.0"
   },
   "fontconfig": {
     "aliases": {
@@ -1518,28 +1518,33 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-04-21",
+    "date": "2023-05-11",
     "dependencies": [
+      "bison",
       "curl",
+      "expat",
       "geos",
       "hdf5",
+      "libdeflate",
+      "libiconv",
       "libjpeg-turbo",
+      "libpng",
       "libtiff",
       "libxml2",
+      "lz4",
+      "openjpeg",
       "openssl3",
       "pcre2",
       "proj",
-      "python3.11",
       "sqlite",
-      "temurin",
       "xz",
       "zlib",
       "zstd"
     ],
     "man1": ["gdal-config.1"],
     "prune": false,
-    "url": ["https://gdal.org/download.html"],
-    "version": "3.6.4"
+    "url": ["https://gdal.org/"],
+    "version": "3.7.0"
   },
   "gdbm": {
     "aliases": {
@@ -2046,7 +2051,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-04-27",
+    "date": "2023-05-11",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2058,7 +2063,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "7.2.0"
+    "version": "7.3.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2130,11 +2135,11 @@
       "h5watch"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-01-03",
+    "date": "2023-05-11",
     "dependencies": ["gcc", "zlib"],
     "prune": false,
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
-    "version": "1.14.0"
+    "version": "1.14.1"
   },
   "hexyl": {
     "aliases": {
@@ -2142,9 +2147,10 @@
     },
     "bin": ["hexyl"],
     "build_dependencies": ["git", "rust"],
-    "date": "2022-12-08",
+    "date": "2023-05-11",
+    "enabled": false,
     "url": ["https://github.com/sharkdp/hexyl/"],
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "hisat2": {
     "arch": "amd64",
@@ -3550,6 +3556,17 @@
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.23"
+  },
+  "openjpeg": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["cmake", "make", "pkg-config"],
+    "date": "2023-05-11",
+    "dependencies": ["libjpeg-turbo", "libpng", "libtiff", "zlib", "zstd"],
+    "prune": false,
+    "url": ["https://www.openjpeg.org/"],
+    "version": "2.5.0"
   },
   "openssh": {
     "aliases": {
