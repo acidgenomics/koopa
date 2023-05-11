@@ -14,17 +14,6 @@
 #
 # -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12
 # -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12 - Failed
-#
-# FIXME Work on including:
-# - bison
-# - expat
-# - libdeflate
-# - libiconv
-# - libjpeg-turbo
-# - libpng
-# - lz4
-# - openjpeg
-# - xz (liblzma)
 
 main() {
     # """
@@ -50,19 +39,26 @@ main() {
     local -a build_deps cmake_args deps
     build_deps=('libtool' 'pkg-config')
     deps=(
+        'bison'
         'curl'
+        'expat'
         'geos'
         'hdf5'
+        'libdeflate'
+        'libiconv'
+        'libjpeg-turbo'
+        'libpng'
+        'libtiff'
         'libxml2'
+        'lz4'
+        'openjpeg' # FIXME Need to add support for this.
         'openssl3'
         'pcre2'
         'sqlite'
+        'xz'
         'zlib'
         'zstd'
-        'libjpeg-turbo'
-        'libtiff'
         'proj'
-        'xz'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
