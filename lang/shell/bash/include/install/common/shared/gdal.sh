@@ -1,17 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve linkage of these:
-#
-# -- Could NOT find EXPAT (missing: EXPAT_DIR)
-# -- Found Iconv: 
-# -- Could NOT find Deflate (missing: Deflate_LIBRARY Deflate_INCLUDE_DIR)
-# -- Found PNG: /usr/X11R6/lib/libpng.dylib (found version "1.6.39")
-# -- Could NOT find GIF (missing: GIF_LIBRARY GIF_INCLUDE_DIR)
-# -- Could NOT find LibLZMA (missing: LIBLZMA_INCLUDE_DIR)
-# -- Could NOT find LZ4 (missing: LZ4_LIBRARY LZ4_INCLUDE_DIR LZ4_VERSION)
-# -- Could NOT find OpenJPEG (missing: OPENJPEG_LIBRARY OPENJPEG_INCLUDE_DIR)
-# -- Found BISON: /usr/bin/bison (found version "2.3")
-#
+# NOTE May need to address this:
 # -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12
 # -- Performing Test HAVE_JPEGTURBO_DUAL_MODE_8_12 - Failed
 
@@ -51,7 +40,7 @@ main() {
         'libtiff'
         'libxml2'
         'lz4'
-        'openjpeg' # FIXME Need to add support for this.
+        'openjpeg'
         'openssl3'
         'pcre2'
         'sqlite'
@@ -64,9 +53,15 @@ main() {
     koopa_activate_app "${deps[@]}"
     koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
+    dict['expat']="$(koopa_app_prefix 'expat')"
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"
+    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['libpng']="$(koopa_app_prefix 'libpng')"
     dict['libtiff']="$(koopa_app_prefix 'libtiff')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
+    dict['lz4']="$(koopa_app_prefix 'lz4')"
+    dict['openjpeg']="$(koopa_app_prefix 'openjpeg')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['proj']="$(koopa_app_prefix 'proj')"
@@ -74,17 +69,35 @@ main() {
     dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     cmake['curl_include_dir']="${dict['curl']}/include"
     cmake['curl_library']="${dict['curl']}/lib/\
 libcurl.${dict['shared_ext']}"
+    cmake['deflate_include_dir']="${dict['libdeflate']}/include"
+    cmake['deflate_library']="${dict['libdeflate']}/lib/\
+libdeflate.${dict['shared_ext']}"
+    cmake['expat_dir']="${dict['expat']}"
     cmake['hdf5_root']="${dict['hdf5']}"
+    cmake['iconv_include_dir']="${dict['libiconv']}/include"
+    cmake['iconv_library']="${dict['libiconv']}/lib/\
+libiconv.${dict['shared_ext']}"
+    cmake['liblzma_include_dir']="${dict['xz']}/include"
+    cmake['liblzma_library']="${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
     cmake['libxml2_include_dir']="${dict['libxml2']}/include"
-    cmake['libxml2_library']="${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
+    cmake['libxml2_library']="${dict['libxml2']}/lib/\
+libxml2.${dict['shared_ext']}"
+    cmake['lz4_include_dir']="${dict['lz4']}/include"
+    cmake['lz4_library']="${dict['lz4']}/lib/liblz4.${dict['shared_ext']}"
+    cmake['openjpeg_include_dir']="${dict['openjpeg']}/include"
+    cmake['openjpeg_library']="${dict['openjpeg']}/lib/\
+libopenjp2.${dict['shared_ext']}"
     cmake['pcre2_include_dir']="${dict['pcre2']}/include"
     cmake['pcre2_8_library']="${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
+    cmake['png_include_dir']="${dict['libpng']}/include"
+    cmake['png_library']="${dict['libpng']}/lib/libpng.${dict['shared_ext']}"
     cmake['proj_dir']="${dict['proj']}/lib/cmake/proj"
     cmake['proj_include_dir']="${dict['proj']}/include"
     cmake['proj_library']="${dict['proj']}/lib/\
@@ -100,9 +113,16 @@ libtiff.${dict['shared_ext']}"
     cmake['zstd_dir']="${dict['zstd']}/lib/cmake/zstd"
     koopa_assert_is_dir \
         "${cmake['curl_include_dir']}" \
+        "${cmake['deflate_include_dir']}" \
+        "${cmake['expat_dir']}" \
         "${cmake['hdf5_root']}" \
+        "${cmake['iconv_include_dir']}" \
+        "${cmake['liblzma_include_dir']}" \
         "${cmake['libxml2_include_dir']}" \
+        "${cmake['lz4_include_dir']}" \
+        "${cmake['openjpeg_include_dir']}" \
         "${cmake['pcre2_include_dir']}" \
+        "${cmake['png_include_dir']}" \
         "${cmake['proj_dir']}" \
         "${cmake['proj_include_dir']}" \
         "${cmake['sqlite3_include_dir']}" \
@@ -111,8 +131,14 @@ libtiff.${dict['shared_ext']}"
         "${cmake['zstd_dir']}"
     koopa_assert_is_file \
         "${cmake['curl_library']}" \
+        "${cmake['deflate_library']}" \
+        "${cmake['iconv_library']}" \
+        "${cmake['liblzma_library']}" \
         "${cmake['libxml2_library']}" \
+        "${cmake['lz4_library']}" \
+        "${cmake['openjpeg_library']}" \
         "${cmake['pcre2_8_library']}" \
+        "${cmake['png_library']}" \
         "${cmake['proj_library']}" \
         "${cmake['sqlite3_library']}" \
         "${cmake['tiff_library_release']}" \
@@ -196,11 +222,24 @@ libtiff.${dict['shared_ext']}"
         # Dependency paths -----------------------------------------------------
         "-DCURL_INCLUDE_DIR=${cmake['curl_include_dir']}"
         "-DCURL_LIBRARY=${cmake['curl_library']}"
+        "-DDeflate_INCLUDE_DIR=${cmake['deflate_include_dir']}"
+        "-DDeflate_LIBRARY=${cmake['deflate_library']}"
+        "-DEXPAT_DIR=${cmake['expat_dir']}"
         "-DHDF5_ROOT=${cmake['hdf5_root']}"
+        "-DICONV_INCLUDE_DIR=${cmake['iconv_include_dir']}"
+        "-DICONV_LIBRARY=${cmake['iconv_library']}"
+        "-DLIBLZMA_INCLUDE_DIR=${cmake['liblzma_include_dir']}"
+        "-DLIBLZMA_LIBRARY=${cmake['liblzma_library']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARY=${cmake['libxml2_library']}"
-        "-DPCRE2_INCLUDE_DIR=${cmake['pcre2_include_dir']}"
+        "-DLZ4_INCLUDE_DIR=${cmake['lz4_include_dir']}"
+        "-DLZ4_LIBRARY=${cmake['lz4_library']}"
+        "-DOPENJPEG_INCLUDE_DIR=${cmake['openjpeg_include_dir']}"
+        "-DOPENJPEG_LIBRARY=${cmake['openjpeg_library']}"
         "-DPCRE2-8_LIBRARY=${cmake['pcre2_8_library']}"
+        "-DPCRE2_INCLUDE_DIR=${cmake['pcre2_include_dir']}"
+        "-DPNG_INCLUDE_DIR=${cmake['png_include_dir']}"
+        "-DPNG_LIBRARY=${cmake['png_library']}"
         "-DPROJ_DIR=${cmake['proj_dir']}"
         "-DPROJ_INCLUDE_DIR=${cmake['proj_include_dir']}"
         "-DPROJ_LIBRARY=${cmake['proj_library']}"

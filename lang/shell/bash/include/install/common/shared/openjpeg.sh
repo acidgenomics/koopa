@@ -27,7 +27,6 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    # Following the definitions from conda-forge here.
     cmake['png_include_dir']="${dict['libpng']}/include"
     cmake['png_library']="${dict['libpng']}/lib/libpng.${dict['shared_ext']}"
     cmake['tiff_include_dir']="${dict['libtiff']}/include"
@@ -40,8 +39,8 @@ main() {
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_STATIC_LIBS=OFF'
         # Dependency paths -----------------------------------------------------
-        "-DPNG_LIBRARY=${cmake['png_library']}"
         "-DPNG_INCLUDE_DIR=${cmake['png_include_dir']}"
+        "-DPNG_LIBRARY=${cmake['png_library']}"
         "-DTIFF_INCLUDE_DIR=${cmake['tiff_include_dir']}"
         "-DTIFF_LIBRARY=${cmake['tiff_library']}"
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
