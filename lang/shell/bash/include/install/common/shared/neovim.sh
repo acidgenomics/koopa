@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # koopa nolint=line-width
 
+# FIXME Rework using a cmake dict.
+# FIXME Check that these linked files/dirs exist.
+
 main() {
     # """
     # Install Neovim.
