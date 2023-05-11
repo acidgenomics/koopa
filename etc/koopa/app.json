@@ -3557,6 +3557,17 @@
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.23"
   },
+  "openjpeg": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["cmake", "make", "pkg-config"],
+    "date": "2023-05-11",
+    "dependencies": ["libjpeg-turbo", "libpng", "libtiff", "zlib", "zstd"],
+    "prune": false,
+    "url": ["https://www.openjpeg.org/"],
+    "version": "2.5.0"
+  },
   "openssh": {
     "aliases": {
       "homebrew": true
