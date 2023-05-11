@@ -3,6 +3,8 @@
 # NOTE Currently hitting ninja-related build error on Ubuntu 20.
 # https://github.com/mamba-org/mamba/issues/2410
 
+# FIXME Rework using a cmake dict.
+
 main() {
     # """
     # Install micromamba.
