@@ -1390,11 +1390,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-11-08",
+    "date": "2023-05-11",
     "enabled": false,
     "large": true,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "9.1.0"
+    "version": "10.0.0"
   },
   "fontconfig": {
     "aliases": {
@@ -1518,7 +1518,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-04-21",
+    "date": "2023-05-11",
     "dependencies": [
       "curl",
       "geos",
@@ -1539,7 +1539,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/download.html"],
-    "version": "3.6.4"
+    "version": "3.7.0"
   },
   "gdbm": {
     "aliases": {
@@ -2046,7 +2046,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-04-27",
+    "date": "2023-05-11",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2058,7 +2058,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "7.2.0"
+    "version": "7.3.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2142,9 +2142,9 @@
     },
     "bin": ["hexyl"],
     "build_dependencies": ["git", "rust"],
-    "date": "2022-12-08",
+    "date": "2023-05-11",
     "url": ["https://github.com/sharkdp/hexyl/"],
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "hisat2": {
     "arch": "amd64",
