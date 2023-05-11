@@ -3,7 +3,7 @@
 main() {
     # """
     # Install fmt library.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-11.
     #
     # @seealso
     # - https://github.com/fmtlib/fmt
@@ -19,7 +19,8 @@ main() {
         # > '-DFMT_PEDANTIC=ON'
         # > '-DFMT_SYSTEM_HEADERS=ON'
         # > '-DFMT_WERROR=ON'
-        '-DBUILD_SHARED_LIBS=TRUE'
+        '-DBUILD_PYTHON_BINDINGS=OFF'
+        '-DBUILD_SHARED_LIBS=ON'
         '-DFMT_DOC=OFF'
         '-DFMT_INSTALL=ON'
         '-DFMT_TEST=ON'
