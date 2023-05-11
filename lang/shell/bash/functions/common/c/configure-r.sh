@@ -3,7 +3,7 @@
 koopa_configure_r() {
     # """
     # Update R configuration.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-11.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -48,7 +48,8 @@ koopa_configure_r() {
             ;;
         '1')
             dict['group']="$(koopa_admin_group_name)"
-            dict['user']="$(koopa_user_name)"
+            # > dict['user']="$(koopa_user_name)"
+            dict['user']='root'
             if [[ -L "${dict['site_library']}" ]]
             then
                 koopa_rm --sudo "${dict['site_library']}"
