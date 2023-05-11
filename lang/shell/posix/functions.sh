@@ -954,7 +954,7 @@ _koopa_activate_zoxide() {
         unset -v __kvar_zoxide
         return 0
     fi
-    _koopa_is_alias 'zoxide' && unalias 'zoxide'
+    _koopa_is_alias 'z' && unalias 'z'
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
@@ -1128,7 +1128,11 @@ _koopa_alias_colorls() {
 
 _koopa_alias_conda() {
     _koopa_activate_conda
-    _koopa_is_function 'conda' || return 1
+    if ! _koopa_is_function 'conda'
+    then
+        _koopa_print 'conda is not active.'
+        return 1
+    fi
     conda "$@"
 }
 
@@ -1241,7 +1245,11 @@ _koopa_alias_l() {
 
 _koopa_alias_mamba() {
     _koopa_activate_conda
-    _koopa_is_function 'mamba' || return 1
+    if ! _koopa_is_function 'mamba'
+    then
+        _koopa_print 'mamba is not active.'
+        return 1
+    fi
     mamba "$@"
 }
 
@@ -1291,8 +1299,12 @@ _koopa_alias_week() {
 
 _koopa_alias_z() {
     _koopa_activate_zoxide
-    _koopa_is_function 'z' || return 1
-    z "$@"
+    if ! _koopa_is_function '__zoxide_z'
+    then
+        _koopa_print 'zoxide is not active.'
+        return 1
+    fi
+    __zoxide_z "$@"
 }
 
 _koopa_arch() {
