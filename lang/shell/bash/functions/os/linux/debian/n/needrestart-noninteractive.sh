@@ -20,7 +20,7 @@ koopa_debian_needrestart_noninteractive() {
     [[ -f "${dict['file']}" ]] || return 0
     if koopa_file_detect_regex \
         --file="${dict['file']}" \
-        --pattern="^\$nrconf\{restart\} = 'a';"
+        --pattern="^\$nrconf{restart} = 'a';$"
     then
         return 0
     fi
@@ -28,7 +28,7 @@ koopa_debian_needrestart_noninteractive() {
     koopa_alert "Modifying '${dict['file']}'."
     koopa_find_and_replace_in_file \
         --regex \
-        --pattern="^.*\$nrconf\{restart\}.+$" \
+        --pattern="^.*\$nrconf{restart}.*;$" \
         --replacement="\$nrconf{restart} = \'a\';" \
         --sudo \
         "${dict['file']}"
