@@ -547,15 +547,18 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '-o' 'Dpkg::Options::=--force-confdef'
-        '-o' 'Dpkg::Options::=--force-confold'
+        '-o' 'DPkg::Options::=--force-confmiss'
+        '-o' 'DPkg::Options::=--force-confnew'
     )
     (
         koopa_add_to_path_end '/usr/sbin' '/sbin'
+        export DEBCONF_ADMIN_EMAIL=''
         export DEBCONF_NONINTERACTIVE_SEEN='true'
         export DEBIAN_FRONTEND='noninteractive'
         export DEBIAN_PRIORITY='critical'
         export NEEDRESTART_MODE='a'
+        export UCF_FORCE_CONFFMISS=1
+        export UCF_FORCE_CONFFNEW=1
         "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 debconf debconf/frontend select Noninteractive
 END
@@ -790,6 +793,7 @@ koopa_debian_install_system_docker() {
 koopa_debian_install_system_r() {
     koopa_install_app \
         --name='r' \
+        --no-isolate \
         --platform='debian' \
         --system \
         --version-key='r' \

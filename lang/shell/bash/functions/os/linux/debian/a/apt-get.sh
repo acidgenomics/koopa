@@ -20,6 +20,7 @@ koopa_debian_apt_get() {
     # - https://www.cyberciti.biz/faq/explain-debian_frontend-apt-get-variable-
     #     for-ubuntu-debian/
     # - https://github.com/moby/moby/issues/27988#issuecomment-462809153
+    # - https://savannah.gnu.org/maintenance/BobsGuideToSystemUpgrades/
     # """
     local -A app
     local -a apt_args
@@ -35,16 +36,21 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '-o' 'Dpkg::Options::=--force-confdef'
-        '-o' 'Dpkg::Options::=--force-confold'
+        # > '-o' 'Dpkg::Options::=--force-confdef'
+        # > '-o' 'Dpkg::Options::=--force-confold'
+        '-o' 'DPkg::Options::=--force-confmiss'
+        '-o' 'DPkg::Options::=--force-confnew'
     )
     # Dropping into a subshell here so we don't inherit any shell changes.
     (
         koopa_add_to_path_end '/usr/sbin' '/sbin'
+        export DEBCONF_ADMIN_EMAIL=''
         export DEBCONF_NONINTERACTIVE_SEEN='true'
         export DEBIAN_FRONTEND='noninteractive'
         export DEBIAN_PRIORITY='critical'
         export NEEDRESTART_MODE='a'
+        export UCF_FORCE_CONFFMISS=1
+        export UCF_FORCE_CONFFNEW=1
         "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 debconf debconf/frontend select Noninteractive
 END

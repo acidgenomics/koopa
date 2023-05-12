@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting an issue with non-interactive subshell on Ubuntu 22.
-#
-# Think this is related to needrestart, but there doesn't seem to be a way
-# around this currently.
-#
-# Processing triggers for install-info (6.8-4build1) ...
-
 main() {
     # """
     # Install latest version of R from CRAN.
