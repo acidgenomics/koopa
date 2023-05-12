@@ -6,6 +6,9 @@ main() {
     # @note Updated 2023-04-10.
     #
     # Using gcc here for gfortran.
+    #
+    # @seealso
+    # - https://www.hdfgroup.org/downloads/hdf5/source-code/
     # """
     local -A dict
     local -a conf_args
@@ -14,6 +17,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
@@ -25,7 +29,7 @@ main() {
         "--with-zlib=${dict['zlib']}"
     )
     dict['url']="https://support.hdfgroup.org/ftp/HDF5/releases/\
-hdf5-${dict['maj_min_ver']}/hdf5-${dict['version']}/src/\
+hdf5-${dict['maj_min_ver']}/hdf5-${dict['mmp_ver']}/src/\
 hdf5-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
