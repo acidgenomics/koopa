@@ -18,13 +18,6 @@ koopa_r_copy_files_into_etc() {
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
-    # This applies to Debian/Ubuntu CRAN binary installs.
-    if koopa_is_linux && \
-        [[ "${dict['system']}" -eq 1 ]] && \
-        [[ -d '/etc/R' ]]
-    then
-        dict['r_etc_target']='/etc/R'
-    fi
     koopa_assert_is_dir \
         "${dict['r_etc_source']}" \
         "${dict['r_etc_target']}" \
@@ -32,15 +25,20 @@ koopa_r_copy_files_into_etc() {
     files=('Rprofile.site' 'repositories')
     for file in "${files[@]}"
     do
+        local -A dict2
+        dict2['source']="${dict['r_etc_source']}/${file}"
+        dict2['target']="${dict['r_etc_target']}/${file}"
+        koopa_assert_is_file "${dict2['source']}"
+        if [[ -f "${dict2['target']}" ]]
+        then
+            dict2['target']="$(koopa_realpath "${dict2['target']}")"
+        fi
+        koopa_alert "Modifying '${dict2['target']}'."
         if [[ "${dict['system']}" -eq 1 ]]
         then
-            koopa_cp --sudo \
-                "${dict['r_etc_source']}/${file}" \
-                "${dict['r_etc_target']}/${file}"
+            koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
         else
-            koopa_cp \
-                "${dict['r_etc_source']}/${file}" \
-                "${dict['r_etc_target']}/${file}"
+            koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi
     done
     return 0

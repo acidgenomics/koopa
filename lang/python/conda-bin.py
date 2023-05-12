@@ -17,12 +17,13 @@ from re import compile as re_compile
 def main(json_file: str) -> bool:
     """
     Parse conda JSON metadata for files to link in 'bin'.
-    @note Updated 2023-03-30.
+    @note Updated 2023-05-11.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
     keys = json_data.keys()
-    assert "files" in keys
+    if "files" not in keys:
+        raise ValueError("Invalid JSON: '" + json_file + "'.")
     file_list = json_data["files"]
     bin_files = []
     pattern = re_compile(r"^bin/([^/]+)$")

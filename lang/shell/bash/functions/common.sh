@@ -142,10 +142,6 @@ koopa_activate_app() {
     return 0
 }
 
-koopa_activate_conda() {
-    _koopa_activate_conda "$@"
-}
-
 koopa_activate_ensembl_perl_api() {
     local -A dict
     dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
@@ -1511,30 +1507,39 @@ koopa_assert_is_writable() {
 }
 
 koopa_autopad_zeros() {
-    local -a files pos
-    local newname num padwidth oldname prefix stem
+    local -A dict
+    local -a pos
+    local file
     koopa_assert_has_args "$#"
-    prefix='sample'
-    padwidth=2
+    dict['dryrun']=0
+    dict['padwidth']=2
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--pad-width='* | \
             '--padwidth='*)
-                padwidth="${1#*=}"
+                dict['padwidth']="${1#*=}"
                 shift 1
                 ;;
+            '--pad-width' | \
             '--padwidth')
-                padwidth="${2:?}"
+                dict['padwidth']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                prefix="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                prefix="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
+                ;;
+            '--dry-run' | \
+            '--dryrun')
+                dict['dryrun']=1
+                shift 1
                 ;;
             '-'*)
                 koopa_invalid_arg "$1"
@@ -1546,23 +1551,26 @@ koopa_autopad_zeros() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    files=("$@")
-    if koopa_is_array_empty "${files[@]:-}"
-    then
-        koopa_stop 'No files.'
-    fi
-    for file in "${files[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    for file in "$@"
     do
-        if [[ "$file" =~ ^([0-9]+)(.*)$ ]]
+        local -A dict2
+        dict2['source']="$file"
+        dict2['bn']="$(koopa_basename "${dict2['source']}")"
+        dict2['dn']="$(koopa_dirname "${dict2['source']}")"
+        if [[ "${dict2['bn']}" =~ ^([0-9]+)(.*)$ ]]
         then
-            oldname="${BASH_REMATCH[0]}"
-            num="${BASH_REMATCH[1]}"
-            num="$(printf "%.${padwidth}d" "$num")"
-            stem="${BASH_REMATCH[2]}"
-            newname="${prefix}_${num}${stem}"
-            koopa_mv "$oldname" "$newname"
+            dict2['num']="${BASH_REMATCH[1]}"
+            dict2['num']="$(printf "%.${dict['padwidth']}d" "${dict2['num']}")"
+            dict2['stem']="${BASH_REMATCH[2]}"
+            dict2['bn2']="${dict['prefix']}${dict2['num']}${dict2['stem']}"
+            dict2['target']="${dict2['dn']}/${dict2['bn2']}"
+            koopa_alert "Renaming '${dict2['source']}' to '${dict2['target']}'."
+            [[ "${dict['dryrun']}" -eq 1 ]] && continue
+            koopa_mv "${dict2['source']}" "${dict2['target']}"
         else
-            koopa_alert_note "Skipping '${file}'."
+            koopa_alert_note "Skipping '${dict2['source']}'."
         fi
     done
     return 0
@@ -4350,34 +4358,6 @@ koopa_compress_ext_pattern() {
     return 0
 }
 
-koopa_conda_activate_env() {
-    local -A dict
-    koopa_assert_has_args_eq "$#" 1
-    dict['env_name']="${1:?}"
-    dict['nounset']="$(koopa_boolean_nounset)"
-    dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
-    if [[ ! -d "${dict['env_prefix']}" ]]
-    then
-        koopa_alert_info "Attempting to install missing conda \
-environment '${dict['env_name']}'."
-        koopa_conda_create_env "${dict['env_name']}"
-        dict['env_prefix']="$( \
-            koopa_conda_env_prefix "${dict['env_name']}" || true \
-        )"
-    fi
-    if [[ ! -d "${dict['env_prefix']}" ]]
-    then
-        koopa_stop "'${dict['env_name']}' conda environment is not installed."
-    fi
-    [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
-    koopa_is_conda_env_active && koopa_conda_deactivate
-    koopa_activate_conda
-    koopa_assert_is_function 'conda'
-    conda activate "${dict['env_prefix']}"
-    [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
-    return 0
-}
-
 koopa_conda_bin() {
     local cmd file
     koopa_assert_has_args_eq "$#" 1
@@ -4754,17 +4734,11 @@ koopa_configure_system_r() {
 
 koopa_configure_user_chemacs() {
     local -A dict
-    koopa_assert_has_args_le "$#" 1
-    dict['source_prefix']="${1:-}"
-    dict['opt_prefix']="$(koopa_opt_prefix)"
-    dict['target_prefix']="${HOME:?}/.emacs.d"
-    if [[ -z "${dict['source_prefix']}" ]]
-    then
-        dict['source_prefix']="${dict['opt_prefix']}/chemacs"
-    fi
-    koopa_assert_is_dir "${dict['source_prefix']}"
-    dict['source_prefix']="$(koopa_realpath "${dict['source_prefix']}")"
-    koopa_ln "${dict['source_prefix']}" "${dict['target_prefix']}"
+    koopa_assert_has_no_args "$#"
+    dict['source']="$(koopa_opt_prefix)/chemacs"
+    dict['target']="${HOME:?}/.emacs.d"
+    koopa_assert_is_dir "${dict['source']}"
+    koopa_ln "${dict['source']}" "${dict['target']}"
     return 0
 }
 
@@ -4778,14 +4752,13 @@ koopa_configure_user_dotfiles() {
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
-    dict['name']='dotfiles'
     dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['script']="${dict['prefix']}/install"
     koopa_assert_is_file "${dict['script']}"
     koopa_ln "${dict['prefix']}" "${dict['cm_prefix']}"
-    koopa_add_config_link "${dict['prefix']}" "${dict['name']}"
+    koopa_add_config_link "${dict['prefix']}" 'dotfiles'
     koopa_add_to_path_start "$(koopa_dirname "${app['bash']}")"
     "${app['bash']}" "${dict['script']}"
     return 0
@@ -4899,16 +4872,16 @@ koopa_convert_line_endings_from_lf_to_crlf() {
 }
 
 koopa_convert_sam_to_bam() {
-    local -A dict
+    local -A bool dict
     local -a pos sam_files
     local sam_file
-    dict['keep_sam']=0
+    bool['keep_sam']=0
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--keep-sam')
-                dict['keep_sam']=1
+                bool['keep_sam']=1
                 shift 1
                 ;;
             '-'*)
@@ -4921,25 +4894,25 @@ koopa_convert_sam_to_bam() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    dict['dir']="${1:-${PWD:?}}"
-    koopa_assert_is_dir "$dir"
-    dict['dir']="$(koopa_realpath "${dict['dir']}")"
+    koopa_assert_has_args_eq "$#" 1
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     readarray -t sam_files <<< "$( \
-        find "${dict['dir']}" \
-            -maxdepth 3 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.sam' \
-            -print \
-        | sort \
+        koopa_find \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.sam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
     )"
     if ! koopa_is_array_non_empty "${sam_files[@]:-}"
     then
-        koopa_stop "No SAM files detected in '${dict['dir']}'."
+        koopa_stop "No SAM files detected in '${dict['prefix']}'."
     fi
-    koopa_h1 "Converting SAM files in '${dict['dir']}' to BAM format."
-    koopa_conda_activate_env 'samtools'
-    case "${dict['keep_sam']}" in
+    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
+    case "${bool['keep_sam']}" in
         '0')
             koopa_alert_note 'SAM files will be deleted.'
             ;;
@@ -4954,12 +4927,11 @@ koopa_convert_sam_to_bam() {
         koopa_samtools_convert_sam_to_bam \
             --input-sam="$sam_file" \
             --output-bam="$bam_file"
-        if [[ "${dict['keep_sam']}" -eq 0 ]]
+        if [[ "${bool['keep_sam']}" -eq 0 ]]
         then
             koopa_rm "$sam_file"
         fi
     done
-    koopa_conda_deactivate
     return 0
 }
 
@@ -10001,6 +9973,7 @@ koopa_install_app() {
     bool['binary']=0
     bool['copy_log_files']=0
     bool['deps']=1
+    bool['isolate']=1
     bool['link_in_bin']=''
     bool['link_in_man1']=''
     bool['link_in_opt']=''
@@ -10009,7 +9982,6 @@ koopa_install_app() {
     bool['push']=0
     bool['quiet']=0
     bool['reinstall']=0
-    bool['subshell']=1
     bool['update_ldconfig']=0
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
@@ -10118,8 +10090,8 @@ koopa_install_app() {
                 bool['prefix_check']=0
                 shift 1
                 ;;
-            '--no-subshell')
-                bool['subshell']=0
+            '--no-isolate')
+                bool['isolate']=0
                 shift 1
                 ;;
             '--private')
@@ -10286,6 +10258,16 @@ ${dict['version2']}"
         [[ "${dict['mode']}" == 'shared' ]] || return 1
         [[ -n "${dict['prefix']}" ]] || return 1
         koopa_install_app_from_binary_package "${dict['prefix']}"
+    elif [[ "${bool['isolate']}" -eq 0 ]]
+    then
+        koopa_install_app_subshell \
+            --installer="${dict['installer']}" \
+            --mode="${dict['mode']}" \
+            --name="${dict['name']}" \
+            --platform="${dict['platform']}" \
+            --prefix="${dict['prefix']}" \
+            --version="${dict['version']}" \
+            "$@"
     else
         app['bash']="$(koopa_locate_bash --allow-missing)"
         if [[ ! -x "${app['bash']}" ]] || \
@@ -18212,12 +18194,6 @@ koopa_r_copy_files_into_etc() {
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
-    if koopa_is_linux && \
-        [[ "${dict['system']}" -eq 1 ]] && \
-        [[ -d '/etc/R' ]]
-    then
-        dict['r_etc_target']='/etc/R'
-    fi
     koopa_assert_is_dir \
         "${dict['r_etc_source']}" \
         "${dict['r_etc_target']}" \
@@ -18225,15 +18201,20 @@ koopa_r_copy_files_into_etc() {
     files=('Rprofile.site' 'repositories')
     for file in "${files[@]}"
     do
+        local -A dict2
+        dict2['source']="${dict['r_etc_source']}/${file}"
+        dict2['target']="${dict['r_etc_target']}/${file}"
+        koopa_assert_is_file "${dict2['source']}"
+        if [[ -f "${dict2['target']}" ]]
+        then
+            dict2['target']="$(koopa_realpath "${dict2['target']}")"
+        fi
+        koopa_alert "Modifying '${dict2['target']}'."
         if [[ "${dict['system']}" -eq 1 ]]
         then
-            koopa_cp --sudo \
-                "${dict['r_etc_source']}/${file}" \
-                "${dict['r_etc_target']}/${file}"
+            koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
         else
-            koopa_cp \
-                "${dict['r_etc_source']}/${file}" \
-                "${dict['r_etc_target']}/${file}"
+            koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi
     done
     return 0

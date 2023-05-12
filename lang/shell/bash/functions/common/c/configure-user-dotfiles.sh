@@ -3,7 +3,7 @@
 koopa_configure_user_dotfiles() {
     # """
     # Configure dotfiles for current user.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-12.
     #
     # This also configures chezmoi to use our koopa managed dotfiles repo.
     #
@@ -30,14 +30,13 @@ koopa_configure_user_dotfiles() {
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
-    dict['name']='dotfiles'
     dict['prefix']="${1:-}"
     [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_dotfiles_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['script']="${dict['prefix']}/install"
     koopa_assert_is_file "${dict['script']}"
     koopa_ln "${dict['prefix']}" "${dict['cm_prefix']}"
-    koopa_add_config_link "${dict['prefix']}" "${dict['name']}"
+    koopa_add_config_link "${dict['prefix']}" 'dotfiles'
     koopa_add_to_path_start "$(koopa_dirname "${app['bash']}")"
     "${app['bash']}" "${dict['script']}"
     return 0

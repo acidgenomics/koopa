@@ -538,17 +538,32 @@ koopa_debian_apt_get() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['debconf_set_selections']="$( \
+        koopa_debian_locate_debconf_set_selections \
+    )"
     koopa_assert_is_executable "${app[@]}"
     apt_args=(
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
+        '-o' 'Dpkg::Options::=--force-confdef'
+        '-o' 'Dpkg::Options::=--force-confold'
     )
-    koopa_sudo \
-        DEBCONF_NONINTERACTIVE_SEEN='true' \
-        DEBIAN_FRONTEND='noninteractive' \
-        "${app['apt_get']}" "${apt_args[@]}" \
-        "$@"
+    (
+        koopa_add_to_path_end '/usr/sbin' '/sbin'
+        export DEBCONF_NONINTERACTIVE_SEEN='true'
+        export DEBIAN_FRONTEND='noninteractive'
+        export DEBIAN_PRIORITY='critical'
+        export LANG='C'
+        export LANGUAGE='C'
+        export LC_ALL='C'
+        export NEEDRESTART_MODE='a'
+        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
+debconf debconf/frontend select Noninteractive
+END
+        koopa_sudo "${app['apt_get']}" "${apt_args[@]}" "$@"
+    )
     return 0
 }
 
@@ -649,6 +664,69 @@ koopa_debian_apt_space_used_by() {
     return 0
 }
 
+koopa_debian_configure_system_defaults() {
+    local -A app
+    koopa_assert_has_no_args "$#"
+    koopa_alert 'Configuring system defaults.'
+    koopa_add_to_path_end '/usr/sbin' '/sbin'
+    koopa_print_env
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['debconf_set_selections']="$( \
+        koopa_debian_locate_debconf_set_selections \
+    )"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_debian_apt_get update
+    koopa_debian_apt_get full-upgrade
+    if ! koopa_is_docker
+    then
+        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
+tzdata tzdata/Areas select America
+tzdata tzdata/Zones/America select New_York
+END
+    fi
+    koopa_debian_apt_install \
+        'bash' \
+        'ca-certificates' \
+        'coreutils' \
+        'curl' \
+        'findutils' \
+        'g++' \
+        'gcc' \
+        'git' \
+        'libc-dev' \
+        'libgmp-dev' \
+        'locales' \
+        'lsb-release' \
+        'make' \
+        'perl' \
+        'procps' \
+        'sudo' \
+        'systemd' \
+        'tzdata' \
+        'unzip'
+    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
+    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
+    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
+    app['update_locale']="$(koopa_debian_locate_update_locale)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_debian_apt_get autoremove
+    koopa_debian_apt_get clean
+    if ! koopa_is_docker
+    then
+        koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
+    fi
+    koopa_sudo_write_string \
+        --file='/etc/locale.gen' \
+        --string='en_US.UTF-8 UTF-8'
+    koopa_sudo "${app['locale_gen']}" --purge
+    koopa_sudo "${app['dpkg_reconfigure']}" \
+        --frontend='noninteractive' locales
+    koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
+    koopa_enable_passwordless_sudo
+    koopa_alert_success 'Configuration of system defaults was successful.'
+    return 0
+}
+
 koopa_debian_debian_version() {
     local file x
     file='/etc/debian_version'
@@ -704,64 +782,10 @@ koopa_debian_install_from_deb() {
     return 0
 }
 
-koopa_debian_install_system_builder_base() {
-    local -A app
-    app['cat']="$(koopa_locate_cat --allow-system)"
-    app['debconf_set_selections']="$( \
-        koopa_debian_locate_debconf_set_selections \
-    )"
-    app['echo']="$(koopa_locate_echo --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_get update
-    koopa_debian_apt_get full-upgrade
-    "${app['cat']}" << END \
-        | koopa_sudo "${app['debconf_set_selections']}"
-tzdata tzdata/Areas select America
-tzdata tzdata/Zones/America select New_York
-END
-    koopa_debian_apt_install \
-        'bash' \
-        'ca-certificates' \
-        'coreutils' \
-        'curl' \
-        'findutils' \
-        'g++' \
-        'gcc' \
-        'git' \
-        'libc-dev' \
-        'libgmp-dev' \
-        'locales' \
-        'lsb-release' \
-        'make' \
-        'perl' \
-        'procps' \
-        'sudo' \
-        'systemd' \
-        'tzdata' \
-        'unzip'
-    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
-    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
-    app['update_locale']="$(koopa_debian_locate_update_locale)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_get autoremove
-    koopa_debian_apt_get clean
-    koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
-    koopa_sudo_write_string \
-        --file='/etc/locale.gen' \
-        --string='en_US.UTF-8 UTF-8'
-    koopa_sudo "${app['locale_gen']}" --purge
-    koopa_sudo "${app['dpkg_reconfigure']}" \
-        --frontend='noninteractive' locales
-    koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
-    koopa_debian_needrestart_noninteractive
-    koopa_enable_passwordless_sudo
-    return 0
-}
-
 koopa_debian_install_system_docker() {
     koopa_install_app \
         --name='docker' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -770,6 +794,7 @@ koopa_debian_install_system_docker() {
 koopa_debian_install_system_r() {
     koopa_install_app \
         --name='r' \
+        --no-isolate \
         --platform='debian' \
         --system \
         --version-key='r' \
@@ -779,6 +804,7 @@ koopa_debian_install_system_r() {
 koopa_debian_install_system_rstudio_server() {
     koopa_install_app \
         --name='rstudio-server' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -787,6 +813,7 @@ koopa_debian_install_system_rstudio_server() {
 koopa_debian_install_system_shiny_server() {
     koopa_install_app \
         --name='shiny-server' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -795,6 +822,7 @@ koopa_debian_install_system_shiny_server() {
 koopa_debian_install_system_wine() {
     koopa_install_app \
         --name='wine' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -882,21 +910,19 @@ koopa_debian_needrestart_noninteractive() {
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['file']='/etc/needrestart/needrestart.conf'
-    dict['replacement']="\$nrconf{restart} = \'l\';"
     [[ -f "${dict['file']}" ]] || return 0
-    if koopa_file_detect_fixed \
+    if ! koopa_file_detect_fixed \
         --file="${dict['file']}" \
-        --pattern="\$nrconf{restart} = 'l';"
+        --pattern="#\$nrconf{restart} = 'i';"
     then
         return 0
     fi
     koopa_assert_is_admin
-    koopa_alert "Replacing '${dict['pattern']}' with '${dict['replacement']}' \
-in '${dict['file']}'."
+    koopa_alert "Modifying '${dict['file']}'."
     koopa_find_and_replace_in_file \
         --fixed \
         --pattern="#\$nrconf{restart} = \'i\';" \
-        --replacement="\$nrconf{restart} = \'l\';" \
+        --replacement="\$nrconf{restart} = \'a\';" \
         --sudo \
         "${dict['file']}"
     return 0
