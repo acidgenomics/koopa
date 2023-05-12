@@ -32,11 +32,14 @@ koopa_debian_configure_system_defaults() {
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
-    "${app['cat']}" << END \
-        | koopa_sudo "${app['debconf_set_selections']}"
+    if ! koopa_is_docker
+    then
+        "${app['cat']}" << END \
+| koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
+    fi
     koopa_debian_apt_install \
         'bash' \
         'ca-certificates' \
