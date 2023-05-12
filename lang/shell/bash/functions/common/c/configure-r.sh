@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this as an isolated script, similar to install.
+
 koopa_configure_r() {
     # """
     # Update R configuration.

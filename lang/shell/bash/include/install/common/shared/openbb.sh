@@ -49,11 +49,13 @@ refs/tags/${dict['file']}"
     export PIP_REQUIRE_VIRTUALENV=false
     export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
+    # FIXME Rework this.
     koopa_activate_conda "${dict['conda_prefix']}"
     conda env create \
         --force \
         --file "${dict['conda_env_file']}" \
         --prefix "${dict['conda_env_prefix']}"
+    # FIXME Rework this.
     koopa_conda_deactivate
     app['poetry']="${dict['conda_env_prefix']}/bin/poetry"
     koopa_assert_is_executable "${app[@]}"

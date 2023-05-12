@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework this to not deactivate dynamically.
+# FIXME This is too complicated -- remove and rethink.
 
 koopa_conda_activate_env() {
     # """
     # Activate a conda environment.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-05-12.
     #
     # Designed to work inside calling scripts and/or subshells.
     #
@@ -25,6 +25,8 @@ koopa_conda_activate_env() {
     # > eval "$(conda shell.bash hook)"
     #
     # @seealso
+    # - https://conda.io/projects/conda/en/latest/user-guide/
+    #     getting-started.html
     # - https://github.com/conda/conda/issues/7980
     # - https://stackoverflow.com/questions/34534513
     # """
