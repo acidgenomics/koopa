@@ -22,6 +22,7 @@ koopa_debian_configure_system_defaults() {
     # - https://sleeplessbeastie.eu/2018/09/17/
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
+    set -x # FIXME
     local -A app
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
