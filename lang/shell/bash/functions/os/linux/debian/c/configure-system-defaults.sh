@@ -82,7 +82,7 @@ END
     koopa_sudo "${app['dpkg_reconfigure']}" \
         --frontend='noninteractive' locales
     koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
-    koopa_debian_needrestart_noninteractive
+    # > koopa_debian_needrestart_noninteractive
     koopa_enable_passwordless_sudo
     koopa_alert_success 'Configuration of system defaults was successful.'
     return 0
