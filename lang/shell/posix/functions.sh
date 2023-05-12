@@ -329,6 +329,7 @@ _koopa_activate_conda() {
             __kvar_shell='posix'
             ;;
     esac
+    _koopa_is_alias 'conda' && unalias 'conda'
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
     _koopa_is_function 'conda' || return 1
