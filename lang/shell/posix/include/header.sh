@@ -55,7 +55,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa in interactive shell.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-12.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -125,9 +125,7 @@ __koopa_activate_koopa() {
     if ! _koopa_is_subshell
     then
         _koopa_add_config_link \
-            "$KOOPA_PREFIX" 'home' \
             "${KOOPA_PREFIX}/activate" 'activate' \
-            "$(_koopa_dotfiles_prefix)" 'dotfiles' \
             || return 1
         _koopa_activate_today_bucket || return 1
     fi
