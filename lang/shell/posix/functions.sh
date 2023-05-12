@@ -60,7 +60,6 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
-    alias conda='_koopa_alias_conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
@@ -1126,16 +1125,6 @@ _koopa_alias_colorls() {
     return 0
 }
 
-_koopa_alias_conda() {
-    _koopa_activate_conda
-    if ! _koopa_is_function 'conda'
-    then
-        _koopa_print 'conda is not active.'
-        return 1
-    fi
-    conda "$@"
-}
-
 _koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
@@ -1241,16 +1230,6 @@ _koopa_alias_l() {
     else
         ls -BFhn "$@"
     fi
-}
-
-_koopa_alias_mamba() {
-    _koopa_activate_conda
-    if ! _koopa_is_function 'mamba'
-    then
-        _koopa_print 'mamba is not active.'
-        return 1
-    fi
-    mamba "$@"
 }
 
 _koopa_alias_nvim_fzf() {
