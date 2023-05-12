@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
 # FIXME Hitting an issue with non-interactive subshell on Ubuntu 22.
+#
 # Think this is related to needrestart, but there doesn't seem to be a way
 # around this currently.
 #
-# debconf: unable to initialize frontend: Dialog
-# debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
-# debconf: falling back to frontend: Readline
-# Running mktexlsr. This may take some time... done.
 # Processing triggers for install-info (6.8-4build1) ...
 
 main() {
@@ -100,7 +97,6 @@ main() {
     koopa_debian_apt_install "${dep_pkgs[@]}"
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
-    # FIXME This step is erroring out...need to debug.
     koopa_debian_apt_install "${pkgs[@]}"
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
