@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Need to run this in an isolated subshell.
+# FIXME This should support '--verbose' mode.
 
 koopa_debian_configure_system_defaults() {
     # """
@@ -25,7 +26,6 @@ koopa_debian_configure_system_defaults() {
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
     local -A app
-    set -x
     koopa_assert_has_no_args "$#"
     koopa_alert 'Configuring system defaults.'
     koopa_add_to_path_end '/usr/sbin' '/sbin'
