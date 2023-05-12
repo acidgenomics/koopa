@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this to 'koopa configure system defaults'.
+
 # FIXME How to disable "Play sound on startup"
 
 # FIXME How to set disable sleep when screen is off while plugged in:

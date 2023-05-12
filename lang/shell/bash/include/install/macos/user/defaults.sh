@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Need to disable Handoff by default.
+# FIXME Rename this to 'koopa configure user defaults'.
 
 main() {
     # """
     # Install macOS user defaults.
-    # @note Updated 2023-05-11.
+    # @note Updated 2023-05-12.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
