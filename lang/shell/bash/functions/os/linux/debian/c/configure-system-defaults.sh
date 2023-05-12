@@ -34,14 +34,12 @@ koopa_debian_configure_system_defaults() {
     app['debconf_set_selections']="$( \
         koopa_debian_locate_debconf_set_selections \
     )"
-    app['echo']="$(koopa_locate_echo --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
     if ! koopa_is_docker
     then
-        "${app['cat']}" << END \
-| koopa_sudo "${app['debconf_set_selections']}"
+        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END

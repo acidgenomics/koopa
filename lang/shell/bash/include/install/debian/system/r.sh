@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting an issue with non-interactive subshell on Ubuntu 22.
+# Think this is related to needrestart, but there doesn't seem to be a way
+# around this currently.
+#
+# debconf: unable to initialize frontend: Dialog
+# debconf: (Dialog frontend will not work on a dumb terminal, an emacs shell buffer, or without a controlling terminal.)
+# debconf: falling back to frontend: Readline
+# Running mktexlsr. This may take some time... done.
+# Processing triggers for install-info (6.8-4build1) ...
+
 main() {
     # """
     # Install latest version of R from CRAN.
