@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to an an option to not isolate subshell.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
@@ -21,6 +23,8 @@ koopa_install_app() {
     bool['copy_log_files']=0
     # Automatically install required dependencies (shared apps only).
     bool['deps']=1
+    # Perform the installation in an isolated subshell?
+    bool['isolate']=1
     # Will any individual programs be linked into koopa 'bin/'?
     bool['link_in_bin']=''
     # Link corresponding man1 documentation files for app in bin.
@@ -37,7 +41,6 @@ koopa_install_app() {
     # nested install calls (e.g. Emacs installer handoff to GNU app).
     bool['quiet']=0
     bool['reinstall']=0
-    bool['subshell']=1
     bool['update_ldconfig']=0
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
@@ -149,8 +152,8 @@ koopa_install_app() {
                 bool['prefix_check']=0
                 shift 1
                 ;;
-            '--no-subshell')
-                bool['subshell']=0
+            '--no-isolate')
+                bool['isolate']=0
                 shift 1
                 ;;
             '--private')
@@ -322,6 +325,16 @@ ${dict['version2']}"
         [[ "${dict['mode']}" == 'shared' ]] || return 1
         [[ -n "${dict['prefix']}" ]] || return 1
         koopa_install_app_from_binary_package "${dict['prefix']}"
+    elif [[ "${bool['isolate']}" -eq 0 ]]
+    then
+        koopa_install_app_subshell \
+            --installer="${dict['installer']}" \
+            --mode="${dict['mode']}" \
+            --name="${dict['name']}" \
+            --platform="${dict['platform']}" \
+            --prefix="${dict['prefix']}" \
+            --version="${dict['version']}" \
+            "$@"
     else
         app['bash']="$(koopa_locate_bash --allow-missing)"
         if [[ ! -x "${app['bash']}" ]] || \
