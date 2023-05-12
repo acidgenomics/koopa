@@ -546,13 +546,13 @@ koopa_debian_apt_get() {
         '-o' 'Dpkg::Options::=--force-confdef'
         '-o' 'Dpkg::Options::=--force-confold'
     )
-    export DEBCONF_NONINTERACTIVE_SEEN='true'
-    export DEBIAN_FRONTEND='noninteractive'
-    export DEBIAN_PRIORITY='critical'
-    export NEEDRESTART_MODE='a'
-    koopa_sudo \
-        "${app['apt_get']}" "${apt_args[@]}" \
-        "$@"
+    (
+        export DEBCONF_NONINTERACTIVE_SEEN='true'
+        export DEBIAN_FRONTEND='noninteractive'
+        export DEBIAN_PRIORITY='critical'
+        export NEEDRESTART_MODE='a'
+        koopa_sudo "${app['apt_get']}" "${apt_args[@]}" "$@"
+    )
     return 0
 }
 
@@ -664,11 +664,14 @@ koopa_debian_configure_system_defaults() {
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
-    "${app['cat']}" << END \
-        | koopa_sudo "${app['debconf_set_selections']}"
+    if ! koopa_is_docker
+    then
+        "${app['cat']}" << END \
+| koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
+    fi
     koopa_debian_apt_install \
         'bash' \
         'ca-certificates' \
