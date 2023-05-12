@@ -888,18 +888,18 @@ koopa_debian_needrestart_noninteractive() {
     koopa_assert_has_no_args "$#"
     dict['file']='/etc/needrestart/needrestart.conf'
     [[ -f "${dict['file']}" ]] || return 0
-    if koopa_file_detect_regex \
+    if ! koopa_file_detect_fixed \
         --file="${dict['file']}" \
-        --pattern="^\$nrconf\{restart\} = 'a';$"
+        --pattern="#\$nrconf{restart} = 'i';"
     then
         return 0
     fi
     koopa_assert_is_admin
     koopa_alert "Modifying '${dict['file']}'."
     koopa_find_and_replace_in_file \
-        --regex \
-        --pattern="^.*\$nrconf\{restart\}.*;$" \
-        --replacement="\$nrconf\{restart\} = \'a\';" \
+        --fixed \
+        --pattern="#\$nrconf{restart} = \'i\';" \
+        --replacement="\$nrconf{restart} = \'a\';" \
         --sudo \
         "${dict['file']}"
     return 0
