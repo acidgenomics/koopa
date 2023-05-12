@@ -3,7 +3,7 @@
 koopa_debian_apt_get() {
     # """
     # Non-interactive variant of apt-get, with saner defaults.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-12.
     #
     # Ubuntu 22 is annoying about needrestart triggers breaking
     # non-interactive scripts.
@@ -33,12 +33,13 @@ koopa_debian_apt_get() {
         '-o' 'Dpkg::Options::=--force-confdef'
         '-o' 'Dpkg::Options::=--force-confold'
     )
-    export DEBCONF_NONINTERACTIVE_SEEN='true'
-    export DEBIAN_FRONTEND='noninteractive'
-    export DEBIAN_PRIORITY='critical'
-    export NEEDRESTART_MODE='a'
-    koopa_sudo \
-        "${app['apt_get']}" "${apt_args[@]}" \
-        "$@"
+    # Dropping into a subshell here so we don't propagate these exports.
+    (
+        export DEBCONF_NONINTERACTIVE_SEEN='true'
+        export DEBIAN_FRONTEND='noninteractive'
+        export DEBIAN_PRIORITY='critical'
+        export NEEDRESTART_MODE='a'
+        koopa_sudo "${app['apt_get']}" "${apt_args[@]}" "$@"
+    )
     return 0
 }
