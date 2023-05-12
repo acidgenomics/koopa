@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to run this in an isolated subshell.
-# FIXME This should support '--verbose' mode.
+# NOTE Ensure that this does not run in an isolated subshell.
 
 koopa_debian_configure_system_defaults() {
     # """
