@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-12.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -17,14 +17,12 @@ main() {
     # """
     local -A app dict
     koopa_activate_app 'ca-certificates'
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-    dict['conda_prefix']="$(koopa_app_prefix 'conda')"
-    dict['name']='OpenBBTerminal'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir \
-        "${dict['ca_certificates']}" \
-        "${dict['conda_prefix']}"
+    koopa_assert_is_dir "${dict['ca_certificates']}"
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
     koopa_assert_is_file "${dict['cacert']}"
     dict['libexec']="${dict['prefix']}/libexec"
@@ -37,26 +35,23 @@ main() {
         "${dict['src_prefix']}"
     dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
     export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/OpenBB-finance/${dict['name']}/archive/\
-refs/tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/OpenBB-finance/OpenBBTerminal/archive/\
+refs/tags/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     dict['conda_env_file']='build/conda/conda-3-9-env.yaml'
     koopa_assert_is_file "${dict['conda_env_file']}"
     export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
     export PIP_REQUIRE_VIRTUALENV=false
     export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
-    koopa_activate_conda "${dict['conda_prefix']}"
-    conda env create \
+    "${app['conda']}" env create \
         --force \
         --file "${dict['conda_env_file']}" \
         --prefix "${dict['conda_env_prefix']}"
-    koopa_conda_deactivate
     app['poetry']="${dict['conda_env_prefix']}/bin/poetry"
-    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_executable "${app['poetry']}"
     dict['poetry_config_file']='poetry.toml'
     koopa_assert_is_not_file "${dict['poetry_config_file']}"
     "${app['poetry']}" config \

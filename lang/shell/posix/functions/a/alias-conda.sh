@@ -3,7 +3,7 @@
 _koopa_alias_conda() {
     # """
     # Conda alias.
-    # @note Updated 2023-05-11.
+    # @note Updated 2023-05-12.
     # """
     _koopa_activate_conda
     if ! _koopa_is_function 'conda'
