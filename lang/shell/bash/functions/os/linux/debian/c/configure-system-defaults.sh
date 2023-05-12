@@ -22,7 +22,6 @@ koopa_debian_configure_system_defaults() {
     # - https://sleeplessbeastie.eu/2018/09/17/
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
-    set -x # FIXME
     local -A app
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
@@ -67,7 +66,10 @@ END
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get autoremove
     koopa_debian_apt_get clean
-    koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
+    if ! koopa_is_docker
+    then
+        koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
+    fi
     koopa_sudo_write_string \
         --file='/etc/locale.gen' \
         --string='en_US.UTF-8 UTF-8'
