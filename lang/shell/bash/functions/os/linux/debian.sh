@@ -655,7 +655,6 @@ koopa_debian_apt_space_used_by() {
 
 koopa_debian_configure_system_defaults() {
     local -A app
-    set -x
     koopa_assert_has_no_args "$#"
     koopa_alert 'Configuring system defaults.'
     koopa_add_to_path_end '/usr/sbin' '/sbin'
