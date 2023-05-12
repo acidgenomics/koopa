@@ -785,6 +785,7 @@ koopa_debian_install_from_deb() {
 koopa_debian_install_system_docker() {
     koopa_install_app \
         --name='docker' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -803,6 +804,7 @@ koopa_debian_install_system_r() {
 koopa_debian_install_system_rstudio_server() {
     koopa_install_app \
         --name='rstudio-server' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -811,6 +813,7 @@ koopa_debian_install_system_rstudio_server() {
 koopa_debian_install_system_shiny_server() {
     koopa_install_app \
         --name='shiny-server' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
@@ -819,6 +822,7 @@ koopa_debian_install_system_shiny_server() {
 koopa_debian_install_system_wine() {
     koopa_install_app \
         --name='wine' \
+        --no-isolate \
         --platform='debian' \
         --system \
         "$@"
