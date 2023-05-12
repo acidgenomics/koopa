@@ -54,7 +54,7 @@ __koopa_posix_header() {
 
 __koopa_activate_koopa() {
     # """
-    # Activate koopa in interactive shell.
+    # Activate koopa.
     # @note Updated 2023-05-12.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
@@ -64,18 +64,10 @@ __koopa_activate_koopa() {
     _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     [ "${KOOPA_MINIMAL:-0}" -eq 0 ] || return 0
-    # > _koopa_umask || return 1
-    # Edge case for JupyterLab terminal inside of conda.
-    if [ -z "${HOME:-}" ]
-    then
-        HOME="$(pwd)"
-        export HOME
-    fi
+    _koopa_export_home || return 1
     _koopa_activate_profile_private || return 1
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
-    # Edge case for RStudio Server terminal to support dircolors.
-    [ -n "${SHELL:-}" ] && export SHELL
     _koopa_activate_xdg || return 1
     _koopa_export_editor || return 1
     _koopa_export_gnupg || return 1
