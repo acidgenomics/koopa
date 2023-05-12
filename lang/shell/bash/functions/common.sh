@@ -1507,30 +1507,39 @@ koopa_assert_is_writable() {
 }
 
 koopa_autopad_zeros() {
-    local -a files pos
-    local newname num padwidth oldname prefix stem
+    local -A dict
+    local -a pos
+    local file
     koopa_assert_has_args "$#"
-    prefix='sample'
-    padwidth=2
+    dict['dryrun']=0
+    dict['padwidth']=2
+    dict['prefix']=''
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--pad-width='* | \
             '--padwidth='*)
-                padwidth="${1#*=}"
+                dict['padwidth']="${1#*=}"
                 shift 1
                 ;;
+            '--pad-width' | \
             '--padwidth')
-                padwidth="${2:?}"
+                dict['padwidth']="${2:?}"
                 shift 2
                 ;;
             '--prefix='*)
-                prefix="${1#*=}"
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
-                prefix="${2:?}"
+                dict['prefix']="${2:?}"
                 shift 2
+                ;;
+            '--dry-run' | \
+            '--dryrun')
+                dict['dryrun']=1
+                shift 1
                 ;;
             '-'*)
                 koopa_invalid_arg "$1"
@@ -1542,23 +1551,26 @@ koopa_autopad_zeros() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    files=("$@")
-    if koopa_is_array_empty "${files[@]:-}"
-    then
-        koopa_stop 'No files.'
-    fi
-    for file in "${files[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    for file in "$@"
     do
-        if [[ "$file" =~ ^([0-9]+)(.*)$ ]]
+        local -A dict2
+        dict2['source']="$file"
+        dict2['bn']="$(koopa_basename "${dict2['source']}")"
+        dict2['dn']="$(koopa_dirname "${dict2['source']}")"
+        if [[ "${dict2['bn']}" =~ ^([0-9]+)(.*)$ ]]
         then
-            oldname="${BASH_REMATCH[0]}"
-            num="${BASH_REMATCH[1]}"
-            num="$(printf "%.${padwidth}d" "$num")"
-            stem="${BASH_REMATCH[2]}"
-            newname="${prefix}_${num}${stem}"
-            koopa_mv "$oldname" "$newname"
+            dict2['num']="${BASH_REMATCH[1]}"
+            dict2['num']="$(printf "%.${dict['padwidth']}d" "${dict2['num']}")"
+            dict2['stem']="${BASH_REMATCH[2]}"
+            dict2['bn2']="${dict['prefix']}${dict2['num']}${dict2['stem']}"
+            dict2['target']="${dict2['dn']}/${dict2['bn2']}"
+            koopa_alert "Renaming '${dict2['source']}' to '${dict2['target']}'."
+            [[ "${dict['dryrun']}" -eq 1 ]] && continue
+            koopa_mv "${dict2['source']}" "${dict2['target']}"
         else
-            koopa_alert_note "Skipping '${file}'."
+            koopa_alert_note "Skipping '${dict2['source']}'."
         fi
     done
     return 0

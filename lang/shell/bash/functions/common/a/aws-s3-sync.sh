@@ -14,6 +14,7 @@
 # FIXME Don't allow positional arguments here.
 # FIXME Exclude uses glob matching here, whereas our find pattern uses regex...
 # FIXME Improve this to automatically exclude files under git!
+# FIXME Support using '--dry-run' instead of '--dryrun'.
 
 koopa_aws_s3_sync() {
     # """
