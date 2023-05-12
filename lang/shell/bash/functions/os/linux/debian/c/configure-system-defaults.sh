@@ -2,7 +2,6 @@
 
 # FIXME Run this in an isolated subshell.
 # FIXME Do we need to add sbin to path?
-
 # FIXME Seeing this inside of Docker:
 # Generation complete.
 # /var/lib/dpkg/info/locales.postinst: 64: locale-gen: not found
@@ -33,6 +32,7 @@ koopa_debian_configure_system_defaults() {
     set -x
     koopa_assert_has_no_args "$#"
     koopa_alert 'Configuring system defaults.'
+    koopa_add_to_path_end '/usr/sbin' '/sbin'
     koopa_print_env
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
