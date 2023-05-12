@@ -650,6 +650,7 @@ koopa_debian_apt_space_used_by() {
 }
 
 koopa_debian_configure_system_defaults() {
+    set -x # FIXME
     local -A app
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
