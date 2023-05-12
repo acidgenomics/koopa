@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this error due to install wrapper:
-# !! Error: Required arguments missing.
-
-# FIXME Need to disable Handoff by default.
+# FIXME Rename this to 'koopa configure user defaults'.
 
 main() {
     # """
     # Install macOS user defaults.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-12.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -212,6 +209,18 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'NSGlobalDomain' \
         'NSWindowResizeTime' \
         '.001'
+    koopa_h2 'Handoff'
+    # Disabling handoff by default.
+    # https://superuser.com/questions/1420107/
+    # https://superuser.com/a/1613808
+    "${app['defaults']}" -currentHost write \
+        'com.apple.coreservices.useractivityd' \
+        'ActivityAdvertisingAllowed' \
+        -bool false
+    "${app['defaults']}" -currentHost write \
+        'com.apple.coreservices.useractivityd' \
+        'ActivityReceivingAllowed' \
+        -bool false
     koopa_h2 'Dock, Dashboard, and hot corners'
     # Enable highlight hover effect for the grid view of a stack (Dock).
     "${app['defaults']}" write \
@@ -1363,6 +1372,11 @@ WebKit2AllowsInlineMediaPlayback" \
         'com.googlecode.iterm2' \
         'PromptOnQuit' \
         -bool false
+    koopa_h2 'BBEdit'
+    # https://www.barebones.com/support/bbedit/ExpertPreferences.html
+    "${app['defaults']}" write \
+        'com.barebones.bbedit DisableCursorBlink' \
+        -bool true
     koopa_h2 'Final steps'
     # This step is CPU intensive and can cause the fans to kick on for old
     # Intel Macs, so disabling.
@@ -1392,7 +1406,7 @@ WebKit2AllowsInlineMediaPlayback" \
         'SystemUIServer'
         'cfprefsd'
     )
-    koopa_alert "Reloading affected apps: $(koopa_to_string "${apps[@]}")"
+    koopa_alert "Reloading affected apps: $(koopa_to_string "${app_names[@]}")"
     for app_name in "${app_names[@]}"
     do
         "${app['kill_all']}" "${app_name}" &>/dev/null || true

@@ -3,8 +3,9 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-05-03.
+    # @note Updated 2023-05-12.
     # """
+    _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
@@ -20,6 +21,8 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
+    # NOTE This can be problematic during Zsh activation if koopa is sourced in
+    # both zprofile and zshrc.
     alias conda='_koopa_alias_conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
@@ -44,8 +47,6 @@ _koopa_activate_aliases() {
     alias lh='l | head'
     alias ll='l -l'
     alias lt='l | tail'
-    # Defining this conditionally in POSIX header instead.
-    # > alias mamba='_koopa_alias_mamba'
     alias nvim-fzf='_koopa_alias_nvim_fzf'
     alias nvim-vanilla='_koopa_alias_nvim_vanilla'
     alias prelude-emacs='_koopa_prelude_emacs'

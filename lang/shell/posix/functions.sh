@@ -45,6 +45,7 @@ _koopa_activate_alacritty() {
 }
 
 _koopa_activate_aliases() {
+    _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
@@ -307,46 +308,35 @@ _koopa_activate_completion() {
 }
 
 _koopa_activate_conda() {
-    __kvar_deactivate=0
-    __kvar_prefix="${1:-}"
-    if [ -z "$__kvar_prefix" ]
-    then
-        __kvar_deactivate=1
-        __kvar_prefix="$(_koopa_conda_prefix)"
-    fi
+    __kvar_prefix="$(_koopa_conda_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
-        unset -v \
-            __kvar_deactivate \
-            __kvar_prefix
+        unset -v __kvar_prefix
         return 0
     fi
-    __kvar_script="${__kvar_prefix}/bin/activate"
-    if [ ! -r "$__kvar_script" ]
+    __kvar_conda="${__kvar_prefix}/bin/conda"
+    if [ ! -x "$__kvar_conda" ]
     then
-        unset -v \
-            __kvar_deactivate \
-            __kvar_prefix \
-            __kvar_script
+        unset -v __kvar_conda __kvar_prefix
         return 0
     fi
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
+        'bash' | \
+        'zsh')
+            ;;
+        *)
+            __kvar_shell='posix'
+            ;;
+    esac
     _koopa_is_alias 'conda' && unalias 'conda'
-    _koopa_is_alias 'mamba' && unalias 'mamba'
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    . "$__kvar_script"
-    if [ "$__kvar_deactivate" -eq 1 ] && \
-        [ "${CONDA_DEFAULT_ENV:-}" = 'base' ] && \
-        [ "${CONDA_SHLVL:-0}" -eq 1 ]
-    then
-        conda deactivate
-    fi
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
+    __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
+    eval "$__kvar_conda_setup"
+    _koopa_is_function 'conda' || return 1
     unset -v \
-        __kvar_deactivate \
-        __kvar_nounset \
-        __kvar_prefix \
-        __kvar_script
+        __kvar_conda \
+        __kvar_conda_setup \
+        __kvar_prefix
     return 0
 }
 
@@ -1243,16 +1233,6 @@ _koopa_alias_l() {
     fi
 }
 
-_koopa_alias_mamba() {
-    _koopa_activate_conda
-    if ! _koopa_is_function 'mamba'
-    then
-        _koopa_print 'mamba is not active.'
-        return 1
-    fi
-    mamba "$@"
-}
-
 _koopa_alias_nvim_fzf() {
     nvim "$(fzf)"
 }
@@ -1606,6 +1586,12 @@ _koopa_export_history() {
     return 0
 }
 
+_koopa_export_home() {
+    [ -z "${HOME:-}" ] && HOME="$(pwd)"
+    export HOME
+    return 0
+}
+
 _koopa_export_koopa_cpu_count() {
     KOOPA_CPU_COUNT="$(_koopa_cpu_count)"
     export KOOPA_CPU_COUNT
@@ -1615,7 +1601,8 @@ _koopa_export_koopa_cpu_count() {
 _koopa_export_koopa_shell() {
     unset -v KOOPA_SHELL
     KOOPA_SHELL="$(_koopa_locate_shell)"
-    export KOOPA_SHELL
+    [ -z "${SHELL:-}" ] && SHELL="$KOOPA_SHELL"
+    export KOOPA_SHELL SHELL
     return 0
 }
 
@@ -1927,6 +1914,16 @@ _koopa_major_minor_patch_version() {
         __kvar_string="$( \
             _koopa_print "$__kvar_string" \
             | cut -d '.' -f '1-3' \
+        )"
+        [ -n "$__kvar_string" ] || return 1
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
+            | cut -d '-' -f '1' \
+        )"
+        [ -n "$__kvar_string" ] || return 1
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
+            | cut -d 'p' -f '1' \
         )"
         [ -n "$__kvar_string" ] || return 1
         _koopa_print "$__kvar_string"

@@ -1100,9 +1100,9 @@
     "version": "042fe0c43831c8575abfdec4196ebd7305fa16ac"
   },
   "dotfiles": {
-    "date": "2023-05-09",
+    "date": "2023-05-12",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "f3635131c7c87b1102d02cf378e15bc612955d24"
+    "version": "307dddf68fd6a7a942af096a5ef869dcb0a9b504"
   },
   "du-dust": {
     "aliases": {
@@ -2135,11 +2135,11 @@
       "h5watch"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-05-11",
+    "date": "2023-05-12",
     "dependencies": ["gcc", "zlib"],
     "prune": false,
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
-    "version": "1.14.1"
+    "version": "1.14.1-2"
   },
   "hexyl": {
     "aliases": {
@@ -4330,17 +4330,17 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-05-06",
+    "date": "2023-05-12",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.265"
+    "version": "0.0.267"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-05-02",
+    "date": "2023-05-12",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.25"
+    "version": "0.0.27"
   },
   "rust": {
     "aliases": {
@@ -4527,16 +4527,15 @@
     "version": "0.8.1"
   },
   "snakemake": {
-    "arch": "amd64",
     "bin": ["snakemake"],
-    "date": "2023-05-04",
+    "date": "2023-05-12",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.25.3"
+    "version": "7.25.4"
   },
   "sox": {
     "aliases": {

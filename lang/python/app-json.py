@@ -23,9 +23,11 @@ def main(json_file: str, app_name: str, key: str) -> bool:
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
     keys = json_data.keys()
-    assert app_name in keys
+    if app_name not in keys:
+        raise NameError("Unsupported app: '" + app_name + "'.")
     app_dict = json_data[app_name]
-    assert key in app_dict.keys()
+    if key not in app_dict.keys():
+        raise ValueError("Invalid key: '" + key + "'.")
     value = app_dict[key]
     if isinstance(value, list):
         for i in value:
