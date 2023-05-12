@@ -538,6 +538,10 @@ koopa_debian_apt_get() {
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
     app['apt_get']="$(koopa_debian_locate_apt_get)"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['debconf_set_selections']="$( \
+        koopa_debian_locate_debconf_set_selections \
+    )"
     koopa_assert_is_executable "${app[@]}"
     apt_args=(
         '--assume-yes'
@@ -547,10 +551,14 @@ koopa_debian_apt_get() {
         '-o' 'Dpkg::Options::=--force-confold'
     )
     (
+        koopa_add_to_path_end '/usr/sbin' '/sbin'
         export DEBCONF_NONINTERACTIVE_SEEN='true'
         export DEBIAN_FRONTEND='noninteractive'
         export DEBIAN_PRIORITY='critical'
         export NEEDRESTART_MODE='a'
+        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
+debconf debconf/frontend select Noninteractive
+END
         koopa_sudo "${app['apt_get']}" "${apt_args[@]}" "$@"
     )
     return 0
@@ -663,14 +671,12 @@ koopa_debian_configure_system_defaults() {
     app['debconf_set_selections']="$( \
         koopa_debian_locate_debconf_set_selections \
     )"
-    app['echo']="$(koopa_locate_echo --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
     if ! koopa_is_docker
     then
-        "${app['cat']}" << END \
-| koopa_sudo "${app['debconf_set_selections']}"
+        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
