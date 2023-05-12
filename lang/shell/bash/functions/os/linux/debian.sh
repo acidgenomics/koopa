@@ -543,10 +543,14 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
+        '-o' 'Dpkg::Options::=--force-confdef'
+        '-o' 'Dpkg::Options::=--force-confold'
     )
+    export DEBCONF_NONINTERACTIVE_SEEN='true'
+    export DEBIAN_FRONTEND='noninteractive'
+    export DEBIAN_PRIORITY='critical'
+    export NEEDRESTART_MODE='a'
     koopa_sudo \
-        DEBCONF_NONINTERACTIVE_SEEN='true' \
-        DEBIAN_FRONTEND='noninteractive' \
         "${app['apt_get']}" "${apt_args[@]}" \
         "$@"
     return 0
@@ -883,11 +887,10 @@ koopa_debian_needrestart_noninteractive() {
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['file']='/etc/needrestart/needrestart.conf'
-    dict['replacement']="\$nrconf{restart} = \'l\';"
     [[ -f "${dict['file']}" ]] || return 0
-    if koopa_file_detect_fixed \
+    if koopa_file_detect_regex \
         --file="${dict['file']}" \
-        --pattern="\$nrconf{restart} = 'l';"
+        --pattern="^\$nrconf\{restart\} = 'a';"
     then
         return 0
     fi
@@ -895,9 +898,9 @@ koopa_debian_needrestart_noninteractive() {
     koopa_alert "Replacing '${dict['pattern']}' with '${dict['replacement']}' \
 in '${dict['file']}'."
     koopa_find_and_replace_in_file \
-        --fixed \
-        --pattern="#\$nrconf{restart} = \'i\';" \
-        --replacement="\$nrconf{restart} = \'l\';" \
+        --regex \
+        --pattern="^#\$nrconf\{restart\}.+$" \
+        --replacement="\$nrconf{restart} = \'a\';" \
         --sudo \
         "${dict['file']}"
     return 0
