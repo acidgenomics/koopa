@@ -1916,6 +1916,16 @@ _koopa_major_minor_patch_version() {
             | cut -d '.' -f '1-3' \
         )"
         [ -n "$__kvar_string" ] || return 1
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
+            | cut -d '-' -f '1' \
+        )"
+        [ -n "$__kvar_string" ] || return 1
+        __kvar_string="$( \
+            _koopa_print "$__kvar_string" \
+            | cut -d 'p' -f '1' \
+        )"
+        [ -n "$__kvar_string" ] || return 1
         _koopa_print "$__kvar_string"
     done
     unset -v __kvar_string
