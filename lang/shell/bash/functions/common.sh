@@ -142,10 +142,6 @@ koopa_activate_app() {
     return 0
 }
 
-koopa_activate_conda() {
-    _koopa_activate_conda "$@"
-}
-
 koopa_activate_ensembl_perl_api() {
     local -A dict
     dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
@@ -4350,34 +4346,6 @@ koopa_compress_ext_pattern() {
     return 0
 }
 
-koopa_conda_activate_env() {
-    local -A dict
-    koopa_assert_has_args_eq "$#" 1
-    dict['env_name']="${1:?}"
-    dict['nounset']="$(koopa_boolean_nounset)"
-    dict['env_prefix']="$(koopa_conda_env_prefix "${dict['env_name']}" || true)"
-    if [[ ! -d "${dict['env_prefix']}" ]]
-    then
-        koopa_alert_info "Attempting to install missing conda \
-environment '${dict['env_name']}'."
-        koopa_conda_create_env "${dict['env_name']}"
-        dict['env_prefix']="$( \
-            koopa_conda_env_prefix "${dict['env_name']}" || true \
-        )"
-    fi
-    if [[ ! -d "${dict['env_prefix']}" ]]
-    then
-        koopa_stop "'${dict['env_name']}' conda environment is not installed."
-    fi
-    [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
-    koopa_is_conda_env_active && koopa_conda_deactivate
-    koopa_activate_conda
-    koopa_assert_is_function 'conda'
-    conda activate "${dict['env_prefix']}"
-    [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
-    return 0
-}
-
 koopa_conda_bin() {
     local cmd file
     koopa_assert_has_args_eq "$#" 1
@@ -4893,16 +4861,16 @@ koopa_convert_line_endings_from_lf_to_crlf() {
 }
 
 koopa_convert_sam_to_bam() {
-    local -A dict
+    local -A bool dict
     local -a pos sam_files
     local sam_file
-    dict['keep_sam']=0
+    bool['keep_sam']=0
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--keep-sam')
-                dict['keep_sam']=1
+                bool['keep_sam']=1
                 shift 1
                 ;;
             '-'*)
@@ -4915,25 +4883,25 @@ koopa_convert_sam_to_bam() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    dict['dir']="${1:-${PWD:?}}"
-    koopa_assert_is_dir "$dir"
-    dict['dir']="$(koopa_realpath "${dict['dir']}")"
+    koopa_assert_has_args_eq "$#" 1
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     readarray -t sam_files <<< "$( \
-        find "${dict['dir']}" \
-            -maxdepth 3 \
-            -mindepth 1 \
-            -type f \
-            -iname '*.sam' \
-            -print \
-        | sort \
+        koopa_find \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.sam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
     )"
     if ! koopa_is_array_non_empty "${sam_files[@]:-}"
     then
-        koopa_stop "No SAM files detected in '${dict['dir']}'."
+        koopa_stop "No SAM files detected in '${dict['prefix']}'."
     fi
-    koopa_h1 "Converting SAM files in '${dict['dir']}' to BAM format."
-    koopa_conda_activate_env 'samtools'
-    case "${dict['keep_sam']}" in
+    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
+    case "${bool['keep_sam']}" in
         '0')
             koopa_alert_note 'SAM files will be deleted.'
             ;;
@@ -4948,12 +4916,11 @@ koopa_convert_sam_to_bam() {
         koopa_samtools_convert_sam_to_bam \
             --input-sam="$sam_file" \
             --output-bam="$bam_file"
-        if [[ "${dict['keep_sam']}" -eq 0 ]]
+        if [[ "${bool['keep_sam']}" -eq 0 ]]
         then
             koopa_rm "$sam_file"
         fi
     done
-    koopa_conda_deactivate
     return 0
 }
 
