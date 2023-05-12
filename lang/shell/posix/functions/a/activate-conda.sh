@@ -3,7 +3,7 @@
 _koopa_activate_conda() {
     # """
     # Activate conda using 'activate' script.
-    # @note Updated 2023-03-20.
+    # @note Updated 2023-05-12.
     # """
     __kvar_deactivate=0
     __kvar_prefix="${1:-}"
