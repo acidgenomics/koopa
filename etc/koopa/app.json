@@ -4527,16 +4527,15 @@
     "version": "0.8.1"
   },
   "snakemake": {
-    "arch": "amd64",
     "bin": ["snakemake"],
-    "date": "2023-05-04",
+    "date": "2023-05-12",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.25.3"
+    "version": "7.25.4"
   },
   "sox": {
     "aliases": {
