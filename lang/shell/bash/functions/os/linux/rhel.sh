@@ -23,7 +23,7 @@ ${dict['os_maj_ver']}-${dict['arch']}-rpms"
         "${app['sub_mngr']}" repos --enable "${dict['sub_rpm']}"
     fi
     koopa_fedora_dnf_install "https://dl.fedoraproject.org/pub/epel/\
-epel-release-latest-${os_maj_ver}.noarch.rpm"
+epel-release-latest-${dict['os_maj_ver']}.noarch.rpm"
     return 0
 }
 
