@@ -11,13 +11,17 @@ koopa_rhel_enable_epel() {
         return 0
     fi
     koopa_assert_is_admin
-    app['sub_mngr']="$(koopa_rhel_locate_subscription_manager)"
-    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['os_ver']="$(koopa_linux_os_version)"
     dict['os_maj_ver']="$(koopa_major_version "${dict['os_ver']}")"
-    "${app['sub_mngr']}" repos --enable \
-        "codeready-builder-for-rhel-${dict['os_maj_ver']}-${dict['arch']}-rpms"
+    if ! koopa_is_docker
+    then
+        app['sub_mngr']="$(koopa_rhel_locate_subscription_manager)"
+        koopa_assert_is_executable "${app['sub_mngr']}"
+        dict['sub_rpm']="codeready-builder-for-rhel-\
+${dict['os_maj_ver']}-${dict['arch']}-rpms"
+        "${app['sub_mngr']}" repos --enable "${dict['sub_rpm']}"
+    fi
     koopa_fedora_dnf_install "https://dl.fedoraproject.org/pub/epel/\
 epel-release-latest-${os_maj_ver}.noarch.rpm"
     return 0
