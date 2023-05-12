@@ -547,18 +547,18 @@ koopa_debian_apt_get() {
         '--assume-yes'
         '--no-install-recommends'
         '--quiet'
-        '-o' 'DPkg::Options::=--force-confmiss'
-        '-o' 'DPkg::Options::=--force-confnew'
+        '-o' 'Dpkg::Options::=--force-confdef'
+        '-o' 'Dpkg::Options::=--force-confold'
     )
     (
         koopa_add_to_path_end '/usr/sbin' '/sbin'
-        export DEBCONF_ADMIN_EMAIL=''
         export DEBCONF_NONINTERACTIVE_SEEN='true'
         export DEBIAN_FRONTEND='noninteractive'
         export DEBIAN_PRIORITY='critical'
+        export LANG='C'
+        export LANGUAGE='C'
+        export LC_ALL='C'
         export NEEDRESTART_MODE='a'
-        export UCF_FORCE_CONFFMISS=1
-        export UCF_FORCE_CONFFNEW=1
         "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 debconf debconf/frontend select Noninteractive
 END
