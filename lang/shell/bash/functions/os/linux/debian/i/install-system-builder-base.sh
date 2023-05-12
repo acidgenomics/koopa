@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Rename to 'koopa configure system defaults'.
 # FIXME Need to patch needrestart to be non-interactive.
 
 koopa_debian_install_system_builder_base() {
     # """
     # Bootstrap the Debian/Ubuntu builder AMI.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-12.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
