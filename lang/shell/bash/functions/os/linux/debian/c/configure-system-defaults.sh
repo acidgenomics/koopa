@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Run this in an isolated subshell.
-# FIXME Do we need to add sbin to path?
-# FIXME Seeing this inside of Docker:
-# Generation complete.
-# /var/lib/dpkg/info/locales.postinst: 64: locale-gen: not found
+# FIXME Need to run this in an isolated subshell.
 
 koopa_debian_configure_system_defaults() {
     # """
