@@ -45,6 +45,7 @@ _koopa_activate_alacritty() {
 }
 
 _koopa_activate_aliases() {
+    _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
@@ -60,6 +61,7 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
+    alias conda='_koopa_alias_conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
@@ -302,6 +304,38 @@ _koopa_activate_completion() {
         __kvar_file \
         __kvar_koopa_prefix \
         __kvar_shell
+    return 0
+}
+
+_koopa_activate_conda() {
+    __kvar_prefix="$(_koopa_conda_prefix)"
+    if [ ! -d "$__kvar_prefix" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    __kvar_conda="${__kvar_prefix}/bin/conda"
+    if [ ! -x "$__kvar_conda" ]
+    then
+        unset -v __kvar_conda __kvar_prefix
+        return 0
+    fi
+    __kvar_shell="$(_koopa_shell_name)"
+    case "$__kvar_shell" in
+        'bash' | \
+        'zsh')
+            ;;
+        *)
+            __kvar_shell='posix'
+            ;;
+    esac
+    __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
+    eval "$__kvar_conda_setup"
+    _koopa_is_function 'conda' || return 1
+    unset -v \
+        __kvar_conda \
+        __kvar_conda_setup \
+        __kvar_prefix
     return 0
 }
 
@@ -1081,6 +1115,16 @@ _koopa_alias_colorls() {
     return 0
 }
 
+_koopa_alias_conda() {
+    _koopa_activate_conda
+    if ! _koopa_is_function 'conda'
+    then
+        _koopa_print 'conda is not active.'
+        return 1
+    fi
+    conda "$@"
+}
+
 _koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
@@ -1541,6 +1585,12 @@ _koopa_export_history() {
     return 0
 }
 
+_koopa_export_home() {
+    [ -z "${HOME:-}" ] && HOME="$(pwd)"
+    export HOME
+    return 0
+}
+
 _koopa_export_koopa_cpu_count() {
     KOOPA_CPU_COUNT="$(_koopa_cpu_count)"
     export KOOPA_CPU_COUNT
@@ -1550,7 +1600,8 @@ _koopa_export_koopa_cpu_count() {
 _koopa_export_koopa_shell() {
     unset -v KOOPA_SHELL
     KOOPA_SHELL="$(_koopa_locate_shell)"
-    export KOOPA_SHELL
+    [ -z "${SHELL:-}" ] && SHELL="$KOOPA_SHELL"
+    export KOOPA_SHELL SHELL
     return 0
 }
 
