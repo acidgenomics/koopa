@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
-# FIXME Rename to 'koopa configure system defaults'.
-# FIXME Need to patch needrestart to be non-interactive.
-
-koopa_debian_install_system_builder_base() {
+koopa_debian_configure_system_defaults() {
     # """
-    # Bootstrap the Debian/Ubuntu builder AMI.
+    # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
     # @note Updated 2023-05-12.
+    #
+    # @section apt install:
+    #
+    # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'. Don't
+    # include 'zlib1g-dev' here. We want to ensure that our build recipes are
+    # hardened with a local copy of zlib.
+    #
+    # @section: needrestart:
+    #
+    # This still isn't fixing system R install inside an isolated shell on
+    # Ubuntu 22. Not sure how to resolve this currently.
     #
     # @seealso
     # - https://www.serverlab.ca/tutorials/linux/administration-linux/
@@ -28,9 +36,6 @@ koopa_debian_install_system_builder_base() {
 tzdata tzdata/Areas select America
 tzdata tzdata/Zones/America select New_York
 END
-    # Needed for compiling software: 'gcc' 'g++' 'libc-dev' 'make'. Don't
-    # include 'zlib1g-dev' here. We want to ensure that our build recipes are
-    # hardened with a local copy of zlib.
     koopa_debian_apt_install \
         'bash' \
         'ca-certificates' \
