@@ -655,6 +655,10 @@ koopa_debian_apt_space_used_by() {
 
 koopa_debian_configure_system_defaults() {
     local -A app
+    set -x
+    koopa_assert_has_no_args "$#"
+    koopa_alert 'Configuring system defaults.'
+    koopa_print_env
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['debconf_set_selections']="$( \
         koopa_debian_locate_debconf_set_selections \
@@ -711,6 +715,7 @@ END
     koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
     koopa_debian_needrestart_noninteractive
     koopa_enable_passwordless_sudo
+    koopa_alert_success 'Configuration of system defaults was successful.'
     return 0
 }
 
