@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Make this user accessible in CLI.
-
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
