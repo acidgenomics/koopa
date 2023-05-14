@@ -3,13 +3,23 @@
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-14.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
     #
     # Debian Docker images can also use snapshots:
     # http://snapshot.debian.org/archive/debian/20210326T030000Z
+    #
+    # @section Docker images:
+    #
+    # Debian 12 defaults:
+    # > deb http://deb.debian.org/debian
+    #       stable main
+    # > deb http://deb.debian.org/debian-security
+    #       stable-security main
+    # > deb http://deb.debian.org/debian
+    #       stable-updates main
     #
     # @section AWS AMI instances:
     #
@@ -100,7 +110,7 @@ koopa_debian_apt_configure_sources() {
             --regex \
         | koopa_grep \
             --fixed \
-            --pattern=" ${codenames['main']} main" \
+            --pattern=' main' \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
@@ -111,7 +121,7 @@ koopa_debian_apt_configure_sources() {
             --regex \
         | koopa_grep \
             --fixed \
-            --pattern=" ${codenames['security']} main" \
+            --pattern='-security main' \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
