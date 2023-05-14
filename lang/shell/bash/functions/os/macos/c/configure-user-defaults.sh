@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_macos_install_system_defaults() {
-    koopa_install_app \
+koopa_macos_configure_user_defaults() {
+    koopa_configure_app \
         --name='defaults' \
         --platform='macos' \
-        --system \
+        --user \
         "$@"
 }
