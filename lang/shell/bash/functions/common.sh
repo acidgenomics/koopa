@@ -3807,7 +3807,27 @@ koopa_cli_app() {
 }
 
 koopa_cli_configure() {
+    local -a flags pos
     local app stem
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--verbose')
+                flags+=("$1")
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     stem='configure'
     case "$1" in
         'system' | \
@@ -3826,7 +3846,12 @@ koopa_cli_configure() {
         then
             koopa_stop "Unsupported app: '${app}'."
         fi
-        "${dict['fun']}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
+        then
+            "${dict['fun']}" "${flags[@]:-}"
+        else
+            "${dict['fun']}"
+        fi
     done
     return 0
 }
@@ -4101,8 +4126,8 @@ koopa_cli_system() {
 }
 
 koopa_cli_uninstall() {
-    local app stem
     local -a flags pos
+    local app stem
     flags=()
     pos=()
     while (("$#"))
@@ -4645,83 +4670,82 @@ koopa_config_prefix() {
     _koopa_config_prefix "$@"
 }
 
-koopa_configure_r() {
-    local -A app dict
-    koopa_assert_has_args_le "$#" 1
-    app['r']="${1:-}"
-    [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
-    koopa_assert_is_executable "${app[@]}"
-    app['r']="$(koopa_realpath "${app['r']}")"
-    dict['name']='r'
-    dict['system']=0
-    if ! koopa_is_koopa_app "${app['r']}"
+koopa_configure_app() {
+    local -A bool dict
+    local -a pos
+    koopa_assert_is_owner
+    bool['verbose']=0
+    dict['config_fun']='main'
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['mode']='shared'
+    dict['name']=''
+    dict['platform']='common'
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--name='*)
+                dict['name']="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict['name']="${2:?}"
+                shift 2
+                ;;
+            '--platform='*)
+                dict['platform']="${1#*=}"
+                shift 1
+                ;;
+            '--platform')
+                dict['platform']="${2:?}"
+                shift 2
+                ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
+            '--system')
+                dict['mode']='system'
+                shift 1
+                ;;
+            '--user')
+                dict['mode']='user'
+                shift 1
+                ;;
+            '-*')
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_is_set '--name' "${dict['name']}"
+    if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        koopa_assert_is_admin
-        dict['system']=1
+        export KOOPA_VERBOSE=1
+        set -o xtrace
     fi
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['site_library']="${dict['r_prefix']}/site-library"
-    koopa_alert_configure_start "${dict['name']}" "${app['r']}"
-    koopa_assert_is_dir "${dict['r_prefix']}"
-    if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
-    then
-        koopa_stop \
-            "'libomp' is not installed." \
-            "Run 'koopa install system openmp' to resolve."
-    fi
-    koopa_r_copy_files_into_etc "${app['r']}"
-    koopa_r_configure_environ "${app['r']}"
-    koopa_r_configure_makevars "${app['r']}"
-    koopa_r_configure_ldpaths "${app['r']}"
-    koopa_r_configure_java "${app['r']}"
-    case "${dict['system']}" in
-        '0')
-            if [[ -L "${dict['site_library']}" ]]
-            then
-                koopa_rm "${dict['site_library']}"
-            fi
-            koopa_sys_mkdir "${dict['site_library']}"
-            ;;
-        '1')
-            dict['group']="$(koopa_admin_group_name)"
-            dict['user']='root'
-            if [[ -L "${dict['site_library']}" ]]
-            then
-                koopa_rm --sudo "${dict['site_library']}"
-            fi
-            koopa_mkdir --sudo "${dict['site_library']}"
-            koopa_chmod --sudo '0775' "${dict['site_library']}"
-            koopa_chown --sudo --recursive \
-                "${dict['user']}:${dict['group']}" \
-                "${dict['site_library']}"
-            koopa_chmod --sudo --recursive \
-                'g+rw' "${dict['site_library']}"
-            dict['site_library_2']='/usr/local/lib/R/site-library'
-            if [[ -d "${dict['site_library_2']}" ]]
-            then
-                koopa_chmod --sudo '0775' "${dict['site_library_2']}"
-                koopa_chown --sudo --recursive \
-                    "${dict['user']}:${dict['group']}" \
-                    "${dict['site_library_2']}"
-                koopa_chmod --sudo --recursive \
-                    'g+rw' "${dict['site_library_2']}"
-            fi
-            ;;
-    esac
-    koopa_r_configure_makeconf "${app['r']}"
-    koopa_r_migrate_non_base_packages "${app['r']}"
-    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
-    then
-        app['rstudio_server']="$( \
-            koopa_linux_locate_rstudio_server --allow-missing \
-        )"
-        if [[ -x "${app['rstudio_server']}" ]]
-        then
-            koopa_linux_configure_system_rstudio_server
-        fi
-    fi
+    dict['config_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
+configure/${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
+    koopa_assert_is_file "${dict['config_file']}"
+    dict['tmp_dir']="$(koopa_tmp_dir)"
+    (
+        koopa_cd "${dict['tmp_dir']}"
+        source "${dict['config_file']}"
+        koopa_assert_is_function "${dict['config_fun']}"
+        "${dict['config_fun']}" "$@"
+    )
+    koopa_rm "${dict['tmp_dir']}"
     return 0
+}
+
+koopa_configure_r() {
+    koopa_configure_app \
+        --name='r' \
+        "$@"
 }
 
 koopa_configure_system_r() {
@@ -22756,12 +22780,7 @@ koopa_uninstall_app() {
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
-        then
-            koopa_alert_uninstall_start "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_uninstall_start "${dict['name']}"
-        fi
+        koopa_alert_uninstall_start "${dict['name']}" "${dict['prefix']}"
     fi
     [[ -z "${dict['uninstaller_bn']}" ]] && \
         dict['uninstaller_bn']="${dict['name']}"
@@ -22821,13 +22840,7 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
-        then
-            koopa_alert_uninstall_success \
-                "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_uninstall_success "${dict['name']}"
-        fi
+        koopa_alert_uninstall_success "${dict['name']}" "${dict['prefix']}"
     fi
     return 0
 }
