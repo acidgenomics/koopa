@@ -26,8 +26,11 @@ koopa_switch_to_develop() {
             koopa_alert_note "Already on 'develop' branch."
             return 0
         fi
-        "${app['git']}" remote set-url \
-            "${dict['origin']}" "${dict['remote_url']}"
+        if koopa_is_github_ssh_enabled
+        then
+            "${app['git']}" remote set-url \
+                "${dict['origin']}" "${dict['remote_url']}"
+        fi
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"
         "${app['git']}" fetch "${dict['origin']}"
