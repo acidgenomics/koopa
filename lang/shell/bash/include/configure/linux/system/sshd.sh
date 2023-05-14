@@ -26,6 +26,7 @@ main() {
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
+    koopa_alert "Modifying '${dict['file']}'."
     read -r -d '' "dict[string]" << END || true
 AcceptEnv KOOPA_COLOR_MODE
 END
