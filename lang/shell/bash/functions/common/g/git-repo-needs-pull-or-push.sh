@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rethink this approach?
-
 koopa_git_repo_needs_pull_or_push() {
     # """
     # Does the current git repo need a pull or push?
