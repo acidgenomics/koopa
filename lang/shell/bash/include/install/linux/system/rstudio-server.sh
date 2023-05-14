@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-14.
     #
     # Don't enclose values in quotes in the conf file.
     #
@@ -30,7 +30,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_debian_like
     then
-        dict['fun']='koopa_debian_gdebi_install'
+        dict['fun']='koopa_debian_install_from_deb'
         dict['arch']="$(koopa_arch2)" # e.g 'amd64'.
         dict['distro']="$(koopa_debian_os_codename)"
         case "${dict['distro']}" in
@@ -43,7 +43,7 @@ main() {
         dict['file_ext']='deb'
     elif koopa_is_fedora_like
     then
-        dict['fun']='koopa_fedora_dnf_install'
+        dict['fun']='koopa_fedora_install_from_rpm'
         dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
         dict['distro']='centos8'
         dict['file_ext']='rpm'
