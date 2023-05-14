@@ -334,7 +334,6 @@ _koopa_complete() {
                         'quarto'
                         'r'
                         'r-devel'
-                        'r-koopa'
                         'radian'
                         'ranger-fm'
                         'rbenv'
