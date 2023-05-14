@@ -674,7 +674,7 @@ koopa_debian_enable_unattended_upgrades() {
     return 0
 }
 
-koopa_debian_gdebi_install() {
+koopa_debian_install_from_deb() {
     local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
@@ -686,17 +686,6 @@ koopa_debian_gdebi_install() {
     fi
     koopa_assert_is_executable "${app[@]}"
     koopa_sudo "${app['gdebi']}" --non-interactive "$@"
-    return 0
-}
-
-koopa_debian_install_from_deb() {
-    local -A app dict
-    koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_admin
-    app['gdebi']="$(koopa_debian_locate_gdebi)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['file']="${1:?}"
-    koopa_sudo "${app['gdebi']}" --non-interactive "${dict['file']}"
     return 0
 }
 
