@@ -136,6 +136,22 @@ koopa_macos_clean_launch_services() {
     return 0
 }
 
+koopa_macos_configure_system_defaults() {
+    koopa_configure_app \
+        --name='defaults' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_configure_user_defaults() {
+    koopa_configure_app \
+        --name='defaults' \
+        --platform='macos' \
+        --user \
+        "$@"
+}
+
 koopa_macos_create_dmg() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
@@ -552,14 +568,6 @@ koopa_macos_ifactive() {
     return 0
 }
 
-koopa_macos_install_system_defaults() {
-    koopa_install_app \
-        --name='defaults' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
@@ -606,14 +614,6 @@ koopa_macos_install_system_xcode_openmp() {
         --name='xcode-openmp' \
         --platform='macos' \
         --system \
-        "$@"
-}
-
-koopa_macos_install_user_defaults() {
-    koopa_install_app \
-        --name='defaults' \
-        --platform='macos' \
-        --user \
         "$@"
 }
 
