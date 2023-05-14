@@ -1088,6 +1088,7 @@
     },
     "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2023-05-14",
+    "enabled": false,
     "url": ["https://github.com/docker/docker-credential-helpers/"],
     "version": "0.7.0"
   },
