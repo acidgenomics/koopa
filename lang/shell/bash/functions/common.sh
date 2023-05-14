@@ -4767,25 +4767,10 @@ koopa_configure_user_chemacs() {
 }
 
 koopa_configure_user_dotfiles() {
-    local -A app dict
-    koopa_assert_has_args_le "$#" 1
-    app['bash']="$(koopa_locate_bash --allow-system)"
-    if [[ "${app['bash']}" == '/bin/bash' ]] && koopa_is_macos
-    then
-        app['bash']='/usr/local/bin/bash'
-    fi
-    koopa_assert_is_executable "${app[@]}"
-    dict['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
-    dict['prefix']="${1:-}"
-    [[ -z "${dict['prefix']}" ]] && dict['prefix']="$(koopa_dotfiles_prefix)"
-    koopa_assert_is_dir "${dict['prefix']}"
-    dict['script']="${dict['prefix']}/install"
-    koopa_assert_is_file "${dict['script']}"
-    koopa_ln "${dict['prefix']}" "${dict['cm_prefix']}"
-    koopa_add_config_link "${dict['prefix']}" 'dotfiles'
-    koopa_add_to_path_start "$(koopa_dirname "${app['bash']}")"
-    "${app['bash']}" "${dict['script']}"
-    return 0
+    koopa_configure_app \
+        --name='dotfiles' \
+        --user \
+        "$@"
 }
 
 koopa_contains() {
