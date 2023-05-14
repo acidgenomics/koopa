@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to not require bcbio activation step.
-# FIXME Work on locating bcbio_setup_genome directly.
-
 koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     # """
     # Install bcbio-nextgen genome from Ensembl.

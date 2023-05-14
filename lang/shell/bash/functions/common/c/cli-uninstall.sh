@@ -3,13 +3,13 @@
 koopa_cli_uninstall() {
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-14.
     #
     # @seealso
     # > koopa_cli_uninstall 'python3.10'
     # """
-    local app stem
     local -a flags pos
+    local app stem
     flags=()
     pos=()
     while (("$#"))

@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Currently errors if 'opt' folder doesn't exist.
-# This can happen when bootstrapping a system and the first install fails.
-
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-14.
     # """
     local -A bool dict
     local -a bin_arr man1_arr
@@ -133,12 +130,7 @@ koopa_uninstall_app() {
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
-        then
-            koopa_alert_uninstall_start "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_uninstall_start "${dict['name']}"
-        fi
+        koopa_alert_uninstall_start "${dict['name']}" "${dict['prefix']}"
     fi
     [[ -z "${dict['uninstaller_bn']}" ]] && \
         dict['uninstaller_bn']="${dict['name']}"
@@ -173,7 +165,6 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
             then
                 koopa_unlink_in_opt "${dict['name']}"
             fi
-            # FIXME Rework this as a function.
             if [[ "${bool['unlink_in_bin']}" -eq 1 ]]
             then
                 readarray -t bin_arr <<< "$( \
@@ -185,7 +176,6 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
                     koopa_unlink_in_bin "${bin_arr[@]}"
                 fi
             fi
-            # FIXME Rework this as a function.
             if [[ "${bool['unlink_in_man1']}" -eq 1 ]]
             then
                 readarray -t man1_arr <<< "$( \
@@ -201,13 +191,7 @@ uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
     then
-        if [[ -n "${dict['prefix']}" ]]
-        then
-            koopa_alert_uninstall_success \
-                "${dict['name']}" "${dict['prefix']}"
-        else
-            koopa_alert_uninstall_success "${dict['name']}"
-        fi
+        koopa_alert_uninstall_success "${dict['name']}" "${dict['prefix']}"
     fi
     return 0
 }

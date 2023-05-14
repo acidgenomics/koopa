@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Allow the user to specify which R.
-
 koopa_r_package_version() {
     # """
     # R package version.

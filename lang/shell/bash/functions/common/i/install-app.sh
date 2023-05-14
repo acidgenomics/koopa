@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to an an option to not isolate subshell.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.

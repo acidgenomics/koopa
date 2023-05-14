@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is also now erroring with hardened env approach.
-# The shell crashes at 'Processing triggers for man-db'.
-
 main() {
     # """
     # Install Docker.
