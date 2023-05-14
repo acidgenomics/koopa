@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Work on consolidating:
+# - koopa_debian_gdebi_install
+# - koopa_debian_install_from_deb
+#
+# - koopa_fedora_dnf_install
+# - koopa_fedora_install_from_rpm
+
 main() {
     # """
     # Install Shiny Server binary.
