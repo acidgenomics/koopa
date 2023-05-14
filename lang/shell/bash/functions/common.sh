@@ -4728,6 +4728,11 @@ koopa_configure_app() {
         export KOOPA_VERBOSE=1
         set -o xtrace
     fi
+    case "${dict['mode']}" in
+        'system')
+            koopa_assert_is_admin
+            ;;
+    esac
     dict['config_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
 configure/${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
     koopa_assert_is_file "${dict['config_file']}"
