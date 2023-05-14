@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to require libsecret here?
-
 main() {
     # """
     # Install docker-credential-pass.
@@ -30,11 +28,15 @@ v${dict['version']}.tar.gz"
             'bin/build/docker-credential-osxkeychain'
     else
         "${app['make']}" 'pass'
-        "${app['make']}" 'secretservice'
         koopa_cp \
             --target-directory="${dict['prefix']}/bin" \
-            'bin/build/docker-credential-pass' \
-            'bin/build/docker-credential-secretservice'
+            'bin/build/docker-credential-pass'
+        # NOTE This requires 'libsecret' to be installed.
+        # > "${app['make']}" 'secretservice'
+        # > koopa_cp \
+        # >     --target-directory="${dict['prefix']}/bin" \
+        # >     'bin/build/docker-credential-pass' \
+        # >     'bin/build/docker-credential-secretservice'
     fi
     return 0
 }
