@@ -574,26 +574,6 @@ koopa_debian_apt_install() {
     return 0
 }
 
-koopa_debian_apt_is_key_imported() {
-    local -A app dict
-    koopa_assert_has_args_eq "$#" 1
-    app['apt_key']="$(koopa_debian_locate_apt_key)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['key']="${1:?}"
-    dict['key_pattern']="$( \
-        koopa_print "${dict['key']}" \
-        | "${app['sed']}" 's/ //g' \
-        | "${app['sed']}" -E \
-            "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
-(.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
-    )"
-    dict['string']="$("${app['apt_key']}" list 2>&1 || true)"
-    koopa_str_detect_fixed \
-        --string="${dict['string']}" \
-        --pattern="${dict['key_pattern']}"
-}
-
 koopa_debian_apt_key_prefix() {
     koopa_assert_has_no_args "$#"
     koopa_print '/usr/share/keyrings'
@@ -776,12 +756,6 @@ koopa_debian_install_system_wine() {
 koopa_debian_locate_apt_get() {
     koopa_locate_app \
         '/usr/bin/apt-get' \
-        "$@"
-}
-
-koopa_debian_locate_apt_key() {
-    koopa_locate_app \
-        '/usr/bin/apt-key' \
         "$@"
 }
 
