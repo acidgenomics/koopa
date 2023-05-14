@@ -4762,13 +4762,10 @@ koopa_configure_system_r() {
 }
 
 koopa_configure_user_chemacs() {
-    local -A dict
-    koopa_assert_has_no_args "$#"
-    dict['source']="$(koopa_opt_prefix)/chemacs"
-    dict['target']="${HOME:?}/.emacs.d"
-    koopa_assert_is_dir "${dict['source']}"
-    koopa_ln "${dict['source']}" "${dict['target']}"
-    return 0
+    koopa_configure_app \
+        --name='chemacs' \
+        --user \
+        "$@"
 }
 
 koopa_configure_user_dotfiles() {
