@@ -689,13 +689,6 @@ koopa_debian_gdebi_install() {
     return 0
 }
 
-koopa_debian_install_bcbio_nextgen_vm() {
-    koopa_install_app \
-        --name='bcbio-nextgen-vm' \
-        --platform='debian' \
-        "$@"
-}
-
 koopa_debian_install_from_deb() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
@@ -896,13 +889,6 @@ koopa_debian_set_timezone() {
     koopa_alert "Setting local timezone to '${dict['tz']}'."
     koopa_sudo "${app['timedatectl']}" set-timezone "${dict['tz']}"
     return 0
-}
-
-koopa_debian_uninstall_bcbio_nextgen_vm() {
-    koopa_uninstall_app \
-        --name='bcbio-nextgen-vm' \
-        --platform='debian' \
-        "$@"
 }
 
 koopa_debian_uninstall_shiny_server() {

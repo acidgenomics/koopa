@@ -435,7 +435,6 @@ _koopa_complete() {
                             'apptainer'
                             'aspera-connect'
                             'bcbio-nextgen'
-                            'bcbio-nextgen-vm'
                             'cloudbiolinux'
                             'docker-credential-pass'
                             'elfutils'
