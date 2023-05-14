@@ -3,7 +3,7 @@
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-05-14.
     #
     # @section apt install:
     #
@@ -32,6 +32,7 @@ main() {
         koopa_debian_locate_debconf_set_selections \
     )"
     koopa_assert_is_executable "${app[@]}"
+    koopa_debian_apt_configure_sources
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
     if ! koopa_is_docker
