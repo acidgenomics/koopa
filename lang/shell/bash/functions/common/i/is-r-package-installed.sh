@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to allow user to specify which R.
-
 koopa_is_r_package_installed() {
     # """
     # Is the requested R package installed?
