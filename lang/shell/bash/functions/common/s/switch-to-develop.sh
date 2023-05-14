@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Also set the origin to SSH instead of HTTPS.
-# git remote set-url origin git@github.com:acidgenomics/koopa.git
-
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-14.
     #
     # @seealso
     # - https://stackoverflow.com/questions/49297153/
@@ -19,6 +16,7 @@ koopa_switch_to_develop() {
     dict['branch']='develop'
     dict['origin']='origin'
     dict['prefix']="$(koopa_koopa_prefix)"
+    dict['remote_url']='git@github.com:acidgenomics/koopa.git'
     dict['user']="$(koopa_user_name)"
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
@@ -28,6 +26,8 @@ koopa_switch_to_develop() {
             koopa_alert_note "Already on 'develop' branch."
             return 0
         fi
+        "${app['git']}" remote set-url \
+            "${dict['origin']}" "${dict['remote_url']}"
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"
         "${app['git']}" fetch "${dict['origin']}"
