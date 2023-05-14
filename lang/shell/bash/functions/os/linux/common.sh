@@ -434,13 +434,6 @@ koopa_linux_install_cloudbiolinux() {
         "$@"
 }
 
-koopa_linux_install_docker_credential_pass() {
-    koopa_install_app \
-        --name='docker-credential-pass' \
-        --platform='linux' \
-        "$@"
-}
-
 koopa_linux_install_elfutils() {
     koopa_install_app \
         --name='elfutils' \
@@ -714,13 +707,6 @@ koopa_linux_uninstall_private_bcl2fastq() {
 koopa_linux_uninstall_cloudbiolinux() {
     koopa_uninstall_app \
         --name='cloudbiolinux' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_uninstall_docker_credential_pass() {
-    koopa_uninstall_app \
-        --name='docker-credential-pass' \
         --platform='linux' \
         "$@"
 }
