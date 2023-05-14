@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 
-# FIXME Duplicated with 'gdebi-install'?
-
 koopa_debian_install_from_deb() {
     # """
     # Install directly from a '.deb' file.
     # @note Updated 2023-05-01.
     # """
-    local -A app dict
-    koopa_assert_has_args_eq "$#" 1
+    local -A app
+    koopa_assert_has_args "$#"
     koopa_assert_is_admin
-    app['gdebi']="$(koopa_debian_locate_gdebi)"
+    app['gdebi']="$(koopa_debian_locate_gdebi --allow-missing)"
+    if [[ ! -x "${app['gdebi']}" ]]
+    then
+        koopa_debian_apt_install 'gdebi-core'
+        app['gdebi']="$(koopa_debian_locate_gdebi)"
+    fi
     koopa_assert_is_executable "${app[@]}"
-    dict['file']="${1:?}"
-    koopa_sudo "${app['gdebi']}" --non-interactive "${dict['file']}"
+    koopa_sudo "${app['gdebi']}" --non-interactive "$@"
     return 0
 }

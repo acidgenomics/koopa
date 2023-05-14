@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rename this to 'koopa configure user defaults'.
-
 main() {
     # """
     # Install macOS user defaults.

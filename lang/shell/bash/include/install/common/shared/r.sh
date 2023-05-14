@@ -5,7 +5,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-14.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -303,18 +303,33 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     "${app['make']}" install
     app['r']="${dict['prefix']}/bin/R"
     app['rscript']="${dict['prefix']}/bin/Rscript"
-    koopa_assert_is_installed "${app['r']}" "${app['rscript']}"
+    koopa_assert_is_executable "${app['r']}" "${app['rscript']}"
     koopa_configure_r "${app['r']}"
     # NOTE libxml is now expected to return FALSE as of R 4.2.
     "${app['rscript']}" -e 'capabilities()'
     koopa_check_shared_object \
         --name='libR' \
         --prefix="${dict['prefix']}/lib/R/lib"
-    if [[ "${dict['name']}" != 'r-devel' ]]
-    then
-        koopa_install_r_koopa "${app['r']}"
-        koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
-        # FIXME Also add check that koopa R package loads successfully.
-    fi
+    [[ "${dict['name']}" == 'r-devel' ]] && return 0
+    koopa_install_r_koopa "${app['r']}"
+    # Install our internal R koopa package.
+    "${app['rscript']}" -e " \
+        options(
+            error = quote(quit(status = 1L)),
+            warn = 1L
+        ); \
+        if (!requireNamespace('BiocManager', quietly = TRUE)) { ; \
+            install.packages('BiocManager'); \
+        } ; \
+        install.packages(
+            pkgs = 'koopa',
+            repos = c(
+                'https://r.acidgenomics.com',
+                BiocManager::repositories()
+            ),
+            dependencies = TRUE
+        ); \
+    "
+    koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
     return 0
 }
