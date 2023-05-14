@@ -10817,6 +10817,12 @@ koopa_install_difftastic() {
         "$@"
 }
 
+koopa_install_docker_credential_helpers() {
+    koopa_install_app \
+        --name='docker-credential-helpers' \
+        "$@"
+}
+
 koopa_install_dotfiles() {
     koopa_install_app \
         --name='dotfiles' \
@@ -23095,6 +23101,12 @@ koopa_uninstall_diff_so_fancy() {
 koopa_uninstall_difftastic() {
     koopa_uninstall_app \
         --name='difftastic' \
+        "$@"
+}
+
+koopa_uninstall_docker_credential_helpers() {
+    koopa_uninstall_app \
+        --name='docker-credential-helpers' \
         "$@"
 }
 

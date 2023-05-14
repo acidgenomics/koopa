@@ -1082,13 +1082,12 @@
     "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.46.0"
   },
-  "docker-credential-pass": {
+  "docker-credential-helpers": {
     "aliases": {
       "homebrew": "docker-credential-helper"
     },
-    "bin": ["docker-credential-pass"],
-    "date": "2022-11-15",
-    "platform": "linux",
+    "build_dependencies": ["go", "make", "pkg-config"],
+    "date": "2023-05-14",
     "url": ["https://github.com/docker/docker-credential-helpers/"],
     "version": "0.7.0"
   },
