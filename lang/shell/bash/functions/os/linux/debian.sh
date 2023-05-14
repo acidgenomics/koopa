@@ -381,7 +381,7 @@ koopa_debian_apt_configure_sources() {
             --regex \
         | koopa_grep \
             --fixed \
-            --pattern=" ${codenames['main']} main" \
+            --pattern=' main' \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
@@ -392,7 +392,7 @@ koopa_debian_apt_configure_sources() {
             --regex \
         | koopa_grep \
             --fixed \
-            --pattern=" ${codenames['security']} main" \
+            --pattern='-security main' \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
@@ -574,26 +574,6 @@ koopa_debian_apt_install() {
     return 0
 }
 
-koopa_debian_apt_is_key_imported() {
-    local -A app dict
-    koopa_assert_has_args_eq "$#" 1
-    app['apt_key']="$(koopa_debian_locate_apt_key)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['key']="${1:?}"
-    dict['key_pattern']="$( \
-        koopa_print "${dict['key']}" \
-        | "${app['sed']}" 's/ //g' \
-        | "${app['sed']}" -E \
-            "s/^(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})(.{4})\
-(.{4})(.{4})(.{4})\$/\1 \2 \3 \4 \5  \6 \7 \8 \9/" \
-    )"
-    dict['string']="$("${app['apt_key']}" list 2>&1 || true)"
-    koopa_str_detect_fixed \
-        --string="${dict['string']}" \
-        --pattern="${dict['key_pattern']}"
-}
-
 koopa_debian_apt_key_prefix() {
     koopa_assert_has_no_args "$#"
     koopa_print '/usr/share/keyrings'
@@ -665,66 +645,11 @@ koopa_debian_apt_space_used_by() {
 }
 
 koopa_debian_configure_system_defaults() {
-    local -A app
-    koopa_assert_has_no_args "$#"
-    koopa_alert 'Configuring system defaults.'
-    koopa_add_to_path_end '/usr/sbin' '/sbin'
-    koopa_print_env
-    app['cat']="$(koopa_locate_cat --allow-system)"
-    app['debconf_set_selections']="$( \
-        koopa_debian_locate_debconf_set_selections \
-    )"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_get update
-    koopa_debian_apt_get full-upgrade
-    if ! koopa_is_docker
-    then
-        "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
-tzdata tzdata/Areas select America
-tzdata tzdata/Zones/America select New_York
-END
-    fi
-    koopa_debian_apt_install \
-        'bash' \
-        'ca-certificates' \
-        'coreutils' \
-        'curl' \
-        'findutils' \
-        'g++' \
-        'gcc' \
-        'git' \
-        'libc-dev' \
-        'libgmp-dev' \
-        'locales' \
-        'lsb-release' \
-        'make' \
-        'perl' \
-        'procps' \
-        'sudo' \
-        'systemd' \
-        'tzdata' \
-        'unzip'
-    app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
-    app['locale_gen']="$(koopa_debian_locate_locale_gen)"
-    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
-    app['update_locale']="$(koopa_debian_locate_update_locale)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_get autoremove
-    koopa_debian_apt_get clean
-    if ! koopa_is_docker
-    then
-        koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
-    fi
-    koopa_sudo_write_string \
-        --file='/etc/locale.gen' \
-        --string='en_US.UTF-8 UTF-8'
-    koopa_sudo "${app['locale_gen']}" --purge
-    koopa_sudo "${app['dpkg_reconfigure']}" \
-        --frontend='noninteractive' locales
-    koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
-    koopa_enable_passwordless_sudo
-    koopa_alert_success 'Configuration of system defaults was successful.'
-    return 0
+    koopa_configure_app \
+        --name='defaults' \
+        --platform='debian' \
+        --system \
+        "$@"
 }
 
 koopa_debian_debian_version() {
@@ -749,7 +674,7 @@ koopa_debian_enable_unattended_upgrades() {
     return 0
 }
 
-koopa_debian_gdebi_install() {
+koopa_debian_install_from_deb() {
     local -A app
     koopa_assert_has_args "$#"
     koopa_assert_is_admin
@@ -761,24 +686,6 @@ koopa_debian_gdebi_install() {
     fi
     koopa_assert_is_executable "${app[@]}"
     koopa_sudo "${app['gdebi']}" --non-interactive "$@"
-    return 0
-}
-
-koopa_debian_install_bcbio_nextgen_vm() {
-    koopa_install_app \
-        --name='bcbio-nextgen-vm' \
-        --platform='debian' \
-        "$@"
-}
-
-koopa_debian_install_from_deb() {
-    local -A app dict
-    koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_admin
-    app['gdebi']="$(koopa_debian_locate_gdebi)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['file']="${1:?}"
-    koopa_sudo "${app['gdebi']}" --non-interactive "${dict['file']}"
     return 0
 }
 
@@ -831,12 +738,6 @@ koopa_debian_install_system_wine() {
 koopa_debian_locate_apt_get() {
     koopa_locate_app \
         '/usr/bin/apt-get' \
-        "$@"
-}
-
-koopa_debian_locate_apt_key() {
-    koopa_locate_app \
-        '/usr/bin/apt-key' \
         "$@"
 }
 
@@ -977,13 +878,6 @@ koopa_debian_set_timezone() {
     koopa_alert "Setting local timezone to '${dict['tz']}'."
     koopa_sudo "${app['timedatectl']}" set-timezone "${dict['tz']}"
     return 0
-}
-
-koopa_debian_uninstall_bcbio_nextgen_vm() {
-    koopa_uninstall_app \
-        --name='bcbio-nextgen-vm' \
-        --platform='debian' \
-        "$@"
 }
 
 koopa_debian_uninstall_shiny_server() {

@@ -345,93 +345,27 @@ koopa_linux_bcl2fastq_indrops() {
 }
 
 koopa_linux_configure_system_lmod() {
-    local -A dict
-    koopa_assert_has_args_le "$#" 1
-    koopa_assert_is_admin
-    dict['etc_dir']='/etc/profile.d'
-    dict['prefix']="${1:-}"
-    if [[ -z "${dict['prefix']}" ]]
-    then
-        dict['prefix']="$(koopa_app_prefix 'lmod')"
-    fi
-    koopa_assert_is_dir "${dict['prefix']}"
-    dict['init_dir']="${dict['prefix']}/apps/lmod/lmod/init"
-    koopa_assert_is_dir "${dict['init_dir']}"
-    if [[ ! -d "${dict['etc_dir']}" ]]
-    then
-        koopa_mkdir --sudo "${dict['etc_dir']}"
-    fi
-    koopa_ln --sudo \
-        "${dict['init_dir']}/profile" \
-        "${dict['etc_dir']}/z00_lmod.sh"
-    koopa_ln --sudo \
-        "${dict['init_dir']}/cshrc" \
-        "${dict['etc_dir']}/z00_lmod.csh"
-    if koopa_is_installed 'fish'
-    then
-        dict['fish_etc_dir']='/etc/fish/conf.d'
-        koopa_alert "Updating Fish configuration in '${dict['fish_etc_dir']}'."
-        if [[ ! -d "${dict['fish_etc_dir']}" ]]
-        then
-            koopa_mkdir --sudo "${dict['fish_etc_dir']}"
-        fi
-        koopa_ln --sudo \
-            "${dict['init_dir']}/profile.fish" \
-            "${dict['fish_etc_dir']}/z00_lmod.fish"
-    fi
-    return 0
+    koopa_configure_app \
+        --name='lmod' \
+        --platform='linux' \
+        --system \
+        "$@"
 }
 
 koopa_linux_configure_system_rstudio_server() {
-    local -A app dict
-    local -a conf_lines
-    koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
-    app['r']="$(koopa_locate_system_r --realpath)"
-    app['rscript']="$(koopa_locate_system_rscript)"
-    app['rstudio_server']="$(koopa_linux_locate_rstudio_server)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['name']='rstudio-server'
-    koopa_alert_configure_start "${dict['name']}" "${app['rstudio_server']}"
-    dict['ld_library_path']="$( \
-        "${app['rscript']}" -e \
-            'cat(Sys.getenv("LD_LIBRARY_PATH"), sep = "\n")' \
-    )"
-    [[ -n "${dict['ld_library_path']}" ]] || return 1
-    conf_lines=()
-    if koopa_is_root
-    then
-        conf_lines+=(
-            'auth-minimum-user-id=0'
-            'auth-none=1'
-        )
-    fi
-    conf_lines+=(
-        "rsession-ld-library-path=${dict['ld_library_path']}"
-        "rsession-which-r=${app['r']}"
-    )
-    dict['conf_string']="$(koopa_print "${conf_lines[@]}")"
-    dict['conf_file']='/etc/rstudio/rserver.conf'
-    koopa_alert_info "Modifying '${dict['conf_file']}'."
-    koopa_sudo_write_string \
-        --file="${dict['conf_file']}" \
-        --string="${dict['conf_string']}"
-    koopa_alert_configure_success "${dict['name']}" "${app['rstudio_server']}"
-    return 0
+    koopa_configure_app \
+        --name='rstudio-server' \
+        --platform='linux' \
+        --system \
+        "$@"
 }
 
 koopa_linux_configure_system_sshd() {
-    local -A dict
-    koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
-    dict['file']='/etc/ssh/sshd_config.d/koopa.conf'
-    read -r -d '' "dict[string]" << END || true
-AcceptEnv KOOPA_COLOR_MODE
-END
-    koopa_sudo_write_string \
-        --file="${dict['file']}" \
-        --string="${dict['string']}"
-    return 0
+    koopa_configure_app \
+        --name='sshd' \
+        --platform='linux' \
+        --system \
+        "$@"
 }
 
 koopa_linux_delete_cache() {
@@ -496,13 +430,6 @@ koopa_linux_install_bcbio_nextgen() {
 koopa_linux_install_cloudbiolinux() {
     koopa_install_app \
         --name='cloudbiolinux' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_install_docker_credential_pass() {
-    koopa_install_app \
-        --name='docker-credential-pass' \
         --platform='linux' \
         "$@"
 }
@@ -780,13 +707,6 @@ koopa_linux_uninstall_private_bcl2fastq() {
 koopa_linux_uninstall_cloudbiolinux() {
     koopa_uninstall_app \
         --name='cloudbiolinux' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_uninstall_docker_credential_pass() {
-    koopa_uninstall_app \
-        --name='docker-credential-pass' \
         --platform='linux' \
         "$@"
 }
