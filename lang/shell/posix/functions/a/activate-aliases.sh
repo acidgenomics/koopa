@@ -54,8 +54,6 @@ _koopa_activate_aliases() {
     alias q='exit'
     alias radian='radian --no-restore --no-save --quiet'
     alias rbenv='_koopa_alias_rbenv'
-    # Add '--binary' and '--hidden' here to make rg behave like 'grep -r'.
-    alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='_koopa_alias_sha256'
     alias spacemacs='_koopa_spacemacs'
