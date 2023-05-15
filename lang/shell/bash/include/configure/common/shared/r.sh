@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider installing AcidDevTools package here automatically.
+
 main() {
     # """
     # Configure R.
