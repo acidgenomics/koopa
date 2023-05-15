@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to address this:
-# MACOSX_RPATH is not specified for the following targets
-
 main() {
     # """
     # Install woff2.
@@ -20,6 +17,8 @@ main() {
     cmake_args=(
         # CMake options --------------------------------------------------------
         # > '-DCMAKE_MACOSX_RPATH=ON'
+        "-DCMAKE_INSTALL_NAME_DIR=${dict['prefix']}/lib"
+        '-DCMAKE_BUILD_WITH_INSTALL_NAME_DIR=ON'
         # Build options --------------------------------------------------------
         '-DBUILD_SHARED_LIBS=ON'
     )
@@ -28,6 +27,9 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    koopa_mkdir \
+        "${dict['prefix']}/include" \
+        "${dict['prefix']}/lib"
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     koopa_cp \
         --target-directory="${dict['prefix']}/bin" \
