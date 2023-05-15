@@ -5067,6 +5067,14 @@
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
   },
+  "woff2": {
+    "bin": ["woff2_compress", "woff2_decompress", "woff2_info"],
+    "build_dependencies": ["brotli", "cmake", "make"],
+    "date": "2023-05-15",
+    "enabled": false,
+    "url": ["https://github.com/google/woff2/"],
+    "version": "1.0.2"
+  },
   "xcode-openmp": {
     "date": "2023-04-11",
     "platform": "macos",
