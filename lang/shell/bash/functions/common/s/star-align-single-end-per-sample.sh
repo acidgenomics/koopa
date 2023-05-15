@@ -2,6 +2,9 @@
 
 # FIXME Add support for automatic pushing to AWS S3.
 
+# NOTE Make sure our settings match GDC mRNA analysis pipeline:
+# https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/Expression_mRNA_Pipeline/
+
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
