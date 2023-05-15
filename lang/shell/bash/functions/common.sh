@@ -8757,16 +8757,10 @@ koopa_grep() {
                 grep_args+=('-q')  # --quiet
             ;;
         'rg')
-            grep_args+=(
-                '--case-sensitive'
-            )
+            grep_args+=('--case-sensitive')
             if [[ -n "${dict['file']}" ]]
             then
-                grep_args+=(
-                    '--no-config'
-                    '--no-ignore'
-                    '--one-file-system'
-                )
+                grep_args+=('--no-config' '--no-ignore' '--one-file-system')
             fi
             case "${dict['mode']}" in
                 'fixed')
