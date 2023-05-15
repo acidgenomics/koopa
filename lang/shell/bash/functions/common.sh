@@ -12847,6 +12847,12 @@ koopa_install_zlib() {
         "$@"
 }
 
+koopa_install_zopfli() {
+    koopa_install_app \
+        --name='zopfli' \
+        "$@"
+}
+
 koopa_install_zoxide() {
     koopa_install_app \
         --name='zoxide' \
@@ -25008,6 +25014,12 @@ koopa_uninstall_zip() {
 koopa_uninstall_zlib() {
     koopa_uninstall_app \
         --name='zlib' \
+        "$@"
+}
+
+koopa_uninstall_zopfli() {
+    koopa_uninstall_app \
+        --name='zopfli' \
         "$@"
 }
 

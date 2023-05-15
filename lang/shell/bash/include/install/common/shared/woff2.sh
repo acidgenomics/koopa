@@ -6,8 +6,8 @@ main() {
     # @note Updated 2023-05-15.
     #
     # @seealso
-    # - https://facebook.github.io/zstd/
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zstd.rb
+    # - https://github.com/google/woff2
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/woff2.rb
     # """
     local -A dict
     local -a cmake_args
@@ -17,6 +17,7 @@ main() {
     cmake_args=(
         # CMake options --------------------------------------------------------
         # > '-DCMAKE_MACOSX_RPATH=ON'
+        # These are needed for correct rpath linkage.
         "-DCMAKE_INSTALL_NAME_DIR=${dict['prefix']}/lib"
         '-DCMAKE_BUILD_WITH_INSTALL_NAME_DIR=ON'
         # Build options --------------------------------------------------------
@@ -27,9 +28,6 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_mkdir \
-        "${dict['prefix']}/include" \
-        "${dict['prefix']}/lib"
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     koopa_cp \
         --target-directory="${dict['prefix']}/bin" \
