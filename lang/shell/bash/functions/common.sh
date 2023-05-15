@@ -4373,6 +4373,10 @@ koopa_cmake_std_args() {
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
+    if koopa_is_macos
+    then
+        args+=('-DCMAKE_MACOSX_RPATH=ON')
+    fi
     koopa_print "${args[@]}"
     return 0
 }
@@ -12684,6 +12688,12 @@ koopa_install_wget() {
 koopa_install_which() {
     koopa_install_app \
         --name='which' \
+        "$@"
+}
+
+koopa_install_woff2() {
+    koopa_install_app \
+        --name='woff2' \
         "$@"
 }
 
@@ -24842,6 +24852,12 @@ koopa_uninstall_wget() {
 koopa_uninstall_which() {
     koopa_uninstall_app \
         --name='which' \
+        "$@"
+}
+
+koopa_uninstall_woff2() {
+    koopa_uninstall_app \
+        --name='woff2' \
         "$@"
 }
 
