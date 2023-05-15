@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't linking zlib correctly.
+#
+
 main() {
     # """
     # Install xxhash.
@@ -7,6 +10,7 @@ main() {
     #
     # @seealso
     # - https://zlib.net/pigz/
+    # - https://github.com/conda-forge/pigz-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/pigz.rb
     # """
     local -A app dict
@@ -14,6 +18,7 @@ main() {
     koopa_activate_app 'zlib' 'zopfli'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -26,6 +31,11 @@ main() {
     koopa_cd 'src'
     koopa_print_env
     "${app['make']}" \
+        --jobs="${dict['jobs']}" \
+        CC='/usr/bin/gcc' \
+        CFLAGS="${CFLAGS:-}" \
+        CPPFLAGS="${CPPFLAGS:-}" \
+        LDFLAGS="${LDFLAGS:-}" \
         PREFIX="${dict['prefix']}" \
         VERBOSE=1 \
         ZOP="${dict['zop']}"
