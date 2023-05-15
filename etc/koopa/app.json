@@ -671,9 +671,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-05-11",
+    "date": "2023-05-15",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.5"
+    "version": "2.33.6"
   },
   "cli11": {
     "aliases": {
@@ -3042,7 +3042,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-04-06",
+    "date": "2023-05-15",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3067,7 +3067,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.04.06"
+    "version": "2023.05.15"
   },
   "man-db": {
     "aliases": {
