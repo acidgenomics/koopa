@@ -12059,6 +12059,12 @@ koopa_install_picard() {
         "$@"
 }
 
+koopa_install_pigz() {
+    koopa_install_app \
+        --name='pigz' \
+        "$@"
+}
+
 koopa_install_pinentry() {
     koopa_install_app \
         --name='pinentry' \
@@ -24256,6 +24262,12 @@ koopa_uninstall_perl() {
 koopa_uninstall_picard() {
     koopa_uninstall_app \
         --name='picard' \
+        "$@"
+}
+
+koopa_uninstall_pigz() {
+    koopa_uninstall_app \
+        --name='pigz' \
         "$@"
 }
 

@@ -3723,6 +3723,14 @@
     ],
     "version": "3.0.0"
   },
+  "pigz": {
+    "bin": ["pigz", "unpigz"],
+    "build_dependencies": ["make"],
+    "date": "2023-05-15",
+    "dependencies": ["zlib", "zopfli"],
+    "url": ["https://zlib.net/pigz/"],
+    "version": "2.7"
+  },
   "pinentry": {
     "aliases": {
       "homebrew": true
