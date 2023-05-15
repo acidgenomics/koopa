@@ -3728,6 +3728,7 @@
     "build_dependencies": ["make"],
     "date": "2023-05-15",
     "dependencies": ["zlib", "zopfli"],
+    "man1": ["pigz.1", "unpigz.1"],
     "url": ["https://zlib.net/pigz/"],
     "version": "2.7"
   },
