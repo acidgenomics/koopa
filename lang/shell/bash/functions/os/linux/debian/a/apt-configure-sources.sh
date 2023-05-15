@@ -3,7 +3,7 @@
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-15.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -121,7 +121,7 @@ koopa_debian_apt_configure_sources() {
             --regex \
         | koopa_grep \
             --fixed \
-            --pattern='-security main' \
+            --pattern='security main' \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
