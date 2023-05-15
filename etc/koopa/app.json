@@ -2952,10 +2952,10 @@
     },
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-30",
+    "date": "2023-05-15",
     "prune": false,
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
-    "version": "5.4.4"
+    "version": "5.4.6"
   },
   "luajit": {
     "aliases": {
