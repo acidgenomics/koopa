@@ -4373,6 +4373,10 @@ koopa_cmake_std_args() {
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
+    if koopa_is_macos
+    then
+        args+=('-DCMAKE_MACOSX_RPATH=ON')
+    fi
     koopa_print "${args[@]}"
     return 0
 }
@@ -12055,6 +12059,12 @@ koopa_install_picard() {
         "$@"
 }
 
+koopa_install_pigz() {
+    koopa_install_app \
+        --name='pigz' \
+        "$@"
+}
+
 koopa_install_pinentry() {
     koopa_install_app \
         --name='pinentry' \
@@ -12687,6 +12697,12 @@ koopa_install_which() {
         "$@"
 }
 
+koopa_install_woff2() {
+    koopa_install_app \
+        --name='woff2' \
+        "$@"
+}
+
 koopa_install_xorg_libice() {
     koopa_install_app \
         --name='xorg-libice' \
@@ -12834,6 +12850,12 @@ koopa_install_zip() {
 koopa_install_zlib() {
     koopa_install_app \
         --name='zlib' \
+        "$@"
+}
+
+koopa_install_zopfli() {
+    koopa_install_app \
+        --name='zopfli' \
         "$@"
 }
 
@@ -24243,6 +24265,12 @@ koopa_uninstall_picard() {
         "$@"
 }
 
+koopa_uninstall_pigz() {
+    koopa_uninstall_app \
+        --name='pigz' \
+        "$@"
+}
+
 koopa_uninstall_pinentry() {
     koopa_uninstall_app \
         --name='pinentry' \
@@ -24845,6 +24873,12 @@ koopa_uninstall_which() {
         "$@"
 }
 
+koopa_uninstall_woff2() {
+    koopa_uninstall_app \
+        --name='woff2' \
+        "$@"
+}
+
 koopa_uninstall_xorg_libice() {
     koopa_uninstall_app \
         --name='xorg-libice' \
@@ -24992,6 +25026,12 @@ koopa_uninstall_zip() {
 koopa_uninstall_zlib() {
     koopa_uninstall_app \
         --name='zlib' \
+        "$@"
+}
+
+koopa_uninstall_zopfli() {
+    koopa_uninstall_app \
+        --name='zopfli' \
         "$@"
 }
 
