@@ -3,7 +3,7 @@
 koopa_cmake_std_args() {
     # """
     # Standard CMake arguments.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-15.
     #
     # Potentially useful:
     # - CMAKE_STATIC_LINKER_FLAGS
@@ -26,6 +26,10 @@ koopa_cmake_std_args() {
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
     )
+    if koopa_is_macos
+    then
+        args+=('-DCMAKE_MACOSX_RPATH=ON')
+    fi
     koopa_print "${args[@]}"
     return 0
 }
