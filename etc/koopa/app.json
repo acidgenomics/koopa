@@ -2410,10 +2410,10 @@
   "jupyterlab": {
     "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-04-27",
+    "date": "2023-05-15",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "3.6.3"
+    "version": "4.0.0"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -2952,10 +2952,10 @@
     },
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-30",
+    "date": "2023-05-15",
     "prune": false,
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
-    "version": "5.4.4"
+    "version": "5.4.6"
   },
   "luajit": {
     "aliases": {
@@ -3722,6 +3722,15 @@
       "https://github.com/broadinstitute/picard/"
     ],
     "version": "3.0.0"
+  },
+  "pigz": {
+    "bin": ["pigz", "unpigz"],
+    "build_dependencies": ["make"],
+    "date": "2023-05-15",
+    "dependencies": ["zlib", "zopfli"],
+    "man1": ["pigz.1", "unpigz.1"],
+    "url": ["https://zlib.net/pigz/"],
+    "version": "2.7"
   },
   "pinentry": {
     "aliases": {
@@ -5067,6 +5076,14 @@
     "url": ["https://ftp.gnu.org/gnu/which/"],
     "version": "2.21"
   },
+  "woff2": {
+    "bin": ["woff2_compress", "woff2_decompress", "woff2_info"],
+    "build_dependencies": ["brotli", "cmake", "make"],
+    "date": "2023-05-15",
+    "enabled": false,
+    "url": ["https://github.com/google/woff2/"],
+    "version": "1.0.2"
+  },
   "xcode-openmp": {
     "date": "2023-04-11",
     "platform": "macos",
@@ -5398,6 +5415,13 @@
     "prune": false,
     "url": ["https://www.zlib.net/"],
     "version": "1.2.13"
+  },
+  "zopfli": {
+    "bin": ["zopfli", "zopflipng"],
+    "build_dependencies": ["cmake"],
+    "date": "2023-05-15",
+    "url": ["https://github.com/google/zopfli/"],
+    "version": "1.0.3"
   },
   "zoxide": {
     "aliases": {
