@@ -392,7 +392,7 @@ koopa_debian_apt_configure_sources() {
             --regex \
         | koopa_grep \
             --fixed \
-            --pattern='-security main' \
+            --pattern='security main' \
         | "${app['head']}" -n 1 \
         | "${app['cut']}" -d ' ' -f '2' \
     )"
