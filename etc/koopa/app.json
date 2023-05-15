@@ -5407,6 +5407,13 @@
     "url": ["https://www.zlib.net/"],
     "version": "1.2.13"
   },
+  "zopfli": {
+    "bin": ["zopfli", "zopflipng"],
+    "build_dependencies": ["cmake"],
+    "date": "2023-05-15",
+    "url": ["https://github.com/google/zopfli/"],
+    "version": "1.0.3"
+  },
   "zoxide": {
     "aliases": {
       "homebrew": true
