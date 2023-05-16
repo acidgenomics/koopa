@@ -8,11 +8,12 @@ main() {
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
     # """
-    local -A app dict
-    local -a bin_names man1_names pos
+    local -A app bool dict
+    local -a bin_names man1_names pos venv_args
     local bin_name man1_name
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    bool['binary']=1
     dict['locate_python']='koopa_locate_python311'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -30,6 +31,11 @@ main() {
             '--python-version')
                 dict['py_maj_ver']="${2:?}"
                 shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--no-binary')
+                bool['binary']=0
+                shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
@@ -87,39 +93,38 @@ main() {
     )"
     dict['venv_cmd']="${dict['pkg_name']}==${dict['version']}"
     koopa_print_env
-    koopa_python_create_venv \
-        --prefix="${dict['libexec']}" \
-        --python="${app['python']}" \
-        "${dict['venv_cmd']}"
+    venv_args=(
+        "--prefix=${dict['libexec']}"
+        "--python=${app['python']}"
+    )
+    if [[ "${bool['binary']}" -eq 0 ]]
+    then
+        venv_args+=('--no-binary')
+    fi
+    venv_args+=("${dict['venv_cmd']}")
+    koopa_python_create_venv "${venv_args[@]}"
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
 ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
     koopa_assert_is_file "${dict['record_file']}"
-    if [[ -f "${dict['record_file']}" ]]
-    then
-        # Ensure we exclude any nested subdirectories in libexec bin, which is
-        # known to happen with some conda recipes (e.g. bowtie2).
-        readarray -t bin_names <<< "$( \
-            koopa_grep \
-                --file="${dict['record_file']}" \
-                --pattern='^\.\./\.\./\.\./bin/[^/]+,' \
-                --regex \
-            | "${app['cut']}" -d ',' -f '1' \
-            | "${app['cut']}" -d '/' -f '5' \
-        )"
-        readarray -t man1_names <<< "$( \
-            koopa_grep \
-                --file="${dict['record_file']}" \
-                --pattern='^\.\./\.\./\.\./share/man/man1/[^/]+,' \
-                --regex \
-            | "${app['cut']}" -d ',' -f '1' \
-            | "${app['cut']}" -d '/' -f '7' \
-        )"
-# >     else
-# >         koopa_alert_note "No record file at '${dict['record_file']}."
-# >         bin_names=("${dict['pkg_name']}")
-# >         man1_names=()
-    fi
+    # Ensure we exclude any nested subdirectories in libexec bin, which is
+    # known to happen with some conda recipes (e.g. bowtie2).
+    readarray -t bin_names <<< "$( \
+        koopa_grep \
+            --file="${dict['record_file']}" \
+            --pattern='^\.\./\.\./\.\./bin/[^/]+,' \
+            --regex \
+        | "${app['cut']}" -d ',' -f '1' \
+        | "${app['cut']}" -d '/' -f '5' \
+    )"
+    readarray -t man1_names <<< "$( \
+        koopa_grep \
+            --file="${dict['record_file']}" \
+            --pattern='^\.\./\.\./\.\./share/man/man1/[^/]+,' \
+            --regex \
+        | "${app['cut']}" -d ',' -f '1' \
+        | "${app['cut']}" -d '/' -f '7' \
+    )"
     koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"
     do

@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2023-03-23.
+    # @note Updated 2023-05-16.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
@@ -15,15 +15,17 @@ koopa_python_create_venv() {
     # @examples
     # > koopa_python_create_venv --name='pandas' 'pandas'
     # """
-    local -A app dict
-    local -a pkgs pos venv_args
+    local -A app bool dict
+    local -a pip_args pkgs pos venv_args
+    local pkg
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     app['python']=''
+    bool['binary']=1
+    bool['pip']=1
+    bool['system_site_packages']=1
     dict['name']=''
-    dict['pip']=1
     dict['prefix']=''
-    dict['system_site_packages']=1
     pos=()
     while (("$#"))
     do
@@ -52,6 +54,15 @@ koopa_python_create_venv() {
             '--python')
                 app['python']="${2:?}"
                 shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--no-binary')
+                bool['binary']=0
+                shift 1
+                ;;
+            '--without-pip')
+                bool['pip']=0
+                shift 1
                 ;;
             # Other ------------------------------------------------------------
             '-'*)
@@ -96,11 +107,11 @@ ${dict['py_maj_min_ver']}"
     koopa_sys_mkdir "${dict['prefix']}"
     unset -v PYTHONPATH
     venv_args=()
-    if [[ "${dict['pip']}" -eq 0 ]]
+    if [[ "${bool['pip']}" -eq 0 ]]
     then
         venv_args+=('--without-pip')
     fi
-    if [[ "${dict['system_site_packages']}" -eq 1 ]]
+    if [[ "${bool['system_site_packages']}" -eq 1 ]]
     then
         venv_args+=('--system-site-packages')
     fi
@@ -108,7 +119,7 @@ ${dict['py_maj_min_ver']}"
     "${app['python']}" -m venv "${venv_args[@]}"
     app['venv_python']="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
-    if [[ "${dict['pip']}" -eq 1 ]]
+    if [[ "${bool['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
             '3.11.'* | \
@@ -123,15 +134,30 @@ ${dict['py_maj_min_ver']}"
                 koopa_stop "Unsupported Python: ${dict['py_version']}."
                 ;;
         esac
-        koopa_python_pip_install \
-            --python="${app['venv_python']}" \
-            "pip==${dict['pip_version']}" \
-            "setuptools==${dict['setuptools_version']}" \
+        pip_args=(
+            "--python=${app['venv_python']}"
+            "pip==${dict['pip_version']}"
+            "setuptools==${dict['setuptools_version']}"
             "wheel==${dict['wheel_version']}"
+        )
+        koopa_python_pip_install "${pip_args[@]}"
     fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
-        koopa_python_pip_install --python="${app['venv_python']}" "${pkgs[@]}"
+        pip_args=("--python=${app['venv_python']}")
+        if [[ "${bool['binary']}" -eq 0 ]]
+        then
+            app['cut']="$(koopa_locate_cut --allow-system)"
+            koopa_assert_is_executable "${app['cut']}"
+            for pkg in "${pkgs[@]}"
+            do
+                local pkg_name
+                pkg_name="$(koopa_print "$pkg" | "${app['cut']}" -d '=' -f 1)"
+                pip_args+=("--no-binary=$pkg_name")
+            done
+        fi
+        pip_args+=("${pkgs[@]}")
+        koopa_python_pip_install "${pip_args[@]}"
     fi
     koopa_sys_set_permissions --recursive "${dict['prefix']}"
     return 0

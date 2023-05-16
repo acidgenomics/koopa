@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure that '/usr/sbin' and '/sbin' are in PATH for system config.
+
 koopa_configure_app() {
     # """
     # Configure an application (inside a subshell).
