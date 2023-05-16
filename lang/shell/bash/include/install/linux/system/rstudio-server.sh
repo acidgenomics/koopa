@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-15.
     #
     # Don't enclose values in quotes in the conf file.
     #
@@ -72,6 +72,8 @@ ${dict['file_ext']}"
             "${dict['url']}" \
     )"
     koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
+    koopa_add_to_path_end '/usr/sbin' '/sbin'
+    koopa_print_env
     koopa_download "${dict['url']}"
     "${dict['fun']}" "$(koopa_basename "${dict['url']}")"
     koopa_linux_configure_system_rstudio_server
