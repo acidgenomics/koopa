@@ -18301,10 +18301,14 @@ koopa_r_copy_files_into_etc() {
     for file in "${files[@]}"
     do
         local -A dict2
+        if [[ -L "/etc/R/${file}" ]]
+        then
+            koopa_rm --sudo "/etc/R/${file}"
+        fi
         dict2['source']="${dict['r_etc_source']}/${file}"
         dict2['target']="${dict['r_etc_target']}/${file}"
         koopa_assert_is_file "${dict2['source']}"
-        if [[ -f "${dict2['target']}" ]]
+        if [[ -L "${dict2['target']}" ]]
         then
             dict2['target']="$(koopa_realpath "${dict2['target']}")"
         fi
