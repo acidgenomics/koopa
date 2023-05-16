@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure that '/usr/sbin' and '/sbin' are in PATH for system.
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.

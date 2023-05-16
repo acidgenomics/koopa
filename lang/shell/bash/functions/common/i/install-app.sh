@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding '/usr/sbin' and '/sbin' to end of PATH automatically
+# for system installs.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
