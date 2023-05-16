@@ -3,22 +3,51 @@
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-15.
     # """
     local -A app dict
-    local -a build_deps cmake_args pos
+    local -a build_deps cmake_args cmake_std_args pos
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
     koopa_assert_is_executable "${app[@]}"
-    dict['builddir']="builddir-$(koopa_random_string)"
+    dict['bin_dir']=''
+    dict['build_dir']="build-$(koopa_random_string)"
     dict['generator']='Unix Makefiles'
+    dict['include_dir']=''
     dict['jobs']="$(koopa_cpu_count)"
+    dict['lib_dir']=''
+    dict['prefix']=''
+    cmake_std_args=()
     pos=()
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--bin-dir='*)
+                dict['bin_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-dir')
+                dict['bin_dir']="${2:?}"
+                shift 2
+                ;;
+            '--include-dir='*)
+                dict['include_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--include-dir')
+                dict['include_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-dir='*)
+                dict['lib_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-dir')
+                dict['lib_dir']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -45,7 +74,14 @@ koopa_cmake_build() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--prefix' "${dict['prefix']}"
-    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
+    cmake_std_args+=("--prefix=${dict['prefix']}")
+    [[ -n "${dict['bin_dir']}" ]] && \
+        cmake_std_args+=("--bin-dir=${dict['bin_dir']}")
+    [[ -n "${dict['include_dir']}" ]] && \
+        cmake_std_args+=("--include-dir=${dict['include_dir']}")
+    [[ -n "${dict['lib_dir']}" ]] && \
+        cmake_std_args+=("--lib-dir=${dict['lib_dir']}")
+    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${cmake_std_args[@]}")"
     [[ "$#" -gt 0 ]] && cmake_args+=("$@")
     case "${dict['generator']}" in
         'Ninja')
@@ -62,15 +98,15 @@ koopa_cmake_build() {
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        '-B' "${dict['builddir']}" \
+        '-B' "${dict['build_dir']}" \
         '-G' "${dict['generator']}" \
         '-S' '.' \
         "${cmake_args[@]}"
     "${app['cmake']}" \
-        --build "${dict['builddir']}" \
+        --build "${dict['build_dir']}" \
         --parallel "${dict['jobs']}"
     "${app['cmake']}" \
-        --install "${dict['builddir']}" \
+        --install "${dict['build_dir']}" \
         --prefix "${dict['prefix']}"
     return 0
 }

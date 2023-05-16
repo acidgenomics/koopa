@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-16.
     #
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     #
@@ -15,8 +15,7 @@ koopa_python_pip_install() {
     # - https://stackoverflow.com/a/43560499/3911732
     # """
     local -A app dict
-    local -a dl_args pkgs pos
-    local pkg
+    local -a dl_args pos
     koopa_assert_has_args "$#"
     dict['prefix']=''
     pos=()
@@ -24,6 +23,14 @@ koopa_python_pip_install() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--no-binary='*)
+                pos=("$1")
+                shift 1
+                ;;
+            '--no-binary')
+                pos=("$1" "${2:?}")
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -55,7 +62,6 @@ koopa_python_pip_install() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_executable "${app[@]}"
-    pkgs=("$@")
     # See also rules defined in '~/.config/pip/pip.conf'.
     install_args=(
         # Can enable this for more verbose logging.
@@ -78,27 +84,10 @@ koopa_python_pip_install() {
         )
         dl_args+=('Target' "${dict['prefix']}")
     fi
-    # Disable binary wheels for some packages.
-    for pkg in "${pkgs[@]}"
-    do
-        case "$pkg" in
-            'pytaglib' | \
-            'pytaglib=='*)
-                local pkg_name
-                app['cut']="$(koopa_locate_cut --allow-system)"
-                koopa_assert_is_executable "${app['cut']}"
-                pkg_name="$( \
-                    koopa_print "$pkg" \
-                    | "${app['cut']}" -d '=' -f 1 \
-                )"
-                install_args+=('--no-binary' "$pkg_name")
-                ;;
-        esac
-    done
-    install_args+=("${pkgs[@]}")
+    install_args+=("$@")
     dl_args=(
         'python' "${app['python']}"
-        'pip install' "${install_args[*]}"
+        'pip install args' "${install_args[*]}"
     )
     koopa_dl "${dl_args[@]}"
     # > unset -v PYTHONPATH

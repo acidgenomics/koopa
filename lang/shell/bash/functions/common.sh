@@ -4289,18 +4289,47 @@ koopa_clone() {
 
 koopa_cmake_build() {
     local -A app dict
-    local -a build_deps cmake_args pos
+    local -a build_deps cmake_args cmake_std_args pos
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
     koopa_assert_is_executable "${app[@]}"
-    dict['builddir']="builddir-$(koopa_random_string)"
+    dict['bin_dir']=''
+    dict['build_dir']="build-$(koopa_random_string)"
     dict['generator']='Unix Makefiles'
+    dict['include_dir']=''
     dict['jobs']="$(koopa_cpu_count)"
+    dict['lib_dir']=''
+    dict['prefix']=''
+    cmake_std_args=()
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--bin-dir='*)
+                dict['bin_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-dir')
+                dict['bin_dir']="${2:?}"
+                shift 2
+                ;;
+            '--include-dir='*)
+                dict['include_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--include-dir')
+                dict['include_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-dir='*)
+                dict['lib_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-dir')
+                dict['lib_dir']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -4324,7 +4353,14 @@ koopa_cmake_build() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--prefix' "${dict['prefix']}"
-    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
+    cmake_std_args+=("--prefix=${dict['prefix']}")
+    [[ -n "${dict['bin_dir']}" ]] && \
+        cmake_std_args+=("--bin-dir=${dict['bin_dir']}")
+    [[ -n "${dict['include_dir']}" ]] && \
+        cmake_std_args+=("--include-dir=${dict['include_dir']}")
+    [[ -n "${dict['lib_dir']}" ]] && \
+        cmake_std_args+=("--lib-dir=${dict['lib_dir']}")
+    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${cmake_std_args[@]}")"
     [[ "$#" -gt 0 ]] && cmake_args+=("$@")
     case "${dict['generator']}" in
         'Ninja')
@@ -4341,15 +4377,15 @@ koopa_cmake_build() {
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        '-B' "${dict['builddir']}" \
+        '-B' "${dict['build_dir']}" \
         '-G' "${dict['generator']}" \
         '-S' '.' \
         "${cmake_args[@]}"
     "${app['cmake']}" \
-        --build "${dict['builddir']}" \
+        --build "${dict['build_dir']}" \
         --parallel "${dict['jobs']}"
     "${app['cmake']}" \
-        --install "${dict['builddir']}" \
+        --install "${dict['build_dir']}" \
         --prefix "${dict['prefix']}"
     return 0
 }
@@ -4357,17 +4393,79 @@ koopa_cmake_build() {
 koopa_cmake_std_args() {
     local -A dict
     local -a args
-    koopa_assert_has_args_eq "$#" 1
-    dict['prefix']="${1:?}"
+    koopa_assert_has_args "$#"
+    dict['bin_dir']=''
+    dict['include_dir']=''
+    dict['lib_dir']=''
+    dict['prefix']=''
+    dict['rpath']=''
+    while (("$#"))
+    do
+        case "$1" in
+            '--bin-dir='*)
+                dict['bin_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-dir')
+                dict['bin_dir']="${2:?}"
+                shift 2
+                ;;
+            '--include-dir='*)
+                dict['include_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--include-dir')
+                dict['include_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-dir='*)
+                dict['lib_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-dir')
+                dict['lib_dir']="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '--rpath='*)
+                dict['rpath']="${1#*=}"
+                shift 1
+                ;;
+            '--rpath')
+                dict['rpath']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
+    [[ -z "${dict['bin_dir']}" ]] && \
+        dict['bin_dir']="${dict['prefix']}/bin"
+    [[ -z "${dict['include_dir']}" ]] && \
+        dict['include_dir']="${dict['prefix']}/include"
+    [[ -z "${dict['lib_dir']}" ]] && \
+        dict['lib_dir']="${dict['prefix']}/lib"
+    [[ -z "${dict['rpath']}" ]] && \
+        dict['rpath']="${dict['prefix']}/lib"
     args=(
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_INCLUDEDIR=${dict['prefix']}/include"
-        "-DCMAKE_INSTALL_LIBDIR=${dict['prefix']}/lib"
+        "-DCMAKE_INSTALL_BINDIR=${dict['bin_dir']}"
+        "-DCMAKE_INSTALL_INCLUDEDIR=${dict['include_dir']}"
+        "-DCMAKE_INSTALL_LIBDIR=${dict['lib_dir']}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_INSTALL_RPATH=${dict['rpath']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
@@ -4375,7 +4473,13 @@ koopa_cmake_std_args() {
     )
     if koopa_is_macos
     then
-        args+=('-DCMAKE_MACOSX_RPATH=ON')
+        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        koopa_assert_is_dir "${dict['sdk_prefix']}"
+        dict['sdk_prefix']="$(koopa_realpath "${dict['sdk_prefix']}")"
+        args+=(
+            '-DCMAKE_MACOSX_RPATH=ON'
+            "-DCMAKE_OSX_SYSROOT=${dict['sdk_prefix']}"
+        )
     fi
     koopa_print "${args[@]}"
     return 0
@@ -8757,16 +8861,10 @@ koopa_grep() {
                 grep_args+=('-q')  # --quiet
             ;;
         'rg')
-            grep_args+=(
-                '--case-sensitive'
-            )
+            grep_args+=('--no-config' '--case-sensitive')
             if [[ -n "${dict['file']}" ]]
             then
-                grep_args+=(
-                    '--no-config'
-                    '--no-ignore'
-                    '--one-file-system'
-                )
+                grep_args+=('--no-ignore' '--one-file-system')
             fi
             case "${dict['mode']}" in
                 'fixed')
@@ -17110,15 +17208,17 @@ koopa_python_activate_venv() {
 }
 
 koopa_python_create_venv() {
-    local -A app dict
-    local -a pkgs pos venv_args
+    local -A app bool dict
+    local -a pip_args pkgs pos venv_args
+    local pkg
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     app['python']=''
+    bool['binary']=1
+    bool['pip']=1
+    bool['system_site_packages']=1
     dict['name']=''
-    dict['pip']=1
     dict['prefix']=''
-    dict['system_site_packages']=1
     pos=()
     while (("$#"))
     do
@@ -17146,6 +17246,14 @@ koopa_python_create_venv() {
             '--python')
                 app['python']="${2:?}"
                 shift 2
+                ;;
+            '--no-binary')
+                bool['binary']=0
+                shift 1
+                ;;
+            '--without-pip')
+                bool['pip']=0
+                shift 1
                 ;;
             '-'*)
                 koopa_invalid_arg "$1"
@@ -17189,11 +17297,11 @@ ${dict['py_maj_min_ver']}"
     koopa_sys_mkdir "${dict['prefix']}"
     unset -v PYTHONPATH
     venv_args=()
-    if [[ "${dict['pip']}" -eq 0 ]]
+    if [[ "${bool['pip']}" -eq 0 ]]
     then
         venv_args+=('--without-pip')
     fi
-    if [[ "${dict['system_site_packages']}" -eq 1 ]]
+    if [[ "${bool['system_site_packages']}" -eq 1 ]]
     then
         venv_args+=('--system-site-packages')
     fi
@@ -17201,29 +17309,44 @@ ${dict['py_maj_min_ver']}"
     "${app['python']}" -m venv "${venv_args[@]}"
     app['venv_python']="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
-    if [[ "${dict['pip']}" -eq 1 ]]
+    if [[ "${bool['pip']}" -eq 1 ]]
     then
         case "${dict['py_version']}" in
             '3.11.'* | \
             '3.10.'* | \
             '3.9.'*)
-                dict['pip_version']='23.0.1'
-                dict['setuptools_version']='67.6.0'
+                dict['pip_version']='23.1.2'
+                dict['setuptools_version']='67.7.2'
                 dict['wheel_version']='0.40.0'
                 ;;
             *)
                 koopa_stop "Unsupported Python: ${dict['py_version']}."
                 ;;
         esac
-        koopa_python_pip_install \
-            --python="${app['venv_python']}" \
-            "pip==${dict['pip_version']}" \
-            "setuptools==${dict['setuptools_version']}" \
+        pip_args=(
+            "--python=${app['venv_python']}"
+            "pip==${dict['pip_version']}"
+            "setuptools==${dict['setuptools_version']}"
             "wheel==${dict['wheel_version']}"
+        )
+        koopa_python_pip_install "${pip_args[@]}"
     fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
-        koopa_python_pip_install --python="${app['venv_python']}" "${pkgs[@]}"
+        pip_args=("--python=${app['venv_python']}")
+        if [[ "${bool['binary']}" -eq 0 ]]
+        then
+            app['cut']="$(koopa_locate_cut --allow-system)"
+            koopa_assert_is_executable "${app['cut']}"
+            for pkg in "${pkgs[@]}"
+            do
+                local pkg_name
+                pkg_name="$(koopa_print "$pkg" | "${app['cut']}" -d '=' -f 1)"
+                pip_args+=("--no-binary=$pkg_name")
+            done
+        fi
+        pip_args+=("${pkgs[@]}")
+        koopa_python_pip_install "${pip_args[@]}"
     fi
     koopa_sys_set_permissions --recursive "${dict['prefix']}"
     return 0
@@ -17243,14 +17366,21 @@ koopa_python_deactivate_venv() {
 
 koopa_python_pip_install() {
     local -A app dict
-    local -a dl_args pkgs pos
-    local pkg
+    local -a dl_args pos
     koopa_assert_has_args "$#"
     dict['prefix']=''
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--no-binary='*)
+                pos=("$1")
+                shift 1
+                ;;
+            '--no-binary')
+                pos=("$1" "${2:?}")
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -17281,7 +17411,6 @@ koopa_python_pip_install() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_executable "${app[@]}"
-    pkgs=("$@")
     install_args=(
         '--default-timeout=300'
         '--disable-pip-version-check'
@@ -17298,26 +17427,10 @@ koopa_python_pip_install() {
         )
         dl_args+=('Target' "${dict['prefix']}")
     fi
-    for pkg in "${pkgs[@]}"
-    do
-        case "$pkg" in
-            'pytaglib' | \
-            'pytaglib=='*)
-                local pkg_name
-                app['cut']="$(koopa_locate_cut --allow-system)"
-                koopa_assert_is_executable "${app['cut']}"
-                pkg_name="$( \
-                    koopa_print "$pkg" \
-                    | "${app['cut']}" -d '=' -f 1 \
-                )"
-                install_args+=('--no-binary' "$pkg_name")
-                ;;
-        esac
-    done
-    install_args+=("${pkgs[@]}")
+    install_args+=("$@")
     dl_args=(
         'python' "${app['python']}"
-        'pip install' "${install_args[*]}"
+        'pip install args' "${install_args[*]}"
     )
     koopa_dl "${dl_args[@]}"
     export PIP_REQUIRE_VIRTUALENV='false'
@@ -18203,10 +18316,14 @@ koopa_r_copy_files_into_etc() {
     for file in "${files[@]}"
     do
         local -A dict2
+        if [[ -L "/etc/R/${file}" ]]
+        then
+            koopa_rm --sudo "/etc/R/${file}"
+        fi
         dict2['source']="${dict['r_etc_source']}/${file}"
         dict2['target']="${dict['r_etc_target']}/${file}"
         koopa_assert_is_file "${dict2['source']}"
-        if [[ -f "${dict2['target']}" ]]
+        if [[ -L "${dict2['target']}" ]]
         then
             dict2['target']="$(koopa_realpath "${dict2['target']}")"
         fi
