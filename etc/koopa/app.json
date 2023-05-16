@@ -3471,6 +3471,7 @@
     "build_dependencies": ["git", "pkg-config", "rust"],
     "date": "2023-04-26",
     "dependencies": ["openssl3"],
+    "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
     "version": "0.79.0"
   },
