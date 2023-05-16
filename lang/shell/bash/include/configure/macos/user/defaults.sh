@@ -1371,9 +1371,21 @@ WebKit2AllowsInlineMediaPlayback" \
         'PromptOnQuit' \
         -bool false
     koopa_h2 'BBEdit'
-    # https://www.barebones.com/support/bbedit/ExpertPreferences.html
+    # See also:
+    # - https://www.barebones.com/support/bbedit/ExpertPreferences.html
+    # - https://www.barebones.com/support/bbedit/zshenv.html
+    # - https://www.barebones.com/support/bbedit/lsp-notes.html
     "${app['defaults']}" write \
-        'com.barebones.bbedit DisableCursorBlink' \
+        'com.barebones.bbedit' \
+        'DisableCursorBlink' \
+        -bool true
+    "${app['defaults']}" write \
+        'com.barebones.bbedit' \
+        'UseFlakeForPythonSyntaxChecking' \
+        -bool false
+    "${app['defaults']}" write \
+        'com.barebones.bbedit' \
+        'WarnMalformedUTF8' \
         -bool true
     koopa_h2 'Final steps'
     # This step is CPU intensive and can cause the fans to kick on for old
