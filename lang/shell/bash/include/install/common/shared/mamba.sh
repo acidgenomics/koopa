@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using a cmake dict.
+
+# FIXME We seem to be seeing some reproc linkage weirdness here:
+# -I/opt/koopa/app/reproc/14.2.4//opt/koopa/app/reproc/14.2.4/include
+
 # NOTE Currently hitting ninja-related build error on Ubuntu 20.
 # https://github.com/mamba-org/mamba/issues/2410
-
-# FIXME Rework using a cmake dict.
 
 main() {
     # """
@@ -20,6 +23,8 @@ main() {
     # - https://man.archlinux.org/man/extra/cmake/cmake-env-variables.7.en
     # - https://github.com/conda-forge/mamba-feedstock/blob/main/
     #     recipe/build_mamba.sh
+    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
+    #     micromamba.rb
     # - https://github.com/Homebrew/brew/blob/3.6.14/Library/
     #     Homebrew/formula.rb#L1539
     # """
