@@ -4289,18 +4289,47 @@ koopa_clone() {
 
 koopa_cmake_build() {
     local -A app dict
-    local -a build_deps cmake_args pos
+    local -a build_deps cmake_args cmake_std_args pos
     koopa_assert_has_args "$#"
     build_deps=('cmake')
     app['cmake']="$(koopa_locate_cmake)"
     koopa_assert_is_executable "${app[@]}"
-    dict['builddir']="builddir-$(koopa_random_string)"
+    dict['bin_dir']=''
+    dict['build_dir']="build-$(koopa_random_string)"
     dict['generator']='Unix Makefiles'
+    dict['include_dir']=''
     dict['jobs']="$(koopa_cpu_count)"
+    dict['lib_dir']=''
+    dict['prefix']=''
+    cmake_std_args=()
     pos=()
     while (("$#"))
     do
         case "$1" in
+            '--bin-dir='*)
+                dict['bin_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-dir')
+                dict['bin_dir']="${2:?}"
+                shift 2
+                ;;
+            '--include-dir='*)
+                dict['include_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--include-dir')
+                dict['include_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-dir='*)
+                dict['lib_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-dir')
+                dict['lib_dir']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -4324,7 +4353,14 @@ koopa_cmake_build() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set '--prefix' "${dict['prefix']}"
-    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
+    cmake_std_args+=("--prefix=${dict['prefix']}")
+    [[ -n "${dict['bin_dir']}" ]] && \
+        cmake_std_args+=("--bin-dir=${dict['bin_dir']}")
+    [[ -n "${dict['include_dir']}" ]] && \
+        cmake_std_args+=("--include-dir=${dict['include_dir']}")
+    [[ -n "${dict['lib_dir']}" ]] && \
+        cmake_std_args+=("--lib-dir=${dict['lib_dir']}")
+    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${cmake_std_args[@]}")"
     [[ "$#" -gt 0 ]] && cmake_args+=("$@")
     case "${dict['generator']}" in
         'Ninja')
@@ -4341,15 +4377,15 @@ koopa_cmake_build() {
     koopa_print_env
     koopa_dl 'CMake args' "${cmake_args[*]}"
     "${app['cmake']}" -LH \
-        '-B' "${dict['builddir']}" \
+        '-B' "${dict['build_dir']}" \
         '-G' "${dict['generator']}" \
         '-S' '.' \
         "${cmake_args[@]}"
     "${app['cmake']}" \
-        --build "${dict['builddir']}" \
+        --build "${dict['build_dir']}" \
         --parallel "${dict['jobs']}"
     "${app['cmake']}" \
-        --install "${dict['builddir']}" \
+        --install "${dict['build_dir']}" \
         --prefix "${dict['prefix']}"
     return 0
 }
@@ -4357,17 +4393,79 @@ koopa_cmake_build() {
 koopa_cmake_std_args() {
     local -A dict
     local -a args
-    koopa_assert_has_args_eq "$#" 1
-    dict['prefix']="${1:?}"
+    koopa_assert_has_args "$#"
+    dict['bin_dir']=''
+    dict['include_dir']=''
+    dict['lib_dir']=''
+    dict['prefix']=''
+    dict['rpath']=''
+    while (("$#"))
+    do
+        case "$1" in
+            '--bin-dir='*)
+                dict['bin_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-dir')
+                dict['bin_dir']="${2:?}"
+                shift 2
+                ;;
+            '--include-dir='*)
+                dict['include_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--include-dir')
+                dict['include_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-dir='*)
+                dict['lib_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-dir')
+                dict['lib_dir']="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '--rpath='*)
+                dict['rpath']="${1#*=}"
+                shift 1
+                ;;
+            '--rpath')
+                dict['rpath']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
+    [[ -z "${dict['bin_dir']}" ]] && \
+        dict['bin_dir']="${dict['prefix']}/bin"
+    [[ -z "${dict['include_dir']}" ]] && \
+        dict['include_dir']="${dict['prefix']}/include"
+    [[ -z "${dict['lib_dir']}" ]] && \
+        dict['lib_dir']="${dict['prefix']}/lib"
+    [[ -z "${dict['rpath']}" ]] && \
+        dict['rpath']="${dict['prefix']}/lib"
     args=(
         '-DCMAKE_BUILD_TYPE=Release'
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INSTALL_INCLUDEDIR=${dict['prefix']}/include"
-        "-DCMAKE_INSTALL_LIBDIR=${dict['prefix']}/lib"
+        "-DCMAKE_INSTALL_BINDIR=${dict['bin_dir']}"
+        "-DCMAKE_INSTALL_INCLUDEDIR=${dict['include_dir']}"
+        "-DCMAKE_INSTALL_LIBDIR=${dict['lib_dir']}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
+        "-DCMAKE_INSTALL_RPATH=${dict['rpath']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
@@ -4375,7 +4473,13 @@ koopa_cmake_std_args() {
     )
     if koopa_is_macos
     then
-        args+=('-DCMAKE_MACOSX_RPATH=ON')
+        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        koopa_assert_is_dir "${dict['sdk_prefix']}"
+        dict['sdk_prefix']="$(koopa_realpath "${dict['sdk_prefix']}")"
+        args+=(
+            '-DCMAKE_MACOSX_RPATH=ON'
+            "-DCMAKE_OSX_SYSROOT=${dict['sdk_prefix']}"
+        )
     fi
     koopa_print "${args[@]}"
     return 0

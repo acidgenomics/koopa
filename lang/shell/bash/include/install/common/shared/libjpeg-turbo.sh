@@ -6,7 +6,7 @@
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-15.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -28,6 +28,8 @@ ${dict['version']}/libjpeg-turbo-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }
