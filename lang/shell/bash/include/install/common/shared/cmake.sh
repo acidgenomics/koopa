@@ -3,7 +3,7 @@
 main() {
     # """
     # Install CMake.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-15.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
@@ -22,7 +22,9 @@ main() {
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    readarray -t cmake_args <<< "$(koopa_cmake_std_args "${dict['prefix']}")"
+    readarray -t cmake_args <<< "$( \
+        koopa_cmake_std_args --prefix="${dict['prefix']}" \
+    )"
     cmake_args+=("-DOPENSSL_ROOT_DIR=${dict['openssl']}")
     bootstrap_args=(
         '--no-system-libs'
