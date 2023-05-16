@@ -3537,7 +3537,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-04-26",
+    "date": "2023-05-16",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3545,7 +3545,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "openblas": {
     "aliases": {
