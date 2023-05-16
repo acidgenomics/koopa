@@ -40,12 +40,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-05-01",
+    "date": "2023-05-16",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.6.0"
+    "version": "2.6.1"
   },
   "apache-spark": {
     "aliases": {
