@@ -2955,6 +2955,7 @@
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-15",
+    "enabled": false,
     "prune": false,
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
     "version": "5.4.6"
@@ -2979,6 +2980,7 @@
     "build_dependencies": ["make", "unzip"],
     "date": "2023-02-08",
     "dependencies": ["lua"],
+    "enabled": false,
     "prune": false,
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.2"
