@@ -1670,13 +1670,13 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-02-08",
+    "date": "2023-05-16",
     "dependencies": ["python3.11"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.3.1.1"
+    "version": "3.4.0"
   },
   "glib": {
     "aliases": {
