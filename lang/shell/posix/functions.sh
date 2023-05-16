@@ -91,7 +91,6 @@ _koopa_activate_aliases() {
     alias q='exit'
     alias radian='radian --no-restore --no-save --quiet'
     alias rbenv='_koopa_alias_rbenv'
-    alias rg='rg --case-sensitive --no-ignore'
     alias ronn='ronn --roff'
     alias sha256='_koopa_alias_sha256'
     alias spacemacs='_koopa_spacemacs'
@@ -763,6 +762,18 @@ _koopa_activate_rbenv() {
         __kvar_nounset \
         __kvar_prefix \
         __kvar_rbenv
+    return 0
+}
+
+_koopa_activate_ripgrep() {
+    [ -x "$(_koopa_bin_prefix)/rg" ] || return 0
+    __kvar_config_file="$(_koopa_xdg_config_home)/ripgrep/config"
+    if [ -f "$__kvar_config_file" ]
+    then
+        RIPGREP_CONFIG_PATH="$__kvar_config_file"
+        export RIPGREP_CONFIG_PATH
+    fi
+    unset -v __kvar_config_file
     return 0
 }
 

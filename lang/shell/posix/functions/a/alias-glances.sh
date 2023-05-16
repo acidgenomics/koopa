@@ -5,6 +5,9 @@ _koopa_alias_glances() {
     # glances alias.
     # @note Updated 2023-03-11.
     #
+    # The '--theme-white' setting only works when the background is exactly
+    # white. Otherwise, need to use '9' hotkey.
+    #
     # @seealso
     # - https://github.com/nicolargo/glances/issues/976
     # """

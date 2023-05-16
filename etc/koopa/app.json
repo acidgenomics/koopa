@@ -671,9 +671,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-05-11",
+    "date": "2023-05-15",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.5"
+    "version": "2.33.6"
   },
   "cli11": {
     "aliases": {
@@ -1100,9 +1100,9 @@
     "version": "042fe0c43831c8575abfdec4196ebd7305fa16ac"
   },
   "dotfiles": {
-    "date": "2023-05-14",
+    "date": "2023-05-15",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "10d7b4b38ccfb52d03ad83b21d252e4c6e3bcab1"
+    "version": "cd7f0b9fd60ae87be6fa75e59cd105d57d13b52c"
   },
   "du-dust": {
     "aliases": {
@@ -1670,8 +1670,10 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-02-08",
+    "date": "2023-05-16",
     "dependencies": ["python3.11"],
+    "notes": ["Seeing build weirdness with 3.4.0 currently."],
+    "outdated": true,
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
@@ -3042,7 +3044,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-04-06",
+    "date": "2023-05-15",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3067,7 +3069,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.04.06"
+    "version": "2023.05.15"
   },
   "man-db": {
     "aliases": {
@@ -3471,6 +3473,7 @@
     "build_dependencies": ["git", "pkg-config", "rust"],
     "date": "2023-04-26",
     "dependencies": ["openssl3"],
+    "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
     "version": "0.79.0"
   },

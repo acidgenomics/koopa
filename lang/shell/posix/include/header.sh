@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-05-15.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -93,6 +93,7 @@ __koopa_activate_koopa() {
     _koopa_activate_gcc_colors || return 1
     _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1
+    _koopa_activate_ripgrep || return 1
     _koopa_activate_secrets || return 1
     _koopa_activate_ssh_key || return 1
     _koopa_activate_tealdeer || return 1
