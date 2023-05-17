@@ -3,7 +3,7 @@
 main() {
     # """
     # Install yaml-cpp.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-17.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/yaml-cpp.rb
@@ -19,9 +19,14 @@ yaml-cpp-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     cmake_args=(
+        # Build options --------------------------------------------------------
         '-DYAML_BUILD_SHARED_LIBS=ON'
         '-DYAML_CPP_BUILD_TESTS=OFF'
     )
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --include-dir='include' \
+        --lib-dir='lib' \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }

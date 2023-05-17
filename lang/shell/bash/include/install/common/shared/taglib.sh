@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TagLib.
-    # @note Updated 2023-03-31.
+    # @note Updated 2023-05-17.
     #
     # @seealso
     # - https://stackoverflow.com/questions/29200461
@@ -30,6 +30,7 @@ main() {
         # Build options --------------------------------------------------------
         '-DBUILD_SHARED_LIBS=ON'
         '-DBUILD_TESTS=OFF'
+        '-DNO_ITUNES_HACKS=ON'
         '-DWITH_ZLIB=ON'
         # Dependency paths -----------------------------------------------------
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
