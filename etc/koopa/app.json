@@ -3274,6 +3274,7 @@
     "date": "2023-05-17",
     "dependencies": ["bison", "flex", "hdf5", "python3.11", "temurin"],
     "large": true,
+    "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
     "version": "3.0.5"
   },
