@@ -37,7 +37,6 @@ main() {
         'libxml2'
         'ncbi-vdb'
         'python3.11'
-        'sqlite'
     )
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
@@ -45,7 +44,6 @@ main() {
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
-    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
     dict['vdb']="$(koopa_app_prefix 'ncbi-vdb')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
@@ -54,22 +52,17 @@ main() {
     cmake['libxml2_libraries']="${dict['libxml2']}/lib/\
 libxml2.${dict['shared_ext']}"
     cmake['python3_executable']="${app['python']}"
-    cmake['sqlite3_include_dir']="${dict['sqlite']}/include"
-    cmake['sqlite3_library']="${dict['sqlite']}/lib/\
-libsqlite3.${dict['shared_ext']}"
     cmake['vdb_bindir']="${dict['vdb']}/lib"
     cmake['vdb_incdir']="${dict['vdb']}/include"
     cmake['vdb_libdir']="${dict['vdb']}/lib"
     koopa_assert_is_dir \
         "${cmake['libxml2_include_dir']}" \
-        "${cmake['sqlite3_include_dir']}" \
         "${cmake['vdb_bindir']}" \
         "${cmake['vdb_incdir']}" \
         "${cmake['vdb_libdir']}"
     koopa_assert_is_file \
         "${cmake['libxml2_libraries']}" \
-        "${cmake['python3_executable']}" \
-        "${cmake['sqlite3_library']}"
+        "${cmake['python3_executable']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DNO_JAVA=ON'
@@ -80,9 +73,6 @@ libsqlite3.${dict['shared_ext']}"
         "-DVDB_BINDIR=${cmake['vdb_bindir']}"
         "-DVDB_INCDIR=${cmake['vdb_incdir']}"
         "-DVDB_LIBDIR=${cmake['vdb_libdir']}"
-        # FIXME Does this help building?
-        "-DSQLite3_INCLUDE_DIR=${cmake['sqlite3_include_dir']}"
-        "-DSQLite3_LIBRARY=${cmake['sqlite3_library']}"
     )
     dict['url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
 ${dict['version']}.tar.gz"
