@@ -1078,9 +1078,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-03-31",
+    "date": "2023-05-17",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.46.0"
+    "version": "0.47.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -2909,7 +2909,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-05-03",
+    "date": "2023-05-17",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -2924,7 +2924,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.3"
+    "version": "16.0.4"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3473,11 +3473,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-04-26",
+    "date": "2023-05-17",
     "dependencies": ["openssl3"],
     "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.79.0"
+    "version": "0.80.0"
   },
   "oniguruma": {
     "aliases": {
