@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure everything goes into lib, not lib64.
+
 main() {
     # """
     # Install NCBI VDB.
@@ -28,7 +30,7 @@ main() {
     CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
     export CFLAGS
     cmake_args=(
-        '-DLIBS_ONLY=OFF'
+        '-DLIBS_ONLY=ON'
         "-DPython3_EXECUTABLE=${app['python']}"
     )
     dict['url']="https://github.com/ncbi/ncbi-vdb/archive/refs/tags/\
@@ -64,6 +66,12 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'libs/kfg/install.sh'
     fi
+    koopa_mkdir "${dict['prefix']}"
+    (
+        koopa_cd "${dict['prefix']}"
+        koopa_mkdir 'lib'
+        koopa_ln 'lib' 'lib64'
+    )
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
