@@ -3260,22 +3260,22 @@
     },
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["cmake"],
-    "date": "2023-04-03",
+    "date": "2023-05-17",
     "dependencies": ["bison", "flex", "hdf5", "ncbi-vdb", "python3.11"],
     "large": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.3"
+    "version": "3.0.5"
   },
   "ncbi-vdb": {
     "aliases": {
       "bioconda": "ncbi-vdb"
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-04-03",
+    "date": "2023-05-17",
     "dependencies": ["bison", "flex", "hdf5", "python3.11", "temurin"],
     "large": true,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.0.2"
+    "version": "3.0.5"
   },
   "ncurses": {
     "aliases": {
