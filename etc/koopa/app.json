@@ -1670,7 +1670,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-05-16",
+    "date": "2023-05-17",
     "dependencies": ["python3.11"],
     "notes": ["Seeing build weirdness with 3.4.0 currently."],
     "outdated": true,
@@ -1678,7 +1678,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.3.1.1"
+    "version": "3.4.0.1"
   },
   "glib": {
     "aliases": {
