@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using a cmake dict.
+# FIXME Now hitting an error with 3.0.5:
+# gmake[1]: *** [CMakeFiles/Makefile2:2045: libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all] Error 2
 
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-04-12.
+    # @note Updated 2023-05-17.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -24,7 +25,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/sratoolkit.rb
     # """
-    local -A app dict
+    local -A app cmake dict
     local -a deps cmake_args
     deps=(
         'bison'
@@ -44,16 +45,31 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
     export CFLAGS
+    cmake['libxml2_include_dir']="${dict['libxml2']}/include"
+    cmake['libxml2_libraries']="${dict['libxml2']}/lib/\
+libxml2.${dict['shared_ext']}"
+    cmake['python3_executable']="${app['python']}"
+    cmake['vdb_bindir']="${dict['vdb']}/lib"
+    cmake['vdb_incdir']="${dict['vdb']}/include"
+    cmake['vdb_libdir']="${dict['vdb']}/lib"
+    koopa_assert_is_dir \
+        "${cmake['libxml2_include_dir']}" \
+        "${cmake['vdb_bindir']}" \
+        "${cmake['vdb_incdir']}" \
+        "${cmake['vdb_libdir']}"
+    koopa_assert_is_file \
+        "${cmake['libxml2_libraries']}" \
+        "${cmake['python3_executable']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DNO_JAVA=ON'
         # Dependency paths -----------------------------------------------------
-        "-DLIBXML2_INCLUDE_DIR=${dict['libxml2']}/include"
-        "-DLIBXML2_LIBRARIES=${dict['libxml2']}/lib/libxml2.${dict['shared_ext']}"
-        "-DPython3_EXECUTABLE=${app['python']}"
-        "-DVDB_BINDIR=${dict['vdb']}/lib"
-        "-DVDB_INCDIR=${dict['vdb']}/include"
-        "-DVDB_LIBDIR=${dict['vdb']}/lib"
+        "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
+        "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"
+        "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
+        "-DVDB_BINDIR=${cmake['vdb_bindir']}"
+        "-DVDB_INCDIR=${cmake['vdb_incdir']}"
+        "-DVDB_LIBDIR=${cmake['vdb_libdir']}"
     )
     dict['url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
 ${dict['version']}.tar.gz"
