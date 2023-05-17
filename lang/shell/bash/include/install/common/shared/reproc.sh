@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to fix pkgconfig here.
-# FIXME We seem to be seeing some reproc linkage weirdness here:
-# -I/opt/koopa/app/reproc/14.2.4//opt/koopa/app/reproc/14.2.4/include
-
 main() {
     # """
     # Install reproc.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-17.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/reproc.rb
@@ -32,8 +28,5 @@ v${dict['version']}.tar.gz"
         --lib-dir='lib' \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
-    # FIXME Do we need this step from homebrew recipe?
-    # lib.install "build/reproc/lib/libreproc.a", "build/reproc++/lib/libreproc++.a"
-    # FIXME The pkgconfig paths are incorrect...
     return 0
 }
