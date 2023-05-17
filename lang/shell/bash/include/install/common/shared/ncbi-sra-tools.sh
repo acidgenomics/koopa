@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Now hitting an error with 3.0.5:
+# NOTE We hit this with ncbi-vdb 3.0.2 and 3.0.5.
 # gmake[1]: *** [CMakeFiles/Makefile2:2045: libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all] Error 2
 
 # 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build
