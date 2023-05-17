@@ -1,10 +1,18 @@
 #!/usr/bin/env bash
 
 # FIXME Now hitting an error with 3.0.5:
+#
 # NOTE We hit this with ncbi-vdb 3.0.2 and 3.0.5.
 # gmake[1]: *** [CMakeFiles/Makefile2:2045: libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all] Error 2
 
 # 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build
+
+# # All Build rule for target.
+# libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all:
+# 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/depend
+# 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build
+# 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20230517-112554-ft2uqsXdCN/src/build-c9649619b1/CMakeFiles --progress-num=99 "Built target vdb-sqlite"
+# .PHONY : libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all
 
 main() {
     # """

@@ -3263,8 +3263,9 @@
     "date": "2023-05-17",
     "dependencies": ["bison", "flex", "hdf5", "ncbi-vdb", "python3.11"],
     "large": true,
+    "outdated": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.5"
+    "version": "3.0.3"
   },
   "ncbi-vdb": {
     "aliases": {
@@ -3274,9 +3275,10 @@
     "date": "2023-05-17",
     "dependencies": ["bison", "flex", "hdf5", "python3.11", "temurin"],
     "large": true,
+    "outdated": true,
     "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.0.5"
+    "version": "3.0.2"
   },
   "ncurses": {
     "aliases": {
