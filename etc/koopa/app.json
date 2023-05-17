@@ -1453,10 +1453,10 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-29",
+    "date": "2023-05-16",
     "prune": false,
     "url": ["https://github.com/fribidi/fribidi/"],
-    "version": "1.0.12"
+    "version": "1.0.13"
   },
   "fzf": {
     "aliases": {
@@ -3046,7 +3046,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-05-15",
+    "date": "2023-05-16",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3071,7 +3071,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2023.05.15"
+    "version": "1.4.4"
   },
   "man-db": {
     "aliases": {
