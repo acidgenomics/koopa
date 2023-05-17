@@ -92,9 +92,10 @@ koopa_cmake_std_args() {
         "-DCMAKE_INSTALL_RPATH=${dict['rpath']}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
-        '-DCMAKE_RULE_MESSAGES=ON'
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Consider enabling:
+        # > '-DCMAKE_RULE_MESSAGES=ON'
         # Additional options set by Homebrew by default:
         # > '-DCMAKE_FIND_FRAMEWORK=LAST'
         # > '-DBUILD_TESTING=OFF'
