@@ -37,7 +37,8 @@ main() {
         'openssl3'
         'python3.11'
         'reproc'
-        'spdlog'
+        # NOTE Enabling spdlog here currently causes the install to fail.
+        # > 'spdlog'
         'termcolor'
         'tl-expected'
         'yaml-cpp'
