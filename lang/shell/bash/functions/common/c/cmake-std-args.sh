@@ -3,7 +3,7 @@
 koopa_cmake_std_args() {
     # """
     # Standard CMake arguments.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-05-17.
     #
     # Potentially useful:
     # - CMAKE_STATIC_LINKER_FLAGS
@@ -11,6 +11,7 @@ koopa_cmake_std_args() {
     # @seealso
     # - https://github.com/Homebrew/brew/blob/64259a420b666744dffb126a79781520bd
     #   266fc6/Library/Homebrew/formula.rb#L1557
+    # - https://bytefreaks.net/programming-2/make-building-with-cmake-verbose
     # """
     local -A dict
     local -a args
@@ -93,6 +94,8 @@ koopa_cmake_std_args() {
         "-DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         '-DCMAKE_VERBOSE_MAKEFILE=ON'
+        # Consider enabling:
+        # > '-DCMAKE_RULE_MESSAGES=ON'
         # Additional options set by Homebrew by default:
         # > '-DCMAKE_FIND_FRAMEWORK=LAST'
         # > '-DBUILD_TESTING=OFF'
