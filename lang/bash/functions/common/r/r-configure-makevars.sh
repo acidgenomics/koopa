@@ -22,7 +22,7 @@ koopa_r_configure_makevars() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
     local -A app app_pc_path_arr bool conf_dict dict
-    local -a cppflags keys libintl ldflags lines pkg_config
+    local -a cppflags keys ldflags lines pkg_config
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
@@ -288,17 +288,17 @@ lib/pkgconfig"
     if koopa_is_macos
     then
         # R CRAN binary has 'Makeconf' containing (no '-lintl'):
-        # > LIBINTL = -Wl,-framework -Wl,CoreFoundation
-        libintl=(
-            # > '-lintl'
-            # > '-liconv'
-            '-Wl,-framework'
-            '-Wl,CoreFoundation'
-        )
-        conf_dict['libintl']="${libintl[*]}"
+        # > local -a libintl
+        # > libintl=(
+        # >     # > '-lintl'
+        # >     # > '-liconv'
+        # >     '-Wl,-framework'
+        # >     '-Wl,CoreFoundation'
+        # > )
+        # > conf_dict['libintl']="${libintl[*]}"
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
-            "LIBINTL = ${conf_dict['libintl']}"
+            # > "LIBINTL = ${conf_dict['libintl']}"
             # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
