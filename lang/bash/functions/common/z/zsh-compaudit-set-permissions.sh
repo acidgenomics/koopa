@@ -3,7 +3,7 @@
 koopa_zsh_compaudit_set_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass during 'compinit'.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-18.
     #
     # @seealso
     # - echo "$FPATH" (string) or echo "$fpath" (array)
@@ -18,7 +18,7 @@ koopa_zsh_compaudit_set_permissions() {
     dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['user_id']="$(koopa_user_id)"
     prefixes=(
-        "${dict['koopa_prefix']}/lang/shell/zsh"
+        "${dict['koopa_prefix']}/lang/zsh"
         "${dict['opt_prefix']}/zsh/share/zsh"
     )
     for prefix in "${prefixes[@]}"

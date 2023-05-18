@@ -3,7 +3,10 @@
 _koopa_alias_kb() {
     # """
     # Koopa 'kb' shortcut alias.
-    # @note Updated 2022-07-21.
+    # @note Updated 2023-05-18.
     # """
-    cd "$(_koopa_koopa_prefix)/lang/bash" || return 1
+    __kvar_bash_prefix="$(_koopa_koopa_prefix)/lang/bash"
+    [ -d "$__kvar_bash_prefix" ] || return 1
+    cd "$__kvar_bash_prefix" || return 1
+    return 0
 }
