@@ -17557,7 +17557,6 @@ koopa_r_configure_environ() {
     elif koopa_is_macos
     then
         path_arr+=(
-            "/opt/r/${dict['arch']}/bin"
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
@@ -17930,12 +17929,6 @@ libexec/lib/server}")
     then
         ld_lib_arr+=("${ld_lib_app_arr[@]}")
     fi
-    if koopa_is_macos && [[ "${dict['system']}" -eq 1 ]]
-    then
-        dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
-        koopa_assert_is_dir "${dict['r_opt_libdir']}"
-        ld_lib_arr+=("${dict['r_opt_libdir']}")
-    fi
     if koopa_is_linux
     then
         dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
@@ -18072,24 +18065,23 @@ koopa_r_configure_makevars() {
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
+    app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
-    if koopa_is_linux
-    then
-        app['cc']='/usr/bin/gcc'
-        app['cxx']='/usr/bin/g++'
-        app['gfortran']='/usr/bin/gfortran'
-    elif koopa_is_macos
-    then
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-        app['gfortran']='/opt/gfortran/bin/gfortran'
-    fi
     if [[ "${dict['use_apps']}" -eq 1 ]]
     then
+        if koopa_is_linux
+        then
+            app['cc']='/usr/bin/gcc'
+            app['cxx']='/usr/bin/g++'
+        elif koopa_is_macos
+        then
+            app['cc']='/usr/bin/clang'
+            app['cxx']='/usr/bin/clang++'
+        fi
         app['awk']="$(koopa_locate_awk)"
         app['bash']="$(koopa_locate_bash)"
         app['echo']="$(koopa_locate_echo)"
@@ -18097,7 +18089,6 @@ koopa_r_configure_makevars() {
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['sed']="$(koopa_locate_sed)"
-        app['sort']="$(koopa_locate_sort)"
         app['tar']="$(koopa_locate_tar)"
         app['yacc']="$(koopa_locate_yacc)"
         dict['bzip2']="$(koopa_app_prefix 'bzip2')"
@@ -18109,24 +18100,8 @@ koopa_r_configure_makevars() {
         koopa_add_to_pkg_config_path \
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
-    else
-        app['ar']='/usr/bin/ar'
-        app['awk']='/usr/bin/awk'
-        app['bash']='/bin/bash'
-        app['echo']='/bin/echo'
-        app['make']='/usr/bin/make'
-        app['ranlib']='/usr/bin/ranlib'
-        app['sed']='/usr/bin/sed'
-        app['sort']='/usr/bin/sort'
-        app['sort']='/usr/bin/sort'
-        app['strip']='/usr/bin/strip'
-        app['tar']='/usr/bin/tar'
-        app['yacc']='/usr/bin/yacc'
     fi
     koopa_assert_is_executable "${app[@]}"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
@@ -18243,89 +18218,89 @@ lib/pkgconfig"
             ldflags+=("-L${dict['gettext']}/lib")
             ldflags+=('-lomp')
         fi
+        conf_dict['ar']="${app['ar']}"
+        conf_dict['awk']="${app['awk']}"
+        conf_dict['cc']="${app['cc']}"
+        conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
+        conf_dict['cppflags']="${cppflags[*]}"
+        conf_dict['cxx']="${app['cxx']} -std=gnu++14"
+        conf_dict['echo']="${app['echo']}"
+        conf_dict['f77']="${app['gfortran']}"
+        conf_dict['fc']="${app['gfortran']}"
+        conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
+        conf_dict['flibs']="$(koopa_gfortran_libs)"
+        conf_dict['ldflags']="${ldflags[*]}"
+        conf_dict['make']="${app['make']}"
+        conf_dict['objc_libs']='-lobjc'
+        conf_dict['objcflags']="-Wall -g -O2 -fobjc-exceptions \$(LTO)"
+        conf_dict['ranlib']="${app['ranlib']}"
+        conf_dict['safe_fflags']='-Wall -g -O2 -msse2 -mfpmath=sse'
+        conf_dict['sed']="${app['sed']}"
+        conf_dict['shell']="${app['bash']}"
+        conf_dict['strip_shared_lib']="${app['strip']} -x"
+        conf_dict['strip_static_lib']="${app['strip']} -S"
+        conf_dict['tar']="${app['tar']}"
+        conf_dict['yacc']="${app['yacc']}"
+        conf_dict['cxx11']="${conf_dict['cxx']}"
+        conf_dict['cxx14']="${conf_dict['cxx']}"
+        conf_dict['cxx17']="${conf_dict['cxx']}"
+        conf_dict['cxx20']="${conf_dict['cxx']}"
+        conf_dict['cxxflags']="${conf_dict['cflags']}"
+        conf_dict['cxx11flags']="${conf_dict['cxxflags']}"
+        conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
+        conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
+        conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
+        conf_dict['f77flags']="${conf_dict['fflags']}"
+        conf_dict['fcflags']="${conf_dict['fflags']}"
+        conf_dict['objc']="${conf_dict['cc']}"
+        conf_dict['objcxx']="${conf_dict['cxx']}"
+        case "${dict['system']}" in
+            '0')
+                conf_dict['op']='+='
+                ;;
+            '1')
+                conf_dict['op']='='
+                ;;
+        esac
+        lines+=(
+            "AR = ${conf_dict['ar']}"
+            "AWK = ${conf_dict['awk']}"
+            "CC = ${conf_dict['cc']}"
+            "CFLAGS = ${conf_dict['cflags']}"
+            "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"
+            "CXX = ${conf_dict['cxx']}"
+            "CXX11 = ${conf_dict['cxx11']}"
+            "CXX11FLAGS = ${conf_dict['cxx11flags']}"
+            "CXX14 = ${conf_dict['cxx14']}"
+            "CXX14FLAGS = ${conf_dict['cxx14flags']}"
+            "CXX17 = ${conf_dict['cxx17']}"
+            "CXX17FLAGS = ${conf_dict['cxx17flags']}"
+            "CXX20 = ${conf_dict['cxx20']}"
+            "CXX20FLAGS = ${conf_dict['cxx20flags']}"
+            "CXXFLAGS = ${conf_dict['cxxflags']}"
+            "ECHO = ${conf_dict['echo']}"
+            "F77 = ${conf_dict['f77']}"
+            "F77FLAGS = ${conf_dict['f77flags']}"
+            "FC = ${conf_dict['fc']}"
+            "FCFLAGS = ${conf_dict['fcflags']}"
+            "FFLAGS = ${conf_dict['fflags']}"
+            "FLIBS = ${conf_dict['flibs']}"
+            "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
+            "MAKE = ${conf_dict['make']}"
+            "OBJC = ${conf_dict['objc']}"
+            "OBJCFLAGS = ${conf_dict['objcflags']}"
+            "OBJCXX = ${conf_dict['objcxx']}"
+            "OBJC_LIBS = ${conf_dict['objc_libs']}"
+            "RANLIB = ${conf_dict['ranlib']}"
+            "SAFE_FFLAGS = ${conf_dict['safe_fflags']}"
+            "SED = ${conf_dict['sed']}"
+            "SHELL = ${conf_dict['shell']}"
+            "STRIP_SHARED_LIB = ${conf_dict['strip_shared_lib']}"
+            "STRIP_STATIC_LIB = ${conf_dict['strip_static_lib']}"
+            "TAR = ${conf_dict['tar']}"
+            "YACC = ${conf_dict['yacc']}"
+        )
     fi
-    conf_dict['ar']="${app['ar']}"
-    conf_dict['awk']="${app['awk']}"
-    conf_dict['cc']="${app['cc']}"
-    conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
-    conf_dict['cppflags']="${cppflags[*]}"
-    conf_dict['cxx']="${app['cxx']} -std=gnu++14"
-    conf_dict['echo']="${app['echo']}"
-    conf_dict['f77']="${app['gfortran']}"
-    conf_dict['fc']="${app['gfortran']}"
-    conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
-    conf_dict['flibs']="$(koopa_gfortran_libs)"
-    conf_dict['ldflags']="${ldflags[*]}"
-    conf_dict['make']="${app['make']}"
-    conf_dict['objc_libs']='-lobjc'
-    conf_dict['objcflags']="-Wall -g -O2 -fobjc-exceptions \$(LTO)"
-    conf_dict['ranlib']="${app['ranlib']}"
-    conf_dict['safe_fflags']='-Wall -g -O2 -msse2 -mfpmath=sse'
-    conf_dict['sed']="${app['sed']}"
-    conf_dict['shell']="${app['bash']}"
-    conf_dict['strip_shared_lib']="${app['strip']} -x"
-    conf_dict['strip_static_lib']="${app['strip']} -S"
-    conf_dict['tar']="${app['tar']}"
-    conf_dict['yacc']="${app['yacc']}"
-    conf_dict['cxx11']="${conf_dict['cxx']}"
-    conf_dict['cxx14']="${conf_dict['cxx']}"
-    conf_dict['cxx17']="${conf_dict['cxx']}"
-    conf_dict['cxx20']="${conf_dict['cxx']}"
-    conf_dict['cxxflags']="${conf_dict['cflags']}"
-    conf_dict['cxx11flags']="${conf_dict['cxxflags']}"
-    conf_dict['cxx14flags']="${conf_dict['cxxflags']}"
-    conf_dict['cxx17flags']="${conf_dict['cxxflags']}"
-    conf_dict['cxx20flags']="${conf_dict['cxxflags']}"
-    conf_dict['f77flags']="${conf_dict['fflags']}"
-    conf_dict['fcflags']="${conf_dict['fflags']}"
-    conf_dict['objc']="${conf_dict['cc']}"
-    conf_dict['objcxx']="${conf_dict['cxx']}"
-    case "${dict['system']}" in
-        '0')
-            conf_dict['op']='+='
-            ;;
-        '1')
-            conf_dict['op']='='
-            ;;
-    esac
-    lines+=(
-        "AR = ${conf_dict['ar']}"
-        "AWK = ${conf_dict['awk']}"
-        "CC = ${conf_dict['cc']}"
-        "CFLAGS = ${conf_dict['cflags']}"
-        "CPPFLAGS ${conf_dict['op']} ${conf_dict['cppflags']}"
-        "CXX = ${conf_dict['cxx']}"
-        "CXX11 = ${conf_dict['cxx11']}"
-        "CXX11FLAGS = ${conf_dict['cxx11flags']}"
-        "CXX14 = ${conf_dict['cxx14']}"
-        "CXX14FLAGS = ${conf_dict['cxx14flags']}"
-        "CXX17 = ${conf_dict['cxx17']}"
-        "CXX17FLAGS = ${conf_dict['cxx17flags']}"
-        "CXX20 = ${conf_dict['cxx20']}"
-        "CXX20FLAGS = ${conf_dict['cxx20flags']}"
-        "CXXFLAGS = ${conf_dict['cxxflags']}"
-        "ECHO = ${conf_dict['echo']}"
-        "F77 = ${conf_dict['f77']}"
-        "F77FLAGS = ${conf_dict['f77flags']}"
-        "FC = ${conf_dict['fc']}"
-        "FCFLAGS = ${conf_dict['fcflags']}"
-        "FFLAGS = ${conf_dict['fflags']}"
-        "FLIBS = ${conf_dict['flibs']}"
-        "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
-        "MAKE = ${conf_dict['make']}"
-        "OBJC = ${conf_dict['objc']}"
-        "OBJCFLAGS = ${conf_dict['objcflags']}"
-        "OBJCXX = ${conf_dict['objcxx']}"
-        "OBJC_LIBS = ${conf_dict['objc_libs']}"
-        "RANLIB = ${conf_dict['ranlib']}"
-        "SAFE_FFLAGS = ${conf_dict['safe_fflags']}"
-        "SED = ${conf_dict['sed']}"
-        "SHELL = ${conf_dict['shell']}"
-        "STRIP_SHARED_LIB = ${conf_dict['strip_shared_lib']}"
-        "STRIP_STATIC_LIB = ${conf_dict['strip_static_lib']}"
-        "TAR = ${conf_dict['tar']}"
-        "YACC = ${conf_dict['yacc']}"
-    )
     if koopa_is_macos
     then
         libintl=(
@@ -18339,7 +18314,10 @@ lib/pkgconfig"
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
     fi
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
+    koopa_alert_info "Modifying '${dict['file']}'."
     case "${dict['system']}" in
         '0')
             koopa_rm "${dict['file']}"

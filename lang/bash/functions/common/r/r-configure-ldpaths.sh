@@ -163,12 +163,12 @@ libexec/lib/server}")
     then
         ld_lib_arr+=("${ld_lib_app_arr[@]}")
     fi
-    if koopa_is_macos && [[ "${dict['system']}" -eq 1 ]]
-    then
-        dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
-        koopa_assert_is_dir "${dict['r_opt_libdir']}"
-        ld_lib_arr+=("${dict['r_opt_libdir']}")
-    fi
+    # > if koopa_is_macos && [[ "${dict['system']}" -eq 1 ]]
+    # > then
+    # >     dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
+    # >     koopa_assert_is_dir "${dict['r_opt_libdir']}"
+    # >     ld_lib_arr+=("${dict['r_opt_libdir']}")
+    # > fi
     if koopa_is_linux
     then
         dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
