@@ -75,12 +75,7 @@ koopa_r_configure_environ() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
-    then
-        dict['use_apps']=0
-    fi
+    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"

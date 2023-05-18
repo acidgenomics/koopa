@@ -6,7 +6,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-18.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -32,18 +32,30 @@ koopa_r_configure_ldpaths() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    if koopa_is_macos
+    then
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['arch']='arm64'
+                ;;
+        esac
+    fi
     dict['system']=0
     dict['use_apps']=1
+    dict['use_java']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
+    if [[ "${dict['system']}" -eq 1 ]]
     then
+        koopa_is_linux && dict['use_java']=0
         dict['use_apps']=0
-        return 0
     fi
-    dict['arch']="$(koopa_arch)"
-    dict['java_home']="$(koopa_app_prefix 'temurin')"
+    if [[ "${dict['use_java']}" -eq 1 ]]
+    then
+        dict['java_home']="$(koopa_app_prefix 'temurin')"
+    else
+        dict['java_home']='/usr/lib/jvm/default-java'
+    fi
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
@@ -61,81 +73,84 @@ libexec/Contents/Home/lib/server}")
         lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
 libexec/lib/server}")
     fi
-    keys=(
-        'bzip2'
-        'cairo'
-        'curl7'
-        'fontconfig'
-        'freetype'
-        'fribidi'
-        'gdal'
-        'geos'
-        'glib'
-        'graphviz'
-        'harfbuzz'
-        'hdf5'
-        'icu4c'
-        'imagemagick'
-        # > 'jpeg'
-        'libffi'
-        'libgit2'
-        'libiconv'
-        'libjpeg-turbo'
-        'libpng'
-        'libssh2'
-        'libtiff'
-        # > 'libuv'
-        'libxml2'
-        'openssl3'
-        'pcre'
-        'pcre2'
-        'pixman'
-        'proj'
-        'python3.11'
-        'readline'
-        'sqlite'
-        'xorg-libice'
-        'xorg-libpthread-stubs'
-        'xorg-libsm'
-        'xorg-libx11'
-        'xorg-libxau'
-        'xorg-libxcb'
-        'xorg-libxdmcp'
-        'xorg-libxext'
-        'xorg-libxrandr'
-        'xorg-libxrender'
-        'xorg-libxt'
-        'xz'
-        'zlib'
-        'zstd'
-    )
-    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        keys+=('gettext')
+        keys=(
+            'bzip2'
+            'cairo'
+            'curl7'
+            'fontconfig'
+            'freetype'
+            'fribidi'
+            'gdal'
+            'geos'
+            'glib'
+            'graphviz'
+            'harfbuzz'
+            'hdf5'
+            'icu4c'
+            'imagemagick'
+            # > 'jpeg'
+            'libffi'
+            'libgit2'
+            'libiconv'
+            'libjpeg-turbo'
+            'libpng'
+            'libssh2'
+            'libtiff'
+            # > 'libuv'
+            'libxml2'
+            'openssl3'
+            'pcre'
+            'pcre2'
+            'pixman'
+            'proj'
+            'python3.11'
+            'readline'
+            'sqlite'
+            'xorg-libice'
+            'xorg-libpthread-stubs'
+            'xorg-libsm'
+            'xorg-libx11'
+            'xorg-libxau'
+            'xorg-libxcb'
+            'xorg-libxdmcp'
+            'xorg-libxext'
+            'xorg-libxrandr'
+            'xorg-libxrender'
+            'xorg-libxt'
+            'xz'
+            'zlib'
+            'zstd'
+        )
+        if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+        then
+            keys+=('gettext')
+        fi
+        if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+        then
+            keys+=('gcc')
+        fi
+        for key in "${keys[@]}"
+        do
+            local prefix
+            prefix="$(koopa_app_prefix "$key")"
+            koopa_assert_is_dir "$prefix"
+            ld_lib_app_arr[$key]="$prefix"
+        done
+        for i in "${!ld_lib_app_arr[@]}"
+        do
+            case "$i" in
+                'gcc')
+                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
+                    ;;
+                *)
+                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+                    ;;
+            esac
+        done
+        koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     fi
-    if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
-    then
-        keys+=('gcc')
-    fi
-    for key in "${keys[@]}"
-    do
-        local prefix
-        prefix="$(koopa_app_prefix "$key")"
-        koopa_assert_is_dir "$prefix"
-        ld_lib_app_arr[$key]="$prefix"
-    done
-    for i in "${!ld_lib_app_arr[@]}"
-    do
-        case "$i" in
-            'gcc')
-                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
-                ;;
-            *)
-                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
-                ;;
-        esac
-    done
-    koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     # Alternative approach, that uses absolute path:
     # > ld_lib_arr+=("${dict['r_prefix']}/lib")
@@ -144,9 +159,16 @@ libexec/lib/server}")
     # > then
     # >     ld_lib_arr+=('/usr/local/lib')
     # > fi
-    ld_lib_arr+=("${ld_lib_app_arr[@]}")
-    # NOTE This currently configuration may be problematic with Linux binary
-    # packages from RSPM. Consider reworking to not include these for system R.
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        ld_lib_arr+=("${ld_lib_app_arr[@]}")
+    fi
+    if koopa_is_macos && [[ "${dict['system']}" -eq 1 ]]
+    then
+        dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
+        koopa_assert_is_dir "${dict['r_opt_libdir']}"
+        ld_lib_arr=("${dict['r_opt_libdir']}")
+    fi
     if koopa_is_linux
     then
         dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"

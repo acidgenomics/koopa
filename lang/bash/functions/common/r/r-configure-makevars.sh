@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to ensure we have system default config defined here too.
+
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-18.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -30,56 +32,57 @@ koopa_r_configure_makevars() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
-    then
-        dict['use_apps']=0
-        return 0
-    fi
-    app['ar']='/usr/bin/ar'
-    app['awk']="$(koopa_locate_awk --realpath)"
-    app['bash']="$(koopa_locate_bash --realpath)"
-    app['echo']="$(koopa_locate_echo --realpath)"
-    app['gfortran']="$(koopa_locate_gfortran --realpath)"
-    app['make']="$(koopa_locate_make --realpath)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    app['ranlib']='/usr/bin/ranlib'
-    app['sed']="$(koopa_locate_sed --realpath)"
-    app['sort']="$(koopa_locate_sort)"
-    app['strip']='/usr/bin/strip'
-    app['tar']="$(koopa_locate_tar --realpath)"
-    app['yacc']="$(koopa_locate_yacc --realpath)"
-    dict['arch']="$(koopa_arch)"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-    dict['gettext']="$(koopa_app_prefix 'gettext')"
-    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
-    dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
-    dict['libpng']="$(koopa_app_prefix 'libpng')"
-    dict['openssl3']="$(koopa_app_prefix 'openssl3')"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    koopa_add_to_pkg_config_path \
-        "${dict['libjpeg']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig"
-    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
+    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
+    # Configure which compilers to use.
     if koopa_is_linux
     then
-        case "${dict['system']}" in
-            '0')
-                app['cc']="$(koopa_locate_gcc --realpath)"
-                app['cxx']="$(koopa_locate_gcxx --realpath)"
-                ;;
-            '1')
-                app['cc']='/usr/bin/gcc'
-                app['cxx']='/usr/bin/g++'
-                ;;
-        esac
+        app['cc']='/usr/bin/gcc'
+        app['cxx']='/usr/bin/g++'
+        app['gfortran']='/usr/bin/gfortran'
     elif koopa_is_macos
     then
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
+        app['gfortran']='/opt/gfortran/bin/gfortran'
+    fi
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        app['awk']="$(koopa_locate_awk)"
+        app['bash']="$(koopa_locate_bash)"
+        app['echo']="$(koopa_locate_echo)"
+        app['gfortran']="$(koopa_locate_gfortran)"
+        app['make']="$(koopa_locate_make)"
+        app['pkg_config']="$(koopa_locate_pkg_config)"
+        app['sed']="$(koopa_locate_sed)"
+        app['sort']="$(koopa_locate_sort)"
+        app['tar']="$(koopa_locate_tar)"
+        app['yacc']="$(koopa_locate_yacc)"
+        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+        dict['gettext']="$(koopa_app_prefix 'gettext')"
+        dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+        dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
+        dict['libpng']="$(koopa_app_prefix 'libpng')"
+        dict['openssl3']="$(koopa_app_prefix 'openssl3')"
+        koopa_add_to_pkg_config_path \
+            "${dict['libjpeg']}/lib/pkgconfig" \
+            "${dict['libpng']}/lib/pkgconfig"
+    else
+        app['ar']='/usr/bin/ar'
+        app['awk']='/usr/bin/awk'
+        app['bash']='/bin/bash'
+        app['echo']='/bin/echo'
+        app['make']='/usr/bin/make'
+        app['ranlib']='/usr/bin/ranlib'
+        app['sed']='/usr/bin/sed'
+        app['sort']='/usr/bin/sort'
+        app['sort']='/usr/bin/sort'
+        app['strip']='/usr/bin/strip'
+        app['tar']='/usr/bin/tar'
+        app['yacc']='/usr/bin/yacc'
     fi
     koopa_assert_is_executable "${app[@]}"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
@@ -90,127 +93,132 @@ koopa_r_configure_makevars() {
     # >         ldflags+=('-L/usr/local/lib')
     # >         ;;
     # > esac
-    # Custom pkg-config flags here are incompatible for macOS clang with these
-    # packages: fs, httpuv, igraph, nloptr.
-    if koopa_is_linux
+    if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        # Ensure these values are in sync with Renviron.site file.
-        keys=(
-            'cairo'
-            'curl7'
-            'fontconfig'
-            'freetype'
-            'fribidi'
-            'gdal'
-            'geos'
-            'glib'
-            'graphviz'
-            'harfbuzz'
-            'icu4c'
-            'imagemagick'
-            # > 'jpeg'
-            'libffi'
-            'libgit2'
-            'libjpeg-turbo'
-            'libpng'
-            'libssh2'
-            'libtiff'
-            # > 'libuv'
-            'libxml2'
-            'openssl3'
-            'pcre'
-            'pcre2'
-            'pixman'
-            'proj'
-            'python3.11'
-            'readline'
-            'sqlite'
-            'xorg-libice'
-            'xorg-libpthread-stubs'
-            'xorg-libsm'
-            'xorg-libx11'
-            'xorg-libxau'
-            'xorg-libxcb'
-            'xorg-libxdmcp'
-            'xorg-libxext'
-            'xorg-libxrandr'
-            'xorg-libxrender'
-            'xorg-libxt'
-            'xorg-xorgproto'
-            'xz'
-            'zlib'
-            'zstd'
-        )
-        for key in "${keys[@]}"
-        do
-            local prefix
-            prefix="$(koopa_app_prefix "$key")"
-            koopa_assert_is_dir "$prefix"
-            app_pc_path_arr[$key]="$prefix"
-        done
-        for i in "${!app_pc_path_arr[@]}"
-        do
-            case "$i" in
-                'xorg-xorgproto')
-                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
-                    ;;
-                *)
-                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
-                    ;;
-            esac
-        done
-        koopa_assert_is_dir "${app_pc_path_arr[@]}"
-        koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
-        pkg_config=(
-            # > 'cairo'
-            # > 'libffi'
-            # > 'libglib-2.0'
-            # > 'libpcre'
-            # > 'pixman-1'
-            # > 'xcb-shm'
-            'fontconfig'
-            'freetype2'
-            'fribidi'
-            'harfbuzz'
-            'icu-i18n'
-            'icu-uc'
-            'libcurl'
-            'libjpeg'
-            'libpcre2-8'
-            'libpng'
-            'libtiff-4'
-            'libxml-2.0'
-            'libzstd'
-            'zlib'
-        )
+        # Custom pkg-config flags here are incompatible for macOS clang with
+        # these packages: fs, httpuv, igraph, nloptr.
+        if koopa_is_linux
+        then
+            # Ensure these values are in sync with Renviron.site file.
+            keys=(
+                'cairo'
+                'curl7'
+                'fontconfig'
+                'freetype'
+                'fribidi'
+                'gdal'
+                'geos'
+                'glib'
+                'graphviz'
+                'harfbuzz'
+                'icu4c'
+                'imagemagick'
+                # > 'jpeg'
+                'libffi'
+                'libgit2'
+                'libjpeg-turbo'
+                'libpng'
+                'libssh2'
+                'libtiff'
+                # > 'libuv'
+                'libxml2'
+                'openssl3'
+                'pcre'
+                'pcre2'
+                'pixman'
+                'proj'
+                'python3.11'
+                'readline'
+                'sqlite'
+                'xorg-libice'
+                'xorg-libpthread-stubs'
+                'xorg-libsm'
+                'xorg-libx11'
+                'xorg-libxau'
+                'xorg-libxcb'
+                'xorg-libxdmcp'
+                'xorg-libxext'
+                'xorg-libxrandr'
+                'xorg-libxrender'
+                'xorg-libxt'
+                'xorg-xorgproto'
+                'xz'
+                'zlib'
+                'zstd'
+            )
+            for key in "${keys[@]}"
+            do
+                local prefix
+                prefix="$(koopa_app_prefix "$key")"
+                koopa_assert_is_dir "$prefix"
+                app_pc_path_arr[$key]="$prefix"
+            done
+            for i in "${!app_pc_path_arr[@]}"
+            do
+                case "$i" in
+                    'xorg-xorgproto')
+                        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
+share/pkgconfig"
+                        ;;
+                    *)
+                        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
+lib/pkgconfig"
+                        ;;
+                esac
+            done
+            koopa_assert_is_dir "${app_pc_path_arr[@]}"
+            koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
+            pkg_config=(
+                # > 'cairo'
+                # > 'libffi'
+                # > 'libglib-2.0'
+                # > 'libpcre'
+                # > 'pixman-1'
+                # > 'xcb-shm'
+                'fontconfig'
+                'freetype2'
+                'fribidi'
+                'harfbuzz'
+                'icu-i18n'
+                'icu-uc'
+                'libcurl'
+                'libjpeg'
+                'libpcre2-8'
+                'libpng'
+                'libtiff-4'
+                'libxml-2.0'
+                'libzstd'
+                'zlib'
+            )
+            cppflags+=(
+                "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+            )
+            ldflags+=(
+                "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+            )
+        fi
+        # NOTE Consider adding libiconv here.
         cppflags+=(
-            "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+            "-I${dict['bzip2']}/include"
+            "-I${dict['hdf5']}/include"
+            "-I${dict['libjpeg']}/include"
+            "-I${dict['libpng']}/include"
+            "-I${dict['openssl3']}/include"
         )
         ldflags+=(
-            "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+            "-L${dict['bzip2']}/lib"
+            "-L${dict['hdf5']}/lib"
+            "-L${dict['libjpeg']}/lib"
+            "-L${dict['libpng']}/lib"
+            "-L${dict['openssl3']}/lib"
         )
-    fi
-    # NOTE Consider adding libiconv here.
-    cppflags+=(
-        "-I${dict['bzip2']}/include"
-        "-I${dict['hdf5']}/include"
-        "-I${dict['libjpeg']}/include"
-        "-I${dict['libpng']}/include"
-        "-I${dict['openssl3']}/include"
-    )
-    ldflags+=(
-        "-L${dict['bzip2']}/lib"
-        "-L${dict['hdf5']}/lib"
-        "-L${dict['libjpeg']}/lib"
-        "-L${dict['libpng']}/lib"
-        "-L${dict['openssl3']}/lib"
-    )
-    if koopa_is_macos
-    then
-        cppflags+=("-I${dict['gettext']}/include")
-        ldflags+=("-L${dict['gettext']}/lib")
-        # libomp is installed at '/usr/local/lib' for macOS.
-        ldflags+=('-lomp')
+        if koopa_is_macos
+        then
+            cppflags+=("-I${dict['gettext']}/include")
+            ldflags+=("-L${dict['gettext']}/lib")
+            # libomp is installed at '/usr/local/lib' for macOS.
+            ldflags+=('-lomp')
+        fi
     fi
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"

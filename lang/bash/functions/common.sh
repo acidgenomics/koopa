@@ -17483,12 +17483,7 @@ koopa_r_configure_environ() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
-    then
-        dict['use_apps']=0
-    fi
+    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
@@ -17754,9 +17749,7 @@ koopa_r_configure_java() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
     then
         dict['use_apps']=0
     fi
@@ -17803,18 +17796,30 @@ koopa_r_configure_ldpaths() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
+    if koopa_is_macos
+    then
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['arch']='arm64'
+                ;;
+        esac
+    fi
     dict['system']=0
     dict['use_apps']=1
+    dict['use_java']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
+    if [[ "${dict['system']}" -eq 1 ]]
     then
+        koopa_is_linux && dict['use_java']=0
         dict['use_apps']=0
-        return 0
     fi
-    dict['arch']="$(koopa_arch)"
-    dict['java_home']="$(koopa_app_prefix 'temurin')"
+    if [[ "${dict['use_java']}" -eq 1 ]]
+    then
+        dict['java_home']="$(koopa_app_prefix 'temurin')"
+    else
+        dict['java_home']='/usr/lib/jvm/default-java'
+    fi
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir \
@@ -17832,82 +17837,94 @@ libexec/Contents/Home/lib/server}")
         lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
 libexec/lib/server}")
     fi
-    keys=(
-        'bzip2'
-        'cairo'
-        'curl7'
-        'fontconfig'
-        'freetype'
-        'fribidi'
-        'gdal'
-        'geos'
-        'glib'
-        'graphviz'
-        'harfbuzz'
-        'hdf5'
-        'icu4c'
-        'imagemagick'
-        'libffi'
-        'libgit2'
-        'libiconv'
-        'libjpeg-turbo'
-        'libpng'
-        'libssh2'
-        'libtiff'
-        'libxml2'
-        'openssl3'
-        'pcre'
-        'pcre2'
-        'pixman'
-        'proj'
-        'python3.11'
-        'readline'
-        'sqlite'
-        'xorg-libice'
-        'xorg-libpthread-stubs'
-        'xorg-libsm'
-        'xorg-libx11'
-        'xorg-libxau'
-        'xorg-libxcb'
-        'xorg-libxdmcp'
-        'xorg-libxext'
-        'xorg-libxrandr'
-        'xorg-libxrender'
-        'xorg-libxt'
-        'xz'
-        'zlib'
-        'zstd'
-    )
-    if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+    if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        keys+=('gettext')
+        keys=(
+            'bzip2'
+            'cairo'
+            'curl7'
+            'fontconfig'
+            'freetype'
+            'fribidi'
+            'gdal'
+            'geos'
+            'glib'
+            'graphviz'
+            'harfbuzz'
+            'hdf5'
+            'icu4c'
+            'imagemagick'
+            'libffi'
+            'libgit2'
+            'libiconv'
+            'libjpeg-turbo'
+            'libpng'
+            'libssh2'
+            'libtiff'
+            'libxml2'
+            'openssl3'
+            'pcre'
+            'pcre2'
+            'pixman'
+            'proj'
+            'python3.11'
+            'readline'
+            'sqlite'
+            'xorg-libice'
+            'xorg-libpthread-stubs'
+            'xorg-libsm'
+            'xorg-libx11'
+            'xorg-libxau'
+            'xorg-libxcb'
+            'xorg-libxdmcp'
+            'xorg-libxext'
+            'xorg-libxrandr'
+            'xorg-libxrender'
+            'xorg-libxt'
+            'xz'
+            'zlib'
+            'zstd'
+        )
+        if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+        then
+            keys+=('gettext')
+        fi
+        if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+        then
+            keys+=('gcc')
+        fi
+        for key in "${keys[@]}"
+        do
+            local prefix
+            prefix="$(koopa_app_prefix "$key")"
+            koopa_assert_is_dir "$prefix"
+            ld_lib_app_arr[$key]="$prefix"
+        done
+        for i in "${!ld_lib_app_arr[@]}"
+        do
+            case "$i" in
+                'gcc')
+                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
+                    ;;
+                *)
+                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
+                    ;;
+            esac
+        done
+        koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     fi
-    if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
-    then
-        keys+=('gcc')
-    fi
-    for key in "${keys[@]}"
-    do
-        local prefix
-        prefix="$(koopa_app_prefix "$key")"
-        koopa_assert_is_dir "$prefix"
-        ld_lib_app_arr[$key]="$prefix"
-    done
-    for i in "${!ld_lib_app_arr[@]}"
-    do
-        case "$i" in
-            'gcc')
-                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
-                ;;
-            *)
-                ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
-                ;;
-        esac
-    done
-    koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
-    ld_lib_arr+=("${ld_lib_app_arr[@]}")
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        ld_lib_arr+=("${ld_lib_app_arr[@]}")
+    fi
+    if koopa_is_macos && [[ "${dict['system']}" -eq 1 ]]
+    then
+        dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
+        koopa_assert_is_dir "${dict['r_opt_libdir']}"
+        ld_lib_arr=("${dict['r_opt_libdir']}")
+    fi
     if koopa_is_linux
     then
         dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
@@ -17960,52 +17977,61 @@ koopa_r_configure_makeconf() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
+    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
+    if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        dict['use_apps']=0
-        return 0
+        app['pkg_config']="$(koopa_locate_pkg_config)"
+        koopa_assert_is_executable "${app[@]}"
+        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+        dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+        dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
+        dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+        dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+        dict['zlib']="$(koopa_app_prefix 'zlib')"
+        koopa_assert_is_dir \
+            "${dict['bzip2']}" \
+            "${dict['icu4c']}" \
+            "${dict['libiconv']}" \
+            "${dict['libjpeg']}" \
+            "${dict['pcre2']}" \
+            "${dict['zlib']}"
+        koopa_add_to_pkg_config_path \
+            "${dict['icu4c']}/lib/pkgconfig" \
+            "${dict['libjpeg']}/lib/pkgconfig" \
+            "${dict['pcre2']}/lib/pkgconfig" \
+            "${dict['zlib']}/lib/pkgconfig"
+        libs=(
+            "$("${app['pkg_config']}" --libs \
+                'icu-i18n' \
+                'icu-uc' \
+                'libjpeg' \
+                'libpcre2-8' \
+                'zlib' \
+            )"
+            "-L${dict['bzip2']}/lib"
+            "-L${dict['libiconv']}/lib"
+            '-ldl'
+            '-lm'
+        )
+        if koopa_is_linux
+        then
+            libs+=('-lrt' '-ltirpc')
+        fi
+    else
+        libs=('-lbz2' '-ldl' '-llzma' '-lm' '-lpcre2-8' '-lz')
+        if koopa_is_macos
+        then
+            libs+=('-liconv' '-licucore')
+        elif koopa_is_linux
+        then
+            libs+=('-licui18n' '-licuuc' '-lrt' '-ltirpc')
+        fi
     fi
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
-    dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
-    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    koopa_assert_is_dir "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makeconf"
-    koopa_assert_is_dir \
-        "${dict['bzip2']}" \
-        "${dict['icu4c']}" \
-        "${dict['libiconv']}" \
-        "${dict['libjpeg']}" \
-        "${dict['pcre2']}" \
-        "${dict['r_prefix']}" \
-        "${dict['zlib']}"
-    koopa_alert_info "Modifying '${dict['file']}'."
     koopa_assert_is_file "${dict['file']}"
-    koopa_add_to_pkg_config_path \
-        "${dict['icu4c']}/lib/pkgconfig" \
-        "${dict['libjpeg']}/lib/pkgconfig" \
-        "${dict['pcre2']}/lib/pkgconfig" \
-        "${dict['zlib']}/lib/pkgconfig"
-    libs=(
-        "$("${app['pkg_config']}" --libs \
-            'icu-i18n' \
-            'icu-uc' \
-            'libjpeg' \
-            'libpcre2-8' \
-            'zlib' \
-        )"
-        "-L${dict['bzip2']}/lib"
-        "-L${dict['libiconv']}/lib"
-        '-ldl'
-        '-lm'
-    )
-    koopa_is_linux && libs+=('-lrt' '-ltirpc')
+    koopa_alert_info "Modifying '${dict['file']}'."
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     case "${dict['system']}" in
@@ -18039,168 +18065,173 @@ koopa_r_configure_makevars() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
-    then
-        dict['use_apps']=0
-        return 0
-    fi
-    app['ar']='/usr/bin/ar'
-    app['awk']="$(koopa_locate_awk --realpath)"
-    app['bash']="$(koopa_locate_bash --realpath)"
-    app['echo']="$(koopa_locate_echo --realpath)"
-    app['gfortran']="$(koopa_locate_gfortran --realpath)"
-    app['make']="$(koopa_locate_make --realpath)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    app['ranlib']='/usr/bin/ranlib'
-    app['sed']="$(koopa_locate_sed --realpath)"
-    app['sort']="$(koopa_locate_sort)"
-    app['strip']='/usr/bin/strip'
-    app['tar']="$(koopa_locate_tar --realpath)"
-    app['yacc']="$(koopa_locate_yacc --realpath)"
-    dict['arch']="$(koopa_arch)"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-    dict['gettext']="$(koopa_app_prefix 'gettext')"
-    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
-    dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
-    dict['libpng']="$(koopa_app_prefix 'libpng')"
-    dict['openssl3']="$(koopa_app_prefix 'openssl3')"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    koopa_add_to_pkg_config_path \
-        "${dict['libjpeg']}/lib/pkgconfig" \
-        "${dict['libpng']}/lib/pkgconfig"
-    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
+    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
     if koopa_is_linux
     then
-        case "${dict['system']}" in
-            '0')
-                app['cc']="$(koopa_locate_gcc --realpath)"
-                app['cxx']="$(koopa_locate_gcxx --realpath)"
-                ;;
-            '1')
-                app['cc']='/usr/bin/gcc'
-                app['cxx']='/usr/bin/g++'
-                ;;
-        esac
+        app['cc']='/usr/bin/gcc'
+        app['cxx']='/usr/bin/g++'
+        app['gfortran']='/usr/bin/gfortran'
     elif koopa_is_macos
     then
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
+        app['gfortran']='/opt/gfortran/bin/gfortran'
+    fi
+    if [[ "${dict['use_apps']}" -eq 1 ]]
+    then
+        app['awk']="$(koopa_locate_awk)"
+        app['bash']="$(koopa_locate_bash)"
+        app['echo']="$(koopa_locate_echo)"
+        app['gfortran']="$(koopa_locate_gfortran)"
+        app['make']="$(koopa_locate_make)"
+        app['pkg_config']="$(koopa_locate_pkg_config)"
+        app['sed']="$(koopa_locate_sed)"
+        app['sort']="$(koopa_locate_sort)"
+        app['tar']="$(koopa_locate_tar)"
+        app['yacc']="$(koopa_locate_yacc)"
+        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+        dict['gettext']="$(koopa_app_prefix 'gettext')"
+        dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+        dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
+        dict['libpng']="$(koopa_app_prefix 'libpng')"
+        dict['openssl3']="$(koopa_app_prefix 'openssl3')"
+        koopa_add_to_pkg_config_path \
+            "${dict['libjpeg']}/lib/pkgconfig" \
+            "${dict['libpng']}/lib/pkgconfig"
+    else
+        app['ar']='/usr/bin/ar'
+        app['awk']='/usr/bin/awk'
+        app['bash']='/bin/bash'
+        app['echo']='/bin/echo'
+        app['make']='/usr/bin/make'
+        app['ranlib']='/usr/bin/ranlib'
+        app['sed']='/usr/bin/sed'
+        app['sort']='/usr/bin/sort'
+        app['sort']='/usr/bin/sort'
+        app['strip']='/usr/bin/strip'
+        app['tar']='/usr/bin/tar'
+        app['yacc']='/usr/bin/yacc'
     fi
     koopa_assert_is_executable "${app[@]}"
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     koopa_alert_info "Modifying '${dict['file']}'."
     cppflags=()
     ldflags=()
     lines=()
-    if koopa_is_linux
+    if [[ "${dict['use_apps']}" -eq 1 ]]
     then
-        keys=(
-            'cairo'
-            'curl7'
-            'fontconfig'
-            'freetype'
-            'fribidi'
-            'gdal'
-            'geos'
-            'glib'
-            'graphviz'
-            'harfbuzz'
-            'icu4c'
-            'imagemagick'
-            'libffi'
-            'libgit2'
-            'libjpeg-turbo'
-            'libpng'
-            'libssh2'
-            'libtiff'
-            'libxml2'
-            'openssl3'
-            'pcre'
-            'pcre2'
-            'pixman'
-            'proj'
-            'python3.11'
-            'readline'
-            'sqlite'
-            'xorg-libice'
-            'xorg-libpthread-stubs'
-            'xorg-libsm'
-            'xorg-libx11'
-            'xorg-libxau'
-            'xorg-libxcb'
-            'xorg-libxdmcp'
-            'xorg-libxext'
-            'xorg-libxrandr'
-            'xorg-libxrender'
-            'xorg-libxt'
-            'xorg-xorgproto'
-            'xz'
-            'zlib'
-            'zstd'
-        )
-        for key in "${keys[@]}"
-        do
-            local prefix
-            prefix="$(koopa_app_prefix "$key")"
-            koopa_assert_is_dir "$prefix"
-            app_pc_path_arr[$key]="$prefix"
-        done
-        for i in "${!app_pc_path_arr[@]}"
-        do
-            case "$i" in
-                'xorg-xorgproto')
-                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
-                    ;;
-                *)
-                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
-                    ;;
-            esac
-        done
-        koopa_assert_is_dir "${app_pc_path_arr[@]}"
-        koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
-        pkg_config=(
-            'fontconfig'
-            'freetype2'
-            'fribidi'
-            'harfbuzz'
-            'icu-i18n'
-            'icu-uc'
-            'libcurl'
-            'libjpeg'
-            'libpcre2-8'
-            'libpng'
-            'libtiff-4'
-            'libxml-2.0'
-            'libzstd'
-            'zlib'
-        )
+        if koopa_is_linux
+        then
+            keys=(
+                'cairo'
+                'curl7'
+                'fontconfig'
+                'freetype'
+                'fribidi'
+                'gdal'
+                'geos'
+                'glib'
+                'graphviz'
+                'harfbuzz'
+                'icu4c'
+                'imagemagick'
+                'libffi'
+                'libgit2'
+                'libjpeg-turbo'
+                'libpng'
+                'libssh2'
+                'libtiff'
+                'libxml2'
+                'openssl3'
+                'pcre'
+                'pcre2'
+                'pixman'
+                'proj'
+                'python3.11'
+                'readline'
+                'sqlite'
+                'xorg-libice'
+                'xorg-libpthread-stubs'
+                'xorg-libsm'
+                'xorg-libx11'
+                'xorg-libxau'
+                'xorg-libxcb'
+                'xorg-libxdmcp'
+                'xorg-libxext'
+                'xorg-libxrandr'
+                'xorg-libxrender'
+                'xorg-libxt'
+                'xorg-xorgproto'
+                'xz'
+                'zlib'
+                'zstd'
+            )
+            for key in "${keys[@]}"
+            do
+                local prefix
+                prefix="$(koopa_app_prefix "$key")"
+                koopa_assert_is_dir "$prefix"
+                app_pc_path_arr[$key]="$prefix"
+            done
+            for i in "${!app_pc_path_arr[@]}"
+            do
+                case "$i" in
+                    'xorg-xorgproto')
+                        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
+share/pkgconfig"
+                        ;;
+                    *)
+                        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
+lib/pkgconfig"
+                        ;;
+                esac
+            done
+            koopa_assert_is_dir "${app_pc_path_arr[@]}"
+            koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
+            pkg_config=(
+                'fontconfig'
+                'freetype2'
+                'fribidi'
+                'harfbuzz'
+                'icu-i18n'
+                'icu-uc'
+                'libcurl'
+                'libjpeg'
+                'libpcre2-8'
+                'libpng'
+                'libtiff-4'
+                'libxml-2.0'
+                'libzstd'
+                'zlib'
+            )
+            cppflags+=(
+                "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+            )
+            ldflags+=(
+                "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+            )
+        fi
         cppflags+=(
-            "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
+            "-I${dict['bzip2']}/include"
+            "-I${dict['hdf5']}/include"
+            "-I${dict['libjpeg']}/include"
+            "-I${dict['libpng']}/include"
+            "-I${dict['openssl3']}/include"
         )
         ldflags+=(
-            "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
+            "-L${dict['bzip2']}/lib"
+            "-L${dict['hdf5']}/lib"
+            "-L${dict['libjpeg']}/lib"
+            "-L${dict['libpng']}/lib"
+            "-L${dict['openssl3']}/lib"
         )
-    fi
-    cppflags+=(
-        "-I${dict['bzip2']}/include"
-        "-I${dict['hdf5']}/include"
-        "-I${dict['libjpeg']}/include"
-        "-I${dict['libpng']}/include"
-        "-I${dict['openssl3']}/include"
-    )
-    ldflags+=(
-        "-L${dict['bzip2']}/lib"
-        "-L${dict['hdf5']}/lib"
-        "-L${dict['libjpeg']}/lib"
-        "-L${dict['libpng']}/lib"
-        "-L${dict['openssl3']}/lib"
-    )
-    if koopa_is_macos
-    then
-        cppflags+=("-I${dict['gettext']}/include")
-        ldflags+=("-L${dict['gettext']}/lib")
-        ldflags+=('-lomp')
+        if koopa_is_macos
+        then
+            cppflags+=("-I${dict['gettext']}/include")
+            ldflags+=("-L${dict['gettext']}/lib")
+            ldflags+=('-lomp')
+        fi
     fi
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
