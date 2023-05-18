@@ -113,7 +113,7 @@ main() {
     export KOOPA_ACTIVATE=0
     export KOOPA_HELP=0
     # shellcheck source=/dev/null
-    source "$(dirname "$bash_source")/../lang/shell/bash/include/header.sh"
+    source "$(dirname "$bash_source")/../lang/bash/include/header.sh"
     koopa_cli "$@"
     return 0
 }
