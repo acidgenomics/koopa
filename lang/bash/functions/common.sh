@@ -2590,7 +2590,7 @@ koopa_basename() {
 }
 
 koopa_bash_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/lang/shell/bash"
+    koopa_print "$(koopa_koopa_prefix)/lang/bash"
     return 0
 }
 
@@ -3123,19 +3123,26 @@ koopa_cache_functions() {
     local -A dict
     koopa_assert_has_no_args "$#"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['shell_prefix']="${dict['koopa_prefix']}/lang/shell"
+    dict['lang_prefix']="${dict['koopa_prefix']}/lang"
+    dict['bash_functions']="${dict['lang_prefix']}/bash/functions"
+    dict['sh_functions']="${dict['lang_prefix']}/sh/functions"
+    koopa_assert_is_dir \
+        "${dict['koopa_prefix']}" \
+        "${dict['lang_prefix']}" \
+        "${dict['bash_functions']}" \
+        "${dict['sh_functions']}"
     koopa_cache_functions_dir \
-        "${dict['shell_prefix']}/bash/functions/activate" \
-        "${dict['shell_prefix']}/bash/functions/common" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/alpine" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/arch" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/common" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/debian" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/fedora" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/opensuse" \
-        "${dict['shell_prefix']}/bash/functions/os/linux/rhel" \
-        "${dict['shell_prefix']}/bash/functions/os/macos" \
-        "${dict['shell_prefix']}/posix/functions"
+        "${dict['bash_functions']}/activate" \
+        "${dict['bash_functions']}/common" \
+        "${dict['bash_functions']}/os/linux/alpine" \
+        "${dict['bash_functions']}/os/linux/arch" \
+        "${dict['bash_functions']}/os/linux/common" \
+        "${dict['bash_functions']}/os/linux/debian" \
+        "${dict['bash_functions']}/os/linux/fedora" \
+        "${dict['bash_functions']}/os/linux/opensuse" \
+        "${dict['bash_functions']}/os/linux/rhel" \
+        "${dict['bash_functions']}/os/macos" \
+        "${dict['sh_functions']}"
     return 0
 }
 
@@ -9052,12 +9059,16 @@ koopa_header() {
     local -A dict
     koopa_assert_has_args_eq "$#" 1
     dict['lang']="$(koopa_lowercase "${1:?}")"
-    dict['prefix']="$(koopa_koopa_prefix)/lang"
+    case "${dict['lang']}" in
+        'posix')
+            dict['lang']='sh'
+            ;;
+    esac
+    dict['prefix']="$(koopa_koopa_prefix)/lang/${dict['lang']}"
     case "${dict['lang']}" in
         'bash' | \
-        'posix' | \
+        'sh' | \
         'zsh')
-            dict['prefix']="${dict['prefix']}/shell"
             dict['ext']='sh'
             ;;
         'r')
@@ -9067,8 +9078,7 @@ koopa_header() {
             koopa_invalid_arg "${dict['lang']}"
             ;;
     esac
-    dict['file']="${dict['prefix']}/${dict['lang']}/include/\
-header.${dict['ext']}"
+    dict['file']="${dict['prefix']}/include/header.${dict['ext']}"
     koopa_assert_is_file "${dict['file']}"
     koopa_print "${dict['file']}"
     return 0
@@ -25273,7 +25283,7 @@ koopa_update_koopa() {
         koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
         return 1
     fi
-    prefixes=("${dict['koopa_prefix']}/lang/shell/zsh")
+    prefixes=("${dict['koopa_prefix']}/lang/zsh")
     for prefix in "${prefixes[@]}"
     do
         if [[ "$(koopa_stat_user_id "$prefix")" == "${dict['user_id']}" ]]
@@ -25674,7 +25684,7 @@ koopa_zsh_compaudit_set_permissions() {
     dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['user_id']="$(koopa_user_id)"
     prefixes=(
-        "${dict['koopa_prefix']}/lang/shell/zsh"
+        "${dict['koopa_prefix']}/lang/zsh"
         "${dict['opt_prefix']}/zsh/share/zsh"
     )
     for prefix in "${prefixes[@]}"
