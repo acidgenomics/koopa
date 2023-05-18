@@ -71,12 +71,17 @@ koopa_r_configure_makeconf() {
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/Makeconf"
+    dict['file_bak']="${dict['file']}.bak"
     koopa_assert_is_file "${dict['file']}"
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
     case "${bool['system']}" in
         '0')
+            if [[ ! -f "${dict['file.bak']}" ]]
+            then
+                koopa_cp "${dict['file']}" "${dict['file.bak']}"
+            fi
             koopa_find_and_replace_in_file \
                 --pattern="${dict['pattern']}" \
                 --replacement="${dict['replacement']}" \
@@ -84,6 +89,10 @@ koopa_r_configure_makeconf() {
                 "${dict['file']}"
             ;;
         '1')
+            if [[ ! -f "${dict['file.bak']}" ]]
+            then
+                koopa_cp --sudo "${dict['file']}" "${dict['file.bak']}"
+            fi
             koopa_find_and_replace_in_file \
                 --sudo \
                 --pattern="${dict['pattern']}" \
