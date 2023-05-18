@@ -17473,17 +17473,17 @@ koopa_python_virtualenvs_prefix() {
 }
 
 koopa_r_configure_environ() {
-    local -A app app_pc_path_arr conf_dict dict
+    local -A app app_pc_path_arr bool conf_dict dict
     local -a keys lines path_arr pc_path_arr
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
@@ -17497,7 +17497,7 @@ koopa_r_configure_environ() {
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
@@ -17515,11 +17515,11 @@ koopa_r_configure_environ() {
         app['zip']="$(koopa_locate_zip)"
         koopa_assert_is_executable "${app[@]}"
         app['lpr']="$(koopa_locate_lpr --allow-missing)"
-        app['open']="$(koopa_locate_open --allow-missing)"
         if [[ ! -x "${app['lpr']}" ]]
         then
             app['lpr']='/usr/bin/lpr'
         fi
+        app['open']="$(koopa_locate_open --allow-missing)"
         if [[ ! -x "${app['open']}" ]]
         then
             if koopa_is_linux
@@ -17567,7 +17567,7 @@ koopa_r_configure_environ() {
     koopa_assert_is_dir "${path_arr[@]}"
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     lines+=("PATH=${conf_dict['path']}")
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         keys=(
             'cairo'
@@ -17634,7 +17634,7 @@ koopa_r_configure_environ() {
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         pc_path_arr=()
         pc_path_arr+=("${app_pc_path_arr[@]}")
-        if [[ "${dict['system']}" -eq 1 ]]
+        if [[ "${bool['system']}" -eq 1 ]]
         then
             local -a sys_pc_path_arr
             readarray -t sys_pc_path_arr <<< "$( \
@@ -17665,7 +17665,7 @@ koopa_r_configure_environ() {
     fi
     if koopa_is_macos
     then
-        if [[ "${dict['system']}" -eq 1 ]]
+        if [[ "${bool['system']}" -eq 1 ]]
         then
             lines+=('R_COMPILE_AND_INSTALL_PACKAGES=never')
         fi
@@ -17688,7 +17688,7 @@ koopa_r_configure_environ() {
         "R_USER_CONFIG_DIR=\${HOME}/.config"
         "R_USER_DATA_DIR=\${HOME}/.local/share"
     )
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         lines+=(
             "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
@@ -17698,7 +17698,9 @@ koopa_r_configure_environ() {
     lines+=("VROOM_CONNECTION_SIZE=524288")
     if koopa_is_fedora_like
     then
-        dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
+        dict['oracle_ver']="$( \
+            koopa_app_json_version 'oracle-instant-client' \
+        )"
         dict['oracle_ver']="$( \
             koopa_major_minor_version "${dict['oracle_ver']}" \
         )"
@@ -17733,7 +17735,7 @@ abort,verbose"
         )
     fi
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
             koopa_write_string \
@@ -17751,19 +17753,19 @@ abort,verbose"
 }
 
 koopa_r_configure_java() {
-    local -A app conf_dict dict
+    local -A app bool conf_dict dict
     local -a java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
-        dict['use_apps']=0
+        bool['use_apps']=0
     fi
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
@@ -17786,7 +17788,7 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    case "${dict[system]}" in
+    case "${bool['system']}" in
         '0')
             r_cmd=("${app['r']}")
             ;;
@@ -17800,7 +17802,7 @@ koopa_r_configure_java() {
 }
 
 koopa_r_configure_ldpaths() {
-    local -A app dict ld_lib_app_arr
+    local -A app bool dict ld_lib_app_arr
     local -a keys ld_lib_arr lines
     local key
     koopa_assert_has_args_eq "$#" 1
@@ -17815,28 +17817,22 @@ koopa_r_configure_ldpaths() {
                 ;;
         esac
     fi
-    dict['system']=0
-    dict['use_apps']=1
-    dict['use_java']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]]
+    bool['system']=0
+    bool['use_apps']=1
+    bool['use_java']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    if [[ "${bool['system']}" -eq 1 ]]
     then
-        koopa_is_linux && dict['use_java']=0
-        dict['use_apps']=0
+        koopa_is_linux && bool['use_java']=0
+        bool['use_apps']=0
     fi
-    if [[ "${dict['use_java']}" -eq 1 ]]
+    if [[ "${bool['use_java']}" -eq 1 ]]
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
         dict['java_home']='/usr/lib/jvm/default-java'
     fi
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['java_home']}" \
-        "${dict['r_prefix']}"
-    dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert_info "Modifying '${dict['file']}'."
+    koopa_assert_is_dir "${dict['java_home']}"
     lines=()
     lines+=(": \${JAVA_HOME=${dict['java_home']}}")
     if koopa_is_macos
@@ -17847,7 +17843,7 @@ libexec/Contents/Home/lib/server}")
         lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
 libexec/lib/server}")
     fi
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         keys=(
             'bzip2'
@@ -17895,11 +17891,11 @@ libexec/lib/server}")
             'zlib'
             'zstd'
         )
-        if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+        if koopa_is_macos || [[ "${bool['system']}" -eq 0 ]]
         then
             keys+=('gettext')
         fi
-        if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+        if koopa_is_linux && [[ "${bool['system']}" -eq 0 ]]
         then
             keys+=('gcc')
         fi
@@ -17925,7 +17921,7 @@ libexec/lib/server}")
     fi
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         ld_lib_arr+=("${ld_lib_app_arr[@]}")
     fi
@@ -17955,8 +17951,13 @@ libexec/lib/server}")
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
     fi
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    koopa_assert_is_dir "${dict['r_prefix']}"
+    dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
-    case "${dict['system']}" in
+    koopa_alert_info "Modifying '${dict['file']}'."
+    case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
             koopa_write_string \
@@ -17974,15 +17975,15 @@ libexec/lib/server}")
 }
 
 koopa_r_configure_makeconf() {
-    local -A app dict
+    local -A app bool dict
     local -a libs
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['pkg_config']="$(koopa_locate_pkg_config)"
         koopa_assert_is_executable "${app[@]}"
@@ -18038,7 +18039,7 @@ koopa_r_configure_makeconf() {
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             koopa_find_and_replace_in_file \
                 --pattern="${dict['pattern']}" \
@@ -18060,18 +18061,18 @@ koopa_r_configure_makeconf() {
 }
 
 koopa_r_configure_makevars() {
-    local -A app app_pc_path_arr conf_dict dict
+    local -A app app_pc_path_arr bool conf_dict dict
     local -a cppflags keys libintl ldflags lines pkg_config
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
         then
@@ -18105,7 +18106,7 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
         then
@@ -18254,7 +18255,7 @@ lib/pkgconfig"
         conf_dict['fcflags']="${conf_dict['fflags']}"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
-        case "${dict['system']}" in
+        case "${bool['system']}" in
             '0')
                 conf_dict['op']='+='
                 ;;
@@ -18318,7 +18319,7 @@ lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
             koopa_write_string \
@@ -18337,14 +18338,14 @@ lib/pkgconfig"
 }
 
 koopa_r_copy_files_into_etc() {
-    local -A app dict
+    local -A app bool dict
     local -a files
     local file
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    bool['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
@@ -18368,7 +18369,7 @@ koopa_r_copy_files_into_etc() {
             dict2['target']="$(koopa_realpath "${dict2['target']}")"
         fi
         koopa_alert "Modifying '${dict2['target']}'."
-        if [[ "${dict['system']}" -eq 1 ]]
+        if [[ "${bool['system']}" -eq 1 ]]
         then
             koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
         else
@@ -18533,20 +18534,20 @@ koopa_r_prefix() {
 }
 
 koopa_r_remove_packages_in_system_library() {
-    local -A app dict
+    local -A app bool dict
     local -a rscript_cmd
     koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"
     app['rscript']="${app['r']}script"
     koopa_assert_is_executable "${app[@]}"
     shift 1
-    dict['system']=0
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
+    bool['system']=0
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     dict['script']="$(koopa_koopa_prefix)/lang/r/\
 remove-packages-in-system-library.R"
     koopa_assert_is_file "${dict['script']}"
     rscript_cmd=()
-    if [[ "${dict['system']}" -eq 1 ]]
+    if [[ "${bool['system']}" -eq 1 ]]
     then
         rscript_cmd+=('koopa_sudo')
     fi

@@ -65,17 +65,17 @@ koopa_r_configure_environ() {
     # - http://mac.r-project.org/
     # - https://cran.r-project.org/bin/macosx/tools/
     # """
-    local -A app app_pc_path_arr conf_dict dict
+    local -A app app_pc_path_arr bool conf_dict dict
     local -a keys lines path_arr pc_path_arr
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
@@ -89,7 +89,7 @@ koopa_r_configure_environ() {
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
@@ -107,11 +107,11 @@ koopa_r_configure_environ() {
         app['zip']="$(koopa_locate_zip)"
         koopa_assert_is_executable "${app[@]}"
         app['lpr']="$(koopa_locate_lpr --allow-missing)"
-        app['open']="$(koopa_locate_open --allow-missing)"
         if [[ ! -x "${app['lpr']}" ]]
         then
             app['lpr']='/usr/bin/lpr'
         fi
+        app['open']="$(koopa_locate_open --allow-missing)"
         if [[ ! -x "${app['open']}" ]]
         then
             if koopa_is_linux
@@ -138,7 +138,7 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    # > case "${dict['system']}" in
+    # > case "${bool['system']}" in
     # >     '1')
     # >         path_arr+=('/usr/local/bin')
     # >         ;;
@@ -168,7 +168,7 @@ koopa_r_configure_environ() {
     koopa_assert_is_dir "${path_arr[@]}"
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     lines+=("PATH=${conf_dict['path']}")
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Set the 'PKG_CONFIG_PATH' string.
         keys=(
@@ -237,12 +237,12 @@ koopa_r_configure_environ() {
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         pc_path_arr=()
-        # > if [[ "${dict['system']}" -eq 1 ]]
+        # > if [[ "${bool['system']}" -eq 1 ]]
         # > then
         # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
         # > fi
         pc_path_arr+=("${app_pc_path_arr[@]}")
-        if [[ "${dict['system']}" -eq 1 ]]
+        if [[ "${bool['system']}" -eq 1 ]]
         then
             local -a sys_pc_path_arr
             # NOTE Likely want to include '/usr/bin/pkg-config' here also.
@@ -274,7 +274,7 @@ koopa_r_configure_environ() {
     fi
     if koopa_is_macos
     then
-        if [[ "${dict['system']}" -eq 1 ]]
+        if [[ "${bool['system']}" -eq 1 ]]
         then
             lines+=('R_COMPILE_AND_INSTALL_PACKAGES=never')
         fi
@@ -326,7 +326,7 @@ koopa_r_configure_environ() {
     # units
     # --------------------------------------------------------------------------
     # The units package requires udunits2 to be installed.
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         lines+=(
             "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
@@ -343,7 +343,9 @@ koopa_r_configure_environ() {
     lines+=("VROOM_CONNECTION_SIZE=524288")
     if koopa_is_fedora_like
     then
-        dict['oracle_ver']="$(koopa_app_json_version 'oracle-instant-client')"
+        dict['oracle_ver']="$( \
+            koopa_app_json_version 'oracle-instant-client' \
+        )"
         dict['oracle_ver']="$( \
             koopa_major_minor_version "${dict['oracle_ver']}" \
         )"
@@ -408,7 +410,7 @@ abort,verbose"
         )
     fi
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
             koopa_write_string \

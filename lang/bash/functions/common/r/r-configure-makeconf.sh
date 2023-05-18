@@ -13,15 +13,15 @@ koopa_r_configure_makeconf() {
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # - https://github.com/wch/r-source/blob/trunk/Makeconf.in
     # """
-    local -A app dict
+    local -A app bool dict
     local -a libs
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['pkg_config']="$(koopa_locate_pkg_config)"
         koopa_assert_is_executable "${app[@]}"
@@ -77,7 +77,7 @@ koopa_r_configure_makeconf() {
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['pattern']='^LIBS = .+$'
     dict['replacement']="LIBS = ${libs[*]}"
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             koopa_find_and_replace_in_file \
                 --pattern="${dict['pattern']}" \

@@ -28,7 +28,7 @@ koopa_r_configure_ldpaths() {
     # @seealso
     # - https://github.com/wch/r-source/blob/HEAD/etc/ldpaths.in
     # """
-    local -A app dict ld_lib_app_arr
+    local -A app bool dict ld_lib_app_arr
     local -a keys ld_lib_arr lines
     local key
     koopa_assert_has_args_eq "$#" 1
@@ -43,28 +43,22 @@ koopa_r_configure_ldpaths() {
                 ;;
         esac
     fi
-    dict['system']=0
-    dict['use_apps']=1
-    dict['use_java']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]]
+    bool['system']=0
+    bool['use_apps']=1
+    bool['use_java']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    if [[ "${bool['system']}" -eq 1 ]]
     then
-        koopa_is_linux && dict['use_java']=0
-        dict['use_apps']=0
+        koopa_is_linux && bool['use_java']=0
+        bool['use_apps']=0
     fi
-    if [[ "${dict['use_java']}" -eq 1 ]]
+    if [[ "${bool['use_java']}" -eq 1 ]]
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
         dict['java_home']='/usr/lib/jvm/default-java'
     fi
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    koopa_assert_is_dir \
-        "${dict['java_home']}" \
-        "${dict['r_prefix']}"
-    dict['file']="${dict['r_prefix']}/etc/ldpaths"
-    koopa_alert_info "Modifying '${dict['file']}'."
+    koopa_assert_is_dir "${dict['java_home']}"
     lines=()
     lines+=(": \${JAVA_HOME=${dict['java_home']}}")
     if koopa_is_macos
@@ -75,7 +69,7 @@ libexec/Contents/Home/lib/server}")
         lines+=(": \${R_JAVA_LD_LIBRARY_PATH=\${JAVA_HOME}/\
 libexec/lib/server}")
     fi
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         keys=(
             'bzip2'
@@ -125,11 +119,11 @@ libexec/lib/server}")
             'zlib'
             'zstd'
         )
-        if koopa_is_macos || [[ "${dict['system']}" -eq 0 ]]
+        if koopa_is_macos || [[ "${bool['system']}" -eq 0 ]]
         then
             keys+=('gettext')
         fi
-        if koopa_is_linux && [[ "${dict['system']}" -eq 0 ]]
+        if koopa_is_linux && [[ "${bool['system']}" -eq 0 ]]
         then
             keys+=('gcc')
         fi
@@ -157,15 +151,15 @@ libexec/lib/server}")
     # Alternative approach, that uses absolute path:
     # > ld_lib_arr+=("${dict['r_prefix']}/lib")
     ld_lib_arr+=("\${R_HOME}/lib")
-    # > if [[ "${dict['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
+    # > if [[ "${bool['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
     # > then
     # >     ld_lib_arr+=('/usr/local/lib')
     # > fi
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         ld_lib_arr+=("${ld_lib_app_arr[@]}")
     fi
-    # > if koopa_is_macos && [[ "${dict['system']}" -eq 1 ]]
+    # > if koopa_is_macos && [[ "${bool['system']}" -eq 1 ]]
     # > then
     # >     dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
     # >     koopa_assert_is_dir "${dict['r_opt_libdir']}"
@@ -197,8 +191,13 @@ libexec/lib/server}")
             'export DYLD_FALLBACK_LIBRARY_PATH'
         )
     fi
+    dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+    koopa_assert_is_dir "${dict['r_prefix']}"
+    dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
-    case "${dict['system']}" in
+    koopa_alert_info "Modifying '${dict['file']}'."
+    case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
             koopa_write_string \
