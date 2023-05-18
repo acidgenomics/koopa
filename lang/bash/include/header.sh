@@ -280,7 +280,7 @@ __koopa_bash_header() {
             dict['header_path']="$(__koopa_realpath "${dict['header_path']}")"
         fi
         KOOPA_PREFIX="$( \
-            cd "$(dirname "${dict['header_path']}")/../../../.." \
+            cd "$(dirname "${dict['header_path']}")/../../.." \
             &>/dev/null \
             && pwd -P \
         )"
