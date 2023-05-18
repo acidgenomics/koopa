@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME Consider adding '/usr/sbin' and '/sbin' to end of PATH automatically
-# for system installs.
-
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-18.
+    #
+    # Refer to 'locale' for desired LC settings.
     # """
     local -A app bool dict
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_is_owner
     koopa_assert_has_no_envs
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
@@ -47,7 +45,6 @@ koopa_install_app() {
     dict['app_prefix']="$(koopa_app_prefix)"
     dict['cpu_count']="$(koopa_cpu_count)"
     dict['installer']=''
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']=''
     dict['platform']='common'
@@ -204,6 +201,7 @@ koopa_install_app() {
         dict['version']="${dict['current_version']}"
     case "${dict['mode']}" in
         'shared')
+            koopa_assert_is_owner
             if [[ -z "${dict['prefix']}" ]]
             then
                 bool['auto_prefix']=1
@@ -226,11 +224,12 @@ ${dict['version2']}"
             fi
             ;;
         'system')
+            koopa_assert_is_owner
+            koopa_assert_is_admin
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             koopa_is_linux && bool['update_ldconfig']=1
-            # > koopa_sudo_trigger
             ;;
         'user')
             bool['link_in_bin']=0
@@ -351,14 +350,7 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        # Configure 'PATH' string.
-        path_arr=(
-            '/usr/bin'
-            '/usr/sbin'
-            '/bin'
-            '/sbin'
-        )
-        # Refer to 'locale' for desired LC settings.
+        path_arr=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -395,8 +387,7 @@ ${dict['version2']}"
                 bool['copy_log_files']=1
             fi
         fi
-        dict['header_file']="${dict['koopa_prefix']}/lang/shell/bash/\
-include/header.sh"
+        dict['header_file']="$(koopa_bash_prefix)/include/header.sh"
         dict['stderr_file']="$(koopa_tmp_log_file)"
         dict['stdout_file']="$(koopa_tmp_log_file)"
         koopa_assert_is_file \

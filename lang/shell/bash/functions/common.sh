@@ -2589,6 +2589,11 @@ koopa_basename() {
     return 0
 }
 
+koopa_bash_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/shell/bash"
+    return 0
+}
+
 koopa_bin_prefix() {
     _koopa_bin_prefix "$@"
 }
@@ -4781,10 +4786,8 @@ koopa_config_prefix() {
 koopa_configure_app() {
     local -A bool dict
     local -a pos
-    koopa_assert_is_owner
     bool['verbose']=0
     dict['config_fun']='main'
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']=''
     dict['platform']='common'
@@ -4837,15 +4840,24 @@ koopa_configure_app() {
         set -o xtrace
     fi
     case "${dict['mode']}" in
+        'shared')
+            koopa_assert_is_owner
+            ;;
         'system')
+            koopa_assert_is_owner
             koopa_assert_is_admin
             ;;
     esac
-    dict['config_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-configure/${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
+    dict['config_file']="$(koopa_bash_prefix)/include/configure/\
+${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
     koopa_assert_is_file "${dict['config_file']}"
     dict['tmp_dir']="$(koopa_tmp_dir)"
     (
+        case "${dict['mode']}" in
+            'system')
+                koopa_add_to_path_end '/usr/sbin' '/sbin'
+                ;;
+        esac
         koopa_cd "${dict['tmp_dir']}"
         source "${dict['config_file']}"
         koopa_assert_is_function "${dict['config_fun']}"
@@ -9980,7 +9992,6 @@ koopa_install_app_subshell() {
     local -a pos
     dict['installer_bn']=''
     dict['installer_fun']='main'
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']="${KOOPA_INSTALL_NAME:-}"
     dict['platform']='common'
@@ -10058,8 +10069,8 @@ koopa_install_app_subshell() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
-    dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
+    dict['installer_file']="$(koopa_bash_prefix)/include/install/\
+${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
     (
         koopa_cd "${dict['tmp_dir']}"
@@ -10080,7 +10091,6 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_is_owner
     koopa_assert_has_no_envs
     bool['auto_prefix']=0
     bool['binary']=0
@@ -10100,7 +10110,6 @@ koopa_install_app() {
     dict['app_prefix']="$(koopa_app_prefix)"
     dict['cpu_count']="$(koopa_cpu_count)"
     dict['installer']=''
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']=''
     dict['platform']='common'
@@ -10251,6 +10260,7 @@ koopa_install_app() {
         dict['version']="${dict['current_version']}"
     case "${dict['mode']}" in
         'shared')
+            koopa_assert_is_owner
             if [[ -z "${dict['prefix']}" ]]
             then
                 bool['auto_prefix']=1
@@ -10272,6 +10282,8 @@ ${dict['version2']}"
             fi
             ;;
         'system')
+            koopa_assert_is_owner
+            koopa_assert_is_admin
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
@@ -10396,12 +10408,7 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr=(
-            '/usr/bin'
-            '/usr/sbin'
-            '/bin'
-            '/sbin'
-        )
+        path_arr=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -10438,8 +10445,7 @@ ${dict['version2']}"
                 bool['copy_log_files']=1
             fi
         fi
-        dict['header_file']="${dict['koopa_prefix']}/lang/shell/bash/\
-include/header.sh"
+        dict['header_file']="$(koopa_bash_prefix)/include/header.sh"
         dict['stderr_file']="$(koopa_tmp_log_file)"
         dict['stdout_file']="$(koopa_tmp_log_file)"
         koopa_assert_is_file \
@@ -22023,7 +22029,8 @@ koopa_sudo_trigger() {
     local -A app
     koopa_assert_has_no_args "$#"
     koopa_is_root && return 0
-    koopa_assert_is_admin
+    koopa_has_passwordless_sudo && return 0
+    koopa_is_admin || return 1
     app['sudo']="$(koopa_locate_sudo)"
     koopa_assert_is_executable "${app['sudo']}"
     "${app['sudo']}" -v
@@ -22761,14 +22768,12 @@ koopa_uninstall_apache_spark() {
 koopa_uninstall_app() {
     local -A bool dict
     local -a bin_arr man1_arr
-    koopa_assert_is_owner
     bool['quiet']=0
     bool['unlink_in_bin']=''
     bool['unlink_in_man1']=''
     bool['unlink_in_opt']=''
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']=''
     dict['opt_prefix']="$(koopa_opt_prefix)"
@@ -22852,6 +22857,7 @@ koopa_uninstall_app() {
     fi
     case "${dict['mode']}" in
         'shared')
+            koopa_assert_is_owner
             [[ -z "${dict['prefix']}" ]] && \
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}"
             [[ -z "${bool['unlink_in_bin']}" ]] && bool['unlink_in_bin']=1
@@ -22859,6 +22865,8 @@ koopa_uninstall_app() {
             [[ -z "${bool['unlink_in_opt']}" ]] && bool['unlink_in_opt']=1
             ;;
         'system')
+            koopa_assert_is_owner
+            koopa_assert_is_admin
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
@@ -22884,12 +22892,17 @@ koopa_uninstall_app() {
     fi
     [[ -z "${dict['uninstaller_bn']}" ]] && \
         dict['uninstaller_bn']="${dict['name']}"
-    dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
+    dict['uninstaller_file']="$(koopa_bash_prefix)/include/uninstall/\
+${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
     then
         dict['tmp_dir']="$(koopa_tmp_dir)"
         (
+            case "${dict['mode']}" in
+                'system')
+                    koopa_add_to_path_end '/usr/sbin' '/sbin'
+                    ;;
+            esac
             koopa_cd "${dict['tmp_dir']}"
             source "${dict['uninstaller_file']}"
             koopa_assert_is_function "${dict['uninstaller_fun']}"
