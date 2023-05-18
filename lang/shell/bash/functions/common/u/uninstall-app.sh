@@ -1,22 +1,18 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure that '/usr/sbin' and '/sbin' are in PATH for system.
-
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-18.
     # """
     local -A bool dict
     local -a bin_arr man1_arr
-    koopa_assert_is_owner
     bool['quiet']=0
     bool['unlink_in_bin']=''
     bool['unlink_in_man1']=''
     bool['unlink_in_opt']=''
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']=''
     dict['opt_prefix']="$(koopa_opt_prefix)"
@@ -103,6 +99,7 @@ koopa_uninstall_app() {
     fi
     case "${dict['mode']}" in
         'shared')
+            koopa_assert_is_owner
             [[ -z "${dict['prefix']}" ]] && \
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}"
             [[ -z "${bool['unlink_in_bin']}" ]] && bool['unlink_in_bin']=1
@@ -110,10 +107,11 @@ koopa_uninstall_app() {
             [[ -z "${bool['unlink_in_opt']}" ]] && bool['unlink_in_opt']=1
             ;;
         'system')
+            koopa_assert_is_owner
+            koopa_assert_is_admin
             bool['unlink_in_bin']=0
             bool['unlink_in_man1']=0
             bool['unlink_in_opt']=0
-            # > koopa_sudo_trigger
             ;;
         'user')
             bool['unlink_in_bin']=0
@@ -136,12 +134,17 @@ koopa_uninstall_app() {
     fi
     [[ -z "${dict['uninstaller_bn']}" ]] && \
         dict['uninstaller_bn']="${dict['name']}"
-    dict['uninstaller_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-uninstall/${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
+    dict['uninstaller_file']="$(koopa_bash_prefix)/include/uninstall/\
+${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
     if [[ -f "${dict['uninstaller_file']}" ]]
     then
         dict['tmp_dir']="$(koopa_tmp_dir)"
         (
+            case "${dict['mode']}" in
+                'system')
+                    koopa_add_to_path_end '/usr/sbin' '/sbin'
+                    ;;
+            esac
             koopa_cd "${dict['tmp_dir']}"
             # shellcheck source=/dev/null
             source "${dict['uninstaller_file']}"

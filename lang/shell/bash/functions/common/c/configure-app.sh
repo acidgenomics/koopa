@@ -1,18 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure that '/usr/sbin' and '/sbin' are in PATH for system config.
-
 koopa_configure_app() {
     # """
     # Configure an application (inside a subshell).
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-18.
     # """
     local -A bool dict
     local -a pos
-    koopa_assert_is_owner
     bool['verbose']=0
     dict['config_fun']='main'
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']=''
     dict['platform']='common'
@@ -68,16 +64,25 @@ koopa_configure_app() {
         set -o xtrace
     fi
     case "${dict['mode']}" in
+        'shared')
+            koopa_assert_is_owner
+            ;;
         'system')
+            koopa_assert_is_owner
             koopa_assert_is_admin
             ;;
     esac
-    dict['config_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-configure/${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
+    dict['config_file']="$(koopa_bash_prefix)/include/configure/\
+${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
     # > koopa_alert "Configuring '${dict['name']}'."
     koopa_assert_is_file "${dict['config_file']}"
     dict['tmp_dir']="$(koopa_tmp_dir)"
     (
+        case "${dict['mode']}" in
+            'system')
+                koopa_add_to_path_end '/usr/sbin' '/sbin'
+                ;;
+        esac
         koopa_cd "${dict['tmp_dir']}"
         # shellcheck source=/dev/null
         source "${dict['config_file']}"

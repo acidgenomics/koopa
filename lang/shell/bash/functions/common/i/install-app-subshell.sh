@@ -3,13 +3,12 @@
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-18.
     # """
     local -A dict
     local -a pos
     dict['installer_bn']=''
     dict['installer_fun']='main'
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['mode']='shared'
     dict['name']="${KOOPA_INSTALL_NAME:-}"
     dict['platform']='common'
@@ -92,8 +91,8 @@ koopa_install_app_subshell() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     [[ -z "${dict['installer_bn']}" ]] && dict['installer_bn']="${dict['name']}"
-    dict['installer_file']="${dict['koopa_prefix']}/lang/shell/bash/include/\
-install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
+    dict['installer_file']="$(koopa_bash_prefix)/include/install/\
+${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
     koopa_assert_is_file "${dict['installer_file']}"
     (
         koopa_cd "${dict['tmp_dir']}"
@@ -106,10 +105,6 @@ install/${dict['platform']}/${dict['mode']}/${dict['installer_bn']}.sh"
         # shellcheck source=/dev/null
         source "${dict['installer_file']}"
         koopa_assert_is_function "${dict['installer_fun']}"
-        # This is problematic with wrapper functions that call activation,
-        # such as automake.
-        # > PATH='/usr/bin:/bin'
-        # > export PATH
         "${dict['installer_fun']}" "$@"
         return 0
     )
