@@ -28,19 +28,19 @@ koopa_r_configure_java() {
     # - JAVAH deprecated in JDK 9.
     #   https://docs.oracle.com/javase/9/tools/javah.htm#JSWOR687
     # """
-    local -A app conf_dict dict
+    local -A app bool conf_dict dict
     local -a java_args r_cmd
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
-        dict['use_apps']=0
+        bool['use_apps']=0
     fi
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
@@ -63,7 +63,7 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    case "${dict[system]}" in
+    case "${bool['system']}" in
         '0')
             r_cmd=("${app['r']}")
             ;;

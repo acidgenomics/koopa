@@ -21,18 +21,18 @@ koopa_r_configure_makevars() {
     # - /opt/koopa/opt/r/lib/R/etc/Makeconf
     # - /Library/Frameworks/R.framework/Versions/Current/Resources/etc/Makeconf
     # """
-    local -A app app_pc_path_arr conf_dict dict
+    local -A app app_pc_path_arr bool conf_dict dict
     local -a cppflags keys libintl ldflags lines pkg_config
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['system']=0
-    dict['use_apps']=1
-    ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    bool['system']=0
+    bool['use_apps']=1
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
         then
@@ -66,13 +66,13 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    # > case "${dict['system']}" in
+    # > case "${bool['system']}" in
     # >     '1')
     # >         cppflags+=('-I/usr/local/include')
     # >         ldflags+=('-L/usr/local/lib')
     # >         ;;
     # > esac
-    if [[ "${dict['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Custom pkg-config flags here are incompatible for macOS clang with
         # these packages: fs, httpuv, igraph, nloptr.
@@ -176,7 +176,7 @@ lib/pkgconfig"
                 "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
             )
         fi
-        # NOTE Consider adding libiconv here.
+        # NOTE Consider adding 'libiconv' here.
         cppflags+=(
             "-I${dict['bzip2']}/include"
             "-I${dict['hdf5']}/include"
@@ -238,7 +238,7 @@ lib/pkgconfig"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
         # This operator is needed to harden library paths for R CRAN binary.
-        case "${dict['system']}" in
+        case "${bool['system']}" in
             '0')
                 conf_dict['op']='+='
                 ;;
@@ -307,7 +307,7 @@ lib/pkgconfig"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
             koopa_write_string \

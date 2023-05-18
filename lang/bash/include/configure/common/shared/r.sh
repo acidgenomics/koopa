@@ -8,26 +8,26 @@
 main() {
     # """
     # Configure R.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-18.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
     # @seealso
     # - R CMD config
     # """
-    local -A app dict
+    local -A app bool dict
     koopa_assert_has_args_le "$#" 1
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
     koopa_assert_is_executable "${app[@]}"
     app['r']="$(koopa_realpath "${app['r']}")"
-    dict['name']='r'
-    dict['system']=0
+    bool['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
     then
         koopa_assert_is_admin
-        dict['system']=1
+        bool['system']=1
     fi
+    dict['name']='r'
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
@@ -38,12 +38,13 @@ main() {
             "'libomp' is not installed." \
             "Run 'koopa install system openmp' to resolve."
     fi
-    koopa_r_copy_files_into_etc "${app['r']}"
+    koopa_r_configure_makeconf "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"
+    koopa_r_copy_files_into_etc "${app['r']}"
     koopa_r_configure_java "${app['r']}"
-    case "${dict['system']}" in
+    case "${bool['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
             then
@@ -79,11 +80,10 @@ main() {
             fi
             ;;
     esac
-    koopa_r_configure_makeconf "${app['r']}"
     koopa_r_migrate_non_base_packages "${app['r']}"
     # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
     koopa_alert_configure_success "${dict['name']}" "${app['r']}"
-    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         app['rstudio_server']="$( \
             koopa_linux_locate_rstudio_server --allow-missing \
