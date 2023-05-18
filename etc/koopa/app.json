@@ -4890,10 +4890,10 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2023-05-14",
+    "date": "2023-05-18",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.1.0"
+    "version": "2.1.1"
   },
   "tuc": {
     "aliases": {
