@@ -251,16 +251,16 @@ local({  # nolint
             "install.packages.compile.from.source" = "never"
         )
     }
-    ## Allow binary install on macOS for CRAN R. Otherwise default to installing
-    ## from source. Note that RSPM doesn't currently support macOS binaries.
-    ## Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
+    ## Enforce binary installs on macOS for CRAN R. Otherwise default to
+    ## installing from source. Note that RSPM doesn't currently support macOS
+    ## binaries. Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
     ## environment variable in 'Renviron'.
     if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
         cran <- "https://cloud.r-project.org"
         options(
             "install.packages.check.source" = "no",
             "install.packages.compile.from.source" = "never",
-            "pkgType" = "both"
+            "pkgType" = "binary"
         )
     }
     repos <- getOption("repos")
