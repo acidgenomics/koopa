@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Save 'Makeconf.bak' on clean install.
-# FIXME Disable modification of LIBS for system R in a future update.
-
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
@@ -61,14 +58,15 @@ koopa_r_configure_makeconf() {
             libs+=('-lrt' '-ltirpc')
         fi
     else
-        libs=('-lbz2' '-ldl' '-llzma' '-lm' '-lpcre2-8' '-lz')
-        if koopa_is_macos
-        then
-            libs+=('-liconv' '-licucore')
-        elif koopa_is_linux
-        then
-            libs+=('-licui18n' '-licuuc' '-lrt' '-ltirpc')
-        fi
+        # > libs=('-lbz2' '-ldl' '-llzma' '-lm' '-lpcre2-8' '-lz')
+        # > if koopa_is_macos
+        # > then
+        # >     libs+=('-liconv' '-licucore')
+        # > elif koopa_is_linux
+        # > then
+        # >     libs+=('-licui18n' '-licuuc' '-lrt' '-ltirpc')
+        # > fi
+        return 0
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
