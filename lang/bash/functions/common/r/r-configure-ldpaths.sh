@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Save 'ldpaths.bak' on clean install.
-
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
@@ -194,17 +192,27 @@ libexec/lib/server}")
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    dict['file_bak']="${dict['file']}.bak"
     koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
     koopa_alert_info "Modifying '${dict['file']}'."
     case "${bool['system']}" in
         '0')
+            if [[ ! -f "${dict['file_bak']}" ]]
+            then
+                koopa_cp "${dict['file']}" "${dict['file_bak']}"
+            fi
             koopa_rm "${dict['file']}"
             koopa_write_string \
                 --file="${dict['file']}" \
                 --string="${dict['string']}"
             ;;
         '1')
+
+            if [[ ! -f "${dict['file_bak']}" ]]
+            then
+                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+            fi
             koopa_rm --sudo "${dict['file']}"
             koopa_sudo_write_string \
                 --file="${dict['file']}" \
