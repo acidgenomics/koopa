@@ -76,7 +76,6 @@ _koopa_activate_aliases() {
     alias k='_koopa_alias_k'
     alias kb='_koopa_alias_kb'
     alias kdev='_koopa_alias_kdev'
-    alias kp='_koopa_alias_kp'
     alias l.='l -d .*'
     alias l1='l -1'
     alias l='_koopa_alias_l'
@@ -1163,7 +1162,10 @@ _koopa_alias_k() {
 }
 
 _koopa_alias_kb() {
-    cd "$(_koopa_koopa_prefix)/lang/shell/bash" || return 1
+    __kvar_bash_prefix="$(_koopa_koopa_prefix)/lang/bash"
+    [ -d "$__kvar_bash_prefix" ] || return 1
+    cd "$__kvar_bash_prefix" || return 1
+    return 0
 }
 
 _koopa_alias_kdev() {
@@ -1195,7 +1197,7 @@ _koopa_alias_kdev() {
         __koopa_print 'Failed to locate env.'
         return 1
     fi
-    __kvar_rcfile="${__kvar_koopa_prefix}/lang/shell/bash/include/header.sh"
+    __kvar_rcfile="${__kvar_koopa_prefix}/lang/bash/include/header.sh"
     [ -f "$__kvar_rcfile" ] || return 1
     "$__kvar_env" -i \
         HOME="${HOME:?}" \
@@ -1220,10 +1222,6 @@ _koopa_alias_kdev() {
         __kvar_koopa_prefix \
         __kvar_rcfile
     return 0
-}
-
-_koopa_alias_kp() {
-    cd "$(_koopa_koopa_prefix)/lang/shell/posix" || return 1
 }
 
 _koopa_alias_l() {

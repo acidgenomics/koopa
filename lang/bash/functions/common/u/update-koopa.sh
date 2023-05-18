@@ -3,7 +3,7 @@
 koopa_update_koopa() {
     # """
     # Update koopa installation.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-18.
     #
     # Update of pinned stable releases is intentionally not supported.
     #
@@ -22,7 +22,7 @@ koopa_update_koopa() {
         koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
         return 1
     fi
-    prefixes=("${dict['koopa_prefix']}/lang/shell/zsh")
+    prefixes=("${dict['koopa_prefix']}/lang/zsh")
     for prefix in "${prefixes[@]}"
     do
         if [[ "$(koopa_stat_user_id "$prefix")" == "${dict['user_id']}" ]]

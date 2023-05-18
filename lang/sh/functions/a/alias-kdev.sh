@@ -3,7 +3,7 @@
 _koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
-    # @note Updated 2023-03-26.
+    # @note Updated 2023-05-18.
     #
     # Potentially useful Bash options:
     # * --debugger
@@ -43,7 +43,7 @@ _koopa_alias_kdev() {
         __koopa_print 'Failed to locate env.'
         return 1
     fi
-    __kvar_rcfile="${__kvar_koopa_prefix}/lang/shell/bash/include/header.sh"
+    __kvar_rcfile="${__kvar_koopa_prefix}/lang/bash/include/header.sh"
     [ -f "$__kvar_rcfile" ] || return 1
     "$__kvar_env" -i \
         HOME="${HOME:?}" \
