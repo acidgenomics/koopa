@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Disable modification of LIBS for system R in a future update.
+
 koopa_r_configure_makeconf() {
     # """
     # Modify the 'Makeconf' file to ensure correct configuration.
