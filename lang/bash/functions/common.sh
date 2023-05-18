@@ -17484,6 +17484,15 @@ koopa_r_configure_environ() {
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
     [[ "${dict['system']}" -eq 1 ]] && dict['use_apps']=0
+    dict['arch']="$(koopa_arch)"
+    if koopa_is_macos
+    then
+        case "${dict['arch']}" in
+            'aarch64')
+                dict['arch']='arm64'
+                ;;
+        esac
+    fi
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
@@ -17548,6 +17557,7 @@ koopa_r_configure_environ() {
     elif koopa_is_macos
     then
         path_arr+=(
+            "/opt/r/${dict['arch']}/bin"
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
@@ -17923,7 +17933,7 @@ libexec/lib/server}")
     then
         dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
         koopa_assert_is_dir "${dict['r_opt_libdir']}"
-        ld_lib_arr=("${dict['r_opt_libdir']}")
+        ld_lib_arr+=("${dict['r_opt_libdir']}")
     fi
     if koopa_is_linux
     then
