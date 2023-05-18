@@ -126,14 +126,14 @@ __koopa_zsh_header() {
         )"
         export KOOPA_PREFIX
     fi
-    source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    source "${KOOPA_PREFIX:?}/lang/sh/include/header.sh"
     if [[ "${KOOPA_TEST:-0}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
     fi
     if [[ "${dict[activate]}" -eq 1 ]] && [[ "${dict[minimal]}" -eq 0 ]]
     then
-        source "${KOOPA_PREFIX:?}/lang/shell/zsh/functions/activate.sh"
+        source "${KOOPA_PREFIX:?}/lang/zsh/functions/activate.sh"
         _koopa_activate_zsh_extras
     fi
     if [[ "${dict[test]}" -eq 1 ]]

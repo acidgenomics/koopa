@@ -3,20 +3,20 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-05-18.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    if [ -f "${KOOPA_PREFIX}/lang/shell/posix/functions.sh" ]
+    if [ -f "${KOOPA_PREFIX}/lang/sh/functions.sh" ]
     then
         # shellcheck source=/dev/null
-        . "${KOOPA_PREFIX}/lang/shell/posix/functions.sh"
+        . "${KOOPA_PREFIX}/lang/sh/functions.sh"
     else
         for __kvar_file in \
-            "${KOOPA_PREFIX}/lang/shell/posix/functions/"*'/'*'.sh'
+            "${KOOPA_PREFIX}/lang/sh/functions/"*'/'*'.sh'
         do
             # shellcheck source=/dev/null
             . "$__kvar_file"

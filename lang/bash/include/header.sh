@@ -113,7 +113,7 @@ __koopa_source_functions() {
     # """
     local -a files
     local cache_file file prefix
-    prefix="$(_koopa_koopa_prefix)/lang/shell/bash/functions/${1:?}"
+    prefix="$(_koopa_koopa_prefix)/lang/bash/functions/${1:?}"
     [[ -d "$prefix" ]] || return 0
     cache_file="${prefix}.sh"
     if [[ -f "$cache_file" ]]
@@ -153,7 +153,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2022-09-02.
+    # @note Updated 2023-05-18.
     #
     # @seealso
     # - shopt
@@ -287,7 +287,7 @@ __koopa_bash_header() {
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX:?}/lang/shell/posix/include/header.sh"
+    source "${KOOPA_PREFIX:?}/lang/sh/include/header.sh"
     if [[ "${bool['test']}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
