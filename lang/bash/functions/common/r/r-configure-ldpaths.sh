@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Save 'ldpaths.bak' on clean install.
+
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 

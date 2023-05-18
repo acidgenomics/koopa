@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME Save 'Makeconf.bak' on clean install.
 # FIXME Disable modification of LIBS for system R in a future update.
 
 koopa_r_configure_makeconf() {

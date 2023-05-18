@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Save 'repositories.bak' on clean install.
+
 koopa_r_copy_files_into_etc() {
     # """
     # Copy R config files into 'etc/'.
