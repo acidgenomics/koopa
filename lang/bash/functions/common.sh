@@ -17928,11 +17928,9 @@ libexec/lib/server}")
     if koopa_is_linux
     then
         dict['sys_libdir']="/usr/lib/${dict['arch']}-linux-gnu"
-        koopa_assert_is_dir "${dict['sys_libdir']}"
-        ld_lib_arr+=("${dict['sys_libdir']}")
+        koopa_assert_is_dir "${dict['sys_libdir']}" '/usr/lib' '/lib'
+        ld_lib_arr+=("${dict['sys_libdir']}" '/usr/lib' '/lib')
     fi
-    [[ -d '/usr/lib' ]] && ld_lib_arr+=('/usr/lib')
-    [[ -d '/lib' ]] && ld_lib_arr+=('/lib')
     ld_lib_arr+=("\${R_JAVA_LD_LIBRARY_PATH}")
     dict['library_path']="$(printf '%s:' "${ld_lib_arr[@]}")"
     lines+=(
