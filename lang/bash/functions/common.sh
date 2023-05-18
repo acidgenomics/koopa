@@ -18072,7 +18072,7 @@ koopa_r_configure_makeconf() {
 
 koopa_r_configure_makevars() {
     local -A app app_pc_path_arr bool conf_dict dict
-    local -a cppflags keys libintl ldflags lines pkg_config
+    local -a cppflags keys ldflags lines pkg_config
     local i key
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
@@ -18314,14 +18314,8 @@ lib/pkgconfig"
     fi
     if koopa_is_macos
     then
-        libintl=(
-            '-Wl,-framework'
-            '-Wl,CoreFoundation'
-        )
-        conf_dict['libintl']="${libintl[*]}"
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=(
-            "LIBINTL = ${conf_dict['libintl']}"
             "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
         )
     fi
