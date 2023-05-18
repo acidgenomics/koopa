@@ -157,7 +157,7 @@ koopa_r_configure_environ() {
     elif koopa_is_macos
     then
         path_arr+=(
-            "/opt/r/${dict['arch']}/bin"
+            # > "/opt/r/${dict['arch']}/bin"
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
