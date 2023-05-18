@@ -17954,17 +17954,27 @@ libexec/lib/server}")
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     dict['file']="${dict['r_prefix']}/etc/ldpaths"
+    dict['file_bak']="${dict['file']}.bak"
     koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
     koopa_alert_info "Modifying '${dict['file']}'."
     case "${bool['system']}" in
         '0')
+            if [[ ! -f "${dict['file_bak']}" ]]
+            then
+                koopa_cp "${dict['file']}" "${dict['file_bak']}"
+            fi
             koopa_rm "${dict['file']}"
             koopa_write_string \
                 --file="${dict['file']}" \
                 --string="${dict['string']}"
             ;;
         '1')
+
+            if [[ ! -f "${dict['file_bak']}" ]]
+            then
+                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+            fi
             koopa_rm --sudo "${dict['file']}"
             koopa_sudo_write_string \
                 --file="${dict['file']}" \
@@ -18023,14 +18033,7 @@ koopa_r_configure_makeconf() {
             libs+=('-lrt' '-ltirpc')
         fi
     else
-        libs=('-lbz2' '-ldl' '-llzma' '-lm' '-lpcre2-8' '-lz')
-        if koopa_is_macos
-        then
-            libs+=('-liconv' '-licucore')
-        elif koopa_is_linux
-        then
-            libs+=('-licui18n' '-licuuc' '-lrt' '-ltirpc')
-        fi
+        return 0
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
