@@ -167,7 +167,7 @@ libexec/lib/server}")
     then
         dict['r_opt_libdir']="/opt/r/${dict['arch']}/lib"
         koopa_assert_is_dir "${dict['r_opt_libdir']}"
-        ld_lib_arr=("${dict['r_opt_libdir']}")
+        ld_lib_arr+=("${dict['r_opt_libdir']}")
     fi
     if koopa_is_linux
     then
