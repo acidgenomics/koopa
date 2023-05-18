@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-05-18.
     #
     # The default Java path differs depending on the system.
     #
@@ -36,9 +36,7 @@ koopa_r_configure_java() {
     dict['system']=0
     dict['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && dict['system']=1
-    if [[ "${dict['system']}" -eq 1 ]] && \
-        koopa_is_linux && \
-        [[ ! -x "$(koopa_locate_bzip2 --allow-missing)" ]]
+    if [[ "${dict['system']}" -eq 1 ]] && koopa_is_linux
     then
         dict['use_apps']=0
     fi
