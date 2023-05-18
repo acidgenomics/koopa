@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-18.
     #
     # @section Package library location:
     #
@@ -268,6 +268,10 @@ koopa_r_configure_environ() {
     fi
     if koopa_is_macos
     then
+        if [[ "${dict['system']}" -eq 1 ]]
+        then
+            lines+=('R_COMPILE_AND_INSTALL_PACKAGES=never')
+        fi
         lines+=('R_MAX_NUM_DLLS=153')
     fi
     # data.table
