@@ -14726,6 +14726,12 @@ bin/${dict['bin_name']}"
     fi
 }
 
+koopa_locate_ar() {
+    koopa_locate_app \
+        '/usr/bin/ar' \
+        "$@"
+}
+
 koopa_locate_ascp() {
     koopa_locate_app \
         --app-name='aspera-connect' \
