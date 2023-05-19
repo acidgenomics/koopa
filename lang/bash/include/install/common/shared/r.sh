@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
 
-# NOTE This is intentionally linking to system bzip2 on macOS.
-
 main() {
     # """
     # Install R.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-19.
+    #
+    # @section Compiler settings:
+    #
+    # The system clang compiler stack is preferred on macOS. If you attempt to
+    # build with GCC, you'll run into a lot of compilation issues with
+    # Posit/RStudio packages, which are only optimized for clang currently.
+    #
+    # @section External dependencies:
+    #
+    # This install script is intentionally linking to system bzip2 on macOS.
+    # R currently has configuration issues with our 'libbz2.dylib' on macOS.
+    #
+    # cURL 8 currently fails build checks.
     #
     # @seealso
     # - Refer to the 'Installation + Administration' manual.
@@ -35,22 +46,13 @@ main() {
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
-    local -A app conf_dict dict
+    local -A app bool conf_dict dict
     local -a build_deps conf_args deps
-    if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
-    then
-        koopa_stop \
-            "'libomp' is not installed." \
-            "Run 'koopa install system openmp' to resolve."
-    fi
+    bool['devel']=0
+    bool['r_koopa']=1
     build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    deps=(
-        'gcc'
-        'zlib'
-        'zstd'
-    )
-    # R currently has configuration issues with libbz2.dylib on macOS.
+    deps=('gcc' 'zlib' 'zstd')
     koopa_is_linux && deps+=('bzip2')
     deps+=(
         'icu4c'
@@ -61,12 +63,13 @@ main() {
         'gettext'
         'xz'
         'openssl3'
-        # NOTE cURL 8 currently fails build checks.
         'curl7'
         'libffi'
         'libjpeg-turbo'
         'libpng'
         'libtiff'
+        'openblas'
+        # > 'openjdk'
         'pcre'
         'pcre2'
         'perl'
@@ -111,17 +114,8 @@ main() {
     app['sed']="$(koopa_locate_sed --realpath)"
     app['tar']="$(koopa_locate_tar --realpath)"
     app['yacc']="$(koopa_locate_yacc --realpath)"
-    # The system clang compiler stack is preferred on macOS. If you attempt to
-    # build with GCC, you'll run into a lot of compilation issues with
-    # Posit/RStudio packages, which are only optimized for clang currently.
     if koopa_is_macos
     then
-        if [[ ! -f '/usr/local/include/omp.h' ]]
-        then
-            koopa_stop \
-                "'libomp' is not installed." \
-                "Run 'koopa install system r-openmp' to resolve."
-        fi
         app['cc']='/usr/bin/clang'
         app['cxx']='/usr/bin/clang++'
     else
@@ -137,17 +131,18 @@ main() {
     dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir \
-        "${dict['tcl_tk']}" \
-        "${dict['temurin']}"
-    # This step can error unless we have run
-    # 'koopa install system tex-packages', so disabling at the moment.
-    # > if koopa_is_macos
-    # > then
-    # >     dict['texbin']='/Library/TeX/texbin'
-    # >     koopa_assert_is_dir "${dict['texbin']}"
-    # >     koopa_add_to_path_start "${dict['texbin']}"
-    # > fi
+    [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
+    if koopa_is_macos
+    then
+        dict['texbin']='/Library/TeX/texbin'
+        if [[ -d "${dict['texbin']}" ]]
+        then
+            koopa_add_to_path_start "${dict['texbin']}"
+        fi
+    fi
+    conf_dict['with_blas']="$( \
+        "${app['pkg_config']}" --libs 'openblas' \
+    )"
     # On macOS, consider including: 'cairo-quartz', 'cairo-quartz-font'.
     conf_dict['with_cairo']="$( \
         "${app['pkg_config']}" --libs \
@@ -228,6 +223,7 @@ main() {
         '--enable-shared'
         "--prefix=${dict['prefix']}"
         "--with-ICU=${conf_dict['with_icu']}"
+        "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
         "--with-libpng=${conf_dict['with_libpng']}"
@@ -265,8 +261,9 @@ main() {
     # Aqua framework is required to use R with RStudio on macOS. Currently
     # disabled due to build issues on macOS 13 with XCode CLT 14.
     koopa_is_macos && conf_args+=('--without-aqua')
-    if [[ "${dict['name']}" == 'r-devel' ]]
+    if [[ "${bool['devel']}" -eq 1 ]]
     then
+        bool['r_koopa']=0
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
         koopa_assert_is_executable "${app[@]}"
@@ -305,31 +302,32 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     app['rscript']="${dict['prefix']}/bin/Rscript"
     koopa_assert_is_executable "${app['r']}" "${app['rscript']}"
     koopa_configure_r "${app['r']}"
-    # NOTE libxml is now expected to return FALSE as of R 4.2.
+    # libxml is now expected to return FALSE here, as of R 4.2.
     "${app['rscript']}" -e 'capabilities()'
     koopa_check_shared_object \
         --name='libR' \
         --prefix="${dict['prefix']}/lib/R/lib"
-    [[ "${dict['name']}" == 'r-devel' ]] && return 0
-    koopa_install_r_koopa "${app['r']}"
-    # Install our internal R koopa package.
-    "${app['rscript']}" -e " \
-        options(
-            error = quote(quit(status = 1L)),
-            warn = 1L
-        ); \
-        if (!requireNamespace('BiocManager', quietly = TRUE)) { ; \
-            install.packages('BiocManager'); \
-        } ; \
-        install.packages(
-            pkgs = 'koopa',
-            repos = c(
-                'https://r.acidgenomics.com',
-                BiocManager::repositories()
-            ),
-            dependencies = TRUE
-        ); \
-    "
-    koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
+    if [[ "${bool['r_koopa']}" -eq 1 ]]
+    then
+        # Install our internal R koopa package.
+        "${app['rscript']}" -e " \
+            options(
+                error = quote(quit(status = 1L)),
+                warn = 1L
+            ); \
+            if (!requireNamespace('BiocManager', quietly = TRUE)) { ; \
+                install.packages('BiocManager'); \
+            } ; \
+            install.packages(
+                pkgs = 'koopa',
+                repos = c(
+                    'https://r.acidgenomics.com',
+                    BiocManager::repositories()
+                ),
+                dependencies = TRUE
+            ); \
+        "
+        koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
+    fi
     return 0
 }
