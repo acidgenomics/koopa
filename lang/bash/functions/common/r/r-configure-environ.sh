@@ -65,15 +65,15 @@ koopa_r_configure_environ() {
     # - http://mac.r-project.org/
     # - https://cran.r-project.org/bin/macosx/tools/
     # """
-    local -A app app_pc_path_arr bool conf_dict dict
-    local -a keys lines path_arr pc_path_arr
-    local i key
+    local -A app bool conf_dict dict
+    local -a lines path_arr
+    lines=()
+    path_arr=()
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
-    bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
@@ -82,28 +82,9 @@ koopa_r_configure_environ() {
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
-        # FIXME Need to provide fallbacks here if not installed.
-        app['bzip2']="$(koopa_locate_bzip2)"
-        app['cat']="$(koopa_locate_cat)"
-        app['gzip']="$(koopa_locate_gzip)"
-        app['less']="$(koopa_locate_less)"
-        app['ln']="$(koopa_locate_ln)"
-        app['lpr']="$(koopa_locate_lpr --allow-missing)"
-        app['make']="$(koopa_locate_make)"
-        app['open']="$(koopa_locate_open --allow-missing)"
-        app['pkg_config']="$(koopa_locate_pkg_config)"
-        app['sed']="$(koopa_locate_sed --allow-system)"
-        app['strip']="$(koopa_locate_strip)"
-        app['tar']="$(koopa_locate_tar)"
-        app['texi2dvi']="$(koopa_locate_texi2dvi)"
-        app['unzip']="$(koopa_locate_unzip)"
-        app['vim']="$(koopa_locate_vim)"
-        app['zip']="$(koopa_locate_zip)"
-        dict['udunits2']="$(koopa_app_prefix 'udunits')"
+        dict['udunits2']="$(koopa_app_prefix 'udunits' --allow-missing)"
     fi
-    dict['file']="${dict['r_prefix']}/etc/Renviron.site"
-    koopa_alert_info "Modifying '${dict['file']}'."
-    lines=()
+    # FIXME Consider only setting these for system install.
     lines+=(
         'R_BATCHSAVE=--no-save --no-restore'
         "R_LIBS_SITE=\${R_HOME}/site-library"
@@ -115,7 +96,6 @@ koopa_r_configure_environ() {
     # Set the 'PATH' string. Restricting path, so we don't mask compiler
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
-    path_arr=()
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -140,112 +120,6 @@ koopa_r_configure_environ() {
     koopa_assert_is_dir "${path_arr[@]}"
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     lines+=("PATH=${conf_dict['path']}")
-    # FIXME Need to rework this.
-    if [[ "${bool['use_apps']}" -eq 1 ]]
-    then
-        # Set the 'PKG_CONFIG_PATH' string.
-        keys=(
-            'cairo'
-            'curl7'
-            'fontconfig'
-            'freetype'
-            'fribidi'
-            'gdal'
-            'geos'
-            'glib'
-            'graphviz'
-            'harfbuzz'
-            'icu4c'
-            'imagemagick'
-            # > 'jpeg'
-            'libffi'
-            'libgit2'
-            'libjpeg-turbo'
-            'libpng'
-            'libssh2'
-            'libtiff'
-            # > 'libuv'
-            'libxml2'
-            'openssl3'
-            'pcre'
-            'pcre2'
-            'pixman'
-            'proj'
-            'python3.11'
-            'readline'
-            'sqlite'
-            'xorg-libice'
-            'xorg-libpthread-stubs'
-            'xorg-libsm'
-            'xorg-libx11'
-            'xorg-libxau'
-            'xorg-libxcb'
-            'xorg-libxdmcp'
-            'xorg-libxext'
-            'xorg-libxrandr'
-            'xorg-libxrender'
-            'xorg-libxt'
-            'xorg-xorgproto'
-            'xz'
-            'zlib'
-            'zstd'
-        )
-        # Revert to making these required.
-        for key in "${keys[@]}"
-        do
-            local prefix
-            prefix="$(koopa_app_prefix "$key" --allow-missing)"
-            if [[ ! -d "$prefix" ]]
-            then
-                koopa_alert_note "Not installed: '${key}'."
-                continue
-            fi
-            app_pc_path_arr[$key]="$prefix"
-        done
-        for i in "${!app_pc_path_arr[@]}"
-        do
-            case "$i" in
-                'xorg-xorgproto')
-                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/share/pkgconfig"
-                    ;;
-                *)
-                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/lib/pkgconfig"
-                    ;;
-            esac
-        done
-        koopa_assert_is_dir "${app_pc_path_arr[@]}"
-        pc_path_arr=()
-        pc_path_arr+=("${app_pc_path_arr[@]}")
-        if [[ "${bool['system']}" -eq 1 ]]
-        then
-            local -a sys_pc_path_arr
-            # NOTE Likely want to include '/usr/bin/pkg-config' here also.
-            readarray -t sys_pc_path_arr <<< "$( \
-                "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
-            )"
-            pc_path_arr+=("${sys_pc_path_arr[@]}")
-        fi
-        conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
-        lines+=(
-            "EDITOR=${app['vim']}"
-            "LN_S=${app['ln']} -s"
-            "MAKE=${app['make']}"
-            "PAGER=${app['less']}"
-            "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
-            "R_BROWSER=${app['open']}"
-            "R_BZIPCMD=${app['bzip2']}"
-            "R_GZIPCMD=${app['gzip']}"
-            "R_PDFVIEWER=${app['open']}"
-            "R_PRINTCMD=${app['lpr']}"
-            "R_STRIP_SHARED_LIB=${app['strip']} -x"
-            "R_STRIP_STATIC_LIB=${app['strip']} -S"
-            "R_TEXI2DVICMD=${app['texi2dvi']}"
-            "R_UNZIPCMD=${app['unzip']}"
-            "R_ZIPCMD=${app['zip']}"
-            "SED=${app['sed']}"
-            "TAR=${app['tar']}"
-        )
-    fi
     if koopa_is_macos
     then
         # This setting is covered in our Rprofile.
@@ -300,8 +174,7 @@ koopa_r_configure_environ() {
     )
     # units
     # --------------------------------------------------------------------------
-    # The units package requires udunits2 to be installed.
-    if [[ "${bool['use_apps']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]] && [[ -d "${dict['udunits2']}" ]]
     then
         lines+=(
             "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
@@ -384,6 +257,8 @@ abort,verbose"
 -Werror=format-security -Wdate-time"
         )
     fi
+    dict['file']="${dict['r_prefix']}/etc/Renviron.site"
+    koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${bool['system']}" in
         '0')
