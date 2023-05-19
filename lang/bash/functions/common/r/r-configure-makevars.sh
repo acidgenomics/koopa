@@ -132,6 +132,7 @@ koopa_r_configure_makevars() {
                 'zlib'
                 'zstd'
             )
+            # FIXME Revert back to erroring on missing app here.
             for key in "${keys[@]}"
             do
                 local prefix
