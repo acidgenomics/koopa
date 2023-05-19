@@ -7,7 +7,7 @@
 main() {
     # """
     # Install CMake.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-05-19.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
@@ -29,14 +29,25 @@ main() {
     readarray -t cmake_args <<< "$( \
         koopa_cmake_std_args --prefix="${dict['prefix']}" \
     )"
-    cmake_args+=("-DOPENSSL_ROOT_DIR=${dict['openssl']}")
+    cmake_args+=(
+        '-DCMake_BUILD_LTO=ON'
+        "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
+    )
     bootstrap_args=(
-        '--no-system-libs'
         "--parallel=${dict['jobs']}"
         "--prefix=${dict['prefix']}"
-        '--'
-        "${cmake_args[@]}"
     )
+    if koopa_is_macos
+    then
+        bootstrap_args+=(
+            '--system-bzip2'
+            '--system-curl'
+            '--system-zlib'
+        )
+    else
+        bootstrap_args+=('--no-system-libs')
+    fi
+    bootstrap_args+=('--' "${cmake_args[@]}")
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
