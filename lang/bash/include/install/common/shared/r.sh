@@ -68,15 +68,17 @@ main() {
         'icu4c'
         'readline'
         'curl7'
-        'libffi' # glib > cairo
+        'lapack'
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        'libxml2' # fontconfig
         'openblas'
         'pcre2'
+        'texinfo'
+        'libffi' # glib > cairo
         'glib' # cairo
         'freetype' # cairo
+        'libxml2' # fontconfig
         'fontconfig' # cairo
         'pixman' # cairo
         'xorg-xorgproto'
@@ -207,6 +209,9 @@ main() {
     conf_dict['with_jpeglib']="$( \
         "${app['pkg_config']}" --libs 'libjpeg' \
     )"
+    conf_dict['with_lapack']="$( \
+        "${app['pkg_config']}" --libs 'lapack' \
+    )"
     conf_dict['with_libpng']="$( \
         "${app['pkg_config']}" --libs 'libpng' \
     )"
@@ -244,6 +249,7 @@ main() {
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
+        "--with-lapack=${conf_dict['with_lapack']}"
         "--with-libpng=${conf_dict['with_libpng']}"
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"

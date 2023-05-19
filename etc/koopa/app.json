@@ -4030,6 +4030,7 @@
       "gcc",
       "glib",
       "icu4c",
+      "lapack",
       "less",
       "libjpeg-turbo",
       "libpng",
