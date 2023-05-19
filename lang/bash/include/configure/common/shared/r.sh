@@ -30,7 +30,6 @@ main() {
     dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    # > koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_copy_files_into_etc "${app['r']}"
