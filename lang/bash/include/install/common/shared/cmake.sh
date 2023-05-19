@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Need to address curses support?
+# -- Checking for curses support - Success
+# -- Looking for wsyncup in /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/lib/libcurses.tbd
+
 main() {
     # """
     # Install CMake.
