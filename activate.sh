@@ -132,14 +132,13 @@ __koopa_export_koopa_subshell() {
 __koopa_header() {
     # """
     # Shared shell header file location.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-05-18.
     # """
-    __kvar_prefix="${KOOPA_PREFIX:?}/lang/shell"
     __kvar_shell="$(__koopa_shell_name)"
-    __kvar_file="${__kvar_prefix}/${__kvar_shell}/include/header.sh"
+    __kvar_file="${KOOPA_PREFIX:?}/lang/${__kvar_shell}/include/header.sh"
     [ -f "$__kvar_file" ] || return 1
     __koopa_print "$__kvar_file"
-    unset -v __kvar_file __kvar_prefix __kvar_shell
+    unset -v __kvar_file __kvar_shell
     return 0
 }
 
@@ -258,7 +257,7 @@ __koopa_realpath() {
 __koopa_shell_name() {
     # """
     # Shell name.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-05-18.
     # """
     if [ -n "${BASH_VERSION:-}" ]
     then
@@ -267,7 +266,7 @@ __koopa_shell_name() {
     then
         __kvar_string='zsh'
     else
-        __kvar_string='posix'
+        __kvar_string='sh'
     fi
     __koopa_print "$__kvar_string"
     unset -v __kvar_string
