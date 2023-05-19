@@ -97,12 +97,14 @@ main() {
     app['awk']="$(koopa_locate_awk)"
     app['bash']="$(koopa_locate_bash)"
     app['bzip2']="$(koopa_locate_bzip2)"
+    app['cc']="$(koopa_locate_gcc)"
+    app['cxx']="$(koopa_locate_gcxx)"
     app['echo']="$(koopa_locate_echo)"
-    app['gfortran']="$(koopa_locate_gfortran --realpath)"
+    app['gfortran']="$(koopa_locate_gfortran)"
     app['gzip']="$(koopa_locate_gzip)"
-    app['jar']="$(koopa_locate_jar --realpath)"
-    app['java']="$(koopa_locate_java --realpath)"
-    app['javac']="$(koopa_locate_javac --realpath)"
+    app['jar']="$(koopa_locate_jar)"
+    app['java']="$(koopa_locate_java)"
+    app['javac']="$(koopa_locate_javac)"
     app['less']="$(koopa_locate_less)"
     app['ln']="$(koopa_locate_ln)"
     app['lpr']="$(koopa_locate_lpr)"
@@ -118,14 +120,6 @@ main() {
     app['vim']="$(koopa_locate_vim)"
     app['yacc']="$(koopa_locate_yacc)"
     app['zip']="$(koopa_locate_zip)"
-    if koopa_is_macos
-    then
-        app['cc']='/usr/bin/clang'
-        app['cxx']='/usr/bin/clang++'
-    else
-        app['cc']="$(koopa_locate_gcc --realpath)"
-        app['cxx']="$(koopa_locate_gcxx --realpath)"
-    fi
     koopa_assert_is_executable "${app[@]}"
     # > dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['jobs']="$(koopa_cpu_count)"
