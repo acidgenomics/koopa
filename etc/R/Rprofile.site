@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-05-03.
+#' @note Updated 2023-05-19.
 #'
 #' @section Restarting R:
 #'
@@ -211,7 +211,10 @@ local({  # nolint
         snapshot,
         sep = "/"
     )
-    options("install.packages.compile.from.source" = "always")
+    options(
+        "install.packages.check.source" = "yes",
+        "install.packages.compile.from.source" = "always"
+    )
     ## Configure the Ubuntu RSPM binary CRAN snapshot.
     if (
         isTRUE(flag[["cranBinary"]]) &&
@@ -243,15 +246,21 @@ local({  # nolint
             snapshot,
             sep = "/"
         )
-        options("install.packages.compile.from.source" = "never")
+        options(
+            "install.packages.check.source" = "no",
+            "install.packages.compile.from.source" = "never"
+        )
     }
-    ## Allow binary install on macOS for CRAN R. Otherwise default to installing
-    ## from source. Note that RSPM doesn't currently support macOS binaries.
+    ## Prefer binary installs on macOS for CRAN R. Otherwise default to
+    ## installing from source. Note that RSPM doesn't currently support macOS
+    ## binaries. Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
+    ## environment variable in 'Renviron'.
     if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
         cran <- "https://cloud.r-project.org"
         options(
-            "pkgType" = "both",
-            "install.packages.compile.from.source" = "never"
+            "install.packages.check.source" = "no",
+            "install.packages.compile.from.source" = "never",
+            "pkgType" = "both"
         )
     }
     repos <- getOption("repos")

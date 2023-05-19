@@ -503,12 +503,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-02",
+    "date": "2023-05-19",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.21.3"
+    "version": "1.22.0"
   },
   "brotli": {
     "aliases": {
@@ -701,11 +701,11 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-04-10",
+    "date": "2023-05-19",
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.26.3"
+    "version": "3.26.4"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1100,9 +1100,9 @@
     "version": "042fe0c43831c8575abfdec4196ebd7305fa16ac"
   },
   "dotfiles": {
-    "date": "2023-05-17",
+    "date": "2023-05-19",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "aee8f459e6b4cd0761387b54a7b3685a342de093"
+    "version": "6365538178417ed0bb213b9f17350fb1548f6e6b"
   },
   "du-dust": {
     "aliases": {
@@ -1541,6 +1541,7 @@
       "zlib",
       "zstd"
     ],
+    "enabled": false,
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
@@ -1566,6 +1567,7 @@
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2023-03-17",
+    "enabled": false,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.11.2"
@@ -1670,7 +1672,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-05-17",
+    "date": "2023-05-19",
     "dependencies": ["python3.11"],
     "notes": ["Seeing build weirdness with 3.4.0 currently."],
     "outdated": true,
@@ -1678,7 +1680,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.4.0.1"
+    "version": "3.4.0.2"
   },
   "glib": {
     "aliases": {
@@ -2098,14 +2100,14 @@
     },
     "arch": "amd64",
     "bin": ["stack"],
-    "date": "2022-12-17",
+    "date": "2023-05-19",
     "enabled": false,
     "large": true,
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.9.3"
+    "version": "2.11.1"
   },
   "hdf5": {
     "aliases": {
@@ -2829,10 +2831,10 @@
       "make",
       "pkg-config"
     ],
-    "date": "2022-08-30",
+    "date": "2023-05-19",
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.44.2"
+    "version": "1.45.0"
   },
   "libvterm": {
     "aliases": {
@@ -3512,13 +3514,13 @@
   "ont-dorado": {
     "bin": ["dorado"],
     "build_dependencies": ["autoconf", "automake", "cmake", "git"],
-    "date": "2024-04-12",
+    "date": "2023-05-19",
     "dependencies": ["hdf5", "openssl3", "zstd"],
     "enabled": false,
     "large": true,
     "notes": ["Need to add support for nvidia-cuda-toolkit."],
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.2.4"
+    "version": "0.3.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -3844,6 +3846,7 @@
       "zlib",
       "zstd"
     ],
+    "enabled": false,
     "man1": ["proj.1", "projinfo.1"],
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
@@ -4015,52 +4018,33 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-04-24",
     "dependencies": [
+      "autoconf",
+      "automake",
       "bzip2",
       "cairo",
       "coreutils",
       "curl7",
       "fontconfig",
       "freetype",
-      "fribidi",
       "gawk",
       "gcc",
-      "gdal",
-      "geos",
-      "gettext",
       "glib",
-      "gperf",
-      "graphviz",
-      "harfbuzz",
-      "hdf5",
       "icu4c",
-      "imagemagick",
-      "jpeg",
+      "lapack",
       "less",
-      "libffi",
-      "libgit2",
-      "libiconv",
       "libjpeg-turbo",
       "libpng",
-      "libssh2",
       "libtiff",
       "libtool",
       "libxml2",
-      "lzo",
-      "ncurses",
-      "openssl3",
-      "pcre",
       "pcre2",
       "pixman",
-      "proj",
-      "python3.11",
       "readline",
       "sed",
-      "sqlite",
       "tar",
       "tcl-tk",
       "temurin",
       "texinfo",
-      "udunits",
       "vim",
       "xorg-libice",
       "xorg-libpthread-stubs",
@@ -4076,7 +4060,6 @@
       "xorg-xcb-proto",
       "xorg-xorgproto",
       "xz",
-      "zip",
       "zlib",
       "zstd"
     ],
@@ -4090,52 +4073,32 @@
   "r-devel": {
     "date": "2023-04-24",
     "dependencies": [
+      "autoconf",
+      "automake",
       "bzip2",
       "cairo",
       "coreutils",
       "curl7",
       "fontconfig",
       "freetype",
-      "fribidi",
       "gawk",
       "gcc",
-      "gdal",
-      "geos",
-      "gettext",
       "glib",
-      "gperf",
-      "graphviz",
-      "harfbuzz",
-      "hdf5",
       "icu4c",
-      "imagemagick",
-      "jpeg",
       "less",
-      "libffi",
-      "libgit2",
-      "libiconv",
       "libjpeg-turbo",
       "libpng",
-      "libssh2",
       "libtiff",
       "libtool",
       "libxml2",
-      "lzo",
-      "ncurses",
-      "openssl3",
-      "pcre",
       "pcre2",
       "pixman",
-      "proj",
-      "python3.11",
       "readline",
       "sed",
-      "sqlite",
       "tar",
       "tcl-tk",
       "temurin",
       "texinfo",
-      "udunits",
       "vim",
       "xorg-libice",
       "xorg-libpthread-stubs",
@@ -4151,7 +4114,6 @@
       "xorg-xcb-proto",
       "xorg-xorgproto",
       "xz",
-      "zip",
       "zlib",
       "zstd"
     ],
@@ -4347,10 +4309,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-05-12",
+    "date": "2023-05-19",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.267"
+    "version": "0.0.269"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -4890,10 +4852,10 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2023-05-14",
+    "date": "2023-05-18",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.1.0"
+    "version": "2.1.1"
   },
   "tuc": {
     "aliases": {
