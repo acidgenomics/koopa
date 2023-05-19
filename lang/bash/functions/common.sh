@@ -17494,14 +17494,17 @@ koopa_r_configure_environ() {
     then
         dict['udunits2']="$(koopa_app_prefix 'udunits' --allow-missing)"
     fi
-    lines+=(
-        'R_BATCHSAVE=--no-save --no-restore'
-        "R_LIBS_SITE=\${R_HOME}/site-library"
-        "R_LIBS_USER=\${R_LIBS_SITE}"
-        'R_PAPERSIZE=letter'
-        "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
-        "TZ=\${TZ:-America/New_York}"
-    )
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        lines+=(
+            'R_BATCHSAVE=--no-save --no-restore'
+            "R_LIBS_SITE=\${R_HOME}/site-library"
+            "R_LIBS_USER=\${R_LIBS_SITE}"
+            'R_PAPERSIZE=letter'
+            "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
+            "TZ=\${TZ:-America/New_York}"
+        )
+    fi
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'

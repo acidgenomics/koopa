@@ -84,15 +84,17 @@ koopa_r_configure_environ() {
     then
         dict['udunits2']="$(koopa_app_prefix 'udunits' --allow-missing)"
     fi
-    # FIXME Consider only setting these for system install.
-    lines+=(
-        'R_BATCHSAVE=--no-save --no-restore'
-        "R_LIBS_SITE=\${R_HOME}/site-library"
-        "R_LIBS_USER=\${R_LIBS_SITE}"
-        'R_PAPERSIZE=letter'
-        "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
-        "TZ=\${TZ:-America/New_York}"
-    )
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        lines+=(
+            'R_BATCHSAVE=--no-save --no-restore'
+            "R_LIBS_SITE=\${R_HOME}/site-library"
+            "R_LIBS_USER=\${R_LIBS_SITE}"
+            'R_PAPERSIZE=letter'
+            "R_PAPERSIZE_USER=\${R_PAPERSIZE}"
+            "TZ=\${TZ:-America/New_York}"
+        )
+    fi
     # Set the 'PATH' string. Restricting path, so we don't mask compiler
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
