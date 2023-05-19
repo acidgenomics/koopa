@@ -279,10 +279,11 @@ koopa_r_configure_environ() {
     fi
     if koopa_is_macos
     then
-        if [[ "${bool['system']}" -eq 1 ]]
-        then
-            lines+=('R_COMPILE_AND_INSTALL_PACKAGES=never')
-        fi
+        # This setting is covered in our Rprofile.
+        # > if [[ "${bool['system']}" -eq 1 ]]
+        # > then
+        # >     lines+=('R_COMPILE_AND_INSTALL_PACKAGES=never')
+        # > fi
         lines+=('R_MAX_NUM_DLLS=153')
     fi
     # data.table

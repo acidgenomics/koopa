@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-05-18.
+#' @note Updated 2023-05-19.
 #'
 #' @section Restarting R:
 #'
@@ -251,7 +251,7 @@ local({  # nolint
             "install.packages.compile.from.source" = "never"
         )
     }
-    ## Enforce binary installs on macOS for CRAN R. Otherwise default to
+    ## Prefer binary installs on macOS for CRAN R. Otherwise default to
     ## installing from source. Note that RSPM doesn't currently support macOS
     ## binaries. Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
     ## environment variable in 'Renviron'.
@@ -260,7 +260,7 @@ local({  # nolint
         options(
             "install.packages.check.source" = "no",
             "install.packages.compile.from.source" = "never",
-            "pkgType" = "binary"
+            "pkgType" = "both"
         )
     }
     repos <- getOption("repos")
