@@ -17804,6 +17804,7 @@ koopa_r_configure_ldpaths() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
+    bool['use_local']=0
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
@@ -17898,8 +17899,12 @@ libexec/lib/server}")
         for key in "${keys[@]}"
         do
             local prefix
-            prefix="$(koopa_app_prefix "$key")"
-            koopa_assert_is_dir "$prefix"
+            prefix="$(koopa_app_prefix "$key" --allow-missing)"
+            if [[ ! -d "$prefix" ]]
+            then
+                koopa_alert_warning "Not installed: '${key}'."
+                continue
+            fi
             ld_lib_app_arr[$key]="$prefix"
         done
         for i in "${!ld_lib_app_arr[@]}"
@@ -17917,6 +17922,10 @@ libexec/lib/server}")
     fi
     ld_lib_arr=()
     ld_lib_arr+=("\${R_HOME}/lib")
+    if [[ "${bool['use_local']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
+    then
+        ld_lib_arr+=('/usr/local/lib')
+    fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         ld_lib_arr+=("${ld_lib_app_arr[@]}")
@@ -18039,9 +18048,9 @@ koopa_r_configure_makeconf() {
     dict['replacement']="LIBS = ${libs[*]}"
     case "${bool['system']}" in
         '0')
-            if [[ ! -f "${dict['file.bak']}" ]]
+            if [[ ! -f "${dict['file_bak']}" ]]
             then
-                koopa_cp "${dict['file']}" "${dict['file.bak']}"
+                koopa_cp "${dict['file']}" "${dict['file_bak']}"
             fi
             koopa_find_and_replace_in_file \
                 --pattern="${dict['pattern']}" \
@@ -18050,9 +18059,9 @@ koopa_r_configure_makeconf() {
                 "${dict['file']}"
             ;;
         '1')
-            if [[ ! -f "${dict['file.bak']}" ]]
+            if [[ ! -f "${dict['file_bak']}" ]]
             then
-                koopa_cp --sudo "${dict['file']}" "${dict['file.bak']}"
+                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
             fi
             koopa_find_and_replace_in_file \
                 --sudo \
@@ -18174,8 +18183,12 @@ koopa_r_configure_makevars() {
             for key in "${keys[@]}"
             do
                 local prefix
-                prefix="$(koopa_app_prefix "$key")"
-                koopa_assert_is_dir "$prefix"
+                prefix="$(koopa_app_prefix "$key" --allow-missing)"
+                if [[ ! -d "$prefix" ]]
+                then
+                    koopa_alert_warning "Not installed: '${key}'."
+                    continue
+                fi
                 app_pc_path_arr[$key]="$prefix"
             done
             for i in "${!app_pc_path_arr[@]}"
@@ -18322,13 +18335,10 @@ lib/pkgconfig"
             "YACC = ${conf_dict['yacc']}"
         )
     fi
-    if koopa_is_macos
+    if koopa_is_macos && [[ "${bool['openmp']}" -eq 1 ]]
     then
-        if [[ "${bool['openmp']}" -eq 1 ]]
-        then
-            conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
-            lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
-        fi
+        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
+        lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"

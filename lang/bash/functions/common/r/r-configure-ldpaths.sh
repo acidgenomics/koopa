@@ -32,6 +32,7 @@ koopa_r_configure_ldpaths() {
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
+    bool['use_local']=0
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
@@ -70,6 +71,8 @@ libexec/lib/server}")
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         keys=(
+            # > 'jpeg'
+            # > 'libuv'
             'bzip2'
             'cairo'
             'curl7'
@@ -84,7 +87,6 @@ libexec/lib/server}")
             'hdf5'
             'icu4c'
             'imagemagick'
-            # > 'jpeg'
             'libffi'
             'libgit2'
             'libiconv'
@@ -92,7 +94,6 @@ libexec/lib/server}")
             'libpng'
             'libssh2'
             'libtiff'
-            # > 'libuv'
             'libxml2'
             'openssl3'
             'pcre'
@@ -128,8 +129,12 @@ libexec/lib/server}")
         for key in "${keys[@]}"
         do
             local prefix
-            prefix="$(koopa_app_prefix "$key")"
-            koopa_assert_is_dir "$prefix"
+            prefix="$(koopa_app_prefix "$key" --allow-missing)"
+            if [[ ! -d "$prefix" ]]
+            then
+                koopa_alert_warning "Not installed: '${key}'."
+                continue
+            fi
             ld_lib_app_arr[$key]="$prefix"
         done
         for i in "${!ld_lib_app_arr[@]}"
@@ -149,10 +154,10 @@ libexec/lib/server}")
     # Alternative approach, that uses absolute path:
     # > ld_lib_arr+=("${dict['r_prefix']}/lib")
     ld_lib_arr+=("\${R_HOME}/lib")
-    # > if [[ "${bool['system']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
-    # > then
-    # >     ld_lib_arr+=('/usr/local/lib')
-    # > fi
+    if [[ "${bool['use_local']}" -eq 1 ]] && [[ -d '/usr/local/lib' ]]
+    then
+        ld_lib_arr+=('/usr/local/lib')
+    fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         ld_lib_arr+=("${ld_lib_app_arr[@]}")

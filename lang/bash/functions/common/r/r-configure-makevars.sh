@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Consider taking out the app configuration steps here.
+
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-05-19.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -85,6 +87,8 @@ koopa_r_configure_makevars() {
         then
             # Ensure these values are in sync with Renviron.site file.
             keys=(
+                # > 'jpeg'
+                # > 'libuv'
                 'cairo'
                 'curl7'
                 'fontconfig'
@@ -97,14 +101,12 @@ koopa_r_configure_makevars() {
                 'harfbuzz'
                 'icu4c'
                 'imagemagick'
-                # > 'jpeg'
                 'libffi'
                 'libgit2'
                 'libjpeg-turbo'
                 'libpng'
                 'libssh2'
                 'libtiff'
-                # > 'libuv'
                 'libxml2'
                 'openssl3'
                 'pcre'
@@ -133,8 +135,12 @@ koopa_r_configure_makevars() {
             for key in "${keys[@]}"
             do
                 local prefix
-                prefix="$(koopa_app_prefix "$key")"
-                koopa_assert_is_dir "$prefix"
+                prefix="$(koopa_app_prefix "$key" --allow-missing)"
+                if [[ ! -d "$prefix" ]]
+                then
+                    koopa_alert_warning "Not installed: '${key}'."
+                    continue
+                fi
                 app_pc_path_arr[$key]="$prefix"
             done
             for i in "${!app_pc_path_arr[@]}"
@@ -196,7 +202,6 @@ lib/pkgconfig"
             "-L${dict['libpng']}/lib"
             "-L${dict['openssl3']}/lib"
         )
-        # FIXME Only set lomp if OpenMP headers are installed.
         if koopa_is_macos
         then
             cppflags+=("-I${dict['gettext']}/include")
@@ -293,24 +298,11 @@ lib/pkgconfig"
             "YACC = ${conf_dict['yacc']}"
         )
     fi
-    if koopa_is_macos
+    if koopa_is_macos && [[ "${bool['openmp']}" -eq 1 ]]
     then
-        # R CRAN binary has 'Makeconf' containing (no '-lintl'):
-        # > local -a libintl
-        # > libintl=(
-        # >     # > '-lintl'
-        # >     # > '-liconv'
-        # >     '-Wl,-framework'
-        # >     '-Wl,CoreFoundation'
-        # > )
-        # > conf_dict['libintl']="${libintl[*]}"
-        # > lines+=("LIBINTL = ${conf_dict['libintl']}")
-        if [[ "${bool['openmp']}" -eq 1 ]]
-        then
-            # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
-            conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
-            lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
-        fi
+        # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
+        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
+        lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
