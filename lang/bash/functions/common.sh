@@ -17485,15 +17485,10 @@ koopa_r_configure_environ() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    if [[ "${bool['use_apps']}" -eq 1 ]]
-    then
-        dict['udunits2']="$(koopa_app_prefix 'udunits' --allow-missing)"
-    fi
     if [[ "${bool['system']}" -eq 1 ]]
     then
         lines+=(
@@ -17550,13 +17545,6 @@ koopa_r_configure_environ() {
         "R_USER_CONFIG_DIR=\${HOME}/.config"
         "R_USER_DATA_DIR=\${HOME}/.local/share"
     )
-    if [[ "${bool['use_apps']}" -eq 1 ]] && [[ -d "${dict['udunits2']}" ]]
-    then
-        lines+=(
-            "UDUNITS2_INCLUDE=${dict['udunits2']}/include"
-            "UDUNITS2_LIBS=${dict['udunits2']}/lib"
-        )
-    fi
     lines+=("VROOM_CONNECTION_SIZE=524288")
     if koopa_is_fedora_like
     then
