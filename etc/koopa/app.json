@@ -4018,6 +4018,8 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-04-24",
     "dependencies": [
+      "autoconf",
+      "automake",
       "bzip2",
       "cairo",
       "coreutils",
@@ -4032,6 +4034,7 @@
       "libjpeg-turbo",
       "libpng",
       "libtiff",
+      "libtool",
       "libxml2",
       "pcre2",
       "pixman",
