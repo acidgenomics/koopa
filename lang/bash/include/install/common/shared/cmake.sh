@@ -34,6 +34,7 @@ main() {
         "-DOPENSSL_ROOT_DIR=${dict['openssl']}"
     )
     bootstrap_args=(
+        '--no-system-libs'
         "--parallel=${dict['jobs']}"
         "--prefix=${dict['prefix']}"
     )
@@ -44,8 +45,6 @@ main() {
             '--system-curl'
             '--system-zlib'
         )
-    else
-        bootstrap_args+=('--no-system-libs')
     fi
     bootstrap_args+=('--' "${cmake_args[@]}")
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
