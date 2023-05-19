@@ -60,8 +60,8 @@ main() {
     koopa_is_linux && deps+=('bzip2')
     deps+=(
         'xz'
-        # > 'zlib'
-        # > 'zstd'
+        'zlib' # libpng
+        'zstd' # libtiff
         'gcc'
         'icu4c'
         # 'ncurses'
@@ -74,16 +74,16 @@ main() {
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        # 'libxml' # FIXME
+        'libxml2' # fontconfig
         'openblas'
         'pcre2'
         # 'perl'
         # > 'temurin'
         # 'texinfo'
         'glib' # cairo
-        # 'freetype' # FIXME
+        'freetype' # cairo
         # 'gperf' # FIXME
-        # 'fontconfig' # FIXME
+        'fontconfig' # cairo
         # 'lzo' # FIXME
         'pixman' # cairo
         # 'fribidi' # FIXME
