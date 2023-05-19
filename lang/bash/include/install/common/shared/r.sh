@@ -69,15 +69,16 @@ main() {
         'readline'
         'curl7'
         'lapack'
-        'libffi' # glib > cairo
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        'libxml2' # fontconfig
         'openblas'
         'pcre2'
+        'texinfo'
+        'libffi' # glib > cairo
         'glib' # cairo
         'freetype' # cairo
+        'libxml2' # fontconfig
         'fontconfig' # cairo
         'pixman' # cairo
         'xorg-xorgproto'
