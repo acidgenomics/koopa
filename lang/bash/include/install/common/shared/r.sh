@@ -50,40 +50,43 @@ main() {
     local -a build_deps conf_args deps
     bool['devel']=0
     bool['r_koopa']=1
-    build_deps=('make' 'pkg-config')
+    build_deps=(
+        'make'
+        'pkg-config'
+        # > 'libtool'
+    )
     koopa_activate_app --build-only "${build_deps[@]}"
-    deps=('gcc' 'zlib' 'zstd')
+    deps=()
     koopa_is_linux && deps+=('bzip2')
     deps+=(
-        'icu4c'
-        'ncurses'
-        'readline'
-        'libxml2'
-        'libiconv'
-        'gettext'
         'xz'
-        'openssl3'
+        # > 'zlib'
+        # > 'zstd'
+        'gcc'
+        'icu4c'
+        # 'ncurses'
+        'readline'
+        # 'libiconv'
+        # 'gettext'
+        # > 'openssl3'
         'curl7'
-        'libffi'
+        'libffi' # glib > cairo
         'libjpeg-turbo'
         'libpng'
         'libtiff'
+        # 'libxml' # FIXME
         'openblas'
-        # > 'openjdk'
-        'pcre'
         'pcre2'
-        'perl'
-        'temurin'
-        'texinfo'
-        'glib'
-        'freetype'
-        'gperf'
-        'fontconfig'
-        'lzo'
-        'pixman'
-        'fribidi'
-        'harfbuzz'
-        'libtool'
+        # 'perl'
+        # > 'temurin'
+        # 'texinfo'
+        'glib' # cairo
+        # 'freetype' # FIXME
+        # 'gperf' # FIXME
+        # 'fontconfig' # FIXME
+        # 'lzo' # FIXME
+        'pixman' # cairo
+        # 'fribidi' # FIXME
         'xorg-xorgproto'
         'xorg-xcb-proto'
         'xorg-libpthread-stubs'
@@ -302,7 +305,6 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     app['rscript']="${dict['prefix']}/bin/Rscript"
     koopa_assert_is_executable "${app['r']}" "${app['rscript']}"
     koopa_configure_r "${app['r']}"
-    # libxml is now expected to return FALSE here, as of R 4.2.
     "${app['rscript']}" -e 'capabilities()'
     koopa_check_shared_object \
         --name='libR' \

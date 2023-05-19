@@ -17620,7 +17620,7 @@ koopa_r_configure_environ() {
             prefix="$(koopa_app_prefix "$key" --allow-missing)"
             if [[ ! -d "$prefix" ]]
             then
-                koopa_alert_warning "Not installed: '${key}'."
+                koopa_alert_note "Not installed: '${key}'."
                 continue
             fi
             app_pc_path_arr[$key]="$prefix"
@@ -17911,7 +17911,7 @@ libexec/lib/server}")
             prefix="$(koopa_app_prefix "$key" --allow-missing)"
             if [[ ! -d "$prefix" ]]
             then
-                koopa_alert_warning "Not installed: '${key}'."
+                koopa_alert_note "Not installed: '${key}'."
                 continue
             fi
             ld_lib_app_arr[$key]="$prefix"
@@ -18195,7 +18195,7 @@ koopa_r_configure_makevars() {
                 prefix="$(koopa_app_prefix "$key" --allow-missing)"
                 if [[ ! -d "$prefix" ]]
                 then
-                    koopa_alert_warning "Not installed: '${key}'."
+                    koopa_alert_note "Not installed: '${key}'."
                     continue
                 fi
                 app_pc_path_arr[$key]="$prefix"

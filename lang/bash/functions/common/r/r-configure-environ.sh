@@ -224,7 +224,7 @@ koopa_r_configure_environ() {
             prefix="$(koopa_app_prefix "$key" --allow-missing)"
             if [[ ! -d "$prefix" ]]
             then
-                koopa_alert_warning "Not installed: '${key}'."
+                koopa_alert_note "Not installed: '${key}'."
                 continue
             fi
             app_pc_path_arr[$key]="$prefix"
