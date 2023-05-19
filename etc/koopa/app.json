@@ -503,12 +503,12 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-02",
+    "date": "2023-05-19",
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.21.3"
+    "version": "1.22.0"
   },
   "brotli": {
     "aliases": {
@@ -1670,7 +1670,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-05-17",
+    "date": "2023-05-19",
     "dependencies": ["python3.11"],
     "notes": ["Seeing build weirdness with 3.4.0 currently."],
     "outdated": true,
@@ -1678,7 +1678,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.4.0.1"
+    "version": "3.4.0.2"
   },
   "glib": {
     "aliases": {
@@ -2098,14 +2098,14 @@
     },
     "arch": "amd64",
     "bin": ["stack"],
-    "date": "2022-12-17",
+    "date": "2023-05-19",
     "enabled": false,
     "large": true,
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.9.3"
+    "version": "2.11.1"
   },
   "hdf5": {
     "aliases": {
@@ -3512,13 +3512,13 @@
   "ont-dorado": {
     "bin": ["dorado"],
     "build_dependencies": ["autoconf", "automake", "cmake", "git"],
-    "date": "2024-04-12",
+    "date": "2023-05-19",
     "dependencies": ["hdf5", "openssl3", "zstd"],
     "enabled": false,
     "large": true,
     "notes": ["Need to add support for nvidia-cuda-toolkit."],
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.2.4"
+    "version": "0.3.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4347,10 +4347,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-05-12",
+    "date": "2023-05-19",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.267"
+    "version": "0.0.269"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
