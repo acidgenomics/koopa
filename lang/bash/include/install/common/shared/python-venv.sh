@@ -100,11 +100,7 @@ main() {
         venv_args+=('--no-binary')
     fi
     venv_args+=("${dict['pkg_name']}==${dict['version']}")
-    case "${dict['name']}" in
-        'pytaglib')
-            venv_args+=('tqdm')
-            ;;
-    esac
+    [[ "$#" -gt 0 ]] && venv_args+=("$@")
     koopa_print_env
     koopa_python_create_venv "${venv_args[@]}"
     dict['record_file']="${dict['libexec']}/lib/\
