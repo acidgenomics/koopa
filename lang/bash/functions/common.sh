@@ -17478,6 +17478,7 @@ koopa_r_configure_environ() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     bool['use_apps']=1
+    bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     dict['arch']="$(koopa_arch)"
@@ -17539,6 +17540,10 @@ koopa_r_configure_environ() {
         "TZ=\${TZ:-America/New_York}"
     )
     path_arr=()
+    if [[ "${bool['use_local']}" -eq 1 ]]
+    then
+        path_arr+=('/usr/local/bin')
+    fi
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -17612,8 +17617,12 @@ koopa_r_configure_environ() {
         for key in "${keys[@]}"
         do
             local prefix
-            prefix="$(koopa_app_prefix "$key")"
-            koopa_assert_is_dir "$prefix"
+            prefix="$(koopa_app_prefix "$key" --allow-missing)"
+            if [[ ! -d "$prefix" ]]
+            then
+                koopa_alert_warning "Not installed: '${key}'."
+                continue
+            fi
             app_pc_path_arr[$key]="$prefix"
         done
         for i in "${!app_pc_path_arr[@]}"
