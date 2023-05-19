@@ -3,12 +3,10 @@
 # FIXME Need to ensure that '/etc/R' and '/usr/lib/R/etc' are in sync.
 # We're seeing cases where configuration is mismatched on Debian/Ubuntu.
 
-# NOTE Consider installing AcidDevTools package here automatically.
-
 main() {
     # """
     # Configure R.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-05-19.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -32,16 +30,10 @@ main() {
     dict['site_library']="${dict['r_prefix']}/site-library"
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    if koopa_is_macos && [[ ! -f '/usr/local/include/omp.h' ]]
-    then
-        koopa_stop \
-            "'libomp' is not installed." \
-            "Run 'koopa install system openmp' to resolve."
-    fi
-    koopa_r_configure_makeconf "${app['r']}"
+    # > koopa_r_configure_makeconf "${app['r']}"
+    koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
-    koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_copy_files_into_etc "${app['r']}"
     koopa_r_configure_java "${app['r']}"
     case "${bool['system']}" in
