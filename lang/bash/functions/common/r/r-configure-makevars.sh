@@ -33,7 +33,6 @@ koopa_r_configure_makevars() {
     bool['openmp']=0
     bool['system']=0
     bool['use_apps']=1
-    bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     if koopa_is_macos && [[ -f '/usr/local/include/omp.h' ]]
@@ -58,6 +57,7 @@ koopa_r_configure_makevars() {
         app['gfortran']="$(koopa_locate_gfortran)"
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
+        app['ranlib']='/usr/bin/ranlib'
         app['sed']="$(koopa_locate_sed)"
         app['tar']="$(koopa_locate_tar)"
         app['yacc']="$(koopa_locate_yacc)"
@@ -75,11 +75,6 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    if [[ "${bool['use_local']}" -eq 1 ]]
-    then
-        cppflags+=('-I/usr/local/include')
-        ldflags+=('-L/usr/local/lib')
-    fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Custom pkg-config flags here are incompatible for macOS clang with
