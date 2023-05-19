@@ -113,6 +113,7 @@ main() {
     app['sed']="$(koopa_locate_sed)"
     app['strip']="$(koopa_locate_strip)"
     app['tar']="$(koopa_locate_tar)"
+    app['texi2dvi']="$(koopa_locate_texi2dvi)"
     app['unzip']="$(koopa_locate_unzip)"
     app['vim']="$(koopa_locate_vim)"
     app['yacc']="$(koopa_locate_yacc)"
@@ -181,7 +182,7 @@ main() {
     conf_dict['r_zipcmd']="${app['zip']}"
     conf_dict['sed']="${app['sed']}"
     conf_dict['tar']="${app['tar']}"
-    conf_dict['tz']="TZ=\${TZ:-America/New_York}"
+    conf_dict['tz']="\${TZ:-America/New_York}"
     conf_dict['with_blas']="$( \
         "${app['pkg_config']}" --libs 'openblas' \
     )"
