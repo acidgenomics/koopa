@@ -2829,10 +2829,10 @@
       "make",
       "pkg-config"
     ],
-    "date": "2022-08-30",
+    "date": "2023-05-19",
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.44.2"
+    "version": "1.45.0"
   },
   "libvterm": {
     "aliases": {
