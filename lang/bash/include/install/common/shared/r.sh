@@ -75,11 +75,8 @@ main() {
         'pcre2'
         'glib' # cairo
         'freetype' # cairo
-        # 'gperf' # FIXME
         'fontconfig' # cairo
-        # 'lzo' # FIXME
         'pixman' # cairo
-        # 'fribidi' # FIXME
         'xorg-xorgproto'
         'xorg-xcb-proto'
         'xorg-libpthread-stubs'
@@ -96,20 +93,30 @@ main() {
         'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
-    app['ar']='/usr/bin/ar'
-    app['awk']="$(koopa_locate_awk --realpath)"
-    app['bash']="$(koopa_locate_bash --realpath)"
-    app['echo']="$(koopa_locate_echo --realpath)"
+    app['ar']="$(koopa_locate_ar)"
+    app['awk']="$(koopa_locate_awk)"
+    app['bash']="$(koopa_locate_bash)"
+    app['bzip2']="$(koopa_locate_bzip2)"
+    app['echo']="$(koopa_locate_echo)"
     app['gfortran']="$(koopa_locate_gfortran --realpath)"
+    app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar --realpath)"
     app['java']="$(koopa_locate_java --realpath)"
     app['javac']="$(koopa_locate_javac --realpath)"
-    app['make']="$(koopa_locate_make --realpath)"
-    app['perl']="$(koopa_locate_perl --realpath)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
-    app['sed']="$(koopa_locate_sed --realpath)"
-    app['tar']="$(koopa_locate_tar --realpath)"
-    app['yacc']="$(koopa_locate_yacc --realpath)"
+    app['less']="$(koopa_locate_less)"
+    app['ln']="$(koopa_locate_ln)"
+    app['lpr']="$(koopa_locate_lpr)"
+    app['make']="$(koopa_locate_make)"
+    app['open']="$(koopa_locate_open)"
+    app['perl']="$(koopa_locate_perl)"
+    app['pkg_config']="$(koopa_locate)"
+    app['sed']="$(koopa_locate_sed)"
+    app['strip']="$(koopa_locate_strip)"
+    app['tar']="$(koopa_locate_tar)"
+    app['unzip']="$(koopa_locate_unzip)"
+    app['vim']="$(koopa_locate_vim)"
+    app['yacc']="$(koopa_locate_yacc)"
+    app['zip']="$(koopa_locate_zip)"
     if koopa_is_macos
     then
         app['cc']='/usr/bin/clang'
@@ -119,7 +126,6 @@ main() {
         app['cxx']="$(koopa_locate_gcxx --realpath)"
     fi
     koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
     # > dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
@@ -127,7 +133,6 @@ main() {
     dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
     if koopa_is_macos
     then
         dict['texbin']='/Library/TeX/texbin'
@@ -136,6 +141,47 @@ main() {
             koopa_add_to_path_start "${dict['texbin']}"
         fi
     fi
+    [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
+    conf_dict['ar']="${app['ar']}"
+    conf_dict['awk']="${app['awk']}"
+    conf_dict['cc']="${app['cc']}"
+    conf_dict['cxx']="${app['cxx']}"
+    conf_dict['echo']="${app['echo']}"
+    conf_dict['editor']="${app['vim']}"
+    conf_dict['f77']="${app['gfortran']}"
+    conf_dict['fc']="${app['gfortran']}"
+    conf_dict['flibs']="$(koopa_gfortran_libs)"
+    conf_dict['jar']="${app['jar']}"
+    conf_dict['java']="${app['java']}"
+    conf_dict['java_home']="${dict['temurin']}"
+    conf_dict['javac']="${app['javac']}"
+    conf_dict['javah']=''
+    conf_dict['libnn']='lib'
+    conf_dict['ln_s']="${app['ln']} -s"
+    conf_dict['make']="${app['make']}"
+    conf_dict['objc']="${app['cc']}"
+    conf_dict['objcxx']="${app['cxx']}"
+    conf_dict['pager']="${app['less']}"
+    conf_dict['perl']="${app['perl']}"
+    conf_dict['r_batchsave']='--no-save --no-restore'
+    conf_dict['r_browser']="${app['open']}"
+    conf_dict['r_bzipcmd']="${app['bzip2']}"
+    conf_dict['r_gzipcmd']="${app['gzip']}"
+    conf_dict['r_libs_site']="\${R_HOME}/site-library"
+    conf_dict['r_libs_user']="\${R_LIBS_SITE}"
+    conf_dict['r_papersize']='letter'
+    conf_dict['r_papersize_user']="\${R_PAPERSIZE}"
+    conf_dict['r_pdfviewer']="${app['open']}"
+    conf_dict['r_printcmd']="${app['lpr']}"
+    conf_dict['r_shell']="${app['bash']}"
+    conf_dict['r_strip_shared_lib']="${app['strip']} -x"
+    conf_dict['r_strip_static_lib']="${app['strip']} -S"
+    conf_dict['r_texi2dvicmd']="${app['texi2dvi']}"
+    conf_dict['r_unzipcmd']="${app['unzip']}"
+    conf_dict['r_zipcmd']="${app['zip']}"
+    conf_dict['sed']="${app['sed']}"
+    conf_dict['tar']="${app['tar']}"
+    conf_dict['tz']="TZ=\${TZ:-America/New_York}"
     conf_dict['with_blas']="$( \
         "${app['pkg_config']}" --libs 'openblas' \
     )"
@@ -182,32 +228,11 @@ main() {
     )"
     conf_dict['with_tcl_config']="${dict['tcl_tk']}/lib/tclConfig.sh"
     conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
+    # Alternatively, can use 'bison -y'.
+    conf_dict['yacc']="${app['yacc']}"
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
-    conf_dict['ar']="${app['ar']}"
-    conf_dict['awk']="${app['awk']}"
-    conf_dict['cc']="${app['cc']}"
-    conf_dict['cxx']="${app['cxx']}"
-    conf_dict['echo']="${app['echo']}"
-    conf_dict['f77']="${app['gfortran']}"
-    conf_dict['fc']="${app['gfortran']}"
-    conf_dict['flibs']="$(koopa_gfortran_libs)"
-    conf_dict['jar']="${app['jar']}"
-    conf_dict['java']="${app['java']}"
-    conf_dict['java_home']="${dict['temurin']}"
-    conf_dict['javac']="${app['javac']}"
-    conf_dict['javah']=''
-    conf_dict['libnn']='lib'
-    conf_dict['make']="${app['make']}"
-    conf_dict['objc']="${app['cc']}"
-    conf_dict['objcxx']="${app['cxx']}"
-    conf_dict['perl']="${app['perl']}"
-    conf_dict['r_shell']="${app['bash']}"
-    conf_dict['sed']="${app['sed']}"
-    conf_dict['tar']="${app['tar']}"
-    # Alternatively, can use 'bison -y'.
-    conf_dict['yacc']="${app['yacc']}"
     conf_args=(
         '--disable-static'
         '--enable-R-profiling'
@@ -236,6 +261,7 @@ main() {
         "CC=${conf_dict['cc']}"
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
+        "EDITOR=${conf_dict['editor']}"
         "F77=${conf_dict['f77']}"
         "FC=${conf_dict['fc']}"
         "FLIBS=${conf_dict['flibs']}"
@@ -245,35 +271,32 @@ main() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
         "LIBnn=${conf_dict['libnn']}"
+        "LN_S=${conf_dict['ln_s']}"
         "MAKE=${conf_dict['make']}"
         "OBJC=${conf_dict['objc']}"
         "OBJCXX=${conf_dict['objcxx']}"
+        "PAGER=${conf_dict['pager']}"
         "PERL=${conf_dict['perl']}"
+        "R_BATCHSAVE=${conf_dict['r_batchsave']}"
+        "R_BROWSER=${conf_dict['r_browser']}"
+        "R_BZIPCMD=${conf_dict['r_bzipcmd']}"
+        "R_GZIPCMD=${conf_dict['r_gzipcmd']}"
+        "R_LIBS_SITE=${conf_dict['r_libs_site']}"
+        "R_LIBS_USER=${conf_dict['r_libs_user']}"
+        "R_PAPERSIZE=${conf_dict['r_papersize']}"
+        "R_PAPERSIZE_USER=${conf_dict['r_papersize_user']}"
+        "R_PDFVIEWER=${conf_dict['r_pdfviewer']}"
+        "R_PRINTCMD=${conf_dict['r_printcmd']}"
         "R_SHELL=${conf_dict['r_shell']}"
+        "R_STRIP_SHARED_LIB=${conf_dict['r_strip_shared_lib']}"
+        "R_STRIP_STATIC_LIB=${conf_dict['r_strip_static_lib']}"
+        "R_TEXI2DVICMD=${conf_dict['r_texi2dvicmd']}"
+        "R_UNZIPCMD=${conf_dict['r_unzipcmd']}"
+        "R_ZIPCMD=${conf_dict['r_zipcmd']}"
         "SED=${conf_dict['sed']}"
         "TAR=${conf_dict['tar']}"
+        "TZ=${conf_dict['tz']}"
         "YACC=${conf_dict['yacc']}"
-
-        #"EDITOR=FIXME"
-        #"LN_S=FIXME"
-        #"PAGER=FIXME"
-        #"R_BROWSER=${app['open']}"
-        #"R_BZIPCMD=${app['bzip2']}"
-        #"R_GZIPCMD=${app['gzip']}"
-        #"R_LIBS_SITE=\${R_HOME}/site-library"
-        #"R_LIBS_USER=\${R_LIBS_SITE}"
-        #"R_PAPERSIZE_USER=\${R_PAPERSIZE}"
-        #"R_PDFVIEWER=${app['open']}"
-        #"R_PRINTCMD=${app['lpr']}"
-        #"R_STRIP_SHARED_LIB=${app['strip']} -x"
-        #"R_STRIP_STATIC_LIB=${app['strip']} -S"
-        #"R_TEXI2DVICMD=${app['texi2dvi']}"
-        #"R_UNZIPCMD=${app['unzip']}"
-        #"R_ZIPCMD=${app['zip']}"
-        #"SED=${app['sed']}"
-        #"TZ=\${TZ:-America/New_York}"
-        #'R_BATCHSAVE=--no-save --no-restore'
-        #'R_PAPERSIZE=letter'
     )
     # Aqua framework is required to use R with RStudio on macOS. Currently
     # disabled due to build issues on macOS 13 with XCode CLT 14.
