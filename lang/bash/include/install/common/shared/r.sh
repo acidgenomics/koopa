@@ -64,11 +64,7 @@ main() {
         'zstd' # libtiff
         'gcc'
         'icu4c'
-        # 'ncurses'
         'readline'
-        # 'libiconv'
-        # 'gettext'
-        # > 'openssl3'
         'curl7'
         'libffi' # glib > cairo
         'libjpeg-turbo'
@@ -77,9 +73,6 @@ main() {
         'libxml2' # fontconfig
         'openblas'
         'pcre2'
-        # 'perl'
-        # > 'temurin'
-        # 'texinfo'
         'glib' # cairo
         'freetype' # cairo
         # 'gperf' # FIXME
@@ -260,6 +253,27 @@ main() {
         "SED=${conf_dict['sed']}"
         "TAR=${conf_dict['tar']}"
         "YACC=${conf_dict['yacc']}"
+
+        #"EDITOR=FIXME"
+        #"LN_S=FIXME"
+        #"PAGER=FIXME"
+        #"R_BROWSER=${app['open']}"
+        #"R_BZIPCMD=${app['bzip2']}"
+        #"R_GZIPCMD=${app['gzip']}"
+        #"R_LIBS_SITE=\${R_HOME}/site-library"
+        #"R_LIBS_USER=\${R_LIBS_SITE}"
+        #"R_PAPERSIZE_USER=\${R_PAPERSIZE}"
+        #"R_PDFVIEWER=${app['open']}"
+        #"R_PRINTCMD=${app['lpr']}"
+        #"R_STRIP_SHARED_LIB=${app['strip']} -x"
+        #"R_STRIP_STATIC_LIB=${app['strip']} -S"
+        #"R_TEXI2DVICMD=${app['texi2dvi']}"
+        #"R_UNZIPCMD=${app['unzip']}"
+        #"R_ZIPCMD=${app['zip']}"
+        #"SED=${app['sed']}"
+        #"TZ=\${TZ:-America/New_York}"
+        #'R_BATCHSAVE=--no-save --no-restore'
+        #'R_PAPERSIZE=letter'
     )
     # Aqua framework is required to use R with RStudio on macOS. Currently
     # disabled due to build issues on macOS 13 with XCode CLT 14.
