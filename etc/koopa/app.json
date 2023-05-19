@@ -701,11 +701,11 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-04-10",
+    "date": "2023-05-19",
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.26.3"
+    "version": "3.26.4"
   },
   "colorls": {
     "bin": ["colorls"],
