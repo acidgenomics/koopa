@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Reduce the number of apps to link here.
+
 # NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
 # package in R, which bundles a very old version (2.28.0) currently.
 
@@ -126,6 +128,7 @@ libexec/lib/server}")
         then
             keys+=('gcc')
         fi
+        # FIXME Revert back to erroring on missing app here.
         for key in "${keys[@]}"
         do
             local prefix
