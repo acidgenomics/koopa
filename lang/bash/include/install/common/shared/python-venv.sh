@@ -91,8 +91,6 @@ main() {
     dict['py_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['py_version']}" \
     )"
-    dict['venv_cmd']="${dict['pkg_name']}==${dict['version']}"
-    koopa_print_env
     venv_args=(
         "--prefix=${dict['libexec']}"
         "--python=${app['python']}"
@@ -101,7 +99,13 @@ main() {
     then
         venv_args+=('--no-binary')
     fi
-    venv_args+=("${dict['venv_cmd']}")
+    venv_args+=("${dict['pkg_name']}==${dict['version']}")
+    case "${dict['name']}" in
+        'pytaglib')
+            venv_args+=('tqdm')
+            ;;
+    esac
+    koopa_print_env
     koopa_python_create_venv "${venv_args[@]}"
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
