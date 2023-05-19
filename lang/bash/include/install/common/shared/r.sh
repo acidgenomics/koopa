@@ -53,12 +53,14 @@ main() {
     build_deps=(
         'make'
         'pkg-config'
-        # > 'libtool'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=()
     koopa_is_linux && deps+=('bzip2')
     deps+=(
+        'autoconf'
+        'automake'
+        'libtool'
         'xz'
         'zlib' # libpng
         'zstd' # libtiff
