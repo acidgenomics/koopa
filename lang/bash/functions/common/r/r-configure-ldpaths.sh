@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Reduce the number of apps to link here.
-
-# NOTE Don't include graphviz here, as it can cause conflicts with Rgraphviz
-# package in R, which bundles a very old version (2.28.0) currently.
-
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-05-19.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.

@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-05-19.
     #
     # @section Package library location:
     #
@@ -74,30 +74,23 @@ koopa_r_configure_environ() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     bool['use_apps']=1
-    bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
-    dict['arch']="$(koopa_arch)"
-    if koopa_is_macos
-    then
-        case "${dict['arch']}" in
-            'aarch64')
-                dict['arch']='arm64'
-                ;;
-        esac
-    fi
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['tmp_file']="$(koopa_tmp_file)"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
+        # FIXME Need to provide fallbacks here if not installed.
         app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
         app['ln']="$(koopa_locate_ln)"
+        app['lpr']="$(koopa_locate_lpr --allow-missing)"
         app['make']="$(koopa_locate_make)"
+        app['open']="$(koopa_locate_open --allow-missing)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['sed']="$(koopa_locate_sed --allow-system)"
         app['strip']="$(koopa_locate_strip)"
@@ -106,22 +99,6 @@ koopa_r_configure_environ() {
         app['unzip']="$(koopa_locate_unzip)"
         app['vim']="$(koopa_locate_vim)"
         app['zip']="$(koopa_locate_zip)"
-        koopa_assert_is_executable "${app[@]}"
-        app['lpr']="$(koopa_locate_lpr --allow-missing)"
-        if [[ ! -x "${app['lpr']}" ]]
-        then
-            app['lpr']='/usr/bin/lpr'
-        fi
-        app['open']="$(koopa_locate_open --allow-missing)"
-        if [[ ! -x "${app['open']}" ]]
-        then
-            if koopa_is_linux
-            then
-                app['open']='/usr/bin/xdg-open'
-            else
-                app['open']='/usr/bin/open'
-            fi
-        fi
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
@@ -139,10 +116,6 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr=()
-    if [[ "${bool['use_local']}" -eq 1 ]]
-    then
-        path_arr+=('/usr/local/bin')
-    fi
     path_arr+=(
         "${dict['koopa_prefix']}/bin"
         '/usr/bin'
@@ -157,7 +130,6 @@ koopa_r_configure_environ() {
     elif koopa_is_macos
     then
         path_arr+=(
-            # > "/opt/r/${dict['arch']}/bin"
             '/Library/TeX/texbin'
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
@@ -168,6 +140,7 @@ koopa_r_configure_environ() {
     koopa_assert_is_dir "${path_arr[@]}"
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     lines+=("PATH=${conf_dict['path']}")
+    # FIXME Need to rework this.
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Set the 'PKG_CONFIG_PATH' string.
@@ -242,10 +215,6 @@ koopa_r_configure_environ() {
         done
         koopa_assert_is_dir "${app_pc_path_arr[@]}"
         pc_path_arr=()
-        # > if [[ "${bool['system']}" -eq 1 ]]
-        # > then
-        # >     pc_path_arr+=('/usr/local/lib/pkgconfig')
-        # > fi
         pc_path_arr+=("${app_pc_path_arr[@]}")
         if [[ "${bool['system']}" -eq 1 ]]
         then
