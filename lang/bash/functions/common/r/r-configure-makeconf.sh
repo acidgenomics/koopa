@@ -78,9 +78,9 @@ koopa_r_configure_makeconf() {
     dict['replacement']="LIBS = ${libs[*]}"
     case "${bool['system']}" in
         '0')
-            if [[ ! -f "${dict['file.bak']}" ]]
+            if [[ ! -f "${dict['file_bak']}" ]]
             then
-                koopa_cp "${dict['file']}" "${dict['file.bak']}"
+                koopa_cp "${dict['file']}" "${dict['file_bak']}"
             fi
             koopa_find_and_replace_in_file \
                 --pattern="${dict['pattern']}" \
@@ -89,9 +89,9 @@ koopa_r_configure_makeconf() {
                 "${dict['file']}"
             ;;
         '1')
-            if [[ ! -f "${dict['file.bak']}" ]]
+            if [[ ! -f "${dict['file_bak']}" ]]
             then
-                koopa_cp --sudo "${dict['file']}" "${dict['file.bak']}"
+                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
             fi
             koopa_find_and_replace_in_file \
                 --sudo \
