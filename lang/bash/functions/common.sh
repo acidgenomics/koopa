@@ -18113,6 +18113,7 @@ koopa_r_configure_makevars() {
             app['cc']='/usr/bin/clang'
             app['cxx']='/usr/bin/clang++'
         fi
+        app['ar']='/usr/bin/ar'
         app['awk']="$(koopa_locate_awk)"
         app['bash']="$(koopa_locate_bash)"
         app['echo']="$(koopa_locate_echo)"
