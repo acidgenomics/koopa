@@ -28,10 +28,16 @@ koopa_r_configure_makevars() {
     app['r']="${1:?}"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    bool['openmp']=0
     bool['system']=0
     bool['use_apps']=1
+    bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    if koopa_is_macos && [[ -f '/usr/local/include/omp.h' ]]
+    then
+        bool['openmp']=1
+    fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -66,12 +72,11 @@ koopa_r_configure_makevars() {
     cppflags=()
     ldflags=()
     lines=()
-    # > case "${bool['system']}" in
-    # >     '1')
-    # >         cppflags+=('-I/usr/local/include')
-    # >         ldflags+=('-L/usr/local/lib')
-    # >         ;;
-    # > esac
+    if [[ "${bool['use_local']}" -eq 1 ]]
+    then
+        cppflags+=('-I/usr/local/include')
+        ldflags+=('-L/usr/local/lib')
+    fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Custom pkg-config flags here are incompatible for macOS clang with
@@ -191,12 +196,15 @@ lib/pkgconfig"
             "-L${dict['libpng']}/lib"
             "-L${dict['openssl3']}/lib"
         )
+        # FIXME Only set lomp if OpenMP headers are installed.
         if koopa_is_macos
         then
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
-            # libomp is installed at '/usr/local/lib' for macOS.
-            ldflags+=('-lomp')
+            if [[ "${bool['openmp']}" -eq 1 ]]
+            then
+                ldflags+=('-lomp')
+            fi
         fi
         conf_dict['ar']="${app['ar']}"
         conf_dict['awk']="${app['awk']}"
@@ -296,12 +304,13 @@ lib/pkgconfig"
         # >     '-Wl,CoreFoundation'
         # > )
         # > conf_dict['libintl']="${libintl[*]}"
-        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
-        lines+=(
-            # > "LIBINTL = ${conf_dict['libintl']}"
+        # > lines+=("LIBINTL = ${conf_dict['libintl']}")
+        if [[ "${bool['openmp']}" -eq 1 ]]
+        then
             # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
-            "SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}"
-        )
+            conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
+            lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
+        fi
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
