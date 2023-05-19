@@ -17680,7 +17680,9 @@ koopa_r_configure_makevars() {
     then
         bool['openmp']=1
     fi
-    if koopa_is_macos && [[ "${bool['openmp']}" -eq 1 ]]
+    if koopa_is_macos && \
+        [[ "${bool['system']}" -eq 1 ]] && \
+        [[ "${bool['openmp']}" -eq 1 ]]
     then
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
