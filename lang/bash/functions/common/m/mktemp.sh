@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider using random string here instead, so that we don't use
+# 'XXX...' on macOS with BSD variant.
+
 koopa_mktemp() {
     # """
     # Wrapper function for system 'mktemp'.
