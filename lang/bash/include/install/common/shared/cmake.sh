@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# Need to address curses support?
-# -- Checking for curses support - Success
-# -- Looking for wsyncup in /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/usr/lib/libcurses.tbd
-
 main() {
     # """
     # Install CMake.
@@ -38,14 +34,14 @@ main() {
         "--parallel=${dict['jobs']}"
         "--prefix=${dict['prefix']}"
     )
-    if koopa_is_macos
-    then
-        bootstrap_args+=(
-            '--system-bzip2'
-            '--system-curl'
-            '--system-zlib'
-        )
-    fi
+    # > if koopa_is_macos
+    # > then
+    # >     bootstrap_args+=(
+    # >         '--system-bzip2'
+    # >         '--system-curl'
+    # >         '--system-zlib'
+    # >     )
+    # > fi
     bootstrap_args+=('--' "${cmake_args[@]}")
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
