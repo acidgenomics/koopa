@@ -109,7 +109,7 @@ main() {
     app['make']="$(koopa_locate_make)"
     app['open']="$(koopa_locate_open)"
     app['perl']="$(koopa_locate_perl)"
-    app['pkg_config']="$(koopa_locate)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
     app['sed']="$(koopa_locate_sed)"
     app['strip']="$(koopa_locate_strip)"
     app['tar']="$(koopa_locate_tar)"
