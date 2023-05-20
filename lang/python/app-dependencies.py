@@ -46,7 +46,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i: i + 1] = x  # noqa: E203
+                items[i : i + 1] = x  # noqa: E203
                 x = items[i]
     except IndexError:
         pass
@@ -137,8 +137,7 @@ def main(app_name: str, json_file: str) -> bool:
         for lvl2 in lst[i]:
             if isinstance(lvl2, list):
                 for lvl3 in lvl2:
-                    lvl4 = get_deps(
-                        app_name=lvl3, json_data=json_data)
+                    lvl4 = get_deps(app_name=lvl3, json_data=json_data)
                     if len(lvl4) > 0:
                         lvl1.append(lvl4)
             else:
