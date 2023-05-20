@@ -17,7 +17,6 @@ koopa_python_create_venv() {
     # """
     local -A app bool dict
     local -a pip_args pkgs pos venv_args
-    local pkg
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     app['python']=''
@@ -147,14 +146,7 @@ ${dict['py_maj_min_ver']}"
         pip_args=("--python=${app['venv_python']}")
         if [[ "${bool['binary']}" -eq 0 ]]
         then
-            app['cut']="$(koopa_locate_cut --allow-system)"
-            koopa_assert_is_executable "${app['cut']}"
-            for pkg in "${pkgs[@]}"
-            do
-                local pkg_name
-                pkg_name="$(koopa_print "$pkg" | "${app['cut']}" -d '=' -f 1)"
-                pip_args+=("--no-binary=$pkg_name")
-            done
+            pip_args+=('--no-binary=:all:')
         fi
         pip_args+=("${pkgs[@]}")
         koopa_python_pip_install "${pip_args[@]}"

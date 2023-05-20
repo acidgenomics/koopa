@@ -3794,13 +3794,13 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2023-04-02",
+    "date": "2023-05-20",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.4.2"
+    "version": "1.5.0"
   },
   "prelude-emacs": {
     "date": "2023-03-07",
@@ -4852,10 +4852,10 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2023-05-18",
+    "date": "2023-05-20",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.1.1"
+    "version": "2.3.0"
   },
   "tuc": {
     "aliases": {
