@@ -2212,10 +2212,10 @@
       "homebrew": true
     },
     "bin": ["http", "https"],
-    "date": "2022-10-18",
+    "date": "2023-05-20",
     "dependencies": ["python3.11"],
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
-    "version": "3.2.1"
+    "version": "3.2.2"
   },
   "hugo": {
     "bin": ["hugo"],
