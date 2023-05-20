@@ -40,7 +40,6 @@ main() {
     koopa_brew_reset_permissions
     "${app['brew']}" analytics off
     "${app['brew']}" bundle install "${install_args[@]}"
-    "${app['brew']}" config
-    "${app['brew']}" doctor || true
+    koopa_brew_doctor
     return 0
 }
