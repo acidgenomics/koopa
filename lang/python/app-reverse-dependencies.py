@@ -16,7 +16,6 @@ from platform import machine, system
 from shutil import disk_usage
 from sys import version_info
 
-
 parser = ArgumentParser()
 parser.add_argument("app_name")
 args = parser.parse_args()
