@@ -37,7 +37,6 @@ master/${dict['file']}"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
     koopa_brew_reset_permissions
-    "${app['brew']}" config
-    "${app['brew']}" doctor || true
+    koopa_brew_doctor
     return 0
 }
