@@ -12,6 +12,7 @@ Parse conda JSON metadata for files to link in 'bin'.
 from argparse import ArgumentParser
 from json import load
 from re import compile as re_compile
+from sys import version_info
 
 
 def main(json_file: str) -> bool:
@@ -44,4 +45,6 @@ args = parser.parse_args()
 
 
 if __name__ == "__main__":
+    if not version_info >= (3, 9):
+        raise RuntimeError("Unsupported Python version.")
     main(json_file=args.json_file)

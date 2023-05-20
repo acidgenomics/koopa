@@ -13,6 +13,7 @@ Parse koopa 'app.json' file.
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
+from sys import version_info
 
 
 def main(json_file: str, app_name: str, key: str) -> bool:
@@ -46,4 +47,6 @@ _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 
 if __name__ == "__main__":
+    if not version_info >= (3, 9):
+        raise RuntimeError("Unsupported Python version.")
     main(json_file=_json_file, app_name=args.app_name, key=args.key)
