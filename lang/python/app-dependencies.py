@@ -156,7 +156,7 @@ def main(app_name: str, json_file: str) -> bool:
 
 
 parser = ArgumentParser()
-parser.add_argument("app_name", nargs="?", type=str)
+parser.add_argument("app_name", nargs=1, type=str)
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
