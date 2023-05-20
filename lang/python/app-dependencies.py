@@ -14,7 +14,6 @@ from os.path import abspath, dirname, join
 from platform import machine, system
 from sys import version_info
 
-
 parser = ArgumentParser()
 parser.add_argument("app_name")
 args = parser.parse_args()

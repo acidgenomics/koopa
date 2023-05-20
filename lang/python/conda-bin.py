@@ -14,7 +14,6 @@ from json import load
 from re import compile as re_compile
 from sys import version_info
 
-
 parser = ArgumentParser()
 parser.add_argument("json_file")
 args = parser.parse_args()

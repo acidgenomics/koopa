@@ -15,7 +15,6 @@ from platform import machine, system
 from shutil import disk_usage
 from sys import version_info
 
-
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 
@@ -39,7 +38,7 @@ def arch2() -> str:
     return string
 
 
-def koopa_opt_prefix() -> bool:
+def koopa_opt_prefix() -> str:
     """
     koopa opt prefix.
     @note Updated 2023-05-01.
@@ -48,7 +47,7 @@ def koopa_opt_prefix() -> bool:
     return prefix
 
 
-def koopa_prefix() -> bool:
+def koopa_prefix() -> str:
     """
     koopa prefix.
     @note Updated 2023-05-01.
