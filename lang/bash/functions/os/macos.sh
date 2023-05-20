@@ -25,6 +25,17 @@ koopa_macos_app_version() {
     return 0
 }
 
+koopa_macos_assert_is_xcode_clt_installed() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_macos_is_xcode_clt_installed
+    then
+        koopa_stop \
+            'Xcode Command Line Tools (CLT) are not installed.' \
+            "Resolve with 'koopa install system xcode-clt'."
+    fi
+    return 0
+}
+
 koopa_macos_brew_cask_outdated() {
     local -A app dict
     koopa_assert_has_no_args "$#"
