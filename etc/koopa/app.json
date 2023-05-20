@@ -3930,8 +3930,8 @@
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "date": "2023-03-26",
-    "dependencies": ["python3.10", "taglib"],
+    "date": "2023-05-20",
+    "dependencies": ["python3.11", "taglib"],
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
@@ -4855,7 +4855,7 @@
     "date": "2023-05-20",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.3.0"
+    "version": "2.3.1"
   },
   "tuc": {
     "aliases": {
