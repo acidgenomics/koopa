@@ -16,6 +16,14 @@ from os.path import abspath, dirname, join
 from sys import version_info
 
 
+parser = ArgumentParser()
+parser.add_argument("--app-name", required=True)
+parser.add_argument("--key", required=True)
+args = parser.parse_args()
+
+_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
+
+
 def main(json_file: str, app_name: str, key: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
@@ -36,14 +44,6 @@ def main(json_file: str, app_name: str, key: str) -> bool:
     else:
         print(value)
     return True
-
-
-parser = ArgumentParser()
-parser.add_argument("--app-name", required=True)
-parser.add_argument("--key", required=True)
-args = parser.parse_args()
-
-_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 
 if __name__ == "__main__":
