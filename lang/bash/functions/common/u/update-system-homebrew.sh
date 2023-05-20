@@ -55,8 +55,7 @@ koopa_update_system_homebrew() {
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
     "${app['brew']}" autoremove || true
-    "${app['brew']}" config
-    "${app['brew']}" doctor || true
+    koopa_brew_doctor
     koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
     return 0
 }
