@@ -2470,7 +2470,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-05-09",
+    "date": "2023-05-20",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2478,7 +2478,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.19.6"
+    "version": "2.19.11"
   },
   "less": {
     "aliases": {
