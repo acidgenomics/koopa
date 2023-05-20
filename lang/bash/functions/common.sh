@@ -24746,6 +24746,8 @@ cuda10.tar.gz" \
 
 koopa_update_system_homebrew() {
     local -A app dict
+    local -a taps
+    local tap
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
     koopa_assert_is_owner
@@ -24772,16 +24774,16 @@ koopa_update_system_homebrew() {
     fi
     koopa_brew_upgrade_brews
     koopa_alert 'Cleaning up.'
-    dict['cask_repo']="$("${app['brew']}" --repo 'homebrew/cask')"
-    dict['core_repo']="$("${app['brew']}" --repo 'homebrew/core')"
-    if [[ -d "${dict['cask_repo']}" ]]
-    then
-        "${app['brew']}" untap 'homebrew-cask'
-    fi
-    if [[ -d "${dict['core_repo']}" ]]
-    then
-        "${app['brew']}" untap 'homebrew-core'
-    fi
+    taps=('homebrew/cask' 'homebrew/core')
+    for tap in "${taps[@]}"
+    do
+        local tap_prefix
+        tap_prefix="$("${app['brew']}" --repo "$tap")"
+        if [[ -d "$tap_prefix" ]]
+        then
+            "${app['brew']}" untap "$tap"
+        fi
+    done
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
     "${app['brew']}" autoremove || true
