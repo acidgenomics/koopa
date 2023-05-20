@@ -32,7 +32,14 @@ koopa_update_system_homebrew() {
     koopa_brew_reset_permissions
     koopa_alert 'Updating Homebrew.'
     koopa_add_to_path_start "${dict['prefix']}/bin"
-    # Untap legacy 'homebrew/cask' and 'homebrew/core' if necessary.
+    "${app['brew']}" analytics off
+    "${app['brew']}" update
+    if koopa_is_macos
+    then
+        koopa_macos_brew_upgrade_casks
+    fi
+    koopa_brew_upgrade_brews
+    koopa_alert 'Cleaning up.'
     dict['cask_repo']="$("${app['brew']}" --repo 'homebrew/cask')"
     dict['core_repo']="$("${app['brew']}" --repo 'homebrew/core')"
     if [[ -d "${dict['cask_repo']}" ]]
@@ -43,14 +50,6 @@ koopa_update_system_homebrew() {
     then
         "${app['brew']}" untap "${dict['core_repo']}"
     fi
-    "${app['brew']}" analytics off
-    "${app['brew']}" update
-    if koopa_is_macos
-    then
-        koopa_macos_brew_upgrade_casks
-    fi
-    koopa_brew_upgrade_brews
-    koopa_alert 'Cleaning up.'
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
     "${app['brew']}" autoremove || true
