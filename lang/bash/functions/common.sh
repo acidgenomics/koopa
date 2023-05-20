@@ -2912,15 +2912,34 @@ koopa_bowtie2_index() {
     return 0
 }
 
-koopa_brew_cleanup() {
+koopa_brew_doctor() {
     local -A app
-    koopa_assert_has_no_args "$#"
+    local -a all_checks disabled_checks enabled_checks
     app['brew']="$(koopa_locate_brew)"
+    app['sort']="$(koopa_locate_sort --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    app['uniq']="$(koopa_locate_uniq --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_alert 'Cleaning up.'
-    "${app['brew']}" cleanup -s || true
-    koopa_rm "$("${app['brew']}" --cache)"
-    "${app['brew']}" autoremove || true
+    disabled_checks=(
+        'check_for_stray_dylibs'
+        'check_for_stray_headers'
+        'check_for_stray_las'
+        'check_for_stray_pcs'
+        'check_for_stray_static_libs'
+        'check_user_path_1'
+        'check_user_path_2'
+        'check_user_path_3'
+    )
+    readarray -t all_checks <<< "$("${app['brew']}" doctor --list-checks)"
+    readarray -t enabled_checks <<< "$( \
+        koopa_print "${all_checks[@]}" "${disabled_checks[@]}" \
+            | "${app['tr']}" ' ' '\n' \
+            | "${app['sort']}" \
+            | "${app['uniq']}" -u \
+    )"
+    koopa_assert_is_array_non_empty "${enabled_checks[@]}"
+    "${app['brew']}" config || true
+    "${app['brew']}" doctor "${enabled_checks[@]}" || true
     return 0
 }
 
@@ -2974,18 +2993,61 @@ koopa_brew_reset_core_repo() {
 }
 
 koopa_brew_reset_permissions() {
-    local -A dict
+    local -A bool dict
+    local -a dirs
+    local dir
     koopa_assert_has_no_args "$#"
-    dict['group']="$(koopa_admin_group_name)"
+    koopa_is_linux && return 0
+    bool['reset']=0
+    dict['group_name']="$(koopa_admin_group_name)"
     dict['prefix']="$(koopa_homebrew_prefix)"
-    dict['user']="$(koopa_user_name)"
+    dict['user_id']="$(koopa_user_id)"
+    dict['user_name']="$(koopa_user_name)"
+    koopa_alert 'Checking permissions.'
+    koopa_assert_is_dir "${dict['prefix']}/Cellar"
+    dict['stat_user_id']="$(koopa_stat_user_id "${dict['prefix']}/Cellar")"
+    if [[ "${dict['stat_user_id']}" != "${dict['user_id']}" ]]
+    then
+        koopa_stop "Homebrew is not owned by current user \
+('${dict['user_name']}')."
+    fi
+    dirs=(
+        "${dict['prefix']}/bin"
+        "${dict['prefix']}/etc"
+        "${dict['prefix']}/etc/bash_completion.d"
+        "${dict['prefix']}/include"
+        "${dict['prefix']}/lib"
+        "${dict['prefix']}/lib/pkgconfig"
+        "${dict['prefix']}/sbin"
+        "${dict['prefix']}/share"
+        "${dict['prefix']}/share/doc"
+        "${dict['prefix']}/share/info"
+        "${dict['prefix']}/share/locale"
+        "${dict['prefix']}/share/man"
+        "${dict['prefix']}/share/man/man1"
+        "${dict['prefix']}/share/man/man3"
+        "${dict['prefix']}/share/man/man5"
+        "${dict['prefix']}/share/zsh"
+        "${dict['prefix']}/share/zsh/site-functions"
+        "${dict['prefix']}/var/homebrew/linked"
+        "${dict['prefix']}/var/homebrew/locks"
+    )
+    for dir in "${dirs[@]}"
+    do
+        [[ "${bool['reset']}" -eq 1 ]] && continue
+        [[ -d "$dir" ]] || continue
+        [[ "$(koopa_stat_user_id "$dir")" == "${dict['user_id']}" ]] \
+            && continue
+        bool['reset']=1
+    done
+    bool['reset']=0 && return 0
     koopa_alert "Resetting ownership of files in \
-'${dict['prefix']}' to '${dict['user']}:${dict['group']}'."
+'${dict['prefix']}' to '${dict['user_name']}:${dict['group_name']}'."
     koopa_chown \
         --no-dereference \
         --recursive \
         --sudo \
-        "${dict['user']}:${dict['group']}" \
+        "${dict['user_name']}:${dict['group_name']}" \
         "${dict['prefix']}/"*
     return 0
 }
@@ -17228,7 +17290,6 @@ koopa_python_activate_venv() {
 koopa_python_create_venv() {
     local -A app bool dict
     local -a pip_args pkgs pos venv_args
-    local pkg
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
     app['python']=''
@@ -17354,14 +17415,7 @@ ${dict['py_maj_min_ver']}"
         pip_args=("--python=${app['venv_python']}")
         if [[ "${bool['binary']}" -eq 0 ]]
         then
-            app['cut']="$(koopa_locate_cut --allow-system)"
-            koopa_assert_is_executable "${app['cut']}"
-            for pkg in "${pkgs[@]}"
-            do
-                local pkg_name
-                pkg_name="$(koopa_print "$pkg" | "${app['cut']}" -d '=' -f 1)"
-                pip_args+=("--no-binary=$pkg_name")
-            done
+            pip_args+=('--no-binary=:all:')
         fi
         pip_args+=("${pkgs[@]}")
         koopa_python_pip_install "${pip_args[@]}"
@@ -24722,74 +24776,49 @@ cuda10.tar.gz" \
 }
 
 koopa_update_system_homebrew() {
-    local -A app bool dict
-    local -a dirs
-    local dir
-    koopa_assert_is_admin
+    local -A app dict
+    local -a taps
+    local tap
     koopa_assert_has_no_args "$#"
-    app['brew']="$(koopa_locate_brew)"
-    koopa_assert_is_executable "${app[@]}"
-    bool['reset']=0
-    dict['prefix']="$(koopa_homebrew_prefix)"
-    dict['user_id']="$(koopa_user_id)"
-    koopa_assert_is_dir "${dict['prefix']}"
-    koopa_alert_update_start 'Homebrew' "${dict['prefix']}"
-    koopa_alert 'Checking Homebrew installation.'
+    koopa_assert_is_admin
+    koopa_assert_is_owner
     if koopa_is_macos
     then
-        koopa_assert_is_dir "${dict['prefix']}/Cellar"
-        if [[ "$(koopa_stat_user_id "${dict['prefix']}/Cellar")" \
-            != "${dict['user_id']}" ]]
-        then
-            koopa_stop 'Homebrew is not managed by current user.'
-        fi
-        if ! koopa_macos_is_xcode_clt_installed
-        then
-            koopa_stop \
-                'Xcode Command Line Tools are missing.' \
-                "Run 'koopa install system xcode-clt' to resolve."
-        fi
-        dirs=(
-            "${dict['prefix']}/bin"
-            "${dict['prefix']}/etc"
-            "${dict['prefix']}/etc/bash_completion.d"
-            "${dict['prefix']}/include"
-            "${dict['prefix']}/lib"
-            "${dict['prefix']}/lib/pkgconfig"
-            "${dict['prefix']}/sbin"
-            "${dict['prefix']}/share"
-            "${dict['prefix']}/share/doc"
-            "${dict['prefix']}/share/info"
-            "${dict['prefix']}/share/locale"
-            "${dict['prefix']}/share/man"
-            "${dict['prefix']}/share/man/man1"
-            "${dict['prefix']}/share/zsh"
-            "${dict['prefix']}/share/zsh/site-functions"
-            "${dict['prefix']}/var/homebrew/linked"
-            "${dict['prefix']}/var/homebrew/locks"
-        )
-        for dir in "${dirs[@]}"
-        do
-            [[ "${bool['reset']}" -eq 1 ]] && continue
-            [[ -d "$dir" ]] || continue
-            [[ "$(koopa_stat_user_id "$dir")" == "${dict['user_id']}" ]] \
-                && continue
-            bool['reset']=1
-        done
+        koopa_macos_assert_is_xcode_clt_installed
     fi
-    if [[ "${bool['reset']}" -eq 1 ]]
-    then
-        koopa_brew_reset_permissions
-        koopa_brew_reset_core_repo
-    fi
+    app['brew']="$(koopa_locate_brew)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="$(koopa_homebrew_prefix)"
+    dict['user_id']="$(koopa_user_id)"
+    koopa_assert_is_dir \
+        "${dict['prefix']}" \
+        "${dict['prefix']}/bin"
+    koopa_alert_update_start 'Homebrew' "${dict['prefix']}"
+    koopa_brew_reset_permissions
+    koopa_alert 'Updating Homebrew.'
+    koopa_add_to_path_start "${dict['prefix']}/bin"
     "${app['brew']}" analytics off
-    "${app['brew']}" update # &>/dev/null
+    "${app['brew']}" update
     if koopa_is_macos
     then
         koopa_macos_brew_upgrade_casks
     fi
     koopa_brew_upgrade_brews
-    koopa_brew_cleanup
+    koopa_alert 'Cleaning up.'
+    taps=('homebrew/cask' 'homebrew/core')
+    for tap in "${taps[@]}"
+    do
+        local tap_prefix
+        tap_prefix="$("${app['brew']}" --repo "$tap")"
+        if [[ -d "$tap_prefix" ]]
+        then
+            "${app['brew']}" untap "$tap"
+        fi
+    done
+    "${app['brew']}" cleanup -s || true
+    koopa_rm "$("${app['brew']}" --cache)"
+    "${app['brew']}" autoremove || true
+    koopa_brew_doctor
     koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
     return 0
 }
