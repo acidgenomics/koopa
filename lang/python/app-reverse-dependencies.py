@@ -17,6 +17,13 @@ from shutil import disk_usage
 from sys import version_info
 
 
+parser = ArgumentParser()
+parser.add_argument("app_name")
+args = parser.parse_args()
+
+_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
+
+
 def arch() -> str:
     """
     Architecture string.
@@ -136,13 +143,6 @@ def main(app_name: str, json_file: str) -> bool:
         return True
     print_apps(app_names=deps, json_data=json_data)
     return True
-
-
-parser = ArgumentParser()
-parser.add_argument("app_name")
-args = parser.parse_args()
-
-_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 
 if __name__ == "__main__":

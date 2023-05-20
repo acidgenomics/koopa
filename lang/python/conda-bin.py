@@ -15,6 +15,11 @@ from re import compile as re_compile
 from sys import version_info
 
 
+parser = ArgumentParser()
+parser.add_argument("json_file")
+args = parser.parse_args()
+
+
 def main(json_file: str) -> bool:
     """
     Parse conda JSON metadata for files to link in 'bin'.
@@ -37,11 +42,6 @@ def main(json_file: str) -> bool:
         for bin_file in bin_files:
             print(bin_file)
     return True
-
-
-parser = ArgumentParser()
-parser.add_argument("json_file")
-args = parser.parse_args()
 
 
 if __name__ == "__main__":
