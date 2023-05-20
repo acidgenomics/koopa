@@ -15,7 +15,6 @@ from json import load
 from os.path import abspath, dirname, join
 from sys import version_info
 
-
 parser = ArgumentParser()
 parser.add_argument("--app-name", required=True)
 parser.add_argument("--key", required=True)
