@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-03-29.
+@note Updated 2023-05-20.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -161,4 +161,4 @@ args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
-main(app_name=args.app_name, json_file=_json_file)
+main(app_name=args.app_name[0], json_file=_json_file)

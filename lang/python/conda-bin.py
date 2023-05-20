@@ -2,7 +2,7 @@
 
 """
 Parse conda JSON metadata for files to link in 'bin'.
-@note Updated 2023-03-30.
+@note Updated 2023-05-20.
 
 @examples
 ./conda-bin.py \
@@ -42,4 +42,4 @@ parser = ArgumentParser()
 parser.add_argument("json_file", nargs=1, type=str)
 args = parser.parse_args()
 
-main(json_file=args.json_file)
+main(json_file=args.json_file[0])
