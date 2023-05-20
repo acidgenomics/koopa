@@ -12,6 +12,7 @@ from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
 from platform import machine, system
+from sys import version_info
 
 
 def arch() -> str:
@@ -45,7 +46,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i: i + 1] = x  # noqa: E203
+                items[i : i + 1] = x  # noqa: E203
                 x = items[i]
     except IndexError:
         pass
@@ -136,8 +137,7 @@ def main(app_name: str, json_file: str) -> bool:
         for lvl2 in lst[i]:
             if isinstance(lvl2, list):
                 for lvl3 in lvl2:
-                    lvl4 = get_deps(
-                        app_name=lvl3, json_data=json_data)
+                    lvl4 = get_deps(app_name=lvl3, json_data=json_data)
                     if len(lvl4) > 0:
                         lvl1.append(lvl4)
             else:
@@ -161,4 +161,8 @@ args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
-main(app_name=args.app_name, json_file=_json_file)
+
+if __name__ == "__main__":
+    if not version_info >= (3, 9):
+        raise RuntimeError("Unsupported Python version.")
+    main(app_name=args.app_name, json_file=_json_file)

@@ -2,7 +2,7 @@
 
 """
 Return supported shared applications defined in 'app.json' file.
-@note Updated 2023-05-01.
+@note Updated 2023-05-20.
 
 @examples
 ./shared-apps.py
@@ -13,6 +13,7 @@ from os import getenv
 from os.path import abspath, dirname, isdir, join
 from platform import machine, system
 from shutil import disk_usage
+from sys import version_info
 
 
 def arch() -> str:
@@ -132,4 +133,8 @@ def main(json_file: str) -> bool:
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
-main(json_file=_json_file)
+
+if __name__ == "__main__":
+    if not version_info >= (3, 9):
+        raise RuntimeError("Unsupported Python version.")
+    main(json_file=_json_file)
