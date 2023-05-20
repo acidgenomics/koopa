@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Homebrew.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-05-20.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -18,16 +18,15 @@ main() {
     # Linux:
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
-    local -A dict
-    if [[ -x "$(koopa_locate_brew --allow-missing)" ]]
+    local -A app dict
+    app['brew']="$(koopa_locate_brew --allow-missing)"
+    if [[ -x "${app['brew']}" ]]
     then
         koopa_stop 'Homebrew is already installed.'
     fi
-    if koopa_is_macos && [[ ! -d '/Library/Developer/CommandLineTools' ]]
+    if koopa_is_macos
     then
-        koopa_stop \
-            'Xcode Command Line Tools are not installed.' \
-            "Run 'koopa install system xcode-clt' to resolve."
+        koopa_macos_assert_is_xcode_clt_installed
     fi
     dict['file']='install.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
@@ -35,5 +34,10 @@ master/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"
     NONINTERACTIVE=1 "./${dict['file']}" || true
+    app['brew']="$(koopa_locate_brew)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_brew_reset_permissions
+    "${app['brew']}" config
+    "${app['brew']}" doctor || true
     return 0
 }
