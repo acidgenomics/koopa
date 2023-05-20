@@ -6,6 +6,5 @@ main() {
         --installer='python-venv' \
         --name='pytaglib' \
         -D '--no-binary' \
-        -D '--python-version=3.10' \
         -D 'tqdm'
 }
