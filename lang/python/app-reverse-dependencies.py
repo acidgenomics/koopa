@@ -14,6 +14,7 @@ from os import getenv
 from os.path import abspath, dirname, join
 from platform import machine, system
 from shutil import disk_usage
+from sys import version_info
 
 
 def arch() -> str:
@@ -145,4 +146,6 @@ _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 
 if __name__ == "__main__":
+    if not version_info >= (3, 9):
+        raise RuntimeError("Unsupported Python version.")
     main(app_name=args.app_name, json_file=_json_file)
