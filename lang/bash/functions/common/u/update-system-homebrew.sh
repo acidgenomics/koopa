@@ -44,11 +44,11 @@ koopa_update_system_homebrew() {
     dict['core_repo']="$("${app['brew']}" --repo 'homebrew/core')"
     if [[ -d "${dict['cask_repo']}" ]]
     then
-        "${app['brew']}" untap "${dict['cask_repo']}"
+        "${app['brew']}" untap 'homebrew-cask'
     fi
     if [[ -d "${dict['core_repo']}" ]]
     then
-        "${app['brew']}" untap "${dict['core_repo']}"
+        "${app['brew']}" untap 'homebrew-core'
     fi
     "${app['brew']}" cleanup -s || true
     koopa_rm "$("${app['brew']}" --cache)"
