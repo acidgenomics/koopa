@@ -42,4 +42,6 @@ parser = ArgumentParser()
 parser.add_argument("json_file")
 args = parser.parse_args()
 
-main(json_file=args.json_file)
+
+if __name__ == "__main__":
+    main(json_file=args.json_file)
