@@ -44,4 +44,6 @@ args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
-main(json_file=_json_file, app_name=args.app_name, key=args.key)
+
+if __name__ == "__main__":
+    main(json_file=_json_file, app_name=args.app_name, key=args.key)

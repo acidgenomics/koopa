@@ -2,7 +2,7 @@
 
 """
 Return supported shared applications defined in 'app.json' file.
-@note Updated 2023-05-01.
+@note Updated 2023-05-20.
 
 @examples
 ./shared-apps.py
@@ -132,4 +132,6 @@ def main(json_file: str) -> bool:
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
-main(json_file=_json_file)
+
+if __name__ == "__main__":
+    main(json_file=_json_file)
