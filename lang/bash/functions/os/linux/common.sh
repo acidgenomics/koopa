@@ -564,6 +564,12 @@ koopa_linux_locate_ldd() {
         "$@"
 }
 
+koopa_linux_locate_pihole() {
+    koopa_locate_app \
+        '/usr/local/bin/pihole' \
+        "$@"
+}
+
 koopa_linux_locate_rstudio_server() {
     koopa_locate_app \
         '/usr/sbin/rstudio-server' \
