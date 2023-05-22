@@ -6273,7 +6273,7 @@ koopa_dot_clean() {
     then
         app['dot_clean']="$(koopa_macos_locate_dot_clean)"
         koopa_assert_is_executable "${app['dot_clean']}"
-        "${app['dot_clean']}" -v "${dict['prefix']}"
+        "${app['dot_clean']}" "${dict['prefix']}"
     fi
     readarray -t files <<< "$( \
         "${app['fd']}" \
