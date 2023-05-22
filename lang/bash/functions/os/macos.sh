@@ -694,6 +694,12 @@ koopa_macos_locate_diskutil() {
         "$@"
 }
 
+koopa_macos_locate_dot_clean() {
+    koopa_locate_app \
+        '/usr/sbin/dot_clean' \
+        "$@"
+}
+
 koopa_macos_locate_dscacheutil() {
     koopa_locate_app \
         '/usr/bin/dscacheutil' \
