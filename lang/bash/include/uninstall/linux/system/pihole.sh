@@ -15,6 +15,7 @@ main() {
         koopa_alert_note "'pihole' is not installed."
         return 0
     fi
+    koopa_assert_is_interactive
     "${app['pihole']}" uninstall
     return 0
 }
