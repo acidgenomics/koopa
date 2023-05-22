@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add support for this.
+koopa_linux_uninstall_system_pivpn() {
+    koopa_uninstall_app \
+        --name='pivpn' \
+        --system \
+        "$@"
+}

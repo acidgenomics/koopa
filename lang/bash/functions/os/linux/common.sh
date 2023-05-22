@@ -739,6 +739,20 @@ koopa_linux_uninstall_private_cellranger() {
         "$@"
 }
 
+koopa_linux_uninstall_system_pihole() {
+    koopa_uninstall_app \
+        --name='pihole' \
+        --system \
+        "$@"
+}
+
+koopa_linux_uninstall_system_pivpn() {
+    koopa_uninstall_app \
+        --name='pivpn' \
+        --system \
+        "$@"
+}
+
 koopa_linux_update_etc_profile_d() {
     local -A dict
     koopa_assert_has_no_args "$#"
