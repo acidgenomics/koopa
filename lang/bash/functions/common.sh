@@ -6257,6 +6257,30 @@ koopa_doom_emacs_prefix() {
     _koopa_doom_emacs_prefix "$@"
 }
 
+koopa_dot_clean() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 1
+    app['fd']="$(koopa_locate_fd)"
+    app['rm']="$(koopa_locate_rm --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    if koopa_is_macos
+    then
+        app['dot_clean']="$(koopa_macos_locate_dot_clean)"
+        koopa_assert_is_executable "${app['dot_clean']}"
+        "${app['dot_clean']}" -v "${dict['prefix']}"
+    fi
+    "${app['fd']}" \
+        --base-directory="${dict['prefix']}" \
+        --glob \
+        --hidden \
+        --type='f' \
+        '.*'
+    return 0
+}
+
 koopa_dotfiles_config_link() {
     koopa_assert_has_no_args "$#"
     koopa_print "$(koopa_config_prefix)/dotfiles"
