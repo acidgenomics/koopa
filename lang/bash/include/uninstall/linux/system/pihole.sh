@@ -8,6 +8,7 @@ main() {
     # @seealso
     # - https://docs.pi-hole.net/main/uninstall/
     # """
+    echo 'FIXME HELLO THERE'
     local -A app
     app['pihole']="$(koopa_linux_locate_pihole --allow-missing)"
     if [[ ! -x "${app['pihole']}" ]]
