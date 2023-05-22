@@ -1,3 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Need to include a pihole uninstaller.
+koopa_linux_uninstall_system_pihole() {
+    koopa_uninstall_app \
+        --name='pihole' \
+        --system \
+        "$@"
+}
