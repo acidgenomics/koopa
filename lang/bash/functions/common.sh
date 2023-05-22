@@ -6277,14 +6277,20 @@ koopa_dot_clean() {
     fi
     readarray -t files <<< "$( \
         "${app['fd']}" \
+            --absolute-path \
             --base-directory="${dict['prefix']}" \
             --glob \
             --hidden \
             --type='f' \
             '.*' \
     )"
-    koopa_is_array_empty "${files[@]}" && return 0
-    readarray -t basenames <<< "$(koopa_basename "${dict['files']}")"
+    if koopa_is_array_empty "${files[@]}"
+    then
+        koopa_alert_success "Dot files cleaned successfully \
+in '${dict['prefix']}'."
+        return 0
+    fi
+    readarray -t basenames <<< "$(koopa_basename "${files[@]}")"
     for i in "${!files[@]}"
     do
         local basename file
