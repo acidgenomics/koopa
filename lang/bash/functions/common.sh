@@ -6301,6 +6301,7 @@ in '${dict['prefix']}'."
             '.AppleDouble' | \
             '.DS_Store' | \
             '.Rhistory' | \
+            '.lacie' | \
             '._'*)
                 koopa_rm --verbose "$file"
                 ;;
