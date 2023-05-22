@@ -6290,6 +6290,7 @@ koopa_dot_clean() {
 in '${dict['prefix']}'."
         return 0
     fi
+    cruft=()
     readarray -t basenames <<< "$(koopa_basename "${files[@]}")"
     for i in "${!files[@]}"
     do
@@ -6297,7 +6298,8 @@ in '${dict['prefix']}'."
         file="${files[$i]}"
         basename="${basenames[$i]}"
         case "$basename" in
-            '.DS_Store')
+            '.DS_Store' | \
+            '._'*)
                 koopa_rm --verbose "$file"
                 ;;
             *)
