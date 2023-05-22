@@ -12104,6 +12104,12 @@ koopa_install_multiqc() {
         "$@"
 }
 
+koopa_install_mutagen() {
+    koopa_install_app \
+        --name='mutagen' \
+        "$@"
+}
+
 koopa_install_nano() {
     koopa_install_app \
         --name='nano' \
@@ -23720,6 +23726,12 @@ koopa_uninstall_msgpack() {
 koopa_uninstall_multiqc() {
     koopa_uninstall_app \
         --name='multiqc' \
+        "$@"
+}
+
+koopa_uninstall_mutagen() {
+    koopa_uninstall_app \
+        --name='mutagen' \
         "$@"
 }
 

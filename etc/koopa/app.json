@@ -3233,6 +3233,16 @@
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.14"
   },
+  "mutagen": {
+    "date": "2023-05-22",
+    "dependencies": ["python3.11"],
+    "enabled": true,
+    "url": [
+      "https://mutagen.readthedocs.io/",
+      "https://github.com/quodlibet/mutagen/"
+    ],
+    "version": "1.46.0"
+  },
   "nano": {
     "aliases": {
       "debian": true,
