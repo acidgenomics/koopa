@@ -9,8 +9,12 @@ main() {
     # - https://docs.pi-hole.net/main/uninstall/
     # """
     local -A app
-    app['pihole']="$(koopa_linux_locate_pihole)"
-    koopa_assert_is_executable "${app[@]}"
+    app['pihole']="$(koopa_linux_locate_pihole --allow-missing)"
+    if [[ ! -x "${app['pihole']}" ]]
+    then
+        koopa_alert_note "'pihole' is not installed."
+        return 0
+    fi
     "${app['pihole']}" uninstall
     return 0
 }
