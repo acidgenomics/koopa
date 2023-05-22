@@ -1204,6 +1204,15 @@ koopa_assert_is_installed() {
     return 0
 }
 
+koopa_assert_is_interactive() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_interactive
+    then
+        koopa_stop 'Shell is not interactive.'
+    fi
+    return 0
+}
+
 koopa_assert_is_koopa_app() {
     local arg
     koopa_assert_has_args "$#"
@@ -13403,6 +13412,10 @@ koopa_is_gnu() {
 
 koopa_is_installed() {
     _koopa_is_installed "$@"
+}
+
+koopa_is_interactive() {
+    _koopa_is_interactive "$@"
 }
 
 koopa_is_koopa_app() {
