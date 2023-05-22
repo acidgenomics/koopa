@@ -750,6 +750,7 @@ koopa_linux_uninstall_private_cellranger() {
 koopa_linux_uninstall_system_pihole() {
     koopa_uninstall_app \
         --name='pihole' \
+        --platform='linux' \
         --system \
         "$@"
 }

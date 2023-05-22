@@ -136,7 +136,6 @@ koopa_uninstall_app() {
         dict['uninstaller_bn']="${dict['name']}"
     dict['uninstaller_file']="$(koopa_bash_prefix)/include/uninstall/\
 ${dict['platform']}/${dict['mode']}/${dict['uninstaller_bn']}.sh"
-    koopa_print "FIXME ${dict['uninstaller_file']}"
     if [[ -f "${dict['uninstaller_file']}" ]]
     then
         dict['tmp_dir']="$(koopa_tmp_dir)"
