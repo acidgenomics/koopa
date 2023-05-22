@@ -20,7 +20,7 @@ koopa_ssh_generate_key() {
     # """
     local -A app dict
     local -a ssh_args
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['hostname']="$(koopa_hostname)"
     dict['key_name']='id_rsa' # or 'id_ed25519'.
