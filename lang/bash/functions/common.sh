@@ -6279,6 +6279,12 @@ koopa_dot_clean() {
         --type='f' \
         '.DS_Store' \
         --exec "${app['rm']}" -v '{}'
+    "${app['fd']}" \
+        --glob \
+        --hidden \
+        --ignore-case \
+        '.bridgecache*' \
+        --exec "${app['rm']}" -v '{}'
     readarray -t files <<< "$( \
         "${app['fd']}" \
             --base-directory="${dict['prefix']}" \
