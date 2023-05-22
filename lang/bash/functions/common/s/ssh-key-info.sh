@@ -10,7 +10,7 @@ koopa_ssh_key_info() {
     # """
     local -A app dict
     local keyfile
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
     app['uniq']="$(koopa_locate_uniq)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${HOME:?}/.ssh"

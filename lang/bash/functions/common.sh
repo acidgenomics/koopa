@@ -13527,7 +13527,7 @@ koopa_is_spacemacs_installed() {
 koopa_is_ssh_enabled() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    app['ssh']="$(koopa_locate_ssh)"
+    app['ssh']="$(koopa_locate_ssh --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['url']="${1:?}"
     dict['pattern']="${2:?}"
@@ -20225,7 +20225,7 @@ koopa_sra_prefetch() {
 koopa_ssh_generate_key() {
     local -A app dict
     local -a ssh_args
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['hostname']="$(koopa_hostname)"
     dict['key_name']='id_rsa' # or 'id_ed25519'.
@@ -20289,7 +20289,7 @@ koopa_ssh_generate_key() {
 koopa_ssh_key_info() {
     local -A app dict
     local keyfile
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
     app['uniq']="$(koopa_locate_uniq)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${HOME:?}/.ssh"
