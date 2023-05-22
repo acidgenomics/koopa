@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add a pihole locator function.
-
 main() {
     # """
     # Uninstall pihole.
-    # @note Updated 2023-05-21.
+    # @note Updated 2023-05-22.
     #
     # @seealso
     # - https://docs.pi-hole.net/main/uninstall/
     # """
-    # pihole uninstall
+    local -A app
+    app['pihole']="$(koopa_linux_locate_pihole)"
+    koopa_assert_is_executable "${app[@]}"
+    "${app['pihole']}" uninstall
     return 0
 }
