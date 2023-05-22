@@ -480,7 +480,7 @@ software/downloads/latest'."
 }
 
 koopa_linux_install_system_pihole() {
-    koopa_update_app \
+    koopa_install_app \
         --name='pihole' \
         --platform='linux' \
         --system \
@@ -488,7 +488,7 @@ koopa_linux_install_system_pihole() {
 }
 
 koopa_linux_install_system_pivpn() {
-    koopa_update_app \
+    koopa_install_app \
         --name='pivpn' \
         --platform='linux' \
         --system \
