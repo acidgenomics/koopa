@@ -28,7 +28,6 @@ koopa_dot_clean() {
             --base-directory="${dict['prefix']}" \
             --glob \
             --hidden \
-            --type='f' \
             '.*' \
     )"
     if koopa_is_array_empty "${files[@]}"
@@ -43,9 +42,12 @@ in '${dict['prefix']}'."
     do
         local basename file
         file="${files[$i]}"
+        [[ -e "$file" ]] || continue
         basename="${basenames[$i]}"
         case "$basename" in
+            '.AppleDouble' | \
             '.DS_Store' | \
+            '.Rhistory' | \
             '._'*)
                 koopa_rm --verbose "$file"
                 ;;
