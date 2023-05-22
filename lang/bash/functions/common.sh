@@ -6259,6 +6259,7 @@ koopa_doom_emacs_prefix() {
 
 koopa_dot_clean() {
     local -A app dict
+    local -a files
     koopa_assert_has_args_eq "$#" 1
     app['fd']="$(koopa_locate_fd)"
     app['rm']="$(koopa_locate_rm --allow-system)"
@@ -6274,10 +6275,24 @@ koopa_dot_clean() {
     fi
     "${app['fd']}" \
         --base-directory="${dict['prefix']}" \
-        --glob \
         --hidden \
         --type='f' \
-        '.*'
+        '.DS_Store' \
+        --exec "${app['rm']}" -v '{}'
+    readarray -t files <<< "$( \
+        "${app['fd']}" \
+            --base-directory="${dict['prefix']}" \
+            --glob \
+            --hidden \
+            --type='f' \
+            '.*' \
+    )"
+    if koopa_is_array_non_empty "${files[@]}"
+    then
+        koopa_alert_note "Dot files remaining in '${dict['prefix']}'."
+        koopa_print "${files[@]}"
+        return 1
+    fi
     return 0
 }
 
