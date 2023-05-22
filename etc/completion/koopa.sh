@@ -279,6 +279,7 @@ _koopa_complete() {
                         'mpfr'
                         'msgpack'
                         'multiqc'
+                        'mutagen'
                         'nano'
                         'nanopolish'
                         'ncbi-sra-tools'
