@@ -11,7 +11,7 @@ koopa_is_ssh_enabled() {
     # """
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    app['ssh']="$(koopa_locate_ssh)"
+    app['ssh']="$(koopa_locate_ssh --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['url']="${1:?}"
     dict['pattern']="${2:?}"
