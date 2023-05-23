@@ -559,10 +559,10 @@ _koopa_complete() {
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'private')
-                            args+=('bcl2fastq' 'ont-guppy')
+                            args+=('ont-guppy')
                             if _koopa_is_linux
                             then
-                                args+=('cellranger')
+                                args+=('bcl2fastq' 'cellranger')
                             fi
                             ;;
                         'system')
