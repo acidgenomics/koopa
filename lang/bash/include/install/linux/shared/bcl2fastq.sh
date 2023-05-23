@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# CMake bootstrap failing inside of conda.
+# Looking for a Fortran compiler - /opt/koopa/bin/gfortran
+# /usr/bin/ld: cannot find /lib64/libc.so.6: No such file or directory
+# /usr/bin/ld: cannot find /usr/lib64/libc_nonshared.a: No such file or directory
+
 main() {
     # """
     # Install bcl2fastq from source.
@@ -13,8 +18,11 @@ main() {
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
     #     manage-environments.html
     #
-    # Docker approach:
+    # Docker image approaches:
     # - https://github.com/Zymo-Research/docker-bcl2fastq/
+    # - https://hub.docker.com/r/umccr/bcl2fastq
+    # - https://alexandria-scrna-data-library.readthedocs.io/en/latest/
+    #     bcl2fastq.html
     #
     # Building from source (problematic with newer GCC / clang):
     # - https://gist.github.com/jblachly/f8dc0f328d66659d9ee005548a5a2d2e
@@ -30,8 +38,11 @@ main() {
     # """
     local -A app dict
     app['aws']="$(koopa_locate_aws --allow-system)"
+    app['conda']="$(koopa_locate_conda --realpath)"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['installers_base']="$(koopa_private_installers_s3_uri)"
+    dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
@@ -39,20 +50,8 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
-    # - bzip2  # 1.0.6
-    # - cloog  # 0.18.0
-    # - curl  # 7.52.1
-    # - expat  # 2.1.0
-    # - gmp  # 6.1.0
-    # - isl  # 0.16.1 / 0.12.2
-    # - mpc  # 1.0.3
-    # - mpfr  # 3.1.5
-    # - ncurses  # 5.9
-    # - openssl  # 1.0.2l
-    # - xz  # 5.2.2
-    # - boost=1.60.0  # 1.54.0
-    - cmake
     - gcc==8.5.0
+    - make
     - zlib
 END
     koopa_write_string \
@@ -66,15 +65,16 @@ ${dict['version']}.tar.zip"
     "${app['aws']}" --profile='acidgenomics' s3 cp \
         "${dict['url']}" "$(koopa_basename "${dict['url']}")"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'unzip'
-    koopa_extract 'unzip/'*'.tar.gz' 'src'
+    koopa_extract 'unzip/'*'.tar.gz' 'bcl2fastq'
+    koopa_cd 'bcl2fastq'
     koopa_mkdir 'build'
     (
         koopa_cd 'build'
-        # FIXME Need to activate conda here.
-        # FIXME Consider reworking 'koopa_conda_activate_env' here or something
-        # of the sort.
+        "${app['conda']}" activate
+        "${app['conda']}" activate "${dict['libexec']}"
+        koopa_print_env
         ../src/configure --prefix="${dict['prefix']}"
-        make
+        make VERBOSE=1 --jobs="${dict['jobs']}"
         make install
     )
     return 0
