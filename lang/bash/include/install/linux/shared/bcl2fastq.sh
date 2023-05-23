@@ -40,7 +40,7 @@ main() {
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local -A app dict
-    local -a conf_args
+    local -a cmake_args conf_args
     koopa_assert_is_not_aarch64
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['conda']="$(koopa_locate_conda --realpath)"
@@ -56,8 +56,6 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
-    # > - boost
-    # > - cmake
     - bzip2
     - gcc==${dict['gcc_version']}
     - gfortran==${dict['gcc_version']}
@@ -96,6 +94,9 @@ ${dict['version']}.tar.zip"
     koopa_mkdir 'build'
     koopa_cd 'build'
     koopa_conda_activate_env "${dict['libexec']}"
+    cmake_args=(
+        "-DCMAKE_SYSROOT=${dict['sysroot']}"
+    )
     conf_args=(
         '--build-type=Release'
         "--parallel=${dict['jobs']}"
@@ -103,15 +104,14 @@ ${dict['version']}.tar.zip"
         '--verbose'
         # > "--with-cmake=${app['conda_cmake']}"
         '--without-unit-tests'
-        # > "BOOST_ROOT=${dict['conda_boost']}"
-        "CC=${app['conda_cc']}"
-        # > "CMAKE_OPTIONS=CMAKE_SYSROOT=${dict['sysroot']}""
-        "CPPFLAGS=-I${dict['libexec']}/include"
-        "CXX=${app['conda_cxx']}"
-        "C_INCLUDE_PATH=${dict['sysroot']}/usr/include"
-        "LDFLAGS=-L${dict['libexec']}/lib"
-        "SYSROOT=${dict['sysroot']}"
+        "CMAKE_OPTIONS=${cmake_args[*]}"
     )
+    # > export BOOST_ROOT="${dict['conda_boost']}"
+    export CC="${app['conda_cc']}"
+    export CPPFLAGS="-I${dict['libexec']}/include"
+    export CXX="${app['conda_cxx']}"
+    export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
+    export LDFLAGS="-L${dict['libexec']}/lib"
     koopa_print_env
     ../src/configure --help || true
     ../src/configure "${conf_args[@]}"
