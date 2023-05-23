@@ -47,6 +47,7 @@ main() {
     koopa_assert_is_not_aarch64
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['conda']="$(koopa_locate_conda --realpath)"
+    app['cp']="$(koopa_locate_cp --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
@@ -82,13 +83,25 @@ END
     koopa_assert_is_dir "${dict['conda_sysroot']}"
     (
         koopa_cd "${dict['sysroot']}"
-        koopa_ln \
+        "${app['cp']}" \
+            --force \
+            --parents \
+            --recursive \
+            --symbolic-link \
             --target-directory="${dict['sysroot']}" \
             "${dict['conda_sysroot']}/"*
-        koopa_ln \
+        "${app['cp']}" \
+            --force \
+            --parents \
+            --recursive \
+            --symbolic-link \
             --target-directory="${dict['sysroot']}/usr/include" \
             "${dict['conda']}/include/"*
-        koopa_ln \
+        "${app['cp']}" \
+            --force \
+            --parents \
+            --recursive \
+            --symbolic-link \
             --target-directory="${dict['sysroot']}/usr/lib" \
             "${dict['conda']}/lib/"*
         koopa_cd "${dict['sysroot']}/usr/bin"
