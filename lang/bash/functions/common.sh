@@ -142,6 +142,26 @@ koopa_activate_app() {
     return 0
 }
 
+koopa_activate_conda_env() { # {{{1
+    local -A bool dict
+    koopa_assert_has_args_eq "$#" 1
+    if koopa_is_conda_env_active
+    then
+        koopa_stop 'Conda environment is already active.'
+    fi
+    bool['nounset']="$(koopa_boolean_nounset)"
+    dict['env']="${1:?}"
+    [[ "${bool['nounset']}" -eq 1 ]] && set +u
+    koopa_activate_conda
+    conda activate "${dict['env']}"
+    [[ "${bool['nounset']}" -eq 1 ]] && set -u
+    return 0
+}
+
+koopa_activate_conda() {
+    _koopa_activate_conda "$@"
+}
+
 koopa_activate_ensembl_perl_api() {
     local -A dict
     dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
