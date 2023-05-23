@@ -106,19 +106,24 @@ ${dict['version']}.tar.zip"
     koopa_cd 'build'
     # > export BOOST_ROOT="${dict['conda_boost']}"
     export CC="${app['cc']}"
-    export CPPFLAGS="-I${dict['sysroot']}/usr/include"
+    export CPPFLAGS="\
+-I${dict['sysroot']}/usr/include \
+--sysroot=${dict['sysroot']}"
     export CXX="${app['cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
     export LDFLAGS="-L${dict['sysroot']}/usr/lib"
     export MAKE="${app['make']}"
     cmake_args=(
+        # > "-DCMAKE_MODULE_LINKER_FLAGS='${LDFLAGS:-}'"
+        # > "-DCMAKE_SHARED_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_CXX_FLAGS='${CPPFLAGS:-}'"
+        "-DCMAKE_CXX_LINK_FLAGS='${CPPFLAGS:-}'"
         "-DCMAKE_C_FLAGS='${CPPFLAGS:-}'"
+        "-DCMAKE_C_LINK_FLAGS='${CPPFLAGS:-}'"
         "-DCMAKE_EXE_LINKER_FLAGS='${LDFLAGS:-}'"
+        "-DCMAKE_FIND_ROOT_PATH='${dict['sysroot']}'"
         "-DCMAKE_INCLUDE_PATH='${dict['sysroot']}/usr/include'"
         "-DCMAKE_LIBRARY_PATH='${dict['sysroot']}/usr/lib'"
-        "-DCMAKE_MODULE_LINKER_FLAGS='${LDFLAGS:-}'"
-        "-DCMAKE_SHARED_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_SYSROOT='${dict['sysroot']}'"
     )
     export "CMAKE_OPTIONS=${cmake_args[*]}"
