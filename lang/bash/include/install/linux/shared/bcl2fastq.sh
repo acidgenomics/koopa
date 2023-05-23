@@ -83,7 +83,6 @@ END
     koopa_assert_is_dir \
         "${dict['libexec']}/include" \
         "${dict['libexec']}/lib" \
-        "${dict['sysroot']}" \
         "${dict['sysroot']}/usr/include"
     # The bcl2fastq installer looks for gmake, so make sure we symlink this.
     (
@@ -104,16 +103,17 @@ ${dict['version']}.tar.zip"
     export CC="${app['conda_cc']}"
     export CPPFLAGS="-I${dict['libexec']}/include"
     export CXX="${app['conda_cxx']}"
-    # > export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
+    export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
     export LDFLAGS="-L${dict['libexec']}/lib"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        "-DCMAKE_INCLUDE_PATH=${dict['libexec']}/include"
+        "-DCMAKE_LIBRARY_PATH=${dict['libexec']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        # > "-DCMAKE_SYSROOT=${dict['sysroot']}"
-        "-DCMAKE_SYSROOT=${dict['libexec']}"
+        "-DCMAKE_SYSROOT=${dict['sysroot']}"
     )
     conf_args=(
         '--build-type=Release'
