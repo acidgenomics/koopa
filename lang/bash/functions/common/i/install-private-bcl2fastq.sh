@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_linux_install_private_bcl2fastq() {
+koopa_install_private_bcl2fastq() {
     koopa_install_app \
         --name='bcl2fastq' \
-        --platform='linux' \
         --private \
         "$@"
     koopa_alert_note "Installation requires agreement to terms of service at: \
