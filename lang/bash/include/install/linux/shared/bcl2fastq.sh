@@ -10,6 +10,8 @@ main() {
     # @seealso
     # Conda approach:
     # - https://anaconda.org/dranew/bcl2fastq/files
+    # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
+    #     manage-environments.html
     #
     # Building from source (problematic with newer GCC / clang):
     # - https://gist.github.com/jblachly/f8dc0f328d66659d9ee005548a5a2d2e
@@ -24,37 +26,37 @@ main() {
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local -A app dict
-    local -a conda_deps
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    conda_deps=(
-        'boost_lib==1.54.0'
-        'bzip2==1.0.6'
-        'cloog==0.18.0'
-        'cmake==3.6.3'
-        'curl==7.52.1'
-        'expat==2.1.0'
-        'gcc==4.8.5'
-        'gmp==6.1.0'
-        'isl==0.12.2'
-        'mpc==1.0.3'
-        'mpfr==3.1.5'
-        'ncurses==5.9'
-        'openssl==1.0.2l'
-        'xz==5.2.2'
-        'zlib==1.2.8'
-    )
-    dict['conda_yaml']='conda.yaml'
-    dict['conda_deps']="$(koopa_print "${conda_deps[@]}" | "${app['sort']}")"
+    dict['conda_file']='conda.yaml'
+    read -r -d '' "dict[conda_string]" << END || true
+name: bcl2fastq
+dependencies:
+    - boost_lib==1.54.0
+    - bzip2==1.0.6
+    - cloog==0.18.0
+    - cmake==3.6.3
+    - curl==7.52.1
+    - expat==2.1.0
+    - gcc==4.8.5
+    - gmp==6.1.0
+    - isl==0.12.2
+    - mpc==1.0.3
+    - mpfr==3.1.5
+    - ncurses==5.9
+    - openssl==1.0.2l
+    - xz==5.2.2
+    - zlib==1.2.8
+END
     koopa_write_string \
-        --file="${dict['conda_yaml']}" \
-        --string="${dict['conda_deps']}"
+        --file="${dict['conda_file']}" \
+        --string="${dict['conda_string']}"
     koopa_conda_create_env \
-        --file="${dict['conda_yaml']}" \
+        --file="${dict['conda_file']}" \
         --prefix="${dict['libexec']}"
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
