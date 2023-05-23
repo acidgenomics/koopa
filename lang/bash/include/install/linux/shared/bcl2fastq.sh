@@ -101,16 +101,22 @@ ${dict['version']}.tar.zip"
     koopa_conda_activate_env "${dict['libexec']}"
     # > export BOOST_ROOT="${dict['conda_boost']}"
     export CC="${app['conda_cc']}"
-    export CPPFLAGS="-I${dict['libexec']}/include"
+    export CPPFLAGS="-I${dict['prefix']}/include \
+-I${dict['libexec']}/include"
     export CXX="${app['conda_cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
-    export LDFLAGS="-L${dict['libexec']}/lib"
+    export LDFLAGS="-L${dict['prefix']}/lib \
+-L${dict['libexec']}/lib"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INCLUDE_PATH=${dict['libexec']}/include"
-        "-DCMAKE_LIBRARY_PATH=${dict['libexec']}/lib"
+        "-DCMAKE_INCLUDE_PATH=\
+${dict['prefix']}/include;\
+${dict['libexec']}/include"
+        "-DCMAKE_LIBRARY_PATH=\
+${dict['prefix']}/lib;\
+${dict['libexec']}/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SYSROOT=${dict['sysroot']}"
@@ -125,6 +131,9 @@ ${dict['version']}.tar.zip"
         "CMAKE_OPTIONS=${cmake_args[*]}"
     )
     koopa_print_env
+    koopa_mkdir \
+        "${dict['prefix']}/include" \
+        "${dict['prefix']}/lib"
     ../src/configure --help || true
     ../src/configure "${conf_args[@]}"
     "${app['conda_make']}" VERBOSE=1 --jobs="${dict['jobs']}"
