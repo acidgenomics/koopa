@@ -46,22 +46,26 @@ main() {
     dict['name']='bcl2fastq'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_macos
+    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    if koopa_is_linux
+    then
+        dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
+        koopa_assert_is_dir "${dict['c_include_path']}"
+        dict['toolset']='gcc'
+    elif koopa_is_macos
     then
         dict['toolset']='clang'
-    else
-        dict['toolset']='gcc'
     fi
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
-    koopa_assert_is_dir "${dict['c_include_path']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-    dict['file']="${dict['version']}.tar.zip"
-    dict['url']="${dict['installers_base']}/${dict['name']}/src/${dict['file']}"
-    "${app['aws']}" --profile='acidgenomics' \
-        s3 cp "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_extract "${dict['name']}${dict['maj_ver']}-"*"-Source.tar.gz"
+    dict['url']="${dict['installers_base']}/${dict['name']}/src/\
+${dict['version']}.tar.zip"
+    "${app['aws']}" \
+        --profile='acidgenomics' \
+        s3 cp \
+            "${dict['url']}" \
+            "$(koopa_basename "${dict['url']}")"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'unzip'
+    koopa_extract 'unzip/'*'.tar.gz' 'src'
     # Install Boost 1.54.0 from 'redist'.
     # Refer to 'src/cmake/bootstrap/installBoost.sh'.
     (
@@ -93,21 +97,21 @@ main() {
             "linkflags=${LDFLAGS:?}"
             'install'
         )
-        koopa_cp \
-            'bcl2fastq/redist/boost_1_54_0.tar.bz2' \
-            'boost_1_54_0.tar.bz2'
-        koopa_extract 'boost_1_54_0.tar.bz2'
-        koopa_cd 'boost_1_54_0'
+        koopa_extract 'src/redist/boost'*'.tar.bz2' 'boost-src'
+        koopa_cd 'boost-src'
         ./bootstrap.sh --help
         ./bootstrap.sh "${bootstrap_args[@]}"
         ./b2 --help
         ./b2 "${b2_args[@]}"
         return 0
     )
-    koopa_cd "${dict['name']}"
-    koopa_mkdir "${dict['name']}-build"
-    koopa_cd "${dict['name']}-build"
-    export C_INCLUDE_PATH="${dict['c_include_path']}"
+    koopa_cd 'src'
+    koopa_mkdir 'build'
+    koopa_cd 'build'
+    if koopa_is_linux
+    then
+        export C_INCLUDE_PATH="${dict['c_include_path']}"
+    fi
     koopa_print_env
     conf_args=(
         '--build-type=Release'
