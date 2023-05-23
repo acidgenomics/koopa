@@ -359,9 +359,9 @@
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
-    "build_dependencies": ["make"],
     "date": "2023-05-23",
-    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
+    "dependencies": ["conda"],
+    "platform": "linux",
     "private": true,
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html"

@@ -46,6 +46,7 @@ refs/tags/v${dict['version']}.tar.gz"
     export PIP_REQUIRE_VIRTUALENV=false
     export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
+    # FIXME Rework using our 'koopa_conda_create_env' with '--file' argument.
     "${app['conda']}" env create \
         --force \
         --file "${dict['conda_env_file']}" \
