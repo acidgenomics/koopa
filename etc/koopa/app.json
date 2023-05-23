@@ -1335,6 +1335,7 @@
     "bin": ["flac"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
+    "enabled": false,
     "man1": ["flac.1"],
     "url": ["https://xiph.org/flac/"],
     "version": "1.4.2"
