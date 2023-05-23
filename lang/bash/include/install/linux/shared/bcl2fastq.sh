@@ -13,6 +13,9 @@ main() {
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
     #     manage-environments.html
     #
+    # Docker approach:
+    # - https://github.com/Zymo-Research/docker-bcl2fastq/
+    #
     # Building from source (problematic with newer GCC / clang):
     # - https://gist.github.com/jblachly/f8dc0f328d66659d9ee005548a5a2d2e
     # - https://sarahpenir.github.io/linux/Installing-bcl2fastq/
@@ -36,21 +39,21 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
-    - boost=1.60.0  # 1.54.0
-    - bzip2  # 1.0.6
-    - cloog  # 0.18.0
-    - cmake # 3.6.2 / 3.6.3
-    - curl  # 7.52.1
-    - expat  # 2.1.0
-    - gcc=8.5.0  # 4.8.5
-    - gmp  # 6.1.0
-    - isl  # 0.16.1 / 0.12.2
-    - mpc  # 1.0.3
-    - mpfr  # 3.1.5
-    - ncurses  # 5.9
-    - openssl  # 1.0.2l
-    - xz  # 5.2.2
-    - zlib  # 1.2.8
+    # - bzip2  # 1.0.6
+    # - cloog  # 0.18.0
+    # - curl  # 7.52.1
+    # - expat  # 2.1.0
+    # - gmp  # 6.1.0
+    # - isl  # 0.16.1 / 0.12.2
+    # - mpc  # 1.0.3
+    # - mpfr  # 3.1.5
+    # - ncurses  # 5.9
+    # - openssl  # 1.0.2l
+    # - xz  # 5.2.2
+    # - boost=1.60.0  # 1.54.0
+    - cmake
+    - gcc==8.5.0
+    - zlib
 END
     koopa_write_string \
         --file="${dict['conda_file']}" \
