@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-05-23.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -559,10 +559,10 @@ _koopa_complete() {
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'private')
-                            args+=('ont-guppy')
+                            args+=('bcl2fastq' 'ont-guppy')
                             if _koopa_is_linux
                             then
-                                args+=('bcl2fastq' 'cellranger')
+                                args+=('cellranger')
                             fi
                             ;;
                         'system')

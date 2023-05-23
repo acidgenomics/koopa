@@ -329,21 +329,6 @@ koopa_linux_bcbio_nextgen_run_tests() {
     return 0
 }
 
-koopa_linux_bcl2fastq_indrops() {
-    local -A app dict
-    koopa_assert_has_no_args "$#"
-    app['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
-    app['tee']="$(koopa_locate_tee)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['log_file']='bcl2fastq-indrops.log'
-    "${app['bcl2fastq']}" \
-        --use-bases-mask 'y*,y*,y*,y*' \
-        --mask-short-adapter-reads 0 \
-        --minimum-trimmed-read-length 0 \
-        2>&1 | "${app['tee']}" "${dict['log_file']}"
-    return 0
-}
-
 koopa_linux_configure_system_lmod() {
     koopa_configure_app \
         --name='lmod' \
@@ -455,18 +440,6 @@ koopa_linux_install_ont_bonito() {
         "$@"
 }
 
-koopa_linux_install_private_bcl2fastq() {
-    koopa_install_app \
-        --name='bcl2fastq' \
-        --platform='linux' \
-        --private \
-        "$@"
-    koopa_alert_note "Installation requires agreement to terms of service at: \
-'https://support.illumina.com/sequencing/sequencing_software/\
-bcl2fastq-conversion-software/downloads.html'."
-    return 0
-}
-
 koopa_linux_install_private_cellranger() {
     koopa_install_app \
         --name='cellranger' \
@@ -515,13 +488,6 @@ koopa_linux_locate_bcbio() {
     koopa_locate_app \
         --app-name='bcbio-nextgen' \
         --bin-name='bcbio-nextgen.py' \
-        "$@"
-}
-
-koopa_linux_locate_bcl2fastq() {
-    koopa_locate_app \
-        --app-name='bcl2fastq' \
-        --bin-name='bcl2fastq' \
         "$@"
 }
 
@@ -701,13 +667,6 @@ koopa_linux_uninstall_attr() {
 koopa_linux_uninstall_bcbio_nextgen() {
     koopa_uninstall_app \
         --name='bcbio-nextgen' \
-        --platform='linux' \
-        "$@"
-}
-
-koopa_linux_uninstall_private_bcl2fastq() {
-    koopa_uninstall_app \
-        --name='bcl2fastq' \
         --platform='linux' \
         "$@"
 }

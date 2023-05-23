@@ -6,7 +6,7 @@
 main() {
     # """
     # Install bcl2fastq from source.
-    # @note Updated 2022-03-27.
+    # @note Updated 2023-05-23.
     #
     # This uses CMake to install.
     # ARM is not yet supported for this.

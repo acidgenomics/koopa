@@ -2603,6 +2603,21 @@ koopa_bash_prefix() {
     return 0
 }
 
+koopa_bcl2fastq_indrops() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    app['bcl2fastq']="$(koopa_locate_bcl2fastq)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['log_file']='bcl2fastq-indrops.log'
+    "${app['bcl2fastq']}" \
+        --use-bases-mask 'y*,y*,y*,y*' \
+        --mask-short-adapter-reads 0 \
+        --minimum-trimmed-read-length 0 \
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
+    return 0
+}
+
 koopa_bin_prefix() {
     _koopa_bin_prefix "$@"
 }
@@ -12351,6 +12366,17 @@ koopa_install_prettier() {
         "$@"
 }
 
+koopa_install_private_bcl2fastq() {
+    koopa_install_app \
+        --name='bcl2fastq' \
+        --private \
+        "$@"
+    koopa_alert_note "Installation requires agreement to terms of service at: \
+'https://support.illumina.com/sequencing/sequencing_software/\
+bcl2fastq-conversion-software/downloads.html'."
+    return 0
+}
+
 koopa_install_private_ont_guppy() {
     koopa_install_app \
         --name='ont-guppy' \
@@ -14937,6 +14963,13 @@ koopa_locate_bc() {
     koopa_locate_app \
         --app-name='bc' \
         --bin-name='bc' \
+        "$@"
+}
+
+koopa_locate_bcl2fastq() {
+    koopa_locate_app \
+        --app-name='bcl2fastq' \
+        --bin-name='bcl2fastq' \
         "$@"
 }
 
@@ -22607,6 +22640,12 @@ koopa_uninstall_bat() {
 koopa_uninstall_bc() {
     koopa_uninstall_app \
         --name='bc' \
+        "$@"
+}
+
+koopa_uninstall_private_bcl2fastq() {
+    koopa_uninstall_app \
+        --name='bcl2fastq' \
         "$@"
 }
 
