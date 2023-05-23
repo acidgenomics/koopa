@@ -56,7 +56,7 @@ dependencies:
     - gfortran==${dict['gcc_version']}
     - gxx==${dict['gcc_version']}
     - make
-    - zlib
+    # > - zlib
 END
     koopa_write_string \
         --file="${dict['conda_file']}" \
