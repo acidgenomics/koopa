@@ -37,6 +37,7 @@ main() {
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local -A app dict
+    local -a conf_args
     koopa_assert_is_not_aarch64
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['conda']="$(koopa_locate_conda --realpath)"
@@ -52,6 +53,8 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
+    # > - boost
+    # > - cmake
     - bzip2
     - gcc==${dict['gcc_version']}
     - gfortran==${dict['gcc_version']}
@@ -86,19 +89,26 @@ ${dict['version']}.tar.zip"
     koopa_extract 'unzip/'*'.tar.gz' 'bcl2fastq'
     koopa_cd 'bcl2fastq'
     koopa_mkdir 'build'
-    (
-        koopa_cd 'build'
-        koopa_conda_activate_env "${dict['libexec']}"
-        export CC="${app['conda_cc']}"
-        export CPPFLAGS="-I${dict['libexec']}/include"
-        export CXX="${app['conda_cxx']}"
-        export LDFLAGS="-L${dict['libexec']}/lib"
-        export SYSROOT="${dict['sysroot']}"
-        koopa_print_env
-        ../src/configure --help || true
-        ../src/configure --prefix="${dict['prefix']}"
-        "${app['conda_make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-        "${app['conda_make']}" install
+    koopa_cd 'build'
+    koopa_conda_activate_env "${dict['libexec']}"
+    conf_args=(
+        '--build-type=Release'
+        "--parallel=${dict['jobs']}"
+        "--prefix=${dict['prefix']}"
+        '--verbose'
+        # > "--with-cmake=${app['conda_cmake']}"
+        '--without-unit-tests'
+        # > "BOOST_ROOT=${dict['conda_boost']}"
+        "CC=${app['conda_cc']}"
+        "CPPFLAGS=-I${dict['libexec']}/include"
+        "CXX=${app['conda_cxx']}"
+        "LDFLAGS=-L${dict['libexec']}/lib"
+        "SYSROOT=${dict['sysroot']}"
     )
+    koopa_print_env
+    ../src/configure --help || true
+    ../src/configure "${conf_args[@]}"
+    "${app['conda_make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['conda_make']}" install
     return 0
 }
