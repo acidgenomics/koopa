@@ -101,7 +101,7 @@ ${dict['version']}.tar.zip"
 -I${dict['libexec']}/include \
 -I${dict['sysroot']}/usr/include"
     export CXX="${app['conda_cxx']}"
-    # > export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
+    export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
     export LDFLAGS="\
 -L${dict['prefix']}/lib \
 -L${dict['libexec']}/lib \
