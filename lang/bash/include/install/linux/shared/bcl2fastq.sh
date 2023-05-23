@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now we're hitting that installer isn't picking up gzip correctly.
-#
-#CMake Error at cmake/cxxConfigure.cmake:75 (message):
-#   No support for gzip compression
-# Call Stack (most recent call first):
-#   cxx/CMakeLists.txt:33 (include)
-
 main() {
     # """
     # Install bcl2fastq from source.
@@ -111,31 +104,21 @@ ${dict['version']}.tar.zip"
     koopa_cd 'bcl2fastq'
     koopa_mkdir 'build'
     koopa_cd 'build'
-    # > koopa_conda_activate_env "${dict['conda']}"
     # > export BOOST_ROOT="${dict['conda_boost']}"
+    # > export CPPFLAGS="-I${dict['sysroot']}/usr/include"
+    # > export LDFLAGS="-L${dict['sysroot']}/usr/lib"
     export CC="${app['cc']}"
-    export CPPFLAGS="\
--I${dict['prefix']}/include \
--I${dict['sysroot']}/usr/include"
     export CXX="${app['cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
-    export LDFLAGS="\
--L${dict['prefix']}/lib \
--L${dict['sysroot']}/usr/lib"
     export MAKE="${app['make']}"
-    # > export PKG_CONFIG_PATH="${dict['sysroot']}/usr/lib/pkgconfig"
     cmake_args=(
-        "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
-        "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
-        "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_INCLUDE_PATH=\
-${dict['prefix']}/include;\
-${dict['sysroot']}/usr/include"
-        "-DCMAKE_LIBRARY_PATH=\
-${dict['prefix']}/lib;\
-${dict['sysroot']}/usr/lib"
-        "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
+        # > "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
+        # > "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
+        # > "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
+        # > "-DCMAKE_INCLUDE_PATH=${dict['sysroot']}/usr/include"
+        # > "-DCMAKE_LIBRARY_PATH=${dict['sysroot']}/usr/lib"
+        # > "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
+        # > "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SYSROOT=${dict['sysroot']}"
     )
     export "CMAKE_OPTIONS=${cmake_args[*]}"
@@ -149,9 +132,6 @@ ${dict['sysroot']}/usr/lib"
     )
     koopa_add_to_path_start "${dict['sysroot']}/usr/bin"
     koopa_print_env
-    koopa_mkdir \
-        "${dict['prefix']}/include" \
-        "${dict['prefix']}/lib"
     ../src/configure --help || true
     ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
