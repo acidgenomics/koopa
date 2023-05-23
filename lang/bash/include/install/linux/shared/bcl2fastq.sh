@@ -113,17 +113,17 @@ ${dict['version']}.tar.zip"
     koopa_cd 'build'
     # > koopa_conda_activate_env "${dict['conda']}"
     # > export BOOST_ROOT="${dict['conda_boost']}"
-    export CC="${app['conda_cc']}"
+    export CC="${app['cc']}"
     export CPPFLAGS="\
 -I${dict['prefix']}/include \
 -I${dict['sysroot']}/usr/include"
-    export CXX="${app['conda_cxx']}"
+    export CXX="${app['cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
     export LDFLAGS="\
 -L${dict['prefix']}/lib \
 -L${dict['sysroot']}/usr/lib"
-    export MAKE="${app['conda_make']}"
-    export PKG_CONFIG_PATH="${dict['sysroot']}/usr/lib/pkgconfig"
+    export MAKE="${app['make']}"
+    # > export PKG_CONFIG_PATH="${dict['sysroot']}/usr/lib/pkgconfig"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
@@ -143,7 +143,7 @@ ${dict['sysroot']}/usr/lib"
         "--parallel=${dict['jobs']}"
         "--prefix=${dict['prefix']}"
         '--verbose'
-        # > "--with-cmake=${app['conda_cmake']}"
+        # > "--with-cmake=${app['cmake']}"
         '--without-unit-tests'
         "CMAKE_OPTIONS=${cmake_args[*]}"
     )
