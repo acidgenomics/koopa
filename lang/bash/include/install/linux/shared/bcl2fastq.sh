@@ -84,11 +84,6 @@ END
         "${dict['libexec']}/include" \
         "${dict['libexec']}/lib" \
         "${dict['sysroot']}/usr/include"
-    # The bcl2fastq installer looks for gmake, so make sure we symlink this.
-    (
-        koopa_cd "${dict['libexec']}/bin"
-        koopa_ln 'make' 'gmake'
-    )
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
     "${app['aws']}" --profile='acidgenomics' s3 cp \
