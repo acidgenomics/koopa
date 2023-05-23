@@ -39,7 +39,7 @@ dependencies:
     - boost=1.60.0  # 1.54.0
     - bzip2  # 1.0.6
     - cloog  # 0.18.0
-    - cmake==3.6.2  # 3.6.3
+    - cmake # 3.6.2 / 3.6.3
     - curl  # 7.52.1
     - expat  # 2.1.0
     - gcc=8.5.0  # 4.8.5
