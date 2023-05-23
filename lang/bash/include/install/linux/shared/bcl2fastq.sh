@@ -115,10 +115,15 @@ ${dict['version']}.tar.zip"
     export LDFLAGS="\
 -L${dict['sysroot']}/usr/lib \
 -L${dict['sysroot']}/lib \
+-L/lib/x86_64-linux-gnu \
+-L/lib \
+-L${dict['sysroot']}/lib \
 --sysroot=${dict['sysroot']}"
     export LD_LIBRARY_PATH="\
 ${dict['sysroot']}/usr/lib:\
-${dict['sysroot']}/lib"
+${dict['sysroot']}/lib:\
+/lib/x86_64-linux-gnu:\
+/lib"
     export MAKE="${app['make']}"
     cmake_args=(
         # > "-DCMAKE_CXX_LINK_FLAGS='${CPPFLAGS:-}'"
