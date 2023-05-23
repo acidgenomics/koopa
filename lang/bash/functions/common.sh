@@ -12635,6 +12635,12 @@ koopa_install_scons() {
         "$@"
 }
 
+koopa_install_screen() {
+    koopa_install_app \
+        --name='screen' \
+        "$@"
+}
+
 koopa_install_sd() {
     koopa_install_app \
         --name='sd' \
@@ -24249,6 +24255,12 @@ koopa_uninstall_scalene() {
 koopa_uninstall_scons() {
     koopa_uninstall_app \
         --name='scons' \
+        "$@"
+}
+
+koopa_uninstall_screen() {
+    koopa_uninstall_app \
+        --name='screen' \
         "$@"
 }
 

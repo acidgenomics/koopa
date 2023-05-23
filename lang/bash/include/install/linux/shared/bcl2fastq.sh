@@ -83,25 +83,13 @@ END
     koopa_assert_is_dir "${dict['conda_sysroot']}"
     (
         koopa_cd "${dict['sysroot']}"
-        "${app['cp']}" \
-            --force \
-            --parents \
-            --recursive \
-            --symbolic-link \
+        "${app['cp']}" -frsv \
             --target-directory="${dict['sysroot']}" \
             "${dict['conda_sysroot']}/"*
-        "${app['cp']}" \
-            --force \
-            --parents \
-            --recursive \
-            --symbolic-link \
+        "${app['cp']}" -frsv \
             --target-directory="${dict['sysroot']}/usr/include" \
             "${dict['conda']}/include/"*
-        "${app['cp']}" \
-            --force \
-            --parents \
-            --recursive \
-            --symbolic-link \
+        "${app['cp']}" -frsv \
             --target-directory="${dict['sysroot']}/usr/lib" \
             "${dict['conda']}/lib/"*
         koopa_cd "${dict['sysroot']}/usr/bin"
