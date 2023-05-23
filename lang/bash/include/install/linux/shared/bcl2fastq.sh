@@ -138,6 +138,7 @@ ${dict['sysroot']}/usr/lib"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SYSROOT=${dict['sysroot']}"
     )
+    export "CMAKE_OPTIONS=${cmake_args[*]}"
     conf_args=(
         '--build-type=Release'
         "--parallel=${dict['jobs']}"
@@ -145,7 +146,6 @@ ${dict['sysroot']}/usr/lib"
         '--verbose'
         # > "--with-cmake=${app['cmake']}"
         '--without-unit-tests'
-        "CMAKE_OPTIONS=${cmake_args[*]}"
     )
     koopa_add_to_path_start "${dict['sysroot']}/usr/bin"
     koopa_print_env
