@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this build error:
+# FIXME Now we're hitting that installer isn't picking up gzip correctly.
 #
-# CMake Error at cmake/macros.cmake:80 (message):
-#   Required header sys/stat.h not found.
+#CMake Error at cmake/cxxConfigure.cmake:75 (message):
+#   No support for gzip compression
 # Call Stack (most recent call first):
-#   cmake/cxxConfigure.cmake:40 (bcl2fastq_find_header_or_die)
 #   cxx/CMakeLists.txt:33 (include)
 
 main() {
