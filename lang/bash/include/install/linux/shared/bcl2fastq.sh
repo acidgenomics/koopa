@@ -107,36 +107,23 @@ ${dict['version']}.tar.zip"
     koopa_cd 'build'
     # > export BOOST_ROOT="${dict['conda_boost']}"
     export CC="${app['cc']}"
-    export CPPFLAGS="\
--I${dict['sysroot']}/usr/include \
---sysroot=${dict['sysroot']}"
+    export CPPFLAGS="-I${dict['sysroot']}/usr/include"
     export CXX="${app['cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
-    export LDFLAGS="\
--L${dict['sysroot']}/usr/lib \
--L${dict['sysroot']}/lib \
--L/lib/x86_64-linux-gnu \
--L/lib \
--L${dict['sysroot']}/lib \
---sysroot=${dict['sysroot']}"
-    export LD_LIBRARY_PATH="\
-${dict['sysroot']}/usr/lib:\
-${dict['sysroot']}/lib:\
-/lib/x86_64-linux-gnu:\
-/lib"
+    export LDFLAGS="-L${dict['sysroot']}/usr/lib -L${dict['sysroot']}/lib"
     export MAKE="${app['make']}"
     cmake_args=(
-        # > "-DCMAKE_CXX_LINK_FLAGS='${CPPFLAGS:-}'"
-        # > "-DCMAKE_C_LINK_FLAGS='${CPPFLAGS:-}'"
-        # > "-DCMAKE_MODULE_LINKER_FLAGS='${LDFLAGS:-}'"
-        # > "-DCMAKE_SHARED_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_CXX_FLAGS='${CPPFLAGS:-}'"
         "-DCMAKE_C_FLAGS='${CPPFLAGS:-}'"
         "-DCMAKE_EXE_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_FIND_ROOT_PATH='${dict['sysroot']}'"
         "-DCMAKE_INCLUDE_PATH='${dict['sysroot']}/usr/include'"
         "-DCMAKE_LIBRARY_PATH='${dict['sysroot']}/usr/lib'"
+        "-DCMAKE_MODULE_LINKER_FLAGS='${LDFLAGS:-}'"
+        "-DCMAKE_SHARED_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_SYSROOT='${dict['sysroot']}'"
+        "-DZLIB_INCLUDE_DIR='${dict['sysroot']}/usr/include'"
+        "-DZLIB_LIBRARY='${dict['sysroot']}/usr/lib/libz.so'"
     )
     export "CMAKE_OPTIONS=${cmake_args[*]}"
     conf_args=(
@@ -148,7 +135,7 @@ ${dict['sysroot']}/lib:\
         '--without-unit-tests'
     )
     koopa_add_to_path_start "${dict['sysroot']}/usr/bin"
-    koopa_conda_activate_env "${dict['conda']}"
+    # > koopa_conda_activate_env "${dict['conda']}"
     koopa_print_env
     ../src/configure --help || true
     ../src/configure "${conf_args[@]}"
