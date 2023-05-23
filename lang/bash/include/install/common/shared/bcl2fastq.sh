@@ -3,6 +3,10 @@
 # FIXME This is currently failing to build on Ubuntu 20.
 # NOTE May need to compile against a much older GCC (e.g. 4.8.2).
 
+# NOTE boost bootstrap fails to build on macOS against clang.
+# Failed to build Boost.Build build engine
+# Consult 'bootstrap.log' for more details
+
 main() {
     # """
     # Install bcl2fastq from source.
@@ -24,48 +28,39 @@ main() {
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local -A app dict
-    local -a conf_args deps
+    local -a build_deps conf_args deps
     koopa_assert_is_not_aarch64
-    koopa_activate_app --build-only 'make'
-    deps=(
-        'bzip2'
-        'icu4c'
-        'xz'
-        'zlib'
-        'zstd'
-    )
+    build_deps=('make')
+    deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['cmake']="$(koopa_locate_cmake --realpath)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='bcl2fastq'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     if koopa_is_linux
     then
+        dict['arch']="$(koopa_arch)"
         dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
         koopa_assert_is_dir "${dict['c_include_path']}"
-        dict['toolset']='gcc'
     elif koopa_is_macos
     then
         dict['toolset']='clang'
     fi
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-    dict['url']="${dict['installers_base']}/${dict['name']}/src/\
+    dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
-    "${app['aws']}" \
-        --profile='acidgenomics' \
-        s3 cp \
-            "${dict['url']}" \
-            "$(koopa_basename "${dict['url']}")"
+    "${app['aws']}" --profile='acidgenomics' s3 cp \
+        "${dict['url']}" "$(koopa_basename "${dict['url']}")"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'unzip'
-    koopa_extract 'unzip/'*'.tar.gz' 'src'
+    koopa_extract 'unzip/'*'.tar.gz' 'bcl2fastq-src'
+    koopa_rm 'unzip'
     # Install Boost 1.54.0 from 'redist'.
     # Refer to 'src/cmake/bootstrap/installBoost.sh'.
     (
@@ -97,7 +92,7 @@ ${dict['version']}.tar.zip"
             "linkflags=${LDFLAGS:?}"
             'install'
         )
-        koopa_extract 'src/redist/boost'*'.tar.bz2' 'boost-src'
+        koopa_extract 'bcl2fastq-src/redist/boost'*'.tar.bz2' 'boost-src'
         koopa_cd 'boost-src'
         ./bootstrap.sh --help
         ./bootstrap.sh "${bootstrap_args[@]}"
@@ -105,7 +100,7 @@ ${dict['version']}.tar.zip"
         ./b2 "${b2_args[@]}"
         return 0
     )
-    koopa_cd 'src'
+    koopa_cd 'bcl2fastq-src'
     koopa_mkdir 'build'
     koopa_cd 'build'
     if koopa_is_linux
