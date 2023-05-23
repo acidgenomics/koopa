@@ -37,6 +37,7 @@ main() {
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
     # """
     local -A app dict
+    koopa_assert_is_not_aarch64
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['conda']="$(koopa_locate_conda --realpath)"
     app['sort']="$(koopa_locate_sort --allow-system)"
@@ -58,6 +59,8 @@ dependencies:
     - make
     - zlib
 END
+    koopa_alert "Preparing conda environment in '${dict['libexec']}'."
+    koopa_print "${dict['conda_string']}"
     koopa_write_string \
         --file="${dict['conda_file']}" \
         --string="${dict['conda_string']}"
