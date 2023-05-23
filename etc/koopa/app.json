@@ -503,6 +503,7 @@
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
     "date": "2023-05-19",
+    "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
