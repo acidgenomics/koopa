@@ -65,7 +65,7 @@ dependencies:
     - make
     - zlib
 END
-    koopa_alert "Preparing conda environment in '${dict['libexec']}'."
+    koopa_alert "Preparing conda environment in '${dict['conda']}'."
     koopa_print "${dict['conda_string']}"
     koopa_write_string \
         --file="${dict['conda_file']}" \
