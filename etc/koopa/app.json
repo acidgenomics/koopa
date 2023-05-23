@@ -535,6 +535,41 @@
     ],
     "version": "0.42.0"
   },
+  "byobu": {
+    "bin": [
+      "byobu",
+      "byobu-config",
+      "byobu-ctrl-a",
+      "byobu-disable",
+      "byobu-disable-prompt",
+      "byobu-enable",
+      "byobu-enable-prompt",
+      "byobu-export",
+      "byobu-janitor",
+      "byobu-keybindings",
+      "byobu-launch",
+      "byobu-launcher",
+      "byobu-launcher-install",
+      "byobu-launcher-uninstall",
+      "byobu-layout",
+      "byobu-prompt",
+      "byobu-quiet",
+      "byobu-reconnect-sockets",
+      "byobu-select-backend",
+      "byobu-select-profile",
+      "byobu-select-session",
+      "byobu-shell",
+      "byobu-silent",
+      "byobu-status",
+      "byobu-status-detail",
+      "byobu-ugraph",
+      "byobu-ulevel"
+    ],
+    "build_dependencies": ["make"],
+    "dependencies": ["gettext", "tmux"],
+    "date": "2023-05-23",
+    "version": "5.133"
+  },
   "bzip2": {
     "aliases": {
       "debian": "libbz2-dev",

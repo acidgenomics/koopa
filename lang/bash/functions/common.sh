@@ -10940,6 +10940,12 @@ koopa_install_bustools() {
         "$@"
 }
 
+koopa_install_byobu() {
+    koopa_install_app \
+        --name='byobu' \
+        "$@"
+}
+
 koopa_install_bzip2() {
     koopa_install_app \
         --name='bzip2' \
@@ -22712,6 +22718,12 @@ koopa_uninstall_brotli() {
 koopa_uninstall_bustools() {
     koopa_uninstall_app \
         --name='bustools' \
+        "$@"
+}
+
+koopa_uninstall_byobu() {
+    koopa_uninstall_app \
+        --name='byobu' \
         "$@"
 }
 
