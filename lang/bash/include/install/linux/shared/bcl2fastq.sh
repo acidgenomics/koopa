@@ -87,6 +87,9 @@ END
             --target-directory="${dict['sysroot']}" \
             "${dict['conda_sysroot']}/"*
         "${app['cp']}" -frsv \
+            --target-directory="${dict['sysroot']}/usr/bin" \
+            "${dict['conda']}/bin/"*
+        "${app['cp']}" -frsv \
             --target-directory="${dict['sysroot']}/usr/include" \
             "${dict['conda']}/include/"*
         "${app['cp']}" -frsv \
