@@ -49,9 +49,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['gcc_version']='8.5.0'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    dict['conda']="$(koopa_init_dir "${dict['libexec']}/conda")"
-    dict['sysroot']="$(koopa_init_dir "${dict['libexec']}/sysroot")"
+    dict['conda']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['sysroot']="$(koopa_init_dir "${dict['prefix']}/sysroot")"
     dict['conda_file']='conda.yaml'
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
@@ -141,6 +140,7 @@ ${dict['version']}.tar.zip"
         '--without-unit-tests'
     )
     koopa_add_to_path_start "${dict['sysroot']}/usr/bin"
+    koopa_conda_activate_env "${dict['conda']}"
     koopa_print_env
     ../src/configure --help || true
     ../src/configure "${conf_args[@]}"
