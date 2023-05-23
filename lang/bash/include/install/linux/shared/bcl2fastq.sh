@@ -101,22 +101,28 @@ ${dict['version']}.tar.zip"
     koopa_conda_activate_env "${dict['libexec']}"
     # > export BOOST_ROOT="${dict['conda_boost']}"
     export CC="${app['conda_cc']}"
-    export CPPFLAGS="-I${dict['prefix']}/include \
--I${dict['libexec']}/include"
+    export CPPFLAGS="\
+-I${dict['prefix']}/include \
+-I${dict['libexec']}/include \
+-I${dict['sysroot']}/usr/include"
     export CXX="${app['conda_cxx']}"
-    export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
-    export LDFLAGS="-L${dict['prefix']}/lib \
--L${dict['libexec']}/lib"
+    # > export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
+    export LDFLAGS="\
+-L${dict['prefix']}/lib \
+-L${dict['libexec']}/lib \
+-L${dict['sysroot']}/usr/lib"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INCLUDE_PATH=\
 ${dict['prefix']}/include;\
-${dict['libexec']}/include"
+${dict['libexec']}/include;\
+${dict['sysroot']}/usr/include"
         "-DCMAKE_LIBRARY_PATH=\
 ${dict['prefix']}/lib;\
-${dict['libexec']}/lib"
+${dict['libexec']}/lib;\
+${dict['sysroot']}/usr/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SYSROOT=${dict['sysroot']}"
