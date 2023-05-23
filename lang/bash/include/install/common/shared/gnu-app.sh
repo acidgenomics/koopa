@@ -5,7 +5,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-05-23.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -65,6 +65,7 @@ main() {
         'patch' | \
         'pth' | \
         'readline' | \
+        'screen' | \
         'stow' | \
         'tar' | \
         'units' | \
