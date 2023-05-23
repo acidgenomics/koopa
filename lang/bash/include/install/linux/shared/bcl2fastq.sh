@@ -75,7 +75,11 @@ END
     koopa_conda_create_env \
         --file="${dict['conda_file']}" \
         --prefix="${dict['libexec']}"
-    app['conda_make']="${dict['libexec']}/bin/make"
+    (
+        koopa_cd "${dict['libexec']}/bin"
+        koopa_ln 'make' 'gmake'
+    )
+    app['conda_make']="${dict['libexec']}/bin/gmake"
     app['conda_cc']="${dict['libexec']}/bin/gcc"
     app['conda_cxx']="${dict['libexec']}/bin/g++"
     koopa_assert_is_executable "${app[@]}"
@@ -106,6 +110,7 @@ ${dict['version']}.tar.zip"
 -L${dict['prefix']}/lib \
 -L${dict['libexec']}/lib \
 -L${dict['sysroot']}/usr/lib"
+    export MAKE="${app['conda_make']}"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
