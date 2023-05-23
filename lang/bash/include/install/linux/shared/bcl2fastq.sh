@@ -60,6 +60,7 @@ main() {
 name: bcl2fastq
 dependencies:
     - bzip2
+    - compiler-rt
     - gcc==${dict['gcc_version']}
     - gfortran==${dict['gcc_version']}
     - gxx==${dict['gcc_version']}
@@ -111,6 +112,7 @@ ${dict['version']}.tar.zip"
 -L${dict['libexec']}/lib \
 -L${dict['sysroot']}/usr/lib"
     export MAKE="${app['conda_make']}"
+    export PKG_CONFIG_PATH="${dict['libexec']}/lib/pkgconfig"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
@@ -126,7 +128,10 @@ ${dict['sysroot']}/usr/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SYSROOT=${dict['sysroot']}"
+        "-DZLIB_INCLUDE_DIR=${dict['libexec']}/include"
+        "-DZLIB_LIBRARY=${dict['libexec']}/lib/libz.so"
     )
+    # FIXME Set CMAKE_LIBRARY_PATH.
     conf_args=(
         '--build-type=Release'
         "--parallel=${dict['jobs']}"
