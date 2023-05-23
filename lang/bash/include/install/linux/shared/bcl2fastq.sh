@@ -56,7 +56,7 @@ dependencies:
     - gfortran==${dict['gcc_version']}
     - gxx==${dict['gcc_version']}
     - make
-    # > - zlib
+    - zlib
 END
     koopa_write_string \
         --file="${dict['conda_file']}" \
@@ -68,6 +68,8 @@ END
     app['conda_cc']="${dict['libexec']}/bin/gcc"
     app['conda_cxx']="${dict['libexec']}/bin/g++"
     koopa_assert_is_executable "${app[@]}"
+    dict['sysroot']="${dict['libexec']}/x86_64-conda-linux-gnu/sysroot"
+    koopa_assert_is_dir "${dict['sysroot']}"
     # The bcl2fastq installer looks for gmake, so make sure we symlink this.
     (
         koopa_cd "${dict['libexec']}/bin"
@@ -83,12 +85,12 @@ ${dict['version']}.tar.zip"
     koopa_mkdir 'build'
     (
         koopa_cd 'build'
-        # FIXME Need to add back our environment activator that works inside
-        # of a hardened shell environment.
-        "${app['conda']}" activate
-        "${app['conda']}" activate "${dict['libexec']}"
+        koopa_conda_activate_env "${dict['libexec']}"
         export CC="${app['conda_cc']}"
+        export CPPFLAGS="-I${dict['libexec']}/include"
         export CXX="${app['conda_cxx']}"
+        export LDFLAGS="-L${dict['libexec']}/lib"
+        export SYSROOT="${dict['sysroot']}"
         koopa_print_env
         ../src/configure --help || true
         ../src/configure --prefix="${dict['prefix']}"
