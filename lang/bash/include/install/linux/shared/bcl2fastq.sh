@@ -36,15 +36,20 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
-    - boost_lib==1.54.0
+    # No longer available on conda-forge:
+    # > - boost==1.54.0
+    # > - cmake==3.6.3
+    # > - gcc==4.8.5
+    # > - isl==0.12.2
+    - boost=1.60.0
     - bzip2==1.0.6
     - cloog==0.18.0
-    - cmake==3.6.3
+    - cmake==3.6.2
     - curl==7.52.1
     - expat==2.1.0
-    - gcc==4.8.5
+    - gcc=8.5.0
     - gmp==6.1.0
-    - isl==0.12.2
+    - isl==0.16.1
     - mpc==1.0.3
     - mpfr==3.1.5
     - ncurses==5.9
