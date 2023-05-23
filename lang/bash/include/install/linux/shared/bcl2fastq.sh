@@ -55,6 +55,7 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
+    # > - curl
     - bzip2
     - compiler-rt
     - gcc==${dict['gcc_version']}
@@ -128,11 +129,11 @@ ${dict['version']}.tar.zip"
     )
     export "CMAKE_OPTIONS=${cmake_args[*]}"
     conf_args=(
+        # > "--with-cmake=${app['cmake']}"
         '--build-type=Release'
         "--parallel=${dict['jobs']}"
         "--prefix=${dict['prefix']}"
         '--verbose'
-        # > "--with-cmake=${app['cmake']}"
         '--without-unit-tests'
     )
     koopa_add_to_path_start "${dict['sysroot']}/usr/bin"
