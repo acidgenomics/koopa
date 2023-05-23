@@ -51,6 +51,7 @@ main() {
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
+    - bzip2
     - gcc==${dict['gcc_version']}
     - gfortran==${dict['gcc_version']}
     - gxx==${dict['gcc_version']}
