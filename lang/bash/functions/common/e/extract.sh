@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for lz (lzip).
-# FIXME Add support for zstd.
+# NOTE Add support for lz (lzip).
+# NOTE Add support for zstd.
 
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-05-23.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -149,20 +149,21 @@ koopa_extract() {
     )
     if [[ "${dict['move_into_target']}" -eq 1 ]]
     then
+        local -a contents
         koopa_rm "${dict['tmpfile']}"
-        app['wc']="$(koopa_locate_wc --allow-system)"
-        koopa_assert_is_executable "${app['wc']}"
-        dict['count']="$( \
+        readarray -t contents <<< "$( \
             koopa_find \
                 --max-depth=1 \
                 --min-depth=1 \
                 --prefix="${dict['tmpdir']}" \
-            | "${app['wc']}" -l \
         )"
-        [[ "${dict['count']}" -gt 0 ]] || return 1
+        if koopa_is_array_empty "${contents[@]}"
+        then
+            koopa_stop "Empty archive file: '${dict['file']}'."
+        fi
         (
             shopt -s dotglob
-            if [[ "${dict['count']}" -eq 1 ]]
+            if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
             then
                 koopa_mv \
                     --target-directory="${dict['target']}" \
