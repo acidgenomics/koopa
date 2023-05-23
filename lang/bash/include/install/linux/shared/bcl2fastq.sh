@@ -27,8 +27,8 @@ main() {
     #     bcl2fastq.html
     #
     # Building from source (problematic with newer GCC / clang):
-    # - https://gist.github.com/jblachly/f8dc0f328d66659d9ee005548a5a2d2e
     # - https://sarahpenir.github.io/linux/Installing-bcl2fastq/
+    # - https://gist.github.com/jblachly/f8dc0f328d66659d9ee005548a5a2d2e
     # - https://github.com/rossigng/easybuild-easyconfigs/blob/main/
     #     easybuild/easyconfigs/b/bcl2fastq2/
     # - https://github.com/perllb/ctg-wgs/blob/master/
@@ -37,6 +37,10 @@ main() {
     #     cellranger/install-bcl2fastq.sh
     # - Potential method for disabling ICU in Boost build (if necessary):
     #   https://stackoverflow.com/questions/31138251/building-boost-without-icu
+    # - Notes about gzip error:
+    #   https://www.seqanswers.com/forum/bioinformatics/bioinformatics-aa/
+    #     22850-bcl2fastq-1-8-3-install-error-on-ubuntu-12-04lts-no-support-
+    #     for-bzip2-compression
     # """
     local -A app dict
     local -a cmake_args conf_args
@@ -77,6 +81,8 @@ END
     koopa_assert_is_executable "${app[@]}"
     dict['sysroot']="${dict['libexec']}/x86_64-conda-linux-gnu/sysroot"
     koopa_assert_is_dir \
+        "${dict['libexec']}/include" \
+        "${dict['libexec']}/lib" \
         "${dict['sysroot']}" \
         "${dict['sysroot']}/usr/include"
     # The bcl2fastq installer looks for gmake, so make sure we symlink this.
@@ -98,7 +104,7 @@ ${dict['version']}.tar.zip"
     export CC="${app['conda_cc']}"
     export CPPFLAGS="-I${dict['libexec']}/include"
     export CXX="${app['conda_cxx']}"
-    export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
+    # > export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
     export LDFLAGS="-L${dict['libexec']}/lib"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
@@ -106,7 +112,8 @@ ${dict['version']}.tar.zip"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-        "-DCMAKE_SYSROOT=${dict['sysroot']}"
+        # > "-DCMAKE_SYSROOT=${dict['sysroot']}"
+        "-DCMAKE_SYSROOT=${dict['libexec']}"
     )
     conf_args=(
         '--build-type=Release'
