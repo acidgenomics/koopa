@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this error on macOS:
+# configure: checking select with  -lnet -lnsl...
+# > configure: error: !!! no select - no screen
+
 main() {
     # """
     # Install screen.
     # @note Updated 2023-05-23.
+    #
+    # @seealso
+    # - https://github.com/conda-forge/screen-feedstock
+    # - https://formulae.brew.sh/formula/screen
+    # - https://ports.macports.org/port/screen/
     # """
     local -A dict
     local -a 
@@ -15,11 +24,16 @@ screen-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    CFLAGS="-include utmp.h -Wno-implicit-function-declaration ${CFLAGS:-}"
+    CFLAGS="${CFLAGS:-}"
+    # > CFLAGS="-DRUN_LOGIN ${CFLAGS:-}"
+    # > CFLAGS="-Wno-implicit-function-declaration ${CFLAGS:-}"
+    # > CFLAGS="-include utmp.h ${CFLAGS:-}"
     export CFLAGS
     conf_args=(
+        # > '--enable-pam'
+        # > '--enable-rxvt_osc'
+        # > '--enable-telnet'
         '--enable-colors256'
-        '--enable-pam'
         "--prefix=${dict['prefix']}"
     )
     ./autogen.sh
