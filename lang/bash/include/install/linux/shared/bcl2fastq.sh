@@ -34,6 +34,7 @@ main() {
     #   https://www.seqanswers.com/forum/bioinformatics/bioinformatics-aa/
     #     22850-bcl2fastq-1-8-3-install-error-on-ubuntu-12-04lts-no-support-
     #     for-bzip2-compression
+    # - https://stackoverflow.com/questions/36195791/
     # """
     local -A app dict
     local -a cmake_args conf_args
