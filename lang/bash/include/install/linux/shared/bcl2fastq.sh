@@ -113,7 +113,9 @@ ${dict['version']}.tar.zip"
 --sysroot=${dict['sysroot']}"
     export CXX="${app['cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
-    export LDFLAGS="-L${dict['sysroot']}/usr/lib"
+    export LDFLAGS="\
+-L${dict['sysroot']}/usr/lib \
+-L${dict['sysroot']}/lib"
     export MAKE="${app['make']}"
     cmake_args=(
         # > "-DCMAKE_MODULE_LINKER_FLAGS='${LDFLAGS:-}'"
