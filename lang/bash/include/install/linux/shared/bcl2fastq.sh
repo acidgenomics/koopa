@@ -44,15 +44,16 @@ main() {
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['gcc_version']='8.5.0'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['conda_file']='conda.yaml'
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
 dependencies:
-    - gcc==8.5.0
-    - gfortran==8.5.0
-    - gxx==8.5.0
+    - gcc==${dict['gcc_version']}
+    - gfortran==${dict['gcc_version']}
+    - gxx==${dict['gcc_version']}
     - make
     - zlib
 END
@@ -66,6 +67,7 @@ END
     app['conda_cc']="${dict['libexec']}/bin/gcc"
     app['conda_cxx']="${dict['libexec']}/bin/g++"
     koopa_assert_is_executable "${app[@]}"
+    # The bcl2fastq installer looks for gmake, so make sure we symlink this.
     (
         koopa_cd "${dict['libexec']}/bin"
         koopa_ln 'make' 'gmake'
