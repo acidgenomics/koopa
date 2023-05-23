@@ -55,6 +55,8 @@ main() {
     dict['gcc_version']='8.5.0'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['conda']="$(koopa_init_dir "${dict['libexec']}/conda")"
+    dict['sysroot']="$(koopa_init_dir "${dict['libexec']}/sysroot")"
     dict['conda_file']='conda.yaml'
     read -r -d '' "dict[conda_string]" << END || true
 name: bcl2fastq
@@ -75,20 +77,27 @@ END
         --string="${dict['conda_string']}"
     koopa_conda_create_env \
         --file="${dict['conda_file']}" \
-        --prefix="${dict['libexec']}"
+        --prefix="${dict['conda']}"
+    dict['conda_sysroot']="${dict['conda']}/x86_64-conda-linux-gnu/sysroot"
+    koopa_assert_is_dir "${dict['conda_sysroot']}"
     (
-        koopa_cd "${dict['libexec']}/bin"
+        koopa_cd "${dict['sysroot']}"
+        koopa_ln \
+            --target-directory="${dict['sysroot']}" \
+            "${dict['conda_sysroot']}/"*
+        koopa_ln \
+            --target-directory="${dict['sysroot']}/usr/include" \
+            "${dict['conda']}/include/"*
+        koopa_ln \
+            --target-directory="${dict['sysroot']}/usr/lib" \
+            "${dict['conda']}/lib/"*
+        koopa_cd "${dict['sysroot']}/usr/bin"
         koopa_ln 'make' 'gmake'
     )
-    app['conda_make']="${dict['libexec']}/bin/gmake"
-    app['conda_cc']="${dict['libexec']}/bin/gcc"
-    app['conda_cxx']="${dict['libexec']}/bin/g++"
+    app['make']="${dict['sysroot']}/usr/bin/gmake"
+    app['cc']="${dict['sysroot']}/usr/bin/gcc"
+    app['cxx']="${dict['sysroot']}/usr/bin/g++"
     koopa_assert_is_executable "${app[@]}"
-    dict['sysroot']="${dict['libexec']}/x86_64-conda-linux-gnu/sysroot"
-    koopa_assert_is_dir \
-        "${dict['libexec']}/include" \
-        "${dict['libexec']}/lib" \
-        "${dict['sysroot']}/usr/include"
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
     "${app['aws']}" --profile='acidgenomics' s3 cp \
@@ -98,40 +107,33 @@ ${dict['version']}.tar.zip"
     koopa_cd 'bcl2fastq'
     koopa_mkdir 'build'
     koopa_cd 'build'
-    koopa_conda_activate_env "${dict['libexec']}"
+    # > koopa_conda_activate_env "${dict['conda']}"
     # > export BOOST_ROOT="${dict['conda_boost']}"
     export CC="${app['conda_cc']}"
     export CPPFLAGS="\
 -I${dict['prefix']}/include \
--I${dict['libexec']}/include \
 -I${dict['sysroot']}/usr/include"
     export CXX="${app['conda_cxx']}"
     export C_INCLUDE_PATH="${dict['sysroot']}/usr/include"
     export LDFLAGS="\
 -L${dict['prefix']}/lib \
--L${dict['libexec']}/lib \
 -L${dict['sysroot']}/usr/lib"
     export MAKE="${app['conda_make']}"
-    export PKG_CONFIG_PATH="${dict['libexec']}/lib/pkgconfig"
+    export PKG_CONFIG_PATH="${dict['sysroot']}/usr/lib/pkgconfig"
     cmake_args=(
         "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
         "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_INCLUDE_PATH=\
 ${dict['prefix']}/include;\
-${dict['libexec']}/include;\
 ${dict['sysroot']}/usr/include"
         "-DCMAKE_LIBRARY_PATH=\
 ${dict['prefix']}/lib;\
-${dict['libexec']}/lib;\
 ${dict['sysroot']}/usr/lib"
         "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
         "-DCMAKE_SYSROOT=${dict['sysroot']}"
-        "-DZLIB_INCLUDE_DIR=${dict['libexec']}/include"
-        "-DZLIB_LIBRARY=${dict['libexec']}/lib/libz.so"
     )
-    # FIXME Set CMAKE_LIBRARY_PATH.
     conf_args=(
         '--build-type=Release'
         "--parallel=${dict['jobs']}"
@@ -147,7 +149,7 @@ ${dict['sysroot']}/usr/lib"
         "${dict['prefix']}/lib"
     ../src/configure --help || true
     ../src/configure "${conf_args[@]}"
-    "${app['conda_make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['conda_make']}" install
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }
