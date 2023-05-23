@@ -142,22 +142,6 @@ koopa_activate_app() {
     return 0
 }
 
-koopa_activate_conda_env() { # {{{1
-    local -A bool dict
-    koopa_assert_has_args_eq "$#" 1
-    if koopa_is_conda_env_active
-    then
-        koopa_stop 'Conda environment is already active.'
-    fi
-    bool['nounset']="$(koopa_boolean_nounset)"
-    dict['env']="${1:?}"
-    [[ "${bool['nounset']}" -eq 1 ]] && set +u
-    koopa_activate_conda
-    conda activate "${dict['env']}"
-    [[ "${bool['nounset']}" -eq 1 ]] && set -u
-    return 0
-}
-
 koopa_activate_conda() {
     _koopa_activate_conda "$@"
 }
@@ -4587,6 +4571,22 @@ koopa_cmake_std_args() {
 koopa_compress_ext_pattern() {
     koopa_assert_has_no_args "$#"
     koopa_print '\.(bz2|gz|xz|zip)$'
+    return 0
+}
+
+koopa_conda_activate_env() { # {{{1
+    local -A bool dict
+    koopa_assert_has_args_eq "$#" 1
+    if koopa_is_conda_env_active
+    then
+        koopa_stop 'Conda environment is already active.'
+    fi
+    bool['nounset']="$(koopa_boolean_nounset)"
+    dict['env']="${1:?}"
+    [[ "${bool['nounset']}" -eq 1 ]] && set +u
+    koopa_activate_conda
+    conda activate "${dict['env']}"
+    [[ "${bool['nounset']}" -eq 1 ]] && set -u
     return 0
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_activate_conda_env() { # {{{1
+koopa_conda_activate_env() { # {{{1
     # """
     # Activate a conda environment.
     # @note Updated 2023-05-23.
