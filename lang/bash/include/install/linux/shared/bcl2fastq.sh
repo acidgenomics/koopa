@@ -60,6 +60,7 @@ dependencies:
     - gcc==${dict['gcc_version']}
     - gfortran==${dict['gcc_version']}
     - gxx==${dict['gcc_version']}
+    - gzip
     - make
     - zlib
 END
