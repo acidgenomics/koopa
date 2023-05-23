@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# CMake bootstrap failing inside of conda.
+# FIXME CMake bootstrap failing inside of conda.
 # Looking for a Fortran compiler - /opt/koopa/bin/gfortran
 # /usr/bin/ld: cannot find /lib64/libc.so.6: No such file or directory
 # /usr/bin/ld: cannot find /usr/lib64/libc_nonshared.a: No such file or directory
@@ -51,6 +51,8 @@ main() {
 name: bcl2fastq
 dependencies:
     - gcc==8.5.0
+    - gfortran==8.5.0
+    - gxx==8.5.0
     - make
     - zlib
 END
@@ -60,6 +62,14 @@ END
     koopa_conda_create_env \
         --file="${dict['conda_file']}" \
         --prefix="${dict['libexec']}"
+    app['conda_make']="${dict['libexec']}/bin/make"
+    app['conda_cc']="${dict['libexec']}/bin/gcc"
+    app['conda_cxx']="${dict['libexec']}/bin/g++"
+    koopa_assert_is_executable "${app[@]}"
+    (
+        koopa_cd "${dict['libexec']}/bin"
+        koopa_ln 'make' 'gmake'
+    )
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
     "${app['aws']}" --profile='acidgenomics' s3 cp \
@@ -70,12 +80,17 @@ ${dict['version']}.tar.zip"
     koopa_mkdir 'build'
     (
         koopa_cd 'build'
+        # FIXME Need to add back our environment activator that works inside
+        # of a hardened shell environment.
         "${app['conda']}" activate
         "${app['conda']}" activate "${dict['libexec']}"
+        export CC="${app['conda_cc']}"
+        export CXX="${app['conda_cxx']}"
         koopa_print_env
+        ../src/configure --help || true
         ../src/configure --prefix="${dict['prefix']}"
-        make VERBOSE=1 --jobs="${dict['jobs']}"
-        make install
+        "${app['conda_make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+        "${app['conda_make']}" install
     )
     return 0
 }
