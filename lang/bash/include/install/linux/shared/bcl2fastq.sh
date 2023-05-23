@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME CMake bootstrap failing inside of conda.
-# Looking for a Fortran compiler - /opt/koopa/bin/gfortran
-# /usr/bin/ld: cannot find /lib64/libc.so.6: No such file or directory
-# /usr/bin/ld: cannot find /usr/lib64/libc_nonshared.a: No such file or directory
+# FIXME Hitting this build error:
+#
+# CMake Error at cmake/macros.cmake:80 (message):
+#   Required header sys/stat.h not found.
+# Call Stack (most recent call first):
+#   cmake/cxxConfigure.cmake:40 (bcl2fastq_find_header_or_die)
+#   cxx/CMakeLists.txt:33 (include)
 
 main() {
     # """
@@ -75,7 +78,9 @@ END
     app['conda_cxx']="${dict['libexec']}/bin/g++"
     koopa_assert_is_executable "${app[@]}"
     dict['sysroot']="${dict['libexec']}/x86_64-conda-linux-gnu/sysroot"
-    koopa_assert_is_dir "${dict['sysroot']}"
+    koopa_assert_is_dir \
+        "${dict['sysroot']}" \
+        "${dict['sysroot']}/usr/include"
     # The bcl2fastq installer looks for gmake, so make sure we symlink this.
     (
         koopa_cd "${dict['libexec']}/bin"
@@ -102,6 +107,7 @@ ${dict['version']}.tar.zip"
         "CC=${app['conda_cc']}"
         "CPPFLAGS=-I${dict['libexec']}/include"
         "CXX=${app['conda_cxx']}"
+        "C_INCLUDE_PATH=${dict['sysroot']}/usr/include"
         "LDFLAGS=-L${dict['libexec']}/lib"
         "SYSROOT=${dict['sysroot']}"
     )
