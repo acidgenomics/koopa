@@ -147,6 +147,7 @@ ${dict['sysroot']}/usr/lib"
         '--without-unit-tests'
         "CMAKE_OPTIONS=${cmake_args[*]}"
     )
+    koopa_add_to_path_start "${dict['sysroot']}/usr/bin"
     koopa_print_env
     koopa_mkdir \
         "${dict['prefix']}/include" \
