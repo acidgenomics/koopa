@@ -116,14 +116,17 @@ ${dict['version']}.tar.zip"
 -L${dict['sysroot']}/usr/lib \
 -L${dict['sysroot']}/lib \
 --sysroot=${dict['sysroot']}"
+    export LD_LIBRARY_PATH="\
+${dict['sysroot']}/usr/lib:\
+${dict['sysroot']}/lib"
     export MAKE="${app['make']}"
     cmake_args=(
+        # > "-DCMAKE_CXX_LINK_FLAGS='${CPPFLAGS:-}'"
+        # > "-DCMAKE_C_LINK_FLAGS='${CPPFLAGS:-}'"
         # > "-DCMAKE_MODULE_LINKER_FLAGS='${LDFLAGS:-}'"
         # > "-DCMAKE_SHARED_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_CXX_FLAGS='${CPPFLAGS:-}'"
-        "-DCMAKE_CXX_LINK_FLAGS='${CPPFLAGS:-}'"
         "-DCMAKE_C_FLAGS='${CPPFLAGS:-}'"
-        "-DCMAKE_C_LINK_FLAGS='${CPPFLAGS:-}'"
         "-DCMAKE_EXE_LINKER_FLAGS='${LDFLAGS:-}'"
         "-DCMAKE_FIND_ROOT_PATH='${dict['sysroot']}'"
         "-DCMAKE_INCLUDE_PATH='${dict['sysroot']}/usr/include'"
