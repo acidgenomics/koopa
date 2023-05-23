@@ -105,6 +105,7 @@ ${dict['version']}.tar.zip"
         '--without-unit-tests'
         # > "BOOST_ROOT=${dict['conda_boost']}"
         "CC=${app['conda_cc']}"
+        # > "CMAKE_OPTIONS=CMAKE_SYSROOT=${dict['sysroot']}""
         "CPPFLAGS=-I${dict['libexec']}/include"
         "CXX=${app['conda_cxx']}"
         "C_INCLUDE_PATH=${dict['sysroot']}/usr/include"
