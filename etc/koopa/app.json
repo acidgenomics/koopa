@@ -4489,6 +4489,14 @@
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
     "version": "4.5.2"
   },
+  "screen": {
+    "bin": ["screen"],
+    "build_dependencies": ["make"],
+    "date": "2023-05-23",
+    "dependencies": ["ncurses"],
+    "man1": ["screen.1"],
+    "version": "4.9.0"
+  },
   "sd": {
     "aliases": {
       "homebrew": true
