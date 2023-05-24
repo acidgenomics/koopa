@@ -1706,8 +1706,29 @@ koopa_aws_codecommit_list_repositories() {
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
+    dict['profile']="${AWS_PROFILE:-default}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     dict['string']="$( \
-        "${app['aws']}" codecommit list-repositories \
+        "${app['aws']}" \
+            codecommit list-repositories \
+                --output='json' \
+                --profile="${dict['profile']}" \
             | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
     )"
     [[ -n "${dict['string']}" ]] || return 1
@@ -2004,6 +2025,10 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
                 --version-id "${dict2['version_id']}" \
             > /dev/null
     done
+    return 0
+}
+
+koopa_aws_s3_dot_clean() {
     return 0
 }
 
