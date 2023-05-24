@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This currently requires system zlib on Linux.
-
-# FIXME This older version of boost won't build with newer versions of GCC.
-# Consider building only on an old instance of Fedora / CentOS (e.g. 6).
-
-# FIXME Hitting cryptic error during boost bootstrapping on Ubuntu 22.
-# ...failed updating 1 target...
-
-# ./boost/regex/v4/regex_raw_buffer.hpp: In member function 'void* boost::re_detail::raw_storage::extend(boost::re_detail::raw_storage::size_type)':
-# ./boost/regex/v4/regex_raw_buffer.hpp:132:24: warning: ISO C++17 does not allow 'register' storage class specifier [-Wregister]
-#   132 |       register pointer result = end;
-#       |                        ^~~~~~
-
 main() {
     # """
     # Install bcl2fastq from source.
@@ -54,7 +41,7 @@ main() {
     #     2.20.0-GCC-11.3.0/
     # """
     local -A app dict
-    local -a conf_args deps
+    local -a cmake_args cmake_std_args conf_args deps
     koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'cmake' 'make'
     deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
@@ -89,9 +76,22 @@ ${dict['version']}.tar.zip"
     koopa_cd 'src'
     koopa_mkdir 'build'
     koopa_cd 'build'
-    readarray -t cmake_args <<< "$( \
+    readarray -t cmake_std_args <<< "$( \
         koopa_cmake_std_args --prefix="${dict['prefix']}"
     )"
+    for arg in "${cmake_std_args[@]}"
+    do
+        case "$arg" in
+            '-DCMAKE_BUILD_TYPE='* | \
+            '-DCMAKE_INSTALL_PREFIX='* | \
+            '-DCMAKE_PARALLEL='* | \
+            '-DCMAKE_VERBOSE_MAKEFILE='*)
+                continue
+                ;;
+        esac
+        arg="${arg//=/=\'}'"
+        cmake_args+=("$arg")
+    done
     export BOOST_ROOT="${dict['libexec']}/boost"
     export CMAKE_OPTIONS="${cmake_args[*]}"
     if koopa_is_linux
