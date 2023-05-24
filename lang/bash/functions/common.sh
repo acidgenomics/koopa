@@ -6288,7 +6288,6 @@ koopa_dot_clean() {
     dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    koopa_alert "Cleaning dot files in '${dict['prefix']}'."
     if koopa_is_macos
     then
         app['dot_clean']="$(koopa_macos_locate_dot_clean)"
@@ -6336,7 +6335,6 @@ in '${dict['prefix']}'."
         koopa_print "${cruft[@]}"
         return 1
     fi
-    koopa_alert_success "Dot files cleaned successfully in '${dict['prefix']}'."
     return 0
 }
 
