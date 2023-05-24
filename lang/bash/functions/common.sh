@@ -16780,16 +16780,10 @@ koopa_mktemp() {
     local str
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['date_id']="$(koopa_datetime)"
-    dict['user_id']="$(koopa_user_id)"
-    if koopa_is_gnu "${app['mktemp']}"
-    then
-        dict['random_string']='XXXXXXXXXX'
-    else
-        dict['random_string']="$(koopa_random_string)"
-    fi
-    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-\
-${dict['random_string']}"
+    dict['date']="$(koopa_datetime)"
+    dict['random']='XXXXXXXXXX'
+    dict['user']="$(koopa_user_id)"
+    dict['template']="koopa-${dict['user']}-${dict['date']}-${dict['random']}"
     mktemp_args=(
         "$@"
         '-t' "${dict['template']}"
