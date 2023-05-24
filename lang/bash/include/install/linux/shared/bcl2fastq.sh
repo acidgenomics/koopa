@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Add libxml2 and libxslt as dependencies.
-# FIXME Consider checking for system zlib.
+# FIXME No support for gzip compression
 
 main() {
     # """
@@ -45,6 +44,10 @@ main() {
     # """
     local -A app dict
     local -a cmake_args cmake_std_args conf_args deps
+    if [[ ! -f '/usr/include/zlib.h' ]]
+    then
+        koopa_stop 'System zlib is required.'
+    fi
     koopa_assert_is_not_aarch64
     koopa_activate_app --build-only 'cmake' 'make'
     deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
