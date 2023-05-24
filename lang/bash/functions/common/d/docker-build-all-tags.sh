@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-## FIXME Rework this using pure shell variant.
-
 koopa_docker_build_all_tags() {
     # """
     # Build all Docker tags.
