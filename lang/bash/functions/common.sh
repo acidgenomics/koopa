@@ -18849,7 +18849,7 @@ koopa_rnaeditingindexer() {
     app['docker']="$(koopa_locate_docker)"
     koopa_assert_is_executable "${app[@]}"
     dict['bam_suffix']='.Aligned.sortedByCoord.out.bam'
-    dict['docker_image']='acidgenomics/rnaeditingindexer'
+    dict['docker_image']='public.ecr.aws/acidgenomics/rnaeditingindexer'
     dict['example']=0
     dict['genome']='hg38'
     dict['local_bam_dir']='bam'

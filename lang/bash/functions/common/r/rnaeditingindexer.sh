@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rebuild Docker image to get this to work.
-
 koopa_rnaeditingindexer() {
     # """
     # Run dockerized RNAEditingIndexer pipeline.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-24.
     #
     # Genome must be indexed by BEDGenomeIndexer.
     # Note that '--verbose' flag includes more output in summary CSV.
@@ -29,8 +27,7 @@ koopa_rnaeditingindexer() {
     app['docker']="$(koopa_locate_docker)"
     koopa_assert_is_executable "${app[@]}"
     dict['bam_suffix']='.Aligned.sortedByCoord.out.bam'
-    # FIXME Need to update this to Amazon ECR image.
-    dict['docker_image']='acidgenomics/rnaeditingindexer'
+    dict['docker_image']='public.ecr.aws/acidgenomics/rnaeditingindexer'
     dict['example']=0
     dict['genome']='hg38'
     dict['local_bam_dir']='bam'
