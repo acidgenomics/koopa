@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider using random string here instead, so that we don't use
-# 'XXX...' on macOS with BSD variant.
-
 koopa_mktemp() {
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-24.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -32,7 +29,14 @@ koopa_mktemp() {
     koopa_assert_is_executable "${app[@]}"
     dict['date_id']="$(koopa_datetime)"
     dict['user_id']="$(koopa_user_id)"
-    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
+    if koopa_is_gnu "${app['mktemp']}"
+    then
+        dict['random_string']='XXXXXXXXXX'
+    else
+        dict['random_string']="$(koopa_random_string)"
+    fi
+    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-\
+${dict['random_string']}"
     mktemp_args=(
         "$@"
         '-t' "${dict['template']}"
