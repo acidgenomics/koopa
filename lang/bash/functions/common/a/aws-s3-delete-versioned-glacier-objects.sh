@@ -98,7 +98,6 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         koopa_alert_note "No versioned Glacier objects in '${dict['bucket']}'."
         return 0
     fi
-    koopa_alert "Deleting versioned Glacier objects in '${dict['bucket']}'."
     readarray -t keys <<< "$( \
         koopa_print "${dict['json']}" \
             | "${app['jq']}" --raw-output '.[].Key' \
