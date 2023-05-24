@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure everything goes into lib, not lib64.
-
 main() {
     # """
     # Install NCBI VDB.

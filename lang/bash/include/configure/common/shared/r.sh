@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to ensure that '/etc/R' and '/usr/lib/R/etc' are in sync.
+# NOTE Need to ensure that '/etc/R' and '/usr/lib/R/etc' are in sync.
 # We're seeing cases where configuration is mismatched on Debian/Ubuntu.
 
 main() {

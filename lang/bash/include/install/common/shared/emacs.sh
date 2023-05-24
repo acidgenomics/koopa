@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Can we build this with macOS framework support, so we can call
-# doom-emacs and spacemacs from this, rather than system Emacs?
+# NOTE Consider building this with macOS framework support, so we can call
+# doom-emacs and spacemacs from this.
 
 main() {
     # """

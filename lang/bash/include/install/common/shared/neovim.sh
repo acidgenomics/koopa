@@ -7,7 +7,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-05-24.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -30,12 +30,11 @@ main() {
     # - https://github.com/neovim/neovim/blob/master/runtime/CMakeLists.txt
     # - https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_RPATH.html
     # """
-    local -A app dict
-    local -a build_deps deps
+    local -A cmake dict
+    local -a build_deps cmake_args deps local_mk_lines
     build_deps=(
         'cmake'
         'libtool'
-        'make'
         'ninja'
         'pkg-config'
     )
@@ -49,8 +48,6 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
@@ -58,38 +55,53 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    # NOTE Consider also including these standard CMake variables:
-    # - CMAKE_INSTALL_INCLUDEDIR
-    # - CMAKE_INSTALL_LIBDIR
-    # - CMAKE_PREFIX_PATH
-    # - CMAKE_VERBOSE_MAKEFILE
-    read -r -d '' "dict[local_mk]" << END || true
-CMAKE_BUILD_TYPE := Release
-DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON
-CMAKE_EXTRA_FLAGS += "-DCMAKE_CXX_FLAGS=${CXXFLAGS:-} ${CPPFLAGS:-}"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_C_FLAGS=${CFLAGS:-} ${CPPFLAGS:-}"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_EXE_LINKER_FLAGS=${LDFLAGS:-}"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_INSTALL_RPATH=${dict['prefix']}/lib"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_MODULE_LINKER_FLAGS=${LDFLAGS:-}"
-CMAKE_EXTRA_FLAGS += "-DCMAKE_SHARED_LINKER_FLAGS=${LDFLAGS:-}"
-CMAKE_EXTRA_FLAGS += "-DICONV_INCLUDE_DIR=${dict['libiconv']}/include"
-CMAKE_EXTRA_FLAGS += "-DICONV_LIBRARY=${dict['libiconv']}/lib/libiconv.${dict['shared_ext']}"
-CMAKE_EXTRA_FLAGS += "-DLIBINTL_INCLUDE_DIR=${dict['gettext']}/include"
-CMAKE_EXTRA_FLAGS += "-DLIBINTL_LIBRARY=${dict['gettext']}/lib/libintl.${dict['shared_ext']}"
-CMAKE_EXTRA_FLAGS += "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
-CMAKE_EXTRA_FLAGS += "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-END
+    cmake['iconv_include_dir']="${dict['libiconv']}/include"
+    cmake['iconv_library']="${dict['libiconv']}/lib/\
+libiconv.${dict['shared_ext']}"
+    cmake['libintl_include_dir']="${dict['gettext']}/include"
+    cmake['libintl_library']="${dict['gettext']}/lib/\
+libintl.${dict['shared_ext']}"
+    cmake['zlib_include_dir']="${dict['zlib']}/include"
+    cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake['iconv_include_dir']}" \
+        "${cmake['libintl_include_dir']}" \
+        "${cmake['zlib_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake['iconv_library']}" \
+        "${cmake['libintl_library']}" \
+        "${cmake['zlib_library']}"
+    readarray -t cmake_args <<< "$( \
+        koopa_cmake_std_args --prefix="${dict['prefix']}" \
+    )"
+    cmake_args+=(
+        "-DICONV_INCLUDE_DIR=${cmake['iconv_include_dir']}"
+        "-DICONV_LIBRARY=${cmake['iconv_library']}"
+        "-DLIBINTL_INCLUDE_DIR=${cmake['libintl_include_dir']}"
+        "-DLIBINTL_LIBRARY=${cmake['libintl_library']}"
+        "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake['zlib_library']}"
+    )
+    local_mk_lines+=(
+        'DEPS_CMAKE_FLAGS += -DUSE_BUNDLED=ON'
+        'CMAKE_BUILD_TYPE := Release'
+    )
+    for arg in "${cmake_args[@]}"
+    do
+        case "$arg" in
+            '-DCMAKE_BUILD_TYPE='*)
+                continue
+                ;;
+        esac
+        local_mk_lines+=("CMAKE_EXTRA_FLAGS += \"${arg}\"")
+    done
+    dict['local_mk']="$(koopa_print "${local_mk_lines[@]}")"
     dict['url']="https://github.com/neovim/neovim/archive/\
 v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_write_string \
-        --file='local.mk' \
-        --string="${dict['local_mk']}"
-    koopa_print_env
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_write_string --file='local.mk' --string="${dict['local_mk']}"
+    koopa_make_build --prefix="${dict['prefix']}"
     return 0
 }
