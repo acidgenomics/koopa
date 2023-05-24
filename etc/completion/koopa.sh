@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-23.
+    # @note Updated 2023-05-24.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -253,6 +253,7 @@ _koopa_complete() {
                         'libuv'
                         'libvterm'
                         'libxml2'
+                        'libxslt'
                         'libyaml'
                         'libzip'
                         'llama'
@@ -462,11 +463,7 @@ _koopa_complete() {
                             args+=('--all-revdeps' '--only-revdeps')
                             ;;
                         'uninstall')
-                            args+=(
-                                'private'
-                                'system'
-                                'user'
-                            )
+                            args+=('private' 'system' 'user')
                             ;;
                     esac
                     ;;

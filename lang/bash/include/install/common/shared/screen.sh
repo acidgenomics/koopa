@@ -1,13 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this error on macOS:
-# configure: checking select with  -lnet -lnsl...
-# > configure: error: !!! no select - no screen
-
 main() {
     # """
     # Install screen.
-    # @note Updated 2023-05-23.
+    # @note Updated 2023-05-24.
+    #
+    # Currently fails to build on macOS using system clang.
     #
     # @seealso
     # - https://github.com/conda-forge/screen-feedstock
@@ -15,7 +13,7 @@ main() {
     # - https://ports.macports.org/port/screen/
     # """
     local -A dict
-    local -a 
+    local -a conf_args
     koopa_activate_app --build-only 'autoconf' 'automake'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -25,14 +23,19 @@ screen-${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     CFLAGS="${CFLAGS:-}"
-    # > CFLAGS="-DRUN_LOGIN ${CFLAGS:-}"
-    # > CFLAGS="-Wno-implicit-function-declaration ${CFLAGS:-}"
-    # > CFLAGS="-include utmp.h ${CFLAGS:-}"
+    if koopa_is_macos
+    then
+        # Fix error: dereferencing pointer to incomplete type 'struct utmp'.
+        CFLAGS="${CFLAGS:-} -include utmp.h"
+        # Fix for Xcode 12 build errors.
+        # https://savannah.gnu.org/bugs/index.php?59465
+        CFLAGS="${CFLAGS:-} -Wno-implicit-function-declaration"
+    fi
     export CFLAGS
     conf_args=(
-        # > '--enable-pam'
         # > '--enable-rxvt_osc'
         # > '--enable-telnet'
+        '--enable-pam'
         '--enable-colors256'
         "--prefix=${dict['prefix']}"
     )

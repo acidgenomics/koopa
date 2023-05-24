@@ -2934,6 +2934,17 @@
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
     "version": "2.11.2"
   },
+  "libxslt": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-05-24",
+    "dependencies": ["icu4c", "libgcrypt", "libxml2"],
+    "enabled": false,
+    "url": ["http://xmlsoft.org/XSLT/"],
+    "version": "1.1.38"
+  },
   "libyaml": {
     "aliases": {
       "homebrew": true
@@ -4495,7 +4506,7 @@
   "screen": {
     "bin": ["screen"],
     "build_dependencies": ["make"],
-    "date": "2023-05-23",
+    "date": "2023-05-24",
     "dependencies": ["ncurses"],
     "enabled": false,
     "man1": ["screen.1"],
