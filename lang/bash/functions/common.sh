@@ -2000,7 +2000,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Fetching object version metadata for '${dict['bucket']}'."
+    koopa_alert "Fetching versioned Glacier objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
             --bucket="${dict['bucket']}" \
@@ -2023,12 +2023,18 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         koopa_print "${dict['json']}" \
             | "${app['jq']}" --raw-output '.[].VersionId' \
     )"
+    koopa_alert_info "$(koopa_ngettext \
+        --num="${#keys[@]}" \
+        --msg1='object' \
+        --msg2='objects' \
+        --suffix=' detected.' \
+    )"
     for i in "${!keys[@]}"
     do
         local -A dict2
         dict2['key']="${keys[$i]}"
         dict2['version_id']="${version_ids[$i]}"
-        koopa_alert "Deleting '${dict['bucket']}/${dict2['key']}' \
+        koopa_alert "Deleting 's3://${dict['bucket']}/${dict2['key']}' \
 (${dict2['version_id']})."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
         "${app['aws']}" --profile "${dict['profile']}" \
