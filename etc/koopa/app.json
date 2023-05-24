@@ -4495,7 +4495,7 @@
   "screen": {
     "bin": ["screen"],
     "build_dependencies": ["make"],
-    "date": "2023-05-23",
+    "date": "2023-05-24",
     "dependencies": ["ncurses"],
     "enabled": false,
     "man1": ["screen.1"],
