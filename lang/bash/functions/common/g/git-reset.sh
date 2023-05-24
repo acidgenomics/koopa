@@ -3,7 +3,7 @@
 koopa_git_reset() {
     # """
     # Clean and reset a git repo and its submodules.
-    # @note Updated 2023-03-12.
+    # @note Updated 2023-05-24.
     #
     # Note extra '-f' flag in 'git clean' step, which handles nested '.git'
     # directories better.
@@ -28,8 +28,7 @@ koopa_git_reset() {
             "${app['git']}" clean -dffx
             if [[ -s '.gitmodules' ]]
             then
-                # FIXME This needs require the directory as input.
-                koopa_git_submodule_init
+                koopa_git_submodule_init "$repo"
                 "${app['git']}" submodule --quiet foreach --recursive \
                     "${app['git']}" clean -dffx
                 "${app['git']}" reset --hard --quiet
