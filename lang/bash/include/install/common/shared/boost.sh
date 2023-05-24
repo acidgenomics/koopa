@@ -12,13 +12,7 @@ main() {
     # """
     local -A dict
     local -a b2_args bootstrap_args deps
-    deps=(
-        'bzip2'
-        'icu4c'
-        'xz'
-        'zlib'
-        'zstd'
-    )
+    deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
     koopa_activate_app "${deps[@]}"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['jobs']="$(koopa_cpu_count)"
@@ -39,26 +33,27 @@ ${dict['version']}/source/${dict['file']}"
     koopa_extract "${dict['file']}"
     koopa_cd "${dict['name']}_${dict['snake_version']}"
     bootstrap_args=(
-        "--prefix=${dict['prefix']}"
         "--libdir=${dict['prefix']}/lib"
-        "--with-toolset=${dict['toolset']}"
+        "--prefix=${dict['prefix']}"
         "--with-icu=${dict['icu4c']}"
+        "--with-toolset=${dict['toolset']}"
         '--without-libraries=log,mpi,python'
     )
     b2_args=(
+        # Stop on the first error.
         '-q'
         # Show commands as they are executed.
         '-d+2'
         "-j${dict['jobs']}"
-        "--prefix=${dict['prefix']}"
         "--libdir=${dict['prefix']}/lib"
-        "toolset=${dict['toolset']}"
-        'variant=release'
-        'link=shared'
-        'threading=multi'
-        'runtime-link=shared'
+        "--prefix=${dict['prefix']}"
         "cxxflags=${CPPFLAGS:?}"
+        'link=shared'
         "linkflags=${LDFLAGS:?}"
+        'runtime-link=shared'
+        "toolset=${dict['toolset']}"
+        'threading=multi'
+        'variant=release'
         'install'
     )
     koopa_print_env
