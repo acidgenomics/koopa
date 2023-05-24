@@ -142,6 +142,10 @@ koopa_activate_app() {
     return 0
 }
 
+koopa_activate_conda() {
+    _koopa_activate_conda "$@"
+}
+
 koopa_activate_ensembl_perl_api() {
     local -A dict
     dict['prefix']="$(koopa_app_prefix 'ensembl-perl-api')"
@@ -1201,6 +1205,15 @@ koopa_assert_is_installed() {
             koopa_stop "Not installed: '${arg}'."
         fi
     done
+    return 0
+}
+
+koopa_assert_is_interactive() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_interactive
+    then
+        koopa_stop 'Shell is not interactive.'
+    fi
     return 0
 }
 
@@ -4561,6 +4574,22 @@ koopa_compress_ext_pattern() {
     return 0
 }
 
+koopa_conda_activate_env() { # {{{1
+    local -A bool dict
+    koopa_assert_has_args_eq "$#" 1
+    if koopa_is_conda_env_active
+    then
+        koopa_stop 'Conda environment is already active.'
+    fi
+    bool['nounset']="$(koopa_boolean_nounset)"
+    dict['env']="${1:?}"
+    [[ "${bool['nounset']}" -eq 1 ]] && set +u
+    koopa_activate_conda
+    conda activate "${dict['env']}"
+    [[ "${bool['nounset']}" -eq 1 ]] && set -u
+    return 0
+}
+
 koopa_conda_bin() {
     local cmd file
     koopa_assert_has_args_eq "$#" 1
@@ -6248,6 +6277,69 @@ koopa_doom_emacs_prefix() {
     _koopa_doom_emacs_prefix "$@"
 }
 
+koopa_dot_clean() {
+    local -A app dict
+    local -a basenames cruft files
+    local i
+    koopa_assert_has_args_eq "$#" 1
+    app['fd']="$(koopa_locate_fd)"
+    app['rm']="$(koopa_locate_rm --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    koopa_alert "Cleaning dot files in '${dict['prefix']}'."
+    if koopa_is_macos
+    then
+        app['dot_clean']="$(koopa_macos_locate_dot_clean)"
+        koopa_assert_is_executable "${app['dot_clean']}"
+        "${app['dot_clean']}" "${dict['prefix']}"
+    fi
+    readarray -t files <<< "$( \
+        "${app['fd']}" \
+            --absolute-path \
+            --base-directory="${dict['prefix']}" \
+            --glob \
+            --hidden \
+            '.*' \
+    )"
+    if koopa_is_array_empty "${files[@]}"
+    then
+        koopa_alert_success "Dot files cleaned successfully \
+in '${dict['prefix']}'."
+        return 0
+    fi
+    cruft=()
+    readarray -t basenames <<< "$(koopa_basename "${files[@]}")"
+    for i in "${!files[@]}"
+    do
+        local basename file
+        file="${files[$i]}"
+        [[ -e "$file" ]] || continue
+        basename="${basenames[$i]}"
+        case "$basename" in
+            '.AppleDouble' | \
+            '.DS_Store' | \
+            '.Rhistory' | \
+            '.lacie' | \
+            '._'*)
+                koopa_rm --verbose "$file"
+                ;;
+            *)
+                cruft+=("$file")
+                ;;
+        esac
+    done
+    if koopa_is_array_non_empty "${cruft[@]}"
+    then
+        koopa_alert_note "Dot files remaining in '${dict['prefix']}'."
+        koopa_print "${cruft[@]}"
+        return 1
+    fi
+    koopa_alert_success "Dot files cleaned successfully in '${dict['prefix']}'."
+    return 0
+}
+
 koopa_dotfiles_config_link() {
     koopa_assert_has_no_args "$#"
     koopa_print "$(koopa_config_prefix)/dotfiles"
@@ -6732,20 +6824,21 @@ koopa_extract() {
     )
     if [[ "${dict['move_into_target']}" -eq 1 ]]
     then
+        local -a contents
         koopa_rm "${dict['tmpfile']}"
-        app['wc']="$(koopa_locate_wc --allow-system)"
-        koopa_assert_is_executable "${app['wc']}"
-        dict['count']="$( \
+        readarray -t contents <<< "$( \
             koopa_find \
                 --max-depth=1 \
                 --min-depth=1 \
                 --prefix="${dict['tmpdir']}" \
-            | "${app['wc']}" -l \
         )"
-        [[ "${dict['count']}" -gt 0 ]] || return 1
+        if koopa_is_array_empty "${contents[@]}"
+        then
+            koopa_stop "Empty archive file: '${dict['file']}'."
+        fi
         (
             shopt -s dotglob
-            if [[ "${dict['count']}" -eq 1 ]]
+            if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
             then
                 koopa_mv \
                     --target-directory="${dict['target']}" \
@@ -10847,6 +10940,12 @@ koopa_install_bustools() {
         "$@"
 }
 
+koopa_install_byobu() {
+    koopa_install_app \
+        --name='byobu' \
+        "$@"
+}
+
 koopa_install_bzip2() {
     koopa_install_app \
         --name='bzip2' \
@@ -12032,6 +12131,12 @@ koopa_install_multiqc() {
         "$@"
 }
 
+koopa_install_mutagen() {
+    koopa_install_app \
+        --name='mutagen' \
+        "$@"
+}
+
 koopa_install_nano() {
     koopa_install_app \
         --name='nano' \
@@ -12527,6 +12632,12 @@ koopa_install_scalene() {
 koopa_install_scons() {
     koopa_install_app \
         --name='scons' \
+        "$@"
+}
+
+koopa_install_screen() {
+    koopa_install_app \
+        --name='screen' \
         "$@"
 }
 
@@ -13405,6 +13516,10 @@ koopa_is_installed() {
     _koopa_is_installed "$@"
 }
 
+koopa_is_interactive() {
+    _koopa_is_interactive "$@"
+}
+
 koopa_is_koopa_app() {
     local app_prefix str
     koopa_assert_has_args "$#"
@@ -13527,7 +13642,7 @@ koopa_is_spacemacs_installed() {
 koopa_is_ssh_enabled() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    app['ssh']="$(koopa_locate_ssh)"
+    app['ssh']="$(koopa_locate_ssh --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['url']="${1:?}"
     dict['pattern']="${2:?}"
@@ -20225,7 +20340,7 @@ koopa_sra_prefetch() {
 koopa_ssh_generate_key() {
     local -A app dict
     local -a ssh_args
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['hostname']="$(koopa_hostname)"
     dict['key_name']='id_rsa' # or 'id_ed25519'.
@@ -20289,7 +20404,7 @@ koopa_ssh_generate_key() {
 koopa_ssh_key_info() {
     local -A app dict
     local keyfile
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen)"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
     app['uniq']="$(koopa_locate_uniq)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${HOME:?}/.ssh"
@@ -22612,6 +22727,12 @@ koopa_uninstall_bustools() {
         "$@"
 }
 
+koopa_uninstall_byobu() {
+    koopa_uninstall_app \
+        --name='byobu' \
+        "$@"
+}
+
 koopa_uninstall_bzip2() {
     koopa_uninstall_app \
         --name='bzip2' \
@@ -23647,6 +23768,12 @@ koopa_uninstall_multiqc() {
         "$@"
 }
 
+koopa_uninstall_mutagen() {
+    koopa_uninstall_app \
+        --name='mutagen' \
+        "$@"
+}
+
 koopa_uninstall_nano() {
     koopa_uninstall_app \
         --name='nano' \
@@ -24128,6 +24255,12 @@ koopa_uninstall_scalene() {
 koopa_uninstall_scons() {
     koopa_uninstall_app \
         --name='scons' \
+        "$@"
+}
+
+koopa_uninstall_screen() {
+    koopa_uninstall_app \
+        --name='screen' \
         "$@"
 }
 

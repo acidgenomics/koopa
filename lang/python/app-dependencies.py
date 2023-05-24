@@ -14,6 +14,12 @@ from os.path import abspath, dirname, join
 from platform import machine, system
 from sys import version_info
 
+parser = ArgumentParser()
+parser.add_argument("app_name")
+args = parser.parse_args()
+
+_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
+
 
 def arch() -> str:
     """
@@ -153,13 +159,6 @@ def main(app_name: str, json_file: str) -> bool:
     lst = list(dict.fromkeys(lst))
     print_apps(app_names=lst, json_data=json_data)
     return True
-
-
-parser = ArgumentParser()
-parser.add_argument("app_name")
-args = parser.parse_args()
-
-_json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 
 
 if __name__ == "__main__":

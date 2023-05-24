@@ -333,7 +333,7 @@ koopa_linux_bcl2fastq_indrops() {
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
-    app['tee']="$(koopa_locate_tee)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['log_file']='bcl2fastq-indrops.log'
     "${app['bcl2fastq']}" \
@@ -480,16 +480,18 @@ software/downloads/latest'."
 }
 
 koopa_linux_install_system_pihole() {
-    koopa_update_app \
+    koopa_install_app \
         --name='pihole' \
+        --no-isolate \
         --platform='linux' \
         --system \
         "$@"
 }
 
 koopa_linux_install_system_pivpn() {
-    koopa_update_app \
+    koopa_install_app \
         --name='pivpn' \
+        --no-isolate \
         --platform='linux' \
         --system \
         "$@"
@@ -559,6 +561,12 @@ koopa_linux_locate_ldconfig() {
 koopa_linux_locate_ldd() {
     koopa_locate_app \
         '/usr/bin/ldd' \
+        "$@"
+}
+
+koopa_linux_locate_pihole() {
+    koopa_locate_app \
+        '/usr/local/bin/pihole' \
         "$@"
 }
 
@@ -736,6 +744,21 @@ koopa_linux_uninstall_private_cellranger() {
     koopa_uninstall_app \
         --name='cellranger' \
         --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_system_pihole() {
+    koopa_uninstall_app \
+        --name='pihole' \
+        --platform='linux' \
+        --system \
+        "$@"
+}
+
+koopa_linux_uninstall_system_pivpn() {
+    koopa_uninstall_app \
+        --name='pivpn' \
+        --system \
         "$@"
 }
 

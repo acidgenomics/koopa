@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-05-23.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -112,6 +112,7 @@ _koopa_complete() {
                         'broot'
                         'brotli'
                         'bustools'
+                        'byobu'
                         'bzip2'
                         'c-ares'
                         'ca-certificates'
@@ -279,6 +280,7 @@ _koopa_complete() {
                         'mpfr'
                         'msgpack'
                         'multiqc'
+                        'mutagen'
                         'nano'
                         'nanopolish'
                         'ncbi-sra-tools'
@@ -358,6 +360,7 @@ _koopa_complete() {
                         'samtools'
                         'scalene'
                         'scons'
+                        'screen'
                         'sd'
                         'sed'
                         'seqkit'
