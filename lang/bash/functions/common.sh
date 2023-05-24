@@ -6304,8 +6304,6 @@ koopa_dot_clean() {
     )"
     if koopa_is_array_empty "${files[@]}"
     then
-        koopa_alert_success "Dot files cleaned successfully \
-in '${dict['prefix']}'."
         return 0
     fi
     cruft=()
