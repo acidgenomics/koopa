@@ -110,7 +110,7 @@ koopa_aws_s3_dot_clean() {
         koopa_alert "Deleting '${s3uri}'."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
         "${app['aws']}" --profile="${dict['profile']}" \
-            rm --region="${dict['region']}" "$s3uri"
+            s3 rm --region="${dict['region']}" "$s3uri"
     done
     return 0
 }
