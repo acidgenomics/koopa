@@ -50,21 +50,14 @@ main() {
     app['cmake']="$(koopa_locate_cmake)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(koopa_arch)"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_linux
-    then
-        dict['arch']="$(koopa_arch)"
-        dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
-        koopa_assert_is_dir "${dict['c_include_path']}"
-        dict['toolset']='gcc'
-    elif koopa_is_macos
-    then
-        dict['toolset']='clang'
-    fi
+    dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
+    koopa_assert_is_dir "${dict['c_include_path']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
@@ -96,10 +89,7 @@ ${dict['version']}.tar.zip"
     done
     export BOOST_ROOT="${dict['libexec']}/boost"
     export CMAKE_OPTIONS="${cmake_args[*]}"
-    if koopa_is_linux
-    then
-        export C_INCLUDE_PATH="${dict['c_include_path']}"
-    fi
+    export C_INCLUDE_PATH="${dict['c_include_path']}"
     koopa_print_env
     conf_args=(
         '--build-type=Release'
@@ -113,6 +103,5 @@ ${dict['version']}.tar.zip"
     ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
-    koopa_rm "${dict['prefix']}/bin/test"
     return 0
 }
