@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_aws_s3_delete_versioned_glacier_objects() {
+koopa_aws_s3_delete_versioned_glacier_object() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
     # @note Updated 2023-05-24.
@@ -13,6 +13,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \
+    # >     --dry-run \
     # >     --bucket='s3://example-bucket/' \
     # >     --profile='default' \
     # >     --region='us-east-1'
@@ -55,6 +56,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
                 dict['region']="${2:?}"
                 shift 2
                 ;;
+            # Flags ------------------------------------------------------------
             '--dry-run' | \
             '--dryrun')
                 bool['dryrun']=1
