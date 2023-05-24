@@ -359,8 +359,8 @@
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
-    "build_dependencies": ["make"],
-    "date": "2023-01-10",
+    "build_dependencies": ["cmake", "make"],
+    "date": "2023-05-24",
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "platform": "linux",
     "private": true,
@@ -503,12 +503,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-19",
+    "date": "2023-05-24",
+    "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.22.0"
+    "version": "1.22.1"
   },
   "brotli": {
     "aliases": {
@@ -534,6 +535,71 @@
       "https://github.com/BUStools/bustools/"
     ],
     "version": "0.42.0"
+  },
+  "byobu": {
+    "bin": [
+      "byobu",
+      "byobu-config",
+      "byobu-ctrl-a",
+      "byobu-disable",
+      "byobu-disable-prompt",
+      "byobu-enable",
+      "byobu-enable-prompt",
+      "byobu-export",
+      "byobu-janitor",
+      "byobu-keybindings",
+      "byobu-launch",
+      "byobu-launcher",
+      "byobu-layout",
+      "byobu-prompt",
+      "byobu-quiet",
+      "byobu-reconnect-sockets",
+      "byobu-screen",
+      "byobu-select-backend",
+      "byobu-select-profile",
+      "byobu-select-session",
+      "byobu-shell",
+      "byobu-silent",
+      "byobu-status",
+      "byobu-status-detail",
+      "byobu-tmux",
+      "byobu-ugraph",
+      "byobu-ulevel"
+    ],
+    "build_dependencies": ["make"],
+    "dependencies": ["gettext", "tmux"],
+    "date": "2023-05-23",
+    "enabled": false,
+    "man1": [
+      "byobu-config.1",
+      "byobu-ctrl-a.1",
+      "byobu-disable-prompt.1",
+      "byobu-disable.1",
+      "byobu-enable-prompt.1",
+      "byobu-enable.1",
+      "byobu-export.1",
+      "byobu-janitor.1",
+      "byobu-keybindings.1",
+      "byobu-launch.1",
+      "byobu-launcher.1",
+      "byobu-layout.1",
+      "byobu-prompt.1",
+      "byobu-quiet.1",
+      "byobu-reconnect-sockets.1",
+      "byobu-screen.1",
+      "byobu-select-backend.1",
+      "byobu-select-profile.1",
+      "byobu-select-session.1",
+      "byobu-shell.1",
+      "byobu-silent.1",
+      "byobu-status-detail.1",
+      "byobu-status.1",
+      "byobu-tmux.1",
+      "byobu-ugraph.1",
+      "byobu-ulevel.1",
+      "byobu.1"
+    ],
+    "version": "5.133"
   },
   "bzip2": {
     "aliases": {
@@ -723,6 +789,7 @@
     "date": "2023-05-03",
     "large": true,
     "prune": false,
+    "outdated": true,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.3.1-0"
   },
@@ -1335,6 +1402,7 @@
     "bin": ["flac"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
+    "enabled": false,
     "man1": ["flac.1"],
     "url": ["https://xiph.org/flac/"],
     "version": "1.4.2"
@@ -2220,11 +2288,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-05-08",
+    "date": "2023-05-24",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.111.3"
+    "version": "0.112.2"
   },
   "hyperfine": {
     "aliases": {
@@ -3232,6 +3300,16 @@
     "large": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.14"
+  },
+  "mutagen": {
+    "date": "2023-05-22",
+    "dependencies": ["python3.11"],
+    "enabled": false,
+    "url": [
+      "https://mutagen.readthedocs.io/",
+      "https://github.com/quodlibet/mutagen/"
+    ],
+    "version": "1.46.0"
   },
   "nano": {
     "aliases": {
@@ -4414,6 +4492,15 @@
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
     "version": "4.5.2"
   },
+  "screen": {
+    "bin": ["screen"],
+    "build_dependencies": ["make"],
+    "date": "2023-05-23",
+    "dependencies": ["ncurses"],
+    "enabled": false,
+    "man1": ["screen.1"],
+    "version": "4.9.0"
+  },
   "sd": {
     "aliases": {
       "homebrew": true
@@ -4507,14 +4594,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-05-12",
+    "date": "2023-05-22",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.25.4"
+    "version": "7.26.0"
   },
   "sox": {
     "aliases": {
@@ -4852,10 +4939,10 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2023-05-20",
+    "date": "2023-05-24",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.3.1"
+    "version": "2.3.2"
   },
   "tuc": {
     "aliases": {
@@ -5332,9 +5419,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-04-11",
+    "date": "2023-05-24",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.33.3"
+    "version": "4.34.1"
   },
   "yt-dlp": {
     "aliases": {
