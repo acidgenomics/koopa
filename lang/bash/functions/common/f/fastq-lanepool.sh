@@ -15,6 +15,7 @@ koopa_fastq_lanepool() {
     local bn file i
     app['cat']="$(koopa_locate_cat --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['pattern']='*_L001_*.fastq*'
     dict['prefix']='lanepool'
     dict['source_dir']=''
     dict['target_dir']=''
@@ -62,15 +63,15 @@ koopa_fastq_lanepool() {
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern='*_L001_*.fastq*' \
+            --pattern="${dict['pattern']}" \
             --prefix="${dict['source_dir']}" \
             --sort \
             --type='f' \
     )"
-    # Error if file array is empty.
-    if [[ "${#fastq_files[@]}" -eq 0 ]]
+    if koopa_is_array_empty "${fastq_files[@]}"
     then
-        koopa_stop "No lane-split FASTQ files in '${dict['source_dir']}'."
+        koopa_stop "No lane-split FASTQ files matching pattern \
+'${dict['pattern']}' in '${dict['source_dir']}'."
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     for file in "${fastq_files[@]}"
