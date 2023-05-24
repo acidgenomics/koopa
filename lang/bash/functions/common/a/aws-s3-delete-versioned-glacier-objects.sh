@@ -84,7 +84,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Fetching object version metadata for '${dict['bucket']}'."
+    koopa_alert "Fetching versioned Glacier objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
             --bucket="${dict['bucket']}" \
@@ -106,6 +106,12 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     readarray -t version_ids <<< "$( \
         koopa_print "${dict['json']}" \
             | "${app['jq']}" --raw-output '.[].VersionId' \
+    )"
+    koopa_alert_info "$(koopa_ngettext \
+        --num="${#keys[@]}" \
+        --msg1='object' \
+        --msg2='objects' \
+        --suffix=' detected.' \
     )"
     for i in "${!keys[@]}"
     do
