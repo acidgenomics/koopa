@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME No support for gzip compression
-
 main() {
     # """
     # Install bcl2fastq from source.
