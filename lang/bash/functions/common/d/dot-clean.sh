@@ -3,7 +3,7 @@
 koopa_dot_clean() {
     # """
     # Clean up dot files recursively inside a directory.
-    # @note Updated 2023-05-22.
+    # @note Updated 2023-05-24.
     # """
     local -A app dict
     local -a basenames cruft files
@@ -15,7 +15,7 @@ koopa_dot_clean() {
     dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    koopa_alert "Cleaning dot files in '${dict['prefix']}'."
+    # > koopa_alert "Cleaning dot files in '${dict['prefix']}'."
     if koopa_is_macos
     then
         app['dot_clean']="$(koopa_macos_locate_dot_clean)"
@@ -33,8 +33,7 @@ koopa_dot_clean() {
     )"
     if koopa_is_array_empty "${files[@]}"
     then
-        koopa_alert_success "Dot files cleaned successfully \
-in '${dict['prefix']}'."
+        # > koopa_alert_success "Dot files cleaned in '${dict['prefix']}'."
         return 0
     fi
     cruft=()
@@ -64,6 +63,6 @@ in '${dict['prefix']}'."
         koopa_print "${cruft[@]}"
         return 1
     fi
-    koopa_alert_success "Dot files cleaned successfully in '${dict['prefix']}'."
+    # > koopa_alert_success "Dot files cleaned in '${dict['prefix']}'."
     return 0
 }

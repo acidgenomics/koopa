@@ -69,6 +69,7 @@ koopa_cli_app() {
                 's3')
                     case "${3:-}" in
                         'delete-versioned-glacier-objects' | \
+                        'dot-clean' | \
                         'find' | \
                         'list-large-files' | \
                         'ls' | \
