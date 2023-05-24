@@ -3,12 +3,12 @@
 koopa_linux_bcl2fastq_indrops() {
     # """
     # Run bcl2fastq on inDrops sequencing run.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-23.
     # """
     local -A app dict
     koopa_assert_has_no_args "$#"
     app['bcl2fastq']="$(koopa_linux_locate_bcl2fastq)"
-    app['tee']="$(koopa_locate_tee)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['log_file']='bcl2fastq-indrops.log'
     "${app['bcl2fastq']}" \
