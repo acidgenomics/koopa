@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
-# koopa nolint=line-width
-
-# FIXME Rework using a cmake dict.
-# FIXME Check that these linked files/dirs exist.
 
 main() {
     # """
@@ -30,9 +26,10 @@ main() {
     # - https://github.com/neovim/neovim/blob/master/runtime/CMakeLists.txt
     # - https://cmake.org/cmake/help/latest/variable/CMAKE_INSTALL_RPATH.html
     # """
-    local -A cmake dict
+    local -A app cmake dict
     local -a build_deps cmake_args deps local_mk_lines
     build_deps=(
+        'make'
         'cmake'
         'libtool'
         'ninja'
@@ -48,6 +45,8 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
+    app['make']="$(koopa_locate_make)"
+    koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
@@ -101,7 +100,10 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    koopa_print_env
+    koopa_print "${dict['local_mk']}"
     koopa_write_string --file='local.mk' --string="${dict['local_mk']}"
-    koopa_make_build --prefix="${dict['prefix']}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install
     return 0
 }
