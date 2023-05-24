@@ -569,6 +569,7 @@
     "build_dependencies": ["make"],
     "dependencies": ["gettext", "tmux"],
     "date": "2023-05-23",
+    "enabled": false,
     "man1": [
       "byobu-config.1",
       "byobu-ctrl-a.1",
