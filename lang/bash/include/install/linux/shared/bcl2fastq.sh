@@ -2,6 +2,9 @@
 
 # FIXME This currently requires system zlib on Linux.
 
+# FIXME This older version of boost won't build with newer versions of GCC.
+# Consider building only on an old instance of Fedora / CentOS (e.g. 6).
+
 # FIXME Hitting cryptic error during boost bootstrapping on Ubuntu 22.
 # ...failed updating 1 target...
 
