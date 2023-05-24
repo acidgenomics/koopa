@@ -2,6 +2,14 @@
 
 # FIXME This currently requires system zlib on Linux.
 
+# FIXME Hitting cryptic error during boost bootstrapping on Ubuntu 22.
+# ...failed updating 1 target...
+
+# ./boost/regex/v4/regex_raw_buffer.hpp: In member function 'void* boost::re_detail::raw_storage::extend(boost::re_detail::raw_storage::size_type)':
+# ./boost/regex/v4/regex_raw_buffer.hpp:132:24: warning: ISO C++17 does not allow 'register' storage class specifier [-Wregister]
+#   132 |       register pointer result = end;
+#       |                        ^~~~~~
+
 main() {
     # """
     # Install bcl2fastq from source.
@@ -83,19 +91,20 @@ ${dict['version']}.tar.zip"
         local -a b2_args bootstrap_args
         koopa_cd 'boost-src'
         bootstrap_args=(
-            "--prefix=${dict['libexec']}/boost"
             "--libdir=${dict['libexec']}/boost/lib"
-            "--with-toolset=${dict['toolset']}"
+            "--prefix=${dict['libexec']}/boost"
             "--with-icu=${dict['icu4c']}"
+            "--with-toolset=${dict['toolset']}"
             '--without-libraries=log,mpi,python'
         )
         b2_args=(
+            # Stop on the first error.
             '-q'
             # Show commands as they are executed.
             '-d+2'
             "-j${dict['jobs']}"
-            "--prefix=${dict['prefix']}"
             "--libdir=${dict['prefix']}/lib"
+            "--prefix=${dict['prefix']}"
             "cxxflags=${CPPFLAGS:?}"
             'link=shared'
             "linkflags=${LDFLAGS:?}"
