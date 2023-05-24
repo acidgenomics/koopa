@@ -17,7 +17,7 @@ koopa_aws_s3_dot_clean() {
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
-    bool['dryrun']=1
+    bool['dryrun']=0
     dict['bucket']=''
     dict['profile']="${AWS_PROFILE:-default}"
     dict['region']="${AWS_REGION:-us-east-1}"
@@ -103,7 +103,7 @@ koopa_aws_s3_dot_clean() {
         --msg2='objects' \
         --suffix=' detected.' \
     )"
-    for key in "${!keys[@]}"
+    for key in "${keys[@]}"
     do
         local s3uri
         s3uri="s3://${dict['bucket']}/${key}"
