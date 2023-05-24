@@ -8824,7 +8824,7 @@ koopa_git_reset() {
             "${app['git']}" clean -dffx
             if [[ -s '.gitmodules' ]]
             then
-                koopa_git_submodule_init
+                koopa_git_submodule_init "$repo"
                 "${app['git']}" submodule --quiet foreach --recursive \
                     "${app['git']}" clean -dffx
                 "${app['git']}" reset --hard --quiet
