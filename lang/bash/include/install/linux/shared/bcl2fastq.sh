@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add libxml2 and libxslt as dependencies.
+# FIXME Consider checking for system zlib.
+
 main() {
     # """
     # Install bcl2fastq from source.
