@@ -503,13 +503,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-19",
+    "date": "2023-05-24",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.22.0"
+    "version": "1.22.1"
   },
   "brotli": {
     "aliases": {
@@ -2287,11 +2287,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-05-08",
+    "date": "2023-05-24",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.111.3"
+    "version": "0.112.2"
   },
   "hyperfine": {
     "aliases": {
@@ -4938,10 +4938,10 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2023-05-20",
+    "date": "2023-05-24",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.3.1"
+    "version": "2.3.2"
   },
   "tuc": {
     "aliases": {
@@ -5418,9 +5418,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-04-11",
+    "date": "2023-05-24",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.33.3"
+    "version": "4.34.1"
   },
   "yt-dlp": {
     "aliases": {
