@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME No support for gzip compression
-
 main() {
     # """
     # Install bcl2fastq from source.
@@ -43,14 +41,15 @@ main() {
     #     2.20.0-GCC-11.3.0/
     # """
     local -A app dict
-    local -a cmake_args cmake_std_args conf_args deps
+    local -a build_deps cmake_args cmake_std_args conf_args deps
     if [[ ! -f '/usr/include/zlib.h' ]]
     then
         koopa_stop 'System zlib is required.'
     fi
     koopa_assert_is_not_aarch64
-    koopa_activate_app --build-only 'cmake' 'make'
+    build_deps=('cmake' 'make')
     deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['cmake']="$(koopa_locate_cmake)"
