@@ -361,15 +361,7 @@
     "bin": ["bcl2fastq"],
     "build_dependencies": ["cmake", "make"],
     "date": "2023-05-24",
-    "dependencies": [
-      "bzip2",
-      "icu4c",
-      "libxml2",
-      "libxslt",
-      "xz",
-      "zlib",
-      "zstd"
-    ],
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "platform": "linux",
     "private": true,
     "url": [
