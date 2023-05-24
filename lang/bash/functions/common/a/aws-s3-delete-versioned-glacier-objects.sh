@@ -3,7 +3,7 @@
 koopa_aws_s3_delete_versioned_glacier_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
-    # @note Updated 2022-09-21.
+    # @note Updated 2023-05-24.
     #
     # @seealso
     # - https://docs.aws.amazon.com/AmazonS3/latest/userguide/
@@ -74,13 +74,14 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
+    koopa_alert "Fetching object version metadata for '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
-            --bucket "${dict['bucket']}" \
-            --output 'json' \
-            --profile "${dict['profile']}" \
-            --query "Versions[?StorageClass=='GLACIER']" \
-            --region "${dict['region']}" \
+            --bucket="${dict['bucket']}" \
+            --output='json' \
+            --profile="${dict['profile']}" \
+            --query="Versions[?StorageClass=='GLACIER']" \
+            --region="${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
@@ -103,10 +104,10 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
         "${app['aws']}" --profile "${dict['profile']}" \
             s3api delete-object \
-                --bucket "${dict['bucket']}" \
-                --key "${dict2['key']}" \
-                --region "${dict['region']}" \
-                --version-id "${dict2['version_id']}" \
+                --bucket="${dict['bucket']}" \
+                --key="${dict2['key']}" \
+                --region="${dict['region']}" \
+                --version-id="${dict2['version_id']}" \
             > /dev/null
     done
     return 0
