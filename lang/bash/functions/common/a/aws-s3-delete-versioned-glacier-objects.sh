@@ -112,7 +112,8 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         local -A dict2
         dict2['key']="${keys[$i]}"
         dict2['version_id']="${version_ids[$i]}"
-        koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
+        koopa_alert "Deleting '${dict['bucket']}/${dict2['key']}' \
+(${dict2['version_id']})."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
         "${app['aws']}" --profile "${dict['profile']}" \
             s3api delete-object \

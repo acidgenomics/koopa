@@ -1935,12 +1935,13 @@ koopa_aws_s3_cp_regex() {
 }
 
 koopa_aws_s3_delete_versioned_glacier_objects() {
-    local -A app dict
+    local -A app bool dict
     local -a keys version_ids
     local i
     app['aws']="$(koopa_locate_aws)"
     app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
+    bool['dryrun']=0
     dict['bucket']=''
     dict['profile']="${AWS_PROFILE:-default}"
     dict['region']="${AWS_REGION:-us-east-1}"
@@ -1971,6 +1972,11 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
                 dict['region']="${2:?}"
                 shift 2
                 ;;
+            '--dry-run' | \
+            '--dryrun')
+                bool['dryrun']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -1990,17 +1996,23 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
+    if [[ "${bool['dryrun']}" -eq 1 ]]
+    then
+        koopa_alert_info 'Dry run mode enabled.'
+    fi
+    koopa_alert "Fetching object version metadata for '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
-            --bucket "${dict['bucket']}" \
-            --output 'json' \
-            --profile "${dict['profile']}" \
-            --query "Versions[?StorageClass=='GLACIER']" \
-            --region "${dict['region']}" \
+            --bucket="${dict['bucket']}" \
+            --output='json' \
+            --profile="${dict['profile']}" \
+            --query="Versions[?StorageClass=='GLACIER']" \
+            --region="${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
-        koopa_stop "No versioned Glacier objects found in '${dict['bucket']}'."
+        koopa_alert_note "No versioned Glacier objects in '${dict['bucket']}'."
+        return 0
     fi
     koopa_alert "Deleting versioned Glacier objects in '${dict['bucket']}'."
     readarray -t keys <<< "$( \
@@ -2016,13 +2028,15 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         local -A dict2
         dict2['key']="${keys[$i]}"
         dict2['version_id']="${version_ids[$i]}"
-        koopa_alert "Deleting '${dict2['key']}' (${dict2['version_id']})."
+        koopa_alert "Deleting '${dict['bucket']}/${dict2['key']}' \
+(${dict2['version_id']})."
+        [[ "${bool['dryrun']}" -eq 1 ]] && continue
         "${app['aws']}" --profile "${dict['profile']}" \
             s3api delete-object \
-                --bucket "${dict['bucket']}" \
-                --key "${dict2['key']}" \
-                --region "${dict['region']}" \
-                --version-id "${dict2['version_id']}" \
+                --bucket="${dict['bucket']}" \
+                --key="${dict2['key']}" \
+                --region="${dict['region']}" \
+                --version-id="${dict2['version_id']}" \
             > /dev/null
     done
     return 0
