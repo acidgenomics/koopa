@@ -11969,6 +11969,12 @@ koopa_install_libxml2() {
         "$@"
 }
 
+koopa_install_libxslt() {
+    koopa_install_app \
+        --name='libxslt' \
+        "$@"
+}
+
 koopa_install_libyaml() {
     koopa_install_app \
         --name='libyaml' \
@@ -23603,6 +23609,12 @@ koopa_uninstall_libvterm() {
 koopa_uninstall_libxml2() {
     koopa_uninstall_app \
         --name='libxml2' \
+        "$@"
+}
+
+koopa_uninstall_libxslt() {
+    koopa_uninstall_app \
+        --name='libxslt' \
         "$@"
 }
 
