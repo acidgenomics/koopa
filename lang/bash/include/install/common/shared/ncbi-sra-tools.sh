@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting an error with 3.0.5:
+# NOTE Hitting build errors with 3.0.5:
 #
 # gmake[1]: *** [CMakeFiles/Makefile2:2045: libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all] Error 2
 #
