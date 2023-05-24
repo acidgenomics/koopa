@@ -789,6 +789,7 @@
     "date": "2023-05-03",
     "large": true,
     "prune": false,
+    "outdated": true,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.3.1-0"
   },

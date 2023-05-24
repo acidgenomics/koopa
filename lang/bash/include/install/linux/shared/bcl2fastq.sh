@@ -68,8 +68,8 @@ main() {
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
-    "${app['aws']}" --profile='acidgenomics' \
-        s3 cp "${dict['url']}" "${dict['file']}"
+    "${app['aws']}" --profile='acidgenomics' s3 cp \
+        "${dict['url']}" "$(koopa_basename "${dict['url']}")"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'unzip'
     koopa_extract 'unzip/'*'.tar.gz' 'bcl2fastq-src'
     koopa_rm 'unzip'
