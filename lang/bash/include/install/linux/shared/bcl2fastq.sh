@@ -50,6 +50,8 @@ main() {
     #     22850-bcl2fastq-1-8-3-install-error-on-ubuntu-12-04lts-no-support-
     #     for-bzip2-compression
     # - https://stackoverflow.com/questions/36195791/
+    # - https://bear-apps.bham.ac.uk/applications/2022a/bcl2fastq2/
+    #     2.20.0-GCC-11.3.0/
     # """
     local -A app dict
     local -a conf_args deps
@@ -82,48 +84,9 @@ ${dict['version']}.tar.zip"
     "${app['aws']}" --profile='acidgenomics' s3 cp \
         "${dict['url']}" "$(koopa_basename "${dict['url']}")"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'unzip'
-    koopa_extract 'unzip/'*'.tar.gz' 'bcl2fastq-src'
+    koopa_extract 'unzip/'*'.tar.gz' 'src'
     koopa_rm 'unzip'
-    # Install Boost 1.54.0 from 'redist'.
-    # Refer to 'src/cmake/bootstrap/installBoost.sh'.
-    koopa_cp \
-        'bcl2fastq-src/redist/boost'*'.tar.bz2' \
-        'boost.tar.bz2'
-    koopa_extract 'boost.tar.bz2' 'boost-src'
-    (
-        local -a b2_args bootstrap_args
-        koopa_cd 'boost-src'
-        bootstrap_args=(
-            "--libdir=${dict['libexec']}/boost/lib"
-            "--prefix=${dict['libexec']}/boost"
-            "--with-icu=${dict['icu4c']}"
-            "--with-toolset=${dict['toolset']}"
-            '--without-libraries=log,mpi,python'
-        )
-        b2_args=(
-            # Stop on the first error.
-            '-q'
-            # Show commands as they are executed.
-            '-d+2'
-            "-j${dict['jobs']}"
-            "--libdir=${dict['prefix']}/lib"
-            "--prefix=${dict['prefix']}"
-            "cxxflags=${CPPFLAGS:?}"
-            'link=shared'
-            "linkflags=${LDFLAGS:?}"
-            'runtime-link=shared'
-            'threading=multi'
-            "toolset=${dict['toolset']}"
-            'variant=release'
-            'install'
-        )
-        ./bootstrap.sh --help
-        ./bootstrap.sh "${bootstrap_args[@]}"
-        ./b2 --help
-        ./b2 "${b2_args[@]}"
-        return 0
-    )
-    koopa_cd 'bcl2fastq-src'
+    koopa_cd 'src'
     koopa_mkdir 'build'
     koopa_cd 'build'
     readarray -t cmake_args <<< "$( \
