@@ -16782,7 +16782,14 @@ koopa_mktemp() {
     koopa_assert_is_executable "${app[@]}"
     dict['date_id']="$(koopa_datetime)"
     dict['user_id']="$(koopa_user_id)"
-    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
+    if koopa_is_gnu "${app['mktemp']}"
+    then
+        dict['random_string']='XXXXXXXXXX'
+    else
+        dict['random_string']="$(koopa_random_string)"
+    fi
+    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-\
+${dict['random_string']}"
     mktemp_args=(
         "$@"
         '-t' "${dict['template']}"
@@ -18371,12 +18378,36 @@ koopa_r_version() {
 
 koopa_random_string() {
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['head']="$(koopa_locate_head --allow-system)"
     app['md5sum']="$(koopa_locate_md5sum --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['length']=10
     dict['seed']="${RANDOM:?}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--length='*)
+                dict['length']="${1#*=}"
+                shift 1
+                ;;
+            '--length')
+                dict['length']="${2:?}"
+                shift 2
+                ;;
+            '--seed='*)
+                dict['seed']="${1#*=}"
+                shift 1
+                ;;
+            '--seed')
+                dict['seed']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    [[ "${dict['length']}" -le 32 ]] || return 1
     dict['str']="$( \
         koopa_print "${dict['seed']}" \
         | "${app['md5sum']}" \
