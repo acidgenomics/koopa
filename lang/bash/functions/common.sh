@@ -2412,8 +2412,9 @@ koopa_aws_s3_list_large_files() {
     dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions \
-                --bucket "${dict['bucket']}" \
-                --region "${dict['region']}" \
+                --bucket="${dict['bucket']}" \
+                --output='json' \
+                --region="${dict['region']}" \
             | "${app['jq']}" \
                 --raw-output \
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
