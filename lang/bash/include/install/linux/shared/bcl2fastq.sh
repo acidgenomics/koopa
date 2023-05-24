@@ -81,6 +81,7 @@ ${dict['version']}.tar.zip"
     )"
     for arg in "${cmake_std_args[@]}"
     do
+        # Exclude these arguments.
         case "$arg" in
             '-DCMAKE_BUILD_TYPE='* | \
             '-DCMAKE_INSTALL_PREFIX='* | \
@@ -89,6 +90,7 @@ ${dict['version']}.tar.zip"
                 continue
                 ;;
         esac
+        # Ensure that values are enclosed in single quotes.
         arg="${arg//=/=\'}'"
         cmake_args+=("$arg")
     done
