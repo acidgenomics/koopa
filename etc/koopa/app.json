@@ -359,8 +359,9 @@
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
-    "date": "2023-05-23",
-    "dependencies": ["conda"],
+    "build_dependencies": ["cmake", "make"],
+    "date": "2023-05-24",
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "platform": "linux",
     "private": true,
     "url": [
