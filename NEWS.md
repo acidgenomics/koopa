@@ -3,10 +3,16 @@
 ## koopa 0.13.0 (2023-05-25)
 
 This is a big update, with thousands of changes since our prelease stable
-0.12.1 release in 2021.
+0.12.1 release in 2021. Documentation explaining these changes in more detail
+will be added to the main koopa website in the next few months.
 
 Major changes:
 
+- Added install support for hundreds of commonly used programs.
+- Added application-specific functionality in the CLI under `koopa app`.
+- Dotfiles are now version pinned. These can be configured by first installing
+  with `koopa install dotfiles` and then configuring using
+  `koopa configure user dotfiles`.
 - Renamed and reorganized internal function library. Bash scripts are now
   consistently prefixed with `koopa_`. Note that POSIX shell scripts are
   prefixed with `_koopa_`.
