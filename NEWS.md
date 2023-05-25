@@ -1,6 +1,15 @@
 # Release notes
 
-## koopa 0.13.0 (2023-03-06)
+## koopa 0.13.0 (2023-05-25)
+
+This is a big update, with thousands of changes since our prelease stable
+0.12.1 release in 2021.
+
+Major changes:
+
+- Renamed and reorganized internal function library. Bash scripts are now
+  consistently prefixed with `koopa_`. Note that POSIX shell scripts are
+  prefixed with `_koopa_`.
 
 Major changes:
 
@@ -383,8 +392,7 @@ New software recipes:
 Minor changes:
 
 - Updated r-koopa dependency to 0.0.7 from 0.0.4.
-- Updated htop installer to use new
-  [htop-dev/htop](https://github.com/htop-dev/htop) forked repo.
+- Updated htop installer to use new forked repo.
 - Updated RStudio Package Manager (RSPM) snapshot to 2020-09-01.
 - Miscellaneous software version updates: Aspera Connect, GDAL, PROJ.
 
@@ -512,7 +520,7 @@ Major changes:
 - Renamed rsync scripts for Azure VM admin. Now prefixed with `rsync-*`.
 - Added additional internal POSIX functions, including assert checks.
 - GNU coreutils are now included in PATH for macOS, when installed via
-  [Homebrew][]. Normally they are prefixed with "g*" on macOS instead.
+  [Homebrew][]. Normally they are prefixed with "g" on macOS instead.
 
 Minor changes:
 
@@ -977,14 +985,9 @@ Minor changes:
 - Removed "g*" aliases for GitHub commands (e.g. ga, gc, gd). Too confusing.
 - Simplified the separator bar for koopa message, avoiding unicode.
 - Renamed `bcl2fastq_indrop` script to `bcl2fastq_indrops`.
-- Added some utility scripts from macOS bash repo:
-      - delete_fs_cruft
-      - git_pull_all
-      - gzip_dir
-      - install_tex
-      - move_files_up_1_level
-      - rename_from_csv
-      - reset_permissions
+- Added some utility scripts from macOS bash repo: `delete_fs_cruft`,
+  `git_pull_all`, `gzip_dir`, `install_tex`, `move_files_up_1_level`,
+  `rename_from_csv`, `reset_permissions`.
 
 ## koopa 0.1.0 (2018-08-24)
 
