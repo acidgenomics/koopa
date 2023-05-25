@@ -26,21 +26,21 @@ libzstd.${dict['shared_ext']}"
         # Build options --------------------------------------------------------
         '-DGIT_SUBMODULE=ON'
         # Dependency paths -----------------------------------------------------
-        # > "-DMKLDNN_DIR=FIXME"
-        # > "-DMKL_DIR=FIXME"
-        # > "-Dkineto_LIBRARY=FIXME"
+        # > "-DMKLDNN_DIR=PATH"
+        # > "-DMKL_DIR=PATH"
+        # > "-Dkineto_LIBRARY=PATH"
         "-DOPENSSL_ROOT_DIR=${cmake['openssl_root_dir']}"
         "-DZSTD_INCLUDE_DIR=${cmake['zstd_include_dir']}"
         "-DZSTD_LIBRARY_RELEASE=${cmake['zstd_library']}"
     )
-# How to build with CUDA toolkit on Linux.
-# >     if koopa_is_linux
-# >     then
-# >         cmake_args+=(
-# >             "-DCUDAToolkit_NVCC_EXECUTABLE=FIXME"
-# >             "-DCUDAToolkit_SENTINEL_FILE=FIXME"
-# >         )
-# >     fi
+    # How to build with CUDA toolkit on Linux.
+    # > if koopa_is_linux
+    # > then
+    # >     cmake_args+=(
+    # >         "-DCUDAToolkit_NVCC_EXECUTABLE=PATH"
+    # >         "-DCUDAToolkit_SENTINEL_FILE=PATH"
+    # >     )
+    # > fi
     "${app['git']}" clone \
         --depth 1 \
         --branch "v${dict['version']}" \
