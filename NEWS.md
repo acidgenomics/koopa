@@ -1,6 +1,21 @@
 # Release notes
 
-## koopa 0.13.0 (2023-03-06)
+## koopa 0.13.0 (2023-05-25)
+
+This is a big update, with thousands of changes since our prelease stable
+0.12.1 release in 2021. Documentation explaining these changes in more detail
+will be added to the main koopa website in the next few months.
+
+Major changes:
+
+- Added install support for hundreds of commonly used programs.
+- Added application-specific functionality in the CLI under `koopa app`.
+- Dotfiles are now version pinned. These can be configured by first installing
+  with `koopa install dotfiles` and then configuring using
+  `koopa configure user dotfiles`.
+- Renamed and reorganized internal function library. Bash scripts are now
+  consistently prefixed with `koopa_`. Note that POSIX shell scripts are
+  prefixed with `_koopa_`.
 
 Major changes:
 
@@ -383,8 +398,7 @@ New software recipes:
 Minor changes:
 
 - Updated r-koopa dependency to 0.0.7 from 0.0.4.
-- Updated htop installer to use new
-  [htop-dev/htop](https://github.com/htop-dev/htop) forked repo.
+- Updated htop installer to use new forked repo.
 - Updated RStudio Package Manager (RSPM) snapshot to 2020-09-01.
 - Miscellaneous software version updates: Aspera Connect, GDAL, PROJ.
 
@@ -418,7 +432,7 @@ This release migrates all internal Bash code to functions in a shared library.
 Major changes:
 
 - Repackaged all internal Bash code inside exported scripts to function library
-in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
+  in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
 - Split out internal Python code into new separate Python package.
 - Split out internal R code into new separate R package.
 
@@ -458,9 +472,9 @@ overhaluled and improved.
 Major changes:
 
 - Documentation has been migrated into `man`-compatible format, and are now
-    saved in `man/man1/`. These are accessible per program via the `--help`
-    flag, which now spawns `man` internally. Python scripts still use the
-    argparser help format.
+  saved in `man/man1/`. These are accessible per program via the `--help`
+  flag, which now spawns `man` internally. Python scripts still use the
+  argparser help format.
 - Renamed all internal shell functions with `koopa_` prefix instead of previous
   `koopa_` prefix. Note that we always want to use an internal prefix, so we
   don't accidentally mask any system functions defined for bash and/or zsh
@@ -512,7 +526,7 @@ Major changes:
 - Renamed rsync scripts for Azure VM admin. Now prefixed with `rsync-*`.
 - Added additional internal POSIX functions, including assert checks.
 - GNU coreutils are now included in PATH for macOS, when installed via
-  [Homebrew][]. Normally they are prefixed with "g*" on macOS instead.
+  [Homebrew][]. Normally they are prefixed with "g" on macOS instead.
 
 Minor changes:
 
@@ -531,7 +545,7 @@ Minor changes:
 New scripts:
 
 - `gencode-fasta` and `gencode-gtf` Python scripts for downloaded GENCODE
-  genome annotations. Currently supports *Homo sapiens* and *Mus musculus*.
+  genome annotations. Currently supports _Homo sapiens_ and _Mus musculus_.
 - (Azure) `link-msigdb`: Shared MSigDB file annotation utility.
 
 Minor changes:
@@ -974,17 +988,12 @@ Minor changes:
 - Updated installation instructions.
 - Removed `/setup/` config files.
 - Added support for automatic SSH key import, using `$SSH_KEY` variable.
-- Removed "g*" aliases for GitHub commands (e.g. ga, gc, gd). Too confusing.
+- Removed "g" aliases for GitHub commands (e.g. ga, gc, gd). Too confusing.
 - Simplified the separator bar for koopa message, avoiding unicode.
 - Renamed `bcl2fastq_indrop` script to `bcl2fastq_indrops`.
-- Added some utility scripts from macOS bash repo:
-      - delete_fs_cruft
-      - git_pull_all
-      - gzip_dir
-      - install_tex
-      - move_files_up_1_level
-      - rename_from_csv
-      - reset_permissions
+- Added some utility scripts from macOS bash repo: `delete_fs_cruft`,
+  `git_pull_all`, `gzip_dir`, `install_tex`, `move_files_up_1_level`,
+  `rename_from_csv`, `reset_permissions`.
 
 ## koopa 0.1.0 (2018-08-24)
 
