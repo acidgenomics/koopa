@@ -55,6 +55,9 @@ portable/openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    ./configure --help || true
+    ./configure "${conf_args[@]}"
+    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
+    "${app['make']}" install-nokeys
     return 0
 }
