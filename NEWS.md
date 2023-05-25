@@ -426,7 +426,7 @@ This release migrates all internal Bash code to functions in a shared library.
 Major changes:
 
 - Repackaged all internal Bash code inside exported scripts to function library
-in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
+  in `shell/bash`. Refer to scripts inside `bin` or `sbin` for examples.
 - Split out internal Python code into new separate Python package.
 - Split out internal R code into new separate R package.
 
@@ -466,9 +466,9 @@ overhaluled and improved.
 Major changes:
 
 - Documentation has been migrated into `man`-compatible format, and are now
-    saved in `man/man1/`. These are accessible per program via the `--help`
-    flag, which now spawns `man` internally. Python scripts still use the
-    argparser help format.
+  saved in `man/man1/`. These are accessible per program via the `--help`
+  flag, which now spawns `man` internally. Python scripts still use the
+  argparser help format.
 - Renamed all internal shell functions with `koopa_` prefix instead of previous
   `koopa_` prefix. Note that we always want to use an internal prefix, so we
   don't accidentally mask any system functions defined for bash and/or zsh
@@ -539,7 +539,7 @@ Minor changes:
 New scripts:
 
 - `gencode-fasta` and `gencode-gtf` Python scripts for downloaded GENCODE
-  genome annotations. Currently supports *Homo sapiens* and *Mus musculus*.
+  genome annotations. Currently supports _Homo sapiens_ and _Mus musculus_.
 - (Azure) `link-msigdb`: Shared MSigDB file annotation utility.
 
 Minor changes:
@@ -982,7 +982,7 @@ Minor changes:
 - Updated installation instructions.
 - Removed `/setup/` config files.
 - Added support for automatic SSH key import, using `$SSH_KEY` variable.
-- Removed "g*" aliases for GitHub commands (e.g. ga, gc, gd). Too confusing.
+- Removed "g" aliases for GitHub commands (e.g. ga, gc, gd). Too confusing.
 - Simplified the separator bar for koopa message, avoiding unicode.
 - Renamed `bcl2fastq_indrop` script to `bcl2fastq_indrops`.
 - Added some utility scripts from macOS bash repo: `delete_fs_cruft`,
