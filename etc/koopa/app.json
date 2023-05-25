@@ -2288,11 +2288,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-05-24",
+    "date": "2023-05-25",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.2"
+    "version": "0.112.3"
   },
   "hyperfine": {
     "aliases": {
@@ -3985,7 +3985,7 @@
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.17"
+    "version": "2.3.18"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4398,10 +4398,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-05-19",
+    "date": "2023-05-25",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.269"
+    "version": "0.0.270"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
