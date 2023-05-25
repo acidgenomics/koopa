@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting segfault on macOS:
-#/usr/bin/install -c -m 644 ssh-sk-helper.8.out /opt/koopa/app/openssh/9.3p1/share/man/man8/ssh-sk-helper.8
-#./install-sh -c -d /opt/koopa/app/openssh/9.3p1/etc
-#/bin/bash: line 2: 23486 Segmentation fault: 11  ./ssh-keygen -A
-#gmake: *** [Makefile:447: host-key] Error 139
-
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-25.
     #
     # @section Privilege separation:
     #
@@ -61,6 +55,7 @@ portable/openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    ./configure --help || true
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install-nokeys

@@ -1818,11 +1818,47 @@ koopa_aws_ecr_login_private() {
     app['aws']="$(koopa_locate_aws)"
     app['docker']="$(koopa_locate_docker)"
     koopa_assert_is_executable "${app[@]}"
-    dict['account_id']="${AWS_ECR_ACCOUNT_ID:?}" # FIXME
-    dict['profile']="${AWS_ECR_PROFILE:?}" # FIXME
-    dict['region']="${AWS_ECR_REGION:?}" # FIXME
-    dict['repo_url']="${dict['account_id']}.dkr.ecr.\
-${dict['region']}.amazonaws.com"
+    dict['account_id']="${AWS_ECR_ACCOUNT_ID:-}"
+    dict['profile']="${AWS_ECR_PROFILE:-}"
+    dict['region']="${AWS_ECR_REGION:-}"
+    dict['repo_url']="${dict['account_id']}.dkr.ecr.${dict['region']}.\
+amazonaws.com"
+    while (("$#"))
+    do
+        case "$1" in
+            '--account-id='*)
+                dict['account_id']="${1#*=}"
+                shift 1
+                ;;
+            '--account-id')
+                dict['account_id']="${2:?}"
+                shift 2
+                ;;
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '--region='*)
+                dict['region']="${1#*=}"
+                shift 1
+                ;;
+            '--region')
+                dict['region']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--account-id or AWS_ECR_ACCOUNT_ID' "${dict['account_id']}" \
+        '--profile or AWS_ECR_PROFILE' "${dict['profile']}" \
+        '--region or AWS_ECR_REGION' "${dict['region']}"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
     "${app['aws']}" --profile="${dict['profile']}" \
@@ -1842,9 +1878,36 @@ koopa_aws_ecr_login_public() {
     app['aws']="$(koopa_locate_aws)"
     app['docker']="$(koopa_locate_docker)"
     koopa_assert_is_executable "${app[@]}"
-    dict['profile']="${AWS_ECR_PROFILE:?}" # FIXME
-    dict['region']="${AWS_ECR_REGION:?}" # FIXME
+    dict['profile']="${AWS_ECR_PROFILE:-}"
+    dict['region']="${AWS_ECR_REGION:-}"
     dict['repo_url']='public.ecr.aws'
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '--region='*)
+                dict['region']="${1#*=}"
+                shift 1
+                ;;
+            '--region')
+                dict['region']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--profile or AWS_ECR_PROFILE' "${dict['profile']}" \
+        '--region or AWS_ECR_REGION' "${dict['region']}"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
     "${app['aws']}" --profile="${dict['profile']}" \
@@ -2349,8 +2412,9 @@ koopa_aws_s3_list_large_files() {
     dict['str']="$( \
         "${app['aws']}" --profile="${dict['profile']}" \
             s3api list-object-versions \
-                --bucket "${dict['bucket']}" \
-                --region "${dict['region']}" \
+                --bucket="${dict['bucket']}" \
+                --output='json' \
+                --region="${dict['region']}" \
             | "${app['jq']}" \
                 --raw-output \
                 '.Versions[] | "\(.Key)\t \(.Size)"' \
@@ -7193,13 +7257,14 @@ koopa_fastq_detect_quality_score() {
 
 koopa_fastq_lanepool() {
     local -A app dict
-    local -a basenames fastq_files head out tail
-    local i
+    local -a bns fastq_files head out tail
+    local bn file i
     app['cat']="$(koopa_locate_cat --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['pattern']='*_L001_*.fastq*'
     dict['prefix']='lanepool'
-    dict['source_dir']="${PWD:?}"
-    dict['target_dir']="${PWD:?}"
+    dict['source_dir']=''
+    dict['target_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -7232,50 +7297,41 @@ koopa_fastq_lanepool() {
                 ;;
         esac
     done
+    koopa_assert_is_set \
+        '--prefix' "${dict['prefix']}" \
+        '--source-dir' "${dict['source_dir']}" \
+        '--target-dir' "${dict['target_dir']}"
     koopa_assert_is_dir "${dict['source_dir']}"
     dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern='*_L001_*.fastq*' \
+            --pattern="${dict['pattern']}" \
             --prefix="${dict['source_dir']}" \
             --sort \
             --type='f' \
     )"
-    if [[ "${#fastq_files[@]}" -eq 0 ]]
+    if koopa_is_array_empty "${fastq_files[@]}"
     then
-        koopa_stop "No lane-split FASTQ files in '${dict['source_dir']}'."
+        koopa_stop "No lane-split FASTQ files matching pattern \
+'${dict['pattern']}' in '${dict['source_dir']}'."
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
-    basenames=()
-    for i in "${fastq_files[@]}"
+    for file in "${fastq_files[@]}"
     do
-        basenames+=("$(koopa_basename "$i")")
+        bns+=("$(koopa_basename "$file")")
     done
-    head=()
-    for i in "${basenames[@]}"
+    for bn in "${bns[@]}"
     do
-        i="${i//_L001_*/}"
-        head+=("$i")
+        head+=("${bn//_L001_*/}")
+        tail+=("${bn//*_L001_/}")
+        out+=("${dict['target_dir']}/${dict['prefix']}_${bn//_L001/}")
     done
-    tail=()
-    for i in "${basenames[@]}"
-    do
-        i="${i//*_L001_/}"
-        tail+=("$i")
-    done
-    out=()
-    for i in "${basenames[@]}"
-    do
-        i="${i//_L001/}"
-        i="${dict['target_dir']}/${dict['prefix']}_${i}"
-        out+=("$i")
-    done
-    for i in "${!out[@]}"
+    for i in "${!fastq_files[@]}"
     do
         "${app['cat']}" \
-            "${dict['source_dir']}/${head[$i]}_L00"[1-9]"_${tail[$i]}" \
+            "${dict['source_dir']}/${head[$i]}_L"*"_${tail[$i]}" \
             > "${out[$i]}"
     done
     return 0
@@ -8768,7 +8824,7 @@ koopa_git_reset() {
             "${app['git']}" clean -dffx
             if [[ -s '.gitmodules' ]]
             then
-                koopa_git_submodule_init
+                koopa_git_submodule_init "$repo"
                 "${app['git']}" submodule --quiet foreach --recursive \
                     "${app['git']}" clean -dffx
                 "${app['git']}" reset --hard --quiet
@@ -16713,19 +16769,17 @@ koopa_mkdir() {
 koopa_mktemp() {
     local -A app dict
     local -a mktemp_args
-    local str
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['date_id']="$(koopa_datetime)"
-    dict['user_id']="$(koopa_user_id)"
-    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
-    mktemp_args=(
-        "$@"
-        '-t' "${dict['template']}"
-    )
-    str="$("${app['mktemp']}" "${mktemp_args[@]}")"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    dict['template']='koopa'
+    if koopa_is_gnu "${app['mktemp']}"
+    then
+        dict['template']="${dict['template']}.XXXXXXXXXX"
+    fi
+    mktemp_args=("$@" '-t' "${dict['template']}")
+    dict['out']="$("${app['mktemp']}" "${mktemp_args[@]}")"
+    [[ -e "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
     return 0
 }
 
@@ -18307,12 +18361,36 @@ koopa_r_version() {
 
 koopa_random_string() {
     local -A app dict
-    koopa_assert_has_no_args "$#"
     app['head']="$(koopa_locate_head --allow-system)"
     app['md5sum']="$(koopa_locate_md5sum --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['length']=10
     dict['seed']="${RANDOM:?}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--length='*)
+                dict['length']="${1#*=}"
+                shift 1
+                ;;
+            '--length')
+                dict['length']="${2:?}"
+                shift 2
+                ;;
+            '--seed='*)
+                dict['seed']="${1#*=}"
+                shift 1
+                ;;
+            '--seed')
+                dict['seed']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    [[ "${dict['length']}" -le 32 ]] || return 1
     dict['str']="$( \
         koopa_print "${dict['seed']}" \
         | "${app['md5sum']}" \
@@ -18771,7 +18849,7 @@ koopa_rnaeditingindexer() {
     app['docker']="$(koopa_locate_docker)"
     koopa_assert_is_executable "${app[@]}"
     dict['bam_suffix']='.Aligned.sortedByCoord.out.bam'
-    dict['docker_image']='acidgenomics/rnaeditingindexer'
+    dict['docker_image']='public.ecr.aws/acidgenomics/rnaeditingindexer'
     dict['example']=0
     dict['genome']='hg38'
     dict['local_bam_dir']='bam'

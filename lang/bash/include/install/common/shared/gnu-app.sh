@@ -1,31 +1,19 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to use our 'make_build' function.
-
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2023-05-23.
+    # @note Updated 2023-05-25.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    case "${dict['name']}" in
-        'make')
-            app['make']="$(koopa_locate_make --only-system)"
-            ;;
-        *)
-            koopa_activate_app --build-only 'make' 'pkg-config'
-            app['make']="$(koopa_locate_make)"
-            ;;
-    esac
-    koopa_assert_is_executable "${app[@]}"
     dict['name2']="${dict['name']}"
     conf_args=("--prefix=${dict['prefix']}")
     [[ "$#" -gt 0 ]] && conf_args+=("$@")
@@ -100,11 +88,6 @@ ${dict['name2']}-${dict['version']}.tar.${dict['suffix']}"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    koopa_make_build "${conf_args[@]}"
     return 0
 }

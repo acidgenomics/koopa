@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-05-25.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -15,10 +15,8 @@ main() {
     # - https://python-poetry.org/docs/configuration/
     # - https://github.com/conda/conda/issues/7741
     # """
-    local -A app dict
+    local -A dict
     koopa_activate_app 'ca-certificates'
-    app['conda']="$(koopa_locate_conda)"
-    koopa_assert_is_executable "${app[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -46,11 +44,9 @@ refs/tags/v${dict['version']}.tar.gz"
     export PIP_REQUIRE_VIRTUALENV=false
     export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
-    # FIXME Rework using our 'koopa_conda_create_env' with '--file' argument.
-    "${app['conda']}" env create \
-        --force \
-        --file "${dict['conda_env_file']}" \
-        --prefix "${dict['conda_env_prefix']}"
+    koopa_conda_create_env \
+        --file="${dict['conda_env_file']}" \
+        --prefix="${dict['conda_env_prefix']}"
     app['poetry']="${dict['conda_env_prefix']}/bin/poetry"
     koopa_assert_is_executable "${app['poetry']}"
     dict['poetry_config_file']='poetry.toml'
@@ -61,7 +57,6 @@ refs/tags/v${dict['version']}.tar.gz"
     "${app['poetry']}" config --list
     # Can use '-vvv' here for more verbose logging.
     "${app['poetry']}" install --no-interaction
-    # > conda install --yes 'tensorflow'
     koopa_rm 'tests' 'website'
     koopa_cp ./* --target-directory="${dict['src_prefix']}"
     dict['poetry_venv_prefix']="$( \
