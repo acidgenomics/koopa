@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this using a cmake dict?
-# FIXME Check that files and dirs exist, where relevant.
+# NOTE Rework this using a cmake dict.
+# NOTE Check that files and dirs exist, where relevant.
 
 main() {
     # """

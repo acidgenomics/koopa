@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Rework using a cmake dict.
+# NOTE Rework using a cmake dict.
 
 main() {
     # """
