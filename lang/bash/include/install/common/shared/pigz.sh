@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't linking zlib correctly.
-#
-
 main() {
     # """
-    # Install xxhash.
-    # @note Updated 2023-05-15.
+    # Install pigz.
+    # @note Updated 2023-05-25.
     #
     # @seealso
     # - https://zlib.net/pigz/
