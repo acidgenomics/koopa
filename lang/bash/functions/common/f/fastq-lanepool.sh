@@ -3,19 +3,22 @@
 koopa_fastq_lanepool() {
     # """
     # Pool lane-split FASTQ files.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-24.
     #
     # @examples
-    # > koopa_fastq_lanepool --source-dir='fastq/'
+    # > koopa_fastq_lanepool \
+    # >     --source-dir='fastq' \
+    # >     --target-dir='fastq-lanepool'
     # """
     local -A app dict
-    local -a basenames fastq_files head out tail
-    local i
+    local -a bns fastq_files head out tail
+    local bn file i
     app['cat']="$(koopa_locate_cat --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    dict['pattern']='*_L001_*.fastq*'
     dict['prefix']='lanepool'
-    dict['source_dir']="${PWD:?}"
-    dict['target_dir']="${PWD:?}"
+    dict['source_dir']=''
+    dict['target_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -50,53 +53,41 @@ koopa_fastq_lanepool() {
                 ;;
         esac
     done
+    koopa_assert_is_set \
+        '--prefix' "${dict['prefix']}" \
+        '--source-dir' "${dict['source_dir']}" \
+        '--target-dir' "${dict['target_dir']}"
     koopa_assert_is_dir "${dict['source_dir']}"
     dict['source_dir']="$(koopa_realpath "${dict['source_dir']}")"
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern='*_L001_*.fastq*' \
+            --pattern="${dict['pattern']}" \
             --prefix="${dict['source_dir']}" \
             --sort \
             --type='f' \
     )"
-    # Error if file array is empty.
-    if [[ "${#fastq_files[@]}" -eq 0 ]]
+    if koopa_is_array_empty "${fastq_files[@]}"
     then
-        koopa_stop "No lane-split FASTQ files in '${dict['source_dir']}'."
+        koopa_stop "No lane-split FASTQ files matching pattern \
+'${dict['pattern']}' in '${dict['source_dir']}'."
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
-    basenames=()
-    # FIXME Consider improving the variable name here.
-    for i in "${fastq_files[@]}"
+    for file in "${fastq_files[@]}"
     do
-        basenames+=("$(koopa_basename "$i")")
+        bns+=("$(koopa_basename "$file")")
     done
-    head=()
-    for i in "${basenames[@]}"
+    for bn in "${bns[@]}"
     do
-        i="${i//_L001_*/}"
-        head+=("$i")
+        head+=("${bn//_L001_*/}")
+        tail+=("${bn//*_L001_/}")
+        out+=("${dict['target_dir']}/${dict['prefix']}_${bn//_L001/}")
     done
-    tail=()
-    for i in "${basenames[@]}"
-    do
-        i="${i//*_L001_/}"
-        tail+=("$i")
-    done
-    out=()
-    for i in "${basenames[@]}"
-    do
-        i="${i//_L001/}"
-        i="${dict['target_dir']}/${dict['prefix']}_${i}"
-        out+=("$i")
-    done
-    # Loop across the array indices, similar to 'mapply()' approach in R.
-    for i in "${!out[@]}"
+    for i in "${!fastq_files[@]}"
     do
         "${app['cat']}" \
-            "${dict['source_dir']}/${head[$i]}_L00"[1-9]"_${tail[$i]}" \
+            "${dict['source_dir']}/${head[$i]}_L"*"_${tail[$i]}" \
             > "${out[$i]}"
     done
     return 0
