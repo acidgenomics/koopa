@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME How to save man1, man3 to share/man instead of man?
-
-# FIXME How to disable version update notice?
-# New CPAN.pm version (v2.34) available.
+# NOTE How to disable version update notice?
+# NOTE How to save 'man1', 'man3' to 'share/man' instead of 'man'?
 
 main() {
     # """

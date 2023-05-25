@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to address this:
-# MACOSX_RPATH is not specified for the following targets
-
 main() {
     # """
     # Install Brotli.

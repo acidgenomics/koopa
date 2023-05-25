@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider using random string here instead, so that we don't use
-# 'XXX...' on macOS with BSD variant.
-
 koopa_mktemp() {
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-24.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -27,18 +24,16 @@ koopa_mktemp() {
     # """
     local -A app dict
     local -a mktemp_args
-    local str
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['date_id']="$(koopa_datetime)"
-    dict['user_id']="$(koopa_user_id)"
-    dict['template']="koopa-${dict['user_id']}-${dict['date_id']}-XXXXXXXXXX"
-    mktemp_args=(
-        "$@"
-        '-t' "${dict['template']}"
-    )
-    str="$("${app['mktemp']}" "${mktemp_args[@]}")"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
+    dict['template']='koopa'
+    if koopa_is_gnu "${app['mktemp']}"
+    then
+        dict['template']="${dict['template']}.XXXXXXXXXX"
+    fi
+    mktemp_args=("$@" '-t' "${dict['template']}")
+    dict['out']="$("${app['mktemp']}" "${mktemp_args[@]}")"
+    [[ -e "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
     return 0
 }

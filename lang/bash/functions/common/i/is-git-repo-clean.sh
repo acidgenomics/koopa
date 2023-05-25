@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Support directory input.
-
 koopa_is_git_repo_clean() {
     # """
     # Is the working directory git repo clean, or does it have unstaged changes?
-    # @note Updated 2023-03-12.
-    #
-    # This is used in prompt, so be careful with assert checks.
+    # @note Updated 2023-05-24.
     #
     # @seealso
     # - https://stackoverflow.com/questions/3878624
