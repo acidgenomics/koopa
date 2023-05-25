@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Include support for popt here.
+# NOTE Include support for popt here.
 
 main() {
     # """
