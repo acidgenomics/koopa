@@ -3209,11 +3209,11 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-04-10",
+    "date": "2023-05-25",
     "dependencies": ["python3.11"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "miller": {
     "aliases": {
