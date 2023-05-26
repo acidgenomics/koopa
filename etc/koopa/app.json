@@ -2958,6 +2958,7 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-26",
     "url": ["https://github.com/besser82/libxcrypt/"],
     "version": "4.4.33"

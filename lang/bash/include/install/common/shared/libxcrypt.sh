@@ -9,20 +9,23 @@ main() {
     # - https://formulae.brew.sh/formula/libfido2
     # """
     local -A dict
-    local -a cmake_args
+    local -a conf_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'libcbor' 'openssl3' 'zlib'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://github.com/Yubico/libfido2/archive/\
-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/besser82/libxcrypt/releases/download/\
+v${dict['version']}/libxcrypt-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    cmake_args=(
-        # Build options --------------------------------------------------------
-        '-DBUILD_STATIC_LIBS=OFF'
+    conf_args=(
+        '--disable-failure-tokens'
+        '--disable-obsolete-api'
+        '--disable-static'
+        '--disable-valgrind'
+        '--disable-xcrypt-compat-files'
+        "--prefix=${dict['prefix']}"
     )
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
