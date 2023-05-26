@@ -11959,6 +11959,12 @@ koopa_install_koopa() {
     return 0
 }
 
+koopa_install_krb5() {
+    koopa_install_app \
+        --name='krb5' \
+        "$@"
+}
+
 koopa_install_ksh93() {
     koopa_install_app \
         --name='ksh93' \
@@ -11981,6 +11987,12 @@ koopa_install_lapack() {
 koopa_install_latch() {
     koopa_install_app \
         --name='latch' \
+        "$@"
+}
+
+koopa_install_ldns() {
+    koopa_install_app \
+        --name='ldns' \
         "$@"
 }
 
@@ -12035,6 +12047,12 @@ koopa_install_libevent() {
 koopa_install_libffi() {
     koopa_install_app \
         --name='libffi' \
+        "$@"
+}
+
+koopa_install_libfido2() {
+    koopa_install_app \
+        --name='libfido2' \
         "$@"
 }
 
@@ -12155,6 +12173,12 @@ koopa_install_libuv() {
 koopa_install_libvterm() {
     koopa_install_app \
         --name='libvterm' \
+        "$@"
+}
+
+koopa_install_libxcrypt() {
+    koopa_install_app \
+        --name='libxcrypt' \
         "$@"
 }
 
@@ -16244,7 +16268,6 @@ koopa_locate_sox() {
 
 koopa_locate_ssh_add() {
     local -a args
-    args=()
     if koopa_is_macos
     then
         args+=('/usr/bin/ssh-add')
@@ -23632,6 +23655,12 @@ koopa_uninstall_koopa() {
     return 0
 }
 
+koopa_uninstall_krb5() {
+    koopa_uninstall_app \
+        --name='krb5' \
+        "$@"
+}
+
 koopa_uninstall_ksh93() {
     koopa_uninstall_app \
         --name='ksh93' \
@@ -23653,6 +23682,12 @@ koopa_uninstall_lapack() {
 koopa_uninstall_latch() {
     koopa_uninstall_app \
         --name='latch' \
+        "$@"
+}
+
+koopa_uninstall_ldns() {
+    koopa_uninstall_app \
+        --name='ldns' \
         "$@"
 }
 
@@ -23707,6 +23742,12 @@ koopa_uninstall_libevent() {
 koopa_uninstall_libffi() {
     koopa_uninstall_app \
         --name='libffi' \
+        "$@"
+}
+
+koopa_uninstall_libfido2() {
+    koopa_uninstall_app \
+        --name='libfido2' \
         "$@"
 }
 
@@ -23827,6 +23868,12 @@ koopa_uninstall_libuv() {
 koopa_uninstall_libvterm() {
     koopa_uninstall_app \
         --name='libvterm' \
+        "$@"
+}
+
+koopa_uninstall_libxcrypt() {
+    koopa_uninstall_app \
+        --name='libxcrypt' \
         "$@"
 }
 
