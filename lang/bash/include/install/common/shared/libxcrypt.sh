@@ -2,11 +2,11 @@
 
 main() {
     # """
-    # Install libfido2.
+    # Install libxcrypt.
     # @note Updated 2023-05-26.
     #
     # @seealso
-    # - https://formulae.brew.sh/formula/libfido2
+    # - https://formulae.brew.sh/formula/libxcrypt
     # """
     local -A dict
     local -a conf_args
