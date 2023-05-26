@@ -2619,6 +2619,15 @@
     "url": ["https://gnupg.org/download/"],
     "version": "2.5.5"
   },
+  "libcbor": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["cmake", "make"],
+    "date": "2023-05-26",
+    "url": ["https://github.com/PJK/libcbor/"],
+    "version": "0.10.2"
+  },
   "libdeflate": {
     "aliases": {
       "conda": true
@@ -2679,12 +2688,14 @@
     "url": ["https://sourceware.org/libffi/"],
     "version": "3.4.4"
   },
-  "libfido": {
+  "libfido2": {
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["cmake", "make"],
     "date": "2023-05-26",
-    "url": "https://developers.yubico.com/libfido2/",
+    "dependencies": ["libcbor"],
+    "url": ["https://developers.yubico.com/libfido2/"],
     "version": "1.13.0"
   },
   "libgcrypt": {
