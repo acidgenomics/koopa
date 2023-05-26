@@ -33,7 +33,6 @@ main() {
         'openssl3'
         'ldns'
         'libedit'
-        'libcbor' # libfido2
         'libfido2'
         'libxcrypt'
         'krb5'
