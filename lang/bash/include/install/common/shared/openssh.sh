@@ -45,51 +45,44 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
+        "--mandir=${dict['prefix']}/share/man"
         "--prefix=${dict['prefix']}"
         "--sbindir=${dict['prefix']}/bin"
+        "--sysconfdir=${dict['prefix']}/etc/ssh"
+        '--with-audit=bsm'
         "--with-kerberos5=${dict['krb5']}"
         "--with-ldns=${dict['ldns']}"
         "--with-libedit=${dict['libedit']}"
+        '--with-md5-passwords'
         '--with-pam'
+        "--with-pid-dir=${dict['prefix']}/var/run"
         '--with-security-key-builtin'
         "--with-ssl-dir=${dict['openssl']}"
         "--with-zlib=${dict['zlib']}"
+        '--without-xauth'
     )
-    if koopa_is_linux
+    if koopa_is_macos
     then
         conf_args+=(
-            "--with-privsep-path=${dict['prefix']}/var/lib/sshd"
+            '--with-keychain=apple'
+            '--with-privsep-path=/var/empty'
         )
+    fi
+    if koopa_is_linux
+    then
+        conf_args+=("--with-privsep-path=${dict['prefix']}/var/lib/sshd")
     fi
     dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
 portable/openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    # > CFLAGS="${CFLAGS:-}"
-    # > if koopa_is_macos
-    # > then
-    # >     koopa_stop 'FIXME'
-        # https://github.com/apple-oss-distributions/OpenSSH/blob/main/openssh/sandbox-darwin.c#L66
-        # url "https://raw.githubusercontent.com/Homebrew/patches/1860b0a745f1fe726900974845d1b0dd3c3398d6/openssh/patch-sandbox-darwin.c-apple-sandbox-named-external.diff"
-        # https://github.com/apple-oss-distributions/OpenSSH/blob/main/openssh/sshd.c#L532
-        # url "https://raw.githubusercontent.com/Homebrew/patches/d8b2d8c2612fd251ac6de17bf0cc5174c3aab94c/openssh/patch-sshd.c-apple-sandbox-named-external.diff"
-        # FIXME Need to update the sandbox prefix.
-        # Use our dict prefix here for 'etc/ssh'...check this.
-        # inreplace "sandbox-darwin.c", "@PREFIX@/share/openssh", etc/"ssh"
-        # > CFLAGS="${CFLAGS:-} -D__APPLE_SANDBOX_NAMED_EXTERNAL__"
-    # > fi
-    # > export CFLAGS
-    # FIXME May need to deparallelize the build here.
-    koopa_make_build "${conf_args[@]}"
+    koopa_make_build \
+        --target='install-nokeys' \
+        "${conf_args[@]}"
     (
         koopa_cd "${dict['prefix']}/bin"
         koopa_ln 'ssh' 'slogin'
     )
-    #if koopa_is_macos
-    #then
-    #    koopa_stop "Need to copy sb file into 'etc/ssh'."
-    #    # "https://raw.githubusercontent.com/apple-oss-distributions/OpenSSH/OpenSSH-268.100.4/com.openssh.sshd.sb"
-    #fi
     return 0
 }
