@@ -12020,6 +12020,12 @@ koopa_install_libassuan() {
         "$@"
 }
 
+koopa_install_libcbor() {
+    koopa_install_app \
+        --name='libcbor' \
+        "$@"
+}
+
 koopa_install_libdeflate() {
     koopa_install_app \
         --name='libdeflate' \
@@ -23712,6 +23718,12 @@ koopa_uninstall_libarchive() {
 koopa_uninstall_libassuan() {
     koopa_uninstall_app \
         --name='libassuan' \
+        "$@"
+}
+
+koopa_uninstall_libcbor() {
+    koopa_uninstall_app \
+        --name='libcbor' \
         "$@"
 }
 

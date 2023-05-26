@@ -230,6 +230,7 @@ _koopa_complete() {
                         'lesspipe'
                         'libarchive'
                         'libassuan'
+                        'libcbor'
                         'libdeflate'
                         'libedit'
                         'libev'
