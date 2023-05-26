@@ -3673,7 +3673,15 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-04-10",
-    "dependencies": ["libedit", "openssl3", "zlib"],
+    "dependencies": [
+      "krb5",
+      "ldns",
+      "libedit",
+      "libfido2",
+      "libxcrypt",
+      "openssl3",
+      "zlib"
+    ],
     "enabled": false,
     "url": ["https://www.openssh.com/portable.html"],
     "version": "9.3p1"
