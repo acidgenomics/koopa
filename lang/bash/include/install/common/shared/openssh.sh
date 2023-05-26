@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # FIXME Hitting a segfault issue with our current install approach on macOS.
+# FIXME Need to add support for libfido2 here.
+# FIXME Add support for ldns here.
 
 main() {
     # """
@@ -15,36 +17,43 @@ main() {
     #
     # @seealso
     # - https://github.com/conda-forge/openssh-feedstock
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
-    #     openssh.rb
+    # - https://formulae.brew.sh/formula/openssh
     # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/openssh.html
     # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # - https://stackoverflow.com/questions/11841919/
     # """
     local -A app dict
-    local -a conf_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app \
-        'zlib' \
-        'libedit' \
+    local -a build_deps conf_args deps
+    build_deps=('pkg-config')
+    deps=(
+        'zlib'
+        'ldns' # FIXME Need to add.
+        'libedit'
+        'libfido2' # FIXME Need to add.
+        'libxcrypt' # FIXME Need to add.
+        'krb5' # FIXME Need to add.
         'openssl3'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_installed "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    dict['krb5']="$(koopa_app_prefix 'krb5')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
-        # > '--with-security-key-builtin' # libfido2
         "--prefix=${dict['prefix']}"
         "--sbindir=${dict['prefix']}/bin"
+        "--with-kerberos5=${dict['krb5']}"
+        '--with-ldns'
         '--with-libedit'
+        '--with-pam'
+        '--with-security-key-builtin'
         "--with-ssl-dir=${dict['openssl']}"
         "--with-zlib=${dict['zlib']}"
-        '--without-kerberos5'
-        '--without-ldns'
-        '--without-pam'
     )
     if koopa_is_linux
     then
@@ -57,9 +66,30 @@ portable/openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    ./configure --help || true
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install-nokeys
+    CFLAGS="${CFLAGS:-}"
+    if koopa_is_macos
+    then
+        koopa_stop 'FIXME'
+        # https://github.com/apple-oss-distributions/OpenSSH/blob/main/openssh/sandbox-darwin.c#L66
+        # url "https://raw.githubusercontent.com/Homebrew/patches/1860b0a745f1fe726900974845d1b0dd3c3398d6/openssh/patch-sandbox-darwin.c-apple-sandbox-named-external.diff"
+        # https://github.com/apple-oss-distributions/OpenSSH/blob/main/openssh/sshd.c#L532
+        # url "https://raw.githubusercontent.com/Homebrew/patches/d8b2d8c2612fd251ac6de17bf0cc5174c3aab94c/openssh/patch-sshd.c-apple-sandbox-named-external.diff"
+        # FIXME Need to update the sandbox prefix.
+        # Use our dict prefix here for 'etc/ssh'...check this.
+        # inreplace "sandbox-darwin.c", "@PREFIX@/share/openssh", etc/"ssh"
+        CFLAGS="${CFLAGS:-} -D__APPLE_SANDBOX_NAMED_EXTERNAL__"
+    fi
+    export CFLAGS
+    # FIXME May need to deparallelize the build here.
+    koopa_make_build "${conf_args[@]}"
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln 'ssh' 'slogin'
+    )
+    if koopa_is_macos
+    then
+        koopa_stop "Need to copy sb file into 'etc/ssh'."
+        # "https://raw.githubusercontent.com/apple-oss-distributions/OpenSSH/OpenSSH-268.100.4/com.openssh.sshd.sb"
+    fi
     return 0
 }
