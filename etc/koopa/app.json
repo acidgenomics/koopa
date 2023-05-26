@@ -2560,7 +2560,9 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["make"],
     "date": "2023-05-26",
+    "dependencies": ["openssl3"],
     "url": ["https://nlnetlabs.nl/projects/ldns/about/"],
     "version": "1.8.3"
   },
