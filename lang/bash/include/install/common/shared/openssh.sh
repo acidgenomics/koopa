@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting a segfault issue with our current install approach on macOS.
+
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-05-25.
+    # @note Updated 2023-05-26.
     #
     # @section Privilege separation:
     #
