@@ -2507,6 +2507,7 @@
     "build_dependencies": ["bison", "make", "pkg-config"],
     "date": "2023-05-26",
     "dependencies": ["libedit", "openssl3"],
+    "enabled": false,
     "url": ["https://web.mit.edu/kerberos/"],
     "version": "1.20.1"
   },
@@ -2565,6 +2566,7 @@
     "build_dependencies": ["make"],
     "date": "2023-05-26",
     "dependencies": ["openssl3"],
+    "enabled": false,
     "url": ["https://nlnetlabs.nl/projects/ldns/about/"],
     "version": "1.8.3"
   },
@@ -2697,6 +2699,7 @@
     "build_dependencies": ["cmake", "make"],
     "date": "2023-05-26",
     "dependencies": ["libcbor"],
+    "enabled": false,
     "url": ["https://developers.yubico.com/libfido2/"],
     "version": "1.13.0"
   },
@@ -2962,6 +2965,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-26",
+    "enabled": false,
     "url": ["https://github.com/besser82/libxcrypt/"],
     "version": "4.4.33"
   },
