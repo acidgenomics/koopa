@@ -3313,9 +3313,11 @@
     "version": "1.14"
   },
   "mutagen": {
+    "bin": ["mutagen-inspect"],
     "date": "2023-05-22",
     "dependencies": ["python3.11"],
     "enabled": false,
+    "man1": ["mutagen-inspect.1"],
     "url": [
       "https://mutagen.readthedocs.io/",
       "https://github.com/quodlibet/mutagen/"
