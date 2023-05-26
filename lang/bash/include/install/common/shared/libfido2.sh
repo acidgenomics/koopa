@@ -23,6 +23,10 @@ ${dict['version']}.tar.gz"
         # Build options --------------------------------------------------------
         '-DBUILD_STATIC_LIBS=OFF'
     )
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --include-dir='include' \
+        --lib-dir='lib' \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }
