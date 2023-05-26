@@ -2500,6 +2500,14 @@
     ],
     "version": "0.48.0"
   },
+  "krb5": {
+    "aliases": {
+      "homebrew": true
+    },
+    "date": "2023-05-26",
+    "url": ["https://web.mit.edu/kerberos/"],
+    "version": "1.20.1"
+  },
   "ksh93": {
     "aliases": {
       "homebrew": true
@@ -2547,6 +2555,14 @@
       "https://docs.latch.bio/"
     ],
     "version": "2.19.11"
+  },
+  "ldns": {
+    "aliases": {
+      "homebrew": true
+    },
+    "date": "2023-05-26",
+    "url": ["https://nlnetlabs.nl/projects/ldns/about/"],
+    "version": "1.8.3"
   },
   "less": {
     "aliases": {
@@ -2660,6 +2676,14 @@
     "prune": false,
     "url": ["https://sourceware.org/libffi/"],
     "version": "3.4.4"
+  },
+  "libfido": {
+    "aliases": {
+      "homebrew": true
+    },
+    "date": "2023-05-26",
+    "url": "https://developers.yubico.com/libfido2/",
+    "version": "1.13.0"
   },
   "libgcrypt": {
     "aliases": {
@@ -2916,6 +2940,14 @@
     "prune": false,
     "url": ["https://www.leonerd.org.uk/code/libvterm/"],
     "version": "0.1.4"
+  },
+  "libxcrypt": {
+    "aliases": {
+      "homebrew": true
+    },
+    "date": "2023-05-26",
+    "url": ["https://github.com/besser82/libxcrypt/"],
+    "version": "4.4.33"
   },
   "libxml2": {
     "aliases": {
