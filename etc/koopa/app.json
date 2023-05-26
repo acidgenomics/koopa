@@ -2504,7 +2504,9 @@
     "aliases": {
       "homebrew": true
     },
+    "build_dependencies": ["bison", "make", "pkg-config"],
     "date": "2023-05-26",
+    "dependencies": ["libedit", "openssl3"],
     "url": ["https://web.mit.edu/kerberos/"],
     "version": "1.20.1"
   },
