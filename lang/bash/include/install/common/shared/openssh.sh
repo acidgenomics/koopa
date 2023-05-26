@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Likely need to rework our fido build.
-# checking for fido_init in -lfido2... no
-# checking for fido.h... yes
-# checking for fido/credman.h... yes
-# checking for usable libfido2 installation... missing/unusable libfido2
-# configure: error: No usable libfido2 library/headers found
+# FIXME Now hitting a segmentation fault:
+# /bin/bash: line 2: 89117 Segmentation fault: 11  ./ssh-keygen -A
+# gmake: *** [Makefile:447: host-key] Error 139
 
 main() {
     # """
