@@ -1532,10 +1532,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-05-25",
+    "date": "2023-05-28",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.41.0"
+    "version": "0.41.1"
   },
   "gatk": {
     "aliases": {
