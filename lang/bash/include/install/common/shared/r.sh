@@ -50,10 +50,7 @@ main() {
     local -a build_deps conf_args deps
     bool['devel']=0
     bool['r_koopa']=1
-    build_deps=(
-        'make'
-        'pkg-config'
-    )
+    build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=()
     koopa_is_linux && deps+=('bzip2')
