@@ -124,7 +124,12 @@ node-v${dict['version']}.tar.xz"
         )
     fi
     "${app['make']}" install
-    # Configure npm.
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln \
+            '../lib/node_modules/corepack/dist/yarn.js' \
+            'yarn'
+    )
     (
         koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln \
@@ -134,15 +139,5 @@ node-v${dict['version']}.tar.xz"
             '../../../lib/node_modules/npm/man/man1/npx.1' \
             'npx.1'
     )
-    # Configure yarn.
-    read -r -d '' "dict[yarn_bin_string]" << END || true
-#!/bin/sh
-
-'${dict['prefix']}/bin/corepack' yarn "\$@"
-END
-    koopa_write_string \
-        --file="${dict['prefix']}/bin/yarn" \
-        --string="${dict['yarn_bin_string']}"
-    koopa_chmod +x "${dict['prefix']}/bin/yarn"
     return 0
 }
