@@ -1487,12 +1487,13 @@
     "bin": ["fq"],
     "date": "2022-11-16",
     "dependencies": ["conda"],
+    "enabled": false,
     "large": true,
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
     ],
-    "version": "0.9.1"
+    "version": "0.10.0"
   },
   "fqtk": {
     "arch": "amd64",
@@ -1564,12 +1565,12 @@
     },
     "bin": ["awk", "gawk"],
     "build_dependencies": ["make"],
-    "date": "2023-01-03",
+    "date": "2023-05-30",
     "dependencies": ["gettext", "mpfr", "readline"],
     "man1": ["awk.1", "gawk.1"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/"],
-    "version": "5.2.1"
+    "version": "5.2.2"
   },
   "gcc": {
     "aliases": {
@@ -1674,13 +1675,13 @@
   "gget": {
     "arch": "amd64",
     "bin": ["gget"],
-    "date": "2023-03-14",
+    "date": "2023-05-30",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
     "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.27.3"
+    "version": "0.27.7"
   },
   "gh": {
     "aliases": {
@@ -1747,7 +1748,6 @@
     "bin": ["glances"],
     "date": "2023-05-19",
     "dependencies": ["python3.11"],
-    "notes": ["Seeing build weirdness with 3.4.0 currently."],
     "outdated": true,
     "url": [
       "https://github.com/nicolargo/glances/",
@@ -1845,12 +1845,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["python3.10"],
     "enabled": false,
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "429.0.0"
+    "version": "432.0.0"
   },
   "googletest": {
     "aliases": {
@@ -1894,11 +1894,11 @@
     },
     "bin": ["gegrep", "gfgrep", "ggrep"],
     "build_dependencies": ["make"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["pcre2"],
     "man1": ["ggrep.1"],
     "url": ["https://www.gnu.org/software/grep/"],
-    "version": "3.10"
+    "version": "3.11"
   },
   "grex": {
     "aliases": {
@@ -2258,7 +2258,7 @@
   "htseq": {
     "arch": "amd64",
     "bin": ["htseq-count"],
-    "date": "2022-07-02",
+    "date": "2025-03-30",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
@@ -2267,7 +2267,7 @@
       "https://github.com/htseq/htseq/",
       "https://bioconda.github.io/recipes/htseq/README.html"
     ],
-    "version": "2.0.2"
+    "version": "2.0.3"
   },
   "htslib": {
     "build_dependencies": ["make"],
@@ -2361,7 +2361,7 @@
       "magick-script"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": [
       "bzip2",
       "fontconfig",
@@ -2388,6 +2388,7 @@
       "zlib",
       "zstd"
     ],
+    "enabled": false,
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -2398,7 +2399,7 @@
     ],
     "prune": false,
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.1-8"
+    "version": "7.1.1-11"
   },
   "ipython": {
     "aliases": {
