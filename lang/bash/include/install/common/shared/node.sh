@@ -82,7 +82,6 @@ cacert.pem"
         '--shared-zlib'
         "--shared-zlib-includes=${dict['zlib']}/include"
         "--shared-zlib-libpath=${dict['zlib']}/lib"
-        '--with-corepack'
         '--with-intl=system-icu'
         '--without-node-snapshot'
         '--verbose'
