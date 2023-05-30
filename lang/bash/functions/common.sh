@@ -13352,12 +13352,6 @@ koopa_install_yapf() {
         "$@"
 }
 
-koopa_install_yarn() {
-    koopa_install_app \
-        --name='yarn' \
-        "$@"
-}
-
 koopa_install_yq() {
     koopa_install_app \
         --name='yq' \
@@ -25047,12 +25041,6 @@ koopa_uninstall_yaml_cpp() {
 koopa_uninstall_yapf() {
     koopa_uninstall_app \
         --name='yapf' \
-        "$@"
-}
-
-koopa_uninstall_yarn() {
-    koopa_uninstall_app \
-        --name='yarn' \
         "$@"
 }
 

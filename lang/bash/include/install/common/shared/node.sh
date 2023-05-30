@@ -5,6 +5,8 @@ main() {
     # Install Node.js.
     # @note Updated 2023-05-30.
     #
+    # Corepack configuration gets saved to '~/.cache/node/corepack'.
+    #
     # Inclusion of shared brotli currently causes the installer to error.
     #
     # conda-forge currently uses shared libuv, openssl, and zlib, but not
