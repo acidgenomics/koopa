@@ -1,23 +1,20 @@
 #!/usr/bin/env bash
 
-# FIXME Intercept --target argument.
-
 koopa_make_build() {
     # """
     # Build with GNU Make.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-05-30.
     # """
     local -A app dict
     local -a conf_args pos targets
     local target
     koopa_assert_has_args "$#"
-    dict['make']="$(koopa_app_prefix 'make' --allow-missing)"
-    if [[ -d "${dict['make']}" ]]
+    if [[ "${KOOPA_INSTALL_NAME:-}" == 'make' ]]
     then
+        app['make']="$(koopa_locate_make --only-system)"
+    else
         koopa_activate_app --build-only 'make'
         app['make']="$(koopa_locate_make)"
-    else
-        app['make']="$(koopa_locate_make --only-system)"
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
