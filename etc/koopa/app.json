@@ -2636,6 +2636,7 @@
     },
     "build_dependencies": ["cmake", "make"],
     "date": "2023-05-26",
+    "enabled": false,
     "url": ["https://github.com/PJK/libcbor/"],
     "version": "0.10.2"
   },
@@ -2736,6 +2737,7 @@
       "zlib",
       "zstd"
     ],
+    "enabled": false,
     "prune": false,
     "url": ["https://github.com/OSGeo/libgeotiff/"],
     "version": "1.7.1"
@@ -2749,7 +2751,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-05-08",
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
-    "outdated": true,
+    "enabled": false,
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
     "version": "1.6.4"
@@ -2984,14 +2986,13 @@
     },
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-09",
+    "date": "2023-05-30",
     "dependencies": ["icu4c", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "notes": ["2.11 release series doesn't link libiconv correctly."],
-    "outdated": true,
     "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/"],
-    "version": "2.11.2"
+    "version": "2.11.4"
   },
   "libxslt": {
     "aliases": {
@@ -3001,7 +3002,10 @@
     "date": "2023-05-24",
     "dependencies": ["icu4c", "libgcrypt", "libxml2"],
     "enabled": false,
-    "url": ["http://xmlsoft.org/XSLT/"],
+    "url": [
+      "http://xmlsoft.org/XSLT/",
+      "https://gitlab.gnome.org/GNOME/libxslt"
+    ],
     "version": "1.1.38"
   },
   "libyaml": {
@@ -3068,14 +3072,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.24"
+    "version": "8.7.25"
   },
   "lsd": {
     "aliases": {
