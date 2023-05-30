@@ -140,5 +140,6 @@ END
     koopa_write_string \
         --file="${dict['prefix']}/bin/yarn" \
         --string="${dict['yarn_bin_string']}"
+    koopa_chmod +x "${dict['prefix']}/bin/yarn"
     return 0
 }
