@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this error on Latch Pods:
+# System has not been booted with systemd as init system (PID 1). Can't operate.
+# Failed to create bus connection: Host is down
+
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-30.
     #
     # @section apt install:
     #
@@ -23,6 +27,7 @@ main() {
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
     local -A app
+    set -x # FIXME
     koopa_assert_has_no_args "$#"
     koopa_alert 'Configuring system defaults.'
     koopa_add_to_path_end '/usr/sbin' '/sbin'
