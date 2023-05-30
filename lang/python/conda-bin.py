@@ -2,7 +2,7 @@
 
 """
 Parse conda JSON metadata for files to link in 'bin'.
-@note Updated 2023-05-20.
+@note Updated 2023-05-30.
 
 @examples
 ./conda-bin.py \
@@ -44,6 +44,6 @@ def main(json_file: str) -> bool:
 
 
 if __name__ == "__main__":
-    if not version_info >= (3, 9):
+    if not version_info >= (3, 8):
         raise RuntimeError("Unsupported Python version.")
     main(json_file=args.json_file)
