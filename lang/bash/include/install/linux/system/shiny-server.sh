@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Shiny Server binary.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-30.
     #
     # Currently Debian/Ubuntu and Fedora/RHEL are supported.
     # Currently only "amd64" (x86) architecture is supported here.
@@ -39,6 +39,8 @@ ${dict['arch']}/shiny-server-${dict['version']}-${dict['file_arch']}.\
 ${dict['file_ext']}"
     koopa_download "${dict['url']}"
     koopa_configure_r "${app['r']}"
+    koopa_add_to_path_end '/usr/sbin' '/sbin'
+    koopa_print_env
     "${app['rscript']}" -e 'install.packages("shiny")'
     "${dict['fun']}" "$(koopa_basename "${dict['url']}")"
     return 0
