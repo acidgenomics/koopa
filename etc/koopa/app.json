@@ -25,12 +25,12 @@
     "arch": "amd64",
     "bin": ["agat"],
     "build_dependencies": ["patch"],
-    "date": "2022-11-14",
+    "date": "2023-05-30",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
     "url": ["https://github.com/NBISweden/AGAT/"],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "anaconda": {
     "date": "2023-05-03",
@@ -97,11 +97,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["hdf5"],
+    "enabled": false,
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "12.2.0"
+    "version": "12.4.0"
   },
   "asdf": {
     "aliases": {
@@ -130,12 +131,12 @@
       "homebrew": "ibm-aspera-connect"
     },
     "bin": ["ascp"],
-    "date": "2023-02-08",
+    "date": "2023-05-30",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.4.265"
+    "version": "4.2.5.306"
   },
   "attr": {
     "aliases": {
@@ -247,12 +248,12 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.48.1"
+    "version": "2.49.0"
   },
   "bamtools": {
     "arch": "amd64",
@@ -294,13 +295,13 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["node"],
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "4.9.1"
+    "version": "4.9.2"
   },
   "bashcov": {
     "bin": ["bashcov"],
@@ -414,13 +415,12 @@
     "version": "1.0"
   },
   "bioconda-utils": {
-    "date": "2023-05-02",
+    "date": "2023-05-30",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "notes": ["Adding bioconda-utils to bin currently causes app to error."],
     "url": ["https://github.com/bioconda/bioconda-utils/"],
-    "version": "1.6.0"
+    "version": "2.2.1"
   },
   "bison": {
     "aliases": {
@@ -459,11 +459,11 @@
       ],
       "homebrew": true
     },
-    "date": "2023-02-08",
+    "date": "2023-05-30",
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.boost.org/"],
-    "version": "1.81.0"
+    "version": "1.82.0"
   },
   "bottom": {
     "aliases": {
