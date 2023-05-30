@@ -4239,6 +4239,7 @@
       "xorg-xcb-proto",
       "xorg-xorgproto",
       "xz",
+      "zip",
       "zlib",
       "zstd"
     ],
@@ -4296,6 +4297,7 @@
       "xorg-xcb-proto",
       "xorg-xorgproto",
       "xz",
+      "zip",
       "zlib",
       "zstd"
     ],
