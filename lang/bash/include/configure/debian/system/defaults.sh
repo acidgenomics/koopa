@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting this error on Latch Pods:
-
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
@@ -25,7 +23,6 @@ main() {
     #     how-to-read-and-insert-new-values-into-the-debconf-database/
     # """
     local -A app
-    set -x # FIXME
     koopa_assert_has_no_args "$#"
     koopa_alert 'Configuring system defaults.'
     koopa_add_to_path_end '/usr/sbin' '/sbin'
