@@ -873,7 +873,7 @@ koopa_debian_set_timezone() {
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    koopa_is_docker && return 0
+    koopa_linux_is_init_systemd || return 0
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     koopa_assert_is_executable "${app[@]}"
     dict['tz']="${1:-}"
