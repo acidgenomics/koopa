@@ -15354,6 +15354,13 @@ koopa_locate_convmv() {
         "$@"
 }
 
+koopa_locate_corepack() {
+    koopa_locate_app \
+        --app-name='node' \
+        --bin-name='corepack' \
+        "$@"
+}
+
 koopa_locate_cp() {
     koopa_locate_app \
         --app-name='coreutils' \
