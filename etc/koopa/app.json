@@ -3602,9 +3602,9 @@
     "aliases": {
       "homebrew": true
     },
-    "bin": ["node", "npm", "npx"],
+    "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": [
       "ca-certificates",
       "c-ares",
@@ -5512,20 +5512,6 @@
       "https://github.com/google/yapf/"
     ],
     "version": "0.33.0"
-  },
-  "yarn": {
-    "aliases": {
-      "homebrew": true
-    },
-    "bin": ["yarn"],
-    "date": "2023-05-30",
-    "dependencies": ["node"],
-    "url": [
-      "https://yarnpkg.com/",
-      "https://github.com/yarnpkg/berry/",
-      "https://classic.yarnpkg.com/"
-    ],
-    "version": "3.5.1"
   },
   "yq": {
     "aliases": {
