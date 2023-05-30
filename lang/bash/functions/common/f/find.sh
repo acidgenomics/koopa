@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-05-30.
     #
     # @section Supported regex types for GNU find:
     #
@@ -21,7 +21,7 @@ koopa_find() {
     # - posix-minimal-basic
     # - sed
     #
-    # Check for supported regex types with:
+    # Can check for supported regex types with:
     # > find . -regextype type
     #
     # @seealso
@@ -35,23 +35,24 @@ koopa_find() {
     #   https://stackoverflow.com/questions/7442417/
     #   https://unix.stackexchange.com/questions/247655/
     # """
-    local -A app dict
+    local -A app bool dict
     local -a exclude_arr find find_args results sorted_results
     local exclude_arg
+    bool['empty']=0
+    bool['exclude']=0
+    bool['hidden']=1
+    bool['print0']=0
+    bool['sort']=0
+    bool['sudo']=0
+    bool['verbose']=0
     dict['days_modified_gt']=''
     dict['days_modified_lt']=''
-    dict['empty']=0
     dict['engine']="${KOOPA_FIND_ENGINE:-}"
-    dict['exclude']=0
     dict['max_depth']=''
     dict['min_depth']=1
     dict['pattern']=''
-    dict['print0']=0
     dict['size']=''
-    dict['sort']=0
-    dict['sudo']=0
     dict['type']=''
-    dict['verbose']=0
     exclude_arr=()
     while (("$#"))
     do
@@ -82,12 +83,12 @@ koopa_find() {
                 shift 2
                 ;;
             '--exclude='*)
-                dict['exclude']=1
+                bool['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict['exclude']=1
+                bool['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
@@ -141,23 +142,27 @@ koopa_find() {
                 ;;
             # Flags ------------------------------------------------------------
             '--empty')
-                dict['empty']=1
+                bool['empty']=1
+                shift 1
+                ;;
+            '--no-hidden')
+                bool['hidden']=0
                 shift 1
                 ;;
             '--print0')
-                dict['print0']=1
+                bool['print0']=1
                 shift 1
                 ;;
             '--sort')
-                dict['sort']=1
+                bool['sort']=1
                 shift 1
                 ;;
             '--sudo')
-                dict['sudo']=1
+                bool['sudo']=1
                 shift 1
                 ;;
             '--verbose')
-                dict['verbose']=1
+                bool['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -186,7 +191,7 @@ koopa_find() {
             ;;
     esac
     find=()
-    if [[ "${dict['sudo']}" -eq 1 ]]
+    if [[ "${bool['sudo']}" -eq 1 ]]
     then
         find+=('koopa_sudo')
     fi
@@ -194,16 +199,22 @@ koopa_find() {
     case "${dict['engine']}" in
         'fd')
             find_args=(
-                # Don't use '--full-path' here.
                 '--absolute-path'
                 '--base-directory' "${dict['prefix']}"
                 '--case-sensitive'
                 '--glob'
-                '--hidden'
                 '--no-follow'
                 '--no-ignore'
                 '--one-file-system'
             )
+            case "${bool['hidden']}" in
+                '0')
+                    find_args+=('--no-hidden')
+                    ;;
+                '1')
+                    find_args+=('--hidden')
+                    ;;
+            esac
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('--min-depth' "${dict['min_depth']}")
@@ -230,7 +241,7 @@ koopa_find() {
                 esac
                 find_args+=('--type' "${dict['type']}")
             fi
-            if [[ "${dict['empty']}" -eq 1 ]]
+            if [[ "${bool['empty']}" -eq 1 ]]
             then
                 # This is additive with other '--type' calls.
                 find_args+=('--type' 'empty')
@@ -249,7 +260,7 @@ koopa_find() {
                     "${dict['days_modified_lt']}d"
                 )
             fi
-            if [[ "${dict['exclude']}" -eq 1 ]]
+            if [[ "${bool['exclude']}" -eq 1 ]]
             then
                 for exclude_arg in "${exclude_arr[@]}"
                 do
@@ -267,7 +278,7 @@ koopa_find() {
                 )"
                 find_args+=('--size' "${dict['size']}")
             fi
-            if [[ "${dict['print0']}" -eq 1 ]]
+            if [[ "${bool['print0']}" -eq 1 ]]
             then
                 find_args+=('--print0')
             fi
@@ -277,10 +288,12 @@ koopa_find() {
             fi
             ;;
         'find')
-            find_args=(
-                "${dict['prefix']}"
-                '-xdev'
-            )
+            find_args=("${dict['prefix']}" '-xdev')
+            if [[ "${bool['hidden']}" -eq 0 ]]
+            then
+                bool['exclude']=1
+                exclude_arr+=('*/.*')
+            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('-mindepth' "${dict['min_depth']}")
@@ -349,7 +362,7 @@ koopa_find() {
             then
                 find_args+=('-mtime' "-${dict['days_modified_lt']}")
             fi
-            if [[ "${dict['exclude']}" -eq 1 ]]
+            if [[ "${bool['exclude']}" -eq 1 ]]
             then
                 for exclude_arg in "${exclude_arr[@]}"
                 do
@@ -362,7 +375,7 @@ koopa_find() {
                     find_args+=('-not' '-path' "$exclude_arg")
                 done
             fi
-            if [[ "${dict['empty']}" -eq 1 ]]
+            if [[ "${bool['empty']}" -eq 1 ]]
             then
                 find_args+=('-empty')
             fi
@@ -370,7 +383,7 @@ koopa_find() {
             then
                 find_args+=('-size' "${dict['size']}")
             fi
-            if [[ "${dict['print0']}" -eq 1 ]]
+            if [[ "${bool['print0']}" -eq 1 ]]
             then
                 find_args+=('-print0')
             else
@@ -381,16 +394,16 @@ koopa_find() {
             koopa_stop 'Invalid find engine.'
             ;;
     esac
-    if [[ "${dict['verbose']}" -eq 1 ]]
+    if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        koopa_warn "Find command: ${find[*]} ${find_args[*]}"
+        >&2 koopa_dl 'Find:' "${find[*]} ${find_args[*]}"
     fi
-    if [[ "${dict['sort']}" -eq 1 ]]
+    if [[ "${bool['sort']}" -eq 1 ]]
     then
         app['sort']="$(koopa_locate_sort --allow-system)"
     fi
     koopa_assert_is_executable "${app[@]}"
-    if [[ "${dict['print0']}" -eq 1 ]]
+    if [[ "${bool['print0']}" -eq 1 ]]
     then
         # NULL-byte ('\0') approach (non-POSIX).
         # Bash complains about NULL butes when assigned to variables
@@ -400,7 +413,7 @@ koopa_find() {
             "${find[@]}" "${find_args[@]}" 2>/dev/null \
         )
         koopa_is_array_non_empty "${results[@]:-}" || return 1
-        if [[ "${dict['sort']}" -eq 1 ]]
+        if [[ "${bool['sort']}" -eq 1 ]]
         then
             readarray -t -d '' sorted_results < <( \
                 printf '%s\0' "${results[@]}" | "${app['sort']}" -z \
@@ -414,7 +427,7 @@ koopa_find() {
             "${find[@]}" "${find_args[@]}" 2>/dev/null \
         )"
         koopa_is_array_non_empty "${results[@]:-}" || return 1
-        if [[ "${dict['sort']}" -eq 1 ]]
+        if [[ "${bool['sort']}" -eq 1 ]]
         then
             readarray -t sorted_results <<< "$( \
                 koopa_print "${results[@]}" | "${app['sort']}" \
