@@ -432,7 +432,6 @@ _koopa_complete() {
                         'xz'
                         'yaml-cpp'
                         'yapf'
-                        'yarn'
                         'yt-dlp'
                         'zellij'
                         'zip'
