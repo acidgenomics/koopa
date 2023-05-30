@@ -471,9 +471,9 @@
     },
     "bin": ["btm"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-02-08",
+    "date": "2023-05-30",
     "url": ["https://github.com/ClementTsang/bottom/"],
-    "version": "0.8.0"
+    "version": "0.9.1"
   },
   "bowtie2": {
     "arch": "amd64",
@@ -599,6 +599,7 @@
       "byobu-ulevel.1",
       "byobu.1"
     ],
+    "url": ["https://www.byobu.org/", "https://launchpad.net/byobu/+download"],
     "version": "5.133"
   },
   "bzip2": {
@@ -642,10 +643,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-02-08",
+    "date": "2023-05-30",
     "prune": false,
     "url": ["https://c-ares.org/"],
-    "version": "1.19.0"
+    "version": "1.19.1"
   },
   "ca-certificates": {
     "aliases": {
@@ -713,7 +714,10 @@
     "build_dependencies": ["cmake", "make"],
     "large": true,
     "prune": false,
-    "url": ["https://uscilab.github.io/cereal/"],
+    "url": [
+      "https://uscilab.github.io/cereal/",
+      "https://github.com/USCiLab/cereal"
+    ],
     "version": "1.3.2"
   },
   "cheat": {
@@ -754,10 +758,10 @@
     "version": "2.3.2"
   },
   "cloudbiolinux": {
-    "date": "2022-12-30",
+    "date": "2023-05-30",
     "enabled": false,
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
-    "version": "2e65f8f854ac43c78a5ff09ca4b98f28d1fb22de"
+    "version": "39eb5ac3d45654404d703ffb450a67947458df37"
   },
   "cmake": {
     "aliases": {
@@ -1084,7 +1088,7 @@
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.1.1"
+    "version": "8.1.2"
   },
   "curl7": {
     "build_dependencies": ["make", "pkg-config"],
@@ -1104,12 +1108,13 @@
     "dependencies": ["libedit"],
     "enabled": false,
     "man1": ["dash.1"],
+    "url": ["http://gondor.apana.org.au/~herbert/dash/"],
     "version": "0.5.12"
   },
   "deeptools": {
     "arch": "amd64",
     "bin": ["deeptools"],
-    "date": "2023-03-14",
+    "date": "2023-05-30",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
@@ -1118,7 +1123,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.1"
+    "version": "3.5.2"
   },
   "delta": {
     "aliases": {
