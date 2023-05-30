@@ -497,6 +497,10 @@ koopa_linux_install_system_pivpn() {
         "$@"
 }
 
+koopa_linux_is_init_systemd() {
+    [[ -d '/run/systemd/system' ]]
+}
+
 koopa_linux_locate_bcbio_python() {
     koopa_locate_app \
         --app-name='bcbio-nextgen' \

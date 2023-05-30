@@ -35,7 +35,7 @@ main() {
     koopa_debian_apt_configure_sources
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
-    if ! koopa_is_docker
+    if koopa_linux_is_init_systemd
     then
         "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
@@ -64,21 +64,11 @@ END
         'unzip'
     app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
-    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get autoremove
     koopa_debian_apt_get clean
-    # FIXME This isn't working on Latch Pods.
-    # System has not been booted with systemd as init system (PID 1). Can't operate.
-    # Failed to create bus connection: Host is down
-    # Rework to check for systemd instead of Docker here.
-    # https://superuser.com/questions/1017959/how-to-know-if-i-am-using-systemd-on-linux
-    # [[ -d /run/systemd/system ]]
-    # > if ! koopa_is_docker
-    # > then
-    # >     koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
-    # > fi
+    koopa_debian_set_timezone
     koopa_sudo_write_string \
         --file='/etc/locale.gen' \
         --string='en_US.UTF-8 UTF-8'
