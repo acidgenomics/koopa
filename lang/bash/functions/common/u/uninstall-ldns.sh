@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_uninstall_yarn() {
+koopa_uninstall_ldns() {
     koopa_uninstall_app \
-        --name='yarn' \
+        --name='ldns' \
         "$@"
 }

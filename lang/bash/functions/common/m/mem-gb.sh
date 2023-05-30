@@ -3,7 +3,7 @@
 koopa_mem_gb() {
     # """
     # Get total system memory in GB.
-    # @note Updated 2022-02-09.
+    # @note Updated 2023-05-30.
     #
     # - 1 GB / 1024 MB
     # - 1 MB / 1024 KB
@@ -13,6 +13,12 @@ koopa_mem_gb() {
     # """
     local -A app dict
     koopa_assert_has_no_args "$#"
+    dict['str']="${KOOPA_MEM_GB:-}"
+    if [[ -n "${dict['str']}" ]]
+    then
+        koopa_print "${dict['str']}"
+        return 0
+    fi
     app['awk']="$(koopa_locate_awk --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     if koopa_is_macos

@@ -3,21 +3,18 @@
 main() {
     # """
     # Install radian with patch for improved 'ldpaths' handling on macOS.
-    # @note Updated 2023-05-02.
+    # @note Updated 2023-05-30.
     #
     # @seealso
     # - https://github.com/randy3k/radian/pull/417
     # """
     local -A app dict
-    koopa_activate_app 'ca-certificates'
+    koopa_activate_ca_certificates
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"
-    dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
-    koopa_assert_is_file "${dict['cacert']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     case "${dict['version']}" in
         '0.6.5')
@@ -111,7 +108,6 @@ END
         'app.patch'
     koopa_cd 'src'
     export PIP_NO_CACHE_DIR=1
-    export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
     "${app['python']}" setup.py install
     koopa_mkdir "${dict['prefix']}/bin"

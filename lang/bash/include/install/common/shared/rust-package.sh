@@ -80,17 +80,9 @@ main() {
             )
             ;;
         'ripgrep-all')
-            case "${dict['version']}" in
-                '0.9.7')
-                    dict['commit']='9e933ca7'
-                    ;;
-                *)
-                    koopa_stop 'Unsupported version.'
-                    ;;
-            esac
             install_args+=(
                 '--git' 'https://github.com/phiresky/ripgrep-all.git'
-                '--rev' "${dict['commit']}"
+                '--tag' "v${dict['version']}"
             )
             ;;
         'starship')

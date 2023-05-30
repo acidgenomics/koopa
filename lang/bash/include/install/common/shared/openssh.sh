@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting a segmentation fault:
+# /bin/bash: line 2: 89117 Segmentation fault: 11  ./ssh-keygen -A
+# gmake: *** [Makefile:447: host-key] Error 139
+
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-05-25.
+    # @note Updated 2023-05-26.
     #
     # @section Privilege separation:
     #
@@ -13,51 +17,72 @@ main() {
     #
     # @seealso
     # - https://github.com/conda-forge/openssh-feedstock
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
-    #     openssh.rb
+    # - https://formulae.brew.sh/formula/openssh
     # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/openssh.html
     # - https://forums.gentoo.org/viewtopic-t-1085536-start-0.html
     # - https://stackoverflow.com/questions/11841919/
     # """
-    local -A app dict
-    local -a conf_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app \
-        'zlib' \
-        'libedit' \
+    local -A dict
+    local -a build_deps conf_args deps
+    build_deps=('pkg-config')
+    deps=(
+        'zlib'
         'openssl3'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_installed "${app[@]}"
+        'ldns'
+        'libedit'
+        'libfido2'
+        'libxcrypt'
+        'krb5'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    dict['krb5']="$(koopa_app_prefix 'krb5')"
+    dict['ldns']="$(koopa_app_prefix 'ldns')"
+    dict['libedit']="$(koopa_app_prefix 'libedit')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
-        # > '--with-security-key-builtin' # libfido2
+        "--mandir=${dict['prefix']}/share/man"
         "--prefix=${dict['prefix']}"
         "--sbindir=${dict['prefix']}/bin"
-        '--with-libedit'
+        "--sysconfdir=${dict['prefix']}/etc/ssh"
+        '--with-audit=bsm'
+        "--with-kerberos5=${dict['krb5']}"
+        "--with-ldns=${dict['ldns']}"
+        "--with-libedit=${dict['libedit']}"
+        '--with-md5-passwords'
+        '--with-pam'
+        "--with-pid-dir=${dict['prefix']}/var/run"
+        '--with-security-key-builtin'
         "--with-ssl-dir=${dict['openssl']}"
         "--with-zlib=${dict['zlib']}"
-        '--without-kerberos5'
-        '--without-ldns'
-        '--without-pam'
+        '--without-xauth'
     )
-    if koopa_is_linux
+    if koopa_is_macos
     then
         conf_args+=(
-            "--with-privsep-path=${dict['prefix']}/var/lib/sshd"
+            '--with-keychain=apple'
+            '--with-privsep-path=/var/empty'
         )
+    fi
+    if koopa_is_linux
+    then
+        conf_args+=("--with-privsep-path=${dict['prefix']}/var/lib/sshd")
     fi
     dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
 portable/openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    ./configure --help || true
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install-nokeys
+    koopa_make_build \
+        --target='install-nokeys' \
+        "${conf_args[@]}"
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln 'ssh' 'slogin'
+    )
     return 0
 }

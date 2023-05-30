@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-05-19.
+    # @note Updated 2023-05-30.
     #
     # @section Compiler settings:
     #
@@ -50,10 +50,7 @@ main() {
     local -a build_deps conf_args deps
     bool['devel']=0
     bool['r_koopa']=1
-    build_deps=(
-        'make'
-        'pkg-config'
-    )
+    build_deps=('make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     deps=()
     koopa_is_linux && deps+=('bzip2')
@@ -111,9 +108,7 @@ main() {
     app['javac']="$(koopa_locate_javac)"
     app['less']="$(koopa_locate_less)"
     app['ln']="$(koopa_locate_ln)"
-    app['lpr']="$(koopa_locate_lpr)"
     app['make']="$(koopa_locate_make)"
-    app['open']="$(koopa_locate_open)"
     app['perl']="$(koopa_locate_perl)"
     app['pkg_config']="$(koopa_locate_pkg_config)"
     app['sed']="$(koopa_locate_sed)"
@@ -125,7 +120,8 @@ main() {
     app['yacc']="$(koopa_locate_yacc)"
     app['zip']="$(koopa_locate_zip)"
     koopa_assert_is_executable "${app[@]}"
-    # > dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    app['lpr']="$(koopa_locate_lpr --allow-missing)"
+    app['open']="$(koopa_locate_open --allow-missing)"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

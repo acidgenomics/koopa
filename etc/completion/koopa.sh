@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-05-26.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -221,18 +221,22 @@ _koopa_complete() {
                         'jupyterlab'
                         'kallisto'
                         'koopa'
+                        'krb5'
                         'ksh93'
                         'lame'
                         'lapack'
                         'latch'
+                        'ldns'
                         'lesspipe'
                         'libarchive'
                         'libassuan'
+                        'libcbor'
                         'libdeflate'
                         'libedit'
                         'libev'
                         'libevent'
                         'libffi'
+                        'libfido2'
                         'libgcrypt'
                         'libgeotiff'
                         'libgit2'
@@ -252,6 +256,7 @@ _koopa_complete() {
                         'libunistring'
                         'libuv'
                         'libvterm'
+                        'libxcrypt'
                         'libxml2'
                         'libxslt'
                         'libyaml'
@@ -427,7 +432,6 @@ _koopa_complete() {
                         'xz'
                         'yaml-cpp'
                         'yapf'
-                        'yarn'
                         'yt-dlp'
                         'zellij'
                         'zip'

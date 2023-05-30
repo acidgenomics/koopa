@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-05-20.
+@note Updated 2023-05-30.
 
 @examples
 ./app-reverse-dependencies.py 'python3.11'
@@ -145,6 +145,6 @@ def main(app_name: str, json_file: str) -> bool:
 
 
 if __name__ == "__main__":
-    if not version_info >= (3, 9):
+    if not version_info >= (3, 8):
         raise RuntimeError("Unsupported Python version.")
     main(app_name=args.app_name, json_file=_json_file)
