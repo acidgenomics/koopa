@@ -1079,12 +1079,12 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-20",
+    "date": "2023-05-30",
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.0.1"
+    "version": "8.1.1"
   },
   "curl7": {
     "build_dependencies": ["make", "pkg-config"],
