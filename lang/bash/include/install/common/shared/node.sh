@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider using similar corepack approach for npm and npx that we're
+# using for yarn.
+
 main() {
     # """
     # Install Node.js.
@@ -125,10 +128,10 @@ node-v${dict['version']}.tar.xz"
     (
         koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln \
-            ../../../'lib/node_modules/npm/man/man1/npm.1' \
+            '../../../lib/node_modules/npm/man/man1/npm.1' \
             'npm.1'
         koopa_ln \
-            ../../../'lib/node_modules/npm/man/man1/npx.1' \
+            '../../../lib/node_modules/npm/man/man1/npx.1' \
             'npx.1'
     )
     # Configure yarn.
