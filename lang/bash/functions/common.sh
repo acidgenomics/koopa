@@ -16642,13 +16642,12 @@ koopa_make_build() {
     local -a conf_args pos targets
     local target
     koopa_assert_has_args "$#"
-    dict['make']="$(koopa_app_prefix 'make' --allow-missing)"
-    if [[ -d "${dict['make']}" ]]
+    if [[ "${KOOPA_INSTALL_NAME:-}" == 'make' ]]
     then
+        app['make']="$(koopa_locate_make --only-system)"
+    else
         koopa_activate_app --build-only 'make'
         app['make']="$(koopa_locate_make)"
-    else
-        app['make']="$(koopa_locate_make --only-system)"
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
