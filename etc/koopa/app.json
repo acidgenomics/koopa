@@ -2288,11 +2288,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-05-25",
+    "date": "2023-05-30",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.3"
+    "version": "0.112.5"
   },
   "hyperfine": {
     "aliases": {
@@ -2482,10 +2482,10 @@
   "jupyterlab": {
     "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-05-15",
+    "date": "2023-05-30",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.0"
+    "version": "4.0.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3945,13 +3945,13 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2023-05-20",
+    "date": "2023-05-30",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.5.0"
+    "version": "1.5.1"
   },
   "prelude-emacs": {
     "date": "2023-03-07",
