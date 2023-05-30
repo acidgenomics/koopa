@@ -3,9 +3,7 @@
 main() {
     # """
     # Install Mozilla CA certificate store.
-    # @note Updated 2023-04-06.
-    #
-    # Consider exporting 'SSL_CERT_FILE' as a global variable in shell session.
+    # @note Updated 2023-05-30.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-05-25.
+    # @note Updated 2023-05-30.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -16,13 +16,10 @@ main() {
     # - https://github.com/conda/conda/issues/7741
     # """
     local -A dict
-    koopa_activate_app 'ca-certificates'
-    dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
+    koopa_activate_ca_certificates
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['ca_certificates']}"
-    dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
-    koopa_assert_is_file "${dict['cacert']}"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['conda_env_prefix']="${dict['libexec']}/conda"
     dict['poetry_prefix']="${dict['libexec']}/poetry"
@@ -40,9 +37,7 @@ refs/tags/v${dict['version']}.tar.gz"
     koopa_cd 'src'
     dict['conda_env_file']='build/conda/conda-3-9-env.yaml'
     koopa_assert_is_file "${dict['conda_env_file']}"
-    export DEFAULT_CA_BUNDLE_PATH="${dict['cacert']}"
     export PIP_REQUIRE_VIRTUALENV=false
-    export SSL_CERT_FILE="${dict['cacert']}"
     koopa_print_env
     koopa_conda_create_env \
         --file="${dict['conda_env_file']}" \
