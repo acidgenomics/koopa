@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is failing to build on new Latch Pod.
+
 main() {
     # """
     # Install Node.js.
