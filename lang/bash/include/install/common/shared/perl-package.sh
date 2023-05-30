@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Perl package.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-05-30.
     #
     # Confirm library configuration with 'perl -V' and check '@INC' variable.
     #
@@ -33,6 +33,7 @@ main() {
     local -a bin_files
     local bin_file
     koopa_activate_app --build-only 'perl'
+    koopa_activate_ca_certificates
     app['bash']="$(koopa_locate_bash)"
     app['bzip2']="$(koopa_locate_bzip2)"
     app['cpan']="$(koopa_locate_cpan)"

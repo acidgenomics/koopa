@@ -142,6 +142,10 @@ koopa_activate_app() {
     return 0
 }
 
+koopa_activate_ca_certificates() {
+    _koopa_activate_ca_certificates "$@"
+}
+
 koopa_activate_conda() {
     _koopa_activate_conda "$@"
 }
@@ -7851,23 +7855,24 @@ koopa_find_user_profile() {
 }
 
 koopa_find() {
-    local -A app dict
+    local -A app bool dict
     local -a exclude_arr find find_args results sorted_results
     local exclude_arg
+    bool['empty']=0
+    bool['exclude']=0
+    bool['hidden']=1
+    bool['print0']=0
+    bool['sort']=0
+    bool['sudo']=0
+    bool['verbose']=0
     dict['days_modified_gt']=''
     dict['days_modified_lt']=''
-    dict['empty']=0
     dict['engine']="${KOOPA_FIND_ENGINE:-}"
-    dict['exclude']=0
     dict['max_depth']=''
     dict['min_depth']=1
     dict['pattern']=''
-    dict['print0']=0
     dict['size']=''
-    dict['sort']=0
-    dict['sudo']=0
     dict['type']=''
-    dict['verbose']=0
     exclude_arr=()
     while (("$#"))
     do
@@ -7897,12 +7902,12 @@ koopa_find() {
                 shift 2
                 ;;
             '--exclude='*)
-                dict['exclude']=1
+                bool['exclude']=1
                 exclude_arr+=("${1#*=}")
                 shift 1
                 ;;
             '--exclude')
-                dict['exclude']=1
+                bool['exclude']=1
                 exclude_arr+=("${2:?}")
                 shift 2
                 ;;
@@ -7955,23 +7960,27 @@ koopa_find() {
                 shift 2
                 ;;
             '--empty')
-                dict['empty']=1
+                bool['empty']=1
+                shift 1
+                ;;
+            '--no-hidden')
+                bool['hidden']=0
                 shift 1
                 ;;
             '--print0')
-                dict['print0']=1
+                bool['print0']=1
                 shift 1
                 ;;
             '--sort')
-                dict['sort']=1
+                bool['sort']=1
                 shift 1
                 ;;
             '--sudo')
-                dict['sudo']=1
+                bool['sudo']=1
                 shift 1
                 ;;
             '--verbose')
-                dict['verbose']=1
+                bool['verbose']=1
                 shift 1
                 ;;
             *)
@@ -7997,9 +8006,12 @@ koopa_find() {
         'find')
             app['find']="$(koopa_locate_find --allow-system)"
             ;;
+        *)
+            koopa_stop 'Invalid find engine.'
+            ;;
     esac
     find=()
-    if [[ "${dict['sudo']}" -eq 1 ]]
+    if [[ "${bool['sudo']}" -eq 1 ]]
     then
         find+=('koopa_sudo')
     fi
@@ -8011,11 +8023,18 @@ koopa_find() {
                 '--base-directory' "${dict['prefix']}"
                 '--case-sensitive'
                 '--glob'
-                '--hidden'
                 '--no-follow'
                 '--no-ignore'
                 '--one-file-system'
             )
+            case "${bool['hidden']}" in
+                '0')
+                    find_args+=('--no-hidden')
+                    ;;
+                '1')
+                    find_args+=('--hidden')
+                    ;;
+            esac
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('--min-depth' "${dict['min_depth']}")
@@ -8042,7 +8061,7 @@ koopa_find() {
                 esac
                 find_args+=('--type' "${dict['type']}")
             fi
-            if [[ "${dict['empty']}" -eq 1 ]]
+            if [[ "${bool['empty']}" -eq 1 ]]
             then
                 find_args+=('--type' 'empty')
             fi
@@ -8060,7 +8079,7 @@ koopa_find() {
                     "${dict['days_modified_lt']}d"
                 )
             fi
-            if [[ "${dict['exclude']}" -eq 1 ]]
+            if [[ "${bool['exclude']}" -eq 1 ]]
             then
                 for exclude_arg in "${exclude_arr[@]}"
                 do
@@ -8077,7 +8096,7 @@ koopa_find() {
                 )"
                 find_args+=('--size' "${dict['size']}")
             fi
-            if [[ "${dict['print0']}" -eq 1 ]]
+            if [[ "${bool['print0']}" -eq 1 ]]
             then
                 find_args+=('--print0')
             fi
@@ -8087,10 +8106,12 @@ koopa_find() {
             fi
             ;;
         'find')
-            find_args=(
-                "${dict['prefix']}"
-                '-xdev'
-            )
+            find_args=("${dict['prefix']}" '-xdev')
+            if [[ "${bool['hidden']}" -eq 0 ]]
+            then
+                bool['exclude']=1
+                exclude_arr+=('*/.*')
+            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('-mindepth' "${dict['min_depth']}")
@@ -8155,7 +8176,7 @@ koopa_find() {
             then
                 find_args+=('-mtime' "-${dict['days_modified_lt']}")
             fi
-            if [[ "${dict['exclude']}" -eq 1 ]]
+            if [[ "${bool['exclude']}" -eq 1 ]]
             then
                 for exclude_arg in "${exclude_arr[@]}"
                 do
@@ -8168,7 +8189,7 @@ koopa_find() {
                     find_args+=('-not' '-path' "$exclude_arg")
                 done
             fi
-            if [[ "${dict['empty']}" -eq 1 ]]
+            if [[ "${bool['empty']}" -eq 1 ]]
             then
                 find_args+=('-empty')
             fi
@@ -8176,7 +8197,7 @@ koopa_find() {
             then
                 find_args+=('-size' "${dict['size']}")
             fi
-            if [[ "${dict['print0']}" -eq 1 ]]
+            if [[ "${bool['print0']}" -eq 1 ]]
             then
                 find_args+=('-print0')
             else
@@ -8187,22 +8208,22 @@ koopa_find() {
             koopa_stop 'Invalid find engine.'
             ;;
     esac
-    if [[ "${dict['verbose']}" -eq 1 ]]
+    if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        koopa_warn "Find command: ${find[*]} ${find_args[*]}"
+        >&2 koopa_dl 'Find:' "${find[*]} ${find_args[*]}"
     fi
-    if [[ "${dict['sort']}" -eq 1 ]]
+    if [[ "${bool['sort']}" -eq 1 ]]
     then
         app['sort']="$(koopa_locate_sort --allow-system)"
     fi
     koopa_assert_is_executable "${app[@]}"
-    if [[ "${dict['print0']}" -eq 1 ]]
+    if [[ "${bool['print0']}" -eq 1 ]]
     then
         readarray -t -d '' results < <( \
             "${find[@]}" "${find_args[@]}" 2>/dev/null \
         )
         koopa_is_array_non_empty "${results[@]:-}" || return 1
-        if [[ "${dict['sort']}" -eq 1 ]]
+        if [[ "${bool['sort']}" -eq 1 ]]
         then
             readarray -t -d '' sorted_results < <( \
                 printf '%s\0' "${results[@]}" | "${app['sort']}" -z \
@@ -8215,7 +8236,7 @@ koopa_find() {
             "${find[@]}" "${find_args[@]}" 2>/dev/null \
         )"
         koopa_is_array_non_empty "${results[@]:-}" || return 1
-        if [[ "${dict['sort']}" -eq 1 ]]
+        if [[ "${bool['sort']}" -eq 1 ]]
         then
             readarray -t sorted_results <<< "$( \
                 koopa_print "${results[@]}" | "${app['sort']}" \
@@ -11959,6 +11980,12 @@ koopa_install_koopa() {
     return 0
 }
 
+koopa_install_krb5() {
+    koopa_install_app \
+        --name='krb5' \
+        "$@"
+}
+
 koopa_install_ksh93() {
     koopa_install_app \
         --name='ksh93' \
@@ -11984,6 +12011,12 @@ koopa_install_latch() {
         "$@"
 }
 
+koopa_install_ldns() {
+    koopa_install_app \
+        --name='ldns' \
+        "$@"
+}
+
 koopa_install_less() {
     koopa_install_app \
         --name='less' \
@@ -12005,6 +12038,12 @@ koopa_install_libarchive() {
 koopa_install_libassuan() {
     koopa_install_app \
         --name='libassuan' \
+        "$@"
+}
+
+koopa_install_libcbor() {
+    koopa_install_app \
+        --name='libcbor' \
         "$@"
 }
 
@@ -12035,6 +12074,12 @@ koopa_install_libevent() {
 koopa_install_libffi() {
     koopa_install_app \
         --name='libffi' \
+        "$@"
+}
+
+koopa_install_libfido2() {
+    koopa_install_app \
+        --name='libfido2' \
         "$@"
 }
 
@@ -12155,6 +12200,12 @@ koopa_install_libuv() {
 koopa_install_libvterm() {
     koopa_install_app \
         --name='libvterm' \
+        "$@"
+}
+
+koopa_install_libxcrypt() {
+    koopa_install_app \
+        --name='libxcrypt' \
         "$@"
 }
 
@@ -13298,12 +13349,6 @@ koopa_install_yaml_cpp() {
 koopa_install_yapf() {
     koopa_install_app \
         --name='yapf' \
-        "$@"
-}
-
-koopa_install_yarn() {
-    koopa_install_app \
-        --name='yarn' \
         "$@"
 }
 
@@ -15303,6 +15348,13 @@ koopa_locate_convmv() {
         "$@"
 }
 
+koopa_locate_corepack() {
+    koopa_locate_app \
+        --app-name='node' \
+        --bin-name='corepack' \
+        "$@"
+}
+
 koopa_locate_cp() {
     koopa_locate_app \
         --app-name='coreutils' \
@@ -16186,10 +16238,17 @@ koopa_locate_scons() {
 }
 
 koopa_locate_scp() {
-    koopa_locate_app \
-        --app-name='openssh' \
-        --bin-name='scp' \
-        "$@"
+    local -a args
+    if koopa_is_macos
+    then
+        args+=('/usr/bin/scp')
+    else
+        args+=(
+            '--app-name=openssh'
+            '--bin-name=scp'
+        )
+    fi
+    koopa_locate_app "${args[@]}" "$@"
 }
 
 koopa_locate_sed() {
@@ -16236,18 +16295,10 @@ koopa_locate_sox() {
 }
 
 koopa_locate_ssh_add() {
-    local -a args
-    args=()
-    if koopa_is_macos
-    then
-        args+=('/usr/bin/ssh-add')
-    else
-        args+=(
-            '--app-name=openssh'
-            '--bin-name=ssh-add'
-        )
-    fi
-    koopa_locate_app "${args[@]}" "$@"
+    koopa_locate_app \
+        --app-name='openssh' \
+        --bin-name='ssh-add' \
+        "$@"
 }
 
 koopa_locate_ssh_keygen() {
@@ -16593,18 +16644,37 @@ koopa_make_build_string() {
 
 koopa_make_build() {
     local -A app dict
-    local -a conf_args
+    local -a conf_args pos targets
+    local target
     koopa_assert_has_args "$#"
-    dict['make']="$(koopa_app_prefix 'make' --allow-missing)"
-    if [[ -d "${dict['make']}" ]]
+    if [[ "${KOOPA_INSTALL_NAME:-}" == 'make' ]]
     then
+        app['make']="$(koopa_locate_make --only-system)"
+    else
         koopa_activate_app --build-only 'make'
         app['make']="$(koopa_locate_make)"
-    else
-        app['make']="$(koopa_locate_make --only-system)"
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--target='*)
+                targets+=("${1#*=}")
+                shift 1
+                ;;
+            '--target')
+                targets+=("${2:?}")
+                shift 2
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_is_array_empty "${targets[@]}" && targets+=('install')
     conf_args+=("$@")
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
@@ -16612,7 +16682,10 @@ koopa_make_build() {
     ./configure --help || true
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    for target in "${targets[@]}"
+    do
+        "${app['make']}" "$target"
+    done
     return 0
 }
 
@@ -16667,6 +16740,12 @@ koopa_md5sum_check_to_new_md5_file() {
 koopa_mem_gb() {
     local -A app dict
     koopa_assert_has_no_args "$#"
+    dict['str']="${KOOPA_MEM_GB:-}"
+    if [[ -n "${dict['str']}" ]]
+    then
+        koopa_print "${dict['str']}"
+        return 0
+    fi
     app['awk']="$(koopa_locate_awk --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     if koopa_is_macos
@@ -23625,6 +23704,12 @@ koopa_uninstall_koopa() {
     return 0
 }
 
+koopa_uninstall_krb5() {
+    koopa_uninstall_app \
+        --name='krb5' \
+        "$@"
+}
+
 koopa_uninstall_ksh93() {
     koopa_uninstall_app \
         --name='ksh93' \
@@ -23649,6 +23734,12 @@ koopa_uninstall_latch() {
         "$@"
 }
 
+koopa_uninstall_ldns() {
+    koopa_uninstall_app \
+        --name='ldns' \
+        "$@"
+}
+
 koopa_uninstall_less() {
     koopa_uninstall_app \
         --name='less' \
@@ -23670,6 +23761,12 @@ koopa_uninstall_libarchive() {
 koopa_uninstall_libassuan() {
     koopa_uninstall_app \
         --name='libassuan' \
+        "$@"
+}
+
+koopa_uninstall_libcbor() {
+    koopa_uninstall_app \
+        --name='libcbor' \
         "$@"
 }
 
@@ -23700,6 +23797,12 @@ koopa_uninstall_libevent() {
 koopa_uninstall_libffi() {
     koopa_uninstall_app \
         --name='libffi' \
+        "$@"
+}
+
+koopa_uninstall_libfido2() {
+    koopa_uninstall_app \
+        --name='libfido2' \
         "$@"
 }
 
@@ -23820,6 +23923,12 @@ koopa_uninstall_libuv() {
 koopa_uninstall_libvterm() {
     koopa_uninstall_app \
         --name='libvterm' \
+        "$@"
+}
+
+koopa_uninstall_libxcrypt() {
+    koopa_uninstall_app \
+        --name='libxcrypt' \
         "$@"
 }
 
@@ -24932,12 +25041,6 @@ koopa_uninstall_yaml_cpp() {
 koopa_uninstall_yapf() {
     koopa_uninstall_app \
         --name='yapf' \
-        "$@"
-}
-
-koopa_uninstall_yarn() {
-    koopa_uninstall_app \
-        --name='yarn' \
         "$@"
 }
 

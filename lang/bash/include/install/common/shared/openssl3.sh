@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This new update is causing a certificate check failure...
+# This was not an issue with previous 3.1.0 release argh.
+
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-05-30.
     #
     # Check supported platforms with:
     # > ./Configure LIST

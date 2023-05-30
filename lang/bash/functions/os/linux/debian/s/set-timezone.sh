@@ -3,16 +3,12 @@
 koopa_debian_set_timezone() {
     # """
     # Set local timezone.
-    # @note Updated 2023-05-01.
-    #
-    # Inside Docker will see this issue:
-    # System has not been booted with systemd as init system (PID 1). Can't
-    # operate. Failed to connect to bus: Host is down.
+    # @note Updated 2023-05-30.
     # """
     local -A app dict
     koopa_assert_has_args_le "$#" 1
     koopa_assert_is_admin
-    koopa_is_docker && return 0
+    koopa_linux_is_init_systemd || return 0
     app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     koopa_assert_is_executable "${app[@]}"
     dict['tz']="${1:-}"

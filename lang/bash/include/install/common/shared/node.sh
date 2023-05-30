@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Consider using similar corepack approach for npm and npx that we're
+# using for yarn.
+
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-30.
+    #
+    # Corepack configuration gets saved to '~/.cache/node/corepack'.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -28,6 +33,7 @@ main() {
     # - https://github.com/conda-forge/nodejs-feedstock/blob/main/
     #     recipe/build.sh
     # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
+    # - https://github.com/nodejs/corepack
     # """
     local -A app dict
     local -a build_deps conf_args deps
@@ -82,7 +88,6 @@ cacert.pem"
         "--shared-zlib-includes=${dict['zlib']}/include"
         "--shared-zlib-libpath=${dict['zlib']}/lib"
         '--with-intl=system-icu'
-        '--without-corepack'
         '--without-node-snapshot'
         '--verbose'
     )
@@ -119,14 +124,25 @@ node-v${dict['version']}.tar.xz"
         )
     fi
     "${app['make']}" install
+    # Configure npm.
     (
         koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln \
-            ../../../'lib/node_modules/npm/man/man1/npm.1' \
+            '../../../lib/node_modules/npm/man/man1/npm.1' \
             'npm.1'
         koopa_ln \
-            ../../../'lib/node_modules/npm/man/man1/npx.1' \
+            '../../../lib/node_modules/npm/man/man1/npx.1' \
             'npx.1'
     )
+    # Configure yarn.
+    read -r -d '' "dict[yarn_bin_string]" << END || true
+#!/bin/sh
+
+'${dict['prefix']}/bin/corepack' yarn "\$@"
+END
+    koopa_write_string \
+        --file="${dict['prefix']}/bin/yarn" \
+        --string="${dict['yarn_bin_string']}"
+    koopa_chmod +x "${dict['prefix']}/bin/yarn"
     return 0
 }

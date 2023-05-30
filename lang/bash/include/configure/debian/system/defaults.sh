@@ -3,7 +3,7 @@
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-05-30.
     #
     # @section apt install:
     #
@@ -35,7 +35,7 @@ main() {
     koopa_debian_apt_configure_sources
     koopa_debian_apt_get update
     koopa_debian_apt_get full-upgrade
-    if ! koopa_is_docker
+    if koopa_linux_is_init_systemd
     then
         "${app['cat']}" << END | koopa_sudo "${app['debconf_set_selections']}"
 tzdata tzdata/Areas select America
@@ -64,15 +64,11 @@ END
         'unzip'
     app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
-    app['timedatectl']="$(koopa_debian_locate_timedatectl)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get autoremove
     koopa_debian_apt_get clean
-    if ! koopa_is_docker
-    then
-        koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
-    fi
+    koopa_debian_set_timezone
     koopa_sudo_write_string \
         --file='/etc/locale.gen' \
         --string='en_US.UTF-8 UTF-8'
