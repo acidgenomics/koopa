@@ -8002,6 +8002,9 @@ koopa_find() {
         'find')
             app['find']="$(koopa_locate_find --allow-system)"
             ;;
+        *)
+            koopa_stop 'Invalid find engine.'
+            ;;
     esac
     find=()
     if [[ "${bool['sudo']}" -eq 1 ]]
