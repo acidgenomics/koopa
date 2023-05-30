@@ -420,11 +420,6 @@ koopa_debian_apt_configure_sources() {
     then
         koopa_rm --sudo "${dict['sources_list']}"
     fi
-    sudo "${app['tee']}" "${dict['sources_list']}" >/dev/null << END
-deb ${urls['main']} ${codenames['main']} ${repos[*]}
-deb ${urls['security']} ${codenames['security']} ${repos[*]}
-deb ${urls['updates']} ${codenames['updates']} ${repos[*]}
-END
     if [[ -L "${dict['sources_list_d']}" ]]
     then
         koopa_rm --sudo "${dict['sources_list_d']}"
@@ -433,6 +428,14 @@ END
     then
         koopa_mkdir --sudo "${dict['sources_list_d']}"
     fi
+    read -r -d '' "dict[sources_list_string]" << END || true
+deb ${urls['main']} ${codenames['main']} ${repos[*]}
+deb ${urls['security']} ${codenames['security']} ${repos[*]}
+deb ${urls['updates']} ${codenames['updates']} ${repos[*]}
+END
+    koopa_sudo_write_string \
+        --file="${dict['sources_list']}" \
+        --string="${dict['sources_list_string']}"
     return 0
 }
 

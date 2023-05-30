@@ -3,7 +3,7 @@
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-05-30.
     #
     # Look up currently enabled sources with:
     # > grep -Eq '^deb\s' '/etc/apt/sources.list'
@@ -152,11 +152,6 @@ koopa_debian_apt_configure_sources() {
     then
         koopa_rm --sudo "${dict['sources_list']}"
     fi
-    sudo "${app['tee']}" "${dict['sources_list']}" >/dev/null << END
-deb ${urls['main']} ${codenames['main']} ${repos[*]}
-deb ${urls['security']} ${codenames['security']} ${repos[*]}
-deb ${urls['updates']} ${codenames['updates']} ${repos[*]}
-END
     # Configure secondary apt sources.
     if [[ -L "${dict['sources_list_d']}" ]]
     then
@@ -166,5 +161,13 @@ END
     then
         koopa_mkdir --sudo "${dict['sources_list_d']}"
     fi
+    read -r -d '' "dict[sources_list_string]" << END || true
+deb ${urls['main']} ${codenames['main']} ${repos[*]}
+deb ${urls['security']} ${codenames['security']} ${repos[*]}
+deb ${urls['updates']} ${codenames['updates']} ${repos[*]}
+END
+    koopa_sudo_write_string \
+        --file="${dict['sources_list']}" \
+        --string="${dict['sources_list_string']}"
     return 0
 }
