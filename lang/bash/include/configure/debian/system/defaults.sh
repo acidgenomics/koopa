@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 # FIXME Hitting this error on Latch Pods:
-# System has not been booted with systemd as init system (PID 1). Can't operate.
-# Failed to create bus connection: Host is down
 
 main() {
     # """
@@ -74,10 +72,16 @@ END
     koopa_assert_is_executable "${app[@]}"
     koopa_debian_apt_get autoremove
     koopa_debian_apt_get clean
-    if ! koopa_is_docker
-    then
-        koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
-    fi
+    # FIXME This isn't working on Latch Pods.
+    # System has not been booted with systemd as init system (PID 1). Can't operate.
+    # Failed to create bus connection: Host is down
+    # Rework to check for systemd instead of Docker here.
+    # https://superuser.com/questions/1017959/how-to-know-if-i-am-using-systemd-on-linux
+    # [[ -d /run/systemd/system ]]
+    # > if ! koopa_is_docker
+    # > then
+    # >     koopa_sudo "${app['timedatectl']}" set-timezone 'America/New_York'
+    # > fi
     koopa_sudo_write_string \
         --file='/etc/locale.gen' \
         --string='en_US.UTF-8 UTF-8'
