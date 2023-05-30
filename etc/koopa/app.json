@@ -1689,9 +1689,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-05-10",
+    "date": "2023-05-30",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.29.0"
+    "version": "2.30.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3152,7 +3152,10 @@
     "date": "2023-03-22",
     "man1": ["lzip.1"],
     "prune": false,
-    "url": ["https://www.nongnu.org/lzip/"],
+    "url": [
+      "https://www.nongnu.org/lzip/",
+      "http://download.savannah.gnu.org/releases/lzip/?C=M&O=D"
+    ],
     "version": "1.23"
   },
   "lzo": {
@@ -3172,7 +3175,10 @@
     "build_dependencies": ["xz"],
     "date": "2022-08-29",
     "prune": false,
-    "url": ["https://www.gnu.org/software/m4/"],
+    "url": [
+      "https://www.gnu.org/software/m4/",
+      "https://ftp.gnu.org/gnu/m4/?C=M;O=D"
+    ],
     "version": "1.4.19"
   },
   "make": {
@@ -3184,7 +3190,7 @@
     "date": "2023-03-07",
     "man1": ["gmake.1"],
     "prune": false,
-    "url": ["https://ftp.gnu.org/gnu/make/"],
+    "url": ["https://ftp.gnu.org/gnu/make/?C=M;O=D"],
     "version": "4.4.1"
   },
   "mamba": {
@@ -3472,7 +3478,7 @@
       "tset.1"
     ],
     "prune": false,
-    "url": ["https://ftp.gnu.org/pub/gnu/ncurses/"],
+    "url": ["https://ftp.gnu.org/pub/gnu/ncurses/?C=M;O=D"],
     "version": "6.4"
   },
   "neofetch": {
@@ -3491,7 +3497,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": [
       "gettext",
       "libiconv",
@@ -3502,18 +3508,18 @@
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.9.0"
+    "version": "0.9.1"
   },
   "nettle": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-29",
+    "date": "2023-05-30",
     "dependencies": ["gmp", "m4"],
     "prune": false,
-    "url": ["https://ftp.gnu.org/gnu/nettle/"],
-    "version": "3.8.1"
+    "url": ["https://ftp.gnu.org/gnu/nettle/?C=M;O=D"],
+    "version": "3.9"
   },
   "nextflow": {
     "arch": "amd64",
@@ -3533,7 +3539,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.11"],
-    "date": "2023-03-07",
+    "date": "2023-05-30",
     "dependencies": [
       "boost",
       "c-ares",
@@ -3545,7 +3551,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/"],
-    "version": "1.52.0"
+    "version": "1.53.0"
   },
   "nim": {
     "aliases": {
@@ -3586,11 +3592,11 @@
     },
     "bin": ["nmap"],
     "build_dependencies": ["bison", "flex", "make"],
-    "date": "2022-09-29",
+    "date": "2023-05-30",
     "dependencies": ["openssl3", "pcre", "zlib"],
     "enabled": false,
     "url": "https://nmap.org/",
-    "version": "7.93"
+    "version": "7.94"
   },
   "node": {
     "aliases": {
@@ -3748,7 +3754,10 @@
       "zlib"
     ],
     "enabled": false,
-    "url": ["https://www.openssh.com/portable.html"],
+    "url": [
+      "https://www.openssh.com/portable.html",
+      "https://github.com/openssh/openssh-portable"
+    ],
     "version": "9.3p1"
   },
   "openssl3": {
@@ -3796,10 +3805,13 @@
     },
     "bin": ["parallel"],
     "build_dependencies": ["make"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "man1": ["parallel.1"],
-    "url": ["https://www.gnu.org/software/parallel/"],
-    "version": "20230422"
+    "url": [
+      "https://www.gnu.org/software/parallel/",
+      "https://ftp.gnu.org/gnu/parallel/?C=M;O=D"
+    ],
+    "version": "20230522"
   },
   "password-store": {
     "aliases": {
@@ -3823,7 +3835,7 @@
     "dependencies": ["attr"],
     "man1": ["patch.1"],
     "prune": false,
-    "url": ["https://ftp.gnu.org/gnu/patch/"],
+    "url": ["https://ftp.gnu.org/gnu/patch/?C=M;O=D"],
     "version": "2.7.6"
   },
   "pcre": {
@@ -3935,7 +3947,10 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-07",
     "prune": false,
-    "url": ["https://cairographics.org/releases/", "http://www.pixman.org/"],
+    "url": [
+      "https://cairographics.org/releases/?C=M;O=D",
+      "http://www.pixman.org/"
+    ],
     "version": "0.42.2"
   },
   "pkg-config": {
@@ -3965,10 +3980,10 @@
     "version": "1.5.1"
   },
   "prelude-emacs": {
-    "date": "2023-03-07",
+    "date": "2023-05-30",
     "url": ["https://github.com/bbatsov/prelude/"],
     "user": true,
-    "version": "fcb629acb645cdff7fdd5f7332bb669c75527fdb"
+    "version": "b57ff48e0985a6ef0f1ed9b279ec487c55982334"
   },
   "prettier": {
     "aliases": {
@@ -4168,9 +4183,9 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.3.340"
+    "version": "1.3.361"
   },
   "r": {
     "aliases": {
@@ -4393,9 +4408,10 @@
     },
     "bin": ["rga"],
     "build_dependencies": ["git", "rust"],
-    "date": "2022-09-26",
+    "date": "2023-05-30",
+    "enabled": false,
     "url": ["https://github.com/phiresky/ripgrep-all/"],
-    "version": "0.9.7"
+    "version": "1.0.0-alpha.4"
   },
   "rmate": {
     "aliases": {
@@ -4534,7 +4550,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "notes": ["0.8.2 is available but only 0.8.0 supports macOS."],
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
@@ -4556,7 +4571,7 @@
   "scalene": {
     "arch": "amd64",
     "bin": ["scalene"],
-    "date": "2023-03-07",
+    "date": "2023-05-30",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
@@ -4564,7 +4579,7 @@
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
     ],
-    "version": "1.5.20"
+    "version": "1.5.21.2"
   },
   "scons": {
     "aliases": {
@@ -4583,6 +4598,7 @@
     "dependencies": ["ncurses"],
     "enabled": false,
     "man1": ["screen.1"],
+    "url": ["https://www.gnu.org/software/screen"],
     "version": "4.9.0"
   },
   "sd": {
@@ -4604,7 +4620,10 @@
     "date": "2022-11-08",
     "man1": ["gsed.1"],
     "prune": false,
-    "url": ["https://www.gnu.org/software/sed/"],
+    "url": [
+      "https://www.gnu.org/software/sed/",
+      "https://ftp.gnu.org/gnu/sed/?C=M;O=D"
+    ],
     "version": "4.9"
   },
   "seqkit": {
@@ -4667,14 +4686,14 @@
   "snakefmt": {
     "arch": "amd64",
     "bin": ["snakefmt"],
-    "date": "2023-02-08",
+    "date": "2023-05-30",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html"
     ],
-    "version": "0.8.1"
+    "version": "0.8.4"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -4695,22 +4714,23 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
     "dependencies": ["flac"],
+    "enabled": false,
     "man1": ["sox.1"],
     "url": ["http://sox.sourceforge.net/sox.html"],
     "version": "14.4.2"
   },
   "spacemacs": {
-    "date": "2023-03-07",
+    "date": "2023-05-30",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
-    "version": "3512e43c9e6efef78b5104785c99518eff60d668"
+    "version": "d5348991aa97ec5e9e09083f20cd117d075fe59b"
   },
   "spacevim": {
-    "date": "2023-03-30",
+    "date": "2023-05-30",
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
     "user": true,
-    "version": "e9062da7bdbabb8524c8d345da98172604d4115f"
+    "version": "d0664365c0c14c6ba45196a679e25f04e10a6093"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "patch", "pkg-config"],
@@ -4730,13 +4750,13 @@
     },
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.41.2"
+    "version": "3.42.0"
   },
   "staden-io-lib": {
     "aliases": {
@@ -4867,7 +4887,10 @@
     "date": "2022-08-30",
     "man1": ["gtar.1"],
     "prune": false,
-    "url": ["https://www.gnu.org/software/tar/"],
+    "url": [
+      "https://www.gnu.org/software/tar/",
+      "https://ftp.gnu.org/gnu/tar/?C=M;O=D"
+    ],
     "version": "1.34"
   },
   "tbb": {
@@ -4958,7 +4981,7 @@
       "texindex.1"
     ],
     "prune": false,
-    "url": ["https://ftp.gnu.org/gnu/texinfo/"],
+    "url": ["https://ftp.gnu.org/gnu/texinfo/?C=M;O=D"],
     "version": "7.0.3"
   },
   "tl-expected": {
@@ -5128,7 +5151,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-05-30",
     "dependencies": ["ncurses", "python3.11"],
     "man1": [
       "ex.1",
@@ -5142,7 +5165,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.1500"
+    "version": "9.0.1550"
   },
   "visidata": {
     "aliases": {
@@ -5202,7 +5225,11 @@
       "pcre2"
     ],
     "man1": ["wget.1"],
-    "url": ["https://www.gnu.org/software/wget/"],
+    "prune": false,
+    "url": [
+      "https://www.gnu.org/software/wget/",
+      "https://ftp.gnu.org/gnu/wget/?C=M;O=D"
+    ],
     "version": "1.21.4"
   },
   "which": {
@@ -5214,7 +5241,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-25",
     "man1": ["gwhich.1"],
-    "url": ["https://ftp.gnu.org/gnu/which/"],
+    "url": ["https://ftp.gnu.org/gnu/which/?C=M;O=D"],
     "version": "2.21"
   },
   "woff2": {
@@ -5494,7 +5521,11 @@
     "date": "2022-09-26",
     "dependencies": ["node"],
     "notes": ["This is version pinned to classic stable."],
-    "url": ["https://yarnpkg.com/", "https://www.npmjs.com/package/yarn/"],
+    "url": [
+      "https://yarnpkg.com/",
+      "https://classic.yarnpkg.com/",
+      "https://www.npmjs.com/package/yarn/"
+    ],
     "version": "1.22.19"
   },
   "yq": {
