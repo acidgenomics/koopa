@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This is failing to build on new Latch Pod.
-
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-05-30.
     #
     # Inclusion of shared brotli currently causes the installer to error.
     #
@@ -30,6 +28,7 @@ main() {
     # - https://github.com/conda-forge/nodejs-feedstock/blob/main/
     #     recipe/build.sh
     # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
+    # - https://github.com/nodejs/corepack
     # """
     local -A app dict
     local -a build_deps conf_args deps
@@ -83,8 +82,8 @@ cacert.pem"
         '--shared-zlib'
         "--shared-zlib-includes=${dict['zlib']}/include"
         "--shared-zlib-libpath=${dict['zlib']}/lib"
+        '--with-corepack'
         '--with-intl=system-icu'
-        '--without-corepack'
         '--without-node-snapshot'
         '--verbose'
     )

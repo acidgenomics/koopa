@@ -5518,15 +5518,14 @@
       "homebrew": true
     },
     "bin": ["yarn"],
-    "date": "2022-09-26",
+    "date": "2023-05-30",
     "dependencies": ["node"],
-    "notes": ["This is version pinned to classic stable."],
     "url": [
       "https://yarnpkg.com/",
-      "https://classic.yarnpkg.com/",
-      "https://www.npmjs.com/package/yarn/"
+      "https://github.com/yarnpkg/berry/",
+      "https://classic.yarnpkg.com/"
     ],
-    "version": "1.22.19"
+    "version": "3.5.1"
   },
   "yq": {
     "aliases": {
