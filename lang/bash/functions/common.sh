@@ -142,6 +142,10 @@ koopa_activate_app() {
     return 0
 }
 
+koopa_activate_ca_certificates() {
+    _koopa_activate_ca_certificates "$@"
+}
+
 koopa_activate_conda() {
     _koopa_activate_conda "$@"
 }
