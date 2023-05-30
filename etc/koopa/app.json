@@ -5181,7 +5181,7 @@
     },
     "bin": ["wget"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2022-08-30",
+    "date": "2023-05-30",
     "dependencies": [
       "gettext",
       "gnutls",
@@ -5193,7 +5193,7 @@
     ],
     "man1": ["wget.1"],
     "url": ["https://www.gnu.org/software/wget/"],
-    "version": "1.21.3"
+    "version": "1.21.4"
   },
   "which": {
     "aliases": {
