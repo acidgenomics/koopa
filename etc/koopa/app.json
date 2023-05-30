@@ -2077,12 +2077,11 @@
       "zfgrep",
       "zforce",
       "zgrep",
-      "zless",
       "zmore",
       "znew"
     ],
     "build_dependencies": ["make"],
-    "date": "2022-08-30",
+    "date": "2023-05-30",
     "man1": [
       "gunzip.1",
       "gzexe.1",
@@ -2092,7 +2091,6 @@
       "zdiff.1",
       "zforce.1",
       "zgrep.1",
-      "zless.1",
       "zmore.1",
       "znew.1"
     ],
