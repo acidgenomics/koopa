@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-# NOTE Add support for lzip.
-# NOTE Add support for zstd.
+# FIXME What's the difference here between decompress and extract?
+# NOTE Add support for lzip (lz).
+# NOTE Add support for zstd (zst).
+# FIXME Migrate support for '.Z' from extract here.
+# FIXME Remove support for xz from extract and use code here instead.
+# FIXME 
 
 koopa_decompress() {
     # """
     # Decompress a compressed file.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-05-31.
     #
     # This function currently allows uncompressed files to pass through.
     #
@@ -36,7 +40,6 @@ koopa_decompress() {
     koopa_assert_has_args "$#"
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['stdout']=0
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -81,6 +84,10 @@ koopa_decompress() {
             ;;
     esac
     dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
+    # FIXME Add support for:
+    # - Z (uncompress)
+    # - lz (lzip)
+    # - zst (zstd)
     case "${dict['source_file']}" in
         *'.bz2' | *'.gz' | *'.xz')
             case "${dict['source_file']}" in
