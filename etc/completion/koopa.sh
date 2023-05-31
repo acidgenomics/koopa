@@ -312,6 +312,7 @@ _koopa_complete() {
                         'openjpeg'
                         'openssh'
                         'openssl3'
+                        'p7zip'
                         'pandoc'
                         'parallel'
                         'password-store'

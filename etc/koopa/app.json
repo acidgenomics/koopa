@@ -3781,6 +3781,12 @@
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
     "version": "21.9.0.0.0-1"
   },
+  "p7zip": {
+    "build_dependencies": ["make"],
+    "date": "2023-05-31",
+    "url": ["https://github.com/p7zip-project/p7zip/"],
+    "version": "17.05"
+  },
   "pandoc": {
     "aliases": {
       "debian": true,

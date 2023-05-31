@@ -5643,7 +5643,6 @@ koopa_decompress() {
     koopa_assert_has_args "$#"
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['stdout']=0
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -7023,7 +7022,7 @@ koopa_extract() {
                 )
                 ;;
             *)
-                koopa_stop 'Unsupported file type.'
+                koopa_stop "Unsupported file: '${dict['file']}'."
                 ;;
         esac
         koopa_assert_is_executable "${app[@]}"
@@ -12537,6 +12536,12 @@ koopa_install_openssh() {
 koopa_install_openssl3() {
     koopa_install_app \
         --name='openssl3' \
+        "$@"
+}
+
+koopa_install_p7zip() {
+    koopa_install_app \
+        --name='p7zip' \
         "$@"
 }
 
@@ -24259,6 +24264,12 @@ koopa_uninstall_openssh() {
 koopa_uninstall_openssl3() {
     koopa_uninstall_app \
         --name='openssl3' \
+        "$@"
+}
+
+koopa_uninstall_p7zip() {
+    koopa_uninstall_app \
+        --name='p7zip' \
         "$@"
 }
 

@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-# NOTE Add support for lz (lzip).
-# NOTE Add support for zstd.
+# FIXME What's the difference between this and 'koopa_decompress'?
+# NOTE Add support for lzip (lz).
+# NOTE Add support for zstd (zst).
+# FIXME Just call koopa_decompress here for other files.
 
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-05-23.
+    # @note Updated 2023-05-31.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -141,7 +143,7 @@ koopa_extract() {
                 )
                 ;;
             *)
-                koopa_stop 'Unsupported file type.'
+                koopa_stop "Unsupported file: '${dict['file']}'."
                 ;;
         esac
         koopa_assert_is_executable "${app[@]}"
