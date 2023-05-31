@@ -91,7 +91,7 @@ koopa_decompress() {
     # - Z (uncompress)
     # - lz (lzip)
     # - zst (zstd)
-    #
+    # - lzma
     # For 7z can use '-x' flag.
     # For Z, don't need an argument.
     case "${dict['source_file']}" in
