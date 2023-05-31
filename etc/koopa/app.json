@@ -3683,14 +3683,14 @@
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
-    "date": "2023-03-14",
+    "date": "2023-05-31",
     "large": true,
     "private": true,
     "url": [
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
     ],
-    "version": "6.4.6"
+    "version": "6.5.7"
   },
   "ont-vbz-compression": {
     "build_dependencies": ["cmake"],
