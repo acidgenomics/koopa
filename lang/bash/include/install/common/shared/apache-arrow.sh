@@ -77,6 +77,9 @@ filename=arrow/arrow-${dict['version']}/apache-arrow-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/cpp'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --ninja \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }
