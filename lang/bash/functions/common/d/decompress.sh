@@ -9,7 +9,7 @@
 
 koopa_decompress() {
     # """
-    # Decompress a compressed file.
+    # Decompress a single compressed file.
     # @note Updated 2023-05-31.
     #
     # This function currently allows uncompressed files to pass through.
@@ -84,10 +84,16 @@ koopa_decompress() {
             ;;
     esac
     dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
+    # FIXME Consider not always redicting to stdout here -- see '-c' flag usage
+    # below. Instead, only do that when stdout is desired.
     # FIXME Add support for:
+    # - 7z (p7zip)
     # - Z (uncompress)
     # - lz (lzip)
     # - zst (zstd)
+    #
+    # For 7z can use '-x' flag.
+    # For Z, don't need an argument.
     case "${dict['source_file']}" in
         *'.bz2' | *'.gz' | *'.xz')
             case "${dict['source_file']}" in
@@ -103,6 +109,7 @@ koopa_decompress() {
             esac
             [[ -x "$cmd" ]] || return 1
             cmd_args=(
+                # FIXME Only use '--stdout' when piping to stdout...rethink.
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
                 '-f' # '--force'.
