@@ -3782,8 +3782,10 @@
     "version": "21.9.0.0.0-1"
   },
   "p7zip": {
+    "bin": ["7z", "7za", "7zr"],
     "build_dependencies": ["make"],
     "date": "2023-05-31",
+    "man1": ["7z.1.gz", "7za.1.gz", "7zr.1.gz"],
     "url": ["https://github.com/p7zip-project/p7zip/"],
     "version": "17.05"
   },
