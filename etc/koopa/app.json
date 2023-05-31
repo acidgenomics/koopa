@@ -2388,7 +2388,6 @@
       "zlib",
       "zstd"
     ],
-    "enabled": false,
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",

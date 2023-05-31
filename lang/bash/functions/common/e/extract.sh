@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME What's the difference between this and 'koopa_decompress'?
-# NOTE Add support for lzip (lz).
-# NOTE Add support for zstd (zst).
-# FIXME Just call koopa_decompress here for other files.
+# FIXME Ensure that file extension matching is case insensitive.
+# FIXME Support '.a' files here, which uses ar.
 
 koopa_extract() {
     # """
@@ -14,23 +12,21 @@ koopa_extract() {
     #
     # See also:
     # - https://github.com/stephenturner/oneliners
+    # - https://en.wikipedia.org/wiki/List_of_archive_formats
     # """
-    local -A app dict
+    local -A app bool dict
     local -a cmd_args
+    local cmd
     koopa_assert_has_args_le "$#" 2
+    bool['move_into_target']=0
     dict['file']="${1:?}"
     dict['target']="${2:-}"
     dict['wd']="${PWD:?}"
     [[ -z "${dict['target']}" ]] && dict['target']="${dict['wd']}"
-    if [[ "${dict['target']}" != "${dict['wd']}"  ]]
-    then
-        dict['move_into_target']=1
-    else
-        dict['move_into_target']=0
-    fi
+    [[ "${dict['target']}" != "${dict['wd']}"  ]] && bool['move_into_target']=1
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    if [[ "${dict['move_into_target']}" -eq 1 ]]
+    if [[ "${bool['move_into_target']}" -eq 1 ]]
     then
         dict['target']="$(koopa_init_dir "${dict['target']}")"
         koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
@@ -47,9 +43,12 @@ koopa_extract() {
     fi
     (
         koopa_cd "${dict['tmpdir']}"
+        # Archiving only -------------------------------------------------------
+        # FIXME Add support for Unix archive ('.a', '.ar').
         case "${dict['file']}" in
             *'.tar' | \
             *'.tar.'* | \
+            *'.tbz2' | \
             *'.tgz')
                 local -a tar_cmd_args
                 tar_cmd_args=(
@@ -57,6 +56,7 @@ koopa_extract() {
                     '-x' # '--extract'.
                 )
                 app['tar']="$(koopa_locate_tar --allow-system)"
+                koopa_assert_is_executable "${app['tar']}"
                 if koopa_is_root && koopa_is_gnu "${app['tar']}"
                 then
                     tar_cmd_args+=(
@@ -73,7 +73,7 @@ koopa_extract() {
             *'.tar.xz' | \
             *'.tbz2' | \
             *'.tgz')
-                app['cmd']="${app['tar']}"
+                cmd="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
                 case "${dict['file']}" in
                     *'.bz2' | *'.tbz2')
@@ -102,27 +102,22 @@ koopa_extract() {
                         ;;
                 esac
                 ;;
-            *'.bz2')
-                app['cmd']="$(koopa_locate_bunzip2 --allow-system)"
-                cmd_args=("${dict['file']}")
-                ;;
-            *'.gz')
-                app['cmd']="$(koopa_locate_gzip --allow-system)"
-                cmd_args=(
-                    '-d' # '--decompress'.
-                    "${dict['file']}"
-                )
-                ;;
             *'.tar')
                 app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
                 ;;
-            *'.xz')
-                app['cmd']="$(koopa_locate_xz --allow-system)"
+            
+            # Archiving and compression ----------------------------------------
+            # FIXME Add support for:
+            # - 7z
+            # - dmg? macOS
+            # - jar
+            *'.7z')
+                app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
-                    '-d' # '--decompress'.
+                    '-x'
                     "${dict['file']}"
-                    )
+                )
                 ;;
             *'.zip')
                 app['cmd']="$(koopa_locate_unzip --allow-system)"
@@ -131,25 +126,32 @@ koopa_extract() {
                     "${dict['file']}"
                 )
                 ;;
-            *'.Z')
-                app['cmd']="$(koopa_locate_uncompress --allow-system)"
+            # Compression only -------------------------------------------------
+            # FIXME Add support for brotli.
+            *'.br' | \
+            *'.bz2' | \
+            *'.gz' | \
+            *'.lz' | \
+            *'.lz4' | \
+            *'.lzma' | \
+            *'.xz' | \
+            *'.z' | \
+            *'.zst')
+                cmd='koopa_decompress'
                 cmd_args=("${dict['file']}")
                 ;;
-            *'.7z')
-                app['cmd']="$(koopa_locate_7z)"
-                cmd_args=(
-                    '-x'
-                    "${dict['file']}"
-                )
-                ;;
+            # Other ------------------------------------------------------------
             *)
                 koopa_stop "Unsupported file: '${dict['file']}'."
                 ;;
         esac
-        koopa_assert_is_executable "${app[@]}"
-        "${app['cmd']}" "${cmd_args[@]}" 2>/dev/null
+        if ! koopa_is_function "$cmd"
+        then
+            koopa_assert_is_executable "$cmd"
+        fi
+        "$cmd" "${cmd_args[@]}" # 2>/dev/null
     )
-    if [[ "${dict['move_into_target']}" -eq 1 ]]
+    if [[ "${bool['move_into_target']}" -eq 1 ]]
     then
         local -a contents
         koopa_rm "${dict['tmpfile']}"
