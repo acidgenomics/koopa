@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure that file extension matching is case insensitive.
+# FIXME Don't support compression formats that allow for decompression of
+# multiple files here: e.g. zip.
+# FIXME Add support for brotli here.
+# FIXME Migrate support for '.Z' from extract here.
+# FIXME Remove support for xz from extract and use code here instead.
 # FIXME What's the difference here between decompress and extract?
 # NOTE Add support for lzip (lz).
 # NOTE Add support for zstd (zst).
-# FIXME Migrate support for '.Z' from extract here.
-# FIXME Remove support for xz from extract and use code here instead.
-# FIXME 
 
 koopa_decompress() {
     # """
     # Decompress a single compressed file.
     # @note Updated 2023-05-31.
     #
-    # This function currently allows uncompressed files to pass through.
+    # Intentionally supports only compression formats. For mixed archiving
+    # and compression formats, use 'koopa_extract' instead.
+    #
+    # Intentionally allows uncompressed files to pass through. Useful for
+    # pipelining handling of large compressed genomics files, such as FASTQ.
     #
     # @examples
     # # Default usage decompresses the file, but keeps the compressed original.
@@ -33,6 +40,9 @@ koopa_decompress() {
     # # Passthrough of uncompressed file is supported.
     # # head -n 1 <(koopa_decompress --stdout 'sample.fastq')
     # # @A01587:114:GW2203131905th:2:1101:5791:1031 1:N:0:CGATCAGT+TTAGAGAG
+    #
+    # @seealso
+    # - https://en.wikipedia.org/wiki/List_of_archive_formats
     # """
     local -A dict
     local -a cmd_args pos
