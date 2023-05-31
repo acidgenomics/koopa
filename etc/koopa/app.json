@@ -47,6 +47,12 @@
     "url": ["https://airflow.apache.org/"],
     "version": "2.6.1"
   },
+  "apache-arrow": {
+    "build_dependencies": ["cmake", "ninja"],
+    "dependencies": ["brotli", "bzip2", "lz4", "openssl3", "utf8proc", "zstd"],
+    "url": ["https://arrow.apache.org/"],
+    "version": "12.0.0"
+  },
   "apache-spark": {
     "aliases": {
       "homebrew": true
