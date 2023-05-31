@@ -59,7 +59,7 @@ main() {
         # > '-DARROW_WITH_BZ2=ON'
         # > '-DARROW_WITH_LZ4=ON'
         # > '-DARROW_WITH_RE2=ON'
-        # > '-DARROW_WITH_SNAPPY=OFF'
+        # > '-DARROW_WITH_SNAPPY=ON'
         # > '-DARROW_WITH_UTF8PROC=ON'
         # > '-DARROW_WITH_ZLIB=ON'
         # > '-DARROW_WITH_ZSTD=ON'
