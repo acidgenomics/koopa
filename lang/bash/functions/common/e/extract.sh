@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for:
+# - a, ar
+# - dmg (macOS)
+# - jar
+
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -67,7 +72,6 @@ $(koopa_basename_sans_ext "${dict['file']}")"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
     # Archiving only -----------------------------------------------------------
-    # FIXME a, ar
     case "${dict['match']}" in
         *'.tar' | \
         *'.tar.'* | \
@@ -130,8 +134,6 @@ $(koopa_basename_sans_ext "${dict['file']}")"
             cmd_args=("${tar_cmd_args[@]}")
             ;;
         # Archiving and compression --------------------------------------------
-        # FIXME dmg
-        # FIXME jar
         *'.7z')
             cmd="$(koopa_locate_7z)"
             cmd_args=(
