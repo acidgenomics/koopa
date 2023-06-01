@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this to 'preferences'.
+
 main() {
     # """
     # Install macOS user defaults.

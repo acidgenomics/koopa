@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this back to 'base'.
+
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
