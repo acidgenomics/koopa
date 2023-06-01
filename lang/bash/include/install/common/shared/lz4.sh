@@ -3,7 +3,7 @@
 main() {
     # """
     # Install lz4.
-    # @note Updated 2023-04-12.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/lz4.rb
@@ -15,12 +15,11 @@ main() {
     dict['name']='lz4'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/${dict['name']}/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+archive/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     "${app['make']}" install PREFIX="${dict['prefix']}"
     koopa_rm "${dict['prefix']}/lib/"*'.a'

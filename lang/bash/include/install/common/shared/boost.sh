@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Boost library.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://www.boost.org/users/download/
@@ -26,12 +26,11 @@ main() {
         dict['toolset']='gcc'
     fi
     dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
-    dict['file']="${dict['name']}_${dict['snake_version']}.tar.bz2"
     dict['url']="https://boostorg.jfrog.io/artifactory/main/release/\
-${dict['version']}/source/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}_${dict['snake_version']}"
+${dict['version']}/source/${dict['name']}_${dict['snake_version']}.tar.bz2"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     bootstrap_args=(
         "--libdir=${dict['prefix']}/lib"
         "--prefix=${dict['prefix']}"
