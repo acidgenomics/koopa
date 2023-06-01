@@ -774,8 +774,7 @@ koopa_apply_debian_patch_set() {
 ${dict['name']}/${dict['name']}_${dict['version']}-${dict['patch_version']}.\
 debian.tar.xz"
     koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")"
-    koopa_assert_is_dir 'debian/patches'
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'debian'
     koopa_assert_is_file 'debian/patches/series'
     readarray -t patch_series < 'debian/patches/series'
     (
@@ -854,8 +853,7 @@ koopa_apply_ubuntu_patch_set() {
 ${dict['name']:0:1}/${dict['name']}/${dict['name']}_${dict['version']}-\
 ${dict['patch_version']}ubuntu1.debian.tar.xz"
     koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")"
-    koopa_assert_is_dir 'debian/patches'
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'debian'
     koopa_assert_is_file 'debian/patches/series'
     readarray -t patch_series < 'debian/patches/series'
     (
@@ -6923,12 +6921,16 @@ koopa_extract() {
     local -A app dict
     local -a cmd_args contents
     local cmd
-    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_has_args_le "$#" 2
     dict['file']="${1:?}"
-    dict['target']="${2:?}"
+    dict['target']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
+    if [[ -z "${dict['target']}" ]]
+    then
+        dict['target']="$(koopa_parent_dir "${dict['file']}")/\
+$(koopa_basename_sans_ext "${dict['file']}")"
+    fi
     koopa_assert_is_non_existing "${dict['target']}"
     dict['target']="$(koopa_init_dir "${dict['target']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
@@ -6938,6 +6940,7 @@ koopa_extract() {
     )"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
+    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     (
         koopa_cd "${dict['tmpdir']}"
         case "${dict['match']}" in

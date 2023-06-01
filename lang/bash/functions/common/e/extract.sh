@@ -14,13 +14,16 @@ koopa_extract() {
     local -A app dict
     local -a cmd_args contents
     local cmd
-    koopa_assert_has_args_eq "$#" 2
+    koopa_assert_has_args_le "$#" 2
     dict['file']="${1:?}"
-    dict['target']="${2:?}"
+    dict['target']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    # Ensure that we're matching against case insensitive basename.
-    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
+    if [[ -z "${dict['target']}" ]]
+    then
+        dict['target']="$(koopa_parent_dir "${dict['file']}")/\
+$(koopa_basename_sans_ext "${dict['file']}")"
+    fi
     koopa_assert_is_non_existing "${dict['target']}"
     dict['target']="$(koopa_init_dir "${dict['target']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
@@ -30,6 +33,8 @@ koopa_extract() {
     )"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
+    # Ensure that we're matching against case insensitive basename.
+    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     (
         koopa_cd "${dict['tmpdir']}"
         # Archiving only -------------------------------------------------------
