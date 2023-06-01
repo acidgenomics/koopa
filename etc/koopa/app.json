@@ -47,6 +47,11 @@
     "url": ["https://airflow.apache.org/"],
     "version": "2.6.1"
   },
+  "apache-arrow": {
+    "build_dependencies": ["cmake", "ninja", "pkg-config"],
+    "url": ["https://arrow.apache.org/"],
+    "version": "12.0.0"
+  },
   "apache-spark": {
     "aliases": {
       "homebrew": true
@@ -130,13 +135,14 @@
     "aliases": {
       "homebrew": "ibm-aspera-connect"
     },
+    "arch": "amd64",
     "bin": ["ascp"],
-    "date": "2023-05-30",
+    "date": "2023-06-01",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.5.306"
+    "version": "4.2.6.393"
   },
   "attr": {
     "aliases": {
@@ -183,8 +189,7 @@
   },
   "autodock-adfr": {
     "arch": "amd64",
-    "date": "2022-10-19",
-    "dependencies": ["conda"],
+    "date": "2023-06-01",
     "enabled": false,
     "large": true,
     "url": ["https://ccsb.scripps.edu/adfr/"],
@@ -516,8 +521,9 @@
       "debian": "libbrotli-dev",
       "homebrew": true
     },
+    "bin": ["brotli"],
     "build_dependencies": ["cmake", "make"],
-    "date": "2022-09-26",
+    "date": "2023-06-01",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/google/brotli/"],
@@ -1165,16 +1171,16 @@
     "version": "0.7.0"
   },
   "doom-emacs": {
-    "date": "2023-05-06",
+    "date": "2023-05-30",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "042fe0c43831c8575abfdec4196ebd7305fa16ac"
+    "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
   },
   "dotfiles": {
-    "date": "2023-05-30",
+    "date": "2023-06-01",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "720403e7061b4694620f79353b807f94d288770c"
+    "version": "d829ef3b1e5d02a04468762c4e834d21ea6ce7c7"
   },
   "du-dust": {
     "aliases": {
@@ -2074,7 +2080,6 @@
       "gunzip",
       "gzexe",
       "gzip",
-      "uncompress",
       "zcat",
       "zcmp",
       "zdiff",
@@ -2294,11 +2299,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-05-30",
+    "date": "2023-06-01",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.5"
+    "version": "0.112.6"
   },
   "hyperfine": {
     "aliases": {
@@ -2388,7 +2393,6 @@
       "zlib",
       "zstd"
     ],
-    "enabled": false,
     "man1": [
       "ImageMagick.1",
       "Magick++-config.1",
@@ -3135,8 +3139,10 @@
       "fedora": "lz4-devel",
       "homebrew": true
     },
+    "bin": ["lz4", "lz4c", "lz4cat", "unlz4"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-30",
+    "date": "2023-06-01",
+    "man1": ["lz4.1", "lz4c.1", "lz4cat.1", "unlz4.1"],
     "prune": false,
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
@@ -3684,14 +3690,14 @@
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
-    "date": "2023-03-14",
+    "date": "2023-05-31",
     "large": true,
     "private": true,
     "url": [
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
     ],
-    "version": "6.4.6"
+    "version": "6.5.7"
   },
   "ont-vbz-compression": {
     "build_dependencies": ["cmake"],
@@ -3780,6 +3786,14 @@
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
     "version": "21.9.0.0.0-1"
+  },
+  "p7zip": {
+    "bin": ["7z", "7za", "7zr"],
+    "build_dependencies": ["make"],
+    "date": "2023-05-31",
+    "man1": ["7z.1.gz", "7za.1.gz", "7zr.1.gz"],
+    "url": ["https://github.com/p7zip-project/p7zip/"],
+    "version": "17.05"
   },
   "pandoc": {
     "aliases": {
@@ -4013,7 +4027,7 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-03-14",
+    "date": "2023-06-01",
     "dependencies": [
       "curl",
       "libjpeg-turbo",
@@ -4027,7 +4041,7 @@
     "man1": ["proj.1", "projinfo.1"],
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.2.0"
+    "version": "9.2.1"
   },
   "py-spy": {
     "aliases": {
@@ -4197,6 +4211,7 @@
     "dependencies": [
       "autoconf",
       "automake",
+      "binutils",
       "bzip2",
       "cairo",
       "coreutils",
@@ -4255,6 +4270,7 @@
     "dependencies": [
       "autoconf",
       "automake",
+      "binutils",
       "bzip2",
       "cairo",
       "coreutils",
@@ -5490,10 +5506,58 @@
       "fedora": "xz-devel",
       "homebrew": true
     },
-    "bin": ["xz"],
+    "bin": [
+      "lzcat",
+      "lzcmp",
+      "lzdiff",
+      "lzegrep",
+      "lzfgrep",
+      "lzgrep",
+      "lzless",
+      "lzma",
+      "lzmadec",
+      "lzmainfo",
+      "lzmore",
+      "unlzma",
+      "unxz",
+      "xz",
+      "xzcat",
+      "xzcmp",
+      "xzdec",
+      "xzdiff",
+      "xzegrep",
+      "xzfgrep",
+      "xzgrep",
+      "xzless",
+      "xzmore"
+    ],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-08",
-    "man1": ["xz.1"],
+    "man1": [
+      "lzcat.1",
+      "lzcmp.1",
+      "lzdiff.1",
+      "lzegrep.1",
+      "lzfgrep.1",
+      "lzgrep.1",
+      "lzless.1",
+      "lzma.1",
+      "lzmadec.1",
+      "lzmainfo.1",
+      "lzmore.1",
+      "unlzma.1",
+      "unxz.1",
+      "xz.1",
+      "xzcat.1",
+      "xzcmp.1",
+      "xzdec.1",
+      "xzdiff.1",
+      "xzegrep.1",
+      "xzfgrep.1",
+      "xzgrep.1",
+      "xzless.1",
+      "xzmore.1"
+    ],
     "prune": false,
     "url": ["https://tukaani.org/xz/"],
     "version": "5.4.3"

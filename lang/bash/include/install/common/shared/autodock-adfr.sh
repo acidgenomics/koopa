@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ADFR suite.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # Linux:
     # - ADFRsuite_x86_64Linux_1.0.tar.gz
@@ -19,7 +19,6 @@ main() {
     app['yes']="$(koopa_locate_yes)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-    dict['name']='ADFRsuite'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
@@ -44,13 +43,11 @@ main() {
             koopa_stop 'Unsupported version.'
             ;;
     esac
-    dict['bn']="${dict['name']}_${dict['arch']}${dict['platform']}\
-_${dict['version']}"
-    dict['file']="${dict['bn']}.tar.gz"
+    dict['file']="adfr.tar.gz"
     dict['url']="https://ccsb.scripps.edu/adfr/download/${dict['id']}/"
     koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['bn']}"
+    koopa_extract "${dict['file']}" 'src'
+    koopa_cd 'src'
     koopa_print_env
     # Install script options:
     # * -d: Target directory.
