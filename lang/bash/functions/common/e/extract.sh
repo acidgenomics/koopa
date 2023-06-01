@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Determine if we need to extract into a subdirectory.
-
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -22,7 +20,6 @@ koopa_extract() {
     dict['target_dir']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    # Ensure that we're matching against case insensitive basename.
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     case "${dict['match']}" in
         *'.br' | \
