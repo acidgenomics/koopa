@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apptainer.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://github.com/apptainer/apptainer
@@ -16,22 +16,19 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['name']='apptainer'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['version_file']='VERSION'
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/apptainer/${dict['name']}/archive/refs/\
-tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/apptainer/apptainer/archive/refs/\
+tags/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     # This step is needed to avoid an error when not cloned from git repo.
-    if [[ ! -f "${dict['version_file']}" ]]
+    if [[ ! -f 'VERSION' ]]
     then
-        koopa_print "${dict['version']}" > "${dict['version_file']}"
+        koopa_print "${dict['version']}" > 'VERSION'
     fi
     conf_args=(
         "--prefix=${dict['prefix']}"
