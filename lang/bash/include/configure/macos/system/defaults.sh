@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE How to disable "Play sound on startup"?
+# FIXME Rename this to 'preferences'.
 
 # NOTE How to set disable sleep when screen is off while plugged in:
 # Displays > Advanced > Prevent automatic sleeping on power adapter when the
