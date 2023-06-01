@@ -3,7 +3,8 @@
 main() {
     # """
     # Install fzf.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
+    #
     # @seealso
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
     # """
@@ -14,19 +15,17 @@ main() {
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='fzf'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export FZF_REVISION='tarball'
     export FZF_VERSION="${dict['version']}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    dict['file']="${dict['version']}.tar.gz"
-    dict['url']="https://github.com/junegunn/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/junegunn/fzf/\
+archive/${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # This will copy fzf binary from 'target/' to 'bin/'.
