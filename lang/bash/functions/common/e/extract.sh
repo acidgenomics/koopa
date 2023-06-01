@@ -22,6 +22,12 @@ koopa_extract() {
     dict['file']="$(koopa_realpath "${dict['file']}")"
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     case "${dict['match']}" in
+        *'.tar.bz2' | \
+        *'.tar.gz' | \
+        *'.tar.lz' | \
+        *'.tar.xz')
+            bool['decompress_only']=0
+            ;;
         *'.br' | \
         *'.bz2' | \
         *'.gz' | \

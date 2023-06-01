@@ -5644,6 +5644,7 @@ koopa_decompress() {
     local -a cmd_args pos
     local cmd
     koopa_assert_has_args "$#"
+    bool['passthrough']=0
     bool['stdout']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     while (("$#"))
@@ -5681,6 +5682,20 @@ koopa_decompress() {
                 "Unsupported archive file: '${dict['source_file']}'." \
                 "Use 'koopa_extract' instead of 'koopa_decompress'."
             ;;
+        *'.br' | \
+        *'.bz2' | \
+        *'.gz' | \
+        *'.lz' | \
+        *'.lz4' | \
+        *'.lzma' | \
+        *'.xz' | \
+        *'.z' | \
+        *'.zstd')
+            bool['passthrough']=0
+            ;;
+        *)
+            bool['passthrough']=1
+            ;;
     esac
     if [[ "${bool['stdout']}" -eq 1 ]]
     then
@@ -5705,9 +5720,23 @@ koopa_decompress() {
         fi
         koopa_assert_is_non_existing "${dict['target_file']}"
     fi
+    if [[ "${bool['passthrough']}" -eq 1 ]]
+    then
+        if [[ "${bool['stdout']}" -eq 1 ]]
+        then
+            app['cat']="$(koopa_locate_cat --allow-system)"
+            koopa_assert_is_executable "${app['cat']}"
+            "${app['cat']}" "${dict['source_file']}" || true
+        else
+            koopa_alert "Passthrough mode. Copying '${dict['source_file']}' to \
+'${dict['target_file']}'."
+            koopa_cp "${dict['source_file']}" "${dict['target_file']}"
+        fi
+        return 0
+    fi
     case "${dict['match']}" in
         *'.bz2' | *'.gz' | *'.lzma' | *'.xz')
-            case "${dict['source_file']}" in
+            case "${dict['match']}" in
                 *'.bz2')
                     cmd="$(koopa_locate_bzip2)"
                     ;;
@@ -5721,7 +5750,6 @@ koopa_decompress() {
                     cmd="$(koopa_locate_xz)"
                     ;;
             esac
-            koopa_assert_is_executable "$cmd"
             cmd_args=(
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
@@ -5729,28 +5757,33 @@ koopa_decompress() {
                 '-k' # '--keep'.
                 "${dict['source_file']}"
             )
-            if [[ "${bool['stdout']}" -eq 1 ]]
-            then
-                "$cmd" "${cmd_args[@]}" || true
-            else
-                koopa_alert "Decompressing '${dict['source_file']}' to \
-'${dict['target_file']}'."
-                "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
-            fi
             ;;
-        *)
-            if [[ "${bool['stdout']}" -eq 1 ]]
-            then
-                app['cat']="$(koopa_locate_cat --allow-system)"
-                koopa_assert_is_executable "${app['cat']}"
-                "${app['cat']}" "${dict['source_file']}" || true
-            else
-                koopa_alert "Copying '${dict['source_file']}' to \
-'${dict['target_file']}'."
-                koopa_cp "${dict['source_file']}" "${dict['target_file']}"
-            fi
+        *'.br')
+            cmd="$(koopa_locate_brotli)"
+            koopa_stop 'FIXME'
+            ;;
+        *'.lz')
+            koopa_stop 'FIXME'
+            ;;
+        *'.lz4')
+            koopa_stop 'FIXME'
+            ;;
+        *'.z')
+            koopa_stop 'FIXME'
+            ;;
+        *'.zstd')
+            koopa_stop 'FIXME'
             ;;
     esac
+    koopa_assert_is_executable "$cmd"
+    if [[ "${bool['stdout']}" -eq 1 ]]
+    then
+        "$cmd" "${cmd_args[@]}" || true
+    else
+        koopa_alert "Decompressing '${dict['source_file']}' to \
+'${dict['target_file']}'."
+        "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
+    fi
     koopa_assert_is_file "${dict['source_file']}"
     if [[ -n "${dict['target_file']}" ]]
     then
@@ -6929,6 +6962,12 @@ koopa_extract() {
     dict['file']="$(koopa_realpath "${dict['file']}")"
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     case "${dict['match']}" in
+        *'.tar.bz2' | \
+        *'.tar.gz' | \
+        *'.tar.lz' | \
+        *'.tar.xz')
+            bool['decompress_only']=0
+            ;;
         *'.br' | \
         *'.bz2' | \
         *'.gz' | \
@@ -15876,6 +15915,13 @@ koopa_locate_luarocks() {
     koopa_locate_app \
         --app-name='luarocks' \
         --bin-name='luarocks' \
+        "$@"
+}
+
+koopa_locate_lz4() {
+    koopa_locate_app \
+        --app-name='lz4' \
+        --bin-name='lz4' \
         "$@"
 }
 
