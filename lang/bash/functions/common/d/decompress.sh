@@ -83,6 +83,9 @@ koopa_decompress() {
     dict['match']="$(koopa_basename "${dict['source_file']}" | koopa_lowercase)"
     # Intentionally error on archive formats.
     case "${dict['match']}" in
+        *'.z')
+            koopa_stop "Use 'uncompress' directly on '.Z' files."
+            ;;
         *'.7z' | \
         *'.a' | \
         *'.tar' | \
@@ -101,7 +104,6 @@ koopa_decompress() {
         *'.lz4' | \
         *'.lzma' | \
         *'.xz' | \
-        *'.z' | \
         *'.zstd')
             bool['passthrough']=0
             ;;
@@ -148,19 +150,38 @@ koopa_decompress() {
         return 0
     fi
     case "${dict['match']}" in
-        *'.bz2' | *'.gz' | *'.lzma' | *'.xz')
+        *'.br' | \
+        *'.bz2' | \
+        *'.gz' | \
+        *'.lz' | \
+        *'.lz4' | \
+        *'.lzma' | \
+        *'.xz' | \
+        *'.zstd')
             case "${dict['match']}" in
+                *'.br')
+                    cmd="$(koopa_locate_brotli)"
+                    ;;
                 *'.bz2')
                     cmd="$(koopa_locate_bzip2)"
                     ;;
                 *'.gz')
                     cmd="$(koopa_locate_gzip)"
                     ;;
+                *'.lz')
+                    cmd="$(koopa_locate_lzip)"
+                    ;;
+                *'.lz4')
+                    cmd="$(koopa_locate_lz4)"
+                    ;;
                 *'.lzma')
                     cmd="$(koopa_locate_lzma)"
                     ;;
                 *'.xz')
                     cmd="$(koopa_locate_xz)"
+                    ;;
+                *'.zstd')
+                    cmd="$(koopa_locate_zstd)"
                     ;;
             esac
             cmd_args=(
@@ -170,22 +191,6 @@ koopa_decompress() {
                 '-k' # '--keep'.
                 "${dict['source_file']}"
             )
-            ;;
-        *'.br')
-            cmd="$(koopa_locate_brotli)"
-            koopa_stop 'FIXME'
-            ;;
-        *'.lz')
-            koopa_stop 'FIXME'
-            ;;
-        *'.lz4')
-            koopa_stop 'FIXME'
-            ;;
-        *'.z')
-            koopa_stop 'FIXME'
-            ;;
-        *'.zstd')
-            koopa_stop 'FIXME'
             ;;
     esac
     koopa_assert_is_executable "$cmd"
