@@ -2299,11 +2299,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-05-30",
+    "date": "2023-06-01",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.5"
+    "version": "0.112.6"
   },
   "hyperfine": {
     "aliases": {
@@ -4025,7 +4025,7 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-03-14",
+    "date": "2023-06-01",
     "dependencies": [
       "curl",
       "libjpeg-turbo",
@@ -4039,7 +4039,7 @@
     "man1": ["proj.1", "projinfo.1"],
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.2.0"
+    "version": "9.2.1"
   },
   "py-spy": {
     "aliases": {
