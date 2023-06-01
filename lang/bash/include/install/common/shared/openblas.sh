@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # Attempting to make in parallel can cause installer to crash.
     #
@@ -33,12 +33,11 @@ main() {
     else
         dict['use_openmp']=1
     fi
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/xianyi/${dict['name']}/archive/\
-${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/xianyi/OpenBLAS/archive/\
+v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     read -r -d '' "dict[makefile_string]" << END || true
 CC=${app['cc']}
 FC=${app['fc']}
