@@ -15158,9 +15158,10 @@ bin/${dict['bin_name']}"
     fi
 }
 
-koopa_locate_ar() {
+koopa_locate_perl() {
     koopa_locate_app \
-        '/usr/bin/ar' \
+        --app-name='binutils' \
+        --bin-name='ar' \
         "$@"
 }
 
