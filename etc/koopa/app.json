@@ -521,8 +521,9 @@
       "debian": "libbrotli-dev",
       "homebrew": true
     },
+    "bin": ["brotli"],
     "build_dependencies": ["cmake", "make"],
-    "date": "2022-09-26",
+    "date": "2023-06-01",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/google/brotli/"],
