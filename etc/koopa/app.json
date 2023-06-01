@@ -188,8 +188,7 @@
   },
   "autodock-adfr": {
     "arch": "amd64",
-    "date": "2022-10-19",
-    "dependencies": ["conda"],
+    "date": "2023-06-01",
     "enabled": false,
     "large": true,
     "url": ["https://ccsb.scripps.edu/adfr/"],
@@ -3139,20 +3138,10 @@
       "fedora": "lz4-devel",
       "homebrew": true
     },
-    "bin": [
-      "lz4",
-      "lz4c",
-      "lz4cat",
-      "unlz4"
-    ],
+    "bin": ["lz4", "lz4c", "lz4cat", "unlz4"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-06-01",
-    "man1": [
-      "lz4.1",
-      "lz4c.1",
-      "lz4cat.1",
-      "unlz4.1"
-    ],
+    "man1": ["lz4.1", "lz4c.1", "lz4cat.1", "unlz4.1"],
     "prune": false,
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
     "version": "1.9.4"
