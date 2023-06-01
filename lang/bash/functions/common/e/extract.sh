@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Always move into the parent directory...simpler.
-# FIXME Ensure that file extension matching is case insensitive.
-# FIXME Support '.a' files here, which uses ar.
-# FIXME Rather than extracting to working directory, extract to location of
-# file.
-
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -20,17 +14,14 @@ koopa_extract() {
     local -A app dict
     local -a cmd_args contents
     local cmd
-    koopa_assert_has_args_le "$#" 2
+    koopa_assert_has_args_eq "$#" 2
     dict['file']="${1:?}"
-    dict['target']="${2:-}"
+    dict['target']="${2:?}"
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
     # Ensure that we're matching against case insensitive basename.
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
-    if [[ -z "${dict['target']}" ]]
-    then
-        dict['target']="$(koopa_parent_dir "${dict['file']}")"
-    fi
+    koopa_assert_is_non_existing "${dict['target']}"
     dict['target']="$(koopa_init_dir "${dict['target']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
     dict['tmpdir']="$( \
