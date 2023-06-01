@@ -5705,14 +5705,7 @@ koopa_decompress() {
         then
             return 0
         fi
-    fi
-    if [[ -f "${dict['target_file']}" ]]
-    then
-        if [[ "${bool['stdout']}" -eq 0 ]]
-        then
-            koopa_alert_note "Overwriting '${dict['target_file']}'."
-        fi
-        koopa_rm "${dict['target_file']}"
+        koopa_assert_is_non_existing "${dict['target_file']}"
     fi
     case "${dict['match']}" in
         *'.bz2' | *'.gz' | *'.lzma' | *'.xz')
@@ -6930,16 +6923,13 @@ koopa_extract() {
     local -A app dict
     local -a cmd_args contents
     local cmd
-    koopa_assert_has_args_le "$#" 2
+    koopa_assert_has_args_eq "$#" 2
     dict['file']="${1:?}"
-    dict['target']="${2:-}"
+    dict['target']="${2:?}"
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
-    if [[ -z "${dict['target']}" ]]
-    then
-        dict['target']="$(koopa_parent_dir "${dict['file']}")"
-    fi
+    koopa_assert_is_non_existing "${dict['target']}"
     dict['target']="$(koopa_init_dir "${dict['target']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
     dict['tmpdir']="$( \

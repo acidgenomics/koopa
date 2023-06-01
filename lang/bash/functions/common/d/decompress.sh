@@ -116,14 +116,7 @@ koopa_decompress() {
         then
             return 0
         fi
-    fi
-    if [[ -f "${dict['target_file']}" ]]
-    then
-        if [[ "${bool['stdout']}" -eq 0 ]]
-        then
-            koopa_alert_note "Overwriting '${dict['target_file']}'."
-        fi
-        koopa_rm "${dict['target_file']}"
+        koopa_assert_is_non_existing "${dict['target_file']}"
     fi
     # FIXME br
     # FIXME lz
