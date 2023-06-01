@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Quarto.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://quarto.org/docs/download/
@@ -11,7 +11,6 @@ main() {
     # """
     local -A dict
     dict['arch']="$(koopa_arch2)" # e.g. "amd64".
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_linux
@@ -21,20 +20,11 @@ main() {
     then
         dict['slug']='macos'
     fi
-    dict['file']="${dict['name']}-${dict['version']}-${dict['slug']}.tar.gz"
     dict['url']="https://github.com/quarto-dev/quarto-cli/releases/download/\
-v${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    if koopa_is_macos
-    then
-        koopa_cp \
-            --target-directory="${dict['prefix']}" \
-            'bin' 'share'
-    else
-        koopa_cp \
-            --target-directory="${dict['prefix']}" \
-            "${dict['name']}-${dict['version']}/"*
-    fi
+v${dict['version']}/quarto-${dict['version']}-${dict['slug']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract \
+        "$(koopa_basename "${dict['url']}")" \
+        "${dict['prefix']}"
     return 0
 }
