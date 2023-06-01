@@ -19,13 +19,13 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['script_target']="${dict['aspera_user_prefix']}/connect"
     dict['url']="https://d3gcli72yxqn2z.cloudfront.net/downloads/connect/\
-latest/bin/ibm-aspera-connect_${dict['version']}_linux_${dict['arch']}.tar.gz"
+latest/bin/ibm-aspera-connect_${dict['version']}_${dict['platform']}_\
+${dict['arch']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_stop "FIXME $PWD"
-    # FIXME Need to rework this.
-    "./${dict['script']}" &>/dev/null
+    "./ibm-aspera-connect_${dict['version']}_${dict['platform']}\
+_${dict['arch']}.sh"
     koopa_assert_is_dir "${dict['script_target']}"
     if [[ "${dict['prefix']}" != "${dict['script_target']}" ]]
     then
