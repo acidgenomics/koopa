@@ -6918,29 +6918,55 @@ koopa_extract_version() {
 }
 
 koopa_extract() {
-    local -A app dict
+    local -A app bool dict
     local -a cmd_args contents
     local cmd
     koopa_assert_has_args_le "$#" 2
+    bool['decompress_only']=0
     dict['file']="${1:?}"
-    dict['target']="${2:-}"
+    dict['target_dir']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    if [[ -z "${dict['target']}" ]]
+    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
+    case "${dict['match']}" in
+        *'.br' | \
+        *'.bz2' | \
+        *'.gz' | \
+        *'.lz' | \
+        *'.lz4' | \
+        *'.lzma' | \
+        *'.xz' | \
+        *'.z' | \
+        *'.zst')
+            bool['decompress_only']=1
+            ;;
+    esac
+    if [[ "${bool['decompress_only']}" -eq 1 ]]
     then
-        dict['target']="$(koopa_parent_dir "${dict['file']}")/\
+        cmd_args=("${dict['file']}")
+        if [[ -n "${dict['target_dir']}" ]]
+        then
+            dict['target_file']="${dict['target_dir']}/\
+$(koopa_basename_sans_ext "${dict['file']}")"
+            cmd_args+=("${dict['target_file']}")
+        fi
+        koopa_decompress "${cmd_args[@]}"
+        return 0
+    fi
+    if [[ -z "${dict['target_dir']}" ]]
+    then
+        dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/\
 $(koopa_basename_sans_ext "${dict['file']}")"
     fi
-    koopa_assert_is_non_existing "${dict['target']}"
-    dict['target']="$(koopa_init_dir "${dict['target']}")"
-    koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
+    koopa_assert_is_non_existing "${dict['target_dir']}"
+    dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
+    koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
     dict['tmpdir']="$( \
         koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
 .koopa-extract-$(koopa_random_string)" \
     )"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
-    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     (
         koopa_cd "${dict['tmpdir']}"
         case "${dict['match']}" in
@@ -7056,11 +7082,11 @@ $(koopa_basename_sans_ext "${dict['file']}")"
         if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
         then
             koopa_mv \
-                --target-directory="${dict['target']}" \
+                --target-directory="${dict['target_dir']}" \
                 "${dict['tmpdir']}"/*/*
         else
             koopa_mv \
-                --target-directory="${dict['target']}" \
+                --target-directory="${dict['target_dir']}" \
                 "${dict['tmpdir']}"/*
         fi
     )
