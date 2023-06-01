@@ -3,7 +3,7 @@
 koopa_docker_run() {
     # """
     # Run Docker image.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-06-01.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -56,6 +56,14 @@ koopa_docker_run() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
     dict['image']="${1:?}"
+    case "${dict['image']}" in
+        *'.dkr.ecr.'*'.amazonaws.com/'*)
+            koopa_aws_ecr_login_private
+            ;;
+        'public.ecr.aws/'*)
+            koopa_aws_ecr_login_public
+            ;;
+    esac
     "${app['docker']}" pull "${dict['image']}"
     run_args=('--interactive' '--tty')
     # Legacy bind mounts approach, now disabled by default.

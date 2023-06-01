@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-26.
+    # @note Updated 2023-05-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -76,6 +76,7 @@ _koopa_complete() {
                         'agat'
                         'anaconda'
                         'apache-airflow'
+                        'apache-arrow'
                         'apache-spark'
                         'apr'
                         'apr-util'
@@ -312,6 +313,7 @@ _koopa_complete() {
                         'openjpeg'
                         'openssh'
                         'openssl3'
+                        'p7zip'
                         'pandoc'
                         'parallel'
                         'password-store'

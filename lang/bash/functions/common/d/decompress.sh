@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-# NOTE Add support for lzip.
-# NOTE Add support for zstd.
-
 koopa_decompress() {
     # """
-    # Decompress a compressed file.
-    # @note Updated 2023-04-05.
+    # Decompress a single compressed file.
+    # @note Updated 2023-06-01.
     #
-    # This function currently allows uncompressed files to pass through.
+    # Intentionally supports only compression formats. For mixed archiving
+    # and compression formats, use 'koopa_extract' instead.
+    #
+    # Intentionally allows uncompressed files to pass through. Useful for
+    # pipelining handling of large compressed genomics files, such as FASTQ.
     #
     # @examples
     # # Default usage decompresses the file, but keeps the compressed original.
@@ -29,20 +30,23 @@ koopa_decompress() {
     # # Passthrough of uncompressed file is supported.
     # # head -n 1 <(koopa_decompress --stdout 'sample.fastq')
     # # @A01587:114:GW2203131905th:2:1101:5791:1031 1:N:0:CGATCAGT+TTAGAGAG
+    #
+    # @seealso
+    # - https://en.wikipedia.org/wiki/List_of_archive_formats
     # """
-    local -A dict
+    local -A bool dict
     local -a cmd_args pos
     local cmd
     koopa_assert_has_args "$#"
+    bool['passthrough']=0
+    bool['stdout']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-    dict['stdout']=0
-    pos=()
     while (("$#"))
     do
         case "$1" in
             # Flags ------------------------------------------------------------
             '--stdout')
-                dict['stdout']=1
+                bool['stdout']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -60,41 +64,112 @@ koopa_decompress() {
     dict['source_file']="${1:?}"
     dict['target_file']="${2:-}"
     koopa_assert_is_file "${dict['source_file']}"
-    case "${dict['stdout']}" in
-        '0')
-            if [[ -z "${dict['target_file']}" ]]
-            then
-                dict['target_file']="$( \
-                    koopa_sub \
-                        --pattern="${dict['compress_ext_pattern']}" \
-                        --replacement='' \
-                        "${dict['source_file']}" \
-                )"
-            fi
-            if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
-            then
-                return 0
-            fi
+    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
+    # Ensure that we're matching against case insensitive basename.
+    dict['match']="$(koopa_basename "${dict['source_file']}" | koopa_lowercase)"
+    # Intentionally error on archive formats.
+    case "${dict['match']}" in
+        *'.z')
+            koopa_stop "Use 'uncompress' directly on '.Z' files."
             ;;
-        '1')
-            [[ -z "${dict['target_file']}" ]] || return 1
+        *'.7z' | \
+        *'.a' | \
+        *'.tar' | \
+        *'.tar.'* | \
+        *'.tbz2' | \
+        *'.tgz' | \
+        *'.zip')
+            koopa_stop \
+                "Unsupported archive file: '${dict['source_file']}'." \
+                "Use 'koopa_extract' instead of 'koopa_decompress'."
+            ;;
+        *'.br' | \
+        *'.bz2' | \
+        *'.gz' | \
+        *'.lz' | \
+        *'.lz4' | \
+        *'.lzma' | \
+        *'.xz' | \
+        *'.zstd')
+            bool['passthrough']=0
+            ;;
+        *)
+            bool['passthrough']=1
             ;;
     esac
-    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
-    case "${dict['source_file']}" in
-        *'.bz2' | *'.gz' | *'.xz')
-            case "${dict['source_file']}" in
+    if [[ "${bool['stdout']}" -eq 1 ]]
+    then
+        if [[ -n "${dict['target_file']}" ]]
+        then
+            koopa_stop 'Target file is not supported for --stdout mode.'
+        fi
+    else
+        if [[ -z "${dict['target_file']}" ]]
+        then
+            dict['target_file']="$( \
+                koopa_sub \
+                    --pattern="${dict['compress_ext_pattern']}" \
+                    --regex \
+                    --replacement='' \
+                    "${dict['source_file']}" \
+            )"
+        fi
+        # Return unmodified for non-compressed files.
+        if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
+        then
+            return 0
+        fi
+        koopa_assert_is_non_existing "${dict['target_file']}"
+    fi
+    if [[ "${bool['passthrough']}" -eq 1 ]]
+    then
+        if [[ "${bool['stdout']}" -eq 1 ]]
+        then
+            app['cat']="$(koopa_locate_cat --allow-system)"
+            koopa_assert_is_executable "${app['cat']}"
+            "${app['cat']}" "${dict['source_file']}" || true
+        else
+            koopa_alert "Passthrough mode. Copying '${dict['source_file']}' to \
+'${dict['target_file']}'."
+            koopa_cp "${dict['source_file']}" "${dict['target_file']}"
+        fi
+        return 0
+    fi
+    case "${dict['match']}" in
+        *'.br' | \
+        *'.bz2' | \
+        *'.gz' | \
+        *'.lz' | \
+        *'.lz4' | \
+        *'.lzma' | \
+        *'.xz' | \
+        *'.zstd')
+            case "${dict['match']}" in
+                *'.br')
+                    cmd="$(koopa_locate_brotli)"
+                    ;;
                 *'.bz2')
                     cmd="$(koopa_locate_bzip2)"
                     ;;
                 *'.gz')
                     cmd="$(koopa_locate_gzip)"
                     ;;
+                *'.lz')
+                    cmd="$(koopa_locate_lzip)"
+                    ;;
+                *'.lz4')
+                    cmd="$(koopa_locate_lz4)"
+                    ;;
+                *'.lzma')
+                    cmd="$(koopa_locate_lzma)"
+                    ;;
                 *'.xz')
                     cmd="$(koopa_locate_xz)"
                     ;;
+                *'.zstd')
+                    cmd="$(koopa_locate_zstd)"
+                    ;;
             esac
-            [[ -x "$cmd" ]] || return 1
             cmd_args=(
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
@@ -102,29 +177,19 @@ koopa_decompress() {
                 '-k' # '--keep'.
                 "${dict['source_file']}"
             )
-            case "${dict['stdout']}" in
-                '0')
-                    "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
-                    ;;
-                '1')
-                    "$cmd" "${cmd_args[@]}" || true
-                    ;;
-            esac
-            ;;
-        *)
-            case "${dict['stdout']}" in
-                '0')
-                    koopa_cp "${dict['source_file']}" "${dict['target_file']}"
-                    ;;
-                '1')
-                    cmd="$(koopa_locate_cat --allow-system)"
-                    [[ -x "$cmd" ]] || return 1
-                    "$cmd" "${dict['source_file']}" || true
-                    ;;
-            esac
             ;;
     esac
-    if [[ "${dict['stdout']}" -eq 0 ]]
+    koopa_assert_is_executable "$cmd"
+    if [[ "${bool['stdout']}" -eq 1 ]]
+    then
+        "$cmd" "${cmd_args[@]}" || true
+    else
+        koopa_alert "Decompressing '${dict['source_file']}' to \
+'${dict['target_file']}'."
+        "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
+    fi
+    koopa_assert_is_file "${dict['source_file']}"
+    if [[ -n "${dict['target_file']}" ]]
     then
         koopa_assert_is_file "${dict['target_file']}"
     fi

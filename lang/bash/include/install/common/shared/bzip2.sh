@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
@@ -23,15 +23,14 @@ main() {
     koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='bzip2'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://sourceware.org/pub/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://sourceware.org/pub/bzip2/\
+bzip2-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['makefile_shared']="Makefile-libbz2_${dict['shared_ext']}"
     koopa_print_env
