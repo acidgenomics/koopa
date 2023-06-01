@@ -1228,8 +1228,8 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "date": "2023-03-07",
-    "dependencies": ["bzip2", "xz", "zlib"],
+    "date": "2023-06-01",
+    "dependencies": ["bzip2", "xz", "zlib", "zstd"],
     "platform": "linux",
     "prune": false,
     "url": ["https://fedorahosted.org/elfutils/"],
