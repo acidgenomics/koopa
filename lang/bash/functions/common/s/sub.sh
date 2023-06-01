@@ -3,7 +3,7 @@
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2022-08-29.
+    # @note Updated 2023-06-01.
     #
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
     # matching line break characters. Additionally, using 'LANG=C' helps avoid
@@ -12,6 +12,7 @@ koopa_sub() {
     #
     # @seealso
     # - https://perldoc.perl.org/functions/quotemeta
+    # - https://perldoc.perl.org/perlop.html
     #
     # @usage koopa_sub --pattern=PATTERN --replacement=REPLACEMENT STRING...
     #
@@ -23,16 +24,15 @@ koopa_sub() {
     # # koopa_sub --pattern='/' --replacement='|' '/\|/\|'
     # # |\|/\|
     # """
-    local -A app dict
+    local -A app bool dict
     local -a pos
     app['perl']="$(koopa_locate_perl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['global']=0
+    bool['global']=0
+    bool['regex']=0
     dict['pattern']=''
-    dict['perl_tail']=''
-    dict['regex']=0
-    dict['replacement']=''
-    pos=()
+    dict['replace']=''
+    dict['tail']=''
     while (("$#"))
     do
         case "$1" in
@@ -46,25 +46,24 @@ koopa_sub() {
                 shift 2
                 ;;
             '--replacement='*)
-                dict['replacement']="${1#*=}"
+                dict['replace']="${1#*=}"
                 shift 1
                 ;;
             '--replacement')
-                # Allowing empty string passthrough here.
-                dict['replacement']="${2:-}"
+                dict['replace']="${2:-}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
             '--fixed')
-                dict['regex']=0
+                bool['regex']=0
                 shift 1
                 ;;
             '--global')
-                dict['global']=1
+                bool['global']=1
                 shift 1
                 ;;
             '--regex')
-                dict['regex']=1
+                bool['regex']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -84,19 +83,19 @@ koopa_sub() {
     fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
-    if [[ "${dict['regex']}" -eq 1 ]]
+    [[ "${bool['global']}" -eq 1 ]] && dict['tail']='g'
+    if [[ "${bool['regex']}" -eq 1 ]]
     then
-        dict['expr']="s|${dict['pattern']}|${dict['replacement']}|\
-${dict['perl_tail']}"
+        dict['pattern']="${dict['pattern']//\//\\\/}"
+        dict['replace']="${dict['replace']//\//\\\/}"
+        dict['expr']="s/${dict['pattern']}/${dict['replace']}/${dict['tail']}"
     else
         dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
-            \$replacement = '${dict['replacement']}'; \
-            s/\$pattern/\$replacement/${dict['perl_tail']}; \
+            \$replacement = '${dict['replace']}'; \
+            s/\$pattern/\$replacement/${dict['tail']}; \
         "
     fi
-    printf '%s' "$@" | \
-        LANG=C "${app['perl']}" -p -e "${dict['expr']}"
+    printf '%s\n' "$@" | LANG=C "${app['perl']}" -p -e "${dict['expr']}"
     return 0
 }
