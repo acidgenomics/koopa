@@ -2080,7 +2080,6 @@
       "gunzip",
       "gzexe",
       "gzip",
-      "uncompress",
       "zcat",
       "zcmp",
       "zdiff",
