@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Always move into the parent directory...simpler.
 # FIXME Ensure that file extension matching is case insensitive.
 # FIXME Support '.a' files here, which uses ar.
+# FIXME Rather than extracting to working directory, extract to location of
+# file.
 
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-05-31.
+    # @note Updated 2023-06-01.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -14,37 +17,33 @@ koopa_extract() {
     # - https://github.com/stephenturner/oneliners
     # - https://en.wikipedia.org/wiki/List_of_archive_formats
     # """
-    local -A app bool dict
-    local -a cmd_args
+    local -A app dict
+    local -a cmd_args contents
     local cmd
     koopa_assert_has_args_le "$#" 2
-    bool['move_into_target']=0
     dict['file']="${1:?}"
     dict['target']="${2:-}"
-    dict['wd']="${PWD:?}"
-    [[ -z "${dict['target']}" ]] && dict['target']="${dict['wd']}"
-    [[ "${dict['target']}" != "${dict['wd']}"  ]] && bool['move_into_target']=1
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    if [[ "${bool['move_into_target']}" -eq 1 ]]
+    if [[ -z "${dict['target']}" ]]
     then
-        dict['target']="$(koopa_init_dir "${dict['target']}")"
-        koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
-        dict['tmpdir']="$( \
-            koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
-.koopa-extract-$(koopa_random_string)" \
-        )"
-        dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
-        koopa_ln "${dict['file']}" "${dict['tmpfile']}"
-        dict['file']="${dict['tmpfile']}"
-    else
-        koopa_alert "Extracting '${dict['file']}'."
-        dict['tmpdir']="${dict['wd']}"
+        dict['target']="$(koopa_parent_dir "${dict['file']}")"
     fi
+    # FIXME Rework this.
+    dict['target']="$(koopa_init_dir "${dict['target']}")"
+    koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
+    dict['tmpdir']="$( \
+        koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
+.koopa-extract-$(koopa_random_string)" \
+    )"
+    dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
+    koopa_ln "${dict['file']}" "${dict['tmpfile']}"
+    dict['file']="${dict['tmpfile']}"
     (
         koopa_cd "${dict['tmpdir']}"
         # Archiving only -------------------------------------------------------
         # FIXME Add support for Unix archive ('.a', '.ar').
+        # FIXME a
         case "${dict['file']}" in
             *'.tar' | \
             *'.tar.'* | \
@@ -106,12 +105,10 @@ koopa_extract() {
                 app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
                 ;;
-            
             # Archiving and compression ----------------------------------------
-            # FIXME Add support for:
-            # - 7z
-            # - dmg? macOS
-            # - jar
+            # FIXME 7z
+            # FIXME dmg
+            # FIXME jar
             *'.7z')
                 app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
@@ -127,7 +124,6 @@ koopa_extract() {
                 )
                 ;;
             # Compression only -------------------------------------------------
-            # FIXME Add support for brotli.
             *'.br' | \
             *'.bz2' | \
             *'.gz' | \
@@ -151,34 +147,31 @@ koopa_extract() {
         fi
         "$cmd" "${cmd_args[@]}" # 2>/dev/null
     )
-    if [[ "${bool['move_into_target']}" -eq 1 ]]
+    # FIXME Consider not removing this...
+    koopa_rm "${dict['tmpfile']}"
+    readarray -t contents <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict['tmpdir']}" \
+    )"
+    if koopa_is_array_empty "${contents[@]}"
     then
-        local -a contents
-        koopa_rm "${dict['tmpfile']}"
-        readarray -t contents <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="${dict['tmpdir']}" \
-        )"
-        if koopa_is_array_empty "${contents[@]}"
-        then
-            koopa_stop "Empty archive file: '${dict['file']}'."
-        fi
-        (
-            shopt -s dotglob
-            if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
-            then
-                koopa_mv \
-                    --target-directory="${dict['target']}" \
-                    "${dict['tmpdir']}"/*/*
-            else
-                koopa_mv \
-                    --target-directory="${dict['target']}" \
-                    "${dict['tmpdir']}"/*
-            fi
-        )
-        koopa_rm "${dict['tmpdir']}"
+        koopa_stop "Empty archive file: '${dict['file']}'."
     fi
+    (
+        shopt -s dotglob
+        if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
+        then
+            koopa_mv \
+                --target-directory="${dict['target']}" \
+                "${dict['tmpdir']}"/*/*
+        else
+            koopa_mv \
+                --target-directory="${dict['target']}" \
+                "${dict['tmpdir']}"/*
+        fi
+    )
+    koopa_rm "${dict['tmpdir']}"
     return 0
 }

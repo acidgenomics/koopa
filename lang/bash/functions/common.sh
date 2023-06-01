@@ -5642,17 +5642,17 @@ koopa_datetime() {
 }
 
 koopa_decompress() {
-    local -A dict
+    local -A bool dict
     local -a cmd_args pos
     local cmd
     koopa_assert_has_args "$#"
+    bool['stdout']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-    dict['stdout']=0
     while (("$#"))
     do
         case "$1" in
             '--stdout')
-                dict['stdout']=1
+                bool['stdout']=1
                 shift 1
                 ;;
             '-')
@@ -5669,29 +5669,45 @@ koopa_decompress() {
     dict['source_file']="${1:?}"
     dict['target_file']="${2:-}"
     koopa_assert_is_file "${dict['source_file']}"
-    case "${dict['stdout']}" in
-        '0')
-            if [[ -z "${dict['target_file']}" ]]
-            then
-                dict['target_file']="$( \
-                    koopa_sub \
-                        --pattern="${dict['compress_ext_pattern']}" \
-                        --replacement='' \
-                        "${dict['source_file']}" \
-                )"
-            fi
-            if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
-            then
-                return 0
-            fi
-            ;;
-        '1')
-            [[ -z "${dict['target_file']}" ]] || return 1
+    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
+    dict['match']="$(koopa_basename "${dict['source_file']}" | koopa_lowercase)"
+    case "${dict['match']}" in
+        *'.7z' | \
+        *'.a' | \
+        *'.tar' | \
+        *'.tar.'* | \
+        *'.tbz2' | \
+        *'.tgz' | \
+        *'.zip')
+            koopa_stop \
+                "Unsupported file: '${dict['source_file']}'." \
+                "Use 'koopa_extract' instead of 'koopa_decompress'."
             ;;
     esac
-    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
-    case "${dict['source_file']}" in
-        *'.bz2' | *'.gz' | *'.xz')
+    if [[ "${bool['stdout']}" -eq 1 ]]
+    then
+        if [[ -z "${dict['target_file']}" ]]
+        then
+            dict['target_file']="$( \
+                koopa_sub \
+                    --pattern="${dict['compress_ext_pattern']}" \
+                    --regex \
+                    --replacement='' \
+                    "${dict['source_file']}" \
+            )"
+        fi
+        if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
+        then
+            return 0
+        fi
+    else
+        if [[ -n "${dict['target_file']}" ]]
+        then
+            koopa_stop 'Target file is not supported for --stdout mode.'
+        fi
+    fi
+    case "${dict['match']}" in
+        *'.bz2' | *'.gz' | *'.lzma' | *'.xz')
             case "${dict['source_file']}" in
                 *'.bz2')
                     cmd="$(koopa_locate_bzip2)"
@@ -5699,11 +5715,14 @@ koopa_decompress() {
                 *'.gz')
                     cmd="$(koopa_locate_gzip)"
                     ;;
+                *'.lzma')
+                    cmd="$(koopa_locate_lzma)"
+                    ;;
                 *'.xz')
                     cmd="$(koopa_locate_xz)"
                     ;;
             esac
-            [[ -x "$cmd" ]] || return 1
+            koopa_assert_is_executable "$cmd"
             cmd_args=(
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
@@ -5711,29 +5730,25 @@ koopa_decompress() {
                 '-k' # '--keep'.
                 "${dict['source_file']}"
             )
-            case "${dict['stdout']}" in
-                '0')
-                    "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
-                    ;;
-                '1')
-                    "$cmd" "${cmd_args[@]}" || true
-                    ;;
-            esac
+            if [[ "${bool['stdout']}" -eq 1 ]]
+            then
+                "$cmd" "${cmd_args[@]}" || true
+            else
+                "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
+            fi
             ;;
         *)
-            case "${dict['stdout']}" in
-                '0')
-                    koopa_cp "${dict['source_file']}" "${dict['target_file']}"
-                    ;;
-                '1')
-                    cmd="$(koopa_locate_cat --allow-system)"
-                    [[ -x "$cmd" ]] || return 1
-                    "$cmd" "${dict['source_file']}" || true
-                    ;;
-            esac
+            if [[ "${bool['stdout']}" -eq 1 ]]
+            then
+                app['cat']="$(koopa_locate_cat --allow-system)"
+                koopa_assert_is_executable "${app['cat']}"
+                "${app['cat']}" "${dict['source_file']}" || true
+            else
+                koopa_cp "${dict['source_file']}" "${dict['target_file']}"
+            fi
             ;;
     esac
-    if [[ "${dict['stdout']}" -eq 0 ]]
+    if [[ "${bool['stdout']}" -eq 0 ]]
     then
         koopa_assert_is_file "${dict['target_file']}"
     fi
@@ -6899,33 +6914,27 @@ koopa_extract_version() {
 }
 
 koopa_extract() {
-    local -A app bool dict
-    local -a cmd_args
+    local -A app dict
+    local -a cmd_args contents
     local cmd
     koopa_assert_has_args_le "$#" 2
-    bool['move_into_target']=0
     dict['file']="${1:?}"
     dict['target']="${2:-}"
-    dict['wd']="${PWD:?}"
-    [[ -z "${dict['target']}" ]] && dict['target']="${dict['wd']}"
-    [[ "${dict['target']}" != "${dict['wd']}"  ]] && bool['move_into_target']=1
     koopa_assert_is_file "${dict['file']}"
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    if [[ "${bool['move_into_target']}" -eq 1 ]]
+    if [[ -z "${dict['target']}" ]]
     then
-        dict['target']="$(koopa_init_dir "${dict['target']}")"
-        koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
-        dict['tmpdir']="$( \
-            koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
-.koopa-extract-$(koopa_random_string)" \
-        )"
-        dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
-        koopa_ln "${dict['file']}" "${dict['tmpfile']}"
-        dict['file']="${dict['tmpfile']}"
-    else
-        koopa_alert "Extracting '${dict['file']}'."
-        dict['tmpdir']="${dict['wd']}"
+        dict['target']="$(koopa_parent_dir "${dict['file']}")"
     fi
+    dict['target']="$(koopa_init_dir "${dict['target']}")"
+    koopa_alert "Extracting '${dict['file']}' to '${dict['target']}'."
+    dict['tmpdir']="$( \
+        koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
+.koopa-extract-$(koopa_random_string)" \
+    )"
+    dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
+    koopa_ln "${dict['file']}" "${dict['tmpfile']}"
+    dict['file']="${dict['tmpfile']}"
     (
         koopa_cd "${dict['tmpdir']}"
         case "${dict['file']}" in
@@ -6989,7 +6998,6 @@ koopa_extract() {
                 app['cmd']="${app['tar']}"
                 cmd_args=("${tar_cmd_args[@]}")
                 ;;
-            
             *'.7z')
                 app['cmd']="$(koopa_locate_7z)"
                 cmd_args=(
@@ -7026,35 +7034,31 @@ koopa_extract() {
         fi
         "$cmd" "${cmd_args[@]}" # 2>/dev/null
     )
-    if [[ "${bool['move_into_target']}" -eq 1 ]]
+    koopa_rm "${dict['tmpfile']}"
+    readarray -t contents <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --prefix="${dict['tmpdir']}" \
+    )"
+    if koopa_is_array_empty "${contents[@]}"
     then
-        local -a contents
-        koopa_rm "${dict['tmpfile']}"
-        readarray -t contents <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --prefix="${dict['tmpdir']}" \
-        )"
-        if koopa_is_array_empty "${contents[@]}"
-        then
-            koopa_stop "Empty archive file: '${dict['file']}'."
-        fi
-        (
-            shopt -s dotglob
-            if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
-            then
-                koopa_mv \
-                    --target-directory="${dict['target']}" \
-                    "${dict['tmpdir']}"/*/*
-            else
-                koopa_mv \
-                    --target-directory="${dict['target']}" \
-                    "${dict['tmpdir']}"/*
-            fi
-        )
-        koopa_rm "${dict['tmpdir']}"
+        koopa_stop "Empty archive file: '${dict['file']}'."
     fi
+    (
+        shopt -s dotglob
+        if [[ "${#contents[@]}" -eq 1 ]] && [[ -d "${contents[0]}" ]]
+        then
+            koopa_mv \
+                --target-directory="${dict['target']}" \
+                "${dict['tmpdir']}"/*/*
+        else
+            koopa_mv \
+                --target-directory="${dict['target']}" \
+                "${dict['tmpdir']}"/*
+        fi
+    )
+    koopa_rm "${dict['tmpdir']}"
     return 0
 }
 
@@ -15865,6 +15869,13 @@ koopa_locate_lzip() {
         "$@"
 }
 
+koopa_locate_lzma() {
+    koopa_locate_app \
+        --app-name='xz' \
+        --bin-name='lzma' \
+        "$@"
+}
+
 koopa_locate_magick_core_config() {
     koopa_locate_app \
         --app-name='imagemagick' \
@@ -21779,16 +21790,15 @@ koopa_strip_trailing_slash() {
 }
 
 koopa_sub() {
-    local -A app dict
+    local -A app bool dict
     local -a pos
     app['perl']="$(koopa_locate_perl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['global']=0
+    bool['global']=0
+    bool['regex']=0
     dict['pattern']=''
-    dict['perl_tail']=''
-    dict['regex']=0
-    dict['replacement']=''
-    pos=()
+    dict['replace']=''
+    dict['tail']=''
     while (("$#"))
     do
         case "$1" in
@@ -21801,23 +21811,23 @@ koopa_sub() {
                 shift 2
                 ;;
             '--replacement='*)
-                dict['replacement']="${1#*=}"
+                dict['replace']="${1#*=}"
                 shift 1
                 ;;
             '--replacement')
-                dict['replacement']="${2:-}"
+                dict['replace']="${2:-}"
                 shift 2
                 ;;
             '--fixed')
-                dict['regex']=0
+                bool['regex']=0
                 shift 1
                 ;;
             '--global')
-                dict['global']=1
+                bool['global']=1
                 shift 1
                 ;;
             '--regex')
-                dict['regex']=1
+                bool['regex']=1
                 shift 1
                 ;;
             '-'*)
@@ -21836,20 +21846,20 @@ koopa_sub() {
     fi
     set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    [[ "${dict['global']}" -eq 1 ]] && dict['perl_tail']='g'
-    if [[ "${dict['regex']}" -eq 1 ]]
+    [[ "${bool['global']}" -eq 1 ]] && dict['tail']='g'
+    if [[ "${bool['regex']}" -eq 1 ]]
     then
-        dict['expr']="s|${dict['pattern']}|${dict['replacement']}|\
-${dict['perl_tail']}"
+        dict['pattern']="${dict['pattern']//\//\\\/}"
+        dict['replace']="${dict['replace']//\//\\\/}"
+        dict['expr']="s/${dict['pattern']}/${dict['replace']}/${dict['tail']}"
     else
         dict['expr']=" \
             \$pattern = quotemeta '${dict['pattern']}'; \
-            \$replacement = '${dict['replacement']}'; \
-            s/\$pattern/\$replacement/${dict['perl_tail']}; \
+            \$replacement = '${dict['replace']}'; \
+            s/\$pattern/\$replacement/${dict['tail']}; \
         "
     fi
-    printf '%s' "$@" | \
-        LANG=C "${app['perl']}" -p -e "${dict['expr']}"
+    printf '%s\n' "$@" | LANG=C "${app['perl']}" -p -e "${dict['expr']}"
     return 0
 }
 

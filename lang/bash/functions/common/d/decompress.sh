@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure that file extension matching is case insensitive.
-# FIXME Don't support compression formats that allow for decompression of
-# multiple files here: e.g. zip.
-# FIXME Add support for brotli here.
-# FIXME Migrate support for '.Z' from extract here.
-# FIXME Remove support for xz from extract and use code here instead.
-# FIXME What's the difference here between decompress and extract?
-# NOTE Add support for lzip (lz).
-# NOTE Add support for zstd (zst).
+# FIXME brotli (br)
+# FIXME lz (lzip)
+# FIXME lz4 (???)
+# FIXME Z (uncompress)
+# FIXME zst (zstd)
+
+# FIXME Add support for:
+# - 7z (p7zip)
+# - Z (uncompress)
+# - lz (lzip)
+# - zst (zstd)
+# For 7z can use '-x' flag.
+# For Z, don't need an argument.
 
 koopa_decompress() {
     # """
     # Decompress a single compressed file.
-    # @note Updated 2023-05-31.
+    # @note Updated 2023-06-01.
     #
     # Intentionally supports only compression formats. For mixed archiving
     # and compression formats, use 'koopa_extract' instead.
@@ -44,18 +48,18 @@ koopa_decompress() {
     # @seealso
     # - https://en.wikipedia.org/wiki/List_of_archive_formats
     # """
-    local -A dict
+    local -A bool dict
     local -a cmd_args pos
     local cmd
     koopa_assert_has_args "$#"
+    bool['stdout']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
-    dict['stdout']=0
     while (("$#"))
     do
         case "$1" in
             # Flags ------------------------------------------------------------
             '--stdout')
-                dict['stdout']=1
+                bool['stdout']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -73,39 +77,53 @@ koopa_decompress() {
     dict['source_file']="${1:?}"
     dict['target_file']="${2:-}"
     koopa_assert_is_file "${dict['source_file']}"
-    case "${dict['stdout']}" in
-        '0')
-            if [[ -z "${dict['target_file']}" ]]
-            then
-                dict['target_file']="$( \
-                    koopa_sub \
-                        --pattern="${dict['compress_ext_pattern']}" \
-                        --replacement='' \
-                        "${dict['source_file']}" \
-                )"
-            fi
-            if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
-            then
-                return 0
-            fi
-            ;;
-        '1')
-            [[ -z "${dict['target_file']}" ]] || return 1
+    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
+    # Ensure that we're matching against case insensitive basename.
+    dict['match']="$(koopa_basename "${dict['source_file']}" | koopa_lowercase)"
+    # Intentionally error on archive formats.
+    case "${dict['match']}" in
+        *'.7z' | \
+        *'.a' | \
+        *'.tar' | \
+        *'.tar.'* | \
+        *'.tbz2' | \
+        *'.tgz' | \
+        *'.zip')
+            koopa_stop \
+                "Unsupported archive file: '${dict['source_file']}'." \
+                "Use 'koopa_extract' instead of 'koopa_decompress'."
             ;;
     esac
-    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
-    # FIXME Consider not always redicting to stdout here -- see '-c' flag usage
-    # below. Instead, only do that when stdout is desired.
-    # FIXME Add support for:
-    # - 7z (p7zip)
-    # - Z (uncompress)
-    # - lz (lzip)
-    # - zst (zstd)
-    # - lzma
-    # For 7z can use '-x' flag.
-    # For Z, don't need an argument.
-    case "${dict['source_file']}" in
-        *'.bz2' | *'.gz' | *'.xz')
+    if [[ "${bool['stdout']}" -eq 1 ]]
+    then
+        if [[ -z "${dict['target_file']}" ]]
+        then
+            dict['target_file']="$( \
+                koopa_sub \
+                    --pattern="${dict['compress_ext_pattern']}" \
+                    --regex \
+                    --replacement='' \
+                    "${dict['source_file']}" \
+            )"
+        fi
+        # Return unmodified for non-compressed files.
+        if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
+        then
+            return 0
+        fi
+    else
+        if [[ -n "${dict['target_file']}" ]]
+        then
+            koopa_stop 'Target file is not supported for --stdout mode.'
+        fi
+    fi
+    # FIXME br
+    # FIXME lz
+    # FIXME lz4
+    # FIXME z
+    # FIXME zstd
+    case "${dict['match']}" in
+        *'.bz2' | *'.gz' | *'.lzma' | *'.xz')
             case "${dict['source_file']}" in
                 *'.bz2')
                     cmd="$(koopa_locate_bzip2)"
@@ -113,42 +131,40 @@ koopa_decompress() {
                 *'.gz')
                     cmd="$(koopa_locate_gzip)"
                     ;;
+                *'.lzma')
+                    cmd="$(koopa_locate_lzma)"
+                    ;;
                 *'.xz')
                     cmd="$(koopa_locate_xz)"
                     ;;
             esac
-            [[ -x "$cmd" ]] || return 1
+            koopa_assert_is_executable "$cmd"
             cmd_args=(
-                # FIXME Only use '--stdout' when piping to stdout...rethink.
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
                 '-f' # '--force'.
                 '-k' # '--keep'.
                 "${dict['source_file']}"
             )
-            case "${dict['stdout']}" in
-                '0')
-                    "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
-                    ;;
-                '1')
-                    "$cmd" "${cmd_args[@]}" || true
-                    ;;
-            esac
+            if [[ "${bool['stdout']}" -eq 1 ]]
+            then
+                "$cmd" "${cmd_args[@]}" || true
+            else
+                "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
+            fi
             ;;
         *)
-            case "${dict['stdout']}" in
-                '0')
-                    koopa_cp "${dict['source_file']}" "${dict['target_file']}"
-                    ;;
-                '1')
-                    cmd="$(koopa_locate_cat --allow-system)"
-                    [[ -x "$cmd" ]] || return 1
-                    "$cmd" "${dict['source_file']}" || true
-                    ;;
-            esac
+            if [[ "${bool['stdout']}" -eq 1 ]]
+            then
+                app['cat']="$(koopa_locate_cat --allow-system)"
+                koopa_assert_is_executable "${app['cat']}"
+                "${app['cat']}" "${dict['source_file']}" || true
+            else
+                koopa_cp "${dict['source_file']}" "${dict['target_file']}"
+            fi
             ;;
     esac
-    if [[ "${dict['stdout']}" -eq 0 ]]
+    if [[ "${bool['stdout']}" -eq 0 ]]
     then
         koopa_assert_is_file "${dict['target_file']}"
     fi
