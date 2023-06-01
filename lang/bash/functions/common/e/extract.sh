@@ -62,7 +62,6 @@ $(koopa_basename_sans_ext "${dict['file']}")"
         dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/\
 $(koopa_basename_sans_ext "${dict['file']}")"
     fi
-    koopa_assert_is_non_existing "${dict['target_dir']}"
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
     dict['tmpdir']="$( \
