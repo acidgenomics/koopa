@@ -5734,6 +5734,8 @@ koopa_decompress() {
             then
                 "$cmd" "${cmd_args[@]}" || true
             else
+                koopa_alert "Decompressing '${dict['source_file']}' to \
+'${dict['target_file']}'."
                 "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
             fi
             ;;
@@ -5744,6 +5746,8 @@ koopa_decompress() {
                 koopa_assert_is_executable "${app['cat']}"
                 "${app['cat']}" "${dict['source_file']}" || true
             else
+                koopa_alert "Copying '${dict['source_file']}' to \
+'${dict['target_file']}'."
                 koopa_cp "${dict['source_file']}" "${dict['target_file']}"
             fi
             ;;
