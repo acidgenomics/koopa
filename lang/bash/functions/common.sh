@@ -5680,12 +5680,17 @@ koopa_decompress() {
         *'.tgz' | \
         *'.zip')
             koopa_stop \
-                "Unsupported file: '${dict['source_file']}'." \
+                "Unsupported archive file: '${dict['source_file']}'." \
                 "Use 'koopa_extract' instead of 'koopa_decompress'."
             ;;
     esac
     if [[ "${bool['stdout']}" -eq 1 ]]
     then
+        if [[ -n "${dict['target_file']}" ]]
+        then
+            koopa_stop 'Target file is not supported for --stdout mode.'
+        fi
+    else
         if [[ -z "${dict['target_file']}" ]]
         then
             dict['target_file']="$( \
@@ -5699,11 +5704,6 @@ koopa_decompress() {
         if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
         then
             return 0
-        fi
-    else
-        if [[ -n "${dict['target_file']}" ]]
-        then
-            koopa_stop 'Target file is not supported for --stdout mode.'
         fi
     fi
     case "${dict['match']}" in
