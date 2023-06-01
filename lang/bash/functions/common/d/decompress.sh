@@ -117,6 +117,14 @@ koopa_decompress() {
             return 0
         fi
     fi
+    if [[ -f "${dict['target_file']}" ]]
+    then
+        if [[ "${bool['stdout']}" -eq 0 ]]
+        then
+            koopa_alert_note "Overwriting '${dict['target_file']}'."
+        fi
+        koopa_rm "${dict['target_file']}"
+    fi
     # FIXME br
     # FIXME lz
     # FIXME lz4
@@ -168,7 +176,8 @@ koopa_decompress() {
             fi
             ;;
     esac
-    if [[ "${bool['stdout']}" -eq 0 ]]
+    koopa_assert_is_file "${dict['source_file']}"
+    if [[ -n "${dict['target_file']}" ]]
     then
         koopa_assert_is_file "${dict['target_file']}"
     fi
