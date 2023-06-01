@@ -3,7 +3,7 @@
 koopa_apply_ubuntu_patch_set() {
     # """
     # Apply Ubuntu patch set.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     # """
     local -A app dict
     local -a patch_series
@@ -65,8 +65,7 @@ koopa_apply_ubuntu_patch_set() {
 ${dict['name']:0:1}/${dict['name']}/${dict['name']}_${dict['version']}-\
 ${dict['patch_version']}ubuntu1.debian.tar.xz"
     koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")"
-    koopa_assert_is_dir 'debian/patches'
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'debian'
     koopa_assert_is_file 'debian/patches/series'
     readarray -t patch_series < 'debian/patches/series'
     (
