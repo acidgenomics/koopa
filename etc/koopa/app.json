@@ -1177,9 +1177,9 @@
     "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
   },
   "dotfiles": {
-    "date": "2023-05-30",
+    "date": "2023-06-01",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "720403e7061b4694620f79353b807f94d288770c"
+    "version": "d829ef3b1e5d02a04468762c4e834d21ea6ce7c7"
   },
   "du-dust": {
     "aliases": {
