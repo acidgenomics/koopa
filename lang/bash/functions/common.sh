@@ -6516,6 +6516,14 @@ koopa_docker_run() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
     dict['image']="${1:?}"
+    case "${dict['image']}" in
+        *'.dkr.ecr.'*'.amazonaws.com/'*)
+            koopa_aws_ecr_login_private
+            ;;
+        'public.ecr.aws/'*)
+            koopa_aws_ecr_login_public
+            ;;
+    esac
     "${app['docker']}" pull "${dict['image']}"
     run_args=('--interactive' '--tty')
     if [[ "${dict['bind']}" -eq 1 ]]
