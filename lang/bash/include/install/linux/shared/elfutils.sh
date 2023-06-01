@@ -3,29 +3,26 @@
 main() {
     # """
     # Install elfutils.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/elfutils.rb
     # """
-    local -A app dict
+    local -A dict
     local -a conf_args deps
     deps=(
         'bzip2'
         'xz'
         'zlib'
-        # > 'zstd'
+        'zstd'
     )
     koopa_is_macos && deps+=('gettext')
     deps+=('libiconv')
-    koopa_activate_app --build-only 'm4' 'make'
+    koopa_activate_app --build-only 'm4'
     koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
-    dict['name']='elfutils'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
@@ -44,9 +41,9 @@ main() {
         '--program-prefix=eu-'
         '--with-bzlib'
         "--with-libiconv-prefix=${dict['libiconv']}"
+        '--with-lzma'
         '--with-zlib'
-        '--without-lzma'
-        '--without-zstd'
+        '--with-zstd'
     )
     if koopa_is_macos
     then
@@ -54,17 +51,11 @@ main() {
             "--with-libintl-prefix=${dict['gettext']}"
         )
     fi
-    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
     dict['url']="https://sourceware.org/elfutils/ftp/\
-${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    ./configure --help
-    ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+${dict['version']}/elfutils-${dict['version']}.tar.bz2"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
