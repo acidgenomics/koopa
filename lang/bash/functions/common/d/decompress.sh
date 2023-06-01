@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME brotli (br)
-# FIXME lz (lzip)
-# FIXME lz4 (lz4)
-# FIXME Z (uncompress)
-# FIXME zst (zstd)
-
-# FIXME Add support for:
-# - 7z (p7zip)
-# - Z (uncompress)
-# - lz (lzip)
-# - zst (zstd)
-# For 7z can use '-x' flag.
-# For Z, don't need an argument.
-
 koopa_decompress() {
     # """
     # Decompress a single compressed file.
