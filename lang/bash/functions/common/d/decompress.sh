@@ -96,6 +96,11 @@ koopa_decompress() {
     esac
     if [[ "${bool['stdout']}" -eq 1 ]]
     then
+        if [[ -n "${dict['target_file']}" ]]
+        then
+            koopa_stop 'Target file is not supported for --stdout mode.'
+        fi
+    else
         if [[ -z "${dict['target_file']}" ]]
         then
             dict['target_file']="$( \
@@ -110,11 +115,6 @@ koopa_decompress() {
         if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
         then
             return 0
-        fi
-    else
-        if [[ -n "${dict['target_file']}" ]]
-        then
-            koopa_stop 'Target file is not supported for --stdout mode.'
         fi
     fi
     # FIXME br
