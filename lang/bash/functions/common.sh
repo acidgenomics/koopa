@@ -7005,14 +7005,14 @@ $(koopa_basename_sans_ext "${dict['file']}")"
                 cmd_args=("${tar_cmd_args[@]}")
                 ;;
             *'.7z')
-                app['cmd']="$(koopa_locate_7z)"
+                cmd="$(koopa_locate_7z)"
                 cmd_args=(
                     '-x'
                     "${dict['tmpfile']}"
                 )
                 ;;
             *'.zip')
-                app['cmd']="$(koopa_locate_unzip --allow-system)"
+                cmd="$(koopa_locate_unzip --allow-system)"
                 cmd_args=(
                     '-qq'
                     "${dict['tmpfile']}"
