@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Cell Ranger.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # Refdata is accessible here:
     # https://support.10xgenomics.com/single-cell-gene-expression/
@@ -21,8 +21,7 @@ main() {
     dict['url']="${dict['installers_base']}/${dict['name']}/${dict['file']}"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_mv "${dict['name']}-${dict['version']}" "${dict['libexec']}"
+    koopa_extract "${dict['file']}" "${dict['libexec']}"
     (
         koopa_cd "${dict['prefix']}"
         koopa_ln 'libexec/bin' 'bin'
