@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to build this from source.
+
 main() {
     # """
     # Install diff-so-fancy.
