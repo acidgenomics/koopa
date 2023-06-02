@@ -2299,11 +2299,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-01",
+    "date": "2023-06-02",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.6"
+    "version": "0.112.7"
   },
   "hyperfine": {
     "aliases": {
@@ -3669,13 +3669,13 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2024-04-12",
+    "date": "2024-06-02",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "ont-dorado": {
     "bin": ["dorado"],
@@ -4538,10 +4538,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-04-20",
+    "date": "2023-06-02",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.69.0"
+    "version": "1.70.0"
   },
   "salmon": {
     "bin": ["salmon"],
