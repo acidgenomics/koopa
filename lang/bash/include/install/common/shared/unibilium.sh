@@ -3,7 +3,7 @@
 main() {
     # """
     # Install unibilium.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-02.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
@@ -13,15 +13,13 @@ main() {
     koopa_activate_app --build-only 'libtool' 'make' 'pkg-config'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='unibilium'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/neovim/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/neovim/unibilium/archive/\
+v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     "${app['make']}"
     "${app['make']}" install PREFIX="${dict['prefix']}"

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_macos_configure_system_defaults() {
+koopa_macos_configure_system_preferences() {
     koopa_configure_app \
-        --name='defaults' \
+        --name='preferences' \
         --platform='macos' \
         --system \
         "$@"

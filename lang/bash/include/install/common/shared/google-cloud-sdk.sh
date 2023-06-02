@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -30,12 +30,12 @@ main() {
             dict['arch2']="${dict['arch']}"
             ;;
     esac
-    dict['file']="google-cloud-cli-${dict['version']}-${dict['os']}-\
-${dict['arch2']}.tar.gz"
     dict['url']="https://dl.google.com/dl/cloudsdk/channels/rapid/\
-downloads/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cp 'google-cloud-sdk' "${dict['prefix']}"
+downloads/google-cloud-cli-${dict['version']}-${dict['os']}-\
+${dict['arch2']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract \
+        "$(koopa_basename "${dict['url']}")" \
+        "${dict['prefix']}"
     return 0
 }

@@ -147,17 +147,17 @@ koopa_macos_clean_launch_services() {
     return 0
 }
 
-koopa_macos_configure_system_defaults() {
+koopa_macos_configure_system_preferences() {
     koopa_configure_app \
-        --name='defaults' \
+        --name='preferences' \
         --platform='macos' \
         --system \
         "$@"
 }
 
-koopa_macos_configure_user_defaults() {
+koopa_macos_configure_user_preferences() {
     koopa_configure_app \
-        --name='defaults' \
+        --name='preferences' \
         --platform='macos' \
         --user \
         "$@"
