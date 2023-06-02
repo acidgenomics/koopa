@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install macOS user defaults.
-    # @note Updated 2023-05-12.
+    # Configure macOS user defaults.
+    # @note Updated 2023-06-02.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'

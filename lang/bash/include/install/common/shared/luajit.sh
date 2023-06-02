@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LuaJIT.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://luajit.org/download.html
@@ -14,15 +14,13 @@ main() {
     app['make']="$(koopa_locate_make)"
     app['pkg_config']="$(koopa_locate_pkg_config)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='LuaJIT'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.gz"
-    dict['url']="https://luajit.org/download/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://luajit.org/download/LuaJIT-${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     if koopa_is_macos
     then
         dict['macos_version']="$(koopa_macos_os_version)"

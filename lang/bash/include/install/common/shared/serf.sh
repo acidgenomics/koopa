@@ -4,7 +4,7 @@
 main() {
     # """
     # Install Apache Serf.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-06-02.
     #
     # Required by subversion for HTTPS connections.
     #
@@ -33,14 +33,13 @@ main() {
     app['patch']="$(koopa_locate_patch)"
     app['scons']="$(koopa_locate_scons)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='serf'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}.tar.bz2"
-    dict['url']="https://www.apache.org/dist/${dict['name']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://www.apache.org/dist/serf/\
+serf-${dict['version']}.tar.bz2"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     # Patch diff created with:
     # > diff -u 'SConstruct' 'SConstruct-1' > 'patch-sconstruct-1.patch'
     "${app['cat']}" << END > 'patch-sconstruct-1.patch'

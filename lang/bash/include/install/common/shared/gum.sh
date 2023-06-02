@@ -3,7 +3,7 @@
 main() {
     # """
     # Install gum.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://github.com/charmbracelet/gum
@@ -15,18 +15,15 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['name']='gum'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/charmbracelet/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
-    app['gum']="${dict['prefix']}/bin/gum"
+    dict['url']="https://github.com/charmbracelet/gum/\
+archive/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     dict['ldflags']="-s -w -X main.Version=${dict['version']}"
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
@@ -40,6 +37,8 @@ archive/${dict['file']}"
         "${dict['fish_c']}" \
         "${dict['zsh_c']}" \
         "${dict['manfile']}"
+    app['gum']="${dict['prefix']}/bin/gum"
+    koopa_assert_is_executable "${app['gum']}"
     "${app['gum']}" completion bash > "${dict['bash_c']}"
     "${app['gum']}" completion fish > "${dict['fish_c']}"
     "${app['gum']}" completion zsh > "${dict['zsh_c']}"

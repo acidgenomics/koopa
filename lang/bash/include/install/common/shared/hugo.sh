@@ -6,7 +6,7 @@
 main() {
     # """
     # Install hugo.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # The '-s' and '-w' ldflags help shrink the size of the binary.
     # Refer to 'go tool link' for details.
@@ -24,17 +24,15 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['name']='hugo'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    dict['file']="v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/gohugoio/${dict['name']}/\
-archive/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/gohugoio/hugo/\
+archive/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     "${app['go']}" build \
         -ldflags '-s -w' \
