@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider using similar corepack approach for npm and npx that we're
-# using for yarn.
-
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-06-02.
     #
     # Corepack configuration gets saved to '~/.cache/node/corepack'.
     #

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-02.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -12,25 +12,23 @@ main() {
     # - https://github.com/macports/macports-ports/blob/master/lang/tcl/Portfile
     # - https://github.com/macports/macports-ports/blob/master/x11/tk/Portfile
     # """
-    local -A app dict
-    local -a conf_args
-    koopa_activate_app 'zlib'
+    local -A dict
+    local -a conf_args deps
+    deps=('zlib')
     if koopa_is_linux
     then
-        koopa_activate_app --build-only 'make' 'pkg-config'
-        koopa_activate_app \
-            'xorg-xorgproto' \
-            'xorg-xcb-proto' \
-            'xorg-libpthread-stubs' \
-            'xorg-libxau' \
-            'xorg-libxdmcp' \
-            'xorg-libxcb' \
+        deps+=(
+            'xorg-xorgproto'
+            'xorg-xcb-proto'
+            'xorg-libpthread-stubs'
+            'xorg-libxau'
+            'xorg-libxdmcp'
+            'xorg-libxcb'
             'xorg-libx11'
+        )
     fi
-    local -A app
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url_stem']='https://prdownloads.sourceforge.net/tcl'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -41,44 +39,38 @@ main() {
         '--enable-threads'
         "--prefix=${dict['prefix']}"
     )
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
-    dict['tcl_file']="tcl${dict['version']}-src.tar.gz"
-    dict['tcl_url']="${dict['url_stem']}/${dict['tcl_file']}"
-    koopa_download "${dict['tcl_url']}" "${dict['tcl_file']}"
-    koopa_extract "${dict['tcl_file']}"
+    dict['tcl_url']="${dict['url_stem']}/tcl${dict['version']}-src.tar.gz"
+    dict['tk_url']="${dict['url_stem']}/tk${dict['version']}-src.tar.gz"
+    koopa_download "${dict['tcl_url']}"
+    koopa_download "${dict['tk_url']}"
+    koopa_extract "$(koopa_basename "${dict['tcl_url']}")" 'tcl-src'
+    koopa_extract "$(koopa_basename "${dict['tk_url']}")" 'tk-src'
     (
-        koopa_cd "tcl${dict['version']}/unix"
-        ./configure --help
-        ./configure "${conf_args[@]}"
-        "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-        "${app['make']}" install
-        "${app['make']}" install-private-headers
+        koopa_cd 'tcl-src/unix'
+        koopa_make_build \
+            --target='install' \
+            --target='install-private-headers' \
+            "${conf_args[@]}"
     )
-    dict['tk_file']="tk${dict['version']}-src.tar.gz"
-    dict['tk_url']="${dict['url_stem']}/${dict['tk_file']}"
-    koopa_download "${dict['tk_url']}" "${dict['tk_file']}"
-    koopa_extract "${dict['tk_file']}"
     (
-        local conf_args_2
-        conf_args_2=(
+        local tk_conf_args
+        tk_conf_args=(
             "${conf_args[@]}"
             "--with-tcl=${dict['prefix']}/lib"
         )
         if koopa_is_macos
         then
-            conf_args_2+=('--enable-aqua=yes')
+            tk_conf_args+=('--enable-aqua=yes')
         fi
-        koopa_cd "tk${dict['version']}/unix"
-        ./configure --help
-        ./configure "${conf_args_2[@]}"
-        "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-        "${app['make']}" install
-        "${app['make']}" install-private-headers
+        koopa_cd 'tk-src/unix'
+        koopa_make_build \
+            --target='install' \
+            --target='install-private-headers' \
+            "${tk_conf_args[@]}"
     )
     (
+        # This is necessary for Lmod.
         koopa_cd "${dict['prefix']}/bin"
-        # This is necessary for Lmod install.
         koopa_ln "tclsh${dict['maj_min_ver']}" 'tclsh'
         koopa_ln "wish${dict['maj_min_ver']}" 'wish'
     )

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Adoptium Eclipse Temurin JDK.
-    # @note Updated 2023-04-24.
+    # @note Updated 2023-06-02.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -60,18 +60,13 @@ main() {
             --replacement='%2B' \
             "${dict['version']}" \
     )"
-    # Need to support these:
-    # - OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.3_7.tar.gz
-    # - OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.3_7.tar.gz
-    # - OpenJDK17U-jdk_x64_linux_hotspot_17.0.3_7.tar.gz
-    # - OpenJDK17U-jdk_x64_mac_hotspot_17.0.3_7.tar.gz
-    dict['file']="OpenJDK${dict['maj_ver']}U-jdk_${dict['arch2']}_\
-${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
     dict['url']="https://github.com/adoptium/temurin${dict['maj_ver']}-\
-binaries/releases/download/jdk-${dict['version3']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cp "jdk-${dict['version']}" "${dict['prefix']}/libexec"
+binaries/releases/download/jdk-${dict['version3']}/OpenJDK${dict['maj_ver']}U-\
+jdk_${dict['arch2']}_${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract \
+        "$(koopa_basename "${dict['url']}")" \
+        "${dict['prefix']}/libexec"
     (
         local -a names
         local libexec name

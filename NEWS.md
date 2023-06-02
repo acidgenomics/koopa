@@ -1,5 +1,29 @@
 # Release notes
 
+## koopa 0.13.1 (2023-06-02)
+
+Major changes:
+
+- Reworked `decompress` and `extract` functions. Added support for additional
+  compression formats, including brotli, lz4, lzip, and zstd.
+
+Minor changes:
+
+- Removed `decompress` from koopa bin. We recommend using `extract` instead,
+  which supports multiple archive formats, including compressed files.
+- Removed install support for `yarn`, which is now bundled inside of `node`.
+- Renamed `defaults` configuration to `preferences` on macOS.
+- Renamed `defaults` configuration to `base` on Debian.
+- Added `ca-certificates` activation function.
+- Improved time zone configuration handling on Debian systems not booted with
+  systemd (e.g. Latch Pods).
+- Hardened extraction steps inside of installers, where applicable.
+
+New installers:
+
+- Added support for `apache-arrow`, `krb5`, `ldns`, `libcbor`, `libfido2`,
+  `libxcrypt`, `p7zip`.
+
 ## koopa 0.13.0 (2023-05-25)
 
 This is a big update, with thousands of changes since our prelease stable

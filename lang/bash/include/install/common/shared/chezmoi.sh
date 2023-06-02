@@ -3,7 +3,7 @@
 main() {
     # """
     # Install chezmoi.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://www.chezmoi.io/
@@ -17,17 +17,15 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['name']='chezmoi'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/twpayne/chezmoi/archive/\
-refs/tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+refs/tags/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     dict['ldflags']="-X main.version=${dict['version']}"
     koopa_print_env
     "${app['go']}" build \

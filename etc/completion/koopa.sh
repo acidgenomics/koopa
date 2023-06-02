@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-05-31.
+    # @note Updated 2023-06-02.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -535,14 +535,17 @@ _koopa_complete() {
                             fi
                             if _koopa_is_debian_like || _koopa_is_macos
                             then
-                                args+=('defaults')
+                                args+=('base')
+                            elif _koopa_is_macos
+                            then
+                                args+=('preferences')
                             fi
                             ;;
                         'user')
                             args+=('chemacs' 'dotfiles')
                             if _koopa_is_macos
                             then
-                                args+=('defaults')
+                                args+=('preferences')
                             fi
                             ;;
                         esac

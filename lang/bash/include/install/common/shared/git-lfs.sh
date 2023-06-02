@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Git LFS.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/git-lfs.rb
@@ -18,17 +18,15 @@ main() {
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='git-lfs'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    dict['file']="${dict['name']}-v${dict['version']}.tar.gz"
-    dict['url']="https://github.com/${dict['name']}/${dict['name']}/releases/\
-download/v${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+    dict['url']="https://github.com/git-lfs/git-lfs/releases/download/\
+v${dict['version']}/git-lfs-v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     koopa_print_env
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     koopa_cp --target-directory="${dict['prefix']}" 'bin'

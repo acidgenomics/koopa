@@ -1178,9 +1178,9 @@
     "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
   },
   "dotfiles": {
-    "date": "2023-06-01",
+    "date": "2023-06-02",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "d829ef3b1e5d02a04468762c4e834d21ea6ce7c7"
+    "version": "8e4aa62096d1e356e9fe85525a8ba792faa74d65"
   },
   "du-dust": {
     "aliases": {
@@ -1228,8 +1228,8 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "date": "2023-03-07",
-    "dependencies": ["bzip2", "xz", "zlib"],
+    "date": "2023-06-01",
+    "dependencies": ["bzip2", "xz", "zlib", "zstd"],
     "platform": "linux",
     "prune": false,
     "url": ["https://fedorahosted.org/elfutils/"],
@@ -2299,11 +2299,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-01",
+    "date": "2023-06-02",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.6"
+    "version": "0.112.7"
   },
   "hyperfine": {
     "aliases": {
@@ -3057,7 +3057,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-05-17",
+    "date": "2023-06-02",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -3072,7 +3072,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.4"
+    "version": "16.0.5"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3669,13 +3669,13 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2024-04-12",
+    "date": "2024-06-02",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "ont-dorado": {
     "bin": ["dorado"],
@@ -4538,10 +4538,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-04-20",
+    "date": "2023-06-02",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.69.0"
+    "version": "1.70.0"
   },
   "salmon": {
     "bin": ["salmon"],

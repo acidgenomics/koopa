@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting a segmentation fault:
-# /bin/bash: line 2: 89117 Segmentation fault: 11  ./ssh-keygen -A
-# gmake: *** [Makefile:447: host-key] Error 139
-
 main() {
     # """
     # Install OpenSSH.

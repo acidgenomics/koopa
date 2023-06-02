@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Julia (from source).
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
@@ -23,15 +23,13 @@ main() {
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='julia'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="${dict['name']}-${dict['version']}-full.tar.gz"
     dict['url']="https://github.com/JuliaLang/julia/releases/download/\
-v${dict['version']}/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+v${dict['version']}/julia-${dict['version']}-full.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     # Customize the 'Make.user' file. Refer to 'Make.inc' for supported values.
     read -r -d '' "dict[make_user_string]" << END || true
 prefix=${dict['prefix']}
@@ -43,7 +41,7 @@ END
     koopa_write_string \
         --file='Make.user' \
         --string="${dict['make_user_string']}"
-    koopa_add_to_path_end '/usr/sbin'
+    koopa_add_to_path_end '/usr/sbin' '/sbin'
     koopa_print_env
     koopa_print "${dict['make_user_string']}"
     "${app['make']}" --jobs="${dict['jobs']}"

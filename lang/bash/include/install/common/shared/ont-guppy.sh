@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Oxford Nanopore guppy caller.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     # """
     local -A app dict
     if koopa_is_macos
@@ -32,8 +32,6 @@ main() {
 ${dict['platform']}/${dict['arch']}/${dict['file']}"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['core_type']}"
-    koopa_cp ./* --target-directory="${dict['prefix']}"
+    koopa_extract "${dict['file']}" "${dict['prefix']}"
     return 0
 }

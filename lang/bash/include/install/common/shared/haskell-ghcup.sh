@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Haskell GHCup.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-01.
     #
     # @seealso
     # - https://www.haskell.org/ghcup/
@@ -16,15 +16,13 @@ main() {
     koopa_activate_app --build-only 'curl'
     dict['build_prefix']="$(koopa_init_dir 'build')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='ghcup-hs'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['file']="v${dict['version']}.tar.gz"
     dict['url']="https://github.com/haskell/ghcup-hs/archive/refs/\
-tags/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}"
-    koopa_cd "${dict['name']}-${dict['version']}"
+tags/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
     # > export BOOTSTRAP_HASKELL_CABAL_VERSION='recommended'
     # > export BOOTSTRAP_HASKELL_GHC_VERSION='recommended'
     # > export BOOTSTRAP_HASKELL_INSTALL_HLS=1

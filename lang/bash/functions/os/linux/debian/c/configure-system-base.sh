@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_debian_configure_system_defaults() {
+koopa_debian_configure_system_base() {
     koopa_configure_app \
-        --name='defaults' \
+        --name='base' \
         --platform='debian' \
         --system \
         "$@"
