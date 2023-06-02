@@ -1,15 +1,14 @@
 #!/usr/bin/env bash
 
-# FIXME Rename this to 'preferences'.
-
-# NOTE How to set disable sleep when screen is off while plugged in:
+# NOTE How to automate this step?
+# Disable sleep when screen is off while plugged in:
 # Displays > Advanced > Prevent automatic sleeping on power adapter when the
 # display is off
 
 main() {
     # """
-    # Install macOS system defaults.
-    # @note Updated 2022-09-02.
+    # Configure macOS system preferences.
+    # @note Updated 2023-06-02.
     #
     # """
     local -A app
