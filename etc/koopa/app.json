@@ -1139,7 +1139,7 @@
     "build_dependencies": ["git", "rust"],
     "date": "2023-06-03",
     "url": ["https://github.com/dandavison/delta/"],
-    "version": "0.16.4"
+    "version": "0.16.5"
   },
   "diff-so-fancy": {
     "aliases": {
