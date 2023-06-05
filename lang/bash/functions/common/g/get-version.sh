@@ -22,7 +22,7 @@ koopa_get_version() {
         local -A dict
         dict['cmd']="$cmd"
         dict['bn']="$(koopa_basename "${dict['cmd']}")"
-        dict['bn_snake']="$(koopa_snake_case_simple "${dict['bn']}")"
+        dict['bn_snake']="$(koopa_snake_case "${dict['bn']}")"
         dict['version_arg']="$(koopa_get_version_arg "${dict['bn']}")"
         dict['version_fun']="koopa_${dict['bn_snake']}_version"
         if koopa_is_function "${dict['version_fun']}"
