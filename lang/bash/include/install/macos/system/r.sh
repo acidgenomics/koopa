@@ -29,7 +29,7 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['framework_prefix']='/Library/Frameworks/R.framework'
-    dict['os']="$(koopa_kebab_case_simple "$(koopa_macos_os_codename)")"
+    dict['os']="$(koopa_kebab_case "$(koopa_macos_os_codename)")"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['arch']}" in
         'aarch64')
