@@ -3429,7 +3429,7 @@ koopa_cache_functions() {
     return 0
 }
 
-koopa_camel_case_simple() {
+koopa_camel_case() {
     local str
     if [[ "$#" -eq 0 ]]
     then
