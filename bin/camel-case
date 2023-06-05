@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../lang/bash/include/header.sh"
 
-koopa_camel_case "$@"
+koopa_rename_camel_case "$@"

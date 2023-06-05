@@ -24,7 +24,7 @@ main() {
     else
         dict['toolset']='gcc'
     fi
-    dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
+    dict['snake_version']="$(koopa_snake_case "${dict['version']}")"
     dict['url']="https://boostorg.jfrog.io/artifactory/main/release/\
 ${dict['version']}/source/boost_${dict['snake_version']}.tar.bz2"
     koopa_download "${dict['url']}"

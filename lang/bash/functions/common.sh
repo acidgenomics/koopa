@@ -3453,11 +3453,6 @@ koopa_camel_case_simple() {
     return 0
 }
 
-koopa_camel_case() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliCamelCase' "$@"
-}
-
 koopa_can_install_binary() {
     local -A dict
     dict['credentials']="${HOME:?}/.aws/credentials"
@@ -8417,7 +8412,7 @@ koopa_get_version() {
         local -A dict
         dict['cmd']="$cmd"
         dict['bn']="$(koopa_basename "${dict['cmd']}")"
-        dict['bn_snake']="$(koopa_snake_case_simple "${dict['bn']}")"
+        dict['bn_snake']="$(koopa_snake_case "${dict['bn']}")"
         dict['version_arg']="$(koopa_get_version_arg "${dict['bn']}")"
         dict['version_fun']="koopa_${dict['bn_snake']}_version"
         if koopa_is_function "${dict['version_fun']}"
@@ -14715,7 +14710,7 @@ koopa_kallisto_quant_single_end() {
     return 0
 }
 
-koopa_kebab_case_simple() {
+koopa_kebab_case() {
     local str
     if [[ "$#" -eq 0 ]]
     then
@@ -14737,11 +14732,6 @@ koopa_kebab_case_simple() {
         koopa_print "$str"
     done
     return 0
-}
-
-koopa_kebab_case() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliKebabCase' "$@"
 }
 
 koopa_local_ip_address() {
@@ -18822,6 +18812,11 @@ koopa_remove_from_path_string() {
     _koopa_remove_from_path_string "$@"
 }
 
+koopa_rename_camel_case() {
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliCamelCase' "$@"
+}
+
 koopa_rename_from_csv() {
     local file line
     koopa_assert_has_args "$#"
@@ -18835,6 +18830,11 @@ koopa_rename_from_csv() {
         koopa_mv "$from" "$to"
     done < "$file"
     return 0
+}
+
+koopa_rename_kebab_case() {
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliKebabCase' "$@"
 }
 
 koopa_rename_lowercase() {
@@ -18904,6 +18904,11 @@ koopa_rename_lowercase() {
             "$@"
     fi
     return 0
+}
+
+koopa_rename_snake_case() {
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliSnakeCase' "$@"
 }
 
 koopa_reset_permissions() {
@@ -20385,7 +20390,7 @@ koopa_shared_ext() {
     return 0
 }
 
-koopa_snake_case_simple() {
+koopa_snake_case() {
     local str
     if [[ "$#" -eq 0 ]]
     then
@@ -20407,11 +20412,6 @@ koopa_snake_case_simple() {
         koopa_print "$str"
     done
     return 0
-}
-
-koopa_snake_case() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliSnakeCase' "$@"
 }
 
 koopa_sort_lines() {

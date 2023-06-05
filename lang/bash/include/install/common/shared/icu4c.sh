@@ -15,8 +15,8 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['kebab_version']="$(koopa_kebab_case_simple "${dict['version']}")"
-    dict['snake_version']="$(koopa_snake_case_simple "${dict['version']}")"
+    dict['kebab_version']="$(koopa_kebab_case "${dict['version']}")"
+    dict['snake_version']="$(koopa_snake_case "${dict['version']}")"
     conf_args=(
         '--disable-samples'
         '--disable-static'
