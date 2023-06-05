@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_camel_case_simple() {
+koopa_camel_case() {
     # """
     # Apply camel case formatting.
     # @note Updated 2023-06-05.
