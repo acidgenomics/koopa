@@ -747,9 +747,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-05-15",
+    "date": "2023-06-05",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.33.6"
+    "version": "2.34.0"
   },
   "cli11": {
     "aliases": {
@@ -2311,9 +2311,9 @@
     },
     "bin": ["hyperfine"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-03-21",
+    "date": "2023-06-05",
     "url": ["https://github.com/sharkdp/hyperfine/"],
-    "version": "1.16.1"
+    "version": "1.17.0"
   },
   "icu4c": {
     "aliases": {
@@ -3262,9 +3262,9 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-03-07",
+    "date": "2023-06-05",
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "mdcat": {
     "aliases": {
@@ -3296,12 +3296,12 @@
     },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2023-03-02",
+    "date": "2023-06-05",
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.7.0"
+    "version": "6.8.0"
   },
   "minimap2": {
     "arch": "amd64",
