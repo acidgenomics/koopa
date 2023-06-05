@@ -3430,26 +3430,22 @@ koopa_cache_functions() {
 }
 
 koopa_camel_case() {
-    local str
+    local -a out
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
-    for str in "$@"
-    do
-        [[ -n "$str" ]] || return 1
-        str="$( \
-            koopa_gsub \
-                --pattern='([ -_])([a-z])' \
-                --regex \
-                --replacement='\U\2' \
-                "$str" \
-        )"
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
+    readarray -t out <<< "$( \
+        koopa_gsub \
+            --pattern='([ -_])([a-z])' \
+            --regex \
+            --replacement='\U\2' \
+            "$@" \
+    )"
+    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_print "${out[@]}"
     return 0
 }
 
@@ -14711,26 +14707,23 @@ koopa_kallisto_quant_single_end() {
 }
 
 koopa_kebab_case() {
-    local str
+    local -a out
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
-    for str in "$@"
-    do
-        [[ -n "$str" ]] || return 1
-        str="$(\
-            koopa_gsub \
-                --pattern='[^-A-Za-z0-9]' \
-                --regex \
-                --replacement='-' \
-                "$str" \
-        )"
-        str="$(koopa_lowercase "$str")"
-        koopa_print "$str"
-    done
+    readarray -t out <<< "$( \
+        koopa_gsub \
+            --pattern='[^-A-Za-z0-9]' \
+            --regex \
+            --replacement='-' \
+            "$@" \
+        | koopa_lowercase \
+    )"
+    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_print "${out[@]}"
     return 0
 }
 
@@ -20391,26 +20384,23 @@ koopa_shared_ext() {
 }
 
 koopa_snake_case() {
-    local str
+    local -a out
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
-    for str in "$@"
-    do
-        [[ -n "$str" ]] || return 1
-        str="$( \
-            koopa_gsub \
-                --pattern='[^A-Za-z0-9_]' \
-                --regex \
-                --replacement='_' \
-                "$str" \
-        )"
-        str="$(koopa_lowercase "$str")"
-        koopa_print "$str"
-    done
+    readarray -t out <<< "$( \
+        koopa_gsub \
+            --pattern='[^A-Za-z0-9_]' \
+            --regex \
+            --replacement='_' \
+            "$@" \
+        | koopa_lowercase \
+    )"
+    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_print "${out[@]}"
     return 0
 }
 
@@ -21878,6 +21868,7 @@ koopa_strip_trailing_slash() {
 koopa_sub() {
     local -A app bool dict
     local -a out pos
+    local str
     app['perl']="$(koopa_locate_perl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['global']=0
@@ -21945,11 +21936,12 @@ koopa_sub() {
             s/\$pattern/\$replacement/${dict['tail']}; \
         "
     fi
-    for arg in "$@"
+    for str in "$@"
     do
+        [[ -n "$str" ]] || return 1
         out+=(
             "$( \
-                printf '%s' "$arg" \
+                printf '%s' "$str" \
                 | LANG=C "${app['perl']}" -p -e "${dict['expr']}" \
             )"
         )
