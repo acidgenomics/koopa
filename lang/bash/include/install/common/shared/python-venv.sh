@@ -72,7 +72,7 @@ main() {
         'ranger-fm' | \
         'ruff-lsp' | \
         'yt-dlp')
-            dict['pkg_name']="$(koopa_snake_case_simple "${dict['name']}")"
+            dict['pkg_name']="$(koopa_snake_case "${dict['name']}")"
             ;;
         'glances')
             dict['pkg_name']='Glances'

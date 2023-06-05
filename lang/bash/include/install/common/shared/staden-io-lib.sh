@@ -26,7 +26,7 @@ main() {
     dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['version2']="$(koopa_kebab_case_simple "${dict['version']}")"
+    dict['version2']="$(koopa_kebab_case "${dict['version']}")"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     conf_args=(
