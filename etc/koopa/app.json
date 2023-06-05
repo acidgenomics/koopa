@@ -2299,11 +2299,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-02",
+    "date": "2023-06-05",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.112.7"
+    "version": "0.113.0"
   },
   "hyperfine": {
     "aliases": {
