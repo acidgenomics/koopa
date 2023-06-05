@@ -3,7 +3,7 @@
 main() {
     # """
     # Install chezmoi.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-05.
     #
     # @seealso
     # - https://www.chezmoi.io/
@@ -30,7 +30,7 @@ refs/tags/v${dict['version']}.tar.gz"
     koopa_print_env
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
-        -o "${dict['prefix']}/bin/${dict['name']}"
+        -o "${dict['prefix']}/bin/chezmoi"
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }
