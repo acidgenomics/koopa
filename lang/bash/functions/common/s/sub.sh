@@ -25,7 +25,7 @@ koopa_sub() {
     # # |\|/\|
     # """
     local -A app bool dict
-    local -a pos
+    local -a out pos
     app['perl']="$(koopa_locate_perl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['global']=0
@@ -96,6 +96,15 @@ koopa_sub() {
             s/\$pattern/\$replacement/${dict['tail']}; \
         "
     fi
-    printf '%s\n' "$@" | LANG=C "${app['perl']}" -p -e "${dict['expr']}"
+    for arg in "$@"
+    do
+        out+=(
+            "$( \
+                printf '%s' "$arg" \
+                | LANG=C "${app['perl']}" -p -e "${dict['expr']}" \
+            )"
+        )
+    done
+    koopa_print "${out[@]}"
     return 0
 }
