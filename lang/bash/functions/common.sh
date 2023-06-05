@@ -3429,33 +3429,24 @@ koopa_cache_functions() {
     return 0
 }
 
-koopa_camel_case_simple() {
-    local str
+koopa_camel_case() {
+    local -a out
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
-    for str in "$@"
-    do
-        [[ -n "$str" ]] || return 1
-        str="$( \
-            koopa_gsub \
-                --pattern='([ -_])([a-z])' \
-                --regex \
-                --replacement='\U\2' \
-                "$str" \
-        )"
-        [[ -n "$str" ]] || return 1
-        koopa_print "$str"
-    done
+    readarray -t out <<< "$( \
+        koopa_gsub \
+            --pattern='([ -_])([a-z])' \
+            --regex \
+            --replacement='\U\2' \
+            "$@" \
+    )"
+    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_print "${out[@]}"
     return 0
-}
-
-koopa_camel_case() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliCamelCase' "$@"
 }
 
 koopa_can_install_binary() {
@@ -8417,7 +8408,7 @@ koopa_get_version() {
         local -A dict
         dict['cmd']="$cmd"
         dict['bn']="$(koopa_basename "${dict['cmd']}")"
-        dict['bn_snake']="$(koopa_snake_case_simple "${dict['bn']}")"
+        dict['bn_snake']="$(koopa_snake_case "${dict['bn']}")"
         dict['version_arg']="$(koopa_get_version_arg "${dict['bn']}")"
         dict['version_fun']="koopa_${dict['bn_snake']}_version"
         if koopa_is_function "${dict['version_fun']}"
@@ -14715,33 +14706,25 @@ koopa_kallisto_quant_single_end() {
     return 0
 }
 
-koopa_kebab_case_simple() {
-    local str
+koopa_kebab_case() {
+    local -a out
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
-    for str in "$@"
-    do
-        [[ -n "$str" ]] || return 1
-        str="$(\
-            koopa_gsub \
-                --pattern='[^-A-Za-z0-9]' \
-                --regex \
-                --replacement='-' \
-                "$str" \
-        )"
-        str="$(koopa_lowercase "$str")"
-        koopa_print "$str"
-    done
+    readarray -t out <<< "$( \
+        koopa_gsub \
+            --pattern='[^-A-Za-z0-9]' \
+            --regex \
+            --replacement='-' \
+            "$@" \
+        | koopa_lowercase \
+    )"
+    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_print "${out[@]}"
     return 0
-}
-
-koopa_kebab_case() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliKebabCase' "$@"
 }
 
 koopa_local_ip_address() {
@@ -18822,6 +18805,11 @@ koopa_remove_from_path_string() {
     _koopa_remove_from_path_string "$@"
 }
 
+koopa_rename_camel_case() {
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliCamelCase' "$@"
+}
+
 koopa_rename_from_csv() {
     local file line
     koopa_assert_has_args "$#"
@@ -18835,6 +18823,11 @@ koopa_rename_from_csv() {
         koopa_mv "$from" "$to"
     done < "$file"
     return 0
+}
+
+koopa_rename_kebab_case() {
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliKebabCase' "$@"
 }
 
 koopa_rename_lowercase() {
@@ -18904,6 +18897,11 @@ koopa_rename_lowercase() {
             "$@"
     fi
     return 0
+}
+
+koopa_rename_snake_case() {
+    koopa_assert_has_args "$#"
+    koopa_r_koopa 'cliSnakeCase' "$@"
 }
 
 koopa_reset_permissions() {
@@ -20385,33 +20383,25 @@ koopa_shared_ext() {
     return 0
 }
 
-koopa_snake_case_simple() {
-    local str
+koopa_snake_case() {
+    local -a out
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
         readarray -t pos <<< "$(</dev/stdin)"
         set -- "${pos[@]}"
     fi
-    for str in "$@"
-    do
-        [[ -n "$str" ]] || return 1
-        str="$( \
-            koopa_gsub \
-                --pattern='[^A-Za-z0-9_]' \
-                --regex \
-                --replacement='_' \
-                "$str" \
-        )"
-        str="$(koopa_lowercase "$str")"
-        koopa_print "$str"
-    done
+    readarray -t out <<< "$( \
+        koopa_gsub \
+            --pattern='[^A-Za-z0-9_]' \
+            --regex \
+            --replacement='_' \
+            "$@" \
+        | koopa_lowercase \
+    )"
+    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_print "${out[@]}"
     return 0
-}
-
-koopa_snake_case() {
-    koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliSnakeCase' "$@"
 }
 
 koopa_sort_lines() {
@@ -21877,7 +21867,8 @@ koopa_strip_trailing_slash() {
 
 koopa_sub() {
     local -A app bool dict
-    local -a pos
+    local -a out pos
+    local str
     app['perl']="$(koopa_locate_perl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['global']=0
@@ -21945,7 +21936,17 @@ koopa_sub() {
             s/\$pattern/\$replacement/${dict['tail']}; \
         "
     fi
-    printf '%s\n' "$@" | LANG=C "${app['perl']}" -p -e "${dict['expr']}"
+    for str in "$@"
+    do
+        [[ -n "$str" ]] || return 1
+        out+=(
+            "$( \
+                printf '%s' "$str" \
+                | LANG=C "${app['perl']}" -p -e "${dict['expr']}" \
+            )"
+        )
+    done
+    koopa_print "${out[@]}"
     return 0
 }
 
