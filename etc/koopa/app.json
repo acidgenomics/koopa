@@ -240,13 +240,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-05-30",
+    "date": "2023-06-06",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.23"
+    "version": "2.11.25"
   },
   "azure-cli": {
     "aliases": {
@@ -4823,9 +4823,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-04-12",
+    "date": "2023-06-06",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.14.2"
+    "version": "1.15.0"
   },
   "stow": {
     "aliases": {

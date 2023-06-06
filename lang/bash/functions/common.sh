@@ -21938,7 +21938,11 @@ koopa_sub() {
     fi
     for str in "$@"
     do
-        [[ -n "$str" ]] || return 1
+        if [[ -z "$str" ]]
+        then
+            out+=("$str")
+            continue
+        fi
         out+=(
             "$( \
                 printf '%s' "$str" \

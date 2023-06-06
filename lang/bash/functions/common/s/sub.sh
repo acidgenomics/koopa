@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This doesn't handle empty strings well.
-
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-06.
     #
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
     # matching line break characters. Additionally, using 'LANG=C' helps avoid
@@ -101,7 +99,11 @@ koopa_sub() {
     fi
     for str in "$@"
     do
-        [[ -n "$str" ]] || return 1
+        if [[ -z "$str" ]]
+        then
+            out+=("$str")
+            continue
+        fi
         out+=(
             "$( \
                 printf '%s' "$str" \
