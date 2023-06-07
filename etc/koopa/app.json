@@ -3329,6 +3329,13 @@
     ],
     "version": "0.5.4"
   },
+  "mold": {
+    "build_dependencies": ["cmake", "make"],
+    "date": "2023-06-07",
+    "dependencies": ["tbb", "zlib", "zstd"],
+    "url": ["https://github.com/rui314/mold/"],
+    "version": "1.11.0"
+  },
   "mpc": {
     "aliases": {
       "debian": "libmpc-dev",

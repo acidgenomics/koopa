@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-06-02.
+    # @note Updated 2023-06-07.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -282,6 +282,7 @@ _koopa_complete() {
                         'miller'
                         'minimap2'
                         'misopy'
+                        'mold'
                         'mpc'
                         'mpdecimal'
                         'mpfr'
