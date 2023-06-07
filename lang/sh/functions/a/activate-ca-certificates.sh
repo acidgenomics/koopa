@@ -7,7 +7,7 @@ _koopa_activate_ca_certificates() {
     #
     # This step is currently necessary for Latch SDK on macOS.
     #
-    # SYSTEM_CERTIFICATE_PATH is picked up by Haskell tls package.
+    # 'SYSTEM_CERTIFICATE_PATH' is picked up by Haskell tls package.
     #
     # @seealso
     # - REQUESTS_CA_BUNDLE
@@ -30,7 +30,7 @@ _koopa_activate_ca_certificates() {
     fi
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
     export SSL_CERT_FILE="$__kvar_file"
-    export SYSTEM_CERTIFICATE_PATH="${__kvar_prefix}/share/ca-certificates"
+    # > export SYSTEM_CERTIFICATE_PATH="${__kvar_prefix}/share/ca-certificates"
     unset -v __kvar_file __kvar_prefix
     return 0
 }
