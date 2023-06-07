@@ -15745,6 +15745,13 @@ koopa_locate_gsl_config() {
         "$@"
 }
 
+koopa_locate_gunzip() {
+    koopa_locate_app \
+        --app-name='gzip' \
+        --bin-name='gunzip' \
+        "$@"
+}
+
 koopa_locate_gzip() {
     koopa_locate_app \
         --app-name='gzip' \
