@@ -6989,6 +6989,7 @@ koopa_extract() {
         cmd_args=("${dict['file']}")
         if [[ -n "${dict['target_dir']}" ]]
         then
+            dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
             dict['target_file']="${dict['target_dir']}/${dict['bn']}"
             cmd_args+=("${dict['target_file']}")
         fi

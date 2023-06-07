@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for:
-# - a, ar
-# - dmg (macOS)
-# - jar
-
-# FIXME Don't resolve the file path name when extracting to current directory.
-
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -53,6 +46,7 @@ koopa_extract() {
         cmd_args=("${dict['file']}")
         if [[ -n "${dict['target_dir']}" ]]
         then
+            dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
             dict['target_file']="${dict['target_dir']}/${dict['bn']}"
             cmd_args+=("${dict['target_file']}")
         fi
