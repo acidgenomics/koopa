@@ -12418,6 +12418,12 @@ koopa_install_misopy() {
         "$@"
 }
 
+koopa_install_mold() {
+    koopa_install_app \
+        --name='mold' \
+        "$@"
+}
+
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
@@ -24190,6 +24196,12 @@ koopa_uninstall_minimap2() {
 koopa_uninstall_misopy() {
     koopa_uninstall_app \
         --name='misopy' \
+        "$@"
+}
+
+koopa_uninstall_mold() {
+    koopa_uninstall_app \
+        --name='mold' \
         "$@"
 }
 
