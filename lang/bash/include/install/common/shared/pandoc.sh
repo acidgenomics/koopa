@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing a build failure with 3.1.3 argh.
-
 main() {
     # """
     # Install Pandoc.
@@ -23,7 +21,7 @@ main() {
     local -A app dict 
     local -a build_deps
     build_deps=('git' 'pkg-config')
-    # > koopa_activate_ca_certificates
+    koopa_activate_ca_certificates
     koopa_activate_app --build-only "${build_deps[@]}"
     app['cabal']="$(koopa_locate_cabal)"
     app['ghcup']="$(koopa_locate_ghcup)"
