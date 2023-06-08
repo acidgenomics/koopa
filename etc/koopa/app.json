@@ -66,12 +66,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-04-26",
+    "date": "2023-06-08",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.1.8"
+    "version": "1.1.9"
   },
   "apr": {
     "aliases": {
@@ -4090,12 +4090,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-04-06",
+    "date": "2023-06-08",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.18"
+    "version": "2.3.19"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4518,10 +4518,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-06-07",
+    "date": "2023-06-08",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.271"
+    "version": "0.0.272"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
