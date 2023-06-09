@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Make this a shared install script with hadolint, shellcheck.
-
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-07.
     #
     # @seealso
     # - https://hackage.haskell.org/package/pandoc
@@ -23,6 +21,9 @@ main() {
     local -A app dict 
     local -a build_deps
     build_deps=('git' 'pkg-config')
+    # > koopa_activate_ca_certificates
+    # > # This is required for Haskell tls package to pick up CA certificates.
+    # > koopa_assert_is_dir "${SYSTEM_CERTIFICATE_PATH:?}"
     koopa_activate_app --build-only "${build_deps[@]}"
     app['cabal']="$(koopa_locate_cabal)"
     app['ghcup']="$(koopa_locate_ghcup)"
