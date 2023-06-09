@@ -1842,9 +1842,9 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2023-05-08",
+    "date": "2023-05-09",
     "url": ["https://golang.org/dl/"],
-    "version": "1.20.4"
+    "version": "1.20.5"
   },
   "google-cloud-sdk": {
     "aliases": {
