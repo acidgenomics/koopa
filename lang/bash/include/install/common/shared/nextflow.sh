@@ -34,5 +34,6 @@ END
         --string="${dict['bin_string']}"
     koopa_chmod +x "${dict['prefix']}/bin/nextflow"
     "${dict['prefix']}/bin/nextflow" -version
+    koopa_rm "${dict['libexec']}/tmp"
     return 0
 }
