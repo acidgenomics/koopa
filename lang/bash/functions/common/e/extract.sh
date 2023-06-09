@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for:
-# - a, ar
-# - dmg (macOS)
-# - jar
-
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-07.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -24,6 +19,7 @@ koopa_extract() {
     dict['file']="${1:?}"
     dict['target_dir']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
+    dict['bn']="$(koopa_basename_sans_ext "${dict['file']}")"
     dict['file']="$(koopa_realpath "${dict['file']}")"
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     case "${dict['match']}" in
@@ -50,8 +46,8 @@ koopa_extract() {
         cmd_args=("${dict['file']}")
         if [[ -n "${dict['target_dir']}" ]]
         then
-            dict['target_file']="${dict['target_dir']}/\
-$(koopa_basename_sans_ext "${dict['file']}")"
+            dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
+            dict['target_file']="${dict['target_dir']}/${dict['bn']}"
             cmd_args+=("${dict['target_file']}")
         fi
         koopa_decompress "${cmd_args[@]}"
@@ -59,8 +55,7 @@ $(koopa_basename_sans_ext "${dict['file']}")"
     fi
     if [[ -z "${dict['target_dir']}" ]]
     then
-        dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/\
-$(koopa_basename_sans_ext "${dict['file']}")"
+        dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/${dict['bn']}"
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."

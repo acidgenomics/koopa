@@ -6962,6 +6962,7 @@ koopa_extract() {
     dict['file']="${1:?}"
     dict['target_dir']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
+    dict['bn']="$(koopa_basename_sans_ext "${dict['file']}")"
     dict['file']="$(koopa_realpath "${dict['file']}")"
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     case "${dict['match']}" in
@@ -6988,8 +6989,8 @@ koopa_extract() {
         cmd_args=("${dict['file']}")
         if [[ -n "${dict['target_dir']}" ]]
         then
-            dict['target_file']="${dict['target_dir']}/\
-$(koopa_basename_sans_ext "${dict['file']}")"
+            dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
+            dict['target_file']="${dict['target_dir']}/${dict['bn']}"
             cmd_args+=("${dict['target_file']}")
         fi
         koopa_decompress "${cmd_args[@]}"
@@ -6997,8 +6998,7 @@ $(koopa_basename_sans_ext "${dict['file']}")"
     fi
     if [[ -z "${dict['target_dir']}" ]]
     then
-        dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/\
-$(koopa_basename_sans_ext "${dict['file']}")"
+        dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/${dict['bn']}"
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
@@ -12418,6 +12418,12 @@ koopa_install_misopy() {
         "$@"
 }
 
+koopa_install_mold() {
+    koopa_install_app \
+        --name='mold' \
+        "$@"
+}
+
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
@@ -15739,6 +15745,13 @@ koopa_locate_gsl_config() {
         "$@"
 }
 
+koopa_locate_gunzip() {
+    koopa_locate_app \
+        --app-name='gzip' \
+        --bin-name='gunzip' \
+        "$@"
+}
+
 koopa_locate_gzip() {
     koopa_locate_app \
         --app-name='gzip' \
@@ -15988,6 +16001,13 @@ koopa_locate_meson() {
     koopa_locate_app \
         --app-name='meson' \
         --bin-name='meson' \
+        "$@"
+}
+
+koopa_locate_minimap2() {
+    koopa_locate_app \
+        --app-name='minimap2' \
+        --bin-name='minimap2' \
         "$@"
 }
 
@@ -24190,6 +24210,12 @@ koopa_uninstall_minimap2() {
 koopa_uninstall_misopy() {
     koopa_uninstall_app \
         --name='misopy' \
+        "$@"
+}
+
+koopa_uninstall_mold() {
+    koopa_uninstall_app \
+        --name='mold' \
         "$@"
 }
 
