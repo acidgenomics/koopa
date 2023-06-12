@@ -8,6 +8,7 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # """
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'gmp' \
         'ncurses' \
