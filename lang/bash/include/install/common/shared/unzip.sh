@@ -3,7 +3,7 @@
 main() {
     # """
     # Install unzip.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-12.
     #
     # Upstream is unmaintained so we use the Ubuntu patchset:
     # https://packages.ubuntu.com/kinetic/unzip
@@ -22,7 +22,6 @@ main() {
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -48,7 +47,7 @@ unzip${dict['version2']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_apply_debian_patch_set \
-        --name="${dict['name']}" \
+        --name='unzip' \
         --patch-version="${dict['patch_version']}" \
         --target='src' \
         --version="${dict['version']}"

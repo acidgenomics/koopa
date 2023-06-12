@@ -1719,7 +1719,7 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "date": "2023-05-08",
+    "date": "2023-06-12",
     "dependencies": [
       "curl",
       "expat",
@@ -1735,7 +1735,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.40.1"
+    "version": "2.41.0"
   },
   "git-lfs": {
     "aliases": {

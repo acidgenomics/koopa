@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cheat.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     # - https://github.com/cheat/cheat/
@@ -15,7 +15,6 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['name']='cheat'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     export GOCACHE="${dict['gocache']}"
@@ -28,7 +27,7 @@ tags/${dict['version']}.tar.gz"
     koopa_print_env
     "${app['go']}" build \
         -mod 'vendor' \
-        -o "${dict['prefix']}/bin/${dict['name']}" \
+        -o "${dict['prefix']}/bin/cheat" \
         './cmd/cheat'
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
