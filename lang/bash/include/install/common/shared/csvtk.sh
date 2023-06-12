@@ -27,7 +27,7 @@ tags/v${dict['version']}.tar.gz"
     dict['ldflags']='-s -w'
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
-        -o "${dict['prefix']}/bin/${dict['name']}" \
+        -o "${dict['prefix']}/bin/csvtk" \
         ./csvtk
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
