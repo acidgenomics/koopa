@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-12.
     #
     # Attempting to make in parallel can cause installer to crash.
     #
@@ -22,7 +22,6 @@ main() {
     app['fc']="$(koopa_locate_gfortran --realpath)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='OpenBLAS'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

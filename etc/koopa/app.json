@@ -240,13 +240,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-06-06",
+    "date": "2023-06-12",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.25"
+    "version": "2.11.27"
   },
   "azure-cli": {
     "aliases": {
@@ -1719,7 +1719,7 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "date": "2023-05-08",
+    "date": "2023-06-12",
     "dependencies": [
       "curl",
       "expat",
@@ -1735,7 +1735,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.40.1"
+    "version": "2.41.0"
   },
   "git-lfs": {
     "aliases": {
@@ -2560,7 +2560,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-05-30",
+    "date": "2023-06-12",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2568,7 +2568,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.21.7"
+    "version": "2.22.5"
   },
   "ldns": {
     "aliases": {
@@ -3047,6 +3047,7 @@
     "bin": ["llama"],
     "build_dependencies": ["go"],
     "date": "2023-01-03",
+    "enabled": false,
     "url": ["https://github.com/antonmedv/llama/"],
     "version": "1.4.0"
   },
