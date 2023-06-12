@@ -3,7 +3,7 @@
 main() {
     # """
     # Install RStudio Server binary.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-06-12.
     #
     # Don't enclose values in quotes in the conf file.
     #
@@ -26,7 +26,6 @@ main() {
     local -A app dict
     app['r']="$(koopa_locate_system_r --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_debian_like
     then
@@ -55,7 +54,7 @@ main() {
     else
         koopa_stop 'Unsupported Linux distro.'
     fi
-    dict['file_stem']="${dict['name']}"
+    dict['file_stem']='rstudio-server'
     if koopa_is_fedora_like
     then
         dict['file_stem']="${dict['file_stem']}-rhel"
