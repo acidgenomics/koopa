@@ -4680,11 +4680,11 @@
       "homebrew": false
     },
     "build_dependencies": ["patch"],
-    "date": "2022-09-26",
+    "date": "2023-06-12",
     "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
     "prune": false,
     "url": ["https://serf.apache.org/"],
-    "version": "1.3.9"
+    "version": "1.3.10"
   },
   "shellcheck": {
     "aliases": {
