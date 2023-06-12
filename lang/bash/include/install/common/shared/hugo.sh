@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Currently seeing this in 'hugo version' return on macOS:
-# BuildDate=unknown
-
 main() {
     # """
     # Install hugo.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-12.
     #
     # The '-s' and '-w' ldflags help shrink the size of the binary.
     # Refer to 'go tool link' for details.
@@ -37,7 +34,7 @@ archive/v${dict['version']}.tar.gz"
     "${app['go']}" build \
         -ldflags '-s -w' \
         -tags 'extended' \
-        -o "${dict['prefix']}/bin/${dict['name']}"
+        -o "${dict['prefix']}/bin/hugo"
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

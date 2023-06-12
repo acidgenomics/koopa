@@ -3,7 +3,7 @@
 main() {
     # """
     # Install llama.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/llama.rb
@@ -27,7 +27,7 @@ v${dict['version']}.tar.gz"
     dict['ldflags']='-s -w'
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
-        -o "${dict['prefix']}/bin/${dict['name']}"
+        -o "${dict['prefix']}/bin/llama"
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

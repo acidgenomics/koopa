@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Oxford Nanopore guppy caller.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-12.
     # """
     local -A app dict
     if koopa_is_macos
@@ -15,7 +15,6 @@ main() {
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['core_type']='cpu' # or 'gpu'.
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
-    dict['name']='ont-guppy'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
@@ -27,11 +26,14 @@ main() {
         dict['platform']='linux'
         dict['ext']='tar.gz'
     fi
-    dict['file']="${dict['version']}-${dict['core_type']}.${dict['ext']}"
-    dict['url']="${dict['installers_base']}/${dict['name']}/\
-${dict['platform']}/${dict['arch']}/${dict['file']}"
+    dict['url']="${dict['installers_base']}/ont-guppy/${dict['platform']}/\
+${dict['arch']}/${dict['version']}-${dict['core_type']}.${dict['ext']}"
     "${app['aws']}" --profile='acidgenomics' \
-        s3 cp "${dict['url']}" "${dict['file']}"
-    koopa_extract "${dict['file']}" "${dict['prefix']}"
+        s3 cp \
+            "${dict['url']}" \
+            "$(koopa_basename "${dict['url']}")"
+    koopa_extract \
+        "$(koopa_basename "${dict['url']}")" \
+        "${dict['prefix']}"
     return 0
 }

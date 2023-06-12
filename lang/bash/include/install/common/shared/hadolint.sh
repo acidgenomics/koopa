@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hadolint.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     # - https://github.com/hadolint/hadolint
@@ -24,7 +24,6 @@ main() {
     dict['ghc_version']='9.2.5'
     dict['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['cabal_store_dir']="$(\
@@ -54,6 +53,6 @@ END
         --installdir="${dict['prefix']}/bin" \
         --jobs="${dict['jobs']}" \
         --verbose \
-        "${dict['name']}-${dict['version']}"
+        "hadolint-${dict['version']}"
     return 0
 }

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install termcolor.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     # - https://github.com/ikalnytskyi/termcolor
@@ -11,7 +11,6 @@ main() {
     # """
     local -A dict
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']='termcolor'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/ikalnytskyi/termcolor/archive/\
