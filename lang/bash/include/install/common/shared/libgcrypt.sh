@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libgcrypt.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
@@ -18,7 +18,6 @@ main() {
     app['patch']="$(koopa_locate_patch)"
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
     dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(

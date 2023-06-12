@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ninja.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     # - https://github.com/ninja-build/ninja
@@ -13,7 +13,6 @@ main() {
     koopa_activate_app --build-only 'python3.11'
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='ninja'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/ninja-build/ninja/archive/refs/\

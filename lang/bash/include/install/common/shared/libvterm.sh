@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libvterm.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-06-12.
     #
     # @seealso
     #- https://github.com/Homebrew/homebrew-core/blob/HEAD/
@@ -13,7 +13,6 @@ main() {
     koopa_activate_app --build-only 'libtool' 'make' 'pkg-config'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']='libvterm'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="http://www.leonerd.org.uk/code/libvterm/\
