@@ -1351,6 +1351,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-07",
     "dependencies": ["lame"],
+    "enabled": false,
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
     "version": "6.0"
@@ -2541,6 +2542,7 @@
     "bin": ["lame"],
     "build_dependencies": ["make"],
     "date": "2022-08-30",
+    "enabled": false,
     "man1": ["lame.1"],
     "url": ["https://lame.sourceforge.io/"],
     "version": "3.100"
