@@ -3047,6 +3047,7 @@
     "bin": ["llama"],
     "build_dependencies": ["go"],
     "date": "2023-01-03",
+    "enabled": false,
     "url": ["https://github.com/antonmedv/llama/"],
     "version": "1.4.0"
   },
