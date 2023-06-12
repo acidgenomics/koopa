@@ -33,10 +33,19 @@ main() {
         dict['arch']="$(koopa_arch2)" # e.g 'amd64'.
         dict['distro']="$(koopa_debian_os_codename)"
         case "${dict['distro']}" in
-            'jammy')
+            # Ubuntu -----------------------------------------------------------
+            'jammy' | 'focal')
                 ;;
+            # Debian -----------------------------------------------------------
+            'buster' | 'bullseye')
+                dict['distro']='jammy'
+                ;;
+            'bookworm')
+                dict['distro']='focal'
+                ;;
+            # Other ------------------------------------------------------------
             *)
-                dict['distro']='bionic'
+                koopa_stop "Unsupported distro: '${dict['distro']}'."
                 ;;
         esac
         dict['file_ext']='deb'
