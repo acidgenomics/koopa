@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-06-12.
     #
     # @section Compiler settings:
     #
