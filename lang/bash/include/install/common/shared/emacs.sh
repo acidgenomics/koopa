@@ -3,8 +3,6 @@
 # NOTE Consider building this with macOS framework support, so we can call
 # doom-emacs and spacemacs from this.
 
-# FIXME This isn't setting gnutls correctly on Linux.
-
 main() {
     # """
     # @seealso
@@ -23,7 +21,6 @@ main() {
     koopa_install_app_subshell \
         --installer='gnu-app' \
         --name='emacs' \
-        '-D' '--with-gnutls' \
         '-D' '--with-modules' \
         '-D' '--without-dbus' \
         '-D' '--without-imagemagick' \
