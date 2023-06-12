@@ -3,15 +3,11 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-06-12.
     #
     # If system doesn't have gettext (msgfmt) installed:
     # Note that this doesn't work on Ubuntu 18 LTS.
     # NO_GETTEXT=YesPlease
-    #
-    # Git source code releases on GitHub:
-    # > file="v${version}.tar.gz"
-    # > url="https://github.com/git/${name}/archive/${file}"
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -39,11 +35,10 @@ main() {
     dict['expat']="$(koopa_app_prefix 'expat')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
-    dict['mirror_url']='https://mirrors.edge.kernel.org/pub/software/scm'
-    dict['name']='git'
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['url_base']='https://mirrors.edge.kernel.org/pub/software/scm/git'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
@@ -61,12 +56,11 @@ main() {
         "--with-zlib=${dict['zlib']}"
         '--without-tcltk'
     )
-    dict['url']="${dict['mirror_url']}/${dict['name']}/\
-${dict['name']}-${dict['version']}.tar.gz"
-    dict['htmldocs_url']="${dict['mirror_url']}/${dict['name']}/\
-${dict['name']}-htmldocs-${dict['version']}.tar.xz"
-    dict['manpages_url']="${dict['mirror_url']}/\
-${dict['name']}/${dict['name']}-manpages-${dict['version']}.tar.xz"
+    dict['url']="${dict['url_base']}/git-${dict['version']}.tar.gz"
+    dict['htmldocs_url']="${dict['url_base']}/\
+git-htmldocs-${dict['version']}.tar.xz"
+    dict['manpages_url']="${dict['url_base']}/\
+git-manpages-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_download "${dict['htmldocs_url']}"
     koopa_download "${dict['manpages_url']}"
