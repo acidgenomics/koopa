@@ -747,9 +747,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-06-05",
+    "date": "2023-06-12",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.34.0"
+    "version": "2.34.1"
   },
   "cli11": {
     "aliases": {
@@ -1146,9 +1146,9 @@
       "homebrew": true
     },
     "bin": ["diff-so-fancy"],
-    "date": "2022-09-01",
+    "date": "2023-06-12",
     "url": ["https://github.com/so-fancy/diff-so-fancy/"],
-    "version": "1.4.3"
+    "version": "1.4.4"
   },
   "difftastic": {
     "aliases": {
@@ -4090,12 +4090,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-06-08",
+    "date": "2023-06-12",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.19"
+    "version": "2.3.20"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4139,14 +4139,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-04-14",
+    "date": "2023-06-12",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.3.1"
+    "version": "7.3.2"
   },
   "python3.10": {
     "aliases": {
@@ -4728,14 +4728,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-05-22",
+    "date": "2023-06-12",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.26.0"
+    "version": "7.28.1"
   },
   "sox": {
     "aliases": {
