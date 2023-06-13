@@ -2530,11 +2530,11 @@
     },
     "bin": ["ksh"],
     "build_dependencies": ["make"],
-    "date": "2023-06-07",
+    "date": "2023-06-13",
     "enabled": false,
     "man1": ["ksh.1"],
     "url": ["https://github.com/ksh93/ksh/"],
-    "version": "1.0.5"
+    "version": "1.0.6"
   },
   "lame": {
     "aliases": {
