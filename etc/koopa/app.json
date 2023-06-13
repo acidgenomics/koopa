@@ -49,6 +49,7 @@
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
+    "enabled": false,
     "url": ["https://arrow.apache.org/"],
     "version": "12.0.0"
   },
