@@ -25,12 +25,12 @@ main() {
         'openssl3' \
         'scons'
     app['cat']="$(koopa_locate_cat --allow-system)"
+    app['patch']="$(koopa_locate_patch)"
     app['scons']="$(koopa_locate_scons)"
     koopa_assert_is_executable "${app[@]}"
     dict['apr']="$(koopa_app_prefix 'apr')"
     dict['apu']="$(koopa_app_prefix 'apr-util')"
     dict['cflags']="${CFLAGS:-}"
-    dict['libdir']="${dict['prefix']}/lib"
     dict['linkflags']="${LDFLAGS:-}"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -42,8 +42,8 @@ serf-${dict['version']}.tar.bz2"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     # Patch diff created with:
-    # > diff -u 'SConstruct-1' 'SConstruct-2' > 'patch-sconstruct-2.patch'
-    "${app['cat']}" << END > 'patch-sconstruct-2.patch'
+    # > diff -u 'SConstruct-1' 'SConstruct-2' > 'patch-sconstruct.patch'
+    "${app['cat']}" << END > 'patch-sconstruct.patch'
 --- SConstruct-1	2022-07-13 08:33:39.000000000 -0400
 +++ SConstruct-2	2022-07-13 08:34:21.000000000 -0400
 @@ -372,6 +372,8 @@
@@ -60,12 +60,12 @@ END
         --unified \
         --verbose \
         'SConstruct' \
-        'patch-sconstruct-2.patch'
+        'patch-sconstruct.patch'
     scons_args=(
         "APR=${dict['apr']}"
         "APU=${dict['apu']}"
         "CFLAGS=${dict['cflags']}"
-        "LIBDIR=${dict['libdir']}"
+        "LIBDIR=${dict['prefix']}/lib"
         "LINKFLAGS=${dict['linkflags']}"
         "OPENSSL=${dict['openssl']}"
         "PREFIX=${dict['prefix']}"
