@@ -3,7 +3,7 @@
 koopa_update_system_homebrew() {
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2023-05-20.
+    # @note Updated 2023-06-13.
     #
     # @seealso
     # - brew linkage --test
@@ -42,13 +42,18 @@ koopa_update_system_homebrew() {
     fi
     koopa_brew_upgrade_brews
     koopa_alert 'Cleaning up.'
-    taps=('homebrew/cask' 'homebrew/core')
+    taps=(
+        'homebrew/cask'
+        'homebrew/cask-drivers'
+        'homebrew/core'
+    )
     for tap in "${taps[@]}"
     do
         local tap_prefix
         tap_prefix="$("${app['brew']}" --repo "$tap")"
         if [[ -d "$tap_prefix" ]]
         then
+            koopa_alert "Untapping '${tap}'."
             "${app['brew']}" untap "$tap"
         fi
     done
