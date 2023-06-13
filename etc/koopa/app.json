@@ -4679,7 +4679,7 @@
       "debian": "libserf-dev",
       "homebrew": false
     },
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["patch", "pkg-config"],
     "date": "2023-06-12",
     "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
     "prune": false,
@@ -5612,6 +5612,7 @@
     "bin": ["yt-dlp"],
     "date": "2023-02-17",
     "dependencies": ["python3.11"],
+    "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
