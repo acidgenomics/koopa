@@ -5612,6 +5612,7 @@
     "bin": ["yt-dlp"],
     "date": "2023-02-17",
     "dependencies": ["python3.11"],
+    "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
