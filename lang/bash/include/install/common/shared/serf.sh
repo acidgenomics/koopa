@@ -17,35 +17,55 @@ main() {
     # """
     local -A app dict
     local -a scons_args
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only 'patch' 'pkg-config'
     koopa_activate_app \
         'zlib' \
         'apr' \
         'apr-util' \
         'openssl3' \
         'scons'
-    app['cat']="$(koopa_locate_cat)"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['patch']="$(koopa_locate_patch)"
     app['scons']="$(koopa_locate_scons)"
     koopa_assert_is_executable "${app[@]}"
+    dict['apr']="$(koopa_app_prefix 'apr')"
+    dict['apu']="$(koopa_app_prefix 'apr-util')"
+    dict['cflags']="${CFLAGS:-}"
+    dict['linkflags']="${LDFLAGS:-}"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['url']="https://www.apache.org/dist/serf/\
 serf-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    dict['apr']="$(koopa_app_prefix 'apr')"
-    dict['apu']="$(koopa_app_prefix 'apr-util')"
-    dict['cflags']="${CFLAGS:-}"
-    dict['libdir']="${dict['prefix']}/lib"
-    dict['linkflags']="${LDFLAGS:-}"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    # Patch diff created with:
+    # > diff -u 'SConstruct-1' 'SConstruct-2' > 'patch-sconstruct.patch'
+    "${app['cat']}" << END > 'patch-sconstruct.patch'
+--- SConstruct-1	2022-07-13 08:33:39.000000000 -0400
++++ SConstruct-2	2022-07-13 08:34:21.000000000 -0400
+@@ -372,6 +372,8 @@
+
+   env.Append(CPPPATH=['\$OPENSSL/include'])
+   env.Append(LIBPATH=['\$OPENSSL/lib'])
++  env.Append(CPPPATH=['\$ZLIB/include'])
++  env.Append(LIBPATH=['\$ZLIB/lib'])
+
+
+ # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
+END
+    "${app['patch']}" \
+        --unified \
+        --verbose \
+        'SConstruct' \
+        'patch-sconstruct.patch'
     scons_args=(
         "APR=${dict['apr']}"
         "APU=${dict['apu']}"
         "CFLAGS=${dict['cflags']}"
-        "LIBDIR=${dict['libdir']}"
+        "LIBDIR=${dict['prefix']}/lib"
         "LINKFLAGS=${dict['linkflags']}"
         "OPENSSL=${dict['openssl']}"
         "PREFIX=${dict['prefix']}"
