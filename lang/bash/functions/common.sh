@@ -18078,7 +18078,6 @@ koopa_r_configure_environ() {
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
         )
     fi
-    koopa_assert_is_dir "${path_arr[@]}"
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     lines+=("PATH=${conf_dict['path']}")
     if koopa_is_macos
