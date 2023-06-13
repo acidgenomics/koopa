@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-06-13.
     #
     # @section Supported regex types for GNU find:
     #
@@ -40,7 +40,7 @@ koopa_find() {
     local exclude_arg
     bool['empty']=0
     bool['exclude']=0
-    bool['hidden']=1
+    bool['hidden']=0
     bool['print0']=0
     bool['sort']=0
     bool['sudo']=0
@@ -143,6 +143,10 @@ koopa_find() {
             # Flags ------------------------------------------------------------
             '--empty')
                 bool['empty']=1
+                shift 1
+                ;;
+            '--hidden')
+                bool['hidden']=1
                 shift 1
                 ;;
             '--no-hidden')
