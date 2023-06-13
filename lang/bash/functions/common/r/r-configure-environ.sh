@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-05-19.
+    # @note Updated 2023-06-12.
     #
     # @section Package library location:
     #
@@ -114,7 +114,6 @@ koopa_r_configure_environ() {
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
         )
     fi
-    koopa_assert_is_dir "${path_arr[@]}"
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
     lines+=("PATH=${conf_dict['path']}")
     if koopa_is_macos
