@@ -4679,7 +4679,7 @@
       "debian": "libserf-dev",
       "homebrew": false
     },
-    "build_dependencies": ["pkg-config"],
+    "build_dependencies": ["patch", "pkg-config"],
     "date": "2023-06-12",
     "dependencies": ["apr", "apr-util", "openssl3", "scons", "zlib"],
     "prune": false,
