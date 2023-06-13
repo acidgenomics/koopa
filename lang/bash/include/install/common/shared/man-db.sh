@@ -3,7 +3,7 @@
 main() {
     # """
     # Install man-db.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-12.
     #
     # Potentially useful:
     # > --program-prefix=g
@@ -13,6 +13,7 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/man-db.rb
     # """
     local -A dict
+    koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'groff' \
         'libpipeline' \
