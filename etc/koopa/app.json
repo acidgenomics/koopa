@@ -2530,11 +2530,11 @@
     },
     "bin": ["ksh"],
     "build_dependencies": ["make"],
-    "date": "2023-06-07",
+    "date": "2023-06-13",
     "enabled": false,
     "man1": ["ksh.1"],
     "url": ["https://github.com/ksh93/ksh/"],
-    "version": "1.0.5"
+    "version": "1.0.6"
   },
   "lame": {
     "aliases": {
@@ -3080,14 +3080,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-06-13",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.25"
+    "version": "8.7.27"
   },
   "lsd": {
     "aliases": {
@@ -4732,14 +4732,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-06-12",
+    "date": "2023-06-13",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.28.1"
+    "version": "7.28.2"
   },
   "sox": {
     "aliases": {

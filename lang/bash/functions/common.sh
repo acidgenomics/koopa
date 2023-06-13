@@ -7919,7 +7919,7 @@ koopa_find() {
     local exclude_arg
     bool['empty']=0
     bool['exclude']=0
-    bool['hidden']=1
+    bool['hidden']=0
     bool['print0']=0
     bool['sort']=0
     bool['sudo']=0
@@ -8020,6 +8020,10 @@ koopa_find() {
                 ;;
             '--empty')
                 bool['empty']=1
+                shift 1
+                ;;
+            '--hidden')
+                bool['hidden']=1
                 shift 1
                 ;;
             '--no-hidden')
