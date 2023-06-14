@@ -115,11 +115,11 @@
       "homebrew": true
     },
     "bin": ["asdf"],
-    "date": "2023-03-16",
+    "date": "2023-06-14",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.11.3"
+    "version": "0.12.0"
   },
   "aspell": {
     "aliases": {
@@ -1546,10 +1546,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-05-28",
+    "date": "2023-06-14",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.41.1"
+    "version": "0.42.0"
   },
   "gatk": {
     "aliases": {
