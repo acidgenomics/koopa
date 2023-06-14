@@ -3061,7 +3061,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-06-02",
+    "date": "2023-06-14",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -3076,7 +3076,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.5"
+    "version": "16.0.6"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
