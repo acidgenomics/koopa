@@ -21,7 +21,7 @@ koopa_extract() {
     koopa_assert_is_file "${dict['file']}"
     dict['bn']="$(koopa_basename_sans_ext "${dict['file']}")"
     case "${dict['bn']}" in
-        '*.tar')
+        *'.tar')
             dict['bn']="$(koopa_basename_sans_ext "${dict['bn']}")"
             ;;
     esac
