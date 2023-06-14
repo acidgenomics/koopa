@@ -1179,9 +1179,9 @@
     "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
   },
   "dotfiles": {
-    "date": "2023-06-08",
+    "date": "2023-06-13",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4e0fd308776e5532865d0e0d353e277538c878a3"
+    "version": "c00b51687c38283d52ebe3cbcf6e19eace778a99"
   },
   "du-dust": {
     "aliases": {
@@ -3061,7 +3061,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-06-02",
+    "date": "2023-06-14",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -3076,7 +3076,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.5"
+    "version": "16.0.6"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],

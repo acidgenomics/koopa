@@ -6963,6 +6963,11 @@ koopa_extract() {
     dict['target_dir']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
     dict['bn']="$(koopa_basename_sans_ext "${dict['file']}")"
+    case "${dict['bn']}" in
+        *'.tar')
+            dict['bn']="$(koopa_basename_sans_ext "${dict['bn']}")"
+            ;;
+    esac
     dict['file']="$(koopa_realpath "${dict['file']}")"
     dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
     case "${dict['match']}" in
