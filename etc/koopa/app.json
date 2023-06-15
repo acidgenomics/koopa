@@ -115,11 +115,11 @@
       "homebrew": true
     },
     "bin": ["asdf"],
-    "date": "2023-03-16",
+    "date": "2023-06-14",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.11.3"
+    "version": "0.12.0"
   },
   "aspell": {
     "aliases": {
@@ -1546,10 +1546,10 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-05-28",
+    "date": "2023-06-14",
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.41.1"
+    "version": "0.42.0"
   },
   "gatk": {
     "aliases": {
@@ -2027,15 +2027,15 @@
   "gseapy": {
     "arch": "amd64",
     "bin": ["gseapy"],
-    "date": "2023-02-08",
-    "dependencies": ["conda"],
+    "date": "2023-06-15",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.0.4"
+    "version": "1.0.5"
   },
   "gsl": {
     "aliases": {
@@ -2563,7 +2563,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-06-12",
+    "date": "2023-06-15",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2571,7 +2571,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.22.5"
+    "version": "2.23.2"
   },
   "ldns": {
     "aliases": {
@@ -4529,10 +4529,10 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-05-12",
+    "date": "2023-06-15",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.27"
+    "version": "0.0.29"
   },
   "rust": {
     "aliases": {
