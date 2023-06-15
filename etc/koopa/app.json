@@ -4529,10 +4529,10 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-05-12",
+    "date": "2023-06-15",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.27"
+    "version": "0.0.29"
   },
   "rust": {
     "aliases": {
