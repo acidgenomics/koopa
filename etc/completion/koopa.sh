@@ -743,7 +743,13 @@ _koopa_complete() {
                                     ;;
                             esac
                             ;;
-                        'kallisto' | \
+                        'kallisto')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'quant')
+                                    args=('paired-end' 'single-end')
+                                    ;;
+                            esac
+                            ;;
                         'salmon')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')

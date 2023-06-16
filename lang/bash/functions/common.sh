@@ -3977,8 +3977,7 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'kallisto' | \
-        'salmon')
+        'kallisto')
             case "${2:-}" in
                 'index')
                     dict['key']="${1:?}-${2:?}"
@@ -3986,7 +3985,6 @@ koopa_cli_app() {
                     ;;
                 'quant')
                     case "${3:-}" in
-                        'bam' | \
                         'paired-end' | \
                         'single-end')
                             dict['key']="${1:?}-${2:?}-${3:?}"
@@ -4016,6 +4014,30 @@ koopa_cli_app() {
         'rnaeditingindexer')
             dict['key']="${1:?}"
             shift 1
+            ;;
+        'salmon')
+            case "${2:-}" in
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                'quant')
+                    case "${3:-}" in
+                        'bam' | \
+                        'paired-end' | \
+                        'single-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
             ;;
         'sra')
             case "${2:-}" in
@@ -14359,10 +14381,8 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "${dict['fastq_r1_file']}" \
         "${dict['fastq_r2_file']}" \
         "${dict['index_file']}"
-    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
@@ -14373,14 +14393,16 @@ koopa_kallisto_quant_paired_end_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
+        '--bias'
         "--bootstrap-samples=${dict['bootstraps']}"
         "--index=${dict['index_file']}"
         "--output-dir=${dict['output_dir']}"
         "--threads=${dict['threads']}"
-        '--bias'
         '--verbose'
     )
     dict['lib_type']="$( \
@@ -14490,12 +14512,12 @@ koopa_kallisto_quant_paired_end() {
             --pattern="*${dict['fastq_r1_tail']}" \
             --prefix="${dict['fastq_dir']}" \
             --sort \
-            --type 'f' \
     )"
     if koopa_is_array_empty "${fastq_r1_files[@]:-}"
     then
         koopa_stop "No FASTQs ending with '${dict['fastq_r1_tail']}'."
     fi
+    koopa_assert_is_file "${fastq_r1_files[@]}"
     koopa_alert_info "$(koopa_ngettext \
         --num="${#fastq_r1_files[@]}" \
         --msg1='sample' \
@@ -14597,7 +14619,6 @@ koopa_kallisto_quant_single_end_per_sample() {
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file "${dict['fastq_file']}" "${dict['index_file']}"
-    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['fastq_bn']="${dict['fastq_bn']/${dict['fastq_tail']}/}"
     dict['id']="${dict['fastq_bn']}"
@@ -14607,6 +14628,7 @@ koopa_kallisto_quant_single_end_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
@@ -14698,12 +14720,12 @@ koopa_kallisto_quant_single_end() {
             --pattern="*${dict['fastq_tail']}" \
             --prefix="${dict['fastq_dir']}" \
             --sort \
-            --type='f' \
     )"
     if koopa_is_array_empty "${fastq_files[@]:-}"
     then
         koopa_stop "No FASTQs ending with '${dict['fastq_tail']}'."
     fi
+    koopa_assert_is_file "${fastq_files[@]}"
     koopa_alert_info "$(koopa_ngettext \
         --num="${#fastq_files[@]}" \
         --msg1='sample' \
