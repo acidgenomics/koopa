@@ -219,6 +219,7 @@ koopa_cli_app() {
                     ;;
                 'quant')
                     case "${3:-}" in
+                        'bam' | \
                         'paired-end' | \
                         'single-end')
                             dict['key']="${1:?}-${2:?}-${3:?}"
