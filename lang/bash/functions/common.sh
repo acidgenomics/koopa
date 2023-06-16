@@ -19689,11 +19689,11 @@ koopa_salmon_quant_bam_per_sample() {
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['transcriptome_fasta_file']}"
-    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
     dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     dict['id']="$(koopa_basename_sans_ext "${dict['bam_file']}")"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
     dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
