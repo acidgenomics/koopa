@@ -3,7 +3,7 @@
 koopa_salmon_quant_single_end_per_sample() {
     # """
     # Run salmon quant on a single-end sample.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-06-16.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -102,7 +102,6 @@ koopa_salmon_quant_single_end_per_sample() {
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
     dict['id']="${dict['fastq_bn']}"
@@ -112,6 +111,7 @@ koopa_salmon_quant_single_end_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     # Don't set '--gcBias' here.
