@@ -12,8 +12,8 @@ koopa_salmon_quant_bam_per_sample() {
     # @examples
     # > koopa_salmon_quant_bam_per_sample \
     # >     --bam-file='bam/sample1.bam' \
-    # >     --index-dir='salmon-index' \
-    # >     --output-dir='salmon'
+    # >     --output-dir='salmon' \
+    # >     --transcriptome-fasta-file='transcriptome.fa.gz'
     # """
     local -A app dict
     local -a quant_args
@@ -24,8 +24,6 @@ koopa_salmon_quant_bam_per_sample() {
     dict['bam_file']=''
     # Current recommendation in bcbio-nextgen.
     dict['bootstraps']=30
-    # e.g. 'salmon-index'.
-    dict['index_dir']=''
     # Detect library fragment type (strandedness) automatically.
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -46,14 +44,6 @@ koopa_salmon_quant_bam_per_sample() {
                 ;;
             '--bam-file')
                 dict['bam_file']="${2:?}"
-                shift 2
-                ;;
-            '--index-dir='*)
-                dict['index_dir']="${1#*=}"
-                shift 1
-                ;;
-            '--index-dir')
-                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
@@ -88,7 +78,6 @@ koopa_salmon_quant_bam_per_sample() {
     done
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
-        '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}" \
         '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
@@ -96,8 +85,6 @@ koopa_salmon_quant_bam_per_sample() {
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_dir "${dict['index_dir']}"
-    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['transcriptome_fasta_file']}"
@@ -116,7 +103,6 @@ koopa_salmon_quant_bam_per_sample() {
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
         "--alignments=${dict['bam_file']}"
-        "--index=${dict['index_dir']}"
         "--libType=${dict['lib_type']}"
         '--no-version-check'
         "--numBootstraps=${dict['bootstraps']}"
