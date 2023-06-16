@@ -12,10 +12,7 @@ main() {
     # """
     local -A app
     local -a make_args
-    koopa_activate_app --build-only \
-        'coreutils' \
-        'gcc' \
-        'make'
+    koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
     app['date']="$(koopa_locate_date)"
     app['gcxx']="$(koopa_locate_gcxx --realpath)"
     app['make']="$(koopa_locate_make)"
@@ -44,6 +41,8 @@ ${dict['version']}.tar.gz"
         make_args+=('STAR' 'STARlong')
     fi
     koopa_mkdir 'bin'
+    # Makefile is currently hard-coded to look for 'date', which isn't expected
+    # GNU on macOS.
     (
         koopa_cd 'bin'
         koopa_ln "${app['date']}" 'date'
