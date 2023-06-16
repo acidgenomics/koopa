@@ -3,8 +3,8 @@
 main() {
     # """
     # Install STAR.
-    #
     # @note Updated 2023-06-16.
+    #
     # @seealso
     # - https://github.com/alexdobin/STAR/
     # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/star
