@@ -19814,12 +19814,12 @@ koopa_salmon_quant_bam() {
             --pattern="*.bam" \
             --prefix="${dict['bam_dir']}" \
             --sort \
-            --type='f' \
     )"
     if koopa_is_array_empty "${bam_files[@]:-}"
     then
         koopa_stop "No BAM files detected in '${dict['bam_dir']}'."
     fi
+    koopa_assert_is_file "${bam_files[@]}"
     koopa_alert_info "$(koopa_ngettext \
         --num="${#bam_files[@]}" \
         --msg1='sample' \
