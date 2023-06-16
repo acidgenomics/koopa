@@ -40,9 +40,9 @@ ${dict['version']}.tar.gz"
     else
         make_args+=('STAR' 'STARlong')
     fi
-    koopa_mkdir 'bin'
     # Makefile is currently hard-coded to look for 'date', which isn't expected
     # GNU on macOS.
+    koopa_mkdir 'bin'
     (
         koopa_cd 'bin'
         koopa_ln "${app['date']}" 'date'
