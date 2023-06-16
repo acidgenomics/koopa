@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME This currently messes up with GENCODE identifiers.
+# NOTE This currently messes up with GENCODE identifiers.
 # Consider correcting the FASTA file here before proceeding.
+# This is a known issue/limitation of kallisto.
 
 koopa_kallisto_quant_paired_end_per_sample() {
     # """
     # Run kallisto quant on a paired-end sample.
-    # @note Updated 2022-10-06.
+    # @note Updated 2023-06-16.
     #
     # Consider adding support for '--genomebam' and '--pseudobam' output,
     # which requires GTF file input ('--gtf') and chromosome names
@@ -156,10 +157,8 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "${dict['fastq_r1_file']}" \
         "${dict['fastq_r2_file']}" \
         "${dict['index_file']}"
-    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
@@ -170,14 +169,16 @@ koopa_kallisto_quant_paired_end_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(
+        '--bias'
         "--bootstrap-samples=${dict['bootstraps']}"
         "--index=${dict['index_file']}"
         "--output-dir=${dict['output_dir']}"
         "--threads=${dict['threads']}"
-        '--bias'
         '--verbose'
     )
     dict['lib_type']="$( \
