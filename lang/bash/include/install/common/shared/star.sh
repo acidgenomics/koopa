@@ -3,6 +3,7 @@
 main() {
     # """
     # Install STAR.
+    #
     # @note Updated 2023-06-16.
     # @seealso
     # - https://github.com/alexdobin/STAR/
@@ -34,10 +35,7 @@ ${dict['version']}.tar.gz"
     )
     if koopa_is_aarch64
     then
-        make_args+=(
-            # > 'CXX_SIMD_FLAGS=-march=native'
-            'CXXFLAGS_SIMD=-std=c++11'
-        )
+        make_args+=('CXXFLAGS_SIMD=-std=c++11')
     fi
     if koopa_is_macos
     then
