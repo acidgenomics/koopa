@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using koopa_find instead of fd.
+
 koopa_dot_clean() {
     # """
     # Clean up dot files recursively inside a directory.
