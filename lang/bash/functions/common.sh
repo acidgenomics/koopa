@@ -3986,6 +3986,7 @@ koopa_cli_app() {
                     ;;
                 'quant')
                     case "${3:-}" in
+                        'bam' | \
                         'paired-end' | \
                         'single-end')
                             dict['key']="${1:?}-${2:?}-${3:?}"
@@ -19618,6 +19619,223 @@ koopa_salmon_index() {
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['salmon']}" index "${index_args[@]}"
     koopa_alert_success "salmon index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_salmon_quant_bam_per_sample() {
+    local -A app dict
+    local -a quant_args
+    koopa_assert_has_args "$#"
+    app['salmon']="$(koopa_locate_salmon)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bam_file']=''
+    dict['bootstraps']=30
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
+    dict['transcriptome_fasta_file']=''
+    quant_args=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-file')
+                dict['bam_file']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            '--transcriptome-fasta-file='*)
+                dict['transcriptome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict['transcriptome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-file' "${dict['bam_file']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    koopa_assert_is_file \
+        "${dict['bam_file']}" \
+        "${dict['transcriptome_fasta_file']}"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    dict['transcriptome_fasta_file']="$( \
+        koopa_realpath "${dict['transcriptome_fasta_file']}" \
+    )"
+    dict['id']="$(koopa_basename_sans_ext "${dict['bam_file']}")"
+    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['id']}'."
+        return 0
+    fi
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    quant_args+=(
+        "--alignments=${dict['bam_file']}"
+        "--index=${dict['index_dir']}"
+        "--libType=${dict['lib_type']}"
+        '--no-version-check'
+        "--numBootstraps=${dict['bootstraps']}"
+        "--output=${dict['output_dir']}"
+        "--targets=${dict['transcriptome_fasta_file']}"
+        "--threads=${dict['threads']}"
+    )
+    koopa_dl 'Quant args' "${quant_args[*]}"
+    "${app['salmon']}" quant "${quant_args[@]}"
+    return 0
+}
+
+koopa_salmon_quant_bam() {
+    local -A dict
+    local -a bam_files
+    local bam_file
+    koopa_assert_has_args "$#"
+    dict['bam_dir']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['output_dir']=''
+    dict['transcriptome_fasta_file']=''
+    while (("$#"))
+    do
+        case "$1" in
+            '--bam-dir='*)
+                dict['bam_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-dir')
+                dict['bam_dir']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            '--transcriptome-fasta-file='*)
+                dict['transcriptome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict['transcriptome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-dir' "${dict['bam_dir']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
+    koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
+    koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
+    dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['transcriptome_fasta_file']="$( \
+        koopa_realpath "${dict['transcriptome_fasta_file']}" \
+    )"
+    koopa_h1 'Running salmon quant.'
+    koopa_dl \
+        'Index dir' "${dict['index_dir']}" \
+        'Transcriptome FASTA' "${dict['transcriptome_fasta_file']}" \
+        'BAM dir' "${dict['bam_dir']}" \
+        'Output dir' "${dict['output_dir']}"
+    readarray -t bam_files <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*.bam" \
+            --prefix="${dict['bam_dir']}" \
+            --sort \
+            --type='f' \
+    )"
+    if koopa_is_array_empty "${bam_files[@]:-}"
+    then
+        koopa_stop "No BAM files detected in '${dict['bam_dir']}'."
+    fi
+    koopa_alert_info "$(koopa_ngettext \
+        --num="${#bam_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
+    for bam_file in "${bam_files[@]}"
+    do
+        koopa_salmon_quant_bam_per_sample \
+            --bam-file="$bam_file" \
+            --index-dir="${dict['index_dir']}" \
+            --lib-type="${dict['lib_type']}" \
+            --output-dir="${dict['output_dir']}" \
+            --transcriptome-fasta-file="${dict['transcriptome_fasta_file']}"
+    done
+    koopa_alert_success 'salmon quant was successful.'
     return 0
 }
 
