@@ -3,7 +3,7 @@
 koopa_kallisto_quant_single_end_per_sample() {
     # """
     # Run kallisto quant (per single-end sample).
-    # @note Updated 2022-03-25.
+    # @note Updated 2022-06-16.
     #
     # Consider adding support for '--genomebam' and '--pseudobam' output,
     # which requires GTF file input ('--gtf') and chromosome names
@@ -116,7 +116,6 @@ koopa_kallisto_quant_single_end_per_sample() {
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file "${dict['fastq_file']}" "${dict['index_file']}"
-    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['fastq_bn']="${dict['fastq_bn']/${dict['fastq_tail']}/}"
     dict['id']="${dict['fastq_bn']}"
@@ -126,6 +125,7 @@ koopa_kallisto_quant_single_end_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
     quant_args+=(

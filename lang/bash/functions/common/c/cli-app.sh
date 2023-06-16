@@ -210,8 +210,7 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'kallisto' | \
-        'salmon')
+        'kallisto')
             case "${2:-}" in
                 'index')
                     dict['key']="${1:?}-${2:?}"
@@ -248,6 +247,30 @@ koopa_cli_app() {
         'rnaeditingindexer')
             dict['key']="${1:?}"
             shift 1
+            ;;
+        'salmon')
+            case "${2:-}" in
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                'quant')
+                    case "${3:-}" in
+                        'bam' | \
+                        'paired-end' | \
+                        'single-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
             ;;
         'sra')
             case "${2:-}" in

@@ -3,7 +3,7 @@
 koopa_salmon_quant_paired_end_per_sample() {
     # """
     # Run salmon quant on a paired-end sample.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-06-16.
     #
     # Attempting to detect library type (strandedness) automatically by default.
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
@@ -173,10 +173,8 @@ koopa_salmon_quant_paired_end_per_sample() {
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
-    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
     koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
@@ -187,10 +185,12 @@ koopa_salmon_quant_paired_end_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
-        '--gcBias' # Recommended for DESeq2.
+        '--gcBias'
         "--index=${dict['index_dir']}"
         "--libType=${dict['lib_type']}"
         "--mates1=${dict['fastq_r1_file']}"

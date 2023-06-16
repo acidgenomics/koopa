@@ -3,7 +3,7 @@
 koopa_kallisto_quant_paired_end() {
     # """
     # Run kallisto quant on multiple paired-end FASTQs in a directory.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-06-16.
     #
     # @examples
     # > koopa_kallisto_quant_paired_end \
@@ -113,12 +113,12 @@ koopa_kallisto_quant_paired_end() {
             --pattern="*${dict['fastq_r1_tail']}" \
             --prefix="${dict['fastq_dir']}" \
             --sort \
-            --type 'f' \
     )"
     if koopa_is_array_empty "${fastq_r1_files[@]:-}"
     then
         koopa_stop "No FASTQs ending with '${dict['fastq_r1_tail']}'."
     fi
+    koopa_assert_is_file "${fastq_r1_files[@]}"
     koopa_alert_info "$(koopa_ngettext \
         --num="${#fastq_r1_files[@]}" \
         --msg1='sample' \
