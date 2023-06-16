@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to handle FASTQ symlinks.
+
 koopa_salmon_quant_paired_end_per_sample() {
     # """
     # Run salmon quant on a paired-end sample.
