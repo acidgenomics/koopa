@@ -10,8 +10,16 @@ main() {
     # """
     local -A app
     local -a make_args
-    koopa_activate_app --build-only 'gcc' 'make'
-    app['gcc']="$(koopa_locate_gcc --realpath)"
+    koopa_activate_app --build-only \
+        'coreutils' \
+        'gcc' \
+        'make'
+    #koopa_activate_app \
+    #    'xz' \
+    #    'zlib' \
+    #    'htslib'
+    app['date']="$(koopa_locate_date)"
+    app['gcxx']="$(koopa_locate_gcxx --realpath)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
@@ -24,7 +32,7 @@ ${dict['version']}.tar.gz"
     koopa_cd 'src/source'
     make_args+=(
         "--jobs=${dict['jobs']}"
-        "CXX=${app['gcc']}"
+        "CXX=${app['gcxx']}"
         'VERBOSE=1'
     )
     if koopa_is_macos
@@ -33,6 +41,15 @@ ${dict['version']}.tar.gz"
     else
         make_args+=('STAR' 'STARlong')
     fi
+    koopa_mkdir 'bin'
+    (
+        koopa_cd 'bin'
+        koopa_ln "${app['date']}" 'date'
+    )
+    koopa_add_to_path_start "$(koopa_realpath 'bin')"
+    koopa_print_env
+    koopa_dl 'make args' "${make_args[*]}"
+    "${app['make']}" "${make_args[@]}"
     koopa_chmod +x 'STAR' 'STARlong'
     koopa_cp 'STAR' "${dict['prefix']}/bin/STAR"
     koopa_cp 'STARlong' "${dict['prefix']}/bin/STARlong"
