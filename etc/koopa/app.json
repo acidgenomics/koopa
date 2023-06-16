@@ -509,13 +509,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-24",
+    "date": "2023-06-16",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.22.1"
+    "version": "1.23.0"
   },
   "brotli": {
     "aliases": {
@@ -4732,14 +4732,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-06-13",
+    "date": "2023-06-16",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.28.2"
+    "version": "7.28.3"
   },
   "sox": {
     "aliases": {
@@ -4805,10 +4805,10 @@
     "version": "1.15.0"
   },
   "star": {
-    "arch": "amd64",
     "bin": ["STAR"],
-    "date": "2022-11-08",
-    "dependencies": ["conda"],
+    "build_dependencies": ["gcc", "make"],
+    "date": "2023-06-16",
+    "dependencies": ["htslib"],
     "large": true,
     "url": [
       "https://github.com/alexdobin/STAR/",
