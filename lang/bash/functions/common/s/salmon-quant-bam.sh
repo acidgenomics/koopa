@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This does need to pass libtype through.
-
 koopa_salmon_quant_bam() {
     # """
     # Run salmon quant on multiple transcriptome-aligned BAMs in a directory.
@@ -14,7 +12,8 @@ koopa_salmon_quant_bam() {
     # @examples
     # > koopa_salmon_quant_bam \
     # >     --bam-dir='bam' \
-    # >     --output-dir='salmon'
+    # >     --output-dir='salmon' \
+    # >     --transcriptome-fasta-file='transcriptome.fa.gz'
     # """
     local -A dict
     local -a bam_files
@@ -22,8 +21,6 @@ koopa_salmon_quant_bam() {
     koopa_assert_has_args "$#"
     # e.g. 'bam'.
     dict['bam_dir']=''
-    # e.g. 'salmon-index'.
-    dict['index_dir']=''
     # Detect library fragment type (strandedness) automatically.
     dict['lib_type']='A'
     # e.g. 'salmon'.
@@ -40,14 +37,6 @@ koopa_salmon_quant_bam() {
                 ;;
             '--bam-dir')
                 dict['bam_dir']="${2:?}"
-                shift 2
-                ;;
-            '--index-dir='*)
-                dict['index_dir']="${1#*=}"
-                shift 1
-                ;;
-            '--index-dir')
-                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--lib-type='*)
@@ -82,21 +71,18 @@ koopa_salmon_quant_bam() {
     done
     koopa_assert_is_set \
         '--bam-dir' "${dict['bam_dir']}" \
-        '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}" \
         '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
-    koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
+    koopa_assert_is_dir "${dict['bam_dir']}"
     koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
     dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
-    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
-        'Index dir' "${dict['index_dir']}" \
         'Transcriptome FASTA' "${dict['transcriptome_fasta_file']}" \
         'BAM dir' "${dict['bam_dir']}" \
         'Output dir' "${dict['output_dir']}"
@@ -123,7 +109,6 @@ koopa_salmon_quant_bam() {
     do
         koopa_salmon_quant_bam_per_sample \
             --bam-file="$bam_file" \
-            --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
             --output-dir="${dict['output_dir']}" \
             --transcriptome-fasta-file="${dict['transcriptome_fasta_file']}"
