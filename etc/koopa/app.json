@@ -4806,9 +4806,8 @@
   },
   "star": {
     "bin": ["STAR"],
-    "build_dependencies": ["gcc", "make"],
+    "build_dependencies": ["coreutils", "gcc", "make"],
     "date": "2023-06-16",
-    "dependencies": ["htslib"],
     "large": true,
     "url": [
       "https://github.com/alexdobin/STAR/",
