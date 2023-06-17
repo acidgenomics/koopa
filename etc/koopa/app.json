@@ -40,12 +40,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-05-16",
+    "date": "2023-06-17",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.6.1"
+    "version": "2.6.2"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -748,9 +748,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-06-12",
+    "date": "2023-06-17",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.34.1"
+    "version": "2.34.2"
   },
   "cli11": {
     "aliases": {
@@ -3254,11 +3254,11 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2023-05-01",
+    "date": "2023-06-17",
     "dependencies": ["node"],
     "large": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.34.0"
+    "version": "0.35.0"
   },
   "mcfly": {
     "aliases": {
@@ -4529,10 +4529,10 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-06-15",
+    "date": "2023-06-17",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.29"
+    "version": "0.0.30"
   },
   "rust": {
     "aliases": {
