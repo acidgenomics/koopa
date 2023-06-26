@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
 
+# FIXME Need to resolve this on macOS:
+# configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals will not be rendered optimally
+
+# Potentially related:
+# https://stat.ethz.ch/pipermail/r-sig-mac/2014-November/011232.html
+
+# FIXME Seeing this issue on macOS:
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libintl.a(printf.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libintl.a(osdep.o) has no symbols
+# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libintl.a(lock.o) has no symbols
+
+# FIXME Here's how to get R to build with curl 8:
+# # `configure` doesn't like curl 8+, but convince it that everything is ok.
+# TODO: report this upstream.
+# ENV["r_cv_have_curl728"] = "yes"
+
 main() {
     # """
     # Install R.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-06-26.
     #
     # @section Compiler settings:
     #
@@ -335,7 +351,7 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     # > "${app['make']}" check
     # > "${app['make']}" pdf
-    "${app['make']}" 'info'
+    "${app['make']}" info
     "${app['make']}" install
     app['r']="${dict['prefix']}/bin/R"
     app['rscript']="${dict['prefix']}/bin/Rscript"
