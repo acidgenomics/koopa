@@ -214,14 +214,14 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
-    "date": "2023-05-08",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.1.1"
+    "version": "2.2.0"
   },
   "automake": {
     "aliases": {
@@ -1707,11 +1707,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-06-26",
     "large": true,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.01.1"
+    "version": "10.01.2"
   },
   "git": {
     "aliases": {
@@ -2301,11 +2301,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-05",
+    "date": "2023-06-26",
     "enabled": false,
     "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.113.0"
+    "version": "0.114.1"
   },
   "hyperfine": {
     "aliases": {
@@ -3622,7 +3622,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-06-26",
     "dependencies": [
       "ca-certificates",
       "c-ares",
@@ -3638,7 +3638,7 @@
     "outdated": true,
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "18.16.0"
+    "version": "18.16.1"
   },
   "npth": {
     "aliases": {
@@ -3722,7 +3722,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-05-16",
+    "date": "2023-06-26",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3730,7 +3730,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.0.1"
+    "version": "3.1.0"
   },
   "openblas": {
     "aliases": {
@@ -3819,10 +3819,10 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-06-07",
+    "date": "2023-06-26",
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.3"
+    "version": "3.1.4"
   },
   "parallel": {
     "aliases": {
@@ -4094,12 +4094,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-06-12",
+    "date": "2023-06-26",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.20"
+    "version": "2.3.21"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4143,14 +4143,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-06-12",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.3.2"
+    "version": "7.4.0"
   },
   "python3.10": {
     "aliases": {
@@ -4158,7 +4158,7 @@
     },
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-06",
+    "date": "2023-06-26",
     "dependencies": [
       "bzip2",
       "expat",
@@ -4176,7 +4176,7 @@
     "man1": ["python3.10.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.10.11"
+    "version": "3.10.12"
   },
   "python3.11": {
     "aliases": {
@@ -4184,7 +4184,7 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-06",
+    "date": "2023-06-26",
     "dependencies": [
       "bzip2",
       "expat",
@@ -4202,7 +4202,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.3"
+    "version": "3.11.4"
   },
   "quarto": {
     "aliases": {
@@ -4219,7 +4219,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-24",
+    "date": "2023-06-26",
     "dependencies": [
       "autoconf",
       "automake",
@@ -4275,7 +4275,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.3.0"
+    "version": "4.3.1"
   },
   "r-devel": {
     "date": "2023-04-24",
@@ -4522,17 +4522,17 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-06-08",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.272"
+    "version": "0.0.275"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-06-17",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.30"
+    "version": "0.0.35"
   },
   "rust": {
     "aliases": {
@@ -4732,14 +4732,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-06-16",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.28.3"
+    "version": "7.29.0"
   },
   "sox": {
     "aliases": {
@@ -5610,14 +5610,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-02-17",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.3.4"
+    "version": "2023.6.22"
   },
   "zellij": {
     "aliases": {
@@ -5625,9 +5625,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-04-14",
+    "date": "2023-06-26",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.36.0"
+    "version": "0.37.2"
   },
   "zip": {
     "aliases": {
