@@ -2609,9 +2609,9 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2023-01-10",
+    "date": "2023-06-26",
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.07"
+    "version": "2.08"
   },
   "libarchive": {
     "aliases": {
