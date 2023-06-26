@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Back up the site packages library for point release updates.
+
 main() {
     # """
     # Install R framework binary.
