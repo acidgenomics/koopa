@@ -574,8 +574,8 @@
       "byobu-ulevel"
     ],
     "build_dependencies": ["make"],
-    "dependencies": ["gettext", "tmux"],
     "date": "2023-05-23",
+    "dependencies": ["gettext", "tmux"],
     "enabled": false,
     "man1": [
       "byobu-config.1",
@@ -799,8 +799,8 @@
     "bin": ["conda"],
     "date": "2023-05-03",
     "large": true,
-    "prune": false,
     "outdated": true,
+    "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.3.1-0"
   },
