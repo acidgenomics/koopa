@@ -574,8 +574,8 @@
       "byobu-ulevel"
     ],
     "build_dependencies": ["make"],
-    "dependencies": ["gettext", "tmux"],
     "date": "2023-05-23",
+    "dependencies": ["gettext", "tmux"],
     "enabled": false,
     "man1": [
       "byobu-config.1",
@@ -799,8 +799,8 @@
     "bin": ["conda"],
     "date": "2023-05-03",
     "large": true,
-    "prune": false,
     "outdated": true,
+    "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.3.1-0"
   },
@@ -1170,9 +1170,9 @@
     "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
   },
   "dotfiles": {
-    "date": "2023-06-13",
+    "date": "2023-06-27",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "c00b51687c38283d52ebe3cbcf6e19eace778a99"
+    "version": "e0d971e1e0e84cbd54048c076d68ee9f1be70217"
   },
   "du-dust": {
     "aliases": {
@@ -2491,7 +2491,7 @@
   "kallisto": {
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make"],
-    "date": "2023-05-01",
+    "date": "2023-06-27",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
     "outdated": true,
@@ -2500,7 +2500,7 @@
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.48.0"
+    "version": "0.50.0"
   },
   "krb5": {
     "aliases": {
@@ -2552,7 +2552,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-06-15",
+    "date": "2023-06-27",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2560,7 +2560,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.23.2"
+    "version": "2.24.7"
   },
   "ldns": {
     "aliases": {
@@ -3655,11 +3655,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-06-07",
+    "date": "2023-06-27",
     "dependencies": ["openssl3"],
     "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.81.0"
+    "version": "0.82.0"
   },
   "oniguruma": {
     "aliases": {
