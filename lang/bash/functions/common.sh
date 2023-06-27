@@ -11367,13 +11367,6 @@ koopa_install_curl() {
         "$@"
 }
 
-koopa_install_curl7() {
-    koopa_install_app \
-        --installer='curl' \
-        --name='curl7' \
-        "$@"
-}
-
 koopa_install_dash() {
     koopa_install_app \
         --name='dash' \
@@ -23499,12 +23492,6 @@ koopa_uninstall_csvtk() {
 koopa_uninstall_curl() {
     koopa_uninstall_app \
         --name='curl' \
-        "$@"
-}
-
-koopa_uninstall_curl7() {
-    koopa_uninstall_app \
-        --name='curl7' \
         "$@"
 }
 
