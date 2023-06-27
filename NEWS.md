@@ -9,6 +9,7 @@ Major changes:
 - Improved handling of FASTQ symlinks in kallisto and salmon functions.
 - Improved parameterization of `koopa_sub`, ensuring that both regex and fixed
   modes work as expected.
+- Apps that depend on Node no longer attempt to burn in module path.
 
 Minor changes:
 
@@ -28,6 +29,7 @@ Minor changes:
 - Added support for locating `gunzip` and `minimap2`.
 - Relaxed Renviron PATH checks for directory paths that may not exist.
 - Homebrew updater now untaps deprecated `homebrew/cask-drivers` tap.
+- Our `koopa_dot_clean` function now uses `koopa_find` internally.
 
 New installers:
 
