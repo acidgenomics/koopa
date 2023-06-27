@@ -12119,6 +12119,12 @@ koopa_install_lesspipe() {
         "$@"
 }
 
+koopa_install_libaec() {
+    koopa_install_app \
+        --name='libaec' \
+        "$@"
+}
+
 koopa_install_libarchive() {
     koopa_install_app \
         --name='libarchive' \
@@ -24095,6 +24101,12 @@ koopa_uninstall_less() {
 koopa_uninstall_lesspipe() {
     koopa_uninstall_app \
         --name='lesspipe' \
+        "$@"
+}
+
+koopa_uninstall_libaec() {
+    koopa_uninstall_app \
+        --name='libaec' \
         "$@"
 }
 
