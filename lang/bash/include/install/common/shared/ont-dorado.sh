@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME Need to require to libaec now.
+# // Path to a library.
+# AEC_DLL:FILEPATH=AEC_DLL-NOTFOUND
+# https://github.com/MathisRosenhauer/libaec
+
+# NOTE Alternatively, can install using prebuilt binaries:
+# - https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.3.1-linux-arm64.tar.gz
+# - https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.3.1-linux-x64.tar.gz
+# - https://cdn.oxfordnanoportal.com/software/analysis/dorado-0.3.1-osx-arm64.tar.gz
+
 main() {
     # """
     # Install ONT dorado basecaller.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-06-27.
     # """
     local -A app cmake dict
     local -a build_deps deps
