@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is falsely returning empty directory...need to rework.
+
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -158,6 +160,8 @@ koopa_extract() {
         "$cmd" "${cmd_args[@]}" # 2>/dev/null
     )
     koopa_rm "${dict['tmpfile']}"
+    # FIXME This isn't working as expected for dorado extraction inside of
+    # Debian Docker image..need to debug.
     readarray -t contents <<< "$( \
         koopa_find \
             --max-depth=1 \
