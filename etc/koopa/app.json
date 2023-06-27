@@ -40,12 +40,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-05-16",
+    "date": "2023-06-17",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.6.1"
+    "version": "2.6.2"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -214,14 +214,14 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
-    "date": "2023-05-08",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.1.1"
+    "version": "2.2.0"
   },
   "automake": {
     "aliases": {
@@ -748,9 +748,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-06-12",
+    "date": "2023-06-17",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.34.1"
+    "version": "2.34.2"
   },
   "cli11": {
     "aliases": {
@@ -1097,14 +1097,6 @@
     "url": ["https://curl.se/"],
     "version": "8.1.2"
   },
-  "curl7": {
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-20",
-    "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
-    "prune": false,
-    "url": ["https://curl.se/"],
-    "version": "7.88.1"
-  },
   "dash": {
     "aliases": {
       "homebrew": true
@@ -1125,7 +1117,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
@@ -1560,7 +1551,6 @@
     "date": "2023-03-21",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
@@ -1687,7 +1677,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.7"
   },
@@ -1707,11 +1696,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-06-26",
     "large": true,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.01.1"
+    "version": "10.01.2"
   },
   "git": {
     "aliases": {
@@ -1756,7 +1745,6 @@
     "bin": ["glances"],
     "date": "2023-05-19",
     "dependencies": ["python3.11"],
-    "outdated": true,
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
@@ -2221,7 +2209,7 @@
     ],
     "build_dependencies": ["make"],
     "date": "2023-05-12",
-    "dependencies": ["gcc", "zlib"],
+    "dependencies": ["gcc", "libaec", "zlib"],
     "prune": false,
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.14.1-2"
@@ -2301,11 +2289,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-05",
+    "date": "2023-06-26",
     "enabled": false,
-    "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.113.0"
+    "version": "0.114.1"
   },
   "hyperfine": {
     "aliases": {
@@ -2506,6 +2493,7 @@
     "date": "2023-05-01",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -2609,9 +2597,20 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2023-01-10",
+    "date": "2023-06-26",
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.07"
+    "version": "2.08"
+  },
+  "libaec": {
+    "bin": ["aec"],
+    "build_dependencies": ["cmake", "make"],
+    "date": "2023-06-27",
+    "man1": ["aec.1"],
+    "url": [
+      "https://gitlab.dkrz.de/k202009/libaec/",
+      "https://github.com/MathisRosenhauer/libaec/"
+    ],
+    "version": "1.0.6"
   },
   "libarchive": {
     "aliases": {
@@ -3206,7 +3205,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-05-16",
+    "date": "2023-06-27",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3231,7 +3230,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.4.4"
+    "version": "1.4.5"
   },
   "man-db": {
     "aliases": {
@@ -3254,11 +3253,11 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2023-05-01",
+    "date": "2023-06-17",
     "dependencies": ["node"],
     "large": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.34.0"
+    "version": "0.35.0"
   },
   "mcfly": {
     "aliases": {
@@ -3622,7 +3621,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-06-26",
     "dependencies": [
       "ca-certificates",
       "c-ares",
@@ -3635,10 +3634,9 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "outdated": true,
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "18.16.0"
+    "version": "18.16.1"
   },
   "npth": {
     "aliases": {
@@ -3691,14 +3689,11 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "git"],
-    "date": "2023-05-19",
-    "dependencies": ["hdf5", "openssl3", "zstd"],
+    "date": "2023-06-27",
     "enabled": false,
     "large": true,
-    "notes": ["Need to add support for nvidia-cuda-toolkit."],
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -3722,7 +3717,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-05-16",
+    "date": "2023-06-26",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3730,7 +3725,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.0.1"
+    "version": "3.1.0"
   },
   "openblas": {
     "aliases": {
@@ -3819,10 +3814,10 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-06-07",
+    "date": "2023-06-26",
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.3"
+    "version": "3.1.4"
   },
   "parallel": {
     "aliases": {
@@ -3961,7 +3956,6 @@
     "date": "2023-05-08",
     "dependencies": ["python3.11"],
     "enabled": false,
-    "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.2.0"
@@ -4094,12 +4088,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-06-12",
+    "date": "2023-06-26",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.20"
+    "version": "2.3.21"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4143,14 +4137,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-06-12",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.3.2"
+    "version": "7.4.0"
   },
   "python3.10": {
     "aliases": {
@@ -4158,7 +4152,7 @@
     },
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-06",
+    "date": "2023-06-26",
     "dependencies": [
       "bzip2",
       "expat",
@@ -4176,7 +4170,7 @@
     "man1": ["python3.10.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.10.11"
+    "version": "3.10.12"
   },
   "python3.11": {
     "aliases": {
@@ -4184,7 +4178,7 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-06",
+    "date": "2023-06-26",
     "dependencies": [
       "bzip2",
       "expat",
@@ -4202,7 +4196,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.3"
+    "version": "3.11.4"
   },
   "quarto": {
     "aliases": {
@@ -4219,19 +4213,19 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-24",
+    "date": "2023-06-27",
     "dependencies": [
       "autoconf",
       "automake",
-      "binutils",
       "bzip2",
       "cairo",
       "coreutils",
-      "curl7",
+      "curl",
       "fontconfig",
       "freetype",
       "gawk",
       "gcc",
+      "gettext",
       "glib",
       "icu4c",
       "lapack",
@@ -4275,22 +4269,22 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.3.0"
+    "version": "4.3.1"
   },
   "r-devel": {
-    "date": "2023-04-24",
+    "date": "2023-06-27",
     "dependencies": [
       "autoconf",
       "automake",
-      "binutils",
       "bzip2",
       "cairo",
       "coreutils",
-      "curl7",
+      "curl",
       "fontconfig",
       "freetype",
       "gawk",
       "gcc",
+      "gettext",
       "glib",
       "icu4c",
       "lapack",
@@ -4338,7 +4332,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "84313"
+    "version": "84605"
   },
   "radian": {
     "bin": ["radian"],
@@ -4522,17 +4516,17 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-06-08",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.272"
+    "version": "0.0.275"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-06-15",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.29"
+    "version": "0.0.35"
   },
   "rust": {
     "aliases": {
@@ -4668,7 +4662,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
@@ -4732,14 +4725,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-06-16",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.28.3"
+    "version": "7.29.0"
   },
   "sox": {
     "aliases": {
@@ -4788,7 +4781,6 @@
     "date": "2023-05-30",
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
-    "outdated": true,
     "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.42.0"
@@ -4799,7 +4791,6 @@
     },
     "build_dependencies": ["make"],
     "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
-    "outdated": true,
     "prune": false,
     "url": ["https://github.com/jkbonfield/io_lib"],
     "version": "1.15.0"
@@ -5610,14 +5601,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-02-17",
+    "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.3.4"
+    "version": "2023.6.22"
   },
   "zellij": {
     "aliases": {
@@ -5625,9 +5616,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-04-14",
+    "date": "2023-06-26",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.36.0"
+    "version": "0.37.2"
   },
   "zip": {
     "aliases": {

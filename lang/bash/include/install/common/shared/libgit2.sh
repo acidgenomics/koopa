@@ -28,11 +28,9 @@ main() {
         dict['openssl']="$(koopa_app_prefix 'openssl3')"
     fi
     cmake['pcre_include_dir']="${dict['pcre']}/include"
-    cmake['pcre_library']="${dict['pcre']}/lib/\
-libpcre.${dict['shared_ext']}"
+    cmake['pcre_library']="${dict['pcre']}/lib/libpcre.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
-    cmake['zlib_library']="${dict['zlib']}/lib/\
-libz.${dict['shared_ext']}"
+    cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     koopa_assert_is_dir \
         "${cmake['pcre_include_dir']}" \
         "${cmake['zlib_include_dir']}"
