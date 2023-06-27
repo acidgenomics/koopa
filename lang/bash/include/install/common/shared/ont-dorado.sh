@@ -31,7 +31,8 @@ main() {
     dict['url']="https://cdn.oxfordnanoportal.com/software/analysis/\
 dorado-${dict['version']}-${dict['platform']}-${dict['arch']}.tar.gz"
     koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")"
-    koopa_stop "$PWD"
+    koopa_extract \
+        "$(koopa_basename "${dict['url']}")" \
+        "${dict['prefix']}"
     return 0
 }
