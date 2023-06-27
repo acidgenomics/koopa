@@ -1117,7 +1117,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
@@ -1552,7 +1551,6 @@
     "date": "2023-03-21",
     "dependencies": ["conda"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
@@ -1679,7 +1677,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.7"
   },
@@ -1748,7 +1745,6 @@
     "bin": ["glances"],
     "date": "2023-05-19",
     "dependencies": ["python3.11"],
-    "outdated": true,
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
@@ -2295,7 +2291,6 @@
     "build_dependencies": ["go"],
     "date": "2023-06-26",
     "enabled": false,
-    "outdated": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
     "version": "0.114.1"
   },
@@ -2498,6 +2493,7 @@
     "date": "2023-05-01",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
+    "outdated": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -3627,7 +3623,6 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "outdated": true,
     "prune": false,
     "url": ["https://nodejs.org/"],
     "version": "18.16.1"
@@ -3684,13 +3679,13 @@
   "ont-dorado": {
     "bin": ["dorado"],
     "build_dependencies": ["autoconf", "automake", "cmake", "git"],
-    "date": "2023-05-19",
+    "date": "2023-06-27",
     "dependencies": ["hdf5", "openssl3", "zstd"],
     "enabled": false,
     "large": true,
     "notes": ["Need to add support for nvidia-cuda-toolkit."],
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -3953,7 +3948,6 @@
     "date": "2023-05-08",
     "dependencies": ["python3.11"],
     "enabled": false,
-    "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.2.0"
@@ -4660,7 +4654,6 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
@@ -4780,7 +4773,6 @@
     "date": "2023-05-30",
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
-    "outdated": true,
     "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
     "version": "3.42.0"
@@ -4791,7 +4783,6 @@
     },
     "build_dependencies": ["make"],
     "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
-    "outdated": true,
     "prune": false,
     "url": ["https://github.com/jkbonfield/io_lib"],
     "version": "1.15.0"
