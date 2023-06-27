@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We're now running into problems with GNU find engine inside of Debian.
-# Need to debug.
-
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -41,7 +38,6 @@ koopa_find() {
     local -A app bool dict
     local -a exclude_arr find find_args results sorted_results
     local exclude_arg
-    set -x # FIXME
     bool['empty']=0
     bool['exclude']=0
     bool['hidden']=0
@@ -300,11 +296,6 @@ koopa_find() {
             ;;
         'find')
             find_args=("${dict['prefix']}" '-xdev')
-            if [[ "${bool['hidden']}" -eq 0 ]]
-            then
-                bool['exclude']=1
-                exclude_arr+=('*/.*')
-            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('-mindepth' "${dict['min_depth']}")
@@ -312,6 +303,10 @@ koopa_find() {
             if [[ -n "${dict['max_depth']}" ]]
             then
                 find_args+=('-maxdepth' "${dict['max_depth']}")
+            fi
+            if [[ "${bool['hidden']}" -eq 0 ]]
+            then
+                find_args+=('-not' '-name' '.*')
             fi
             if [[ -n "${dict['pattern']}" ]]
             then
@@ -407,7 +402,7 @@ koopa_find() {
     esac
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        >&2 koopa_dl 'Find:' "${find[*]} ${find_args[*]}"
+        >&2 koopa_dl 'Find' "${find[*]} ${find_args[*]}"
     fi
     if [[ "${bool['sort']}" -eq 1 ]]
     then
