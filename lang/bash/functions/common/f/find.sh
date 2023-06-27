@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We're now running into problems with GNU find engine inside of Debian.
+# Need to debug.
+
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
@@ -38,6 +41,7 @@ koopa_find() {
     local -A app bool dict
     local -a exclude_arr find find_args results sorted_results
     local exclude_arg
+    set -x # FIXME
     bool['empty']=0
     bool['exclude']=0
     bool['hidden']=0
