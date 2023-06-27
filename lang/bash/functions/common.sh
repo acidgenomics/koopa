@@ -6575,9 +6575,6 @@ koopa_dot_clean() {
     local -a basenames cruft files
     local i
     koopa_assert_has_args_eq "$#" 1
-    app['fd']="$(koopa_locate_fd)"
-    app['rm']="$(koopa_locate_rm --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${1:?}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
@@ -6588,12 +6585,10 @@ koopa_dot_clean() {
         "${app['dot_clean']}" "${dict['prefix']}"
     fi
     readarray -t files <<< "$( \
-        "${app['fd']}" \
-            --absolute-path \
-            --base-directory="${dict['prefix']}" \
-            --glob \
+        koopa_find \
             --hidden \
-            '.*' \
+            --pattern='.*' \
+            --prefix="${dict['prefix']}" \
     )"
     if koopa_is_array_empty "${files[@]}"
     then
