@@ -2491,7 +2491,7 @@
   "kallisto": {
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make"],
-    "date": "2023-05-01",
+    "date": "2023-06-27",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
     "outdated": true,
@@ -2500,7 +2500,7 @@
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.48.0"
+    "version": "0.50.0"
   },
   "krb5": {
     "aliases": {
