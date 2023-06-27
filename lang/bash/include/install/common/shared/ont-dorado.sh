@@ -18,10 +18,23 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
+    cmake['openssl_crypto_library']="${dict['openssl']}/lib/\
+libcrypto.${dict['shared_ext']}"
+    cmake['openssl_include_dir']="${dict['openssl']}/include"
     cmake['openssl_root_dir']="${dict['openssl']}"
+    cmake['openssl_ssl_library']="${dict['openssl']}/lib/\
+libssl.${dict['shared_ext']}"
     cmake['zstd_include_dir']="${dict['zstd']}/include"
     cmake['zstd_library']="${dict['zstd']}/lib/\
 libzstd.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake['openssl_include_dir']}" \
+        "${cmake['openssl_root_dir']}" \
+        "${cmake['zstd_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake['openssl_crypto_library']}" \
+        "${cmake['openssl_ssl_library']}" \
+        "${cmake['zstd_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DGIT_SUBMODULE=ON'
@@ -29,7 +42,10 @@ libzstd.${dict['shared_ext']}"
         # > "-DMKLDNN_DIR=PATH"
         # > "-DMKL_DIR=PATH"
         # > "-Dkineto_LIBRARY=PATH"
+        "-DOPENSSL_CRYPTO_LIBRARY=${cmake['openssl_crypto_library']}"
+        "-DOPENSSL_INCLUDE_DIR=${cmake['openssl_include_dir']}"
         "-DOPENSSL_ROOT_DIR=${cmake['openssl_root_dir']}"
+        "-DOPENSSL_SSL_LIBRARY=${cmake['openssl_ssl_library']}"
         "-DZSTD_INCLUDE_DIR=${cmake['zstd_include_dir']}"
         "-DZSTD_LIBRARY_RELEASE=${cmake['zstd_library']}"
     )
