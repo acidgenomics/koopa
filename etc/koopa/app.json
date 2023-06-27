@@ -3655,11 +3655,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-06-07",
+    "date": "2023-06-27",
     "dependencies": ["openssl3"],
     "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.81.0"
+    "version": "0.82.0"
   },
   "oniguruma": {
     "aliases": {
