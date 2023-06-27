@@ -1638,11 +1638,11 @@
     },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-03-17",
+    "date": "2023-06-27",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.11.2"
+    "version": "3.12.0"
   },
   "gettext": {
     "aliases": {
