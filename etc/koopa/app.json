@@ -3689,12 +3689,9 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "git"],
     "date": "2023-06-27",
-    "dependencies": ["hdf5", "openssl3", "zstd"],
     "enabled": false,
     "large": true,
-    "notes": ["Need to add support for nvidia-cuda-toolkit."],
     "url": ["https://github.com/nanoporetech/dorado/"],
     "version": "0.3.1"
   },
