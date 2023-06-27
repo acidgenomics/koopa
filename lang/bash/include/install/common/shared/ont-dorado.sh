@@ -3,50 +3,35 @@
 main() {
     # """
     # Install ONT dorado basecaller.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-06-27.
+    #
+    # @seealso
+    # - https://github.com/nanoporetech/dorado/blob/master/CMakeLists.txt
+    # - https://github.com/nanoporetech/dorado/blob/master/cmake/HDF5.cmake
     # """
-    local -A app cmake dict
-    local -a build_deps deps
-    build_deps=('autoconf' 'automake' 'git')
-    deps=('hdf5' 'openssl3' 'zstd')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['git']="$(koopa_locate_git)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
-    cmake['openssl_root_dir']="${dict['openssl']}"
-    cmake['zstd_include_dir']="${dict['zstd']}/include"
-    cmake['zstd_library']="${dict['zstd']}/lib/\
-libzstd.${dict['shared_ext']}"
-    cmake_args=(
-        # Build options --------------------------------------------------------
-        '-DGIT_SUBMODULE=ON'
-        # Dependency paths -----------------------------------------------------
-        # > "-DMKLDNN_DIR=PATH"
-        # > "-DMKL_DIR=PATH"
-        # > "-Dkineto_LIBRARY=PATH"
-        "-DOPENSSL_ROOT_DIR=${cmake['openssl_root_dir']}"
-        "-DZSTD_INCLUDE_DIR=${cmake['zstd_include_dir']}"
-        "-DZSTD_LIBRARY_RELEASE=${cmake['zstd_library']}"
-    )
-    # How to build with CUDA toolkit on Linux.
-    # > if koopa_is_linux
-    # > then
-    # >     cmake_args+=(
-    # >         "-DCUDAToolkit_NVCC_EXECUTABLE=PATH"
-    # >         "-DCUDAToolkit_SENTINEL_FILE=PATH"
-    # >     )
-    # > fi
-    "${app['git']}" clone \
-        --depth 1 \
-        --branch "v${dict['version']}" \
-        'https://github.com/nanoporetech/dorado.git' \
-        'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    dict['arch']="$(koopa_arch)"
+    if koopa_is_macos
+    then
+        koopa_assert_is_aarch64
+        dict['platform']='osx'
+    else
+        dict['platform']='linux'
+    fi
+    case "${dict['arch']}" in
+        'aarch64')
+            dict['arch']='arm64'
+            ;;
+        'x86_64')
+            dict['arch']='x64'
+            ;;
+    esac
+    dict['url']="https://cdn.oxfordnanoportal.com/software/analysis/\
+dorado-${dict['version']}-${dict['platform']}-${dict['arch']}.tar.gz"
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")"
+    koopa_stop "$PWD"
     return 0
 }

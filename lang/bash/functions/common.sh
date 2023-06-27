@@ -11367,13 +11367,6 @@ koopa_install_curl() {
         "$@"
 }
 
-koopa_install_curl7() {
-    koopa_install_app \
-        --installer='curl' \
-        --name='curl7' \
-        "$@"
-}
-
 koopa_install_dash() {
     koopa_install_app \
         --name='dash' \
@@ -12123,6 +12116,12 @@ koopa_install_less() {
 koopa_install_lesspipe() {
     koopa_install_app \
         --name='lesspipe' \
+        "$@"
+}
+
+koopa_install_libaec() {
+    koopa_install_app \
+        --name='libaec' \
         "$@"
 }
 
@@ -13997,8 +13996,8 @@ koopa_is_spacemacs_installed() {
 koopa_is_ssh_enabled() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    app['ssh']="$(koopa_locate_ssh --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    app['ssh']="$(koopa_locate_ssh --allow-missing --allow-system)"
+    [[ -x "${app['ssh']}" ]] || return 1
     dict['url']="${1:?}"
     dict['pattern']="${2:?}"
     dict['str']="$( \
@@ -23502,12 +23501,6 @@ koopa_uninstall_curl() {
         "$@"
 }
 
-koopa_uninstall_curl7() {
-    koopa_uninstall_app \
-        --name='curl7' \
-        "$@"
-}
-
 koopa_uninstall_dash() {
     koopa_uninstall_app \
         --name='dash' \
@@ -24108,6 +24101,12 @@ koopa_uninstall_less() {
 koopa_uninstall_lesspipe() {
     koopa_uninstall_app \
         --name='lesspipe' \
+        "$@"
+}
+
+koopa_uninstall_libaec() {
+    koopa_uninstall_app \
+        --name='libaec' \
         "$@"
 }
 

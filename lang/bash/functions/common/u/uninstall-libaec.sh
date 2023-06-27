@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-koopa_uninstall_curl7() {
+koopa_uninstall_libaec() {
     koopa_uninstall_app \
-        --name='curl7' \
+        --name='libaec' \
         "$@"
 }
