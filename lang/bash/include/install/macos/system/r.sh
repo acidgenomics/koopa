@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Back up the site packages library for point release updates.
-
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-04-25.
+    # @note Updated 2023-06-27.
     #
     # @section Intel:
     #
@@ -26,7 +24,8 @@ main() {
     # - https://cran.r-project.org/bin/macosx/
     # - https://mac.r-project.org/tools/
     # """
-    local -A app dict
+    local -A app bool dict
+    bool['backup']=0
     app['installer']="$(koopa_macos_locate_installer)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
@@ -51,6 +50,12 @@ main() {
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['prefix']="${dict['framework_prefix']}/Versions/\
 ${dict['maj_min_ver']}-${dict['arch']}/Resources"
+    [[ -d "${dict['prefix']}/site-library" ]] && bool['backup']=1
+    if [[ "${bool['backup']}" -eq 1 ]]
+    then
+        koopa_alert "Backing up site library."
+        koopa_mv "${dict['prefix']}/site-library" 'site-library'
+    fi
     dict['url']="https://cran.r-project.org/bin/macosx/\
 ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     koopa_download "${dict['url']}"
@@ -59,6 +64,11 @@ ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
             -pkg "$(koopa_basename "${dict['url']}")" \
             -target '/'
     koopa_assert_is_dir "${dict['prefix']}"
+    if [[ "${bool['backup']}" -eq 1 ]]
+    then
+        koopa_alert "Restoring site library."
+        koopa_mv 'site-library' "${dict['prefix']}/site-library"
+    fi
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
     koopa_macos_install_system_xcode_openmp
