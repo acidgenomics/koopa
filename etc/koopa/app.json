@@ -4219,7 +4219,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-26",
+    "date": "2023-06-27",
     "dependencies": [
       "autoconf",
       "automake",
@@ -4227,7 +4227,7 @@
       "bzip2",
       "cairo",
       "coreutils",
-      "curl7",
+      "curl",
       "fontconfig",
       "freetype",
       "gawk",
@@ -4278,7 +4278,7 @@
     "version": "4.3.1"
   },
   "r-devel": {
-    "date": "2023-04-24",
+    "date": "2023-06-27",
     "dependencies": [
       "autoconf",
       "automake",
@@ -4286,7 +4286,7 @@
       "bzip2",
       "cairo",
       "coreutils",
-      "curl7",
+      "curl",
       "fontconfig",
       "freetype",
       "gawk",
@@ -4338,7 +4338,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "84313"
+    "version": "84605"
   },
   "radian": {
     "bin": ["radian"],
