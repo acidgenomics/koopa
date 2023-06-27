@@ -1,25 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve this on macOS:
-# configure: WARNING: neither inconsolata.sty nor zi4.sty found: PDF vignettes and package manuals will not be rendered optimally
-
-# Potentially related:
-# https://stat.ethz.ch/pipermail/r-sig-mac/2014-November/011232.html
-
-# FIXME Seeing this issue on macOS:
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libintl.a(printf.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libintl.a(osdep.o) has no symbols
-# /Library/Developer/CommandLineTools/usr/bin/ranlib: file: libintl.a(lock.o) has no symbols
-
-# FIXME Here's how to get R to build with curl 8:
-# # `configure` doesn't like curl 8+, but convince it that everything is ok.
-# TODO: report this upstream.
-# ENV["r_cv_have_curl728"] = "yes"
-
 main() {
     # """
     # Install R.
-    # @note Updated 2023-06-26.
+    # @note Updated 2023-06-27.
     #
     # @section Compiler settings:
     #
@@ -66,21 +50,24 @@ main() {
     local -a build_deps conf_args deps
     bool['devel']=0
     bool['r_koopa']=1
-    build_deps=('make' 'pkg-config')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    deps=()
-    koopa_is_linux && deps+=('bzip2')
-    deps+=(
+    build_deps=(
         'autoconf'
         'automake'
         'libtool'
+        'make'
+        'pkg-config'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_is_linux && deps+=('bzip2')
+    deps+=(
         'xz'
         'zlib' # libpng
         'zstd' # libtiff
         'gcc'
+        'gettext'
         'icu4c'
         'readline'
-        'curl7'
+        'curl'
         'lapack'
         'libjpeg-turbo'
         'libpng'
@@ -110,7 +97,7 @@ main() {
         'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
-    app['ar']="$(koopa_locate_ar)"
+    app['ar']="$(koopa_locate_ar --only-system)"
     app['awk']="$(koopa_locate_awk)"
     app['bash']="$(koopa_locate_bash)"
     app['bzip2']="$(koopa_locate_bzip2)"
@@ -344,14 +331,13 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
         koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
         koopa_cd 'src'
     fi
+    # `configure` doesn't like curl 8+, but convince it that everything is OK.
+    export r_cv_have_curl728='yes'
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    # > "${app['make']}" check
-    # > "${app['make']}" pdf
-    "${app['make']}" info
     "${app['make']}" install
     app['r']="${dict['prefix']}/bin/R"
     app['rscript']="${dict['prefix']}/bin/Rscript"
