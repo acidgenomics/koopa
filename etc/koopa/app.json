@@ -1712,6 +1712,7 @@
     "build_dependencies": ["autoconf", "make"],
     "date": "2023-06-12",
     "dependencies": [
+      "bash",
       "curl",
       "expat",
       "gettext",
@@ -4552,7 +4553,7 @@
   "salmon": {
     "bin": ["salmon"],
     "build_dependencies": ["cmake", "make", "patch"],
-    "date": "2023-05-01",
+    "date": "2023-06-27",
     "dependencies": [
       "boost",
       "bzip2",
@@ -4570,7 +4571,7 @@
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
     ],
-    "version": "1.10.1"
+    "version": "1.10.2"
   },
   "sambamba": {
     "arch": "amd64",
