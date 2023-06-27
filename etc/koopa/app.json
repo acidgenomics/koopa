@@ -2602,8 +2602,10 @@
     "version": "2.08"
   },
   "libaec": {
-    "build_dependencies": ["make"],
+    "bin": ["aec"],
+    "build_dependencies": ["cmake", "make"],
     "date": "2023-06-27",
+    "man1": ["aec.1"],
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/",
       "https://github.com/MathisRosenhauer/libaec/"
