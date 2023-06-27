@@ -7945,6 +7945,7 @@ koopa_find() {
     local -A app bool dict
     local -a exclude_arr find find_args results sorted_results
     local exclude_arg
+    set -x # FIXME
     bool['empty']=0
     bool['exclude']=0
     bool['hidden']=0
