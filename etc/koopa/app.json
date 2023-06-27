@@ -2601,6 +2601,15 @@
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.08"
   },
+  "libaec": {
+    "build_dependencies": ["make"],
+    "date": "2023-06-27",
+    "url": [
+      "https://gitlab.dkrz.de/k202009/libaec/",
+      "https://github.com/MathisRosenhauer/libaec/"
+    ],
+    "version": "1.0.6"
+  },
   "libarchive": {
     "aliases": {
       "homebrew": true
@@ -4209,7 +4218,6 @@
     "dependencies": [
       "autoconf",
       "automake",
-      "binutils",
       "bzip2",
       "cairo",
       "coreutils",
@@ -4218,6 +4226,7 @@
       "freetype",
       "gawk",
       "gcc",
+      "gettext",
       "glib",
       "icu4c",
       "lapack",
@@ -4268,7 +4277,6 @@
     "dependencies": [
       "autoconf",
       "automake",
-      "binutils",
       "bzip2",
       "cairo",
       "coreutils",
@@ -4277,6 +4285,7 @@
       "freetype",
       "gawk",
       "gcc",
+      "gettext",
       "glib",
       "icu4c",
       "lapack",
