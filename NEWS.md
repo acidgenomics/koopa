@@ -1,5 +1,41 @@
 # Release notes
 
+## koopa 0.13.2 (2023-06-27)
+
+Major changes:
+
+- Added support for salmon quantification directly from BAM files. Using this
+  code to process Nanopore output aligned with minimap2.
+- Improved handling of FASTQ symlinks in kallisto and salmon functions.
+- Improved parameterization of `koopa_sub`, ensuring that both regex and fixed
+  modes work as expected.
+- Apps that depend on Node no longer attempt to burn in module path.
+
+Minor changes:
+
+- Updated Posit package manager (for R) snapshot to 2023-06-23.
+- Reworked `ont-dorado` install support, using pre-built binaries instead of
+  attempting to install from source using CMake.
+- Simplified and reworked file rename functions: `koopa_rename_camel_case`,
+  `koopa_rename_kebab_case`, `koopa_rename_snake_case`.
+- Removed support for `curl7`, now that we can convince R that `curl` 8 is OK.
+- `extract` and `find`: Improved handling of hidden dot files when using GNU
+  find, which we detected when attempting to install `ont-dorado` inside a Linux
+  Docker instance.
+- Export of `EDITOR` value now only defines koopa vim when it is installed.
+- `koopa_is_ssh_enabled` no longer errors if `ssh` is not installed.
+- Fixed cryptic R build error seen on macOS (4.3.1) that was due to usage of
+  GNU binutils `ar` instead of system `ar`.
+- Added support for locating `gunzip` and `minimap2`.
+- Relaxed Renviron PATH checks for directory paths that may not exist.
+- Homebrew updater now untaps deprecated `homebrew/cask-drivers` tap.
+- Our `koopa_dot_clean` function now uses `koopa_find` internally.
+
+New installers:
+
+- Added install support for `libaec`, which is now a dependency for `hdf5`.
+- Added install support for `mold`.
+
 ## koopa 0.13.1 (2023-06-02)
 
 Major changes:
