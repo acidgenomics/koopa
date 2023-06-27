@@ -3,7 +3,7 @@
 main() {
     # """
     # Install kallisto.
-    # @note updated 2023-05-09.
+    # @note updated 2023-05-27.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -21,8 +21,6 @@ main() {
     koopa_activate_app --build-only 'autoconf' 'automake'
     koopa_activate_app 'bzip2' 'hdf5' 'xz' 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
-    app['cmake']="$(koopa_locate_cmake)"
-    app['make']="$(koopa_locate_cmake)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
