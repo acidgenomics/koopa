@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Back up the site library for point release updates.
+
 main() {
     # """
     # Install latest version of R from CRAN.
