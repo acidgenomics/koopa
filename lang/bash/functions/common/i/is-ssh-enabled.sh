@@ -3,7 +3,7 @@
 koopa_is_ssh_enabled() {
     # """
     # Is SSH key enabled (e.g. for git)?
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-06-27.
     #
     # @seealso
     # - https://help.github.com/en/github/authenticating-to-github/
@@ -11,8 +11,8 @@ koopa_is_ssh_enabled() {
     # """
     local -A app dict
     koopa_assert_has_args_eq "$#" 2
-    app['ssh']="$(koopa_locate_ssh --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    app['ssh']="$(koopa_locate_ssh --allow-missing --allow-system)"
+    [[ -x "${app['ssh']}" ]] || return 1
     dict['url']="${1:?}"
     dict['pattern']="${2:?}"
     dict['str']="$( \
