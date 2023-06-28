@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Now hitting a zstd dependency issue on Linux.
+
 main() {
     # """
     # Install kallisto.
-    # @note updated 2023-05-27.
+    # @note updated 2023-06-28.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
