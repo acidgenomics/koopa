@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting a zstd dependency issue on Linux.
-
 main() {
     # """
     # Install kallisto.
@@ -34,6 +32,12 @@ main() {
     cmake['bzip2_libraries']="${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake['bzip2_include_dir']}" \
+        "${cmake['zlib_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake['bzip2_libraries']}" \
+        "${cmake['zlib_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DUSE_HDF5=ON'
@@ -59,6 +63,10 @@ v${dict['version']}.tar.gz"
         "${app['autoreconf']}" --force --install --verbose
         ./configure
     )
+    # FIXME We may need to navigate into bifrost and reconfigure.
+    # src/ext/bifrost/src/bifrost-stamp
+    # FIXME The ZLIB configuration isn't passing through to bifrost correctly.
+    # /tmp/koopa.ynR0Y3NT0e/src/ext/bifrost/src/bifrost-stamp/bifrost-configure
     koopa_cd 'src'
     export KOOPA_CPU_COUNT=1
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
