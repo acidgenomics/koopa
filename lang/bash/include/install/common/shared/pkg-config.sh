@@ -33,7 +33,7 @@ main() {
         dict['sys_inc']="${dict['sdk_prefix']}/usr/include"
         pc_path=('/usr/lib/pkgconfig')
     fi
-    koopa_asssert_is_dir "${dict['sys_inc']}" "${pc_path[@]}"
+    koopa_assert_is_dir "${dict['sys_inc']}" "${pc_path[@]}"
     dict['pc_path']="$(koopa_paste --sep=':' "${pc_path[@]}")"
     conf_args=(
         '--disable-debug'
