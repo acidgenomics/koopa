@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# NOTE v0.50.0: Currently hitting a zlib config issue with bifrost.
+# https://github.com/pachterlab/kallisto/issues/385
+
 main() {
     # """
     # Install kallisto.
-    # @note updated 2023-05-27.
+    # @note updated 2023-06-28.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -32,6 +35,12 @@ main() {
     cmake['bzip2_libraries']="${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake['bzip2_include_dir']}" \
+        "${cmake['zlib_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake['bzip2_libraries']}" \
+        "${cmake['zlib_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DUSE_HDF5=ON'
@@ -45,11 +54,10 @@ main() {
 v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    # This patch step is needed for autoconf 2.69 compatibility.
+    # https://github.com/pachterlab/kallisto/issues/303#issuecomment-884612169
     (
         koopa_cd 'src/ext/htslib'
-        # This patch step is needed for autoconf 2.69 compatibility.
-        # https://github.com/pachterlab/kallisto/issues/
-        #   303#issuecomment-884612169
         "${app['sed']}" \
             -i.bak \
             '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
