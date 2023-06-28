@@ -1,6 +1,6 @@
 # Release notes
 
-## koopa 0.13.2 (2023-06-27)
+## koopa 0.13.2 (2023-06-28)
 
 Major changes:
 
@@ -30,6 +30,7 @@ Minor changes:
 - Relaxed Renviron PATH checks for directory paths that may not exist.
 - Homebrew updater now untaps deprecated `homebrew/cask-drivers` tap.
 - Our `koopa_dot_clean` function now uses `koopa_find` internally.
+- R system configuration now removes legacy `Makevars.site` file on Linux.
 
 New installers:
 
