@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure Makevars.site does not exist for system Linux.
-
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.

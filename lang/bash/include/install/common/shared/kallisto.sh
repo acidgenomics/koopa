@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE v0.50.0: Currently hitting a zlib config issue with bifrost.
+# https://github.com/pachterlab/kallisto/issues/385
+
 main() {
     # """
     # Install kallisto.
@@ -63,10 +66,6 @@ v${dict['version']}.tar.gz"
         "${app['autoreconf']}" --force --install --verbose
         ./configure
     )
-    # FIXME We may need to navigate into bifrost and reconfigure.
-    # src/ext/bifrost/src/bifrost-stamp
-    # FIXME The ZLIB configuration isn't passing through to bifrost correctly.
-    # /tmp/koopa.ynR0Y3NT0e/src/ext/bifrost/src/bifrost-stamp/bifrost-configure
     koopa_cd 'src'
     export KOOPA_CPU_COUNT=1
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
