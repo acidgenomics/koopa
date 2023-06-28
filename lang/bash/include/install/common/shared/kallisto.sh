@@ -54,11 +54,10 @@ main() {
 v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    # This patch step is needed for autoconf 2.69 compatibility.
+    # https://github.com/pachterlab/kallisto/issues/303#issuecomment-884612169
     (
         koopa_cd 'src/ext/htslib'
-        # This patch step is needed for autoconf 2.69 compatibility.
-        # https://github.com/pachterlab/kallisto/issues/
-        #   303#issuecomment-884612169
         "${app['sed']}" \
             -i.bak \
             '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
