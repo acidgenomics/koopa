@@ -2500,7 +2500,7 @@
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.50.0"
+    "version": "0.48.0"
   },
   "krb5": {
     "aliases": {
