@@ -13,6 +13,7 @@ main() {
     # @seealso
     # - https://www.freedesktop.org/wiki/Software/pkg-config/
     # - https://pkg-config.freedesktop.org/releases/
+    # - https://formulae.brew.sh/formula/pkg-config
     # """
     local -A app dict
     local -a conf_args pc_path
