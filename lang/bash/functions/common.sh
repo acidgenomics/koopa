@@ -18256,9 +18256,15 @@ koopa_r_configure_makevars() {
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
-    koopa_is_array_empty "${lines[@]}" && return 0
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
+    if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
+    then
+        koopa_alert_info "Deleting '${dict['file']}'."
+        koopa_rm --sudo "${dict['file']}"
+        return 0
+    fi
+    koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
     case "${bool['system']}" in
