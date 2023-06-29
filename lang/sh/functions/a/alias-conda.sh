@@ -9,6 +9,7 @@ _koopa_alias_conda() {
     # Conda alias.
     # @note Updated 2023-05-12.
     # """
+    echo 'FIXME NOOOOO'
     _koopa_activate_conda
     if ! _koopa_is_function 'conda'
     then
