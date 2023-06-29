@@ -61,7 +61,7 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
-    alias conda='unalias conda; _koopa_activate_conda; conda'
+    alias conda='_koopa_activate_conda; conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
@@ -311,7 +311,6 @@ _koopa_activate_completion() {
 }
 
 _koopa_activate_conda() {
-    echo 'FIXME ACTIVATE NOOOO'
     __kvar_prefix="$(_koopa_conda_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -333,16 +332,10 @@ _koopa_activate_conda() {
             __kvar_shell='posix'
             ;;
     esac
-    if _koopa_is_alias 'conda'
-    then
-        echo 'FIXME NOOOOO'
-        unalias 'conda'
-        type conda # FIXME
-    fi
+    _koopa_is_alias 'conda' && unalias 'conda'
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
     _koopa_is_function 'conda' || return 1
-    declare -f conda
     unset -v \
         __kvar_conda \
         __kvar_conda_setup \
