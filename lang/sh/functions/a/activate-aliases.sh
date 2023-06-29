@@ -53,7 +53,7 @@ _koopa_activate_aliases() {
     alias q='exit'
     alias radian='radian --no-restore --no-save --quiet'
     alias rbenv='_koopa_alias_rbenv'
-    alias ronn='ronn --roff'
+    # > alias ronn='ronn --roff'
     alias sha256='_koopa_alias_sha256'
     alias spacemacs='_koopa_spacemacs'
     alias spacevim='_koopa_spacevim'

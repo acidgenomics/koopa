@@ -6135,7 +6135,7 @@ koopa_dl() {
     koopa_assert_has_args_ge "$#" 2
     while [[ "$#" -ge 2 ]]
     do
-        koopa_msg 'default-bold' 'default' "${1:?}:" "${2:-}"
+        koopa_msg 'default' 'default' "${1:?}:" "${2:-}"
         shift 2
     done
     return 0
@@ -6534,7 +6534,10 @@ koopa_docker_run() {
             koopa_aws_ecr_login_private
             ;;
         'public.ecr.aws/'*)
-            koopa_aws_ecr_login_public
+            if [[ -n "${AWS_ECR_PROFILE:-}" ]]
+            then
+                koopa_aws_ecr_login_public
+            fi
             ;;
     esac
     "${app['docker']}" pull "${dict['image']}"
@@ -11205,6 +11208,12 @@ koopa_install_black() {
         "$@"
 }
 
+koopa_install_blast() {
+    koopa_install_app \
+        --name='blast' \
+        "$@"
+}
+
 koopa_install_boost() {
     koopa_install_app \
         --name='boost' \
@@ -12914,6 +12923,12 @@ koopa_install_ripgrep() {
 koopa_install_rmate() {
     koopa_install_app \
         --name='rmate' \
+        "$@"
+}
+
+koopa_install_ronn_ng() {
+    koopa_install_app \
+        --name='ronn-ng' \
         "$@"
 }
 
@@ -23345,6 +23360,12 @@ koopa_uninstall_black() {
         "$@"
 }
 
+koopa_uninstall_blast() {
+    koopa_uninstall_app \
+        --name='blast' \
+        "$@"
+}
+
 koopa_uninstall_boost() {
     koopa_uninstall_app \
         --name='boost' \
@@ -24891,6 +24912,12 @@ koopa_uninstall_ripgrep() {
 koopa_uninstall_rmate() {
     koopa_uninstall_app \
         --name='rmate' \
+        "$@"
+}
+
+koopa_uninstall_ronn_ng() {
+    koopa_uninstall_app \
+        --name='ronn-ng' \
         "$@"
 }
 
