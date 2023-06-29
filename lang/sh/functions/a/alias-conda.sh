@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# FIXME This is creating an infinite loop inside of Docker bash.
+# Can reprex with our conda image...
+# need to rethink.
+
 _koopa_alias_conda() {
     # """
     # Conda alias.
