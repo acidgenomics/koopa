@@ -451,6 +451,19 @@
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
     "version": "23.3.0"
   },
+  "blast": {
+    "arch": "amd64",
+    "bin": ["blastn", "blastp"],
+    "date": "2023-06-29",
+    "dependencies": ["conda"],
+    "enabled": false,
+    "large": true,
+    "url": [
+      "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
+      "https://bioconda.github.io/recipes/blast/README.html"
+    ],
+    "version": "2.14.0"
+  },
   "boost": {
     "aliases": {
       "debian": [
