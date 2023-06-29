@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-06-29.
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -21,7 +21,7 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
-    alias conda='unalias conda; _koopa_activate_conda; conda'
+    alias conda='_koopa_activate_conda; conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
