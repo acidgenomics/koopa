@@ -1146,6 +1146,7 @@ _koopa_alias_conda() {
         _koopa_print 'conda is not active.'
         return 1
     fi
+    type conda
     conda "$@"
 }
 
