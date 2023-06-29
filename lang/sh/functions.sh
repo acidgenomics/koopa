@@ -47,6 +47,7 @@ _koopa_activate_alacritty() {
 _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
@@ -54,10 +55,19 @@ _koopa_activate_aliases() {
     alias ..='cd ..'
     alias :q='exit'
     alias R='R --no-restore --no-save --quiet'
-    alias asdf='_koopa_alias_asdf'
-    alias black='black --line-length=79'
-    alias br-size='br --sort-by-size'
-    alias br='_koopa_alias_broot'
+    if [ -x "${__kvar_bin_prefix}/asdf" ]
+    then
+        alias asdf='_koopa_activate_asdf; asdf'
+    fi
+    if [ -x "${__kvar_bin_prefix}/black" ]
+    then
+        alias black='black --line-length=79'
+    fi
+    if [ -x "${__kvar_bin_prefix}/broot" ]
+    then
+        alias br='_koopa_activate_broot; br'
+        alias br-size='br --sort-by-size'
+    fi
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
@@ -101,9 +111,10 @@ _koopa_activate_aliases() {
     alias vim-fzf='_koopa_alias_vim_fzf'
     alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
-    alias z='_koopa_alias_z'
+    alias z='_koopa_activate_zoxide; __zoxide_z'
     [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
     [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
+    unset -v __kvar_bin_prefix
     return 0
 }
 
@@ -241,6 +252,7 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
+    _koopa_is_alias 'br' && unalias 'br'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     . "$__kvar_script"
@@ -1102,18 +1114,6 @@ _koopa_add_to_path_string_start() {
     return 0
 }
 
-_koopa_alias_asdf() {
-    _koopa_is_alias 'asdf' && unalias 'asdf'
-    _koopa_activate_asdf
-    asdf "$@"
-}
-
-_koopa_alias_broot() {
-    _koopa_is_alias 'br' && unalias 'br'
-    _koopa_activate_broot
-    br "$@"
-}
-
 _koopa_alias_colorls() {
     case "$(_koopa_color_mode)" in
         'dark')
@@ -1279,16 +1279,6 @@ _koopa_alias_vim_vanilla() {
 
 _koopa_alias_week() {
     date '+%V'
-}
-
-_koopa_alias_z() {
-    _koopa_activate_zoxide
-    if ! _koopa_is_function '__zoxide_z'
-    then
-        _koopa_print 'zoxide is not active.'
-        return 1
-    fi
-    __zoxide_z "$@"
 }
 
 _koopa_arch() {
