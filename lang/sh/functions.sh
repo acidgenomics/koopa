@@ -61,7 +61,7 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
-    alias conda='_koopa_alias_conda'
+    alias conda='unalias conda; _koopa_activate_conda; conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
@@ -1136,18 +1136,6 @@ _koopa_alias_colorls() {
         "$@"
     unset -v __kvar_color_flag
     return 0
-}
-
-_koopa_alias_conda() {
-    unalias conda
-    _koopa_activate_conda
-    if ! _koopa_is_function 'conda'
-    then
-        _koopa_print 'conda is not active.'
-        return 1
-    fi
-    type conda
-    conda "$@"
 }
 
 _koopa_alias_emacs_vanilla() {
