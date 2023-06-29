@@ -13,7 +13,6 @@ _koopa_activate_conda() {
     # - conda shell.zsh hook
     # - conda init <shell>
     # """
-    echo 'FIXME ACTIVATE NOOOO'
     __kvar_prefix="$(_koopa_conda_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -35,18 +34,10 @@ _koopa_activate_conda() {
             __kvar_shell='posix'
             ;;
     esac
-    # FIXME This step doesn't seem to be working properly for Bash in conda
-    # docker image, argh.
-    if _koopa_is_alias 'conda'
-    then
-        echo 'FIXME NOOOOO'
-        unalias 'conda'
-        type conda # FIXME
-    fi
+    _koopa_is_alias 'conda' && unalias 'conda'
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
     _koopa_is_function 'conda' || return 1
-    declare -f conda
     unset -v \
         __kvar_conda \
         __kvar_conda_setup \
