@@ -369,8 +369,13 @@ koopa_debian_apt_configure_sources() {
     dict['os_id']="$(koopa_os_id)"
     dict['sources_list']="$(koopa_debian_apt_sources_file)"
     dict['sources_list_d']="$(koopa_debian_apt_sources_prefix)"
+    if [[ ! -f "${dict['sources_list']}" ]]
+    then
+        koopa_alert_info "Skipping apt configuration at \
+'${dict['sources_list']}'. File does not exist."
+        return 0
+    fi
     koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
-    koopa_assert_is_file "${dict['sources_list']}"
     codenames['main']="${dict['os_codename']}"
     codenames['security']="${dict['os_codename']}-security"
     codenames['updates']="${dict['os_codename']}-updates"
