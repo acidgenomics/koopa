@@ -1132,6 +1132,7 @@ _koopa_alias_colorls() {
 }
 
 _koopa_alias_conda() {
+    echo 'FIXME NOOOOO'
     _koopa_activate_conda
     if ! _koopa_is_function 'conda'
     then
