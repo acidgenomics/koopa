@@ -3,7 +3,7 @@
 _koopa_activate_conda() {
     # """
     # Activate conda.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-06-29.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/
@@ -34,7 +34,14 @@ _koopa_activate_conda() {
             __kvar_shell='posix'
             ;;
     esac
-    _koopa_is_alias 'conda' && unalias 'conda'
+    # FIXME This step doesn't seem to be working properly for Bash in conda
+    # docker image, argh.
+    if _koopa_is_alias 'conda'
+    then
+        echo 'FIXME NOOOOO'
+        unalias 'conda'
+        type conda # FIXME
+    fi
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
     _koopa_is_function 'conda' || return 1
