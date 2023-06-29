@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-06-29.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -106,6 +106,7 @@ _koopa_complete() {
                         'bioconda-utils'
                         'bison'
                         'black'
+                        'blast'
                         'boost'
                         'bottom'
                         'bowtie2'
