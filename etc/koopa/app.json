@@ -4480,6 +4480,16 @@
     ],
     "version": "0.7.3"
   },
+  "ronn-ng": {
+    "date": "2023-06-29",
+    "dependencies": ["ruby"],
+    "enabled": false,
+    "url": [
+      "https://github.com/apjanke/ronn-ng/",
+      "https://rubygems.org/gems/ronn-ng/"
+    ],
+    "version": "0.9.1"
+  },
   "rsem": {
     "arch": "amd64",
     "bin": ["rsem-calculate-expression", "rsem-prepare-reference"],
