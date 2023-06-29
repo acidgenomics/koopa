@@ -311,6 +311,7 @@ _koopa_activate_completion() {
 }
 
 _koopa_activate_conda() {
+    echo 'FIXME ACTIVATE NOOOO'
     __kvar_prefix="$(_koopa_conda_prefix)"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -341,6 +342,7 @@ _koopa_activate_conda() {
     __kvar_conda_setup="$("$__kvar_conda" "shell.${__kvar_shell}" 'hook')"
     eval "$__kvar_conda_setup"
     _koopa_is_function 'conda' || return 1
+    declare -f conda
     unset -v \
         __kvar_conda \
         __kvar_conda_setup \
@@ -1137,12 +1139,14 @@ _koopa_alias_colorls() {
 }
 
 _koopa_alias_conda() {
+    echo 'FIXME CONDA ALIAS'
     _koopa_activate_conda
     if ! _koopa_is_function 'conda'
     then
         _koopa_print 'conda is not active.'
         return 1
     fi
+    declare -f conda # FIXME
     conda "$@"
 }
 
