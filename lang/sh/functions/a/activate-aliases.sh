@@ -7,6 +7,7 @@ _koopa_activate_aliases() {
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
@@ -14,10 +15,19 @@ _koopa_activate_aliases() {
     alias ..='cd ..'
     alias :q='exit'
     alias R='R --no-restore --no-save --quiet'
-    alias asdf='_koopa_alias_asdf'
-    alias black='black --line-length=79'
-    alias br-size='br --sort-by-size'
-    alias br='_koopa_alias_broot'
+    if [ -x "${__kvar_bin_prefix}/asdf" ]
+    then
+        alias asdf='_koopa_activate_asdf; asdf'
+    fi
+    if [ -x "${__kvar_bin_prefix}/black" ]
+    then
+        alias black='black --line-length=79'
+    fi
+    if [ -x "${__kvar_bin_prefix}/broot" ]
+    then
+        alias br='_koopa_activate_broot; br'
+        alias br-size='br --sort-by-size'
+    fi
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
@@ -51,7 +61,6 @@ _koopa_activate_aliases() {
     alias q='exit'
     alias radian='radian --no-restore --no-save --quiet'
     alias rbenv='_koopa_alias_rbenv'
-    # > alias ronn='ronn --roff'
     alias sha256='_koopa_alias_sha256'
     alias spacemacs='_koopa_spacemacs'
     alias spacevim='_koopa_spacevim'
@@ -63,11 +72,12 @@ _koopa_activate_aliases() {
     alias vim-fzf='_koopa_alias_vim_fzf'
     alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
-    alias z='_koopa_alias_z'
+    alias z='_koopa_activate_zoxide; __zoxide_z'
     # Keep these at the end to allow the user to override our defaults.
     # shellcheck source=/dev/null
     [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
     # shellcheck source=/dev/null
     [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
+    unset -v __kvar_bin_prefix
     return 0
 }
