@@ -1092,6 +1092,7 @@
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
     "date": "2022-09-23",
+    "outdated": true,
     "url": ["https://github.com/shenwei356/csvtk/"],
     "version": "0.25.0"
   },
@@ -2303,10 +2304,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-26",
+    "date": "2023-06-29",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.114.1"
+    "version": "0.115.0"
   },
   "hyperfine": {
     "aliases": {
