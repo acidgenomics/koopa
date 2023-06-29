@@ -11208,6 +11208,12 @@ koopa_install_black() {
         "$@"
 }
 
+koopa_install_blast() {
+    koopa_install_app \
+        --name='blast' \
+        "$@"
+}
+
 koopa_install_boost() {
     koopa_install_app \
         --name='boost' \
@@ -23345,6 +23351,12 @@ koopa_uninstall_bison() {
 koopa_uninstall_black() {
     koopa_uninstall_app \
         --name='black' \
+        "$@"
+}
+
+koopa_uninstall_blast() {
+    koopa_uninstall_app \
+        --name='blast' \
         "$@"
 }
 
