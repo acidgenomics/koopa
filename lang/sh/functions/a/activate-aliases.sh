@@ -21,9 +21,7 @@ _koopa_activate_aliases() {
     alias c='clear'
     alias cls='_koopa_alias_colorls'
     alias cm='chezmoi'
-    # NOTE This can be problematic during Zsh activation if koopa is sourced in
-    # both zprofile and zshrc.
-    alias conda='_koopa_alias_conda'
+    alias conda='unalias conda; _koopa_activate_conda; conda'
     alias d='clear; cd -; l'
     alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
