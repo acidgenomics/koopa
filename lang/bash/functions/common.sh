@@ -6534,7 +6534,10 @@ koopa_docker_run() {
             koopa_aws_ecr_login_private
             ;;
         'public.ecr.aws/'*)
-            koopa_aws_ecr_login_public
+            if [[ -n "${AWS_ECR_PROFILE:-}" ]]
+            then
+                koopa_aws_ecr_login_public
+            fi
             ;;
     esac
     "${app['docker']}" pull "${dict['image']}"
