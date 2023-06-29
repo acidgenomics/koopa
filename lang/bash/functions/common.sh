@@ -12926,6 +12926,12 @@ koopa_install_rmate() {
         "$@"
 }
 
+koopa_install_ronn_ng() {
+    koopa_install_app \
+        --name='ronn-ng' \
+        "$@"
+}
+
 koopa_install_ronn() {
     koopa_install_app \
         --name='ronn' \
@@ -24906,6 +24912,12 @@ koopa_uninstall_ripgrep() {
 koopa_uninstall_rmate() {
     koopa_uninstall_app \
         --name='rmate' \
+        "$@"
+}
+
+koopa_uninstall_ronn_ng() {
+    koopa_uninstall_app \
+        --name='ronn-ng' \
         "$@"
 }
 

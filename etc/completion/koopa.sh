@@ -360,6 +360,7 @@ _koopa_complete() {
                         'ripgrep-all'
                         'rmate'
                         'ronn'
+                        'ronn-ng'
                         'rsem'
                         'rsync'
                         'ruby'
