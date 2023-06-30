@@ -3,7 +3,7 @@
 koopa_install_all_binary_apps() {
     # ""
     # Install all shared apps as binary packages.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-06-30.
     #
     # This will currently fail for platforms where not all apps can be
     # successfully compiled, such as ARM.
@@ -13,11 +13,11 @@ koopa_install_all_binary_apps() {
     local -A app bool
     local -a app_names
     local app_name
+    koopa_assert_has_no_args "$#"
     if ! koopa_can_install_binary
     then
         koopa_stop 'No binary file access.'
     fi
-    koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
     [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
