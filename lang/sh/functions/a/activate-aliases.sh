@@ -8,76 +8,167 @@ _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
     __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_xdg_data_home="$(_koopa_xdg_data_home)"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
     alias ...='cd ../../'
     alias ..='cd ..'
     alias :q='exit'
-    alias R='R --no-restore --no-save --quiet'
+    alias c='clear'
+    alias d='clear; cd -; l'
+    alias e='exit'
+    alias g='git'
+    alias h='history'
+    alias k='_koopa_alias_k'
+    alias kb='_koopa_alias_kb'
+    alias kdev='_koopa_alias_kdev'
+    alias l='_koopa_alias_l'
+    alias l.='l -d .*'
+    alias l1='l -1'
+    alias la='l -a'
+    alias lh='l | head'
+    alias ll='l -l'
+    alias lt='l | tail'
+    alias q='exit'
+    alias today='_koopa_alias_today'
+    alias u='clear; cd ../; pwd; l'
+    alias variable-bodies='typeset -p'
+    alias variable-names='compgen -A variable | sort'
+    alias week='_koopa_alias_week'
+    # Application aliases ------------------------------------------------------
+    # asdf.
     if [ -x "${__kvar_bin_prefix}/asdf" ]
     then
         alias asdf='_koopa_activate_asdf; asdf'
     fi
+    # black.
     if [ -x "${__kvar_bin_prefix}/black" ]
     then
         alias black='black --line-length=79'
     fi
+    # broot.
     if [ -x "${__kvar_bin_prefix}/broot" ]
     then
         alias br='_koopa_activate_broot; br'
         alias br-size='br --sort-by-size'
     fi
-    alias c='clear'
-    alias cls='_koopa_alias_colorls'
-    alias cm='chezmoi'
-    alias conda='_koopa_activate_conda; conda'
-    alias d='clear; cd -; l'
-    alias doom-emacs='_koopa_doom_emacs'
-    alias e='exit'
-    alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-    alias emacs='_koopa_alias_emacs'
-    # Consider including '--hidden'.
-    alias fd='fd --case-sensitive --no-ignore'
-    alias fvim='vim "$(fzf)"'
-    alias g='git'
-    alias glances='_koopa_alias_glances'
-    alias h='history'
-    alias j='z'
-    alias k='_koopa_alias_k'
-    alias kb='_koopa_alias_kb'
-    alias kdev='_koopa_alias_kdev'
-    alias l.='l -d .*'
-    alias l1='l -1'
-    alias l='_koopa_alias_l'
-    alias la='l -a'
-    alias lh='l | head'
-    alias ll='l -l'
-    alias lt='l | tail'
-    alias nvim-fzf='_koopa_alias_nvim_fzf'
-    alias nvim-vanilla='_koopa_alias_nvim_vanilla'
-    alias prelude-emacs='_koopa_prelude_emacs'
-    alias pyenv='_koopa_alias_pyenv'
-    alias q='exit'
-    alias radian='radian --no-restore --no-save --quiet'
-    alias rbenv='_koopa_alias_rbenv'
-    alias sha256='_koopa_alias_sha256'
-    alias spacemacs='_koopa_spacemacs'
-    alias spacevim='_koopa_spacevim'
-    alias tmux-vanilla='_koopa_alias_tmux_vanilla'
-    alias today='_koopa_alias_today'
-    alias u='clear; cd ../; pwd; l'
-    alias variable-bodies='typeset -p'
-    alias variable-names='compgen -A variable | sort'
-    alias vim-fzf='_koopa_alias_vim_fzf'
-    alias vim-vanilla='_koopa_alias_vim_vanilla'
-    alias week='_koopa_alias_week'
-    alias z='_koopa_activate_zoxide; __zoxide_z'
+    # chezmoi.
+    if [ -x "${__kvar_bin_prefix}/chezmoi" ]
+    then
+        alias cm='chezmoi'
+    fi
+    # colorls.
+    if [ -x "${__kvar_bin_prefix}/colorls" ]
+    then
+        alias cls='_koopa_alias_colorls'
+    fi
+    # conda.
+    if [ -x "${__kvar_bin_prefix}/conda" ]
+    then
+        alias conda='_koopa_activate_conda; conda'
+    fi
+    # emacs.
+    if [ -x '/usr/local/bin/emacs' ] || \
+        [ -x '/usr/bin/emacs' ] || \
+        [ -x "${__kvar_bin_prefix}/emacs" ]
+    then
+        alias emacs='_koopa_alias_emacs'
+        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
+        if [ -d "${__kvar_xdg_data_home}/doom" ]
+        then
+            alias doom-emacs='_koopa_doom_emacs'
+        fi
+        if [ -d "${__kvar_xdg_data_home}/prelude" ]
+        then
+            alias prelude-emacs='_koopa_prelude_emacs'
+        fi
+        if [ -d "${__kvar_xdg_data_home}/spacemacs" ]
+        then
+            alias spacemacs='_koopa_spacemacs'
+        fi
+    fi
+    # fd-find.
+    if [ -x "${__kvar_bin_prefix}/fd" ]
+    then
+        alias fd='fd --case-sensitive --no-ignore'
+    fi
+    # glances.
+    if [ -x "${__kvar_bin_prefix}/glances" ]
+    then
+        alias glances='_koopa_alias_glances'
+    fi
+    # neovim.
+    if [ -x "${__kvar_bin_prefix}/nvim" ]
+    then
+        alias nvim-vanilla='_koopa_alias_nvim_vanilla'
+        if [ -x "${__kvar_bin_prefix}/fzf" ]
+        then
+            alias nvim-fzf='_koopa_alias_nvim_fzf'
+        fi
+    fi
+    # pyenv.
+    if [ -x "${__kvar_bin_prefix}/pyenv" ]
+    then
+        alias pyenv='_koopa_activate_pyenv; pyenv'
+    fi
+    # r.
+    if [ -x '/usr/local/bin/R' ] || [ -x '/usr/bin/R' ]
+    then
+        alias R='R --no-restore --no-save --quiet'
+    fi
+    # radian.
+    if [ -x "${__kvar_bin_prefix}/pyenv" ]
+    then
+        alias radian='radian --no-restore --no-save --quiet'
+    fi
+    # rbenv.
+    if [ -x "${__kvar_bin_prefix}/rbenv" ]
+    then
+        alias rbenv='_koopa_activate_rbenv; rbenv'
+    fi
+    # shasum.
+    if [ -x '/usr/bin/shasum' ]
+    then
+        alias sha256='_koopa_alias_sha256'
+    fi
+    # tmux.
+    if [ -x "${__kvar_bin_prefix}/tmux" ]
+    then
+        alias tmux-vanilla='_koopa_alias_tmux_vanilla'
+    fi
+    # vim.
+    if [ -x "${__kvar_bin_prefix}/vim" ]
+    then
+        alias vim-vanilla='_koopa_alias_vim_vanilla'
+        if [ -x "${__kvar_bin_prefix}/fzf" ]
+        then
+            alias vim-fzf='_koopa_alias_vim_fzf'
+        fi
+        if [ -d "${__kvar_xdg_data_home}/spacevim" ]
+        then
+            alias spacevim='_koopa_spacevim'
+        fi
+    fi
+    # zoxide.
+    if [ -x "${__kvar_bin_prefix}/zoxide" ]
+    then
+        alias z='_koopa_activate_zoxide; __zoxide_z'
+        # Keep our legacy 'j' binding to mimic autojump.
+        alias j='z'
+    fi
+    # User-defined aliases -----------------------------------------------------
     # Keep these at the end to allow the user to override our defaults.
-    # shellcheck source=/dev/null
-    [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
-    # shellcheck source=/dev/null
-    [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
-    unset -v __kvar_bin_prefix
+    if [ -f "${HOME:?}/.aliases" ]
+    then
+        # shellcheck source=/dev/null
+        . "${HOME:?}/.aliases"
+    fi
+    if [ -f "${HOME:?}/.aliases-private" ]
+    then
+        # shellcheck source=/dev/null
+        . "${HOME:?}/.aliases-private"
+    fi
+    unset -v __kvar_bin_prefix __kvar_xdg_data_home
     return 0
 }
