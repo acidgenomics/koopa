@@ -4175,11 +4175,13 @@ koopa_cli_install() {
             dict['allow_custom']=1
             ;;
         '--all')
-            koopa_install_all_apps
+            shift 1
+            koopa_install_all_apps "$@"
             return 0
             ;;
         '--all-binary')
-            koopa_install_all_binary_apps
+            shift 1
+            koopa_install_all_binary_apps "$@"
             return 0
             ;;
     esac
@@ -10314,10 +10316,25 @@ koopa_install_agat() {
 }
 
 koopa_install_all_apps() {
-    local -A dict
+    local -A bool dict
     local -a app_names push_apps
     local app_name
-    koopa_assert_has_no_args "$#"
+    while (("$#"))
+    do
+        case "$1" in
+            '--push')
+                bool['push']=1
+                shift 1
+                ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=6
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
@@ -10327,6 +10344,7 @@ koopa_install_all_apps() {
     readarray -t app_names <<< "$(koopa_shared_apps)"
     for app_name in "${app_names[@]}"
     do
+        local -a install_args
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
         if [[ -d "$prefix" ]]
@@ -10334,10 +10352,12 @@ koopa_install_all_apps() {
             koopa_alert_note "'${app_name}' already installed at '${prefix}'."
             continue
         fi
-        koopa_cli_install "$app_name"
+        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
+        install_args+=("$app_name")
+        koopa_cli_install "${install_args[@]}"
         push_apps+=("$app_name")
     done
-    if koopa_can_push_binary && \
+    if [[ "${bool['push']}" -eq 1 ]] && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
         for app_name in "${push_apps[@]}"
@@ -10352,11 +10372,11 @@ koopa_install_all_binary_apps() {
     local -A app bool
     local -a app_names
     local app_name
+    koopa_assert_has_no_args "$#"
     if ! koopa_can_install_binary
     then
         koopa_stop 'No binary file access.'
     fi
-    koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
     [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
