@@ -47,63 +47,145 @@ _koopa_activate_alacritty() {
 _koopa_activate_aliases() {
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
+    __kvar_bin_prefix="$(_koopa_bin_prefix)"
+    __kvar_xdg_data_home="$(_koopa_xdg_data_home)"
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
     alias ...='cd ../../'
     alias ..='cd ..'
     alias :q='exit'
-    alias R='R --no-restore --no-save --quiet'
-    alias asdf='_koopa_alias_asdf'
-    alias black='black --line-length=79'
-    alias br-size='br --sort-by-size'
-    alias br='_koopa_alias_broot'
     alias c='clear'
-    alias cls='_koopa_alias_colorls'
-    alias cm='chezmoi'
-    alias conda='_koopa_alias_conda'
     alias d='clear; cd -; l'
-    alias doom-emacs='_koopa_doom_emacs'
     alias e='exit'
-    alias emacs-vanilla='_koopa_alias_emacs_vanilla'
-    alias emacs='_koopa_alias_emacs'
-    alias fd='fd --case-sensitive --no-ignore'
-    alias fvim='vim "$(fzf)"'
     alias g='git'
-    alias glances='_koopa_alias_glances'
     alias h='history'
-    alias j='z'
     alias k='_koopa_alias_k'
     alias kb='_koopa_alias_kb'
     alias kdev='_koopa_alias_kdev'
+    alias l='_koopa_alias_l'
     alias l.='l -d .*'
     alias l1='l -1'
-    alias l='_koopa_alias_l'
     alias la='l -a'
     alias lh='l | head'
     alias ll='l -l'
     alias lt='l | tail'
-    alias nvim-fzf='_koopa_alias_nvim_fzf'
-    alias nvim-vanilla='_koopa_alias_nvim_vanilla'
-    alias prelude-emacs='_koopa_prelude_emacs'
-    alias pyenv='_koopa_alias_pyenv'
     alias q='exit'
-    alias radian='radian --no-restore --no-save --quiet'
-    alias rbenv='_koopa_alias_rbenv'
-    alias sha256='_koopa_alias_sha256'
-    alias spacemacs='_koopa_spacemacs'
-    alias spacevim='_koopa_spacevim'
-    alias tmux-vanilla='_koopa_alias_tmux_vanilla'
     alias today='_koopa_alias_today'
     alias u='clear; cd ../; pwd; l'
     alias variable-bodies='typeset -p'
     alias variable-names='compgen -A variable | sort'
-    alias vim-fzf='_koopa_alias_vim_fzf'
-    alias vim-vanilla='_koopa_alias_vim_vanilla'
     alias week='_koopa_alias_week'
-    alias z='_koopa_alias_z'
-    [ -f "${HOME:?}/.aliases" ] && . "${HOME:?}/.aliases"
-    [ -f "${HOME:?}/.aliases-private" ] && . "${HOME:?}/.aliases-private"
+    if [ -x "${__kvar_bin_prefix}/asdf" ]
+    then
+        alias asdf='_koopa_activate_asdf; asdf'
+    fi
+    if [ -x "${__kvar_bin_prefix}/black" ]
+    then
+        alias black='black --line-length=79'
+    fi
+    if [ -x "${__kvar_bin_prefix}/broot" ]
+    then
+        alias br='_koopa_activate_broot; br'
+        alias br-size='br --sort-by-size'
+    fi
+    if [ -x "${__kvar_bin_prefix}/chezmoi" ]
+    then
+        alias cm='chezmoi'
+    fi
+    if [ -x "${__kvar_bin_prefix}/colorls" ]
+    then
+        alias cls='_koopa_alias_colorls'
+    fi
+    if [ -x "${__kvar_bin_prefix}/conda" ]
+    then
+        alias conda='_koopa_activate_conda; conda'
+    fi
+    if [ -x '/usr/local/bin/emacs' ] || \
+        [ -x '/usr/bin/emacs' ] || \
+        [ -x "${__kvar_bin_prefix}/emacs" ]
+    then
+        alias emacs='_koopa_alias_emacs'
+        alias emacs-vanilla='_koopa_alias_emacs_vanilla'
+        if [ -d "${__kvar_xdg_data_home}/doom" ]
+        then
+            alias doom-emacs='_koopa_doom_emacs'
+        fi
+        if [ -d "${__kvar_xdg_data_home}/prelude" ]
+        then
+            alias prelude-emacs='_koopa_prelude_emacs'
+        fi
+        if [ -d "${__kvar_xdg_data_home}/spacemacs" ]
+        then
+            alias spacemacs='_koopa_spacemacs'
+        fi
+    fi
+    if [ -x "${__kvar_bin_prefix}/fd" ]
+    then
+        alias fd='fd --case-sensitive --no-ignore'
+    fi
+    if [ -x "${__kvar_bin_prefix}/glances" ]
+    then
+        alias glances='_koopa_alias_glances'
+    fi
+    if [ -x "${__kvar_bin_prefix}/nvim" ]
+    then
+        alias nvim-vanilla='_koopa_alias_nvim_vanilla'
+        if [ -x "${__kvar_bin_prefix}/fzf" ]
+        then
+            alias nvim-fzf='_koopa_alias_nvim_fzf'
+        fi
+    fi
+    if [ -x "${__kvar_bin_prefix}/pyenv" ]
+    then
+        alias pyenv='_koopa_activate_pyenv; pyenv'
+    fi
+    if [ -x '/usr/local/bin/R' ] || [ -x '/usr/bin/R' ]
+    then
+        alias R='R --no-restore --no-save --quiet'
+    fi
+    if [ -x "${__kvar_bin_prefix}/pyenv" ]
+    then
+        alias radian='radian --no-restore --no-save --quiet'
+    fi
+    if [ -x "${__kvar_bin_prefix}/rbenv" ]
+    then
+        alias rbenv='_koopa_activate_rbenv; rbenv'
+    fi
+    if [ -x '/usr/bin/shasum' ]
+    then
+        alias sha256='_koopa_alias_sha256'
+    fi
+    if [ -x "${__kvar_bin_prefix}/tmux" ]
+    then
+        alias tmux-vanilla='_koopa_alias_tmux_vanilla'
+    fi
+    if [ -x "${__kvar_bin_prefix}/vim" ]
+    then
+        alias vim-vanilla='_koopa_alias_vim_vanilla'
+        if [ -x "${__kvar_bin_prefix}/fzf" ]
+        then
+            alias vim-fzf='_koopa_alias_vim_fzf'
+        fi
+        if [ -d "${__kvar_xdg_data_home}/spacevim" ]
+        then
+            alias spacevim='_koopa_spacevim'
+        fi
+    fi
+    if [ -x "${__kvar_bin_prefix}/zoxide" ]
+    then
+        alias z='_koopa_activate_zoxide; __zoxide_z'
+        alias j='z'
+    fi
+    if [ -f "${HOME:?}/.aliases" ]
+    then
+        . "${HOME:?}/.aliases"
+    fi
+    if [ -f "${HOME:?}/.aliases-private" ]
+    then
+        . "${HOME:?}/.aliases-private"
+    fi
+    unset -v __kvar_bin_prefix __kvar_xdg_data_home
     return 0
 }
 
@@ -241,6 +323,7 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
+    _koopa_is_alias 'br' && unalias 'br'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     . "$__kvar_script"
@@ -700,6 +783,7 @@ _koopa_activate_pyenv() {
             __kvar_pyenv
         return 0
     fi
+    _koopa_is_alias 'pyenv' && unalias 'pyenv'
     export PYENV_ROOT="$__kvar_prefix"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
@@ -757,6 +841,7 @@ _koopa_activate_rbenv() {
             __kvar_rbenv
         return 0
     fi
+    _koopa_is_alias 'rbenv' && unalias 'rbenv'
     export RBENV_ROOT="$__kvar_prefix"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
@@ -1102,18 +1187,6 @@ _koopa_add_to_path_string_start() {
     return 0
 }
 
-_koopa_alias_asdf() {
-    _koopa_is_alias 'asdf' && unalias 'asdf'
-    _koopa_activate_asdf
-    asdf "$@"
-}
-
-_koopa_alias_broot() {
-    _koopa_is_alias 'br' && unalias 'br'
-    _koopa_activate_broot
-    br "$@"
-}
-
 _koopa_alias_colorls() {
     case "$(_koopa_color_mode)" in
         'dark')
@@ -1131,22 +1204,11 @@ _koopa_alias_colorls() {
     return 0
 }
 
-_koopa_alias_conda() {
-    _koopa_activate_conda
-    if ! _koopa_is_function 'conda'
-    then
-        _koopa_print 'conda is not active.'
-        return 1
-    fi
-    conda "$@"
-}
-
 _koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
 }
 
 _koopa_alias_emacs() {
-    _koopa_is_alias 'emacs' && unalias 'emacs'
     _koopa_emacs "$@"
 }
 
@@ -1255,18 +1317,6 @@ _koopa_alias_nvim_vanilla() {
     nvim -u 'NONE' "$@"
 }
 
-_koopa_alias_pyenv() {
-    _koopa_is_alias 'pyenv' && unalias 'pyenv'
-    _koopa_activate_pyenv
-    pyenv "$@"
-}
-
-_koopa_alias_rbenv() {
-    _koopa_is_alias 'rbenv' && unalias 'rbenv'
-    _koopa_activate_rbenv
-    rbenv "$@"
-}
-
 _koopa_alias_sha256() {
     shasum -a 256 "$@"
 }
@@ -1289,16 +1339,6 @@ _koopa_alias_vim_vanilla() {
 
 _koopa_alias_week() {
     date '+%V'
-}
-
-_koopa_alias_z() {
-    _koopa_activate_zoxide
-    if ! _koopa_is_function '__zoxide_z'
-    then
-        _koopa_print 'zoxide is not active.'
-        return 1
-    fi
-    __zoxide_z "$@"
 }
 
 _koopa_arch() {

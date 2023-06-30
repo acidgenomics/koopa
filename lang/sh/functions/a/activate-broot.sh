@@ -3,7 +3,7 @@
 _koopa_activate_broot() {
     # """
     # Activate broot directory tree utility.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-06-29.
     #
     # The br function script must be sourced for activation.
     # See 'broot --install' for details.
@@ -46,6 +46,7 @@ _koopa_activate_broot() {
             __kvar_shell \
         return 0
     fi
+    _koopa_is_alias 'br' && unalias 'br'
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
     # shellcheck source=/dev/null

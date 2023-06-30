@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't passing '--verbose' flag.
+# FIXME We should only push when '--push' flag is set.
+
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-06-29.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -31,6 +34,7 @@ koopa_install_all_apps() {
         koopa_cli_install "$app_name"
         push_apps+=("$app_name")
     done
+    # FIXME Rework to only do this if '--push' argument is passed.
     if koopa_can_push_binary && \
         koopa_is_array_non_empty "${push_apps[@]:-}"
     then
