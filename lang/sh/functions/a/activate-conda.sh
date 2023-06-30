@@ -3,7 +3,7 @@
 _koopa_activate_conda() {
     # """
     # Activate conda.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-06-29.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/
