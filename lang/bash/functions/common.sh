@@ -4175,11 +4175,13 @@ koopa_cli_install() {
             dict['allow_custom']=1
             ;;
         '--all')
-            koopa_install_all_apps
+            shift 1
+            koopa_install_all_apps "$@"
             return 0
             ;;
         '--all-binary')
-            koopa_install_all_binary_apps
+            shift 1
+            koopa_install_all_binary_apps "$@"
             return 0
             ;;
     esac
@@ -10352,11 +10354,11 @@ koopa_install_all_binary_apps() {
     local -A app bool
     local -a app_names
     local app_name
+    koopa_assert_has_no_args "$#"
     if ! koopa_can_install_binary
     then
         koopa_stop 'No binary file access.'
     fi
-    koopa_assert_has_no_args "$#"
     app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
     bool['bootstrap']=0
     [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
