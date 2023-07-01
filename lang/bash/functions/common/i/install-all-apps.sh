@@ -11,6 +11,8 @@ koopa_install_all_apps() {
     local -A bool dict
     local -a app_names push_apps
     local app_name
+    bool['push']=0
+    bool['verbose']=0
     while (("$#"))
     do
         case "$1" in
