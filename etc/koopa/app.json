@@ -241,13 +241,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-06-12",
+    "date": "2023-07-03",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.11.27"
+    "version": "2.12.6"
   },
   "azure-cli": {
     "aliases": {
@@ -2170,13 +2170,13 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2023-06-29",
+    "date": "2023-07-03",
     "large": true,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.1.19.3"
+    "version": "0.1.19.4"
   },
   "haskell-stack": {
     "aliases": {
@@ -3923,11 +3923,11 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2023-04-24",
+    "date": "2023-07-03",
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.36.1"
+    "version": "5.38.0"
   },
   "picard": {
     "arch": "amd64",
