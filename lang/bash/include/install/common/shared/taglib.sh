@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TagLib.
-    # @note Updated 2023-05-17.
+    # @note Updated 2023-07-03.
     #
     # @seealso
     # - https://stackoverflow.com/questions/29200461
@@ -41,6 +41,10 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --include-dir='include' \
+        --lib-dir='lib' \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }
