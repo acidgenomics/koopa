@@ -761,9 +761,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-06-17",
+    "date": "2023-07-04",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.34.2"
+    "version": "2.34.3"
   },
   "cli11": {
     "aliases": {
@@ -2304,10 +2304,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-29",
+    "date": "2023-07-04",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.115.0"
+    "version": "0.115.1"
   },
   "hyperfine": {
     "aliases": {
@@ -2814,14 +2814,14 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-03-07",
+    "date": "2023-07-04",
     "prune": false,
     "url": [
       "https://www.libjpeg-turbo.org/",
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "2.1.5.1"
+    "version": "3.0.0"
   },
   "libksba": {
     "aliases": {
@@ -4541,10 +4541,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-06-26",
+    "date": "2023-07-04",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.275"
+    "version": "0.0.276"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
