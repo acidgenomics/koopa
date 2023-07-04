@@ -2304,10 +2304,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-06-29",
+    "date": "2023-07-04",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.115.0"
+    "version": "0.115.1"
   },
   "hyperfine": {
     "aliases": {
@@ -4541,10 +4541,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-06-26",
+    "date": "2023-07-04",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.275"
+    "version": "0.0.276"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
