@@ -4773,17 +4773,17 @@
     "version": "14.4.2"
   },
   "spacemacs": {
-    "date": "2023-05-30",
+    "date": "2023-07-05",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
-    "version": "d5348991aa97ec5e9e09083f20cd117d075fe59b"
+    "version": "bdc9d0bec554c363417c04b674fda021398fbe4f"
   },
   "spacevim": {
-    "date": "2023-05-30",
+    "date": "2023-07-05",
     "url": ["https://github.com/SpaceVim/SpaceVim/"],
     "user": true,
-    "version": "d0664365c0c14c6ba45196a679e25f04e10a6093"
+    "version": "d908e2595910f901c8a3756741f4450d5bb4634d"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "patch", "pkg-config"],
