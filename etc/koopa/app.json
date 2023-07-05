@@ -4025,10 +4025,10 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-04-24",
+    "date": "2023-07-05",
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "2.8.8"
+    "version": "3.0.0"
   },
   "procs": {
     "aliases": {
