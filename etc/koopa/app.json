@@ -2489,10 +2489,10 @@
     },
     "bin": ["julia"],
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2023-05-08",
+    "date": "2023-07-06",
     "large": true,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.9.0"
+    "version": "1.9.2"
   },
   "jupyterlab": {
     "arch": "amd64",
@@ -2505,16 +2505,15 @@
   "kallisto": {
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make"],
-    "date": "2023-06-28",
+    "date": "2023-07-06",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
-    "outdated": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.48.0"
+    "version": "0.50.0"
   },
   "krb5": {
     "aliases": {
@@ -3220,7 +3219,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-07-01",
+    "date": "2023-07-06",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3245,7 +3244,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.4.6"
+    "version": "1.4.7"
   },
   "man-db": {
     "aliases": {
@@ -4541,10 +4540,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-07-04",
+    "date": "2023-07-06",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.276"
+    "version": "0.0.277"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -4750,14 +4749,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-06-26",
+    "date": "2023-07-06",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.29.0"
+    "version": "7.30.1"
   },
   "sox": {
     "aliases": {
