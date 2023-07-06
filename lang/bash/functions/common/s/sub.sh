@@ -3,7 +3,7 @@
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2023-06-06.
+    # @note Updated 2023-07-06.
     #
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
     # matching line break characters. Additionally, using 'LANG=C' helps avoid
@@ -34,6 +34,7 @@ koopa_sub() {
     dict['pattern']=''
     dict['replace']=''
     dict['tail']=''
+    pos=()
     while (("$#"))
     do
         case "$1" in

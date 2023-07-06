@@ -6688,28 +6688,19 @@ koopa_download_github_latest() {
 
 koopa_download() {
     local -A app bool dict
-    local -a download_args pos
+    local -a curl_args pos
     koopa_assert_has_args "$#"
+    app['curl']="$(koopa_locate_curl --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     bool['decompress']=0
     bool['extract']=0
     bool['progress']=1
-    dict['engine']='curl'
-    dict['file']="${2:-}"
-    dict['url']="${1:?}"
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
 rv:109.0) Gecko/20100101 Firefox/111.0"
     pos=()
     while (("$#"))
     do
         case "$1" in
-            '--engine='*)
-                dict['engine']="${1#*=}"
-                shift 1
-                ;;
-            '--engine')
-                dict['engine']="${2:?}"
-                shift 2
-                ;;
             '--decompress')
                 bool['decompress']=1
                 shift 1
@@ -6733,11 +6724,39 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_le "$#" 2
-    app['download']="$("koopa_locate_${dict['engine']}" --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    dict['url']="${1:?}"
+    dict['file']="${2:-}"
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"
+        if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='.'
+        then
+            dict['head']="$( \
+                "${app['curl']}" \
+                    --disable \
+                    --head \
+                    --silent \
+                    "${dict['url']}" \
+            )"
+            if koopa_str_detect_fixed \
+                --string="${dict['head']}" \
+                --pattern='X-Filename: '
+            then
+                app['cut']="$(koopa_locate_cut --allow-system)"
+                koopa_assert_is_executable "${app['cut']}"
+                dict['file']="$( \
+                    koopa_grep \
+                        --string="${dict['head']}" \
+                        --pattern='X-Filename: ' \
+                    | "${app['cut']}" -d ' ' -f 2 \
+                    | koopa_sub \
+                        --pattern='\r$' \
+                        --regex \
+                        --replacement='' \
+                    | koopa_basename \
+                )"
+            fi
+        fi
         if koopa_str_detect_fixed --string="${dict['file']}" --pattern='%'
         then
             dict['file']="$( \
@@ -6761,52 +6780,33 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
             )"
         fi
     fi
-    if ! koopa_str_detect_fixed \
-        --string="${dict['file']}" \
-        --pattern='/'
+    if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='/'
     then
         dict['file']="${PWD:?}/${dict['file']}"
     fi
-    download_args=()
-    case "${dict['engine']}" in
-        'curl')
-            download_args+=(
-                '--disable' # Ignore '~/.curlrc'. Must come first.
-                '--create-dirs'
-                '--fail'
-                '--location'
-                '--output' "${dict['file']}"
-                '--retry' 5
-                '--show-error'
-            )
-            case "${dict['url']}" in
-                *'sourceforge.net/'*)
-                    ;;
-                *)
-                    download_args+=(
-                        '--user-agent' "${dict['user_agent']}"
-                    )
-                    ;;
-            esac
-            if [[ "${bool['progress']}" -eq 0 ]]
-            then
-                download_args+=('--silent')
-            fi
+    curl_args+=(
+        '--disable' # Ignore '~/.curlrc'. Must come first.
+        '--create-dirs'
+        '--fail'
+        '--location'
+        '--output' "${dict['file']}"
+        '--retry' 5
+        '--show-error'
+    )
+    case "${dict['url']}" in
+        *'sourceforge.net/'*)
             ;;
-        'wget')
-            download_args+=(
-                "--output-document=${dict['file']}"
-                '--no-verbose'
-            )
-            if [[ "${bool['progress']}" -eq 0 ]]
-            then
-                download_args+=('--quiet')
-            fi
+        *)
+            curl_args+=('--user-agent' "${dict['user_agent']}")
             ;;
     esac
-    download_args+=("${dict['url']}")
+    if [[ "${bool['progress']}" -eq 0 ]]
+    then
+        curl_args+=('--silent')
+    fi
+    curl_args+=("${dict['url']}")
     koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
-    "${app['download']}" "${download_args[@]}"
+    "${app['curl']}" "${curl_args[@]}"
     if [[ "${bool['decompress']}" -eq 1 ]]
     then
         koopa_decompress "${dict['file']}"
@@ -22154,6 +22154,7 @@ koopa_sub() {
     dict['pattern']=''
     dict['replace']=''
     dict['tail']=''
+    pos=()
     while (("$#"))
     do
         case "$1" in
