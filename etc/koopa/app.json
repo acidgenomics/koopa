@@ -5625,14 +5625,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-06-26",
+    "date": "2023-07-06",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.6.22"
+    "version": "2023.7.6"
   },
   "zellij": {
     "aliases": {
