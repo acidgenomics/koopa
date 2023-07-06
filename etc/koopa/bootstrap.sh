@@ -1,8 +1,9 @@
 #!/bin/sh
+# shellcheck disable=SC3043
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2022-11-28.
+# @note Updated 2023-07-05.
 # """
 
 set -o errexit
@@ -59,7 +60,11 @@ install_coreutils() {
 }
 
 main() {
-    [ -x "${PREFIX:?}/bin/bash" ] && return 0
+    if [ -x "${PREFIX:?}/bin/bash" ]
+    then
+        printf "Bash is already installed at '%s'.\n" "${PREFIX:?}"
+        return 0
+    fi
     printf "Installing bootstrap into '%s'.\n" "${PREFIX:?}"
     # > rm -fr "${PREFIX:?}"
     # > install_coreutils
