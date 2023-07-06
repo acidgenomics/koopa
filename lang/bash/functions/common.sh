@@ -6749,6 +6749,10 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
                         --string="${dict['head']}" \
                         --pattern='X-Filename: ' \
                     | "${app['cut']}" -d ' ' -f 2 \
+                    | koopa_sub \
+                        --pattern='\r$' \
+                        --regex \
+                        --replacement='' \
                     | koopa_basename \
                 )"
             fi
@@ -22150,6 +22154,7 @@ koopa_sub() {
     dict['pattern']=''
     dict['replace']=''
     dict['tail']=''
+    pos=()
     while (("$#"))
     do
         case "$1" in

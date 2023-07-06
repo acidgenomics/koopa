@@ -80,6 +80,8 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
         # contain an extension in the basename.
         if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='.'
         then
+            # Fetch the headers only. Note that curl returns these with
+            # carriage return escapes '\r'.
             dict['head']="$( \
                 "${app['curl']}" \
                     --disable \
@@ -98,6 +100,10 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
                         --string="${dict['head']}" \
                         --pattern='X-Filename: ' \
                     | "${app['cut']}" -d ' ' -f 2 \
+                    | koopa_sub \
+                        --pattern='\r$' \
+                        --regex \
+                        --replacement='' \
                     | koopa_basename \
                 )"
             fi
