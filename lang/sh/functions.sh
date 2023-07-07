@@ -122,7 +122,7 @@ _koopa_activate_aliases() {
     fi
     if [ -x "${__kvar_bin_prefix}/fd" ]
     then
-        alias fd='fd --case-sensitive --no-ignore'
+        alias fd='fd --absolute-path --ignore-case --no-ignore'
     fi
     if [ -x "${__kvar_bin_prefix}/glances" ]
     then
