@@ -13607,6 +13607,22 @@ koopa_ip_address() {
     return 0
 }
 
+koopa_ip_info() {
+    local -A app dict
+    app['curl']="$(koopa_locate_curl --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['server']='ipinfo.io'
+    dict['json']="$( \
+        "${app['curl']}" \
+            --disable \
+            --silent \
+            "${dict['server']}" \
+    )"
+    [[ -n "${dict['json']}" ]] || return 1
+    koopa_print "${dict['json']}"
+    return 0
+}
+
 koopa_is_aarch64() {
     case "$(koopa_arch)" in
         'aarch64' | 'arm64')
