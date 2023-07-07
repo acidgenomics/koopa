@@ -3093,14 +3093,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-13",
+    "date": "2023-07-07",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.27"
+    "version": "8.7.28"
   },
   "lsd": {
     "aliases": {
