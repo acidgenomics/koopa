@@ -2504,8 +2504,8 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "make"],
-    "date": "2023-07-06",
+    "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
+    "date": "2023-07-07",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
     "url": [
