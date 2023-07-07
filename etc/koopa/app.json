@@ -2504,8 +2504,8 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "make"],
-    "date": "2023-07-06",
+    "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
+    "date": "2023-07-07",
     "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
     "large": true,
     "url": [
@@ -3093,14 +3093,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-13",
+    "date": "2023-07-07",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.27"
+    "version": "8.7.28"
   },
   "lsd": {
     "aliases": {
@@ -5200,7 +5200,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-07-07",
     "dependencies": ["ncurses", "python3.11"],
     "man1": [
       "ex.1",
@@ -5214,7 +5214,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.1550"
+    "version": "9.0.1650"
   },
   "visidata": {
     "aliases": {
@@ -5625,14 +5625,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-06-26",
+    "date": "2023-07-06",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.6.22"
+    "version": "2023.7.6"
   },
   "zellij": {
     "aliases": {
