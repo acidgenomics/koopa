@@ -2506,7 +2506,7 @@
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
     "date": "2023-07-07",
-    "dependencies": ["bzip2", "hdf5", "xz", "zlib"],
+    "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
     "large": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
