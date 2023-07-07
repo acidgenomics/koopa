@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE v0.50.0: Currently hitting a zlib config issue with bifrost.
-# https://github.com/pachterlab/kallisto/issues/385
-
 main() {
     # """
     # Install kallisto.
-    # @note updated 2023-06-28.
+    # @note updated 2023-07-07.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -18,6 +15,7 @@ main() {
     # - https://github.com/pachterlab/kallisto/issues/160
     # - https://github.com/pachterlab/kallisto/issues/161
     # - https://github.com/pachterlab/kallisto/issues/303
+    # - https://github.com/pachterlab/kallisto/issues/385
     # """
     local -A app cmake dict
     local -a cmake_args
