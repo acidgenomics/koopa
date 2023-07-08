@@ -18,9 +18,22 @@ main() {
     # - https://github.com/pachterlab/kallisto/issues/385
     # """
     local -A app cmake dict
-    local -a cmake_args
-    koopa_activate_app --build-only 'autoconf' 'automake' 'patch'
-    koopa_activate_app 'bzip2' 'hdf5' 'xz' 'zlib'
+    local -a build_deps cmake_args deps
+    build_deps=(
+        'autoconf'
+        'automake'
+        'patch'
+    )
+    deps=(
+        'bzip2'
+        'xz'
+        'zlib'
+        # Need to include this, otherwise libsz won't get burned into rpath.
+        'libaec' # hdf5
+        'hdf5'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['patch']="$(koopa_locate_patch)"
