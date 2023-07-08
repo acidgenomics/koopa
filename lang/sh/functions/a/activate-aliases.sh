@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-06-29.
+    # @note Updated 2023-07-07.
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -91,7 +91,7 @@ _koopa_activate_aliases() {
     # fd-find.
     if [ -x "${__kvar_bin_prefix}/fd" ]
     then
-        alias fd='fd --case-sensitive --no-ignore'
+        alias fd='fd --absolute-path --ignore-case --no-ignore'
     fi
     # glances.
     if [ -x "${__kvar_bin_prefix}/glances" ]
