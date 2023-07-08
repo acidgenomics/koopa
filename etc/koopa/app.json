@@ -2304,10 +2304,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-07-04",
+    "date": "2023-07-08",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.115.1"
+    "version": "0.115.2"
   },
   "hyperfine": {
     "aliases": {
@@ -4102,12 +4102,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-06-26",
+    "date": "2023-07-08",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.21"
+    "version": "2.3.22"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4785,14 +4785,14 @@
     "version": "d908e2595910f901c8a3756741f4450d5bb4634d"
   },
   "spdlog": {
-    "build_dependencies": ["cmake", "patch", "pkg-config"],
-    "date": "2022-11-04",
+    "build_dependencies": ["cmake", "pkg-config"],
+    "date": "2023-07-08",
     "dependencies": ["fmt"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
-    "version": "1.11.0"
+    "version": "1.12.0"
   },
   "sqlite": {
     "aliases": {
