@@ -3395,12 +3395,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-03-05",
+    "date": "2023-07-08",
     "dependencies": ["boost"],
     "enabled": false,
     "prune": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
-    "version": "6.0.0"
+    "version": "6.1.0"
   },
   "multiqc": {
     "arch": "amd64",
