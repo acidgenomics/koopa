@@ -2139,7 +2139,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-05-11",
+    "date": "2023-07-09",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2151,7 +2151,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "7.3.0"
+    "version": "8.0.0"
   },
   "haskell-cabal": {
     "aliases": {
