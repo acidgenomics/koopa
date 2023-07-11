@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-06-27.
+#' @note Updated 2023-07-11.
 #'
 #' @section Restarting R:
 #'
@@ -204,7 +204,7 @@ local({  # nolint
     ## >     "https://packagemanager.posit.co/cran/latest"
     ## > repos[["CRAN"]] <-
     ## >     "https://repo.miserver.it.umich.edu/cran"
-    snapshot <- "2023-06-23"
+    snapshot <- "2023-07-10"
     cran <- paste(
         "https://packagemanager.posit.co",
         "cran",
