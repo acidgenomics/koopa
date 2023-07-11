@@ -40,12 +40,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-06-17",
+    "date": "2023-07-11",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.6.2"
+    "version": "2.6.3"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -446,10 +446,10 @@
       "homebrew": true
     },
     "bin": ["black"],
-    "date": "2023-03-29",
+    "date": "2023-07-11",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "23.3.0"
+    "version": "23.7.0"
   },
   "blast": {
     "arch": "amd64",
@@ -2139,7 +2139,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-05-11",
+    "date": "2023-07-09",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2151,7 +2151,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "7.3.0"
+    "version": "8.0.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3093,14 +3093,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-07",
+    "date": "2023-07-11",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.28"
+    "version": "8.7.29"
   },
   "lsd": {
     "aliases": {
@@ -3219,7 +3219,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-07-06",
+    "date": "2023-07-11",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3244,7 +3244,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.4.7"
+    "version": "1.4.8"
   },
   "man-db": {
     "aliases": {
