@@ -2139,7 +2139,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-07-09",
+    "date": "2023-07-12",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2151,7 +2151,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.0.0"
+    "version": "8.0.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -5616,9 +5616,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-05-24",
+    "date": "2023-07-12",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.34.1"
+    "version": "4.34.2"
   },
   "yt-dlp": {
     "aliases": {
