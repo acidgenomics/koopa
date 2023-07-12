@@ -92,8 +92,11 @@ koopa_r_configure_environ() {
     # Set the 'PATH' string. Restricting path, so we don't mask compiler
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
+    if [[ "${bool['system']}" -eq 0 ]]
+    then
+        path_arr+=("${dict['koopa_prefix']}/bin")
+    fi
     path_arr+=(
-        # > "${dict['koopa_prefix']}/bin"
         '/usr/bin'
         '/bin'
     )

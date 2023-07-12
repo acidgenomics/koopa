@@ -18134,6 +18134,10 @@ koopa_r_configure_environ() {
             "TZ=\${TZ:-America/New_York}"
         )
     fi
+    if [[ "${bool['system']}" -eq 0 ]]
+    then
+        path_arr+=("${dict['koopa_prefix']}/bin")
+    fi
     path_arr+=(
         '/usr/bin'
         '/bin'
