@@ -18122,7 +18122,6 @@ koopa_r_configure_environ() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['tmp_file']="$(koopa_tmp_file)"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
@@ -18135,8 +18134,11 @@ koopa_r_configure_environ() {
             "TZ=\${TZ:-America/New_York}"
         )
     fi
+    if [[ "${bool['system']}" -eq 0 ]]
+    then
+        path_arr+=("${dict['koopa_prefix']}/bin")
+    fi
     path_arr+=(
-        "${dict['koopa_prefix']}/bin"
         '/usr/bin'
         '/bin'
     )
@@ -18219,6 +18221,14 @@ abort,verbose"
         )
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
+    if [[ -L "${dict['file']}" ]]
+    then
+        dict['realfile']="$(koopa_realpath "${dict['file']}")"
+        if [[ "${dict['realfile']}" == '/etc/R/Renviron.site' ]]
+        then
+            dict['file']="${dict['realfile']}"
+        fi
+    fi
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${bool['system']}" in
@@ -18358,16 +18368,16 @@ koopa_r_copy_files_into_etc() {
     for file in "${files[@]}"
     do
         local -A dict2
-        if [[ -L "/etc/R/${file}" ]]
-        then
-            koopa_rm --sudo "/etc/R/${file}"
-        fi
         dict2['source']="${dict['r_etc_source']}/${file}"
         dict2['target']="${dict['r_etc_target']}/${file}"
         koopa_assert_is_file "${dict2['source']}"
         if [[ -L "${dict2['target']}" ]]
         then
-            dict2['target']="$(koopa_realpath "${dict2['target']}")"
+            dict2['realtarget']="$(koopa_realpath "${dict2['target']}")"
+            if [[ "${dict2['realtarget']}" == "/etc/R/${file}" ]]
+            then
+                dict2['target']="${dict2['realtarget']}"
+            fi
         fi
         koopa_alert "Modifying '${dict2['target']}'."
         if [[ "${bool['system']}" -eq 1 ]]
