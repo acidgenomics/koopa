@@ -3,7 +3,7 @@
 koopa_r_copy_files_into_etc() {
     # """
     # Copy R config files into 'etc/'.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-07-12.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -26,17 +26,16 @@ koopa_r_copy_files_into_etc() {
     for file in "${files[@]}"
     do
         local -A dict2
-        # Ensure we clean up legacy symlinks on Debian.
-        if [[ -L "/etc/R/${file}" ]]
-        then
-            koopa_rm --sudo "/etc/R/${file}"
-        fi
         dict2['source']="${dict['r_etc_source']}/${file}"
         dict2['target']="${dict['r_etc_target']}/${file}"
         koopa_assert_is_file "${dict2['source']}"
         if [[ -L "${dict2['target']}" ]]
         then
-            dict2['target']="$(koopa_realpath "${dict2['target']}")"
+            dict2['realtarget']="$(koopa_realpath "${dict2['target']}")"
+            if [[ "${dict2['realtarget']}" == "/etc/R/${file}" ]]
+            then
+                dict2['target']="${dict2['realtarget']}"
+            fi
         fi
         koopa_alert "Modifying '${dict2['target']}'."
         if [[ "${bool['system']}" -eq 1 ]]
