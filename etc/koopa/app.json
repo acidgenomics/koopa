@@ -4540,10 +4540,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-07-06",
+    "date": "2023-07-12",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.277"
+    "version": "0.0.278"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
