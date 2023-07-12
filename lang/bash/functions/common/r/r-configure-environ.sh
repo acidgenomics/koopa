@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-07-12.
     #
     # @section Package library location:
     #
@@ -77,7 +77,6 @@ koopa_r_configure_environ() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-    dict['tmp_file']="$(koopa_tmp_file)"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
@@ -94,7 +93,7 @@ koopa_r_configure_environ() {
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
     path_arr+=(
-        "${dict['koopa_prefix']}/bin"
+        # > "${dict['koopa_prefix']}/bin"
         '/usr/bin'
         '/bin'
     )
@@ -245,6 +244,15 @@ abort,verbose"
         )
     fi
     dict['file']="${dict['r_prefix']}/etc/Renviron.site"
+    # Ensure we handle Debian configuration files in '/etc/R'.
+    if [[ -L "${dict['file']}" ]]
+    then
+        dict['realfile']="$(koopa_realpath "${dict['file']}")"
+        if [[ "${dict['realfile']}" == '/etc/R/Renviron.site' ]]
+        then
+            dict['file']="${dict['realfile']}"
+        fi
+    fi
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     case "${bool['system']}" in
