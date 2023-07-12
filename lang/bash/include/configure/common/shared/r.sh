@@ -1,17 +1,15 @@
 #!/usr/bin/env bash
 
-# NOTE Need to ensure that '/etc/R' and '/usr/lib/R/etc' are in sync.
-# We're seeing cases where configuration is mismatched on Debian/Ubuntu.
-
 main() {
     # """
     # Configure R.
-    # @note Updated 2023-05-19.
+    # @note Updated 2023-07-12.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
     # @seealso
     # - R CMD config
+    # - https://cran.r-project.org/bin/linux/debian/
     # """
     local -A app bool dict
     koopa_assert_has_args_le "$#" 1
