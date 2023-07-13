@@ -1999,7 +1999,7 @@ koopa_aws_s3_cp_regex() {
     return 0
 }
 
-koopa_aws_s3_delete_versioned_glacier_object() {
+koopa_aws_s3_delete_versioned_glacier_objects() {
     local -A app bool dict
     local -a keys version_ids
     local i
