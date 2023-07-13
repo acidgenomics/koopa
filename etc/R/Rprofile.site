@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-07-11.
+#' @note Updated 2023-07-13.
 #'
 #' @section Restarting R:
 #'
@@ -265,19 +265,12 @@ local({  # nolint
     }
     repos <- getOption("repos")
     repos[["CRAN"]] <- cran
-    ## Configure the RSPM Bioconductor mirror repo.
-    ## This is currently warning about new books repo, so disabled for now.
-    ## > options(
-    ## >    "BioC_mirror" =
-    ## >        "https://packagemanager.posit.co/bioconductor"
-    ## > )
     ## Always include our Acid Genomics repo.
     repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
     options("repos" = repos)
-    ## Allow Bioconductor to work offline. Note that this will warn when
-    ## enabled, which causes `AcidDevTools::install` to error, since warnings
-    ## are converted to errors.
-    ## > options("BIOCONDUCTOR_ONLINE_VERSION_DIAGNOSIS" = FALSE)
+    ## Configure the Posit Bioconductor mirror repo.
+    ## https://packagemanager.posit.co/client/#/repos/4/overview
+    options("BioC_mirror" = "https://packagemanager.posit.co/bioconductor")
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
     if (isTRUE(flag[["interactive"]])) {
