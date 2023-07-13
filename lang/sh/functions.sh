@@ -589,8 +589,6 @@ _koopa_activate_homebrew() {
         export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
     [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
         export HOMEBREW_INSTALL_CLEANUP=1
-    [ -z "${HOMEBREW_NO_ANALYTICS:-}" ] && \
-        export HOMEBREW_NO_ANALYTICS=1
     [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
         export HOMEBREW_NO_ENV_HINTS=1
     unset -v __kvar_prefix
