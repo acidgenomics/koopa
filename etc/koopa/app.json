@@ -3703,11 +3703,11 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-06-27",
+    "date": "2023-07-13",
     "enabled": false,
     "large": true,
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.3.1"
+    "version": "0.3.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
