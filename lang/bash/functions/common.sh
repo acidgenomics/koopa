@@ -18134,7 +18134,7 @@ koopa_r_configure_environ() {
             "TZ=\${TZ:-America/New_York}"
         )
     fi
-    if [[ "${bool['system']}" -eq 0 ]]
+    if [[ "${bool['system']}" -eq 0 ]] || koopa_is_macos
     then
         path_arr+=("${dict['bin_prefix']}")
     fi
@@ -18158,7 +18158,6 @@ koopa_r_configure_environ() {
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools'
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
-            "${dict['bin_prefix']}"
         )
     fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
