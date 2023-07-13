@@ -18146,6 +18146,7 @@ koopa_r_configure_environ() {
     then
         path_arr+=(
             '/usr/lib/rstudio-server/bin/quarto/bin'
+            '/usr/lib/rstudio-server/bin/quarto/bin/tools'
             '/usr/lib/rstudio-server/bin/postback'
         )
     elif koopa_is_macos
@@ -18155,6 +18156,7 @@ koopa_r_configure_environ() {
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
+            '/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools'
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
         )
     fi
