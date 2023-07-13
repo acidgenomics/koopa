@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_aws_s3_delete_versioned_glacier_object() {
+koopa_aws_s3_delete_versioned_glacier_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
     # @note Updated 2023-05-24.

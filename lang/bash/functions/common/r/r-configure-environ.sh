@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-07-12.
+    # @note Updated 2023-07-13.
     #
     # @section Package library location:
     #
@@ -75,7 +75,8 @@ koopa_r_configure_environ() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['system']}" -eq 1 ]]
@@ -94,7 +95,7 @@ koopa_r_configure_environ() {
     # inside RStudio.
     if [[ "${bool['system']}" -eq 0 ]]
     then
-        path_arr+=("${dict['koopa_prefix']}/bin")
+        path_arr+=("${dict['bin_prefix']}")
     fi
     path_arr+=(
         '/usr/bin'
@@ -104,6 +105,7 @@ koopa_r_configure_environ() {
     then
         path_arr+=(
             '/usr/lib/rstudio-server/bin/quarto/bin'
+            '/usr/lib/rstudio-server/bin/quarto/bin/tools'
             '/usr/lib/rstudio-server/bin/postback'
         )
     elif koopa_is_macos
@@ -113,7 +115,9 @@ koopa_r_configure_environ() {
             '/usr/local/MacGPG2/bin'
             '/opt/X11/bin'
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
+            '/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools'
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
+            "${dict['opt_prefix']}/imagemagick/bin"
         )
     fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
