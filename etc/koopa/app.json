@@ -1162,9 +1162,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-17",
+    "date": "2023-07-13",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.47.0"
+    "version": "0.48.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1691,6 +1691,7 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.7"
   },
@@ -2497,10 +2498,10 @@
   "jupyterlab": {
     "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-06-08",
+    "date": "2023-07-13",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   "kallisto": {
     "bin": ["kallisto"],
