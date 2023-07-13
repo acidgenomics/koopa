@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-07-13.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -15,11 +15,10 @@ main() {
     app['bash']="$(koopa_locate_bash --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-    dict['from_latest']=0
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['os_type']="$(koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['py_version']="3.10"
+    dict['py_version']='3.11'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in
@@ -68,15 +67,6 @@ main() {
     dict['script']="Miniconda${dict['py_major_version']}-\
 py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
-# >     # Workaround for installing newer versions that aren't yet available
-# >     # at 'https://repo.anaconda.com/miniconda/'.
-# >     case "${dict['version']}" in
-# >         'XXX')
-# >             dict['from_latest']=1
-# >             dict['script']="Miniconda${dict['py_major_version']}-latest-\
-# > ${dict['os_type2']}-${dict['arch2']}.sh"
-# >             ;;
-# >     esac
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
@@ -85,16 +75,6 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
         "${dict['prefix']}/.condarc"
     app['conda']="${dict['prefix']}/bin/conda"
     koopa_assert_is_installed "${app['conda']}"
-    if [[ "${dict['from_latest']}" -eq 1 ]]
-    then
-        "${app['conda']}" install \
-            --channel='conda-forge' \
-            --name='base' \
-            --override-channels \
-            --solver='classic' \
-            --yes \
-            "conda==${dict['version']}"
-    fi
     "${app['conda']}" list
     "${app['conda']}" info --all
     "${app['conda']}" config --show
