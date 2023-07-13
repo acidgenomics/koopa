@@ -76,7 +76,6 @@ koopa_r_configure_environ() {
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     dict['bin_prefix']="$(koopa_bin_prefix)"
-    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['system']}" -eq 1 ]]
@@ -117,7 +116,7 @@ koopa_r_configure_environ() {
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools'
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
-            "${dict['opt_prefix']}/imagemagick/bin"
+            "${dict['bin_prefix']}"
         )
     fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
