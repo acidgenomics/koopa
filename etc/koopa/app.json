@@ -810,12 +810,12 @@
   "conda": {
     "arch": "amd64",
     "bin": ["conda"],
-    "date": "2023-05-03",
+    "date": "2023-07-13",
     "large": true,
     "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.3.1-0"
+    "version": "23.5.1-0"
   },
   "convmv": {
     "aliases": {
@@ -1162,9 +1162,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-05-17",
+    "date": "2023-07-13",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.47.0"
+    "version": "0.48.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1691,6 +1691,7 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.7"
   },
@@ -2139,7 +2140,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-07-09",
+    "date": "2023-07-12",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2151,7 +2152,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.0.0"
+    "version": "8.0.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2497,10 +2498,10 @@
   "jupyterlab": {
     "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-06-08",
+    "date": "2023-07-13",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4540,10 +4541,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-07-06",
+    "date": "2023-07-12",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.277"
+    "version": "0.0.278"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5616,9 +5617,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-05-24",
+    "date": "2023-07-12",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.34.1"
+    "version": "4.34.2"
   },
   "yt-dlp": {
     "aliases": {
