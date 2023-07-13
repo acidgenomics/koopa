@@ -808,7 +808,6 @@
     "version": "1.4.6"
   },
   "conda": {
-    "arch": "amd64",
     "bin": ["conda"],
     "date": "2023-07-13",
     "large": true,
@@ -3220,7 +3219,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-07-11",
+    "date": "2023-07-13",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3245,7 +3244,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.4.8"
+    "version": "1.4.9"
   },
   "man-db": {
     "aliases": {
