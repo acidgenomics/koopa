@@ -4076,12 +4076,12 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.11"],
-    "date": "2023-03-17",
+    "date": "2023-07-15",
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "2.10.4"
+    "version": "2.11.0"
   },
   "pycodestyle": {
     "aliases": {
