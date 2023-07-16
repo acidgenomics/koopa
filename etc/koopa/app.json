@@ -528,7 +528,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.24.0"
+    "version": "1.24.1"
   },
   "brotli": {
     "aliases": {
