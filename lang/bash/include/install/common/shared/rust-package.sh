@@ -26,7 +26,22 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
-    export RUSTFLAGS="${LDFLAGS:-}"
+    if [[ -n "${LDFLAGS:-}" ]]
+    then
+        local -a ldflags rustflags
+        local ldflag
+        rustflags=()
+        IFS=' ' read -r -a ldflags <<< "${LDFLAGS:-}"
+        for ldflag in "${ldflags[@]}"
+        do
+            case "$ldflag" in
+                '-L'*)
+                    rustflags+=("$ldflag")
+                    ;;
+            esac
+        done
+        export RUSTFLAGS="${rustflags[*]}"
+    fi
     install_args=(
         '--config' 'net.git-fetch-with-cli=true'
         '--config' 'net.retry=5'
