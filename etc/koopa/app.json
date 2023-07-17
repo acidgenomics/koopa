@@ -761,9 +761,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-07-04",
+    "date": "2023-07-17",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.34.3"
+    "version": "2.35.0"
   },
   "cli11": {
     "aliases": {
@@ -2774,7 +2774,7 @@
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.6.4"
+    "version": "1.7.0"
   },
   "libgpg-error": {
     "aliases": {
@@ -3301,11 +3301,11 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-05-25",
+    "date": "2023-07-17",
     "dependencies": ["python3.11"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.1.1"
+    "version": "1.2.0"
   },
   "miller": {
     "aliases": {
