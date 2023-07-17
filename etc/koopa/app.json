@@ -2453,6 +2453,19 @@
     "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
     "version": "5.3.0"
   },
+  "jless": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["jless"],
+    "build_dependencies": ["git", "rust"],
+    "date": "2023-07-17",
+    "url": [
+      "https://jless.io/",
+      "https://github.com/PaulJuliusMartinez/jless/"
+    ],
+    "version": "0.9.0"
+  },
   "jpeg": {
     "aliases": {
       "homebrew": true
@@ -4848,7 +4861,7 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "build_dependencies": ["git", "rust"],
+    "build_dependencies": ["cmake", "git", "rust"],
     "date": "2023-06-06",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.15.0"
