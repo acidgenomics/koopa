@@ -3,7 +3,7 @@
 main() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-07-17.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -58,6 +58,7 @@ main() {
         'tar' | \
         'units' | \
         'wget' | \
+        'wget2' | \
         'which')
             dict['suffix']='gz'
             ;;
@@ -80,6 +81,9 @@ main() {
             ;;
         'ncurses')
             dict['version']="$(koopa_major_minor_version "${dict['version']}")"
+            ;;
+        'wget2')
+            dict['name']='wget'
             ;;
     esac
     export FORCE_UNSAFE_CONFIGURE=1

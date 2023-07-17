@@ -13371,6 +13371,12 @@ koopa_install_wget() {
         "$@"
 }
 
+koopa_install_wget2() {
+    koopa_install_app \
+        --name='wget2' \
+        "$@"
+}
+
 koopa_install_which() {
     koopa_install_app \
         --name='which' \
@@ -25375,6 +25381,12 @@ koopa_uninstall_vulture() {
 koopa_uninstall_wget() {
     koopa_uninstall_app \
         --name='wget' \
+        "$@"
+}
+
+koopa_uninstall_wget2() {
+    koopa_uninstall_app \
+        --name='wget2' \
         "$@"
 }
 
