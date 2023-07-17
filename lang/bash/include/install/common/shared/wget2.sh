@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Switch to shared gnu-app install approach.
-# See wget (v1) for reference.
-
-# FIXME Need to add support for lzlib.
+# NOTE Add support for lzlib.
 # https://formulae.brew.sh/formula/lzlib
 
 main() {
@@ -31,17 +28,19 @@ main() {
         'libidn'
         'libtasn1'
         'nettle'
+        'openssl3'
         'pcre2'
         'gnutls'
         'icu4c'
-        # FIXME "gpgme"
-        # FIXME "libassuan"
-        # FIXME "libgpg-error"
-        # FIXME "libmicrohttpd"
-        # FIXME "libnghttp2"
-        # FIXME "libpsl"
-        # FIXME "lzlib"
-        # FIXME "p11-kit"
+        'libgpg-error'
+        'libassuan'
+        'nghttp2'
+        # Consider adding:
+        # > 'gpgme'
+        # > 'libmicrohttpd'
+        # > 'libpsl'
+        # > 'lzlib'
+        # > 'p11-kit'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
