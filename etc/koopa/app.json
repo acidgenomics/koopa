@@ -5294,6 +5294,39 @@
     ],
     "version": "1.21.4"
   },
+  "wget2": {
+    "aliases": {
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
+    },
+    "bin": ["wget2"],
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-07-17",
+    "dependencies": [
+      "brotli",
+      "bzip2",
+      "gettext",
+      "gnutls",
+      "icu4c",
+      "libassuan",
+      "libgpg-error",
+      "libidn",
+      "libtasn1",
+      "nettle",
+      "nghttp2",
+      "openssl3",
+      "pcre2",
+      "xz",
+      "zlib",
+      "zstd"
+    ],
+    "enabled": false,
+    "man1": ["wget2.1"],
+    "prune": false,
+    "url": ["https://gitlab.com/gnuwget/wget2"],
+    "version": "2.0.1"
+  },
   "which": {
     "aliases": {
       "fedora": true,

@@ -25,8 +25,8 @@ main() {
         --installer='gnu-app' \
         --name='wget' \
         -D '--disable-debug' \
-        -D '--with-ssl=openssl' \
         -D "--with-libssl-prefix=${dict['ssl']}" \
+        -D '--with-ssl=openssl' \
         -D '--without-included-regex' \
         -D '--without-libpsl'
 }
