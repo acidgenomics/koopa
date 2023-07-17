@@ -5304,13 +5304,22 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-07-17",
     "dependencies": [
+      "brotli",
+      "bzip2",
       "gettext",
       "gnutls",
+      "icu4c",
+      "libassuan",
+      "libgpg-error",
       "libidn",
       "libtasn1",
       "nettle",
+      "nghttp2",
       "openssl3",
-      "pcre2"
+      "pcre2",
+      "xz",
+      "zlib",
+      "zstd"
     ],
     "man1": ["wget2.1"],
     "prune": false,
