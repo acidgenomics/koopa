@@ -3,20 +3,16 @@
 main() {
     # """
     # Install Rust package.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-07-17.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
     #
-    # @section Useful development packages (without binaries):
-    #
-    # - crossbeam
-    # - hyper
-    # - rayon
-    # - tide
-    #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/ripgrep.rb
+    # - https://doc.rust-lang.org/cargo/reference/environment-variables.html#
+    #     environment-variables-cargo-reads
+    # - https://internals.rust-lang.org/t/compiling-rustc-with-non-standard-
+    #     flags/8950/6
     # """
     local -A app dict
     local -a install_args
@@ -30,6 +26,22 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir "${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
+    if [[ -n "${LDFLAGS:-}" ]]
+    then
+        local -a ldflags rustflags
+        local ldflag
+        rustflags=()
+        IFS=' ' read -r -a ldflags <<< "${LDFLAGS:-}"
+        for ldflag in "${ldflags[@]}"
+        do
+            case "$ldflag" in
+                '-L'*)
+                    rustflags+=("$ldflag")
+                    ;;
+            esac
+        done
+        export RUSTFLAGS="${rustflags[*]}"
+    fi
     install_args=(
         '--config' 'net.git-fetch-with-cli=true'
         '--config' 'net.retry=5'
