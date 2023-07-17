@@ -1170,10 +1170,10 @@
       "homebrew": "docker-credential-helper"
     },
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-05-14",
+    "date": "2023-07-17",
     "enabled": false,
     "url": ["https://github.com/docker/docker-credential-helpers/"],
-    "version": "0.7.0"
+    "version": "0.8.0"
   },
   "doom-emacs": {
     "date": "2023-05-30",
@@ -2460,6 +2460,12 @@
     "bin": ["jless"],
     "build_dependencies": ["git", "rust"],
     "date": "2023-07-17",
+    "dependencies": [
+      "xorg-libxau",
+      "xorg-libxcb",
+      "xorg-libxdmcp",
+      "xorg-xorgproto"
+    ],
     "url": [
       "https://jless.io/",
       "https://github.com/PaulJuliusMartinez/jless/"
@@ -4089,12 +4095,12 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.11"],
-    "date": "2023-07-15",
+    "date": "2023-07-17",
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "2.11.0"
+    "version": "2.11.1"
   },
   "pycodestyle": {
     "aliases": {
