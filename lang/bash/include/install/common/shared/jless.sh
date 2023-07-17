@@ -11,7 +11,10 @@ main() {
     if koopa_is_linux
     then
         koopa_activate_app --build-only 'python3.11'
-        koopa_activate_app 'xorg-libxau' 'xorg-libxcb'
+        koopa_activate_app \
+            'xorg-xorgproto' \
+            'xorg-libxau' \
+            'xorg-libxcb'
     fi
     koopa_install_app_subshell \
         --installer='rust-package' \
