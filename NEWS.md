@@ -1,5 +1,34 @@
 # Release notes
 
+## koopa 0.13.3 (2023-07-17)
+
+New apps: `blast`, `jless`, `ronn-ng`, and `wget2`.
+
+New binaries:
+
+- `ip-info`: Detailed information on current IP address, including city,
+  organization, and timezone. Returned in JSON format.
+
+Major changes:
+
+- `koopa_download` function has been overhauled and simplified to only wrap
+  `curl`. Support for `wget` engine has been dropped from this function.
+- Improved R system configuration.
+- Improved cross-platform and cross-shell compatibility of some convenience
+  aliases, most notably `conda` and `z` (for zoxide).
+
+Minor changes:
+
+- Fixed typo in `koopa_aws_s3_delete_versioned_glacier_objects` name.
+- The `koopa install` command now supports positional arguments with `--all`
+  and `--all-binary` flags set.
+- Definition lists are no longer bold by default.
+- `koopa_docker_run` now allows unauthenticated pulls from AWS ECR. To enable
+  authenticated pulls, ensure that `AWS_ECR_ACCOUNT_ID`, `AWS_ECR_PROFILE`, and
+  `AWS_ECR_REGION` environment variables are defined.
+- Binaries are now only pushed consistently when `--push` flag is set.
+- Relaxed apt configuration for new Debian 12 instances.
+
 ## koopa 0.13.2 (2023-06-28)
 
 Major changes:
