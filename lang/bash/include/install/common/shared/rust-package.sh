@@ -9,10 +9,13 @@ main() {
     # https://doc.rust-lang.org/cargo/
     #
     # @seealso
+    # Setting custom linker arguments using RUSTFLAGS:
     # - https://doc.rust-lang.org/cargo/reference/environment-variables.html#
     #     environment-variables-cargo-reads
     # - https://internals.rust-lang.org/t/compiling-rustc-with-non-standard-
     #     flags/8950/6
+    # - https://github.com/rust-lang/cargo/issues/5077
+    # - https://news.ycombinator.com/item?id=29570931
     # """
     local -A app dict
     local -a install_args
@@ -31,14 +34,10 @@ main() {
         local -a ldflags rustflags
         local ldflag
         rustflags=()
-        IFS=' ' read -r -a ldflags <<< "${LDFLAGS:-}"
+        IFS=' ' read -r -a ldflags <<< "${LDFLAGS:?}"
         for ldflag in "${ldflags[@]}"
         do
-            case "$ldflag" in
-                '-L'*)
-                    rustflags+=("$ldflag")
-                    ;;
-            esac
+            rustflags+=('-C' "link-arg=${ldflag}")
         done
         export RUSTFLAGS="${rustflags[*]}"
     fi
