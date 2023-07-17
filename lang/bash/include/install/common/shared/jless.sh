@@ -14,6 +14,7 @@ main() {
         koopa_activate_app \
             'xorg-xorgproto' \
             'xorg-libxau' \
+            'xorg-libxdmcp' \
             'xorg-libxcb'
     fi
     koopa_install_app_subshell \
