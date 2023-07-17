@@ -31,7 +31,7 @@ main() {
         local -a ldflags rustflags
         local ldflag
         rustflags=()
-        IFS=' ' read -r -a ldflags <<< "${LDFLAGS:-}"
+        IFS=' ' read -r -a ldflags <<< "${LDFLAGS:?}"
         for ldflag in "${ldflags[@]}"
         do
             case "$ldflag" in
