@@ -3,6 +3,15 @@
 # NOTE Add support for lzlib.
 # https://formulae.brew.sh/formula/lzlib
 
+# FIXME Add support for these:
+# -gpgme
+# -hsts
+# -idn
+# -lzip
+# -ntlm
+# -opie
+# -psl
+
 main() {
     # """
     # Install wget2.
@@ -45,6 +54,7 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['ssl']="$(koopa_app_prefix 'openssl3')"
     # > dict['lzlib']="$(koopa_app_prefix 'lzlib')"
     # > export LZIP_CFLAGS="-I${dict['lzlib']}/include"
     # > export LZIP_LIBS="-L${dict['lzlib']}/lib -llz"
@@ -53,5 +63,8 @@ main() {
         --name='wget2' \
         -D '--with-bzip2' \
         -D "--with-libintl-prefix=${dict['gettext']}" \
-        -D '--with-lzma'
+        -D "--with-libssl-prefix=${dict['ssl']}" \
+        -D '--with-lzma' \
+        -D '--with-ssl=openssl' \
+        -D '--without-libpsl'
 }
