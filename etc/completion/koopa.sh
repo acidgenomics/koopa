@@ -60,6 +60,7 @@ _koopa_complete() {
                         'ssh'
                         'star'
                         'wget'
+                        'wget2'
                     )
                     ;;
                 'configure')

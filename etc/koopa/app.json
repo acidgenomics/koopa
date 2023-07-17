@@ -5294,6 +5294,29 @@
     ],
     "version": "1.21.4"
   },
+  "wget2": {
+    "aliases": {
+      "debian": true,
+      "fedora": true,
+      "homebrew": true
+    },
+    "bin": ["wget2"],
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-07-17",
+    "dependencies": [
+      "gettext",
+      "gnutls",
+      "libidn",
+      "libtasn1",
+      "nettle",
+      "openssl3",
+      "pcre2"
+    ],
+    "man1": ["wget2.1"],
+    "prune": false,
+    "url": ["https://gitlab.com/gnuwget/wget2"],
+    "version": "2.0.1"
+  },
   "which": {
     "aliases": {
       "fedora": true,
