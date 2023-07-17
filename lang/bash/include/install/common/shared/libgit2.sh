@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to build with openssl3 and libgit2 on Linux.
+
 main() {
     # """
     # Install libgit2.
