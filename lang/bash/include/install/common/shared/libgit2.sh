@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to build with openssl3 and libgit2 on Linux.
+
 main() {
     # """
     # Install libgit2.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-07-17.
     #
     # @seealso
     # - https://libgit2.org/docs/guides/build-and-link/
@@ -25,6 +27,7 @@ main() {
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     if koopa_is_macos
     then
+        dict['libssh2']="$(koopa_app_prefix 'libssh2')"
         dict['openssl']="$(koopa_app_prefix 'openssl3')"
     fi
     cmake['pcre_include_dir']="${dict['pcre']}/include"
@@ -48,14 +51,19 @@ main() {
     )
     if koopa_is_macos
     then
+        cmake['libssh2_include_dir']="${dict['libssh2']}/include"
+        cmake['libssh2_library']="${dict['libssh2']}/lib/\
+libssh2.${dict['shared_ext']}"
         cmake['openssl_crypto_library']="${dict['openssl']}/lib/\
 libcrypto.${dict['shared_ext']}"
         cmake['openssl_include_dir']="${dict['openssl']}/include"
         cmake['openssl_ssl_library']="${dict['openssl']}/lib/\
 libssl.${dict['shared_ext']}"
         koopa_assert_is_dir \
+            "${cmake['libssh2_include_dir']}" \
             "${cmake['openssl_include_dir']}"
         koopa_assert_is_file \
+            "${cmake['libssh2_library']}" \
             "${cmake['openssl_crypto_library']}" \
             "${cmake['openssl_ssl_library']}"
         cmake_args+=(
@@ -63,6 +71,8 @@ libssl.${dict['shared_ext']}"
             '-DUSE_HTTPS=ON'
             '-DUSE_SSH=ON'
             # Dependency paths -------------------------------------------------
+            "-DLIBSSH2_INCLUDE_DIR=${cmake['libssh2_include_dir']}"
+            "-DLIBSSH2_LIBRARY=${cmake['libssh2_library']}"
             "-DOPENSSL_CRYPTO_LIBRARY=${cmake['openssl_crypto_library']}"
             "-DOPENSSL_INCLUDE_DIR=${cmake['openssl_include_dir']}"
             "-DOPENSSL_SSL_LIBRARY=${cmake['openssl_ssl_library']}"
