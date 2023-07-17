@@ -34,11 +34,7 @@ main() {
         IFS=' ' read -r -a ldflags <<< "${LDFLAGS:?}"
         for ldflag in "${ldflags[@]}"
         do
-            case "$ldflag" in
-                '-L'*)
-                    rustflags+=("$ldflag")
-                    ;;
-            esac
+            rustflags+=("-C link-arg=${ldflag}")
         done
         export RUSTFLAGS="${rustflags[*]}"
     fi
