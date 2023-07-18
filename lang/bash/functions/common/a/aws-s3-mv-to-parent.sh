@@ -4,7 +4,7 @@ koopa_aws_s3_mv_to_parent() {
     # """
     # Move objects in an S3 bucket directory to parent directory.
     #
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-18.
     #
     # @details
     # Empty directory will be removed automatically, since S3 uses object
@@ -67,11 +67,11 @@ koopa_aws_s3_mv_to_parent() {
         dict2['dn1']="$(koopa_dirname "$file")"
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
         dict2['target']="${dict2['dn2']}/${dict2['bn']}"
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 mv \
-                --recursive \
-                "${dict2['file']}" \
-                "${dict2['target']}"
+        "${app['aws']}" s3 mv \
+            --profile "${dict['profile']}" \
+            --recursive \
+            "${dict2['file']}" \
+            "${dict2['target']}"
     done
     return 0
 }

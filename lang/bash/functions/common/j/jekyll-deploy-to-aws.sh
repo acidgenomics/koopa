@@ -3,7 +3,10 @@
 koopa_jekyll_deploy_to_aws() {
     # """
     # Deploy Jekyll website to AWS S3 and CloudFront.
-    # @note Updated 2023-02-17.
+    # @note Updated 2023-07-18.
+    #
+    # @seealso
+    # - aws cloudfront create-invalidation help
     # """
     local -A app dict
     koopa_assert_has_args "$#"
@@ -87,10 +90,11 @@ to '${dict['bucket_prefix']}'."
     koopa_alert "Invalidating CloudFront cache at '${dict['distribution_id']}'."
     # The '--paths' variable should only be called once, using space-separated
     # variables. Consider adding '/css/*' here if necessary.
-    "${app['aws']}" --profile="${dict['profile']}" \
-        cloudfront create-invalidation \
-            --distribution-id="${dict['distribution_id']}" \
-            --paths='/*' \
-            >/dev/null
+    "${app['aws']}" cloudfront create-invalidation \
+        --distribution-id "${dict['distribution_id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --paths '/*' \
+        --profile "${dict['profile']}"
     return 0
 }
