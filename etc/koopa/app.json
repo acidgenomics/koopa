@@ -33,10 +33,10 @@
     "version": "1.1.0"
   },
   "anaconda": {
-    "date": "2023-07-13",
+    "date": "2023-07-18",
     "large": true,
     "url": ["https://repo.continuum.io/archive/"],
-    "version": "2023.07-0"
+    "version": "2023.07-1"
   },
   "apache-airflow": {
     "bin": ["airflow"],
@@ -809,12 +809,12 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2023-07-13",
+    "date": "2023-07-18",
     "large": true,
     "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.5.1-0"
+    "version": "23.5.2-0"
   },
   "convmv": {
     "aliases": {
