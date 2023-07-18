@@ -1762,7 +1762,7 @@ koopa_aws_ec2_list_running_instances() {
     local -a filters
     app['aws']="$(koopa_locate_aws)"
     koopa_assert_is_executable "${app[@]}"
-    bool['named']=0
+    bool['name']=0
     dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
     do
@@ -1775,8 +1775,8 @@ koopa_aws_ec2_list_running_instances() {
                 dict['profile']="${2:?}"
                 shift 2
                 ;;
-            '--named')
-                bool['named']=1
+            '--with-name')
+                bool['name']=1
                 shift 1
                 ;;
             *)
@@ -1785,7 +1785,7 @@ koopa_aws_ec2_list_running_instances() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    if [[ "${bool['named']}" -eq 1 ]]
+    if [[ "${bool['name']}" -eq 1 ]]
     then
         dict['query']="Reservations[*].Instances[*][Tags[?Key=='Name'].Value[],\
 InstanceId,NetworkInterfaces[0].PrivateIpAddresses[0].PrivateIpAddress]"
@@ -1857,7 +1857,7 @@ koopa_aws_ec2_map_instance_ids_to_names() {
     return 0
 }
 
-koopa_aws_ec2_suspend() {
+koopa_aws_ec2_stop() {
     local -A app dict
     app['aws']="$(koopa_locate_aws)"
     koopa_assert_is_executable "${app[@]}"
@@ -1881,7 +1881,7 @@ koopa_aws_ec2_suspend() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    koopa_alert "Suspending EC2 instance '${dict['id']}'."
+    koopa_alert "Stopping EC2 instance '${dict['id']}'."
     "${app['aws']}" ec2 stop-instances \
         --instance-id "${dict['id']}" \
         --no-cli-pager \
@@ -3926,9 +3926,14 @@ koopa_cli_app() {
                 'ec2')
                     case "${3:-}" in
                         'instance-id' | \
-                        'suspend')
+                        'list-running-instances' | \
+                        'map-instance-ids-to-names' | \
+                        'stop')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
+                            ;;
+                        'suspend')
+                            koopa_defunct 'ec2 stop'
                             ;;
                         *)
                             koopa_cli_invalid_arg "$@"
