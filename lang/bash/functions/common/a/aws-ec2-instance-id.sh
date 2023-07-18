@@ -2,7 +2,7 @@
 
 koopa_aws_ec2_instance_id() {
     # """
-    # AWS EC2 instance identifier.
+    # AWS EC2 current instance identifier.
     # @note Updated 2023-04-06.
     #
     # @seealso
