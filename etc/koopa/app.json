@@ -2650,13 +2650,13 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-12-09",
+    "date": "2023-07-18",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.6.2"
+    "version": "3.7.0"
   },
   "libassuan": {
     "aliases": {
