@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-# NOTE Consider prompting the user about this, when interactive.
-
 koopa_aws_ec2_terminate() {
     # """
     # Terminate current AWS EC2 instance.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-07-18.
+    #
+    # Since this is a destructive action, don't make available in the koopa CLI.
+    #
+    # @seealso
+    # - aws ec2 terminate-instances help
     # """
     local -A app dict
     app['aws']="$(koopa_locate_aws)"
