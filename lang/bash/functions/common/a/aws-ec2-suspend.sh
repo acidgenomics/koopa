@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for region.
-
 koopa_aws_ec2_suspend() {
     # """
     # Suspend current AWS EC2 instance.
