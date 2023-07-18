@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for region.
+
 koopa_aws_ec2_suspend() {
     # """
     # Suspend current AWS EC2 instance.
-    # @note Updated 2023-04-03.
+    # @note Updated 2023-07-18.
+    #
+    # @seealso
+    # - aws ec2 stop-instances help
     # """
     local -A app dict
     app['aws']="$(koopa_locate_aws)"
