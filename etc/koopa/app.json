@@ -522,13 +522,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-07-16",
+    "date": "2023-07-18",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.24.1"
+    "version": "1.24.2"
   },
   "brotli": {
     "aliases": {
@@ -761,9 +761,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-07-17",
+    "date": "2023-07-18",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.35.0"
+    "version": "2.35.1"
   },
   "cli11": {
     "aliases": {
@@ -3667,6 +3667,7 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
+    "outdated": true,
     "prune": false,
     "url": ["https://nodejs.org/"],
     "version": "18.16.1"
@@ -5240,14 +5241,14 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2023-05-01",
+    "date": "2023-07-18",
     "dependencies": ["python3.11"],
     "man1": ["vd.1", "visidata.1"],
     "url": [
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "2.11"
+    "version": "2.11.1"
   },
   "visual-studio-code-cli": {
     "aliases": {
