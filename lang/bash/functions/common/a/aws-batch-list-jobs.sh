@@ -3,7 +3,10 @@
 koopa_aws_batch_list_jobs() {
     # """
     # List AWS Batch jobs.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-07-18.
+    #
+    # @seealso
+    # - aws batch list-jobs help
     # """
     local -A app dict
     local -a job_queue_array status_array
@@ -83,10 +86,12 @@ koopa_aws_batch_list_jobs() {
     for status in "${status_array[@]}"
     do
         koopa_h2 "$status"
-        "${app['aws']}" --profile="${dict['profile']}" \
-            batch list-jobs \
-                --job-queue "${dict['job_queue']}" \
-                --job-status "$status"
+        "${app['aws']}" batch list-jobs \
+            --job-queue "${dict['job_queue']}" \
+            --job-status "$status" \
+            --no-cli-pager \
+            --output 'text' \
+            --profile "${dict['profile']}"
     done
     return 0
 }

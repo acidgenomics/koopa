@@ -3,7 +3,7 @@
 koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-07-18.
     #
     # @examples
     # > koopa_aws_s3_list_large_files \
@@ -83,16 +83,16 @@ koopa_aws_s3_list_large_files() {
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     dict['awk_string']="NR<=${dict['num']} {print \$1}"
     dict['str']="$( \
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3api list-object-versions \
-                --bucket="${dict['bucket']}" \
-                --output='json' \
-                --region="${dict['region']}" \
-            | "${app['jq']}" \
-                --raw-output \
-                '.Versions[] | "\(.Key)\t \(.Size)"' \
-            | "${app['sort']}" --key=2 --numeric-sort --reverse \
-            | "${app['awk']}" "${dict['awk_string']}" \
+        "${app['aws']}" s3api list-object-versions \
+            --bucket "${dict['bucket']}" \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+        | "${app['jq']}" \
+            --raw-output \
+            '.Versions[] | "\(.Key)\t \(.Size)"' \
+        | "${app['sort']}" --key=2 --numeric-sort --reverse \
+        | "${app['awk']}" "${dict['awk_string']}" \
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"

@@ -1606,8 +1606,9 @@ koopa_aws_batch_fetch_and_run() {
             koopa_download "${dict['url']}" "${dict['file']}"
             ;;
         's3://'*)
-            "${app['aws']}" --profile="${dict['profile']}" \
-                s3 cp "${dict['url']}" "${dict['file']}"
+            "${app['aws']}" s3 cp \
+                --profile "${dict['profile']}" \
+                "${dict['url']}" "${dict['file']}"
             ;;
         *)
             koopa_stop "Unsupported URL: '${dict['url']}'."
@@ -1695,10 +1696,12 @@ koopa_aws_batch_list_jobs() {
     for status in "${status_array[@]}"
     do
         koopa_h2 "$status"
-        "${app['aws']}" --profile="${dict['profile']}" \
-            batch list-jobs \
-                --job-queue "${dict['job_queue']}" \
-                --job-status "$status"
+        "${app['aws']}" batch list-jobs \
+            --job-queue "${dict['job_queue']}" \
+            --job-status "$status" \
+            --no-cli-pager \
+            --output 'text' \
+            --profile "${dict['profile']}"
     done
     return 0
 }
@@ -1727,11 +1730,11 @@ koopa_aws_codecommit_list_repositories() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     dict['string']="$( \
-        "${app['aws']}" \
-            codecommit list-repositories \
-                --output='json' \
-                --profile="${dict['profile']}" \
-            | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
+        "${app['aws']}" codecommit list-repositories \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+        | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
     )"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"
@@ -1780,8 +1783,9 @@ koopa_aws_ec2_map_instance_ids_to_names() {
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     dict['json']="$( \
         "${app['aws']}" ec2 describe-instances \
-            --output='json' \
-            --profile="${dict['profile']}" \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
     )"
     readarray -t ids <<< "$( \
         koopa_print "${dict['json']}" \
@@ -1828,9 +1832,11 @@ koopa_aws_ec2_suspend() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_alert "Suspending EC2 instance '${dict['id']}'."
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ec2 stop-instances --instance-id "${dict['id']}" \
-        >/dev/null
+    "${app['aws']}" ec2 stop-instances \
+        --instance-id "${dict['id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --profile "${dict['profile']}"
     return 0
 }
 
@@ -1858,9 +1864,11 @@ koopa_aws_ec2_terminate() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ec2 terminate-instances --instance-id "${dict['id']}" \
-        >/dev/null
+    "${app['aws']}" ec2 terminate-instances \
+        --instance-id "${dict['id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --profile "${dict['profile']}"
     return 0
 }
 
@@ -1912,9 +1920,9 @@ amazonaws.com"
         '--region or AWS_ECR_REGION' "${dict['region']}"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ecr get-login-password \
-            --region "${dict['region']}" \
+    "${app['aws']}" ecr get-login-password \
+        --profile "${dict['profile']}" \
+        --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
@@ -1961,9 +1969,9 @@ koopa_aws_ecr_login_public() {
         '--region or AWS_ECR_REGION' "${dict['region']}"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ecr-public get-login-password \
-            --region "${dict['region']}" \
+    "${app['aws']}" ecr-public get-login-password \
+        --profile "${dict['profile']}" \
+        --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \
@@ -2037,14 +2045,14 @@ koopa_aws_s3_cp_regex() {
     then
         koopa_stop "Souce and or/target must match '${dict['bucket_pattern']}'."
     fi
-    "${app['aws']}" --profile="${dict['profile']}" \
-        s3 cp \
-            --exclude='*' \
-            --follow-symlinks \
-            --include="${dict['pattern']}" \
-            --recursive \
-            "${dict['source_prefix']}" \
-            "${dict['target_prefix']}"
+    "${app['aws']}" s3 cp \
+        --exclude '*' \
+        --follow-symlinks \
+        --include "${dict['pattern']}" \
+        --profile "${dict['profile']}" \
+        --recursive \
+        "${dict['source_prefix']}" \
+        "${dict['target_prefix']}"
     return 0
 }
 
@@ -2117,11 +2125,12 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     koopa_alert "Fetching versioned Glacier objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
-            --bucket="${dict['bucket']}" \
-            --output='json' \
-            --profile="${dict['profile']}" \
-            --query="Versions[?StorageClass=='GLACIER']" \
-            --region="${dict['region']}" \
+            --bucket "${dict['bucket']}" \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --query "Versions[?StorageClass=='GLACIER']" \
+            --region "${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
@@ -2150,13 +2159,14 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         koopa_alert "Deleting 's3://${dict['bucket']}/${dict2['key']}' \
 (${dict2['version_id']})."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" --profile "${dict['profile']}" \
-            s3api delete-object \
-                --bucket="${dict['bucket']}" \
-                --key="${dict2['key']}" \
-                --region="${dict['region']}" \
-                --version-id="${dict2['version_id']}" \
-            > /dev/null
+        "${app['aws']}" s3api delete-object \
+            --bucket "${dict['bucket']}" \
+            --key "${dict2['key']}" \
+            --no-cli-pager \
+            --output 'text' \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+            --version-id "${dict2['version_id']}"
     done
     return 0
 }
@@ -2230,11 +2240,12 @@ koopa_aws_s3_dot_clean() {
     koopa_alert "Fetching objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-objects \
-            --bucket="${dict['bucket']}" \
-            --output='json' \
-            --profile="${dict['profile']}" \
-            --query="Contents[?contains(Key,'/.')].Key" \
-            --region="${dict['region']}" \
+            --bucket "${dict['bucket']}" \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --query "Contents[?contains(Key,'/.')].Key" \
+            --region "${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
@@ -2257,8 +2268,10 @@ koopa_aws_s3_dot_clean() {
         s3uri="s3://${dict['bucket']}/${key}"
         koopa_alert "Deleting '${s3uri}'."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 rm --region="${dict['region']}" "$s3uri"
+        "${app['aws']}" s3 rm \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+            "$s3uri"
     done
     return 0
 }
@@ -2461,16 +2474,16 @@ koopa_aws_s3_list_large_files() {
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
     dict['awk_string']="NR<=${dict['num']} {print \$1}"
     dict['str']="$( \
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3api list-object-versions \
-                --bucket="${dict['bucket']}" \
-                --output='json' \
-                --region="${dict['region']}" \
-            | "${app['jq']}" \
-                --raw-output \
-                '.Versions[] | "\(.Key)\t \(.Size)"' \
-            | "${app['sort']}" --key=2 --numeric-sort --reverse \
-            | "${app['awk']}" "${dict['awk_string']}" \
+        "${app['aws']}" s3api list-object-versions \
+            --bucket "${dict['bucket']}" \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+        | "${app['jq']}" \
+            --raw-output \
+            '.Versions[] | "\(.Key)\t \(.Size)"' \
+        | "${app['sort']}" --key=2 --numeric-sort --reverse \
+        | "${app['awk']}" "${dict['awk_string']}" \
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
@@ -2559,8 +2572,10 @@ koopa_aws_s3_ls() {
         fi
     fi
     str="$( \
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 ls "${ls_args[@]}" "${dict['prefix']}" \
+        "${app['aws']}" s3 ls \
+            --profile "${dict['profile']}" \
+            "${ls_args[@]}" \
+            "${dict['prefix']}" \
             2>/dev/null \
     )"
     [[ -n "$str" ]] || return 1
@@ -2691,11 +2706,11 @@ koopa_aws_s3_mv_to_parent() {
         dict2['dn1']="$(koopa_dirname "$file")"
         dict2['dn2']="$(koopa_dirname "${dict2['dn1']}")"
         dict2['target']="${dict2['dn2']}/${dict2['bn']}"
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 mv \
-                --recursive \
-                "${dict2['file']}" \
-                "${dict2['target']}"
+        "${app['aws']}" s3 mv \
+            --profile "${dict['profile']}" \
+            --recursive \
+            "${dict2['file']}" \
+            "${dict2['target']}"
     done
     return 0
 }
@@ -2796,10 +2811,10 @@ koopa_aws_s3_sync() {
             "--exclude=*/${pattern}"
         )
     done
-    "${app['aws']}" --profile="${dict['profile']}" \
-        s3 sync \
-            "${exclude_args[@]}" \
-            "${sync_args[@]}"
+    "${app['aws']}" s3 sync \
+        --profile "${dict['profile']}" \
+        "${exclude_args[@]}" \
+        "${sync_args[@]}"
     return 0
 }
 
@@ -10515,11 +10530,11 @@ default '${dict['binary_prefix']}' location."
 ${dict2['name']}-${dict2['version']}.tar.gz"
             dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
-            "${app['aws']}" --profile="${dict['aws_profile']}" \
-                s3 cp \
-                    --only-show-errors \
-                    "${dict2['tar_url']}" \
-                    "${dict2['tar_file']}"
+            "${app['aws']}" s3 cp \
+                --only-show-errors \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['tar_url']}" \
+                "${dict2['tar_file']}"
             koopa_assert_is_file "${dict2['tar_file']}"
             "${app['tar']}" -Pxzf "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
@@ -14266,11 +14281,12 @@ to '${dict['bucket_prefix']}'."
         "${dict['local_prefix']}/_site/" \
         "${dict['bucket_prefix']}/"
     koopa_alert "Invalidating CloudFront cache at '${dict['distribution_id']}'."
-    "${app['aws']}" --profile="${dict['profile']}" \
-        cloudfront create-invalidation \
-            --distribution-id="${dict['distribution_id']}" \
-            --paths='/*' \
-            >/dev/null
+    "${app['aws']}" cloudfront create-invalidation \
+        --distribution-id "${dict['distribution_id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --paths '/*' \
+        --profile "${dict['profile']}"
     return 0
 }
 
@@ -17903,8 +17919,9 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
             --file="${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
+        "${app['aws']}" s3 cp \
+            --profile "${dict['profile']}" \
+            "${dict2['local_tar']}" "${dict2['remote_tar']}"
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0
@@ -21326,10 +21343,10 @@ to '${dict['tmp_fastq_r2_file']}"
         koopa_assert_is_executable "${app['aws']}"
         koopa_alert "Syncing '${dict['output_dir']}' \
 to '${dict['aws_s3_uri']}'."
-        "${app['aws']}" --profile="${dict['aws_profile']}" \
-            s3 sync \
-                "${dict['output_dir']}/" \
-                "${dict['aws_s3_uri']}/"
+        "${app['aws']}" s3 sync \
+            --profile "${dict['aws_profile']}" \
+            "${dict['output_dir']}/" \
+            "${dict['aws_s3_uri']}/"
         koopa_rm "${dict['output_dir']}"
         koopa_mkdir "${dict['output_dir']}"
     fi
@@ -25753,10 +25770,10 @@ cuda10.tar.gz" \
     koopa_download \
         "${dict['base_url']}/ont-guppy-cpu_${dict['version']}_osx64.zip" \
         "${dict['prefix']}/macos/amd64/${dict['version']}-cpu.zip"
-    aws --profile="${dict['s3_profile']}" \
-        s3 sync \
-            "${dict['prefix']}/" \
-            "${dict['s3_target']}/"
+    "${app['aws']}" s3 sync \
+        --profile "${dict['s3_profile']}" \
+        "${dict['prefix']}/" \
+        "${dict['s3_target']}/"
     koopa_rm "${dict['prefix']}"
     return 0
 }
