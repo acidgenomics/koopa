@@ -34,8 +34,10 @@ koopa_aws_ec2_suspend() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_alert "Suspending EC2 instance '${dict['id']}'."
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ec2 stop-instances --instance-id "${dict['id']}" \
-        >/dev/null
+    "${app['aws']}" ec2 stop-instances \
+        --instance-id "${dict['id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --profile "${dict['profile']}"
     return 0
 }

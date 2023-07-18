@@ -5,7 +5,7 @@ koopa_aws_s3_cp_regex() {
     # Copy a local file or S3 object to another location locally or in S3 using
     # regular expression pattern matching.
     #
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-18.
     #
     # @seealso
     # - aws s3 cp help
@@ -75,13 +75,13 @@ koopa_aws_s3_cp_regex() {
     then
         koopa_stop "Souce and or/target must match '${dict['bucket_pattern']}'."
     fi
-    "${app['aws']}" --profile="${dict['profile']}" \
-        s3 cp \
-            --exclude='*' \
-            --follow-symlinks \
-            --include="${dict['pattern']}" \
-            --recursive \
-            "${dict['source_prefix']}" \
-            "${dict['target_prefix']}"
+    "${app['aws']}" s3 cp \
+        --exclude '*' \
+        --follow-symlinks \
+        --include "${dict['pattern']}" \
+        --profile "${dict['profile']}" \
+        --recursive \
+        "${dict['source_prefix']}" \
+        "${dict['target_prefix']}"
     return 0
 }

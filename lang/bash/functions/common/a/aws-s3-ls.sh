@@ -123,8 +123,10 @@ koopa_aws_s3_ls() {
         fi
     fi
     str="$( \
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 ls "${ls_args[@]}" "${dict['prefix']}" \
+        "${app['aws']}" s3 ls \
+            --profile "${dict['profile']}" \
+            "${ls_args[@]}" \
+            "${dict['prefix']}" \
             2>/dev/null \
     )"
     [[ -n "$str" ]] || return 1

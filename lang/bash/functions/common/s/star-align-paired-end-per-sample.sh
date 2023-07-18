@@ -8,7 +8,7 @@
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-02-15.
+    # @note Updated 2023-07-18.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
@@ -184,10 +184,10 @@ to '${dict['tmp_fastq_r2_file']}"
         koopa_assert_is_executable "${app['aws']}"
         koopa_alert "Syncing '${dict['output_dir']}' \
 to '${dict['aws_s3_uri']}'."
-        "${app['aws']}" --profile="${dict['aws_profile']}" \
-            s3 sync \
-                "${dict['output_dir']}/" \
-                "${dict['aws_s3_uri']}/"
+        "${app['aws']}" s3 sync \
+            --profile "${dict['aws_profile']}" \
+            "${dict['output_dir']}/" \
+            "${dict['aws_s3_uri']}/"
         koopa_rm "${dict['output_dir']}"
         koopa_mkdir "${dict['output_dir']}"
     fi

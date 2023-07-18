@@ -3,7 +3,7 @@
 koopa_aws_s3_dot_clean() {
     # """
     # Delete dot files accidentally stored in an S3 bucket.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-07-18.
     #
     # This also intentionally deletes git repos, which should be stored at
     # CodeCommit.
@@ -82,11 +82,12 @@ koopa_aws_s3_dot_clean() {
     koopa_alert "Fetching objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-objects \
-            --bucket="${dict['bucket']}" \
-            --output='json' \
-            --profile="${dict['profile']}" \
-            --query="Contents[?contains(Key,'/.')].Key" \
-            --region="${dict['region']}" \
+            --bucket "${dict['bucket']}" \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --query "Contents[?contains(Key,'/.')].Key" \
+            --region "${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
@@ -109,8 +110,10 @@ koopa_aws_s3_dot_clean() {
         s3uri="s3://${dict['bucket']}/${key}"
         koopa_alert "Deleting '${s3uri}'."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 rm --region="${dict['region']}" "$s3uri"
+        "${app['aws']}" s3 rm \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+            "$s3uri"
     done
     return 0
 }

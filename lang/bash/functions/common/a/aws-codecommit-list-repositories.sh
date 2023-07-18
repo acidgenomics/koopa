@@ -3,7 +3,10 @@
 koopa_aws_codecommit_list_repositories() {
     # """
     # List AWS CodeCommit repositories.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-07-18.
+    #
+    # @seealso
+    # - aws codecommit list-repositories help
     # """
     local -A app dict
     app['aws']="$(koopa_locate_aws)"
@@ -30,11 +33,11 @@ koopa_aws_codecommit_list_repositories() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     dict['string']="$( \
-        "${app['aws']}" \
-            codecommit list-repositories \
-                --output='json' \
-                --profile="${dict['profile']}" \
-            | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
+        "${app['aws']}" codecommit list-repositories \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+        | "${app['jq']}" --raw-output '.repositories[].repositoryName' \
     )"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"

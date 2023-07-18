@@ -3,7 +3,7 @@
 koopa_aws_ecr_login_private() {
     # """
     # Log in to AWS ECR private registry.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-07-18.
     #
     # @seealso
     # - https://docs.aws.amazon.com/AmazonECR/latest/
@@ -58,9 +58,9 @@ amazonaws.com"
         '--region or AWS_ECR_REGION' "${dict['region']}"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ecr get-login-password \
-            --region "${dict['region']}" \
+    "${app['aws']}" ecr get-login-password \
+        --profile "${dict['profile']}" \
+        --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \

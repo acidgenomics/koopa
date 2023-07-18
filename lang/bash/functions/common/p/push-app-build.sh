@@ -3,12 +3,13 @@
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-07-18.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
     #
     # @seealso
+    # - aws s3 cp help
     # - https://docs.aws.amazon.com/cli/latest/userguide/
     #     cli-configure-retries.html
     # - https://www.gnu.org/software/tar/manual/html_section/verbose.html
@@ -61,8 +62,9 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
             --file="${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
-        "${app['aws']}" --profile="${dict['profile']}" \
-            s3 cp "${dict2['local_tar']}" "${dict2['remote_tar']}"
+        "${app['aws']}" s3 cp \
+            --profile "${dict['profile']}" \
+            "${dict2['local_tar']}" "${dict2['remote_tar']}"
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0

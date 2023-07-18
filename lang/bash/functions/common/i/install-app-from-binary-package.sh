@@ -3,7 +3,7 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-07-18.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
@@ -50,11 +50,11 @@ ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
             # > then
             # >     koopa_stop "No package at '${dict2['tar_url']}'."
             # > fi
-            "${app['aws']}" --profile="${dict['aws_profile']}" \
-                s3 cp \
-                    --only-show-errors \
-                    "${dict2['tar_url']}" \
-                    "${dict2['tar_file']}"
+            "${app['aws']}" s3 cp \
+                --only-show-errors \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['tar_url']}" \
+                "${dict2['tar_file']}"
             koopa_assert_is_file "${dict2['tar_file']}"
             "${app['tar']}" -Pxzf "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
