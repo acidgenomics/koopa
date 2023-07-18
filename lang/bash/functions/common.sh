@@ -1757,6 +1757,56 @@ koopa_aws_ec2_instance_id() {
     return 0
 }
 
+koopa_aws_ec2_list_running_instances() {
+    local -A app bool dict
+    local -a filters
+    app['aws']="$(koopa_locate_aws)"
+    koopa_assert_is_executable "${app[@]}"
+    bool['named']=0
+    dict['profile']="${AWS_PROFILE:-default}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '--named')
+                bool['named']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
+    if [[ "${bool['named']}" -eq 1 ]]
+    then
+        dict['query']="Reservations[*].Instances[*][Tags[?Key=='Name'].Value[],\
+InstanceId,NetworkInterfaces[0].PrivateIpAddresses[0].PrivateIpAddress]"
+        filters+=('Name=tag-key,Values=Name')
+    else
+        dict['query']='Reservations[*].Instances[*].[InstanceId]'
+    fi
+    filters+=('Name=instance-state-name,Values=running')
+    dict['out']="$( \
+        "${app['aws']}" ec2 describe-instances \
+            --filters "${filters[@]}" \
+            --no-cli-pager \
+            --output 'text' \
+            --profile "${dict['profile']}" \
+            --query "${dict['query']}" \
+    )"
+    [[ -n "${dict['out']}" ]] || return 1
+    koopa_print "${dict['out']}"
+    return 0
+}
+
 koopa_aws_ec2_map_instance_ids_to_names() {
     local -A app dict
     local -a ids names out
