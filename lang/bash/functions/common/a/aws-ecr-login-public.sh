@@ -3,7 +3,7 @@
 koopa_aws_ecr_login_public() {
     # """
     # Log in to AWS ECR public registry.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-07-18.
     # """
     local -A app dict
     app['aws']="$(koopa_locate_aws)"
@@ -43,9 +43,9 @@ koopa_aws_ecr_login_public() {
         '--region or AWS_ECR_REGION' "${dict['region']}"
     koopa_alert "Logging into '${dict['repo_url']}'."
     "${app['docker']}" logout "${dict['repo_url']}" >/dev/null || true
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ecr-public get-login-password \
-            --region "${dict['region']}" \
+    "${app['aws']}" ecr-public get-login-password \
+        --profile "${dict['profile']}" \
+        --region "${dict['region']}" \
     | "${app['docker']}" login \
         --password-stdin \
         --username 'AWS' \

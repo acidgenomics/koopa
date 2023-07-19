@@ -35,8 +35,10 @@ koopa_aws_ec2_terminate() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    "${app['aws']}" --profile="${dict['profile']}" \
-        ec2 terminate-instances --instance-id "${dict['id']}" \
-        >/dev/null
+    "${app['aws']}" ec2 terminate-instances \
+        --instance-id "${dict['id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --profile "${dict['profile']}"
     return 0
 }

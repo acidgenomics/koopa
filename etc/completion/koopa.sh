@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-07-17.
+    # @note Updated 2023-07-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -730,7 +730,12 @@ _koopa_complete() {
                                     args=('list-repositories')
                                     ;;
                                 'ec2')
-                                    args=('instance-id' 'suspend')
+                                    args=(
+                                        'instance-id'
+                                        'list-running-instances'
+                                        'map-instance-ids-to-names'
+                                        'stop'
+                                    )
                                     ;;
                                 'ecr')
                                     args=('login-public' 'login-private')

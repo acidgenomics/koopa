@@ -32,8 +32,9 @@ koopa_aws_ec2_map_instance_ids_to_names() {
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     dict['json']="$( \
         "${app['aws']}" ec2 describe-instances \
-            --output='json' \
-            --profile="${dict['profile']}" \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
     )"
     readarray -t ids <<< "$( \
         koopa_print "${dict['json']}" \

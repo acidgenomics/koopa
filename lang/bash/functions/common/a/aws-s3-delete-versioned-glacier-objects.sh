@@ -3,9 +3,10 @@
 koopa_aws_s3_delete_versioned_glacier_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-07-18.
     #
     # @seealso
+    # - aws s3api list-object-versions help
     # - https://docs.aws.amazon.com/AmazonS3/latest/userguide/
     #     DeletingObjectVersions.html
     # - https://github.com/swoodford/aws/blob/master/
@@ -89,11 +90,12 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     koopa_alert "Fetching versioned Glacier objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
-            --bucket="${dict['bucket']}" \
-            --output='json' \
-            --profile="${dict['profile']}" \
-            --query="Versions[?StorageClass=='GLACIER']" \
-            --region="${dict['region']}" \
+            --bucket "${dict['bucket']}" \
+            --no-cli-pager \
+            --output 'json' \
+            --profile "${dict['profile']}" \
+            --query "Versions[?StorageClass=='GLACIER']" \
+            --region "${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
@@ -122,13 +124,14 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         koopa_alert "Deleting 's3://${dict['bucket']}/${dict2['key']}' \
 (${dict2['version_id']})."
         [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" --profile "${dict['profile']}" \
-            s3api delete-object \
-                --bucket="${dict['bucket']}" \
-                --key="${dict2['key']}" \
-                --region="${dict['region']}" \
-                --version-id="${dict2['version_id']}" \
-            > /dev/null
+        "${app['aws']}" s3api delete-object \
+            --bucket "${dict['bucket']}" \
+            --key "${dict2['key']}" \
+            --no-cli-pager \
+            --output 'text' \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}" \
+            --version-id "${dict2['version_id']}"
     done
     return 0
 }

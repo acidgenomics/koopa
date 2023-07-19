@@ -3,7 +3,7 @@
 koopa_aws_batch_fetch_and_run() {
     # """
     # Fetch and run a script on AWS Batch.
-    # @note Updated 2023-02-15.
+    # @note Updated 2023-07-18.
     #
     # S3 bucket paths and remote URLs are supported.
     #
@@ -25,8 +25,9 @@ koopa_aws_batch_fetch_and_run() {
             koopa_download "${dict['url']}" "${dict['file']}"
             ;;
         's3://'*)
-            "${app['aws']}" --profile="${dict['profile']}" \
-                s3 cp "${dict['url']}" "${dict['file']}"
+            "${app['aws']}" s3 cp \
+                --profile "${dict['profile']}" \
+                "${dict['url']}" "${dict['file']}"
             ;;
         *)
             koopa_stop "Unsupported URL: '${dict['url']}'."

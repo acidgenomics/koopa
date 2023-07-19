@@ -19,7 +19,7 @@
 koopa_aws_s3_sync() {
     # """
     # Sync an S3 bucket, but ignore some files automatically.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-07-18.
     #
     # @details
     # AWS CLI unfortunately does not currently support regular expressions, at
@@ -141,9 +141,9 @@ koopa_aws_s3_sync() {
             "--exclude=*/${pattern}"
         )
     done
-    "${app['aws']}" --profile="${dict['profile']}" \
-        s3 sync \
-            "${exclude_args[@]}" \
-            "${sync_args[@]}"
+    "${app['aws']}" s3 sync \
+        --profile "${dict['profile']}" \
+        "${exclude_args[@]}" \
+        "${sync_args[@]}"
     return 0
 }
