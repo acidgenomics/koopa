@@ -6,7 +6,7 @@ koopa_aws_s3_find() {
     # """
     # Find files in an AWS S3 bucket.
     #
-    # @note Updated 2022-03-01.
+    # @note Updated 2022-07-18.
     #
     # This uses regular expression matching against the full path for
     # '--exclude' and '--include', instead of globbing.
