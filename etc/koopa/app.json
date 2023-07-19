@@ -67,12 +67,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-06-08",
+    "date": "2023-07-19",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.1.9"
+    "version": "1.2.0"
   },
   "apr": {
     "aliases": {
@@ -761,9 +761,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-07-18",
+    "date": "2023-07-19",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.35.1"
+    "version": "2.35.2"
   },
   "cli11": {
     "aliases": {
