@@ -241,13 +241,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-07-13",
+    "date": "2023-07-20",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.0"
+    "version": "2.13.1"
   },
   "azure-cli": {
     "aliases": {
@@ -2304,10 +2304,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-07-13",
+    "date": "2023-07-20",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.115.3"
+    "version": "0.115.4"
   },
   "hyperfine": {
     "aliases": {
@@ -2584,7 +2584,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-07-13",
+    "date": "2023-07-20",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2592,7 +2592,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.26.2"
+    "version": "2.27.3"
   },
   "ldns": {
     "aliases": {
@@ -4404,10 +4404,10 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2023-06-30",
+    "date": "2023-07-20",
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.63.0"
+    "version": "1.63.1"
   },
   "readline": {
     "aliases": {
