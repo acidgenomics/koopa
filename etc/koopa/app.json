@@ -4404,10 +4404,10 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2023-06-30",
+    "date": "2023-07-20",
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.63.0"
+    "version": "1.63.1"
   },
   "readline": {
     "aliases": {
