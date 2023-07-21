@@ -19849,6 +19849,7 @@ koopa_salmon_quant_bam_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bam_file']=''
     dict['bootstraps']=30
+    dict['gencode']=0
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
@@ -19891,6 +19892,10 @@ koopa_salmon_quant_bam_per_sample() {
                 dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
+            '--gencode')
+                dict['gencode']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -19919,6 +19924,13 @@ koopa_salmon_quant_bam_per_sample() {
         koopa_alert_note "Skipping '${dict['id']}'."
         return 0
     fi
+    if [[ "${dict['gencode']}" -eq 0 ]] && \
+        koopa_str_detect_regex \
+            --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
+            --pattern='^gencode\.'
+    then
+        dict['gencode']=1
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
@@ -19930,6 +19942,10 @@ koopa_salmon_quant_bam_per_sample() {
         "--targets=${dict['transcriptome_fasta_file']}"
         "--threads=${dict['threads']}"
     )
+    if [[ "${dict['gencode']}" -eq 1 ]]
+    then
+        quant_args+=('--gencode')
+    fi
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app['salmon']}" quant "${quant_args[@]}"
     return 0
