@@ -18108,8 +18108,8 @@ ${dict['py_maj_min_ver']}"
             '3.11.'* | \
             '3.10.'* | \
             '3.9.'*)
-                dict['pip_version']='23.1.2'
-                dict['setuptools_version']='67.7.2'
+                dict['pip_version']='23.2'
+                dict['setuptools_version']='68.0.0'
                 dict['wheel_version']='0.40.0'
                 ;;
             *)
