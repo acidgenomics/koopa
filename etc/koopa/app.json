@@ -67,12 +67,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-07-19",
+    "date": "2023-07-25",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "apr": {
     "aliases": {
@@ -1700,9 +1700,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-07-11",
+    "date": "2023-07-25",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.32.0"
+    "version": "2.32.1"
   },
   "ghostscript": {
     "aliases": {
@@ -2071,11 +2071,11 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2023-01-12",
+    "date": "2023-07-25",
     "enabled": false,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.10.0"
+    "version": "0.11.0"
   },
   "gzip": {
     "aliases": {
@@ -3112,14 +3112,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-11",
+    "date": "2023-07-25",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.29"
+    "version": "8.7.30"
   },
   "lsd": {
     "aliases": {
@@ -3750,7 +3750,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-06-26",
+    "date": "2023-07-25",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3758,7 +3758,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.1.0"
+    "version": "3.2.0"
   },
   "openblas": {
     "aliases": {
@@ -4122,12 +4122,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-07-08",
+    "date": "2023-07-25",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.22"
+    "version": "2.3.23"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4560,10 +4560,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-07-12",
+    "date": "2023-07-25",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.278"
+    "version": "0.0.280"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -4967,9 +4967,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
+    "date": "2023-07-25",
     "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
-    "version": "2021.9.0"
+    "version": "2021.10.0"
   },
   "tcl-tk": {
     "aliases": {
