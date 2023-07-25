@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add install support for bcftools
 ** TODO Check that installers work for an installation without sudo access. Can do this with the biocontainers Docker image.
 ** TODO Our system pruner should not prune conservative apps. This is the simplest way to avoid dependency issues.
 ** TODO Our app pruner will currently break some applications that have conservative dependencies. Need to rethink how to handle this.
