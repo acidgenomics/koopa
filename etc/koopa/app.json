@@ -2281,7 +2281,7 @@
   },
   "htslib": {
     "build_dependencies": ["make"],
-    "date": "2023-04-04",
+    "date": "2023-07-25",
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "large": true,
     "prune": false,
@@ -2289,7 +2289,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.17"
+    "version": "1.18"
   },
   "httpie": {
     "aliases": {
@@ -4632,14 +4632,14 @@
   "samtools": {
     "bin": ["samtools"],
     "build_dependencies": ["make"],
-    "date": "2023-04-04",
+    "date": "2023-07-25",
     "dependencies": ["htslib", "ncurses", "zlib"],
     "large": true,
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.17"
+    "version": "1.18"
   },
   "scalene": {
     "arch": "amd64",
