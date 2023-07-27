@@ -241,13 +241,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-07-20",
+    "date": "2023-07-27",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.1"
+    "version": "2.13.4"
   },
   "azure-cli": {
     "aliases": {
@@ -2584,7 +2584,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-07-20",
+    "date": "2023-07-27",
     "dependencies": ["python3.10"],
     "large": true,
     "url": [
@@ -2592,7 +2592,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.27.3"
+    "version": "2.29.0"
   },
   "ldns": {
     "aliases": {
