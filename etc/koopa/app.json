@@ -3424,8 +3424,8 @@
   "multiqc": {
     "arch": "amd64",
     "bin": ["multiqc"],
-    "date": "2023-01-09",
-    "dependencies": ["conda"],
+    "date": "2023-07-27",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
