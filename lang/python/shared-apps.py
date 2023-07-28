@@ -2,7 +2,7 @@
 
 """
 Return supported shared applications defined in 'app.json' file.
-@note Updated 2023-05-30.
+@note Updated 2023-07-28.
 
 @examples
 ./shared-apps.py
@@ -83,7 +83,7 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-03-29.
+    @note Updated 2023-07-28.
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
