@@ -3,7 +3,7 @@
 koopa_link_in_opt() {
     # """
     # Link an application in koopa 'opt/' directory.
-    # @note Updated 2022-08-02.
+    # @note Updated 2023-07-28.
     #
     # @usage
     # > koopa_link_in_opt \
@@ -12,8 +12,8 @@ koopa_link_in_opt() {
     #
     # @examples
     # > koopa_link_in_opt \
-    # >     --name='python3.10' \
-    # >     --source='/opt/koopa/app/python3.10/3.10.5'
+    # >     --name='r' \
+    # >     --source='/opt/koopa/app/r/4.3.1'
     # """
     koopa_link_in_dir --prefix="$(koopa_opt_prefix)" "$@"
 }
