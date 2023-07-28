@@ -2584,15 +2584,15 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-07-27",
-    "dependencies": ["python3.10"],
+    "date": "2023-07-28",
+    "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.29.0"
+    "version": "2.30.0"
   },
   "ldns": {
     "aliases": {
