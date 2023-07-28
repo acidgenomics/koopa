@@ -3,14 +3,14 @@
 koopa_app_prefix() {
     # """
     # Application prefix.
-    # @note Updated 2023-03-29.
+    # @note Updated 2023-07-28.
     #
     # @examples
     # > koopa_app_prefix
     # # /opt/koopa/app
-    # > koopa_app_prefix 'python3.10' 'r'
-    # # /opt/koopa/app/python3.10/3.10.6
-    # # /opt/koopa/app/r/4.2.1
+    # > koopa_app_prefix 'r' 'ruby'
+    # # /opt/koopa/app/r/4.3.1
+    # # /opt/koopa/app/ruby/3.2.2
     # """
     local -A dict
     local -a pos

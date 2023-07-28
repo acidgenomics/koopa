@@ -3,10 +3,10 @@
 koopa_cli_uninstall() {
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2023-05-14.
+    # @note Updated 2023-07-28.
     #
     # @seealso
-    # > koopa_cli_uninstall 'python3.10'
+    # > koopa_cli_uninstall 'tmux' 'vim'
     # """
     local -a flags pos
     local app stem

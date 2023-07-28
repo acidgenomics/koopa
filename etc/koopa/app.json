@@ -1856,12 +1856,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-05-30",
-    "dependencies": ["python3.10"],
+    "date": "2023-07-28",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "432.0.0"
+    "version": "440.0.0"
   },
   "googletest": {
     "aliases": {
@@ -4179,32 +4179,6 @@
       "https://github.com/pytest-dev/pytest/"
     ],
     "version": "7.4.0"
-  },
-  "python3.10": {
-    "aliases": {
-      "homebrew": "python@3.10"
-    },
-    "bin": ["python3.10", "python3.10-config"],
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-26",
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "gdbm",
-      "libedit",
-      "libffi",
-      "mpdecimal",
-      "ncurses",
-      "openssl3",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
-    "man1": ["python3.10.1"],
-    "prune": false,
-    "url": ["https://www.python.org/"],
-    "version": "3.10.12"
   },
   "python3.11": {
     "aliases": {

@@ -3,7 +3,7 @@
 _koopa_activate_google_cloud_sdk() {
     # """
     # Activate Google Cloud SDK.
-    # @note Updated 2023-03-09.
+    # @note Updated 2023-07-28.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -14,7 +14,7 @@ _koopa_activate_google_cloud_sdk() {
         unset -v __kvar_bin_prefix
         return 0
     fi
-    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.10"
+    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.11"
     export CLOUDSDK_PYTHON
     unset -v __kvar_bin_prefix
     return 0

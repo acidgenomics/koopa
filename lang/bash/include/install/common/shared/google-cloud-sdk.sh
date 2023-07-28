@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-07-28.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -11,7 +11,7 @@ main() {
     #     Casks/google-cloud-sdk.rb
     # """
     local -A dict
-    koopa_activate_app --build-only 'python3.10'
+    koopa_activate_app --build-only 'python3.11'
     dict['arch']="$(koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

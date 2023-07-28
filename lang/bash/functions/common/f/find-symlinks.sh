@@ -9,7 +9,7 @@ koopa_find_symlinks() {
     #
     # @examples
     # > koopa_find_symlinks \
-    # >     --source-prefix="$(koopa_app_prefix)/python3.10" \
+    # >     --source-prefix="$(koopa_app_prefix)/r" \
     # >     --target-prefix="$(koopa_bin_prefix)"
     # """
     local -A dict

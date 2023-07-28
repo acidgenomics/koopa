@@ -3,10 +3,10 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2023-06-30.
+    # @note Updated 2023-07-28.
     #
     # @examples
-    # > koopa_cli_install --binary --reinstall --verbose 'python3.10' 'tmux'
+    # > koopa_cli_install --binary --reinstall --verbose 'tmux' 'vim'
     # > koopa_cli_install user 'doom-emacs' 'spacemacs'
     # """
     local -A dict
