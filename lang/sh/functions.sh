@@ -571,7 +571,7 @@ _koopa_activate_google_cloud_sdk() {
         unset -v __kvar_bin_prefix
         return 0
     fi
-    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.10"
+    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.11"
     export CLOUDSDK_PYTHON
     unset -v __kvar_bin_prefix
     return 0

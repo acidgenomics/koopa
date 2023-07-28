@@ -12964,13 +12964,6 @@ koopa_install_pytest() {
         "$@"
 }
 
-koopa_install_python310() {
-    koopa_install_app \
-        --installer='python' \
-        --name='python3.10' \
-        "$@"
-}
-
 koopa_install_python311() {
     local -A dict
     dict['app_prefix']="$(koopa_app_prefix)"
@@ -16412,13 +16405,6 @@ koopa_locate_pylint() {
     koopa_locate_app \
         --app-name='pylint' \
         --bin-name='pylint' \
-        "$@"
-}
-
-koopa_locate_python310() {
-    koopa_locate_app \
-        --app-name='python3.10' \
-        --bin-name='python3.10' \
         "$@"
 }
 

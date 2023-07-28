@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Is setting the '--gencode' flag problematic when we have already cleaned
+# the input FASTA? Need to check this.
+
 koopa_salmon_index() {
     # """
     # Generate salmon index.

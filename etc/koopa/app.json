@@ -67,12 +67,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-07-25",
+    "date": "2023-07-27",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "apr": {
     "aliases": {
@@ -241,13 +241,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-07-20",
+    "date": "2023-07-27",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.1"
+    "version": "2.13.4"
   },
   "azure-cli": {
     "aliases": {
@@ -1161,9 +1161,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-07-13",
+    "date": "2023-07-27",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.48.0"
+    "version": "0.49.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1183,9 +1183,9 @@
     "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
   },
   "dotfiles": {
-    "date": "2023-06-27",
+    "date": "2023-07-25",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "e0d971e1e0e84cbd54048c076d68ee9f1be70217"
+    "version": "46da273d63284e0ee16fac83dbd3d1f2033bf44d"
   },
   "du-dust": {
     "aliases": {
@@ -1856,12 +1856,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-05-30",
-    "dependencies": ["python3.10"],
+    "date": "2023-07-28",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "432.0.0"
+    "version": "440.0.0"
   },
   "googletest": {
     "aliases": {
@@ -2584,15 +2584,15 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-07-20",
-    "dependencies": ["python3.10"],
+    "date": "2023-07-28",
+    "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.27.3"
+    "version": "2.30.0"
   },
   "ldns": {
     "aliases": {
@@ -3424,8 +3424,8 @@
   "multiqc": {
     "arch": "amd64",
     "bin": ["multiqc"],
-    "date": "2023-01-09",
-    "dependencies": ["conda"],
+    "date": "2023-07-27",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
@@ -3691,7 +3691,7 @@
     "dependencies": ["openssl3"],
     "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.82.0"
+    "version": "0.83.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4154,10 +4154,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-05-08",
+    "date": "2023-07-26",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.4"
+    "version": "2.17.5"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4181,30 +4181,11 @@
     "version": "7.4.0"
   },
   "python3.10": {
-    "aliases": {
-      "homebrew": "python@3.10"
-    },
     "bin": ["python3.10", "python3.10-config"],
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-26",
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "gdbm",
-      "libedit",
-      "libffi",
-      "mpdecimal",
-      "ncurses",
-      "openssl3",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
+    "date": "2023-07-28",
+    "enabled": false,
     "man1": ["python3.10.1"],
-    "prune": false,
-    "url": ["https://www.python.org/"],
-    "version": "3.10.12"
+    "removed": true
   },
   "python3.11": {
     "aliases": {
@@ -4769,14 +4750,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-07-21",
+    "date": "2023-07-26",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.30.2"
+    "version": "7.31.0"
   },
   "sox": {
     "aliases": {
