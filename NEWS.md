@@ -6,6 +6,29 @@ Major changes:
 
 - Removed support for `python3.10`. Updated `google-cloud-sdk` and `latch` to
   depend on `python3.11`.
+- Improved internal consistency of `aws` cli command syntax and JSON return.
+
+Minor changes:
+
+- Updated apps: `anaconda`, `aws-cli`, `broot`, `chezmoi`, `conda`,
+  `difftastic`, `gh`, `google-cloud-sdk`, `gum`, `htslib`, `latch`,
+  `libarchive`, `lmod`, `multiqc`, `node`, `nushell`, `openbb`, `pandoc`,
+  `pyenv`, `rclone`, `ruff`, `samtools`, `snakemake`, `tbb`, and `visidata`.
+- Reverted `prettier` from 3.0.0 back to 2.8.8 to avoid breaking changes with
+  JSON sorting plugin.
+- Renamed `koopa_aws_ec2_suspend` to `koopa_aws_ec2_stop`, matching the current
+  syntax conventions of AWS CLI.
+- Add notes on GENCODE handling during salmon indexing and quant. We're working
+  on improving the sanitization of GENCODE FASTA files to avoid identifier
+  issues related to usage of the non-standard `|` delimiter instead of spaces,
+  which will be deployed in a pending `r-acidgenomes` package update.
+
+New functions:
+
+- `koopa_aws_ec2_list_running_instances`: List currently running EC2 instances.
+- `koopa_aws_ec2_map_instance_ids_to_names`: New convenience function that
+  returns mappings of AWS EC2 instance identifiers to defined human-friendly
+  names (aliases).
 
 ## koopa 0.13.3 (2023-07-17)
 
