@@ -4180,6 +4180,12 @@
     ],
     "version": "7.4.0"
   },
+  "python3.10": {
+    "bin": ["python3.10", "python3.10-config"],
+    "date": "2023-07-28",
+    "man1": ["python3.10.1"],
+    "removed": true
+  },
   "python3.11": {
     "aliases": {
       "homebrew": "python@3.11"

@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Improve sunsetting of removed apps (e.g. python3.10) and update the system checks to support this.
+    Consider rewriting the system checks in bash or python instead of R.
 ** TODO Add install support for bcftools
 ** TODO Check that installers work for an installation without sudo access. Can do this with the biocontainers Docker image.
 ** TODO Our system pruner should not prune conservative apps. This is the simplest way to avoid dependency issues.
