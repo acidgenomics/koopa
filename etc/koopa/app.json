@@ -3954,6 +3954,7 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
