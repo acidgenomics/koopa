@@ -1,5 +1,12 @@
 # Release notes
 
+## koopa 0.13.4 (2023-07-28)
+
+Major changes:
+
+- Removed support for `python3.10`. Updated `google-cloud-sdk` and `latch` to
+  depend on `python3.11`.
+
 ## koopa 0.13.3 (2023-07-17)
 
 New apps: `blast`, `jless`, `ronn-ng`, and `wget2`.
