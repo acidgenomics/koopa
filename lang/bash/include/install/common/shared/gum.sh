@@ -3,7 +3,7 @@
 main() {
     # """
     # Install gum.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-07-29.
     #
     # @seealso
     # - https://github.com/charmbracelet/gum
@@ -24,6 +24,7 @@ archive/v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    app['gum']="${dict['prefix']}/bin/gum"
     dict['ldflags']="-s -w -X main.Version=${dict['version']}"
     "${app['go']}" build \
         -ldflags "${dict['ldflags']}" \
@@ -37,7 +38,6 @@ archive/v${dict['version']}.tar.gz"
         "${dict['fish_c']}" \
         "${dict['zsh_c']}" \
         "${dict['manfile']}"
-    app['gum']="${dict['prefix']}/bin/gum"
     koopa_assert_is_executable "${app['gum']}"
     "${app['gum']}" completion bash > "${dict['bash_c']}"
     "${app['gum']}" completion fish > "${dict['fish_c']}"
