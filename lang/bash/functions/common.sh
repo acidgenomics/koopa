@@ -9207,7 +9207,7 @@ releases/latest"
 koopa_gnu_mirror_url() {
     local server
     koopa_assert_has_no_args "$#"
-    server='ftp://aeneas.mit.edu/pub/gnu'
+    server='https://gnu.mirror.constant.com'
     koopa_print "$server"
     return 0
 }
