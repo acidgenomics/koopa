@@ -761,9 +761,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-07-19",
+    "date": "2023-07-30",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.35.2"
+    "version": "2.36.1"
   },
   "cli11": {
     "aliases": {
@@ -1247,7 +1247,7 @@
     },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
-    "date": "2022-09-12",
+    "date": "2023-07-30",
     "dependencies": [
       "gmp",
       "gnutls",
@@ -1261,7 +1261,7 @@
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "28.2"
+    "version": "29.1"
   },
   "ensembl-perl-api": {
     "date": "2023-02-09",
@@ -1514,6 +1514,7 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/fulcrumgenomics/fqtk/",
       "https://bioconda.github.io/recipes/fqtk/README.html"
@@ -2650,13 +2651,13 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-18",
+    "date": "2023-07-30",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.7.0"
+    "version": "3.7.1"
   },
   "libassuan": {
     "aliases": {
@@ -3687,11 +3688,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-06-27",
+    "date": "2023-07-30",
     "dependencies": ["openssl3"],
     "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.83.0"
+    "version": "0.83.1"
   },
   "oniguruma": {
     "aliases": {
@@ -3954,6 +3955,7 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
@@ -4850,9 +4852,9 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "git", "rust"],
-    "date": "2023-06-06",
+    "date": "2023-07-30",
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.15.0"
+    "version": "1.16.0"
   },
   "stow": {
     "aliases": {

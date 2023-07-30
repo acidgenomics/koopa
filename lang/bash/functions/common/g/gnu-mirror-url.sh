@@ -3,7 +3,12 @@
 koopa_gnu_mirror_url() {
     # """
     # Get GNU FTP mirror URL.
-    # @note Updated 2023-03-24.
+    # @note Updated 2023-07-30.
+    #
+    # Servers:
+    # - https://ftpmirror.gnu.org (primary mirror)
+    # - ftp://aeneas.mit.edu/pub/gnu
+    # - https://gnu.mirror.constant.com
     #
     # @seealso
     # - https://www.gnu.org/prep/ftp.en.html
@@ -11,8 +16,7 @@ koopa_gnu_mirror_url() {
     # """
     local server
     koopa_assert_has_no_args "$#"
-    # > server='https://ftpmirror.gnu.org'
-    server='ftp://aeneas.mit.edu/pub/gnu'
+    server='https://gnu.mirror.constant.com'
     koopa_print "$server"
     return 0
 }
