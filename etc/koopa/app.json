@@ -2305,10 +2305,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-07-20",
+    "date": "2023-07-31",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.115.4"
+    "version": "0.116.0"
   },
   "hyperfine": {
     "aliases": {
