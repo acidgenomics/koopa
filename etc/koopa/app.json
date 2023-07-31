@@ -1176,11 +1176,11 @@
     "version": "0.8.0"
   },
   "doom-emacs": {
-    "date": "2023-05-30",
+    "date": "2023-07-31",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "07fca786154551f90f36535bfb21f8ca4abd5027"
+    "version": "90b1b221fe7c20f2edef341a780e194cd22c7daa"
   },
   "dotfiles": {
     "date": "2023-07-25",
@@ -2281,10 +2281,12 @@
     "version": "2.0.3"
   },
   "htslib": {
+    "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2023-07-25",
+    "date": "2023-07-31",
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "large": true,
+    "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
     "prune": false,
     "url": [
       "https://github.com/samtools/samtools/",
@@ -4775,11 +4777,11 @@
     "version": "14.4.2"
   },
   "spacemacs": {
-    "date": "2023-07-05",
+    "date": "2023-07-31",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
-    "version": "bdc9d0bec554c363417c04b674fda021398fbe4f"
+    "version": "4882f70e6541275969b09b52394bb9af563852f4"
   },
   "spacevim": {
     "date": "2023-07-05",
