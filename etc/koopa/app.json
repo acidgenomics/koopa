@@ -3817,11 +3817,11 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-08-01",
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.1.1"
+    "version": "3.1.2"
   },
   "oracle-instant-client": {
     "date": "2023-03-07",
