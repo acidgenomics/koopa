@@ -3,7 +3,7 @@
 koopa_mktemp() {
     # """
     # Wrapper function for system 'mktemp'.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-08-03.
     #
     # Traditionally, many shell scripts take the name of the program with the
     # pid as a suffix and use that as a temporary file name. This kind of
@@ -29,7 +29,7 @@ koopa_mktemp() {
     dict['template']='koopa'
     if koopa_is_gnu "${app['mktemp']}"
     then
-        dict['template']="${dict['template']}.XXXXXXXXXX"
+        dict['template']="${dict['template']}.XXXXXXXXXXXX"
     fi
     mktemp_args=("$@" '-t' "${dict['template']}")
     dict['out']="$("${app['mktemp']}" "${mktemp_args[@]}")"
