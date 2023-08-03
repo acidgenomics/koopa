@@ -17159,7 +17159,7 @@ koopa_mktemp() {
     dict['template']='koopa'
     if koopa_is_gnu "${app['mktemp']}"
     then
-        dict['template']="${dict['template']}.XXXXXXXXXX"
+        dict['template']="${dict['template']}.XXXXXXXXXXXX"
     fi
     mktemp_args=("$@" '-t' "${dict['template']}")
     dict['out']="$("${app['mktemp']}" "${mktemp_args[@]}")"
