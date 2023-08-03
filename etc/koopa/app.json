@@ -2519,10 +2519,10 @@
   "jupyterlab": {
     "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-07-13",
+    "date": "2023-08-03",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.3"
+    "version": "4.0.4"
   },
   "kallisto": {
     "bin": ["kallisto"],
