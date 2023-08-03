@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Don't allow the user to uninstall an app that is required for another
+# app. Need to check with our Python JSON parser first.
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
