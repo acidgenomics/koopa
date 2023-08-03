@@ -1103,12 +1103,12 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-08-03",
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.1.2"
+    "version": "8.2.1"
   },
   "dash": {
     "aliases": {
@@ -2140,7 +2140,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-08-01",
+    "date": "2023-08-02",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2152,7 +2152,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.1.0"
+    "version": "8.1.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2587,7 +2587,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-07-28",
+    "date": "2023-08-02",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
@@ -2595,7 +2595,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.30.0"
+    "version": "2.31.0"
   },
   "ldns": {
     "aliases": {
@@ -4754,14 +4754,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-07-26",
+    "date": "2023-08-02",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.31.0"
+    "version": "7.31.1"
   },
   "sox": {
     "aliases": {
