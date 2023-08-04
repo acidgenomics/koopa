@@ -4749,6 +4749,14 @@ koopa_cmake_build() {
                 dict['include_dir']="${2:?}"
                 shift 2
                 ;;
+            '--jobs='*)
+                dict['jobs']="${1#*=}"
+                shift 1
+                ;;
+            '--jobs')
+                dict['jobs']="${2:?}"
+                shift 2
+                ;;
             '--lib-dir='*)
                 dict['lib_dir']="${1#*=}"
                 shift 1
