@@ -445,8 +445,8 @@
     "aliases": {
       "homebrew": true
     },
-    "bin": ["black"],
-    "date": "2023-07-11",
+    "bin": ["black", "blackd"],
+    "date": "2023-08-04",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
     "version": "23.7.0"
