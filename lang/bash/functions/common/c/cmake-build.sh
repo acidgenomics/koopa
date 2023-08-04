@@ -3,7 +3,7 @@
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-08-04.
     # """
     local -A app dict
     local -a build_deps cmake_args cmake_std_args pos
@@ -38,6 +38,14 @@ koopa_cmake_build() {
                 ;;
             '--include-dir')
                 dict['include_dir']="${2:?}"
+                shift 2
+                ;;
+            '--jobs='*)
+                dict['jobs']="${1#*=}"
+                shift 1
+                ;;
+            '--jobs')
+                dict['jobs']="${2:?}"
                 shift 2
                 ;;
             '--lib-dir='*)
