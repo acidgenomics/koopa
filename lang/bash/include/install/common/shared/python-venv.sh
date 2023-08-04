@@ -3,7 +3,7 @@
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-04-25.
+    # @note Updated 2023-08-04.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -87,6 +87,14 @@ main() {
             dict['pkg_name']="${dict['name']}"
             ;;
     esac
+    case "${dict['name']}" in
+        'black')
+            dict['pip_name']='black[d]'
+            ;;
+        *)
+            dict['pip_name']="${dict['pkg_name']}"
+            ;;
+    esac
     dict['py_version']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['py_version']}" \
@@ -99,7 +107,7 @@ main() {
     then
         venv_args+=('--no-binary')
     fi
-    venv_args+=("${dict['pkg_name']}==${dict['version']}")
+    venv_args+=("${dict['pip_name']}==${dict['version']}")
     [[ "$#" -gt 0 ]] && venv_args+=("$@")
     koopa_print_env
     koopa_python_create_venv "${venv_args[@]}"
