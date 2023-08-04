@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TBB.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-08-04.
     #
     # @seealso
     # - https://github.com/oneapi-src/oneTBB
@@ -25,6 +25,9 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --jobs=1 \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }
