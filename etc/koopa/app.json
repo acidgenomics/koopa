@@ -3850,10 +3850,10 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-07-21",
+    "date": "2023-08-07",
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.6"
+    "version": "3.1.6.1"
   },
   "parallel": {
     "aliases": {
@@ -4754,14 +4754,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-08-05",
+    "date": "2023-08-07",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.32.1"
+    "version": "7.32.2"
   },
   "sox": {
     "aliases": {
