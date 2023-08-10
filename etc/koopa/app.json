@@ -5253,14 +5253,14 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2023-01-09",
+    "date": "2023-08-10",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.7"
+    "version": "2.8"
   },
   "wget": {
     "aliases": {
