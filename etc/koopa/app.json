@@ -241,13 +241,13 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-07-27",
+    "date": "2023-08-10",
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.4"
+    "version": "2.13.8"
   },
   "azure-cli": {
     "aliases": {
@@ -1848,9 +1848,9 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2023-05-09",
+    "date": "2023-08-10",
     "url": ["https://golang.org/dl/"],
-    "version": "1.20.5"
+    "version": "1.21.0"
   },
   "google-cloud-sdk": {
     "aliases": {
@@ -2587,7 +2587,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-08-02",
+    "date": "2023-08-09",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
@@ -2595,7 +2595,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.31.0"
+    "version": "2.31.1"
   },
   "ldns": {
     "aliases": {
@@ -3115,14 +3115,14 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-25",
+    "date": "2023-08-10",
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "enabled": false,
     "large": true,
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.30"
+    "version": "8.7.31"
   },
   "lsd": {
     "aliases": {
@@ -3323,11 +3323,11 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-07-17",
+    "date": "2023-08-08",
     "dependencies": ["python3.11"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "miller": {
     "aliases": {
@@ -3657,7 +3657,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-07-18",
+    "date": "2023-08-10",
     "dependencies": [
       "ca-certificates",
       "c-ares",
@@ -3672,7 +3672,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "18.17.0"
+    "version": "18.17.1"
   },
   "npth": {
     "aliases": {
@@ -3725,11 +3725,11 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-07-13",
+    "date": "2023-08-10",
     "enabled": false,
     "large": true,
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.3.2"
+    "version": "0.3.3"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4545,10 +4545,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-07-31",
+    "date": "2023-08-10",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.281"
+    "version": "0.0.284"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -4754,14 +4754,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-08-07",
+    "date": "2023-08-10",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.32.2"
+    "version": "7.32.3"
   },
   "sox": {
     "aliases": {
