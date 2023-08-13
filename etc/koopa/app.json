@@ -1475,11 +1475,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-11",
+    "date": "2023-08-13",
     "enabled": false,
     "large": true,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "10.0.0"
+    "version": "10.1.0"
   },
   "fontconfig": {
     "aliases": {
@@ -2517,12 +2517,11 @@
     "version": "1.9.2"
   },
   "jupyterlab": {
-    "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-08-03",
+    "date": "2023-08-13",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.4"
+    "version": "4.0.5"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3370,11 +3369,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-06-07",
+    "date": "2023-08-13",
     "dependencies": ["tbb", "zlib", "zstd"],
     "enabled": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "1.11.0"
+    "version": "2.1.0"
   },
   "mpc": {
     "aliases": {
