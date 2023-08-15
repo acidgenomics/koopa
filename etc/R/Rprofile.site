@@ -215,7 +215,7 @@ local({  # nolint
                 x = dict[["osVersion"]],
                 split = " ",
                 fixed = TRUE
-            )[[1L]][[2L]]
+            )[[1L]][[3L]]
             x <- strsplit(
                 x = x,
                 split = ".",
@@ -224,8 +224,7 @@ local({  # nolint
             distro <- switch(
                 EXPR = x,
                 "11" = "bullseye",
-                "12" = "bookworm",
-                ""
+                "12" = "bookworm"
             )
         } else if (isTRUE(grepl(
             pattern = "Ubuntu",
@@ -246,8 +245,7 @@ local({  # nolint
                 EXPR = x,
                 "18" = "bionic",
                 "20" = "focal",
-                "22" = "jammy",
-                ""
+                "22" = "jammy"
             )
         }
         if (!identical(distro, character())) {
