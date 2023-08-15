@@ -1,5 +1,25 @@
 # Release notes
 
+## koopa 0.13.5 (2023-08-15)
+
+Minor changes:
+
+- App updates: `anaconda`, `aws-cli`, `black`, `chezmoi`, `csvtk`, `curl`,
+  `doom-emacs`, `dotfiles`, `emacs`, `fmt`, `go`, `gtop`, `harfbuzz`, `hugo`,
+  `jupyterlab`, `latch`, `libarchive`, `libgit2`, `lmod`, `meson`, `mold`,
+  `multiqc`, `nextflow`, `node`, `nushell`, `ont-bonito`, `ont-dorado`,
+  `openssl3`, `pandoc`, `pyenv`, `pygments`, `quarto`, `ruff`, `snakemake`,
+  `spacemacs`, `starship`, `vulture`, `yq`, `zoxide`.
+- Added support to deparallelize builds in `koopa_cmake_build`.
+- Updated GNU FTP mirror back to canonical URL, now that Emacs update has
+  successfully propagated.
+- Increased the number of `X` characters in `koopa_mktemp`, to avoid warnings
+  seen with Ubuntu 22.
+- The `black` installer now includes `blackd`, which is very useful for live
+  code formatting in PyCharm.
+- System R installer now includes pandoc on Debian.
+- The tbb installer deparallizes CMake to avoid issues on Linux.
+
 ## koopa 0.13.4 (2023-07-28)
 
 Major changes:

@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Back up the site library for point release updates.
-
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2023-05-10.
+    # @note Updated 2023-05-15.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -64,6 +62,7 @@ main() {
         'lsb-release'
         'man-db'
         'mpack'
+        'pandoc'
         'python3'
         'python3-venv'
         'subversion'
