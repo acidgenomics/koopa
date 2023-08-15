@@ -48,6 +48,9 @@ if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
 }
 ## Install ${dict['pkg']}.
 .libPaths(new = "${dict['tmp_lib']}")
+message("repos")
+print(getOption("repos"))
+message(".libPaths")
 print(.libPaths())
 install.packages(
     pkgs = "${dict['pkg']}",
