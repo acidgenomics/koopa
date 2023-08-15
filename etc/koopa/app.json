@@ -1090,10 +1090,9 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2022-09-23",
-    "outdated": true,
+    "date": "2023-08-15",
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.25.0"
+    "version": "0.27.0"
   },
   "curl": {
     "aliases": {
@@ -2791,12 +2790,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-08-15",
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.7.0"
+    "version": "1.7.1"
   },
   "libgpg-error": {
     "aliases": {
