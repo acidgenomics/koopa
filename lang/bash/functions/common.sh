@@ -18261,6 +18261,7 @@ koopa_r_check() {
         dict['pkg2']="$(koopa_lowercase "${dict['pkg']}")"
         dict['rscript']='check.R'
         dict['tmp_dir']="$(koopa_tmp_dir)"
+        dict['tmp_lib']="$(koopa_init_dir "${dict['tmp_dir']}/lib")"
         dict['tarball']="https://github.com/acidgenomics/\
 r-${dict['pkg2']}/archive/HEAD.tar.gz"
         (
@@ -18283,16 +18284,16 @@ if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
         dependencies = TRUE
     )
 }
-if (!requireNamespace("${dict['pkg']}", quietly = TRUE)) {
-    install.packages(
-        pkgs = "${dict['pkg']}",
-        repos = c(
-            "https://r.acidgenomics.com",
-            BiocManager::repositories()
-        ),
-        dependencies = TRUE
-    )
-}
+.libPaths(new = "${dict['tmp_lib']}")
+print(.libPaths())
+install.packages(
+    pkgs = "${dict['pkg']}",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+)
 AcidDevTools::check("src")
 END
             "${app['rscript']}" "${dict['rscript']}"
