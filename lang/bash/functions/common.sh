@@ -18236,6 +18236,59 @@ koopa_python_virtualenvs_prefix() {
     return 0
 }
 
+koopa_r_check() {
+    local -A app
+    koopa_assert_has_args "$#"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['rscript']="$(koopa_locate_rscript --only-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for pkg in "$@"
+    do
+        local -A dict
+        dict['pkg']="${1:?}"
+        dict['pkg2']="$(koopa_lowercase "${dict['pkg']}")"
+        dict['rscript']='check.R'
+        dict['tmp_dir']="$(koopa_tmp_dir)"
+        dict['tarball']="https://github.com/acidgenomics/\
+r-${dict['pkg2']}/archive/HEAD.tar.gz"
+        (
+            koopa_cd "${dict['tmp_dir']}"
+            koopa_download "${dict['tarball']}" 'src.tar.gz'
+            koopa_extract 'src.tar.gz' 'src'
+            "${app['cat']}" << END > "${dict['rscript']}"
+if (!requireNamespace("BiocManager", quietly = TRUE)) {
+    install.packages("BiocManager")
+}
+if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
+    install.packages(
+        pkgs = "AcidDevTools",
+        repos = c(
+            "https://r.acidgenomics.com",
+            BiocManager::repositories()
+        ),
+        dependencies = TRUE
+    )
+}
+if (!requireNamespace("${dict['pkg']}", quietly = TRUE)) {
+    install.packages(
+        pkgs = "${dict['pkg']}",
+        repos = c(
+            "https://r.acidgenomics.com",
+            BiocManager::repositories()
+        ),
+        dependencies = TRUE
+    )
+}
+AcidDevTools::check("src")
+END
+            "${app['rscript']}" "${dict['rscript']}"
+        )
+        koopa_rm "${dict['tmp_dir']}"
+    done
+    return 0
+}
+
 koopa_r_configure_environ() {
     local -A app bool conf_dict dict
     local -a lines path_arr
