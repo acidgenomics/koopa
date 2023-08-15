@@ -1090,10 +1090,9 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2022-09-23",
-    "outdated": true,
+    "date": "2023-08-15",
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.25.0"
+    "version": "0.27.0"
   },
   "curl": {
     "aliases": {
@@ -1475,11 +1474,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-11",
+    "date": "2023-08-13",
     "enabled": false,
     "large": true,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "10.0.0"
+    "version": "10.1.0"
   },
   "fontconfig": {
     "aliases": {
@@ -2517,12 +2516,11 @@
     "version": "1.9.2"
   },
   "jupyterlab": {
-    "arch": "amd64",
     "bin": ["jupyter-lab"],
-    "date": "2023-08-03",
+    "date": "2023-08-13",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.4"
+    "version": "4.0.5"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -2791,12 +2789,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-08-15",
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.7.0"
+    "version": "1.7.1"
   },
   "libgpg-error": {
     "aliases": {
@@ -3370,11 +3368,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-06-07",
+    "date": "2023-08-13",
     "dependencies": ["tbb", "zlib", "zstd"],
     "enabled": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "1.11.0"
+    "version": "2.1.0"
   },
   "mpc": {
     "aliases": {
@@ -3725,11 +3723,11 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-08-10",
+    "date": "2023-08-15",
     "enabled": false,
     "large": true,
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.3.3"
+    "version": "0.3.4"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
