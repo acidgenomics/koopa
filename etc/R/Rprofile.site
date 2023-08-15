@@ -210,7 +210,7 @@ local({  # nolint
             pattern = "Debian",
             x = dict[["osVersion"]],
             fixed = TRUE
-        )) {
+        ))) {
             x <- strsplit(
                 x = dict[["osVersion"]],
                 split = " ",
