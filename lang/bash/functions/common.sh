@@ -18257,7 +18257,7 @@ koopa_r_check() {
     for pkg in "$@"
     do
         local -A dict
-        dict['pkg']="${1:?}"
+        dict['pkg']="$pkg"
         dict['pkg2']="$(koopa_lowercase "${dict['pkg']}")"
         dict['rscript']='check.R'
         dict['tmp_dir']="$(koopa_tmp_dir)"
