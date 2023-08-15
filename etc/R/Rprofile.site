@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-08-14.
+#' @note Updated 2023-08-15.
 #'
 #' @section Restarting R:
 #'
@@ -202,41 +202,66 @@ local({  # nolint
         "install.packages.check.source" = "yes",
         "install.packages.compile.from.source" = "always"
     )
-    ## Configure the Ubuntu Posit binary CRAN snapshot.
-    if (
-        isTRUE(flag[["cranBinary"]]) &&
-        isTRUE(grepl(pattern = "Ubuntu", x = dict[["osVersion"]], fixed = TRUE))
-    ) {
-        x <- strsplit(
+    if (isTRUE(flag[["linux"]]) && isTRUE(flag[["cranBinary"]])) {
+        ## Configure the Debian/Ubuntu Posit binary CRAN snapshot.
+        ## On Debian/Ubuntu, can access distro codename with 'lsb_release -cs'.
+        distro <- character()
+        if (isTRUE(grepl(
+            pattern = "Debian",
             x = dict[["osVersion"]],
-            split = " ",
             fixed = TRUE
-        )[[1L]][[2L]]
-        x <- strsplit(
-            x = x,
-            split = ".",
+        ))) {
+            x <- strsplit(
+                x = dict[["osVersion"]],
+                split = " ",
+                fixed = TRUE
+            )[[1L]][[3L]]
+            x <- strsplit(
+                x = x,
+                split = ".",
+                fixed = TRUE
+            )[[1L]][[1L]]
+            distro <- switch(
+                EXPR = x,
+                "11" = "bullseye",
+                "12" = "bookworm"
+            )
+        } else if (isTRUE(grepl(
+            pattern = "Ubuntu",
+            x = dict[["osVersion"]],
             fixed = TRUE
-        )[[1L]][[1L]]
-        ## Can access codename with 'lsb_release -cs'.
-        distro <- switch(
-            EXPR = x,
-            "18" = "bionic",
-            "20" = "focal",
-            "22" = "jammy",
-            "jammy"
-        )
-        cran <- paste(
-            "https://packagemanager.posit.co",
-            "cran",
-            "__linux__",
-            distro,
-            snapshot,
-            sep = "/"
-        )
-        options(
-            "install.packages.check.source" = "no",
-            "install.packages.compile.from.source" = "never"
-        )
+        ))) {
+            x <- strsplit(
+                x = dict[["osVersion"]],
+                split = " ",
+                fixed = TRUE
+            )[[1L]][[2L]]
+            x <- strsplit(
+                x = x,
+                split = ".",
+                fixed = TRUE
+            )[[1L]][[1L]]
+            distro <- switch(
+                EXPR = x,
+                "18" = "bionic",
+                "20" = "focal",
+                "22" = "jammy"
+            )
+        }
+        if (!identical(distro, character())) {
+            cran <- paste(
+                "https://packagemanager.posit.co",
+                "cran",
+                "__linux__",
+                distro,
+                snapshot,
+                sep = "/"
+            )
+            options(
+                "install.packages.check.source" = "no",
+                "install.packages.compile.from.source" = "never"
+            )
+        }
     }
     ## Prefer binary installs on macOS for CRAN R. Otherwise default to
     ## installing from source. Note that RSPM doesn't currently support macOS
