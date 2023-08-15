@@ -202,7 +202,7 @@ local({  # nolint
         "install.packages.check.source" = "yes",
         "install.packages.compile.from.source" = "always"
     )
-    if (isTRUE(flag[["linux"]] && isTRUE(flag[["cranBinary"]])) {
+    if (isTRUE(flag[["linux"]]) && isTRUE(flag[["cranBinary"]])) {
         ## Configure the Debian/Ubuntu Posit binary CRAN snapshot.
         ## On Debian/Ubuntu, can access distro codename with 'lsb_release -cs'.
         distro <- character()
