@@ -1,6 +1,6 @@
 # koopa 🐢
 
-![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)
+![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)
 
 Shell bootloader for bioinformatics.
 
