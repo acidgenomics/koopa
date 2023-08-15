@@ -2225,6 +2225,7 @@
     "build_dependencies": ["make"],
     "date": "2023-05-12",
     "dependencies": ["gcc", "libaec", "zlib"],
+    "outdated": true,
     "prune": false,
     "url": ["https://www.hdfgroup.org/downloads/hdf5/"],
     "version": "1.14.1-2"
