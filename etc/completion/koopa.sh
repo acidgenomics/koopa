@@ -54,6 +54,7 @@ _koopa_complete() {
                         'jekyll'
                         'kallisto'
                         'rnaeditingindexer'
+                        'r'
                         'rsem'
                         'salmon'
                         'sra'
@@ -697,6 +698,9 @@ _koopa_complete() {
                             ;;
                         'md5sum')
                             args=('check-to-new-md5-file')
+                            ;;
+                        'r')
+                            args=('check')
                             ;;
                         'sra')
                             args=(
