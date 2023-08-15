@@ -208,7 +208,7 @@ local({  # nolint
         distro <- character()
         if (isTRUE(grepl(
             pattern = "Debian",
-            x = dict[["osVersion"]]
+            x = dict[["osVersion"]],
             fixed = TRUE
         )) {
             x <- strsplit(
