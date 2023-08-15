@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider installing packages into an isolated library, for higher
+# stringency. This can help us identify issues related to 'Suggests' usage.
+
 koopa_r_check() {
     # """
     # Acid Genomics 'R CMD check' workflow.
