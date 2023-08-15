@@ -4130,6 +4130,17 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
+        'r')
+            case "${2:-}" in
+                'check')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'rnaeditingindexer')
             dict['key']="${1:?}"
             shift 1
@@ -18253,6 +18264,8 @@ koopa_r_check() {
         dict['tarball']="https://github.com/acidgenomics/\
 r-${dict['pkg2']}/archive/HEAD.tar.gz"
         (
+            koopa_alert "Checking '${dict['pkg']}' package in \
+'${dict['tmp_dir']}'."
             koopa_cd "${dict['tmp_dir']}"
             koopa_download "${dict['tarball']}" 'src.tar.gz'
             koopa_extract 'src.tar.gz' 'src'

@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2023-07-18.
+    # @note Updated 2023-08-15.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -241,6 +241,17 @@ koopa_cli_app() {
         'md5sum')
             case "${2:-}" in
                 'check-to-new-md5-file')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
+        'r')
+            case "${2:-}" in
+                'check')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
