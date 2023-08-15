@@ -18286,16 +18286,14 @@ if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
 }
 .libPaths(new = "${dict['tmp_lib']}")
 print(.libPaths())
-if (!requireNamespace("${dict['pkg']}", quietly = TRUE)) {
-    install.packages(
-        pkgs = "${dict['pkg']}",
-        repos = c(
-            "https://r.acidgenomics.com",
-            BiocManager::repositories()
-        ),
-        dependencies = TRUE
-    )
-}
+install.packages(
+    pkgs = "${dict['pkg']}",
+    repos = c(
+        "https://r.acidgenomics.com",
+        BiocManager::repositories()
+    ),
+    dependencies = TRUE
+)
 AcidDevTools::check("src")
 END
             "${app['rscript']}" "${dict['rscript']}"
