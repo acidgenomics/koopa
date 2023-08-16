@@ -324,6 +324,7 @@ _koopa_complete() {
                         'parallel'
                         'password-store'
                         'patch'
+                        'pbzip2'
                         'pcre'
                         'pcre2'
                         'perl'
