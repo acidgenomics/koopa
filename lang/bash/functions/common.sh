@@ -12841,6 +12841,12 @@ koopa_install_patch() {
         "$@"
 }
 
+koopa_install_pbzip2() {
+    koopa_install_app \
+        --name='pbzip2' \
+        "$@"
+}
+
 koopa_install_pcre() {
     koopa_install_app \
         --name='pcre' \
@@ -24928,6 +24934,12 @@ koopa_uninstall_password_store() {
 koopa_uninstall_patch() {
     koopa_uninstall_app \
         --name='patch' \
+        "$@"
+}
+
+koopa_uninstall_pbzip2() {
+    koopa_uninstall_app \
+        --name='pbzip2' \
         "$@"
 }
 
