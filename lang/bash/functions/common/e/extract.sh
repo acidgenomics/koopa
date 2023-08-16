@@ -3,7 +3,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-06-14.
+    # @note Updated 2023-08-16.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -53,6 +53,7 @@ koopa_extract() {
         then
             dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
             dict['target_file']="${dict['target_dir']}/${dict['bn']}"
+
             cmd_args+=("${dict['target_file']}")
         fi
         koopa_decompress "${cmd_args[@]}"
@@ -83,7 +84,13 @@ koopa_extract() {
             )
             app['tar']="$(koopa_locate_tar --allow-system)"
             koopa_assert_is_executable "${app['tar']}"
-            if koopa_is_root && koopa_is_gnu "${app['tar']}"
+            if koopa_is_gnu "${app['tar']}"
+            then
+                bool['gnu_tar']=1
+            else
+                bool['gnu_tar']=0
+            fi
+            if koopa_is_root && [[ "${bool['gnu_tar']}" -eq 1 ]]
             then
                 tar_cmd_args+=(
                     '--no-same-owner'
@@ -101,32 +108,45 @@ koopa_extract() {
         *'.tgz')
             cmd="${app['tar']}"
             cmd_args=("${tar_cmd_args[@]}")
+            app['cmd2']=''
             case "${dict['tmpfile']}" in
                 *'.bz2' | *'.tbz2')
-                    app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
-                    koopa_add_to_path_start \
-                        "$(koopa_dirname "${app['cmd2']}")"
+                    if [[ "${bool['gnu_tar']}" -eq 1 ]]
+                    then
+                        app['cmd2']="$(koopa_locate_pbzip2 --allow-missing)"
+                    fi
+                    if [[ ! -x "${app['cmd2']}" ]]
+                    then
+                        app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
+                    fi
                     cmd_args+=('-j') # '--bzip2'.
                     ;;
                 *'.gz' | *'.tgz')
-                    app['cmd2']="$(koopa_locate_gzip --allow-system)"
-                    koopa_add_to_path_start \
-                        "$(koopa_dirname "${app['cmd2']}")"
+                    if [[ "${bool['gnu_tar']}" -eq 1 ]]
+                    then
+                        app['cmd2']="$(koopa_locate_pigz --allow-missing)"
+                    fi
+                    if [[ ! -x "${app['cmd2']}" ]]
+                    then
+                        app['cmd2']="$(koopa_locate_gzip --allow-system)"
+                    fi
                     cmd_args+=('-z') # '--gzip'.
                     ;;
                 *'.lz')
                     app['cmd2']="$(koopa_locate_lzip --allow-system)"
-                    koopa_add_to_path_start \
-                        "$(koopa_dirname "${app['cmd2']}")"
                     cmd_args+=('--lzip')
                     ;;
                 *'.xz')
                     app['cmd2']="$(koopa_locate_xz --allow-system)"
-                    koopa_add_to_path_start \
-                        "$(koopa_dirname "${app['cmd2']}")"
                     cmd_args+=('-J') # '--xz'.
                     ;;
             esac
+            if [[ "${bool['gnu_tar']}" -eq 1 ]]
+            then
+                cmd_args+=('--use-compress-program' "${app['cmd2']}")
+            else
+                koopa_add_to_path_start "$(koopa_dirname "${app['cmd2']}")"
+            fi
             ;;
         *'.tar')
             app['cmd']="${app['tar']}"
