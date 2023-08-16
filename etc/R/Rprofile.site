@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-08-15.
+#' @note Updated 2023-08-16.
 #'
 #' @section Restarting R:
 #'
@@ -495,20 +495,15 @@ local({  # nolint
             "readr.show_progress" = FALSE
         )
     }
+    if (isInstalled("Seurat")) {
+        options("Seurat.object.assay.version" = "v5")
+    }
     if (isInstalled("styler")) {
-        options(
-            "styler.cache_root" = "styler"
-        )
+        options("styler.cache_root" = "styler")
     }
     if (isInstalled("reticulate")) {
         ## Ensure that Miniconda is used by default.
-        options(
-            "reticulate.conda_binary" =
-                file.path(
-                    Sys.getenv("KOOPA_OPT_PREFIX"),
-                    "conda", "condabin", "conda"
-                )
-        )
+        options("reticulate.conda_binary" = Sys.which("conda"))
     }
     ## > if (isInstalled("styler")) {
     ## >     ## https://styler.r-lib.org/reference/styler_addins.html
