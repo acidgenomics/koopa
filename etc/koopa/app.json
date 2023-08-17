@@ -3754,7 +3754,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-07-25",
+    "date": "2023-08-17",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3762,7 +3762,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.2.0"
+    "version": "3.2.1"
   },
   "openblas": {
     "aliases": {
@@ -4619,6 +4619,7 @@
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"

@@ -5794,9 +5794,8 @@ koopa_datetime() {
 }
 
 koopa_decompress() {
-    local -A bool dict
+    local -A app bool dict
     local -a cmd_args pos
-    local cmd
     koopa_assert_has_args "$#"
     bool['passthrough']=0
     bool['stdout']=0
@@ -5900,59 +5899,63 @@ koopa_decompress() {
         *'.zstd')
             case "${dict['match']}" in
                 *'.br')
-                    cmd="$(koopa_locate_brotli)"
+                    app['cmd']="$(koopa_locate_brotli --allow-system)"
                     ;;
                 *'.bz2')
-                    cmd="$(koopa_locate_pbzip2 --allow-missing)"
-                    if [[ -x "$cmd" ]]
+                    app['cmd']="$( \
+                        koopa_locate_pbzip2 --allow-missing --allow-system \
+                    )"
+                    if [[ -x "${app['cmd']}" ]]
                     then
                         cmd_args+=("-p$(koopa_cpu_count)")
                     else
-                        cmd="$(koopa_locate_bzip2)"
+                        app['cmd']="$(koopa_locate_bzip2 --allow-system)"
                     fi
                     ;;
                 *'.gz')
-                    cmd="$(koopa_locate_pigz --allow-missing)"
-                    if [[ -x "$cmd" ]]
+                    app['cmd']="$( \
+                        koopa_locate_pigz --allow-missing --allow-system \
+                    )"
+                    if [[ -x "${app['cmd']}" ]]
                     then
                         cmd_args+=('-p' "$(koopa_cpu_count)")
                     else
-                        cmd="$(koopa_locate_gzip)"
+                        app['cmd']="$(koopa_locate_gzip --allow-system)"
                     fi
                     ;;
                 *'.lz')
-                    cmd="$(koopa_locate_lzip)"
+                    app['cmd']="$(koopa_locate_lzip --allow-system)"
                     ;;
                 *'.lz4')
-                    cmd="$(koopa_locate_lz4)"
+                    app['cmd']="$(koopa_locate_lz4 --allow-system)"
                     ;;
                 *'.lzma')
-                    cmd="$(koopa_locate_lzma)"
+                    app['cmd']="$(koopa_locate_lzma --allow-system)"
                     ;;
                 *'.xz')
-                    cmd="$(koopa_locate_xz)"
+                    app['cmd']="$(koopa_locate_xz --allow-system)"
                     ;;
                 *'.zstd')
-                    cmd="$(koopa_locate_zstd)"
+                    app['cmd']="$(koopa_locate_zstd --allow-system)"
                     ;;
             esac
             cmd_args+=(
-                '-c' # '--stdout'.
-                '-d' # '--decompress'.
-                '-f' # '--force'.
-                '-k' # '--keep'.
+                '-c'
+                '-d'
+                '-f'
+                '-k'
                 "${dict['source_file']}"
             )
             ;;
     esac
-    koopa_assert_is_executable "$cmd"
+    koopa_assert_is_executable "${app['cmd']}"
     if [[ "${bool['stdout']}" -eq 1 ]]
     then
-        "$cmd" "${cmd_args[@]}" || true
+        "${app['cmd']}" "${cmd_args[@]}" || true
     else
         koopa_alert "Decompressing '${dict['source_file']}' to \
 '${dict['target_file']}'."
-        "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
+        "${app['cmd']}" "${cmd_args[@]}" > "${dict['target_file']}"
     fi
     koopa_assert_is_file "${dict['source_file']}"
     if [[ -n "${dict['target_file']}" ]]
@@ -7223,14 +7226,18 @@ koopa_extract() {
             then
                 case "${dict['tmpfile']}" in
                     *'.bz2' | *'.tbz2')
-                        app['cmd2']="$(koopa_locate_pbzip2 --allow-missing)"
+                        app['cmd2']="$( \
+                            koopa_locate_pbzip2 --allow-missing --allow-system \
+                        )"
                         if [[ ! -x "${app['cmd2']}" ]]
                         then
                             app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
                         fi
                         ;;
                     *'.gz' | *'.tgz')
-                        app['cmd2']="$(koopa_locate_pigz --allow-missing)"
+                        app['cmd2']="$( \
+                            koopa_locate_pigz --allow-missing --allow-system \
+                        )"
                         if [[ ! -x "${app['cmd2']}" ]]
                         then
                             app['cmd2']="$(koopa_locate_gzip --allow-system)"
@@ -7270,7 +7277,7 @@ koopa_extract() {
             cmd_args+=("${tar_cmd_args[@]}")
             ;;
         *'.7z')
-            app['cmd']="$(koopa_locate_7z)"
+            app['cmd']="$(koopa_locate_7z --allow-system)"
             cmd_args+=('-x' "${dict['tmpfile']}")
             ;;
         *'.zip')

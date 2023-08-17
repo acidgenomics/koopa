@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for extraction of individual files.
+# This is the tar convention -- maybe we can make this work with unzip.
+# > tar -tzvf your_archive.tar.gz
+# > tar -xvzf your_archive.tar.gz your_archive/specific_file.txt
+
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
@@ -113,7 +118,9 @@ koopa_extract() {
                 case "${dict['tmpfile']}" in
                     *'.bz2' | *'.tbz2')
                         # Enable parallel decompression, when possible.
-                        app['cmd2']="$(koopa_locate_pbzip2 --allow-missing)"
+                        app['cmd2']="$( \
+                            koopa_locate_pbzip2 --allow-missing --allow-system \
+                        )"
                         if [[ ! -x "${app['cmd2']}" ]]
                         then
                             app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
@@ -121,7 +128,9 @@ koopa_extract() {
                         ;;
                     *'.gz' | *'.tgz')
                         # Enable parallel decompression, when possible.
-                        app['cmd2']="$(koopa_locate_pigz --allow-missing)"
+                        app['cmd2']="$( \
+                            koopa_locate_pigz --allow-missing --allow-system \
+                        )"
                         if [[ ! -x "${app['cmd2']}" ]]
                         then
                             app['cmd2']="$(koopa_locate_gzip --allow-system)"
@@ -164,7 +173,7 @@ koopa_extract() {
             ;;
         # Archiving and compression --------------------------------------------
         *'.7z')
-            app['cmd']="$(koopa_locate_7z)"
+            app['cmd']="$(koopa_locate_7z --allow-system)"
             cmd_args+=('-x' "${dict['tmpfile']}")
             ;;
         *'.zip')
