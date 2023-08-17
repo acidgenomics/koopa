@@ -15,7 +15,7 @@ main() {
     # - https://python-poetry.org/docs/configuration/
     # - https://github.com/conda/conda/issues/7741
     # """
-    local -A dict
+    local -A app dict
     koopa_activate_ca_certificates
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
