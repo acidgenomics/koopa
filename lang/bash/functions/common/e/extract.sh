@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# NOTE Consider adding support for extraction of individual files.
+# This is the tar convention -- maybe we can make this work with unzip.
+# > tar -tzvf your_archive.tar.gz
+# > tar -xvzf your_archive.tar.gz your_archive/specific_file.txt
+
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
