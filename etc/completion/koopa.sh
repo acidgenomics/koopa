@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-07-28.
+    # @note Updated 2023-08-17.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -231,12 +231,14 @@ _koopa_complete() {
                         'lame'
                         'lapack'
                         'latch'
+                        'ldc'
                         'ldns'
                         'lesspipe'
                         'libaec'
                         'libarchive'
                         'libassuan'
                         'libcbor'
+                        'libconfig'
                         'libdeflate'
                         'libedit'
                         'libev'
