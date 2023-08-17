@@ -195,7 +195,7 @@ llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/llvm'
     koopa_cmake_build \
-        --prefix="${dict['prefix']}"
+        --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
     return 0
 }
