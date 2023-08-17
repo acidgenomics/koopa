@@ -136,6 +136,7 @@ koopa_extract() {
                 esac
                 cmd_args+=('--use-compress-program' "${app['cmd2']}")
             else
+                # BSD tar (e.g. on macOS) supports bzip2, gzip, and xz.
                 case "${dict['tmpfile']}" in
                     *'.bz2' | *'.tbz2')
                         app['cmd2']="$(koopa_locate_bzip2 --allow-system)"
