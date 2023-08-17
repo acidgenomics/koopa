@@ -1090,9 +1090,9 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2023-08-15",
+    "date": "2023-08-17",
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.27.0"
+    "version": "0.27.1"
   },
   "curl": {
     "aliases": {
@@ -1160,9 +1160,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-07-27",
+    "date": "2023-08-17",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.49.0"
+    "version": "0.50.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -4838,13 +4838,13 @@
   "star": {
     "bin": ["STAR"],
     "build_dependencies": ["coreutils", "gcc", "make"],
-    "date": "2023-06-16",
+    "date": "2023-08-17",
     "large": true,
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
     ],
-    "version": "2.7.10b"
+    "version": "2.7.11a"
   },
   "star-fusion": {
     "arch": "amd64",
