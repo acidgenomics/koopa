@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-08-17.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -15,11 +15,10 @@ main() {
     # - https://python-poetry.org/docs/configuration/
     # - https://github.com/conda/conda/issues/7741
     # """
-    local -A dict
+    local -A app dict
     koopa_activate_ca_certificates
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir "${dict['ca_certificates']}"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['conda_env_prefix']="${dict['libexec']}/conda"
     dict['poetry_prefix']="${dict['libexec']}/poetry"
