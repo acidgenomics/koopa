@@ -3,7 +3,7 @@
 koopa_decompress() {
     # """
     # Decompress a single compressed file.
-    # @note Updated 2023-08-16.
+    # @note Updated 2023-08-17.
     #
     # Intentionally supports only compression formats. For mixed archiving
     # and compression formats, use 'koopa_extract' instead.
@@ -34,9 +34,8 @@ koopa_decompress() {
     # @seealso
     # - https://en.wikipedia.org/wiki/List_of_archive_formats
     # """
-    local -A bool dict
+    local -A app bool dict
     local -a cmd_args pos
-    local cmd
     koopa_assert_has_args "$#"
     bool['passthrough']=0
     bool['stdout']=0
@@ -145,59 +144,67 @@ koopa_decompress() {
         *'.zstd')
             case "${dict['match']}" in
                 *'.br')
-                    cmd="$(koopa_locate_brotli)"
+                    app['cmd']="$(koopa_locate_brotli --allow-system)"
                     ;;
                 *'.bz2')
-                    cmd="$(koopa_locate_pbzip2 --allow-missing)"
-                    if [[ -x "$cmd" ]]
+                    app['cmd']="$( \
+                        koopa_locate_pbzip2 --allow-missing --allow-system \
+                    )"
+                    if [[ -x "${app['cmd']}" ]]
                     then
                         cmd_args+=("-p$(koopa_cpu_count)")
                     else
-                        cmd="$(koopa_locate_bzip2)"
+                        app['cmd']="$(koopa_locate_bzip2 --allow-system)"
                     fi
                     ;;
                 *'.gz')
-                    cmd="$(koopa_locate_pigz --allow-missing)"
-                    if [[ -x "$cmd" ]]
+                    app['cmd']="$( \
+                        koopa_locate_pigz --allow-missing --allow-system \
+                    )"
+                    if [[ -x "${app['cmd']}" ]]
                     then
                         cmd_args+=('-p' "$(koopa_cpu_count)")
                     else
-                        cmd="$(koopa_locate_gzip)"
+                        app['cmd']="$(koopa_locate_gzip --allow-system)"
                     fi
                     ;;
                 *'.lz')
-                    cmd="$(koopa_locate_lzip)"
+                    app['cmd']="$(koopa_locate_lzip --allow-system)"
                     ;;
                 *'.lz4')
-                    cmd="$(koopa_locate_lz4)"
+                    app['cmd']="$(koopa_locate_lz4 --allow-system)"
                     ;;
                 *'.lzma')
-                    cmd="$(koopa_locate_lzma)"
+                    app['cmd']="$(koopa_locate_lzma --allow-system)"
                     ;;
                 *'.xz')
-                    cmd="$(koopa_locate_xz)"
+                    app['cmd']="$(koopa_locate_xz --allow-system)"
                     ;;
                 *'.zstd')
-                    cmd="$(koopa_locate_zstd)"
+                    app['cmd']="$(koopa_locate_zstd --allow-system)"
                     ;;
             esac
             cmd_args+=(
-                '-c' # '--stdout'.
-                '-d' # '--decompress'.
-                '-f' # '--force'.
-                '-k' # '--keep'.
+                # GNU: '--stdout'.
+                '-c'
+                # GNU: '--decompress'.
+                '-d'
+                # GNU: '--force'.
+                '-f'
+                # GNU: '--keep'.
+                '-k'
                 "${dict['source_file']}"
             )
             ;;
     esac
-    koopa_assert_is_executable "$cmd"
+    koopa_assert_is_executable "${app['cmd']}"
     if [[ "${bool['stdout']}" -eq 1 ]]
     then
-        "$cmd" "${cmd_args[@]}" || true
+        "${app['cmd']}" "${cmd_args[@]}" || true
     else
         koopa_alert "Decompressing '${dict['source_file']}' to \
 '${dict['target_file']}'."
-        "$cmd" "${cmd_args[@]}" > "${dict['target_file']}"
+        "${app['cmd']}" "${cmd_args[@]}" > "${dict['target_file']}"
     fi
     koopa_assert_is_file "${dict['source_file']}"
     if [[ -n "${dict['target_file']}" ]]
