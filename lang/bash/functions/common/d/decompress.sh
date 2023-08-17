@@ -3,7 +3,7 @@
 koopa_decompress() {
     # """
     # Decompress a single compressed file.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-08-16.
     #
     # Intentionally supports only compression formats. For mixed archiving
     # and compression formats, use 'koopa_extract' instead.
@@ -148,10 +148,22 @@ koopa_decompress() {
                     cmd="$(koopa_locate_brotli)"
                     ;;
                 *'.bz2')
-                    cmd="$(koopa_locate_bzip2)"
+                    cmd="$(koopa_locate_pbzip2 --allow-missing)"
+                    if [[ -x "$cmd" ]]
+                    then
+                        cmd_args+=("-p$(koopa_cpu_count)")
+                    else
+                        cmd="$(koopa_locate_bzip2)"
+                    fi
                     ;;
                 *'.gz')
-                    cmd="$(koopa_locate_gzip)"
+                    cmd="$(koopa_locate_pigz --allow-missing)"
+                    if [[ -x "$cmd" ]]
+                    then
+                        cmd_args+=('-p' "$(koopa_cpu_count)")
+                    else
+                        cmd="$(koopa_locate_gzip)"
+                    fi
                     ;;
                 *'.lz')
                     cmd="$(koopa_locate_lzip)"
@@ -169,7 +181,7 @@ koopa_decompress() {
                     cmd="$(koopa_locate_zstd)"
                     ;;
             esac
-            cmd_args=(
+            cmd_args+=(
                 '-c' # '--stdout'.
                 '-d' # '--decompress'.
                 '-f' # '--force'.
