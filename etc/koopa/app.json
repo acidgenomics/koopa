@@ -2598,6 +2598,21 @@
     ],
     "version": "2.31.1"
   },
+  "ldc": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["cmake", "libconfig", "pkg-config"],
+    "dependencies": ["llvm"],
+    "date": "2023-08-17",
+    "enabled": false,
+    "large": true,
+    "url": [
+      "https://wiki.dlang.org/LDC",
+      "https://github.com/ldc-developers/ldc/"
+    ],
+    "version": "1.33.0"
+  },
   "ldns": {
     "aliases": {
       "homebrew": true
@@ -2682,6 +2697,19 @@
     "enabled": false,
     "url": ["https://github.com/PJK/libcbor/"],
     "version": "0.10.2"
+  },
+  "libconfig": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["make"],
+    "date": "2023-08-17",
+    "enabled": false,
+    "url": [
+      "https://hyperrealm.github.io/libconfig/",
+      "https://github.com/hyperrealm/libconfig/"
+    ],
+    "version": "1.7.3"
   },
   "libdeflate": {
     "aliases": {
