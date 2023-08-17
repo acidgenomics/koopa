@@ -10,6 +10,8 @@ koopa_extract() {
     # See also:
     # - https://github.com/stephenturner/oneliners
     # - https://en.wikipedia.org/wiki/List_of_archive_formats
+    # - Automatic parallel decompression
+    #   https://twitter.com/Sanbomics/status/1691862498419597462
     # """
     local -A app bool dict
     local -a cmd_args contents
