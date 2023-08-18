@@ -130,11 +130,11 @@ koopa_activate_app() {
         fi
         if [[ -d "${dict2['prefix']}/lib" ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib"
+            LIBRARY_PATH="${dict2['prefix']}/lib:${LIBRARY_PATH}"
         fi
         if [[ -d "${dict2['prefix']}/lib64" ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib64"
+            LIBRARY_PATH="${dict2['prefix']}/lib64:${LIBRARY_PATH}"
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
