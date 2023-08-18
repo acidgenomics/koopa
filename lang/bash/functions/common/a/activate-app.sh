@@ -26,6 +26,7 @@ koopa_activate_app() {
     # and CXXFLAGS is only passed when compiling and linking C++.
     #
     # @seealso
+    # - https://gcc.gnu.org/onlinedocs/gcc/Environment-Variables.html
     # - https://www.gnu.org/software/make/manual/
     # - https://www.gnu.org/software/make/manual/html_node/
     #     Implicit-Variables.html
@@ -71,8 +72,6 @@ koopa_activate_app() {
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
-    # FIXME This may require system paths to be defined, and currently breaks
-    # the gcc installer if it is defined.
     LIBRARY_PATH="${LIBRARY_PATH:-}"
     for app_name in "$@"
     do
@@ -174,11 +173,11 @@ koopa_activate_app() {
         # is picked up by some apps that use make (e.g. sambamba).
         if [[ -d "${dict2['prefix']}/lib" ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib"
+            LIBRARY_PATH="${dict2['prefix']}/lib:${LIBRARY_PATH}"
         fi
         if [[ -d "${dict2['prefix']}/lib64" ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib64"
+            LIBRARY_PATH="${dict2['prefix']}/lib64:${LIBRARY_PATH}"
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
@@ -189,10 +188,50 @@ koopa_activate_app() {
             CMAKE_PREFIX_PATH="${dict2['prefix']};${CMAKE_PREFIX_PATH}"
         fi
     done
-    export CMAKE_PREFIX_PATH
-    export CPPFLAGS
-    export LDFLAGS
-    export LDLIBS
-    export LIBRARY_PATH
+    # Ensure 'LIBRARY_PATH' contains system paths, when applicable.
+    # FIXME This likely needs to include gcc system paths as well. Refer to
+    # our R configuration script for details on how to handle this.
+    if [[ -n "$LIBRARY_PATH" ]]
+    then
+        if [[ -d '/usr/lib64' ]]
+        then
+            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib64"
+        fi
+        if [[ -d '/usr/lib' ]]
+        then
+            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib"
+        fi
+    fi
+    # Decide whether to export global variables.
+    if [[ -n "$CMAKE_PREFIX_PATH" ]]
+    then
+        export CMAKE_PREFIX_PATH
+    else
+        unset -v CMAKE_PREFIX_PATH
+    fi
+    if [[ -n "$CPPFLAGS" ]]
+    then
+        export CPPFLAGS
+    else
+        unset -v CPPFLAGS
+    fi
+    if [[ -n "$LDFLAGS" ]]
+    then
+        export LDFLAGS
+    else
+        unset -v LDFLAGS
+    fi
+    if [[ -n "$LDLIBS" ]]
+    then
+        export LDLIBS
+    else
+        unset -v LDLIBS
+    fi
+    if [[ -n "$LIBRARY_PATH" ]]
+    then
+        export LIBRARY_PATH
+    else
+        unset -v LIBRARY_PATH
+    fi
     return 0
 }
