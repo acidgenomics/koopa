@@ -350,6 +350,8 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     if [[ "${bool['r_koopa']}" -eq 1 ]]
     then
         # Install our internal R koopa package.
+        # NOTE Consider setting 'dependencies = NA' here to lighten the number
+        # of packages that get installed into the system library here.
         "${app['rscript']}" -e " \
             options(
                 error = quote(quit(status = 1L)),
