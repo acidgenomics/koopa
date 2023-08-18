@@ -2598,6 +2598,20 @@
     ],
     "version": "2.31.1"
   },
+  "ldc": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["gnupg", "libarchive", "xz"],
+    "date": "2023-08-17",
+    "enabled": false,
+    "large": true,
+    "url": [
+      "https://wiki.dlang.org/LDC",
+      "https://github.com/ldc-developers/ldc/"
+    ],
+    "version": "1.33.0"
+  },
   "ldns": {
     "aliases": {
       "homebrew": true
@@ -2682,6 +2696,19 @@
     "enabled": false,
     "url": ["https://github.com/PJK/libcbor/"],
     "version": "0.10.2"
+  },
+  "libconfig": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["make"],
+    "date": "2023-08-17",
+    "enabled": false,
+    "url": [
+      "https://hyperrealm.github.io/libconfig/",
+      "https://github.com/hyperrealm/libconfig/"
+    ],
+    "version": "1.7.3"
   },
   "libdeflate": {
     "aliases": {
@@ -4556,15 +4583,16 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-08-10",
+    "date": "2023-08-18",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.284"
+    "version": "0.0.285"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-06-26",
+    "date": "2023-08-18",
     "dependencies": ["python3.11"],
+    "outdated": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
     "version": "0.0.35"
   },
@@ -4613,18 +4641,15 @@
     "version": "1.10.2"
   },
   "sambamba": {
-    "arch": "amd64",
     "bin": ["sambamba"],
-    "date": "2023-02-08",
-    "dependencies": ["conda"],
+    "date": "2023-08-17",
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
     ],
-    "version": "1.0"
+    "version": "1.0.1"
   },
   "samtools": {
     "bin": ["samtools"],
