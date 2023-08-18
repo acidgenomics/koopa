@@ -25,6 +25,7 @@ main() {
     # - https://github.com/llvm-mirror/openmp/blob/master/libomptarget/cmake/
     #     Modules/LibomptargetGetDependencies.cmake
     # - https://stackoverflow.com/questions/6077414/
+    # - https://wiki.dlang.org/Building_LDC_from_source
     # """
     local -A app dict
     local -a build_deps cmake_args deps projects runtimes
@@ -194,7 +195,7 @@ llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/llvm'
     koopa_cmake_build \
-        --prefix="${dict['prefix']}"
+        --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
     return 0
 }
