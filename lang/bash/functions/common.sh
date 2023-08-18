@@ -144,11 +144,47 @@ koopa_activate_app() {
             CMAKE_PREFIX_PATH="${dict2['prefix']};${CMAKE_PREFIX_PATH}"
         fi
     done
-    export CMAKE_PREFIX_PATH
-    export CPPFLAGS
-    export LDFLAGS
-    export LDLIBS
-    export LIBRARY_PATH
+    if [[ -n "$LIBRARY_PATH" ]]
+    then
+        if [[ -d '/usr/lib64' ]]
+        then
+            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib64"
+        fi
+        if [[ -d '/usr/lib' ]]
+        then
+            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib"
+        fi
+    fi
+    if [[ -n "$CMAKE_PREFIX_PATH" ]]
+    then
+        export CMAKE_PREFIX_PATH
+    else
+        unset -v CMAKE_PREFIX_PATH
+    fi
+    if [[ -n "$CPPFLAGS" ]]
+    then
+        export CPPFLAGS
+    else
+        unset -v CPPFLAGS
+    fi
+    if [[ -n "$LDFLAGS" ]]
+    then
+        export LDFLAGS
+    else
+        unset -v LDFLAGS
+    fi
+    if [[ -n "$LDLIBS" ]]
+    then
+        export LDLIBS
+    else
+        unset -v LDLIBS
+    fi
+    if [[ -n "$LIBRARY_PATH" ]]
+    then
+        export LIBRARY_PATH
+    else
+        unset -v LIBRARY_PATH
+    fi
     return 0
 }
 
