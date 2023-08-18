@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider renaming this to a dlang install script.
-# FIXME Consider renaming this to just dlang, and see if you can install
-# DMD, GDC, and LDC together!
-
-# curl -fsS https://dlang.org/install.sh | bash -s dmd
-# curl -fsS https://dlang.org/install.sh | bash -s ldc
-
-# FIXME Use '--path' in the install script.
-
-# Can version pin with:
-#   dmd|gdc|ldc           latest version of a compiler
-#   dmd|gdc|ldc-<version> specific version of a compiler (e.g. dmd-2.071.1, ldc-1.1.0-beta2)
-
 main() {
     # """
     # Install a D language compiler.
@@ -40,5 +27,4 @@ main() {
         "${dict['name']}-${dict['version']}"
     koopa_cp "${dict['name']}-${dict['version']}" "${dict['prefix']}"
     return 0
-
 }
