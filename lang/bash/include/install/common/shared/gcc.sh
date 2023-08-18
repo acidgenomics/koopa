@@ -50,6 +50,7 @@ main() {
     # - https://gcc.gnu.org/install/prerequisites.html
     # - https://gcc.gnu.org/wiki/InstallingGCC
     # - https://gcc.gnu.org/wiki/FAQ
+    # - https://gcc.gnu.org/onlinedocs/gcc/Environment-Variables.html
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gcc.rb
     # - https://github.com/macports/macports-ports/blob/master/lang/
     #     gcc12/Portfile
