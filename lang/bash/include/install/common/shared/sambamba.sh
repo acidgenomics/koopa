@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE conda build issue with macOS:
-# https://github.com/bioconda/bioconda-recipes/pull/42509
-
-# FIXME Seeing this error with ldc:
-# ld: unknown option: -flto=full
-
 main() {
     # """
     # Install sambamba.
@@ -31,19 +25,16 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/biod/sambamba/archive/refs/tags/\
 v${dict['version']}.tar.gz"
+    export CC="${app['cc']}"
+    export LIBRARY_PATH="${LIBRARY_PATH:?}"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
-    "${app['make']}" \
-        CC="${app['cc']}" \
-        LIBRARY_PATH="${LIBRARY_PATH:?}" \
-        VERBOSE=1 \
-        prefix="${dict['prefix']}" \
-        release
+    "${app['make']}" VERBOSE=1 release
     "${app['make']}" check
-    "${app['make']}" \
-        prefix="${dict['prefix']}" \
-        install
+    koopa_cp \
+        "bin/sambamba-${dict['version']}" \
+        "${dict['prefix']}/bin/sambamba"
     return 0
 }
