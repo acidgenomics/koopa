@@ -6,7 +6,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-05-04.
+    # @note Updated 2023-08-18.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -122,8 +122,10 @@ main() {
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
         dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
         dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
+# >         dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
+# > archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
         dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
-archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
+archive/refs/tags/gcc-${dict['maj_min_ver']}-darwin-r0.tar.gz"
     else
         dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
 gcc-${dict['version']}.tar.xz"
@@ -132,6 +134,10 @@ gcc-${dict['version']}.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_mkdir 'build'
     koopa_cd 'build'
+    # FIXME Looks like we need to patch 13.2.0 for ARM argh.
+    # https://github.com/Homebrew/homebrew-core/pull/138001/commits/94523a0431a5a6fe74a4a8f6c82cb39419815c0d#diff-dfa1423326b0276262edc6c5001ce9221a06007cbaec2f1ae73b1f60b2efdce2
+    # Need to use this patch:
+    # https://raw.githubusercontent.com/Homebrew/formula-patches/3c5cbc8e9cf444a1967786af48e430588e1eb481/gcc/gcc-13.2.0.diff
     ../src/configure --help
     ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
