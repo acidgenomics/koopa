@@ -14,7 +14,7 @@ main() {
     # - https://formulae.brew.sh/formula/ldc
     # """
     local -A dict
-    koopa_activate_app 'gnupg' 'libarchive' 'xz'
+    koopa_activate_app --build-only 'gnupg' 'libarchive' 'xz'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
