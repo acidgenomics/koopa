@@ -2602,8 +2602,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "libconfig", "pkg-config"],
-    "dependencies": ["llvm"],
+    "build_dependencies": ["gnupg", "libarchive", "xz"],
     "date": "2023-08-17",
     "enabled": false,
     "large": true,
