@@ -12309,6 +12309,12 @@ koopa_install_latch() {
         "$@"
 }
 
+koopa_install_ldc() {
+    koopa_install_app \
+        --name='ldc' \
+        "$@"
+}
+
 koopa_install_ldns() {
     koopa_install_app \
         --name='ldns' \
@@ -12348,6 +12354,12 @@ koopa_install_libassuan() {
 koopa_install_libcbor() {
     koopa_install_app \
         --name='libcbor' \
+        "$@"
+}
+
+koopa_install_libconfig() {
+    koopa_install_app \
+        --name='libconfig' \
         "$@"
 }
 
@@ -24420,6 +24432,12 @@ koopa_uninstall_latch() {
         "$@"
 }
 
+koopa_uninstall_ldc() {
+    koopa_uninstall_app \
+        --name='ldc' \
+        "$@"
+}
+
 koopa_uninstall_ldns() {
     koopa_uninstall_app \
         --name='ldns' \
@@ -24459,6 +24477,12 @@ koopa_uninstall_libassuan() {
 koopa_uninstall_libcbor() {
     koopa_uninstall_app \
         --name='libcbor' \
+        "$@"
+}
+
+koopa_uninstall_libconfig() {
+    koopa_uninstall_app \
+        --name='libconfig' \
         "$@"
 }
 
