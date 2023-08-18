@@ -36,7 +36,6 @@ koopa_activate_app() {
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
     LIBRARY_PATH="${LIBRARY_PATH:-}"
     for app_name in "$@"
     do
@@ -131,12 +130,10 @@ koopa_activate_app() {
         fi
         if [[ -d "${dict2['prefix']}/lib" ]]
         then
-            LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${dict2['prefix']}/lib"
             LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib"
         fi
         if [[ -d "${dict2['prefix']}/lib64" ]]
         then
-            LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${dict2['prefix']}/lib64"
             LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib64"
         fi
         koopa_add_rpath_to_ldflags \
@@ -151,7 +148,6 @@ koopa_activate_app() {
     export CPPFLAGS
     export LDFLAGS
     export LDLIBS
-    export LD_LIBRARY_PATH
     export LIBRARY_PATH
     return 0
 }
