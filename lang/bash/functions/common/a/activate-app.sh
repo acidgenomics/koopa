@@ -71,6 +71,8 @@ koopa_activate_app() {
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
+    # FIXME This may require system paths to be defined, and currently breaks
+    # the gcc installer if it is defined.
     LIBRARY_PATH="${LIBRARY_PATH:-}"
     for app_name in "$@"
     do
