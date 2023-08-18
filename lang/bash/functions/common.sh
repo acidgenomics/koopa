@@ -36,6 +36,8 @@ koopa_activate_app() {
     CPPFLAGS="${CPPFLAGS:-}"
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}"
+    LIBRARY_PATH="${LIBRARY_PATH:-}"
     for app_name in "$@"
     do
         local -A dict2
@@ -103,29 +105,39 @@ koopa_activate_app() {
             )"
             if [[ -n "${dict2['cflags']}" ]]
             then
-                CPPFLAGS="${CPPFLAGS:-} ${dict2['cflags']}"
+                CPPFLAGS="${CPPFLAGS} ${dict2['cflags']}"
             fi
             if [[ -n "${dict2['ldflags']}" ]]
             then
-                LDFLAGS="${LDFLAGS:-} ${dict2['ldflags']}"
+                LDFLAGS="${LDFLAGS} ${dict2['ldflags']}"
             fi
             if [[ -n "${dict2['ldlibs']}" ]]
             then
-                LDLIBS="${LDLIBS:-} ${dict2['ldlibs']}"
+                LDLIBS="${LDLIBS} ${dict2['ldlibs']}"
             fi
         else
             if [[ -d "${dict2['prefix']}/include" ]]
             then
-                CPPFLAGS="${CPPFLAGS:-} -I${dict2['prefix']}/include"
+                CPPFLAGS="${CPPFLAGS} -I${dict2['prefix']}/include"
             fi
             if [[ -d "${dict2['prefix']}/lib" ]]
             then
-                LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib"
+                LDFLAGS="${LDFLAGS} -L${dict2['prefix']}/lib"
             fi
             if [[ -d "${dict2['prefix']}/lib64" ]]
             then
-                LDFLAGS="${LDFLAGS:-} -L${dict2['prefix']}/lib64"
+                LDFLAGS="${LDFLAGS} -L${dict2['prefix']}/lib64"
             fi
+        fi
+        if [[ -d "${dict2['prefix']}/lib" ]]
+        then
+            LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${dict2['prefix']}/lib"
+            LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib"
+        fi
+        if [[ -d "${dict2['prefix']}/lib64" ]]
+        then
+            LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${dict2['prefix']}/lib64"
+            LIBRARY_PATH="${LIBRARY_PATH}:${dict2['prefix']}/lib64"
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
@@ -139,6 +151,8 @@ koopa_activate_app() {
     export CPPFLAGS
     export LDFLAGS
     export LDLIBS
+    export LD_LIBRARY_PATH
+    export LIBRARY_PATH
     return 0
 }
 
@@ -12309,6 +12323,12 @@ koopa_install_latch() {
         "$@"
 }
 
+koopa_install_ldc() {
+    koopa_install_app \
+        --name='ldc' \
+        "$@"
+}
+
 koopa_install_ldns() {
     koopa_install_app \
         --name='ldns' \
@@ -12348,6 +12368,12 @@ koopa_install_libassuan() {
 koopa_install_libcbor() {
     koopa_install_app \
         --name='libcbor' \
+        "$@"
+}
+
+koopa_install_libconfig() {
+    koopa_install_app \
+        --name='libconfig' \
         "$@"
 }
 
@@ -24420,6 +24446,12 @@ koopa_uninstall_latch() {
         "$@"
 }
 
+koopa_uninstall_ldc() {
+    koopa_uninstall_app \
+        --name='ldc' \
+        "$@"
+}
+
 koopa_uninstall_ldns() {
     koopa_uninstall_app \
         --name='ldns' \
@@ -24459,6 +24491,12 @@ koopa_uninstall_libassuan() {
 koopa_uninstall_libcbor() {
     koopa_uninstall_app \
         --name='libcbor' \
+        "$@"
+}
+
+koopa_uninstall_libconfig() {
+    koopa_uninstall_app \
+        --name='libconfig' \
         "$@"
 }
 
