@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-05-04.
+    # @note Updated 2023-08-18.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -121,6 +121,10 @@ main() {
         dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
         dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
 archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
+        # Alternate URL:
+        # > dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-\
+        # > branch/archive/refs/tags/gcc-${dict['maj_min_ver']}-\
+        # > darwin-r0.tar.gz"
     else
         dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
 gcc-${dict['version']}.tar.xz"
@@ -129,6 +133,8 @@ gcc-${dict['version']}.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_mkdir 'build'
     koopa_cd 'build'
+    unset -v LIBRARY_PATH
+    koopa_print_env
     ../src/configure --help
     ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
