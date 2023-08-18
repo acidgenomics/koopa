@@ -130,11 +130,19 @@ koopa_activate_app() {
         fi
         if [[ -d "${dict2['prefix']}/lib" ]]
         then
-            LIBRARY_PATH="${dict2['prefix']}/lib:${LIBRARY_PATH}"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_start  \
+                    "$LIBRARY_PATH" \
+                    "${dict2['prefix']}/lib" \
+            )"
         fi
         if [[ -d "${dict2['prefix']}/lib64" ]]
         then
-            LIBRARY_PATH="${dict2['prefix']}/lib64:${LIBRARY_PATH}"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_start  \
+                    "$LIBRARY_PATH" \
+                    "${dict2['prefix']}/lib64" \
+            )"
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
@@ -148,11 +156,19 @@ koopa_activate_app() {
     then
         if [[ -d '/usr/lib64' ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib64"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_end \
+                    "$LIBRARY_PATH" \
+                    '/usr/lib64' \
+            )"
         fi
         if [[ -d '/usr/lib' ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_end \
+                    "$LIBRARY_PATH" \
+                    '/usr/lib' \
+            )"
         fi
     fi
     if [[ -n "$CMAKE_PREFIX_PATH" ]]
@@ -303,6 +319,10 @@ koopa_add_to_path_end() {
 
 koopa_add_to_path_start() {
     _koopa_add_to_path_start "$@"
+}
+
+koopa_add_to_path_string_end() {
+    _koopa_add_to_path_string_end "$@"
 }
 
 koopa_add_to_path_string_start() {

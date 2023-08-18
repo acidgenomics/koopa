@@ -173,11 +173,19 @@ koopa_activate_app() {
         # is picked up by some apps that use make (e.g. sambamba).
         if [[ -d "${dict2['prefix']}/lib" ]]
         then
-            LIBRARY_PATH="${dict2['prefix']}/lib:${LIBRARY_PATH}"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_start  \
+                    "$LIBRARY_PATH" \
+                    "${dict2['prefix']}/lib" \
+            )"
         fi
         if [[ -d "${dict2['prefix']}/lib64" ]]
         then
-            LIBRARY_PATH="${dict2['prefix']}/lib64:${LIBRARY_PATH}"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_start  \
+                    "$LIBRARY_PATH" \
+                    "${dict2['prefix']}/lib64" \
+            )"
         fi
         koopa_add_rpath_to_ldflags \
             "${dict2['prefix']}/lib" \
@@ -188,18 +196,23 @@ koopa_activate_app() {
             CMAKE_PREFIX_PATH="${dict2['prefix']};${CMAKE_PREFIX_PATH}"
         fi
     done
-    # Ensure 'LIBRARY_PATH' contains system paths, when applicable.
-    # FIXME This likely needs to include gcc system paths as well. Refer to
-    # our R configuration script for details on how to handle this.
     if [[ -n "$LIBRARY_PATH" ]]
     then
         if [[ -d '/usr/lib64' ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib64"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_end \
+                    "$LIBRARY_PATH" \
+                    '/usr/lib64' \
+            )"
         fi
         if [[ -d '/usr/lib' ]]
         then
-            LIBRARY_PATH="${LIBRARY_PATH}:/usr/lib"
+            LIBRARY_PATH="$( \
+                koopa_add_to_path_string_end \
+                    "$LIBRARY_PATH" \
+                    '/usr/lib' \
+            )"
         fi
     fi
     # Decide whether to export global variables.
