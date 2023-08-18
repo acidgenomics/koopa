@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing this error on ARM mac:
+# gmake[1]: *** [Makefile:24321: stage1-bubble] Error 2
+
 main() {
     # """
     # Install GCC.
