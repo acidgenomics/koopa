@@ -1591,9 +1591,10 @@
     "build_dependencies": ["make"],
     "date": "2023-08-15",
     "dependencies": ["gmp", "isl", "mpc", "mpfr", "zstd"],
+    "outdated": true,
     "prune": false,
     "url": ["https://gcc.gnu.org/"],
-    "version": "13.2.0"
+    "version": "13.1.0"
   },
   "gdal": {
     "aliases": {
