@@ -136,6 +136,8 @@ gcc-${dict['version']}.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_mkdir 'build'
     koopa_cd 'build'
+    unset -v LIBRARY_PATH
+    koopa_print_env
     ../src/configure --help
     ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
