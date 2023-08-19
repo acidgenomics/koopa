@@ -3665,6 +3665,7 @@
     "date": "2022-11-05",
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": ["https://github.com/nlohmann/json/"],
     "version": "3.11.2"
   },
@@ -5046,6 +5047,7 @@
     "date": "2022-11-05",
     "enabled": false,
     "large": true,
+    "prune": false,
     "url": [
       "https://termcolor.readthedocs.io/",
       "https://github.com/ikalnytskyi/termcolor/"
