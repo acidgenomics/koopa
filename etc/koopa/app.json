@@ -4644,7 +4644,7 @@
   },
   "sambamba": {
     "bin": ["sambamba"],
-    "build_dependencies": ["ldc", "make", "python3.11"],
+    "build_dependencies": ["gcc", "ldc", "make", "python3.11"],
     "date": "2023-08-17",
     "dependencies": ["bzip2", "lz4", "xz", "zlib"],
     "enabled": false,
