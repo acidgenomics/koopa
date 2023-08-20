@@ -15704,6 +15704,17 @@ koopa_locate_cat() {
         "$@"
 }
 
+koopa_locate_cc() {
+    local str
+    if koopa_is_macos
+    then
+        str='/usr/bin/clang'
+    else
+        str='/usr/bin/gcc'
+    fi
+    koopa_locate_app "$str"
+}
+
 koopa_locate_chezmoi() {
     koopa_locate_app \
         --app-name='chezmoi' \
@@ -15811,6 +15822,17 @@ koopa_locate_cut() {
         --bin-name='gcut' \
         --system-bin-name='cut' \
         "$@"
+}
+
+koopa_locate_cxx() {
+    local str
+    if koopa_is_macos
+    then
+        str='/usr/bin/clang++'
+    else
+        str='/usr/bin/g++'
+    fi
+    koopa_locate_app "$str"
 }
 
 koopa_locate_date() {
