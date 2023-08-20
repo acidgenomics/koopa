@@ -31,7 +31,14 @@ v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
-    "${app['make']}" VERBOSE=1 release
+    # The bioconda recipe uses this tweak for CC value:
+    # > sed -e "/^CC=/d" Makefile > Makefile.new
+    # > mv Makefile.new Makefile
+    "${app['make']}" \
+        CC="$CC" \
+        LIBRARY_PATH="$LIBRARY_PATH" \
+        VERBOSE=1 \
+        release
     # These checks are currently failing on Apple Silicon.
     # > "${app['make']}" check
     koopa_cp \
