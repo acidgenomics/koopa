@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Consider adding 'koopa_delete_line' that uses sed with '\d' internally.
+    Refer to recent sambamba bioconda recipe update as an example.
 ** TODO Icons are now wonky for doom-emacs using emacs 29.1.
 ** TODO Improve sunsetting of removed apps (e.g. python3.10) and update the system checks to support this.
     Consider rewriting the system checks in bash or python instead of R.
