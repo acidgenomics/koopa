@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='python-venv' \
-        --name='glances'
+        --name='glances' \
+        -D --package-name='Glances'
 }

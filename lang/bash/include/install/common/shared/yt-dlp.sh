@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='python-venv' \
-        --name='yt-dlp'
+        --name='yt-dlp' \
+        -D --package-name='yt_dlp'
 }
