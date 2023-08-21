@@ -761,9 +761,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-08-06",
+    "date": "2023-08-21",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.37.0"
+    "version": "2.38.0"
   },
   "cli11": {
     "aliases": {
@@ -1701,9 +1701,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-07-25",
+    "date": "2023-08-21",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.32.1"
+    "version": "2.33.0"
   },
   "ghostscript": {
     "aliases": {
@@ -4086,7 +4086,7 @@
     "large": true,
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   "prelude-emacs": {
     "date": "2023-05-30",
