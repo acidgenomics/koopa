@@ -7200,6 +7200,7 @@ koopa_extract() {
     local -a cmd_args contents
     koopa_assert_has_args_le "$#" 2
     bool['decompress_only']=0
+    bool['gnu_tar']=0
     dict['file']="${1:?}"
     dict['target_dir']="${2:-}"
     koopa_assert_is_file "${dict['file']}"
@@ -7357,7 +7358,7 @@ koopa_extract() {
     koopa_assert_is_executable "${app['cmd']}"
     (
         koopa_cd "${dict['tmpdir']}"
-        if [[ "${bool['gnu_tar']}" -eq 0 ]]
+        if [[ "${bool['gnu_tar']}" -eq 0 ]] && [[ -x "${app['cmd2']:-}" ]]
         then
             koopa_add_to_path_start "$(koopa_dirname "${app['cmd2']}")"
         fi
