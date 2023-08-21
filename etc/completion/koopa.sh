@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-08-17.
+    # @note Updated 2023-08-21.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -275,6 +275,7 @@ _koopa_complete() {
                         'lua'
                         'luajit'
                         'luarocks'
+                        'luigi'
                         'lz4'
                         'lzip'
                         'lzo'
@@ -421,6 +422,7 @@ _koopa_complete() {
                         'visidata'
                         'visual-studio-code-cli'
                         'vulture'
+                        'walk'
                         'wget'
                         'which'
                         'woff2'
