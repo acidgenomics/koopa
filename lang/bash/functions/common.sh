@@ -7358,7 +7358,7 @@ koopa_extract() {
     koopa_assert_is_executable "${app['cmd']}"
     (
         koopa_cd "${dict['tmpdir']}"
-        if [[ "${bool['gnu_tar']}" -eq 0 ]]
+        if [[ "${bool['gnu_tar']}" -eq 0 ]] && [[ -x "${app['cmd2']:-}" ]]
         then
             koopa_add_to_path_start "$(koopa_dirname "${app['cmd2']}")"
         fi
