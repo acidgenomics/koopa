@@ -12651,6 +12651,12 @@ koopa_install_luarocks() {
         "$@"
 }
 
+koopa_install_luigi() {
+    koopa_install_app \
+        --name='luigi' \
+        "$@"
+}
+
 koopa_install_lz4() {
     koopa_install_app \
         --name='lz4' \
@@ -24793,6 +24799,12 @@ koopa_uninstall_luajit() {
 koopa_uninstall_luarocks() {
     koopa_uninstall_app \
         --name='luarocks' \
+        "$@"
+}
+
+koopa_uninstall_luigi() {
+    koopa_uninstall_app \
+        --name='luigi' \
         "$@"
 }
 
