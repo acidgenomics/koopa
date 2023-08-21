@@ -150,6 +150,11 @@ _koopa_activate_aliases() {
             alias spacevim='_koopa_spacevim'
         fi
     fi
+    # walk.
+    if [ -x "${__kvar_bin_prefix}/walk" ]
+    then
+        alias lk='_koopa_walk'
+    fi
     # zoxide.
     if [ -x "${__kvar_bin_prefix}/zoxide" ]
     then
