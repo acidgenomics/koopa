@@ -172,6 +172,10 @@ _koopa_activate_aliases() {
             alias spacevim='_koopa_spacevim'
         fi
     fi
+    if [ -x "${__kvar_bin_prefix}/walk" ]
+    then
+        alias lk='_koopa_walk'
+    fi
     if [ -x "${__kvar_bin_prefix}/zoxide" ]
     then
         alias z='_koopa_activate_zoxide; __zoxide_z'
@@ -2264,6 +2268,14 @@ _koopa_user_name() {
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
     unset -v __kvar_string
+    return 0
+}
+
+_koopa_walk() {
+    __kvar_walk="$(_koopa_bin_prefix)/walk"
+    [ -x "$__kvar_walk" ] || return 1
+    cd "$("$__kvar_walk" "$@")" || return 1
+    unset -v __kvar_walk
     return 0
 }
 

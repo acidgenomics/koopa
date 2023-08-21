@@ -6665,12 +6665,11 @@ koopa_docker_prune_all_images() {
     koopa_assert_has_no_args "$#"
     app['docker']="$(koopa_locate_docker)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_alert 'Pruning Docker buildx.'
+    "${app['docker']}" buildx prune --all --force --verbose || true
     koopa_alert 'Pruning Docker images.'
     "${app['docker']}" system prune --all --force || true
     "${app['docker']}" images
-    koopa_alert 'Pruning Docker buildx.'
-    "${app['docker']}" buildx prune --all --force --verbose || true
-    "${app['docker']}" buildx ls
     return 0
 }
 
@@ -12652,6 +12651,12 @@ koopa_install_luarocks() {
         "$@"
 }
 
+koopa_install_luigi() {
+    koopa_install_app \
+        --name='luigi' \
+        "$@"
+}
+
 koopa_install_lz4() {
     koopa_install_app \
         --name='lz4' \
@@ -13617,6 +13622,12 @@ koopa_install_visual_studio_code_cli() {
 koopa_install_vulture() {
     koopa_install_app \
         --name='vulture' \
+        "$@"
+}
+
+koopa_install_walk() {
+    koopa_install_app \
+        --name='walk' \
         "$@"
 }
 
@@ -24797,6 +24808,12 @@ koopa_uninstall_luarocks() {
         "$@"
 }
 
+koopa_uninstall_luigi() {
+    koopa_uninstall_app \
+        --name='luigi' \
+        "$@"
+}
+
 koopa_uninstall_lz4() {
     koopa_uninstall_app \
         --name='lz4' \
@@ -25738,6 +25755,12 @@ koopa_uninstall_visual_studio_code_cli() {
 koopa_uninstall_vulture() {
     koopa_uninstall_app \
         --name='vulture' \
+        "$@"
+}
+
+koopa_uninstall_walk() {
+    koopa_uninstall_app \
+        --name='walk' \
         "$@"
 }
 

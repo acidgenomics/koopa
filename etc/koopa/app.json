@@ -3201,6 +3201,18 @@
     "url": ["https://github.com/luarocks/luarocks/"],
     "version": "3.9.2"
   },
+  "luigi": {
+    "bin": ["luigi"],
+    "date": "2023-08-21",
+    "dependencies": ["python3.11"],
+    "enabled": false,
+    "large": true,
+    "url": [
+      "https://github.com/spotify/luigi/",
+      "https://pypi.org/project/luigi/"
+    ],
+    "version": "3.3.0"
+  },
   "lz4": {
     "aliases": {
       "debian": "liblz4-dev",
@@ -5302,7 +5314,14 @@
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.9"
+    "version": "2.9.1"
+  },
+  "walk": {
+    "bin": ["walk"],
+    "build_dependencies": ["go"],
+    "date": "2023-08-21",
+    "url": ["https://github.com/antonmedv/walk/"],
+    "version": "1.5.2"
   },
   "wget": {
     "aliases": {
