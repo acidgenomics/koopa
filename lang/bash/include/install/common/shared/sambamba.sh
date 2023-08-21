@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Now hitting this error on macOS:
-# ldc2 -wi -I. -I./BioD:./BioD/contrib/msgpack-d/src -g -J. -O3 -release -enable-inlining -boundscheck=off  -L/opt/koopa/app/bzip2/1.0.8/lib -L/opt/koopa/app/lz4/1.9.4/lib -L/opt/koopa/app/xz/5.4.3/lib -L/opt/koopa/app/zlib/1.2.13/lib -of=bin/sambamba-1.0.1 bin/sambamba-1.0.1.o  -L-lz -L-llz4
-# ld: can't map file, errno=22 file '/opt/koopa/app/lz4/1.9.4/lib' for architecture x86_64
-# clang: error: linker command failed with exit code 1 (use -v to see invocation)
-# Error: /usr/bin/clang failed with status: 1
-# gmake: *** [Makefile:103: bin/sambamba-1.0.1] Error 1
-
 main() {
     # """
     # Install sambamba.
-    # @note Updated 2023-08-20.
+    # @note Updated 2023-08-21.
     #
     # @seealso
     # - https://github.com/biod/sambamba/blob/master/INSTALL.md
@@ -34,18 +27,7 @@ main() {
 v${dict['version']}.tar.gz"
     export CC="${app['cc']}"
     export LIBRARY_PATH="${LIBRARY_PATH:?}"
-    if koopa_is_macos
-    then
-        # FIXME Take this out if unsetting LDFLAGS works.
-        LDFLAGS="$( \
-            koopa_gsub \
-                --pattern='(\s+)?-Wl,-rpath,[^\s]+' \
-                --regex \
-                --replacement='' \
-                "${LDFLAGS:?}" \
-        )"
-        unset -v LDFLAGS
-    fi
+    koopa_is_macos && unset -v LDFLAGS
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
