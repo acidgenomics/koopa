@@ -4068,13 +4068,13 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2023-05-30",
+    "date": "2023-08-21",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.5.1"
+    "version": "1.6.0"
   },
   "prelude-emacs": {
     "date": "2023-05-30",
@@ -4592,11 +4592,11 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-08-18",
+    "date": "2023-08-21",
     "dependencies": ["python3.11"],
     "outdated": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.35"
+    "version": "0.0.37"
   },
   "rust": {
     "aliases": {
@@ -4644,8 +4644,8 @@
   },
   "sambamba": {
     "bin": ["sambamba"],
-    "build_dependencies": ["gcc", "ldc", "make", "python3.11"],
-    "date": "2023-08-17",
+    "build_dependencies": ["ldc", "make", "python3.11"],
+    "date": "2023-08-21",
     "dependencies": ["bzip2", "lz4", "xz", "zlib"],
     "enabled": false,
     "large": true,
@@ -5295,14 +5295,14 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2023-08-10",
+    "date": "2023-08-21",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.8"
+    "version": "2.9"
   },
   "wget": {
     "aliases": {
