@@ -5302,7 +5302,7 @@
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.9"
+    "version": "2.9.1"
   },
   "wget": {
     "aliases": {
