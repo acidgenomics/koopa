@@ -259,7 +259,7 @@
     "enabled": false,
     "large": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.50.0"
+    "version": "2.51.0"
   },
   "bamtools": {
     "arch": "amd64",
