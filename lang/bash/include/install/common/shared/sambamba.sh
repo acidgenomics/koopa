@@ -3,7 +3,7 @@
 main() {
     # """
     # Install sambamba.
-    # @note Updated 2023-08-20.
+    # @note Updated 2023-08-21.
     #
     # @seealso
     # - https://github.com/biod/sambamba/blob/master/INSTALL.md
@@ -13,13 +13,12 @@ main() {
     # """
     local -A app dict
     local -a build_deps deps
-    build_deps=('gcc' 'ldc' 'make' 'python3.11')
+    build_deps=('ldc' 'make' 'python3.11')
     deps=('bzip2' 'lz4' 'xz' 'zlib')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['cc']="$(koopa_locate_gcc)"
+    app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['ldc']="$(koopa_app_prefix 'ldc')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -28,21 +27,23 @@ main() {
 v${dict['version']}.tar.gz"
     export CC="${app['cc']}"
     export LIBRARY_PATH="${LIBRARY_PATH:?}"
+    koopa_is_macos && unset -v LDFLAGS
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    # Ensure that we're using our compiler and not baked in 'gcc'.
     koopa_find_and_replace_in_file \
         --pattern='^(CC=gcc)$' \
         --regex \
         --replacement='# \1' \
         'Makefile'
-    # Clang doesn't currently support 'flto=full'.
-    # > koopa_find_and_replace_in_file \
-    # >     --pattern='^(LDFLAGS     = -L=-flto=full)$' \
-    # >     --regex \
-    # >     --replacement='# \1' \
-    # >     'Makefile'
+    if koopa_is_macos
+    then
+        koopa_find_and_replace_in_file \
+            --pattern='^(LDFLAGS     = -L=-flto=full)$' \
+            --regex \
+            --replacement='# \1' \
+            'Makefile'
+    fi
     koopa_print_env
     "${app['make']}" \
         CC="$CC" \
