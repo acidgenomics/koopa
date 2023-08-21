@@ -19,6 +19,8 @@ main() {
     bool['binary']=1
     dict['locate_python']='koopa_locate_python311'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['pip_name']=''
+    dict['pkg_name']=''
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_maj_ver']=''
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -27,6 +29,22 @@ main() {
     do
         case "$1" in
             # Key value pairs --------------------------------------------------
+            '--package-name='*)
+                dict['pkg_name']="${1#*=}"
+                shift 1
+                ;;
+            '--package-name')
+                dict['pkg_name']="${2:?}"
+                shift 2
+                ;;
+            '--pip-name='*)
+                dict['pip_name']="${1#*=}"
+                shift 1
+                ;;
+            '--pip-name')
+                dict['pip_name']="${2:?}"
+                shift 2
+                ;;
             '--python-version='*)
                 dict['py_maj_ver']="${1#*=}"
                 shift 1
@@ -67,42 +85,8 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dict['libexec']="${dict['prefix']}/libexec"
-    # NOTE Consider reworking the case-sensitivity edge case handling here.
-    # FIXME Define these as variables per install function instead.
-    case "${dict['name']}" in
-        'apache-airflow' | \
-        'azure-cli' | \
-        'py-spy' | \
-        'ranger-fm' | \
-        'ruff-lsp' | \
-        'yt-dlp')
-            dict['pkg_name']="$(koopa_snake_case "${dict['name']}")"
-            ;;
-        'glances')
-            dict['pkg_name']='Glances'
-            ;;
-        'pygments')
-            dict['pkg_name']='Pygments'
-            ;;
-        'scons')
-            dict['pkg_name']='SCons'
-            ;;
-        *)
-            dict['pkg_name']="${dict['name']}"
-            ;;
-    esac
-    # FIXME Define these as variables per install function instead.
-    case "${dict['name']}" in
-        'black')
-            dict['pip_name']='black[d]'
-            ;;
-        'luigi')
-            dict['pip_name']='luigi[toml]'
-            ;;
-        *)
-            dict['pip_name']="${dict['pkg_name']}"
-            ;;
-    esac
+    [[ -z "${dict['pkg_name']}" ]] && dict['pkg_name']="${dict['name']}"
+    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['pkg_name']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['py_version']}" \

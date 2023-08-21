@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='python-venv' \
-        --name='ruff-lsp'
+        --name='ruff-lsp' \
+        -D --package-name='ruff_lsp'
 }
