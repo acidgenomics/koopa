@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='python-venv' \
-        --name='scons'
+        --name='scons' \
+        -D --package-name='SCons'
 }
