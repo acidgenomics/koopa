@@ -422,6 +422,7 @@ _koopa_complete() {
                         'visidata'
                         'visual-studio-code-cli'
                         'vulture'
+                        'walk'
                         'wget'
                         'which'
                         'woff2'

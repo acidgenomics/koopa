@@ -5316,6 +5316,13 @@
     ],
     "version": "2.9.1"
   },
+  "walk": {
+    "bin": ["walk"],
+    "build_dependencies": ["go"],
+    "date": "2023-08-21",
+    "url": ["https://github.com/antonmedv/walk/"],
+    "version": "1.5.2"
+  },
   "wget": {
     "aliases": {
       "debian": true,

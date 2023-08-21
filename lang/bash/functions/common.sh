@@ -13625,6 +13625,12 @@ koopa_install_vulture() {
         "$@"
 }
 
+koopa_install_walk() {
+    koopa_install_app \
+        --name='walk' \
+        "$@"
+}
+
 koopa_install_wget() {
     koopa_install_app \
         --name='wget' \
@@ -25749,6 +25755,12 @@ koopa_uninstall_visual_studio_code_cli() {
 koopa_uninstall_vulture() {
     koopa_uninstall_app \
         --name='vulture' \
+        "$@"
+}
+
+koopa_uninstall_walk() {
+    koopa_uninstall_app \
+        --name='walk' \
         "$@"
 }
 
