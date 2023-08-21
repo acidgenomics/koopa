@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Allow the user to pass in '--pip-name' and '--pkg-name' variables,
+# rather than hard-coding them here.
+
 main() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-08-04.
+    # @note Updated 2023-08-21.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -65,6 +68,7 @@ main() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dict['libexec']="${dict['prefix']}/libexec"
     # NOTE Consider reworking the case-sensitivity edge case handling here.
+    # FIXME Define these as variables per install function instead.
     case "${dict['name']}" in
         'apache-airflow' | \
         'azure-cli' | \
@@ -87,9 +91,13 @@ main() {
             dict['pkg_name']="${dict['name']}"
             ;;
     esac
+    # FIXME Define these as variables per install function instead.
     case "${dict['name']}" in
         'black')
             dict['pip_name']='black[d]'
+            ;;
+        'luigi')
+            dict['pip_name']='luigi[toml]'
             ;;
         *)
             dict['pip_name']="${dict['pkg_name']}"
