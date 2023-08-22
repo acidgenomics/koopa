@@ -20,7 +20,7 @@ main() {
     local -A app
     local -a make_args
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
-    koopa_activate_app 'zlib'
+    # > koopa_activate_app 'zlib'
     app['date']="$(koopa_locate_date)"
     app['gcxx']="$(koopa_locate_gcxx)"
     app['make']="$(koopa_locate_make)"
