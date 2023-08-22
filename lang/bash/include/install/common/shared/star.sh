@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Bundled htslib isn't picking up zlib correctly argh.
+# htslib/htslib/bgzf.h:33:10: fatal error: zlib.h: No such file or directory
+
 main() {
     # """
     # Install STAR.
@@ -11,11 +14,11 @@ main() {
     # - https://github.com/alexdobin/STAR/issues/1265
     # """
     local -A app
-    local -a make_args
+    local -a libs make_args
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
     koopa_activate_app 'zlib'
     app['date']="$(koopa_locate_date)"
-    app['gcxx']="$(koopa_locate_gcxx --realpath)"
+    app['gcxx']="$(koopa_locate_gcxx)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
@@ -26,9 +29,16 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/source'
+    libs=(
+        '-lz'
+        "-L${dict['zlib']}/lib"
+        "-Wl,-rpath,${dict['zlib']}/lib"
+    )
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['gcxx']}"
+        "CXXFLAGS=${CPPFLAGS:?}"
+        "LIBS=${libs[*]}"
         'VERBOSE=1'
     )
     if koopa_is_aarch64
