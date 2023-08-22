@@ -24,6 +24,7 @@ main() {
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
