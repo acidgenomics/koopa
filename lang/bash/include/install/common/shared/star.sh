@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Currently seeing zlib linkage issues on Linux without system zlib.
-# https://github.com/alexdobin/STAR/issues/142
-
 main() {
     # """
     # Install STAR.
@@ -15,6 +12,10 @@ main() {
     # """
     local -A app
     local -a make_args
+    if [[ ! -f '/usr/include/zlib.h' ]]
+    then
+        koopa_stop 'System zlib is required.'
+    fi
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
     koopa_activate_app 'zlib'
     app['date']="$(koopa_locate_date)"
