@@ -4881,7 +4881,6 @@
     "bin": ["STAR"],
     "build_dependencies": ["coreutils", "gcc", "make"],
     "date": "2023-08-22",
-    "dependencies": ["zlib"],
     "enabled": false,
     "large": true,
     "url": [
