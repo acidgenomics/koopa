@@ -34,11 +34,11 @@ ${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     (
         koopa_cd 'src/source/htslib'
-        "${app['sed']}" \
-            -i.bak \
-            '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
-            'configure.ac'
-        "${app['autoreconf']}" --force --install --verbose
+        #"${app['sed']}" \
+        #    -i.bak \
+        #    '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
+        #    'configure.ac'
+        #"${app['autoreconf']}" --force --install --verbose
         ./configure
     )
     koopa_cd 'src/source'
