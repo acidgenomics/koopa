@@ -30,16 +30,16 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/source'
-    libs=(
-        '-lz'
-        "-L${dict['zlib']}/lib"
-        "-Wl,-rpath,${dict['zlib']}/lib"
-    )
+    # > libs=(
+    # >     '-lz'
+    # >     "-L${dict['zlib']}/lib"
+    # >     "-Wl,-rpath,${dict['zlib']}/lib"
+    # > )
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['gcxx']}"
         "CXXFLAGS=${CPPFLAGS:?}"
-        "LIBS=${libs[*]}"
+        # > "LIBS=${libs[*]}"
         'VERBOSE=1'
     )
     if koopa_is_aarch64
