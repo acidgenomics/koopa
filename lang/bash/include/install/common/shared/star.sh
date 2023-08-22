@@ -35,12 +35,12 @@ ${dict['version']}.tar.gz"
     koopa_find_and_replace_in_file \
         --pattern='^LDFLAGS  =$' \
         --regex \
-        --replacement="LDFLAGS = ${LDFLAGS:?}" \
+        --replacement="LDFLAGS := ${LDFLAGS:?}" \
         'src/source/htslib/Makefile'
     koopa_find_and_replace_in_file \
         --pattern='^LDLIBS   =$' \
         --regex \
-        --replacement="LDLIBS = ${LDLIBS:?}" \
+        --replacement="LDLIBS := ${LDLIBS:?}" \
         'src/source/htslib/Makefile'
     koopa_cd 'src/source'
     make_args+=(
