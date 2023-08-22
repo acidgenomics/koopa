@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# NOTE Currently seeing zlib linkage issues on Linux without system zlib.
+# FIXME Currently seeing zlib linkage issues on Linux without system zlib.
+# https://github.com/alexdobin/STAR/issues/142
 
 main() {
     # """
