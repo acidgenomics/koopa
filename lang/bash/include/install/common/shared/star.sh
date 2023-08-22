@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# NOTE Potentially useful for linking our zlib in htslib:
+# https://github.com/alexdobin/STAR/issues/1379
+# > cd 'src/source/htslib'
+# > make clean
+# > make CFLAGS=-fPIE
+# > cd ..
+# > make clean
+# > make LDFLAGSextra=-fPIE
+
 main() {
     # """
     # Install STAR.
@@ -7,11 +16,8 @@ main() {
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/
-    # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/star
-    # - https://github.com/alexdobin/STAR/issues/1265
-    # - zlib linkage issues:
-    #   https://github.com/samtools/htslib/issues/347
-    #   https://github.com/samtools/htslib/issues/1074
+    # - https://bioconda.github.io/recipes/star/README.html
+    # - https://github.com/alexdobin/STAR/issues/1932
     # """
     local -A app
     local -a make_args
@@ -37,6 +43,8 @@ ${dict['version']}.tar.gz"
         "CXX=${app['gcxx']}"
         'VERBOSE=1'
     )
+    # Need to set additional flags for Apple Silicon.
+    # https://github.com/alexdobin/STAR/issues/1265
     if koopa_is_aarch64
     then
         make_args+=('CXXFLAGS_SIMD=-std=c++11')
