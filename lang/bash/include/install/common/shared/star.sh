@@ -12,15 +12,17 @@ main() {
     # """
     local -A app
     local -a make_args
-    if [[ ! -f '/usr/include/zlib.h' ]]
-    then
-        koopa_stop 'System zlib is required.'
-    fi
+    # > if [[ ! -f '/usr/include/zlib.h' ]]
+    # > then
+    # >     koopa_stop 'System zlib is required.'
+    # > fi
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
     koopa_activate_app 'zlib'
+    app['autoreconf']="$(koopa_locate_autoreconf)"
     app['date']="$(koopa_locate_date)"
     app['gcxx']="$(koopa_locate_gcxx)"
     app['make']="$(koopa_locate_make)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -30,6 +32,15 @@ main() {
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    (
+        koopa_cd 'src/source/htslib'
+        "${app['sed']}" \
+            -i.bak \
+            '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
+            'configure.ac'
+        "${app['autoreconf']}" --force --install --verbose
+        ./configure
+    )
     koopa_cd 'src/source'
     make_args+=(
         "--jobs=${dict['jobs']}"
