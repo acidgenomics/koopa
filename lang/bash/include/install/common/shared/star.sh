@@ -15,44 +15,26 @@ main() {
     # """
     local -A app
     local -a make_args
+    if koopa_is_linux && [[ ! -f '/usr/include/zlib.h' ]]
+    then
+        koopa_stop 'System zlib is required.'
+    fi
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
-    koopa_activate_app 'zlib'
-    app['autoreconf']="$(koopa_locate_autoreconf)"
     app['date']="$(koopa_locate_date)"
     app['gcxx']="$(koopa_locate_gcxx)"
     app['make']="$(koopa_locate_make)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    # Need to correct htslib Makefile for zlib.
-    dict['cram_src']="$(koopa_realpath 'src/source/htslib/cram')"
-    dict['htslib_src']="$(koopa_realpath 'src/source/htslib/htslib')"
-    CPPFLAGS="${CPPFLAGS:-} -I. -I./cram -I./htslib"
-    export CPPFLAGS
-    koopa_find_and_replace_in_file \
-        --pattern='^LDFLAGS  =$' \
-        --regex \
-        --replacement="LDFLAGS := ${LDFLAGS:?}" \
-        'src/source/htslib/Makefile'
-    koopa_find_and_replace_in_file \
-        --pattern='^LDLIBS   =$' \
-        --regex \
-        --replacement="LDLIBS := ${LDLIBS:?}" \
-        'src/source/htslib/Makefile'
     koopa_cd 'src/source'
     make_args+=(
         "--jobs=${dict['jobs']}"
-        "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['gcxx']}"
-        "LDFLAGS=${LDFLAGS:?}"
-        "LDLIBS=${LDLIBS:?}"
         'VERBOSE=1'
     )
     if koopa_is_aarch64
