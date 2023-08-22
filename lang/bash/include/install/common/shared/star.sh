@@ -17,7 +17,10 @@ main() {
     # @seealso
     # - https://github.com/alexdobin/STAR/
     # - https://bioconda.github.io/recipes/star/README.html
-    # - https://github.com/alexdobin/STAR/issues/1932
+    # - How to compile without system zlib?
+    #   https://github.com/alexdobin/STAR/issues/1932
+    # - Unbundle htslib pull request:
+    #   https://github.com/alexdobin/STAR/pull/1586
     # """
     local -A app
     local -a make_args
