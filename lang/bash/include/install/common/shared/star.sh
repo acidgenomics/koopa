@@ -3,7 +3,7 @@
 main() {
     # """
     # Install STAR.
-    # @note Updated 2023-06-16.
+    # @note Updated 2023-08-22.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/
@@ -13,6 +13,7 @@ main() {
     local -A app
     local -a make_args
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
+    koopa_activate_app 'zlib'
     app['date']="$(koopa_locate_date)"
     app['gcxx']="$(koopa_locate_gcxx --realpath)"
     app['make']="$(koopa_locate_make)"

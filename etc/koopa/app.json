@@ -4880,7 +4880,8 @@
   "star": {
     "bin": ["STAR"],
     "build_dependencies": ["coreutils", "gcc", "make"],
-    "date": "2023-08-17",
+    "date": "2023-08-22",
+    "dependencies": ["zlib"],
     "large": true,
     "url": [
       "https://github.com/alexdobin/STAR/",
