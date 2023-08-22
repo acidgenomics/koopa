@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Bundled htslib isn't picking up zlib correctly argh.
-# htslib/htslib/bgzf.h:33:10: fatal error: zlib.h: No such file or directory
-
-# FIXME Now hitting a linker issue:
-# g++: warning: parametersDefault.xxd: linker input file unused because linking not done
-# g++: warning: htslib: linker input file unused because linking not done
+# NOTE Currently seeing zlib linkage issues on Linux without system zlib.
 
 main() {
     # """

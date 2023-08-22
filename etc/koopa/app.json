@@ -4887,7 +4887,7 @@
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
     ],
-    "version": "2.7.10b"
+    "version": "2.7.11a"
   },
   "star-fusion": {
     "arch": "amd64",
