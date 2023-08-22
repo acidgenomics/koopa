@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework installer to locate our bzip2 correctly.
+# Currently failing on koopa Ubuntu instance.
+
 main() {
     # """
     # Install pbzip2.
-    # @note Updated 2023-08-16.
+    # @note Updated 2023-08-22.
     #
     # @seealso
     # - https://github.com/conda-forge/pbzip2-feedstock
@@ -12,6 +15,7 @@ main() {
     local -A app dict
     koopa_activate_app --build-only 'make'
     koopa_activate_app 'bzip2'
+    app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
@@ -26,8 +30,9 @@ ${dict['version']}/+download/pbzip2-${dict['version']}.tar.gz"
     koopa_print_env
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
-        CC='/usr/bin/gcc' \
+        CC="${app['cc']}" \
         CFLAGS="${CFLAGS:-}" \
+        CPPFLAGS="${CPPFLAGS:-}" \
         LDFLAGS="${LDFLAGS:-}" \
         PREFIX="${dict['prefix']}" \
         VERBOSE=1 \
