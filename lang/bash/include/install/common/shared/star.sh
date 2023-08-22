@@ -15,10 +15,6 @@ main() {
     # """
     local -A app
     local -a make_args
-    # > if [[ ! -f '/usr/include/zlib.h' ]]
-    # > then
-    # >     koopa_stop 'System zlib is required.'
-    # > fi
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
     koopa_activate_app 'zlib'
     app['autoreconf']="$(koopa_locate_autoreconf)"
@@ -37,14 +33,14 @@ ${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     # Need to correct htslib Makefile for zlib.
     koopa_find_and_replace_in_file \
-        --pattern='^(LDFLAGS\s.+)$' \
+        --pattern='^LDFLAGS  =$' \
         --regex \
-        --replacement='# \1' \
+        --replacement="LDFLAGS = ${LDFLAGS:?}" \
         'src/source/htslib/Makefile'
     koopa_find_and_replace_in_file \
-        --pattern='^(LDLIBS\s.+)$' \
+        --pattern='^LDLIBS   =$' \
         --regex \
-        --replacement='# \1' \
+        --replacement="LDLIBS = ${LDLIBS:?}" \
         'src/source/htslib/Makefile'
     koopa_cd 'src/source'
     make_args+=(
