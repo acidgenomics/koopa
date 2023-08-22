@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME zlib linkage isn't correct with current Makefile:
-# https://github.com/alexdobin/STAR/blob/master/source/htslib/Makefile
-
 main() {
     # """
     # Install STAR.
