@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework installer to locate our bzip2 correctly.
-# Currently failing on koopa Ubuntu instance.
-
-
-# If you would like to build pbzip2 with a statically linked
-# libbzip2 library, download the bzip2 source from the above site,
-# compile it, and copy the libbz2.a and bzlib.h files into the
-# pbzip2 source directory.  Then type `make pbzip2-static'.
-
 main() {
     # """
     # Install pbzip2.
@@ -38,7 +29,6 @@ ${dict['version']}/+download/pbzip2-${dict['version']}.tar.gz"
         --jobs="${dict['jobs']}" \
         CC="${app['cc']}" \
         CFLAGS="${CFLAGS:-}" \
-        CPPFLAGS="${CPPFLAGS:-}" \
         CXXFLAGS="${CPPFLAGS:-}" \
         LDFLAGS="${LDFLAGS:-}" \
         PREFIX="${dict['prefix']}" \
