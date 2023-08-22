@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME zlib linkage isn't correct with current Makefile:
+# https://github.com/alexdobin/STAR/blob/master/source/htslib/Makefile
+
 main() {
     # """
     # Install STAR.
@@ -32,18 +35,21 @@ main() {
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    (
-        koopa_cd 'src/source/htslib'
-        #"${app['sed']}" \
-        #    -i.bak \
-        #    '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
-        #    'configure.ac'
-        #"${app['autoreconf']}" --force --install --verbose
-        ./configure
-    )
+    # Need to correct htslib Makefile for zlib.
+    koopa_find_and_replace_in_file \
+        --pattern='^(LDFLAGS\s.+)$' \
+        --regex \
+        --replacement='# \1' \
+        'src/source/htslib/Makefile'
+    koopa_find_and_replace_in_file \
+        --pattern='^(LDLIBS\s.+)$' \
+        --regex \
+        --replacement='# \1' \
+        'src/source/htslib/Makefile'
     koopa_cd 'src/source'
     make_args+=(
         "--jobs=${dict['jobs']}"
+        "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['gcxx']}"
         'VERBOSE=1'
     )
