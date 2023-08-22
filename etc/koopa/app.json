@@ -4883,6 +4883,7 @@
     "date": "2023-08-22",
     "enabled": false,
     "large": true,
+    "notes": ["Requires system zlib to be installed."],
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
