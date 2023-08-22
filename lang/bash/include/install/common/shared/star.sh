@@ -3,6 +3,10 @@
 # FIXME Bundled htslib isn't picking up zlib correctly argh.
 # htslib/htslib/bgzf.h:33:10: fatal error: zlib.h: No such file or directory
 
+# FIXME Now hitting a linker issue:
+# g++: warning: parametersDefault.xxd: linker input file unused because linking not done
+# g++: warning: htslib: linker input file unused because linking not done
+
 main() {
     # """
     # Install STAR.
@@ -14,7 +18,7 @@ main() {
     # - https://github.com/alexdobin/STAR/issues/1265
     # """
     local -A app
-    local -a libs make_args
+    local -a make_args
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
     koopa_activate_app 'zlib'
     app['date']="$(koopa_locate_date)"
