@@ -42,7 +42,7 @@ ${dict['version']}.tar.gz"
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['gcxx']}"
-        "CXXFLAGS=${CPPFLAGS:?}"
+        # > "CXXFLAGS=${CPPFLAGS:?}"
         # > "LIBS=${libs[*]}"
         'VERBOSE=1'
     )
