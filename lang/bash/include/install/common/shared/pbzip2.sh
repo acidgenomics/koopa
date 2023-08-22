@@ -28,9 +28,8 @@ ${dict['version']}/+download/pbzip2-${dict['version']}.tar.gz"
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
         CC="${app['cc']}" \
-        CFLAGS="${CFLAGS:-}" \
-        CXXFLAGS="${CPPFLAGS:-}" \
-        LDFLAGS="${LDFLAGS:-}" \
+        CXXFLAGS="${CPPFLAGS:?}" \
+        LDFLAGS="${LDFLAGS:?}" \
         PREFIX="${dict['prefix']}" \
         VERBOSE=1 \
         install
