@@ -32,8 +32,9 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     # Need to correct htslib Makefile for zlib.
-    # shellcheck disable=SC2155
-    export C_INCLUDE_PATH="$(koopa_realpath 'src/source/htslib/cram')"
+    dict['cram_src']="$(koopa_realpath 'src/source/htslib/cram')"
+    CPPFLAGS="${CPPFLAGS:-} -I${dict['cram_src']}"
+    export CPPFLAGS
     koopa_find_and_replace_in_file \
         --pattern='^LDFLAGS  =$' \
         --regex \
