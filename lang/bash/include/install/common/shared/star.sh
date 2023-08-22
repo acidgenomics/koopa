@@ -9,6 +9,9 @@ main() {
     # - https://github.com/alexdobin/STAR/
     # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/star
     # - https://github.com/alexdobin/STAR/issues/1265
+    # - zlib linkage issues:
+    #   https://github.com/samtools/htslib/issues/347
+    #   https://github.com/samtools/htslib/issues/1074
     # """
     local -A app
     local -a make_args
