@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# NOTE Potentially useful for linking our zlib in htslib:
+# https://github.com/alexdobin/STAR/issues/1379
+# > cd 'src/source/htslib'
+# > make clean
+# > make CFLAGS=-fPIE
+# > cd ..
+# > make clean
+# > make LDFLAGSextra=-fPIE
+
 main() {
     # """
     # Install STAR.
@@ -7,15 +16,21 @@ main() {
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/
-    # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/star
-    # - https://github.com/alexdobin/STAR/issues/1265
+    # - https://bioconda.github.io/recipes/star/README.html
+    # - How to compile without system zlib?
+    #   https://github.com/alexdobin/STAR/issues/1932
+    # - Unbundle htslib pull request:
+    #   https://github.com/alexdobin/STAR/pull/1586
     # """
     local -A app
     local -a make_args
+    if koopa_is_linux && [[ ! -f '/usr/include/zlib.h' ]]
+    then
+        koopa_stop 'System zlib is required.'
+    fi
     koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
-    koopa_activate_app 'zlib'
     app['date']="$(koopa_locate_date)"
-    app['gcxx']="$(koopa_locate_gcxx --realpath)"
+    app['gcxx']="$(koopa_locate_gcxx)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
@@ -31,6 +46,8 @@ ${dict['version']}.tar.gz"
         "CXX=${app['gcxx']}"
         'VERBOSE=1'
     )
+    # Need to set additional flags for Apple Silicon.
+    # https://github.com/alexdobin/STAR/issues/1265
     if koopa_is_aarch64
     then
         make_args+=('CXXFLAGS_SIMD=-std=c++11')
