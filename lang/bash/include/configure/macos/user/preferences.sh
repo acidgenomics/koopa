@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure macOS user defaults.
-    # @note Updated 2023-06-02.
+    # @note Updated 2023-08-22.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -329,7 +329,7 @@ write defaults, ensure that your terminal app has full disk access enabled." \
     # >     -array-add '{tile-data={}; tile-type="spacer-tile";}'
     # Hot corners.
     # Possible values:
-    #  0: no-op
+    #  0: No action
     #  2: Mission Control
     #  3: Show application windows
     #  4: Desktop
@@ -349,28 +349,29 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.dock' \
         'wvous-tl-modifier' \
         -int 0
-    # Top right screen corner: None.
+    # Top right screen corner: Lock Screen.
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-tr-corner' \
-        -int 0
-    "${app['defaults']}" write 'com.apple.dock' \
+        -int 13
+    "${app['defaults']}" write \
+        'com.apple.dock' \
         'wvous-tr-modifier' \
         -int 0
-    # Bottom left screen corner: Lock Screen.
+    # Bottom left screen corner: None.
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-bl-corner' \
-        -int 13
+        -int 0
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-bl-modifier' \
         -int 0
-    # Bottom right screen corner: Desktop.
+    # Bottom right screen corner: None.
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-br-corner' \
-        -int 4
+        -int 0
     "${app['defaults']}" write \
         'com.apple.dock' \
         'wvous-br-modifier' \
