@@ -51,6 +51,8 @@ ${dict['version']}.tar.gz"
         "--jobs=${dict['jobs']}"
         "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['gcxx']}"
+        "LDFLAGS=${LDFLAGS:?}"
+        "LDLIBS=${LDLIBS:?}"
         'VERBOSE=1'
     )
     if koopa_is_aarch64
