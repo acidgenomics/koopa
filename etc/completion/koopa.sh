@@ -95,7 +95,7 @@ _koopa_complete() {
                         'aws-cli'
                         'azure-cli'
                         'bamtools'
-                        'bandwhich'
+                        # > 'bandwhich'
                         'bash'
                         'bash-language-server'
                         'bashcov'
