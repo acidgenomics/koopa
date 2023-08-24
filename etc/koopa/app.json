@@ -274,7 +274,7 @@
     "aliases": {
       "homebrew": true
     },
-    "bin": ["grex"],
+    "bin": ["bandwhich"],
     "build_dependencies": ["git", "rust"],
     "date": "2022-12-08",
     "enabled": false,
@@ -1918,9 +1918,9 @@
     },
     "bin": ["grex"],
     "build_dependencies": ["git", "rust"],
-    "date": "2022-12-08",
+    "date": "2023-08-24",
     "url": ["https://github.com/pemistahl/grex/"],
-    "version": "1.4.1"
+    "version": "1.4.4"
   },
   "groff": {
     "aliases": {
@@ -4626,10 +4626,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-07-13",
+    "date": "2023-08-24",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.71.0"
+    "version": "1.72.0"
   },
   "salmon": {
     "bin": ["salmon"],
