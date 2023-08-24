@@ -3282,7 +3282,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-07-13",
+    "date": "2023-08-24",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3307,7 +3307,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.4.9"
+    "version": "1.5.0"
   },
   "man-db": {
     "aliases": {
