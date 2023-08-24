@@ -274,7 +274,7 @@
     "aliases": {
       "homebrew": true
     },
-    "bin": ["grex"],
+    "bin": ["bandwhich"],
     "build_dependencies": ["git", "rust"],
     "date": "2022-12-08",
     "enabled": false,
@@ -1918,9 +1918,9 @@
     },
     "bin": ["grex"],
     "build_dependencies": ["git", "rust"],
-    "date": "2022-12-08",
+    "date": "2023-08-24",
     "url": ["https://github.com/pemistahl/grex/"],
-    "version": "1.4.1"
+    "version": "1.4.4"
   },
   "groff": {
     "aliases": {
@@ -3282,7 +3282,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-07-13",
+    "date": "2023-08-24",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3307,7 +3307,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.4.9"
+    "version": "1.5.0"
   },
   "man-db": {
     "aliases": {
@@ -3732,11 +3732,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["git", "pkg-config", "rust"],
-    "date": "2023-07-30",
+    "date": "2023-08-23",
     "dependencies": ["openssl3"],
     "enabled": false,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.83.1"
+    "version": "0.84.0"
   },
   "oniguruma": {
     "aliases": {
@@ -3892,10 +3892,10 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-08-07",
+    "date": "2023-08-23",
     "large": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.6.1"
+    "version": "3.1.6.2"
   },
   "parallel": {
     "aliases": {
@@ -4626,10 +4626,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-07-13",
+    "date": "2023-08-24",
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.71.0"
+    "version": "1.72.0"
   },
   "salmon": {
     "bin": ["salmon"],
