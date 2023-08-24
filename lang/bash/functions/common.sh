@@ -11394,12 +11394,6 @@ koopa_install_bamtools() {
         "$@"
 }
 
-koopa_install_bandwhich() {
-    koopa_install_app \
-        --name='bandwhich' \
-        "$@"
-}
-
 koopa_install_bash_language_server() {
     koopa_install_app \
         --name='bash-language-server' \
