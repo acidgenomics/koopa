@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Potentially useful for linking our zlib in htslib:
-# https://github.com/alexdobin/STAR/issues/1379
-# > cd 'src/source/htslib'
-# > make clean
-# > make CFLAGS=-fPIE
-# > cd ..
-# > make clean
-# > make LDFLAGSextra=-fPIE
+# FIXME Apply bioconda patch or pull request to unbundle htslib:
+# - https://github.com/bioconda/bioconda-recipes/blob/master/recipes/star/
+#     patches/0002-donotuse_own_htslib.patch
+# - https://github.com/alexdobin/STAR/pull/1586
 
 main() {
     # """
@@ -24,6 +20,7 @@ main() {
     # """
     local -A app
     local -a make_args
+    # FIXME Once we unbundle htslib (see above), can remove this.
     if koopa_is_linux && [[ ! -f '/usr/include/zlib.h' ]]
     then
         koopa_stop 'System zlib is required.'
