@@ -27,10 +27,10 @@ main() {
     export NPM_CONFIG_UPDATE_NOTIFIER=false
     koopa_is_root && install_args+=('--unsafe-perm')
     install_args+=(
-        '-ddd'
         '--build-from-source'
         "--cache=${dict['cache_prefix']}"
         '--global'
+        '--loglevel=silly' # -ddd
         '--no-audit'
         '--no-fund'
         "${dict['name']}@${dict['version']}"
