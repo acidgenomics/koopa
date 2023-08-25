@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-# NOTE The json-sort-order plugin isn't compatible with prettier 3 yet.
-# - https://github.com/Gudahtt/prettier-plugin-sort-json/issues/119
-# - https://www.npmjs.com/package/prettier
+# FIXME prettier isn't detecting globally installed plugins correctly:
+# prettier --plugin '/opt/koopa/opt/prettier/lib/node_modules/prettier-plugin-sort-json/dist/index.js' --help
 
 main() {
     koopa_install_app_subshell \
         --installer='node-package' \
-        --name='prettier'
+        --name='prettier' \
+        -D 'prettier-plugin-sort-json@3.0.0'
 }
