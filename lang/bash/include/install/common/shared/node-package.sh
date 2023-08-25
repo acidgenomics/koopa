@@ -3,12 +3,14 @@
 main() {
     # """
     # Install Node.js package using npm.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-08-25.
     #
     # @seealso
     # - npm help config
     # - npm help install
     # - npm config get prefix
+    # - https://github.com/Homebrew/brew/blob/master/Library/Homebrew/
+    #     language/node.rb
     # """
     local -A app dict
     local -a install_args
@@ -23,18 +25,19 @@ main() {
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"
     export NPM_CONFIG_UPDATE_NOTIFIER=false
-    install_args=(
+    koopa_is_root && install_args+=('--unsafe-perm')
+    install_args+=(
+        '--build-from-source'
         "--cache=${dict['cache_prefix']}"
-        '--location=global'
+        '--global'
+        '--loglevel=silly' # -ddd
         '--no-audit'
         '--no-fund'
+        "${dict['name']}@${dict['version']}"
+        # Enable pass-in of additional plug-ins (e.g. for prettier).
+        "$@"
     )
-    install_args+=("${dict['name']}@${dict['version']}")
-    case "${dict['name']}" in
-        'prettier')
-            install_args+=('prettier-plugin-sort-json')
-            ;;
-    esac
+    koopa_dl 'npm install args' "${install_args[*]}"
     "${app['npm']}" install "${install_args[@]}" 2>&1
     koopa_rm "${dict['cache_prefix']}"
     return 0
