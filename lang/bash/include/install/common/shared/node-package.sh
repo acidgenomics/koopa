@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js package using npm.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-08-25.
     #
     # @seealso
     # - npm help config
@@ -23,18 +23,16 @@ main() {
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"
     export NPM_CONFIG_UPDATE_NOTIFIER=false
-    install_args=(
+    install_args+=(
         "--cache=${dict['cache_prefix']}"
         '--location=global'
         '--no-audit'
         '--no-fund'
+        "${dict['name']}@${dict['version']}"
+        # Enable pass-in of additional plug-ins (e.g. for prettier).
+        "$@"
     )
-    install_args+=("${dict['name']}@${dict['version']}")
-    case "${dict['name']}" in
-        'prettier')
-            install_args+=('prettier-plugin-sort-json')
-            ;;
-    esac
+    koopa_dl 'npm install args' "${install_args[*]}"
     "${app['npm']}" install "${install_args[@]}" 2>&1
     koopa_rm "${dict['cache_prefix']}"
     return 0
