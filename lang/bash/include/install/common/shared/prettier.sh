@@ -7,5 +7,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='node-package' \
-        --name='prettier'
+        --name='prettier' \
+        -D 'prettier-plugin-sort-json@2.0.0'
 }
