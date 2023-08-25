@@ -1160,9 +1160,9 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["git", "rust"],
-    "date": "2023-08-17",
+    "date": "2023-08-25",
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.50.0"
+    "version": "0.51.1"
   },
   "docker-credential-helpers": {
     "aliases": {
