@@ -9,6 +9,8 @@ main() {
     # - npm help config
     # - npm help install
     # - npm config get prefix
+    # - https://github.com/Homebrew/brew/blob/master/Library/Homebrew/
+    #     language/node.rb
     # """
     local -A app dict
     local -a install_args
@@ -23,9 +25,12 @@ main() {
     koopa_add_to_path_start "$(koopa_dirname "${app['node']}")"
     export NPM_CONFIG_PREFIX="${dict['prefix']}"
     export NPM_CONFIG_UPDATE_NOTIFIER=false
+    koopa_is_root && install_args+=('--unsafe-perm')
     install_args+=(
+        '-ddd'
+        '--build-from-source'
         "--cache=${dict['cache_prefix']}"
-        '--location=global'
+        '--global'
         '--no-audit'
         '--no-fund'
         "${dict['name']}@${dict['version']}"
