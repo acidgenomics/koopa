@@ -3,7 +3,7 @@
 koopa_bioconda_autobump_recipe() {
     # """
     # Edit a Bioconda autobump recipe.
-    # @note Updated 2023-01-12.
+    # @note Updated 2023-08-26.
     # """
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
