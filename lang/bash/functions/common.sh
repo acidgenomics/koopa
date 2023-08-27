@@ -11913,6 +11913,12 @@ koopa_install_git() {
         "$@"
 }
 
+koopa_install_gitui() {
+    koopa_install_app \
+        --name='gitui' \
+        "$@"
+}
+
 koopa_install_glances() {
     koopa_install_app \
         --name='glances' \
@@ -24214,6 +24220,12 @@ koopa_uninstall_git_lfs() {
 koopa_uninstall_git() {
     koopa_uninstall_app \
         --name='git' \
+        "$@"
+}
+
+koopa_uninstall_gitui() {
+    koopa_uninstall_app \
+        --name='gitui' \
         "$@"
 }
 
