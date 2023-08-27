@@ -1754,6 +1754,16 @@
     "url": ["https://git-lfs.github.com/"],
     "version": "3.3.0"
   },
+  "gitui": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["gitui"],
+    "build_dependencies": ["git", "rust"],
+    "date": "2023-08-27",
+    "url": ["https://github.com/extrawurst/gitui/"],
+    "version": "0.24.0"
+  },
   "glances": {
     "aliases": {
       "homebrew": true
@@ -5320,9 +5330,9 @@
   "walk": {
     "bin": ["walk"],
     "build_dependencies": ["go"],
-    "date": "2023-08-21",
+    "date": "2023-08-27",
     "url": ["https://github.com/antonmedv/walk/"],
-    "version": "1.5.2"
+    "version": "1.6.0"
   },
   "wget": {
     "aliases": {
