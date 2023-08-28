@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Add support for lzlib.
-# https://formulae.brew.sh/formula/lzlib
-
-# FIXME Add support for these:
-# -gpgme
-# -hsts
-# -idn
-# -lzip
-# -ntlm
-# -opie
-# -psl
+# NOTE Consider adding support: gpgme, hsts, idn, lzip, ntlm, opie, psl
 
 main() {
     # """
@@ -23,10 +13,7 @@ main() {
     # """
     local -a build_deps deps
     local -A dict
-    build_deps=(
-        'sed'
-        'texinfo'
-    )
+    build_deps=('sed' 'texinfo')
     deps=(
         'brotli'
         'bzip2'
