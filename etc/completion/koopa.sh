@@ -421,7 +421,6 @@ _koopa_complete() {
                         'utf8proc'
                         'vim'
                         'visidata'
-                        'visual-studio-code-cli'
                         'vulture'
                         'walk'
                         'wget'

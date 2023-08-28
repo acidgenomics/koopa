@@ -13613,12 +13613,6 @@ koopa_install_visidata() {
         "$@"
 }
 
-koopa_install_visual_studio_code_cli() {
-    koopa_install_app \
-        --name='visual-studio-code-cli' \
-        "$@"
-}
-
 koopa_install_vulture() {
     koopa_install_app \
         --name='vulture' \
@@ -25749,12 +25743,6 @@ koopa_uninstall_vim() {
 koopa_uninstall_visidata() {
     koopa_uninstall_app \
         --name='visidata' \
-        "$@"
-}
-
-koopa_uninstall_visual_studio_code_cli() {
-    koopa_uninstall_app \
-        --name='visual-studio-code-cli' \
         "$@"
 }
 
