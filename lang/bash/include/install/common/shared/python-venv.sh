@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Allow the user to pass in '--pip-name' and '--pkg-name' variables,
-# rather than hard-coding them here.
-
 main() {
     # """
     # Install a Python package as a virtual environment application.
