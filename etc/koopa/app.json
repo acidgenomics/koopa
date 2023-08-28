@@ -4636,7 +4636,6 @@
       "rustfmt"
     ],
     "date": "2023-08-24",
-    "dependencies": ["git"],
     "large": true,
     "url": ["https://www.rust-lang.org/"],
     "version": "1.72.0"
