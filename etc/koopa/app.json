@@ -5302,17 +5302,6 @@
     ],
     "version": "2.11.1"
   },
-  "visual-studio-code-cli": {
-    "aliases": {
-      "homebrew": "code-cli"
-    },
-    "bin": ["code"],
-    "build_dependencies": ["rust"],
-    "date": "2023-05-08",
-    "enabled": false,
-    "url": ["https://github.com/microsoft/vscode/"],
-    "version": "1.78.0"
-  },
   "vulture": {
     "aliases": {
       "homebrew": true
