@@ -2,7 +2,7 @@
 
 main() {
     koopa_install_app_subshell \
-        --installer='python-venv' \
+        --installer='python-package' \
         --name='black' \
         -D --pip-name='black[d]'
 }

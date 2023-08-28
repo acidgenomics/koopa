@@ -14,7 +14,7 @@ main() {
     # Change the default configuration target with 'AIRFLOW_HOME'.
     # """
     koopa_install_app_subshell \
-        --installer='python-venv' \
+        --installer='python-package' \
         --name='apache-airflow' \
         -D --package-name='apache_airflow'
 }
