@@ -41,10 +41,23 @@ main() {
                 dict['cargo_name']="${2:?}"
                 shift 2
                 ;;
+            # Passthrough key value pairs --------------------------------------
+            '--features='* | \
+            '--git='* | \
+            '--tag='*)
+                # Left-hand side: '%-*'; right-hand side: '#*-'.
+                pos+=("${1%*=}" "${1#*=}")
+                shift 1
+                ;;
+            '--features' | \
+            '--git' | \
+            '--tag')
+                pos+=("$1" "$2")
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
