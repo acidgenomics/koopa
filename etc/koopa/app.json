@@ -4517,10 +4517,10 @@
     },
     "bin": ["rga"],
     "build_dependencies": ["rust"],
-    "date": "2023-05-30",
+    "date": "2023-08-28",
     "enabled": false,
     "url": ["https://github.com/phiresky/ripgrep-all/"],
-    "version": "1.0.0-alpha.4"
+    "version": "1.0.0-alpha.5"
   },
   "rmate": {
     "aliases": {
