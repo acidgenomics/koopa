@@ -1474,12 +1474,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-13",
+    "date": "2023-08-28",
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "10.1.0"
+    "version": "10.1.1"
   },
   "fontconfig": {
     "aliases": {
