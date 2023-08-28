@@ -19,6 +19,7 @@ main() {
     dict['build_cmd']=''
     dict['ldflags']=''
     dict['mod']=''
+    dict['tags']=''
     dict['url']=''
     pos=()
     while (("$#"))
@@ -57,6 +58,14 @@ main() {
                 dict['mod']="${2:?}"
                 shift 2
                 ;;
+            '--tags='*)
+                dict['tags']="${1#*=}"
+                shift 1
+                ;;
+            '--tags')
+                dict['tags']="${2:?}"
+                shift 2
+                ;;
             '--url='*)
                 dict['url']="${1#*=}"
                 shift 1
@@ -83,6 +92,10 @@ main() {
     if [[ -n "${dict['mod']}" ]]
     then
         build_args+=('-mod' "${dict['mod']}")
+    fi
+    if [[ -n "${dict['tags']}" ]]
+    then
+        build_args+=('-tags' "${dict['tags']}")
     fi
     build_args+=('-o' "${dict['prefix']}/bin/${dict['bin_name']}")
     if [[ -n "${dict['build_cmd']}" ]]
