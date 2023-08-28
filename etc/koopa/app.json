@@ -3169,9 +3169,9 @@
     },
     "bin": ["lsd"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2023-08-28",
     "url": ["https://github.com/Peltoche/lsd/"],
-    "version": "0.23.1"
+    "version": "1.0.0"
   },
   "lua": {
     "aliases": {
@@ -5331,9 +5331,9 @@
   "walk": {
     "bin": ["walk"],
     "build_dependencies": ["go"],
-    "date": "2023-08-27",
+    "date": "2023-08-28",
     "url": ["https://github.com/antonmedv/walk/"],
-    "version": "1.6.0"
+    "version": "1.6.2"
   },
   "wget": {
     "aliases": {
@@ -5753,9 +5753,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-06-26",
+    "date": "2023-08-28",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.37.2"
+    "version": "0.38.0"
   },
   "zip": {
     "aliases": {
