@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to split out package-specific configuration.
+
 main() {
     # """
     # Install Rust package.
-    # @note Updated 2023-07-17.
+    # @note Updated 2023-08-28.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -87,6 +89,12 @@ main() {
         'fd-find')
             install_args+=(
                 '--git' 'https://github.com/sharkdp/fd.git'
+                '--tag' "v${dict['version']}"
+            )
+            ;;
+        'lsd')
+            install_args+=(
+                '--git' 'https://github.com/lsd-rs/lsd.git'
                 '--tag' "v${dict['version']}"
             )
             ;;
