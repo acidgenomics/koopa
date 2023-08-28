@@ -3,5 +3,6 @@
 main() {
     koopa_install_app_subshell \
         --installer='rust-package' \
-        --name='delta'
+        --name='delta' \
+        -D '--cargo-name=git-delta'
 }

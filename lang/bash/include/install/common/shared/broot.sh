@@ -5,10 +5,6 @@ main() {
     # Install broot.
     # @note Updated 2023-08-28.
     #
-    # How to install from git when crates.io is outdated:
-    # > -D '--git' -D 'https://github.com/Canop/broot.git'
-    # > -D '--tag' -D "v${KOOPA_INSTALL_VERSION:?}"
-    #
     # Consider including opt (used in Homebrew recipe):
     # - 'xorg-xorgproto'
     # - 'xorg-xcb-proto'
