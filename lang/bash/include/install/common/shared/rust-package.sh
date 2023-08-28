@@ -45,8 +45,10 @@ main() {
             '--features='* | \
             '--git='* | \
             '--tag='*)
-                # Left-hand side: '%-*'; right-hand side: '#*-'.
-                pos+=("${1%*=}" "${1#*=}")
+                # e.g. '--features=extra'.
+                # left-hand side: "${1%%=*}" (e.g. '--features').
+                # right-hand side: "${1#*=}" (e.g. 'extra').
+                pos+=("${1%%=*}" "${1#*=}")
                 shift 1
                 ;;
             '--features' | \
@@ -85,13 +87,9 @@ main() {
         '--locked'
         '--root' "${dict['prefix']}"
         '--verbose'
+        '--version' "${dict['version']}"
     )
     [[ "$#" -gt 0 ]] && install_args+=("$@")
-    # Only set '--version' for packages to be installed from crates.io.
-    if [[ ! "${install_args[*]}" =~ '--git' ]]
-    then
-        install_args+=('--version' "${dict['version']}")
-    fi
     install_args+=("${dict['cargo_name']}")
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
