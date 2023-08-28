@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to support '--ldflags' here.
-# FIXME Need to support '--url' here.
-# FIXME Allow the user to change bin-name? Default to the app name.
-# FIXME Need to support some type of 'bin' argument here? What about just
-# '-o' passthrough?
-
 main() {
     # """
     # Install a Go package.
