@@ -65,6 +65,7 @@ main() {
                 ;;
         esac
     done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     if [[ -n "${dict['py_maj_ver']}" ]]
     then
         # e.g. '3.11' to '311'.
@@ -80,7 +81,6 @@ main() {
     koopa_assert_is_function "${dict['locate_python']}"
     app['python']="$("${dict['locate_python']}" --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     dict['libexec']="${dict['prefix']}/libexec"
     [[ -z "${dict['pkg_name']}" ]] && dict['pkg_name']="${dict['name']}"
     [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['pkg_name']}"
