@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nushell.
-    # @note Updated 2023-04-12.
+    # @note Updated 2023-08-28.
     #
     # @seealso
     # - https://www.nushell.sh/book/installation.html#build-from-source
@@ -18,5 +18,7 @@ main() {
     export OPENSSL_DIR
     koopa_install_app_subshell \
         --installer='rust-package' \
-        --name='nushell'
+        --name='nushell' \
+        -D '--cargo-name=nu' \
+        -D '--features=extra'
 }
