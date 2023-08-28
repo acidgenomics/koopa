@@ -22,7 +22,9 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['bin_name']=''
+    dict['build_cmd']=''
     dict['ldflags']=''
+    dict['mod']=''
     dict['url']=''
     pos=()
     while (("$#"))
@@ -37,12 +39,28 @@ main() {
                 dict['bin_name']="${2:?}"
                 shift 2
                 ;;
+            '--build-cmd='*)
+                dict['build_cmd']="${1#*=}"
+                shift 1
+                ;;
+            '--build-cmd')
+                dict['build_cmd']="${2:?}"
+                shift 2
+                ;;
             '--ldflags='*)
                 dict['ldflags']="${1#*=}"
                 shift 1
                 ;;
             '--ldflags')
                 dict['ldflags']="${2:?}"
+                shift 2
+                ;;
+            '--mod='*)
+                dict['mod']="${1#*=}"
+                shift 1
+                ;;
+            '--mod')
+                dict['mod']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
@@ -60,6 +78,7 @@ main() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_is_set '--url' "${dict['url']}"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     [[ -z "${dict['bin_name']}" ]] && dict['bin_name']="${dict['name']}"
@@ -67,7 +86,15 @@ main() {
     then
         build_args+=('-ldflags' "${dict['ldflags']}")
     fi
+    if [[ -n "${dict['mod']}" ]]
+    then
+        build_args+=('-mod' "${dict['mod']}")
+    fi
     build_args+=('-o' "${dict['prefix']}/bin/${dict['bin_name']}")
+    if [[ -n "${dict['build_cmd']}" ]]
+    then
+        build_args+=("${dict['build_cmd']}")
+    fi
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
