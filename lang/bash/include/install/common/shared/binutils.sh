@@ -3,7 +3,7 @@
 main() {
     # """
     # Install binutils.
-    # @note Updated 2022-11-15.
+    # @note Updated 2023-08-29.
     #
     # @section Flex / Lex configuration on Ubuntu 22:
     # - https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
@@ -22,12 +22,12 @@ main() {
     # - https://tracker.debian.org/pkg/binutils
     # - https://salsa.debian.org/toolchain-team/binutils/-/tree/master/debian
     # """
-    local -a build_deps deps install_args
+    local -a build_deps conf_args deps
     build_deps=('bison' 'flex')
     deps=('zlib' 'texinfo')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    install_args=(
+    conf_args=(
         # > -D '--disable-multilib'
         # > -D '--disable-nls'
         # > -D '--disable-plugins'
@@ -53,13 +53,11 @@ main() {
     )
     if koopa_is_linux
     then
-        install_args+=(
+        conf_args+=(
             # > -D 'LEX=flex'
             -D 'LEX=touch lex.yy.c'
         )
     fi
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='binutils' \
-        "${install_args[@]}"
+    koopa_install_gnu_app --jobs=1 "${conf_args[@]}"
+    return 0
 }
