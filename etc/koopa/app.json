@@ -2039,9 +2039,8 @@
     "version": "1.22.4"
   },
   "gseapy": {
-    "arch": "amd64",
     "bin": ["gseapy"],
-    "date": "2023-06-15",
+    "date": "2023-08-28",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
@@ -2049,7 +2048,7 @@
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.0.5"
+    "version": "1.0.6"
   },
   "gsl": {
     "aliases": {
