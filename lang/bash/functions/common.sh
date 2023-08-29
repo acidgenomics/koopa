@@ -11408,6 +11408,7 @@ koopa_install_bamtools() {
 
 koopa_install_bash_language_server() {
     koopa_install_app \
+        --installer='node-package' \
         --name='bash-language-server' \
         "$@"
 }
@@ -12295,6 +12296,7 @@ koopa_install_gsl() {
 
 koopa_install_gtop() {
     koopa_install_app \
+        --installer='node-package' \
         --name='gtop' \
         "$@"
 }
@@ -12994,6 +12996,7 @@ koopa_install_man_db() {
 
 koopa_install_markdownlint_cli() {
     koopa_install_app \
+        --installer='node-package' \
         --name='markdownlint-cli' \
         "$@"
 }
