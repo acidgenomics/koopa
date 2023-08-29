@@ -11765,7 +11765,6 @@ koopa_install_deeptools() {
 
 koopa_install_delta() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='delta' \
         "$@"
 }
@@ -13931,7 +13930,6 @@ koopa_install_rust_package() {
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
-    dict['cargo_name']=''
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:-}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
@@ -13940,12 +13938,28 @@ koopa_install_rust_package() {
     while (("$#"))
     do
         case "$1" in
-            '--cargo-name='*)
-                dict['cargo_name']="${1#*=}"
+            '--name='*)
+                dict['name']="${1#*=}"
                 shift 1
                 ;;
-            '--cargo-name')
-                dict['cargo_name']="${2:?}"
+            '--name')
+                dict['name']="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict['version']="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict['version']="${2:?}"
                 shift 2
                 ;;
             '--features='* | \
@@ -13965,9 +13979,12 @@ koopa_install_rust_package() {
                 ;;
         esac
     done
+    koopa_assert_is_set \
+        '--name' "${dict['name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--version' "${dict['version']}"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_dir "${dict['cargo_home']}"
-    [[ -z "${dict['cargo_name']}" ]] && dict['cargo_name']="${dict['name']}"
     export CARGO_HOME="${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
     if [[ -n "${LDFLAGS:-}" ]]
@@ -13992,7 +14009,7 @@ koopa_install_rust_package() {
         '--version' "${dict['version']}"
     )
     [[ "$#" -gt 0 ]] && install_args+=("$@")
-    install_args+=("${dict['cargo_name']}")
+    install_args+=("${dict['name']}")
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
     "${app['cargo']}" install "${install_args[@]}"
