@@ -10,14 +10,17 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/csvtk.rb
     # """
     local -A dict
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/shenwei356/csvtk/archive/refs/\
 tags/v${dict['version']}.tar.gz"
-    koopa_install_app_subshell \
-        --installer='go-package' \
-        --name='csvtk' \
-        -D '--build-cmd=./csvtk' \
-        -D '--ldflags=-s -w' \
-        -D "--url=${dict['url']}"
+    koopa_install_go_package \
+        --build-cmd='./csvtk' \
+        --ldflags='-s -w' \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}" \
+        --version="${dict['version']}"
     return 0
 }
