@@ -5,7 +5,12 @@ main() {
     # Ensure release is tagged production before submitting.
     # https://exiftool.org/history.html
     # """
-    koopa_install_app_subshell \
-        --installer='perl-package' \
-        --name='exiftool'
+    local -A dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    koopa_install_perl_package \
+        --cpan-path='EXIFTOOL/Image-ExifTool' \
+        --prefix="${dict['prefix']}" \
+        --version="${dict['version']}"
+    return 0
 }
