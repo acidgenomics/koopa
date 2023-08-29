@@ -12420,7 +12420,6 @@ koopa_install_jemalloc() {
 
 koopa_install_jless() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='jless' \
         "$@"
 }
@@ -12901,7 +12900,6 @@ koopa_install_llvm() {
 
 koopa_install_lsd() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='lsd' \
         "$@"
 }

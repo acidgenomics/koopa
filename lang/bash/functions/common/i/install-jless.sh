@@ -2,7 +2,6 @@
 
 koopa_install_jless() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='jless' \
         "$@"
 }
