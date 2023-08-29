@@ -11503,6 +11503,7 @@ koopa_install_bowtie2() {
 
 koopa_install_bpytop() {
     koopa_install_app \
+        --installer='python-package' \
         --name='bpytop' \
         "$@"
 }
@@ -11735,6 +11736,7 @@ koopa_install_cpufetch() {
 
 koopa_install_csvkit() {
     koopa_install_app \
+        --installer='python-package' \
         --name='csvkit' \
         "$@"
 }
@@ -11760,6 +11762,7 @@ koopa_install_dash() {
 
 koopa_install_deeptools() {
     koopa_install_app \
+        --installer='python-package' \
         --name='deeptools' \
         "$@"
 }
@@ -11907,6 +11910,7 @@ koopa_install_flac() {
 
 koopa_install_flake8() {
     koopa_install_app \
+        --installer='python-package' \
         --name='flake8' \
         "$@"
 }
@@ -12267,6 +12271,7 @@ koopa_install_groff() {
 
 koopa_install_gseapy() {
     koopa_install_app \
+        --installer='python-package' \
         --name='gseapy' \
         "$@"
 }
@@ -12366,6 +12371,7 @@ koopa_install_htslib() {
 
 koopa_install_httpie() {
     koopa_install_app \
+        --installer='python-package' \
         --name='httpie' \
         "$@"
 }
@@ -12397,6 +12403,7 @@ koopa_install_imagemagick() {
 
 koopa_install_ipython() {
     koopa_install_app \
+        --installer='python-package' \
         --name='ipython' \
         "$@"
 }
@@ -12409,6 +12416,7 @@ koopa_install_isl() {
 
 koopa_install_isort() {
     koopa_install_app \
+        --installer='python-package' \
         --name='isort' \
         "$@"
 }
@@ -12445,6 +12453,7 @@ koopa_install_julia() {
 
 koopa_install_jupyterlab() {
     koopa_install_app \
+        --installer='python-package' \
         --name='jupyterlab' \
         "$@"
 }
@@ -12643,6 +12652,7 @@ koopa_install_lapack() {
 
 koopa_install_latch() {
     koopa_install_app \
+        --installer='python-package' \
         --name='latch' \
         "$@"
 }
@@ -12992,6 +13002,7 @@ koopa_install_mdcat() {
 
 koopa_install_meson() {
     koopa_install_app \
+        --installer='python-package' \
         --name='meson' \
         "$@"
 }
@@ -13047,6 +13058,7 @@ koopa_install_msgpack() {
 
 koopa_install_multiqc() {
     koopa_install_app \
+        --installer='python-package' \
         --name='multiqc' \
         "$@"
 }
@@ -13465,6 +13477,7 @@ koopa_install_pinentry() {
 
 koopa_install_pipx() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pipx' \
         "$@"
 }
@@ -13483,6 +13496,7 @@ koopa_install_pkg_config() {
 
 koopa_install_poetry() {
     koopa_install_app \
+        --installer='python-package' \
         --name='poetry' \
         "$@"
 }
@@ -13530,6 +13544,7 @@ koopa_install_pybind11() {
 
 koopa_install_pycodestyle() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pycodestyle' \
         "$@"
 }
@@ -13542,6 +13557,7 @@ koopa_install_pyenv() {
 
 koopa_install_pyflakes() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pyflakes' \
         "$@"
 }
@@ -13554,6 +13570,7 @@ koopa_install_pygments() {
 
 koopa_install_pylint() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pylint' \
         "$@"
 }
@@ -13566,6 +13583,7 @@ koopa_install_pytaglib() {
 
 koopa_install_pytest() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pytest' \
         "$@"
 }
@@ -13920,6 +13938,7 @@ koopa_install_ruff_lsp() {
 
 koopa_install_ruff() {
     koopa_install_app \
+        --installer='python-package' \
         --name='ruff' \
         "$@"
 }
@@ -14054,6 +14073,7 @@ koopa_install_samtools() {
 
 koopa_install_scalene() {
     koopa_install_app \
+        --installer='python-package' \
         --name='scalene' \
         "$@"
 }
@@ -14110,12 +14130,14 @@ koopa_install_shunit2() {
 
 koopa_install_snakefmt() {
     koopa_install_app \
+        --installer='python-package' \
         --name='snakefmt' \
         "$@"
 }
 
 koopa_install_snakemake() {
     koopa_install_app \
+        --installer='python-package' \
         --name='snakemake' \
         "$@"
 }
@@ -14301,6 +14323,7 @@ koopa_install_tree() {
 
 koopa_install_tryceratops() {
     koopa_install_app \
+        --installer='python-package' \
         --name='tryceratops' \
         "$@"
 }
@@ -14388,12 +14411,14 @@ koopa_install_vim() {
 
 koopa_install_visidata() {
     koopa_install_app \
+        --installer='python-package' \
         --name='visidata' \
         "$@"
 }
 
 koopa_install_vulture() {
     koopa_install_app \
+        --installer='python-package' \
         --name='vulture' \
         "$@"
 }
@@ -14539,6 +14564,7 @@ koopa_install_yaml_cpp() {
 
 koopa_install_yapf() {
     koopa_install_app \
+        --installer='python-package' \
         --name='yapf' \
         "$@"
 }
