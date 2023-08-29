@@ -1123,17 +1123,16 @@
     "version": "0.5.12"
   },
   "deeptools": {
-    "arch": "amd64",
     "bin": ["deeptools"],
-    "date": "2023-05-30",
-    "dependencies": ["conda"],
+    "date": "2023-08-29",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.2"
+    "version": "3.5.3"
   },
   "delta": {
     "aliases": {
