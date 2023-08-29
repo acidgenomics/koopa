@@ -7,6 +7,7 @@ koopa_install_go_package() {
     # """
     local -A app dict
     local -a build_args
+    koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'go'
     app['go']="$(koopa_locate_go)"
     koopa_assert_is_executable "${app[@]}"
