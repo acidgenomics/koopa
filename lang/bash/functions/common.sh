@@ -11598,9 +11598,9 @@ koopa_install_conda_package() {
     local -A dict
     local -a bin_names create_args pos
     local bin_name
-    dict['name']=''
-    dict['prefix']=''
-    dict['version']=''
+    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
+    dict['version']="${KOOPA_INSTALL_VERSION:-}"
     dict['yaml_file']=''
     pos=()
     while (("$#"))
@@ -12085,11 +12085,11 @@ koopa_install_go_package() {
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['ldflags']=''
     dict['mod']=''
-    dict['name']=''
-    dict['prefix']=''
+    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
     dict['tags']=''
     dict['url']=''
-    dict['version']=''
+    dict['version']="${KOOPA_INSTALL_VERSION:-}"
     pos=()
     while (("$#"))
     do

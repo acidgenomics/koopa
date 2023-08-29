@@ -3,7 +3,7 @@
 koopa_install_go_package() {
     # """
     # Install a Go package.
-    # @note Updated 2023-08-28.
+    # @note Updated 2023-08-29.
     # """
     local -A app dict
     local -a build_args pos
@@ -16,11 +16,11 @@ koopa_install_go_package() {
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['ldflags']=''
     dict['mod']=''
-    dict['name']=''
-    dict['prefix']=''
+    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
     dict['tags']=''
     dict['url']=''
-    dict['version']=''
+    dict['version']="${KOOPA_INSTALL_VERSION:-}"
     pos=()
     while (("$#"))
     do
