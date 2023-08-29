@@ -2,9 +2,8 @@
 
 main() {
     koopa_activate_app 'taglib'
-    koopa_install_app_subshell \
-        --installer='python-package' \
-        --name='pytaglib' \
-        -D '--no-binary' \
-        -D 'tqdm'
+    koopa_install_python_package \
+        --extra-package='tqdm' \
+        --no-binary
+    return 0
 }
