@@ -1,7 +1,1 @@
-#!/usr/bin/env bash
-
-main() {
-    koopa_install_app_subshell \
-        --installer='conda-package' \
-        --name='subread'
-}
+conda-package.sh
