@@ -29,9 +29,9 @@ koopa_install_ruby_package() {
     koopa_assert_is_executable "${app[@]}"
     dict['gemfile']='Gemfile'
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']="${KOOPA_INSTALL_NAME:-}"
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
-    dict['version']="${KOOPA_INSTALL_VERSION:-}"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     while (("$#"))
     do
         case "$1" in
