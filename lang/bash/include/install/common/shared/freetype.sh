@@ -13,6 +13,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    koopa_install_gnu_app --non-gnu-mirror "${install_args[@]}"
     return 0
 }
