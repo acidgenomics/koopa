@@ -25,9 +25,9 @@ koopa_install_rust_package() {
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
     dict['cargo_name']=''
     dict['jobs']="$(koopa_cpu_count)"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
+    dict['version']="${KOOPA_INSTALL_VERSION:-}"
     pos=()
     while (("$#"))
     do
