@@ -12,6 +12,7 @@ main() {
     # """
     local -A dict
     local -a ldflags
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/rclone/rclone/archive/\
 v${dict['version']}.tar.gz"
@@ -20,6 +21,7 @@ v${dict['version']}.tar.gz"
         "github.com/rclone/rclone/fs.Version=v${dict['version']}"
     )
     dict['ldflags']="${ldflags[*]}"
+    # FIXME Need to rework this as a function so we can copy the rclone.1 file.
     koopa_install_app_subshell \
         --installer='go-package' \
         --name='rclone' \
