@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
 main() {
+    # """
+    # Install picard.
+    # @note Updated 2023-08-29.
+    # """
     local -A dict
-    koopa_install_app_subshell \
-        --installer='conda-package' \
-        --name='picard'
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    koopa_install_conda_package \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --version="${dict['version']}"
     dict['jvm_prefix']="${dict['prefix']}/libexec/lib/jvm"
     koopa_assert_is_dir "${dict['jvm_prefix']}"
     dict['picard_file']="${dict['prefix']}/bin/picard"
