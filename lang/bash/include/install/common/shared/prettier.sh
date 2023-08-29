@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='node-package' \
-        --name='prettier' \
-        -D 'prettier-plugin-sort-json@3.0.1'
+    koopa_install_node_package --extra-package='prettier-plugin-sort-json'
+    return 0
 }
