@@ -11,8 +11,8 @@ koopa_install_gnu_app() {
     local -a conf_args
     koopa_assert_is_install_subshell
     dict['compress_ext']='gz'
-    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
     dict['jobs']="$(koopa_cpu_count)"
+    dict['mirror']="$(koopa_gnu_mirror_url)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['parent_name']=''
     dict['pkg_name']=''
@@ -40,11 +40,11 @@ koopa_install_gnu_app() {
                 shift 2
                 ;;
             '--mirror='*)
-                dict['gnu_mirror']="${1#*=}"
+                dict['mirror']="${1#*=}"
                 shift 1
                 ;;
             '--mirror')
-                dict['gnu_mirror']="${2:?}"
+                dict['mirror']="${2:?}"
                 shift 2
                 ;;
             '--package-name='*)
@@ -79,6 +79,11 @@ koopa_install_gnu_app() {
                 dict['version']="${2:?}"
                 shift 2
                 ;;
+            # Flags ------------------------------------------------------------
+            '--non-gnu-mirror')
+                dict['mirror']='https://mirrors.sarata.com/non-gnu'
+                shift 1
+                ;;
             # Configuration passthrough support --------------------------------
             # Inspired by CMake approach using '-D' prefix.
             '-D')
@@ -94,7 +99,7 @@ koopa_install_gnu_app() {
     [[ -z "${dict['parent_name']}" ]] && dict['parent_name']="${dict['name']}"
     [[ -z "${dict['pkg_name']}" ]] && dict['pkg_name']="${dict['name']}"
     koopa_assert_is_set \
-        '--mirror' "${dict['gnu_mirror']}" \
+        '--mirror' "${dict['mirror']}" \
         '--name' "${dict['name']}" \
         '--package-name' "${dict['pkg_name']}" \
         '--parent-name' "${dict['parent_name']}" \
@@ -102,7 +107,7 @@ koopa_install_gnu_app() {
         '--version' "${dict['version']}"
     conf_args+=("--prefix=${dict['prefix']}")
     export FORCE_UNSAFE_CONFIGURE=1
-    dict['url']="${dict['gnu_mirror']}/${dict['parent_name']}/\
+    dict['url']="${dict['mirror']}/${dict['parent_name']}/\
 ${dict['pkg_name']}-${dict['version']}.tar.${dict['compress_ext']}"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
