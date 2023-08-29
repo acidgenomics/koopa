@@ -8,9 +8,9 @@ main() {
     local -A dict
     koopa_activate_app 'openssl3'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     OPENSSL_DIR="${dict['openssl']}"
     export OPENSSL_DIR
     koopa_install_rust_package \
