@@ -51,12 +51,28 @@ koopa_install_python_package() {
                 dict['pip_name']="${2:?}"
                 shift 2
                 ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
             '--python-version='*)
                 dict['py_maj_ver']="${1#*=}"
                 shift 1
                 ;;
             '--python-version')
                 dict['py_maj_ver']="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict['version']="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict['version']="${2:?}"
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
@@ -70,6 +86,14 @@ koopa_install_python_package() {
                 ;;
         esac
     done
+    [[ -z "${dict['pkg_name']}" ]] && dict['pkg_name']="${dict['name']}"
+    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['pkg_name']}"
+    koopa_assert_is_set \
+        '--name' "${dict['name']}" \
+        '--package-name' "${dict['pkg_name']}" \
+        '--pip-name' "${dict['pip_name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--version' "${dict['version']}"
     if [[ -n "${dict['py_maj_ver']}" ]]
     then
         # e.g. '3.11' to '311'.
@@ -86,8 +110,6 @@ koopa_install_python_package() {
     app['python']="$("${dict['locate_python']}" --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['libexec']="${dict['prefix']}/libexec"
-    [[ -z "${dict['pkg_name']}" ]] && dict['pkg_name']="${dict['name']}"
-    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['pkg_name']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$( \
         koopa_major_minor_version "${dict['py_version']}" \
