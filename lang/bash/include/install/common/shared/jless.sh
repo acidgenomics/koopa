@@ -3,11 +3,12 @@
 main() {
     # """
     # Install jless.
-    # @note Updated 2023-07-17.
+    # @note Updated 2023-08-29.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/jless
     # """
+    local -A dict
     if koopa_is_linux
     then
         koopa_activate_app \
@@ -16,7 +17,12 @@ main() {
             'xorg-libxdmcp' \
             'xorg-libxcb'
     fi
-    koopa_install_app_subshell \
-        --installer='rust-package' \
-        --name='jless'
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    koopa_install_rust_package \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --version="${dict['version']}"
+    return 0
 }
