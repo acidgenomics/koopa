@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
-# NOTE Need to activate lzip build only here?
-
 main() {
-    koopa_install_gnu_app
+    koopa_install_gnu_app --compress-ext='lz'
     return 0
 }
