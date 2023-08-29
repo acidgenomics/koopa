@@ -36,6 +36,9 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app --non-gnu-mirror "${install_args[@]}"
+    koopa_install_gnu_app \
+        --compress-ext='xz' \
+        --non-gnu-mirror \
+        "${install_args[@]}"
     return 0
 }
