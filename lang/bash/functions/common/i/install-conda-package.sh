@@ -16,6 +16,7 @@ koopa_install_conda_package() {
     local -A dict
     local -a bin_names create_args pos
     local bin_name
+    koopa_assert_is_install_subshell
     dict['name']="${KOOPA_INSTALL_NAME:-}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
     dict['version']="${KOOPA_INSTALL_VERSION:-}"

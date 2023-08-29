@@ -1263,6 +1263,15 @@ koopa_assert_is_gnu() {
     return 0
 }
 
+koopa_assert_is_install_subshell() {
+    koopa_assert_has_no_args "$#"
+    if [[ -z "${KOOPA_INSTALL_NAME:-}" ]]
+    then
+        koopa_stop 'Unsupported command.'
+    fi
+    return 0
+}
+
 koopa_assert_is_installed() {
     local arg
     koopa_assert_has_args "$#"
@@ -11605,6 +11614,7 @@ koopa_install_conda_package() {
     local -A dict
     local -a bin_names create_args pos
     local bin_name
+    koopa_assert_is_install_subshell
     dict['name']="${KOOPA_INSTALL_NAME:-}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
     dict['version']="${KOOPA_INSTALL_VERSION:-}"
@@ -12091,6 +12101,7 @@ koopa_install_gnutls() {
 koopa_install_go_package() {
     local -A app dict
     local -a build_args
+    koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'go'
     app['go']="$(koopa_locate_go)"
     koopa_assert_is_executable "${app[@]}"
@@ -13272,6 +13283,7 @@ koopa_install_perl_package() {
     local -A app dict
     local -a bin_files deps
     local bin_file
+    koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'perl'
     koopa_activate_ca_certificates
     app['bash']="$(koopa_locate_bash)"
@@ -13592,6 +13604,7 @@ koopa_install_python_package() {
     local -A app bool dict
     local -a bin_names extra_pkgs man1_names venv_args
     local bin_name man1_name
+    koopa_assert_is_install_subshell
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
@@ -13854,6 +13867,7 @@ koopa_install_rsync() {
 
 koopa_install_ruby_package() {
     local -A app dict
+    koopa_assert_is_install_subshell
     app['bundle']="$(koopa_locate_bundle)"
     app['ruby']="$(koopa_locate_ruby --realpath)"
     koopa_assert_is_executable "${app[@]}"
@@ -13946,6 +13960,7 @@ koopa_install_ruff() {
 koopa_install_rust_package() {
     local -A app bool dict
     local -a install_args pos
+    koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'rust'
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
