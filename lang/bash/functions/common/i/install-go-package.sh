@@ -6,7 +6,7 @@ koopa_install_go_package() {
     # @note Updated 2023-08-29.
     # """
     local -A app dict
-    local -a build_args pos
+    local -a build_args
     koopa_activate_app --build-only 'go'
     app['go']="$(koopa_locate_go)"
     koopa_assert_is_executable "${app[@]}"
@@ -21,7 +21,6 @@ koopa_install_go_package() {
     dict['tags']=''
     dict['url']=''
     dict['version']="${KOOPA_INSTALL_VERSION:-}"
-    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -104,7 +103,6 @@ koopa_install_go_package() {
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_set \
         '--name' "${dict['name']}" \
         '--prefix' "${dict['prefix']}" \
