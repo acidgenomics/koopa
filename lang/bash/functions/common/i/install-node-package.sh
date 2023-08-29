@@ -20,9 +20,9 @@ koopa_install_node_package() {
     app['npm']="$(koopa_locate_npm)"
     koopa_assert_is_executable "${app[@]}"
     dict['cache_prefix']="$(koopa_tmp_dir)"
-    dict['name']="${KOOPA_INSTALL_NAME:-}"
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
-    dict['version']="${KOOPA_INSTALL_VERSION:-}"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     extra_pkgs=()
     while (("$#"))
     do

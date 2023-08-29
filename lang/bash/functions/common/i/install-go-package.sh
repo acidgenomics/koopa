@@ -17,11 +17,11 @@ koopa_install_go_package() {
     dict['gopath']="$(koopa_init_dir 'go')"
     dict['ldflags']=''
     dict['mod']=''
-    dict['name']="${KOOPA_INSTALL_NAME:-}"
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['tags']=''
     dict['url']=''
-    dict['version']="${KOOPA_INSTALL_VERSION:-}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     while (("$#"))
     do
         case "$1" in

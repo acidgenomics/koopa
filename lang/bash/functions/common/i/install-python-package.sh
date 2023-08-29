@@ -16,12 +16,12 @@ koopa_install_python_package() {
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
     dict['locate_python']='koopa_locate_python311'
-    dict['name']="${KOOPA_INSTALL_NAME:-}"
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['pip_name']=''
     dict['pkg_name']=''
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_maj_ver']=''
-    dict['version']="${KOOPA_INSTALL_VERSION:-}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     extra_pkgs=()
     while (("$#"))
     do
