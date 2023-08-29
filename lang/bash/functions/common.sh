@@ -12985,7 +12985,6 @@ koopa_install_mcfly() {
 
 koopa_install_mdcat() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='mdcat' \
         "$@"
 }
@@ -13156,7 +13155,6 @@ koopa_install_npth() {
 
 koopa_install_nushell() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='nushell' \
         "$@"
 }
@@ -13785,14 +13783,12 @@ koopa_install_reproc() {
 
 koopa_install_ripgrep_all() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='ripgrep-all' \
         "$@"
 }
 
 koopa_install_ripgrep() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='ripgrep' \
         "$@"
 }
@@ -14145,7 +14141,6 @@ koopa_install_star() {
 
 koopa_install_starship() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='starship' \
         "$@"
 }
@@ -14294,7 +14289,6 @@ koopa_install_tryceratops() {
 
 koopa_install_tuc() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='tuc' \
         "$@"
 }
