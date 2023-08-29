@@ -11391,6 +11391,7 @@ koopa_install_azure_cli() {
 
 koopa_install_bamtools() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='bamtools' \
         "$@"
 }
@@ -11446,12 +11447,14 @@ koopa_install_binutils() {
 
 koopa_install_bioawk() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='bioawk' \
         "$@"
 }
 
 koopa_install_bioconda_utils() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='bioconda-utils' \
         "$@"
 }
@@ -11470,6 +11473,7 @@ koopa_install_black() {
 
 koopa_install_blast() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='blast' \
         "$@"
 }
@@ -11488,6 +11492,7 @@ koopa_install_bottom() {
 
 koopa_install_bowtie2() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='bowtie2' \
         "$@"
 }
@@ -11512,6 +11517,7 @@ koopa_install_brotli() {
 
 koopa_install_bustools() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='bustools' \
         "$@"
 }
@@ -11814,6 +11820,7 @@ koopa_install_ensembl_perl_api() {
 
 koopa_install_entrez_direct() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='entrez-direct' \
         "$@"
 }
@@ -11838,6 +11845,7 @@ koopa_install_expat() {
 
 koopa_install_fastqc() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fastqc' \
         "$@"
 }
@@ -11856,12 +11864,14 @@ koopa_install_ffmpeg() {
 
 koopa_install_ffq() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='ffq' \
         "$@"
 }
 
 koopa_install_fgbio() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fgbio' \
         "$@"
 }
@@ -11917,12 +11927,14 @@ koopa_install_fontconfig() {
 
 koopa_install_fq() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fq' \
         "$@"
 }
 
 koopa_install_fqtk() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fqtk' \
         "$@"
 }
@@ -11989,12 +12001,14 @@ koopa_install_gettext() {
 
 koopa_install_gffutils() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='gffutils' \
         "$@"
 }
 
 koopa_install_gget() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='gget' \
         "$@"
 }
@@ -12181,6 +12195,7 @@ koopa_install_hexyl() {
 
 koopa_install_hisat2() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='hisat2' \
         "$@"
 }
@@ -12193,6 +12208,7 @@ koopa_install_htop() {
 
 koopa_install_htseq() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='htseq' \
         "$@"
 }
@@ -12847,6 +12863,7 @@ koopa_install_minimap2() {
 
 koopa_install_misopy() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='misopy' \
         "$@"
 }
@@ -12901,6 +12918,7 @@ koopa_install_nano() {
 
 koopa_install_nanopolish() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='nanopolish' \
         "$@"
 }
@@ -13338,6 +13356,7 @@ koopa_install_ronn() {
 
 koopa_install_rsem() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='rsem' \
         "$@"
 }
@@ -13422,6 +13441,7 @@ koopa_install_sed() {
 
 koopa_install_seqkit() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='seqkit' \
         "$@"
 }
@@ -13482,6 +13502,7 @@ koopa_install_staden_io_lib() {
 
 koopa_install_star_fusion() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='star-fusion' \
         "$@"
 }
@@ -13506,6 +13527,7 @@ koopa_install_stow() {
 
 koopa_install_subread() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='subread' \
         "$@"
 }
@@ -13651,6 +13673,7 @@ koopa_install_udunits() {
 
 koopa_install_umis() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='umis' \
         "$@"
 }
