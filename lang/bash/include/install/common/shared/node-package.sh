@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to split this out into our function library.
+
 main() {
     # """
     # Install Node.js package using npm.
