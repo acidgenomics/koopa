@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='python-package' \
-        --name='azure-cli' \
-        -D --package-name='azure_cli'
+    koopa_install_python_package --package-name='azure_cli'
+    return 0
 }

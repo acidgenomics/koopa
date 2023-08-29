@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='python-package' \
-        --name='ruff-lsp' \
-        -D --package-name='ruff_lsp'
+    koopa_install_python_package --package-name='ruff_lsp'
+    return 0
 }
