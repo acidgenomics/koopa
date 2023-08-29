@@ -8,7 +8,6 @@ main() {
     # @seealso
     # - https://formulae.brew.sh/formula/jless
     # """
-    local -A dict
     if koopa_is_linux
     then
         koopa_activate_app \
@@ -17,12 +16,6 @@ main() {
             'xorg-libxdmcp' \
             'xorg-libxcb'
     fi
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_install_rust_package \
-        --name="${dict['name']}" \
-        --prefix="${dict['prefix']}" \
-        --version="${dict['version']}"
+    koopa_install_rust_package
     return 0
 }

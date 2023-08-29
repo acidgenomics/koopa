@@ -13918,11 +13918,12 @@ koopa_install_ruff() {
 }
 
 koopa_install_rust_package() {
-    local -A app dict
+    local -A app bool dict
     local -a install_args pos
     koopa_activate_app --build-only 'rust'
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
+    bool['openssl']=0
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:-}"
@@ -13968,6 +13969,10 @@ koopa_install_rust_package() {
                 pos+=("$1" "$2")
                 shift 2
                 ;;
+            '--with-openssl')
+                bool['openssl']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -13981,6 +13986,12 @@ koopa_install_rust_package() {
     koopa_assert_is_dir "${dict['cargo_home']}"
     export CARGO_HOME="${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
+    if [[ "${bool['openssl']}" -eq 1 ]]
+    then
+        koopa_activate_app 'openssl3'
+        dict['openssl']="$(koopa_app_prefix 'openssl3')"
+        export OPENSSL_DIR="${dict['openssl']}"
+    fi
     if [[ -n "${LDFLAGS:-}" ]]
     then
         local -a ldflags rustflags
