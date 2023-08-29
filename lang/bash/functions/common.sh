@@ -4376,9 +4376,6 @@ koopa_cli_install() {
     dict['custom_enabled']=0
     dict['stem']='install'
     case "${1:-}" in
-        'koopa')
-            dict['allow_custom']=1
-            ;;
         '--all')
             shift 1
             koopa_install_all_apps "$@"
@@ -4388,6 +4385,12 @@ koopa_cli_install() {
             shift 1
             koopa_install_all_binary_apps "$@"
             return 0
+            ;;
+        'app')
+            koopa_stop 'Unsupported command.'
+            ;;
+        'koopa')
+            dict['allow_custom']=1
             ;;
     esac
     flags=()
