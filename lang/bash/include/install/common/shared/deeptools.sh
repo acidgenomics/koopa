@@ -2,6 +2,6 @@
 
 main() {
     koopa_install_app_subshell \
-        --installer='conda-package' \
+        --installer='python-package' \
         --name='deeptools'
 }
