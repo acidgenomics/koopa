@@ -13572,7 +13572,7 @@ koopa_install_pytest() {
 
 koopa_install_python_package() {
     local -A app bool dict
-    local -a bin_names man1_names pos venv_args
+    local -a bin_names extra_pkgs man1_names venv_args
     local bin_name man1_name
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -13584,10 +13584,18 @@ koopa_install_python_package() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:-}"
     dict['py_maj_ver']=''
     dict['version']="${KOOPA_INSTALL_VERSION:-}"
-    pos=()
+    extra_pkgs=()
     while (("$#"))
     do
         case "$1" in
+            '--extra-package='*)
+                extra_pkgs+=("${1#*=}")
+                shift 1
+                ;;
+            '--extra-packages')
+                extra_pkgs+=("${2:?}")
+                shift 2
+                ;;
             '--package-name='*)
                 dict['pkg_name']="${1#*=}"
                 shift 1
@@ -13616,16 +13624,11 @@ koopa_install_python_package() {
                 bool['binary']=0
                 shift 1
                 ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
             *)
-                pos+=("$1")
-                shift 1
+                koopa_invalid_arg "$1"
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     if [[ -n "${dict['py_maj_ver']}" ]]
     then
         dict['py_maj_ver_2']="$( \
@@ -13656,7 +13659,10 @@ koopa_install_python_package() {
         venv_args+=('--no-binary')
     fi
     venv_args+=("${dict['pip_name']}==${dict['version']}")
-    [[ "$#" -gt 0 ]] && venv_args+=("$@")
+    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    then
+        venv_args+=("${extra_pkgs[@]}")
+    fi
     koopa_print_env
     koopa_python_create_venv "${venv_args[@]}"
     dict['record_file']="${dict['libexec']}/lib/\
