@@ -19,6 +19,7 @@ koopa_install_rust_package() {
     # """
     local -A app bool dict
     local -a install_args pos
+    koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'rust'
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"

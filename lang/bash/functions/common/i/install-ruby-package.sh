@@ -23,6 +23,7 @@ koopa_install_ruby_package() {
     # - https://stackoverflow.com/questions/16098757/
     # """
     local -A app dict
+    koopa_assert_is_install_subshell
     app['bundle']="$(koopa_locate_bundle)"
     app['ruby']="$(koopa_locate_ruby --realpath)"
     koopa_assert_is_executable "${app[@]}"

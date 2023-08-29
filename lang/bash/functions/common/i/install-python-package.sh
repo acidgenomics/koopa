@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Don't allow passthrough here.
-# Instead, use '--extra-package'
-
 koopa_install_python_package() {
     # """
     # Install a Python package as a virtual environment application.
@@ -14,6 +11,7 @@ koopa_install_python_package() {
     local -A app bool dict
     local -a bin_names extra_pkgs man1_names venv_args
     local bin_name man1_name
+    koopa_assert_is_install_subshell
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1

@@ -32,6 +32,7 @@ koopa_install_perl_package() {
     local -A app dict
     local -a bin_files deps
     local bin_file
+    koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'perl'
     koopa_activate_ca_certificates
     app['bash']="$(koopa_locate_bash)"
