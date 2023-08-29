@@ -11418,6 +11418,7 @@ koopa_install_bashcov() {
 
 koopa_install_bat() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='bat' \
         "$@"
 }
@@ -11487,6 +11488,7 @@ koopa_install_boost() {
 
 koopa_install_bottom() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='bottom' \
         "$@"
 }
@@ -11506,6 +11508,7 @@ koopa_install_bpytop() {
 
 koopa_install_broot() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='broot' \
         "$@"
 }
@@ -11762,6 +11765,7 @@ koopa_install_deeptools() {
 
 koopa_install_delta() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='delta' \
         "$@"
 }
@@ -11774,6 +11778,7 @@ koopa_install_diff_so_fancy() {
 
 koopa_install_difftastic() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='difftastic' \
         "$@"
 }
@@ -11792,6 +11797,7 @@ koopa_install_dotfiles() {
 
 koopa_install_du_dust() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='du-dust' \
         "$@"
 }
@@ -11829,6 +11835,7 @@ koopa_install_entrez_direct() {
 
 koopa_install_exa() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='exa' \
         "$@"
 }
@@ -11854,6 +11861,7 @@ koopa_install_fastqc() {
 
 koopa_install_fd_find() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='fd-find' \
         "$@"
 }
@@ -12041,6 +12049,7 @@ koopa_install_git() {
 
 koopa_install_gitui() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='gitui' \
         "$@"
 }
@@ -12245,6 +12254,7 @@ koopa_install_grep() {
 
 koopa_install_grex() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='grex' \
         "$@"
 }
@@ -12323,6 +12333,7 @@ koopa_install_hdf5() {
 
 koopa_install_hexyl() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='hexyl' \
         "$@"
 }
@@ -12367,6 +12378,7 @@ koopa_install_hugo() {
 
 koopa_install_hyperfine() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='hyperfine' \
         "$@"
 }
@@ -12409,6 +12421,7 @@ koopa_install_jemalloc() {
 
 koopa_install_jless() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='jless' \
         "$@"
 }
@@ -12889,6 +12902,7 @@ koopa_install_llvm() {
 
 koopa_install_lsd() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='lsd' \
         "$@"
 }
@@ -12967,12 +12981,14 @@ koopa_install_markdownlint_cli() {
 
 koopa_install_mcfly() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='mcfly' \
         "$@"
 }
 
 koopa_install_mdcat() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='mdcat' \
         "$@"
 }
@@ -13143,9 +13159,9 @@ koopa_install_npth() {
 
 koopa_install_nushell() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='nushell' \
         "$@"
-    return 0
 }
 
 koopa_install_oniguruma() {
@@ -13493,6 +13509,7 @@ koopa_install_private_ont_guppy() {
 
 koopa_install_procs() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='procs' \
         "$@"
 }
@@ -13771,12 +13788,14 @@ koopa_install_reproc() {
 
 koopa_install_ripgrep_all() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='ripgrep-all' \
         "$@"
 }
 
 koopa_install_ripgrep() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='ripgrep' \
         "$@"
 }
@@ -14024,6 +14043,7 @@ koopa_install_screen() {
 
 koopa_install_sd() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='sd' \
         "$@"
 }
@@ -14110,6 +14130,7 @@ koopa_install_star() {
 
 koopa_install_starship() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='starship' \
         "$@"
 }
@@ -14196,6 +14217,7 @@ koopa_install_tcl_tk() {
 
 koopa_install_tealdeer() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='tealdeer' \
         "$@"
 }
@@ -14232,6 +14254,7 @@ koopa_install_tmux() {
 
 koopa_install_tokei() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='tokei' \
         "$@"
 }
@@ -14256,6 +14279,7 @@ koopa_install_tryceratops() {
 
 koopa_install_tuc() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='tuc' \
         "$@"
 }
@@ -14463,6 +14487,7 @@ koopa_install_xorg_xtrans() {
 
 koopa_install_xsv() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='xsv' \
         "$@"
 }
@@ -14505,6 +14530,7 @@ koopa_install_yt_dlp() {
 
 koopa_install_zellij() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='zellij' \
         "$@"
 }
@@ -14529,6 +14555,7 @@ koopa_install_zopfli() {
 
 koopa_install_zoxide() {
     koopa_install_app \
+        --installer='rust-package' \
         --name='zoxide' \
         "$@"
 }
