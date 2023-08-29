@@ -12,6 +12,7 @@ main() {
     # """
     local -A dict
     local -a ldflags
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/rclone/rclone/archive/\
@@ -21,12 +22,13 @@ v${dict['version']}.tar.gz"
         "github.com/rclone/rclone/fs.Version=v${dict['version']}"
     )
     dict['ldflags']="${ldflags[*]}"
-    # FIXME Need to rework this as a function so we can copy the rclone.1 file.
-    koopa_install_app_subshell \
-        --installer='go-package' \
-        --name='rclone' \
-        -D "--ldflags=${dict['ldflags']}" \
-        -D "--url=${dict['url']}"
+    koopa_install_go_package \
+        --ldflags="${dict['ldflags']}" \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}" \
+        --version="${dict['version']}"
+    # The working directory gets changed to extracted tarball in the call above.
     koopa_cp \
         --target-directory="${dict['prefix']}/share/man/man1" \
         'rclone.1'

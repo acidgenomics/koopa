@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hugo.
-    # @note Updated 2023-08-28.
+    # @note Updated 2023-08-29.
     #
     # The '-s' and '-w' ldflags help shrink the size of the binary.
     # Refer to 'go tool link' for details.
@@ -16,16 +16,19 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/hugo.rb
     # """
     local -A dict
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://github.com/gohugoio/hugo/archive/\
-v${dict['version']}.tar.gz"
     dict['ldflags']='-s -w'
     dict['tags']='extended'
-    koopa_install_app_subshell \
-        --installer='go-package' \
-        --name='hugo' \
-        -D "--ldflags=${dict['ldflags']}" \
-        -D "--tags=${dict['tags']}" \
-        -D "--url=${dict["url"]}"
+    dict['url']="https://github.com/gohugoio/hugo/archive/\
+v${dict['version']}.tar.gz"
+    koopa_install_go_package \
+        --ldflags="${dict['ldflags']}" \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --tags="${dict['tags']}" \
+        --url="${dict['url']}" \
+        --version="${dict['version']}"
     return 0
 }

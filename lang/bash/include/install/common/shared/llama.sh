@@ -9,14 +9,17 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/llama.rb
     # """
     local -A dict
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['ldflags']='-s -w'
     dict['url']="https://github.com/antonmedv/llama/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    dict['ldflags']='-s -w'
-    koopa_install_app_subshell \
-        --installer='go-package' \
-        --name='llama' \
-        -D "--ldflags=${dict['ldflags']}" \
-        -D "--url=${dict['url']}"
+    koopa_install_go_package \
+        --ldflags="${dict['ldflags']}" \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}" \
+        --version="${dict['version']}"
     return 0
 }
