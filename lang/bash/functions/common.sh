@@ -1265,7 +1265,7 @@ koopa_assert_is_gnu() {
 
 koopa_assert_is_install_subshell() {
     koopa_assert_has_no_args "$#"
-    if [[ -z "${KOOPA_INSTALL_NAME:-}" ]]
+    if ! koopa_is_install_subshell
     then
         koopa_stop 'Unsupported command.'
     fi
@@ -10735,6 +10735,7 @@ ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
 koopa_install_app_subshell() {
     local -A dict
     local -a pos
+    koopa_assert_is_install_subshell
     dict['installer_bn']=''
     dict['installer_fun']='main'
     dict['mode']='shared'
@@ -15203,6 +15204,10 @@ koopa_is_gnu() {
         koopa_str_detect_fixed --pattern='GNU' --string="$str" || return 1
     done
     return 0
+}
+
+koopa_is_install_subshell() {
+    [[ "${KOOPA_INSTALL_APP_SUBSHELL:-0}" -eq 1 ]]
 }
 
 koopa_is_installed() {

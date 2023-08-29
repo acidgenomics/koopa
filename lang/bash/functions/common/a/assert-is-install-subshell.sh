@@ -6,7 +6,7 @@ koopa_assert_is_install_subshell() {
     # @note Updated 2023-08-29.
     # """
     koopa_assert_has_no_args "$#"
-    if [[ -z "${KOOPA_INSTALL_NAME:-}" ]]
+    if ! koopa_is_install_subshell
     then
         koopa_stop 'Unsupported command.'
     fi
