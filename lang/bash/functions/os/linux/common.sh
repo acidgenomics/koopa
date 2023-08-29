@@ -450,6 +450,7 @@ koopa_linux_install_lmod() {
 
 koopa_linux_install_ont_bonito() {
     koopa_install_app \
+        --installer='python-package' \
         --name='ont-bonito' \
         --platform='linux' \
         "$@"
