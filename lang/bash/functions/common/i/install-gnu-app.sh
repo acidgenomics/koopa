@@ -81,6 +81,9 @@ koopa_install_gnu_app() {
                 ;;
             # Flags ------------------------------------------------------------
             '--non-gnu-mirror')
+                # Alternative URLs:
+                # - https://download.savannah.gnu.org/releases
+                # - https://download.savannah.nongnu.org/releases
                 dict['mirror']='https://mirrors.sarata.com/non-gnu'
                 shift 1
                 ;;
