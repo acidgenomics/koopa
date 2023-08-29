@@ -5,14 +5,15 @@
 main() {
     # """
     # Install wget2.
-    # @note Updated 2023-07-17.
+    # @note Updated 2023-08-29.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/wget2
     # - https://gitlab.com/gnuwget/wget2
     # """
-    local -a build_deps deps
     local -A dict
+    local -a build_deps conf_args deps install_args
+    local conf_arg
     build_deps=('sed' 'texinfo')
     deps=(
         'brotli'
@@ -45,13 +46,18 @@ main() {
     # > dict['lzlib']="$(koopa_app_prefix 'lzlib')"
     # > export LZIP_CFLAGS="-I${dict['lzlib']}/include"
     # > export LZIP_LIBS="-L${dict['lzlib']}/lib -llz"
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='wget2' \
-        -D '--with-bzip2' \
-        -D "--with-libintl-prefix=${dict['gettext']}" \
-        -D "--with-libssl-prefix=${dict['ssl']}" \
-        -D '--with-lzma' \
-        -D '--with-ssl=openssl' \
-        -D '--without-libpsl'
+    conf_args=(
+        '--with-bzip2'
+        "--with-libintl-prefix=${dict['gettext']}"
+        "--with-libssl-prefix=${dict['ssl']}"
+        '--with-lzma'
+        '--with-ssl=openssl'
+        '--without-libpsl'
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app --parent-name='wget' "${install_args[@]}"
+    return 0
 }
