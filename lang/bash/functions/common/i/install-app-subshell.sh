@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to harden against 'koopa install subshell' in CLI.
+
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-08-29.
     # """
     local -A dict
     local -a pos

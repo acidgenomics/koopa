@@ -9,7 +9,7 @@ koopa_make_build() {
     local -a conf_args pos targets
     local target
     koopa_assert_has_args "$#"
-    if [[ "${KOOPA_INSTALL_NAME:-}" == 'make' ]]
+    if [[ "${KOOPA_INSTALL_NAME:?}" == 'make' ]]
     then
         app['make']="$(koopa_locate_make --only-system)"
     else
