@@ -6,13 +6,11 @@ main() {
     # @note Updated 2023-08-30.
     #
     # @seealso
+    # - https://hackage.haskell.org/package/hadolint
     # - https://github.com/hadolint/hadolint
-    # - https://cabal.readthedocs.io/
-    # - https://cabal.readthedocs.io/en/stable/installing-packages.html
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/
-    #     hadolint.rb
+    # - https://formulae.brew.sh/formula/hadolint
     # - https://github.com/hadolint/hadolint/issues/904
     # """
-    koopa_install_haskell_package
+    koopa_install_haskell_package --ghc-version='9.2.8'
     return 0
 }
