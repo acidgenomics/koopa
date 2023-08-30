@@ -6,8 +6,9 @@ main() {
     # @note Updated 2023-08-30.
     #
     # @seealso
-    # - https://emacsformacosx.com/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
+    # - https://emacsformacosx.com/
+    # - https://github.com/d12frosted/homebrew-emacs-plus
     # - https://www.emacswiki.org/emacs/EmacsForMacOS
     # - https://emacs.stackexchange.com/questions/28840/
     # """
