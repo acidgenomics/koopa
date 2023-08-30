@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Work on standardizing our cabal install code.
+
 main() {
     # """
     # Install ShellCheck.
