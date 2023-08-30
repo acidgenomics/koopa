@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider building this with macOS framework support, so we can call
-# doom-emacs and spacemacs from this.
-
 main() {
     # """
     # Install Emacs.
@@ -41,11 +38,6 @@ main() {
     )
     if koopa_is_macos
     then
-        conf_args+=(
-            # > '--with-cocoa'
-            '--with-ns'
-        )
-    else
         conf_args+=('--without-ns')
     fi
     for conf_arg in "${conf_args[@]}"

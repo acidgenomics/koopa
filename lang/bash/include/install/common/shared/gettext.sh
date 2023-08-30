@@ -2,7 +2,7 @@
 
 main() {
     # Install gettext.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-08-30.
     #
     # Note that 'libintl.h' is included with glibc.
     #
@@ -19,6 +19,8 @@ main() {
     #     cc1-undefined-reference-to-libintl-textdomain
     # """
     local -A dict
+    local -a conf_args install_args
+    local conf_arg
     koopa_activate_app \
         'bison' \
         'libiconv' \
