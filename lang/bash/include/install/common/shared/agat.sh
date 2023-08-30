@@ -3,18 +3,13 @@
 main() {
     # """
     # Install agat.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-08-30.
     # """
     local -A app dict
     app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_install_conda_package \
-        --name="${dict['name']}" \
-        --prefix="${dict['prefix']}" \
-        --version="${dict['version']}"
+    koopa_install_conda_package
     # Generated using 'diff -u agat agat-1 > agat.patch'.
     dict['patch_file']='agat.patch'
     read -r -d '' "dict[patch_string]" << END || true

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Work on standardizing cabal install code with hadolint.
+
 main() {
     # """
     # Install Pandoc.

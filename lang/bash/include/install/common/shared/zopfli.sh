@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zopfli.
-    # @note Updated 2023-05-15.
+    # @note Updated 2023-08-30.
     #
     # @seealso
     # - https://github.com/google/zopfli
@@ -13,10 +13,7 @@ main() {
     local -a cmake_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    cmake_args=(
-        # Build options --------------------------------------------------------
-        '-DBUILD_SHARED_LIBS=ON'
-    )
+    cmake_args=('-DBUILD_SHARED_LIBS=ON')
     dict['url']="https://github.com/google/zopfli/archive/\
 zopfli-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"

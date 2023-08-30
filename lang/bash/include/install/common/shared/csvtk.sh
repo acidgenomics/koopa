@@ -3,24 +3,21 @@
 main() {
     # """
     # Install csvtk.
-    # @note Updated 2023-08-28.
+    # @note Updated 2023-08-30.
     #
     # @seealso
     # - https://github.com/shenwei356/csvtk
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/csvtk.rb
     # """
     local -A dict
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['build_cmd']='./csvtk'
+    dict['ldflags']='-s -w'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/shenwei356/csvtk/archive/refs/\
 tags/v${dict['version']}.tar.gz"
     koopa_install_go_package \
-        --build-cmd='./csvtk' \
-        --ldflags='-s -w' \
-        --name="${dict['name']}" \
-        --prefix="${dict['prefix']}" \
-        --url="${dict['url']}" \
-        --version="${dict['version']}"
+        --build-cmd="${dict['build_cmd']}" \
+        --ldflags="${dict['ldflags']}" \
+        --url="${dict['url']}"
     return 0
 }
