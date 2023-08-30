@@ -3,14 +3,8 @@
 main() {
     # """
     # Install GATK.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-08-30.
     # """
-    local -A dict
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_install_conda_package \
-        --name='gatk4' \
-        --prefix="${dict['prefix']}" \
-        --version="${dict['version']}"
+    koopa_install_conda_package --name='gatk4'
     return 0
 }

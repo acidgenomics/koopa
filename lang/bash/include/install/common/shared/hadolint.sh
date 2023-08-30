@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Work on consolidating haskell / cabal package install code.
+# Can also apply this to pandoc.
+
 main() {
     # """
     # Install hadolint.

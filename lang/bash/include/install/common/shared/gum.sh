@@ -3,14 +3,13 @@
 main() {
     # """
     # Install gum.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-08-30.
     #
     # @seealso
     # - https://github.com/charmbracelet/gum
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gum.rb
     # """
     local -A app dict
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['ldflags']="-s -w -X main.Version=${dict['version']}"
@@ -18,7 +17,6 @@ main() {
 v${dict['version']}.tar.gz"
     koopa_install_go_package \
         --ldflags="${dict['ldflags']}" \
-        --name="${dict['name']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}" \
         --version="${dict['version']}"

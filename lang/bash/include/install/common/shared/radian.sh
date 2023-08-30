@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can remove our patch code with the next radian update.
+
 main() {
     # """
     # Install radian with patch for improved 'ldpaths' handling on macOS.
