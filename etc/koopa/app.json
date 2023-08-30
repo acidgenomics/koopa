@@ -3803,7 +3803,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-08-17",
+    "date": "2023-08-30",
     "dependencies": ["conda", "poetry"],
     "enabled": false,
     "large": true,
@@ -3811,7 +3811,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.2.1"
+    "version": "3.2.2"
   },
   "openblas": {
     "aliases": {
