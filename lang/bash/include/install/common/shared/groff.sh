@@ -2,7 +2,6 @@
 
 main() {
     koopa_activate_app 'texinfo'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='groff'
+    koopa_install_gnu_app
+    return 0
 }
