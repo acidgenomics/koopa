@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='tar' \
-        -D '--program-prefix=g'
+    # """
+    # Install tar.
+    # @note Updated 2023-08-30.
+    # """
+    koopa_install_gnu_app -D '--program-prefix=g'
+    return 0
 }
