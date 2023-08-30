@@ -13,6 +13,6 @@ main() {
     #     hadolint.rb
     # - https://github.com/hadolint/hadolint/issues/904
     # """
-    koopa_install_haskell_package --ghc-version='9.2.5'
+    koopa_install_haskell_package
     return 0
 }

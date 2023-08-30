@@ -17,7 +17,6 @@ main() {
     # """
     koopa_install_haskell_package \
         --dependency='zlib' \
-        --extra-package='pandoc-cli' \
-        --ghc-version='9.4.4'
+        --extra-package='pandoc-cli'
     return 0
 }
