@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
 # NOTE Need to apply patches for this.
-# https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/mpfr.rb
 
 main() {
+    # """
+    # Install mpfr.
+    # @note Updated 2023-08-30.
+    #
+    # @seealso
+    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/mpfr.rb
+    # """
     koopa_activate_app 'gmp'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='mpfr' \
-        -D '--disable-static'
+    koopa_install_gnu_app -D '--disable-static'
+    return 0
 }
