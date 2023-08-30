@@ -8,6 +8,9 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # - https://emacsformacosx.com/
+    # - https://github.com/caldwell/build-emacs/
+    # - https://github.com/caldwell/build-emacs/blob/master/build-emacs-from-tar
+    # - https://github.com/jimeh/build-emacs-for-macos/
     # - https://github.com/d12frosted/homebrew-emacs-plus
     # - https://www.emacswiki.org/emacs/EmacsForMacOS
     # - https://emacs.stackexchange.com/questions/28840/
