@@ -3,16 +3,11 @@
 main() {
     # """
     # Install picard.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-08-30.
     # """
     local -A dict
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_install_conda_package \
-        --name="${dict['name']}" \
-        --prefix="${dict['prefix']}" \
-        --version="${dict['version']}"
+    koopa_install_conda_package
     dict['jvm_prefix']="${dict['prefix']}/libexec/lib/jvm"
     koopa_assert_is_dir "${dict['jvm_prefix']}"
     dict['picard_file']="${dict['prefix']}/bin/picard"
