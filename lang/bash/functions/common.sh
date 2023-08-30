@@ -12361,6 +12361,7 @@ koopa_install_googletest() {
 
 koopa_install_gperf() {
     koopa_install_app \
+        --installer='gnu-app' \
         --name='gperf' \
         "$@"
 }
