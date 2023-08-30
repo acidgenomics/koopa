@@ -2,7 +2,7 @@
 
 main() {
     # Install gawk.
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-08-30.
     #
     # Persistent memory allocator (PMA) is enabled by default. At the time of
     # writing, that would force an x86_64 executable on macOS arm64, because a
@@ -19,14 +19,8 @@ main() {
     # """
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    koopa_activate_app \
-        'gettext' \
-        'mpfr' \
-        'readline'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='gawk' \
-        -D '--disable-pma'
+    koopa_activate_app 'gettext' 'mpfr' 'readline'
+    koopa_install_gnu_app -D '--disable-pma'
     (
         koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln 'gawk.1' 'awk.1'

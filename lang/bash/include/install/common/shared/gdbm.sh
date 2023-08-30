@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 main() {
+    # """
+    # Install gdbm.
+    # @note Updated 2023-08-30.
+    # """
     koopa_activate_app 'readline'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='gdbm' \
-        -D '--disable-static'
+    koopa_install_gnu_app -D '--disable-static'
+    return 0
 }
