@@ -14409,6 +14409,7 @@ koopa_install_starship() {
 
 koopa_install_stow() {
     koopa_install_app \
+        --installer='gnu-app' \
         --name='stow' \
         "$@"
 }
