@@ -34,23 +34,28 @@ main() {
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='gettext' \
-        -D '--disable-csharp' \
-        -D '--disable-debug' \
-        -D '--disable-dependency-tracking' \
-        -D '--disable-java' \
-        -D '--disable-silent-rules' \
-        -D '--disable-static' \
-        -D '--enable-nls' \
-        -D '--with-emacs' \
-        -D "--with-included-gettext" \
-        -D "--with-bison-prefix=${dict['bison']}" \
-        -D "--with-libiconv-prefix=${dict['libiconv']}" \
-        -D "--with-libncurses-prefix=${dict['ncurses']}" \
-        -D "--with-libunistring-prefix=${dict['libunistring']}" \
-        -D "--with-libxml2-prefix=${dict['libxml2']}"
+
+    conf_args=(
+        '--disable-csharp'
+        '--disable-debug'
+        '--disable-dependency-tracking'
+        '--disable-java'
+        '--disable-silent-rules'
+        '--disable-static'
+        '--enable-nls'
+        '--with-emacs'
+        '--with-included-gettext'
+        "--with-bison-prefix=${dict['bison']}"
+        "--with-libiconv-prefix=${dict['libiconv']}"
+        "--with-libncurses-prefix=${dict['ncurses']}"
+        "--with-libunistring-prefix=${dict['libunistring']}"
+        "--with-libxml2-prefix=${dict['libxml2']}"
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app "${install_args[@]}"
     koopa_assert_is_file \
         "${dict['prefix']}/include/libintl.h" \
         "${dict['prefix']}/lib/libintl.${dict['shared_ext']}"
