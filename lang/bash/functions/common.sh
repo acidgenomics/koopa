@@ -13082,6 +13082,7 @@ koopa_install_lzo() {
 
 koopa_install_m4() {
     koopa_install_app \
+        --installer='gnu-app' \
         --name='m4' \
         "$@"
 }
