@@ -12,6 +12,7 @@ main() {
     # - https://emacsformacosx.com/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
     # - https://www.emacswiki.org/emacs/EmacsForMacOS
+    # - https://emacs.stackexchange.com/questions/28840/
     # """
     local -a conf_args install_args
     local conf_arg
@@ -40,7 +41,12 @@ main() {
     )
     if koopa_is_macos
     then
-        conf_args+=('--with-cocoa')
+        conf_args+=(
+            # > '--with-cocoa'
+            '--with-ns'
+        )
+    else
+        conf_args+=('--without-ns')
     fi
     for conf_arg in "${conf_args[@]}"
     do
