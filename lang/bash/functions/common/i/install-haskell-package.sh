@@ -6,6 +6,7 @@ koopa_install_haskell_package() {
     # @note Updated 2023-08-30.
     #
     # @seealso
+    # - https://www.haskell.org/ghc/
     # - https://www.haskell.org/cabal/
     # - https://www.haskell.org/ghcup/
     # - https://hackage.haskell.org/
@@ -23,7 +24,7 @@ koopa_install_haskell_package() {
     app['ghcup']="$(koopa_locate_ghcup)"
     koopa_assert_is_executable "${app[@]}"
     dict['cabal_dir']="$(koopa_init_dir 'cabal')"
-    dict['ghc_version']='9.6.2'
+    dict['ghc_version']='9.4.7'
     dict['ghcup_prefix']="$(koopa_init_dir 'ghcup')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME?}"
