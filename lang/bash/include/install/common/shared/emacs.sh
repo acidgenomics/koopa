@@ -5,9 +5,16 @@
 
 main() {
     # """
+    # Install Emacs.
+    # @note Updated 2023-08-30.
+    #
     # @seealso
+    # - https://emacsformacosx.com/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
+    # - https://www.emacswiki.org/emacs/EmacsForMacOS
     # """
+    local -a conf_args install_args
+    local conf_arg
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'gmp' \
@@ -18,13 +25,27 @@ main() {
         'nettle' \
         'texinfo' \
         'gnutls'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='emacs' \
-        '-D' '--with-modules' \
-        '-D' '--without-dbus' \
-        '-D' '--without-imagemagick' \
-        '-D' '--without-ns' \
-        '-D' '--without-selinux' \
-        '-D' '--without-x'
+    conf_args=(
+        # Used in Homebrew formula:
+        # > '--with-gnutls'
+        # > '--with-xml2'
+        # > '--with-tree-sitter'
+        '--disable-silent-rules'
+        '--with-modules'
+        '--without-dbus'
+        '--without-imagemagick'
+        '--without-ns'
+        '--without-selinux'
+        '--without-x'
+    )
+    if koopa_is_macos
+    then
+        conf_args+=('--with-cocoa')
+    fi
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app "${install_args[@]}"
+    return 0
 }
