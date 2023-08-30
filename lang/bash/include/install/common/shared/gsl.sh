@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='gsl' \
-        -D '--disable-static'
+    # """
+    # Install gsl.
+    # @note Updated 2023-08-30.
+    # """
+    koopa_install_gnu_app -D '--disable-static'
+    return 0
 }
