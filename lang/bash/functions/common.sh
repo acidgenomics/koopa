@@ -13521,6 +13521,12 @@ koopa_install_openjpeg() {
         "$@"
 }
 
+koopa_install_openldap() {
+    koopa_install_app \
+        --name='openldap' \
+        "$@"
+}
+
 koopa_install_openssh() {
     koopa_install_app \
         --name='openssh' \
@@ -26225,6 +26231,12 @@ koopa_uninstall_openblas() {
 koopa_uninstall_openjpeg() {
     koopa_uninstall_app \
         --name='openjpeg' \
+        "$@"
+}
+
+koopa_uninstall_openldap() {
+    koopa_uninstall_app \
+        --name='openldap' \
         "$@"
 }
 
