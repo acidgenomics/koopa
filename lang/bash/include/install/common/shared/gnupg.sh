@@ -6,13 +6,8 @@ main() {
     # @note Updated 2023-08-31.
     #
     # @seealso
-    # How to disable ldap requirement ('--disable-ldap'):
     # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/gnupg.html
-    # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/gnupg.html
-    # - https://dev.gnupg.org/T6239
-    # - https://gitlab.com/goeb/gnupg-static/-/commit/
-    #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
-    # - https://crux.nu/bugs/index.php?do=details&task_id=1935
+    # - https://formulae.brew.sh/formula/gnupg
     # """
     local -A app dict
     local -a build_deps conf_args deps

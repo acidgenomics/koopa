@@ -320,6 +320,7 @@ _koopa_complete() {
                         'openbb'
                         'openblas'
                         'openjpeg'
+                        'openldap'
                         'openssh'
                         'openssl3'
                         'p7zip'

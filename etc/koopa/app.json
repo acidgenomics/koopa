@@ -1843,6 +1843,7 @@
       "libtasn1",
       "nettle",
       "npth",
+      "openldap",
       "pinentry",
       "readline",
       "sqlite",
@@ -5405,7 +5406,7 @@
       "zlib",
       "zstd"
     ],
-    "man1": ["wget2.1"],
+    "enabled": false,
     "prune": false,
     "url": ["https://gitlab.com/gnuwget/wget2"],
     "version": "2.1.0"

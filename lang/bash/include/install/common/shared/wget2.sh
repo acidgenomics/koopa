@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME We're still not creating the 'wget2.1' file man file as expected.
+# This likely requires doxygen -- work on adding in a future update.
+
 # NOTE Consider adding support: gpgme, hsts, idn, lzip, ntlm, opie, psl
 
 main() {
@@ -42,6 +45,7 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['sed']="$(koopa_app_prefix 'sed')"
     dict['ssl']="$(koopa_app_prefix 'openssl3')"
     # > dict['lzlib']="$(koopa_app_prefix 'lzlib')"
     # > export LZIP_CFLAGS="-I${dict['lzlib']}/include"
@@ -58,6 +62,16 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app --parent-name='wget' "${install_args[@]}"
+    # The pattern used in 'docs/wget2_md2man.sh.in' doesn't work with bsd sed.
+    koopa_mkdir 'bin'
+    (
+        koopa_cd 'bin'
+        koopa_ln "${dict['sed']}/bin/gsed" 'sed'
+    )
+    koopa_add_to_path_start "$(koopa_realpath 'bin')"
+    koopa_install_gnu_app \
+        --mirror='https://mirrors.kernel.org/gnu' \
+        --parent-name='wget' \
+        "${install_args[@]}"
     return 0
 }
