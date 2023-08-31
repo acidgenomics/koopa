@@ -3855,6 +3855,17 @@
     "url": ["https://www.openjpeg.org/"],
     "version": "2.5.0"
   },
+  "openldap": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["make"],
+    "date": "2023-08-31",
+    "dependencies": ["openssl3"],
+    "enabled": false,
+    "url": ["https://www.openldap.org/software/"],
+    "version": "2.6.6"
+  },
   "openssh": {
     "aliases": {
       "homebrew": true
