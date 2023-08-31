@@ -5405,7 +5405,6 @@
       "zlib",
       "zstd"
     ],
-    "enabled": false,
     "man1": ["wget2.1"],
     "prune": false,
     "url": ["https://gitlab.com/gnuwget/wget2"],
