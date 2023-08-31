@@ -404,6 +404,7 @@
     "build_dependencies": ["bison", "flex"],
     "date": "2023-08-31",
     "dependencies": ["texinfo", "zlib"],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/binutils/?C=M;O=D"],
     "version": "2.41"
   },
@@ -2042,6 +2043,7 @@
       "tfmtodit.1",
       "troff.1"
     ],
+    "prune": false,
     "url": ["https://ftp.gnu.org/gnu/groff/?C=M;O=D"],
     "version": "1.23.0"
   },
@@ -2132,6 +2134,7 @@
       "zmore.1",
       "znew.1"
     ],
+    "prune": false,
     "url": [
       "https://www.gnu.org/software/gzip/",
       "https://ftp.gnu.org/gnu/gzip/?C=M;O=D"
@@ -2569,6 +2572,7 @@
     "date": "2023-08-31",
     "dependencies": ["libedit", "openssl3"],
     "enabled": false,
+    "prune": false,
     "url": ["https://web.mit.edu/kerberos/"],
     "version": "1.21.2"
   },
@@ -3080,6 +3084,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "enabled": false,
+    "prune": false,
     "url": ["https://github.com/besser82/libxcrypt/"],
     "version": "4.4.36"
   },
@@ -3863,6 +3868,7 @@
     "date": "2023-08-31",
     "dependencies": ["openssl3"],
     "enabled": false,
+    "prune": false,
     "url": ["https://www.openldap.org/software/"],
     "version": "2.6.6"
   },
