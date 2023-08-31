@@ -1,20 +1,5 @@
 #!/usr/bin/env bash
 
-# The installer doesn't honor '--disable-ldap' anymore, which is problematic
-# currently on Linux.
-
-# FIXME 2.4.3 fails to build on Linux if LDAP is not installed.
-
-# /usr/bin/ld: server.o: in function `cmd_ad_query':
-# server.c:(.text+0x1db4): undefined reference to `ks_ldap_help_variables'
-# collect2: error: ld returned 1 exit status
-# make[2]: *** [Makefile:937: dirmngr] Error 1
-# 
-# I saw there was a bug related to this that was fixed upstream, but it still seems to be an issue with the port: https://dev.gnupg.org/T6239
-
-# FIXME Consider requiring openldap here.
-# https://github.com/Homebrew/homebrew-core/blob/b124d57c4c711699749c9b1ebb98c21c74588452/Formula/g/gnupg.rb
-
 main() {
     # """
     # Install GnuPG.
@@ -32,7 +17,6 @@ main() {
     local -A app dict
     local -a build_deps conf_args deps
     build_deps=('pkg-config' 'sed')
-    # FIXME Add openldap support here.
     deps=(
         'zlib'
         'bzip2'
@@ -47,6 +31,7 @@ main() {
         'libksba'
         'npth'
         'pinentry'
+        'openldap'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -84,13 +69,6 @@ main() {
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    # FIXME Here's a patch for that, need to rework.
-    # src/dirmngr/server.c:2779: undefined reference to `ks_ldap_help_variables'
-    "${app['sed']}" \
-        -e '/ks_ldap_free_state/i #if USE_LDAP' \
-        -e '/ks_get_state =/a #endif' \
-        -i'.bak' \
-        'dirmngr/server.c'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
