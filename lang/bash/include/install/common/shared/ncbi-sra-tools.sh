@@ -23,9 +23,11 @@ main() {
     #     Formula/sratoolkit.rb
     # """
     local -A app cmake dict
-    local -a build_deps cmake_args
+    local -a build_deps cmake_args deps
     build_deps=('bison' 'flex' 'ncbi-vdb' 'python3.11')
+    deps=('libxml2' 'ncbi-vdb')
     koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
@@ -33,8 +35,6 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['vdb']="$(koopa_app_prefix 'ncbi-vdb')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
-    export CFLAGS
     cmake['libxml2_include_dir']="${dict['libxml2']}/include"
     cmake['libxml2_libraries']="${dict['libxml2']}/lib/\
 libxml2.${dict['shared_ext']}"
@@ -79,6 +79,7 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'build/install.sh'
     fi
+    # If build fails, set '--jobs=1' here for better debugging info.
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
