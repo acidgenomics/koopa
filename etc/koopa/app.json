@@ -537,11 +537,11 @@
     },
     "bin": ["brotli"],
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-06-01",
+    "date": "2023-08-31",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/google/brotli/"],
-    "version": "1.0.9"
+    "version": "1.1.0"
   },
   "bustools": {
     "arch": "amd64",
@@ -2318,10 +2318,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-08-07",
+    "date": "2023-08-31",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.117.0"
+    "version": "0.118.2"
   },
   "hyperfine": {
     "aliases": {
@@ -5740,9 +5740,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-28",
+    "date": "2023-08-31",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.38.0"
+    "version": "0.38.1"
   },
   "zip": {
     "aliases": {
