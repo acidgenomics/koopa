@@ -5,7 +5,7 @@
 main() {
     # """
     # Install libxrender.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -30,7 +30,7 @@ main() {
         "--prefix=${dict['prefix']}"
     )
     dict['url']="https://www.x.org/archive/individual/lib/\
-libXrender-${dict['version']}.tar.gz"
+libXrender-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
