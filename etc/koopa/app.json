@@ -2000,9 +2000,9 @@
       "tfmtodit",
       "troff"
     ],
-    "build_dependencies": ["make"],
-    "date": "2023-03-15",
-    "dependencies": ["texinfo"],
+    "build_dependencies": ["bison", "make", "pkg-config", "texinfo"],
+    "date": "2023-08-31",
+    "dependencies": ["m4", "perl"],
     "man1": [
       "addftinfo.1",
       "afmtodit.1",
