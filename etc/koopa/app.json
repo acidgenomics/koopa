@@ -3547,9 +3547,9 @@
       "homebrew": "sratoolkit"
     },
     "bin": ["fasterq-dump", "vdb-config"],
-    "build_dependencies": ["cmake"],
+    "build_dependencies": ["bison", "cmake", "flex"],
     "date": "2023-08-31",
-    "dependencies": ["bison", "flex", "hdf5", "ncbi-vdb", "python3.11"],
+    "dependencies": ["ncbi-vdb", "python3.11"],
     "large": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.0.7"

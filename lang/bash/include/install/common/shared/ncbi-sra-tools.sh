@@ -23,16 +23,9 @@ main() {
     #     Formula/sratoolkit.rb
     # """
     local -A app cmake dict
-    local -a deps cmake_args
-    deps=(
-        'bison'
-        'flex'
-        'hdf5'
-        'libxml2'
-        'ncbi-vdb'
-        'python3.11'
-    )
-    koopa_activate_app "${deps[@]}"
+    local -a build_deps cmake_args
+    build_deps=('bison' 'flex' 'ncbi-vdb' 'python3.11')
+    koopa_activate_app --build-only "${build_deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
@@ -68,15 +61,6 @@ libxml2.${dict['shared_ext']}"
         "-DVDB_INCDIR=${cmake['vdb_incdir']}"
         "-DVDB_LIBDIR=${cmake['vdb_libdir']}"
     )
-    if koopa_is_macos
-    then
-        CFLAGS="${CFLAGS:-}"
-        CFLAGS="${CFLAGS} -DTARGET_OS_OSX"
-        export CFLAGS
-        CXXFLAGS="${CXXFLAGS:-}"
-        CXXFLAGS="${CXXFLAGS} -DTARGET_OS_OSX -D_LIBCPP_DISABLE_AVAILABILITY"
-        export CXXFLAGS
-    fi
     dict['url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
@@ -95,22 +79,6 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'build/install.sh'
     fi
-    if koopa_is_macos
-    then
-        koopa_mkdir 'obj/ngs/ngs-java/javadoc/ngs-doc'
-    fi
-    koopa_cd '..'
-    koopa_mkdir 'build'
-    koopa_cd 'build'
-    koopa_activate_app --build-only 'cmake'
-    cmake_args+=(
-        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
-        '-DCMAKE_BUILD_TYPE=Release'
-    )
-    cmake ../src "${cmake_args[@]}"
-    cmake --build . -j 4 -v
-    cmake --install .
-    # FIXME We may need to build in separate directory here.
-    # koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
