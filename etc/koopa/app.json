@@ -5456,7 +5456,10 @@
     "date": "2023-01-03",
     "dependencies": ["xorg-xorgproto", "xorg-xtrans"],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libice/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libice/-/tags"
+    ],
     "version": "1.1.1"
   },
   "xorg-libpthread-stubs": {
@@ -5464,9 +5467,13 @@
       "homebrew": "libpthread-stubs"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-31",
+    "date": "2023-08-31",
+    "outdated": true,
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/pthread-stubs/-/tags"
+    ],
     "version": "0.5"
   },
   "xorg-libsm": {
@@ -5477,7 +5484,10 @@
     "date": "2023-01-03",
     "dependencies": ["xorg-libice", "xorg-xorgproto", "xorg-xtrans"],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libsm/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libsm/-/tags"
+    ],
     "version": "1.2.4"
   },
   "xorg-libx11": {
@@ -5495,7 +5505,10 @@
       "xorg-xtrans"
     ],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libx11/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libx11/-/tags"
+    ],
     "version": "1.8.6"
   },
   "xorg-libxau": {
@@ -5506,7 +5519,10 @@
     "date": "2023-01-03",
     "dependencies": ["xorg-xorgproto"],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxau/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxau/-/tags"
+    ],
     "version": "1.0.11"
   },
   "xorg-libxcb": {
@@ -5522,8 +5538,12 @@
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
+    "outdated": true,
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxcb/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxcb/-/tags"
+    ],
     "version": "1.16"
   },
   "xorg-libxdmcp": {
@@ -5534,7 +5554,10 @@
     "date": "2023-01-03",
     "dependencies": ["xorg-xorgproto"],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxdmcp/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxdmcp/-/tags"
+    ],
     "version": "1.1.4"
   },
   "xorg-libxext": {
@@ -5552,7 +5575,10 @@
       "xorg-xorgproto"
     ],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxext/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxext/-/tags"
+    ],
     "version": "1.3.5"
   },
   "xorg-libxrandr": {
@@ -5572,7 +5598,10 @@
       "xorg-xorgproto"
     ],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/tags"
+    ],
     "version": "1.5.3"
   },
   "xorg-libxrender": {
@@ -5590,7 +5619,10 @@
       "xorg-xorgproto"
     ],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxrender/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxrender/-/tags"
+    ],
     "version": "0.9.11"
   },
   "xorg-libxt": {
@@ -5610,7 +5642,10 @@
       "xorg-xorgproto"
     ],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxt/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxt/-/tags"
+    ],
     "version": "1.3.0"
   },
   "xorg-xcb-proto": {
@@ -5619,8 +5654,12 @@
     },
     "build_dependencies": ["make", "pkg-config", "python3.11"],
     "date": "2023-08-31",
+    "notes": ["This must match xorg-libxcb version."],
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/proto/xcbproto/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/proto/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/proto/xcbproto/-/tags"
+    ],
     "version": "1.16.0"
   },
   "xorg-xorgproto": {
@@ -5630,7 +5669,10 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/tags"],
+    "url": [
+      "https://www.x.org/archive/individual/proto/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/tags"
+    ],
     "version": "2023.2"
   },
   "xorg-xtrans": {
@@ -5640,9 +5682,14 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "dependencies": ["xorg-xorgproto"],
+    "notes": ["1.5.0 fails to build on macOS due to missing stropts.h."],
+    "outdated": true,
     "prune": false,
-    "url": ["https://gitlab.freedesktop.org/xorg/lib/libxtrans/-/tags"],
-    "version": "1.5.0"
+    "url": [
+      "https://www.x.org/archive/individual/lib/?C=M;O=D",
+      "https://gitlab.freedesktop.org/xorg/lib/libxtrans/-/tags"
+    ],
+    "version": "1.4.0"
   },
   "xsv": {
     "aliases": {

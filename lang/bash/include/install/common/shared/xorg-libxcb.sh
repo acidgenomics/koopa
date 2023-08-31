@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xorg-libxcb.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
@@ -37,8 +37,8 @@ main() {
         '--with-doxygen=no'
         "PYTHON=${app['python']}"
     )
-    dict['url']="https://xcb.freedesktop.org/dist/\
-libxcb-${dict['version']}.tar.gz"
+    dict['url']="https://www.x.org/archive/individual/lib/\
+libxcb-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
