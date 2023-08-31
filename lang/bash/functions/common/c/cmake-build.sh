@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure that we don't build inside the src directory...
-# Need to build a level up from the input...rethink this.
-
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.
@@ -15,12 +12,15 @@ koopa_cmake_build() {
     app['cmake']="$(koopa_locate_cmake)"
     koopa_assert_is_executable "${app[@]}"
     dict['bin_dir']=''
-    dict['build_dir']="build-$(koopa_random_string)"
     dict['generator']='Unix Makefiles'
     dict['include_dir']=''
     dict['jobs']="$(koopa_cpu_count)"
     dict['lib_dir']=''
     dict['prefix']=''
+    dict['source_dir']="$(koopa_realpath "${PWD:?}")"
+    dict['build_dir']="$( \
+        koopa_init_dir "${dict['source_dir']}-cmake-$(koopa_random_string)" \
+    )"
     cmake_std_args=()
     pos=()
     while (("$#"))
@@ -107,11 +107,14 @@ koopa_cmake_build() {
     esac
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_print_env
-    koopa_dl 'CMake args' "${cmake_args[*]}"
+    koopa_dl \
+        'CMake args' "${cmake_args[*]}" \
+        'build dir' "${dict['build_dir']}" \
+        'source dir' "${dict['source_dir']}"
     "${app['cmake']}" -LH \
         '-B' "${dict['build_dir']}" \
         '-G' "${dict['generator']}" \
-        '-S' '.' \
+        '-S' "${dict['source_dir']}" \
         "${cmake_args[@]}"
     "${app['cmake']}" \
         --build "${dict['build_dir']}" \
@@ -119,5 +122,6 @@ koopa_cmake_build() {
     "${app['cmake']}" \
         --install "${dict['build_dir']}" \
         --prefix "${dict['prefix']}"
+    koopa_rm "${dict['build_dir']}"
     return 0
 }
