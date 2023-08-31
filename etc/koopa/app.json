@@ -25,12 +25,12 @@
     "arch": "amd64",
     "bin": ["agat"],
     "build_dependencies": ["patch"],
-    "date": "2023-05-30",
+    "date": "2023-08-31",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
     "url": ["https://github.com/NBISweden/AGAT/"],
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "anaconda": {
     "date": "2023-08-07",
@@ -58,12 +58,12 @@
       "homebrew": true
     },
     "bin": ["pyspark", "sparkR"],
-    "date": "2023-05-08",
+    "date": "2023-08-31",
     "dependencies": ["python3.11", "r", "temurin"],
     "enabled": false,
     "large": true,
     "url": ["https://spark.apache.org/"],
-    "version": "3.4.0"
+    "version": "3.4.1"
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
@@ -103,12 +103,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-08-31",
     "dependencies": ["hdf5"],
     "enabled": false,
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "12.4.0"
+    "version": "12.6.3"
   },
   "asdf": {
     "aliases": {
@@ -154,7 +154,7 @@
     "date": "2022-08-29",
     "platform": "linux",
     "prune": false,
-    "url": ["https://download.savannah.nongnu.org/releases/attr/"],
+    "url": ["https://download.savannah.nongnu.org/releases/attr/?C=M&O=D"],
     "version": "2.5.1"
   },
   "autoconf": {
@@ -175,7 +175,7 @@
     "date": "2022-08-29",
     "dependencies": ["m4"],
     "prune": false,
-    "url": ["https://ftp.gnu.org/gnu/autoconf/"],
+    "url": ["https://ftp.gnu.org/gnu/autoconf/?C=M;O=D"],
     "version": "2.71"
   },
   "autodock": {
@@ -190,22 +190,19 @@
   },
   "autodock-adfr": {
     "arch": "amd64",
-    "date": "2023-06-01",
+    "date": "2023-08-31",
     "enabled": false,
     "large": true,
     "url": ["https://ccsb.scripps.edu/adfr/"],
     "version": "1.0"
   },
   "autodock-vina": {
-    "aliases": {
-      "conda": "vina"
-    },
-    "arch": "amd64",
     "bin": ["vina"],
-    "date": "2022-10-19",
+    "date": "2023-08-31",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": [
       "https://vina.scripps.edu/",
       "https://github.com/ccsb-scripps/AutoDock-Vina/"
