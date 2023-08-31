@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME 2.4.3 fails to build on Linux if LDAP is not installed.
+# https://crux.nu/bugs/index.php?do=details&task_id=1935&project=1&amp%3Bamp%3Bopened=63&status%5B0%5D=&amp%3Bpagenum=45&order=tasktype&sort=asc&toggleadvanced=1
+
+# /usr/bin/ld: server.o: in function `cmd_ad_query':
+# server.c:(.text+0x1db4): undefined reference to `ks_ldap_help_variables'
+# collect2: error: ld returned 1 exit status
+# make[2]: *** [Makefile:937: dirmngr] Error 1
+# 
+# I saw there was a bug related to this that was fixed upstream, but it still seems to be an issue with the port: https://dev.gnupg.org/T6239
+
 main() {
     # """
     # Install GnuPG.
