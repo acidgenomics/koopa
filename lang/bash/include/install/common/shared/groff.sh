@@ -9,7 +9,7 @@ main() {
     local conf_arg
     koopa_activate_app --build-only 'bison' 'pkg-config' 'texinfo'
     koopa_activate_app 'm4' 'perl'
-    conf_args+=('--without-x')
+    conf_args=('--without-x')
     for conf_arg in "${conf_args[@]}"
     do
         install_args+=('-D' "$conf_arg")
