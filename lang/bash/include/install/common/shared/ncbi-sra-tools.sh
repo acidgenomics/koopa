@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Hitting build errors with 3.0.5:
-#
-# gmake[1]: *** [CMakeFiles/Makefile2:2045: libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all] Error 2
-#
-# Relevant lines in Makefile2:
-#
-# # All Build rule for target.
-# libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all:
-# 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/depend
-# 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build
-# 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20230517-112554-ft2uqsXdCN/src/build-c9649619b1/CMakeFiles --progress-num=99 "Built target vdb-sqlite"
-# .PHONY : libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all
-
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-05-17.
+    # @note Updated 2023-08-31.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -81,6 +68,15 @@ libxml2.${dict['shared_ext']}"
         "-DVDB_INCDIR=${cmake['vdb_incdir']}"
         "-DVDB_LIBDIR=${cmake['vdb_libdir']}"
     )
+    if koopa_is_macos
+    then
+        CFLAGS="${CFLAGS:-}"
+        CFLAGS="${CFLAGS} -DTARGET_OS_OSX"
+        export CFLAGS
+        CXXFLAGS="${CXXFLAGS:-}"
+        CXXFLAGS="${CXXFLAGS} -DTARGET_OS_OSX -D_LIBCPP_DISABLE_AVAILABILITY"
+        export CXXFLAGS
+    fi
     dict['url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
@@ -99,6 +95,22 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'build/install.sh'
     fi
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    if koopa_is_macos
+    then
+        koopa_mkdir 'obj/ngs/ngs-java/javadoc/ngs-doc'
+    fi
+    koopa_cd '..'
+    koopa_mkdir 'build'
+    koopa_cd 'build'
+    koopa_activate_app --build-only 'cmake'
+    cmake_args+=(
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
+        '-DCMAKE_BUILD_TYPE=Release'
+    )
+    cmake ../src "${cmake_args[@]}"
+    cmake --build . -j 4 -v
+    cmake --install .
+    # FIXME We may need to build in separate directory here.
+    # koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

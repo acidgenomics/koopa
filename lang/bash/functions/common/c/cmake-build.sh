@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure that we don't build inside the src directory...
+# Need to build a level up from the input...rethink this.
+
 koopa_cmake_build() {
     # """
     # Perform a standard CMake build.
-    # @note Updated 2023-08-04.
+    # @note Updated 2023-08-31.
     # """
     local -A app dict
     local -a build_deps cmake_args cmake_std_args pos
