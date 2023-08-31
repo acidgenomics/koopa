@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xorg-xorgproto.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -19,7 +19,7 @@ main() {
         '--disable-silent-rules'
         "--prefix=${dict['prefix']}"
     )
-    dict['url']="https://xorg.freedesktop.org/archive/individual/proto/\
+    dict['url']="https://www.x.org/archive/individual/proto/\
 xorgproto-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
