@@ -5090,7 +5090,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "17.0.8+1"
+    "version": "17.0.8.1+1"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
