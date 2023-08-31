@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -22,7 +22,6 @@ main() {
         'libxml2'
         'openssl3'
         'zlib'
-        'boost'
     )
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
@@ -33,12 +32,10 @@ main() {
     conf_args=(
         '--disable-examples'
         '--disable-hpack-tools'
-        '--disable-python-bindings'
         '--disable-silent-rules'
         '--disable-static'
         '--enable-app'
         "--prefix=${dict['prefix']}"
-        "--with-boost=${dict['boost']}"
         '--with-jemalloc'
         '--with-libcares'
         '--with-libev'
