@@ -3,7 +3,7 @@
 main() {
     # """
     # Install findutils.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-08-31.
     # """
     if koopa_is_macos
     then
@@ -19,6 +19,8 @@ main() {
         CFLAGS="-D__nonnull\(params\)= ${CFLAGS}"
         export CFLAGS
     fi
-    koopa_install_gnu_app -D '--program-prefix=g'
+    koopa_install_gnu_app \
+        --compress-ext='xz' \
+        -D '--program-prefix=g'
     return 0
 }
