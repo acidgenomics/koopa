@@ -3859,7 +3859,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make"],
+    "build_dependencies": ["groff", "make"],
     "date": "2023-08-31",
     "dependencies": ["openssl3"],
     "enabled": false,
