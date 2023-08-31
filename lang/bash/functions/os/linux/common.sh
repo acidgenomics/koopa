@@ -483,7 +483,6 @@ software/downloads/latest'."
 koopa_linux_install_system_pihole() {
     koopa_install_app \
         --name='pihole' \
-        --no-isolate \
         --platform='linux' \
         --system \
         "$@"
@@ -492,7 +491,6 @@ koopa_linux_install_system_pihole() {
 koopa_linux_install_system_pivpn() {
     koopa_install_app \
         --name='pivpn' \
-        --no-isolate \
         --platform='linux' \
         --system \
         "$@"

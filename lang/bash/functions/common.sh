@@ -10945,26 +10945,6 @@ koopa_install_app() {
                 bool['deps']=0
                 shift 1
                 ;;
-            '--no-link-in-bin')
-                bool['link_in_bin']=0
-                shift 1
-                ;;
-            '--no-link-in-man1')
-                bool['link_in_man1']=0
-                shift 1
-                ;;
-            '--no-link-in-opt')
-                bool['link_in_opt']=0
-                shift 1
-                ;;
-            '--no-prefix-check')
-                bool['prefix_check']=0
-                shift 1
-                ;;
-            '--no-isolate')
-                bool['isolate']=0
-                shift 1
-                ;;
             '--private')
                 bool['private']=1
                 shift 1
@@ -11033,9 +11013,11 @@ ${dict['version2']}"
         'system')
             koopa_assert_is_owner
             koopa_assert_is_admin
+            bool['isolate']=0
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
+            bool['prefix_check']=0
             koopa_is_linux && bool['update_ldconfig']=1
             ;;
         'user')
@@ -11134,6 +11116,7 @@ ${dict['version2']}"
         koopa_install_app_from_binary_package "${dict['prefix']}"
     elif [[ "${bool['isolate']}" -eq 0 ]]
     then
+        export KOOPA_INSTALL_APP_SUBSHELL=1
         koopa_install_app_subshell \
             --installer="${dict['installer']}" \
             --mode="${dict['mode']}" \
@@ -11142,6 +11125,7 @@ ${dict['version2']}"
             --prefix="${dict['prefix']}" \
             --version="${dict['version']}" \
             "$@"
+        unset -v KOOPA_INSTALL_APP_SUBSHELL
     else
         app['bash']="$(koopa_locate_bash --allow-missing)"
         if [[ ! -x "${app['bash']}" ]] || \
@@ -14112,6 +14096,7 @@ koopa_install_r() {
 
 koopa_install_radian() {
     koopa_install_app \
+        --installer='python-package' \
         --name='radian' \
         "$@"
 }
@@ -14561,7 +14546,6 @@ koopa_install_swig() {
 koopa_install_system_bootstrap() {
     koopa_install_app \
         --name='bootstrap' \
-        --no-prefix-check \
         --system \
         "$@"
 }
@@ -14576,7 +14560,6 @@ koopa_install_system_homebrew_bundle() {
 koopa_install_system_homebrew() {
     koopa_install_app \
         --name='homebrew' \
-        --no-prefix-check \
         --prefix="$(koopa_homebrew_prefix)" \
         --system \
         "$@"
