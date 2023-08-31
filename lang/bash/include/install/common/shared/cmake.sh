@@ -3,7 +3,7 @@
 main() {
     # """
     # Install CMake.
-    # @note Updated 2023-05-19.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Kitware/CMake
@@ -17,6 +17,7 @@ main() {
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    koopa_is_linux && dict['jobs']=1
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=7
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
