@@ -3,7 +3,7 @@
 main() {
     # """
     # Install binutils.
-    # @note Updated 2022-11-15.
+    # @note Updated 2023-08-29.
     #
     # @section Flex / Lex configuration on Ubuntu 22:
     # - https://lists.gnu.org/archive/html/bug-binutils/2016-01/msg00076.html
@@ -22,44 +22,47 @@ main() {
     # - https://tracker.debian.org/pkg/binutils
     # - https://salsa.debian.org/toolchain-team/binutils/-/tree/master/debian
     # """
-    local -a build_deps deps install_args
+    local -a build_deps conf_args deps install_args
+    local conf_arg
     build_deps=('bison' 'flex')
     deps=('zlib' 'texinfo')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    install_args=(
-        # > -D '--disable-multilib'
-        # > -D '--disable-nls'
-        # > -D '--disable-plugins'
-        # > -D '--disable-static'
-        # > -D '--disable-werror'
-        # > -D '--enable-64-bit-bfd'
-        # > -D '--enable-default-execstack=no'
-        # > -D '--enable-deterministic-archives'
-        # > -D '--enable-interwork'
-        # > -D '--enable-ld=default'
-        # > -D '--enable-relro'
-        # > -D '--enable-targets=all'
-        # > -D '--with-mmap'
-        # > -D '--with-pic'
-        # > -D '--with-system-zlib'
-        -D '--disable-debug'
-        -D '--disable-dependency-tracking'
+    conf_args=(
+        # > '--disable-multilib'
+        # > '--disable-nls'
+        # > '--disable-plugins'
+        # > '--disable-static'
+        # > '--disable-werror'
+        # > '--enable-64-bit-bfd'
+        # > '--enable-default-execstack=no'
+        # > '--enable-deterministic-archives'
+        # > '--enable-interwork'
+        # > '--enable-ld=default'
+        # > '--enable-relro'
+        # > '--enable-targets=all'
+        # > '--with-mmap'
+        # > '--with-pic'
+        # > '--with-system-zlib'
+        '--disable-debug'
+        '--disable-dependency-tracking'
         # gprofng currently has a weird bison detection issue on Linux.
-        -D '--disable-gprofng'
+        '--disable-gprofng'
         # gold is required for llvm.
-        -D '--enable-gold'
-        -D '--without-debuginfod'
+        '--enable-gold'
+        '--without-debuginfod'
     )
     if koopa_is_linux
     then
-        install_args+=(
-            # > -D 'LEX=flex'
-            -D 'LEX=touch lex.yy.c'
+        conf_args+=(
+            # > 'LEX=flex'
+            'LEX=touch lex.yy.c'
         )
     fi
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='binutils' \
-        "${install_args[@]}"
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app --jobs=1 "${install_args[@]}"
+    return 0
 }

@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='python-venv' \
-        --name='glances' \
-        -D --package-name='Glances'
+    koopa_install_python_package --package-name='Glances'
+    return 0
 }

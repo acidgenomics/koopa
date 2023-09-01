@@ -3,30 +3,33 @@
 main() {
     # """
     # Install GnuPG.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/gnupg.html
-    # - https://gitlab.com/goeb/gnupg-static/-/commit/
-    #     42665e459192e3ee1bb6461ae2d4336d8f1f023c
+    # - https://formulae.brew.sh/formula/gnupg
     # """
     local -A app dict
-    local -a conf_args
-    koopa_activate_app --build-only 'pkg-config' 'sed'
-    koopa_activate_app \
-        'zlib' \
-        'bzip2' \
-        'readline' \
-        'nettle' \
-        'libtasn1' \
-        'gnutls' \
-        'sqlite' \
-        'libgpg-error' \
-        'libgcrypt' \
-        'libassuan' \
-        'libksba' \
-        'npth' \
+    local -a build_deps conf_args deps
+    build_deps=('pkg-config' 'sed')
+    deps=(
+        'zlib'
+        'bzip2'
+        'readline'
+        'nettle'
+        'libtasn1'
+        'gnutls'
+        'sqlite'
+        'libgpg-error'
+        'libgcrypt'
+        'libassuan'
+        'libksba'
+        'npth'
         'pinentry'
+        'openldap'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['sed']="$(koopa_locate_sed)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
@@ -61,11 +64,6 @@ main() {
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    "${app['sed']}" \
-        -e '/ks_ldap_free_state/i #if USE_LDAP' \
-        -e '/ks_get_state =/a #endif' \
-        -i'.bak' \
-        'dirmngr/server.c'
     koopa_make_build "${conf_args[@]}"
     return 0
 }

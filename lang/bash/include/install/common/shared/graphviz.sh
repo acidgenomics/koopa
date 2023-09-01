@@ -15,7 +15,7 @@
 main() {
     # """
     # Install graphviz.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://graphviz.org/
@@ -26,6 +26,7 @@ main() {
     local -A dict
     local -a conf_args
     koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app 'expat'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(

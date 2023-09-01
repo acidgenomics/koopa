@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-05-26.
+    # @note Updated 2023-08-31.
     #
     # @section Privilege separation:
     #
@@ -56,6 +56,7 @@ main() {
         "--with-ssl-dir=${dict['openssl']}"
         "--with-zlib=${dict['zlib']}"
         '--without-xauth'
+        '--without-zlib-version-check'
     )
     if koopa_is_macos
     then

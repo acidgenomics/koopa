@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libxrandr.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/

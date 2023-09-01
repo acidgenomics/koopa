@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='python-venv' \
-        --name='yt-dlp' \
-        -D --package-name='yt_dlp'
+    koopa_install_python_package --package-name='yt_dlp'
+    return 0
 }

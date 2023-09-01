@@ -7,7 +7,6 @@ main() {
     # """
     koopa_activate_app --build-only 'texinfo'
     koopa_activate_app 'ed'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='bc'
+    koopa_install_gnu_app
+    return 0
 }

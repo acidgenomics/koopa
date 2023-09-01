@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This should error when we fail to link.
+# e.g. 'wget2.1', due to bsd sed / missing doxygen.
+
 koopa_link_in_man1() {
     # """
     # Link documentation into koopa 'MANPATH' man1 directory.

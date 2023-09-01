@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='rust-package' \
-        --name='tuc'
+    # """
+    # Install tuc.
+    # @note Updated 2023-08-29.
+    # """
+    koopa_install_rust_package --features='regex'
+    return 0
 }

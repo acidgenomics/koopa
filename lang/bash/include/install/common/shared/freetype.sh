@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='freetype' \
-        -D '--disable-static' \
-        -D '--enable-freetype-config' \
-        -D '--enable-shared=yes' \
-        -D '--without-harfbuzz'
+    local -a conf_args install_args
+    local conf_arg
+    conf_args=(
+        '--disable-static'
+        '--enable-freetype-config'
+        '--enable-shared=yes'
+        '--without-harfbuzz'
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app --non-gnu-mirror "${install_args[@]}"
+    return 0
 }
