@@ -214,6 +214,7 @@
     "date": "2023-06-26",
     "dependencies": ["python3.11"],
     "enabled": false,
+    "outdated": true,
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
@@ -4179,6 +4180,7 @@
     ],
     "enabled": false,
     "man1": ["proj.1", "projinfo.1"],
+    "outdated": true,
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.2.1"
@@ -4650,7 +4652,6 @@
     "bin": ["ruff-lsp"],
     "date": "2023-08-21",
     "dependencies": ["python3.11"],
-    "outdated": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
     "version": "0.0.37"
   },
@@ -5471,7 +5472,6 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "outdated": true,
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -5541,7 +5541,6 @@
       "xorg-xcb-proto",
       "xorg-xorgproto"
     ],
-    "outdated": true,
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
