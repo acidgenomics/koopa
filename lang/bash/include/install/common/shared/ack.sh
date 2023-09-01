@@ -1,7 +1,15 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='perl-package' \
-        --name='ack'
+    # """
+    # Install ack.
+    # @note Updated 2023-08-31.
+    # """
+    local -A dict
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    koopa_install_perl_package \
+        --cpan-path='PETDANCE/ack' \
+        --dependency='File::Next' \
+        --version="v${dict['version']}"
+    return 0
 }

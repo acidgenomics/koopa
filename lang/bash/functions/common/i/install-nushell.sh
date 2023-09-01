@@ -4,5 +4,4 @@ koopa_install_nushell() {
     koopa_install_app \
         --name='nushell' \
         "$@"
-    return 0
 }

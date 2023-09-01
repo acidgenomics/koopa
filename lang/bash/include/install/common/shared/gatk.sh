@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='conda-env' \
-        --name='gatk4'
+    # """
+    # Install GATK.
+    # @note Updated 2023-08-30.
+    # """
+    koopa_install_conda_package --name='gatk4'
+    return 0
 }

@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='make' \
+    koopa_install_gnu_app \
         -D '--program-prefix=g'
+    return 0
 }

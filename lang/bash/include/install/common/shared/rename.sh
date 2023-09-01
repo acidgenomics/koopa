@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='perl-package' \
-        --name='rename'
+    # """
+    # Install rename.
+    # @note Updated 2023-08-30.
+    # """
+    koopa_install_perl_package --cpan-path='RMBARKER/File-Rename'
+    return 0
 }

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install jless.
-    # @note Updated 2023-07-17.
+    # @note Updated 2023-08-29.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/jless
@@ -16,7 +16,6 @@ main() {
             'xorg-libxdmcp' \
             'xorg-libxcb'
     fi
-    koopa_install_app_subshell \
-        --installer='rust-package' \
-        --name='jless'
+    koopa_install_rust_package
+    return 0
 }

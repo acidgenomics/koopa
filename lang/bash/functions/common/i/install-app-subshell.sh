@@ -3,10 +3,11 @@
 koopa_install_app_subshell() {
     # """
     # Install an application in a hardened subshell.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-08-29.
     # """
     local -A dict
     local -a pos
+    koopa_assert_is_install_subshell
     dict['installer_bn']=''
     dict['installer_fun']='main'
     dict['mode']='shared'

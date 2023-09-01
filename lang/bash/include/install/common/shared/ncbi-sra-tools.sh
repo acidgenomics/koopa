@@ -1,22 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Hitting build errors with 3.0.5:
-#
-# gmake[1]: *** [CMakeFiles/Makefile2:2045: libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all] Error 2
-#
-# Relevant lines in Makefile2:
-#
-# # All Build rule for target.
-# libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all:
-# 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/depend
-# 	$(MAKE) $(MAKESILENT) -f libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build.make libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/build
-# 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/koopa-501-20230517-112554-ft2uqsXdCN/src/build-c9649619b1/CMakeFiles --progress-num=99 "Built target vdb-sqlite"
-# .PHONY : libs/vdb-sqlite/CMakeFiles/vdb-sqlite.dir/all
-
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-05-17.
+    # @note Updated 2023-08-31.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -36,15 +23,10 @@ main() {
     #     Formula/sratoolkit.rb
     # """
     local -A app cmake dict
-    local -a deps cmake_args
-    deps=(
-        'bison'
-        'flex'
-        'hdf5'
-        'libxml2'
-        'ncbi-vdb'
-        'python3.11'
-    )
+    local -a build_deps cmake_args deps
+    build_deps=('bison' 'flex' 'ncbi-vdb' 'python3.11')
+    deps=('libxml2')
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --realpath)"
     koopa_assert_is_executable "${app[@]}"
@@ -53,8 +35,6 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['vdb']="$(koopa_app_prefix 'ncbi-vdb')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    CFLAGS="-DH5_USE_110_API ${CFLAGS:-}"
-    export CFLAGS
     cmake['libxml2_include_dir']="${dict['libxml2']}/include"
     cmake['libxml2_libraries']="${dict['libxml2']}/lib/\
 libxml2.${dict['shared_ext']}"
@@ -99,6 +79,7 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'build/install.sh'
     fi
+    # If build fails, set '--jobs=1' here for better debugging info.
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

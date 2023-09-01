@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='lzip'
+    koopa_install_gnu_app --non-gnu-mirror
+    return 0
 }

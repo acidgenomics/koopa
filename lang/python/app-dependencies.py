@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-05-30.
+@note Updated 2023-08-29.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -138,7 +138,7 @@ def main(app_name: str, json_file: str) -> bool:
     i = 0
     lst = []
     lst.append(deps)
-    while i < len(deps):
+    while i <= len(deps):
         lvl1 = []
         for lvl2 in lst[i]:
             if isinstance(lvl2, list):

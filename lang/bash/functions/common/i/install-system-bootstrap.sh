@@ -3,7 +3,6 @@
 koopa_install_system_bootstrap() {
     koopa_install_app \
         --name='bootstrap' \
-        --no-prefix-check \
         --system \
         "$@"
 }
