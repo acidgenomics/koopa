@@ -735,6 +735,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make"],
+    "enabled": false,
     "large": true,
     "prune": false,
     "url": [
@@ -2481,6 +2482,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-09-26",
+    "enabled": false,
     "prune": false,
     "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
     "version": "5.3.0"
@@ -4924,6 +4926,7 @@
     },
     "build_dependencies": ["make"],
     "dependencies": ["bzip2", "curl", "libdeflate", "xz", "zlib", "zstd"],
+    "enabled": false,
     "prune": false,
     "url": ["https://github.com/jkbonfield/io_lib"],
     "version": "1.15.0"
