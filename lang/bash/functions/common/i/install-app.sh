@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Instead of erroring on an unsupported app, remove it when it exists
+# and has been removed (e.g. 'llama', 'python3.10').
+# FIXME Alternatively, in the 'install --all' situation, just ignore existing
+# directories from removed apps that are no longer supported.
+
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.

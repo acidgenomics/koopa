@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add a Python script that checks linkage for duplicates in bin and man1.
 ** TODO Consider adding 'koopa_delete_line' that uses sed with '\d' internally.
     Refer to recent sambamba bioconda recipe update as an example.
 ** TODO Icons are now wonky for doom-emacs using emacs 29.1.
