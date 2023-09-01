@@ -2,14 +2,24 @@
 
 main() {
     # """
+    # Install attr.
+    # @note Updated 2023-08-29.
+    #
     # @seealso
     # - https://savannah.nongnu.org/projects/attr
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/attr.rb
     # """
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='attr' \
-       -D '--disable-debug' \
-       -D '--disable-dependency-tracking' \
-       -D '--disable-silent-rules'
+    local -a conf_args install_args
+    local conf_arg
+    conf_args=(
+       '--disable-debug'
+       '--disable-dependency-tracking'
+       '--disable-silent-rules'
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app --non-gnu-mirror "${install_args[@]}"
+    return 0
 }

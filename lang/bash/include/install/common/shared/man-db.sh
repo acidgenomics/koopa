@@ -3,7 +3,7 @@
 main() {
     # """
     # Install man-db.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-08-29.
     #
     # Potentially useful:
     # > --program-prefix=g
@@ -13,22 +13,32 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/man-db.rb
     # """
     local -A dict
+    local -a conf_args install_args
+    local conf_arg
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app \
         'groff' \
         'libpipeline' \
         'gdbm'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='man-db' \
-        -D '--disable-cache-owner' \
-        -D '--disable-dependency-tracking' \
-        -D '--disable-nls' \
-        -D '--disable-setuid' \
-        -D '--disable-silent-rules' \
-        -D '--program-prefix=g' \
-        -D "--with-config-file=${dict['prefix']}/etc/man_db.conf" \
-        -D "--with-systemdsystemunitdir=${dict['prefix']}/etc/systemd/system" \
-        -D "--with-systemdtmpfilesdir=${dict['prefix']}/etc/tmpfiles.d"
+    conf_args=(
+        '--disable-cache-owner'
+        '--disable-dependency-tracking'
+        '--disable-nls'
+        '--disable-setuid'
+        '--disable-silent-rules'
+        '--program-prefix=g'
+        "--with-config-file=${dict['prefix']}/etc/man_db.conf"
+        "--with-systemdsystemunitdir=${dict['prefix']}/etc/systemd/system"
+        "--with-systemdtmpfilesdir=${dict['prefix']}/etc/tmpfiles.d"
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app \
+        --compress-ext='xz' \
+        --non-gnu-mirror \
+        "${install_args[@]}"
+    return 0
 }

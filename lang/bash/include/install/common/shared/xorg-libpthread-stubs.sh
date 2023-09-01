@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libpthread-stubs.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -15,8 +15,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=("--prefix=${dict['prefix']}")
-    dict['url']="https://xcb.freedesktop.org/dist/\
-libpthread-stubs-${dict['version']}.tar.bz2"
+    dict['url']="https://www.x.org/archive/individual/lib/\
+libpthread-stubs-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'

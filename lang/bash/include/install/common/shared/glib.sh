@@ -3,7 +3,7 @@
 main() {
     # """
     # Install glib.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-08-31.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
@@ -14,7 +14,8 @@ main() {
     local -a build_deps deps meson_args
     build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python3.11')
     deps=('zlib')
-    koopa_is_macos && deps+=('gettext')
+    # Linking to our gettext causes build to fail for 2.76.5.
+    # > koopa_is_macos && deps+=('gettext')
     deps+=('libffi' 'pcre2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"

@@ -2,6 +2,7 @@
 
 koopa_install_ruff() {
     koopa_install_app \
+        --installer='python-package' \
         --name='ruff' \
         "$@"
 }

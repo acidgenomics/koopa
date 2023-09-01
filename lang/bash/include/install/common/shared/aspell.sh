@@ -3,7 +3,7 @@
 main() {
     # """
     # Install aspell.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-08-29.
     #
     # @seealso
     # - http://aspell.net/
@@ -17,12 +17,10 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['lang_base_url']='https://ftp.gnu.org/gnu/aspell/dict'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='aspell'
+    koopa_install_gnu_app
     app['aspell']="${dict['prefix']}/bin/aspell"
     app['prezip']="${dict['prefix']}/bin/prezip"
-    koopa_assert_is_installed "${app['aspell']}" "${app['prezip']}"
+    koopa_assert_is_executable "${app['aspell']}" "${app['prezip']}"
     koopa_add_to_path_start "${dict['prefix']}/bin"
     lang['de']='aspell6-de-20161207-7-0'
     lang['en']='aspell6-en-2020.12.07-0'

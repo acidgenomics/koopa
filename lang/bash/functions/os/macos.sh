@@ -583,7 +583,6 @@ koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
         --name='python3.11' \
-        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \
@@ -593,7 +592,6 @@ koopa_macos_install_system_python() {
 koopa_macos_install_system_r() {
     koopa_install_app \
         --name='r' \
-        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_r_prefix)" \
         --system \
@@ -613,9 +611,7 @@ koopa_macos_install_system_rosetta() {
 koopa_macos_install_system_xcode_clt() {
     koopa_install_app \
         --name='xcode-clt' \
-        --no-prefix-check \
         --platform='macos' \
-        --prefix='/Library/Developer/CommandLineTools' \
         --system \
         "$@"
 }

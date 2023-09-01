@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 
 main() {
+    # """
+    # Install libtool.
+    # @note Updated 2023-08-30.
+    # """
     local -A dict
-    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    local -a conf_args install_args
+    local conf_arg
     koopa_activate_app 'm4'
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='libtool' \
-        -D '--disable-static' \
-        -D '--program-prefix=g'
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    conf_args=(
+        '--disable-static'
+        '--program-prefix=g'
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app "${install_args[@]}"
     (
         koopa_cd "${dict['prefix']}/bin"
         koopa_ln 'glibtool' 'libtool'

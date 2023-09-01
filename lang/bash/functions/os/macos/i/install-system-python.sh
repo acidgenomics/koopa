@@ -4,7 +4,6 @@ koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
         --name='python3.11' \
-        --no-prefix-check \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \

@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-08-21.
+    # @note Updated 2023-08-31.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -181,6 +181,7 @@ _koopa_complete() {
                         'ghostscript'
                         'git'
                         'git-lfs'
+                        'gitui'
                         'glances'
                         'glib'
                         'gmp'
@@ -269,7 +270,6 @@ _koopa_complete() {
                         'libxslt'
                         'libyaml'
                         'libzip'
-                        'llama'
                         'llvm'
                         'lsd'
                         'lua'
@@ -320,6 +320,7 @@ _koopa_complete() {
                         'openbb'
                         'openblas'
                         'openjpeg'
+                        'openldap'
                         'openssh'
                         'openssl3'
                         'p7zip'
@@ -420,7 +421,6 @@ _koopa_complete() {
                         'utf8proc'
                         'vim'
                         'visidata'
-                        'visual-studio-code-cli'
                         'vulture'
                         'walk'
                         'wget'

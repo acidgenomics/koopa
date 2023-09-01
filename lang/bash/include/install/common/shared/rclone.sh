@@ -3,35 +3,34 @@
 main() {
     # """
     # Install rclone.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-08-29.
     #
     # @seealso
     # - https://rclone.org/
     # - https://github.com/rclone/rclone/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/rclone.rb
     # """
-    local -A app dict
-    koopa_activate_app --build-only 'go'
-    app['go']="$(koopa_locate_go)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['gocache']="$(koopa_init_dir 'gocache')"
-    dict['gopath']="$(koopa_init_dir 'go')"
+    local -A dict
+    local -a ldflags
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    export GOCACHE="${dict['gocache']}"
-    export GOPATH="${dict['gopath']}"
-    dict['url']="https://github.com/rclone/rclone/archive/v1.62.2.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    dict['ldflags']="-s -w -X github.com/rclone/rclone/fs.Version=v${dict['version']}"
-    koopa_print_env
-    "${app['go']}" build \
-        -ldflags "${dict['ldflags']}" \
-        -o "${dict['prefix']}/bin/rclone"
+    dict['url']="https://github.com/rclone/rclone/archive/\
+v${dict['version']}.tar.gz"
+    ldflags=(
+        '-s' '-w' '-X'
+        "github.com/rclone/rclone/fs.Version=v${dict['version']}"
+    )
+    dict['ldflags']="${ldflags[*]}"
+    koopa_install_go_package \
+        --ldflags="${dict['ldflags']}" \
+        --name="${dict['name']}" \
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}" \
+        --version="${dict['version']}"
+    # The working directory gets changed to extracted tarball in the call above.
     koopa_cp \
         --target-directory="${dict['prefix']}/share/man/man1" \
         'rclone.1'
-    koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    koopa_install_app_subshell \
-        --installer='rust-package' \
-        --name='delta'
+    koopa_install_rust_package --name='git-delta'
+    return 0
 }

@@ -21,6 +21,8 @@ main() {
     # - https://stackoverflow.com/questions/6562403/
     # """
     local -A dict
+    local -a conf_args install_args
+    local conf_arg
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -29,21 +31,25 @@ main() {
     dict['pkgconfig_dir']="${dict['prefix']}/lib/pkgconfig"
     koopa_mkdir "${dict['pkgconfig_dir']}"
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='ncurses' \
-        -D '--enable-pc-files' \
-        -D '--enable-sigwinch' \
-        -D '--enable-symlinks' \
-        -D '--enable-widec' \
-        -D '--with-cxx-binding' \
-        -D '--with-cxx-shared' \
-        -D '--with-gpm=no' \
-        -D '--with-manpage-format=normal' \
-        -D "--with-pkg-config-libdir=${dict['pkgconfig_dir']}" \
-        -D '--with-shared' \
-        -D '--with-versioned-syms' \
-        -D '--without-ada'
+    conf_args=(
+        '--enable-pc-files'
+        '--enable-sigwinch'
+        '--enable-symlinks'
+        '--enable-widec'
+        '--with-cxx-binding'
+        '--with-cxx-shared'
+        '--with-gpm=no'
+        '--with-manpage-format=normal'
+        "--with-pkg-config-libdir=${dict['pkgconfig_dir']}"
+        '--with-shared'
+        '--with-versioned-syms'
+        '--without-ada'
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    koopa_install_gnu_app "${install_args[@]}"
     (
         koopa_cd "${dict['prefix']}/bin"
         koopa_ln \

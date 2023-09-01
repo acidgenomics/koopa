@@ -1,32 +1,23 @@
 #!/usr/bin/env bash
 
-# NOTE Add support for lzlib.
-# https://formulae.brew.sh/formula/lzlib
+# FIXME We're still not creating the 'wget2.1' file man file as expected.
+# This likely requires doxygen -- work on adding in a future update.
 
-# FIXME Add support for these:
-# -gpgme
-# -hsts
-# -idn
-# -lzip
-# -ntlm
-# -opie
-# -psl
+# NOTE Consider adding support: gpgme, hsts, idn, lzip, ntlm, opie, psl
 
 main() {
     # """
     # Install wget2.
-    # @note Updated 2023-07-17.
+    # @note Updated 2023-08-29.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/wget2
     # - https://gitlab.com/gnuwget/wget2
     # """
-    local -a build_deps deps
     local -A dict
-    build_deps=(
-        'sed'
-        'texinfo'
-    )
+    local -a build_deps conf_args deps install_args
+    local conf_arg
+    build_deps=('sed' 'texinfo')
     deps=(
         'brotli'
         'bzip2'
@@ -54,17 +45,33 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
+    dict['sed']="$(koopa_app_prefix 'sed')"
     dict['ssl']="$(koopa_app_prefix 'openssl3')"
     # > dict['lzlib']="$(koopa_app_prefix 'lzlib')"
     # > export LZIP_CFLAGS="-I${dict['lzlib']}/include"
     # > export LZIP_LIBS="-L${dict['lzlib']}/lib -llz"
-    koopa_install_app_subshell \
-        --installer='gnu-app' \
-        --name='wget2' \
-        -D '--with-bzip2' \
-        -D "--with-libintl-prefix=${dict['gettext']}" \
-        -D "--with-libssl-prefix=${dict['ssl']}" \
-        -D '--with-lzma' \
-        -D '--with-ssl=openssl' \
-        -D '--without-libpsl'
+    conf_args=(
+        '--with-bzip2'
+        "--with-libintl-prefix=${dict['gettext']}"
+        "--with-libssl-prefix=${dict['ssl']}"
+        '--with-lzma'
+        '--with-ssl=openssl'
+        '--without-libpsl'
+    )
+    for conf_arg in "${conf_args[@]}"
+    do
+        install_args+=('-D' "$conf_arg")
+    done
+    # The pattern used in 'docs/wget2_md2man.sh.in' doesn't work with bsd sed.
+    koopa_mkdir 'bin'
+    (
+        koopa_cd 'bin'
+        koopa_ln "${dict['sed']}/bin/gsed" 'sed'
+    )
+    koopa_add_to_path_start "$(koopa_realpath 'bin')"
+    koopa_install_gnu_app \
+        --mirror='https://mirrors.kernel.org/gnu' \
+        --parent-name='wget' \
+        "${install_args[@]}"
+    return 0
 }
