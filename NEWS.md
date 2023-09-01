@@ -1,5 +1,49 @@
 # Release notes
 
+## koopa 0.14.0 (2023-09-01)
+
+Major changes:
+
+- New apps: `gitui`, `libconfig`, `luigi`, `openldap`, `pbzip2`, and `walk`
+  (renamed from `llama`).
+- Removed apps: `llama` (renamed to `walk`) and `visual-studio-code-cli`.
+- Reworked language / package manager-specific installers: Conda packages,
+  GNU apps, Go packages, Haskell packages, Node packages, Python packages,
+  Ruby packages, and Rust packages.
+- App installer function now sets `LIBRARY_PATH`, which can be picked up in
+  `make` install scripts. Note that this needs to be unset when installing GCC.
+- `koopa_decompress` and `koopa_extract` now attempt to use pbzip2 (for bzip2)
+  and pigz (for gz) for parallel processing when possible.
+
+Minor changes:
+
+- App updates: `ack`, `apache-airflow`, `apache-spark`, `armadillo`, `aws-cli`,
+  `azure-cli`, `bashcov`, `binutils`, `bioconda-utils`, `blast`, `boost`,
+  `bottom`, `broot`, `brotli`, `bustools`, `ca-certificates`, `chezmoi`,
+  `cmake`, `coreutils`, `csvtk`, `deeptools`, `difftastic`, `doom-emacs`,
+  `ensembl-perl-api`, `flac`, `flake8`, `fmt`, `fqtk`, `freetype`, `gcc`,
+  `gettext`, `gffutils`, `gget`, `gh`, `git`, `git-lfs`, `glib`, `gmp`, `gnupg`,
+  `gnutls`, `google-cloud-sdk`, `googletest`, `graphviz`, `grex`, `groff`,
+  `gseapy`, `gzip`, `hdf5`, `hexyl`, `hugo`, `icu4c`, `imagemagick`, `ipython`,
+  `julia`, `krb5`, `latch`, `ldc`, `less`, `libassuan`, `libconfig`, `libedit`,
+  `libidn`, `libksba`, `libluv`, `libpng`, `libssh2`, `libtiff`, `libxcrypt`,
+  `libxml2`, `libzip`, `lmod`, `lsd`, `luigi`, `mamba`, `miller`, `mpfr`,
+  `ncbi-sra-tools`, `ncbi-vdb`, `nghttp2`, `nim`, `nushell`, `openbb`,
+  `openldap`, `openssh`, `oracle-instant-client`, `pandoc`, `parallel`,
+  `pbzip2`, `pigz`, `poetry`, `prettier`, `pycodestyle`, `pyenv`, `pyflakes`,
+  `python3.11`, `r-devel`, `radian`, `ripgrep-all`, `rstudio-server`, `ruff`,
+  `ruff-lsp`, `rust`, `sambamba`, `scalene`, `screen`, `seqkit`, `spacemacs`,
+  `spacevim`, `sqlite`, `star`, `subread`, `tar`, `temurin`, `tree`, `vim`,
+  `vulture`, `walk`, `wget2`, `xorg-libpthread-stubs`, `xorg-libx11`,
+  `xorg-libxcb`, `xorg-xcb-proto`, `xorg-xorgproto`, `xxhash`, `xz`, `yaml-cpp`,
+  `yapf`, `zellij`, and `zlib`. 
+- Added app locator functions for `CC`, `CXX`, pbzip2, and pigz.
+- Reworked app subshell handling.
+- Reworked temporary CMake build location to be consistency out of the source
+  directory in `koopa_cmake_build` install calls.
+- Reworked `koopa_docker_prune_all_images` to not list `buildx` images.
+- Improved linkage when installing `ncbi-sra-tools`.
+
 ## koopa 0.13.5 (2023-08-15)
 
 Minor changes:
