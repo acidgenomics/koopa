@@ -10582,12 +10582,19 @@ koopa_install_all_apps() {
     local -a app_names push_apps
     local app_name
     bool['push']=0
+    bool['update']=0
     bool['verbose']=0
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=6
     while (("$#"))
     do
         case "$1" in
             '--push')
                 bool['push']=1
+                shift 1
+                ;;
+            '--update')
+                bool['update']=1
                 shift 1
                 ;;
             '--verbose')
@@ -10599,11 +10606,13 @@ koopa_install_all_apps() {
                 ;;
         esac
     done
-    dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=6
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
+    fi
+    if [[ "${bool['update']}" -eq 1 ]]
+    then
+        koopa_update_koopa
     fi
     readarray -t app_names <<< "$(koopa_shared_apps)"
     for app_name in "${app_names[@]}"
