@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE May need to address this:
-# Package xorg-macros was not found in the pkg-config search path.
-# Perhaps you should add the directory containing `xorg-macros.pc'
-# to the PKG_CONFIG_PATH environment variable
-# No package 'xorg-macros' found
-# https://github.com/freedesktop/xorg-macros
-
 main() {
     # """
     # Install xorg-libxau.

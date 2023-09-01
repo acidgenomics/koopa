@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for libxft.
-# https://gitlab.freedesktop.org/xorg/lib/libxft
-
 main() {
     # """
     # Install FLTK.
