@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Neovim.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-09-01.
     #
     # @seealso
     # - https://github.com/neovim/neovim/wiki/Building-Neovim
@@ -49,6 +49,7 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['jobs']="$(koopa_cpu_count)"
+    koopa_is_linux && dict['jobs']=1
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
