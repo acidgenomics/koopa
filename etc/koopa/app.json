@@ -524,13 +524,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-07-20",
+    "date": "2023-09-05",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.25.0"
+    "version": "1.25.1"
   },
   "brotli": {
     "aliases": {
@@ -765,9 +765,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-08-21",
+    "date": "2023-09-05",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.38.0"
+    "version": "2.39.0"
   },
   "cli11": {
     "aliases": {
@@ -1776,9 +1776,9 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-30",
+    "date": "2023-09-05",
     "url": ["https://github.com/extrawurst/gitui/"],
-    "version": "0.24.1"
+    "version": "0.24.2"
   },
   "glances": {
     "aliases": {
@@ -3319,7 +3319,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-08-24",
+    "date": "2023-09-05",
     "dependencies": [
       "bzip2",
       "cli11",
@@ -3344,7 +3344,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.0"
+    "version": "1.5.1"
   },
   "man-db": {
     "aliases": {
@@ -3367,11 +3367,11 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2023-06-17",
+    "date": "2023-09-05",
     "dependencies": ["node"],
     "large": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.35.0"
+    "version": "0.36.0"
   },
   "mcfly": {
     "aliases": {
@@ -3514,7 +3514,7 @@
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
-    "date": "2023-05-22",
+    "date": "2023-09-05",
     "dependencies": ["python3.11"],
     "enabled": false,
     "man1": ["mutagen-inspect.1"],
@@ -3522,7 +3522,7 @@
       "https://mutagen.readthedocs.io/",
       "https://github.com/quodlibet/mutagen/"
     ],
-    "version": "1.46.0"
+    "version": "1.47.0"
   },
   "nano": {
     "aliases": {
@@ -3668,7 +3668,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.11"],
-    "date": "2023-08-31",
+    "date": "2023-09-05",
     "dependencies": [
       "c-ares",
       "jemalloc",
@@ -3679,7 +3679,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.55.1"
+    "version": "1.56.0"
   },
   "nim": {
     "aliases": {
@@ -3845,12 +3845,12 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-01",
+    "date": "2023-09-05",
     "dependencies": ["gcc"],
     "enabled": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.23"
+    "version": "0.3.24"
   },
   "openjpeg": {
     "aliases": {
@@ -4275,14 +4275,14 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-06-26",
+    "date": "2023-09-05",
     "dependencies": ["python3.11"],
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.4.0"
+    "version": "7.4.1"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -4652,10 +4652,10 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-08-21",
+    "date": "2023-09-05",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.37"
+    "version": "0.0.38"
   },
   "rust": {
     "aliases": {
