@@ -3,7 +3,9 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-09-06.
+    #
+    # Note that 'pandoc-lua-engine' is required for R pkgdown.
     #
     # @seealso
     # - https://github.com/jgm/pandoc/blob/main/CONTRIBUTING.md
@@ -17,6 +19,8 @@ main() {
     # """
     koopa_install_haskell_package \
         --dependency='zlib' \
-        --extra-package='pandoc-cli'
+        --extra-package='pandoc-cli' \
+        --extra-package='pandoc-lua-engine' \
+        --extra-package='pandoc-server'
     return 0
 }

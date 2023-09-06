@@ -765,9 +765,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-09-05",
+    "date": "2023-09-06",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.39.0"
+    "version": "2.39.1"
   },
   "cli11": {
     "aliases": {
@@ -1717,9 +1717,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-08-21",
+    "date": "2023-09-06",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.33.0"
+    "version": "2.34.0"
   },
   "ghostscript": {
     "aliases": {
