@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-07-13.
+    # @note Updated 2023-09-06.
     #
     # @section Package library location:
     #
@@ -92,14 +92,6 @@ koopa_r_configure_environ() {
     # Set the 'PATH' string. Restricting path, so we don't mask compiler
     # binaries with virtual environment. This also greatly improves consistency
     # inside RStudio.
-    if [[ "${bool['system']}" -eq 0 ]] || koopa_is_macos
-    then
-        path_arr+=("${dict['bin_prefix']}")
-    fi
-    path_arr+=(
-        '/usr/bin'
-        '/bin'
-    )
     if koopa_is_linux
     then
         path_arr+=(
@@ -110,12 +102,22 @@ koopa_r_configure_environ() {
     elif koopa_is_macos
     then
         path_arr+=(
-            '/Library/TeX/texbin'
-            '/usr/local/MacGPG2/bin'
-            '/opt/X11/bin'
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools'
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
+        )
+    fi
+    if [[ "${bool['system']}" -eq 0 ]] || koopa_is_macos
+    then
+        path_arr+=("${dict['bin_prefix']}")
+    fi
+    path_arr+=('/usr/bin' '/bin')
+    if koopa_is_macos
+    then
+        path_arr+=(
+            '/Library/TeX/texbin'
+            '/usr/local/MacGPG2/bin'
+            '/opt/X11/bin'
         )
     fi
     conf_dict['path']="$(printf '%s:' "${path_arr[@]}")"
