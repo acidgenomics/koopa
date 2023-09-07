@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_exa() {
+koopa_install_eza() {
     koopa_install_app \
         --installer='rust-package' \
-        --name='exa' \
+        --name='eza' \
         "$@"
 }
