@@ -2,13 +2,10 @@
 
 _koopa_alias_l() {
     # """
-    # List files alias that uses 'exa' instead of 'ls', when possible.
-    # @note Updated 2023-04-21.
+    # List files alias that uses 'eza' instead of 'ls', when possible.
+    # @note Updated 2023-09-07.
     #
-    # Use exa instead of ls, when possible.
-    # https://the.exa.website/docs/command-line-options
-    #
-    # @secton Useful exa flags:
+    # @section Useful exa flags:
     # * -F, --classify
     #         Displays file type indicators by file names.
     # * -a, --all
@@ -24,6 +21,7 @@ _koopa_alias_l() {
     #         Ignores files mentioned in .gitignore.
     # *     --group-directories-first
     #         Lists directories before other files when sorting.
+    #
     # @section Useful ls flags:
     # * -B, --ignore-backups
     #         do not list implied entries ending with ~
@@ -32,9 +30,9 @@ _koopa_alias_l() {
     # * -h, --human-readable
     #         with -l and -s, print sizes like 1K 234M 2G etc.
     # """
-    if [ -x "$(_koopa_bin_prefix)/exa" ]
+    if [ -x "$(_koopa_bin_prefix)/eza" ]
     then
-        "$(_koopa_bin_prefix)/exa" \
+        "$(_koopa_bin_prefix)/eza" \
             --classify \
             --group \
             --group-directories-first \

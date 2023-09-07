@@ -1294,9 +1294,9 @@ _koopa_alias_kdev() {
 }
 
 _koopa_alias_l() {
-    if [ -x "$(_koopa_bin_prefix)/exa" ]
+    if [ -x "$(_koopa_bin_prefix)/eza" ]
     then
-        "$(_koopa_bin_prefix)/exa" \
+        "$(_koopa_bin_prefix)/eza" \
             --classify \
             --group \
             --group-directories-first \
