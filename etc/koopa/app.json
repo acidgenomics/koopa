@@ -2530,11 +2530,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2022-08-30",
+    "date": "2023-09-07",
     "dependencies": ["gettext", "m4", "oniguruma"],
     "man1": ["jq.1"],
     "url": ["https://github.com/stedolan/jq/"],
-    "version": "1.6"
+    "version": "1.7"
   },
   "julia": {
     "aliases": {
