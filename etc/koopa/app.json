@@ -1298,10 +1298,10 @@
       "homebrew": true
     },
     "bin": ["exa"],
-    "build_dependencies": ["rust"],
-    "date": "2022-09-26",
-    "url": ["https://github.com/ogham/exa/"],
-    "version": "0.10.1"
+    "date": "2023-09-07",
+    "enabled": false,
+    "removed": true,
+    "url": ["https://github.com/ogham/exa/"]
   },
   "exiftool": {
     "aliases": {
@@ -1338,6 +1338,19 @@
     "prune": false,
     "url": ["https://libexpat.github.io/"],
     "version": "2.5.0"
+  },
+  "eza": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["eza"],
+    "build_dependencies": ["rust"],
+    "date": "2023-09-07",
+    "url": [
+      "https://github.com/eza-community/eza/",
+      "https://crates.io/crates/eza/"
+    ],
+    "version": "0.11.0"
   },
   "fastqc": {
     "arch": "amd64",
@@ -1510,17 +1523,16 @@
     "version": "2.14.2"
   },
   "fq": {
-    "arch": "amd64",
     "bin": ["fq"],
-    "date": "2022-11-16",
-    "dependencies": ["conda"],
+    "build_dependencies": ["rust"],
+    "date": "2023-08-07",
     "enabled": false,
     "large": true,
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
     ],
-    "version": "0.10.0"
+    "version": "0.11.0"
   },
   "fqtk": {
     "arch": "amd64",
