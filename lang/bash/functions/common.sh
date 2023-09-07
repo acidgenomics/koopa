@@ -11851,13 +11851,6 @@ koopa_install_entrez_direct() {
         "$@"
 }
 
-koopa_install_exa() {
-    koopa_install_app \
-        --installer='rust-package' \
-        --name='exa' \
-        "$@"
-}
-
 koopa_install_exiftool() {
     koopa_install_app \
         --name='exiftool' \
@@ -11867,6 +11860,13 @@ koopa_install_exiftool() {
 koopa_install_expat() {
     koopa_install_app \
         --name='expat' \
+        "$@"
+}
+
+koopa_install_eza() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --name='eza' \
         "$@"
 }
 
@@ -25194,6 +25194,12 @@ koopa_uninstall_exiftool() {
 koopa_uninstall_expat() {
     koopa_uninstall_app \
         --name='expat' \
+        "$@"
+}
+
+koopa_uninstall_eza() {
+    koopa_uninstall_app \
+        --name='eza' \
         "$@"
 }
 
