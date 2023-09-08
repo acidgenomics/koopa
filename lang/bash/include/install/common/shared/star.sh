@@ -5,6 +5,10 @@
 #     patches/0002-donotuse_own_htslib.patch
 # - https://github.com/alexdobin/STAR/pull/1586
 
+# FIXME When STAR pull request is merged, can use:
+# SYSTEM_HTSLIB=1 to make
+# https://github.com/alexdobin/STAR/pull/1586
+
 main() {
     # """
     # Install STAR.
