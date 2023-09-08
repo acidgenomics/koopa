@@ -2189,6 +2189,7 @@
       "pcre2",
       "zlib"
     ],
+    "outdated": true,
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
     "version": "8.1.1"
