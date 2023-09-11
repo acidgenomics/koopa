@@ -3538,6 +3538,17 @@
     ],
     "version": "1.47.0"
   },
+  "mypy": {
+    "bin": ["mypy"],
+    "date": "2023-09-11",
+    "dependencies": ["python3.11"],
+    "url": [
+      "https://www.mypy-lang.org/",
+      "https://github.com/python/mypy/",
+      "https://pypi.org/project/mypy/"
+    ],
+    "version": "1.5.1"
+  },
   "nano": {
     "aliases": {
       "debian": true,
