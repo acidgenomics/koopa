@@ -4515,10 +4515,10 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2023-07-20",
+    "date": "2023-09-11",
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.63.1"
+    "version": "1.64.0"
   },
   "readline": {
     "aliases": {
@@ -4670,10 +4670,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-08-26",
+    "date": "2023-09-11",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.286"
+    "version": "0.0.288"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
