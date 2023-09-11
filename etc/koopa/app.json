@@ -3539,7 +3539,7 @@
     "version": "1.47.0"
   },
   "mypy": {
-    "bin": ["mypy"],
+    "bin": ["dmypy", "mypy", "mypyc"],
     "date": "2023-09-11",
     "dependencies": ["python3.11"],
     "url": [
@@ -4245,6 +4245,17 @@
       "https://pypi.org/project/pycodestyle/"
     ],
     "version": "2.11.0"
+  },
+  "pydantic": {
+    "bin": ["pydantic"],
+    "date": "2023-09-11",
+    "dependencies": ["python3.11"],
+    "url": [
+      "https://docs.pydantic.dev/latest/",
+      "https://github.com/pydantic/pydantic/",
+      "https://pypi.org/project/pydantic/"
+    ],
+    "version": "2.3.0"
   },
   "pyenv": {
     "aliases": {
