@@ -115,11 +115,11 @@
       "homebrew": true
     },
     "bin": ["asdf"],
-    "date": "2023-06-14",
+    "date": "2023-09-11",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.12.0"
+    "version": "0.13.0"
   },
   "aspell": {
     "aliases": {
