@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-09-07.
+    # @note Updated 2023-09-11.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -297,6 +297,7 @@ _koopa_complete() {
                         'msgpack'
                         'multiqc'
                         'mutagen'
+                        'mypy'
                         'nano'
                         'nanopolish'
                         'ncbi-sra-tools'
