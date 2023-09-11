@@ -1345,12 +1345,12 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-07",
+    "date": "2023-09-11",
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.11.0"
+    "version": "0.11.1"
   },
   "fastqc": {
     "arch": "amd64",
