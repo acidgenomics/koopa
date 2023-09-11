@@ -13319,6 +13319,13 @@ koopa_install_mutagen() {
         "$@"
 }
 
+koopa_install_mypy() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='mypy' \
+        "$@"
+}
+
 koopa_install_nano() {
     koopa_install_app \
         --name='nano' \
