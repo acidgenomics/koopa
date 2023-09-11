@@ -4246,17 +4246,6 @@
     ],
     "version": "2.11.0"
   },
-  "pydantic": {
-    "bin": ["pydantic"],
-    "date": "2023-09-11",
-    "dependencies": ["python3.11"],
-    "url": [
-      "https://docs.pydantic.dev/latest/",
-      "https://github.com/pydantic/pydantic/",
-      "https://pypi.org/project/pydantic/"
-    ],
-    "version": "2.3.0"
-  },
   "pyenv": {
     "aliases": {
       "homebrew": true
