@@ -448,10 +448,10 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2023-09-09",
+    "date": "2023-09-11",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "23.9.0"
+    "version": "23.9.1"
   },
   "blast": {
     "arch": "amd64",
