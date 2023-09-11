@@ -13884,13 +13884,6 @@ koopa_install_pycodestyle() {
         "$@"
 }
 
-koopa_install_pydantic() {
-    koopa_install_app \
-        --installer='python-package' \
-        --name='pydantic' \
-        "$@"
-}
-
 koopa_install_pyenv() {
     koopa_install_app \
         --name='pyenv' \
@@ -26123,6 +26116,12 @@ koopa_uninstall_multiqc() {
 koopa_uninstall_mutagen() {
     koopa_uninstall_app \
         --name='mutagen' \
+        "$@"
+}
+
+koopa_uninstall_mypy() {
+    koopa_uninstall_app \
+        --name='mypy' \
         "$@"
 }
 

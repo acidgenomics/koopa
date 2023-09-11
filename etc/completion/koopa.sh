@@ -347,7 +347,6 @@ _koopa_complete() {
                         'py-spy'
                         'pybind11'
                         'pycodestyle'
-                        'pydantic'
                         'pyenv'
                         'pyflakes'
                         'pygments'
