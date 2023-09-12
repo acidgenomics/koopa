@@ -211,15 +211,14 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
-    "date": "2023-06-26",
+    "date": "2023-09-12",
     "dependencies": ["python3.11"],
     "enabled": false,
-    "outdated": true,
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.2.0"
+    "version": "2.2.1"
   },
   "automake": {
     "aliases": {
@@ -1788,9 +1787,12 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-09",
+    "date": "2023-09-12",
     "outdated": true,
-    "url": ["https://github.com/extrawurst/gitui/"],
+    "url": [
+      "https://github.com/extrawurst/gitui/",
+      "https://crates.io/crates/gitui"
+    ],
     "version": "0.24.2"
   },
   "glances": {
@@ -2180,7 +2182,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-08-02",
+    "date": "2023-09-12",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2190,10 +2192,9 @@
       "pcre2",
       "zlib"
     ],
-    "outdated": true,
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.1.1"
+    "version": "8.2.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2712,13 +2713,13 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-30",
+    "date": "2023-09-12",
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "enabled": false,
     "large": true,
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.7.1"
+    "version": "3.7.2"
   },
   "libassuan": {
     "aliases": {
@@ -4078,17 +4079,16 @@
   "picard": {
     "arch": "amd64",
     "bin": ["picard"],
-    "date": "2023-03-07",
+    "date": "2023-09-12",
     "dependencies": ["conda"],
     "enabled": false,
     "large": true,
-    "outdated": true,
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.0.0"
+    "version": "3.1.0"
   },
   "pigz": {
     "bin": ["pigz", "unpigz"],
@@ -4195,7 +4195,7 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-06-01",
+    "date": "2023-09-12",
     "dependencies": [
       "curl",
       "libjpeg-turbo",
@@ -4207,10 +4207,9 @@
     ],
     "enabled": false,
     "man1": ["proj.1", "projinfo.1"],
-    "outdated": true,
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.2.1"
+    "version": "9.3.0"
   },
   "py-spy": {
     "aliases": {
@@ -4677,10 +4676,10 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-09-05",
+    "date": "2023-09-12",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.38"
+    "version": "0.0.39"
   },
   "rust": {
     "aliases": {
