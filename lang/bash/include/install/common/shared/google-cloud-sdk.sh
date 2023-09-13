@@ -3,12 +3,14 @@
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2023-07-28.
+    # @note Updated 2023-09-13.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
-    # - https://github.com/Homebrew/homebrew-cask/blob/master/
-    #     Casks/google-cloud-sdk.rb
+    # - https://cloud.google.com/sdk/docs/downloads-interactive
+    # - https://formulae.brew.sh/cask/google-cloud-sdk
+    # - https://saturncloud.io/blog/how-to-resolve-modulenotfounderror-no-
+    #     module-named-googlecloud-error/
     # """
     local -A dict
     koopa_activate_app --build-only 'python3.11'
