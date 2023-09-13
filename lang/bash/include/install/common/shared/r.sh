@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-09-13.
     #
     # @section Compiler settings:
     #
@@ -47,7 +47,8 @@ main() {
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
     # """
     local -A app bool conf_dict dict
-    local -a build_deps conf_args deps
+    local -a build_deps conf_args deps r_pkgs
+    local r_pkg
     bool['devel']=0
     bool['r_koopa']=1
     build_deps=(
@@ -95,6 +96,7 @@ main() {
         'xorg-libxt'
         'cairo'
         'tcl-tk'
+        'openssl3' # openssl
     )
     koopa_activate_app "${deps[@]}"
     app['ar']="$(koopa_locate_ar --only-system)"
@@ -369,7 +371,13 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
                 dependencies = TRUE
             ); \
         "
-        koopa_assert_is_dir "${dict['prefix']}/lib/R/site-library/koopa"
+        dict['site_lib']="${dict['prefix']}/lib/R/site-library"
+        koopa_assert_is_dir "${dict['site_lib']}"
+        r_pkgs=('koopa' 'pipette')
+        for r_pkg in "${r_pkgs[@]}"
+        do
+            koopa_assert_is_dir "${dict['site_lib']}/${r_pkg}"
+        done
     fi
     return 0
 }
