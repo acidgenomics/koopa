@@ -75,7 +75,6 @@ __koopa_activate_koopa() {
     _koopa_export_pager || return 1
     _koopa_activate_ca_certificates || return 1
     _koopa_activate_homebrew || return 1
-    _koopa_activate_google_cloud_sdk || return 1
     _koopa_activate_ruby || return 1
     _koopa_activate_julia || return 1
     _koopa_activate_python || return 1
@@ -95,7 +94,8 @@ __koopa_activate_koopa() {
     _koopa_activate_lesspipe || return 1
     _koopa_activate_ripgrep || return 1
     _koopa_activate_secrets || return 1
-    _koopa_activate_ssh_key || return 1
+    # This is problematic for keys with a passkey, so disabling at the moment.
+    # > _koopa_activate_ssh_key || return 1
     _koopa_activate_tealdeer || return 1
     if _koopa_is_macos
     then
