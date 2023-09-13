@@ -115,11 +115,11 @@
       "homebrew": true
     },
     "bin": ["asdf"],
-    "date": "2023-09-11",
+    "date": "2023-09-13",
     "enabled": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.13.0"
+    "version": "0.13.1"
   },
   "aspell": {
     "aliases": {
@@ -1629,7 +1629,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-07-13",
+    "date": "2023-09-13",
     "dependencies": [
       "bison",
       "curl",
@@ -1656,7 +1656,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.7.1"
+    "version": "3.7.2"
   },
   "gdbm": {
     "aliases": {
@@ -1738,11 +1738,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-26",
+    "date": "2023-09-13",
     "large": true,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.01.2"
+    "version": "10.02.0"
   },
   "git": {
     "aliases": {
