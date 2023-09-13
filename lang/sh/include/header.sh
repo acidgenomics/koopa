@@ -94,7 +94,8 @@ __koopa_activate_koopa() {
     _koopa_activate_lesspipe || return 1
     _koopa_activate_ripgrep || return 1
     _koopa_activate_secrets || return 1
-    _koopa_activate_ssh_key || return 1
+    # This is problematic for keys with a passkey, so disabling at the moment.
+    # > _koopa_activate_ssh_key || return 1
     _koopa_activate_tealdeer || return 1
     if _koopa_is_macos
     then
