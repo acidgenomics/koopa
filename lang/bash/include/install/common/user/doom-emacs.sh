@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to ensure our emacs is PATH, at least on Linux.
+
 main() {
     # """
     # Install Doom Emacs.
-    # @note Updated 2023-05-06.
+    # @note Updated 2023-09-13.
     #
     # Installer flags:
     # https://github.com/hlissner/doom-emacs/blob/develop/core/cli/install.el
@@ -31,7 +33,10 @@ main() {
         --url="${dict['url']}"
     app['doom']="${dict['prefix']}/bin/doom"
     koopa_assert_is_installed "${app['doom']}"
-    if koopa_is_macos
+    if koopa_is_linux
+    then
+        koopa_activate_app --build-only 'emacs'
+    elif koopa_is_macos
     then
         koopa_add_to_path_start "$(koopa_homebrew_prefix)/bin"
     fi
