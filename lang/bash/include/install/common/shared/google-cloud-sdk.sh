@@ -41,13 +41,15 @@ downloads/google-cloud-cli-${dict['version']}-${dict['os']}-\
 ${dict['arch2']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" "${dict['libexec']}"
-    koopa_cd "${dict['libexec']}"
-    ./install.sh \
-        --bash-completion false \
-        --install-python false \
-        --path-update false \
-        --rc-path false \
-        --usage-reporting false
+    (
+        koopa_cd "${dict['libexec']}"
+        ./install.sh \
+            --bash-completion false \
+            --install-python false \
+            --path-update false \
+            --rc-path false \
+            --usage-reporting false
+    )
     app['gcloud']="${dict['libexec']}/bin/gcloud"
     koopa_assert_is_executable "${app['gcloud']}"
     conf_args=(
