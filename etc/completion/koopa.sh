@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-09-11.
+    # @note Updated 2023-09-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -123,7 +123,6 @@ _koopa_complete() {
                         'cairo'
                         'cereal'
                         'cheat'
-                        'chemacs'
                         'chezmoi'
                         'cli11'
                         'cmake'
