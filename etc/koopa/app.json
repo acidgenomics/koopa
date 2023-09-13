@@ -1183,11 +1183,11 @@
     "version": "0.8.0"
   },
   "doom-emacs": {
-    "date": "2023-08-31",
+    "date": "2023-09-13",
     "dependencies": ["chemacs", "emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "7a7503045850ea83f205de6e71e6d886187f4a22"
+    "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
   },
   "dotfiles": {
     "date": "2023-09-07",
