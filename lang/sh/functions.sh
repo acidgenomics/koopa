@@ -568,19 +568,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-_koopa_activate_google_cloud_sdk() {
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    if [ ! -x "${__kvar_bin_prefix}/gcloud" ]
-    then
-        unset -v __kvar_bin_prefix
-        return 0
-    fi
-    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.11"
-    export CLOUDSDK_PYTHON
-    unset -v __kvar_bin_prefix
-    return 0
-}
-
 _koopa_activate_homebrew() {
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
