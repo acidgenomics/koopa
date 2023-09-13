@@ -754,9 +754,9 @@
     "version": "4.4.0"
   },
   "chemacs": {
-    "date": "2023-03-07",
-    "url": ["https://github.com/plexus/chemacs2/"],
-    "version": "c2d700b784c793cc82131ef86323801b8d6e67bb"
+    "date": "2023-09-13",
+    "enabled": false,
+    "removed": true
   },
   "chezmoi": {
     "aliases": {

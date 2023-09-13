@@ -5428,13 +5428,6 @@ koopa_configure_system_r() {
     return 0
 }
 
-koopa_configure_user_chemacs() {
-    koopa_configure_app \
-        --name='chemacs' \
-        --user \
-        "$@"
-}
-
 koopa_configure_user_dotfiles() {
     koopa_configure_app \
         --name='dotfiles' \
@@ -11581,12 +11574,6 @@ koopa_install_cereal() {
 koopa_install_cheat() {
     koopa_install_app \
         --name='cheat' \
-        "$@"
-}
-
-koopa_install_chemacs() {
-    koopa_install_app \
-        --name='chemacs' \
         "$@"
 }
 
