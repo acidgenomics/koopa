@@ -377,6 +377,7 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
         for r_pkg in "${r_pkgs[@]}"
         do
             koopa_assert_is_dir "${dict['site_lib']}/${r_pkg}"
+            "${app['rscript']}" -e "library(${r_pkg})"
         done
     fi
     return 0
