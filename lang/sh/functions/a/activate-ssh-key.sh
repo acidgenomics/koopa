@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# FIXME How to skip if the user has a passkey set?
+
 _koopa_activate_ssh_key() {
     # """
     # Import an SSH key automatically.
-    # @note Updated 2023-03-10.
+    # @note Updated 2023-09-13.
     #
     # NOTE: SCP will fail unless this is interactive only.
     # ssh-agent will prompt for password if there's one set.
