@@ -1899,12 +1899,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-08-31",
+    "date": "2023-09-13",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "444.0.0"
+    "version": "446.0.0"
   },
   "googletest": {
     "aliases": {
@@ -4380,6 +4380,7 @@
       "libtool",
       "libxml2",
       "openblas",
+      "openssl3",
       "pcre2",
       "pixman",
       "readline",
@@ -4439,6 +4440,7 @@
       "libtool",
       "libxml2",
       "openblas",
+      "openssl3",
       "pcre2",
       "pixman",
       "readline",
