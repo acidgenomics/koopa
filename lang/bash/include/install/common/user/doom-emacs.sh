@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to ensure our emacs is PATH, at least on Linux.
-
 main() {
     # """
     # Install Doom Emacs.
