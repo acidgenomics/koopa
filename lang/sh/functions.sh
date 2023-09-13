@@ -568,19 +568,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-_koopa_activate_google_cloud_sdk() {
-    __kvar_bin_prefix="$(_koopa_bin_prefix)"
-    if [ ! -x "${__kvar_bin_prefix}/gcloud" ]
-    then
-        unset -v __kvar_bin_prefix
-        return 0
-    fi
-    CLOUDSDK_PYTHON="${__kvar_bin_prefix}/python3.11"
-    export CLOUDSDK_PYTHON
-    unset -v __kvar_bin_prefix
-    return 0
-}
-
 _koopa_activate_homebrew() {
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
@@ -1477,12 +1464,15 @@ _koopa_doom_emacs_prefix() {
 }
 
 _koopa_doom_emacs() {
-    if [ ! -d "$(_koopa_doom_emacs_prefix)" ]
+    __kvar_doom_emacs_prefix="$(_koopa_doom_emacs_prefix)"
+    if [ ! -d "$__kvar_doom_emacs_prefix" ]
     then
         _koopa_print 'Doom Emacs is not installed.'
+        unset -v __kvar_doom_emacs_prefix
         return 1
     fi
-    _koopa_emacs --with-profile 'doom' "$@"
+    _koopa_emacs --init-directory="$__kvar_doom_emacs_prefix" "$@"
+    unset -v __kvar_doom_emacs_prefix
     return 0
 }
 
@@ -1550,13 +1540,6 @@ _koopa_emacs_prefix() {
 }
 
 _koopa_emacs() {
-    __kvar_prefix="${HOME:?}/.emacs.d"
-    if [ ! -L "$__kvar_prefix" ] || [ ! -f "${__kvar_prefix}/chemacs.el" ]
-    then
-        _koopa_print "Chemacs is not configured at '${__kvar_prefix}'."
-        unset -v __kvar_prefix
-        return 1
-    fi
     if _koopa_is_macos
     then
         __kvar_emacs="$(_koopa_macos_emacs)"
@@ -1566,9 +1549,7 @@ _koopa_emacs() {
     if [ ! -e "$__kvar_emacs" ]
     then
         _koopa_print "Emacs not installed at '${__kvar_emacs}'."
-        unset -v \
-            __kvar_emacs \
-            __kvar_prefix
+        unset -v __kvar_emacs
         return 1
     fi
     if [ -e "${HOME:?}/.terminfo/78/xterm-24bit" ] && _koopa_is_macos
@@ -1577,9 +1558,7 @@ _koopa_emacs() {
     else
         "$__kvar_emacs" "$@" >/dev/null 2>&1
     fi
-    unset -v \
-        __kvar_emacs \
-        __kvar_prefix
+    unset -v __kvar_emacs
     return 0
 }
 
@@ -2094,12 +2073,15 @@ _koopa_prelude_emacs_prefix() {
 }
 
 _koopa_prelude_emacs() {
-    if [ ! -d "$(_koopa_prelude_emacs_prefix)" ]
+    __kvar_prelude_emacs_prefix="$(_koopa_prelude_emacs_prefix)"
+    if [ ! -d "$__kvar_prelude_emacs_prefix" ]
     then
         _koopa_print 'Prelude Emacs is not installed.'
+        unset -v __kvar_prelude_emacs_prefix
         return 1
     fi
-    _koopa_emacs --with-profile 'prelude' "$@"
+    _koopa_emacs --init-directory="$__kvar_prelude_emacs_prefix" "$@"
+    unset -v __kvar_prelude_emacs_prefix
     return 0
 }
 
@@ -2203,12 +2185,15 @@ _koopa_spacemacs_prefix() {
 }
 
 _koopa_spacemacs() {
-    if [ ! -d "$(_koopa_spacemacs_prefix)" ]
+    __kvar_spacemacs_prefix="$(_koopa_spacemacs_prefix)"
+    if [ ! -d "$__kvar_spacemacs_prefix" ]
     then
         _koopa_print 'Spacemacs is not installed.'
+        unset -v __kvar_spacemacs_prefix
         return 1
     fi
-    _koopa_emacs --with-profile 'spacemacs' "$@"
+    _koopa_emacs --init-directory="$__kvar_spacemacs_prefix" "$@"
+    unset -v __kvar_spacemacs_prefix
     return 0
 }
 
