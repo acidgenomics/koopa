@@ -10850,6 +10850,7 @@ koopa_install_app() {
     local i
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
+    koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
     bool['copy_log_files']=0
