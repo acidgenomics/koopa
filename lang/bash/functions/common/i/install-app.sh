@@ -8,7 +8,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-08-31.
+    # @note Updated 2023-09-14.
     #
     # Refer to 'locale' for desired LC settings.
     # """
@@ -17,6 +17,8 @@ koopa_install_app() {
     local i
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
+    # Biocontainers images currently bundle Python 2.
+    koopa_assert_is_installed 'python3'
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
     bool['auto_prefix']=0
