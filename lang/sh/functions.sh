@@ -1369,6 +1369,22 @@ _koopa_boolean_nounset() {
     return 0
 }
 
+_koopa_check_multiple_users() {
+    _koopa_is_aws_ec2 || return 0
+    __kvar_n="$(_koopa_logged_in_user_count)"
+    if [ "$__kvar_n" -gt 1 ]
+    then
+        __kvar_users="$( \
+            _koopa_logged_in_users \
+            | tr '\n' ' ' \
+        )"
+        _koopa_print "Multiple users: ${__kvar_users}"
+        unset -v __kvar_users
+    fi
+    unset -v __kvar_n
+    return 0
+}
+
 _koopa_color_mode() {
     __kvar_string="${KOOPA_COLOR_MODE:-}"
     if [ -z "$__kvar_string" ]
@@ -1738,6 +1754,12 @@ _koopa_is_arch() {
     _koopa_is_os 'arch'
 }
 
+_koopa_is_aws_ec2() {
+    [ -x '/usr/bin/ec2metadata' ] && return 0
+    [ "$(hostname -d)" = 'ec2.internal' ] && return 0
+    return 1
+}
+
 _koopa_is_debian_like() {
     _koopa_is_os_like 'debian'
 }
@@ -1900,6 +1922,28 @@ _koopa_locate_shell() {
     [ -n "$__kvar_shell" ] || return 1
     _koopa_print "$__kvar_shell"
     unset -v __kvar_pid __kvar_shell
+    return 0
+}
+
+_koopa_logged_in_user_count() {
+    __kvar_string="$(_koopa_logged_in_users | wc -l)"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
+}
+
+_koopa_logged_in_users() {
+    __kvar_string="$( \
+        who -q \
+        | awk 'NR > 1 { print prev } { prev = $0 }' \
+        | tr ' ' '\n' \
+        | sort \
+        | uniq \
+    )"
+    [ -n "$__kvar_string" ] || return 1
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
     return 0
 }
 
