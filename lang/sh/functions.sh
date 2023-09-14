@@ -1923,14 +1923,22 @@ _koopa_locate_shell() {
 }
 
 _koopa_logged_in_user_count() {
-    __kvar_string="$(who -q | tail -n 1 | grep -Eo '[0-9]+$')"
+    __kvar_string="$(_koopa_logged_in_users | wc -l)"
+    [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
     unset -v __kvar_string
     return 0
 }
 
 _koopa_logged_in_users() {
-    __kvar_string="$(who -q | head -n -1)"
+    __kvar_string="$( \
+        who -q \
+        | awk 'NR > 1 { print prev } { prev = $0 }' \
+        | tr ' ' '\n' \
+        | uniq \
+        | sort \
+    )"
+    [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
     unset -v __kvar_string
     return 0
