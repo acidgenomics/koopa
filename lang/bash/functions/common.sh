@@ -609,6 +609,7 @@ koopa_ansi_escape() {
 koopa_app_dependencies() {
     local app_name cmd
     koopa_assert_has_args_eq "$#" 1
+    koopa_assert_is_installed 'python3'
     app_name="${1:?}"
     cmd="$(koopa_koopa_prefix)/lang/python/app-dependencies.py"
     koopa_assert_is_executable "$cmd"
@@ -652,6 +653,7 @@ koopa_app_json_version() {
 koopa_app_json() {
     local cmd
     koopa_assert_has_args "$#"
+    koopa_assert_is_installed 'python3'
     cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
     koopa_assert_is_executable "$cmd"
     "$cmd" "$@"
@@ -720,6 +722,7 @@ ${dict2['version']}"
 koopa_app_reverse_dependencies() {
     local app_name cmd
     koopa_assert_has_args_eq "$#" 1
+    koopa_assert_is_installed 'python3'
     app_name="${1:?}"
     cmd="$(koopa_koopa_prefix)/lang/python/app-reverse-dependencies.py"
     koopa_assert_is_executable "$cmd"
@@ -22194,6 +22197,7 @@ koopa_scripts_private_prefix() {
 koopa_shared_apps() {
     local cmd
     koopa_assert_has_no_args "$#"
+    koopa_assert_is_installed 'python3'
     cmd="$(koopa_koopa_prefix)/lang/python/shared-apps.py"
     koopa_assert_is_executable "$cmd"
     "$cmd"
