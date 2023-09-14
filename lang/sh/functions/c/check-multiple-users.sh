@@ -11,7 +11,10 @@ _koopa_check_multiple_users() {
     __kvar_n="$(_koopa_logged_in_user_count)"
     if [ "$__kvar_n" -gt 1 ]
     then
-        __kvar_users="$(_koopa_logged_in_users)"
+        __kvar_users="$( \
+            _koopa_logged_in_users \
+            | tr '\n' ' ' \
+        )"
         _koopa_print "Multiple users active: ${__kvar_users}"
         unset -v __kvar_users
     fi
