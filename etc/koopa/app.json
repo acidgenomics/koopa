@@ -1344,7 +1344,8 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-11",
+    "date": "2023-09-14",
+    "outdated": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
