@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pkg-config.
-    # @note Updated 2023-06-28.
+    # @note Updated 2023-09-14.
     #
     # Requires cmp and diff to be installed.
     #
@@ -23,16 +23,20 @@ main() {
     if koopa_is_linux
     then
         dict['sys_inc']='/usr/include'
-        pc_path=(
-            "/usr/lib/${dict['arch']}-linux-gnu/pkgconfig"
-            '/usr/lib/pkgconfig'
-            '/usr/share/pkgconfig'
-        )
+        pc_path+=("/usr/lib/${dict['arch']}-linux-gnu/pkgconfig")
+        if [[ -d '/usr/lib/pkgconfig' ]]
+        then
+            pc_path+=('/usr/lib/pkgconfig')
+        fi
+        if [[ -d '/usr/share/pkgconfig' ]]
+        then
+            pc_path+=('/usr/share/pkgconfig')
+        fi
     elif koopa_is_macos
     then
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
         dict['sys_inc']="${dict['sdk_prefix']}/usr/include"
-        pc_path=('/usr/lib/pkgconfig')
+        pc_path+=('/usr/lib/pkgconfig')
     fi
     koopa_assert_is_dir "${dict['sys_inc']}" "${pc_path[@]}"
     dict['pc_path']="$(koopa_paste --sep=':' "${pc_path[@]}")"
