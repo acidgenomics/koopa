@@ -24,12 +24,14 @@ main() {
     then
         dict['sys_inc']='/usr/include'
         pc_path+=("/usr/lib/${dict['arch']}-linux-gnu/pkgconfig")
-        ## This no longer exists on Debian 12.
         if [[ -d '/usr/lib/pkgconfig' ]]
         then
             pc_path+=('/usr/lib/pkgconfig')
         fi
-        pc_path+=('/usr/share/pkgconfig')
+        if [[ -d '/usr/share/pkgconfig' ]]
+        then
+            pc_path+=('/usr/share/pkgconfig')
+        fi
     elif koopa_is_macos
     then
         dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
