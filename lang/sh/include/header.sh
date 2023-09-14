@@ -121,6 +121,7 @@ __koopa_activate_koopa() {
             "${KOOPA_PREFIX}/activate" 'activate' \
             || return 1
         _koopa_activate_today_bucket || return 1
+        _koopa_check_multiple_users || return 1
     fi
     _koopa_activate_aliases || return 1
     return 0
