@@ -1378,7 +1378,7 @@ _koopa_check_multiple_users() {
             _koopa_logged_in_users \
             | tr '\n' ' ' \
         )"
-        _koopa_print "Multiple users active: ${__kvar_users}"
+        _koopa_print "Multiple users: ${__kvar_users}"
         unset -v __kvar_users
     fi
     unset -v __kvar_n
