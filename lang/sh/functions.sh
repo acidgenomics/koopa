@@ -2000,6 +2000,13 @@ _koopa_major_version() {
     return 0
 }
 
+_koopa_number_of_logged_in_users() {
+    __kvar_string="$(who -q | tail -n 1 | awk '{ print $NF }')"
+    _koopa_print "$__kvar_string"
+    unset -v __kvar_string
+    return 0
+}
+
 _koopa_opt_prefix() {
     _koopa_print "$(_koopa_koopa_prefix)/opt"
     return 0
