@@ -12,8 +12,8 @@ _koopa_logged_in_users() {
         who -q \
         | awk 'NR > 1 { print prev } { prev = $0 }' \
         | tr ' ' '\n' \
-        | uniq \
         | sort \
+        | uniq \
     )"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
