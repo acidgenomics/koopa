@@ -19608,11 +19608,13 @@ r-${dict['pkg2']}/archive/refs/heads/develop.tar.gz"
         dict['rscript']='check.R'
         dict['tarball']="https://github.com/acidgenomics/${dict['pkg2']}/\
 archive/refs/heads/develop.tar.gz"
+        koopa_alert "Checking '${dict['pkg']}' package in '${dict['tmp_dir']}'."
         (
             koopa_cd "${dict['tmp_dir']}"
             koopa_download "${dict['tarball']}"
             koopa_extract "$(koopa_basename "${dict['tarball']}")" 'src'
             "${app['cat']}" << END > "${dict['rscript']}"
+pkgbuild::check_build_tools(debug = TRUE)
 install.packages(
     pkgs = c("AcidDevTools", "AcidTest"),
     repos = c(
@@ -19623,7 +19625,9 @@ install.packages(
 )
 AcidDevTools::check("src")
 END
+            koopa_conda_activate_env "${dict['conda_prefix']}"
             "${app['rscript']}" "${dict['rscript']}"
+            koopa_conda_deactivate
         )
         koopa_rm "${dict['tmp_dir']}"
     done
@@ -19646,9 +19650,8 @@ koopa_r_check() {
         dict['tmp_lib']="$(koopa_init_dir "${dict['tmp_dir']}/lib")"
         dict['tarball']="https://github.com/acidgenomics/\
 ${dict['pkg2']}/archive/refs/heads/develop.tar.gz"
+        koopa_alert "Checking '${dict['pkg']}' package in '${dict['tmp_dir']}'."
         (
-            koopa_alert "Checking '${dict['pkg']}' package in \
-'${dict['tmp_dir']}'."
             koopa_cd "${dict['tmp_dir']}"
             koopa_download "${dict['tarball']}"
             koopa_extract "$(koopa_basename "${dict['tarball']}")" 'src'
