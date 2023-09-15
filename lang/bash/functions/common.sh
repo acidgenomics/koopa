@@ -19590,7 +19590,7 @@ koopa_r_check() {
         dict['tmp_dir']="$(koopa_tmp_dir)"
         dict['tmp_lib']="$(koopa_init_dir "${dict['tmp_dir']}/lib")"
         dict['tarball']="https://github.com/acidgenomics/\
-r-${dict['pkg2']}/archive/HEAD.tar.gz"
+r-${dict['pkg2']}/archive/refs/heads/develop.tar.gz"
         (
             koopa_alert "Checking '${dict['pkg']}' package in \
 '${dict['tmp_dir']}'."
@@ -19598,31 +19598,38 @@ r-${dict['pkg2']}/archive/HEAD.tar.gz"
             koopa_download "${dict['tarball']}" 'src.tar.gz'
             koopa_extract 'src.tar.gz' 'src'
             "${app['cat']}" << END > "${dict['rscript']}"
+.libPaths(new = "${dict['tmp_lib']}", include.site = FALSE)
+message("repos")
+print(getOption("repos"))
+message(".libPaths")
+print(.libPaths())
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
 if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
     install.packages(
-        pkgs = "AcidDevTools",
+        pkgs = c(
+            "AcidDevTools",
+            "desc",
+            "goalie",
+            "rcmdcheck",
+            "testthat",
+            "urlchecker"
+        ),
         repos = c(
             "https://r.acidgenomics.com",
             BiocManager::repositories()
         ),
-        dependencies = TRUE
+        dependencies = NA
     )
 }
-.libPaths(new = "${dict['tmp_lib']}")
-message("repos")
-print(getOption("repos"))
-message(".libPaths")
-print(.libPaths())
 install.packages(
     pkgs = "${dict['pkg']}",
     repos = c(
         "https://r.acidgenomics.com",
         BiocManager::repositories()
     ),
-    dependencies = TRUE
+    dependencies = NA
 )
 AcidDevTools::check("src")
 END
