@@ -2565,10 +2565,10 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-08-13",
+    "date": "2023-09-15",
     "dependencies": ["python3.11"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.5"
+    "version": "4.0.6"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -2601,11 +2601,11 @@
     },
     "bin": ["ksh"],
     "build_dependencies": ["make"],
-    "date": "2023-06-13",
+    "date": "2023-09-15",
     "enabled": false,
     "man1": ["ksh.1"],
     "url": ["https://github.com/ksh93/ksh/"],
-    "version": "1.0.6"
+    "version": "1.0.7"
   },
   "lame": {
     "aliases": {
