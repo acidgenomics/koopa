@@ -12,7 +12,6 @@ koopa_r_check() {
     # """
     local -A app
     koopa_assert_has_args "$#"
-    app['cat']="$(koopa_locate_cat --allow-system)"
     app['rscript']="$(koopa_locate_rscript --only-system)"
     koopa_assert_is_executable "${app[@]}"
     for pkg in "$@"
@@ -20,18 +19,12 @@ koopa_r_check() {
         local -A dict
         dict['pkg']="$pkg"
         dict['pkg2']="r-$(koopa_lowercase "${dict['pkg']}")"
-        dict['rscript']='check.R'
         dict['tmp_dir']="$(koopa_tmp_dir)"
         dict['tmp_lib']="$(koopa_init_dir "${dict['tmp_dir']}/lib")"
         dict['tarball']="https://github.com/acidgenomics/\
 ${dict['pkg2']}/archive/refs/heads/develop.tar.gz"
-        koopa_alert "Checking '${dict['pkg']}' package in '${dict['tmp_dir']}'."
-        (
-            koopa_cd "${dict['tmp_dir']}"
-            koopa_download "${dict['tarball']}"
-            koopa_extract "$(koopa_basename "${dict['tarball']}")" 'src'
-            # FIXME Use our string writer instead.
-            "${app['cat']}" << END > "${dict['rscript']}"
+        dict['rscript']="${dict['tmp_dir']}/check.R"
+        read -r -d '' "dict[rscript_string]" << END || true
 .libPaths(new = "${dict['tmp_lib']}", include.site = FALSE)
 message("repos")
 print(getOption("repos"))
@@ -69,6 +62,14 @@ install.packages(
 )
 AcidDevTools::check("src")
 END
+        koopa_write_string \
+            --file="${dict['rscript']}" \
+            --string="${dict['rscript_string']}"
+        koopa_alert "Checking '${dict['pkg']}' package in '${dict['tmp_dir']}'."
+        (
+            koopa_cd "${dict['tmp_dir']}"
+            koopa_download "${dict['tarball']}"
+            koopa_extract "$(koopa_basename "${dict['tarball']}")" 'src'
             "${app['rscript']}" "${dict['rscript']}"
         )
         koopa_rm "${dict['tmp_dir']}"
