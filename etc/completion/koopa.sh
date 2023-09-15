@@ -705,7 +705,7 @@ _koopa_complete() {
                             args=('check-to-new-md5-file')
                             ;;
                         'r')
-                            args=('check')
+                            args=('bioconda-check' 'check')
                             ;;
                         'sra')
                             args=(
