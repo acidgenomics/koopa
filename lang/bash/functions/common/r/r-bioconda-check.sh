@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Need to create bioconda recipe in temporary location.
-# FIXME Consider installing devtools into recipe first.
-# FIXME Need to locate Rscript there.
+# FIXME This will currently create conda packages in our cache...need to rethink
+# Use our koopa variant for conda environent creation instead.
 
 koopa_r_bioconda_check() {
     # """
@@ -29,6 +28,8 @@ koopa_r_bioconda_check() {
 r-${dict['pkg2']}/archive/refs/heads/develop.tar.gz"
         dict['conda_name']="${dict['pkg2']}"
         dict['conda_prefix']="$(koopa_init_dir "${dict['tmp_dir']}/conda")"
+        # FIXME We should use our koopa variant here.
+        # FIXME Consider using a file instead.
         "${app['conda']}" create \
             --prefix="${dict['conda_prefix']}" \
             'r-biocmanager' \
@@ -53,6 +54,7 @@ archive/refs/heads/develop.tar.gz"
             koopa_extract "$(koopa_basename "${dict['tarball']}")" 'src'
             # FIXME Use our string writer instead.
             "${app['cat']}" << END > "${dict['rscript']}"
+pkgbuild::check_build_tools(debug = TRUE)
 install.packages(
     pkgs = c("AcidDevTools", "AcidTest"),
     repos = c(
@@ -63,7 +65,9 @@ install.packages(
 )
 AcidDevTools::check("src")
 END
+            koopa_conda_activate_env "${dict['conda_prefix']}"
             "${app['rscript']}" "${dict['rscript']}"
+            koopa_conda_deactivate
         )
         koopa_rm "${dict['tmp_dir']}"
     done
