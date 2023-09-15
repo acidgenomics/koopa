@@ -19591,7 +19591,7 @@ koopa_r_bioconda_check() {
         )"
         dict2['tarball']="https://github.com/acidgenomics/\
 r-${dict2['pkg2']}/archive/refs/heads/develop.tar.gz"
-        dict2['conda_prefix']="${dict2['tmp_dir']}/conda"
+        dict2['conda_prefix']="$(koopa_init_dir "${dict2['tmp_dir']}/conda")"
         dict2['tarball']="https://github.com/acidgenomics/${dict2['pkg2']}/\
 archive/refs/heads/develop.tar.gz"
         dict2['rscript']="${dict2['tmp_dir']}/check.R"
