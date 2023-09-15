@@ -71,7 +71,6 @@ END
             "${app2['rscript']}" "${dict2['rscript']}"
             koopa_conda_deactivate
         )
-        koopa_rm "${dict2['tmp_dir']}"
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0

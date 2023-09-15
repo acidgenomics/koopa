@@ -77,7 +77,6 @@ END
             koopa_extract "$(koopa_basename "${dict2['tarball']}")" 'src'
             "${app['rscript']}" "${dict2['rscript']}"
         )
-        koopa_rm "${dict2['tmp_dir']}"
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0
