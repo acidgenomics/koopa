@@ -32,18 +32,15 @@ r-${dict['pkg2']}/archive/refs/heads/develop.tar.gz"
             koopa_download "${dict['tarball']}" 'src.tar.gz'
             koopa_extract 'src.tar.gz' 'src'
             "${app['cat']}" << END > "${dict['rscript']}"
-## Configure temporary package library.
 .libPaths(new = "${dict['tmp_lib']}", include.site = FALSE)
 message("repos")
 print(getOption("repos"))
-## Can also check with '.Library.site' and '.Library'.
 message(".libPaths")
 print(.libPaths())
-## Install BiocManager.
+message("Installing AcidDevTools.")
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
-## Install AcidDevTools.
 if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
     install.packages(
         pkgs = c(
@@ -61,16 +58,15 @@ if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
         dependencies = NA
     )
 }
-## Install ${dict['pkg']}.
+message("Installing ${dict['pkg']}.")
 install.packages(
     pkgs = "${dict['pkg']}",
     repos = c(
         "https://r.acidgenomics.com",
         BiocManager::repositories()
     ),
-    dependencies = NA
+    dependencies = TRUE
 )
-## Run package checks.
 AcidDevTools::check("src")
 END
             "${app['rscript']}" "${dict['rscript']}"
