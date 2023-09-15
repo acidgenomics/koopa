@@ -19603,6 +19603,7 @@ message("repos")
 print(getOption("repos"))
 message(".libPaths")
 print(.libPaths())
+message("Installing AcidDevTools.")
 if (!requireNamespace("BiocManager", quietly = TRUE)) {
     install.packages("BiocManager")
 }
@@ -19623,13 +19624,14 @@ if (!requireNamespace("AcidDevTools", quietly = TRUE)) {
         dependencies = NA
     )
 }
+message("Installing ${dict['pkg']}.")
 install.packages(
     pkgs = "${dict['pkg']}",
     repos = c(
         "https://r.acidgenomics.com",
         BiocManager::repositories()
     ),
-    dependencies = NA
+    dependencies = TRUE
 )
 AcidDevTools::check("src")
 END
