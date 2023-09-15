@@ -251,6 +251,7 @@ koopa_cli_app() {
             ;;
         'r')
             case "${2:-}" in
+                'bioconda-check' | \
                 'check')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
