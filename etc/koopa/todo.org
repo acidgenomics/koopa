@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Check to see if app needs to be updated by looking at timestamp.
+    Alternatively, can use build number instead, which may be simpler.
 ** TODO Need to improve emacs configuration without doom or spacemacs on Linux.
     Can we just relocate ~/.emacs.d using Emacs 29 now?
     Likely can remove the dependency on chemacs.
