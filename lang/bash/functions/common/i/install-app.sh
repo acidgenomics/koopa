@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Our installer should drop an invisible build file into the directory
+# that contains build number and date, for easy checking during updates.
 # FIXME Instead of erroring on an unsupported app, remove it when it exists
 # and has been removed (e.g. 'llama', 'python3.10').
 # FIXME Alternatively, in the 'install --all' situation, just ignore existing
