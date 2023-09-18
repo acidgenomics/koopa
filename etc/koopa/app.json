@@ -67,12 +67,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-07-27",
+    "date": "2023-09-18",
     "enabled": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.2.2"
+    "version": "1.2.3"
   },
   "apr": {
     "aliases": {
@@ -2761,10 +2761,10 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-03-30",
+    "date": "2023-09-18",
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.18"
+    "version": "1.19"
   },
   "libedit": {
     "aliases": {
@@ -4251,12 +4251,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-08-27",
+    "date": "2023-09-18",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.25"
+    "version": "2.3.27"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4672,10 +4672,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-09-13",
+    "date": "2023-09-18",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.289"
+    "version": "0.0.290"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5860,9 +5860,9 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-31",
+    "date": "2023-09-18",
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.38.1"
+    "version": "0.38.2"
   },
   "zip": {
     "aliases": {
