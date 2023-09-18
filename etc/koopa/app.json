@@ -4883,14 +4883,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-08-10",
+    "date": "2023-09-18",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.32.3"
+    "version": "7.32.4"
   },
   "sox": {
     "aliases": {
