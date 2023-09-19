@@ -11408,6 +11408,13 @@ koopa_install_bamtools() {
         "$@"
 }
 
+koopa_install_bandwhich() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --name='bandwhich' \
+        "$@"
+}
+
 koopa_install_bash_language_server() {
     koopa_install_app \
         --installer='node-package' \
