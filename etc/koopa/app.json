@@ -1344,13 +1344,12 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-14",
-    "outdated": true,
+    "date": "2023-09-19",
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.11.1"
+    "version": "0.13.0"
   },
   "fastqc": {
     "arch": "amd64",
@@ -1729,9 +1728,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-09-06",
+    "date": "2023-09-19",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.34.0"
+    "version": "2.35.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2183,7 +2182,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-09-12",
+    "date": "2023-09-19",
     "dependencies": [
       "freetype",
       "gettext",
@@ -2195,7 +2194,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.2.0"
+    "version": "8.2.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3192,6 +3191,7 @@
     ],
     "enabled": false,
     "large": true,
+    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "16.0.6"
   },
@@ -3773,6 +3773,7 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
+    "outdated": true,
     "prune": false,
     "url": ["https://nodejs.org/"],
     "version": "18.17.1"
@@ -4883,14 +4884,14 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-08-10",
+    "date": "2023-09-18",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.32.3"
+    "version": "7.32.4"
   },
   "sox": {
     "aliases": {
