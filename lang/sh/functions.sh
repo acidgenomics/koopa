@@ -65,7 +65,7 @@ _koopa_activate_aliases() {
     alias kdev='_koopa_alias_kdev'
     alias l='_koopa_alias_l'
     alias l.='l -d .*'
-    alias l1='l -1'
+    alias l1='ls -1'
     alias la='l -a'
     alias lh='l | head'
     alias ll='l -l'

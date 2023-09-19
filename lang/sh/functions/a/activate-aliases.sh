@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2023-07-07.
+    # @note Updated 2023-09-19.
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -25,7 +25,7 @@ _koopa_activate_aliases() {
     alias kdev='_koopa_alias_kdev'
     alias l='_koopa_alias_l'
     alias l.='l -d .*'
-    alias l1='l -1'
+    alias l1='ls -1'
     alias la='l -a'
     alias lh='l | head'
     alias ll='l -l'
