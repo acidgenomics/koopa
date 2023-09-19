@@ -273,11 +273,10 @@
     },
     "bin": ["bandwhich"],
     "build_dependencies": ["rust"],
-    "date": "2022-12-08",
+    "date": "2023-09-19",
     "enabled": false,
-    "notes": ["Current version has build issues related to Cargo lock."],
     "url": ["https://github.com/imsnif/bandwhich/"],
-    "version": "0.20.0"
+    "version": "0.21.0"
   },
   "bash": {
     "aliases": {
@@ -764,9 +763,9 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-09-06",
+    "date": "2023-09-19",
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.39.1"
+    "version": "2.40.0"
   },
   "cli11": {
     "aliases": {
