@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-09-06.
+    # @note Updated 2023-09-20.
     #
     # @section Package library location:
     #
@@ -138,7 +138,7 @@ koopa_r_configure_environ() {
     # rcmdcheck
     # --------------------------------------------------------------------------
     # Options: "never", "error", "warning", "note".
-    lines+=('RCMDCHECK_ERROR_ON=warning')
+    lines+=('RCMDCHECK_ERROR_ON=error')
     # remotes
     # --------------------------------------------------------------------------
     lines+=(

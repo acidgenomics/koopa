@@ -19782,7 +19782,7 @@ koopa_r_configure_environ() {
         lines+=('R_MAX_NUM_DLLS=153')
     fi
     lines+=('R_DATATABLE_NUM_PROCS_PERCENT=100')
-    lines+=('RCMDCHECK_ERROR_ON=warning')
+    lines+=('RCMDCHECK_ERROR_ON=error')
     lines+=(
         'R_REMOTES_STANDALONE=true'
         'R_REMOTES_UPGRADE=always'
