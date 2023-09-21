@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add system R-devel install support for macOS.
+    Useful for Bioconductor devel cycle from October to April.
 ** TODO Need to check whether doom-emacs and spacemacs are outdated.
     Could approach this by saving an invisible build file into the directory.
 ** TODO Check to see if app needs to be updated by looking at timestamp.
