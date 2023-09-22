@@ -60,11 +60,20 @@ koopa_r_configure_environ() {
     # R CMD check always uses C locale for checks, which often differs from
     # user configuration:
     #
-    # > Sys.getlocale("LC_COLLATE")
-    # # [1] "en_US.UTF-8"
+    # > Sys.getlocale("LC_ALL")
+    # # [1] "en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8"
+    #
+    # Can override this by setting 'LC_ALL' variable in 'Renviron':
+    # > LC_ALL='C'
+    #
+    # Alternatively, can set locale in 'Rprofile':
+    # > Sys.setlocale("LC_ALL", "C")
+    #
+    # Doing this may crash Shiny Server though.
     #
     # More details:
-    # https://github.com/r-lib/devtools/issues/2121
+    # - https://github.com/r-lib/devtools/issues/2121/
+    # - https://stackoverflow.com/questions/16347731/
     #
     # @seealso
     # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
