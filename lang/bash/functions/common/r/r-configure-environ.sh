@@ -55,6 +55,17 @@ koopa_r_configure_environ() {
     # reverse order.
     # > R_DEFAULT_PACKAGES='utils,grDevices,graphics,stats'
     #
+    # @section Locale:
+    #
+    # R CMD check always uses C locale for checks, which often differs from
+    # user configuration:
+    #
+    # > Sys.getlocale("LC_COLLATE")
+    # # [1] "en_US.UTF-8"
+    #
+    # More details:
+    # https://github.com/r-lib/devtools/issues/2121
+    #
     # @seealso
     # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
     # - https://support.rstudio.com/hc/en-us/articles/215733837
