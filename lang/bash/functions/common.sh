@@ -18507,18 +18507,11 @@ koopa_mkdir() {
 
 koopa_mktemp() {
     local -A app dict
-    local -a mktemp_args
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['template']='koopa'
-    if koopa_is_gnu "${app['mktemp']}"
-    then
-        dict['template']="${dict['template']}.XXXXXXXXXXXX"
-    fi
-    mktemp_args=("$@" '-t' "${dict['template']}")
-    dict['out']="$("${app['mktemp']}" "${mktemp_args[@]}")"
-    [[ -e "${dict['out']}" ]] || return 1
-    koopa_print "${dict['out']}"
+    dict['str']="$("${app['mktemp']}" "$@")"
+    [[ -e "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
