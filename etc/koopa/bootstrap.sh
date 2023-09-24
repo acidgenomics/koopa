@@ -1,26 +1,24 @@
 #!/bin/sh
-# shellcheck disable=SC3043
+
+# FIXME Install to temporary directory.
+# FIXME Install Python here.
+# FIXME Return the temporary directory path at end of function.
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2023-07-05.
+# @note Updated 2023-09-23.
 # """
 
 set -o errexit
 set -o nounset
 
-PREFIX='/usr/local'
-TMPDIR="$(mktemp -d)"
-
-# Restrict the system path.
-PATH='/usr/bin:/bin'
-export PATH
-
-# Deparallize, to ensure cross platform compatibility.
 JOBS=1
+PATH='/usr/bin:/bin'
+TMPDIR="$(mktemp -d)"
+PREFIX="${TMPDIR}/bootstrap"
+export JOBS PATH PREFIX TMPDIR
 
 install_bash() {
-    local file name tmp_dir url version
     name='bash'
     version='5.2'
     file="${name}-${version}.tar.gz"
@@ -39,7 +37,6 @@ install_bash() {
 }
 
 install_coreutils() {
-    local file name tmp_dir url version
     name='coreutils'
     version='9.1'
     file="${name}-${version}.tar.gz"
@@ -58,6 +55,9 @@ install_coreutils() {
     rm -fr "$tmp_dir"
     return 0
 }
+
+# FIXME Add support for Python
+# install_python
 
 main() {
     if [ -x "${PREFIX:?}/bin/bash" ]
