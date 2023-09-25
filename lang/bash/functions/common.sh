@@ -11151,7 +11151,16 @@ ${dict['version2']}"
         then
             app['bash']="${KOOPA_BOOTSTRAP_PREFIX:?}/bin/bash"
         else
-            app['bash']="$(koopa_locate_bash)"
+            app['bash']="$(koopa_locate_bash --allow-missing)"
+            if [[ ! -x "${app['bash']}" ]]
+            then
+                if koopa_is_macos
+                then
+                    app['bash']='/usr/local/bin/bash'
+                else
+                    app['bash']="$(koopa_locate_bash --allow-system)"
+                fi
+            fi
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
