@@ -5,9 +5,11 @@
 # @note Updated 2023-09-25.
 # """
 
+# Can debug with:
+# > set -o xtrace
+
 set -o errexit
 set -o nounset
-set -o xtrace
 
 PATH='/usr/bin:/bin'
 TMPDIR="$(mktemp -d)"
@@ -15,6 +17,7 @@ PREFIX="${TMPDIR}/bootstrap"
 export PATH PREFIX TMPDIR
 
 install_bash() {
+    printf 'Installing Bash.\n'
     mkdir -p "${TMPDIR}/src/bash"
     cd "${TMPDIR}/src/bash" || return 1
     curl \
@@ -29,6 +32,7 @@ install_bash() {
 }
 
 install_coreutils() {
+    printf 'Installing GNU coreutils.\n'
     mkdir -p "${TMPDIR}/src/coreutils"
     cd "${TMPDIR}/src/coreutils" || return 1
     curl \
@@ -43,6 +47,7 @@ install_coreutils() {
 }
 
 install_python() {
+    printf 'Installing Python.\n'
     mkdir -p "${TMPDIR}/src/python"
     cd "${TMPDIR}/src/python"
     curl \
@@ -57,7 +62,7 @@ install_python() {
 }
 
 main() {
-    printf "Installing bootstrap into '%s'.\n" "$PREFIX"
+    printf "Installing koopa bootstrap into '%s'.\n" "$PREFIX"
     (
         install_bash
         install_coreutils
