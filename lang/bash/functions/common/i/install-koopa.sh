@@ -173,7 +173,7 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_install_app --bootstrap 'bash' 'python'
+        koopa_cli_install --bootstrap 'bash' 'python3.11'
     fi
     return 0
 }
