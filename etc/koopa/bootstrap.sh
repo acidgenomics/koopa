@@ -11,9 +11,9 @@
 set -o errexit
 set -o nounset
 
-PATH='/usr/bin:/bin'
 TMPDIR="$(mktemp -d)"
 PREFIX="${TMPDIR}/bootstrap"
+PATH="${PREFIX}/bin:/usr/bin:/bin"
 export PATH PREFIX TMPDIR
 
 install_bash() {
@@ -28,6 +28,7 @@ install_bash() {
     ./configure --prefix="$PREFIX"
     make
     make install
+    [ -x "${PREFIX}/bin/bash" ] || return 1
     return 0
 }
 
@@ -43,6 +44,7 @@ install_bash() {
 # >     ./configure --prefix="${PREFIX:?}" --program-prefix='g'
 # >     make
 # >     make install
+# >     [ -x "${PREFIX}/bin/gcp" ] || return 1
 # >     return 0
 # > }
 
@@ -52,12 +54,13 @@ install_python() {
     cd "${TMPDIR}/src/python"
     curl \
         'https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz' \
-        'src.tar.gz'
+        -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd 'Python-3.11.5' || return 1
     ./configure --prefix="$PREFIX"
     make
     make install
+    [ -x "${PREFIX}/bin/python3" ] || return 1
     return 0
 }
 
@@ -68,9 +71,6 @@ main() {
         install_bash
         install_python
     )
-    [ -x "${PREFIX}/bin/bash" ] || return 1
-    [ -x "${PREFIX}/bin/gcp" ] || return 1
-    [ -x "${PREFIX}/bin/python3" ] || return 1
     printf '%s\n' "$PREFIX"
     return 0
 }
