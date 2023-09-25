@@ -77,6 +77,7 @@ koopa_install_koopa() {
                 ;;
         esac
     done
+    [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]] && bool['bootstrap']=1
     if [[ "${bool['interactive']}" -eq 1 ]]
     then
         if koopa_is_admin && [[ -z "${dict['prefix']}" ]]
@@ -172,7 +173,7 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_install_app 'bash' 'python'
+        koopa_install_app --bootstrap 'bash' 'python'
     fi
     return 0
 }
