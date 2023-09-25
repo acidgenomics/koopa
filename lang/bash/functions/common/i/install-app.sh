@@ -127,6 +127,10 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
+            '--bootstrap')
+                bool['bootstrap']=1
+                shift 1
+                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -140,10 +144,6 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
-            '--bootstrap')
-                bool['bootstrap']=1
-                shift 1
-                ;;
             '--no-dependencies')
                 bool['deps']=0
                 shift 1
