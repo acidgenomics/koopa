@@ -336,24 +336,16 @@ ${dict['version2']}"
             "$@"
         unset -v KOOPA_INSTALL_APP_SUBSHELL
     else
-        app['bash']="$(koopa_locate_bash --allow-missing)"
-        if [[ ! -x "${app['bash']}" ]] || \
-            [[ "${dict['name']}" == 'bash' ]]
+        if [[ "${bool['bootstrap']}" -eq 1 ]]
         then
-            if koopa_is_macos
-            then
-                app['bash']='/usr/local/bin/bash'
-            else
-                app['bash']='/bin/bash'
-            fi
+            app['bash']="${KOOPA_BOOTSTRAP_PREFIX:?}/bin/bash"
+            # > path_arr+=("${KOOPA_BOOTSTRAP_PREFIX:?}/bin")
+        else
+            app['bash']="$(koopa_locate_bash)"
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        if [[ "${bool['boostrap']}" -eq 1 ]]
-        then
-            path_arr+=("${KOOPA_BOOTSTRAP_PATH:?}/bin")
-        fi
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
