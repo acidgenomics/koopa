@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-09-06.
+    # @note Updated 2023-09-20.
     #
     # @section Package library location:
     #
@@ -54,6 +54,26 @@ koopa_r_configure_environ() {
     # the packages in the order given, so they appear on the search path in
     # reverse order.
     # > R_DEFAULT_PACKAGES='utils,grDevices,graphics,stats'
+    #
+    # @section Locale:
+    #
+    # R CMD check always uses C locale for checks, which often differs from
+    # user configuration:
+    #
+    # > Sys.getlocale("LC_ALL")
+    # # [1] "en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8"
+    #
+    # Can override this by setting 'LC_ALL' variable in 'Renviron':
+    # > LC_ALL='C'
+    #
+    # Alternatively, can set locale in 'Rprofile':
+    # > Sys.setlocale("LC_ALL", "C")
+    #
+    # Doing this may crash Shiny Server though.
+    #
+    # More details:
+    # - https://github.com/r-lib/devtools/issues/2121/
+    # - https://stackoverflow.com/questions/16347731/
     #
     # @seealso
     # - 'help(Startup)' for documentation on '~/.Renviron' and 'Renviron.site'.
@@ -138,7 +158,7 @@ koopa_r_configure_environ() {
     # rcmdcheck
     # --------------------------------------------------------------------------
     # Options: "never", "error", "warning", "note".
-    lines+=('RCMDCHECK_ERROR_ON=warning')
+    lines+=('RCMDCHECK_ERROR_ON=error')
     # remotes
     # --------------------------------------------------------------------------
     lines+=(
