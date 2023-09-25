@@ -3679,14 +3679,14 @@
   "nextflow": {
     "arch": "amd64",
     "bin": ["nextflow"],
-    "date": "2023-08-12",
+    "date": "2023-09-25",
     "dependencies": ["temurin"],
     "large": true,
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "23.04.3"
+    "version": "23.04.4"
   },
   "nghttp2": {
     "aliases": {
