@@ -31,20 +31,20 @@ install_bash() {
     return 0
 }
 
-install_coreutils() {
-    printf 'Installing GNU coreutils.\n'
-    mkdir -p "${TMPDIR}/src/coreutils"
-    cd "${TMPDIR}/src/coreutils" || return 1
-    curl \
-        'https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.gz' \
-        -o 'src.tar.gz'
-    tar -xzf 'src.tar.gz'
-    cd 'coreutils-9.4' || return 1
-    ./configure --prefix="${PREFIX:?}" --program-prefix='g'
-    make
-    make install
-    return 0
-}
+# > install_coreutils() {
+# >     printf 'Installing GNU coreutils.\n'
+# >     mkdir -p "${TMPDIR}/src/coreutils"
+# >     cd "${TMPDIR}/src/coreutils" || return 1
+# >     curl \
+# >         'https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.gz' \
+# >         -o 'src.tar.gz'
+# >     tar -xzf 'src.tar.gz'
+# >     cd 'coreutils-9.4' || return 1
+# >     ./configure --prefix="${PREFIX:?}" --program-prefix='g'
+# >     make
+# >     make install
+# >     return 0
+# > }
 
 install_python() {
     printf 'Installing Python.\n'
@@ -64,8 +64,8 @@ install_python() {
 main() {
     printf "Installing koopa bootstrap into '%s'.\n" "$PREFIX"
     (
+        # > install_coreutils
         install_bash
-        install_coreutils
         install_python
     )
     [ -x "${PREFIX}/bin/bash" ] || return 1
