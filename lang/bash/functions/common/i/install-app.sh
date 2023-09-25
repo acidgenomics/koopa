@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add option to not restrict path / bootstrap mode.
+# Consider setting KOOPA_BOOTSTRAP_PATH and adding the bin here.
 # FIXME Our installer should drop an invisible build file into the directory
 # that contains build number and date, for easy checking during updates.
 # FIXME Instead of erroring on an unsupported app, remove it when it exists
@@ -10,7 +12,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-09-14.
+    # @note Updated 2023-09-25.
     #
     # Refer to 'locale' for desired LC settings.
     # """
@@ -19,7 +21,6 @@ koopa_install_app() {
     local i
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    # Biocontainers images currently bundle Python 2.
     koopa_assert_is_installed 'python3'
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
@@ -27,6 +28,8 @@ koopa_install_app() {
     # Download pre-built binary from our S3 bucket. Inspired by the
     # Homebrew bottle approach.
     bool['binary']=0
+    # Install shared apps in bootstrap mode?
+    bool['bootstrap']=0
     # Should we copy the log files into the install prefix?
     bool['copy_log_files']=0
     # Automatically install required dependencies (shared apps only).
@@ -124,6 +127,10 @@ koopa_install_app() {
             # CLI user-accessible flags ----------------------------------------
             '--binary')
                 bool['binary']=1
+                shift 1
+                ;;
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
             '--push')
@@ -343,7 +350,11 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        if [[ "${bool['boostrap']}" -eq 1 ]]
+        then
+            path_arr+=("${KOOPA_BOOTSTRAP_PATH:?}/bin")
+        fi
+        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'

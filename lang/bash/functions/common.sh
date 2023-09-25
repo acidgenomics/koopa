@@ -4403,6 +4403,7 @@ koopa_cli_install() {
     do
         case "$1" in
             '--binary' | \
+            '--bootstrap' | \
             '--push' | \
             '--reinstall' | \
             '--verbose')
@@ -10857,6 +10858,7 @@ koopa_install_app() {
     koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
+    bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
     bool['isolate']=1
@@ -10941,6 +10943,10 @@ koopa_install_app() {
                 ;;
             '--binary')
                 bool['binary']=1
+                shift 1
+                ;;
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
             '--push')
@@ -11155,7 +11161,11 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        if [[ "${bool['boostrap']}" -eq 1 ]]
+        then
+            path_arr+=("${KOOPA_BOOTSTRAP_PATH:?}/bin")
+        fi
+        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
