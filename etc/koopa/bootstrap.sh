@@ -11,15 +11,15 @@
 set -o errexit
 set -o nounset
 
-TMPDIR="$(mktemp -d)"
-PREFIX="${TMPDIR}/bootstrap"
+PREFIX="${PREFIX:-}"
+[ -z "$PREFIX" ] && PREFIX="$(mktemp -d)"
 PATH="${PREFIX}/bin:/usr/bin:/bin"
-export PATH PREFIX TMPDIR
+export PATH PREFIX
 
 install_bash() {
     printf 'Installing Bash.\n'
-    mkdir -p "${TMPDIR}/src/bash"
-    cd "${TMPDIR}/src/bash" || return 1
+    mkdir -p "${PREFIX}/src/bash"
+    cd "${PREFIX}/src/bash" || return 1
     curl \
         'https://ftp.gnu.org/gnu/bash/bash-5.2.15.tar.gz' \
         -o 'src.tar.gz'
@@ -34,8 +34,8 @@ install_bash() {
 
 # > install_coreutils() {
 # >     printf 'Installing GNU coreutils.\n'
-# >     mkdir -p "${TMPDIR}/src/coreutils"
-# >     cd "${TMPDIR}/src/coreutils" || return 1
+# >     mkdir -p "${PREFIX}/src/coreutils"
+# >     cd "${PREFIX}/src/coreutils" || return 1
 # >     curl \
 # >         'https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.gz' \
 # >         -o 'src.tar.gz'
@@ -50,14 +50,14 @@ install_bash() {
 
 install_python() {
     printf 'Installing Python.\n'
-    mkdir -p "${TMPDIR}/src/python"
-    cd "${TMPDIR}/src/python"
+    mkdir -p "${PREFIX}/src/python"
+    cd "${PREFIX}/src/python"
     curl \
         'https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd 'Python-3.11.5' || return 1
-    ./configure --prefix="$PREFIX"
+    ./configure --prefix="$PREFIX" --without-ensurepip
     make
     make install
     [ -x "${PREFIX}/bin/python3" ] || return 1
@@ -71,7 +71,6 @@ main() {
         install_bash
         install_python
     )
-    printf '%s\n' "$PREFIX"
     return 0
 }
 
