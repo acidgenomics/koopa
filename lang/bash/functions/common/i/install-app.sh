@@ -292,6 +292,10 @@ ${dict['version2']}"
                 then
                     dep_install_args+=('--binary')
                 fi
+                if [[ "${bool['bootstrap']}" -eq 1 ]]
+                then
+                    dep_install_args+=('--bootstrap')
+                fi
                 if [[ "${bool['push']}" -eq 1 ]]
                 then
                     dep_install_args+=('--push')
@@ -339,7 +343,16 @@ ${dict['version2']}"
             app['bash']="${KOOPA_BOOTSTRAP_PREFIX:?}/bin/bash"
             # > path_arr+=("${KOOPA_BOOTSTRAP_PREFIX:?}/bin")
         else
-            app['bash']="$(koopa_locate_bash)"
+            app['bash']="$(koopa_locate_bash --allow-missing)"
+            if [[ ! -x "${app['bash']}" ]]
+            then
+                if koopa_is_macos
+                then
+                    app['bash']='/usr/local/bin/bash'
+                else
+                    app['bash']="$(koopa_locate_bash --allow-system)"
+                fi
+            fi
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
