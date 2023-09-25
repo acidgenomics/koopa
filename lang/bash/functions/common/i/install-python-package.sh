@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to use 'egg-name' key instead.
+
 koopa_install_python_package() {
     # """
     # Install a Python package as a virtual environment application.
