@@ -285,8 +285,8 @@
       "homebrew": true
     },
     "bin": ["bash"],
-    "build_dependencies": ["make", "pkg-config", "patch"],
-    "date": "2022-12-14",
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-09-25",
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
