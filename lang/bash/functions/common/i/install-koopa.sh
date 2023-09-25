@@ -3,13 +3,14 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-09-25.
     # """
     local -A bool dict
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
-        'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
+        'python3' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
     bool['add_to_user_profile']=1
+    bool['bootstrap']=0
     bool['interactive']=1
     bool['passwordless_sudo']=0
     bool['shared']=0
@@ -36,6 +37,10 @@ koopa_install_koopa() {
             # Flags ------------------------------------------------------------
             '--add-to-user-profile')
                 bool['add_to_user_profile']=1
+                shift 1
+                ;;
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
             '--no-add-to-user-profile')
@@ -165,5 +170,9 @@ koopa_install_koopa() {
     fi
     koopa_zsh_compaudit_set_permissions
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
+    then
+        koopa_install_app 'bash' 'python'
+    fi
     return 0
 }
