@@ -285,8 +285,8 @@
       "homebrew": true
     },
     "bin": ["bash"],
-    "build_dependencies": ["make", "pkg-config", "patch"],
-    "date": "2022-12-14",
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2023-09-25",
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
@@ -1095,9 +1095,9 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2023-08-20",
+    "date": "2023-09-24",
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.27.2"
+    "version": "0.28.0"
   },
   "curl": {
     "aliases": {
@@ -1343,12 +1343,12 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-19",
+    "date": "2023-09-25",
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.13.0"
+    "version": "0.13.1"
   },
   "fastqc": {
     "arch": "amd64",
@@ -2351,10 +2351,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-08-31",
+    "date": "2023-09-24",
     "enabled": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.118.2"
+    "version": "0.119.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3382,11 +3382,11 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2023-09-05",
+    "date": "2023-09-24",
     "dependencies": ["node"],
     "large": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.36.0"
+    "version": "0.37.0"
   },
   "mcfly": {
     "aliases": {
@@ -3463,11 +3463,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-08-13",
+    "date": "2023-09-24",
     "dependencies": ["tbb", "zlib", "zstd"],
     "enabled": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "mpc": {
     "aliases": {
@@ -3520,12 +3520,12 @@
   "multiqc": {
     "arch": "amd64",
     "bin": ["multiqc"],
-    "date": "2023-08-05",
+    "date": "2023-09-24",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.15"
+    "version": "1.16"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4672,10 +4672,10 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-09-18",
+    "date": "2023-09-24",
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.290"
+    "version": "0.0.291"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5845,14 +5845,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-07-06",
+    "date": "2023-09-24",
     "dependencies": ["python3.11"],
     "enabled": false,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.7.6"
+    "version": "2023.9.24"
   },
   "zellij": {
     "aliases": {

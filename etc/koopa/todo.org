@@ -1,6 +1,10 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Bootstrap script should install Bash and Python into temporary directory.
+    Then add that to PATH, run koopa installer, and then run koopa install bash python.
+** TODO Add system R-devel install support for macOS.
+    Useful for Bioconductor devel cycle from October to April.
 ** TODO Need to check whether doom-emacs and spacemacs are outdated.
     Could approach this by saving an invisible build file into the directory.
 ** TODO Check to see if app needs to be updated by looking at timestamp.
