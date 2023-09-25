@@ -292,6 +292,10 @@ ${dict['version2']}"
                 then
                     dep_install_args+=('--binary')
                 fi
+                if [[ "${bool['bootstrap']}" -eq 1 ]]
+                then
+                    dep_install_args+=('--bootstrap')
+                fi
                 if [[ "${bool['push']}" -eq 1 ]]
                 then
                     dep_install_args+=('--push')
