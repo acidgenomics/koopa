@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add option to not restrict path / bootstrap mode.
-# Consider setting KOOPA_BOOTSTRAP_PATH and adding the bin here.
 # FIXME Our installer should drop an invisible build file into the directory
 # that contains build number and date, for easy checking during updates.
 # FIXME Instead of erroring on an unsupported app, remove it when it exists
@@ -129,10 +127,6 @@ koopa_install_app() {
                 bool['binary']=1
                 shift 1
                 ;;
-            '--bootstrap')
-                bool['bootstrap']=1
-                shift 1
-                ;;
             '--push')
                 bool['push']=1
                 shift 1
@@ -146,6 +140,10 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
+            '--bootstrap')
+                bool['bootstrap']=1
+                shift 1
+                ;;
             '--no-dependencies')
                 bool['deps']=0
                 shift 1
