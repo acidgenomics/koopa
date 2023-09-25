@@ -2632,7 +2632,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-09-13",
+    "date": "2023-09-25",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
@@ -2640,7 +2640,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.32.6"
+    "version": "2.32.8"
   },
   "ldc": {
     "aliases": {
@@ -4283,10 +4283,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-07-26",
+    "date": "2023-09-25",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.5"
+    "version": "2.17.6"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
