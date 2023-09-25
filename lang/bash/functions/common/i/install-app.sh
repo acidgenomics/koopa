@@ -10,7 +10,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-09-14.
+    # @note Updated 2023-09-25.
     #
     # Refer to 'locale' for desired LC settings.
     # """
@@ -19,7 +19,6 @@ koopa_install_app() {
     local i
     koopa_assert_has_args "$#"
     koopa_assert_has_no_envs
-    # Biocontainers images currently bundle Python 2.
     koopa_assert_is_installed 'python3'
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
@@ -27,6 +26,8 @@ koopa_install_app() {
     # Download pre-built binary from our S3 bucket. Inspired by the
     # Homebrew bottle approach.
     bool['binary']=0
+    # Install shared apps in bootstrap mode?
+    bool['bootstrap']=0
     # Should we copy the log files into the install prefix?
     bool['copy_log_files']=0
     # Automatically install required dependencies (shared apps only).
@@ -139,6 +140,10 @@ koopa_install_app() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
+            '--bootstrap')
+                bool['bootstrap']=1
+                shift 1
+                ;;
             '--no-dependencies')
                 bool['deps']=0
                 shift 1
@@ -329,21 +334,17 @@ ${dict['version2']}"
             "$@"
         unset -v KOOPA_INSTALL_APP_SUBSHELL
     else
-        app['bash']="$(koopa_locate_bash --allow-missing)"
-        if [[ ! -x "${app['bash']}" ]] || \
-            [[ "${dict['name']}" == 'bash' ]]
+        if [[ "${bool['bootstrap']}" -eq 1 ]]
         then
-            if koopa_is_macos
-            then
-                app['bash']='/usr/local/bin/bash'
-            else
-                app['bash']='/bin/bash'
-            fi
+            app['bash']="${KOOPA_BOOTSTRAP_PREFIX:?}/bin/bash"
+            # > path_arr+=("${KOOPA_BOOTSTRAP_PREFIX:?}/bin")
+        else
+            app['bash']="$(koopa_locate_bash)"
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'

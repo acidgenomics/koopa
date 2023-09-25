@@ -4403,6 +4403,7 @@ koopa_cli_install() {
     do
         case "$1" in
             '--binary' | \
+            '--bootstrap' | \
             '--push' | \
             '--reinstall' | \
             '--verbose')
@@ -10857,6 +10858,7 @@ koopa_install_app() {
     koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
+    bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
     bool['isolate']=1
@@ -10953,6 +10955,10 @@ koopa_install_app() {
                 ;;
             '--verbose')
                 bool['verbose']=1
+                shift 1
+                ;;
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
             '--no-dependencies')
@@ -11141,21 +11147,16 @@ ${dict['version2']}"
             "$@"
         unset -v KOOPA_INSTALL_APP_SUBSHELL
     else
-        app['bash']="$(koopa_locate_bash --allow-missing)"
-        if [[ ! -x "${app['bash']}" ]] || \
-            [[ "${dict['name']}" == 'bash' ]]
+        if [[ "${bool['bootstrap']}" -eq 1 ]]
         then
-            if koopa_is_macos
-            then
-                app['bash']='/usr/local/bin/bash'
-            else
-                app['bash']='/bin/bash'
-            fi
+            app['bash']="${KOOPA_BOOTSTRAP_PREFIX:?}/bin/bash"
+        else
+            app['bash']="$(koopa_locate_bash)"
         fi
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -12721,8 +12722,9 @@ koopa_install_koopa() {
     local -A bool dict
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
-        'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
+        'python3' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
     bool['add_to_user_profile']=1
+    bool['bootstrap']=0
     bool['interactive']=1
     bool['passwordless_sudo']=0
     bool['shared']=0
@@ -12747,6 +12749,10 @@ koopa_install_koopa() {
                 ;;
             '--add-to-user-profile')
                 bool['add_to_user_profile']=1
+                shift 1
+                ;;
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
             '--no-add-to-user-profile')
@@ -12782,6 +12788,7 @@ koopa_install_koopa() {
                 ;;
         esac
     done
+    [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]] && bool['bootstrap']=1
     if [[ "${bool['interactive']}" -eq 1 ]]
     then
         if koopa_is_admin && [[ -z "${dict['prefix']}" ]]
@@ -12875,6 +12882,10 @@ koopa_install_koopa() {
     fi
     koopa_zsh_compaudit_set_permissions
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
+    then
+        koopa_install_app --bootstrap 'bash' 'python'
+    fi
     return 0
 }
 
@@ -18507,18 +18518,11 @@ koopa_mkdir() {
 
 koopa_mktemp() {
     local -A app dict
-    local -a mktemp_args
     app['mktemp']="$(koopa_locate_mktemp --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['template']='koopa'
-    if koopa_is_gnu "${app['mktemp']}"
-    then
-        dict['template']="${dict['template']}.XXXXXXXXXXXX"
-    fi
-    mktemp_args=("$@" '-t' "${dict['template']}")
-    dict['out']="$("${app['mktemp']}" "${mktemp_args[@]}")"
-    [[ -e "${dict['out']}" ]] || return 1
-    koopa_print "${dict['out']}"
+    dict['str']="$("${app['mktemp']}" "$@")"
+    [[ -e "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 
@@ -19782,7 +19786,7 @@ koopa_r_configure_environ() {
         lines+=('R_MAX_NUM_DLLS=153')
     fi
     lines+=('R_DATATABLE_NUM_PROCS_PERCENT=100')
-    lines+=('RCMDCHECK_ERROR_ON=warning')
+    lines+=('RCMDCHECK_ERROR_ON=error')
     lines+=(
         'R_REMOTES_STANDALONE=true'
         'R_REMOTES_UPGRADE=always'
