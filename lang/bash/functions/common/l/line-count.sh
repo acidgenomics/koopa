@@ -5,7 +5,7 @@ koopa_line_count() {
     # Return the number of lines in a file.
     # @note Updated 2023-04-05.
     #
-    # Example: koopa_line_count 'txToGene.csv'
+    # Example: koopa_line_count 'tx2gene.csv'
     # """
     local -A app
     local file
