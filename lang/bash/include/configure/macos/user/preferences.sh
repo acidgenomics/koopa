@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Need to disable annoying new default setting in macOS Sonoma:
+# Click wallpaper to reveal desktop
+# Only in Stage Manager
+
 main() {
     # """
     # Configure macOS user defaults.
