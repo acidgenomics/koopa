@@ -3,7 +3,7 @@
 koopa_macos_os_codename() {
     # """
     # macOS OS codename (marketing name).
-    # @note Updated 2023-03-19.
+    # @note Updated 2023-09-27.
     #
     # @seealso
     # - https://apple.stackexchange.com/questions/333452/
@@ -12,6 +12,9 @@ koopa_macos_os_codename() {
     local -A dict
     dict['version']="$(koopa_macos_os_version)"
     case "${dict['version']}" in
+        '14.'*)
+            dict['string']='Sonoma'
+            ;;
         '13.'*)
             dict['string']='Ventura'
             ;;

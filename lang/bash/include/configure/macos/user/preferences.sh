@@ -1,23 +1,9 @@
 #!/usr/bin/env bash
 
-
-# FIXME Need to disable annoying new default setting in macOS Sonoma:
-# Click wallpaper to reveal desktop
-# Only in Stage Manager
-#
-# com.apple.WindowManager
-# EnableStandardClickToShowDesktop
-# 
-# defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
-#
-# https://derflounder.wordpress.com/2023/09/26/managing-the-click-wallpaper-to-reveal-desktop-setting-in-macos-sonoma/
-# https://github.com/rtrouton/profiles/blob/462be5072df6f1c35a7ab1791adaa77cc50b9d3e/ManageClickWallpaperToShowDesktopItems/ManageClickWallpaperToShowDesktopItems.mobileconfig
-
-
 main() {
     # """
     # Configure macOS user defaults.
-    # @note Updated 2023-08-22.
+    # @note Updated 2023-09-27.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -60,6 +46,13 @@ main() {
 write defaults, ensure that your terminal app has full disk access enabled." \
     'System Preferences > Security & Privacy > Privacy > Full Disk Access'
     koopa_h2 'General UI/UX'
+    # Disable click wallpaper to reveal desktop. Added in Sonoma.
+    # - https://derflounder.wordpress.com/2023/09/26/managing-the-click-
+    #     wallpaper-to-reveal-desktop-setting-in-macos-sonoma/
+    "${app['defaults']}" write \
+        'com.apple.WindowManager' \
+        'EnableStandardClickToShowDesktop' \
+        -bool false
     # Reduce motion.
     "${app['defaults']}" write \
         'com.apple.universalaccess' \
