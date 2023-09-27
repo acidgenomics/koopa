@@ -522,13 +522,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-20",
+    "date": "2023-09-27",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.25.2"
+    "version": "1.26.0"
   },
   "brotli": {
     "aliases": {
@@ -1132,7 +1132,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2023-08-29",
+    "date": "2023-09-27",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
@@ -1140,7 +1140,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.3"
+    "version": "3.5.4"
   },
   "delta": {
     "aliases": {
@@ -5836,9 +5836,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-08-11",
+    "date": "2023-09-27",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.35.1"
+    "version": "4.35.2"
   },
   "yt-dlp": {
     "aliases": {
