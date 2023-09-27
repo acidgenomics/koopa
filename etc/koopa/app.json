@@ -4636,11 +4636,11 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2023-08-25",
+    "date": "2023-09-27",
     "platform": "linux",
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2023.06.2+561"
+    "version": "2023.09.0+463"
   },
   "rsync": {
     "aliases": {
