@@ -522,13 +522,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-20",
+    "date": "2023-09-27",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.25.2"
+    "version": "1.26.0"
   },
   "brotli": {
     "aliases": {
@@ -1132,7 +1132,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2023-08-29",
+    "date": "2023-09-27",
     "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
@@ -1140,7 +1140,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.3"
+    "version": "3.5.4"
   },
   "delta": {
     "aliases": {
@@ -1189,9 +1189,9 @@
     "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
   },
   "dotfiles": {
-    "date": "2023-09-07",
+    "date": "2023-09-27",
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "59488be40c41c1032e17b8eb17f277b036f7dfef"
+    "version": "6110c5c2be468e7619e368c8f6e6e2ef46ee7bfe"
   },
   "du-dust": {
     "aliases": {
@@ -2632,7 +2632,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-09-13",
+    "date": "2023-09-25",
     "dependencies": ["python3.11"],
     "large": true,
     "url": [
@@ -2640,7 +2640,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.32.6"
+    "version": "2.32.8"
   },
   "ldc": {
     "aliases": {
@@ -3679,14 +3679,14 @@
   "nextflow": {
     "arch": "amd64",
     "bin": ["nextflow"],
-    "date": "2023-08-12",
+    "date": "2023-09-25",
     "dependencies": ["temurin"],
     "large": true,
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "23.04.3"
+    "version": "23.04.4"
   },
   "nghttp2": {
     "aliases": {
@@ -4283,10 +4283,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-07-26",
+    "date": "2023-09-25",
     "dependencies": ["python3.11"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.5"
+    "version": "2.17.6"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4636,11 +4636,11 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2023-08-25",
+    "date": "2023-09-27",
     "platform": "linux",
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2023.06.2+561"
+    "version": "2023.09.0+463"
   },
   "rsync": {
     "aliases": {
@@ -5836,9 +5836,9 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-08-11",
+    "date": "2023-09-27",
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.35.1"
+    "version": "4.35.2"
   },
   "yt-dlp": {
     "aliases": {
