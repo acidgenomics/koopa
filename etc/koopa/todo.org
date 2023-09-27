@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Could improve 'koopa install --all' to error at the beginning for unsupported / removed apps...e.g. chemacs.
 ** TODO Bootstrap script should install Bash and Python into temporary directory.
     Then add that to PATH, run koopa installer, and then run koopa install bash python.
 ** TODO Add system R-devel install support for macOS.
