@@ -11073,9 +11073,6 @@ ${dict['version2']}"
             fi
             if [[ -d "${dict['prefix']}" ]]
             then
-                [[ "${bool['quiet']}" -eq 0 ]] && \
-                    koopa_alert_is_installed \
-                        "${dict['name']}" "${dict['prefix']}"
                 return 0
             fi
         fi
