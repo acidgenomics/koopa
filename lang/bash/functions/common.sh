@@ -10618,11 +10618,7 @@ koopa_install_all_apps() {
         local -a install_args
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        if [[ -d "$prefix" ]]
-        then
-            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
-            continue
-        fi
+        [[ -d "$prefix" ]] && continue
         [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
         install_args+=("$app_name")
         koopa_cli_install "${install_args[@]}"
@@ -10660,11 +10656,7 @@ koopa_install_all_binary_apps() {
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        if [[ -d "$prefix" ]]
-        then
-            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
-            continue
-        fi
+        [[ -d "$prefix" ]] && continue
         koopa_cli_install --binary "$app_name"
     done
     if [[ "${bool['bootstrap']}" -eq 1 ]]
