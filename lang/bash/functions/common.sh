@@ -429,20 +429,6 @@ koopa_alert_install_success() {
     koopa_alert_process_success 'Installation' "$@"
 }
 
-koopa_alert_is_installed() {
-    local -A dict
-    dict['name']="${1:?}"
-    dict['prefix']="${2:-}"
-    dict['string']="'${dict['name']}' is installed"
-    if [[ -n "${dict['prefix']}" ]]
-    then
-        dict['string']="${dict['string']} at '${dict['prefix']}'"
-    fi
-    dict['string']="${dict['string']}."
-    koopa_alert_note "${dict['string']}"
-    return 0
-}
-
 koopa_alert_is_not_installed() {
     local -A dict
     dict['name']="${1:?}"
@@ -11063,10 +11049,7 @@ ${dict['version2']}"
                         ;;
                 esac
             fi
-            if [[ -d "${dict['prefix']}" ]]
-            then
-                return 0
-            fi
+            [[ -d "${dict['prefix']}" ]] && return 0
         fi
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
