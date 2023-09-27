@@ -1,8 +1,18 @@
 #!/usr/bin/env bash
 
+
 # FIXME Need to disable annoying new default setting in macOS Sonoma:
 # Click wallpaper to reveal desktop
 # Only in Stage Manager
+#
+# com.apple.WindowManager
+# EnableStandardClickToShowDesktop
+# 
+# defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
+#
+# https://derflounder.wordpress.com/2023/09/26/managing-the-click-wallpaper-to-reveal-desktop-setting-in-macos-sonoma/
+# https://github.com/rtrouton/profiles/blob/462be5072df6f1c35a7ab1791adaa77cc50b9d3e/ManageClickWallpaperToShowDesktopItems/ManageClickWallpaperToShowDesktopItems.mobileconfig
+
 
 main() {
     # """
