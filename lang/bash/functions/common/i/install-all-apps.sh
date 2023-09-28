@@ -3,7 +3,7 @@
 koopa_install_all_apps() {
     # """
     # Build and install all koopa apps from source.
-    # @note Updated 2023-09-01.
+    # @note Updated 2023-09-27.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -52,11 +52,7 @@ koopa_install_all_apps() {
         local -a install_args
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        if [[ -d "$prefix" ]]
-        then
-            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
-            continue
-        fi
+        [[ -d "$prefix" ]] && continue
         [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
         install_args+=("$app_name")
         koopa_cli_install "${install_args[@]}"
