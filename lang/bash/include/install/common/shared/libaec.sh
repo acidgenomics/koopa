@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libaec.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-09-29.
     #
     # @seealso
     # - https://gitlab.dkrz.de/k202009/libaec/
@@ -20,5 +20,8 @@ v${dict['version']}/libaec-v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_cmake_build --prefix="${dict['prefix']}"
+    # Delete legacy 'aec' from bin.
+    dict['bin_prefix']="$(koopa_bin_prefix)"
+    koopa_rm "${dict['bin_prefix']}/aec"
     return 0
 }

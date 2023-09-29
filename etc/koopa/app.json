@@ -2697,15 +2697,14 @@
     "version": "2.08"
   },
   "libaec": {
-    "bin": ["aec"],
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-06-27",
+    "date": "2023-09-29",
     "man1": ["aec.1"],
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
       "https://github.com/MathisRosenhauer/libaec/"
     ],
-    "version": "1.0.6"
+    "version": "1.1.1"
   },
   "libarchive": {
     "aliases": {
@@ -3416,11 +3415,11 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-08-08",
+    "date": "2023-09-29",
     "dependencies": ["python3.11"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "miller": {
     "aliases": {

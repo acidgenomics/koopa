@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure macOS user defaults.
-    # @note Updated 2023-09-27.
+    # @note Updated 2023-09-28.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -47,6 +47,8 @@ write defaults, ensure that your terminal app has full disk access enabled." \
     'System Preferences > Security & Privacy > Privacy > Full Disk Access'
     koopa_h2 'General UI/UX'
     # Disable click wallpaper to reveal desktop. Added in Sonoma.
+    # System Settings > Desktop & Dock > Desktop & Stage Manager >
+    # Click wallpaper to reveal desktop > Only in Stage Manager
     # - https://derflounder.wordpress.com/2023/09/26/managing-the-click-
     #     wallpaper-to-reveal-desktop-setting-in-macos-sonoma/
     "${app['defaults']}" write \
