@@ -3651,7 +3651,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-09-29",
     "dependencies": [
       "gettext",
       "libiconv",
@@ -3662,7 +3662,7 @@
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.9.1"
+    "version": "0.9.2"
   },
   "nettle": {
     "aliases": {
