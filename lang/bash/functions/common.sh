@@ -429,20 +429,6 @@ koopa_alert_install_success() {
     koopa_alert_process_success 'Installation' "$@"
 }
 
-koopa_alert_is_installed() {
-    local -A dict
-    dict['name']="${1:?}"
-    dict['prefix']="${2:-}"
-    dict['string']="'${dict['name']}' is installed"
-    if [[ -n "${dict['prefix']}" ]]
-    then
-        dict['string']="${dict['string']} at '${dict['prefix']}'"
-    fi
-    dict['string']="${dict['string']}."
-    koopa_alert_note "${dict['string']}"
-    return 0
-}
-
 koopa_alert_is_not_installed() {
     local -A dict
     dict['name']="${1:?}"
@@ -10618,11 +10604,7 @@ koopa_install_all_apps() {
         local -a install_args
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        if [[ -d "$prefix" ]]
-        then
-            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
-            continue
-        fi
+        [[ -d "$prefix" ]] && continue
         [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
         install_args+=("$app_name")
         koopa_cli_install "${install_args[@]}"
@@ -10660,11 +10642,7 @@ koopa_install_all_binary_apps() {
     do
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        if [[ -d "$prefix" ]]
-        then
-            koopa_alert_note "'${app_name}' already installed at '${prefix}'."
-            continue
-        fi
+        [[ -d "$prefix" ]] && continue
         koopa_cli_install --binary "$app_name"
     done
     if [[ "${bool['bootstrap']}" -eq 1 ]]
@@ -11071,10 +11049,7 @@ ${dict['version2']}"
                         ;;
                 esac
             fi
-            if [[ -d "${dict['prefix']}" ]]
-            then
-                return 0
-            fi
+            [[ -d "${dict['prefix']}" ]] && return 0
         fi
     fi
     if [[ "${bool['quiet']}" -eq 0 ]]
