@@ -251,12 +251,12 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-08-21",
-    "dependencies": ["python3.12"],
+    "date": "2023-10-02",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.51.0"
+    "version": "2.53.0"
   },
   "bamtools": {
     "arch": "amd64",
@@ -1898,12 +1898,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-09-13",
-    "dependencies": ["python3.12"],
+    "date": "2023-10-02",
+    "dependencies": ["python3.11"],
     "enabled": false,
     "large": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "446.0.0"
+    "version": "448.0.0"
   },
   "googletest": {
     "aliases": {
@@ -3579,23 +3579,23 @@
     },
     "bin": ["fasterq-dump", "vdb-config"],
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
-    "date": "2023-08-31",
+    "date": "2023-10-02",
     "dependencies": ["libxml2", "ncbi-vdb"],
     "large": true,
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.7"
+    "version": "3.0.8"
   },
   "ncbi-vdb": {
     "aliases": {
       "bioconda": "ncbi-vdb"
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-08-31",
+    "date": "2023-10-02",
     "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin"],
     "large": true,
     "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.0.7"
+    "version": "3.0.8"
   },
   "ncurses": {
     "aliases": {
@@ -4283,10 +4283,10 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-09-25",
+    "date": "2023-10-02",
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "2.17.6"
+    "version": "3.0.0"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4699,17 +4699,17 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-09-24",
+    "date": "2023-10-02",
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.291"
+    "version": "0.0.292"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-09-12",
+    "date": "2023-10-02",
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.39"
+    "version": "0.0.40"
   },
   "rust": {
     "aliases": {
