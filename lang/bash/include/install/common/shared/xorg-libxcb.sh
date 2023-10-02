@@ -12,7 +12,7 @@ main() {
     local -a conf_args
     koopa_activate_app --build-only \
         'pkg-config' \
-        'python3.11'
+        'python3.12'
     koopa_activate_app \
         'xorg-xorgproto' \
         'xorg-xcb-proto' \

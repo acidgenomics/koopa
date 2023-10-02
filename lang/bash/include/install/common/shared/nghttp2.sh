@@ -14,7 +14,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args deps
-    koopa_activate_app --build-only 'pkg-config' 'python3.11'
+    koopa_activate_app --build-only 'pkg-config' 'python3.12'
     deps=(
         'c-ares'
         'jemalloc'

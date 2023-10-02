@@ -12,7 +12,7 @@ main() {
     # """
     local -A app dict
     local -a build_deps deps meson_args
-    build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python3.11')
+    build_deps=('cmake' 'meson' 'ninja' 'pkg-config' 'python3.12')
     deps=('zlib')
     # Linking to our gettext causes build to fail for 2.76.5.
     # > koopa_is_macos && deps+=('gettext')

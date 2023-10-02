@@ -41,7 +41,7 @@ main() {
         'icu4c'
         'libuv'
         'openssl3'
-        'python3.11'
+        'python3.12'
         'c-ares'
         'nghttp2'
     )

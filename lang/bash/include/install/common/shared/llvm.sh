@@ -36,7 +36,7 @@ main() {
         'libffi'
         'libxml2'
         'ncurses'
-        'python3.11'
+        'python3.12'
         'swig'
     )
     if koopa_is_linux
@@ -62,7 +62,7 @@ main() {
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['python']="$(koopa_app_prefix 'python3.11')"
+    dict['python']="$(koopa_app_prefix 'python3.12')"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
