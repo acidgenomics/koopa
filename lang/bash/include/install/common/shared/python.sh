@@ -60,7 +60,6 @@ main() {
         'gdbm'
         'sqlite'
         'readline' # or libedit
-        'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
@@ -92,7 +91,8 @@ main() {
         # https://github.com/python/cpython/issues/98673
         'ac_cv_working_openssl_hashlib=yes'
         'ac_cv_working_openssl_ssl=yes'
-        # > 'py_cv_module__tkinter=disabled'
+        # Disable the optional tkinter module.
+        'py_cv_module__tkinter=disabled'
     )
     if koopa_is_macos
     then
@@ -143,13 +143,11 @@ Python-${dict['version']}.tar.xz"
     "${app['python']}" -c 'import _ctypes'
     "${app['python']}" -c 'import _decimal'
     "${app['python']}" -c 'import _gdbm'
-    # > "${app['python']}" -c 'import _tkinter'
     "${app['python']}" -c 'import hashlib'
     "${app['python']}" -c 'import pyexpat'
     "${app['python']}" -c 'import readline'
     "${app['python']}" -c 'import sqlite3'
     "${app['python']}" -c 'import ssl'
-    "${app['python']}" -c 'import tkinter'
     "${app['python']}" -c 'import zlib'
     koopa_alert 'Checking pip configuration.'
     "${app['python']}" -m pip list --format='columns'

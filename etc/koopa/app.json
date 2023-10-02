@@ -4333,7 +4333,6 @@
       "openssl3",
       "readline",
       "sqlite",
-      "tcl-tk",
       "unzip",
       "xz",
       "zlib"
@@ -4361,7 +4360,6 @@
       "openssl3",
       "readline",
       "sqlite",
-      "tcl-tk",
       "unzip",
       "xz",
       "zlib"
