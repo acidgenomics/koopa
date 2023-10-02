@@ -3767,7 +3767,7 @@
       "libuv",
       "nghttp2",
       "openssl3",
-      "python3.12",
+      "python3.11",
       "zlib"
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
