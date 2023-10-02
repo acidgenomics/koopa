@@ -3,6 +3,10 @@
 # FIXME Now our bzip2 import is failing?
 #Following modules built successfully but were removed because they could not be imported: _bz2
 
+# FIXME bz2 is failing on 3.12 for macOS:
+# install: Modules/_bz2.cpython-312-darwin.so: No such file or directory
+# gmake: *** [Makefile:2084: sharedinstall] Error 71
+
 # FIXME Install without sqlite, for speed.
 
 # NOTE Python 3.12 no longer installs setuptools by default:
@@ -155,13 +159,11 @@ main() {
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     koopa_assert_is_dir \
-        "${dict['bzip2']}" \
         "${dict['openssl']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
@@ -181,6 +183,7 @@ main() {
         "--with-openssl=${dict['openssl']}"
         '--with-system-expat'
         '--with-system-libmpdec'
+        'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
     )
     if koopa_is_macos
     then
@@ -190,14 +193,13 @@ main() {
             "--with-dtrace=${app['dtrace']}"
             # FIXME Can we take this out if we improve pkg-config support
             # for bzip2 on macOS? Do we need to link to the so file here?
-            "BZIP2_CFLAGS=-I${dict['bzip2']}/include"
-            "BZIP2_LIBS=-L${dict['bzip2']}/lib -lbz2"
+            # > "BZIP2_CFLAGS=-I${dict['bzip2']}/include"
+            # > "BZIP2_LIBS=-L${dict['bzip2']}/lib -lbz2"
         )
     fi
     case "${dict['version']}" in
         '3.11.'*)
             conf_args+=(
-                'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
                 # Avoid OpenSSL checks that are problematic for Python 3.11.0.
                 # https://github.com/python/cpython/issues/98673
                 'ac_cv_working_openssl_hashlib=yes'
@@ -239,7 +241,7 @@ Python-${dict['version']}.tar.xz"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" altinstall
+    "${app['make']}" install
     app['python']="${dict['prefix']}/bin/python${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     "${app['python']}" -m sysconfig
