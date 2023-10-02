@@ -4320,7 +4320,7 @@
     "aliases": {
       "homebrew": "python@3.11"
     },
-    "bin": ["python3.12", "python3.12-config"],
+    "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "dependencies": [
