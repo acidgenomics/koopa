@@ -1,100 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now our bzip2 import is failing?
-#Following modules built successfully but were removed because they could not be imported: _bz2
-
-# FIXME bz2 is failing on 3.12 for macOS:
-# install: Modules/_bz2.cpython-312-darwin.so: No such file or directory
-# gmake: *** [Makefile:2084: sharedinstall] Error 71
-
-# FIXME Install without sqlite, for speed.
-
-# NOTE Python 3.12 no longer installs setuptools by default:
-# https://twitter.com/VictorStinner/status/1654124014632321025
-
-# FIXME Need to take out this option:
-# configure: WARNING: unrecognized options: --with-system-ffi
-
-# FIXME Hitting a decimal-related build error with clang:
-#
-# ./Modules/_decimal/_decimal.c:4724:32: error: use of undeclared identifier 'inv10_p'
-#         mpd_qpowmod(exp_hash, &inv10_p, tmp, &p, &maxctx, &status);
-#                               ^
-# ./Modules/_decimal/_decimal.c:4724:47: error: use of undeclared identifier 'p'
-#         mpd_qpowmod(exp_hash, &inv10_p, tmp, &p, &maxctx, &status);
-#                                              ^
-# ./Modules/_decimal/_decimal.c:4739:25: error: use of undeclared identifier 'p'
-#     mpd_qrem(tmp, tmp, &p, &maxctx, &status);
-#                        ^
-# 5 errors generated.
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-# gmake[2]: *** [Makefile:3012: Modules/_decimal/_decimal.o] Error 1
-# gmake[2]: *** Waiting for unfinished jobs....
-
-# Draft Homebrew pull request:
-#
-# https://github.com/Homebrew/homebrew-core/pull/149142
-# https://github.com/Homebrew/homebrew-core/pull/149142/files#diff-2b638765de0666dff89595d3c97c19db17cf1f1b33d320ea7ba9e81be89372a1
-
-# How to suppress this for clang?
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-
-# Now seeing this with 3.12 update:
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-# gcc  -I./Modules/_hacl/include -D_BSD_SOURCE -D_DEFAULT_SOURCE -fno-strict-overflow -Wsign-compare -Wunreachable-code -DNDEBUG -g -O3 -Wall    -fno-semantic-interposition -flto -std=c11 -Wextra -Wno-unused-parameter -Wno-missing-field-initializers -Wstrict-prototypes -Werror=implicit-function-declaration -fvisibility=hidden -fprofile-instr-generate -I./Include/internal  -I. -I./Include -I/opt/koopa/app/zlib/1.3/include -I/opt/koopa/app/bzip2/1.0.8/include -I/opt/koopa/app/expat/2.5.0/include -I/opt/koopa/app/libffi/3.4.4/include -I/opt/koopa/app/mpdecimal/2.5.1/include -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/openssl3/3.1.3/include -I/opt/koopa/app/xz/5.4.4/include -I/opt/koopa/app/libedit/20230828-3.1/include -I/opt/koopa/app/libedit/20230828-3.1/include/editline -I/opt/koopa/app/gdbm/1.23/include -I/opt/koopa/app/sqlite/3.43.0/include  -I/opt/koopa/app/zlib/1.3/include -I/opt/koopa/app/bzip2/1.0.8/include -I/opt/koopa/app/expat/2.5.0/include -I/opt/koopa/app/libffi/3.4.4/include -I/opt/koopa/app/mpdecimal/2.5.1/include -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -D_DARWIN_C_SOURCE -DNCURSES_WIDECHAR -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/ncurses/6.4/include/ncursesw -I/opt/koopa/app/ncurses/6.4/include -I/opt/koopa/app/openssl3/3.1.3/include -I/opt/koopa/app/xz/5.4.4/include -I/opt/koopa/app/libedit/20230828-3.1/include -I/opt/koopa/app/libedit/20230828-3.1/include/editline -I/opt/koopa/app/gdbm/1.23/include -I/opt/koopa/app/sqlite/3.43.0/include   -c ./Modules/_hacl/Hacl_Hash_SHA1.c -o Modules/_hacl/Hacl_Hash_SHA1.o
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-# ./Modules/readline.c:448:21: error: expected expression
-#         (VFunction *)on_completion_display_matches_hook : 0;
-#                     ^
-# ./Modules/readline.c:448:10: error: use of undeclared identifier 'VFunction'; did you mean 'function'?
-#         (VFunction *)on_completion_display_matches_hook : 0;
-#          ^~~~~~~~~
-#          function
-# ./Modules/readline.c:434:61: note: 'function' declared here
-#                                                   PyObject *function)
-#                                                             ^
-# ./Modules/readline.c:448:22: error: expected ':'
-#         (VFunction *)on_completion_display_matches_hook : 0;
-#                      ^
-#                      :
-# ./Modules/readline.c:444:63: note: to match this '?'
-#         readlinestate_global->completion_display_matches_hook ?
-#                                                               ^
-# ./Modules/readline.c:1018:16: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
-# on_startup_hook()
-#                ^
-#                 void
-# ./Modules/readline.c:1033:18: warning: a function declaration without a prototype is deprecated in all versions of C [-Wstrict-prototypes]
-# on_pre_input_hook()
-#                  ^
-#                   void
-# 2 warnings and 3 errors generated.
-# gmake[2]: *** [Makefile:3026: Modules/readline.o] Error 1
-# gmake[2]: *** Waiting for unfinished jobs....
-# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
-# gmake[2]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.vs2GHGXd1K/src'
-# gmake[1]: *** [Makefile:798: profile-gen-stamp] Error 2
-# gmake[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.vs2GHGXd1K/src'
-# gmake: *** [Makefile:810: profile-run-stamp] Error 2
-
-# FIXME How to clean up the duplicate rpath here?
-# Does this only happen when we enable LTO?
-# ld: warning: duplicate -rpath '/opt/koopa/app/bzip2/1.0.8/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/bzip2/1.0.8/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/python3.12/3.12.0/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/sqlite/3.43.0/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/gdbm/1.23/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/libedit/20230828-3.1/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/xz/5.4.4/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/openssl3/3.1.3/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/ncurses/6.4/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/mpdecimal/2.5.1/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/libffi/3.4.4/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/expat/2.5.0/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/bzip2/1.0.8/lib' ignored
-# ld: warning: duplicate -rpath '/opt/koopa/app/zlib/1.3/lib' ignored
-
 main() {
     # """
     # Install Python.
@@ -143,9 +48,7 @@ main() {
     local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps+=('zlib')
-    # FIXME Can we enable and have this build?
-    # > ! koopa_is_macos && deps+=('bzip2')
-    deps+=('bzip2')
+    ! koopa_is_macos && deps+=('bzip2')
     deps+=(
         'expat'
         'libffi'
@@ -154,9 +57,9 @@ main() {
         'openssl3'
         'xz'
         'unzip'
-        # > 'libedit'
         'gdbm'
         'sqlite'
+        'readline' # or libedit
     )
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
@@ -165,8 +68,6 @@ main() {
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir \
-        "${dict['openssl']}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     koopa_mkdir \
@@ -186,6 +87,11 @@ main() {
         '--with-system-expat'
         '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
+        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
+        # https://github.com/python/cpython/issues/98673
+        'ac_cv_working_openssl_hashlib=yes'
+        'ac_cv_working_openssl_ssl=yes'
+        'py_cv_module__tkinter=disabled'
     )
     if koopa_is_macos
     then
@@ -193,17 +99,6 @@ main() {
         koopa_assert_is_executable "${app['dtrace']}"
         conf_args+=("--with-dtrace=${app['dtrace']}")
     fi
-    case "${dict['version']}" in
-        '3.11.'*)
-            conf_args+=(
-                # Avoid OpenSSL checks that are problematic for Python 3.11.0.
-                # https://github.com/python/cpython/issues/98673
-                'ac_cv_working_openssl_hashlib=yes'
-                'ac_cv_working_openssl_ssl=yes'
-                'py_cv_module__tkinter=disabled'
-            )
-            ;;
-    esac
     dict['url']="https://www.python.org/ftp/python/${dict['version']}/\
 Python-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
@@ -237,7 +132,7 @@ Python-${dict['version']}.tar.xz"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    "${app['make']}" altinstall
     app['python']="${dict['prefix']}/bin/python${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     "${app['python']}" -m sysconfig
@@ -247,13 +142,13 @@ Python-${dict['version']}.tar.xz"
     "${app['python']}" -c 'import _ctypes'
     "${app['python']}" -c 'import _decimal'
     "${app['python']}" -c 'import _gdbm'
+    "${app['python']}" -c 'import _tkinter'
     "${app['python']}" -c 'import hashlib'
     "${app['python']}" -c 'import pyexpat'
     "${app['python']}" -c 'import readline'
     "${app['python']}" -c 'import sqlite3'
     "${app['python']}" -c 'import ssl'
     "${app['python']}" -c 'import zlib'
-    # FIXME How to check readline support?
     koopa_alert 'Checking pip configuration.'
     "${app['python']}" -m pip list --format='columns'
     return 0
