@@ -1,19 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Now seeing this error:
-# ModuleNotFoundError: No module named 'imp'
-
-# Traceback (most recent call last):
-#   File "/opt/koopa/app/google-cloud-sdk/446.0.0/libexec/lib/gcloud.py", line 132, in <module>
-#     main()
-#   File "/opt/koopa/app/google-cloud-sdk/446.0.0/libexec/lib/gcloud.py", line 90, in main
-#     from googlecloudsdk.core.util import encoding
-#   File "/opt/koopa/app/google-cloud-sdk/446.0.0/libexec/lib/googlecloudsdk/__init__.py", line 23, in <module>
-#     from googlecloudsdk.core.util import importing
-#   File "/opt/koopa/app/google-cloud-sdk/446.0.0/libexec/lib/googlecloudsdk/core/util/importing.py", line 23, in <module>
-#     import imp
-# ModuleNotFoundError: No module named 'imp'
-
 main() {
     # """
     # Install Google Cloud SDK.
