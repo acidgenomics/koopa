@@ -22,6 +22,11 @@
 # gmake[2]: *** [Makefile:3012: Modules/_decimal/_decimal.o] Error 1
 # gmake[2]: *** Waiting for unfinished jobs....
 
+# Draft Homebrew pull request:
+#
+# https://github.com/Homebrew/homebrew-core/pull/149142
+# https://github.com/Homebrew/homebrew-core/pull/149142/files#diff-2b638765de0666dff89595d3c97c19db17cf1f1b33d320ea7ba9e81be89372a1
+
 main() {
     # """
     # Install Python.
