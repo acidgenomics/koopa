@@ -15,7 +15,7 @@ main() {
     local -A app dict
     local -a conf_args
     koopa_activate_app --build-only 'python3.11'
-    app['python']="$(koopa_locate_python311)"
+    app['python']="$(koopa_locate_python312)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -28,7 +28,7 @@ main() {
     app['less']="$(koopa_locate_less)"
     app['make']="$(koopa_locate_make)"
     app['perl']="$(koopa_locate_perl)"
-    app['python']="$(koopa_locate_python311)"
+    app['python']="$(koopa_locate_python312)"
     app['vim']="$(koopa_locate_vim)"
     koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
