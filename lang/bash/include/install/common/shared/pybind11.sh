@@ -10,7 +10,7 @@ main() {
     # """
     local -A dict
     local -a cmake_args
-    koopa_activate_app --build-only 'python3.11'
+    koopa_activate_app --build-only 'python3.12'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(

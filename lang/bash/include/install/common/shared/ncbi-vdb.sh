@@ -14,7 +14,7 @@ main() {
     # """
     local -A app dict
     local -a cmake_args deps
-    deps=('bison' 'flex' 'hdf5' 'python3.11')
+    deps=('bison' 'flex' 'hdf5' 'python3.12')
     koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"

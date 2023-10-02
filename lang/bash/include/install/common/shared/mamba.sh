@@ -35,7 +35,7 @@ main() {
         'libsolv'
         'nlohmann-json'
         'openssl3'
-        'python3.11'
+        'python3.12'
         'reproc'
         # NOTE Enabling spdlog here currently causes the install to fail.
         # > 'spdlog'
