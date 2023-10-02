@@ -71,6 +71,23 @@
 # gmake[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.vs2GHGXd1K/src'
 # gmake: *** [Makefile:810: profile-run-stamp] Error 2
 
+# FIXME How to clean up the duplicate rpath here?
+# Does this only happen when we enable LTO?
+# ld: warning: duplicate -rpath '/opt/koopa/app/bzip2/1.0.8/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/bzip2/1.0.8/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/python3.12/3.12.0/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/sqlite/3.43.0/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/gdbm/1.23/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/libedit/20230828-3.1/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/xz/5.4.4/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/openssl3/3.1.3/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/ncurses/6.4/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/mpdecimal/2.5.1/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/libffi/3.4.4/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/expat/2.5.0/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/bzip2/1.0.8/lib' ignored
+# ld: warning: duplicate -rpath '/opt/koopa/app/zlib/1.3/lib' ignored
+
 main() {
     # """
     # Install Python.
@@ -171,19 +188,23 @@ main() {
         koopa_assert_is_executable "${app['dtrace']}"
         conf_args+=(
             "--with-dtrace=${app['dtrace']}"
-            '--with-lto'
+            # > '--with-lto'
         )
     fi
-    conf_args+=(
-        # > 'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
-        # This is defined in the MacPorts recipe.
-        # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
-        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
-        # https://github.com/python/cpython/issues/98673
-        'ac_cv_working_openssl_hashlib=yes'
-        'ac_cv_working_openssl_ssl=yes'
-        'py_cv_module__tkinter=disabled'
-    )
+    case "${dict['version']}" in
+        '3.11.'*)
+            conf_args+=(
+                'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
+                # This is defined in the MacPorts recipe.
+                # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
+                # Avoid OpenSSL checks that are problematic for Python 3.11.0.
+                # https://github.com/python/cpython/issues/98673
+                'ac_cv_working_openssl_hashlib=yes'
+                'ac_cv_working_openssl_ssl=yes'
+                'py_cv_module__tkinter=disabled'
+            )
+            ;;
+    esac
     koopa_add_rpath_to_ldflags \
         "${dict['prefix']}/lib" \
         "${dict['bzip2']}/lib"
