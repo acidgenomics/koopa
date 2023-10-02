@@ -48,7 +48,6 @@ main() {
     local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps+=('zlib')
-    # Attempting to build against our bzip2 is currently problematic on macOS.
     ! koopa_is_macos && deps+=('bzip2')
     deps+=(
         'expat'
@@ -60,7 +59,7 @@ main() {
         'unzip'
         'gdbm'
         'sqlite'
-        'libedit' # or readline (linux)
+        'libedit'
     )
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
@@ -85,7 +84,8 @@ main() {
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
-        '--with-readline=editline'
+        # Setting this breaks build on macOS with 12.0.0.
+        # > '--with-readline=editline'
         '--with-system-expat'
         '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
@@ -135,7 +135,7 @@ Python-${dict['version']}.tar.xz"
     ./configure --help
     ./configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" altinstall
+    "${app['make']}" install
     app['python']="${dict['prefix']}/bin/python${dict['maj_min_ver']}"
     koopa_assert_is_installed "${app['python']}"
     "${app['python']}" -m sysconfig
