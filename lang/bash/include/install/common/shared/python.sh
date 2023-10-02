@@ -143,7 +143,9 @@ main() {
     local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps+=('zlib')
-    ! koopa_is_macos && deps+=('bzip2')
+    # FIXME Can we enable and have this build?
+    # > ! koopa_is_macos && deps+=('bzip2')
+    deps+=('bzip2')
     deps+=(
         'expat'
         'libffi'

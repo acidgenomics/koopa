@@ -89,6 +89,25 @@ bzip2-${dict['version']}.tar.gz"
                 "libbz2.${dict['shared_ext']}"
         )
     fi
+    # Remove the unwanted static file.
     koopa_rm "${dict['prefix']}/lib/"*'.a'
+    # Create pkg-config file.
+    dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/bzip2.pc"
+    read -r -d '' "dict[pkg_config_string]" << END || true
+prefix=${dict['prefix']}
+exec_prefix=\${prefix}
+bindir=\${exec_prefix}/bin
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: bzip2
+Description: Lossless, block-sorting data compression
+Version: #{version}
+Libs: -L\${libdir} -lbz2
+Cflags: -I\${includedir}
+END
+    koopa_write_string \
+        --file="${dict['pkg_config_file']}" \
+        --string="${dict['pkg_config_string']}"
     return 0
 }
