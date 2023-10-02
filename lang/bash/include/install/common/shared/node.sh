@@ -41,14 +41,14 @@ main() {
         'icu4c'
         'libuv'
         'openssl3'
-        'python3.11'
+        'python3.12'
         'c-ares'
         'nghttp2'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['cares']="$(koopa_app_prefix 'c-ares')"

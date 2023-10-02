@@ -11736,7 +11736,6 @@ koopa_install_cpufetch() {
 
 koopa_install_csvkit() {
     koopa_install_app \
-        --installer='python-package' \
         --name='csvkit' \
         "$@"
 }
@@ -12869,7 +12868,7 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install --bootstrap 'bash' 'python3.11'
+        koopa_cli_install --bootstrap 'bash' 'python3.12'
     fi
     return 0
 }
@@ -12901,7 +12900,6 @@ koopa_install_lapack() {
 
 koopa_install_latch() {
     koopa_install_app \
-        --installer='python-package' \
         --name='latch' \
         "$@"
 }
@@ -13926,7 +13924,7 @@ koopa_install_python_package() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
-    dict['locate_python']='koopa_locate_python311'
+    dict['locate_python']='koopa_locate_python312'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['pip_name']=''
     dict['pkg_name']=''
@@ -14076,6 +14074,13 @@ ${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
 }
 
 koopa_install_python311() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.11' \
+        "$@"
+}
+
+koopa_install_python312() {
     local -A dict
     dict['app_prefix']="$(koopa_app_prefix)"
     dict['bin_prefix']="$(koopa_bin_prefix)"
@@ -14083,15 +14088,15 @@ koopa_install_python311() {
     dict['opt_prefix']="$(koopa_opt_prefix)"
     koopa_install_app \
         --installer='python' \
-        --name='python3.11' \
+        --name='python3.12' \
         "$@"
     (
         koopa_cd "${dict['bin_prefix']}"
-        koopa_ln 'python3.11' 'python3'
-        koopa_ln 'python3.11' 'python'
+        koopa_ln 'python3.12' 'python3'
+        koopa_ln 'python3.12' 'python'
         koopa_cd "${dict['man1_prefix']}"
-        koopa_ln 'python3.11.1' 'python3.1'
-        koopa_ln 'python3.11.1' 'python.1'
+        koopa_ln 'python3.12.1' 'python3.1'
+        koopa_ln 'python3.12.1' 'python.1'
     )
     koopa_rm \
         "${dict['app_prefix']}/python" \
@@ -17765,6 +17770,13 @@ koopa_locate_python311() {
         "$@"
 }
 
+koopa_locate_python312() {
+    koopa_locate_app \
+        --app-name='python3.12' \
+        --bin-name='python3.12' \
+        "$@"
+}
+
 koopa_locate_r() {
     koopa_locate_app \
         --app-name='r' \
@@ -19389,7 +19401,7 @@ koopa_python_create_venv() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     pkgs=("$@")
     [[ -z "${app['python']}" ]] && \
-        app['python']="$(koopa_locate_python311 --realpath)"
+        app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
@@ -19433,18 +19445,9 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        case "${dict['py_version']}" in
-            '3.11.'* | \
-            '3.10.'* | \
-            '3.9.'*)
-                dict['pip_version']='23.2'
-                dict['setuptools_version']='68.0.0'
-                dict['wheel_version']='0.40.0'
-                ;;
-            *)
-                koopa_stop "Unsupported Python: ${dict['py_version']}."
-                ;;
-        esac
+        dict['pip_version']='23.2.1'
+        dict['setuptools_version']='68.2.2'
+        dict['wheel_version']='0.41.2'
         pip_args=(
             "--python=${app['venv_python']}"
             "pip==${dict['pip_version']}"
@@ -19522,7 +19525,7 @@ koopa_python_pip_install() {
         esac
     done
     [[ -z "${app['python']}" ]] && \
-        app['python']="$(koopa_locate_python311 --realpath)"
+        app['python']="$(koopa_locate_python312 --realpath)"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_executable "${app[@]}"
@@ -27432,7 +27435,7 @@ koopa_user_name() {
 koopa_validate_json() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    app['python']="$(koopa_locate_python311)"
+    app['python']="$(koopa_locate_python312)"
     dict['file']="${1:?}"
     "${app['python']}" -m 'json.tool' "${dict['file']}" >/dev/null
 }

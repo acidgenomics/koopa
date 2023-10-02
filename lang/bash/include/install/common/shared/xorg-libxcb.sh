@@ -12,14 +12,14 @@ main() {
     local -a conf_args
     koopa_activate_app --build-only \
         'pkg-config' \
-        'python3.11'
+        'python3.12'
     koopa_activate_app \
         'xorg-xorgproto' \
         'xorg-xcb-proto' \
         'xorg-libpthread-stubs' \
         'xorg-libxau' \
         'xorg-libxdmcp'
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

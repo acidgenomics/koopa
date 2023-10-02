@@ -17,7 +17,7 @@ koopa_install_python_package() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
-    dict['locate_python']='koopa_locate_python311'
+    dict['locate_python']='koopa_locate_python312'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['pip_name']=''
     dict['pkg_name']=''
