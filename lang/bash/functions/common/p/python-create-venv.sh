@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2023-07-21.
+    # @note Updated 2023-10-02.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
@@ -120,19 +120,10 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        case "${dict['py_version']}" in
-            '3.11.'* | \
-            '3.10.'* | \
-            '3.9.'*)
-                # 2023-07-21.
-                dict['pip_version']='23.2'
-                dict['setuptools_version']='68.0.0'
-                dict['wheel_version']='0.40.0'
-                ;;
-            *)
-                koopa_stop "Unsupported Python: ${dict['py_version']}."
-                ;;
-        esac
+        # 2023-10-02.
+        dict['pip_version']='23.2.1'
+        dict['setuptools_version']='68.2.2'
+        dict['wheel_version']='0.41.2'
         pip_args=(
             "--python=${app['venv_python']}"
             "pip==${dict['pip_version']}"
