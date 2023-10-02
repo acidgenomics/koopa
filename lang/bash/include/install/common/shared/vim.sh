@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Vim.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-10-02.
     #
     # On Ubuntu, '--enable-rubyinterp' currently causing a false positive error
     # related to ncurses, even when '--with-tlib' is correctly set.
@@ -13,8 +13,8 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'ncurses' 'python3.12'
-    app['python']="$(koopa_locate_python312 --realpath)"
+    koopa_activate_app 'ncurses' 'python3.11'
+    app['python']="$(koopa_locate_python311 --realpath)"
     app['python_config']="${app['python']}-config"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
