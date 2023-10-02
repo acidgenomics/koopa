@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Take out the '-rpath' duplicates here.
-# FIXME Is readline instead of libedit on macOS a problem?
-
 main() {
     # """
     # Install Python.
@@ -48,8 +45,7 @@ main() {
     #   https://stackoverflow.com/questions/41328451/
     # """
     local -A app dict
-    local -a conf_args deps ldflags ldflags2
-    local ldflag
+    local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps+=('zlib')
     # Attempting to build against our bzip2 is currently problematic on macOS.
@@ -134,19 +130,6 @@ Python-${dict['version']}.tar.xz"
             'configure'
         export PYTHON_DECIMAL_WITH_MACHINE="${dict['decimal_arch']}"
     fi
-    # FIXME Is this warning Python-specific, or a more general ld-related
-    # change in macOS Sonoma?
-    # LDFLAGS: Ignore duplicate '-Wl,-rpath,' in favor of only '-L'.
-    IFS=' ' read -r -a ldflags <<< "${LDFLAGS:?}"
-    for ldflag in "${ldflags[@]}"
-    do
-        case "$ldflag" in
-            '-L'*)
-                ldflags2+=("$ldflag")
-                ;;
-        esac
-    done
-    export LDFLAGS="${ldflags2[*]}"
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
