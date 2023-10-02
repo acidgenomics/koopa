@@ -2461,10 +2461,10 @@
       "homebrew": true
     },
     "bin": ["ipython"],
-    "date": "2023-08-31",
+    "date": "2023-10-02",
     "dependencies": ["python3.12"],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "8.14.0"
+    "version": "8.16.1"
   },
   "isl": {
     "aliases": {
@@ -2633,7 +2633,7 @@
   "latch": {
     "bin": ["latch"],
     "date": "2023-09-25",
-    "dependencies": ["python3.12"],
+    "dependencies": ["python3.11"],
     "large": true,
     "url": [
       "https://pypi.org/project/latch/",
