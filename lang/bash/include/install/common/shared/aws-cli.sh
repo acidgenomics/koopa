@@ -12,7 +12,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    app['python']="$(koopa_locate_python311 --allow-missing)"
+    app['python']="$(koopa_locate_python312 --allow-missing)"
     if [[ ! -x "${app['python']}" ]]
     then
         app['python']='/usr/bin/python3'

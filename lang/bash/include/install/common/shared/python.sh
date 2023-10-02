@@ -3,10 +3,29 @@
 # NOTE Python 3.12 no longer installs setuptools by default:
 # https://twitter.com/VictorStinner/status/1654124014632321025
 
+# FIXME Need to take out this option:
+# configure: WARNING: unrecognized options: --with-system-ffi
+
+# FIXME Hitting a decimal-related build error with clang:
+#
+# ./Modules/_decimal/_decimal.c:4724:32: error: use of undeclared identifier 'inv10_p'
+#         mpd_qpowmod(exp_hash, &inv10_p, tmp, &p, &maxctx, &status);
+#                               ^
+# ./Modules/_decimal/_decimal.c:4724:47: error: use of undeclared identifier 'p'
+#         mpd_qpowmod(exp_hash, &inv10_p, tmp, &p, &maxctx, &status);
+#                                              ^
+# ./Modules/_decimal/_decimal.c:4739:25: error: use of undeclared identifier 'p'
+#     mpd_qrem(tmp, tmp, &p, &maxctx, &status);
+#                        ^
+# 5 errors generated.
+# clang: warning: argument unused during compilation: '-fno-semantic-interposition' [-Wunused-command-line-argument]
+# gmake[2]: *** [Makefile:3012: Modules/_decimal/_decimal.o] Error 1
+# gmake[2]: *** Waiting for unfinished jobs....
+
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-10-02.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
