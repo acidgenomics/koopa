@@ -17765,6 +17765,13 @@ koopa_locate_pylint() {
         "$@"
 }
 
+koopa_locate_python311() {
+    koopa_locate_app \
+        --app-name='python3.11' \
+        --bin-name='python3.11' \
+        "$@"
+}
+
 koopa_locate_python312() {
     koopa_locate_app \
         --app-name='python3.12' \
@@ -19440,18 +19447,9 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        case "${dict['py_version']}" in
-            '3.11.'* | \
-            '3.10.'* | \
-            '3.9.'*)
-                dict['pip_version']='23.2'
-                dict['setuptools_version']='68.0.0'
-                dict['wheel_version']='0.40.0'
-                ;;
-            *)
-                koopa_stop "Unsupported Python: ${dict['py_version']}."
-                ;;
-        esac
+        dict['pip_version']='23.2.1'
+        dict['setuptools_version']='68.2.2'
+        dict['wheel_version']='0.41.2'
         pip_args=(
             "--python=${app['venv_python']}"
             "pip==${dict['pip_version']}"
