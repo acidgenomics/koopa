@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to install with pkg-config support on macOS.
+
 main() {
     # """
     # Install bzip2.

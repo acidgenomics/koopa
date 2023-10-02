@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Now our bzip2 import is failing?
+#Following modules built successfully but were removed because they could not be imported: _bz2
+
 # FIXME Install without sqlite, for speed.
 
 # NOTE Python 3.12 no longer installs setuptools by default:
@@ -176,11 +179,8 @@ main() {
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
-        # FIXME Disabling these with Python 3.12.
-        # > '--with-readline=editline'
-        # > '--with-system-expat'
-        # > '--with-system-ffi'
-        # > '--with-system-libmpdec'
+        '--with-system-expat'
+        '--with-system-libmpdec'
     )
     if koopa_is_macos
     then
@@ -188,15 +188,16 @@ main() {
         koopa_assert_is_executable "${app['dtrace']}"
         conf_args+=(
             "--with-dtrace=${app['dtrace']}"
-            # > '--with-lto'
+            # FIXME Can we take this out if we improve pkg-config support
+            # for bzip2 on macOS? Do we need to link to the so file here?
+            "BZIP2_CFLAGS=-I${dict['bzip2']}/include"
+            "BZIP2_LIBS=-L${dict['bzip2']}/lib -lbz2"
         )
     fi
     case "${dict['version']}" in
         '3.11.'*)
             conf_args+=(
                 'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
-                # This is defined in the MacPorts recipe.
-                # > 'SETUPTOOLS_USE_DISTUTILS=stdlib'
                 # Avoid OpenSSL checks that are problematic for Python 3.11.0.
                 # https://github.com/python/cpython/issues/98673
                 'ac_cv_working_openssl_hashlib=yes'
@@ -205,9 +206,6 @@ main() {
             )
             ;;
     esac
-    koopa_add_rpath_to_ldflags \
-        "${dict['prefix']}/lib" \
-        "${dict['bzip2']}/lib"
     dict['url']="https://www.python.org/ftp/python/${dict['version']}/\
 Python-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
@@ -247,6 +245,7 @@ Python-${dict['version']}.tar.xz"
     "${app['python']}" -m sysconfig
     koopa_check_shared_object --file="${app['python']}"
     koopa_alert 'Checking module integrity.'
+    "${app['python']}" -c 'import _bz2'
     "${app['python']}" -c 'import _ctypes'
     "${app['python']}" -c 'import _decimal'
     "${app['python']}" -c 'import _gdbm'
