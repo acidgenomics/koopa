@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to install with pkg-config support on macOS.
-
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-10-02.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
@@ -106,8 +104,12 @@ Version: #{version}
 Libs: -L\${libdir} -lbz2
 Cflags: -I\${includedir}
 END
-    koopa_write_string \
-        --file="${dict['pkg_config_file']}" \
-        --string="${dict['pkg_config_string']}"
+    if [[ ! -f "${dict['pkg_config_file']}" ]]
+    then
+        koopa_alert 'Adding pkg-config support.'
+        koopa_write_string \
+            --file="${dict['pkg_config_file']}" \
+            --string="${dict['pkg_config_string']}"
+    fi
     return 0
 }
