@@ -522,13 +522,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-27",
+    "date": "2023-10-02",
     "enabled": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.26.0"
+    "version": "1.26.1"
   },
   "brotli": {
     "aliases": {
@@ -1343,12 +1343,12 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-25",
+    "date": "2023-10-02",
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.13.1"
+    "version": "0.14.0"
   },
   "fastqc": {
     "arch": "amd64",
@@ -2226,14 +2226,14 @@
     },
     "arch": "amd64",
     "bin": ["stack"],
-    "date": "2023-05-19",
+    "date": "2023-10-02",
     "enabled": false,
     "large": true,
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.11.1"
+    "version": "2.13.1"
   },
   "hdf5": {
     "aliases": {
@@ -4251,12 +4251,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-09-18",
+    "date": "2023-10-02",
     "enabled": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.27"
+    "version": "2.3.28"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
