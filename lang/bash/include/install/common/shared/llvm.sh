@@ -54,7 +54,7 @@ main() {
     app['git']="$(koopa_locate_git --realpath)"
     app['perl']="$(koopa_locate_perl --realpath)"
     app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['libedit']="$(koopa_app_prefix 'libedit')"

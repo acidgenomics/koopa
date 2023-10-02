@@ -14,7 +14,7 @@ main() {
     local -A app dict
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'ncurses' 'python3.11'
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     app['python_config']="${app['python']}-config"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

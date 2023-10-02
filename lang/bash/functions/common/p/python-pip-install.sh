@@ -58,7 +58,7 @@ koopa_python_pip_install() {
         esac
     done
     [[ -z "${app['python']}" ]] && \
-        app['python']="$(koopa_locate_python311 --realpath)"
+        app['python']="$(koopa_locate_python312 --realpath)"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_executable "${app[@]}"
