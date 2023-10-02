@@ -116,9 +116,10 @@ main() {
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
         '--with-readline=editline'
-        '--with-system-expat'
-        '--with-system-ffi'
-        '--with-system-libmpdec'
+        # FIXME Disabling these with Python 3.12.
+        # > '--with-system-expat'
+        # > '--with-system-ffi'
+        # > '--with-system-libmpdec'
     )
     if koopa_is_macos
     then
@@ -165,6 +166,7 @@ Python-${dict['version']}.tar.xz"
         esac
         export PYTHON_DECIMAL_WITH_MACHINE="${dict['decimal_arch']}"
         case "${dict['version']}" in
+            '3.12.'* | \
             '3.11.'*)
                 koopa_find_and_replace_in_file \
                     --fixed \
