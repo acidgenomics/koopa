@@ -27,19 +27,12 @@ main() {
     # - Installing multiple versions:
     #   https://github.com/python/cpython#installing-multiple-versions
     # - Latest configuration recipe:
-    #   https://github.com/python/cpython/blob/3.11/configure
+    #   https://github.com/python/cpython/blob/3.12/configure
     # - macOS install recipes:
-    #   https://github.com/Homebrew/homebrew-core/blob/master/
-    #     Formula/python@3.10.rb
     #   https://github.com/Homebrew/homebrew-core/blob/master/
     #     Formula/python@3.11.rb
     #   https://github.com/macports/macports-ports/blob/master/lang/
-    #     python310/Portfile
-    # - Python lib needs to be in rpath:
-    #   https://stackoverflow.com/questions/43333207
-    #   https://bugs.python.org/issue36659
-    # - Python 3.11 update:
-    #   https://github.com/Homebrew/homebrew-core/pull/113811
+    #     python311/Portfile
     # - OpenSSL configuration issues:
     #   https://stackoverflow.com/questions/45954528/
     #   https://stackoverflow.com/questions/41328451/
@@ -84,8 +77,6 @@ main() {
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
-        # Setting this breaks build on macOS with 12.0.0.
-        # > '--with-readline=editline'
         '--with-system-expat'
         '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
