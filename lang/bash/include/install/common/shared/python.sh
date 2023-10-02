@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Take out the '-rpath' duplicates here.
+# FIXME Is readline instead of libedit on macOS a problem?
+
 main() {
     # """
     # Install Python.
@@ -48,6 +51,7 @@ main() {
     local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
     deps+=('zlib')
+    # Attempting to build against our bzip2 is currently problematic on macOS.
     ! koopa_is_macos && deps+=('bzip2')
     deps+=(
         'expat'
@@ -59,7 +63,7 @@ main() {
         'unzip'
         'gdbm'
         'sqlite'
-        'readline' # or libedit
+        'libedit' # or readline (linux)
     )
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
@@ -84,6 +88,7 @@ main() {
         '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
+        '--with-readline=libedit'
         '--with-system-expat'
         '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
