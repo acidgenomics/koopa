@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2023-09-25.
+# @note Updated 2023-10-02.
 # """
 
 # Can debug with:
@@ -53,10 +53,10 @@ install_python() {
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
     curl \
-        'https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz' \
+        'https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'Python-3.11.5' || return 1
+    cd 'Python-3.12.0' || return 1
     ./configure --prefix="$PREFIX" --without-ensurepip
     make
     make install

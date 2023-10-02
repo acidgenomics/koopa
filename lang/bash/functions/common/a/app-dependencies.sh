@@ -6,7 +6,7 @@ koopa_app_dependencies() {
     # @note Updated 2023-09-14.
     #
     # @examples
-    # koopa_app_dependencies 'python3.11'
+    # koopa_app_dependencies 'python3.12'
     # """
     local app_name cmd
     koopa_assert_has_args_eq "$#" 1

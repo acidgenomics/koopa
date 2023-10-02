@@ -24,8 +24,8 @@ main() {
     # """
     local -A app dict
     local -a install_args
-    koopa_activate_app --build-only 'bzip2' 'python3.11'
-    app['python']="$(koopa_locate_python311 --realpath)"
+    koopa_activate_app --build-only 'bzip2' 'python3.12'
+    app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
