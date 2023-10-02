@@ -142,9 +142,9 @@ main() {
     local -A app dict
     local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
-    deps=(
-        'zlib'
-        'bzip2'
+    deps+=('zlib')
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'expat'
         'libffi'
         'mpdecimal'
@@ -152,7 +152,7 @@ main() {
         'openssl3'
         'xz'
         'unzip'
-        'libedit'
+        # > 'libedit'
         'gdbm'
         'sqlite'
     )
@@ -189,13 +189,7 @@ main() {
     then
         app['dtrace']='/usr/sbin/dtrace'
         koopa_assert_is_executable "${app['dtrace']}"
-        conf_args+=(
-            "--with-dtrace=${app['dtrace']}"
-            # FIXME Can we take this out if we improve pkg-config support
-            # for bzip2 on macOS? Do we need to link to the so file here?
-            # > "BZIP2_CFLAGS=-I${dict['bzip2']}/include"
-            # > "BZIP2_LIBS=-L${dict['bzip2']}/lib -lbz2"
-        )
+        conf_args+=("--with-dtrace=${app['dtrace']}")
     fi
     case "${dict['version']}" in
         '3.11.'*)
