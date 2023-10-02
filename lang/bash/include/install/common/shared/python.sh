@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME How to handle tkinter?
-# The necessary bits to build these optional modules were not found:
-# _tkinter
-
 main() {
     # """
     # Install Python.
