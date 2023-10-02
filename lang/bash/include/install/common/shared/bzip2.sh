@@ -100,7 +100,7 @@ includedir=\${prefix}/include
 
 Name: bzip2
 Description: Lossless, block-sorting data compression
-Version: #{version}
+Version: ${dict['version']}
 Libs: -L\${libdir} -lbz2
 Cflags: -I\${includedir}
 END
