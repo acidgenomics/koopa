@@ -14,7 +14,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args deps
-    koopa_activate_app --build-only 'pkg-config' 'python3.11'
+    koopa_activate_app --build-only 'pkg-config' 'python3.12'
     deps=(
         'c-ares'
         'jemalloc'
@@ -24,7 +24,7 @@ main() {
         'zlib'
     )
     koopa_activate_app "${deps[@]}"
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

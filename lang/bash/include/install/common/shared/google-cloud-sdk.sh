@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2023-09-13.
+    # @note Updated 2023-10-02.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install

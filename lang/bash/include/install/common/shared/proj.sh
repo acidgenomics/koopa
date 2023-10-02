@@ -20,7 +20,7 @@ main() {
         'zstd'
         'libjpeg-turbo'
         'libtiff'
-        'python3.11'
+        'python3.12'
         'sqlite'
     )
     koopa_activate_app --build-only 'pkg-config'

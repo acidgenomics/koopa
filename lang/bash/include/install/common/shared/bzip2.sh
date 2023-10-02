@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2023-06-01.
+    # @note Updated 2023-10-02.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
@@ -87,6 +87,29 @@ bzip2-${dict['version']}.tar.gz"
                 "libbz2.${dict['shared_ext']}"
         )
     fi
+    # Remove the unwanted static file.
     koopa_rm "${dict['prefix']}/lib/"*'.a'
+    # Create pkg-config file.
+    dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/bzip2.pc"
+    read -r -d '' "dict[pkg_config_string]" << END || true
+prefix=${dict['prefix']}
+exec_prefix=\${prefix}
+bindir=\${exec_prefix}/bin
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
+
+Name: bzip2
+Description: Lossless, block-sorting data compression
+Version: ${dict['version']}
+Libs: -L\${libdir} -lbz2
+Cflags: -I\${includedir}
+END
+    if [[ ! -f "${dict['pkg_config_file']}" ]]
+    then
+        koopa_alert 'Adding pkg-config support.'
+        koopa_write_string \
+            --file="${dict['pkg_config_file']}" \
+            --string="${dict['pkg_config_string']}"
+    fi
     return 0
 }

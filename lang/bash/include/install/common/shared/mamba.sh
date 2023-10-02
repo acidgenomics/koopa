@@ -35,7 +35,7 @@ main() {
         'libsolv'
         'nlohmann-json'
         'openssl3'
-        'python3.11'
+        'python3.12'
         'reproc'
         # NOTE Enabling spdlog here currently causes the install to fail.
         # > 'spdlog'
@@ -44,7 +44,7 @@ main() {
         'yaml-cpp'
     )
     koopa_activate_app "${deps[@]}"
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['curl']="$(koopa_app_prefix 'curl')"
