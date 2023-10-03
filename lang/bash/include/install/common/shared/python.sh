@@ -43,14 +43,15 @@ main() {
     if ! koopa_is_macos
     then
         deps+=(
-            'zlib'
             'bzip2'
             'expat'
             'libedit'
             'libffi'
             'libxcrypt'
             'ncurses'
+            'readline'
             'unzip'
+            'zlib'
         )
     fi
     deps+=(
