@@ -72,6 +72,7 @@ main() {
         "${dict['prefix']}/bin" \
         "${dict['prefix']}/lib"
     koopa_add_to_path_start "${dict['prefix']}/bin"
+    koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     conf_args=(
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
