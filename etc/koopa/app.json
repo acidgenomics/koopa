@@ -4570,8 +4570,8 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-27",
-    "default": false,
+    "date": "2023-10-03",
+    "default": true,
     "dependencies": [
       "autoconf",
       "automake",
