@@ -19205,7 +19205,7 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
-    koopa_r_koopa 'cliPruneAppBinaries' "$@"
+    koopa_stop 'FIXME Reworking this in Python.'
     return 0
 }
 
