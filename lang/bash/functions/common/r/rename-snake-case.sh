@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this as a Rust program.
+
 koopa_rename_snake_case() {
     # """
     # Rename files with snake case formatting.
