@@ -2,7 +2,7 @@
 
 """
 Return supported shared applications defined in 'app.json' file.
-@note Updated 2023-07-28.
+@note Updated 2023-10-03.
 
 @examples
 ./shared-apps.py
@@ -83,11 +83,12 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-07-28.
+    @note Updated 2023-10-03.
     """
+    sys_bool_dict = {}
+    sys_bool_dict["large"] = large()
     sys_dict = {}
     sys_dict["arch"] = arch2()
-    sys_dict["large"] = large()
     sys_dict["opt_prefix"] = koopa_opt_prefix()
     sys_dict["platform"] = platform()
     for val in app_names:
@@ -99,11 +100,11 @@ def print_apps(app_names: list, json_data: dict) -> bool:
         if "arch" in keys:
             if json["arch"] != sys_dict["arch"]:
                 continue
-        if "enabled" in keys:
-            if not json["enabled"]:
+        if "default" in keys:
+            if not json["default"]:
                 continue
         if "large" in keys:
-            if json["large"] and not sys_dict["large"]:
+            if json["large"] and not sys_bool_dict["large"]:
                 continue
         if "platform" in keys:
             if json["platform"] != sys_dict["platform"]:
