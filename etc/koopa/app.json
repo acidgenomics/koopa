@@ -16,6 +16,7 @@
       "wget"
     ],
     "date": "2023-04-11",
+    "default": true,
     "dependencies": ["perl"],
     "man1": ["ack.1"],
     "url": ["https://beyondgrep.com/"],
@@ -34,6 +35,7 @@
   },
   "anaconda": {
     "date": "2023-08-07",
+    "default": true,
     "large": true,
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2023.07-2"
@@ -81,6 +83,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-08",
+    "default": false,
     "prune": false,
     "url": ["https://apr.apache.org/"],
     "version": "1.7.4"
