@@ -97,8 +97,8 @@ def print_apps(app_names: list, json_data: dict) -> bool:
         if "arch" in keys:
             if json["arch"] != sys_dict["arch"]:
                 continue
-        if "enabled" in keys:
-            if not json["enabled"]:
+        if "default" in keys:
+            if not json["default"]:
                 continue
         if "large" in keys:
             if json["large"] and not sys_bool_dict["large"]:
