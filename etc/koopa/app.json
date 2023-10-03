@@ -4511,9 +4511,9 @@
     "dependencies": [
       "bzip2",
       "expat",
-      "gdbm",
       "libedit",
       "libffi",
+      "libxcrypt",
       "mpdecimal",
       "ncurses",
       "openssl3",
@@ -4538,9 +4538,9 @@
     "dependencies": [
       "bzip2",
       "expat",
-      "gdbm",
       "libedit",
       "libffi",
+      "libxcrypt",
       "mpdecimal",
       "ncurses",
       "openssl3",

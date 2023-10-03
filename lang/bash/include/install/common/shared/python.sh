@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-10-02.
+    # @note Updated 2023-10-03.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -40,19 +40,24 @@ main() {
     local -A app dict
     local -a conf_args deps
     koopa_activate_app --build-only 'make' 'pkg-config'
-    deps+=('zlib')
-    ! koopa_is_macos && deps+=('bzip2')
+    if ! koopa_is_macos
+    then
+        deps+=(
+            'zlib'
+            'bzip2'
+            'expat'
+            'libedit'
+            'libffi'
+            'libxcrypt'
+            'ncurses'
+            'unzip'
+        )
+    fi
     deps+=(
-        'expat'
-        'libffi'
         'mpdecimal'
-        'ncurses'
         'openssl3'
-        'xz'
-        'unzip'
-        'gdbm'
         'sqlite'
-        'libedit'
+        'xz'
     )
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
@@ -74,7 +79,6 @@ main() {
         '--enable-shared'
         "--prefix=${dict['prefix']}"
         '--with-computed-gotos'
-        '--with-dbmliborder=gdbm:ndbm'
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
         '--with-system-expat'
@@ -135,7 +139,6 @@ Python-${dict['version']}.tar.xz"
     "${app['python']}" -c 'import _bz2'
     "${app['python']}" -c 'import _ctypes'
     "${app['python']}" -c 'import _decimal'
-    "${app['python']}" -c 'import _gdbm'
     "${app['python']}" -c 'import hashlib'
     "${app['python']}" -c 'import pyexpat'
     "${app['python']}" -c 'import readline'
