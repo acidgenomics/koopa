@@ -1727,9 +1727,9 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-09-19",
+    "date": "2023-10-02",
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.35.0"
+    "version": "2.36.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3176,7 +3176,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-06-14",
+    "date": "2023-10-02",
     "dependencies": [
       "binutils",
       "elfutils",
@@ -3192,7 +3192,7 @@
     "large": true,
     "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "16.0.6"
+    "version": "17.0.2"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
