@@ -84,11 +84,9 @@ main() {
         '--with-system-expat'
         '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
-        # Avoid OpenSSL checks that are problematic for Python 3.11.0.
-        # https://github.com/python/cpython/issues/98673
         'ac_cv_working_openssl_hashlib=yes'
         'ac_cv_working_openssl_ssl=yes'
-        # Disable the optional tkinter module.
+        'py_cv_module__gdbm=disabled'
         'py_cv_module__tkinter=disabled'
     )
     if koopa_is_macos
