@@ -3795,7 +3795,11 @@ koopa_check_shared_object() {
 }
 
 koopa_check_system() {
-    koopa_stop 'FIXME Reworking this in Python.'
+    koopa_assert_has_no_args "$#"
+    koopa_check_exports
+    koopa_check_disk '/'
+    koopa_r_koopa 'cliCheckSystem'
+    koopa_alert_success 'System passed all checks.'
     return 0
 }
 
@@ -19205,12 +19209,12 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
-    koopa_stop 'FIXME Reworking this in Python.'
+    koopa_r_koopa 'cliPruneAppBinaries' "$@"
     return 0
 }
 
 koopa_prune_apps() {
-    koopa_stop 'FIXME Reworking this in Python.'
+    koopa_r_koopa 'cliPruneApps' "$@"
     return 0
 }
 
