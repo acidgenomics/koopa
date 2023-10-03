@@ -3793,21 +3793,10 @@ koopa_check_shared_object() {
     "${app['tool']}" "${tool_args[@]}"
     return 0
 }
+w#!/usr/bin/env bash
 
 koopa_check_system() {
-    local -A app
-    koopa_assert_has_no_args "$#"
-    app['r']="$(koopa_locate_r --allow-missing)"
-    if [[ ! -x "${app['r']}" ]]
-    then
-        koopa_stop \
-            'koopa R is not installed.' \
-            "Resolve with 'koopa install r'."
-    fi
-    koopa_check_exports || return 1
-    koopa_check_disk '/' || return 1
-    koopa_r_koopa 'cliCheckSystem'
-    koopa_alert_success 'System passed all checks.'
+    koopa_stop 'FIXME Reworking this in Python.'
     return 0
 }
 
@@ -19222,7 +19211,7 @@ koopa_prune_app_binaries() {
 }
 
 koopa_prune_apps() {
-    koopa_r_koopa 'cliPruneApps' "$@"
+    koopa_stop 'FIXME Reworking this in Python.'
     return 0
 }
 
