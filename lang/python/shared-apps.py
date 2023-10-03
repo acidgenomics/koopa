@@ -97,6 +97,9 @@ def print_apps(app_names: list, json_data: dict) -> bool:
             continue
         json = json_data[val]
         keys = json.keys()
+        if "removed" in keys:
+            if json["removed"]:
+                continue
         if "arch" in keys:
             if json["arch"] != sys_dict["arch"]:
                 continue
