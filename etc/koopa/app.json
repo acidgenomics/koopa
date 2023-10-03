@@ -782,7 +782,6 @@
   },
   "chemacs": {
     "date": "2023-09-13",
-    "default": false,
     "removed": true
   },
   "chezmoi": {
@@ -1342,7 +1341,6 @@
   "exa": {
     "bin": ["exa"],
     "date": "2023-09-07",
-    "default": false,
     "removed": true,
     "url": ["https://github.com/ogham/exa/"]
   },
@@ -3294,7 +3292,6 @@
   "llama": {
     "bin": ["llama"],
     "date": "2023-08-31",
-    "default": false,
     "notes": ["Renamed to walk."],
     "removed": true
   },
@@ -4496,7 +4493,6 @@
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
     "date": "2023-07-28",
-    "default": false,
     "man1": ["python3.10.1"],
     "removed": true
   },
