@@ -3793,7 +3793,6 @@ koopa_check_shared_object() {
     "${app['tool']}" "${tool_args[@]}"
     return 0
 }
-w#!/usr/bin/env bash
 
 koopa_check_system() {
     koopa_stop 'FIXME Reworking this in Python.'
