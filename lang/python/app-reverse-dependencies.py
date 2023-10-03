@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-05-30.
+@note Updated 2023-10-03.
 
 @examples
 ./app-reverse-dependencies.py 'python3.11'
@@ -84,11 +84,12 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-03-29.
+    @note Updated 2023-10-03.
     """
+    sys_bool_dict = {}
+    sys_bool_dict["large"] = large()
     sys_dict = {}
     sys_dict["arch"] = arch2()
-    sys_dict["large"] = large()
     sys_dict["platform"] = platform()
     for val in app_names:
         json = json_data[val]
@@ -100,7 +101,7 @@ def print_apps(app_names: list, json_data: dict) -> bool:
             if not json["enabled"]:
                 continue
         if "large" in keys:
-            if json["large"] and not sys_dict["large"]:
+            if json["large"] and not sys_bool_dict["large"]:
                 continue
         if "platform" in keys:
             if json["platform"] != sys_dict["platform"]:
