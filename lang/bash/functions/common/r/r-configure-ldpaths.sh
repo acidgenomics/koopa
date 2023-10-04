@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Only do this for system macOS.
-
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
