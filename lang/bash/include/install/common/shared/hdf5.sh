@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 
+# FIXME Now seeing a build error on macOS Sonoma:
+# ld: unknown options: -commons
+# clang: error: linker command failed with exit code 1 (use -v to see invocation)
+# gmake[2]: *** [Makefile:1497: H5detect] Error 1
+# gmake[2]: *** Waiting for unfinished jobs....
+# ld: unknown options: -commons
+# clang: error: linker command failed with exit code 1 (use -v to see invocation)
+# gmake[2]: *** [Makefile:1501: H5make_libsettings] Error 1
+# gmake[2]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.5Qp6kHf58q/src/src'
+# gmake[1]: *** [Makefile:1360: all] Error 2
+# gmake[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.5Qp6kHf58q/src/src'
+# gmake: *** [Makefile:729: all-recursive] Error 1
+
+# Related issue:
+# https://community.intel.com/t5/Intel-Fortran-Compiler/Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
+
 main() {
     # """
     # Install HDF5.
@@ -36,6 +52,14 @@ main() {
         "--with-szlib=${dict['libaec']}"
         "--with-zlib=${dict['zlib']}"
     )
+    if koopa_is_macos
+    then
+        # Work around incompatibility with new linker (FB13194355).
+        # https://github.com/HDFGroup/hdf5/issues/3571
+        LDFLAGS="${LDFLAGS:-}"
+        LDFLAGS="-Wl,-ld_classic ${LDFLAGS}"
+        export LDFLAGS
+    fi
     dict['url']="https://support.hdfgroup.org/ftp/HDF5/releases/\
 hdf5-${dict['maj_min_ver']}/hdf5-${dict['mmp_ver']}/src/\
 hdf5-${dict['version']}.tar.gz"
