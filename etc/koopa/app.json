@@ -6130,7 +6130,7 @@
     "bin": ["yt-dlp"],
     "date": "2023-09-24",
     "default": false,
-    "dependencies": ["python3.12"],
+    "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
