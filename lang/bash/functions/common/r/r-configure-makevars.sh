@@ -89,7 +89,7 @@ koopa_r_configure_makevars() {
                 # > 'jpeg'
                 # > 'libuv'
                 'cairo'
-                'curl7'
+                'curl'
                 'fontconfig'
                 'freetype'
                 'fribidi'
