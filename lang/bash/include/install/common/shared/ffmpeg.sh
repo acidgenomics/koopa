@@ -3,7 +3,7 @@
 main() {
     # """
     # Install FFmpeg.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-10-04.
     #
     # @seealso
     # - https://ffmpeg.org/
@@ -24,6 +24,14 @@ main() {
         '--enable-version3'
         "--prefix=${dict['prefix']}"
     )
+    if koopa_is_macos
+    then
+        # The new linker leads to duplicate symbol issue.
+        # https://github.com/homebrew-ffmpeg/homebrew-ffmpeg/issues/140
+        LDFLAGS="${LDFLAGS:-}"
+        LDFLAGS="-Wl,-ld_classic ${LDFLAGS}"
+        export LDFLAGS
+    fi
     dict['url']="https://ffmpeg.org/releases/ffmpeg-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
