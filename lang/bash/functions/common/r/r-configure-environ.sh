@@ -180,6 +180,7 @@ koopa_r_configure_environ() {
             'glib'
             'graphviz'
             'harfbuzz'
+            'hdf5'
             'icu4c'
             'imagemagick'
             # > 'jpeg'
