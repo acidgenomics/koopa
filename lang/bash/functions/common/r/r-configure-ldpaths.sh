@@ -32,25 +32,23 @@ koopa_r_configure_ldpaths() {
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
-    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    bool['use_apps']=1
-    bool['use_java']=1
+    bool['use_apps']=0
+    bool['use_java']=0
     bool['use_local']=0
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     dict['arch']="$(koopa_arch)"
-    if koopa_is_linux
-    then
-        if [[ "${bool['system']}" -eq 1 ]]
-        then
-            bool['use_apps']=0
-            bool['use_java']=0
-        fi
-    elif koopa_is_macos
+    if koopa_is_macos
     then
         case "${dict['arch']}" in
             'aarch64')
                 dict['arch']='arm64'
                 ;;
         esac
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            bool['use_apps']=1
+            bool['use_java']=1
+        fi
     fi
     if [[ "${bool['use_java']}" -eq 1 ]]
     then
@@ -130,12 +128,8 @@ libexec/lib/server}")
         for key in "${keys[@]}"
         do
             local prefix
-            prefix="$(koopa_app_prefix "$key" --allow-missing)"
-            if [[ ! -d "$prefix" ]]
-            then
-                koopa_alert_note "Not installed: '${key}'."
-                continue
-            fi
+            prefix="$(koopa_app_prefix "$key")"
+            koopa_assert_is_dir "$prefix"
             ld_lib_app_arr[$key]="$prefix"
         done
         for i in "${!ld_lib_app_arr[@]}"
