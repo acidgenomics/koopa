@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Configure PKG_CONFIG_PATH.
+
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-09-20.
+    # @note Updated 2023-10-04.
     #
     # @section Package library location:
     #
