@@ -2801,7 +2801,7 @@
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-09-29",
+    "date": "2023-10-04",
     "default": false,
     "man1": ["aec.1"],
     "prune": false,
@@ -2809,7 +2809,7 @@
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
       "https://github.com/MathisRosenhauer/libaec/"
     ],
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "libarchive": {
     "aliases": {
