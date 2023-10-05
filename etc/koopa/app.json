@@ -34,11 +34,11 @@
     "version": "1.2.0"
   },
   "anaconda": {
-    "date": "2023-08-07",
+    "date": "2023-10-05",
     "default": true,
     "large": true,
     "url": ["https://repo.continuum.io/archive/"],
-    "version": "2023.07-2"
+    "version": "2023.09-0"
   },
   "apache-airflow": {
     "bin": ["airflow"],
@@ -264,6 +264,7 @@
     "default": false,
     "dependencies": ["python3.11"],
     "large": true,
+    "notes": ["Only up to Python 3.10 is officially supported."],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
     "version": "2.53.0"
   },
@@ -2794,10 +2795,10 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2023-10-03",
+    "date": "2023-10-05",
     "default": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.09"
+    "version": "2.10"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3382,7 +3383,7 @@
   },
   "luigi": {
     "bin": ["luigi"],
-    "date": "2023-08-21",
+    "date": "2023-10-05",
     "default": false,
     "dependencies": ["python3.12"],
     "large": true,
@@ -3390,7 +3391,7 @@
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.3.0"
+    "version": "3.4.0"
   },
   "lz4": {
     "aliases": {
