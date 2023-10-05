@@ -20106,7 +20106,7 @@ libexec/lib/server}")
             'pcre2'
             'pixman'
             'proj'
-            'python3.11'
+            'python3.12'
             'readline'
             'sqlite'
             'xorg-libice'
