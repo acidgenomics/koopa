@@ -2451,10 +2451,10 @@
     },
     "bin": ["hyperfine"],
     "build_dependencies": ["rust"],
-    "date": "2023-06-05",
+    "date": "2023-10-05",
     "default": false,
     "url": ["https://github.com/sharkdp/hyperfine/"],
-    "version": "1.17.0"
+    "version": "1.18.0"
   },
   "icu4c": {
     "aliases": {
@@ -4014,7 +4014,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-08-30",
+    "date": "2023-10-05",
     "default": false,
     "dependencies": ["conda", "poetry"],
     "large": true,
@@ -4022,7 +4022,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.2.2"
+    "version": "3.2.3"
   },
   "openblas": {
     "aliases": {
