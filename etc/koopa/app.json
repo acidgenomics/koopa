@@ -4360,10 +4360,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-07",
+    "date": "2023-10-06",
     "default": true,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.0"
+    "version": "0.14.1"
   },
   "proj": {
     "aliases": {
@@ -4428,12 +4428,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-10-02",
+    "date": "2023-10-06",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.28"
+    "version": "2.3.29"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4462,11 +4462,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-10-02",
+    "date": "2023-10-06",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4927,11 +4927,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-09-20",
+    "date": "2023-10-06",
     "default": true,
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.72.1"
+    "version": "1.73.0"
   },
   "salmon": {
     "bin": ["salmon"],
