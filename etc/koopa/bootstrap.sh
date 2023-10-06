@@ -17,7 +17,7 @@ PATH="${PREFIX}/bin:/usr/bin:/bin"
 export PATH PREFIX
 
 install_bash() {
-    printf 'Installing Bash.\n'
+    printf 'Installing %s in %s.\n' 'Bash' "$PREFIX"
     mkdir -p "${PREFIX}/src/bash"
     cd "${PREFIX}/src/bash" || return 1
     curl \
@@ -33,7 +33,7 @@ install_bash() {
 }
 
 # > install_coreutils() {
-# >     printf 'Installing GNU coreutils.\n'
+# >     printf 'Installing %s in %s.\n' 'GNU coreutils' "$PREFIX"
 # >     mkdir -p "${PREFIX}/src/coreutils"
 # >     cd "${PREFIX}/src/coreutils" || return 1
 # >     curl \
@@ -49,7 +49,7 @@ install_bash() {
 # > }
 
 install_python() {
-    printf 'Installing Python.\n'
+    printf 'Installing %s in %s.\n' 'Python' "$PREFIX"
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
     curl \
