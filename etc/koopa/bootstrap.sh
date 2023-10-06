@@ -65,7 +65,7 @@ install_python() {
 }
 
 main() {
-    printf 'Installing %s into %s.\n' 'koopa bootstrap' "$PREFIX"
+    printf 'Installing %s in %s.\n' 'koopa bootstrap' "$PREFIX"
     (
         # > install_coreutils
         install_bash
