@@ -148,7 +148,7 @@ koopa_install_koopa() {
         koopa_assert_is_admin
         koopa_rm --sudo "${dict['prefix']}"
         koopa_cp --sudo "${dict['source_prefix']}" "${dict['prefix']}"
-        koopa_sys_set_permissions --recursive "${dict['prefix']}"
+        koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
     else
         koopa_cp "${dict['source_prefix']}" "${dict['prefix']}"
