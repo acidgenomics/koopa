@@ -3,18 +3,19 @@
 koopa_sys_set_permissions() {
     # """
     # Set permissions on target prefix(es).
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-10-06.
     #
     # Consider ensuring that nested directories are also executable.
     # e.g. 'app/julia-packages/1.6/registries/General'.
     # """
-    local -A dict
+    local -A bool
     local -a chmod_args chown_args pos
     local arg
     koopa_assert_has_args "$#"
-    dict['dereference']=1
-    dict['recursive']=0
-    dict['shared']=1
+    bool['dereference']=1
+    bool['recursive']=0
+    bool['shared']=1
+    bool['sudo']=0
     chmod_args=()
     chown_args=()
     pos=()
@@ -23,23 +24,28 @@ koopa_sys_set_permissions() {
         case "$1" in
             '--dereference' | \
             '-H')
-                dict['dereference']=1
+                bool['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict['dereference']=0
+                bool['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R' | \
             '-r')
-                dict['recursive']=1
+                bool['recursive']=1
+                shift 1
+                ;;
+            '--sudo' | \
+            '-S')
+                bool['sudo']=1
                 shift 1
                 ;;
             '--user' | \
             '-u')
-                dict['shared']=0
+                bool['shared']=0
                 shift 1
                 ;;
             '-'*)
@@ -53,21 +59,26 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${dict['shared']}" in
+    case "${bool['shared']}" in
         '0')
-            dict['group']="$(koopa_group_name)"
-            dict['user']="$(koopa_user_name)"
+            bool['group']="$(koopa_group_name)"
+            bool['user']="$(koopa_user_name)"
             ;;
         '1')
-            dict['group']="$(koopa_sys_group_name)"
-            dict['user']="$(koopa_sys_user_name)"
+            bool['group']="$(koopa_sys_group_name)"
+            bool['user']="$(koopa_sys_user_name)"
             ;;
     esac
     chown_args+=('--no-dereference')
-    if [[ "${dict['recursive']}" -eq 1 ]]
+    if [[ "${bool['recursive']}" -eq 1 ]]
     then
         chmod_args+=('--recursive')
         chown_args+=('--recursive')
+    fi
+    if [[ "${bool['sudo']}" -eq 1 ]]
+    then
+        chmod_args+=('--sudo')
+        chown_args+=('--sudo')
     fi
     if koopa_is_shared_install
     then
@@ -75,10 +86,10 @@ koopa_sys_set_permissions() {
     else
         chmod_args+=('u+rw,g+r,g-w,o+r,o-w')
     fi
-    chown_args+=("${dict['user']}:${dict['group']}")
+    chown_args+=("${bool['user']}:${bool['group']}")
     for arg in "$@"
     do
-        if [[ "${dict['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
+        if [[ "${bool['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
         fi

@@ -12835,7 +12835,7 @@ koopa_install_koopa() {
         koopa_assert_is_admin
         koopa_rm --sudo "${dict['prefix']}"
         koopa_cp --sudo "${dict['source_prefix']}" "${dict['prefix']}"
-        koopa_sys_set_permissions --recursive "${dict['prefix']}"
+        koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
     else
         koopa_cp "${dict['source_prefix']}" "${dict['prefix']}"
@@ -24610,13 +24610,14 @@ koopa_sys_mkdir() {
 }
 
 koopa_sys_set_permissions() {
-    local -A dict
+    local -A bool
     local -a chmod_args chown_args pos
     local arg
     koopa_assert_has_args "$#"
-    dict['dereference']=1
-    dict['recursive']=0
-    dict['shared']=1
+    bool['dereference']=1
+    bool['recursive']=0
+    bool['shared']=1
+    bool['sudo']=0
     chmod_args=()
     chown_args=()
     pos=()
@@ -24625,23 +24626,28 @@ koopa_sys_set_permissions() {
         case "$1" in
             '--dereference' | \
             '-H')
-                dict['dereference']=1
+                bool['dereference']=1
                 shift 1
                 ;;
             '--no-dereference' | \
             '-h')
-                dict['dereference']=0
+                bool['dereference']=0
                 shift 1
                 ;;
             '--recursive' | \
             '-R' | \
             '-r')
-                dict['recursive']=1
+                bool['recursive']=1
+                shift 1
+                ;;
+            '--sudo' | \
+            '-S')
+                bool['sudo']=1
                 shift 1
                 ;;
             '--user' | \
             '-u')
-                dict['shared']=0
+                bool['shared']=0
                 shift 1
                 ;;
             '-'*)
@@ -24655,21 +24661,26 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${dict['shared']}" in
+    case "${bool['shared']}" in
         '0')
-            dict['group']="$(koopa_group_name)"
-            dict['user']="$(koopa_user_name)"
+            bool['group']="$(koopa_group_name)"
+            bool['user']="$(koopa_user_name)"
             ;;
         '1')
-            dict['group']="$(koopa_sys_group_name)"
-            dict['user']="$(koopa_sys_user_name)"
+            bool['group']="$(koopa_sys_group_name)"
+            bool['user']="$(koopa_sys_user_name)"
             ;;
     esac
     chown_args+=('--no-dereference')
-    if [[ "${dict['recursive']}" -eq 1 ]]
+    if [[ "${bool['recursive']}" -eq 1 ]]
     then
         chmod_args+=('--recursive')
         chown_args+=('--recursive')
+    fi
+    if [[ "${bool['sudo']}" -eq 1 ]]
+    then
+        chmod_args+=('--sudo')
+        chown_args+=('--sudo')
     fi
     if koopa_is_shared_install
     then
@@ -24677,10 +24688,10 @@ koopa_sys_set_permissions() {
     else
         chmod_args+=('u+rw,g+r,g-w,o+r,o-w')
     fi
-    chown_args+=("${dict['user']}:${dict['group']}")
+    chown_args+=("${bool['user']}:${bool['group']}")
     for arg in "$@"
     do
-        if [[ "${dict['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
+        if [[ "${bool['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
         then
             arg="$(koopa_realpath "$arg")"
         fi
@@ -26284,17 +26295,37 @@ koopa_uninstall_kallisto() {
 }
 
 koopa_uninstall_koopa() {
-    local -A dict
+    local -A bool dict
+    bool['dotfiles']=1
+    bool['koopa']=1
     dict['config_prefix']="$(koopa_config_prefix)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    if koopa_is_linux && koopa_is_shared_install
+    if koopa_is_interactive
     then
-        koopa_rm --sudo '/etc/profile.d/zzz-koopa.sh'
+        bool['koopa']="$( \
+            koopa_read_yn \
+                'Proceed with koopa uninstall' \
+                "${bool['koopa']}" \
+        )"
+        bool['dotfiles']="$( \
+            koopa_read_yn \
+                'Uninstall dotfiles' \
+                "${bool['dotfiles']}" \
+        )"
     fi
-    koopa_uninstall_dotfiles
-    koopa_rm \
-        "${dict['config_prefix']}" \
-        "${dict['koopa_prefix']}"
+    [[ "${bool['koopa']}" -eq 0 ]] && return 1
+    [[ "${bool['dotfiles']}" -eq 1 ]] && koopa_uninstall_dotfiles
+    koopa_rm --verbose "${dict['config_prefix']}"
+    if koopa_is_shared_install
+    then
+        if koopa_is_linux
+        then
+            koopa_rm --sudo --verbose '/etc/profile.d/zzz-koopa.sh'
+        fi
+        koopa_rm --sudo --verbose "${dict['koopa_prefix']}"
+    else
+        koopa_rm --verbose "${dict['koopa_prefix']}"
+    fi
     return 0
 }
 
