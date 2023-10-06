@@ -822,12 +822,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-10-06",
     "default": true,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.27.4"
+    "version": "3.27.7"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -5643,14 +5643,14 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2023-08-21",
+    "date": "2023-10-06",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.9.1"
+    "version": "2.10"
   },
   "walk": {
     "bin": ["walk"],
