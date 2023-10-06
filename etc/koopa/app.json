@@ -2940,7 +2940,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "patch", "pkg-config"],
     "date": "2023-05-08",
     "default": false,
     "dependencies": ["libgpg-error"],
