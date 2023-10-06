@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2023-10-02.
+# @note Updated 2023-10-06.
 # """
 
 # Can debug with:
