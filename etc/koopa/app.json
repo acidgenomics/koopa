@@ -1376,7 +1376,7 @@
       "fedora": "expat-devel",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2022-11-08",
     "default": false,
     "prune": false,
