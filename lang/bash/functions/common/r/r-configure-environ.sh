@@ -197,7 +197,7 @@ koopa_r_configure_environ() {
             'pcre2'
             'pixman'
             'proj'
-            'python3.11'
+            # > 'python3.12'
             'readline'
             'sqlite'
             'xorg-libice'
