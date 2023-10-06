@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-09-13.
+#' @note Updated 2023-10-06.
 #'
 #' @section Restarting R:
 #'
@@ -415,12 +415,17 @@ local({  # nolint
         ## out-of-date Bioconductor versions.
     }
     if (isInstalled("cli")) {
-        options("cli.unicode" = TRUE)
+        ## Refer to `cli::ansi_has_hyperlink_support` for hyperlink details.
+        options(
+            "cli.hyperlink" = FALSE,
+            "cli.unicode" = TRUE
+        )
     }
     if (isInstalled("crayon")) {
         options(
+            "crayon.colors" = 256L,
             "crayon.enabled" = TRUE,
-            "crayon.colors" = 256L
+            "crayon.hyperlink" = FALSE
         )
     }
     if (isInstalled("data.table")) {

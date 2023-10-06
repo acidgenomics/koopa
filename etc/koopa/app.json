@@ -713,7 +713,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-26",
-    "default": false,
+    "default": true,
     "dependencies": [
       "expat",
       "fontconfig",
@@ -822,12 +822,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-10-06",
     "default": true,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.27.4"
+    "version": "3.27.7"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1230,10 +1230,10 @@
     "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
   },
   "dotfiles": {
-    "date": "2023-09-27",
+    "date": "2023-10-06",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "6110c5c2be468e7619e368c8f6e6e2ef46ee7bfe"
+    "version": "6f4dfe370cfe66b10766ac7c723678c627171ad5"
   },
   "du-dust": {
     "aliases": {
@@ -1567,7 +1567,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-02-08",
-    "default": false,
+    "default": true,
     "dependencies": ["gperf", "freetype", "libxml2"],
     "prune": false,
     "url": ["https://www.freedesktop.org/wiki/Software/fontconfig/"],
@@ -1606,7 +1606,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": ["https://www.freetype.org/"],
     "version": "2.13.2"
@@ -1619,7 +1619,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-16",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": ["https://github.com/fribidi/fribidi/"],
     "version": "1.0.13"
@@ -1688,7 +1688,7 @@
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
     "date": "2023-09-13",
-    "default": false,
+    "default": true,
     "dependencies": [
       "bison",
       "curl",
@@ -1737,7 +1737,7 @@
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2023-06-27",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
     "version": "3.12.0"
@@ -1888,7 +1888,7 @@
       "python3.12"
     ],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["libffi", "pcre2", "zlib"],
     "prune": false,
     "url": [
@@ -2010,7 +2010,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["expat"],
     "prune": false,
     "url": [
@@ -2263,7 +2263,7 @@
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
     "date": "2023-09-19",
-    "default": false,
+    "default": true,
     "dependencies": [
       "freetype",
       "gettext",
@@ -2451,10 +2451,10 @@
     },
     "bin": ["hyperfine"],
     "build_dependencies": ["rust"],
-    "date": "2023-06-05",
+    "date": "2023-10-05",
     "default": false,
     "url": ["https://github.com/sharkdp/hyperfine/"],
-    "version": "1.17.0"
+    "version": "1.18.0"
   },
   "icu4c": {
     "aliases": {
@@ -2920,7 +2920,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": ["https://sourceware.org/libffi/"],
     "version": "3.4.4"
@@ -3029,7 +3029,7 @@
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2023-07-04",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": [
       "https://www.libjpeg-turbo.org/",
@@ -3085,7 +3085,7 @@
     "bin": ["libpng-config", "libpng16-config"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["http://www.libpng.org/pub/png/libpng.html"],
@@ -3109,7 +3109,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["openssl3", "zlib"],
     "prune": false,
     "url": ["https://www.libssh2.org/"],
@@ -3149,7 +3149,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["libjpeg-turbo", "zstd"],
     "prune": false,
     "url": [
@@ -3239,7 +3239,7 @@
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["icu4c", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "prune": false,
@@ -4014,7 +4014,7 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-08-30",
+    "date": "2023-10-05",
     "default": false,
     "dependencies": ["conda", "poetry"],
     "large": true,
@@ -4022,7 +4022,7 @@
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.2.2"
+    "version": "3.2.3"
   },
   "openblas": {
     "aliases": {
@@ -4301,7 +4301,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-03-07",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": [
       "https://cairographics.org/releases/?C=M;O=D",
@@ -4360,10 +4360,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-07",
+    "date": "2023-10-06",
     "default": true,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.0"
+    "version": "0.14.1"
   },
   "proj": {
     "aliases": {
@@ -4374,7 +4374,7 @@
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2023-09-12",
-    "default": false,
+    "default": true,
     "dependencies": [
       "curl",
       "libjpeg-turbo",
@@ -4428,12 +4428,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-10-02",
+    "date": "2023-10-06",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.28"
+    "version": "2.3.29"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4462,11 +4462,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-10-02",
+    "date": "2023-10-06",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4748,7 +4748,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
-    "default": false,
+    "default": true,
     "dependencies": ["ncurses"],
     "prune": false,
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
@@ -4927,11 +4927,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-09-20",
+    "date": "2023-10-06",
     "default": true,
     "large": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.72.1"
+    "version": "1.73.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -5643,14 +5643,14 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2023-08-21",
+    "date": "2023-10-06",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.9.1"
+    "version": "2.10"
   },
   "walk": {
     "bin": ["walk"],
@@ -5754,7 +5754,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["xorg-xorgproto", "xorg-xtrans"],
     "prune": false,
     "url": [
@@ -5769,7 +5769,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
@@ -5783,7 +5783,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["xorg-libice", "xorg-xorgproto", "xorg-xtrans"],
     "prune": false,
     "url": [
@@ -5798,7 +5798,7 @@
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": [
       "xorg-libpthread-stubs",
       "xorg-libxau",
@@ -5820,7 +5820,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["xorg-xorgproto"],
     "prune": false,
     "url": [
@@ -5835,7 +5835,7 @@
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": [
       "xorg-libpthread-stubs",
       "xorg-libxau",
@@ -5856,7 +5856,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["xorg-xorgproto"],
     "prune": false,
     "url": [
@@ -5871,7 +5871,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
-    "default": false,
+    "default": true,
     "dependencies": [
       "xorg-libpthread-stubs",
       "xorg-libx11",
@@ -5893,7 +5893,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-01-03",
-    "default": false,
+    "default": true,
     "dependencies": [
       "xorg-libpthread-stubs",
       "xorg-libx11",
@@ -5917,7 +5917,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
-    "default": false,
+    "default": true,
     "dependencies": [
       "xorg-libpthread-stubs",
       "xorg-libx11",
@@ -5939,7 +5939,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-05-08",
-    "default": false,
+    "default": true,
     "dependencies": [
       "xorg-libice",
       "xorg-libpthread-stubs",
@@ -5963,7 +5963,7 @@
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "notes": ["This must match xorg-libxcb version."],
     "prune": false,
     "url": [
@@ -5978,7 +5978,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
@@ -5992,7 +5992,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "dependencies": ["xorg-xorgproto"],
     "notes": ["1.5.0 fails to build on macOS due to missing stropts.h."],
     "outdated": true,
@@ -6173,7 +6173,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
-    "default": false,
+    "default": true,
     "prune": false,
     "url": ["https://www.zlib.net/"],
     "version": "1.3"
