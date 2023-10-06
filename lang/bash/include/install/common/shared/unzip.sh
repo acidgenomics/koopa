@@ -18,7 +18,7 @@ main() {
     local -A app dict
     local -a loc_macros make_args
     koopa_activate_app --build-only 'make'
-    koopa_activate_app 'bzip2'
+    ! koopa_is_macos && koopa_activate_app 'bzip2'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
