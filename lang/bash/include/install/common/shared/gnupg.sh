@@ -27,6 +27,7 @@ main() {
         'npth'
         'pinentry'
         'openldap'
+        'libiconv'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
