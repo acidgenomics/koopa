@@ -1918,7 +1918,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "date": "2023-08-31",
+    "date": "2023-10-06",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -1926,6 +1926,7 @@
       "libassuan",
       "libgcrypt",
       "libgpg-error",
+      "libiconv",
       "libksba",
       "libtasn1",
       "nettle",
