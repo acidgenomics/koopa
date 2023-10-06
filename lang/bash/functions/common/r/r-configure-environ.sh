@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-10-04.
+    # @note Updated 2023-10-06.
     #
     # @section Package library location:
     #
@@ -277,6 +277,11 @@ koopa_r_configure_environ() {
         # > fi
         lines+=('R_MAX_NUM_DLLS=153')
     fi
+    # cli
+    # --------------------------------------------------------------------------
+    # Refer to 'cli::ansi_has_hyperlink_support' for details.
+    # This is currently covered in our Rprofile instead.
+    # > lines+=('R_CLI_HYPERLINKS=FALSE')
     # data.table
     # --------------------------------------------------------------------------
     # Refer to 'data.table::getDTthreads' for more info.
