@@ -71,6 +71,7 @@ main() {
         # > install_coreutils
         # > install_python
     )
+    printf 'System bootstrap was successful.\n'
     return 0
 }
 
