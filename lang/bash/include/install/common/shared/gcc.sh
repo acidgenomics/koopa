@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-08-18.
+    # @note Updated 2023-10-07.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -80,17 +80,22 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
+    dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     conf_args=(
         '-v'
-        '--disable-multilib'
         '--disable-nls'
         '--enable-checking=release'
         '--enable-host-shared'
+        # Avoiding building:
+        #  - Ada and D, which require a pre-existing GCC to bootstrap
+        #  - Go, currently not supported on macOS
+        #  - BRIG
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         '--enable-libstdcxx-time'
-        '--enable-lto'
+        # > '--enable-lto'
         "--prefix=${dict['prefix']}"
         '--with-build-config=bootstrap-debug'
+        '--with-gcc-major-version-only'
         # Required dependencies.
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
@@ -98,13 +103,16 @@ main() {
         # Optional dependencies.
         "--with-isl=${dict['isl']}"
         "--with-zstd=${dict['zstd']}"
-        # Ensure linkage is defined during bootstrap (stage 2).
-        "--with-boot-ldflags=-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     )
     if koopa_is_linux
     then
-        # Enable to PIE by default to match what the host GCC uses.
-        conf_args+=('--enable-default-pie')
+        conf_args+=(
+            '--disable-multilib'
+            # Enable to PIE by default to match what the host GCC uses.
+            '--enable-default-pie'
+            # Ensure linkage is defined during bootstrap (stage 2).
+            "--with-boot-ldflags=${dict['boot_ldflags']}"
+        )
     elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
@@ -129,6 +137,13 @@ archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
     else
         dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
 gcc-${dict['version']}.tar.xz"
+    fi
+    # FIXME Only do this for clang 15+.
+    if koopa_is_macos
+    then
+        app['ld']='/Library/Developer/CommandLineTools/usr/bin/ld-classic'
+        koopa_assert_is_executable "${app['ld']}"
+        conf_args+=("--with-ld="${app['ld']}")
     fi
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
