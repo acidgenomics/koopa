@@ -143,7 +143,7 @@ gcc-${dict['version']}.tar.xz"
     then
         app['ld']='/Library/Developer/CommandLineTools/usr/bin/ld-classic'
         koopa_assert_is_executable "${app['ld']}"
-        conf_args+=("--with-ld="${app['ld']}")
+        conf_args+=("--with-ld=${app['ld']}")
     fi
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
