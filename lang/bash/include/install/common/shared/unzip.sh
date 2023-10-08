@@ -73,10 +73,14 @@ unzip${dict['version2']}.tar.gz"
     then
         make_args+=(
             'LFLAGS1=-liconv'
+            'L_BZ2=-lbz2'
             'macosx'
         )
     else
-        make_args+=('generic')
+        make_args+=(
+            "L_BZ2=-L${dict['bzip2']}/lib -lbz2"
+            'generic'
+        )
     fi
     koopa_print_env
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
