@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-10-07.
+    # @note Updated 2023-10-08.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -51,9 +51,8 @@ main() {
     # - https://gcc.gnu.org/wiki/InstallingGCC
     # - https://gcc.gnu.org/wiki/FAQ
     # - https://gcc.gnu.org/onlinedocs/gcc/Environment-Variables.html
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/gcc.rb
-    # - https://github.com/macports/macports-ports/blob/master/lang/
-    #     gcc12/Portfile
+    # - https://formulae.brew.sh/formula/gcc
+    # - https://ports.macports.org/port/gcc13/
     # - https://github.com/fxcoudert/gfortran-for-macOS/blob/
     #     master/build_package.md
     # - https://solarianprogrammer.com/2019/10/12/compiling-gcc-macos/
@@ -82,17 +81,27 @@ main() {
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     conf_args=(
+        # Can also define here:
+        # - '--disable-tls'
+        # - "--libiconv-prefix=XXX"
+        # - "--program-suffix=-mp-${major}"
+        # - "--with-ar=XXX"
+        # - "--with-as=XXX"
+        # - "--with-bugurl=XXX"
+        # - "--with-ld=XXX"
         '-v'
         '--disable-nls'
+        '--disable-multilib'
         '--enable-checking=release'
         '--enable-host-shared'
         # Avoiding building:
         #  - Ada and D, which require a pre-existing GCC to bootstrap
         #  - Go, currently not supported on macOS
         #  - BRIG
+        # Consider adding 'jit' here, which is set in MacPorts.
         '--enable-languages=c,c++,fortran,objc,obj-c++'
         '--enable-libstdcxx-time'
-        # > '--enable-lto'
+        '--enable-lto'
         "--prefix=${dict['prefix']}"
         '--with-build-config=bootstrap-debug'
         '--with-gcc-major-version-only'
@@ -103,16 +112,13 @@ main() {
         # Optional dependencies.
         "--with-isl=${dict['isl']}"
         "--with-zstd=${dict['zstd']}"
+        # Ensure linkage is defined during bootstrap (stage 2).
+        "--with-boot-ldflags=${dict['boot_ldflags']}"
     )
     if koopa_is_linux
     then
-        conf_args+=(
-            '--disable-multilib'
-            # Enable to PIE by default to match what the host GCC uses.
-            '--enable-default-pie'
-            # Ensure linkage is defined during bootstrap (stage 2).
-            "--with-boot-ldflags=${dict['boot_ldflags']}"
-        )
+        # Enable to PIE by default to match what the host GCC uses.
+        conf_args+=('--enable-default-pie')
     elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
@@ -143,6 +149,7 @@ gcc-${dict['version']}.tar.xz"
     then
         app['ld']='/Library/Developer/CommandLineTools/usr/bin/ld-classic'
         koopa_assert_is_executable "${app['ld']}"
+        # Can use '--with-system-zlib' here instead.
         conf_args+=("--with-ld=${app['ld']}")
     fi
     koopa_download "${dict['url']}"
