@@ -1376,7 +1376,7 @@
       "fedora": "expat-devel",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2022-11-08",
     "default": false,
     "prune": false,
@@ -1918,7 +1918,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "date": "2023-08-31",
+    "date": "2023-10-06",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -1926,6 +1926,7 @@
       "libassuan",
       "libgcrypt",
       "libgpg-error",
+      "libiconv",
       "libksba",
       "libtasn1",
       "nettle",
@@ -2940,7 +2941,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "patch", "pkg-config"],
     "date": "2023-05-08",
     "default": false,
     "dependencies": ["libgpg-error"],
