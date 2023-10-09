@@ -15572,6 +15572,17 @@ koopa_is_variable_defined() {
     return 0
 }
 
+koopa_is_x86_64() {
+    case "$(koopa_arch)" in
+        'x86_64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 koopa_jekyll_deploy_to_aws() {
     local -A app dict
     koopa_assert_has_args "$#"
