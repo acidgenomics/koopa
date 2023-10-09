@@ -303,13 +303,11 @@ koopa_add_monorepo_config_link() {
 koopa_add_rpath_to_ldflags() {
     local dir
     koopa_assert_has_args "$#"
-    LDFLAGS="${LDFLAGS:-}"
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        LDFLAGS="${LDFLAGS} -Wl,-rpath,${dir}"
+        koopa_append_ldflags "-Wl,-rpath,${dir}"
     done
-    export LDFLAGS
     return 0
 }
 
@@ -726,6 +724,18 @@ koopa_app_version() {
     dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
     dict['version']="$(koopa_basename "${dict['realpath']}")"
     koopa_print "${dict['version']}"
+    return 0
+}
+
+koopa_append_ldflags() {
+    local str
+    koopa_assert_has_args "$#"
+    LDFLAGS="${LDFLAGS:-}"
+    for str in "$@"
+    do
+        LDFLAGS="${LDFLAGS} ${str}"
+    done
+    export LDFLAGS
     return 0
 }
 
