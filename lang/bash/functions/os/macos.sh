@@ -738,6 +738,12 @@ koopa_macos_locate_launchctl() {
         "$@"
 }
 
+koopa_macos_locate_ld_classic() {
+    koopa_locate_app \
+        '/Library/Developer/CommandLineTools/usr/bin/ld-classic' \
+        "$@"
+}
+
 koopa_macos_locate_lsregister() {
     koopa_locate_app \
         "/System/Library/Frameworks/CoreServices.framework\
@@ -1130,6 +1136,14 @@ koopa_macos_uninstall_system_xcode_openmp() {
         --platform='macos' \
         --system \
         "$@"
+}
+
+koopa_macos_xcode_clt_major_version() {
+    local str
+    str="$(koopa_macos_xcode_clt_version)"
+    str="$(koopa_major_version "$str")"
+    koopa_print "$str"
+    return 0
 }
 
 koopa_macos_xcode_clt_version() {
