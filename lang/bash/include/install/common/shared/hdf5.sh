@@ -5,8 +5,6 @@ main() {
     # Install HDF5.
     # @note Updated 2023-10-09.
     #
-    # Using gcc here for gfortran.
-    #
     # @seealso
     # - https://www.hdfgroup.org/downloads/hdf5/source-code/
     # - https://docs.hdfgroup.org/archive/support/HDF5/release/cmakebuild.html
@@ -17,7 +15,7 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    deps=('zlib' 'gcc' 'libaec')
+    deps=('libaec' 'zlib')
     koopa_activate_app "${deps[@]}"
     dict['libaec']="$(koopa_app_prefix 'libaec')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -27,11 +25,11 @@ main() {
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-fortran'
         '--disable-silent-rules'
         '--disable-static'
         '--enable-build-mode=production'
         '--enable-cxx'
-        '--enable-fortran'
         "--prefix=${dict['prefix']}"
         "--with-szlib=${dict['libaec']}"
         "--with-zlib=${dict['zlib']}"
