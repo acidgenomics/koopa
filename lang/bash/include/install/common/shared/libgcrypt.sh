@@ -33,6 +33,7 @@ libgcrypt-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     # Patch from Homebrew recipe.
+    # FIXME Rework to not require cat here.
     "${app['cat']}" << END > 'rndgetentropy.patch'
 index 513da0b..d8eedce 100644
 --- a/random/rndgetentropy.c
