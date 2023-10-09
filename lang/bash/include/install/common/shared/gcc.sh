@@ -175,7 +175,7 @@ archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
         app['patch']="$(koopa_locate_patch)"
         koopa_assert_is_executable "${app['patch']}"
         dict['patch_file']='patch-math-h.patch'
-        read -r -d '' "dict[patch_string]" << END || true
+        read -r -d '' "dict[patch_string]" << 'END' || true
 diff --git a/fixincludes/fixincl.x b/fixincludes/fixincl.x
 index 416d2c2e3a4ba5f84e9ec04d8e4fd4b13240cb2d..e52f11d8460f8ecf375a0949d2c2409a7854c5b3 100644 (file)
 --- a/fixincludes/fixincl.x
@@ -199,7 +199,7 @@ index 416d2c2e3a4ba5f84e9ec04d8e4fd4b13240cb2d..e52f11d8460f8ecf375a0949d2c2409a
   */
  tSCC zDarwin_Flt_Eval_MethodSelect0[] =
 -       "^#if __FLT_EVAL_METHOD__ == 0$";
-+       "^#if __FLT_EVAL_METHOD__ == 0( \\\\|\\\\| __FLT_EVAL_METHOD__ == -1)?$";
++       "^#if __FLT_EVAL_METHOD__ == 0( \\|\\| __FLT_EVAL_METHOD__ == -1)?$";
  
  #define    DARWIN_FLT_EVAL_METHOD_TEST_CT  1
  static tTestDesc aDarwin_Flt_Eval_MethodTests[] = {
@@ -221,12 +221,12 @@ index 45e0cbc0c10b9666ce1e1a901ee4463ea0528d7e..19e0ea2df66270f015b867f2a67d7bc2
      mach      = "*-*-darwin*";
      files     = math.h;
 -    select    = "^#if __FLT_EVAL_METHOD__ == 0$";
-+    select    = "^#if __FLT_EVAL_METHOD__ == 0( \\\\|\\\\| __FLT_EVAL_METHOD__ == -1)?$";
++    select    = "^#if __FLT_EVAL_METHOD__ == 0( \\|\\| __FLT_EVAL_METHOD__ == -1)?$";
      c_fix     = format;
 -    c_fix_arg = "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 16";
 -    test_text = "#if __FLT_EVAL_METHOD__ == 0";
 +    c_fix_arg = "%0 || __FLT_EVAL_METHOD__ == 16";
-+    test_text = "#if __FLT_EVAL_METHOD__ == 0\\\n"
++    test_text = "#if __FLT_EVAL_METHOD__ == 0\n"
 +               "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1";
  };
  
