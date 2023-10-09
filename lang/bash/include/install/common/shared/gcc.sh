@@ -255,7 +255,6 @@ END
                 --verbose
         )
     fi
-    koopa_stop "$PWD"
     koopa_mkdir 'build'
     koopa_cd 'build'
     unset -v LIBRARY_PATH
