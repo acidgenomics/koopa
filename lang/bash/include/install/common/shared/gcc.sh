@@ -161,23 +161,23 @@ archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
     # - https://github.com/Homebrew/brew/blob/master/Library/Homebrew/patch.rb
     # - https://www.gnu.org/software/diffutils/manual/html_node/
     #     Multiple-Patches.html
+    # - fixincludes/fixincl.x
+    #   https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;
+    #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch1
+    # - fixincludes/inclhack.def
+    #   https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;
+    #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch2
+    # - fixincludes/tests/base/math.h
+    #   https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;
+    #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch3
     if [[ "${bool['math_h_patch']}" -eq 1 ]]
     then
         app['patch']="$(koopa_locate_patch)"
         koopa_assert_is_executable "${app['patch']}"
-        # - fixincludes/fixincl.x
-        #   https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;
-        #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch1
-        # - fixincludes/inclhack.def
-        #   https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;
-        #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch2
-        # - fixincludes/tests/base/math.h
-        #   https://gcc.gnu.org/git/?p=gcc.git;a=commitdiff;
-        #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch3
-        dict['patch_file']='math-h.patch'
+        dict['patch_file']='patch-math-h.patch'
         read -r -d '' "dict[patch_string]" << END || true
 diff --git a/fixincludes/fixincl.x b/fixincludes/fixincl.x
-index 416d2c2e3a4..e52f11d8460 100644
+index 416d2c2e3a4ba5f84e9ec04d8e4fd4b13240cb2d..e52f11d8460f8ecf375a0949d2c2409a7854c5b3 100644 (file)
 --- a/fixincludes/fixincl.x
 +++ b/fixincludes/fixincl.x
 @@ -2,11 +2,11 @@
@@ -213,7 +213,7 @@ index 416d2c2e3a4..e52f11d8460 100644
  
  /* * * * * * * * * * * * * * * * * * * * * * * * * *
 diff --git a/fixincludes/inclhack.def b/fixincludes/inclhack.def
-index 45e0cbc0c10..19e0ea2df66 100644
+index 45e0cbc0c10b9666ce1e1a901ee4463ea0528d7e..19e0ea2df66270f015b867f2a67d7bc27c04d956 100644 (file)
 --- a/fixincludes/inclhack.def
 +++ b/fixincludes/inclhack.def
 @@ -1819,10 +1819,11 @@ fix = {
@@ -226,13 +226,13 @@ index 45e0cbc0c10..19e0ea2df66 100644
 -    c_fix_arg = "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 16";
 -    test_text = "#if __FLT_EVAL_METHOD__ == 0";
 +    c_fix_arg = "%0 || __FLT_EVAL_METHOD__ == 16";
-+    test_text = "#if __FLT_EVAL_METHOD__ == 0\\n"
-+		"#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1";
++    test_text = "#if __FLT_EVAL_METHOD__ == 0\\\n"
++               "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1";
  };
  
  /*
 diff --git a/fixincludes/tests/base/math.h b/fixincludes/tests/base/math.h
-index 29b67579748..7b92f29a409 100644
+index 29b67579748c5efbb88bc3285ee35ffe9800b55d..7b92f29a409f31ea05ca8141e15db70ea1b829a8 100644 (file)
 --- a/fixincludes/tests/base/math.h
 +++ b/fixincludes/tests/base/math.h
 @@ -32,6 +32,7 @@
@@ -241,19 +241,19 @@ index 29b67579748..7b92f29a409 100644
  #if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 16
 +#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1 || __FLT_EVAL_METHOD__ == 16
  #endif  /* DARWIN_FLT_EVAL_METHOD_CHECK */
+ 
+ 
 END
         (
             koopa_cd 'src'
             koopa_write_string \
                 --file="${dict['patch_file']}" \
                 --string="${dict['patch_string']}"
-            # FIXME Need to use 'strip=1' here?
             "${app['patch']}" \
                 --input="${dict['patch_file']}" \
                 --strip=1 \
                 --verbose
         )
-        koopa_stop "$PWD"
     fi
     koopa_mkdir 'build'
     koopa_cd 'build'
