@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# libgfortran build error on macOS Sonoma x86:
+#
+# ../../../src/libgfortran/generated/maxval_r10.c: In function 'maxval_r10':
+# ./kinds.h:61:26: error: 'l' undeclared (first use in this function)
+#    61 | #define GFC_REAL_10_HUGE l
+#
+# gmake[2]: *** [Makefile:1693: all] Error 2
+# gmake[1]: *** [Makefile:20211: all-target-libgfortran] Error 2
+# gmake: *** [Makefile:1079: all] Error 2
+
 main() {
     # """
     # Install GCC.
@@ -63,7 +73,7 @@ main() {
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
     local -A app dict
-    local -a build_deps conf_args deps
+    local -a build_deps conf_args deps langs
     build_deps=('make')
     deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -80,6 +90,14 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
+    langs=(
+        'c'
+        'c++'
+        'objc'
+        'obj-c++'
+        'fortran'
+    )
+    dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         # Can also define here:
         # - '--disable-tls'
@@ -91,7 +109,6 @@ main() {
         # - "--with-ld=XXX"
         '-v'
         '--disable-nls'
-        '--disable-multilib'
         '--enable-checking=release'
         '--enable-host-shared'
         # Avoiding building:
@@ -99,9 +116,10 @@ main() {
         #  - Go, currently not supported on macOS
         #  - BRIG
         # Consider adding 'jit' here, which is set in MacPorts.
-        '--enable-languages=c,c++,fortran,objc,obj-c++'
+        "--enable-languages=${dict['langs']}"
         '--enable-libstdcxx-time'
-        '--enable-lto'
+        # FIXME Is this causing libgfortran failure on macOS x86?
+        # > '--enable-lto'
         "--prefix=${dict['prefix']}"
         '--with-build-config=bootstrap-debug'
         '--with-gcc-major-version-only'
@@ -117,8 +135,12 @@ main() {
     )
     if koopa_is_linux
     then
-        # Enable to PIE by default to match what the host GCC uses.
-        conf_args+=('--enable-default-pie')
+        conf_args+=(
+            # Fix Linux error: gnu/stubs-32.h: No such file or directory.
+            '--disable-multilib'
+            # Enable to PIE by default to match what the host GCC uses.
+            '--enable-default-pie'
+        )
     elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"

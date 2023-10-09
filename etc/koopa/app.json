@@ -3505,6 +3505,7 @@
     "build_dependencies": ["make"],
     "date": "2023-02-08",
     "default": true,
+    "dependencies": ["libpipeline"],
     "man1": ["gman.1"],
     "url": [
       "https://man-db.nongnu.org/",
