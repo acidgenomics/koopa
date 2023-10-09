@@ -4031,9 +4031,8 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-09-05",
+    "date": "2023-10-09",
     "default": false,
-    "dependencies": ["gcc"],
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.24"
@@ -6155,8 +6154,8 @@
       "homebrew": true
     },
     "bin": ["zip"],
-    "build_dependencies": ["gcc", "make", "patch"],
-    "date": "2023-04-06",
+    "build_dependencies": ["make", "patch"],
+    "date": "2023-10-09",
     "default": true,
     "dependencies": ["bzip2"],
     "man1": ["zip.1"],

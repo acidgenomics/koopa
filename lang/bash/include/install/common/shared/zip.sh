@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Need to provide a patch for xcode 15.
+# https://github.com/Homebrew/homebrew-core/blob/6d56d2d5d09ea51fd3e1a5da801babff0e68ada3/Formula/z/zip.rb
+# https://raw.githubusercontent.com/Homebrew/formula-patches/d2b59930/zip/xcode15.diff
+
 main() {
     # """
     # Install zip.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-10-09.
     #
     # Upstream is unmaintained so we use the Debian patchset:
     # https://packages.debian.org/sid/zip

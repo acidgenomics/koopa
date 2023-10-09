@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBLAS.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-10-09.
     #
     # Attempting to make in parallel can cause installer to crash.
     #
@@ -14,12 +14,11 @@ main() {
     # - https://github.com/macports/macports-ports/blob/master/math/
     #     OpenBLAS/Portfile
     # - https://iq.opengenus.org/install-openblas-from-source/
+    # - https://github.com/OpenMathLib/OpenBLAS/issues/1628
     # """
     local -A app dict
     koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app 'gcc'
-    app['cc']='/usr/bin/gcc'
-    app['fc']="$(koopa_locate_gfortran --realpath)"
+    app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -39,7 +38,7 @@ v${dict['version']}.tar.gz"
     koopa_cd 'src'
     read -r -d '' "dict[makefile_string]" << END || true
 CC=${app['cc']}
-FC=${app['fc']}
+NOFORTRAN=1
 NUM_THREADS=56
 USE_OPENMP=${dict['use_openmp']}
 END
