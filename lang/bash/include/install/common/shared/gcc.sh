@@ -144,10 +144,16 @@ archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            bool['math_h_patch']=1
+            # FIXME This patch approach doesn't seem to work, rethink this.
+            # > bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
             conf_args+=("--with-ld=${app['ld']}")
+            # FIXME Draft approach using the new experimental toolchain.
+            if koopa_is_x86_64
+            then
+                dict['url']='https://github.com/iains/gcc-darwin-arm64/archive/refs/heads/master-wip-apple-si.tar.gz'
+            fi
         fi
     fi
     koopa_download "${dict['url']}"
@@ -172,10 +178,15 @@ archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
     #     h=93f803d53b5ccaabded9d7b4512b54da81c1c616#patch3
     if [[ "${bool['math_h_patch']}" -eq 1 ]]
     then
+        app['cat']="$(koopa_locate_cat --allow-system)"
         app['patch']="$(koopa_locate_patch)"
-        koopa_assert_is_executable "${app['patch']}"
+        koopa_assert_is_executable "${app[@]}"
         dict['patch_file']='patch-math-h.patch'
-        read -r -d '' "dict[patch_string]" << END || true
+        (
+            koopa_cd 'src'
+            # Need to use cat here with quoted 'END' to avoid escaping of
+            # backslashes. Attempting to read into string doesn't work right.
+            "${app['cat']}" << 'END' > "${dict['patch_file']}"
 diff --git a/fixincludes/fixincl.x b/fixincludes/fixincl.x
 index 416d2c2e3a4ba5f84e9ec04d8e4fd4b13240cb2d..e52f11d8460f8ecf375a0949d2c2409a7854c5b3 100644 (file)
 --- a/fixincludes/fixincl.x
@@ -226,8 +237,8 @@ index 45e0cbc0c10b9666ce1e1a901ee4463ea0528d7e..19e0ea2df66270f015b867f2a67d7bc2
 -    c_fix_arg = "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 16";
 -    test_text = "#if __FLT_EVAL_METHOD__ == 0";
 +    c_fix_arg = "%0 || __FLT_EVAL_METHOD__ == 16";
-+    test_text = "#if __FLT_EVAL_METHOD__ == 0\\\n"
-+               "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1";
++    test_text = "#if __FLT_EVAL_METHOD__ == 0\n"
++		"#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == -1";
  };
  
  /*
@@ -244,11 +255,6 @@ index 29b67579748c5efbb88bc3285ee35ffe9800b55d..7b92f29a409f31ea05ca8141e15db70e
  
  
 END
-        (
-            koopa_cd 'src'
-            koopa_write_string \
-                --file="${dict['patch_file']}" \
-                --string="${dict['patch_string']}"
             "${app['patch']}" \
                 --input="${dict['patch_file']}" \
                 --strip=1 \

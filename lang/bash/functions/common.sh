@@ -303,13 +303,11 @@ koopa_add_monorepo_config_link() {
 koopa_add_rpath_to_ldflags() {
     local dir
     koopa_assert_has_args "$#"
-    LDFLAGS="${LDFLAGS:-}"
     for dir in "$@"
     do
         [[ -d "$dir" ]] || continue
-        LDFLAGS="${LDFLAGS} -Wl,-rpath,${dir}"
+        koopa_append_ldflags "-Wl,-rpath,${dir}"
     done
-    export LDFLAGS
     return 0
 }
 
@@ -726,6 +724,18 @@ koopa_app_version() {
     dict['realpath']="$(koopa_realpath "${dict['symlink']}")"
     dict['version']="$(koopa_basename "${dict['realpath']}")"
     koopa_print "${dict['version']}"
+    return 0
+}
+
+koopa_append_ldflags() {
+    local str
+    koopa_assert_has_args "$#"
+    LDFLAGS="${LDFLAGS:-}"
+    for str in "$@"
+    do
+        LDFLAGS="${LDFLAGS} ${str}"
+    done
+    export LDFLAGS
     return 0
 }
 
@@ -15562,6 +15572,17 @@ koopa_is_variable_defined() {
     return 0
 }
 
+koopa_is_x86_64() {
+    case "$(koopa_arch)" in
+        'x86_64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 koopa_jekyll_deploy_to_aws() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -17379,6 +17400,12 @@ koopa_locate_koopa() {
         "$@"
 }
 
+koopa_locate_ld() {
+    koopa_locate_app \
+        '/usr/bin/ld' \
+        "$@"
+}
+
 koopa_locate_less() {
     koopa_locate_app \
         --app-name='less' \
@@ -19040,6 +19067,11 @@ koopa_paste0() {
     koopa_paste --sep='' "$@"
 }
 
+koopa_patch_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/bash/include/patch"
+    return 0
+}
+
 koopa_prelude_emacs_prefix() {
     _koopa_prelude_emacs_prefix "$@"
 }
@@ -19724,11 +19756,11 @@ koopa_r_configure_environ() {
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
-    bool['use_apps']=0
+    bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if koopa_is_macos && [[ "${bool['system']}" -eq 1 ]]
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
-        bool['use_apps']=1
+        bool['use_apps']=0
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
@@ -20000,12 +20032,19 @@ koopa_r_configure_java() {
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
-        dict['java_home']='/usr/lib/jvm/default-java'
+        if koopa_is_linux
+        then
+            dict['java_home']='/usr/lib/jvm/default-java'
+        elif koopa_is_macos
+        then
+            dict['java_home']="$(/usr/libexec/java_home)"
+        fi
     fi
     koopa_assert_is_dir "${dict['java_home']}"
     app['jar']="${dict['java_home']}/bin/jar"
     app['java']="${dict['java_home']}/bin/java"
     app['javac']="${dict['java_home']}/bin/javac"
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert_info "Using Java SDK at '${dict['java_home']}'."
     conf_dict['java_home']="${dict['java_home']}"
     conf_dict['jar']="${app['jar']}"
@@ -20040,10 +20079,13 @@ koopa_r_configure_ldpaths() {
     app['r']="${1:?}"
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
-    bool['use_apps']=0
-    bool['use_java']=0
+    bool['use_apps']=1
     bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
+    then
+        bool['use_apps']=0
+    fi
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
@@ -20052,17 +20094,18 @@ koopa_r_configure_ldpaths() {
                 dict['arch']='arm64'
                 ;;
         esac
-        if [[ "${bool['system']}" -eq 1 ]]
-        then
-            bool['use_apps']=1
-            bool['use_java']=1
-        fi
     fi
-    if [[ "${bool['use_java']}" -eq 1 ]]
+    if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
-        dict['java_home']='/usr/lib/jvm/default-java'
+        if koopa_is_linux
+        then
+            dict['java_home']='/usr/lib/jvm/default-java'
+        elif koopa_is_macos
+        then
+            dict['java_home']="$(/usr/libexec/java_home)"
+        fi
     fi
     koopa_assert_is_dir "${dict['java_home']}"
     lines=()
@@ -20227,22 +20270,24 @@ koopa_r_configure_makevars() {
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
-    bool['use_apps']=0
+    bool['use_apps']=1
     bool['use_openmp']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if koopa_is_macos
+    if [[ "${bool['system']}" -eq 1 ]]
     then
-        if [[ "${bool['system']}" -eq 1 ]]
+        if koopa_is_linux
         then
-            bool['use_apps']=1
+            bool['use_apps']=0
+        elif koopa_is_macos
+        then
             bool['use_openmp']=1
         fi
-        if [[ "${bool['use_openmp']}" -eq 1 ]]
-        then
-            koopa_assert_is_file '/usr/local/include/omp.h'
-            conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
-            lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
-        fi
+    fi
+    if koopa_is_macos && [[ "${bool['use_openmp']}" -eq 1 ]]
+    then
+        koopa_assert_is_file '/usr/local/include/omp.h'
+        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
+        lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
@@ -20252,7 +20297,12 @@ koopa_r_configure_makevars() {
         app['cc']="$(koopa_locate_cc --only-system)"
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
-        app['gfortran']="$(koopa_locate_gfortran)"
+        if koopa_is_macos
+        then
+            app['gfortran']='/opt/gfortran/bin/gfortran'
+        else
+            app['gfortran']="$(koopa_locate_gfortran)"
+        fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"
@@ -20382,8 +20432,13 @@ lib/pkgconfig"
         )
         if koopa_is_macos
         then
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
+            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+            then
+                ldflags+=('-Wl,-ld_classic')
+            fi
             if [[ "${bool['use_openmp']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')
