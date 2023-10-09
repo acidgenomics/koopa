@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-10-04.
+    # @note Updated 2023-10-09.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -40,6 +40,7 @@ koopa_r_configure_makevars() {
             bool['use_apps']=0
         elif koopa_is_macos
         then
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             bool['use_openmp']=1
         fi
     fi
@@ -59,6 +60,11 @@ koopa_r_configure_makevars() {
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
         app['gfortran']="$(koopa_locate_gfortran)"
+        app['ld']="$(koopa_locate_ld --only-system)"
+        if koopa_is_macos && [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+        then
+            app['ld']="$(koopa_macos_locate_ld_classic)"
+        fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"
