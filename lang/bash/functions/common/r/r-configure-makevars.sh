@@ -59,7 +59,6 @@ koopa_r_configure_makevars() {
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
         app['gfortran']="$(koopa_locate_gfortran)"
-        app['ld']="$(koopa_locate_ld --only-system)"
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"
@@ -67,14 +66,6 @@ koopa_r_configure_makevars() {
         app['strip']="$(koopa_locate_strip)"
         app['tar']="$(koopa_locate_tar)"
         app['yacc']="$(koopa_locate_yacc)"
-        if koopa_is_macos
-        then
-            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-            then
-                app['ld']="$(koopa_macos_locate_ld_classic)"
-            fi
-        fi
         koopa_assert_is_executable "${app[@]}"
         dict['bzip2']="$(koopa_app_prefix 'bzip2')"
         dict['gettext']="$(koopa_app_prefix 'gettext')"
@@ -210,8 +201,15 @@ lib/pkgconfig"
         )
         if koopa_is_macos
         then
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
+            # The new ld linker in Xcode CLT 15 breaks a lot of stuff, so
+            # reverting to classic mode here.
+            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+            then
+                ldflags+=('-Wl,-ld_classic')
+            fi
             if [[ "${bool['use_openmp']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')
@@ -229,7 +227,6 @@ lib/pkgconfig"
         conf_dict['fc']="${app['gfortran']}"
         conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
         conf_dict['flibs']="$(koopa_gfortran_libs)"
-        conf_dict['ld']="${app['ld']}"
         conf_dict['ldflags']="${ldflags[*]}"
         conf_dict['make']="${app['make']}"
         conf_dict['objc_libs']='-lobjc'
@@ -289,7 +286,6 @@ lib/pkgconfig"
             "FCFLAGS = ${conf_dict['fcflags']}"
             "FFLAGS = ${conf_dict['fflags']}"
             "FLIBS = ${conf_dict['flibs']}"
-            "LD = ${conf_dict['ld']}"
             "LDFLAGS ${conf_dict['op']} ${conf_dict['ldflags']}"
             "MAKE = ${conf_dict['make']}"
             "OBJC = ${conf_dict['objc']}"
