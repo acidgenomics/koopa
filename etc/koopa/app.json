@@ -5660,7 +5660,7 @@
     "bin": ["walk"],
     "build_dependencies": ["go"],
     "date": "2023-08-28",
-    "default": true,
+    "default": false,
     "url": ["https://github.com/antonmedv/walk/"],
     "version": "1.6.2"
   },
