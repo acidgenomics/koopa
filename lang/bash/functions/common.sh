@@ -17389,6 +17389,12 @@ koopa_locate_koopa() {
         "$@"
 }
 
+koopa_locate_ld() {
+    koopa_locate_app \
+        '/usr/bin/ld' \
+        "$@"
+}
+
 koopa_locate_less() {
     koopa_locate_app \
         --app-name='less' \
@@ -20258,6 +20264,7 @@ koopa_r_configure_makevars() {
             bool['use_apps']=0
         elif koopa_is_macos
         then
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             bool['use_openmp']=1
         fi
     fi
@@ -20276,6 +20283,11 @@ koopa_r_configure_makevars() {
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
         app['gfortran']="$(koopa_locate_gfortran)"
+        app['ld']="$(koopa_locate_ld --only-system)"
+        if koopa_is_macos && [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+        then
+            app['ld']="$(koopa_macos_locate_ld_classic)"
+        fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"
