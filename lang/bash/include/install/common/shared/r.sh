@@ -124,7 +124,6 @@ main() {
     app['yacc']="$(koopa_locate_yacc)"
     app['zip']="$(koopa_locate_zip)"
     koopa_assert_is_executable "${app[@]}"
-    app['gfortran']="$(koopa_locate_gfortran --allow-missing)"
     app['lpr']="$(koopa_locate_lpr --allow-missing)"
     app['open']="$(koopa_locate_open --allow-missing)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -133,14 +132,6 @@ main() {
     dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_macos
-    then
-        dict['texbin']='/Library/TeX/texbin'
-        if [[ -d "${dict['texbin']}" ]]
-        then
-            koopa_add_to_path_start "${dict['texbin']}"
-        fi
-    fi
     [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
@@ -148,9 +139,6 @@ main() {
     conf_dict['cxx']="${app['cxx']}"
     conf_dict['echo']="${app['echo']}"
     conf_dict['editor']="${app['vim']}"
-    conf_dict['f77']="${app['gfortran']}"
-    conf_dict['fc']="${app['gfortran']}"
-    conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['temurin']}"
@@ -236,7 +224,7 @@ main() {
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
-    conf_args=(
+    conf_args+=(
         '--disable-static'
         '--enable-R-profiling'
         '--enable-R-shlib'
@@ -266,9 +254,6 @@ main() {
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
         "EDITOR=${conf_dict['editor']}"
-        "F77=${conf_dict['f77']}"
-        "FC=${conf_dict['fc']}"
-        "FLIBS=${conf_dict['flibs']}"
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
         "JAVAC=${conf_dict['javac']}"
@@ -302,9 +287,29 @@ main() {
         "TZ=${conf_dict['tz']}"
         "YACC=${conf_dict['yacc']}"
     )
-    # Aqua framework is required to use R with RStudio on macOS. Currently
-    # disabled due to build issues on macOS 13 with XCode CLT 14.
-    koopa_is_macos && conf_args+=('--without-aqua')
+    if koopa_is_linux
+    then
+        app['gfortran']="$(koopa_locate_gfortran)"
+        koopa_assert_is_exectuable "${app['gfortran']}"
+        conf_dict['f77']="${app['gfortran']}"
+        conf_dict['fc']="${app['gfortran']}"
+        conf_dict['flibs']="$(koopa_gfortran_libs)"
+        conf_args+=(
+            "F77=${conf_dict['f77']}"
+            "FC=${conf_dict['fc']}"
+            "FLIBS=${conf_dict['flibs']}"
+        )
+    elif koopa_is_macos
+    then
+        dict['texbin']='/Library/TeX/texbin'
+        if [[ -d "${dict['texbin']}" ]]
+        then
+            koopa_add_to_path_start "${dict['texbin']}"
+        fi
+        # Aqua framework is required to use R with RStudio on macOS. Currently
+        # disabled due to build issues on macOS 13 with XCode CLT 14.
+        conf_args+=('--without-aqua')
+    fi
     if [[ "${bool['devel']}" -eq 1 ]]
     then
         bool['r_koopa']=0
