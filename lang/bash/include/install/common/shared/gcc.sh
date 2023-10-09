@@ -199,7 +199,7 @@ index 416d2c2e3a4ba5f84e9ec04d8e4fd4b13240cb2d..e52f11d8460f8ecf375a0949d2c2409a
   */
  tSCC zDarwin_Flt_Eval_MethodSelect0[] =
 -       "^#if __FLT_EVAL_METHOD__ == 0$";
-+       "^#if __FLT_EVAL_METHOD__ == 0( \\|\\| __FLT_EVAL_METHOD__ == -1)?$";
++       "^#if __FLT_EVAL_METHOD__ == 0( \\\\|\\\\| __FLT_EVAL_METHOD__ == -1)?$";
  
  #define    DARWIN_FLT_EVAL_METHOD_TEST_CT  1
  static tTestDesc aDarwin_Flt_Eval_MethodTests[] = {
@@ -221,7 +221,7 @@ index 45e0cbc0c10b9666ce1e1a901ee4463ea0528d7e..19e0ea2df66270f015b867f2a67d7bc2
      mach      = "*-*-darwin*";
      files     = math.h;
 -    select    = "^#if __FLT_EVAL_METHOD__ == 0$";
-+    select    = "^#if __FLT_EVAL_METHOD__ == 0( \\|\\| __FLT_EVAL_METHOD__ == -1)?$";
++    select    = "^#if __FLT_EVAL_METHOD__ == 0( \\\\|\\\\| __FLT_EVAL_METHOD__ == -1)?$";
      c_fix     = format;
 -    c_fix_arg = "#if __FLT_EVAL_METHOD__ == 0 || __FLT_EVAL_METHOD__ == 16";
 -    test_text = "#if __FLT_EVAL_METHOD__ == 0";
@@ -255,6 +255,7 @@ END
                 --verbose
         )
     fi
+    koopa_stop "$PWD"
     koopa_mkdir 'build'
     koopa_cd 'build'
     unset -v LIBRARY_PATH
