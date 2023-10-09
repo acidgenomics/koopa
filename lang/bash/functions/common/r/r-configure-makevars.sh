@@ -10,7 +10,7 @@ koopa_r_configure_makevars() {
     #
     # @section gfortran configuration on macOS:
     #
-    # - https://mac.r-project.org
+    # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/releases
     # - https://github.com/Rdatatable/data.table/wiki/Installation/
     # - https://developer.r-project.org/Blog/public/2020/11/02/
@@ -58,7 +58,12 @@ koopa_r_configure_makevars() {
         app['cc']="$(koopa_locate_cc --only-system)"
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
-        app['gfortran']="$(koopa_locate_gfortran)"
+        if koopa_is_macos
+        then
+            app['gfortran']='/opt/gfortran/bin/gfortran'
+        else
+            app['gfortran']="$(koopa_locate_gfortran)"
+        fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"

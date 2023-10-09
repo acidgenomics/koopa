@@ -106,7 +106,12 @@ main() {
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     app['echo']="$(koopa_locate_echo)"
-    app['fortran']="$(koopa_locate_gfortran)"
+    if koopa_is_macos
+    then
+        app['gfortran']='/opt/gfortran/bin/gfortran'
+    else
+        app['gfortran']="$(koopa_locate_gfortran)"
+    fi
     app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar)"
     app['java']="$(koopa_locate_java)"
@@ -140,8 +145,8 @@ main() {
     conf_dict['cxx']="${app['cxx']}"
     conf_dict['echo']="${app['echo']}"
     conf_dict['editor']="${app['vim']}"
-    conf_dict['f77']="${app['fortran']}"
-    conf_dict['fc']="${app['fortran']}"
+    conf_dict['f77']="${app['gfortran']}"
+    conf_dict['fc']="${app['gfortran']}"
     conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
