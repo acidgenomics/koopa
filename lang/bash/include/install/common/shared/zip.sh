@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zip.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-10-09.
     #
     # Upstream is unmaintained so we use the Debian patchset:
     # https://packages.debian.org/sid/zip
@@ -15,15 +15,11 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
     local -A app dict
-    local -a build_deps deps
-    build_deps=('make')
-    # Currently hitting build issues when using Clang on macOS.
-    koopa_is_macos && build_deps+=('gcc')
-    deps=('bzip2')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    local -A app
+    koopa_activate_app --build-only 'make'
+    ! koopa_is_macos && koopa_activate_app 'bzip2'
+    app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
+    app['patch']="$(koopa_locate_patch --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -56,15 +52,40 @@ zip${dict['version2']}.tar.gz"
         --target='src' \
         --version="${dict['version']}"
     koopa_cd 'src'
+    if koopa_is_macos
+    then
+        # Fix compile with clang 15. Otherwise configure thinks 'memset()' and
+        # others are missing.
+        # See also:
+        # - https://github.com/Homebrew/formula-patches/blob/master/
+        #     zip/xcode15.diff
+        dict['patch_prefix']="$(koopa_patch_prefix)"
+        dict['patch_file']="${dict['patch_prefix']}/macos/zip/xcode15.diff"
+        koopa_assert_is_file "${dict['patch_file']}"
+        "${app['patch']}" \
+            --input="${dict['patch_file']}" \
+            --strip=1 \
+            --verbose
+    fi
     koopa_print_env
-    "${app['make']}" -f 'unix/Makefile' \
-        'CC=gcc' \
+    "${app['make']}" \
+        -f 'unix/Makefile' \
+        "CC=${app['cc']}" \
         'generic'
-    "${app['make']}" -f 'unix/Makefile' \
+    "${app['make']}" \
+        -f 'unix/Makefile' \
         "prefix=${dict['prefix']}" \
         "BINDIR=${dict['prefix']}/bin" \
         "MANDIR=${dict['prefix']}/share/man/man1" \
         install
+    koopa_cd '..'
+    koopa_mkdir 'test'
+    koopa_cd 'test'
+    app['zip']="${dict['prefix']}/bin/zip"
+    koopa_assert_is_executable "${app['zip']}"
+    koopa_touch 'test1' 'test2' 'test3'
+    "${app['zip']}" -Z 'bzip2' 'test.zip' 'test1' 'test2' 'test3'
+    koopa_assert_is_file 'test.zip'
     return 0
 }
 

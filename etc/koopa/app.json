@@ -1772,6 +1772,14 @@
     ],
     "version": "0.12"
   },
+  "gfortran": {
+    "date": "2023-10-09",
+    "default": true,
+    "platform": "macos",
+    "system": true,
+    "url": ["https://mac.r-project.org/"],
+    "version": "12.2"
+  },
   "gget": {
     "arch": "amd64",
     "bin": ["gget"],
@@ -2335,7 +2343,6 @@
       "h5delete",
       "h5diff",
       "h5dump",
-      "h5fc",
       "h5format_convert",
       "h5import",
       "h5jam",
@@ -2352,7 +2359,7 @@
     "build_dependencies": ["make"],
     "date": "2023-08-15",
     "default": true,
-    "dependencies": ["gcc", "libaec", "zlib"],
+    "dependencies": ["libaec", "zlib"],
     "prune": false,
     "url": [
       "https://www.hdfgroup.org/downloads/hdf5/",
@@ -4032,9 +4039,8 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-09-05",
+    "date": "2023-10-09",
     "default": false,
-    "dependencies": ["gcc"],
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
     "version": "0.3.24"
@@ -4571,7 +4577,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-03",
+    "date": "2023-10-09",
     "default": true,
     "dependencies": [
       "autoconf",
@@ -4583,11 +4589,9 @@
       "fontconfig",
       "freetype",
       "gawk",
-      "gcc",
       "gettext",
       "glib",
       "icu4c",
-      "lapack",
       "less",
       "libffi",
       "libgit2",
@@ -4606,6 +4610,7 @@
       "tcl-tk",
       "temurin",
       "texinfo",
+      "udunits",
       "vim",
       "xorg-libice",
       "xorg-libpthread-stubs",
@@ -4645,11 +4650,9 @@
       "fontconfig",
       "freetype",
       "gawk",
-      "gcc",
       "gettext",
       "glib",
       "icu4c",
-      "lapack",
       "less",
       "libffi",
       "libgit2",
@@ -4668,6 +4671,7 @@
       "tcl-tk",
       "temurin",
       "texinfo",
+      "udunits",
       "vim",
       "xorg-libice",
       "xorg-libpthread-stubs",
@@ -5658,7 +5662,7 @@
     "bin": ["walk"],
     "build_dependencies": ["go"],
     "date": "2023-08-28",
-    "default": true,
+    "default": false,
     "url": ["https://github.com/antonmedv/walk/"],
     "version": "1.6.2"
   },
@@ -6158,8 +6162,8 @@
       "homebrew": true
     },
     "bin": ["zip"],
-    "build_dependencies": ["gcc", "make", "patch"],
-    "date": "2023-04-06",
+    "build_dependencies": ["make", "patch"],
+    "date": "2023-10-09",
     "default": true,
     "dependencies": ["bzip2"],
     "man1": ["zip.1"],

@@ -3,9 +3,7 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2023-10-04.
-    #
-    # Using gcc here for gfortran.
+    # @note Updated 2023-10-09.
     #
     # @seealso
     # - https://www.hdfgroup.org/downloads/hdf5/source-code/
@@ -17,7 +15,7 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    deps=('zlib' 'gcc' 'libaec')
+    deps=('libaec' 'zlib')
     koopa_activate_app "${deps[@]}"
     dict['libaec']="$(koopa_app_prefix 'libaec')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -27,26 +25,28 @@ main() {
     dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
         '--disable-dependency-tracking'
+        '--disable-fortran'
         '--disable-silent-rules'
         '--disable-static'
         '--enable-build-mode=production'
         '--enable-cxx'
-        '--enable-fortran'
         "--prefix=${dict['prefix']}"
         "--with-szlib=${dict['libaec']}"
         "--with-zlib=${dict['zlib']}"
     )
+    # Work around incompatibility with new linker (FB13194355).
+    # > ld: unknown options: -commons
+    # See also:
+    # - https://github.com/HDFGroup/hdf5/issues/3571
+    # - https://community.intel.com/t5/Intel-Fortran-Compiler/
+    #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
     if koopa_is_macos
     then
-        # Work around incompatibility with new linker (FB13194355).
-        # > ld: unknown options: -commons
-        # See also:
-        # - https://github.com/HDFGroup/hdf5/issues/3571
-        # - https://community.intel.com/t5/Intel-Fortran-Compiler/
-        #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
-        LDFLAGS="${LDFLAGS:-}"
-        LDFLAGS="-Wl,-ld_classic ${LDFLAGS}"
-        export LDFLAGS
+        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+        then
+            koopa_append_ldflags '-Wl,-ld_classic'
+        fi
     fi
     dict['url']="https://support.hdfgroup.org/ftp/HDF5/releases/\
 hdf5-${dict['maj_min_ver']}/hdf5-${dict['mmp_ver']}/src/\
