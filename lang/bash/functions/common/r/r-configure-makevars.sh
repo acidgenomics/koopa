@@ -40,7 +40,6 @@ koopa_r_configure_makevars() {
             bool['use_apps']=0
         elif koopa_is_macos
         then
-            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             bool['use_openmp']=1
         fi
     fi
@@ -61,10 +60,6 @@ koopa_r_configure_makevars() {
         app['echo']="$(koopa_locate_echo)"
         app['gfortran']="$(koopa_locate_gfortran)"
         app['ld']="$(koopa_locate_ld --only-system)"
-        if koopa_is_macos && [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-        then
-            app['ld']="$(koopa_macos_locate_ld_classic)"
-        fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"
@@ -72,6 +67,14 @@ koopa_r_configure_makevars() {
         app['strip']="$(koopa_locate_strip)"
         app['tar']="$(koopa_locate_tar)"
         app['yacc']="$(koopa_locate_yacc)"
+        if koopa_is_macos
+        then
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+            then
+                app['ld']="$(koopa_macos_locate_ld_classic)"
+            fi
+        fi
         koopa_assert_is_executable "${app[@]}"
         dict['bzip2']="$(koopa_app_prefix 'bzip2')"
         dict['gettext']="$(koopa_app_prefix 'gettext')"
