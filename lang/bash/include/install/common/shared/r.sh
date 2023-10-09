@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-09-13.
+    # @note Updated 2023-10-09.
     #
     # @section Compiler settings:
     #
@@ -64,12 +64,12 @@ main() {
         'xz'
         'zlib' # libpng
         'zstd' # libtiff
-        'gcc'
+        # > 'gcc'
         'gettext'
         'icu4c'
         'readline'
         'curl'
-        'lapack'
+        # > 'lapack'
         'libjpeg-turbo'
         'libpng'
         'libtiff'
@@ -103,10 +103,9 @@ main() {
     app['awk']="$(koopa_locate_awk)"
     app['bash']="$(koopa_locate_bash)"
     app['bzip2']="$(koopa_locate_bzip2)"
-    app['cc']="$(koopa_locate_gcc)"
-    app['cxx']="$(koopa_locate_gcxx)"
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['cxx']="$(koopa_locate_cxx --only-system)"
     app['echo']="$(koopa_locate_echo)"
-    app['gfortran']="$(koopa_locate_gfortran)"
     app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar)"
     app['java']="$(koopa_locate_java)"
@@ -125,6 +124,7 @@ main() {
     app['yacc']="$(koopa_locate_yacc)"
     app['zip']="$(koopa_locate_zip)"
     koopa_assert_is_executable "${app[@]}"
+    app['gfortran']="$(koopa_locate_gfortran --allow-missing)"
     app['lpr']="$(koopa_locate_lpr --allow-missing)"
     app['open']="$(koopa_locate_open --allow-missing)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -210,9 +210,9 @@ main() {
     conf_dict['with_jpeglib']="$( \
         "${app['pkg_config']}" --libs 'libjpeg' \
     )"
-    conf_dict['with_lapack']="$( \
-        "${app['pkg_config']}" --libs 'lapack' \
-    )"
+    # > conf_dict['with_lapack']="$( \
+    # >     "${app['pkg_config']}" --libs 'lapack' \
+    # > )"
     conf_dict['with_libpng']="$( \
         "${app['pkg_config']}" --libs 'libpng' \
     )"
@@ -250,7 +250,7 @@ main() {
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
-        "--with-lapack=${conf_dict['with_lapack']}"
+        # > "--with-lapack=${conf_dict['with_lapack']}"
         "--with-libpng=${conf_dict['with_libpng']}"
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
