@@ -44,6 +44,7 @@ koopa_r_configure_java() {
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
+        # FIXME This isn't correct for macOS.
         dict['java_home']='/usr/lib/jvm/default-java'
     fi
     koopa_assert_is_dir "${dict['java_home']}"

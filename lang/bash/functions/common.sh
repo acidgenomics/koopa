@@ -20072,7 +20072,13 @@ koopa_r_configure_ldpaths() {
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
-        dict['java_home']='/usr/lib/jvm/default-java'
+        if koopa_is_linux
+        then
+            dict['java_home']='/usr/lib/jvm/default-java'
+        elif koopa_is_macos
+        then
+            dict['java_home']="$(/usr/libexec/java_home)"
+        fi
     fi
     koopa_assert_is_dir "${dict['java_home']}"
     lines=()
