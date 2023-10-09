@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-10-08.
+    # @note Updated 2023-10-09.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -63,7 +63,7 @@ main() {
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
     local -A app dict
-    local -a build_deps conf_args deps
+    local -a build_deps conf_args deps langs
     build_deps=('make')
     deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -80,6 +80,13 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
     dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
+    # Avoiding building:
+    #  - Ada and D, which require a pre-existing GCC to bootstrap.
+    #  - Go, currently not supported on macOS.
+    #  - BRIG.
+    # Consider adding 'jit' here, which is set in MacPorts.
+    langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
+    dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         # Can also define here:
         # - '--disable-tls'
@@ -91,15 +98,9 @@ main() {
         # - "--with-ld=XXX"
         '-v'
         '--disable-nls'
-        '--disable-multilib'
         '--enable-checking=release'
         '--enable-host-shared'
-        # Avoiding building:
-        #  - Ada and D, which require a pre-existing GCC to bootstrap
-        #  - Go, currently not supported on macOS
-        #  - BRIG
-        # Consider adding 'jit' here, which is set in MacPorts.
-        '--enable-languages=c,c++,fortran,objc,obj-c++'
+        "--enable-languages=${dict['langs']}"
         '--enable-libstdcxx-time'
         '--enable-lto'
         "--prefix=${dict['prefix']}"
@@ -117,39 +118,32 @@ main() {
     )
     if koopa_is_linux
     then
-        # Enable to PIE by default to match what the host GCC uses.
-        conf_args+=('--enable-default-pie')
+        conf_args+=(
+            # Fix Linux error: gnu/stubs-32.h: No such file or directory.
+            '--disable-multilib'
+            # Enable to PIE by default to match what the host GCC uses.
+            '--enable-default-pie'
+        )
+        dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
+gcc-${dict['version']}.tar.xz"
     elif koopa_is_macos
     then
+        dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+        dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+        dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir "${dict['sysroot']}"
+        dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
+archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
         conf_args+=(
             '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
-    fi
-    if koopa_is_macos && koopa_is_aarch64
-    then
-        dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-        dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-        dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
-        dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-branch/\
-archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
-        # Alternate URL:
-        # > dict['url']="https://github.com/iains/gcc-${dict['maj_ver']}-\
-        # > branch/archive/refs/tags/gcc-${dict['maj_min_ver']}-\
-        # > darwin-r0.tar.gz"
-    else
-        dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
-gcc-${dict['version']}.tar.xz"
-    fi
-    # FIXME Only do this for clang 15+.
-    if koopa_is_macos
-    then
+        # FIXME Only do this for clang 15+:
+        # FIXME Create a locator function for this.
         app['ld']='/Library/Developer/CommandLineTools/usr/bin/ld-classic'
         koopa_assert_is_executable "${app['ld']}"
-        # Can use '--with-system-zlib' here instead.
         conf_args+=("--with-ld=${app['ld']}")
     fi
     koopa_download "${dict['url']}"
