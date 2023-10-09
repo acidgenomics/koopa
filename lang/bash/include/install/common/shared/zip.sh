@@ -27,6 +27,7 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     local -A app
+    app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
@@ -59,16 +60,29 @@ zip${dict['version2']}.tar.gz"
         --patch-version="${dict['patch_version']}" \
         --target='src' \
         --version="${dict['version']}"
+    # Fix compile with newer Clang
+    # Otherwise configure thinks memset() and others are missing
+    # "https://raw.githubusercontent.com/Homebrew/formula-patches/d2b59930/zip/xcode15.diff"
     koopa_cd 'src'
     koopa_print_env
-    "${app['make']}" -f 'unix/Makefile' \
-        'CC=gcc' \
+    "${app['make']}" \
+        -f 'unix/Makefile' \
+        "CC=${app['cc']}" \
         'generic'
-    "${app['make']}" -f 'unix/Makefile' \
+    "${app['make']}" \
+        -f 'unix/Makefile' \
         "prefix=${dict['prefix']}" \
         "BINDIR=${dict['prefix']}/bin" \
         "MANDIR=${dict['prefix']}/share/man/man1" \
         install
+    koopa_cd '..'
+    koopa_mkdir 'test'
+    koopa_cd 'test'
+    app['zip']="${dict['prefix']}/bin/zip"
+    koopa_assert_is_executable "${app['zip']}"
+    koopa_touch 'test1' 'test2' 'test3'
+    "${app['zip']}" -Z 'bzip2' 'test.zip' 'test1' 'test2' 'test3'
+    koopa_assert_is_file 'test.zip'
     return 0
 }
 
