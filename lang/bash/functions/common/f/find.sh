@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2023-06-13.
+    # @note Updated 2023-10-09.
     #
     # @section Supported regex types for GNU find:
     #
@@ -421,10 +421,16 @@ koopa_find() {
         koopa_is_array_non_empty "${results[@]:-}" || return 1
         if [[ "${bool['sort']}" -eq 1 ]]
         then
-            readarray -t -d '' sorted_results < <( \
-                printf '%s\0' "${results[@]}" | "${app['sort']}" -z \
-            )
+            readarray -t sorted_results <<< "$( \
+                koopa_print "${results[@]}" | "${app['sort']}" \
+            )"
             results=("${sorted_results[@]}")
+        fi
+        if [[ "${dict['engine']}" = 'fd' ]]
+        then
+            readarray -t results <<< "$( \
+                koopa_strip_trailing_slash "${results[@]}" \
+            )"
         fi
         printf '%s\0' "${results[@]}"
     else
@@ -439,6 +445,12 @@ koopa_find() {
                 koopa_print "${results[@]}" | "${app['sort']}" \
             )"
             results=("${sorted_results[@]}")
+        fi
+        if [[ "${dict['engine']}" = 'fd' ]]
+        then
+            readarray -t results <<< "$( \
+                koopa_strip_trailing_slash "${results[@]}" \
+            )"
         fi
         koopa_print "${results[@]}"
     fi

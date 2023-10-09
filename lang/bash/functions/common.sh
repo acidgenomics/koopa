@@ -8563,10 +8563,16 @@ koopa_find() {
         koopa_is_array_non_empty "${results[@]:-}" || return 1
         if [[ "${bool['sort']}" -eq 1 ]]
         then
-            readarray -t -d '' sorted_results < <( \
-                printf '%s\0' "${results[@]}" | "${app['sort']}" -z \
-            )
+            readarray -t sorted_results <<< "$( \
+                koopa_print "${results[@]}" | "${app['sort']}" \
+            )"
             results=("${sorted_results[@]}")
+        fi
+        if [[ "${dict['engine']}" = 'fd' ]]
+        then
+            readarray -t results <<< "$( \
+                koopa_strip_trailing_slash "${results[@]}" \
+            )"
         fi
         printf '%s\0' "${results[@]}"
     else
@@ -8580,6 +8586,12 @@ koopa_find() {
                 koopa_print "${results[@]}" | "${app['sort']}" \
             )"
             results=("${sorted_results[@]}")
+        fi
+        if [[ "${dict['engine']}" = 'fd' ]]
+        then
+            readarray -t results <<< "$( \
+                koopa_strip_trailing_slash "${results[@]}" \
+            )"
         fi
         koopa_print "${results[@]}"
     fi
@@ -8714,40 +8726,6 @@ koopa_get_version() {
         [[ -n "${dict['str']}" ]] || return 1
         koopa_print "${dict['str']}"
     done
-    return 0
-}
-
-koopa_gfortran_libs() {
-    local -A app dict
-    local -a flibs gcc_libs
-    local i
-    app['dirname']="$(koopa_locate_dirname)"
-    app['sort']="$(koopa_locate_sort)"
-    app['xargs']="$(koopa_locate_xargs)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
-    dict['gcc']="$(koopa_app_prefix 'gcc')"
-    koopa_assert_is_dir "${dict['gcc']}"
-    readarray -t gcc_libs <<< "$( \
-        koopa_find \
-            --prefix="${dict['gcc']}" \
-            --pattern='*.a' \
-            --type 'f' \
-        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-        | "${app['sort']}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${gcc_libs[@]:-}"
-    for i in "${!gcc_libs[@]}"
-    do
-        flibs+=("-L${gcc_libs[$i]}")
-    done
-    flibs+=('-lgfortran' '-lm')
-    case "${dict['arch']}" in
-        'x86_64')
-            flibs+=('-lquadmath')
-            ;;
-    esac
-    koopa_print "${flibs[*]}"
     return 0
 }
 
@@ -20454,7 +20432,7 @@ lib/pkgconfig"
         conf_dict['f77']="${app['gfortran']}"
         conf_dict['fc']="${app['gfortran']}"
         conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
-        conf_dict['flibs']="$(koopa_gfortran_libs)"
+        conf_dict['flibs']="$(koopa_r_gfortran_libs)"
         conf_dict['ldflags']="${ldflags[*]}"
         conf_dict['make']="${app['make']}"
         conf_dict['objc_libs']='-lobjc'
@@ -20595,6 +20573,68 @@ koopa_r_copy_files_into_etc() {
             koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi
     done
+    return 0
+}
+
+koopa_r_gfortran_libs() {
+    local -A app dict
+    local -a flibs libs
+    local i
+    dict['arch']="$(koopa_arch)"
+    if koopa_is_linux
+    then
+        app['dirname']="$(koopa_locate_dirname --allow-system)"
+        app['sort']="$(koopa_locate_sort --allow-system)"
+        app['xargs']="$(koopa_locate_xargs --allow-system)"
+        koopa_assert_is_executable "${app[@]}"
+        dict['gcc']="$(koopa_app_prefix 'gcc')"
+        koopa_assert_is_dir "${dict['gcc']}"
+        readarray -t libs <<< "$( \
+            koopa_find \
+                --pattern='*.a' \
+                --prefix="${dict['gcc']}" \
+                --type 'f' \
+            | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+            | "${app['sort']}" --unique \
+        )"
+    elif koopa_is_macos
+    then
+        case "${dict['arch']}" in
+            'arm64')
+                dict['arch']='aarch64'
+                ;;
+        esac
+        dict['gfortran']='/opt/gfortran'
+        koopa_assert_is_dir "${dict['gfortran']}"
+        readarray -t libs <<< "$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern="${dict['arch']}*" \
+                --prefix="${dict['gfortran']}/lib/gcc" \
+                --type='d' \
+        )"
+        libs+=("${dict['gfortran']}/lib")
+    fi
+    koopa_assert_is_array_non_empty "${libs[@]:-}"
+    for i in "${!libs[@]}"
+    do
+        flibs+=("-L${libs[$i]}")
+    done
+    flibs+=('-lgfortran')
+    if koopa_is_linux
+    then
+        flibs+=('-lm')
+    elif koopa_is_macos
+    then
+        flibs+=('-lemutls_w')
+    fi
+    case "${dict['arch']}" in
+        'x86_64')
+            flibs+=('-lquadmath')
+            ;;
+    esac
+    koopa_print "${flibs[*]}"
     return 0
 }
 

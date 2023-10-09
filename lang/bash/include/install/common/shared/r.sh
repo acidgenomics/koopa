@@ -147,7 +147,7 @@ main() {
     conf_dict['editor']="${app['vim']}"
     conf_dict['f77']="${app['gfortran']}"
     conf_dict['fc']="${app['gfortran']}"
-    conf_dict['flibs']="$(koopa_gfortran_libs)"
+    conf_dict['flibs']="$(koopa_r_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['temurin']}"
