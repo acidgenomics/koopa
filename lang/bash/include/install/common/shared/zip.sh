@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to provide a patch for xcode 15.
-# https://github.com/Homebrew/homebrew-core/blob/6d56d2d5d09ea51fd3e1a5da801babff0e68ada3/Formula/z/zip.rb
-# https://raw.githubusercontent.com/Homebrew/formula-patches/d2b59930/zip/xcode15.diff
-
 main() {
     # """
     # Install zip.
@@ -19,16 +15,11 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/main/zip
     # """
     local -A app dict
-    local -a build_deps deps
-    build_deps=('make')
-    # Currently hitting build issues when using Clang on macOS.
-    koopa_is_macos && build_deps+=('gcc')
-    deps=('bzip2')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    local -A app
+    koopa_activate_app --build-only 'make'
+    ! koopa_is_macos && koopa_activate_app 'bzip2'
     app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
+    app['patch']="$(koopa_locate_patch --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -60,10 +51,22 @@ zip${dict['version2']}.tar.gz"
         --patch-version="${dict['patch_version']}" \
         --target='src' \
         --version="${dict['version']}"
-    # Fix compile with newer Clang
-    # Otherwise configure thinks memset() and others are missing
-    # "https://raw.githubusercontent.com/Homebrew/formula-patches/d2b59930/zip/xcode15.diff"
     koopa_cd 'src'
+    if koopa_is_macos
+    then
+        # Fix compile with clang 15. Otherwise configure thinks 'memset()' and
+        # others are missing.
+        # See also:
+        # - https://github.com/Homebrew/formula-patches/blob/master/
+        #     zip/xcode15.diff
+        dict['patch_prefix']="$(koopa_patch_prefix)"
+        dict['patch_file']="${dict['patch_prefix']}/macos/zip/xcode15.diff"
+        koopa_assert_is_file "${dict['patch_file']}"
+        "${app['patch']}" \
+            --input="${dict['patch_file']}" \
+            --strip=1 \
+            --verbose
+    fi
     koopa_print_env
     "${app['make']}" \
         -f 'unix/Makefile' \
