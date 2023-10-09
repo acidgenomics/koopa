@@ -144,10 +144,16 @@ archive/refs/heads/gcc-${dict['maj_min_ver2']}-darwin.tar.gz"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            bool['math_h_patch']=1
+            # FIXME This patch approach doesn't seem to work, rethink this.
+            # > bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
             conf_args+=("--with-ld=${app['ld']}")
+            # FIXME Draft approach using the new experimental toolchain.
+            if koopa_is_x86_64
+            then
+                dict['url']='https://github.com/iains/gcc-darwin-arm64/archive/refs/heads/master-wip-apple-si.tar.gz'
+            fi
         fi
     fi
     koopa_download "${dict['url']}"
