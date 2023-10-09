@@ -19067,6 +19067,11 @@ koopa_paste0() {
     koopa_paste --sep='' "$@"
 }
 
+koopa_patch_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/bash/include/patch"
+    return 0
+}
+
 koopa_prelude_emacs_prefix() {
     _koopa_prelude_emacs_prefix "$@"
 }
