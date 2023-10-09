@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to rework recipes that depend on gcc. This is not a reliable toolchain on macOS.
+    hdf5, lapack, openblas, r, star, zip
 ** TODO Could improve 'koopa install --all' to error at the beginning for unsupported / removed apps...e.g. chemacs.
 ** TODO Bootstrap script should install Bash and Python into temporary directory.
     Then add that to PATH, run koopa installer, and then run koopa install bash python.

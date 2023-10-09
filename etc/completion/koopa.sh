@@ -603,7 +603,13 @@ _koopa_complete() {
                                 fi
                             elif _koopa_is_macos
                             then
-                                args+=('python' 'r' 'xcode-clt' 'xcode-openmp')
+                                args+=(
+                                    'gfortran'
+                                    'python'
+                                    'r'
+                                    'xcode-clt'
+                                    'xcode-openmp'
+                                )
                             fi
                             ;;
                         'user')

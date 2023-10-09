@@ -3,14 +3,14 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-10-04.
+    # @note Updated 2023-10-09.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
     #
     # @section gfortran configuration on macOS:
     #
-    # - https://mac.r-project.org
+    # - https://mac.r-project.org/tools/
     # - https://github.com/fxcoudert/gfortran-for-macOS/releases
     # - https://github.com/Rdatatable/data.table/wiki/Installation/
     # - https://developer.r-project.org/Blog/public/2020/11/02/
@@ -30,23 +30,25 @@ koopa_r_configure_makevars() {
     app['sort']="$(koopa_locate_sort --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
-    bool['use_apps']=0
+    bool['use_apps']=1
     bool['use_openmp']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if koopa_is_macos
+    if [[ "${bool['system']}" -eq 1 ]]
     then
-        if [[ "${bool['system']}" -eq 1 ]]
+        if koopa_is_linux
         then
-            bool['use_apps']=1
+            bool['use_apps']=0
+        elif koopa_is_macos
+        then
             bool['use_openmp']=1
         fi
-        if [[ "${bool['use_openmp']}" -eq 1 ]]
-        then
-            koopa_assert_is_file '/usr/local/include/omp.h'
-            # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
-            conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
-            lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
-        fi
+    fi
+    if koopa_is_macos && [[ "${bool['use_openmp']}" -eq 1 ]]
+    then
+        koopa_assert_is_file '/usr/local/include/omp.h'
+        # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
+        conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
+        lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
@@ -56,7 +58,12 @@ koopa_r_configure_makevars() {
         app['cc']="$(koopa_locate_cc --only-system)"
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
-        app['gfortran']="$(koopa_locate_gfortran)"
+        if koopa_is_macos
+        then
+            app['gfortran']='/opt/gfortran/bin/gfortran'
+        else
+            app['gfortran']="$(koopa_locate_gfortran)"
+        fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"
@@ -199,8 +206,15 @@ lib/pkgconfig"
         )
         if koopa_is_macos
         then
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
+            # The new ld linker in Xcode CLT 15 breaks a lot of stuff, so
+            # reverting to classic mode here.
+            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+            then
+                ldflags+=('-Wl,-ld_classic')
+            fi
             if [[ "${bool['use_openmp']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')

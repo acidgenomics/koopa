@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Boost library.
-    # @note Updated 2023-06-05.
+    # @note Updated 2023-10-09.
     #
     # @seealso
     # - https://www.boost.org/users/download/
@@ -12,7 +12,7 @@ main() {
     # """
     local -A dict
     local -a b2_args bootstrap_args deps
-    deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
+    deps+=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
     koopa_activate_app "${deps[@]}"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['jobs']="$(koopa_cpu_count)"

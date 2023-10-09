@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-09-13.
+    # @note Updated 2023-10-09.
     #
     # @section Compiler settings:
     #
@@ -64,12 +64,12 @@ main() {
         'xz'
         'zlib' # libpng
         'zstd' # libtiff
-        'gcc'
+        # > 'gcc'
         'gettext'
         'icu4c'
         'readline'
         'curl'
-        'lapack'
+        # > 'lapack'
         'libjpeg-turbo'
         'libpng'
         'libtiff'
@@ -103,10 +103,15 @@ main() {
     app['awk']="$(koopa_locate_awk)"
     app['bash']="$(koopa_locate_bash)"
     app['bzip2']="$(koopa_locate_bzip2)"
-    app['cc']="$(koopa_locate_gcc)"
-    app['cxx']="$(koopa_locate_gcxx)"
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['cxx']="$(koopa_locate_cxx --only-system)"
     app['echo']="$(koopa_locate_echo)"
-    app['gfortran']="$(koopa_locate_gfortran)"
+    if koopa_is_macos
+    then
+        app['gfortran']='/opt/gfortran/bin/gfortran'
+    else
+        app['gfortran']="$(koopa_locate_gfortran)"
+    fi
     app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar)"
     app['java']="$(koopa_locate_java)"
@@ -133,14 +138,6 @@ main() {
     dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_macos
-    then
-        dict['texbin']='/Library/TeX/texbin'
-        if [[ -d "${dict['texbin']}" ]]
-        then
-            koopa_add_to_path_start "${dict['texbin']}"
-        fi
-    fi
     [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
     conf_dict['ar']="${app['ar']}"
     conf_dict['awk']="${app['awk']}"
@@ -210,9 +207,9 @@ main() {
     conf_dict['with_jpeglib']="$( \
         "${app['pkg_config']}" --libs 'libjpeg' \
     )"
-    conf_dict['with_lapack']="$( \
-        "${app['pkg_config']}" --libs 'lapack' \
-    )"
+    # > conf_dict['with_lapack']="$( \
+    # >     "${app['pkg_config']}" --libs 'lapack' \
+    # > )"
     conf_dict['with_libpng']="$( \
         "${app['pkg_config']}" --libs 'libpng' \
     )"
@@ -236,7 +233,7 @@ main() {
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
-    conf_args=(
+    conf_args+=(
         '--disable-static'
         '--enable-R-profiling'
         '--enable-R-shlib'
@@ -250,7 +247,7 @@ main() {
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
-        "--with-lapack=${conf_dict['with_lapack']}"
+        # > "--with-lapack=${conf_dict['with_lapack']}"
         "--with-libpng=${conf_dict['with_libpng']}"
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
@@ -302,9 +299,17 @@ main() {
         "TZ=${conf_dict['tz']}"
         "YACC=${conf_dict['yacc']}"
     )
-    # Aqua framework is required to use R with RStudio on macOS. Currently
-    # disabled due to build issues on macOS 13 with XCode CLT 14.
-    koopa_is_macos && conf_args+=('--without-aqua')
+    if koopa_is_macos
+    then
+        dict['texbin']='/Library/TeX/texbin'
+        if [[ -d "${dict['texbin']}" ]]
+        then
+            koopa_add_to_path_start "${dict['texbin']}"
+        fi
+        # Aqua framework is required to use R with RStudio on macOS. Currently
+        # disabled due to build issues on macOS 13 with XCode CLT 14.
+        conf_args+=('--without-aqua')
+    fi
     if [[ "${bool['devel']}" -eq 1 ]]
     then
         bool['r_koopa']=0

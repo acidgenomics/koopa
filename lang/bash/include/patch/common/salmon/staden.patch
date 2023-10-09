@@ -1,0 +1,18 @@
+--- Findlibstadenio.cmake	2023-05-01 11:11:46
++++ Findlibstadenio.cmake-1	2023-05-01 11:13:01
+@@ -16,15 +16,6 @@
+ find_library(HTSCODEC_LIBRARY NAMES htscodecs libhtscodecs
+   HINTS ${STADEN_ROOT} ENV STADEN_ROOT PATH_SUFFIXES lib lib64)
+ 
+-if(STADEN_INCLUDE_DIR)
+-  set(_version_regex "^#define[ \t]+PACKAGE_VERSION[ \t]+\"([^\"]+)\".*")
+-  file(STRINGS "${STADEN_INCLUDE_DIR}/io_lib/io_lib_config.h"
+-    STADEN_VERSION REGEX "${_version_regex}")
+-  string(REGEX REPLACE "${_version_regex}" "\\1"
+-    STADEN_VERSION "${STADEN_VERSION}")
+-  unset(_version_regex)
+-endif()
+-
+ include(FindPackageHandleStandardArgs)
+ find_package_handle_standard_args(libstadenio DEFAULT_MSG
+                                   STADEN_LIBRARY 

@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-10-09.
     #
     # The default Java path differs depending on the system.
     #
@@ -44,12 +44,19 @@ koopa_r_configure_java() {
     then
         dict['java_home']="$(koopa_app_prefix 'temurin')"
     else
-        dict['java_home']='/usr/lib/jvm/default-java'
+        if koopa_is_linux
+        then
+            dict['java_home']='/usr/lib/jvm/default-java'
+        elif koopa_is_macos
+        then
+            dict['java_home']="$(/usr/libexec/java_home)"
+        fi
     fi
     koopa_assert_is_dir "${dict['java_home']}"
     app['jar']="${dict['java_home']}/bin/jar"
     app['java']="${dict['java_home']}/bin/java"
     app['javac']="${dict['java_home']}/bin/javac"
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert_info "Using Java SDK at '${dict['java_home']}'."
     conf_dict['java_home']="${dict['java_home']}"
     conf_dict['jar']="${app['jar']}"
