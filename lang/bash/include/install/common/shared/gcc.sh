@@ -89,13 +89,13 @@ main() {
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         # Can also define here:
-        # - '--disable-tls'
-        # - "--libiconv-prefix=XXX"
-        # - "--program-suffix=-mp-${major}"
-        # - "--with-ar=XXX"
-        # - "--with-as=XXX"
-        # - "--with-bugurl=XXX"
-        # - "--with-ld=XXX"
+        # > '--disable-tls'
+        # > "--libiconv-prefix=XXX"
+        # > "--program-suffix=-mp-${major}"
+        # > "--with-ar=XXX"
+        # > "--with-as=XXX"
+        # > "--with-bugurl=XXX"
+        # > "--with-ld=XXX"
         '-v'
         '--disable-nls'
         '--enable-checking=release'
