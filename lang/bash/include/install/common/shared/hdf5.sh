@@ -3,7 +3,7 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2023-10-04.
+    # @note Updated 2023-10-09.
     #
     # Using gcc here for gfortran.
     #
@@ -36,17 +36,19 @@ main() {
         "--with-szlib=${dict['libaec']}"
         "--with-zlib=${dict['zlib']}"
     )
+    # Work around incompatibility with new linker (FB13194355).
+    # > ld: unknown options: -commons
+    # See also:
+    # - https://github.com/HDFGroup/hdf5/issues/3571
+    # - https://community.intel.com/t5/Intel-Fortran-Compiler/
+    #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
     if koopa_is_macos
     then
-        # Work around incompatibility with new linker (FB13194355).
-        # > ld: unknown options: -commons
-        # See also:
-        # - https://github.com/HDFGroup/hdf5/issues/3571
-        # - https://community.intel.com/t5/Intel-Fortran-Compiler/
-        #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
-        LDFLAGS="${LDFLAGS:-}"
-        LDFLAGS="-Wl,-ld_classic ${LDFLAGS}"
-        export LDFLAGS
+        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+        then
+            koopa_append_ldflags '-Wl,-ld_classic'
+        fi
     fi
     dict['url']="https://support.hdfgroup.org/ftp/HDF5/releases/\
 hdf5-${dict['maj_min_ver']}/hdf5-${dict['mmp_ver']}/src/\
