@@ -2335,7 +2335,6 @@
       "h5delete",
       "h5diff",
       "h5dump",
-      "h5fc",
       "h5format_convert",
       "h5import",
       "h5jam",
