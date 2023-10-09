@@ -579,6 +579,14 @@ koopa_macos_ifactive() {
     return 0
 }
 
+koopa_macos_install_system_gfortran() {
+    koopa_install_app \
+        --name='gfortran' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
@@ -1076,6 +1084,14 @@ koopa_macos_uninstall_system_cisco_webex() {
 koopa_macos_uninstall_system_docker() {
     koopa_uninstall_app \
         --name='docker' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_uninstall_system_gfortran() {
+    koopa_uninstall_app \
+        --name='gfortran' \
         --platform='macos' \
         --system \
         "$@"

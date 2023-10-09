@@ -106,6 +106,7 @@ main() {
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     app['echo']="$(koopa_locate_echo)"
+    app['fortran']="$(koopa_locate_gfortran)"
     app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar)"
     app['java']="$(koopa_locate_java)"
@@ -139,6 +140,9 @@ main() {
     conf_dict['cxx']="${app['cxx']}"
     conf_dict['echo']="${app['echo']}"
     conf_dict['editor']="${app['vim']}"
+    conf_dict['f77']="${app['fortran']}"
+    conf_dict['fc']="${app['fortran']}"
+    conf_dict['flibs']="$(koopa_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['temurin']}"
@@ -254,6 +258,9 @@ main() {
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
         "EDITOR=${conf_dict['editor']}"
+        "F77=${conf_dict['f77']}"
+        "FC=${conf_dict['fc']}"
+        "FLIBS=${conf_dict['flibs']}"
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
         "JAVAC=${conf_dict['javac']}"
@@ -287,19 +294,7 @@ main() {
         "TZ=${conf_dict['tz']}"
         "YACC=${conf_dict['yacc']}"
     )
-    if koopa_is_linux
-    then
-        app['gfortran']="$(koopa_locate_gfortran)"
-        koopa_assert_is_exectuable "${app['gfortran']}"
-        conf_dict['f77']="${app['gfortran']}"
-        conf_dict['fc']="${app['gfortran']}"
-        conf_dict['flibs']="$(koopa_gfortran_libs)"
-        conf_args+=(
-            "F77=${conf_dict['f77']}"
-            "FC=${conf_dict['fc']}"
-            "FLIBS=${conf_dict['flibs']}"
-        )
-    elif koopa_is_macos
+    if koopa_is_macos
     then
         dict['texbin']='/Library/TeX/texbin'
         if [[ -d "${dict['texbin']}" ]]

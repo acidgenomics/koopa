@@ -1772,6 +1772,14 @@
     ],
     "version": "0.12"
   },
+  "gfortran": {
+    "date": "2023-10-09",
+    "default": true,
+    "platform": "macos",
+    "system": true,
+    "url": ["https://mac.r-project.org/"],
+    "version": "12.2"
+  },
   "gget": {
     "arch": "amd64",
     "bin": ["gget"],
@@ -4570,7 +4578,7 @@
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-10-03",
-    "default": true,
+    "default": false,
     "dependencies": [
       "autoconf",
       "automake",
@@ -4581,6 +4589,7 @@
       "fontconfig",
       "freetype",
       "gawk",
+      "gcc",
       "gettext",
       "glib",
       "icu4c",
