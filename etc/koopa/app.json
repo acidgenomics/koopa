@@ -3505,6 +3505,7 @@
     "build_dependencies": ["make"],
     "date": "2023-02-08",
     "default": true,
+    "dependencies": ["gdbm", "libpipeline"],
     "man1": ["gman.1"],
     "url": [
       "https://man-db.nongnu.org/",
@@ -3737,9 +3738,9 @@
       "bioconda": "ncbi-vdb"
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-10-02",
+    "date": "2023-10-09",
     "default": false,
-    "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin"],
+    "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin", "zlib"],
     "large": true,
     "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
