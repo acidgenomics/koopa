@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME I think we need to bake lib into rpath here, not picking up correctly
-# on macOS.
+# FIXME This doesn't seem to set rpath correctly with clang 15.
+# Library not loaded: libbz2.dylib
 
 main() {
     # """
