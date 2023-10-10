@@ -4569,7 +4569,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-09",
+    "date": "2023-10-10",
     "default": true,
     "dependencies": [
       "autoconf",
@@ -4586,7 +4586,9 @@
       "gettext",
       "glib",
       "graphviz",
+      "harfbuzz",
       "icu4c",
+      "imagemagick",
       "less",
       "libffi",
       "libgit2",
