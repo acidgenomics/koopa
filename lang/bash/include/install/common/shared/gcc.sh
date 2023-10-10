@@ -82,11 +82,8 @@ main() {
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
     local -A app bool dict
-    local -a build_deps conf_args deps langs
-    build_deps=('make')
-    deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    local -a conf_args langs
+    koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
@@ -189,7 +186,6 @@ gcc-${dict['version']}.tar.xz"
     fi
     koopa_mkdir 'build'
     koopa_cd 'build'
-    unset -v LIBRARY_PATH
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ../src/configure --help
