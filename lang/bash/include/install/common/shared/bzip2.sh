@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME I think we need to bake lib into rpath here, not picking up correctly
+# on macOS.
+
 main() {
     # """
     # Install bzip2.
@@ -26,6 +29,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    koopa_mkdir "${dict['prefix']}/lib"
     dict['url']="https://sourceware.org/pub/bzip2/\
 bzip2-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
@@ -56,7 +60,8 @@ bzip2-${dict['version']}.tar.gz"
             'compress.o' \
             'decompress.o' \
             'bzlib.o' \
-            "${LDFLAGS:-}"
+            "-L${dict['prefix']}/lib" \
+            "-Wl,-rpath,${dict['prefix']}/lib"
     fi
     if koopa_is_linux
     then
@@ -93,10 +98,10 @@ bzip2-${dict['version']}.tar.gz"
     dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/bzip2.pc"
     read -r -d '' "dict[pkg_config_string]" << END || true
 prefix=${dict['prefix']}
-exec_prefix=${dict['prefix']}
-bindir=${dict['prefix']}/bin
-libdir=${dict['prefix']}/lib
-includedir=${dict['prefix']}/include
+exec_prefix=\${prefix}
+bindir=\${exec_prefix}/bin
+libdir=\${exec_prefix}/lib
+includedir=\${prefix}/include
 
 Name: bzip2
 Description: Lossless, block-sorting data compression
