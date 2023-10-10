@@ -10,9 +10,6 @@
 #     patches/0002-donotuse_own_htslib.patch
 # - https://github.com/alexdobin/STAR/pull/1586
 
-# NOTE When STAR pull request is merged, can use:
-# 'SYSTEM_HTSLIB=1' to make
-# https://github.com/alexdobin/STAR/pull/1586
 
 main() {
     # """
@@ -29,24 +26,21 @@ main() {
     # """
     local -A app
     local -a make_args
-    # FIXME Once we unbundle htslib (see above), can remove this.
-    if koopa_is_linux && [[ ! -f '/usr/include/zlib.h' ]]
-    then
-        koopa_stop 'System zlib is required.'
-    fi
     koopa_activate_app --build-only 'coreutils' 'make'
-    app['date']="$(koopa_locate_date)"
+    koopa_activate_app 'htslib'
     app['cxx']="$(koopa_locate_cxx)"
+    app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
+    app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    dict['patch_prefix']="$(koopa_patch_prefix)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src/source'
+    # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib.
+    # https://github.com/alexdobin/STAR/pull/1586
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
@@ -63,6 +57,21 @@ ${dict['version']}.tar.gz"
         make_args+=('STARforMacStatic' 'STARlongForMacStatic')
     else
         make_args+=('STAR' 'STARlong')
+    fi
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src/source'
+    dict['patch_common_prefix']="${dict['patch_prefix']}/common/star"
+    koopa_assert_is_dir "${dict['patch_common_prefix']}"
+    ## FIXME Need to apply patches.
+    koopa_stop 'FIXME patch 1'
+    koopa_stop 'FIXME patch 2'
+    if koopa_is_macos
+    then
+        dict['patch_macos_prefix']="${dict['patch_prefix']}/macos/star"
+        koopa_assert_is_dir "${dict['patch_macos_prefix']}"
+        # FIXME Need to remove openmp.
+        koopa_stop 'FIXME'
     fi
     # Makefile is currently hard-coded to look for 'date', which isn't expected
     # GNU on macOS.

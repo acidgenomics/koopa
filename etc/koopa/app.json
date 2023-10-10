@@ -5216,10 +5216,10 @@
   "star": {
     "bin": ["STAR"],
     "build_dependencies": ["coreutils", "make"],
-    "date": "2023-08-22",
+    "date": "2023-10-10",
     "default": false,
+    "dependencies": ["htslib"],
     "large": true,
-    "notes": ["Requires system zlib to be installed."],
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
