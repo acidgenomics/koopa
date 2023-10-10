@@ -2376,7 +2376,6 @@
     "build_dependencies": ["make"],
     "date": "2023-10-10",
     "default": false,
-    "dependencies": ["perl", "python3.12"],
     "large": true,
     "url": [
       "https://daehwankimlab.github.io/hisat2/",
