@@ -1672,9 +1672,9 @@
     },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
-    "date": "2023-08-15",
+    "date": "2023-10-10",
     "default": false,
-    "dependencies": ["gmp", "isl", "mpc", "mpfr", "zstd"],
+    "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
     "url": ["https://gcc.gnu.org/"],
     "version": "13.2.0"
