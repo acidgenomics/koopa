@@ -2727,6 +2727,7 @@
     "date": "2022-11-11",
     "default": false,
     "dependencies": ["gcc"],
+    "notes": ["LAPACK is written in Fortran, which is why we require GCC."],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.11.0"
@@ -5214,7 +5215,7 @@
   },
   "star": {
     "bin": ["STAR"],
-    "build_dependencies": ["coreutils", "gcc", "make"],
+    "build_dependencies": ["coreutils", "make"],
     "date": "2023-08-22",
     "default": false,
     "large": true,
