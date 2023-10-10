@@ -154,9 +154,9 @@ main() {
     conf_dict['f77']="${app['gfortran']}"
     conf_dict['fc']="${app['gfortran']}"
     # FIXME This doesn't match the default R system config, double check.
-    conf_dict['fcflags']='-g -O2 $(LTO_FC)'
+    # > conf_dict['fcflags']='-g -O2 $(LTO_FC)'
     conf_dict['fclibs']="$(koopa_r_gfortran_libs)"
-    conf_dict['fflags']='-g -O2 $(LTO_FC)'
+    # > conf_dict['fflags']='-g -O2 $(LTO_FC)'
     conf_dict['flibs']="$(koopa_r_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
@@ -275,9 +275,9 @@ main() {
         "EDITOR=${conf_dict['editor']}"
         "F77=${conf_dict['f77']}"
         "FC=${conf_dict['fc']}"
-        "FCFLAGS=${conf_dict['fcflags']}"
+        # > "FCFLAGS=${conf_dict['fcflags']}"
         "FCLIBS=${conf_dict['fclibs']}"
-        "FFLAGS=${conf_dict['fflags']}"
+        # > "FFLAGS=${conf_dict['fflags']}"
         "FLIBS=${conf_dict['flibs']}"
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
@@ -365,7 +365,7 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
         CPPFLAGS="${CPPFLAGS} -I/opt/gfortran/include"
         export CPPFLAGS
         LDFLAGS="${LDFLAGS:-}"
-        LDFLAGS="${LDFLAGS} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib"
+        LDFLAGS="${LDFLAGS} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib -L/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0 -Wl,-rpath,/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0"
         export LDFLAGS
     fi
     koopa_print_env
