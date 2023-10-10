@@ -98,19 +98,20 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
-    dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
+    # > dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
+        # Can leave this unset, per @ians:
+        # > '--enable-host-shared'
+        # > '--enable-lto'
+        # > '--with-build-config=bootstrap-debug'
         '-v'
         '--disable-nls'
         '--enable-checking=release'
-        '--enable-host-shared'
         "--enable-languages=${dict['langs']}"
         '--enable-libstdcxx-time'
-        '--enable-lto'
         "--prefix=${dict['prefix']}"
-        '--with-build-config=bootstrap-debug'
         '--with-gcc-major-version-only'
         # Required dependencies.
         "--with-gmp=${dict['gmp']}"
@@ -120,7 +121,7 @@ main() {
         "--with-isl=${dict['isl']}"
         "--with-zstd=${dict['zstd']}"
         # Ensure linkage is defined during bootstrap (stage 2).
-        "--with-boot-ldflags=${dict['boot_ldflags']}"
+        # > "--with-boot-ldflags=${dict['boot_ldflags']}"
     )
     if koopa_is_linux
     then
@@ -145,7 +146,8 @@ gcc/${dict['version']}"
             "${dict['patch_prefix']}" \
             "${dict['sysroot']}"
         conf_args+=(
-            '--with-native-system-header-dir=/usr/include'
+            # Can leave this unset, per @ians:
+            # > '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
