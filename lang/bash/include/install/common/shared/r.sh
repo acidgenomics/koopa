@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
 
-# Fortran configuration hell:
-# https://stat.ethz.ch/pipermail/r-sig-debian/2014-September/002322.html
-# https://stat.ethz.ch/pipermail/r-help/2014-February/366245.html
-# https://stackoverflow.com/questions/22555526/set-cxxflags-in-rcpp-makevars
-# https://trac.macports.org/ticket/44084
-# https://stackoverflow.com/questions/25033951/
-# https://stackoverflow.com/questions/22555526/
-# https://github.com/Homebrew/legacy-homebrew/issues/12776
-# https://github.com/Homebrew/legacy-homebrew/issues/19949
-# https://trac.macports.org/ticket/44084
-
 main() {
     # """
     # Install R.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-10.
     #
     # @section Compiler settings:
     #
@@ -151,12 +140,7 @@ main() {
     conf_dict['cxx']="${app['cxx']}"
     conf_dict['echo']="${app['echo']}"
     conf_dict['editor']="${app['vim']}"
-    conf_dict['f77']="${app['gfortran']}"
     conf_dict['fc']="${app['gfortran']}"
-    # FIXME This doesn't match the default R system config, double check.
-    # > conf_dict['fcflags']='-g -O2 $(LTO_FC)'
-    conf_dict['fclibs']="$(koopa_r_gfortran_libs)"
-    # > conf_dict['fflags']='-g -O2 $(LTO_FC)'
     conf_dict['flibs']="$(koopa_r_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
@@ -273,11 +257,7 @@ main() {
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
         "EDITOR=${conf_dict['editor']}"
-        "F77=${conf_dict['f77']}"
         "FC=${conf_dict['fc']}"
-        # > "FCFLAGS=${conf_dict['fcflags']}"
-        "FCLIBS=${conf_dict['fclibs']}"
-        # > "FFLAGS=${conf_dict['fflags']}"
         "FLIBS=${conf_dict['flibs']}"
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
@@ -353,17 +333,6 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     fi
     # 'configure' doesn't detect curl 8 correctly.
     export r_cv_have_curl728='yes'
-    # Fortran is required, and setting FCLIBS/FLIBS alone isn't sufficient.
-    # Need to append LDFLAGS currently as well.
-    #if koopa_is_macos
-    #then
-    #    dict['fc_ldflags']="$(koopa_r_gfortran_ldflags)"
-    #    # > koopa_append_ldflags "${dict['fc_ldflags']}"
-    #    koopa_print "${dict['fc_ldflags']}"
-    #    LDFLAGS="${LDFLAGS:?} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib -L/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0 -Wl,-rpath,/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0"
-    #    export LDFLAGS
-    #    # > koopa_append_cppflags '-I/opt/gfortran/include'
-    #fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
