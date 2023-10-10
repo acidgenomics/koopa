@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Use this approach for patching:
-# https://github.com/alexdobin/STAR/pull/1586/files
+# FIXME This isn't currently working correctly with clang on macOS Sonoma.
+# Author has only tested using GCC on macOS.
 
 main() {
     # """
@@ -36,8 +36,10 @@ main() {
 ${dict['version']}.tar.gz"
     make_args+=(
         "--jobs=${dict['jobs']}"
+        # > "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
-        'SYSTEM_HTSLIB=1'
+        # https://github.com/alexdobin/STAR/pull/1586/files
+        # > 'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
     if koopa_is_macos
