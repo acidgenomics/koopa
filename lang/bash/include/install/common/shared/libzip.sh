@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libzip.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://libzip.org/download/
@@ -12,9 +12,9 @@ main() {
     local -A cmake dict
     local -a cmake_args deps
     koopa_activate_app --build-only 'pkg-config'
-    deps=(
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'zlib'
-        'bzip2'
         'zstd'
         'nettle'
         'openssl3'
