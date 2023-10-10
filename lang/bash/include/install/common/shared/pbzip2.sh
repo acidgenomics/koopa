@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pbzip2.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://github.com/conda-forge/pbzip2-feedstock
@@ -11,8 +11,6 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'make'
-    # FIXME How to link our bzip2 correctly on macOS Sonoma?
-    # FIXME We may need to set rpath here.
     ! koopa_is_macos && koopa_activate_app 'bzip2'
     app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
