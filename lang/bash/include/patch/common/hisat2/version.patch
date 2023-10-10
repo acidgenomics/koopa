@@ -28,18 +28,19 @@ diff --git a/hisat2.xcodeproj/project.pbxproj b/hisat2.xcodeproj/project.pbxproj
 @@ -1206 +1206 @@
 -					"HISAT2_VERSION2=\"\\\"`cat VERSION`\\\"\"",
 +					"HISAT2_VERSION2=\"\\\"`cat VERSION.txt`\\\"\"",
-diff --git a/msvcc/codeStubs.vcxproj b/msvcc/codeStubs.vcxproj
---- a/msvcc/codeStubs.vcxproj
-+++ b/msvcc/codeStubs.vcxproj
-@@ -75 +75 @@
--      <Inputs>../VERSION;</Inputs>
-+      <Inputs>../VERSION.txt;</Inputs>
-@@ -97 +97 @@
--      <Inputs>../VERSION;</Inputs>
-+      <Inputs>../VERSION.txt;</Inputs>
-diff --git a/msvcc/SetVersion.vbs b/msvcc/SetVersion.vbs
---- a/msvcc/SetVersion.vbs
-+++ b/msvcc/SetVersion.vbs
-@@ -4 +4 @@
--set FileHandler = FS.GetFile("../VERSION")
-+set FileHandler = FS.GetFile("../VERSION.txt")
+# Disabled due to CRLF line endings mismatch:
+# > diff --git a/msvcc/codeStubs.vcxproj b/msvcc/codeStubs.vcxproj
+# > --- a/msvcc/codeStubs.vcxproj
+# > +++ b/msvcc/codeStubs.vcxproj
+# > @@ -75 +75 @@
+# > -      <Inputs>../VERSION;</Inputs>
+# > +      <Inputs>../VERSION.txt;</Inputs>
+# > @@ -97 +97 @@
+# > -      <Inputs>../VERSION;</Inputs>
+# > +      <Inputs>../VERSION.txt;</Inputs>
+# > diff --git a/msvcc/SetVersion.vbs b/msvcc/SetVersion.vbs
+# > --- a/msvcc/SetVersion.vbs
+# > +++ b/msvcc/SetVersion.vbs
+# > @@ -4 +4 @@
+# > -set FileHandler = FS.GetFile("../VERSION")
+# > +set FileHandler = FS.GetFile("../VERSION.txt")
