@@ -20654,9 +20654,6 @@ koopa_r_gfortran_libs() {
     if koopa_is_linux
     then
         flibs+=('-lm')
-    elif koopa_is_macos
-    then
-        flibs+=('-lemutls_w')
     fi
     case "${dict['arch']}" in
         'x86_64')
