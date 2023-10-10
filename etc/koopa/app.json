@@ -5218,7 +5218,7 @@
     "build_dependencies": ["coreutils", "make"],
     "date": "2023-10-10",
     "default": false,
-    "dependencies": ["htslib"],
+    "dependencies": ["htslib", "xz", "zlib"],
     "large": true,
     "url": [
       "https://github.com/alexdobin/STAR/",
