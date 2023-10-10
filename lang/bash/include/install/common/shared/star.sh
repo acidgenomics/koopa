@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+## FIXME Need to fix this to build with clang.
+
 # FIXME Apply bioconda patch or pull request to unbundle htslib:
 # - https://github.com/bioconda/bioconda-recipes/blob/master/recipes/star/
 #     patches/0002-donotuse_own_htslib.patch
@@ -12,7 +14,7 @@
 main() {
     # """
     # Install STAR.
-    # @note Updated 2023-08-22.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/
@@ -29,9 +31,9 @@ main() {
     then
         koopa_stop 'System zlib is required.'
     fi
-    koopa_activate_app --build-only 'coreutils' 'gcc' 'make'
+    koopa_activate_app --build-only 'coreutils' 'make'
     app['date']="$(koopa_locate_date)"
-    app['gcxx']="$(koopa_locate_gcxx)"
+    app['cxx']="$(koopa_locate_cxx)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
@@ -44,7 +46,7 @@ ${dict['version']}.tar.gz"
     koopa_cd 'src/source'
     make_args+=(
         "--jobs=${dict['jobs']}"
-        "CXX=${app['gcxx']}"
+        "CXX=${app['cxx']}"
         'VERBOSE=1'
     )
     # Need to set additional flags for Apple Silicon.
