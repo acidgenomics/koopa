@@ -20618,23 +20618,15 @@ koopa_r_gfortran_libs() {
     local -a flibs libs
     local i
     koopa_assert_has_no_args "$#"
+    app['dirname']="$(koopa_locate_dirname --allow-system)"
+    app['sort']="$(koopa_locate_sort --allow-system)"
+    app['xargs']="$(koopa_locate_xargs --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
-        app['dirname']="$(koopa_locate_dirname --allow-system)"
-        app['sort']="$(koopa_locate_sort --allow-system)"
-        app['xargs']="$(koopa_locate_xargs --allow-system)"
-        koopa_assert_is_executable "${app[@]}"
-        dict['gcc']="$(koopa_app_prefix 'gcc')"
-        koopa_assert_is_dir "${dict['gcc']}"
-        readarray -t libs <<< "$( \
-            koopa_find \
-                --pattern='*.a' \
-                --prefix="${dict['gcc']}" \
-                --type 'f' \
-            | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-            | "${app['sort']}" --unique \
-        )"
+        dict['gfortran']="$(koopa_app_prefix 'gcc')"
+
     elif koopa_is_macos
     then
         case "${dict['arch']}" in
@@ -20646,15 +20638,38 @@ koopa_r_gfortran_libs() {
         koopa_assert_is_dir "${dict['gfortran']}"
         readarray -t libs <<< "$( \
             koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
+                --max-depth=2 \
+                --min-depth=2 \
                 --pattern="${dict['arch']}*" \
                 --prefix="${dict['gfortran']}/lib/gcc" \
                 --type='d' \
         )"
+    fi
+    koopa_assert_is_dir "${dict['gfortran']}"
+    readarray -t libs <<< "$( \
+        koopa_find \
+            --pattern='*.a' \
+            --prefix="${dict['gfortran']}" \
+            --type='f' \
+        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+        | "${app['sort']}" --unique \
+    )"
+    koopa_assert_is_array_non_empty "${libs[@]:-}"
+    if koopa_is_macos
+    then
+        local -a libs2
+        local lib
+        for lib in "${libs[@]}"
+        do
+            case "$lib" in
+                */"${dict['arch']}-"*)
+                    libs2+=("$lib")
+                    ;;
+            esac
+        done
+        libs=("${libs2[@]}")
         libs+=("${dict['gfortran']}/lib")
     fi
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
     for i in "${!libs[@]}"
     do
         flibs+=("-L${libs[$i]}")
