@@ -12575,7 +12575,6 @@ koopa_install_hexyl() {
 
 koopa_install_hisat2() {
     koopa_install_app \
-        --installer='conda-package' \
         --name='hisat2' \
         "$@"
 }
