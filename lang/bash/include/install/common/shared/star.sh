@@ -1,20 +1,15 @@
 #!/usr/bin/env bash
 
-## FIXME Need to fix this to build with clang.
-## clang: error: unsupported option '-fopenmp'
-## Need to patch this:
-## https://github.com/alexdobin/STAR/blob/79affaae7d5e70221287762eab4e40679fad87f7/source/Makefile#L48
-
-# FIXME Apply bioconda patch or pull request to unbundle htslib:
-# - https://github.com/bioconda/bioconda-recipes/blob/master/recipes/star/
-#     patches/0002-donotuse_own_htslib.patch
-# - https://github.com/alexdobin/STAR/pull/1586
-
+# FIXME Need to fix our htslib linkage:
+# ./InOutStreams.h:5:10: fatal error: 'htslib/bgzf.h' file not found
 
 main() {
     # """
     # Install STAR.
     # @note Updated 2023-10-10.
+    #
+    # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib:
+    # https://github.com/alexdobin/STAR/pull/1586
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/
@@ -27,7 +22,7 @@ main() {
     local -A app
     local -a make_args
     koopa_activate_app --build-only 'coreutils' 'make'
-    koopa_activate_app 'htslib'
+    koopa_activate_app 'xz' 'zlib' 'htslib'
     app['cxx']="$(koopa_locate_cxx)"
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
@@ -39,8 +34,6 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
-    # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib.
-    # https://github.com/alexdobin/STAR/pull/1586
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
@@ -61,17 +54,31 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/source'
-    dict['patch_common_prefix']="${dict['patch_prefix']}/common/star"
-    koopa_assert_is_dir "${dict['patch_common_prefix']}"
-    ## FIXME Need to apply patches.
-    koopa_stop 'FIXME patch 1'
-    koopa_stop 'FIXME patch 2'
+    dict['patch_common']="${dict['patch_prefix']}/common/star"
+    koopa_assert_is_dir "${dict['patch_common']}"
+    dict['patch_file_1']="${dict['patch_common']}/disable-avx2.patch"
+    dict['patch_file_2']="${dict['patch_common']}/unbundle-htslib.patch"
+    koopa_assert_is_file \
+        "${dict['patch_file_1']}" \
+        "${dict['patch_file_2']}"
+    "${app['patch']}" \
+        --input="${dict['patch_file_1']}" \
+        --unified \
+        --verbose
+    "${app['patch']}" \
+        --input="${dict['patch_file_2']}" \
+        --unified \
+        --verbose
     if koopa_is_macos
     then
-        dict['patch_macos_prefix']="${dict['patch_prefix']}/macos/star"
-        koopa_assert_is_dir "${dict['patch_macos_prefix']}"
-        # FIXME Need to remove openmp.
-        koopa_stop 'FIXME'
+        dict['patch_macos']="${dict['patch_prefix']}/macos/star"
+        koopa_assert_is_dir "${dict['patch_macos']}"
+        dict['patch_file_3']="${dict['patch_macos']}/disable-openmp.patch"
+        koopa_assert_is_file "${dict['patch_file_3']}"
+        "${app['patch']}" \
+            --input="${dict['patch_file_3']}" \
+            --unified \
+            --verbose
     fi
     # Makefile is currently hard-coded to look for 'date', which isn't expected
     # GNU on macOS.

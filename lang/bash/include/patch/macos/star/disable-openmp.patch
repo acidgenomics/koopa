@@ -1,0 +1,14 @@
+Description: Disable OpenMP for clang
+Author: Michael Steinbaugh <mike@steinbaugh.com>
+Last-Update: 2023-10-10
+--- a/source/Makefile
++++ b/source/Makefile
+@@ -44,7 +44,7 @@
+ CFLAGS ?= -pipe -Wall -Wextra -O3
+ 
+ # Unconditionally set essential flags and optimization options
+-CXXFLAGS_common := -std=c++11 -fopenmp $(COMPTIMEPLACE) $(CCFLAGS_common_add)
++CXXFLAGS_common := -std=c++11 $(COMPTIMEPLACE) $(CCFLAGS_common_add)
+ CXXFLAGS_main := -O3 $(CXXFLAGS_common)
+ CXXFLAGS_gdb := -O0 -g3 $(CXXFLAGS_common)
+ 
