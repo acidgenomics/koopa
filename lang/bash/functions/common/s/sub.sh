@@ -3,7 +3,7 @@
 koopa_sub() {
     # """
     # Single substitution.
-    # @note Updated 2023-07-06.
+    # @note Updated 2023-10-10.
     #
     # Using 'printf' instead of 'koopa_print' here avoids issues with Perl
     # matching line break characters. Additionally, using 'LANG=C' helps avoid
@@ -69,7 +69,7 @@ koopa_sub() {
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
-            '-'*)
+            '--'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
