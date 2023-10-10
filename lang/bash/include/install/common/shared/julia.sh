@@ -18,7 +18,7 @@ main() {
     # """
     local -A app dict
     local -a build_deps
-    build_deps=('bzip2' 'cmake' 'make' 'tar' 'xz')
+    build_deps+=('bzip2' 'cmake' 'make' 'tar' 'xz')
     koopa_activate_app --build-only "${build_deps[@]}"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"

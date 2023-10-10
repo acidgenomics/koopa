@@ -14,9 +14,10 @@ main() {
     # - https://github.com/arq5x/bedtools2/tree/master/src/utils/htslib
     # """
     local -A app dict
-    local -a libs
+    local -a deps libs
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
-    koopa_activate_app 'bzip2' 'curl' 'openssl3' 'xz' 'zlib'
+    deps+=('bzip2' 'curl' 'openssl3' 'xz' 'zlib')
+    koopa_activate_app "${deps[@]}"
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
     app['sed']="$(koopa_locate_sed --allow-system)"

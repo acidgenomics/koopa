@@ -18,9 +18,9 @@ main() {
     local -a build_deps conf_args deps install_args
     local conf_arg
     build_deps=('sed' 'texinfo')
-    deps=(
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'brotli'
-        'bzip2'
         'xz'
         'zlib'
         'zstd'
