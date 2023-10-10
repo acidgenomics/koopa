@@ -3,7 +3,7 @@
 main() {
     # """
     # Install staden io-lib.
-    # @note Updated 2023-05-01.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://github.com/jkbonfield/io_lib
@@ -13,14 +13,8 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    deps=(
-        'bzip2'
-        'curl'
-        'libdeflate'
-        'xz'
-        'zlib'
-        'zstd'
-    )
+    ! koopa_is_macos && deps+=('bzip2')
+    deps=('curl' 'libdeflate' 'xz' 'zlib' 'zstd')
     koopa_activate_app "${deps[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"

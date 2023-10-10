@@ -10,12 +10,8 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    deps=(
-        'bzip2'
-        'xz'
-        'zlib'
-        'zstd'
-    )
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=('xz' 'zlib' 'zstd')
     koopa_is_macos && deps+=('gettext')
     deps+=('libiconv')
     koopa_activate_app --build-only 'm4'

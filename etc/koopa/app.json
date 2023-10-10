@@ -2727,6 +2727,7 @@
     "date": "2022-11-11",
     "default": false,
     "dependencies": ["gcc"],
+    "notes": ["LAPACK is written in Fortran, which is why we require GCC."],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.11.0"
@@ -4569,7 +4570,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-09",
+    "date": "2023-10-10",
     "default": true,
     "dependencies": [
       "autoconf",
@@ -4586,7 +4587,9 @@
       "gettext",
       "glib",
       "graphviz",
+      "harfbuzz",
       "icu4c",
+      "imagemagick",
       "less",
       "libffi",
       "libgit2",
@@ -5211,12 +5214,12 @@
     "version": "1.15.0"
   },
   "star": {
+    "arch": "amd64",
     "bin": ["STAR"],
-    "build_dependencies": ["coreutils", "gcc", "make"],
-    "date": "2023-08-22",
+    "date": "2023-10-10",
     "default": false,
+    "dependencies": ["conda"],
     "large": true,
-    "notes": ["Requires system zlib to be installed."],
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
@@ -5665,8 +5668,8 @@
   "walk": {
     "bin": ["walk"],
     "build_dependencies": ["go"],
-    "date": "2023-08-28",
-    "default": false,
+    "date": "2023-10-10",
+    "default": true,
     "url": ["https://github.com/antonmedv/walk/"],
     "version": "1.6.2"
   },
