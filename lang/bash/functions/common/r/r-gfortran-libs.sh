@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We need to locate gfortran...this is wrong.
-
 koopa_r_gfortran_libs() {
     # """
     # Define FLIBS for our R gfortran configuration.
@@ -78,9 +76,6 @@ koopa_r_gfortran_libs() {
     if koopa_is_linux
     then
         flibs+=('-lm')
-    elif koopa_is_macos
-    then
-        flibs+=('-lemutls_w')
     fi
     # quadmath is not yet supported for aarch64.
     # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=96016
