@@ -95,6 +95,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
+    # FIXME See if we can simplify the rpath here.
+    koopa_add_rpath_to_ldflags "${dict['zstd']}/lib"
     # > dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
