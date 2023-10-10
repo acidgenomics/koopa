@@ -1,5 +1,8 @@
---- Findlibstadenio.cmake	2023-05-01 11:11:46
-+++ Findlibstadenio.cmake-1	2023-05-01 11:13:01
+Description: Remove staden include dir
+Author: Michael Steinbaugh <mike@steinbaugh.com>
+Last-Update: 2023-10-10
+--- a/cmake/Modules/Findlibstadenio.cmake
++++ b/cmake/Modules/Findlibstadenio.cmake
 @@ -16,15 +16,6 @@
  find_library(HTSCODEC_LIBRARY NAMES htscodecs libhtscodecs
    HINTS ${STADEN_ROOT} ENV STADEN_ROOT PATH_SUFFIXES lib lib64)
