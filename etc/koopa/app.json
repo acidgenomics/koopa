@@ -4638,6 +4638,7 @@
     "version": "4.3.1"
   },
   "r-devel": {
+    "build_dependencies": ["make", "pkg-config", "subversion"],
     "date": "2023-10-10",
     "default": false,
     "dependencies": [
