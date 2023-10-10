@@ -2,6 +2,8 @@
 
 ## FIXME Need to fix this to build with clang.
 ## clang: error: unsupported option '-fopenmp'
+## Need to patch this:
+## https://github.com/alexdobin/STAR/blob/79affaae7d5e70221287762eab4e40679fad87f7/source/Makefile#L48
 
 # FIXME Apply bioconda patch or pull request to unbundle htslib:
 # - https://github.com/bioconda/bioconda-recipes/blob/master/recipes/star/
