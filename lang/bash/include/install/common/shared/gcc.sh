@@ -88,39 +88,20 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
-    dict['isl']="$(koopa_app_prefix 'isl')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['mpc']="$(koopa_app_prefix 'mpc')"
     dict['mpfr']="$(koopa_app_prefix 'mpfr')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
-    # FIXME See if we can simplify the rpath here.
-    koopa_add_rpath_to_ldflags "${dict['zstd']}/lib"
-    # > dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
-        # Can leave this unset, per @ians:
-        # > '--enable-host-shared'
-        # > '--enable-lto'
-        # > '--with-build-config=bootstrap-debug'
         '-v'
-        '--disable-nls'
-        '--enable-checking=release'
         "--enable-languages=${dict['langs']}"
-        '--enable-libstdcxx-time'
         "--prefix=${dict['prefix']}"
-        '--with-gcc-major-version-only'
-        # Required dependencies.
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        # Optional dependencies.
-        "--with-isl=${dict['isl']}"
-        "--with-zstd=${dict['zstd']}"
-        # Ensure linkage is defined during bootstrap (stage 2).
-        # > "--with-boot-ldflags=${dict['boot_ldflags']}"
     )
     if koopa_is_linux
     then
@@ -145,8 +126,6 @@ gcc/${dict['version']}"
             "${dict['patch_prefix']}" \
             "${dict['sysroot']}"
         conf_args+=(
-            # Can leave this unset, per @ians:
-            # > '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
