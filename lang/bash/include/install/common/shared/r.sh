@@ -353,20 +353,12 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     fi
     # 'configure' doesn't detect curl 8 correctly.
     export r_cv_have_curl728='yes'
-    # Fortran is required, and setting FLIBS alone isn't sufficient. Need to
-    # append LDFLAGS currently as well.
-    # > configure: error: Maybe check LDFLAGS for paths to Fortran libraries?
-    # FIXME > koopa_append_ldflags "${conf_dict['flibs']}"
+    # Fortran is required, and setting FCLIBS/FLIBS alone isn't sufficient.
+    # Need to append LDFLAGS currently as well.
     if koopa_is_macos
     then
-        # FIXME Rework using 'koopa_append_ldflags' and 'koopa_append_cppflags'.
-        CPPFLAGS="${CPPFLAGS:-}"
-        # May need to add '/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0'.
-        CPPFLAGS="${CPPFLAGS} -I/opt/gfortran/include"
-        export CPPFLAGS
-        LDFLAGS="${LDFLAGS:-}"
-        LDFLAGS="${LDFLAGS} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib -L/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0 -Wl,-rpath,/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0"
-        export LDFLAGS
+        # > koopa_append_ldflags '-L/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0'
+        koopa_append_ldflags "${conf_dict['fclibs']}"
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
