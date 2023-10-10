@@ -82,45 +82,26 @@ main() {
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
     local -A app bool dict
-    local -a build_deps conf_args deps langs
-    build_deps=('make')
-    deps=('gmp' 'mpfr' 'mpc' 'isl' 'zstd')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    local -a conf_args langs
+    koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['gmp']="$(koopa_app_prefix 'gmp')"
     dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
-    dict['isl']="$(koopa_app_prefix 'isl')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['mpc']="$(koopa_app_prefix 'mpc')"
     dict['mpfr']="$(koopa_app_prefix 'mpfr')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
-    dict['boot_ldflags']="-static-libstdc++ -static-libgcc ${LDFLAGS:?}"
     langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         '-v'
-        '--disable-nls'
-        '--enable-checking=release'
-        '--enable-host-shared'
         "--enable-languages=${dict['langs']}"
-        '--enable-libstdcxx-time'
-        '--enable-lto'
         "--prefix=${dict['prefix']}"
-        '--with-build-config=bootstrap-debug'
-        '--with-gcc-major-version-only'
-        # Required dependencies.
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
-        # Optional dependencies.
-        "--with-isl=${dict['isl']}"
-        "--with-zstd=${dict['zstd']}"
-        # Ensure linkage is defined during bootstrap (stage 2).
-        "--with-boot-ldflags=${dict['boot_ldflags']}"
     )
     if koopa_is_linux
     then
@@ -145,7 +126,6 @@ gcc/${dict['version']}"
             "${dict['patch_prefix']}" \
             "${dict['sysroot']}"
         conf_args+=(
-            '--with-native-system-header-dir=/usr/include'
             "--with-sysroot=${dict['sysroot']}"
             '--with-system-zlib'
         )
@@ -187,7 +167,6 @@ gcc-${dict['version']}.tar.xz"
     fi
     koopa_mkdir 'build'
     koopa_cd 'build'
-    unset -v LIBRARY_PATH
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ../src/configure --help
