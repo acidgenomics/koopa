@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
 ## FIXME Need to fix this to build with clang.
+## clang: error: unsupported option '-fopenmp'
 
 # FIXME Apply bioconda patch or pull request to unbundle htslib:
 # - https://github.com/bioconda/bioconda-recipes/blob/master/recipes/star/
 #     patches/0002-donotuse_own_htslib.patch
 # - https://github.com/alexdobin/STAR/pull/1586
 
-# FIXME When STAR pull request is merged, can use:
-# SYSTEM_HTSLIB=1 to make
+# NOTE When STAR pull request is merged, can use:
+# 'SYSTEM_HTSLIB=1' to make
 # https://github.com/alexdobin/STAR/pull/1586
 
 main() {
