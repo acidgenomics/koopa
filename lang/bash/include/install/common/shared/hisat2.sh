@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't building correctly on Apple Silicon.
+
 main() {
     # """
     # Install HISAT2.
