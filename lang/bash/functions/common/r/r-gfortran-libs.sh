@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Our find step on macOS inconsistently returns trailing slash.
-
 koopa_r_gfortran_libs() {
     # """
     # Define FLIBS for our R gfortran configuration.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-10.
     #
     # Locate gfortran library paths (from GCC). This will cover 'lib' and
     # 'lib64' subdirs. See also 'gcc --print-search-dirs'.
@@ -13,6 +11,7 @@ koopa_r_gfortran_libs() {
     local -A app dict
     local -a flibs libs
     local i
+    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then

@@ -357,18 +357,13 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     # Need to append LDFLAGS currently as well.
     if koopa_is_macos
     then
-        CPPFLAGS="${CPPFLAGS:-}"
-        CPPFLAGS="${CPPFLAGS} -I/opt/gfortran/include"
-        export CPPFLAGS
-        #koopa_append_ldflags \
-        #    '-L/opt/gfortran/lib' \
-        #    '-L/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0'
-        #koopa_add_rpath_to_ldflags \
-        #    '/opt/gfortran/lib' \
-        #    '/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0'
-        LDFLAGS="${LDFLAGS:-}"
-        LDFLAGS="${LDFLAGS} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib -L/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0/12.2.0 -Wl,-rpath,/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0/12.2.0"
-        export LDFLAGS
+        dict['fc_ldflags']="$(koopa_r_gfortran_ldflags)"
+        koopa_append_ldflags \
+            '-L/opt/gfortran/lib' \
+            '-Wl,-rpath,/opt/gfortran/lib' \
+            '-L/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0/12.2.0' \
+            '-Wl,-rpath,/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0/12.2.0'
+        koopa_append_ldflags "${dict['fc_ldflags']}"
     fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
