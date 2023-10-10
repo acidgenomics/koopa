@@ -20588,31 +20588,6 @@ koopa_r_copy_files_into_etc() {
     return 0
 }
 
-koopa_r_gfortran_ldflags() {
-    local -a flibs ldflags
-    local flib rpath
-    koopa_assert_has_no_args "$#"
-    readarray -d ' ' -t flibs <<< "$(koopa_r_gfortran_libs)"
-    for flib in "${flibs[@]}"
-    do
-        case "$flib" in
-            '-L'*)
-                ldflags+=("$flib")
-                rpath="$( \
-                    koopa_sub \
-                        --pattern='-L' \
-                        --replacement='' \
-                        "$flib" \
-                )"
-                rpath="-Wl,-rpath,${rpath}"
-                ldflags+=("$rpath")
-                ;;
-        esac
-    done
-    koopa_print "${ldflags[*]}"
-    return 0
-}
-
 koopa_r_gfortran_libs() {
     local -A app dict
     local -a flibs libs
@@ -20667,6 +20642,7 @@ koopa_r_gfortran_libs() {
                     ;;
             esac
         done
+        koopa_assert_is_array_non_empty "${libs2[@]:-}"
         libs=("${libs2[@]}")
         libs+=("${dict['gfortran']}/lib")
     fi
