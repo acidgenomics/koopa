@@ -1707,6 +1707,7 @@
       "pcre2",
       "proj",
       "sqlite",
+      "temurin",
       "xz",
       "zlib",
       "zstd"
