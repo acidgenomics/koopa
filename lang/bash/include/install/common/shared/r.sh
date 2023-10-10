@@ -66,7 +66,7 @@ main() {
         'libjpeg-turbo'
         'libpng'
         'libtiff'
-        'openblas' # for lapack
+        'openblas' # lapack, when fortran enabled
         'pcre2'
         'texinfo'
         'libffi' # glib > cairo
@@ -199,9 +199,10 @@ main() {
     conf_dict['with_jpeglib']="$( \
         "${app['pkg_config']}" --libs 'libjpeg' \
     )"
-    conf_dict['with_lapack']="$( \
-        "${app['pkg_config']}" --libs 'lapack' \
-    )"
+    # Only enable this if we build openblas with fortran.
+    # > conf_dict['with_lapack']="$( \
+    # >     "${app['pkg_config']}" --libs 'lapack' \
+    # > )"
     conf_dict['with_libpng']="$( \
         "${app['pkg_config']}" --libs 'libpng' \
     )"
@@ -239,7 +240,7 @@ main() {
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
-        "--with-lapack=${conf_dict['with_lapack']}"
+        # > "--with-lapack=${conf_dict['with_lapack']}"
         "--with-libpng=${conf_dict['with_libpng']}"
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
