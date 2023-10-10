@@ -58,9 +58,10 @@ END
         koopa_ln \
             "libopenblas.${dict['shared_ext']}" \
             "libblas.${dict['shared_ext']}"
-        koopa_ln \
-            "libopenblas.${dict['shared_ext']}" \
-            "liblapack.${dict['shared_ext']}"
+        # Only can add this when fortran is enabled.
+        # > koopa_ln \
+        # >     "libopenblas.${dict['shared_ext']}" \
+        # >     "liblapack.${dict['shared_ext']}"
     )
     return 0
 }
