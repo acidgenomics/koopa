@@ -4585,6 +4585,7 @@
       "geos",
       "gettext",
       "glib",
+      "graphviz",
       "icu4c",
       "less",
       "libffi",
