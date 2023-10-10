@@ -138,7 +138,8 @@ main() {
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
         dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
         dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
-        dict['patch_prefix']="$(koopa_patch_prefix)/macos/${dict['version']}"
+        dict['patch_prefix']="$(koopa_patch_prefix)/macos/\
+gcc/${dict['version']}"
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir \
             "${dict['patch_prefix']}" \
