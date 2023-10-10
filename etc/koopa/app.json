@@ -4637,7 +4637,7 @@
     "version": "4.3.1"
   },
   "r-devel": {
-    "date": "2023-08-31",
+    "date": "2023-10-10",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4649,9 +4649,14 @@
       "fontconfig",
       "freetype",
       "gawk",
+      "gdal",
+      "geos",
       "gettext",
       "glib",
+      "graphviz",
+      "harfbuzz",
       "icu4c",
+      "imagemagick",
       "less",
       "libffi",
       "libgit2",
@@ -4664,6 +4669,7 @@
       "openssl3",
       "pcre2",
       "pixman",
+      "proj",
       "readline",
       "sed",
       "tar",
@@ -4698,7 +4704,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "85035"
+    "version": "85312"
   },
   "r-gfortran": {
     "date": "2023-10-09",
