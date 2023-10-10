@@ -27,10 +27,7 @@ main() {
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
-    app['pkg_config']="$(koopa_locate_pkg_config)"
     koopa_assert_is_executable "${app[@]}"
-    dict['htslib_cflags']="$("${app['pkg_config']}" --cflags 'htslib')"
-    dict['htslib_libs']="$("${app['pkg_config']}" --libs 'htslib')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['patch_prefix']="$(koopa_patch_prefix)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -40,8 +37,6 @@ ${dict['version']}.tar.gz"
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
-        "HTSLIB_CFLAGS=${dict['htslib_cflags']}"
-        "HTSLIB_LIBS=${dict['htslib_libs']}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
