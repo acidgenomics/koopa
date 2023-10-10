@@ -355,11 +355,15 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     export r_cv_have_curl728='yes'
     # Fortran is required, and setting FCLIBS/FLIBS alone isn't sufficient.
     # Need to append LDFLAGS currently as well.
-    if koopa_is_macos
-    then
-        dict['fc_ldflags']="$(koopa_r_gfortran_ldflags)"
-        koopa_append_ldflags "${dict['fc_ldflags']}"
-    fi
+    #if koopa_is_macos
+    #then
+    #    dict['fc_ldflags']="$(koopa_r_gfortran_ldflags)"
+    #    # > koopa_append_ldflags "${dict['fc_ldflags']}"
+    #    koopa_print "${dict['fc_ldflags']}"
+    #    LDFLAGS="${LDFLAGS:?} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib -L/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0 -Wl,-rpath,/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0"
+    #    export LDFLAGS
+    #    # > koopa_append_cppflags '-I/opt/gfortran/include'
+    #fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
