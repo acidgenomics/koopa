@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-10.
     #
     # @section Compiler settings:
     #
@@ -45,21 +45,16 @@ main() {
     # - https://svn.r-project.org/R/trunk/Makefile.in
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
+    # - https://svn.r-project.org/R/trunk/configure
     # """
     local -A app bool conf_dict dict
     local -a build_deps conf_args deps r_pkgs
     local r_pkg
     bool['devel']=0
     bool['r_koopa']=1
-    build_deps=(
-        'autoconf'
-        'automake'
-        'libtool'
-        'make'
-        'pkg-config'
-    )
+    build_deps=('autoconf' 'automake' 'libtool' 'make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_is_linux && deps+=('bzip2')
+    ! koopa_is_macos && deps+=('bzip2')
     deps+=(
         'xz'
         'zlib' # libpng
@@ -96,7 +91,7 @@ main() {
         'xorg-libxt'
         'cairo'
         'tcl-tk'
-        'openssl3' # openssl
+        'openssl3'
     )
     koopa_activate_app "${deps[@]}"
     app['ar']="$(koopa_locate_ar --only-system)"
@@ -145,9 +140,8 @@ main() {
     conf_dict['cxx']="${app['cxx']}"
     conf_dict['echo']="${app['echo']}"
     conf_dict['editor']="${app['vim']}"
-    conf_dict['f77']="${app['gfortran']}"
     conf_dict['fc']="${app['gfortran']}"
-    conf_dict['flibs']="$(koopa_gfortran_libs)"
+    conf_dict['flibs']="$(koopa_r_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
     conf_dict['java_home']="${dict['temurin']}"
@@ -263,7 +257,6 @@ main() {
         "CXX=${conf_dict['cxx']}"
         "ECHO=${conf_dict['echo']}"
         "EDITOR=${conf_dict['editor']}"
-        "F77=${conf_dict['f77']}"
         "FC=${conf_dict['fc']}"
         "FLIBS=${conf_dict['flibs']}"
         "JAR=${conf_dict['jar']}"
@@ -338,7 +331,7 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
         koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
         koopa_cd 'src'
     fi
-    # `configure` doesn't like curl 8+, but convince it that everything is OK.
+    # 'configure' doesn't detect curl 8 correctly.
     export r_cv_have_curl728='yes'
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"

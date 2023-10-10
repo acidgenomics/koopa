@@ -231,7 +231,7 @@ lib/pkgconfig"
         conf_dict['f77']="${app['gfortran']}"
         conf_dict['fc']="${app['gfortran']}"
         conf_dict['fflags']="-Wall -g -O2 \$(LTO_FC)"
-        conf_dict['flibs']="$(koopa_gfortran_libs)"
+        conf_dict['flibs']="$(koopa_r_gfortran_libs)"
         conf_dict['ldflags']="${ldflags[*]}"
         conf_dict['make']="${app['make']}"
         conf_dict['objc_libs']='-lobjc'
