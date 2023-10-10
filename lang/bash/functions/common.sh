@@ -727,6 +727,18 @@ koopa_app_version() {
     return 0
 }
 
+koopa_append_cppflags() {
+    local str
+    koopa_assert_has_args "$#"
+    CPPFLAGS="${CPPFLAGS:-}"
+    for str in "$@"
+    do
+        CPPFLAGS="${CPPFLAGS} ${str}"
+    done
+    export CPPFLAGS
+    return 0
+}
+
 koopa_append_ldflags() {
     local str
     koopa_assert_has_args "$#"
@@ -20576,10 +20588,36 @@ koopa_r_copy_files_into_etc() {
     return 0
 }
 
+koopa_r_gfortran_ldflags() {
+    local -a flibs ldflags
+    local flib rpath
+    koopa_assert_has_no_args "$#"
+    readarray -d ' ' -t flibs <<< "$(koopa_r_gfortran_libs)"
+    for flib in "${flibs[@]}"
+    do
+        case "$flib" in
+            '-L'*)
+                ldflags+=("$flib")
+                rpath="$( \
+                    koopa_sub \
+                        --pattern='-L' \
+                        --replacement='' \
+                        "$flib" \
+                )"
+                rpath="-Wl,-rpath,${rpath}"
+                ldflags+=("$rpath")
+                ;;
+        esac
+    done
+    koopa_print "${ldflags[*]}"
+    return 0
+}
+
 koopa_r_gfortran_libs() {
     local -A app dict
     local -a flibs libs
     local i
+    koopa_assert_has_no_args "$#"
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
@@ -24461,7 +24499,7 @@ koopa_sub() {
                 bool['regex']=1
                 shift 1
                 ;;
-            '-'*)
+            '--'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
