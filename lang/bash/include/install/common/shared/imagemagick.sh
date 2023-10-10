@@ -33,10 +33,10 @@ main() {
     local -A dict
     local -a conf_args deps
     koopa_activate_app --build-only 'pkg-config'
-    deps=(
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'zlib'
         'zstd'
-        'bzip2'
         'xz'
         'freetype'
         'jpeg'

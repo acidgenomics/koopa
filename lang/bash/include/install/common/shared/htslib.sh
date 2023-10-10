@@ -10,14 +10,8 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    deps=(
-        'bzip2'
-        'curl'
-        'libdeflate'
-        'openssl3'
-        'xz'
-        'zlib'
-    )
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=('curl' 'libdeflate' 'openssl3' 'xz' 'zlib')
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

@@ -13,8 +13,8 @@ main() {
     local -a build_deps conf_args deps
     build_deps=('pkg-config' 'sed')
     deps=(
-        'zlib'
         'bzip2'
+        'zlib'
         'readline'
         'nettle'
         'libtasn1'
