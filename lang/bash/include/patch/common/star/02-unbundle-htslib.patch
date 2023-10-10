@@ -18,14 +18,14 @@ Last-Changed: 2023-10-10
  LDFLAGS_gdb := $(LDFLAGS_shared)
  
 +ifdef SYSTEM_HTSLIB
-+PKG_CONFIG ?= pkg-config
-+HTSLIB_CFLAGS = $(shell $(PKG_CONFIG) --cflags htslib)
-+HTSLIB_LIBS = $(shell $(PKG_CONFIG) --libs htslib)
++# > PKG_CONFIG ?= pkg-config
++# > HTSLIB_CFLAGS = $(shell $(PKG_CONFIG) --cflags htslib)
++# > HTSLIB_LIBS = $(shell $(PKG_CONFIG) --libs htslib)
 +else
-+HTSLIB_DEP := htslib
-+
-+HTSLIB_CFLAGS := -Ihtslib/
-+HTSLIB_LIBS := htslib/libhts.a -lz
++# > HTSLIB_DEP := htslib
++# > 
++# > HTSLIB_CFLAGS := -Ihtslib/
++# > HTSLIB_LIBS := htslib/libhts.a -lz
 +endif
 +
 +CPPFLAGS += $(HTSLIB_CFLAGS)
