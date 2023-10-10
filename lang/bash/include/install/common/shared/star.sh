@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Need to fix our htslib linkage:
-# ./InOutStreams.h:5:10: fatal error: 'htslib/bgzf.h' file not found
+# FIXME Use this approach for patching:
+# https://github.com/alexdobin/STAR/pull/1586/files
 
 main() {
     # """
@@ -28,6 +28,7 @@ main() {
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"
+    dict['htslib']="$(koopa_app_prefix 'htslib')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['patch_prefix']="$(koopa_patch_prefix)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -37,6 +38,9 @@ ${dict['version']}.tar.gz"
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
+        "CXXFLAGS=${CPPFLAGS:?}"
+        "LDFLAGS=${LDFLAGS:?}"
+        'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
     # Need to set additional flags for Apple Silicon.
