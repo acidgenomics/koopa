@@ -358,11 +358,6 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     if koopa_is_macos
     then
         dict['fc_ldflags']="$(koopa_r_gfortran_ldflags)"
-        koopa_append_ldflags \
-            '-L/opt/gfortran/lib' \
-            '-Wl,-rpath,/opt/gfortran/lib' \
-            '-L/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0/12.2.0' \
-            '-Wl,-rpath,/opt/gfortran/lib/gcc/aarch64-apple-darwin20.0/12.2.0'
         koopa_append_ldflags "${dict['fc_ldflags']}"
     fi
     koopa_print_env
