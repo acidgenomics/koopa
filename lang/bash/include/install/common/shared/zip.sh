@@ -19,7 +19,7 @@ main() {
     ! koopa_is_macos && koopa_activate_app 'bzip2'
     app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
-    app['patch']="$(koopa_locate_patch --allow-system)"
+    app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"
     dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
