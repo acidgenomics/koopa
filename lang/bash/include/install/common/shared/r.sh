@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# Fortran configuration hell:
+# https://stat.ethz.ch/pipermail/r-sig-debian/2014-September/002322.html
+# https://stat.ethz.ch/pipermail/r-help/2014-February/366245.html
+# https://stackoverflow.com/questions/22555526/set-cxxflags-in-rcpp-makevars
+# https://trac.macports.org/ticket/44084
+# https://stackoverflow.com/questions/25033951/
+# https://stackoverflow.com/questions/22555526/
+# https://github.com/Homebrew/legacy-homebrew/issues/12776
+# https://github.com/Homebrew/legacy-homebrew/issues/19949
+# https://trac.macports.org/ticket/44084
+
 main() {
     # """
     # Install R.
@@ -45,21 +56,16 @@ main() {
     # - https://svn.r-project.org/R/trunk/Makefile.in
     # - https://github.com/archlinux/svntogit-packages/blob/
     #     b3c63075d83c8dea993b8d776b8f9970c58791fe/r/trunk/PKGBUILD
+    # - https://svn.r-project.org/R/trunk/configure
     # """
     local -A app bool conf_dict dict
     local -a build_deps conf_args deps r_pkgs
     local r_pkg
     bool['devel']=0
     bool['r_koopa']=1
-    build_deps=(
-        'autoconf'
-        'automake'
-        'libtool'
-        'make'
-        'pkg-config'
-    )
+    build_deps=('autoconf' 'automake' 'libtool' 'make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_is_linux && deps+=('bzip2')
+    ! koopa_is_macos && deps+=('bzip2')
     deps+=(
         'xz'
         'zlib' # libpng
@@ -96,7 +102,7 @@ main() {
         'xorg-libxt'
         'cairo'
         'tcl-tk'
-        'openssl3' # openssl
+        'openssl3'
     )
     koopa_activate_app "${deps[@]}"
     app['ar']="$(koopa_locate_ar --only-system)"
@@ -147,6 +153,10 @@ main() {
     conf_dict['editor']="${app['vim']}"
     conf_dict['f77']="${app['gfortran']}"
     conf_dict['fc']="${app['gfortran']}"
+    # FIXME This doesn't match the default R system config, double check.
+    conf_dict['fcflags']='-g -O2 $(LTO_FC)'
+    conf_dict['fclibs']="$(koopa_r_gfortran_libs)"
+    conf_dict['fflags']='-g -O2 $(LTO_FC)'
     conf_dict['flibs']="$(koopa_r_gfortran_libs)"
     conf_dict['jar']="${app['jar']}"
     conf_dict['java']="${app['java']}"
@@ -265,6 +275,9 @@ main() {
         "EDITOR=${conf_dict['editor']}"
         "F77=${conf_dict['f77']}"
         "FC=${conf_dict['fc']}"
+        "FCFLAGS=${conf_dict['fcflags']}"
+        "FCLIBS=${conf_dict['fclibs']}"
+        "FFLAGS=${conf_dict['fflags']}"
         "FLIBS=${conf_dict['flibs']}"
         "JAR=${conf_dict['jar']}"
         "JAVA=${conf_dict['java']}"
@@ -338,8 +351,23 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
         koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
         koopa_cd 'src'
     fi
-    # `configure` doesn't like curl 8+, but convince it that everything is OK.
+    # 'configure' doesn't detect curl 8 correctly.
     export r_cv_have_curl728='yes'
+    # Fortran is required, and setting FLIBS alone isn't sufficient. Need to
+    # append LDFLAGS currently as well.
+    # > configure: error: Maybe check LDFLAGS for paths to Fortran libraries?
+    # FIXME > koopa_append_ldflags "${conf_dict['flibs']}"
+    if koopa_is_macos
+    then
+        # FIXME Rework using 'koopa_append_ldflags' and 'koopa_append_cppflags'.
+        CPPFLAGS="${CPPFLAGS:-}"
+        # May need to add '/opt/gfortran/lib/gcc/x86_64-apple-darwin20.0/12.2.0'.
+        CPPFLAGS="${CPPFLAGS} -I/opt/gfortran/include"
+        export CPPFLAGS
+        LDFLAGS="${LDFLAGS:-}"
+        LDFLAGS="${LDFLAGS} -L/opt/gfortran/lib -Wl,-rpath,/opt/gfortran/lib"
+        export LDFLAGS
+    fi
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
     ./configure --help
