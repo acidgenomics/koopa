@@ -21,7 +21,7 @@ main() {
     # """
     local -A app
     local -a make_args
-    koopa_activate_app --build-only 'coreutils' 'make'
+    koopa_activate_app --build-only 'coreutils' 'make' 'pkg-config'
     koopa_activate_app 'xz' 'zlib' 'htslib'
     app['cxx']="$(koopa_locate_cxx)"
     app['date']="$(koopa_locate_date)"
@@ -38,17 +38,12 @@ ${dict['version']}.tar.gz"
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
-        "CXXFLAGS=${CPPFLAGS:?}"
+        # > "CXXFLAGS=${CPPFLAGS:?}"
+        "CPPFLAGS=${CPPFLAGS:?}"
         "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
-    # Need to set additional flags for Apple Silicon.
-    # https://github.com/alexdobin/STAR/issues/1265
-    if koopa_is_aarch64
-    then
-        make_args+=('CXXFLAGS_SIMD=-std=c++11')
-    fi
     if koopa_is_macos
     then
         make_args+=('STARforMacStatic' 'STARlongForMacStatic')
@@ -60,8 +55,8 @@ ${dict['version']}.tar.gz"
     koopa_cd 'src/source'
     dict['patch_common']="${dict['patch_prefix']}/common/star"
     koopa_assert_is_dir "${dict['patch_common']}"
-    dict['patch_file_1']="${dict['patch_common']}/disable-avx2.patch"
-    dict['patch_file_2']="${dict['patch_common']}/unbundle-htslib.patch"
+    dict['patch_file_1']="${dict['patch_common']}/01-disable-avx2.patch"
+    dict['patch_file_2']="${dict['patch_common']}/02-unbundle-htslib.patch"
     koopa_assert_is_file \
         "${dict['patch_file_1']}" \
         "${dict['patch_file_2']}"
