@@ -48,7 +48,8 @@ main() {
     fi
     koopa_assert_is_not_aarch64
     build_deps=('cmake' 'make')
-    deps=('bzip2' 'icu4c' 'xz' 'zlib' 'zstd')
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=('icu4c' 'xz' 'zlib' 'zstd')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['aws']="$(koopa_locate_aws --allow-system)"

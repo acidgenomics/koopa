@@ -12689,9 +12689,17 @@ koopa_install_jupyterlab() {
 }
 
 koopa_install_kallisto() {
-    koopa_install_app \
-        --name='kallisto' \
-        "$@"
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        koopa_install_app \
+            --name='kallisto' \
+            "$@"
+    else
+        koopa_install_app \
+            --installer='conda-package' \
+            --name='kallisto' \
+            "$@"
+    fi
 }
 
 koopa_install_koopa() {
@@ -14407,9 +14415,17 @@ koopa_install_rust() {
 }
 
 koopa_install_salmon() {
-    koopa_install_app \
-        --name='salmon' \
-        "$@"
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        koopa_install_app \
+            --name='salmon' \
+            "$@"
+    else
+        koopa_install_app \
+            --installer='conda-package' \
+            --name='salmon' \
+            "$@"
+    fi
 }
 
 koopa_install_sambamba() {
@@ -14527,7 +14543,9 @@ koopa_install_star_fusion() {
 }
 
 koopa_install_star() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
+        --installer='conda-package' \
         --name='star' \
         "$@"
 }
@@ -20654,9 +20672,6 @@ koopa_r_gfortran_libs() {
     if koopa_is_linux
     then
         flibs+=('-lm')
-    elif koopa_is_macos
-    then
-        flibs+=('-lemutls_w')
     fi
     case "${dict['arch']}" in
         'x86_64')

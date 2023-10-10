@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libarchive.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
@@ -12,14 +12,8 @@ main() {
     local -A dict
     local -a conf_args deps
     koopa_activate_app --build-only 'pkg-config'
-    deps=(
-        'bzip2'
-        'expat'
-        'lz4'
-        'xz'
-        'zlib'
-        'zstd'
-    )
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=('expat' 'lz4' 'xz' 'zlib' 'zstd')
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
