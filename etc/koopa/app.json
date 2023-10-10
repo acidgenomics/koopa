@@ -2374,7 +2374,7 @@
   "hisat2": {
     "arch": "amd64",
     "bin": ["hisat2"],
-    "date": "2020-07-24",
+    "date": "2023-10-10",
     "default": false,
     "dependencies": ["conda"],
     "large": true,
@@ -4638,6 +4638,7 @@
     "version": "4.3.1"
   },
   "r-devel": {
+    "build_dependencies": ["make", "pkg-config", "subversion"],
     "date": "2023-10-10",
     "default": false,
     "dependencies": [
@@ -5227,6 +5228,7 @@
     "default": false,
     "dependencies": ["conda"],
     "large": true,
+    "notes": ["Currently doesn't build with clang on macOS Sonoma."],
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
