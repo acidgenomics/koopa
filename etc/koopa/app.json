@@ -5221,11 +5221,11 @@
     "version": "1.15.0"
   },
   "star": {
-    "arch": "amd64",
     "bin": ["STAR"],
+    "build_dependencies": ["coreutils", "make"],
     "date": "2023-10-10",
     "default": false,
-    "dependencies": ["conda"],
+    "dependencies": ["xz", "zlib"],
     "large": true,
     "url": [
       "https://github.com/alexdobin/STAR/",
