@@ -3,7 +3,7 @@
 main() {
     # """
     # Install salmon.
-    # @note Updated 2023-05-02.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://github.com/COMBINE-lab/salmon/
@@ -15,9 +15,9 @@ main() {
     local -A app cmake dict
     local -a build_deps cmake_args deps
     build_deps=('patch' 'pkg-config')
-    deps=(
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'boost'
-        'bzip2'
         'cereal'
         'curl'
         'icu4c'

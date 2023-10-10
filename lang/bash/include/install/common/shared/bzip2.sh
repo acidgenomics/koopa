@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME I think we need to bake lib into rpath here, not picking up correctly
-# on macOS.
-
 main() {
     # """
     # Install bzip2.
@@ -10,19 +7,21 @@ main() {
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
-    # - https://gitlab.com/federicomenaquintero/bzip2
+    # - https://github.com/apple-open-source/macos/tree/master/bzip2/bzip2
     # - https://github.com/conda-forge/bzip2-feedstock/blob/main/recipe/build.sh
+    # - https://opensource.apple.com/source/bzip2/bzip2-16.5/bzip2/
+    #     Makefile.auto.html
+    # - https://gitlab.com/federicomenaquintero/bzip2
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bzip2.rb
     # - https://github.com/macports/macports-ports/blob/master/archivers/
     #     bzip2/Portfile
     # - https://stackoverflow.com/questions/67179779/
-    # - https://opensource.apple.com/source/bzip2/bzip2-16.5/bzip2/
-    #     Makefile.auto.html
     # - https://gist.githubusercontent.com/obihill/
     #     3278c17bcee41c0c8b59a41ada8c0d35/raw/
     #     3bf890e2ad40d0af358e153395c228326f0b44d5/Makefile-libbz2_dylib
     # """
     local -A app dict
+    local -a cc_args
     koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
@@ -46,22 +45,26 @@ bzip2-${dict['version']}.tar.gz"
     elif koopa_is_macos
     then
         # This is the approach used by conda-forge recipe.
-        app['cc']="$(koopa_locate_gcc --only-system)"
+        app['cc']="$(koopa_locate_cc)"
         koopa_assert_is_executable "${app['cc']}"
-        "${app['cc']}" \
-            '-shared' \
-            '-Wl,-install_name' \
-            "-Wl,libbz2.${dict['shared_ext']}" \
-            -o "libbz2.${dict['version']}.${dict['shared_ext']}" \
-            'blocksort.o' \
-            'huffman.o' \
-            'crctable.o' \
-            'randtable.o' \
-            'compress.o' \
-            'decompress.o' \
-            'bzlib.o' \
-            "-L${dict['prefix']}/lib" \
+        cc_args+=(
+            '-shared'
+            '-Wl,-install_name'
+            "-Wl,libbz2.${dict['shared_ext']}"
+            '-o' "libbz2.${dict['version']}.${dict['shared_ext']}"
+            'blocksort.o'
+            'huffman.o'
+            'crctable.o'
+            'randtable.o'
+            'compress.o'
+            'decompress.o'
+            'bzlib.o'
+            # LDFLAGS ====
+            "-L${dict['prefix']}/lib"
             "-Wl,-rpath,${dict['prefix']}/lib"
+            # > '-Wl,-ld_classic'
+        )
+        "${app['cc']}" "${cc_args[@]}"
     fi
     if koopa_is_linux
     then
