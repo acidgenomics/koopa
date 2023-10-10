@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Need to not use sudo permission on linux here:
+# /opt/koopa/app/r/4.3.1/lib/R/etc/Makevars.site
+# Need to check our boolean flag handling here.
+
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-10.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
