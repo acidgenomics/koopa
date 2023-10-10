@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bzip2.
-    # @note Updated 2023-10-02.
+    # @note Updated 2023-10-10.
     #
     # @seealso
     # - https://www.sourceware.org/bzip2/
@@ -93,16 +93,14 @@ bzip2-${dict['version']}.tar.gz"
     dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/bzip2.pc"
     read -r -d '' "dict[pkg_config_string]" << END || true
 prefix=${dict['prefix']}
-exec_prefix=\${prefix}
-bindir=\${exec_prefix}/bin
-libdir=\${exec_prefix}/lib
-includedir=\${prefix}/include
+exec_prefix=${dict['prefix']}
+bindir=${dict['prefix']}/bin
+libdir=${dict['prefix']}/lib
+includedir=${dict['prefix']}/include
 
 Name: bzip2
 Description: Lossless, block-sorting data compression
 Version: ${dict['version']}
-
-Requires:
 Libs: -L\${libdir} -lbz2
 Cflags: -I\${includedir}
 END
