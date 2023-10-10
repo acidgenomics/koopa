@@ -23,7 +23,7 @@ main() {
     local -a make_args
     koopa_activate_app --build-only 'coreutils' 'make' 'pkg-config'
     koopa_activate_app 'xz' 'zlib' 'htslib'
-    app['cxx']="$(koopa_locate_cxx)"
+    app['cxx']="$(koopa_locate_gcxx)"
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
@@ -36,10 +36,8 @@ main() {
 ${dict['version']}.tar.gz"
     make_args+=(
         "--jobs=${dict['jobs']}"
-        # > "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
-        # https://github.com/alexdobin/STAR/pull/1586/files
-        # > 'SYSTEM_HTSLIB=1'
+        'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
     if koopa_is_macos
