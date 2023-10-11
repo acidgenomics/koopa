@@ -2050,7 +2050,7 @@ _koopa_opt_prefix() {
 }
 
 _koopa_os_id() {
-    __kvar_string="$(_koopa_os_string | cut -d '-' -f '1')"
+    __kvar_string="$(_koopa_os_string | cut -d '-' -f 1)"
     [ -n "$__kvar_string" ] || return 1
     _koopa_print "$__kvar_string"
     unset -v __kvar_string
