@@ -70,14 +70,12 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    case "${bool['system']}" in
-        '0')
-            r_cmd=("${app['r']}")
-            ;;
-        '1')
-            r_cmd=('koopa_sudo' "${app['r']}")
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        r_cmd=('koopa_sudo' "${app['r']}")
+    else
+        r_cmd=("${app['r']}")
+    fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0

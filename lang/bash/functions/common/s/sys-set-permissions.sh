@@ -59,16 +59,14 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${bool['shared']}" in
-        '0')
-            bool['group']="$(koopa_group_name)"
-            bool['user']="$(koopa_user_name)"
-            ;;
-        '1')
-            bool['group']="$(koopa_sys_group_name)"
-            bool['user']="$(koopa_sys_user_name)"
-            ;;
-    esac
+    if [[ "${bool['shared']}" -eq 1 ]]
+    then
+        bool['group']="$(koopa_sys_group_name)"
+        bool['user']="$(koopa_sys_user_name)"
+    else
+        bool['group']="$(koopa_group_name)"
+        bool['user']="$(koopa_user_name)"
+    fi
     chown_args+=('--no-dereference')
     if [[ "${bool['recursive']}" -eq 1 ]]
     then
