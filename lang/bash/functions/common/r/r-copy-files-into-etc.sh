@@ -15,7 +15,6 @@ koopa_r_copy_files_into_etc() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
