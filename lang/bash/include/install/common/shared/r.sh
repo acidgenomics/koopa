@@ -103,7 +103,7 @@ main() {
     then
         app['gfortran']='/opt/gfortran/bin/gfortran'
     else
-        app['gfortran']="$(koopa_locate_gfortran)"
+        app['gfortran']="$(koopa_locate_gfortran --only-system)"
     fi
     app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar)"
