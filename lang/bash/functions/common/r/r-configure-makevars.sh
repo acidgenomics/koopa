@@ -7,7 +7,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-11.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -227,7 +227,6 @@ lib/pkgconfig"
         conf_dict['ar']="${app['ar']}"
         conf_dict['awk']="${app['awk']}"
         conf_dict['cc']="${app['cc']}"
-        # NOTE Consider using '-O3' instead of '-O2' here.
         conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
         conf_dict['cppflags']="${cppflags[*]}"
         conf_dict['cxx']="${app['cxx']} -std=gnu++14"
