@@ -13,7 +13,6 @@ koopa_is_koopa_app() {
     do
         [[ -e "$str" ]] || return 1
         str="$(koopa_realpath "$str")"
-        # FIXME This may be problematic on Ubuntu 22...may need to rework.
         koopa_str_detect_regex \
             --string="$str" \
             --pattern="^${app_prefix}" \
