@@ -20025,6 +20025,7 @@ koopa_r_configure_java() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
@@ -20081,6 +20082,7 @@ koopa_r_configure_ldpaths() {
     bool['use_apps']=1
     bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
@@ -20258,6 +20260,7 @@ koopa_r_configure_makevars() {
     bool['use_apps']=1
     bool['use_openmp']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20545,6 +20548,7 @@ koopa_r_copy_files_into_etc() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
@@ -20804,6 +20808,7 @@ koopa_r_remove_packages_in_system_library() {
     shift 1
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['script']="$(koopa_koopa_prefix)/lang/r/\
 remove-packages-in-system-library.R"
     koopa_assert_is_file "${dict['script']}"

@@ -14,6 +14,7 @@ koopa_r_remove_packages_in_system_library() {
     shift 1
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['script']="$(koopa_koopa_prefix)/lang/r/\
 remove-packages-in-system-library.R"
     koopa_assert_is_file "${dict['script']}"
