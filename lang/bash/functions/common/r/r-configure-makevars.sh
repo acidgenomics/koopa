@@ -7,7 +7,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-11.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -66,7 +66,7 @@ koopa_r_configure_makevars() {
         then
             app['gfortran']='/opt/gfortran/bin/gfortran'
         else
-            app['gfortran']="$(koopa_locate_gfortran)"
+            app['gfortran']="$(koopa_locate_gfortran --only-system)"
         fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
@@ -86,9 +86,6 @@ koopa_r_configure_makevars() {
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
     fi
-    cppflags=()
-    ldflags=()
-    lines=()
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Custom pkg-config flags here are incompatible for macOS clang with
@@ -227,7 +224,6 @@ lib/pkgconfig"
         conf_dict['ar']="${app['ar']}"
         conf_dict['awk']="${app['awk']}"
         conf_dict['cc']="${app['cc']}"
-        # NOTE Consider using '-O3' instead of '-O2' here.
         conf_dict['cflags']="-Wall -g -O2 \$(LTO)"
         conf_dict['cppflags']="${cppflags[*]}"
         conf_dict['cxx']="${app['cxx']} -std=gnu++14"
@@ -264,14 +260,12 @@ lib/pkgconfig"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
         # This operator is needed to harden library paths for R CRAN binary.
-        case "${bool['system']}" in
-            '0')
-                conf_dict['op']='+='
-                ;;
-            '1')
-                conf_dict['op']='='
-                ;;
-        esac
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            conf_dict['op']='='
+        else
+            conf_dict['op']='+='
+        fi
         lines+=(
             "AR = ${conf_dict['ar']}"
             "AWK = ${conf_dict['awk']}"
@@ -313,7 +307,9 @@ lib/pkgconfig"
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
+    if koopa_is_linux && \
+        [[ "${bool['system']}" -eq 1 ]] && \
+        [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "Deleting '${dict['file']}'."
         koopa_rm --sudo "${dict['file']}"
@@ -322,20 +318,18 @@ lib/pkgconfig"
     koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     unset -v PKG_CONFIG_PATH
     return 0
 }
