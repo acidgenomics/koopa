@@ -24340,7 +24340,23 @@ koopa_str_unique_by_colon() {
 }
 
 koopa_str_unique_by_space() {
-    koopa_stop 'FIXME IN PROGRESS'
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    app['uniq']="$(koopa_locate_uniq --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ' ' '\n' \
+                | "${app['uniq']}" \
+                | "${app['tr']}" '\n' ' ' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
     return 0
 }
 
