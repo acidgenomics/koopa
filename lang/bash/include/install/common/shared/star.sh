@@ -19,6 +19,8 @@
 # File is located here:
 # /opt/koopa/app/htslib/1.18/include/htslib/sam.h
 
+# FIXME Alternatively can build with full llvm on macOS.
+
 main() {
     # """
     # Install STAR.
