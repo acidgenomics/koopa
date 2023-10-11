@@ -6,7 +6,7 @@ koopa_str_unique_by_colon() {
     # @note Updated 2023-10-11.
     #
     # Primarily intended for use during app activation, to sanitize PATH,
-    # LIBRARY, and other build variables.
+    # LIBRARY_PATH, and other build variables.
     # 
     # @examples
     # koopa_str_unique_by_colon '/usr/bin:/usr/bin'
