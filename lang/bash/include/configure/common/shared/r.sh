@@ -32,6 +32,7 @@ main() {
     koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_copy_files_into_etc "${app['r']}"
+    koopa_r_configure_java "${app['r']}"
     case "${bool['system']}" in
         '0')
             if [[ -L "${dict['site_library']}" ]]
@@ -41,7 +42,6 @@ main() {
             koopa_sys_mkdir "${dict['site_library']}"
             ;;
         '1')
-            koopa_r_configure_java "${app['r']}"
             dict['group']="$(koopa_admin_group_name)"
             dict['user']='root'
             # > dict['user']="$(koopa_user_name)"

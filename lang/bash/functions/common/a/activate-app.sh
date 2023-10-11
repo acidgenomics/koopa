@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure we remove duplicates here.
+# Need to load string as an array, and make unique.
+
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
