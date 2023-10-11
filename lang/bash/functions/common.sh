@@ -20271,12 +20271,14 @@ koopa_r_configure_makevars() {
             bool['use_openmp']=1
         fi
     fi
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if koopa_is_macos && [[ "${bool['use_openmp']}" -eq 1 ]]
     then
         koopa_assert_is_file '/usr/local/include/omp.h'
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['ar']="$(koopa_locate_ar --only-system)"
@@ -20309,6 +20311,7 @@ koopa_r_configure_makevars() {
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
     fi
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20465,6 +20468,7 @@ lib/pkgconfig"
         conf_dict['fcflags']="${conf_dict['fflags']}"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
+        koopa_warn "FIXME SYSTEM: ${bool['system']}"
         if [[ "${bool['system']}" -eq 1 ]]
         then
             conf_dict['op']='='
@@ -20510,8 +20514,10 @@ lib/pkgconfig"
             "YACC = ${conf_dict['yacc']}"
         )
     fi
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "Deleting '${dict['file']}'."
@@ -20519,8 +20525,10 @@ lib/pkgconfig"
         return 0
     fi
     koopa_is_array_empty "${lines[@]}" && return 0
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
+    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
         koopa_print "${app['r']}"
