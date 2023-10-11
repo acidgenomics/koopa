@@ -133,8 +133,7 @@ gcc/${dict['version']}"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            # FIXME Testing 15.1.0.0.1.1696033181 x86_64 build support.
-            # > bool['math_h_patch']=1
+            bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
             conf_args+=("--with-ld=${app['ld']}")
