@@ -42,7 +42,12 @@ main() {
     deps+=('xz' 'zlib' 'htslib')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['cxx']="$(koopa_locate_cxx --only-system)"
+    if koopa_is_macos
+    then
+        app['cxx']="$(koopa_locate_gcxx)"
+    else
+        app['cxx']="$(koopa_locate_cxx --only-system)"
+    fi
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
@@ -61,17 +66,14 @@ ${dict['version']}.tar.gz"
         then
             koopa_append_ldflags '-Wl,-ld_classic'
         fi
-        # For clang, can't link libc++ statically, only libstdc++.
-        koopa_append_ldflags '-static-libc++'
-        # Here's how to do it for GCC:
-        # > koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
+        koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
     fi
     make_args+=(
+        # > "CPPFLAGS=${CPPFLAGS:?}"
+        # > "CXXFLAGS=${CPPFLAGS:?}"
+        # > "LDFLAGS=${LDFLAGS:?}"
         "--jobs=${dict['jobs']}"
-        "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
-        "CXXFLAGS=${CPPFLAGS:?}"
-        "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
@@ -81,7 +83,7 @@ ${dict['version']}.tar.gz"
         # > make_args+=('STARforMac')
         make_args+=(
             "PKG_CONFIG=${app['pkg_config']} --static"
-            "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
+            # > "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
             'STARforMacStatic' 'STARlongForMacStatic'
         )
     else
@@ -105,17 +107,6 @@ ${dict['version']}.tar.gz"
         --input="${dict['patch_file_2']}" \
         --unified \
         --verbose
-    if koopa_is_macos
-    then
-        dict['patch_macos']="${dict['patch_prefix']}/macos/star"
-        koopa_assert_is_dir "${dict['patch_macos']}"
-        dict['patch_file_3']="${dict['patch_macos']}/disable-openmp.patch"
-        koopa_assert_is_file "${dict['patch_file_3']}"
-        "${app['patch']}" \
-            --input="${dict['patch_file_3']}" \
-            --unified \
-            --verbose
-    fi
     # Makefile is currently hard-coded to look for 'date', which isn't expected
     # GNU on macOS.
     koopa_mkdir 'bin'
