@@ -24372,7 +24372,7 @@ koopa_str_unique_by_colon() {
     return 0
 }
 
-koopa_str_unique_by_colon() {
+koopa_str_unique_by_semicolon() {
     local -A app
     local str str2
     koopa_assert_has_args "$#"
