@@ -23,7 +23,6 @@ main() {
         koopa_assert_is_admin
         bool['system']=1
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['name']='r'
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"

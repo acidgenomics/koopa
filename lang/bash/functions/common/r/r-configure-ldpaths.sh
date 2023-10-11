@@ -33,7 +33,6 @@ koopa_r_configure_ldpaths() {
     bool['use_apps']=1
     bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0

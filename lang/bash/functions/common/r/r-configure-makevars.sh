@@ -37,7 +37,6 @@ koopa_r_configure_makevars() {
     bool['use_apps']=1
     bool['use_openmp']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -48,7 +47,6 @@ koopa_r_configure_makevars() {
             bool['use_openmp']=1
         fi
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if koopa_is_macos && [[ "${bool['use_openmp']}" -eq 1 ]]
     then
         koopa_assert_is_file '/usr/local/include/omp.h'
@@ -56,7 +54,6 @@ koopa_r_configure_makevars() {
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['ar']="$(koopa_locate_ar --only-system)"
@@ -89,7 +86,6 @@ koopa_r_configure_makevars() {
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Custom pkg-config flags here are incompatible for macOS clang with
@@ -264,7 +260,6 @@ lib/pkgconfig"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
         # This operator is needed to harden library paths for R CRAN binary.
-        koopa_warn "FIXME SYSTEM: ${bool['system']}"
         if [[ "${bool['system']}" -eq 1 ]]
         then
             conf_dict['op']='='
@@ -310,10 +305,8 @@ lib/pkgconfig"
             "YACC = ${conf_dict['yacc']}"
         )
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if koopa_is_linux && \
         [[ "${bool['system']}" -eq 1 ]] && \
         [[ -f "${dict['file']}" ]]
@@ -323,14 +316,10 @@ lib/pkgconfig"
         return 0
     fi
     koopa_is_array_empty "${lines[@]}" && return 0
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        koopa_print "${app['r']}"
-        koopa_stop 'FIXME NOOOO BAD UBUNTU'
         koopa_rm --sudo "${dict['file']}"
         koopa_sudo_write_string \
             --file="${dict['file']}" \
