@@ -6,7 +6,7 @@
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
-    # @note Updated 2023-08-18.
+    # @note Updated 2023-10-11.
     #
     # Consider using 'pkg-config' to manage CFLAGS, CPPFLAGS, and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
