@@ -20268,11 +20268,7 @@ koopa_r_configure_makevars() {
     bool['system']=0
     bool['use_apps']=1
     bool['use_openmp']=0
-    if ! koopa_is_koopa_app "${app['r']}"
-    then
-        koopa_stop 'FIXME NOOOO BAD DETECTION HERE'
-        bool['system']=1
-    fi
+    ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     if [[ "${bool['system']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20535,6 +20531,7 @@ lib/pkgconfig"
     koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
+    koopa_stop "FIXME UBUNTU ${bool['system']}."
     case "${bool['system']}" in
         '0')
             koopa_rm "${dict['file']}"
