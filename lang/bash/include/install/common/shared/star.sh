@@ -26,7 +26,7 @@ main() {
     deps+=('xz' 'zlib' 'htslib')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['cxx']="$(koopa_locate_gcxx)"
+    app['cxx']="$(koopa_locate_cxx)"
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
