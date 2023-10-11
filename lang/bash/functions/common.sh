@@ -20025,7 +20025,6 @@ koopa_r_configure_java() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
@@ -20082,7 +20081,6 @@ koopa_r_configure_ldpaths() {
     bool['use_apps']=1
     bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
@@ -20260,7 +20258,6 @@ koopa_r_configure_makevars() {
     bool['use_apps']=1
     bool['use_openmp']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20271,14 +20268,12 @@ koopa_r_configure_makevars() {
             bool['use_openmp']=1
         fi
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if koopa_is_macos && [[ "${bool['use_openmp']}" -eq 1 ]]
     then
         koopa_assert_is_file '/usr/local/include/omp.h'
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'
         lines+=("SHLIB_OPENMP_CFLAGS = ${conf_dict['shlib_openmp_cflags']}")
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         app['ar']="$(koopa_locate_ar --only-system)"
@@ -20311,7 +20306,6 @@ koopa_r_configure_makevars() {
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20468,7 +20462,6 @@ lib/pkgconfig"
         conf_dict['fcflags']="${conf_dict['fflags']}"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
-        koopa_warn "FIXME SYSTEM: ${bool['system']}"
         if [[ "${bool['system']}" -eq 1 ]]
         then
             conf_dict['op']='='
@@ -20514,25 +20507,21 @@ lib/pkgconfig"
             "YACC = ${conf_dict['yacc']}"
         )
     fi
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
-    if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
+    if koopa_is_linux && \
+        [[ "${bool['system']}" -eq 1 ]] && \
+        [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "Deleting '${dict['file']}'."
         koopa_rm --sudo "${dict['file']}"
         return 0
     fi
     koopa_is_array_empty "${lines[@]}" && return 0
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        koopa_print "${app['r']}"
-        koopa_stop 'FIXME NOOOO BAD UBUNTU'
         koopa_rm --sudo "${dict['file']}"
         koopa_sudo_write_string \
             --file="${dict['file']}" \
@@ -20556,7 +20545,6 @@ koopa_r_copy_files_into_etc() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['r_etc_source']="$(koopa_koopa_prefix)/etc/R"
     dict['r_etc_target']="${dict['r_prefix']}/etc"
@@ -20816,7 +20804,6 @@ koopa_r_remove_packages_in_system_library() {
     shift 1
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    koopa_warn "FIXME SYSTEM: ${bool['system']}"
     dict['script']="$(koopa_koopa_prefix)/lang/r/\
 remove-packages-in-system-library.R"
     koopa_assert_is_file "${dict['script']}"
