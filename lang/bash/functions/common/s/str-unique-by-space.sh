@@ -9,6 +9,7 @@ koopa_str_unique_by_space() {
     # LDFLAGS, and other build variables.
     #
     # @seealso
+    # - https://stackoverflow.com/questions/11532157/
     # - https://stackoverflow.com/questions/13648410/
     # 
     # @examples
@@ -19,16 +20,18 @@ koopa_str_unique_by_space() {
     local -A app
     local str str2
     koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
     app['tr']="$(koopa_locate_tr --allow-system)"
-    app['uniq']="$(koopa_locate_uniq --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for str in "$@"
     do
+        # shellcheck disable=SC2016
         str2="$( \
             koopa_print "$str" \
                 | "${app['tr']}" ' ' '\n' \
-                | "${app['uniq']}" \
+                | "${app['awk']}" '!x[$0]++' \
                 | "${app['tr']}" '\n' ' ' \
+                | koopa_strip_right --pattern=' ' \
         )"
         [[ -n "$str2" ]] || return 1
         koopa_print "$str2"
