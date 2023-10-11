@@ -20160,10 +20160,6 @@ libexec/lib/server}")
         then
             keys+=('gettext')
         fi
-        if koopa_is_linux && [[ "${bool['system']}" -eq 0 ]]
-        then
-            keys+=('gcc')
-        fi
         for key in "${keys[@]}"
         do
             local prefix
@@ -20173,14 +20169,7 @@ libexec/lib/server}")
         done
         for i in "${!ld_lib_app_arr[@]}"
         do
-            case "$i" in
-                'gcc')
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
-                    ;;
-                *)
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
-                    ;;
-            esac
+            ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
         done
         koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     fi
@@ -20591,50 +20580,36 @@ koopa_r_copy_files_into_etc() {
 
 koopa_r_gfortran_libs() {
     local -A app dict
-    local -a flibs libs
-    local i
+    local -a flibs libs libs2
+    local lib
     koopa_assert_has_no_args "$#"
-    app['dirname']="$(koopa_locate_dirname --allow-system)"
-    app['sort']="$(koopa_locate_sort --allow-system)"
-    app['xargs']="$(koopa_locate_xargs --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
-        dict['gfortran']="$(koopa_app_prefix 'gcc')"
-
+        app['gfortran']="$(koopa_locate_gfortran --only-system)"
+        koopa_assert_is_executable "${app[@]}"
     elif koopa_is_macos
     then
+        app['dirname']="$(koopa_locate_dirname --allow-system)"
+        app['sort']="$(koopa_locate_sort --allow-system)"
+        app['xargs']="$(koopa_locate_xargs --allow-system)"
+        koopa_assert_is_executable "${app[@]}"
         case "${dict['arch']}" in
             'arm64')
                 dict['arch']='aarch64'
                 ;;
         esac
-        dict['gfortran']='/opt/gfortran'
-        koopa_assert_is_dir "${dict['gfortran']}"
+        dict['lib_prefix']='/opt/gfortran/lib'
+        koopa_assert_is_dir "${dict['lib_prefix']}"
         readarray -t libs <<< "$( \
             koopa_find \
-                --max-depth=2 \
-                --min-depth=2 \
-                --pattern="${dict['arch']}*" \
-                --prefix="${dict['gfortran']}/lib/gcc" \
-                --type='d' \
+                --pattern='libgfortran.a' \
+                --prefix="${dict['lib_prefix']}" \
+                --type='f' \
+            | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+            | "${app['sort']}" --unique \
         )"
-    fi
-    koopa_assert_is_dir "${dict['gfortran']}"
-    readarray -t libs <<< "$( \
-        koopa_find \
-            --pattern='*.a' \
-            --prefix="${dict['gfortran']}" \
-            --type='f' \
-        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-        | "${app['sort']}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
-    if koopa_is_macos
-    then
-        local -a libs2
-        local lib
+        koopa_assert_is_array_non_empty "${libs[@]:-}"
         for lib in "${libs[@]}"
         do
             case "$lib" in
@@ -20645,12 +20620,12 @@ koopa_r_gfortran_libs() {
         done
         koopa_assert_is_array_non_empty "${libs2[@]:-}"
         libs=("${libs2[@]}")
-        libs+=("${dict['gfortran']}/lib")
+        libs+=("${dict['lib_prefix']}")
+        for lib in "${libs[@]}"
+        do
+            flibs+=("-L${lib}")
+        done
     fi
-    for i in "${!libs[@]}"
-    do
-        flibs+=("-L${libs[$i]}")
-    done
     flibs+=('-lgfortran')
     if koopa_is_linux
     then
