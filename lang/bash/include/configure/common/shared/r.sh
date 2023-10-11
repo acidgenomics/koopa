@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME Can improve this to automatically install any missing dependencies.
+# FIXME Need to ensure that this is only allowed for koopa owner.
 
 main() {
     # """
