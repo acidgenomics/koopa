@@ -9,6 +9,16 @@
 # > ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
 # > #include <htslib/sam.h>
 
+# Problematic part of Makefile:
+# Depend.list: $(SOURCES) parametersDefault.xxd $(HTSLIB_DEP)
+# 	echo $(SOURCES)
+# 	'rm' -f ./Depend.list
+# 	$(CXX) $(CXXFLAGS_common) -MM $^ >> Depend.list
+# include Depend.list
+#
+# File is located here:
+# /opt/koopa/app/htslib/1.18/include/htslib/sam.h
+
 main() {
     # """
     # Install STAR.
@@ -60,6 +70,7 @@ ${dict['version']}.tar.gz"
         "--jobs=${dict['jobs']}"
         "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
+        "CXXFLAGS=${CPPFLAGS:?}"
         "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
@@ -69,7 +80,8 @@ ${dict['version']}.tar.gz"
         # Static instead of dynamic build is currently recommended in README.
         # > make_args+=('STARforMac')
         make_args+=(
-            # > "PKG_CONFIG=${app['pkg_config']} --static"
+            "PKG_CONFIG=${app['pkg_config']} --static"
+            "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
             'STARforMacStatic' 'STARlongForMacStatic'
         )
     else
