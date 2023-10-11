@@ -314,7 +314,9 @@ lib/pkgconfig"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
     koopa_warn "FIXME SYSTEM: ${bool['system']}"
-    if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
+    if koopa_is_linux && \
+        [[ "${bool['system']}" -eq 1 ]] && \
+        [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "Deleting '${dict['file']}'."
         koopa_rm --sudo "${dict['file']}"
