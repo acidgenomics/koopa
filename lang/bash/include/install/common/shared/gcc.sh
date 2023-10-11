@@ -103,11 +103,11 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     langs=(
-        # > 'c'
-        # > 'c++'
+        'c'
+        'c++'
         'fortran'
-        # > 'objc'
-        # > 'obj-c++'
+        'objc'
+        'obj-c++'
     )
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
@@ -128,7 +128,8 @@ main() {
     then
         app['patch']="$(koopa_locate_patch)"
         koopa_assert_is_executable "${app['patch']}"
-        bool['homebrew_patch']=1
+        bool['homebrew_patch']=0
+        koopa_is_aarch64 && bool['homebrew_patch']=1
         bool['math_h_patch']=0
         dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
@@ -146,7 +147,8 @@ gcc/${dict['version']}"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            bool['math_h_patch']=1
+            # FIXME Doesn't seem like we need to apply this.
+            # > koopa_is_aarch64 && bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
             conf_args+=("--with-ld=${app['ld']}")
