@@ -341,8 +341,6 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     app['r']="${dict['prefix']}/bin/R"
     app['rscript']="${dict['prefix']}/bin/Rscript"
     koopa_assert_is_executable "${app['r']}" "${app['rscript']}"
-    # FIXME See if R on Ubuntu is creating a Makevars.site owned as root.
-    koopa_stop "$PWD"
     koopa_configure_r "${app['r']}"
     "${app['rscript']}" -e 'capabilities()'
     koopa_check_shared_object \

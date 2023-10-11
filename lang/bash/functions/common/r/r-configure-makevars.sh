@@ -329,6 +329,7 @@ lib/pkgconfig"
                 --string="${dict['string']}"
             ;;
         '1')
+            koopa_stop 'FIXME NOOOO BAD UBUNTU'
             koopa_rm --sudo "${dict['file']}"
             koopa_sudo_write_string \
                 --file="${dict['file']}" \
