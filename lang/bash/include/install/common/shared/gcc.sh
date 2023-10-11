@@ -147,7 +147,6 @@ gcc/${dict['version']}"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            # FIXME Doesn't seem like we need to apply this.
             # > koopa_is_aarch64 && bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
