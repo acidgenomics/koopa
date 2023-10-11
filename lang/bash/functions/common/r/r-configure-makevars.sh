@@ -260,14 +260,12 @@ lib/pkgconfig"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
         # This operator is needed to harden library paths for R CRAN binary.
-        case "${bool['system']}" in
-            '0')
-                conf_dict['op']='+='
-                ;;
-            '1')
-                conf_dict['op']='='
-                ;;
-        esac
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            conf_dict['op']='='
+        else
+            conf_dict['op']='+='
+        fi
         lines+=(
             "AR = ${conf_dict['ar']}"
             "AWK = ${conf_dict['awk']}"
@@ -318,23 +316,20 @@ lib/pkgconfig"
     koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    koopa_stop "FIXME UBUNTU ${bool['system']}."
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_print "${app['r']}"
-            koopa_stop 'FIXME NOOOO BAD UBUNTU'
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_print "${app['r']}"
+        koopa_stop 'FIXME NOOOO BAD UBUNTU'
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     unset -v PKG_CONFIG_PATH
     return 0
 }

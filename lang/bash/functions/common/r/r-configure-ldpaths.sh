@@ -185,28 +185,25 @@ libexec/lib/server}")
     koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }

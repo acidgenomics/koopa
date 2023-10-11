@@ -45,14 +45,12 @@ koopa_convert_sam_to_bam() {
         koopa_stop "No SAM files detected in '${dict['prefix']}'."
     fi
     koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    case "${bool['keep_sam']}" in
-        '0')
-            koopa_alert_note 'SAM files will be deleted.'
-            ;;
-        '1')
-            koopa_alert_note 'SAM files will be preserved.'
-            ;;
-    esac
+    if [[ "${bool['keep_sam']}" -eq 1 ]]
+    then
+        koopa_alert_note 'SAM files will be preserved.'
+    else
+        koopa_alert_note 'SAM files will be deleted.'
+    fi
     for sam_file in "${sam_files[@]}"
     do
         local bam_file

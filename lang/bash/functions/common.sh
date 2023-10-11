@@ -5611,14 +5611,12 @@ koopa_convert_sam_to_bam() {
         koopa_stop "No SAM files detected in '${dict['prefix']}'."
     fi
     koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    case "${bool['keep_sam']}" in
-        '0')
-            koopa_alert_note 'SAM files will be deleted.'
-            ;;
-        '1')
-            koopa_alert_note 'SAM files will be preserved.'
-            ;;
-    esac
+    if [[ "${bool['keep_sam']}" -eq 1 ]]
+    then
+        koopa_alert_note 'SAM files will be preserved.'
+    else
+        koopa_alert_note 'SAM files will be deleted.'
+    fi
     for sam_file in "${sam_files[@]}"
     do
         local bam_file
@@ -8401,14 +8399,12 @@ koopa_find() {
                 '--no-ignore'
                 '--one-file-system'
             )
-            case "${bool['hidden']}" in
-                '0')
-                    find_args+=('--no-hidden')
-                    ;;
-                '1')
-                    find_args+=('--hidden')
-                    ;;
-            esac
+            if [[ "${bool['hidden']}" -eq 1 ]]
+            then
+                find_args+=('--hidden')
+            else
+                find_args+=('--no-hidden')
+            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('--min-depth' "${dict['min_depth']}")
@@ -20005,20 +20001,18 @@ abort,verbose"
     fi
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }
 
@@ -20065,14 +20059,12 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    case "${bool['system']}" in
-        '0')
-            r_cmd=("${app['r']}")
-            ;;
-        '1')
-            r_cmd=('koopa_sudo' "${app['r']}")
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        r_cmd=('koopa_sudo' "${app['r']}")
+    else
+        r_cmd=("${app['r']}")
+    fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
@@ -20230,29 +20222,26 @@ libexec/lib/server}")
     koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }
 
@@ -20473,14 +20462,12 @@ lib/pkgconfig"
         conf_dict['fcflags']="${conf_dict['fflags']}"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
-        case "${bool['system']}" in
-            '0')
-                conf_dict['op']='+='
-                ;;
-            '1')
-                conf_dict['op']='='
-                ;;
-        esac
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            conf_dict['op']='='
+        else
+            conf_dict['op']='+='
+        fi
         lines+=(
             "AR = ${conf_dict['ar']}"
             "AWK = ${conf_dict['awk']}"
@@ -20531,23 +20518,20 @@ lib/pkgconfig"
     koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    koopa_stop "FIXME UBUNTU ${bool['system']}."
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_print "${app['r']}"
-            koopa_stop 'FIXME NOOOO BAD UBUNTU'
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_print "${app['r']}"
+        koopa_stop 'FIXME NOOOO BAD UBUNTU'
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     unset -v PKG_CONFIG_PATH
     return 0
 }
@@ -24840,16 +24824,14 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${bool['shared']}" in
-        '0')
-            bool['group']="$(koopa_group_name)"
-            bool['user']="$(koopa_user_name)"
-            ;;
-        '1')
-            bool['group']="$(koopa_sys_group_name)"
-            bool['user']="$(koopa_sys_user_name)"
-            ;;
-    esac
+    if [[ "${bool['shared']}" -eq 1 ]]
+    then
+        bool['group']="$(koopa_sys_group_name)"
+        bool['user']="$(koopa_sys_user_name)"
+    else
+        bool['group']="$(koopa_group_name)"
+        bool['user']="$(koopa_user_name)"
+    fi
     chown_args+=('--no-dereference')
     if [[ "${bool['recursive']}" -eq 1 ]]
     then
