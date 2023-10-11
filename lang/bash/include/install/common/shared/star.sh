@@ -6,7 +6,7 @@
 main() {
     # """
     # Install STAR.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-11.
     #
     # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib:
     # https://github.com/alexdobin/STAR/pull/1586
@@ -30,6 +30,7 @@ main() {
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['patch_prefix']="$(koopa_patch_prefix)"
@@ -37,15 +38,33 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
+    if koopa_is_macos
+    then
+        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+        then
+            koopa_append_ldflags '-Wl,-ld_classic'
+        fi
+        # For clang, can't link libc++ statically, only libstdc++.
+        koopa_append_ldflags '-static-libc++'
+        # Here's how to do it for GCC:
+        # > koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
+    fi
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
+        "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
     if koopa_is_macos
     then
-        make_args+=('STARforMacStatic' 'STARlongForMacStatic')
+        # Static instead of dynamic build is currently recommended in README:
+        # > make_args+=('STARforMac')
+        make_args+=(
+            "PKG_CONFIG=${app['pkg_config']} --static"
+            'STARforMacStatic' 'STARlongForMacStatic'
+        )
     else
         make_args+=('STAR' 'STARlong')
     fi
