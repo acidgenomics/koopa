@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can improve this to automatically install any missing dependencies.
+
 main() {
     # """
     # Configure R.
