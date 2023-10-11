@@ -20,9 +20,12 @@ main() {
     #   https://github.com/alexdobin/STAR/pull/1586
     # """
     local -A app
-    local -a make_args
-    koopa_activate_app --build-only 'coreutils' 'make' 'pkg-config'
-    koopa_activate_app 'xz' 'zlib' 'htslib'
+    local -a build_deps deps make_args
+    build_deps=('coreutils' 'make' 'pkg-config')
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=('xz' 'zlib' 'htslib')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['cxx']="$(koopa_locate_gcxx)"
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
