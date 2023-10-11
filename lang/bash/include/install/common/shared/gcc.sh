@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME This is still failing on my Intel MacBook, CLT 15.1.0.0.1.1696033181.
+# FIXME Try building just fortran to see if we can reproduce faster.
 
 main() {
     # """
@@ -95,7 +96,13 @@ main() {
     dict['mpfr']="$(koopa_app_prefix 'mpfr')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
+    langs=(
+        # > 'c'
+        # > 'c++'
+        'fortran'
+        # > 'objc'
+        # > 'obj-c++'
+    )
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         '-v'
