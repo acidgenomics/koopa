@@ -37,6 +37,8 @@ koopa_activate_app() {
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
     LIBRARY_PATH="${LIBRARY_PATH:-}"
+    PATH="${PATH:-}"
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for app_name in "$@"
     do
         local -A dict2
@@ -173,33 +175,54 @@ koopa_activate_app() {
     fi
     if [[ -n "$CMAKE_PREFIX_PATH" ]]
     then
+        CMAKE_PREFIX_PATH="$( \
+            koopa_str_unique_by_semicolon "$CMAKE_PREFIX_PATH" \
+        )"
         export CMAKE_PREFIX_PATH
     else
         unset -v CMAKE_PREFIX_PATH
     fi
     if [[ -n "$CPPFLAGS" ]]
     then
+        CPPFLAGS="$(koopa_str_unique_by_space "$CPPFLAGS")"
         export CPPFLAGS
     else
         unset -v CPPFLAGS
     fi
     if [[ -n "$LDFLAGS" ]]
     then
+        LDFLAGS="$(koopa_str_unique_by_space "$LDFLAGS")"
         export LDFLAGS
     else
         unset -v LDFLAGS
     fi
     if [[ -n "$LDLIBS" ]]
     then
+        LDLIBS="$(koopa_str_unique_by_space "$LDLIBS")"
         export LDLIBS
     else
         unset -v LDLIBS
     fi
     if [[ -n "$LIBRARY_PATH" ]]
     then
+        LIBRARY_PATH="$(koopa_str_unique_by_colon "$LIBRARY_PATH")"
         export LIBRARY_PATH
     else
         unset -v LIBRARY_PATH
+    fi
+    if [[ -n "$PATH" ]]
+    then
+        PATH="$(koopa_str_unique_by_colon "$PATH")"
+        export PATH
+    else
+        unset -v PATH
+    fi
+    if [[ -n "$PKG_CONFIG_PATH" ]]
+    then
+        PKG_CONFIG_PATH="$(koopa_str_unique_by_colon "$PKG_CONFIG_PATH")"
+        export PKG_CONFIG_PATH
+    else
+        unset -v PKG_CONFIG_PATH
     fi
     return 0
 }
@@ -5588,14 +5611,12 @@ koopa_convert_sam_to_bam() {
         koopa_stop "No SAM files detected in '${dict['prefix']}'."
     fi
     koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    case "${bool['keep_sam']}" in
-        '0')
-            koopa_alert_note 'SAM files will be deleted.'
-            ;;
-        '1')
-            koopa_alert_note 'SAM files will be preserved.'
-            ;;
-    esac
+    if [[ "${bool['keep_sam']}" -eq 1 ]]
+    then
+        koopa_alert_note 'SAM files will be preserved.'
+    else
+        koopa_alert_note 'SAM files will be deleted.'
+    fi
     for sam_file in "${sam_files[@]}"
     do
         local bam_file
@@ -8378,14 +8399,12 @@ koopa_find() {
                 '--no-ignore'
                 '--one-file-system'
             )
-            case "${bool['hidden']}" in
-                '0')
-                    find_args+=('--no-hidden')
-                    ;;
-                '1')
-                    find_args+=('--hidden')
-                    ;;
-            esac
+            if [[ "${bool['hidden']}" -eq 1 ]]
+            then
+                find_args+=('--hidden')
+            else
+                find_args+=('--no-hidden')
+            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('--min-depth' "${dict['min_depth']}")
@@ -14526,7 +14545,9 @@ koopa_install_star_fusion() {
 }
 
 koopa_install_star() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
+        --installer='conda-package' \
         --name='star' \
         "$@"
 }
@@ -15362,15 +15383,8 @@ koopa_is_koopa_app() {
     [[ -d "$app_prefix" ]] || return 1
     for str in "$@"
     do
-        if koopa_is_installed "$str"
-        then
-            str="$(koopa_which_realpath "$str")"
-        elif [[ -e "$str" ]]
-        then
-            str="$(koopa_realpath "$str")"
-        else
-            return 1
-        fi
+        [[ -e "$str" ]] || return 1
+        str="$(koopa_realpath "$str")"
         koopa_str_detect_regex \
             --string="$str" \
             --pattern="^${app_prefix}" \
@@ -19987,20 +20001,18 @@ abort,verbose"
     fi
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }
 
@@ -20047,14 +20059,12 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    case "${bool['system']}" in
-        '0')
-            r_cmd=("${app['r']}")
-            ;;
-        '1')
-            r_cmd=('koopa_sudo' "${app['r']}")
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        r_cmd=('koopa_sudo' "${app['r']}")
+    else
+        r_cmd=("${app['r']}")
+    fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
@@ -20158,10 +20168,6 @@ libexec/lib/server}")
         then
             keys+=('gettext')
         fi
-        if koopa_is_linux && [[ "${bool['system']}" -eq 0 ]]
-        then
-            keys+=('gcc')
-        fi
         for key in "${keys[@]}"
         do
             local prefix
@@ -20171,14 +20177,7 @@ libexec/lib/server}")
         done
         for i in "${!ld_lib_app_arr[@]}"
         do
-            case "$i" in
-                'gcc')
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
-                    ;;
-                *)
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
-                    ;;
-            esac
+            ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
         done
         koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     fi
@@ -20223,29 +20222,26 @@ libexec/lib/server}")
     koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }
 
@@ -20290,7 +20286,7 @@ koopa_r_configure_makevars() {
         then
             app['gfortran']='/opt/gfortran/bin/gfortran'
         else
-            app['gfortran']="$(koopa_locate_gfortran)"
+            app['gfortran']="$(koopa_locate_gfortran --only-system)"
         fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
@@ -20310,9 +20306,6 @@ koopa_r_configure_makevars() {
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
     fi
-    cppflags=()
-    ldflags=()
-    lines=()
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20469,14 +20462,12 @@ lib/pkgconfig"
         conf_dict['fcflags']="${conf_dict['fflags']}"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
-        case "${bool['system']}" in
-            '0')
-                conf_dict['op']='+='
-                ;;
-            '1')
-                conf_dict['op']='='
-                ;;
-        esac
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            conf_dict['op']='='
+        else
+            conf_dict['op']='+='
+        fi
         lines+=(
             "AR = ${conf_dict['ar']}"
             "AWK = ${conf_dict['awk']}"
@@ -20518,7 +20509,9 @@ lib/pkgconfig"
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
+    if koopa_is_linux && \
+        [[ "${bool['system']}" -eq 1 ]] && \
+        [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "Deleting '${dict['file']}'."
         koopa_rm --sudo "${dict['file']}"
@@ -20527,20 +20520,18 @@ lib/pkgconfig"
     koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     unset -v PKG_CONFIG_PATH
     return 0
 }
@@ -20589,50 +20580,36 @@ koopa_r_copy_files_into_etc() {
 
 koopa_r_gfortran_libs() {
     local -A app dict
-    local -a flibs libs
-    local i
+    local -a flibs libs libs2
+    local lib
     koopa_assert_has_no_args "$#"
-    app['dirname']="$(koopa_locate_dirname --allow-system)"
-    app['sort']="$(koopa_locate_sort --allow-system)"
-    app['xargs']="$(koopa_locate_xargs --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
-        dict['gfortran']="$(koopa_app_prefix 'gcc')"
-
+        app['gfortran']="$(koopa_locate_gfortran --only-system)"
+        koopa_assert_is_executable "${app[@]}"
     elif koopa_is_macos
     then
+        app['dirname']="$(koopa_locate_dirname --allow-system)"
+        app['sort']="$(koopa_locate_sort --allow-system)"
+        app['xargs']="$(koopa_locate_xargs --allow-system)"
+        koopa_assert_is_executable "${app[@]}"
         case "${dict['arch']}" in
             'arm64')
                 dict['arch']='aarch64'
                 ;;
         esac
-        dict['gfortran']='/opt/gfortran'
-        koopa_assert_is_dir "${dict['gfortran']}"
+        dict['lib_prefix']='/opt/gfortran/lib'
+        koopa_assert_is_dir "${dict['lib_prefix']}"
         readarray -t libs <<< "$( \
             koopa_find \
-                --max-depth=2 \
-                --min-depth=2 \
-                --pattern="${dict['arch']}*" \
-                --prefix="${dict['gfortran']}/lib/gcc" \
-                --type='d' \
+                --pattern='libgfortran.a' \
+                --prefix="${dict['lib_prefix']}" \
+                --type='f' \
+            | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+            | "${app['sort']}" --unique \
         )"
-    fi
-    koopa_assert_is_dir "${dict['gfortran']}"
-    readarray -t libs <<< "$( \
-        koopa_find \
-            --pattern='*.a' \
-            --prefix="${dict['gfortran']}" \
-            --type='f' \
-        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-        | "${app['sort']}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
-    if koopa_is_macos
-    then
-        local -a libs2
-        local lib
+        koopa_assert_is_array_non_empty "${libs[@]:-}"
         for lib in "${libs[@]}"
         do
             case "$lib" in
@@ -20643,12 +20620,12 @@ koopa_r_gfortran_libs() {
         done
         koopa_assert_is_array_non_empty "${libs2[@]:-}"
         libs=("${libs2[@]}")
-        libs+=("${dict['gfortran']}/lib")
+        libs+=("${dict['lib_prefix']}")
+        for lib in "${libs[@]}"
+        do
+            flibs+=("-L${lib}")
+        done
     fi
-    for i in "${!libs[@]}"
-    do
-        flibs+=("-L${libs[$i]}")
-    done
     flibs+=('-lgfortran')
     if koopa_is_linux
     then
@@ -24354,6 +24331,72 @@ koopa_str_detect() {
     koopa_grep "${grep_args[@]}"
 }
 
+koopa_str_unique_by_colon() {
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ':' '\n' \
+                | "${app['awk']}" '!x[$0]++' \
+                | "${app['tr']}" '\n' ':' \
+                | koopa_strip_right --pattern=':' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
+    return 0
+}
+
+koopa_str_unique_by_semicolon() {
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ';' '\n' \
+                | "${app['awk']}" '!x[$0]++' \
+                | "${app['tr']}" '\n' ';' \
+                | koopa_strip_right --pattern=';' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
+    return 0
+}
+
+koopa_str_unique_by_space() {
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ' ' '\n' \
+                | "${app['awk']}" '!x[$0]++' \
+                | "${app['tr']}" '\n' ' ' \
+                | koopa_strip_right --pattern=' ' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
+    return 0
+}
+
 koopa_strip_left() {
     local -A dict
     local -a pos
@@ -24781,16 +24824,14 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${bool['shared']}" in
-        '0')
-            bool['group']="$(koopa_group_name)"
-            bool['user']="$(koopa_user_name)"
-            ;;
-        '1')
-            bool['group']="$(koopa_sys_group_name)"
-            bool['user']="$(koopa_sys_user_name)"
-            ;;
-    esac
+    if [[ "${bool['shared']}" -eq 1 ]]
+    then
+        bool['group']="$(koopa_sys_group_name)"
+        bool['user']="$(koopa_sys_user_name)"
+    else
+        bool['group']="$(koopa_group_name)"
+        bool['user']="$(koopa_user_name)"
+    fi
     chown_args+=('--no-dereference')
     if [[ "${bool['recursive']}" -eq 1 ]]
     then

@@ -6,7 +6,7 @@
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-10-11.
     #
     # Also consider requiring:
     # - ghostscript
@@ -59,13 +59,6 @@ main() {
         'xorg-libxrender'
         'xorg-libxt'
     )
-    # Using system clang on macOS to avoid '-lopenmp' issues when building
-    # R from source.
-    if koopa_is_linux
-    then
-        # gcc deps: gmp, mpfr, mpc.
-        deps+=('gcc')
-    fi
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
