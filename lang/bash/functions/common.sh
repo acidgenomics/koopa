@@ -38,6 +38,7 @@ koopa_activate_app() {
     LDLIBS="${LDLIBS:-}"
     LIBRARY_PATH="${LIBRARY_PATH:-}"
     PATH="${PATH:-}"
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for app_name in "$@"
     do
         local -A dict2
@@ -215,6 +216,13 @@ koopa_activate_app() {
         export PATH
     else
         unset -v PATH
+    fi
+    if [[ -n "$PKG_CONFIG_PATH" ]]
+    then
+        PKG_CONFIG_PATH="$(koopa_str_unique_by_colon "$PKG_CONFIG_PATH")"
+        export PKG_CONFIG_PATH
+    else
+        unset -v PKG_CONFIG_PATH
     fi
     return 0
 }
