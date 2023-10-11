@@ -3,7 +3,7 @@
 main() {
     # """
     # Install p7zip.
-    # @note Updated 2023-04-11.
+    # @note Updated 2023-10-11.
     #
     # @seealso
     # - https://github.com/conda-forge/p7zip-feedstock
@@ -11,6 +11,8 @@ main() {
     # - https://ports.macports.org/port/p7zip/
     # """
     local -A app dict
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['cxx']="$(koopa_locate_cxx --only-system)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -23,17 +25,15 @@ v${dict['version']}.tar.gz"
     if koopa_is_linux
     then
         dict['makefile']='makefile.linux_any_cpu'
-        CC='gcc'
-        CXX='g++'
     elif koopa_is_macos
     then
         dict['makefile']='makefile.macosx_llvm_64bits'
-        CC='clang'
-        CXX='clang++'
     fi
-    export CC CXX
     koopa_assert_is_file "${dict['makefile']}"
     koopa_ln "${dict['makefile']}" 'makefile.machine'
+    CC="${app['cc']}"
+    CXX="${app['cxx']}"
+    export CC CXX
     koopa_print_env
     # The 'all3' here refers to '7z', '7za', and '7zr'.
     "${app['make']}" all3 \

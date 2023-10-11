@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Use system gcc here on Linux.
+# FIXME Rework to look for libgfortran instead.
+# FIXME Can just return the flags on Linux.
+
 koopa_r_gfortran_libs() {
     # """
     # Define FLIBS for our R gfortran configuration.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-11.
     #
     # Locate gfortran library paths (from GCC). This will cover 'lib' and
     # 'lib64' subdirs. See also 'gcc --print-search-dirs'.
@@ -19,7 +23,7 @@ koopa_r_gfortran_libs() {
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
-        dict['gfortran']="$(koopa_app_prefix 'gcc')"
+        dict['lib_prefix']='/usr/lib'
 
     elif koopa_is_macos
     then
@@ -28,24 +32,14 @@ koopa_r_gfortran_libs() {
                 dict['arch']='aarch64'
                 ;;
         esac
-        dict['gfortran']='/opt/gfortran'
-        koopa_assert_is_dir "${dict['gfortran']}"
-        # FIXME We need to search for 'libgfortran.dylib' and get the
-        # parent directory.
-        readarray -t libs <<< "$( \
-            koopa_find \
-                --max-depth=2 \
-                --min-depth=2 \
-                --pattern="${dict['arch']}*" \
-                --prefix="${dict['gfortran']}/lib/gcc" \
-                --type='d' \
-        )"
+        dict['lib_prefix']='/opt/gfortran/lib'
     fi
-    koopa_assert_is_dir "${dict['gfortran']}"
+    koopa_assert_is_dir "${dict['lib_prefix']}"
+    # FIXME Need to look for libgfortran specifically here.
     readarray -t libs <<< "$( \
         koopa_find \
             --pattern='*.a' \
-            --prefix="${dict['gfortran']}" \
+            --prefix="${dict['lib_prefix']}" \
             --type='f' \
         | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
         | "${app['sort']}" --unique \
@@ -66,8 +60,8 @@ koopa_r_gfortran_libs() {
         done
         koopa_assert_is_array_non_empty "${libs2[@]:-}"
         libs=("${libs2[@]}")
-        libs+=("${dict['gfortran']}/lib")
     fi
+    libs+=("${dict['lib_prefix']}")
     for i in "${!libs[@]}"
     do
         flibs+=("-L${libs[$i]}")
