@@ -22,8 +22,6 @@ main() {
     bool['system']=0
     if ! koopa_is_koopa_app "${app['r']}"
     then
-        koopa_print "${app['r']}"
-        koopa_stop 'FIXME NOOOO BAD UBUNTU'
         koopa_assert_is_admin
         bool['system']=1
     fi
