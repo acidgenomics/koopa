@@ -120,9 +120,6 @@ koopa_macos_brew_upgrade_casks() {
                 "${app['brew']}" unlink 'vim'
                 "${app['brew']}" link 'vim'
                 ;;
-            'microsoft-teams')
-                koopa_macos_disable_microsoft_teams_updater
-                ;;
         esac
     done
     return 0

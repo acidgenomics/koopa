@@ -3,7 +3,7 @@
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2023-05-09.
+    # @note Updated 2023-10-11.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -56,9 +56,9 @@ koopa_macos_brew_upgrade_casks() {
                 "${app['brew']}" unlink 'vim'
                 "${app['brew']}" link 'vim'
                 ;;
-            'microsoft-teams')
-                koopa_macos_disable_microsoft_teams_updater
-                ;;
+            # > 'microsoft-teams-classic')
+            # >     koopa_macos_disable_microsoft_teams_updater
+            # >     ;;
         esac
     done
     return 0
