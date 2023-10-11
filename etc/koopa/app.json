@@ -791,10 +791,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-09-19",
+    "date": "2023-10-11",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.40.0"
+    "version": "2.40.2"
   },
   "cli11": {
     "aliases": {
@@ -1143,13 +1143,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-03",
+    "date": "2023-10-11",
     "default": true,
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.2.1"
+    "version": "8.4.0"
   },
   "dash": {
     "aliases": {
@@ -1206,10 +1206,10 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-25",
+    "date": "2023-10-11",
     "default": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.51.1"
+    "version": "0.52.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1389,13 +1389,13 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-02",
+    "date": "2023-10-11",
     "default": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.14.0"
+    "version": "0.14.1"
   },
   "fastqc": {
     "arch": "amd64",
@@ -3849,7 +3849,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2023-09-05",
+    "date": "2023-10-11",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -3861,7 +3861,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.56.0"
+    "version": "1.57.0"
   },
   "nim": {
     "aliases": {
@@ -3988,11 +3988,11 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-08-15",
+    "date": "2023-10-11",
     "default": false,
     "large": true,
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.3.4"
+    "version": "0.4.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -6153,14 +6153,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-09-24",
+    "date": "2023-10-11",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.9.24"
+    "version": "2023.10.7"
   },
   "zellij": {
     "aliases": {
