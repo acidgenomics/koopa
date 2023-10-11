@@ -3,6 +3,12 @@
 # FIXME This is still failing on my Intel MacBook, CLT 15.1.0.0.1.1696033181.
 # FIXME Try building just fortran to see if we can reproduce faster.
 
+# Potentially related to build error:
+# https://opensource.apple.com/source/llvmgcc42/
+# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2336.11/
+# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2335.9/libgfortran/generated/maxloc1_16_r10.c
+# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2336.11/libgfortran/generated/maxloc1_16_r16.c.auto.html
+
 main() {
     # """
     # Install GCC.
