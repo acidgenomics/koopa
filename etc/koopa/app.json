@@ -335,10 +335,10 @@
     },
     "bin": ["bat"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-26",
+    "date": "2023-10-11",
     "default": true,
     "url": ["https://github.com/sharkdp/bat"],
-    "version": "0.23.0"
+    "version": "0.24.0"
   },
   "bc": {
     "aliases": {
