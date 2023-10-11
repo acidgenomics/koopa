@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-10-11.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -13,7 +13,7 @@ main() {
     local -A dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'gcc'
+    koopa_is_macos && koopa_activate_app 'gcc'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # Temporary fix for 3.11.0 download link.

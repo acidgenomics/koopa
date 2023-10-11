@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-11.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -131,7 +131,8 @@ gcc/${dict['version']}"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            bool['math_h_patch']=1
+            # FIXME Testing 15.1.0.0.1.1696033181 x86_64 build support.
+            # > bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
             conf_args+=("--with-ld=${app['ld']}")

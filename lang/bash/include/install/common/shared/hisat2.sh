@@ -13,8 +13,8 @@ main() {
     local -A app dict
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
-    app['cc']="$(koopa_locate_cc)"
-    app['cxx']="$(koopa_locate_cxx)"
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['cxx']="$(koopa_locate_cxx --only-system)"
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

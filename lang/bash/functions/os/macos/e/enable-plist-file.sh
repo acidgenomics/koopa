@@ -33,28 +33,26 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
         then
             dict['sudo']=0
         fi
-        case "${dict['sudo']}" in
-            '0')
-                koopa_mv \
-                    "${dict['disabled_file']}" \
-                    "${dict['enabled_file']}"
-                if [[ "${dict['daemon']}" -eq 1 ]]
-                then
+        if [[ "${dict['sudo']}" -eq 1 ]]
+        then
+            koopa_assert_is_admin
+            koopa_mv --sudo \
+                "${dict['disabled_file']}" \
+                "${dict['enabled_file']}"
+            if [[ "${dict['daemon']}" -eq 1 ]]
+            then
+                koopa_sudo \
                     "${app['launchctl']}" load "${dict['enabled_file']}"
-                fi
-                ;;
-            '1')
-                koopa_assert_is_admin
-                koopa_mv --sudo \
-                    "${dict['disabled_file']}" \
-                    "${dict['enabled_file']}"
-                if [[ "${dict['daemon']}" -eq 1 ]]
-                then
-                    koopa_sudo \
-                        "${app['launchctl']}" load "${dict['enabled_file']}"
-                fi
-                ;;
-        esac
+            fi
+        else
+            koopa_mv \
+                "${dict['disabled_file']}" \
+                "${dict['enabled_file']}"
+            if [[ "${dict['daemon']}" -eq 1 ]]
+            then
+                "${app['launchctl']}" load "${dict['enabled_file']}"
+            fi
+        fi
     done
     return 0
 }
