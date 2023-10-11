@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is still failing on my Intel MacBook, CLT 15.1.0.0.1.1696033181.
+
 main() {
     # """
     # Install GCC.
