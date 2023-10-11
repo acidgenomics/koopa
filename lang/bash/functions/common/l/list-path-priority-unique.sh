@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rework using 'koopa_str_unique_by_colon'.
+
 koopa_list_path_priority_unique() {
     # """
     # Split PATH string by ':' delim into lines but only return uniques.

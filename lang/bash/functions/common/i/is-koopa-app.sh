@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is failing to detect our koopa R on Ubuntu 22 corectly.
+
 koopa_is_koopa_app() {
     # """
     # Is a specific command installed in koopa app prefix?

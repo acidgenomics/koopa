@@ -20526,6 +20526,7 @@ lib/pkgconfig"
                 --string="${dict['string']}"
             ;;
         '1')
+            koopa_print "${app['r']}"
             koopa_stop 'FIXME NOOOO BAD UBUNTU'
             koopa_rm --sudo "${dict['file']}"
             koopa_sudo_write_string \
@@ -24330,6 +24331,16 @@ koopa_str_detect() {
     )
     [[ "${dict['sudo']}" -eq 1 ]] && grep_args+=('--sudo')
     koopa_grep "${grep_args[@]}"
+}
+
+koopa_str_unique_by_colon() {
+    koopa_stop 'FIXME IN PROGRESS'
+    return 0
+}
+
+koopa_str_unique_by_space() {
+    koopa_stop 'FIXME IN PROGRESS'
+    return 0
 }
 
 koopa_strip_left() {
