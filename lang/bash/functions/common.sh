@@ -20281,7 +20281,7 @@ koopa_r_configure_makevars() {
         then
             app['gfortran']='/opt/gfortran/bin/gfortran'
         else
-            app['gfortran']="$(koopa_locate_gfortran)"
+            app['gfortran']="$(koopa_locate_gfortran --only-system)"
         fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
