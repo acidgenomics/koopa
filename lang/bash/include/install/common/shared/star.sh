@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't currently working correctly with clang on macOS Sonoma.
+# NOTE This isn't currently working correctly with clang on macOS Sonoma.
 # Author has only tested using GCC on macOS.
+
+# Same clang linkage issues persist with CLT 15.1.0.0.1.1696033181.
+
+# > In file included from bam_cat.c:49:
+# > ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
+# > #include <htslib/sam.h>
 
 main() {
     # """
@@ -52,6 +58,7 @@ ${dict['version']}.tar.gz"
     fi
     make_args+=(
         "--jobs=${dict['jobs']}"
+        "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
         "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
@@ -59,10 +66,10 @@ ${dict['version']}.tar.gz"
     )
     if koopa_is_macos
     then
-        # Static instead of dynamic build is currently recommended in README:
+        # Static instead of dynamic build is currently recommended in README.
         # > make_args+=('STARforMac')
         make_args+=(
-            "PKG_CONFIG=${app['pkg_config']} --static"
+            # > "PKG_CONFIG=${app['pkg_config']} --static"
             'STARforMacStatic' 'STARlongForMacStatic'
         )
     else
