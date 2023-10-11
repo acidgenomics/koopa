@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_str_unique_by_colon() {
+koopa_str_unique_by_semicolon() {
     # """
     # Make elements in a CMake path string separated by semicolons unique.
     # @note Updated 2023-10-11.
