@@ -123,10 +123,6 @@ libexec/lib/server}")
         then
             keys+=('gettext')
         fi
-        if koopa_is_linux && [[ "${bool['system']}" -eq 0 ]]
-        then
-            keys+=('gcc')
-        fi
         for key in "${keys[@]}"
         do
             local prefix
@@ -136,14 +132,7 @@ libexec/lib/server}")
         done
         for i in "${!ld_lib_app_arr[@]}"
         do
-            case "$i" in
-                'gcc')
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
-                    ;;
-                *)
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
-                    ;;
-            esac
+            ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
         done
         koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     fi
