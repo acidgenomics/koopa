@@ -42,12 +42,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-09-07",
+    "date": "2023-10-12",
     "default": false,
     "dependencies": ["python3.12"],
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.7.1"
+    "version": "2.7.2"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -69,12 +69,12 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-09-18",
+    "date": "2023-10-12",
     "default": false,
     "large": true,
     "platform": "linux",
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.2.3"
+    "version": "1.2.4"
   },
   "apr": {
     "aliases": {
@@ -335,10 +335,10 @@
     },
     "bin": ["bat"],
     "build_dependencies": ["rust"],
-    "date": "2023-03-26",
+    "date": "2023-10-11",
     "default": true,
     "url": ["https://github.com/sharkdp/bat"],
-    "version": "0.23.0"
+    "version": "0.24.0"
   },
   "bc": {
     "aliases": {
@@ -1389,13 +1389,13 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-11",
+    "date": "2023-10-12",
     "default": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.14.1"
+    "version": "0.14.2"
   },
   "fastqc": {
     "arch": "amd64",
@@ -2663,11 +2663,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-09-15",
+    "date": "2023-10-11",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.6"
+    "version": "4.0.7"
   },
   "kallisto": {
     "bin": ["kallisto"],
