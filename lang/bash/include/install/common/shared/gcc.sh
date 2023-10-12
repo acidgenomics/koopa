@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME This is still failing on my Intel MacBook, CLT 15.1.0.0.1.1696033181.
+# FIXME Try building just fortran to see if we can reproduce faster.
+
+# Potentially related to build error:
+# https://opensource.apple.com/source/llvmgcc42/
+# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2336.11/
+# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2335.9/libgfortran/generated/maxloc1_16_r10.c
+# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2336.11/libgfortran/generated/maxloc1_16_r16.c.auto.html
+
 main() {
     # """
     # Install GCC.
@@ -93,7 +102,13 @@ main() {
     dict['mpfr']="$(koopa_app_prefix 'mpfr')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    langs=('c' 'c++' 'fortran' 'objc' 'obj-c++')
+    langs=(
+        'c'
+        'c++'
+        'fortran'
+        'objc'
+        'obj-c++'
+    )
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         '-v'
@@ -113,7 +128,8 @@ main() {
     then
         app['patch']="$(koopa_locate_patch)"
         koopa_assert_is_executable "${app['patch']}"
-        bool['homebrew_patch']=1
+        bool['homebrew_patch']=0
+        koopa_is_aarch64 && bool['homebrew_patch']=1
         bool['math_h_patch']=0
         dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
         dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
@@ -131,8 +147,7 @@ gcc/${dict['version']}"
         )
         if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
         then
-            # FIXME Testing 15.1.0.0.1.1696033181 x86_64 build support.
-            # > bool['math_h_patch']=1
+            # > koopa_is_aarch64 && bool['math_h_patch']=1
             app['ld']="$(koopa_macos_locate_ld_classic)"
             koopa_assert_is_executable "${app['ld']}"
             conf_args+=("--with-ld=${app['ld']}")
