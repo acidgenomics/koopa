@@ -42,12 +42,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-09-07",
+    "date": "2023-10-12",
     "default": false,
     "dependencies": ["python3.12"],
     "large": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.7.1"
+    "version": "2.7.2"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
