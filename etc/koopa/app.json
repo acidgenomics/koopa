@@ -5402,13 +5402,13 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2023-08-31",
+    "date": "2023-10-13",
     "default": true,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "17.0.8.1+1"
+    "version": "21+35"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
