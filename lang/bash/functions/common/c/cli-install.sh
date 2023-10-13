@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2023-09-25.
+    # @note Updated 2023-10-13.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'tmux' 'vim'
@@ -18,16 +18,10 @@ koopa_cli_install() {
     dict['stem']='install'
     case "${1:-}" in
         '--all')
-            shift 1
-            koopa_install_all_apps "$@"
-            return 0
+            koopa_defunct 'koopa install all default'
             ;;
-        '--all-binary')
-            shift 1
-            koopa_install_all_binary_apps "$@"
-            return 0
-            ;;
-        'app')
+        'app' | \
+        'shared-apps')
             koopa_stop 'Unsupported command.'
             ;;
         'koopa')
@@ -65,6 +59,7 @@ koopa_cli_install() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     case "${1:-}" in
+        'all' | \
         'private' | \
         'system' | \
         'user')
