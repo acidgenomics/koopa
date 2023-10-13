@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-# FIXME Add a '--mode' option here.
-# FIXME Add '--default-only' and '--all-supported' flags.
-
 """
 Return supported shared applications defined in 'app.json' file.
 @note Updated 2023-10-13.
