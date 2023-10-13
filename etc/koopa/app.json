@@ -4932,7 +4932,6 @@
     ],
     "date": "2023-10-06",
     "default": true,
-
     "url": ["https://www.rust-lang.org/"],
     "version": "1.73.0"
   },
@@ -4953,7 +4952,6 @@
       "xz",
       "zlib"
     ],
-
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
