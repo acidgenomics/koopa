@@ -791,10 +791,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-10-11",
+    "date": "2023-10-13",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.40.2"
+    "version": "2.40.3"
   },
   "cli11": {
     "aliases": {
