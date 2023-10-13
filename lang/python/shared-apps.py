@@ -16,8 +16,7 @@ from sys import version_info
 
 parser = ArgumentParser()
 parser.add_argument(
-    "--mode", choices=["all-supported", "default-only"], required=False
-)
+    "--mode", choices=["all-supported", "default-only"], required=False)
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
@@ -83,20 +82,20 @@ def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
     sys_dict["opt_prefix"] = koopa_opt_prefix()
     sys_dict["platform"] = platform()
     for val in app_names:
-        if mode is None:
+        if mode != "default-only":
             if isdir(join(sys_dict["opt_prefix"], val)):
                 print(val)
                 continue
         json = json_data[val]
         keys = json.keys()
+        if "default" in keys and mode != "all-supported":
+            if not json["default"]:
+                continue
         if "removed" in keys:
             if json["removed"]:
                 continue
         if "arch" in keys:
             if json["arch"] != sys_dict["arch"]:
-                continue
-        if "default" in keys and mode != "all-supported":
-            if not json["default"]:
                 continue
         if "platform" in keys:
             if json["platform"] != sys_dict["platform"]:
