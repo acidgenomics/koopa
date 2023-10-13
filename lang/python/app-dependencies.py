@@ -52,7 +52,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i: i + 1] = x  # noqa: E203
+                items[i : i + 1] = x  # noqa: E203
                 x = items[i]
     except IndexError:
         pass
