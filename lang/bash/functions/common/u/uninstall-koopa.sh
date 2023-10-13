@@ -3,28 +3,21 @@
 koopa_uninstall_koopa() {
     # """
     # Uninstall koopa.
-    # @note Updated 2023-10-06.
+    # @note Updated 2023-10-13.
     # """
     local -A bool dict
-    bool['dotfiles']=1
-    bool['koopa']=1
+    bool['uninstall_koopa']=1
     dict['config_prefix']="$(koopa_config_prefix)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     if koopa_is_interactive
     then
-        bool['koopa']="$( \
+        bool['uninstall_koopa']="$( \
             koopa_read_yn \
                 'Proceed with koopa uninstall' \
-                "${bool['koopa']}" \
-        )"
-        bool['dotfiles']="$( \
-            koopa_read_yn \
-                'Uninstall dotfiles' \
-                "${bool['dotfiles']}" \
+                "${bool['uninstall_koopa']}" \
         )"
     fi
-    [[ "${bool['koopa']}" -eq 0 ]] && return 1
-    [[ "${bool['dotfiles']}" -eq 1 ]] && koopa_uninstall_dotfiles
+    [[ "${bool['uninstall_koopa']}" -eq 0 ]] && return 1
     koopa_rm --verbose "${dict['config_prefix']}"
     if koopa_is_shared_install
     then
