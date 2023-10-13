@@ -13,19 +13,37 @@ koopa_cli_install() {
     local -a flags pos
     local app
     koopa_assert_has_args "$#"
-    dict['allow_custom']=0
-    dict['custom_enabled']=0
     dict['stem']='install'
     case "${1:-}" in
-        '--all')
-            koopa_defunct 'koopa install all default'
-            ;;
-        'app' | \
-        'shared-apps')
-            koopa_stop 'Unsupported command.'
+        'all')
+            shift 1
+            case "${1:-}" in
+                'default' | 'supported')
+                    dict['fun']="koopa_install_all_${1:?}"
+                    koopa_assert_is_function "${dict['fun']}"
+                    shift 1
+                    "${dict['fun']}" "$@"
+                    return 0
+                    ;;
+                *)
+                    koopa_stop 'Unsupported mode.'
+                    ;;
+                esac
             ;;
         'koopa')
-            dict['allow_custom']=1
+            shift 1
+            koopa_install_koopa "$@"
+            return 0
+            ;;
+        'private' | 'system' | 'user')
+            dict['stem']="${dict['stem']}-${1:?}"
+            shift 1
+            ;;
+        'app' | 'shared-apps')
+            koopa_stop 'Unsupported command.'
+            ;;
+        '--all')
+            koopa_defunct 'koopa install all default'
             ;;
     esac
     flags=()
@@ -42,9 +60,9 @@ koopa_cli_install() {
                 shift 1
                 ;;
             '-'*)
-                if [[ "${dict['allow_custom']}" -eq 1 ]]
+                if [[ "${bool['allow_custom_args']}" -eq 1 ]]
                 then
-                    dict['custom_enabled']=1
+                    bool['custom_args_enabled']=1
                     pos+=("$1")
                     shift 1
                 else
@@ -58,29 +76,7 @@ koopa_cli_install() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    case "${1:-}" in
-        'all' | \
-        'private' | \
-        'system' | \
-        'user')
-            dict['stem']="${dict['stem']}-${1:?}"
-            shift 1
-            ;;
-    esac
     koopa_assert_has_args "$#"
-    if [[ "${dict['custom_enabled']}" -eq 1 ]]
-    then
-        dict['app']="${1:?}"
-        shift 1
-        dict['key']="${dict['stem']}-${dict['app']}"
-        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
-        if ! koopa_is_function "${dict['fun']}"
-        then
-            koopa_stop "Unsupported app: '${dict['app']}'."
-        fi
-        "${dict['fun']}" "$@"
-        return 0
-    fi
     for app in "$@"
     do
         local -A dict2
@@ -93,7 +89,7 @@ koopa_cli_install() {
         fi
         if koopa_is_array_non_empty "${flags[@]:-}"
         then
-            "${dict2['fun']}" "${flags[@]:-}"
+            "${dict2['fun']}" "${flags[@]}"
         else
             "${dict2['fun']}"
         fi
