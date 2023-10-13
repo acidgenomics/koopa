@@ -76,7 +76,7 @@ def get_deps(app_name: str, json_data: dict) -> list:
         supported = json_data[app_name]["supported"]
         if os_id in supported.keys():
             if not supported[os_id]:
-                return []
+                raise NameError("Unsupported app: '" + app_name + "'.")
     if "build_dependencies" in json_data[app_name]:
         build_deps = json_data[app_name]["build_dependencies"]
         if isinstance(build_deps, dict):
@@ -128,9 +128,6 @@ def print_apps(app_names: list, json_data: dict) -> bool:
     for val in app_names:
         json = json_data[val]
         keys = json.keys()
-        # FIXME Need to rework this step.
-        if "supported" in keys:
-            raise NameError(val)
         if "arch" in keys:
             if json["arch"] != sys_dict["arch"]:
                 continue
