@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# FIXME Also need to include non-default apps that are installed.
+
 """
 Solve app dependencies defined in 'app.json' file.
 @note Updated 2023-10-03.
