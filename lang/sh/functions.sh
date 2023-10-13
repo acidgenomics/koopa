@@ -2036,6 +2036,8 @@ _koopa_major_version() {
         __kvar_string="$( \
             _koopa_print "$__kvar_string" \
             | cut -d '.' -f '1' \
+            | cut -d '-' -f '1' \
+            | cut -d '+' -f '1' \
         )"
         [ -n "$__kvar_string" ] || return 1
         _koopa_print "$__kvar_string"
