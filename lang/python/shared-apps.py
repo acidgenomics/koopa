@@ -16,7 +16,8 @@ from sys import version_info
 
 parser = ArgumentParser()
 parser.add_argument(
-    "--mode", choices=["all-supported", "default-only"], required=False)
+    "--mode", choices=["all-supported", "default-only"], required=False
+)
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
