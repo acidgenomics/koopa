@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider building this with full LLVM on macOS.
+
 # FIXME This is still failing on my Intel MacBook, CLT 15.1.0.0.1.1696033181.
 # FIXME Try building just fortran to see if we can reproduce faster.
 
