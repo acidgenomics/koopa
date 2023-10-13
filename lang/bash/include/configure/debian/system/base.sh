@@ -3,7 +3,7 @@
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-10-13.
     #
     # @section apt install:
     #
@@ -50,6 +50,7 @@ END
         'findutils' \
         'g++' \
         'gcc' \
+        'gfortran' \
         'git' \
         'libc-dev' \
         'libgmp-dev' \
