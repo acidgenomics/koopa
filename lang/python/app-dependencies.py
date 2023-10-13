@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 
-# FIXME Also need to include non-default apps that are installed.
-# FIXME Need to add support for '--all-supported' flag.
-# FIXME Add support for '--default-only' flag?
-
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-08-29.
+@note Updated 2023-10-13.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -56,7 +52,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i : i + 1] = x  # noqa: E203
+                items[i: i + 1] = x  # noqa: E203
                 x = items[i]
     except IndexError:
         pass
