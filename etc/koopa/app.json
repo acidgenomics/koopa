@@ -1302,7 +1302,6 @@
   "ensembl-perl-api": {
     "date": "2023-08-31",
     "default": false,
-
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
     "version": "110"
   },
@@ -1312,7 +1311,6 @@
     "date": "2022-06-06",
     "default": true,
     "dependencies": ["conda"],
-
     "url": [
       "https://www.ncbi.nlm.nih.gov/home/tools/",
       "https://bioconda.github.io/recipes/entrez-direct/README.html"
@@ -1383,7 +1381,6 @@
     "date": "2023-03-07",
     "default": false,
     "dependencies": ["conda"],
-
     "url": ["https://github.com/s-andrews/FastQC/"],
     "version": "0.12.1"
   },
@@ -1417,7 +1414,6 @@
     "date": "2022-11-08",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://github.com/pachterlab/ffq/",
       "https://bioconda.github.io/recipes/ffq/README.html"
@@ -1429,7 +1425,6 @@
     "date": "2023-02-08",
     "default": false,
     "dependencies": ["conda"],
-
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
     "version": "2.1.0"
   },
@@ -1534,7 +1529,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-08-28",
     "default": false,
-
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
     "version": "10.1.1"
@@ -1558,7 +1552,6 @@
     "build_dependencies": ["rust"],
     "date": "2023-08-07",
     "default": false,
-
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
@@ -1571,7 +1564,6 @@
     "date": "2023-03-05",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://github.com/fulcrumgenomics/fqtk/",
       "https://bioconda.github.io/recipes/fqtk/README.html"
@@ -1625,7 +1617,6 @@
     "date": "2023-03-21",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
@@ -1656,6 +1647,10 @@
     "default": false,
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
+    "supported": {
+      "noarch": true,
+      "macos-amd64": false
+    },
     "url": ["https://gcc.gnu.org/"],
     "version": "13.2.0"
   },
@@ -1746,7 +1741,6 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://github.com/daler/gffutils/",
       "https://bioconda.github.io/recipes/gffutils/README.html"
@@ -1759,7 +1753,6 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
-
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.9"
   },
@@ -1782,7 +1775,6 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-09-13",
     "default": false,
-
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
     "version": "10.02.0"
@@ -1955,7 +1947,6 @@
     "date": "2023-10-02",
     "default": false,
     "dependencies": ["python3.11"],
-
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
     "version": "448.0.0"
   },
@@ -1966,7 +1957,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-08-31",
     "default": false,
-
     "url": ["https://github.com/google/googletest/"],
     "version": "1.14.0"
   },
@@ -2127,7 +2117,6 @@
     "date": "2023-08-28",
     "default": false,
     "dependencies": ["python3.12"],
-
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
@@ -2233,7 +2222,6 @@
     ],
     "date": "2022-11-15",
     "default": false,
-
     "url": ["https://github.com/hadolint/hadolint/"],
     "version": "2.12.0"
   },
@@ -2267,7 +2255,6 @@
     "build_dependencies": ["haskell-ghcup"],
     "date": "2023-05-08",
     "default": false,
-
     "url": ["https://www.haskell.org/cabal/download.html"],
     "version": "3.10.1.0"
   },
@@ -2279,7 +2266,6 @@
     "build_dependencies": ["curl"],
     "date": "2023-07-03",
     "default": false,
-
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
@@ -2294,7 +2280,6 @@
     "bin": ["stack"],
     "date": "2023-10-02",
     "default": false,
-
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
@@ -2357,7 +2342,6 @@
     "date": "2023-10-10",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://daehwankimlab.github.io/hisat2/",
       "https://bioconda.github.io/recipes/hisat2/README.html"
@@ -2384,7 +2368,6 @@
     "date": "2025-03-30",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://htseq.readthedocs.io/",
       "https://github.com/htseq/htseq/",
@@ -2398,7 +2381,6 @@
     "date": "2023-07-31",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
-
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
     "prune": false,
     "url": [
@@ -2637,7 +2619,6 @@
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "date": "2023-08-25",
     "default": true,
-
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
     "version": "1.9.3"
   },
@@ -2651,11 +2632,16 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
-    "date": "2023-07-07",
+    "build_dependencies": {
+      "noarch": [],
+      "macos-arm64": ["autoconf", "automake", "cmake", "make", "patch"]
+    },
+    "date": "2023-10-13",
     "default": true,
-    "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
-
+    "dependencies": {
+      "noarch": ["conda"],
+      "macos-arm64": ["bzip2", "hdf5", "libaec", "xz", "zlib"]
+    },
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -2718,7 +2704,6 @@
     "date": "2023-09-25",
     "default": true,
     "dependencies": ["python3.11"],
-
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
@@ -2733,7 +2718,6 @@
     "build_dependencies": ["gnupg", "libarchive", "xz"],
     "date": "2023-08-26",
     "default": false,
-
     "url": [
       "https://wiki.dlang.org/LDC",
       "https://github.com/ldc-developers/ldc/"
@@ -2802,7 +2786,6 @@
     "date": "2023-09-12",
     "default": false,
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
-
     "prune": false,
     "url": ["https://www.libarchive.org/"],
     "version": "3.7.2"
@@ -3078,7 +3061,6 @@
     "date": "2023-05-08",
     "default": false,
     "dependencies": ["zlib"],
-
     "prune": false,
     "url": ["https://github.com/openSUSE/libsolv/"],
     "version": "0.7.24"
@@ -3298,7 +3280,6 @@
       "swig",
       "zlib"
     ],
-
     "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "17.0.2"
@@ -3308,7 +3289,6 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
-
     "platform": "linux",
     "prune": false,
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
@@ -3368,7 +3348,6 @@
     "date": "2023-10-05",
     "default": false,
     "dependencies": ["python3.12"],
-
     "url": [
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
@@ -3468,7 +3447,6 @@
       "yaml-cpp",
       "zstd"
     ],
-
     "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
     "url": [
       "https://mamba.readthedocs.io/",
@@ -3502,7 +3480,6 @@
     "date": "2023-09-24",
     "default": true,
     "dependencies": ["node"],
-
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
     "version": "0.37.0"
   },
@@ -3564,7 +3541,6 @@
     "date": "2023-05-01",
     "default": false,
     "dependencies": ["zlib"],
-
     "url": [
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
@@ -3576,7 +3552,6 @@
     "date": "2023-01-10",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "http://hollywood.mit.edu/burgelab/miso/",
       "https://github.com/yarden/MISO/",
@@ -3649,7 +3624,6 @@
     "date": "2023-09-24",
     "default": false,
     "dependencies": ["python3.12"],
-
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.16"
   },
@@ -3696,7 +3670,6 @@
     "date": "2022-10-11",
     "default": false,
     "dependencies": ["conda"],
-
     "url": ["https://bioconda.github.io/recipes/nanopolish/README.html"],
     "version": "0.14.0"
   },
@@ -3710,7 +3683,6 @@
     "date": "2023-10-02",
     "default": true,
     "dependencies": ["libxml2", "ncbi-vdb"],
-
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.0.8"
   },
@@ -3722,7 +3694,6 @@
     "date": "2023-10-09",
     "default": false,
     "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin", "zlib"],
-
     "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
     "version": "3.0.8"
@@ -3816,7 +3787,6 @@
     "date": "2023-09-25",
     "default": true,
     "dependencies": ["temurin"],
-
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
@@ -3852,7 +3822,6 @@
     "bin": ["nim"],
     "date": "2023-08-31",
     "default": false,
-
     "url": ["https://nim-lang.org/"],
     "version": "2.0.0"
   },
@@ -3873,7 +3842,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-05",
     "default": false,
-
     "prune": false,
     "url": ["https://github.com/nlohmann/json/"],
     "version": "3.11.2"
@@ -3961,7 +3929,6 @@
     "date": "2023-08-01",
     "default": false,
     "dependencies": ["python3.12"],
-
     "platform": "linux",
     "url": ["https://github.com/nanoporetech/bonito/"],
     "version": "0.7.2"
@@ -3970,7 +3937,6 @@
     "bin": ["dorado"],
     "date": "2023-10-13",
     "default": false,
-
     "url": ["https://github.com/nanoporetech/dorado/"],
     "version": "0.4.1"
   },
@@ -3978,7 +3944,6 @@
     "bin": ["guppy_basecaller"],
     "date": "2023-05-31",
     "default": false,
-
     "private": true,
     "url": [
       "https://community.nanoporetech.com/",
@@ -3991,7 +3956,6 @@
     "date": "2023-03-29",
     "default": false,
     "dependencies": ["hdf5", "zstd"],
-
     "url": ["https://github.com/nanoporetech/vbz_compression/"],
     "version": "1.0.2"
   },
@@ -4000,7 +3964,6 @@
     "date": "2023-10-05",
     "default": false,
     "dependencies": ["conda", "poetry"],
-
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
@@ -4113,7 +4076,6 @@
     "date": "2023-08-31",
     "default": true,
     "dependencies": ["zlib"],
-
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "3.1.7"
   },
@@ -4235,7 +4197,6 @@
     "date": "2023-09-12",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
@@ -4313,7 +4274,6 @@
     "date": "2023-08-21",
     "default": false,
     "dependencies": ["python3.12"],
-
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.6.1"
@@ -4386,7 +4346,6 @@
     "build_dependencies": ["cmake", "python3.12"],
     "date": "2023-07-17",
     "default": false,
-
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
     "version": "2.11.1"
@@ -4680,7 +4639,6 @@
       "zlib",
       "zstd"
     ],
-
     "url": [
       "https://svn.r-project.org/R/",
       "https://stat.ethz.ch/R/daily/",
@@ -4784,7 +4742,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2022-11-03",
     "default": false,
-
     "prune": false,
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
     "version": "14.2.4"
@@ -4853,7 +4810,6 @@
     "date": "2023-02-01",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://github.com/deweylab/RSEM/",
       "https://bioconda.github.io/recipes/rsem/README.html"
@@ -4937,21 +4893,27 @@
   },
   "salmon": {
     "bin": ["salmon"],
-    "build_dependencies": ["cmake", "make", "patch"],
+    "build_dependencies": {
+      "noarch": [],
+      "macos-arm64": ["cmake", "make", "patch"]
+    },
     "date": "2023-06-27",
     "default": true,
-    "dependencies": [
-      "boost",
-      "bzip2",
-      "cereal",
-      "icu4c",
-      "jemalloc",
-      "libiconv",
-      "staden-io-lib",
-      "tbb",
-      "xz",
-      "zlib"
-    ],
+    "dependencies": {
+      "noarch": ["conda"],
+      "macos-arm64": [
+        "boost",
+        "bzip2",
+        "cereal",
+        "icu4c",
+        "jemalloc",
+        "libiconv",
+        "staden-io-lib",
+        "tbb",
+        "xz",
+        "zlib"
+      ]
+    },
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
@@ -4964,7 +4926,6 @@
     "date": "2023-08-21",
     "default": false,
     "dependencies": ["bzip2", "lz4", "xz", "zlib"],
-
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
@@ -4977,7 +4938,6 @@
     "date": "2023-07-25",
     "default": true,
     "dependencies": ["htslib", "ncurses", "zlib"],
-
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -4990,7 +4950,6 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["python3.12"],
-
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
@@ -5054,7 +5013,6 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
@@ -5113,7 +5071,6 @@
     "date": "2023-05-30",
     "default": true,
     "dependencies": ["python3.12"],
-
     "url": [
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html"
@@ -5125,7 +5082,6 @@
     "date": "2023-09-18",
     "default": true,
     "dependencies": ["python3.12"],
-
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
@@ -5168,7 +5124,6 @@
     "date": "2023-07-08",
     "default": false,
     "dependencies": ["fmt"],
-
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.12.0"
@@ -5202,13 +5157,14 @@
     "version": "1.15.0"
   },
   "star": {
-    "arch": "amd64",
     "bin": ["STAR"],
-    "date": "2023-10-10",
+    "date": "2023-10-13",
     "default": false,
     "dependencies": ["conda"],
-
-    "notes": ["Currently doesn't build with clang on macOS Sonoma."],
+    "supported": {
+      "noarch": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/alexdobin/STAR/",
       "https://bioconda.github.io/recipes/star/README.html"
@@ -5221,7 +5177,6 @@
     "date": "2023-03-07",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
@@ -5257,7 +5212,6 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
-
     "url": [
       "https://subread.sourceforge.net/",
       "https://bioconda.github.io/recipes/subread/README.html"
@@ -5392,7 +5346,6 @@
     "build_dependencies": ["cmake"],
     "date": "2022-11-05",
     "default": false,
-
     "prune": false,
     "url": [
       "https://termcolor.readthedocs.io/",
