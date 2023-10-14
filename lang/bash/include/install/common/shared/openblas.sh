@@ -18,7 +18,7 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'make' 'pkg-config'
-    app['cc']="$(koopa_locate_cc)"
+    app['cc']="$(koopa_locate_cc --only-system)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
