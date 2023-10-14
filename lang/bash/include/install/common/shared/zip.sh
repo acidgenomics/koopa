@@ -17,7 +17,7 @@ main() {
     local -A app dict
     koopa_activate_app --build-only 'make'
     ! koopa_is_macos && koopa_activate_app 'bzip2'
-    app['cc']="$(koopa_locate_cc)"
+    app['cc']="$(koopa_locate_cc --only-system)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"

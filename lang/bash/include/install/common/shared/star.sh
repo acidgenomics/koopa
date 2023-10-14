@@ -1,12 +1,30 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't currently working correctly with clang on macOS Sonoma.
+# NOTE This isn't currently working correctly with clang on macOS Sonoma.
 # Author has only tested using GCC on macOS.
+
+# Same clang linkage issues persist with CLT 15.1.0.0.1.1696033181.
+
+# > In file included from bam_cat.c:49:
+# > ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
+# > #include <htslib/sam.h>
+
+# Problematic part of Makefile:
+# Depend.list: $(SOURCES) parametersDefault.xxd $(HTSLIB_DEP)
+# 	echo $(SOURCES)
+# 	'rm' -f ./Depend.list
+# 	$(CXX) $(CXXFLAGS_common) -MM $^ >> Depend.list
+# include Depend.list
+#
+# File is located here:
+# /opt/koopa/app/htslib/1.18/include/htslib/sam.h
+
+# FIXME Alternatively can build with full llvm on macOS.
 
 main() {
     # """
     # Install STAR.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-11.
     #
     # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib:
     # https://github.com/alexdobin/STAR/pull/1586
@@ -20,13 +38,22 @@ main() {
     #   https://github.com/alexdobin/STAR/pull/1586
     # """
     local -A app
-    local -a make_args
-    koopa_activate_app --build-only 'coreutils' 'make' 'pkg-config'
-    koopa_activate_app 'xz' 'zlib' 'htslib'
-    app['cxx']="$(koopa_locate_gcxx)"
+    local -a build_deps deps make_args
+    build_deps=('coreutils' 'make' 'pkg-config')
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=('xz' 'zlib' 'htslib')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
+    if koopa_is_macos
+    then
+        app['cxx']="$(koopa_locate_gcxx)"
+    else
+        app['cxx']="$(koopa_locate_cxx --only-system)"
+    fi
     app['date']="$(koopa_locate_date)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
+    app['pkg_config']="$(koopa_locate_pkg_config)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['patch_prefix']="$(koopa_patch_prefix)"
@@ -34,7 +61,19 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
+    if koopa_is_macos
+    then
+        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+        then
+            koopa_append_ldflags '-Wl,-ld_classic'
+        fi
+        koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
+    fi
     make_args+=(
+        # > "CPPFLAGS=${CPPFLAGS:?}"
+        # > "CXXFLAGS=${CPPFLAGS:?}"
+        # > "LDFLAGS=${LDFLAGS:?}"
         "--jobs=${dict['jobs']}"
         "CXX=${app['cxx']}"
         'SYSTEM_HTSLIB=1'
@@ -42,7 +81,13 @@ ${dict['version']}.tar.gz"
     )
     if koopa_is_macos
     then
-        make_args+=('STARforMacStatic' 'STARlongForMacStatic')
+        # Static instead of dynamic build is currently recommended in README.
+        # > make_args+=('STARforMac')
+        make_args+=(
+            "PKG_CONFIG=${app['pkg_config']} --static"
+            # > "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
+            'STARforMacStatic' 'STARlongForMacStatic'
+        )
     else
         make_args+=('STAR' 'STARlong')
     fi
@@ -64,17 +109,6 @@ ${dict['version']}.tar.gz"
         --input="${dict['patch_file_2']}" \
         --unified \
         --verbose
-    if koopa_is_macos
-    then
-        dict['patch_macos']="${dict['patch_prefix']}/macos/star"
-        koopa_assert_is_dir "${dict['patch_macos']}"
-        dict['patch_file_3']="${dict['patch_macos']}/disable-openmp.patch"
-        koopa_assert_is_file "${dict['patch_file_3']}"
-        "${app['patch']}" \
-            --input="${dict['patch_file_3']}" \
-            --unified \
-            --verbose
-    fi
     # Makefile is currently hard-coded to look for 'date', which isn't expected
     # GNU on macOS.
     koopa_mkdir 'bin'

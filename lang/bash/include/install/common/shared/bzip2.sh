@@ -45,7 +45,7 @@ bzip2-${dict['version']}.tar.gz"
     elif koopa_is_macos
     then
         # This is the approach used by conda-forge recipe.
-        app['cc']="$(koopa_locate_cc)"
+        app['cc']="$(koopa_locate_cc --only-system)"
         koopa_assert_is_executable "${app['cc']}"
         cc_args+=(
             '-shared'
