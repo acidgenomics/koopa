@@ -18,7 +18,7 @@ main() {
     deps+=('lz4' 'xz' 'zlib')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['cc']="$(koopa_locate_cc)"
+    app['cc']="$(koopa_locate_cc --only-system)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['ldc']="$(koopa_app_prefix 'ldc')"

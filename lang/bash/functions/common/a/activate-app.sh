@@ -3,7 +3,7 @@
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
-    # @note Updated 2023-08-18.
+    # @note Updated 2023-10-11.
     #
     # Consider using 'pkg-config' to manage CFLAGS, CPPFLAGS, and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -73,6 +73,8 @@ koopa_activate_app() {
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
     LIBRARY_PATH="${LIBRARY_PATH:-}"
+    PATH="${PATH:-}"
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for app_name in "$@"
     do
         local -A dict2
@@ -218,33 +220,54 @@ koopa_activate_app() {
     # Decide whether to export global variables.
     if [[ -n "$CMAKE_PREFIX_PATH" ]]
     then
+        CMAKE_PREFIX_PATH="$( \
+            koopa_str_unique_by_semicolon "$CMAKE_PREFIX_PATH" \
+        )"
         export CMAKE_PREFIX_PATH
     else
         unset -v CMAKE_PREFIX_PATH
     fi
     if [[ -n "$CPPFLAGS" ]]
     then
+        CPPFLAGS="$(koopa_str_unique_by_space "$CPPFLAGS")"
         export CPPFLAGS
     else
         unset -v CPPFLAGS
     fi
     if [[ -n "$LDFLAGS" ]]
     then
+        LDFLAGS="$(koopa_str_unique_by_space "$LDFLAGS")"
         export LDFLAGS
     else
         unset -v LDFLAGS
     fi
     if [[ -n "$LDLIBS" ]]
     then
+        LDLIBS="$(koopa_str_unique_by_space "$LDLIBS")"
         export LDLIBS
     else
         unset -v LDLIBS
     fi
     if [[ -n "$LIBRARY_PATH" ]]
     then
+        LIBRARY_PATH="$(koopa_str_unique_by_colon "$LIBRARY_PATH")"
         export LIBRARY_PATH
     else
         unset -v LIBRARY_PATH
+    fi
+    if [[ -n "$PATH" ]]
+    then
+        PATH="$(koopa_str_unique_by_colon "$PATH")"
+        export PATH
+    else
+        unset -v PATH
+    fi
+    if [[ -n "$PKG_CONFIG_PATH" ]]
+    then
+        PKG_CONFIG_PATH="$(koopa_str_unique_by_colon "$PKG_CONFIG_PATH")"
+        export PKG_CONFIG_PATH
+    else
+        unset -v PKG_CONFIG_PATH
     fi
     return 0
 }

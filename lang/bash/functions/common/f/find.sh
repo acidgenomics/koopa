@@ -214,14 +214,12 @@ koopa_find() {
                 '--no-ignore'
                 '--one-file-system'
             )
-            case "${bool['hidden']}" in
-                '0')
-                    find_args+=('--no-hidden')
-                    ;;
-                '1')
-                    find_args+=('--hidden')
-                    ;;
-            esac
+            if [[ "${bool['hidden']}" -eq 1 ]]
+            then
+                find_args+=('--hidden')
+            else
+                find_args+=('--no-hidden')
+            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('--min-depth' "${dict['min_depth']}")

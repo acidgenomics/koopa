@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for 'koopa_macos_xcode_clt_version'.
+
 koopa_get_version() {
     # """
     # Get the version of an installed program.

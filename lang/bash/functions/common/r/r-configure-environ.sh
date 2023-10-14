@@ -423,19 +423,17 @@ abort,verbose"
     fi
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }

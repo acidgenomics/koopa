@@ -37,6 +37,8 @@ koopa_activate_app() {
     LDFLAGS="${LDFLAGS:-}"
     LDLIBS="${LDLIBS:-}"
     LIBRARY_PATH="${LIBRARY_PATH:-}"
+    PATH="${PATH:-}"
+    PKG_CONFIG_PATH="${PKG_CONFIG_PATH:-}"
     for app_name in "$@"
     do
         local -A dict2
@@ -173,33 +175,54 @@ koopa_activate_app() {
     fi
     if [[ -n "$CMAKE_PREFIX_PATH" ]]
     then
+        CMAKE_PREFIX_PATH="$( \
+            koopa_str_unique_by_semicolon "$CMAKE_PREFIX_PATH" \
+        )"
         export CMAKE_PREFIX_PATH
     else
         unset -v CMAKE_PREFIX_PATH
     fi
     if [[ -n "$CPPFLAGS" ]]
     then
+        CPPFLAGS="$(koopa_str_unique_by_space "$CPPFLAGS")"
         export CPPFLAGS
     else
         unset -v CPPFLAGS
     fi
     if [[ -n "$LDFLAGS" ]]
     then
+        LDFLAGS="$(koopa_str_unique_by_space "$LDFLAGS")"
         export LDFLAGS
     else
         unset -v LDFLAGS
     fi
     if [[ -n "$LDLIBS" ]]
     then
+        LDLIBS="$(koopa_str_unique_by_space "$LDLIBS")"
         export LDLIBS
     else
         unset -v LDLIBS
     fi
     if [[ -n "$LIBRARY_PATH" ]]
     then
+        LIBRARY_PATH="$(koopa_str_unique_by_colon "$LIBRARY_PATH")"
         export LIBRARY_PATH
     else
         unset -v LIBRARY_PATH
+    fi
+    if [[ -n "$PATH" ]]
+    then
+        PATH="$(koopa_str_unique_by_colon "$PATH")"
+        export PATH
+    else
+        unset -v PATH
+    fi
+    if [[ -n "$PKG_CONFIG_PATH" ]]
+    then
+        PKG_CONFIG_PATH="$(koopa_str_unique_by_colon "$PKG_CONFIG_PATH")"
+        export PKG_CONFIG_PATH
+    else
+        unset -v PKG_CONFIG_PATH
     fi
     return 0
 }
@@ -985,6 +1008,15 @@ koopa_assert_are_not_identical() {
     if [[ "${1:?}" == "${2:?}" ]]
     then
         koopa_stop "'${1}' is identical to '${2}'."
+    fi
+    return 0
+}
+
+koopa_assert_can_install_binary() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_can_install_binary
+    then
+        koopa_stop 'No binary file access.'
     fi
     return 0
 }
@@ -4376,25 +4408,37 @@ koopa_cli_install() {
     local -a flags pos
     local app
     koopa_assert_has_args "$#"
-    dict['allow_custom']=0
-    dict['custom_enabled']=0
     dict['stem']='install'
     case "${1:-}" in
-        '--all')
+        'all')
             shift 1
-            koopa_install_all_apps "$@"
-            return 0
-            ;;
-        '--all-binary')
-            shift 1
-            koopa_install_all_binary_apps "$@"
-            return 0
-            ;;
-        'app')
-            koopa_stop 'Unsupported command.'
+            case "${1:-}" in
+                'default' | 'supported')
+                    dict['fun']="koopa_install_all_${1:?}"
+                    koopa_assert_is_function "${dict['fun']}"
+                    shift 1
+                    "${dict['fun']}" "$@"
+                    return 0
+                    ;;
+                *)
+                    koopa_stop 'Unsupported mode.'
+                    ;;
+                esac
             ;;
         'koopa')
-            dict['allow_custom']=1
+            shift 1
+            koopa_install_koopa "$@"
+            return 0
+            ;;
+        'private' | 'system' | 'user')
+            dict['stem']="${dict['stem']}-${1:?}"
+            shift 1
+            ;;
+        'app' | 'shared-apps')
+            koopa_stop 'Unsupported command.'
+            ;;
+        '--all')
+            koopa_defunct 'koopa install all default'
             ;;
     esac
     flags=()
@@ -4411,9 +4455,9 @@ koopa_cli_install() {
                 shift 1
                 ;;
             '-'*)
-                if [[ "${dict['allow_custom']}" -eq 1 ]]
+                if [[ "${bool['allow_custom_args']}" -eq 1 ]]
                 then
-                    dict['custom_enabled']=1
+                    bool['custom_args_enabled']=1
                     pos+=("$1")
                     shift 1
                 else
@@ -4427,28 +4471,7 @@ koopa_cli_install() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    case "${1:-}" in
-        'private' | \
-        'system' | \
-        'user')
-            dict['stem']="${dict['stem']}-${1:?}"
-            shift 1
-            ;;
-    esac
     koopa_assert_has_args "$#"
-    if [[ "${dict['custom_enabled']}" -eq 1 ]]
-    then
-        dict['app']="${1:?}"
-        shift 1
-        dict['key']="${dict['stem']}-${dict['app']}"
-        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
-        if ! koopa_is_function "${dict['fun']}"
-        then
-            koopa_stop "Unsupported app: '${dict['app']}'."
-        fi
-        "${dict['fun']}" "$@"
-        return 0
-    fi
     for app in "$@"
     do
         local -A dict2
@@ -4461,7 +4484,7 @@ koopa_cli_install() {
         fi
         if koopa_is_array_non_empty "${flags[@]:-}"
         then
-            "${dict2['fun']}" "${flags[@]:-}"
+            "${dict2['fun']}" "${flags[@]}"
         else
             "${dict2['fun']}"
         fi
@@ -5588,14 +5611,12 @@ koopa_convert_sam_to_bam() {
         koopa_stop "No SAM files detected in '${dict['prefix']}'."
     fi
     koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    case "${bool['keep_sam']}" in
-        '0')
-            koopa_alert_note 'SAM files will be deleted.'
-            ;;
-        '1')
-            koopa_alert_note 'SAM files will be preserved.'
-            ;;
-    esac
+    if [[ "${bool['keep_sam']}" -eq 1 ]]
+    then
+        koopa_alert_note 'SAM files will be preserved.'
+    else
+        koopa_alert_note 'SAM files will be deleted.'
+    fi
     for sam_file in "${sam_files[@]}"
     do
         local bam_file
@@ -8378,14 +8399,12 @@ koopa_find() {
                 '--no-ignore'
                 '--one-file-system'
             )
-            case "${bool['hidden']}" in
-                '0')
-                    find_args+=('--no-hidden')
-                    ;;
-                '1')
-                    find_args+=('--hidden')
-                    ;;
-            esac
+            if [[ "${bool['hidden']}" -eq 1 ]]
+            then
+                find_args+=('--hidden')
+            else
+                find_args+=('--no-hidden')
+            fi
             if [[ -n "${dict['min_depth']}" ]]
             then
                 find_args+=('--min-depth' "${dict['min_depth']}")
@@ -10553,94 +10572,13 @@ koopa_install_agat() {
         "$@"
 }
 
-koopa_install_all_apps() {
-    local -A bool dict
-    local -a app_names push_apps
-    local app_name
-    bool['push']=0
-    bool['update']=0
-    bool['verbose']=0
-    dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=6
-    while (("$#"))
-    do
-        case "$1" in
-            '--push')
-                bool['push']=1
-                shift 1
-                ;;
-            '--update')
-                bool['update']=1
-                shift 1
-                ;;
-            '--verbose')
-                bool['verbose']=1
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
-    then
-        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
-    fi
-    if [[ "${bool['update']}" -eq 1 ]]
-    then
-        koopa_update_koopa
-    fi
-    readarray -t app_names <<< "$(koopa_shared_apps)"
-    for app_name in "${app_names[@]}"
-    do
-        local -a install_args
-        local prefix
-        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
-        install_args+=("$app_name")
-        koopa_cli_install "${install_args[@]}"
-        push_apps+=("$app_name")
-    done
-    if [[ "${bool['push']}" -eq 1 ]] && \
-        koopa_is_array_non_empty "${push_apps[@]:-}"
-    then
-        for app_name in "${push_apps[@]}"
-        do
-            koopa_push_app_build "$app_name"
-        done
-    fi
+koopa_install_all_default() {
+    koopa_install_shared_apps "$@"
     return 0
 }
 
-koopa_install_all_binary_apps() {
-    local -A app bool
-    local -a app_names
-    local app_name
-    koopa_assert_has_no_args "$#"
-    if ! koopa_can_install_binary
-    then
-        koopa_stop 'No binary file access.'
-    fi
-    app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
-    bool['bootstrap']=0
-    [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
-    readarray -t app_names <<< "$(koopa_shared_apps)"
-    if [[ "${bool['bootstrap']}" -eq 1 ]]
-    then
-        koopa_install_aws_cli --no-dependencies
-    fi
-    for app_name in "${app_names[@]}"
-    do
-        local prefix
-        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        koopa_cli_install --binary "$app_name"
-    done
-    if [[ "${bool['bootstrap']}" -eq 1 ]]
-    then
-        koopa_cli_install --reinstall 'aws-cli'
-    fi
+koopa_install_all_supported() {
+    koopa_install_shared_apps --all-supported "$@"
     return 0
 }
 
@@ -11044,10 +10982,6 @@ ${dict['version2']}"
             [[ -d "${dict['prefix']}" ]] && return 0
         fi
     fi
-    if [[ "${bool['quiet']}" -eq 0 ]]
-    then
-        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
-    fi
     if [[ "${bool['deps']}" -eq 1 ]]
     then
         local dep deps
@@ -11085,6 +11019,10 @@ ${dict['version2']}"
                 koopa_cli_install "${dep_install_args[@]}"
             done
         fi
+    fi
+    if [[ "${bool['quiet']}" -eq 0 ]]
+    then
+        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
     fi
     if [[ -n "${dict['prefix']}" ]] && [[ ! -d "${dict['prefix']}" ]]
     then
@@ -14468,6 +14406,102 @@ koopa_install_serf() {
         "$@"
 }
 
+koopa_install_shared_apps() {
+    local -A app bool dict
+    local -a app_names push_apps
+    local app_name
+    koopa_assert_is_owner
+    bool['all_supported']=0
+    bool['aws_bootstrap']=0
+    bool['binary']=0
+    bool['push']=0
+    bool['update']=0
+    bool['verbose']=0
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=6
+    while (("$#"))
+    do
+        case "$1" in
+            '--binary')
+                bool['binary']=1
+                shift 1
+                ;;
+            '--push')
+                bool['push']=1
+                shift 1
+                ;;
+            '--update')
+                bool['update']=1
+                shift 1
+                ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
+            '--all-supported')
+                bool['all_supported']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "${bool['binary']}" -eq 1 ]]
+    then
+        koopa_assert_can_install_binary
+        if [[ "${bool['push']}" -eq 1 ]]
+        then
+            koopa_stop 'Pushing binary apps is not supported.'
+        fi
+        app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
+        [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
+    fi
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
+    fi
+    if [[ "${bool['update']}" -eq 1 ]]
+    then
+        koopa_update_koopa
+    fi
+    if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
+    then
+        koopa_install_aws_cli --no-dependencies
+    fi
+    if [[ "${bool['all_supported']}" -eq 1 ]]
+    then
+        readarray -t app_names <<< "$(koopa_shared_apps --mode='all-supported')"
+    else
+        readarray -t app_names <<< "$(koopa_shared_apps)"
+    fi
+    for app_name in "${app_names[@]}"
+    do
+        local -a install_args
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        [[ -d "$prefix" ]] && continue
+        [[ "${bool['binary']}" -eq 1 ]] && install_args+=('--binary')
+        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
+        install_args+=("$app_name")
+        koopa_cli_install "${install_args[@]}"
+        push_apps+=("$app_name")
+    done
+    if [[ "${bool['push']}" -eq 1 ]] && \
+        koopa_is_array_non_empty "${push_apps[@]:-}"
+    then
+        for app_name in "${push_apps[@]}"
+        do
+            koopa_push_app_build "$app_name"
+        done
+    fi
+    if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
+    then
+        koopa_cli_install --reinstall 'aws-cli'
+    fi
+    return 0
+}
+
 koopa_install_shellcheck() {
     koopa_install_app \
         --name='shellcheck' \
@@ -15364,15 +15398,8 @@ koopa_is_koopa_app() {
     [[ -d "$app_prefix" ]] || return 1
     for str in "$@"
     do
-        if koopa_is_installed "$str"
-        then
-            str="$(koopa_which_realpath "$str")"
-        elif [[ -e "$str" ]]
-        then
-            str="$(koopa_realpath "$str")"
-        else
-            return 1
-        fi
+        [[ -e "$str" ]] || return 1
+        str="$(koopa_realpath "$str")"
         koopa_str_detect_regex \
             --string="$str" \
             --pattern="^${app_prefix}" \
@@ -19989,20 +20016,18 @@ abort,verbose"
     fi
     koopa_alert_info "Modifying '${dict['file']}'."
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }
 
@@ -20049,14 +20074,12 @@ koopa_r_configure_java() {
         "JAVAH=${conf_dict['javah']}"
         "JAVA_HOME=${conf_dict['java_home']}"
     )
-    case "${bool['system']}" in
-        '0')
-            r_cmd=("${app['r']}")
-            ;;
-        '1')
-            r_cmd=('koopa_sudo' "${app['r']}")
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        r_cmd=('koopa_sudo' "${app['r']}")
+    else
+        r_cmd=("${app['r']}")
+    fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     return 0
@@ -20160,10 +20183,6 @@ libexec/lib/server}")
         then
             keys+=('gettext')
         fi
-        if koopa_is_linux && [[ "${bool['system']}" -eq 0 ]]
-        then
-            keys+=('gcc')
-        fi
         for key in "${keys[@]}"
         do
             local prefix
@@ -20173,14 +20192,7 @@ libexec/lib/server}")
         done
         for i in "${!ld_lib_app_arr[@]}"
         do
-            case "$i" in
-                'gcc')
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib64"
-                    ;;
-                *)
-                    ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
-                    ;;
-            esac
+            ld_lib_app_arr[$i]="${ld_lib_app_arr[$i]}/lib"
         done
         koopa_assert_is_dir "${ld_lib_app_arr[@]}"
     fi
@@ -20225,29 +20237,26 @@ libexec/lib/server}")
     koopa_assert_is_file "${dict['file']}"
     dict['string']="$(koopa_print "${lines[@]}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-
-            if [[ ! -f "${dict['file_bak']}" ]]
-            then
-                koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
-            fi
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp --sudo "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        if [[ ! -f "${dict['file_bak']}" ]]
+        then
+            koopa_cp "${dict['file']}" "${dict['file_bak']}"
+        fi
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     return 0
 }
 
@@ -20292,7 +20301,7 @@ koopa_r_configure_makevars() {
         then
             app['gfortran']='/opt/gfortran/bin/gfortran'
         else
-            app['gfortran']="$(koopa_locate_gfortran)"
+            app['gfortran']="$(koopa_locate_gfortran --only-system)"
         fi
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
@@ -20312,9 +20321,6 @@ koopa_r_configure_makevars() {
             "${dict['libjpeg']}/lib/pkgconfig" \
             "${dict['libpng']}/lib/pkgconfig"
     fi
-    cppflags=()
-    ldflags=()
-    lines=()
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         if koopa_is_linux
@@ -20471,14 +20477,12 @@ lib/pkgconfig"
         conf_dict['fcflags']="${conf_dict['fflags']}"
         conf_dict['objc']="${conf_dict['cc']}"
         conf_dict['objcxx']="${conf_dict['cxx']}"
-        case "${bool['system']}" in
-            '0')
-                conf_dict['op']='+='
-                ;;
-            '1')
-                conf_dict['op']='='
-                ;;
-        esac
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            conf_dict['op']='='
+        else
+            conf_dict['op']='+='
+        fi
         lines+=(
             "AR = ${conf_dict['ar']}"
             "AWK = ${conf_dict['awk']}"
@@ -20520,7 +20524,9 @@ lib/pkgconfig"
     fi
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['file']="${dict['r_prefix']}/etc/Makevars.site"
-    if koopa_is_linux && bool['system']=1 && [[ -f "${dict['file']}" ]]
+    if koopa_is_linux && \
+        [[ "${bool['system']}" -eq 1 ]] && \
+        [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "Deleting '${dict['file']}'."
         koopa_rm --sudo "${dict['file']}"
@@ -20529,20 +20535,18 @@ lib/pkgconfig"
     koopa_is_array_empty "${lines[@]}" && return 0
     dict['string']="$(koopa_print "${lines[@]}" | "${app['sort']}")"
     koopa_alert_info "Modifying '${dict['file']}'."
-    case "${bool['system']}" in
-        '0')
-            koopa_rm "${dict['file']}"
-            koopa_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-        '1')
-            koopa_rm --sudo "${dict['file']}"
-            koopa_sudo_write_string \
-                --file="${dict['file']}" \
-                --string="${dict['string']}"
-            ;;
-    esac
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        koopa_rm --sudo "${dict['file']}"
+        koopa_sudo_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    else
+        koopa_rm "${dict['file']}"
+        koopa_write_string \
+            --file="${dict['file']}" \
+            --string="${dict['string']}"
+    fi
     unset -v PKG_CONFIG_PATH
     return 0
 }
@@ -20591,50 +20595,36 @@ koopa_r_copy_files_into_etc() {
 
 koopa_r_gfortran_libs() {
     local -A app dict
-    local -a flibs libs
-    local i
+    local -a flibs libs libs2
+    local lib
     koopa_assert_has_no_args "$#"
-    app['dirname']="$(koopa_locate_dirname --allow-system)"
-    app['sort']="$(koopa_locate_sort --allow-system)"
-    app['xargs']="$(koopa_locate_xargs --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     if koopa_is_linux
     then
-        dict['gfortran']="$(koopa_app_prefix 'gcc')"
-
+        app['gfortran']="$(koopa_locate_gfortran --only-system)"
+        koopa_assert_is_executable "${app[@]}"
     elif koopa_is_macos
     then
+        app['dirname']="$(koopa_locate_dirname --allow-system)"
+        app['sort']="$(koopa_locate_sort --allow-system)"
+        app['xargs']="$(koopa_locate_xargs --allow-system)"
+        koopa_assert_is_executable "${app[@]}"
         case "${dict['arch']}" in
             'arm64')
                 dict['arch']='aarch64'
                 ;;
         esac
-        dict['gfortran']='/opt/gfortran'
-        koopa_assert_is_dir "${dict['gfortran']}"
+        dict['lib_prefix']='/opt/gfortran/lib'
+        koopa_assert_is_dir "${dict['lib_prefix']}"
         readarray -t libs <<< "$( \
             koopa_find \
-                --max-depth=2 \
-                --min-depth=2 \
-                --pattern="${dict['arch']}*" \
-                --prefix="${dict['gfortran']}/lib/gcc" \
-                --type='d' \
+                --pattern='libgfortran.a' \
+                --prefix="${dict['lib_prefix']}" \
+                --type='f' \
+            | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
+            | "${app['sort']}" --unique \
         )"
-    fi
-    koopa_assert_is_dir "${dict['gfortran']}"
-    readarray -t libs <<< "$( \
-        koopa_find \
-            --pattern='*.a' \
-            --prefix="${dict['gfortran']}" \
-            --type='f' \
-        | "${app['xargs']}" -I '{}' "${app['dirname']}" '{}' \
-        | "${app['sort']}" --unique \
-    )"
-    koopa_assert_is_array_non_empty "${libs[@]:-}"
-    if koopa_is_macos
-    then
-        local -a libs2
-        local lib
+        koopa_assert_is_array_non_empty "${libs[@]:-}"
         for lib in "${libs[@]}"
         do
             case "$lib" in
@@ -20645,12 +20635,12 @@ koopa_r_gfortran_libs() {
         done
         koopa_assert_is_array_non_empty "${libs2[@]:-}"
         libs=("${libs2[@]}")
-        libs+=("${dict['gfortran']}/lib")
+        libs+=("${dict['lib_prefix']}")
+        for lib in "${libs[@]}"
+        do
+            flibs+=("-L${lib}")
+        done
     fi
-    for i in "${!libs[@]}"
-    do
-        flibs+=("-L${libs[$i]}")
-    done
     flibs+=('-lgfortran')
     if koopa_is_linux
     then
@@ -22943,11 +22933,10 @@ koopa_scripts_private_prefix() {
 
 koopa_shared_apps() {
     local cmd
-    koopa_assert_has_no_args "$#"
     koopa_assert_is_installed 'python3'
     cmd="$(koopa_koopa_prefix)/lang/python/shared-apps.py"
     koopa_assert_is_executable "$cmd"
-    "$cmd"
+    "$cmd" "$@"
     return 0
 }
 
@@ -24356,6 +24345,72 @@ koopa_str_detect() {
     koopa_grep "${grep_args[@]}"
 }
 
+koopa_str_unique_by_colon() {
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ':' '\n' \
+                | "${app['awk']}" '!x[$0]++' \
+                | "${app['tr']}" '\n' ':' \
+                | koopa_strip_right --pattern=':' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
+    return 0
+}
+
+koopa_str_unique_by_semicolon() {
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ';' '\n' \
+                | "${app['awk']}" '!x[$0]++' \
+                | "${app['tr']}" '\n' ';' \
+                | koopa_strip_right --pattern=';' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
+    return 0
+}
+
+koopa_str_unique_by_space() {
+    local -A app
+    local str str2
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for str in "$@"
+    do
+        str2="$( \
+            koopa_print "$str" \
+                | "${app['tr']}" ' ' '\n' \
+                | "${app['awk']}" '!x[$0]++' \
+                | "${app['tr']}" '\n' ' ' \
+                | koopa_strip_right --pattern=' ' \
+        )"
+        [[ -n "$str2" ]] || return 1
+        koopa_print "$str2"
+    done
+    return 0
+}
+
 koopa_strip_left() {
     local -A dict
     local -a pos
@@ -24783,16 +24838,14 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    case "${bool['shared']}" in
-        '0')
-            bool['group']="$(koopa_group_name)"
-            bool['user']="$(koopa_user_name)"
-            ;;
-        '1')
-            bool['group']="$(koopa_sys_group_name)"
-            bool['user']="$(koopa_sys_user_name)"
-            ;;
-    esac
+    if [[ "${bool['shared']}" -eq 1 ]]
+    then
+        bool['group']="$(koopa_sys_group_name)"
+        bool['user']="$(koopa_sys_user_name)"
+    else
+        bool['group']="$(koopa_group_name)"
+        bool['user']="$(koopa_user_name)"
+    fi
     chown_args+=('--no-dereference')
     if [[ "${bool['recursive']}" -eq 1 ]]
     then
@@ -26418,25 +26471,18 @@ koopa_uninstall_kallisto() {
 
 koopa_uninstall_koopa() {
     local -A bool dict
-    bool['dotfiles']=1
-    bool['koopa']=1
+    bool['uninstall_koopa']=1
     dict['config_prefix']="$(koopa_config_prefix)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     if koopa_is_interactive
     then
-        bool['koopa']="$( \
+        bool['uninstall_koopa']="$( \
             koopa_read_yn \
                 'Proceed with koopa uninstall' \
-                "${bool['koopa']}" \
-        )"
-        bool['dotfiles']="$( \
-            koopa_read_yn \
-                'Uninstall dotfiles' \
-                "${bool['dotfiles']}" \
+                "${bool['uninstall_koopa']}" \
         )"
     fi
-    [[ "${bool['koopa']}" -eq 0 ]] && return 1
-    [[ "${bool['dotfiles']}" -eq 1 ]] && koopa_uninstall_dotfiles
+    [[ "${bool['uninstall_koopa']}" -eq 0 ]] && return 1
     koopa_rm --verbose "${dict['config_prefix']}"
     if koopa_is_shared_install
     then

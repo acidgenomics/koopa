@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-08-29.
+@note Updated 2023-10-13.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -52,7 +52,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i : i + 1] = x  # noqa: E203
+                items[i: i + 1] = x  # noqa: E203
                 x = items[i]
     except IndexError:
         pass
@@ -62,7 +62,7 @@ def flatten(items, seqtypes=(list, tuple)):
 def get_deps(app_name: str, json_data: dict) -> list:
     """
     Get unique build dependencies and dependencies in an ordered list.
-    @note Updated 2023-05-11.
+    @note Updated 2023-10-13.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
@@ -71,13 +71,38 @@ def get_deps(app_name: str, json_data: dict) -> list:
         raise NameError("Unsupported app: '" + app_name + "'.")
     build_deps = []
     deps = []
+    os_id = os_string()
+    if "supported" in json_data[app_name]:
+        supported = json_data[app_name]["supported"]
+        if os_id in supported.keys():
+            if not supported[os_id]:
+                raise NameError("Unsupported app: '" + app_name + "'.")
     if "build_dependencies" in json_data[app_name]:
         build_deps = json_data[app_name]["build_dependencies"]
+        if isinstance(build_deps, dict):
+            if os_id in build_deps.keys():
+                build_deps = build_deps[os_id]
+            else:
+                build_deps = build_deps["noarch"]
     if "dependencies" in json_data[app_name]:
         deps = json_data[app_name]["dependencies"]
+        if isinstance(deps, dict):
+            if os_id in deps.keys():
+                deps = deps[os_id]
+            else:
+                deps = deps["noarch"]
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
+
+
+def os_string() -> str:
+    """
+    Platform and architecture-specific identifier.
+    @note Updated 2023-10-13.
+    """
+    string = platform() + "-" + arch2()
+    return string
 
 
 def platform() -> str:
@@ -95,7 +120,7 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-03-31.
+    @note Updated 2023-10-13.
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
@@ -125,7 +150,7 @@ def print_apps(app_names: list, json_data: dict) -> bool:
 def main(app_name: str, json_file: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-05-11.
+    @note Updated 2023-10-13.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)

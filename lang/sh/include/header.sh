@@ -31,20 +31,18 @@ __koopa_posix_header() {
     then
         export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:-}"
     fi
-    case "${KOOPA_ACTIVATE:-0}" in
-        '0')
-            unalias -a
-            if [ "${KOOPA_INSTALL_APP_SUBSHELL:-0}" -eq 0 ]
-            then
-                PATH='/usr/bin:/bin'
-                PATH="${KOOPA_PREFIX}/bin:${PATH}"
-                export PATH
-            fi
-            ;;
-        '1')
-            __koopa_activate_koopa || return 1
-            ;;
-    esac
+    if [ "${KOOPA_ACTIVATE:-0}" -eq 1 ]
+    then
+        __koopa_activate_koopa || return 1
+    else
+        unalias -a
+        if [ "${KOOPA_INSTALL_APP_SUBSHELL:-0}" -eq 0 ]
+        then
+            PATH='/usr/bin:/bin'
+            PATH="${KOOPA_PREFIX}/bin:${PATH}"
+            export PATH
+        fi
+    fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
         _koopa_duration_stop 'posix' || return 1
