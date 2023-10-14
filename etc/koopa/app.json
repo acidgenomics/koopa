@@ -518,12 +518,12 @@
   "bowtie2": {
     "arch": "amd64",
     "bin": ["bowtie2"],
-    "date": "2023-02-08",
+    "date": "2023-10-14",
     "default": false,
     "dependencies": ["conda"],
     "large": true,
     "url": ["https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"],
-    "version": "2.5.1"
+    "version": "2.5.2"
   },
   "bpytop": {
     "aliases": {
@@ -1630,11 +1630,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-06-14",
+    "date": "2023-10-14",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.42.0"
+    "version": "0.43.0"
   },
   "gatk": {
     "aliases": {
@@ -6151,14 +6151,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-09-24",
+    "date": "2023-10-14",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.9.24"
+    "version": "2023.10.13"
   },
   "zellij": {
     "aliases": {
