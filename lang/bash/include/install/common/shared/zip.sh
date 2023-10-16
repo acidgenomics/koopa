@@ -18,11 +18,6 @@ main() {
     local -A app dict
     local -a make_args make_install_args
     koopa_activate_app --build-only 'make'
-    if ! koopa_is_macos
-    then
-        koopa_activate_app 'bzip2'
-        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-    fi
     app['cc']="$(koopa_locate_cc --only-system)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
@@ -75,6 +70,7 @@ zip${dict['version2']}.tar.gz"
     make_args+=(
         '-f' 'unix/Makefile'
         "CC=${app['cc']}"
+        'NO_BZIP2_SUPPORT=1'
         'generic'
     )
     make_install_args+=(
@@ -83,10 +79,6 @@ zip${dict['version2']}.tar.gz"
         "BINDIR=${dict['prefix']}/bin"
         "MANDIR=${dict['prefix']}/share/man/man1"
     )
-    if ! koopa_is_macos
-    then
-        make_args+=("IZ_BZIP2=${dict['bzip2']}")
-    fi
     koopa_print_env
     "${app['make']}" "${make_args[@]}"
     "${app['make']}" "${make_install_args[@]}" install
@@ -96,9 +88,6 @@ zip${dict['version2']}.tar.gz"
     app['zip']="${dict['prefix']}/bin/zip"
     koopa_assert_is_executable "${app['zip']}"
     "${app['zip']}" -v
-    koopa_touch 'test1' 'test2' 'test3'
-    "${app['zip']}" -Z 'bzip2' 'test.zip' 'test1' 'test2' 'test3'
-    koopa_assert_is_file 'test.zip'
     return 0
 }
 
