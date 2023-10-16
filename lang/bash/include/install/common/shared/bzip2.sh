@@ -96,7 +96,7 @@ bzip2-${dict['version']}.tar.gz"
         )
     fi
     # Remove the unwanted static file.
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
+    # > koopa_rm "${dict['prefix']}/lib/"*'.a'
     # Create pkg-config file.
     dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/bzip2.pc"
     read -r -d '' "dict[pkg_config_string]" << END || true
