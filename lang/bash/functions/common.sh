@@ -1012,6 +1012,15 @@ koopa_assert_are_not_identical() {
     return 0
 }
 
+koopa_assert_can_install_binary() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_can_install_binary
+    then
+        koopa_stop 'No binary file access.'
+    fi
+    return 0
+}
+
 koopa_assert_has_args_eq() {
     if [[ "$#" -ne 2 ]]
     then
@@ -4399,25 +4408,37 @@ koopa_cli_install() {
     local -a flags pos
     local app
     koopa_assert_has_args "$#"
-    dict['allow_custom']=0
-    dict['custom_enabled']=0
     dict['stem']='install'
     case "${1:-}" in
-        '--all')
+        'all')
             shift 1
-            koopa_install_all_apps "$@"
-            return 0
-            ;;
-        '--all-binary')
-            shift 1
-            koopa_install_all_binary_apps "$@"
-            return 0
-            ;;
-        'app')
-            koopa_stop 'Unsupported command.'
+            case "${1:-}" in
+                'default' | 'supported')
+                    dict['fun']="koopa_install_all_${1:?}"
+                    koopa_assert_is_function "${dict['fun']}"
+                    shift 1
+                    "${dict['fun']}" "$@"
+                    return 0
+                    ;;
+                *)
+                    koopa_stop 'Unsupported mode.'
+                    ;;
+                esac
             ;;
         'koopa')
-            dict['allow_custom']=1
+            shift 1
+            koopa_install_koopa "$@"
+            return 0
+            ;;
+        'private' | 'system' | 'user')
+            dict['stem']="${dict['stem']}-${1:?}"
+            shift 1
+            ;;
+        'app' | 'shared-apps')
+            koopa_stop 'Unsupported command.'
+            ;;
+        '--all')
+            koopa_defunct 'koopa install all default'
             ;;
     esac
     flags=()
@@ -4434,9 +4455,9 @@ koopa_cli_install() {
                 shift 1
                 ;;
             '-'*)
-                if [[ "${dict['allow_custom']}" -eq 1 ]]
+                if [[ "${bool['allow_custom_args']}" -eq 1 ]]
                 then
-                    dict['custom_enabled']=1
+                    bool['custom_args_enabled']=1
                     pos+=("$1")
                     shift 1
                 else
@@ -4450,28 +4471,7 @@ koopa_cli_install() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    case "${1:-}" in
-        'private' | \
-        'system' | \
-        'user')
-            dict['stem']="${dict['stem']}-${1:?}"
-            shift 1
-            ;;
-    esac
     koopa_assert_has_args "$#"
-    if [[ "${dict['custom_enabled']}" -eq 1 ]]
-    then
-        dict['app']="${1:?}"
-        shift 1
-        dict['key']="${dict['stem']}-${dict['app']}"
-        dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
-        if ! koopa_is_function "${dict['fun']}"
-        then
-            koopa_stop "Unsupported app: '${dict['app']}'."
-        fi
-        "${dict['fun']}" "$@"
-        return 0
-    fi
     for app in "$@"
     do
         local -A dict2
@@ -4484,7 +4484,7 @@ koopa_cli_install() {
         fi
         if koopa_is_array_non_empty "${flags[@]:-}"
         then
-            "${dict2['fun']}" "${flags[@]:-}"
+            "${dict2['fun']}" "${flags[@]}"
         else
             "${dict2['fun']}"
         fi
@@ -10572,94 +10572,13 @@ koopa_install_agat() {
         "$@"
 }
 
-koopa_install_all_apps() {
-    local -A bool dict
-    local -a app_names push_apps
-    local app_name
-    bool['push']=0
-    bool['update']=0
-    bool['verbose']=0
-    dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=6
-    while (("$#"))
-    do
-        case "$1" in
-            '--push')
-                bool['push']=1
-                shift 1
-                ;;
-            '--update')
-                bool['update']=1
-                shift 1
-                ;;
-            '--verbose')
-                bool['verbose']=1
-                shift 1
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
-    then
-        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
-    fi
-    if [[ "${bool['update']}" -eq 1 ]]
-    then
-        koopa_update_koopa
-    fi
-    readarray -t app_names <<< "$(koopa_shared_apps)"
-    for app_name in "${app_names[@]}"
-    do
-        local -a install_args
-        local prefix
-        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
-        install_args+=("$app_name")
-        koopa_cli_install "${install_args[@]}"
-        push_apps+=("$app_name")
-    done
-    if [[ "${bool['push']}" -eq 1 ]] && \
-        koopa_is_array_non_empty "${push_apps[@]:-}"
-    then
-        for app_name in "${push_apps[@]}"
-        do
-            koopa_push_app_build "$app_name"
-        done
-    fi
+koopa_install_all_default() {
+    koopa_install_shared_apps "$@"
     return 0
 }
 
-koopa_install_all_binary_apps() {
-    local -A app bool
-    local -a app_names
-    local app_name
-    koopa_assert_has_no_args "$#"
-    if ! koopa_can_install_binary
-    then
-        koopa_stop 'No binary file access.'
-    fi
-    app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
-    bool['bootstrap']=0
-    [[ ! -x "${app['aws']}" ]] && bool['bootstrap']=1
-    readarray -t app_names <<< "$(koopa_shared_apps)"
-    if [[ "${bool['bootstrap']}" -eq 1 ]]
-    then
-        koopa_install_aws_cli --no-dependencies
-    fi
-    for app_name in "${app_names[@]}"
-    do
-        local prefix
-        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        koopa_cli_install --binary "$app_name"
-    done
-    if [[ "${bool['bootstrap']}" -eq 1 ]]
-    then
-        koopa_cli_install --reinstall 'aws-cli'
-    fi
+koopa_install_all_supported() {
+    koopa_install_shared_apps --all-supported "$@"
     return 0
 }
 
@@ -11063,10 +10982,6 @@ ${dict['version2']}"
             [[ -d "${dict['prefix']}" ]] && return 0
         fi
     fi
-    if [[ "${bool['quiet']}" -eq 0 ]]
-    then
-        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
-    fi
     if [[ "${bool['deps']}" -eq 1 ]]
     then
         local dep deps
@@ -11104,6 +11019,10 @@ ${dict['version2']}"
                 koopa_cli_install "${dep_install_args[@]}"
             done
         fi
+    fi
+    if [[ "${bool['quiet']}" -eq 0 ]]
+    then
+        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
     fi
     if [[ -n "${dict['prefix']}" ]] && [[ ! -d "${dict['prefix']}" ]]
     then
@@ -14485,6 +14404,102 @@ koopa_install_serf() {
     koopa_install_app \
         --name='serf' \
         "$@"
+}
+
+koopa_install_shared_apps() {
+    local -A app bool dict
+    local -a app_names push_apps
+    local app_name
+    koopa_assert_is_owner
+    bool['all_supported']=0
+    bool['aws_bootstrap']=0
+    bool['binary']=0
+    bool['push']=0
+    bool['update']=0
+    bool['verbose']=0
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=6
+    while (("$#"))
+    do
+        case "$1" in
+            '--binary')
+                bool['binary']=1
+                shift 1
+                ;;
+            '--push')
+                bool['push']=1
+                shift 1
+                ;;
+            '--update')
+                bool['update']=1
+                shift 1
+                ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
+            '--all-supported')
+                bool['all_supported']=1
+                shift 1
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ "${bool['binary']}" -eq 1 ]]
+    then
+        koopa_assert_can_install_binary
+        if [[ "${bool['push']}" -eq 1 ]]
+        then
+            koopa_stop 'Pushing binary apps is not supported.'
+        fi
+        app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
+        [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
+    fi
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "${dict['mem_gb_cutoff']} GB of RAM is required."
+    fi
+    if [[ "${bool['update']}" -eq 1 ]]
+    then
+        koopa_update_koopa
+    fi
+    if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
+    then
+        koopa_install_aws_cli --no-dependencies
+    fi
+    if [[ "${bool['all_supported']}" -eq 1 ]]
+    then
+        readarray -t app_names <<< "$(koopa_shared_apps --mode='all-supported')"
+    else
+        readarray -t app_names <<< "$(koopa_shared_apps)"
+    fi
+    for app_name in "${app_names[@]}"
+    do
+        local -a install_args
+        local prefix
+        prefix="$(koopa_app_prefix --allow-missing "$app_name")"
+        [[ -d "$prefix" ]] && continue
+        [[ "${bool['binary']}" -eq 1 ]] && install_args+=('--binary')
+        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
+        install_args+=("$app_name")
+        koopa_cli_install "${install_args[@]}"
+        push_apps+=("$app_name")
+    done
+    if [[ "${bool['push']}" -eq 1 ]] && \
+        koopa_is_array_non_empty "${push_apps[@]:-}"
+    then
+        for app_name in "${push_apps[@]}"
+        do
+            koopa_push_app_build "$app_name"
+        done
+    fi
+    if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
+    then
+        koopa_cli_install --reinstall 'aws-cli'
+    fi
+    return 0
 }
 
 koopa_install_shellcheck() {
@@ -22918,11 +22933,10 @@ koopa_scripts_private_prefix() {
 
 koopa_shared_apps() {
     local cmd
-    koopa_assert_has_no_args "$#"
     koopa_assert_is_installed 'python3'
     cmd="$(koopa_koopa_prefix)/lang/python/shared-apps.py"
     koopa_assert_is_executable "$cmd"
-    "$cmd"
+    "$cmd" "$@"
     return 0
 }
 
