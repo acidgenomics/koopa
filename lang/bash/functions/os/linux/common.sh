@@ -406,6 +406,7 @@ koopa_linux_install_apptainer() {
 }
 
 koopa_linux_install_aspera_connect() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='aspera-connect' \
         --platform='linux' \
@@ -420,10 +421,10 @@ koopa_linux_install_attr() {
 }
 
 koopa_linux_install_bcbio_nextgen() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='bcbio-nextgen' \
         --platform='linux' \
-        --version="$(koopa_current_bcbio_nextgen_version)" \
         "$@"
 }
 
@@ -457,6 +458,7 @@ koopa_linux_install_ont_bonito() {
 }
 
 koopa_linux_install_private_bcl2fastq() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='bcl2fastq' \
         --platform='linux' \
@@ -469,6 +471,7 @@ bcl2fastq-conversion-software/downloads.html'."
 }
 
 koopa_linux_install_private_cellranger() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='cellranger' \
         --platform='linux' \
