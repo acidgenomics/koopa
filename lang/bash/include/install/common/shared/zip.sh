@@ -70,7 +70,6 @@ zip${dict['version2']}.tar.gz"
     make_args+=(
         '-f' 'unix/Makefile'
         "CC=${app['cc']}"
-        'NO_BZIP2_SUPPORT=1'
         'generic'
     )
     make_install_args+=(
