@@ -52,7 +52,7 @@ def flatten(items, seqtypes=(list, tuple)):
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i: i + 1] = x  # noqa: E203
+                items[i : i + 1] = x  # noqa: E203
                 x = items[i]
     except IndexError:
         pass
@@ -62,33 +62,34 @@ def flatten(items, seqtypes=(list, tuple)):
 def get_deps(app_name: str, json_data: dict) -> list:
     """
     Get unique build dependencies and dependencies in an ordered list.
-    @note Updated 2023-10-13.
+    @note Updated 2023-10-16.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
     """
     if app_name not in json_data:
         raise NameError("Unsupported app: '" + app_name + "'.")
+    sys_dict = {}
+    sys_dict["os_id"] = os_id()
     build_deps = []
     deps = []
-    os_id = os_string()
     if "supported" in json_data[app_name]:
         supported = json_data[app_name]["supported"]
-        if os_id in supported.keys():
-            if not supported[os_id]:
-                raise NameError("Unsupported app: '" + app_name + "'.")
+        if sys_dict["os_id"] in supported.keys():
+            if not supported[sys_dict["os_id"]]:
+                raise ValueError("Unsupported platform.")
     if "build_dependencies" in json_data[app_name]:
         build_deps = json_data[app_name]["build_dependencies"]
         if isinstance(build_deps, dict):
-            if os_id in build_deps.keys():
-                build_deps = build_deps[os_id]
+            if sys_dict["os_id"] in build_deps.keys():
+                build_deps = build_deps[sys_dict["os_id"]]
             else:
                 build_deps = build_deps["noarch"]
     if "dependencies" in json_data[app_name]:
         deps = json_data[app_name]["dependencies"]
         if isinstance(deps, dict):
-            if os_id in deps.keys():
-                deps = deps[os_id]
+            if sys_dict["os_id"] in deps.keys():
+                deps = deps[sys_dict["os_id"]]
             else:
                 deps = deps["noarch"]
     all_deps = build_deps + deps
@@ -96,10 +97,10 @@ def get_deps(app_name: str, json_data: dict) -> list:
     return all_deps
 
 
-def os_string() -> str:
+def os_id() -> str:
     """
     Platform and architecture-specific identifier.
-    @note Updated 2023-10-13.
+    @note Updated 2023-10-16.
     """
     string = platform() + "-" + arch2()
     return string
