@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# FIXME Need to rework platform-specific handling.
+
 """
 Solve app dependencies defined in 'app.json' file.
 @note Updated 2023-10-13.
