@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zip.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-16.
     #
     # Upstream is unmaintained so we use the Debian patchset:
     # https://packages.debian.org/sid/zip
@@ -13,15 +13,20 @@ main() {
     # - http://ftp.debian.org/debian/pool/main/z/zip/
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/zip.rb
     # - https://git.alpinelinux.org/aports/tree/main/zip
+    # - https://fossies.org/linux/zip/bzip2/install.txt
     # """
     local -A app dict
+    local -a make_args make_install_args
     koopa_activate_app --build-only 'make'
-    ! koopa_is_macos && koopa_activate_app 'bzip2'
+    if ! koopa_is_macos
+    then
+        koopa_activate_app 'bzip2'
+        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+    fi
     app['cc']="$(koopa_locate_cc --only-system)"
     app['make']="$(koopa_locate_make)"
     app['patch']="$(koopa_locate_patch)"
     koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -67,17 +72,24 @@ zip${dict['version2']}.tar.gz"
             --strip=1 \
             --verbose
     fi
-    koopa_print_env
-    "${app['make']}" \
-        -f 'unix/Makefile' \
-        "CC=${app['cc']}" \
+    make_args+=(
+        '-f' 'unix/Makefile'
+        "CC=${app['cc']}"
         'generic'
-    "${app['make']}" \
-        -f 'unix/Makefile' \
-        "prefix=${dict['prefix']}" \
-        "BINDIR=${dict['prefix']}/bin" \
-        "MANDIR=${dict['prefix']}/share/man/man1" \
-        install
+    )
+    make_install_args+=(
+        '-f' 'unix/Makefile'
+        "prefix=${dict['prefix']}"
+        "BINDIR=${dict['prefix']}/bin"
+        "MANDIR=${dict['prefix']}/share/man/man1"
+    )
+    if ! koopa_is_macos
+    then
+        make_args+=("IZ_BZIP2=${dict['bzip2']}")
+    fi
+    koopa_print_env
+    "${app['make']}" "${make_args[@]}"
+    "${app['make']}" "${make_install_args[@]}" install
     koopa_cd '..'
     koopa_mkdir 'test'
     koopa_cd 'test'
