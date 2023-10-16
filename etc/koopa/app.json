@@ -5163,6 +5163,7 @@
     "dependencies": ["conda"],
     "supported": {
       "noarch": true,
+      "macos-amd64": false,
       "macos-arm64": false
     },
     "url": [
