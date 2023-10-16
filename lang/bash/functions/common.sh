@@ -14389,7 +14389,7 @@ koopa_install_salmon() {
             "$@"
     else
         koopa_install_app \
-            --installer-'conda-package' \
+            --installer='conda-package' \
             --name='salmon' \
             "$@"
     fi
