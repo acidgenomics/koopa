@@ -95,6 +95,7 @@ zip${dict['version2']}.tar.gz"
     koopa_cd 'test'
     app['zip']="${dict['prefix']}/bin/zip"
     koopa_assert_is_executable "${app['zip']}"
+    "${app['zip']}" -v
     koopa_touch 'test1' 'test2' 'test3'
     "${app['zip']}" -Z 'bzip2' 'test.zip' 'test1' 'test2' 'test3'
     koopa_assert_is_file 'test.zip'
