@@ -11912,6 +11912,10 @@ koopa_install_gawk() {
 }
 
 koopa_install_gcc() {
+    if koopa_is_macos && koopa_is_x86_64
+    then
+        koopa_stop 'Unsupported platform.'
+    fi
     koopa_install_app \
         --name='gcc' \
         "$@"
@@ -12626,9 +12630,17 @@ koopa_install_jupyterlab() {
 }
 
 koopa_install_kallisto() {
-    koopa_install_app \
-        --name='kallisto' \
-        "$@"
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        koopa_install_app \
+            --name='kallisto' \
+            "$@"
+    else
+        koopa_install_app \
+            --installer='conda-package' \
+            --name='kallisto' \
+            "$@"
+    fi
 }
 
 koopa_install_koopa() {
@@ -14344,9 +14356,17 @@ koopa_install_rust() {
 }
 
 koopa_install_salmon() {
-    koopa_install_app \
-        --name='salmon' \
-        "$@"
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        koopa_install_app \
+            --name='salmon' \
+            "$@"
+    else
+        koopa_install_app \
+            --installer-'conda-package' \
+            --name='salmon' \
+            "$@"
+    fi
 }
 
 koopa_install_sambamba() {
