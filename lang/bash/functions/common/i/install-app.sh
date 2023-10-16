@@ -10,7 +10,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-09-25.
+    # @note Updated 2023-10-13.
     #
     # Refer to 'locale' for desired LC settings.
     # """
@@ -261,10 +261,6 @@ ${dict['version2']}"
             [[ -d "${dict['prefix']}" ]] && return 0
         fi
     fi
-    if [[ "${bool['quiet']}" -eq 0 ]]
-    then
-        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
-    fi
     if [[ "${bool['deps']}" -eq 1 ]]
     then
         local dep deps
@@ -302,6 +298,10 @@ ${dict['version2']}"
                 koopa_cli_install "${dep_install_args[@]}"
             done
         fi
+    fi
+    if [[ "${bool['quiet']}" -eq 0 ]]
+    then
+        koopa_alert_install_start "${dict['name']}" "${dict['prefix']}"
     fi
     if [[ -n "${dict['prefix']}" ]] && [[ ! -d "${dict['prefix']}" ]]
     then
