@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-# FIXME Need to rework platform specific handling.
-
 """
 Return supported shared applications defined in 'app.json' file.
-@note Updated 2023-10-13.
+@note Updated 2023-10-16.
 
 @examples
 ./shared-apps.py
@@ -63,6 +61,15 @@ def koopa_prefix() -> str:
     return prefix
 
 
+def os_id() -> str:
+    """
+    Platform and architecture-specific identifier.
+    @note Updated 2023-10-16.
+    """
+    string = platform() + "-" + arch2()
+    return string
+
+
 def platform() -> str:
     """
     Platform string.
@@ -78,11 +85,12 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-10-13.
+    @note Updated 2023-10-16.
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
     sys_dict["opt_prefix"] = koopa_opt_prefix()
+    sys_dict["os_id"] = os_id()
     sys_dict["platform"] = platform()
     for val in app_names:
         if mode != "default-only":
@@ -91,6 +99,10 @@ def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
                 continue
         json = json_data[val]
         keys = json.keys()
+        if "supported" in json:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
         if "default" in keys and mode != "all-supported":
             if not json["default"]:
                 continue
