@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-09-19.
+    # @note Updated 2023-10-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -468,13 +468,7 @@ _koopa_complete() {
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'install')
-                            args+=(
-                                '--all'
-                                '--all-binary'
-                                'private'
-                                'system'
-                                'user'
-                            )
+                            args+=('all' 'private' 'system' 'user')
                             ;;
                         'reinstall')
                             args+=('--all-revdeps' '--only-revdeps')
@@ -577,6 +571,9 @@ _koopa_complete() {
                             ;;
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
+                        'all')
+                            args=('default' 'supported')
+                            ;;
                         'private')
                             args+=('ont-guppy')
                             if _koopa_is_linux
