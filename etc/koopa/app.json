@@ -1588,7 +1588,7 @@
     },
     "bin": ["flake8"],
     "date": "2023-08-31",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/flake8/",
@@ -2691,7 +2691,7 @@
     },
     "bin": ["isort"],
     "date": "2023-01-30",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/isort/",
@@ -4588,7 +4588,7 @@
     },
     "bin": ["pylint"],
     "date": "2023-10-06",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
     "version": "3.0.1"
