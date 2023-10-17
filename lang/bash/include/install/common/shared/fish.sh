@@ -14,9 +14,9 @@ main() {
     local -A app cmake dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    # > koopa_activate_app 'gettext' 'ncurses' 'pcre2'
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
+    app['msgfmt']="$(koopa_locate_msgfmt --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
@@ -27,6 +27,7 @@ main() {
     cmake['curses_include_path']="${dict['ncurses']}/include"
     cmake['curses_library']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
+    cmake['gettext_msgfmt_executable']="${app['msgfmt']}"
     cmake['intl_include_dir']="${dict['gettext']}/include"
     cmake['intl_libraries']="${dict['gettext']}/lib/\
 libintl.${dict['shared_ext']}"
@@ -49,6 +50,7 @@ libpcre2-32.${dict['shared_ext']}"
         # Dependency paths -----------------------------------------------------
         "-DCURSES_INCLUDE_PATH=${cmake['curses_include_path']}"
         "-DCURSES_LIBRARY=${cmake['curses_library']}"
+        "-DGETTEXT_MSGFMT_EXECUTABLE=${cmake['gettext_msgfmt_executable']}"
         "-DIntl_INCLUDE_DIR=${cmake['intl_include_dir']}"
         "-DIntl_LIBRARIES=${cmake['intl_libraries']}"
         "-DSYS_PCRE2_INCLUDE_DIR=${cmake['sys_pcre2_include_dir']}"
@@ -65,6 +67,6 @@ ${dict['version']}/fish-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cmake_build --jobs=1 --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
