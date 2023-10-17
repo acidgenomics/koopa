@@ -414,10 +414,22 @@
   },
   "bedtools": {
     "bin": ["bedtools"],
-    "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2023-05-01",
+    "build_dependencies": {
+      "noarch": [],
+      "macos-arm64": ["autoconf", "automake", "make"]
+    },
+    "date": "2023-10-17",
     "default": false,
-    "dependencies": ["bzip2", "curl", "xz", "zlib"],
+    "dependencies": {
+      "noarch": ["conda"],
+      "macos-arm64": ["bzip2", "curl", "xz", "zlib"]
+    },
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "url": [
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
