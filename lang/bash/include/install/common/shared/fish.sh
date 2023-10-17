@@ -28,6 +28,8 @@ main() {
     cmake['curses_include_path']="${dict['ncurses']}/include"
     cmake['curses_library']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
+    cmake['curses_tinfo']="${dict['ncurses']}/lib/\
+libtinfo.${dict['shared_ext']}"
     cmake['gettext_msgfmt_executable']="${app['msgfmt']}"
     cmake['gettext_msgmerge_executable']="${app['msgmerge']}"
     cmake['intl_include_dir']="${dict['gettext']}/include"
@@ -42,6 +44,7 @@ libpcre2-32.${dict['shared_ext']}"
         "${cmake['sys_pcre2_include_dir']}"
     koopa_assert_is_file \
         "${cmake['curses_library']}" \
+        "${cmake['curses_tinfo']}" \
         "${cmake['intl_libraries']}" \
         "${cmake['sys_pcre2_lib']}"
     cmake_args=(
@@ -52,6 +55,7 @@ libpcre2-32.${dict['shared_ext']}"
         # Dependency paths -----------------------------------------------------
         "-DCURSES_INCLUDE_PATH=${cmake['curses_include_path']}"
         "-DCURSES_LIBRARY=${cmake['curses_library']}"
+        "-DCURSES_TINFO=${cmake['curses_tinfo']}"
         "-DGETTEXT_MSGFMT_EXECUTABLE=${cmake['gettext_msgfmt_executable']}"
         "-DGETTEXT_MSGMERGE_EXECUTABLE=${cmake['gettext_msgmerge_executable']}"
         "-DIntl_INCLUDE_DIR=${cmake['intl_include_dir']}"
