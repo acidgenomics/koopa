@@ -1615,17 +1615,19 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-30",
+    "date": "2023-10-17",
     "default": false,
     "dependencies": [
-      "freetype",
+      "libjpeg-turbo",
+      "libpng",
       "xorg-libpthread-stubs",
       "xorg-libx11",
       "xorg-libxau",
       "xorg-libxcb",
       "xorg-libxdmcp",
       "xorg-xorgproto",
-      "xorg-xtrans"
+      "xorg-xtrans",
+      "zlib"
     ],
     "prune": false,
     "url": ["https://www.fltk.org/"],
