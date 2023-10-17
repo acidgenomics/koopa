@@ -19,7 +19,7 @@ main() {
 ---
 > SCRIPT_DIR=${dict['prefix']}
 END
-        koopa_write_lines \
+        koopa_write_string \
             --file="${dict['patch_file']}" \
             --string="${dict['patch_string']}"
         "${app['patch']}" \
@@ -33,7 +33,6 @@ END
             "${dict['prefix']}/libexec/bin/STARlong" \
             "${dict['patch_file']}"
     fi
-    "${dict['prefix']}/bin/STAR" -h
-    "${dict['prefix']}/bin/STARlong" -h
+    "${dict['prefix']}/bin/STAR" -v
     return 0
 }
