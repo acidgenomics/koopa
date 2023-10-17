@@ -15821,6 +15821,7 @@ koopa_kallisto_index() {
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     dict['transcriptome_fasta_file']=''
     index_args=()
     while (("$#"))
@@ -15869,6 +15870,7 @@ koopa_kallisto_index() {
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
+        "--threads=${dict['threads']}"
         "${dict['transcriptome_fasta_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
