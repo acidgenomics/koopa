@@ -14,10 +14,16 @@ main() {
     then
         dict['patch_file']='patch-script-dir.patch'
         read -r -d '' "dict[patch_string]" << END || true
-3c3
-< SCRIPT_DIR=\$( cd -- "\$( dirname -- "\${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
----
-> SCRIPT_DIR=${dict['prefix']}
+--- STAR»···2023-09-14 23:16:08.176325082 -0400
++++ STAR-1»·2023-10-17 16:12:25.451825406 -0400
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+
+-SCRIPT_DIR=\$( cd -- "\$( dirname -- "\${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
++SCRIPT_DIR=${dict['prefix']}
+ DIR=\$SCRIPT_DIR
+ BASE=\${DIR}/\$(basename "\$0")
+ CMDARGS="\$@"
 END
         koopa_write_string \
             --file="${dict['patch_file']}" \
