@@ -3,7 +3,7 @@
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - kallisto index --help
@@ -24,6 +24,7 @@ koopa_kallisto_index() {
     dict['mem_gb_cutoff']=14
     # e.g. 'kallisto-index'.
     dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     # e.g. 'gencode.v39.transcripts.fa.gz'.
     dict['transcriptome_fasta_file']=''
     index_args=()
@@ -72,9 +73,11 @@ koopa_kallisto_index() {
     dict['index_file']="${dict['output_dir']}/kallisto.idx"
     koopa_alert "Generating kallisto index at '${dict['output_dir']}'."
     index_args+=(
+        # > '--distinguish'
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
+        "--threads=${dict['threads']}"
         "${dict['transcriptome_fasta_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"

@@ -11708,8 +11708,9 @@ koopa_install_dash() {
 }
 
 koopa_install_deeptools() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='deeptools' \
         "$@"
 }
@@ -12336,7 +12337,6 @@ koopa_install_groff() {
 
 koopa_install_gseapy() {
     koopa_install_app \
-        --installer='python-package' \
         --name='gseapy' \
         "$@"
 }
@@ -12660,17 +12660,9 @@ koopa_install_jupyterlab() {
 }
 
 koopa_install_kallisto() {
-    if koopa_is_macos && koopa_is_aarch64
-    then
-        koopa_install_app \
-            --name='kallisto' \
-            "$@"
-    else
-        koopa_install_app \
-            --installer='conda-package' \
-            --name='kallisto' \
-            "$@"
-    fi
+    koopa_install_app \
+        --name='kallisto' \
+        "$@"
 }
 
 koopa_install_koopa() {
@@ -14390,17 +14382,9 @@ koopa_install_rust() {
 }
 
 koopa_install_salmon() {
-    if koopa_is_macos && koopa_is_aarch64
-    then
-        koopa_install_app \
-            --name='salmon' \
-            "$@"
-    else
-        koopa_install_app \
-            --installer='conda-package' \
-            --name='salmon' \
-            "$@"
-    fi
+    koopa_install_app \
+        --name='salmon' \
+        "$@"
 }
 
 koopa_install_sambamba() {
@@ -14634,7 +14618,7 @@ koopa_install_star_fusion() {
 koopa_install_star() {
     koopa_assert_is_not_aarch64
     koopa_install_app \
-        --installer='conda-package' \
+        --installer='star-conda' \
         --name='star' \
         "$@"
 }
@@ -15822,6 +15806,7 @@ koopa_kallisto_index() {
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
     dict['transcriptome_fasta_file']=''
     index_args=()
     while (("$#"))
@@ -15870,6 +15855,7 @@ koopa_kallisto_index() {
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
+        "--threads=${dict['threads']}"
         "${dict['transcriptome_fasta_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
@@ -17679,6 +17665,20 @@ koopa_locate_mktemp() {
         --app-name='coreutils' \
         --bin-name='gmktemp' \
         --system-bin-name='mktemp' \
+        "$@"
+}
+
+koopa_locate_msgfmt() {
+    koopa_locate_app \
+        --app-name='gettext' \
+        --bin-name='msgfmt' \
+        "$@"
+}
+
+koopa_locate_msgmerge() {
+    koopa_locate_app \
+        --app-name='gettext' \
+        --bin-name='msgmerge' \
         "$@"
 }
 
