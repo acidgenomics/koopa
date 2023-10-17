@@ -3,7 +3,7 @@
 koopa_make_build() {
     # """
     # Build with GNU Make.
-    # @note Updated 2023-05-30.
+    # @note Updated 2023-10-17.
     # """
     local -A app dict
     local -a conf_args pos targets
@@ -22,6 +22,14 @@ koopa_make_build() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
+            '--jobs='*)
+                dict['jobs']="${1#*=}"
+                shift 1
+                ;;
+            '--jobs')
+                dict['jobs']="${2:?}"
+                shift 2
+                ;;
             '--target='*)
                 targets+=("${1#*=}")
                 shift 1
