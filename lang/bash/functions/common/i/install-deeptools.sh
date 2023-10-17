@@ -2,7 +2,7 @@
 
 koopa_install_deeptools() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='deeptools' \
         "$@"
 }
