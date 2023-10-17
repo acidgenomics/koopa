@@ -51,6 +51,7 @@ main() {
     dict['fmt']="$(koopa_app_prefix 'fmt')"
     dict['libarchive']="$(koopa_app_prefix 'libarchive')"
     dict['libsolv']="$(koopa_app_prefix 'libsolv')"
+    dict['nlohmann_json']="$(koopa_app_prefix 'nlohmann-json')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['reproc']="$(koopa_app_prefix 'reproc')"
@@ -73,6 +74,8 @@ libarchive.${dict['shared_ext']}"
 libsolv.${dict['shared_ext']}"
     cmake['libsolvext_libraries']="${dict['libsolv']}/lib/\
 libsolvext.${dict['shared_ext']}"
+    cmake['nlohmann_json_dir']="${dict['nlohmann_json']}/share/cmake/\
+nlohmann_json"
     cmake['openssl_root_dir']="${dict['openssl']}"
     cmake['python3_executable']="${app['python']}"
     cmake['reproc_dir']="${dict['reproc']}/lib/cmake/reproc"
@@ -86,6 +89,7 @@ libsolvext.${dict['shared_ext']}"
         "${cmake['curl_include_dir']}" \
         "${cmake['fmt_dir']}" \
         "${cmake['libarchive_include_dir']}" \
+        "${cmake['nlohmann_json_dir']}" \
         "${cmake['openssl_root_dir']}" \
         "${cmake['reproc_dir']}" \
         "${cmake['reprocxx_dir']}" \
@@ -124,6 +128,7 @@ libsolvext.${dict['shared_ext']}"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
         # Additional CMake configuration ---------------------------------------
         "-Dfmt_DIR=${cmake['fmt_dir']}"
+        "-Dnlohmann_json_DIR=${cmake['nlohmann_json_dir']}"
         "-Dreproc++_DIR=${cmake['reprocxx_dir']}"
         "-Dreproc_DIR=${cmake['reproc_dir']}"
         "-Dspdlog_DIR=${cmake['spdlog_dir']}"
