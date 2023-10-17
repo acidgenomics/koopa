@@ -11,10 +11,12 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/fish.rb
     # - https://github.com/fish-shell/fish-shell/blob/master/cmake/PCRE2.cmake
     # """
-    local -A cmake dict
+    local -A app cmake dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'gettext' 'ncurses' 'pcre2'
+    app['msgfmt']="$(koopa_locate_msgfmt)"
+    koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
@@ -24,6 +26,7 @@ main() {
     cmake['curses_include_dirs']="${dict['ncurses']}/include"
     cmake['curses_libraries']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
+    cmake['gettext_msgfmt_executable']="${app['msgfmt']}"
     cmake['intl_include_dir']="${dict['gettext']}/include"
     cmake['intl_libraries']="${dict['gettext']}/lib/\
 libintl.${dict['shared_ext']}"
@@ -50,6 +53,9 @@ libpcre2-32.${dict['shared_ext']}"
         "-DIntl_LIBRARIES=${cmake['intl_libraries']}"
         "-DSYS_PCRE2_INCLUDE_DIR=${cmake['sys_pcre2_include_dir']}"
         "-DSYS_PCRE2_LIB=${cmake['sys_pcre2_lib']}"
+        # These are from conda-forge recipe:
+        '-Dmbrtowc_invalid_utf8_exit=OFF'
+        "-DGETTEXT_MSGFMT_EXECUTABLE=${cmake['gettext_msgfmt_executable']}"
     )
     if koopa_is_macos
     then
