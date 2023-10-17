@@ -12336,7 +12336,6 @@ koopa_install_groff() {
 
 koopa_install_gseapy() {
     koopa_install_app \
-        --installer='python-package' \
         --name='gseapy' \
         "$@"
 }

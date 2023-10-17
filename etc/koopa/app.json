@@ -2247,7 +2247,7 @@
     "bin": ["gseapy"],
     "date": "2023-08-28",
     "default": false,
-    "dependencies": ["python3.12"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
