@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GnuPG.
-    # @note Updated 2023-08-31.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/postlfs/gnupg.html
@@ -12,8 +12,8 @@ main() {
     local -A app dict
     local -a build_deps conf_args deps
     build_deps=('pkg-config' 'sed')
-    deps=(
-        'bzip2'
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'zlib'
         'readline'
         'nettle'
@@ -33,7 +33,6 @@ main() {
     koopa_activate_app "${deps[@]}"
     app['sed']="$(koopa_locate_sed)"
     koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['gcrypt_url']="$(koopa_gcrypt_url)"
     dict['libassuan']="$(koopa_app_prefix 'libassuan')"
     dict['libgcrypt']="$(koopa_app_prefix 'libgcrypt')"
@@ -45,13 +44,11 @@ main() {
     dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    conf_args=(
-        # > '--disable-doc'
+    conf_args+=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
         "--prefix=${dict['prefix']}"
         '--enable-gnutls'
-        "--with-bzip2=${dict['bzip2']}"
         "--with-libassuan-prefix=${dict['libassuan']}"
         "--with-libgcrypt-prefix=${dict['libgcrypt']}"
         "--with-libgpg-error-prefix=${dict['libgpg_error']}"
@@ -61,6 +58,11 @@ main() {
         "--with-readline=${dict['readline']}"
         "--with-zlib=${dict['zlib']}"
     )
+    if ! koopa_is_macos
+    then
+        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+        conf_args+=("--with-bzip2=${dict['bzip2']}")
+    fi
     dict['url']="${dict['gcrypt_url']}/gnupg/gnupg-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'

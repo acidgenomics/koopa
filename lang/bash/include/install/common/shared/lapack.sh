@@ -3,17 +3,23 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2023-10-11.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
     # - https://github.com/Reference-LAPACK/lapack
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/lapack.rb
     # """
-    local -A dict
+    local -A app dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_is_macos && koopa_activate_app 'gcc'
+    if koopa_is_macos
+    then
+        app['fortran']='/opt/gfortran/bin/gfortran'
+    else
+        app['fortran']="$(koopa_locate_gfortran --only-system)"
+    fi
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     # Temporary fix for 3.11.0 download link.
@@ -26,6 +32,7 @@ main() {
 v${dict['version']}.tar.gz"
     cmake_args=(
         '-DBUILD_SHARED_LIBS=ON'
+        "-DCMAKE_Fortran_COMPILER=${app['fortran']}"
         '-DLAPACKE=ON'
     )
     koopa_download "${dict['url']}"
