@@ -17,6 +17,9 @@ main() {
     local -A app cmake dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
+    # FIXME This is causing linkage issues on Linux, but we may need to burn
+    # these in manually instead.
+    koopa_activate_app 'gettext' 'ncurses' 'pcre2'
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     app['msgfmt']="$(koopa_locate_msgfmt --realpath)"
