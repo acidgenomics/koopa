@@ -6,7 +6,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2023-05-17.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
@@ -25,8 +25,8 @@ main() {
     # """
     local -A app cmake dict
     local -a cmake_args deps
-    deps=(
-        'bzip2'
+    ! koopa_is_macos && deps+=('bzip2')
+    deps+=(
         'zstd'
         'cli11'
         'curl'
@@ -46,11 +46,11 @@ main() {
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['fmt']="$(koopa_app_prefix 'fmt')"
     dict['libarchive']="$(koopa_app_prefix 'libarchive')"
     dict['libsolv']="$(koopa_app_prefix 'libsolv')"
+    dict['nlohmann_json']="$(koopa_app_prefix 'nlohmann-json')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['reproc']="$(koopa_app_prefix 'reproc')"
@@ -60,9 +60,6 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['yaml_cpp']="$(koopa_app_prefix 'yaml-cpp')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"
-    cmake['bzip2_include_dir']="${dict['bzip2']}/include"
-    cmake['bzip2_libraries']="${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
-    cmake['bzip2_library']="${dict['bzip2']}/lib/libbz2.${dict['shared_ext']}"
     cmake['curl_include_dir']="${dict['curl']}/include"
     cmake['curl_library']="${dict['curl']}/lib/libcurl.${dict['shared_ext']}"
     cmake['fmt_dir']="${dict['fmt']}/lib/cmake/fmt"
@@ -73,19 +70,21 @@ libarchive.${dict['shared_ext']}"
 libsolv.${dict['shared_ext']}"
     cmake['libsolvext_libraries']="${dict['libsolv']}/lib/\
 libsolvext.${dict['shared_ext']}"
+    cmake['nlohmann_json_dir']="${dict['nlohmann_json']}/share/cmake/\
+nlohmann_json"
     cmake['openssl_root_dir']="${dict['openssl']}"
     cmake['python3_executable']="${app['python']}"
     cmake['reproc_dir']="${dict['reproc']}/lib/cmake/reproc"
     cmake['reprocxx_dir']="${dict['reproc']}/lib/cmake/reproc++"
     cmake['spdlog_dir']="${dict['spdlog']}/lib/cmake/spdlog"
     cmake['tl_expected_dir']="${dict['tl_expected']}/share/cmake/tl-expected"
-    cmake['yaml_cpp_dir']="${dict['yaml_cpp']}/share/cmake/yaml-cpp"
+    cmake['yaml_cpp_dir']="${dict['yaml_cpp']}/lib/cmake/yaml-cpp"
     cmake['zstd_dir']="${dict['zstd']}/lib/cmake/zstd"
     koopa_assert_is_dir \
-        "${cmake['bzip2_include_dir']}" \
         "${cmake['curl_include_dir']}" \
         "${cmake['fmt_dir']}" \
         "${cmake['libarchive_include_dir']}" \
+        "${cmake['nlohmann_json_dir']}" \
         "${cmake['openssl_root_dir']}" \
         "${cmake['reproc_dir']}" \
         "${cmake['reprocxx_dir']}" \
@@ -94,8 +93,6 @@ libsolvext.${dict['shared_ext']}"
         "${cmake['yaml_cpp_dir']}" \
         "${cmake['zstd_dir']}"
     koopa_assert_is_file \
-        "${cmake['bzip2_libraries']}" \
-        "${cmake['bzip2_library']}" \
         "${cmake['curl_library']}" \
         "${cmake['libarchive_library']}" \
         "${cmake['libsolv_libraries']}" \
@@ -111,9 +108,6 @@ libsolvext.${dict['shared_ext']}"
         '-DBUILD_MICROMAMBA=ON'
         '-DMICROMAMBA_LINKAGE=DYNAMIC'
         # Required dependencies ------------------------------------------------
-        "-DBZIP2_INCLUDE_DIR=${cmake['bzip2_include_dir']}"
-        "-DBZIP2_LIBRARIES=${cmake['bzip2_libraries']}"
-        "-DBZIP2_LIBRARY=${cmake['bzip2_library']}"
         "-DCURL_INCLUDE_DIR=${cmake['curl_include_dir']}"
         "-DCURL_LIBRARY=${cmake['curl_library']}"
         "-DLibArchive_INCLUDE_DIR=${cmake['libarchive_include_dir']}"
@@ -124,6 +118,7 @@ libsolvext.${dict['shared_ext']}"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
         # Additional CMake configuration ---------------------------------------
         "-Dfmt_DIR=${cmake['fmt_dir']}"
+        "-Dnlohmann_json_DIR=${cmake['nlohmann_json_dir']}"
         "-Dreproc++_DIR=${cmake['reprocxx_dir']}"
         "-Dreproc_DIR=${cmake['reproc_dir']}"
         "-Dspdlog_DIR=${cmake['spdlog_dir']}"
@@ -131,6 +126,24 @@ libsolvext.${dict['shared_ext']}"
         "-Dyaml-cpp_DIR=${cmake['yaml_cpp_dir']}"
         "-Dzstd_DIR=${cmake['zstd_dir']}"
     )
+    if ! koopa_is_macos
+    then
+        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
+        cmake['bzip2_include_dir']="${dict['bzip2']}/include"
+        cmake['bzip2_libraries']="${dict['bzip2']}/lib/\
+libbz2.${dict['shared_ext']}"
+        cmake['bzip2_library']="${dict['bzip2']}/lib/\
+libbz2.${dict['shared_ext']}"
+        koopa_assert_is_dir "${cmake['bzip2_include_dir']}"
+        koopa_assert_is_file \
+            "${cmake['bzip2_libraries']}" \
+            "${cmake['bzip2_library']}"
+        cmake_args+=(
+            "-DBZIP2_INCLUDE_DIR=${cmake['bzip2_include_dir']}"
+            "-DBZIP2_LIBRARIES=${cmake['bzip2_libraries']}"
+            "-DBZIP2_LIBRARY=${cmake['bzip2_library']}"
+        )
+    fi
     dict['url']="https://github.com/mamba-org/mamba/archive/refs/tags/\
 micromamba-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
