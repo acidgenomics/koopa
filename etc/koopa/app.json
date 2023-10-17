@@ -47,7 +47,7 @@
     "bin": ["airflow"],
     "date": "2023-10-12",
     "default": false,
-    "dependencies": ["python3.12"],
+    "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
     "version": "2.7.2"
   },
