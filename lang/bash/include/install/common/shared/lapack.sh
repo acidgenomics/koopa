@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2023-10-11.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -17,7 +17,7 @@ main() {
     then
         app['fortran']='/opt/gfortran/bin/gfortran'
     else
-        app['fortran']="$(koopa_locate_fortran --only-system)"
+        app['fortran']="$(koopa_locate_gfortran --only-system)"
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
