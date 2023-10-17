@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-10-13.
+@note Updated 2023-10-16.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -24,18 +24,9 @@ _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 def arch() -> str:
     """
     Architecture string.
-    @note Updated 2023-03-27.
+    @note Updated 2023-10-16.
     """
     string = machine()
-    return string
-
-
-def arch2() -> str:
-    """
-    Architecture string 2.
-    @note Updated 2023-03-27.
-    """
-    string = arch()
     if string == "x86_64":
         string = "amd64"
     return string
@@ -73,11 +64,6 @@ def get_deps(app_name: str, json_data: dict) -> list:
     sys_dict["os_id"] = os_id()
     build_deps = []
     deps = []
-    if "supported" in json_data[app_name]:
-        supported = json_data[app_name]["supported"]
-        if sys_dict["os_id"] in supported.keys():
-            if not supported[sys_dict["os_id"]]:
-                raise ValueError("Unsupported platform.")
     if "build_dependencies" in json_data[app_name]:
         build_deps = json_data[app_name]["build_dependencies"]
         if isinstance(build_deps, dict):
@@ -102,7 +88,7 @@ def os_id() -> str:
     Platform and architecture-specific identifier.
     @note Updated 2023-10-16.
     """
-    string = platform() + "-" + arch2()
+    string = platform() + "-" + arch()
     return string
 
 
@@ -121,20 +107,17 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-10-13.
+    @note Updated 2023-10-16.
     """
     sys_dict = {}
-    sys_dict["arch"] = arch2()
-    sys_dict["platform"] = platform()
+    sys_dict["os_id"] = os_id()
     for val in app_names:
         json = json_data[val]
         keys = json.keys()
-        if "arch" in keys:
-            if json["arch"] != sys_dict["arch"]:
-                continue
-        if "platform" in keys:
-            if json["platform"] != sys_dict["platform"]:
-                continue
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
         if "private" in keys:
             if json["private"]:
                 continue
