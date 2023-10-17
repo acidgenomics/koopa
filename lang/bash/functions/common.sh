@@ -18445,6 +18445,14 @@ koopa_make_build() {
     while (("$#"))
     do
         case "$1" in
+            '--jobs='*)
+                dict['jobs']="${1#*=}"
+                shift 1
+                ;;
+            '--jobs')
+                dict['jobs']="${2:?}"
+                shift 2
+                ;;
             '--target='*)
                 targets+=("${1#*=}")
                 shift 1
