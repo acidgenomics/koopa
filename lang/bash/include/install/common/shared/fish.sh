@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Fish shell.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://github.com/fish-shell/fish-shell/#building
@@ -15,7 +15,8 @@ main() {
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'gettext' 'ncurses' 'pcre2'
-    app['msgfmt']="$(koopa_locate_msgfmt)"
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['cxx']="$(koopa_locate_cxx --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
@@ -26,7 +27,6 @@ main() {
     cmake['curses_include_dirs']="${dict['ncurses']}/include"
     cmake['curses_libraries']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
-    cmake['gettext_msgfmt_executable']="${app['msgfmt']}"
     cmake['intl_include_dir']="${dict['gettext']}/include"
     cmake['intl_libraries']="${dict['gettext']}/lib/\
 libintl.${dict['shared_ext']}"
@@ -53,14 +53,13 @@ libpcre2-32.${dict['shared_ext']}"
         "-DIntl_LIBRARIES=${cmake['intl_libraries']}"
         "-DSYS_PCRE2_INCLUDE_DIR=${cmake['sys_pcre2_include_dir']}"
         "-DSYS_PCRE2_LIB=${cmake['sys_pcre2_lib']}"
-        # These are from conda-forge recipe:
-        '-Dmbrtowc_invalid_utf8_exit=OFF'
-        "-DGETTEXT_MSGFMT_EXECUTABLE=${cmake['gettext_msgfmt_executable']}"
     )
     if koopa_is_macos
     then
         cmake_args+=('-DMAC_CODESIGN_ID=OFF')
     fi
+    export CC="${app['cc']}"
+    export CXX="${app['cxx']}"
     dict['url']="https://github.com/fish-shell/fish-shell/releases/download/\
 ${dict['version']}/fish-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
