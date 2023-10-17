@@ -16,7 +16,7 @@ main() {
     deps+=('icu4c' 'xz' 'zlib' 'zstd')
     koopa_activate_app "${deps[@]}"
     app['cc']="$(koopa_locate_cc --only-system)"
-    koopa_assert_is_executable "${app['cc']]}"
+    koopa_assert_is_executable "${app[@]}"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
