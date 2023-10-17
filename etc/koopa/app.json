@@ -870,6 +870,12 @@
   "cloudbiolinux": {
     "date": "2023-05-30",
     "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
     "version": "39eb5ac3d45654404d703ffb450a67947458df37"
   },
