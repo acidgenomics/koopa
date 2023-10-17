@@ -3129,7 +3129,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-07-04",
+    "date": "2023-10-17",
     "default": false,
     "prune": false,
     "url": [
@@ -3137,7 +3137,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "libksba": {
     "aliases": {
@@ -3403,7 +3403,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3418,7 +3418,7 @@
     ],
     "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "17.0.2"
+    "version": "17.0.3"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3569,7 +3569,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-09-05",
+    "date": "2023-10-17",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3593,7 +3593,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.1"
+    "version": "1.5.2"
   },
   "man-db": {
     "aliases": {
@@ -4533,12 +4533,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-10-06",
+    "date": "2023-10-17",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.29"
+    "version": "2.3.30"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5035,19 +5035,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.292"
+    "version": "0.1.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.40"
+    "version": "0.0.41"
   },
   "rust": {
     "aliases": {
