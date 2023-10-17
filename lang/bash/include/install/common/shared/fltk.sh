@@ -3,33 +3,38 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-10-17.
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/fltk.rb
+    # - https://formulae.brew.sh/formula/fltk
     # - https://courses.cs.washington.edu/courses/csep557/14au/tools/
     #     fltk_install.html
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
+    local -a build_deps conf_args deps
+    build_deps+=('cmake' 'pkg-config')
+    deps+=(
+        'zlib'
+        'libjpeg-turbo'
+        'libpng'
+    )
     if koopa_is_linux
     then
-        koopa_activate_app \
-            'freetype' \
-            'xorg-xorgproto' \
-            'xorg-xtrans' \
-            'xorg-libpthread-stubs' \
-            'xorg-libxau' \
-            'xorg-libxdmcp' \
-            'xorg-libxcb' \
+        deps+=(
+            'xorg-xorgproto'
+            'xorg-xtrans'
+            'xorg-libpthread-stubs'
+            'xorg-libxau'
+            'xorg-libxdmcp'
+            'xorg-libxcb'
             'xorg-libx11'
+        )
     fi
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
-        '--disable-cairo'
-        '--disable-xft'
         '--enable-shared'
         '--enable-threads'
         "--prefix=${dict['prefix']}"
@@ -42,9 +47,6 @@ main() {
             "--x-includes=${dict['x11']}/include"
             "--x-libraries=${dict['x11']}/lib"
         )
-    elif koopa_is_macos
-    then
-        conf_args+=('--disable-x11')
     fi
     dict['url']="https://www.fltk.org/pub/fltk/${dict['version']}/\
 fltk-${dict['version']}-source.tar.gz"

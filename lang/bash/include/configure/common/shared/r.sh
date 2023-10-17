@@ -68,17 +68,20 @@ main() {
         koopa_sys_mkdir "${dict['site_library']}"
     fi
     koopa_r_migrate_non_base_packages "${app['r']}"
-    koopa_sys_set_permissions --recursive "${dict['site_library']}"
-    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
-    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
+    if [[ "${bool['system']}" -eq 1 ]]
     then
-        app['rstudio_server']="$( \
-            koopa_linux_locate_rstudio_server --allow-missing \
-        )"
-        if [[ -x "${app['rstudio_server']}" ]]
+        koopa_sys_set_permissions --recursive --sudo "${dict['site_library']}"
+        if koopa_is_linux
         then
-            koopa_linux_configure_system_rstudio_server
+            app['rstudio_server']="$( \
+                koopa_linux_locate_rstudio_server --allow-missing \
+            )"
+            if [[ -x "${app['rstudio_server']}" ]]
+            then
+                koopa_linux_configure_system_rstudio_server
+            fi
         fi
     fi
+    koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     return 0
 }
