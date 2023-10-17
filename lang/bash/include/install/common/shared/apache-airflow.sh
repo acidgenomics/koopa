@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Airflow.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-10-17.
     #
     # Use 'airflow standalone' to configure for current user. Use this for
     # development only, not production. The 'standalone' command will initialise
@@ -13,6 +13,8 @@ main() {
     #
     # Change the default configuration target with 'AIRFLOW_HOME'.
     # """
-    koopa_install_python_package --package-name='apache_airflow'
+    koopa_install_python_package \
+        --package-name='apache_airflow' \
+        --python-version='3.11'
     return 0
 }
