@@ -1236,13 +1236,7 @@
     "bin": ["deeptools"],
     "date": "2023-10-17",
     "default": false,
-    "dependencies": ["conda"],
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": true,
-      "macos-amd64": true,
-      "macos-arm64": true
-    },
+    "dependencies": ["python3.11"],
     "url": [
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
