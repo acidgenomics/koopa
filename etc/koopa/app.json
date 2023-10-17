@@ -2790,22 +2790,11 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "build_dependencies": {
-      "noarch": [],
-      "macos-arm64": ["autoconf", "automake", "cmake", "make", "patch"]
-    },
-    "date": "2023-10-13",
+    "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
+    "date": "2023-10-17",
     "default": true,
-    "dependencies": {
-      "noarch": ["conda"],
-      "macos-arm64": ["bzip2", "hdf5", "libaec", "xz", "zlib"]
-    },
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": true
-    },
+    "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
+    "notes": ["The conda recipe core dumps on Ubuntu during indexing."],
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
