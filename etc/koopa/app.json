@@ -1900,10 +1900,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.36.0"
+    "version": "2.37.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3782,11 +3782,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2023-09-24",
+    "date": "2023-10-17",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.16"
+    "version": "1.17"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
