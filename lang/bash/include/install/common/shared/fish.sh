@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to locate libpcre2-32.so.0:
-# fish: error while loading shared libraries: libpcre2-32.so.0: cannot open shared object file: No such file or directory
-
 main() {
     # """
     # Install Fish shell.
@@ -17,8 +14,6 @@ main() {
     local -A app cmake dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    # FIXME This is causing linkage issues on Linux, but we may need to burn
-    # these in manually instead.
     koopa_activate_app 'gettext' 'ncurses' 'pcre2'
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
@@ -86,5 +81,9 @@ ${dict['version']}/fish-${dict['version']}.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    app['fish']="${dict['prefix']}/bin/fish"
+    koopa_assert_is_executable "${app['fish']}"
+    "${app['fish']}" --version
+    koopa_check_shared_object --file="${app['fish']}"
     return 0
 }
