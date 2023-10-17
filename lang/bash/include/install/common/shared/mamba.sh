@@ -6,7 +6,7 @@
 main() {
     # """
     # Install micromamba.
-    # @note Updated 2023-05-17.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://mamba.readthedocs.io/en/latest/user_guide/micromamba.html
@@ -79,7 +79,7 @@ libsolvext.${dict['shared_ext']}"
     cmake['reprocxx_dir']="${dict['reproc']}/lib/cmake/reproc++"
     cmake['spdlog_dir']="${dict['spdlog']}/lib/cmake/spdlog"
     cmake['tl_expected_dir']="${dict['tl_expected']}/share/cmake/tl-expected"
-    cmake['yaml_cpp_dir']="${dict['yaml_cpp']}/share/cmake/yaml-cpp"
+    cmake['yaml_cpp_dir']="${dict['yaml_cpp']}/lib/cmake/yaml-cpp"
     cmake['zstd_dir']="${dict['zstd']}/lib/cmake/zstd"
     koopa_assert_is_dir \
         "${cmake['bzip2_include_dir']}" \
