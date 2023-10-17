@@ -24,8 +24,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    cmake['curses_include_dirs']="${dict['ncurses']}/include"
-    cmake['curses_libraries']="${dict['ncurses']}/lib/\
+    cmake['curses_include_path']="${dict['ncurses']}/include"
+    cmake['curses_library']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
     cmake['intl_include_dir']="${dict['gettext']}/include"
     cmake['intl_libraries']="${dict['gettext']}/lib/\
@@ -34,11 +34,11 @@ libintl.${dict['shared_ext']}"
     cmake['sys_pcre2_lib']="${dict['pcre2']}/lib/\
 libpcre2-32.${dict['shared_ext']}"
     koopa_assert_is_dir \
-        "${cmake['curses_include_dirs']}" \
+        "${cmake['curses_include_path']}" \
         "${cmake['intl_include_dir']}" \
         "${cmake['sys_pcre2_include_dir']}"
     koopa_assert_is_file \
-        "${cmake['curses_libraries']}" \
+        "${cmake['curses_library']}" \
         "${cmake['intl_libraries']}" \
         "${cmake['sys_pcre2_lib']}"
     cmake_args=(
@@ -47,8 +47,8 @@ libpcre2-32.${dict['shared_ext']}"
         '-DFISH_USE_SYSTEM_PCRE2=ON'
         '-DWITH_GETTEXT=ON'
         # Dependency paths -----------------------------------------------------
-        "-DCURSES_INCLUDE_DIRS=${cmake['curses_include_dirs']}"
-        "-DCURSES_LIBRARIES=${cmake['curses_libraries']}"
+        "-DCURSES_INCLUDE_PATH=${cmake['curses_include_path']}"
+        "-DCURSES_LIBRARY=${cmake['curses_library']}"
         "-DIntl_INCLUDE_DIR=${cmake['intl_include_dir']}"
         "-DIntl_LIBRARIES=${cmake['intl_libraries']}"
         "-DSYS_PCRE2_INCLUDE_DIR=${cmake['sys_pcre2_include_dir']}"
