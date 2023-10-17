@@ -3,7 +3,7 @@
 main() {
     # """
     # Install unzip.
-    # @note Updated 2023-06-12.
+    # @note Updated 2023-10-17.
     #
     # Upstream is unmaintained so we use the Ubuntu patchset:
     # https://packages.ubuntu.com/kinetic/unzip
@@ -18,10 +18,9 @@ main() {
     local -A app dict
     local -a loc_macros make_args
     koopa_activate_app --build-only 'make'
-    ! koopa_is_macos && koopa_activate_app 'bzip2'
+    app['cc']="$(koopa_locate_cc --only-system)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
-    dict['bzip2']="$(koopa_app_prefix 'bzip2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -64,23 +63,14 @@ unzip${dict['version2']}.tar.gz"
     )
     make_args=(
         "prefix=${dict['prefix']}"
-        'CC=gcc'
+        "CC=${app['cc']}"
         "LOC=${loc_macros[*]}"
-        'D_USE_BZ2=-DUSE_BZIP2'
-        "L_BZ2=-L${dict['bzip2']}/lib -lbz2"
     )
     if koopa_is_macos
     then
-        make_args+=(
-            'LFLAGS1=-liconv'
-            'L_BZ2=-lbz2'
-            'macosx'
-        )
+        make_args+=('LFLAGS1=-liconv' 'macosx')
     else
-        make_args+=(
-            "L_BZ2=-L${dict['bzip2']}/lib -lbz2"
-            'generic'
-        )
+        make_args+=('generic')
     fi
     koopa_print_env
     "${app['make']}" -f 'unix/Makefile' "${make_args[@]}"
