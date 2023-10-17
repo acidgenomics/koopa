@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This isn't working on Ubuntu 22 EC2 instance, need to debug.
-
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
