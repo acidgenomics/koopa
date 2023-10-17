@@ -26,18 +26,9 @@ _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 def arch() -> str:
     """
     Architecture string.
-    @note Updated 2023-03-27.
+    @note Updated 2023-10-16.
     """
     string = machine()
-    return string
-
-
-def arch2() -> str:
-    """
-    Architecture string 2.
-    @note Updated 2023-03-27.
-    """
-    string = arch()
     if string == "x86_64":
         string = "amd64"
     return string
@@ -66,7 +57,7 @@ def os_id() -> str:
     Platform and architecture-specific identifier.
     @note Updated 2023-10-16.
     """
-    string = platform() + "-" + arch2()
+    string = platform() + "-" + arch()
     return string
 
 
@@ -88,10 +79,8 @@ def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
     @note Updated 2023-10-16.
     """
     sys_dict = {}
-    sys_dict["arch"] = arch2()
     sys_dict["opt_prefix"] = koopa_opt_prefix()
     sys_dict["os_id"] = os_id()
-    sys_dict["platform"] = platform()
     for val in app_names:
         if mode != "default-only":
             if isdir(join(sys_dict["opt_prefix"], val)):
@@ -108,12 +97,6 @@ def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
                 continue
         if "removed" in keys:
             if json["removed"]:
-                continue
-        if "arch" in keys:
-            if json["arch"] != sys_dict["arch"]:
-                continue
-        if "platform" in keys:
-            if json["platform"] != sys_dict["platform"]:
                 continue
         if "private" in keys:
             if json["private"]:

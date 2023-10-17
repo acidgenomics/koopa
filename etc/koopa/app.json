@@ -23,12 +23,17 @@
     "version": "3.7.0"
   },
   "agat": {
-    "arch": "amd64",
     "bin": ["agat"],
     "build_dependencies": ["patch"],
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/NBISweden/AGAT/"],
     "version": "1.2.0"
   },
@@ -65,9 +70,14 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-10-12",
+    "date": "2023-10-16",
     "default": false,
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/apptainer/apptainer/"],
     "version": "1.2.4"
   },
@@ -136,11 +146,15 @@
     "aliases": {
       "homebrew": "ibm-aspera-connect"
     },
-    "arch": "amd64",
     "bin": ["ascp"],
-    "date": "2023-06-01",
+    "date": "2023-10-16",
     "default": false,
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://www.ibm.com/aspera/connect/"],
     "version": "4.2.6.393"
   },
@@ -150,10 +164,15 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-29",
+    "date": "2023-10-16",
     "default": false,
-    "platform": "linux",
     "prune": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://download.savannah.nongnu.org/releases/attr/?C=M&O=D"],
     "version": "2.5.1"
   },
@@ -180,18 +199,28 @@
     "version": "2.71"
   },
   "autodock": {
-    "arch": "amd64",
     "bin": ["autodock4"],
-    "date": "2022-10-19",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://autodock.scripps.edu/"],
     "version": "4.2.6"
   },
   "autodock-adfr": {
-    "arch": "amd64",
-    "date": "2023-08-31",
+    "date": "2023-10-16",
     "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://ccsb.scripps.edu/adfr/"],
     "version": "1.0"
   },
@@ -254,16 +283,20 @@
     "date": "2023-10-02",
     "default": false,
     "dependencies": ["python3.11"],
-    "notes": ["Only up to Python 3.10 is officially supported."],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
     "version": "2.53.0"
   },
   "bamtools": {
-    "arch": "amd64",
     "bin": ["bamtools"],
-    "date": "2022-03-14",
+    "date": "2023-10-16",
     "default": true,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/pezmaster31/bamtools"],
     "version": "2.5.2"
   },
@@ -347,22 +380,19 @@
   "bcbio-nextgen": {
     "bin": ["bcbio_nextgen.py"],
     "build_dependencies": ["bzip2", "python3.12"],
-    "date": "2022-09-26",
+    "date": "2023-10-16",
     "default": false,
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": [
       "https://bcbio-nextgen.readthedocs.io/",
       "https://github.com/bcbio/bcbio-nextgen/"
     ],
     "version": "1.2.9"
-  },
-  "bcbio-nextgen-vm": {
-    "bin": ["bcbio-nextgen.py"],
-    "date": "2022-09-26",
-    "default": false,
-    "platform": "linux",
-    "url": ["https://github.com/bcbio/bcbio-nextgen-vm/"],
-    "version": "0.1.6"
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
@@ -370,7 +400,12 @@
     "date": "2023-05-24",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "private": true,
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html"
@@ -413,11 +448,16 @@
     "version": "2.41"
   },
   "bioawk": {
-    "arch": "amd64",
     "bin": ["bioawk"],
-    "date": "2019-10-26",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/lh3/bioawk"],
     "version": "1.0"
   },
@@ -425,6 +465,12 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/bioconda/bioconda-utils/"],
     "version": "2.4.0"
   },
@@ -457,11 +503,16 @@
     "version": "23.9.1"
   },
   "blast": {
-    "arch": "amd64",
     "bin": ["blastn", "blastp"],
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
@@ -501,11 +552,16 @@
     "version": "0.9.6"
   },
   "bowtie2": {
-    "arch": "amd64",
     "bin": ["bowtie2"],
-    "date": "2023-10-14",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"],
     "version": "2.5.2"
   },
@@ -551,11 +607,16 @@
     "version": "1.1.0"
   },
   "bustools": {
-    "arch": "amd64",
     "bin": ["bustools"],
-    "date": "2022-08-31",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://bustools.github.io/",
       "https://github.com/BUStools/bustools/",
@@ -732,8 +793,13 @@
     "bin": ["cellranger"],
     "date": "2023-01-03",
     "default": false,
-    "platform": "linux",
     "private": true,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
@@ -1267,11 +1333,16 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "date": "2023-06-01",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["bzip2", "xz", "zlib", "zstd"],
-    "platform": "linux",
     "prune": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://fedorahosted.org/elfutils/"],
     "version": "0.189"
   },
@@ -1306,11 +1377,16 @@
     "version": "110"
   },
   "entrez-direct": {
-    "arch": "amd64",
     "bin": ["efetch", "esearch"],
-    "date": "2022-06-06",
+    "date": "2023-10-16",
     "default": true,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://www.ncbi.nlm.nih.gov/home/tools/",
       "https://bioconda.github.io/recipes/entrez-direct/README.html"
@@ -1376,11 +1452,16 @@
     "version": "0.14.2"
   },
   "fastqc": {
-    "arch": "amd64",
     "bin": ["fastqc"],
-    "date": "2023-03-07",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/s-andrews/FastQC/"],
     "version": "0.12.1"
   },
@@ -1409,11 +1490,16 @@
     "version": "6.0"
   },
   "ffq": {
-    "arch": "amd64",
     "bin": ["ffq"],
-    "date": "2022-11-08",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/pachterlab/ffq/",
       "https://bioconda.github.io/recipes/ffq/README.html"
@@ -1421,10 +1507,15 @@
     "version": "0.3.0"
   },
   "fgbio": {
-    "arch": "amd64",
-    "date": "2023-02-08",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
     "version": "2.1.0"
   },
@@ -1559,11 +1650,16 @@
     "version": "0.11.0"
   },
   "fqtk": {
-    "arch": "amd64",
     "bin": ["fqtk"],
-    "date": "2023-03-05",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/fulcrumgenomics/fqtk/",
       "https://bioconda.github.io/recipes/fqtk/README.html"
@@ -1612,11 +1708,16 @@
     "aliases": {
       "conda": "gatk4"
     },
-    "arch": "amd64",
     "bin": ["gatk"],
-    "date": "2023-03-21",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
@@ -1736,11 +1837,16 @@
     "version": "0.22"
   },
   "gffutils": {
-    "arch": "amd64",
     "bin": ["gffutils-cli"],
-    "date": "2023-08-31",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/daler/gffutils/",
       "https://bioconda.github.io/recipes/gffutils/README.html"
@@ -1748,11 +1854,16 @@
     "version": "0.12"
   },
   "gget": {
-    "arch": "amd64",
     "bin": ["gget"],
-    "date": "2023-08-31",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
     "version": "0.27.9"
   },
@@ -2212,7 +2323,6 @@
     "aliases": {
       "homebrew": true
     },
-    "arch": "amd64",
     "bin": ["hadolint"],
     "build_dependencies": [
       "git",
@@ -2220,8 +2330,14 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2022-11-15",
+    "date": "2023-10-16",
     "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/hadolint/hadolint/"],
     "version": "2.12.0"
   },
@@ -2276,10 +2392,15 @@
     "aliases": {
       "homebrew": true
     },
-    "arch": "amd64",
     "bin": ["stack"],
-    "date": "2023-10-02",
+    "date": "2023-10-16",
     "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
@@ -2337,11 +2458,16 @@
     "version": "0.13.1"
   },
   "hisat2": {
-    "arch": "amd64",
     "bin": ["hisat2"],
     "date": "2023-10-10",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://daehwankimlab.github.io/hisat2/",
       "https://bioconda.github.io/recipes/hisat2/README.html"
@@ -2363,11 +2489,16 @@
     "version": "3.2.2"
   },
   "htseq": {
-    "arch": "amd64",
     "bin": ["htseq-count"],
-    "date": "2025-03-30",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://htseq.readthedocs.io/",
       "https://github.com/htseq/htseq/",
@@ -2642,6 +2773,12 @@
       "noarch": ["conda"],
       "macos-arm64": ["bzip2", "hdf5", "libaec", "xz", "zlib"]
     },
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -2768,9 +2905,8 @@
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-10-04",
+    "date": "2023-10-17",
     "default": false,
-    "man1": ["aec.1"],
     "prune": false,
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
@@ -2993,7 +3129,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-07-04",
+    "date": "2023-10-17",
     "default": false,
     "prune": false,
     "url": [
@@ -3001,7 +3137,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "libksba": {
     "aliases": {
@@ -3267,7 +3403,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3282,15 +3418,20 @@
     ],
     "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "17.0.2"
+    "version": "17.0.3"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
-    "platform": "linux",
     "prune": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
     "version": "8.7.32"
   },
@@ -3428,7 +3569,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-09-05",
+    "date": "2023-10-17",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3452,7 +3593,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.1"
+    "version": "1.5.2"
   },
   "man-db": {
     "aliases": {
@@ -3535,10 +3676,9 @@
     "version": "6.9.0"
   },
   "minimap2": {
-    "arch": "amd64",
     "bin": ["minimap2"],
     "build_dependencies": ["make"],
-    "date": "2023-05-01",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["zlib"],
     "url": [
@@ -3552,6 +3692,12 @@
     "date": "2023-01-10",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "http://hollywood.mit.edu/burgelab/miso/",
       "https://github.com/yarden/MISO/",
@@ -3619,7 +3765,6 @@
     "version": "6.1.0"
   },
   "multiqc": {
-    "arch": "amd64",
     "bin": ["multiqc"],
     "date": "2023-09-24",
     "default": false,
@@ -3665,11 +3810,16 @@
     "version": "7.2"
   },
   "nanopolish": {
-    "arch": "amd64",
     "bin": ["nanopolish"],
     "date": "2022-10-11",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://bioconda.github.io/recipes/nanopolish/README.html"],
     "version": "0.14.0"
   },
@@ -3782,16 +3932,15 @@
     "version": "3.9"
   },
   "nextflow": {
-    "arch": "amd64",
     "bin": ["nextflow"],
-    "date": "2023-09-25",
+    "date": "2023-10-16",
     "default": true,
     "dependencies": ["temurin"],
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "23.04.4"
+    "version": "23.10.0"
   },
   "nghttp2": {
     "aliases": {
@@ -3929,7 +4078,12 @@
     "date": "2023-08-01",
     "default": false,
     "dependencies": ["python3.12"],
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/nanoporetech/bonito/"],
     "version": "0.7.2"
   },
@@ -4047,7 +4201,12 @@
   "oracle-instant-client": {
     "date": "2023-08-31",
     "default": false,
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
     "version": "21.11.0.0.0-1"
@@ -4192,11 +4351,16 @@
     "version": "5.38.0"
   },
   "picard": {
-    "arch": "amd64",
     "bin": ["picard"],
     "date": "2023-09-12",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://bioconda.github.io/recipes/picard/README.html",
       "https://broadinstitute.github.io/picard/",
@@ -4369,12 +4533,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-10-06",
+    "date": "2023-10-17",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.29"
+    "version": "2.3.30"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4649,9 +4813,14 @@
     "version": "85312"
   },
   "r-gfortran": {
-    "date": "2023-10-09",
+    "date": "2023-10-16",
     "default": true,
-    "platform": "macos",
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "system": true,
     "url": ["https://mac.r-project.org/"],
     "version": "12.2"
@@ -4805,11 +4974,16 @@
     "version": "0.9.1"
   },
   "rsem": {
-    "arch": "amd64",
     "bin": ["rsem-calculate-expression", "rsem-prepare-reference"],
-    "date": "2023-02-01",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/deweylab/RSEM/",
       "https://bioconda.github.io/recipes/rsem/README.html"
@@ -4819,7 +4993,12 @@
   "rstudio-server": {
     "date": "2023-09-27",
     "default": false,
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
     "version": "2023.09.0+463"
@@ -4856,19 +5035,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.0.292"
+    "version": "0.1.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-10-02",
+    "date": "2023-10-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.40"
+    "version": "0.0.41"
   },
   "rust": {
     "aliases": {
@@ -4897,7 +5076,7 @@
       "noarch": [],
       "macos-arm64": ["cmake", "make", "patch"]
     },
-    "date": "2023-06-27",
+    "date": "2023-10-16",
     "default": true,
     "dependencies": {
       "noarch": ["conda"],
@@ -4914,6 +5093,12 @@
         "zlib"
       ]
     },
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
@@ -4922,10 +5107,22 @@
   },
   "sambamba": {
     "bin": ["sambamba"],
-    "build_dependencies": ["ldc", "make", "python3.12"],
+    "build_dependencies": {
+      "noarch": [],
+      "macos-arm64": ["ldc", "make", "python3.12"]
+    },
     "date": "2023-08-21",
     "default": false,
-    "dependencies": ["bzip2", "lz4", "xz", "zlib"],
+    "dependencies": {
+      "noarch": "conda",
+      "macos-arm64": ["bzip2", "lz4", "xz", "zlib"]
+    },
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "url": [
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
@@ -4934,10 +5131,22 @@
   },
   "samtools": {
     "bin": ["samtools"],
-    "build_dependencies": ["make"],
-    "date": "2023-07-25",
+    "build_dependencies": {
+      "noarch": [],
+      "macos-arm64": ["make"]
+    },
+    "date": "2023-10-16",
     "default": true,
-    "dependencies": ["htslib", "ncurses", "zlib"],
+    "dependencies": {
+      "noarch": "conda",
+      "macos-arm64": ["htslib", "ncurses", "zlib"]
+    },
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "url": [
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
@@ -4945,9 +5154,8 @@
     "version": "1.18"
   },
   "scalene": {
-    "arch": "amd64",
     "bin": ["scalene"],
-    "date": "2023-08-31",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
@@ -5008,11 +5216,16 @@
     "version": "4.9"
   },
   "seqkit": {
-    "arch": "amd64",
     "bin": ["seqkit"],
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
@@ -5051,7 +5264,12 @@
   "shiny-server": {
     "date": "2023-02-08",
     "default": false,
-    "platform": "linux",
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "system": true,
     "url": ["https://www.rstudio.com/products/shiny/download-server/"],
     "version": "1.5.20.1002"
@@ -5162,7 +5380,9 @@
     "default": false,
     "dependencies": ["conda"],
     "supported": {
-      "noarch": true,
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
       "macos-arm64": false
     },
     "url": [
@@ -5172,11 +5392,16 @@
     "version": "2.7.11a"
   },
   "star-fusion": {
-    "arch": "amd64",
     "bin": ["STAR-Fusion"],
-    "date": "2023-03-07",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
@@ -5207,11 +5432,16 @@
     "version": "2.3.1"
   },
   "subread": {
-    "arch": "amd64",
     "bin": ["featureCounts"],
-    "date": "2023-08-31",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://subread.sourceforge.net/",
       "https://bioconda.github.io/recipes/subread/README.html"
@@ -5482,11 +5712,16 @@
     "version": "2.2.28"
   },
   "umis": {
-    "arch": "amd64",
     "bin": ["umis"],
-    "date": "2023-03-14",
+    "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/vals/umis/",
       "https://bioconda.github.io/recipes/umis/README.html"
@@ -5696,7 +5931,12 @@
   "xcode-openmp": {
     "date": "2023-04-11",
     "default": true,
-    "platform": "macos",
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
     "version": "14.0.6"

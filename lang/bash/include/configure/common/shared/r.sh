@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Can improve this to automatically install any missing dependencies.
-# FIXME Need to ensure that this is only allowed for koopa owner.
-
 main() {
     # """
     # Configure R.
-    # @note Updated 2023-10-11.
+    # @note Updated 2023-10-17.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -71,7 +68,7 @@ main() {
         koopa_sys_mkdir "${dict['site_library']}"
     fi
     koopa_r_migrate_non_base_packages "${app['r']}"
-    # > koopa_sys_set_permissions --recursive "${dict['site_library']}"
+    koopa_sys_set_permissions --recursive "${dict['site_library']}"
     koopa_alert_configure_success "${dict['name']}" "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
