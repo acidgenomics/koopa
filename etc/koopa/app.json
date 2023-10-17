@@ -5088,33 +5088,21 @@
   },
   "salmon": {
     "bin": ["salmon"],
-    "build_dependencies": {
-      "noarch": [],
-      "macos-arm64": ["cmake", "make", "patch"]
-    },
-    "date": "2023-10-16",
+    "build_dependencies": ["cmake", "make", "patch"],
+    "date": "2023-10-17",
     "default": true,
-    "dependencies": {
-      "noarch": ["conda"],
-      "macos-arm64": [
-        "boost",
-        "bzip2",
-        "cereal",
-        "icu4c",
-        "jemalloc",
-        "libiconv",
-        "staden-io-lib",
-        "tbb",
-        "xz",
-        "zlib"
-      ]
-    },
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": true
-    },
+    "dependencies": [
+      "boost",
+      "bzip2",
+      "cereal",
+      "icu4c",
+      "jemalloc",
+      "libiconv",
+      "staden-io-lib",
+      "tbb",
+      "xz",
+      "zlib"
+    ],
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
