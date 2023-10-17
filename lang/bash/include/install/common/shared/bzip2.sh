@@ -19,6 +19,7 @@ main() {
     # - https://gist.githubusercontent.com/obihill/
     #     3278c17bcee41c0c8b59a41ada8c0d35/raw/
     #     3bf890e2ad40d0af358e153395c228326f0b44d5/Makefile-libbz2_dylib
+    # - https://mjtsai.com/blog/2020/06/26/reverse-engineering-macos-11-0/
     # """
     local -A app dict
     local -a cc_args
