@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to locate libpcre2-32.so.0:
+# fish: error while loading shared libraries: libpcre2-32.so.0: cannot open shared object file: No such file or directory
+
 main() {
     # """
     # Install Fish shell.
@@ -51,6 +54,11 @@ libpcre2-32.${dict['shared_ext']}"
         # Build options --------------------------------------------------------
         '-DBUILD_DOCS=OFF'
         '-DFISH_USE_SYSTEM_PCRE2=ON'
+        '-DPCRE2_BUILD_PCRE2GREP=OFF'
+        '-DPCRE2_BUILD_PCRE2_32=OFF'
+        '-DPCRE2_BUILD_PCRE2_8=OFF'
+        '-DPCRE2_BUILD_TESTS=OFF'
+        '-DPCRE2_SHOW_REPORT=ON'
         '-DWITH_GETTEXT=ON'
         # Dependency paths -----------------------------------------------------
         "-DCURSES_INCLUDE_PATH=${cmake['curses_include_path']}"
