@@ -14,7 +14,7 @@ main() {
     local -A app cmake dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'gettext' 'ncurses' 'pcre2'
+    # > koopa_activate_app 'gettext' 'ncurses' 'pcre2'
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     koopa_assert_is_executable "${app[@]}"
