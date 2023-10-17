@@ -17,6 +17,7 @@ main() {
         'zlib'
         'libjpeg-turbo'
         'libpng'
+        'freetype'
     )
     if koopa_is_linux
     then
