@@ -114,7 +114,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-08-31",
     "default": false,
-    "dependencies": ["hdf5"],
+    "dependencies": ["hdf5", "zlib"],
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
     "version": "12.6.3"
