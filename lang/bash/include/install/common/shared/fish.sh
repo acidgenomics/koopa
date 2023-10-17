@@ -42,7 +42,6 @@ libpcre2-32.${dict['shared_ext']}"
         # Build options --------------------------------------------------------
         '-DBUILD_DOCS=OFF'
         '-DFISH_USE_SYSTEM_PCRE2=ON'
-        '-DMAC_CODESIGN_ID=OFF'
         '-DWITH_GETTEXT=ON'
         # Dependency paths -----------------------------------------------------
         "-DCURSES_INCLUDE_DIRS=${cmake['curses_include_dirs']}"
@@ -52,11 +51,15 @@ libpcre2-32.${dict['shared_ext']}"
         "-DSYS_PCRE2_INCLUDE_DIR=${cmake['sys_pcre2_include_dir']}"
         "-DSYS_PCRE2_LIB=${cmake['sys_pcre2_lib']}"
     )
+    if koopa_is_macos
+    then
+        cmake_args+=('-DMAC_CODESIGN_ID=OFF')
+    fi
     dict['url']="https://github.com/fish-shell/fish-shell/releases/download/\
 ${dict['version']}/fish-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build --jobs=1 --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
