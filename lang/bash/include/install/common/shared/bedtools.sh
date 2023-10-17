@@ -35,7 +35,7 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'bedtools'
     (
-        koopa_cd 'bedtools/utils/htslib'
+        koopa_cd 'bedtools/src/utils/htslib'
         # This is needed to provide compatibility with autoconf 2.69.
         "${app['sed']}" \
             -i.bak \
@@ -55,7 +55,6 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
         "-L${dict['openssl']}/lib"
         "-L${dict['xz']}/lib"
         "-L${dict['zlib']}/lib"
-        "-Wl,-rpath,${dict['bzip2']}/lib"
         "-Wl,-rpath,${dict['curl']}/lib"
         "-Wl,-rpath,${dict['openssl']}/lib"
         "-Wl,-rpath,${dict['xz']}/lib"
@@ -64,9 +63,12 @@ v${dict['version']}/bedtools-${dict['version']}.tar.gz"
     if ! koopa_is_macos
     then
         dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-        libs+=("-L${dict['bzip2']}/lib")
+        libs+=(
+            "-L${dict['bzip2']}/lib"
+            "-Wl,-rpath,${dict['bzip2']}/lib"
+        )
     fi
-    koopa_cd 'bedtools/src'
+    koopa_cd 'bedtools'
     koopa_print_env
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
