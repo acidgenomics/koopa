@@ -3,7 +3,7 @@
 koopa_install_star() {
     koopa_assert_is_not_aarch64
     koopa_install_app \
-        --installer='conda-package' \
+        --installer='star-conda' \
         --name='star' \
         "$@"
 }
