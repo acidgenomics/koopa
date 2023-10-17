@@ -3637,7 +3637,7 @@
     },
     "bin": ["markdownlint"],
     "date": "2023-09-24",
-    "default": true,
+    "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
     "version": "0.37.0"
