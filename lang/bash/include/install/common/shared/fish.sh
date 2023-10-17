@@ -17,6 +17,7 @@ main() {
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     app['msgfmt']="$(koopa_locate_msgfmt --realpath)"
+    app['msgmerge']="$(koopa_locate_msgmerge --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
@@ -28,6 +29,7 @@ main() {
     cmake['curses_library']="${dict['ncurses']}/lib/\
 libncursesw.${dict['shared_ext']}"
     cmake['gettext_msgfmt_executable']="${app['msgfmt']}"
+    cmake['gettext_msgmerge_executable']="${app['msgmerge']}"
     cmake['intl_include_dir']="${dict['gettext']}/include"
     cmake['intl_libraries']="${dict['gettext']}/lib/\
 libintl.${dict['shared_ext']}"
@@ -51,6 +53,7 @@ libpcre2-32.${dict['shared_ext']}"
         "-DCURSES_INCLUDE_PATH=${cmake['curses_include_path']}"
         "-DCURSES_LIBRARY=${cmake['curses_library']}"
         "-DGETTEXT_MSGFMT_EXECUTABLE=${cmake['gettext_msgfmt_executable']}"
+        "-DGETTEXT_MSGMERGE_EXECUTABLE=${cmake['gettext_msgmerge_executable']}"
         "-DIntl_INCLUDE_DIR=${cmake['intl_include_dir']}"
         "-DIntl_LIBRARIES=${cmake['intl_libraries']}"
         "-DSYS_PCRE2_INCLUDE_DIR=${cmake['sys_pcre2_include_dir']}"
