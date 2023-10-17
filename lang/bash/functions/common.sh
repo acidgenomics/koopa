@@ -17681,6 +17681,13 @@ koopa_locate_mktemp() {
         "$@"
 }
 
+koopa_locate_msgfmt() {
+    koopa_locate_app \
+        --app-name='gettext' \
+        --bin-name='msgfmt' \
+        "$@"
+}
+
 koopa_locate_mv() {
     koopa_locate_app \
         --app-name='coreutils' \
