@@ -3,7 +3,7 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/fltk
