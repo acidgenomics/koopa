@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't working on doudna, need to debug.
+
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
