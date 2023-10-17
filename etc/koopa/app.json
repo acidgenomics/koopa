@@ -147,7 +147,7 @@
       "homebrew": "ibm-aspera-connect"
     },
     "bin": ["ascp"],
-    "date": "2023-10-16",
+    "date": "2023-10-17",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -156,7 +156,7 @@
       "macos-arm64": false
     },
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.6.393"
+    "version": "4.2.7.445"
   },
   "attr": {
     "aliases": {
