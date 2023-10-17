@@ -91,12 +91,11 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-10-13.
+    @note Updated 2023-10-16.
     """
     sys_dict = {}
     sys_dict["arch"] = arch2()
     sys_dict["opt_prefix"] = koopa_opt_prefix()
-    sys_dict["platform"] = platform()
     for val in app_names:
         if mode != "default-only":
             if isdir(join(sys_dict["opt_prefix"], val)):
@@ -110,12 +109,10 @@ def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
         if "removed" in keys:
             if json["removed"]:
                 continue
-        if "arch" in keys:
-            if json["arch"] != sys_dict["arch"]:
-                continue
-        if "platform" in keys:
-            if json["platform"] != sys_dict["platform"]:
-                continue
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
         if "private" in keys:
             if json["private"]:
                 continue

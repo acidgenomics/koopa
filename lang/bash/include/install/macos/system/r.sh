@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-10-17.
     #
     # @section Intel:
     #
@@ -25,6 +25,7 @@ main() {
     # - https://mac.r-project.org/tools/
     # """
     local -A app bool dict
+    local -a deps
     bool['backup']=0
     app['installer']="$(koopa_macos_locate_installer)"
     koopa_assert_is_executable "${app[@]}"
@@ -71,7 +72,11 @@ ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     fi
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
+    koopa_macos_install_system_gfortran
     koopa_macos_install_system_xcode_openmp
+    readarray -t deps <<< "$(koopa_app_dependencies 'r')"
+    koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
+    koopa_cli_install "${deps[@]}"
     koopa_configure_r "${app['r']}"
     return 0
 }
