@@ -39,6 +39,6 @@ END
             "${dict['prefix']}/libexec/bin/STARlong" \
             "${dict['patch_file']}"
     fi
-    "${dict['prefix']}/bin/STAR" -v
+    "${dict['prefix']}/bin/STAR" -h
     return 0
 }
