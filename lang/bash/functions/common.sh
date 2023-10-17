@@ -11709,7 +11709,7 @@ koopa_install_dash() {
 
 koopa_install_deeptools() {
     koopa_install_app \
-        --installer='conda-package' \
+        --installer='python-package' \
         --name='deeptools' \
         "$@"
 }
