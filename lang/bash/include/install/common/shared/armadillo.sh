@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-10-17.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -16,7 +16,7 @@ main() {
     local -A dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'hdf5'
+    koopa_activate_app 'zlib' 'hdf5'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=('-DALLOW_OPENBLAS_MACOS=ON')
