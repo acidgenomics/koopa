@@ -5766,7 +5766,6 @@
     "build_dependencies": ["make", "patch"],
     "date": "2023-04-06",
     "default": true,
-    "dependencies": ["bzip2"],
     "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
     "prune": false,
     "url": ["http://infozip.sourceforge.net/UnZip.html"],
