@@ -17688,6 +17688,13 @@ koopa_locate_msgfmt() {
         "$@"
 }
 
+koopa_locate_msgmerge() {
+    koopa_locate_app \
+        --app-name='gettext' \
+        --bin-name='msgmerge' \
+        "$@"
+}
+
 koopa_locate_mv() {
     koopa_locate_app \
         --app-name='coreutils' \
