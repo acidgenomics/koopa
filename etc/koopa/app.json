@@ -2792,7 +2792,7 @@
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
     "date": "2023-10-17",
-    "default": true,
+    "default": false,
     "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
     "notes": ["The conda recipe core dumps on Ubuntu during indexing."],
     "url": [
@@ -5090,7 +5090,7 @@
     "bin": ["salmon"],
     "build_dependencies": ["cmake", "make", "patch"],
     "date": "2023-10-17",
-    "default": true,
+    "default": false,
     "dependencies": [
       "boost",
       "bzip2",
