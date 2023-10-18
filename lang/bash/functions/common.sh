@@ -14672,9 +14672,8 @@ koopa_install_star_fusion() {
 }
 
 koopa_install_star() {
-    koopa_assert_is_not_aarch64
     koopa_install_app \
-        --installer='star-conda' \
+        --installer='star-src' \
         --name='star' \
         "$@"
 }
@@ -17068,6 +17067,20 @@ koopa_locate_chown() {
         args+=('/bin/chown')
     fi
     koopa_locate_app "${args[@]}" "$@"
+}
+
+koopa_locate_clang() {
+    koopa_locate_app \
+        --app-name='llvm' \
+        --bin-name='clang' \
+        "$@"
+}
+
+koopa_locate_clangxx() {
+    koopa_locate_app \
+        --app-name='llvm' \
+        --bin-name='clang++' \
+        "$@"
 }
 
 koopa_locate_cmake() {

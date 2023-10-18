@@ -24,7 +24,7 @@
 main() {
     # """
     # Install STAR.
-    # @note Updated 2023-10-11.
+    # @note Updated 2023-10-18.
     #
     # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib:
     # https://github.com/alexdobin/STAR/pull/1586
@@ -46,7 +46,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     if koopa_is_macos
     then
-        app['cxx']="$(koopa_locate_gcxx)"
+        app['cxx']="$(koopa_locate_clangxx)"
     else
         app['cxx']="$(koopa_locate_cxx --only-system)"
     fi
@@ -125,4 +125,3 @@ ${dict['version']}.tar.gz"
     koopa_cp 'STARlong' "${dict['prefix']}/bin/STARlong"
     return 0
 }
-
