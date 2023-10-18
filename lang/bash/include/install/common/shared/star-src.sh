@@ -1,25 +1,10 @@
 #!/usr/bin/env bash
 
-# NOTE This isn't currently working correctly with clang on macOS Sonoma.
-# Author has only tested using GCC on macOS.
-
-# Same clang linkage issues persist with CLT 15.1.0.0.1.1696033181.
-
-# > In file included from bam_cat.c:49:
-# > ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
-# > #include <htslib/sam.h>
-
-# Problematic part of Makefile:
-# Depend.list: $(SOURCES) parametersDefault.xxd $(HTSLIB_DEP)
-# 	echo $(SOURCES)
-# 	'rm' -f ./Depend.list
-# 	$(CXX) $(CXXFLAGS_common) -MM $^ >> Depend.list
-# include Depend.list
-#
-# File is located here:
-# /opt/koopa/app/htslib/1.18/include/htslib/sam.h
-
-# FIXME Alternatively can build with full llvm on macOS.
+# FIXME Failing to locate our htslib correctly:
+# ./InOutStreams.h:5:10: fatal error: 'htslib/bgzf.h' file not found
+#     5 | #include <htslib/bgzf.h>
+# ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
+#     4 | #include <htslib/sam.h>
 
 main() {
     # """
@@ -71,26 +56,15 @@ ${dict['version']}.tar.gz"
         koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
     fi
     make_args+=(
-        # > "CPPFLAGS=${CPPFLAGS:?}"
-        # > "CXXFLAGS=${CPPFLAGS:?}"
-        # > "LDFLAGS=${LDFLAGS:?}"
         "--jobs=${dict['jobs']}"
+        "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
+        "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
+        'STAR'
+        'STARlong'
     )
-    if koopa_is_macos
-    then
-        # Static instead of dynamic build is currently recommended in README.
-        # > make_args+=('STARforMac')
-        make_args+=(
-            "PKG_CONFIG=${app['pkg_config']} --static"
-            # > "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
-            'STARforMacStatic' 'STARlongForMacStatic'
-        )
-    else
-        make_args+=('STAR' 'STARlong')
-    fi
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/source'
