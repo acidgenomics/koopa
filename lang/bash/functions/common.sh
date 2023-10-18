@@ -4195,6 +4195,30 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
+        'hisat2' | \
+        'star')
+            case "${2:-}" in
+                'align')
+                    case "${3:-}" in
+                        'paired-end' | \
+                        'single-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'jekyll')
             case "${2:-}" in
                 'serve')
@@ -4297,29 +4321,6 @@ koopa_cli_app() {
         'ssh')
             case "${2:-}" in
                 'generate-key')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'star')
-            case "${2:-}" in
-                'align')
-                    case "${3:-}" in
-                        'paired-end' | \
-                        'single-end')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
                     ;;
