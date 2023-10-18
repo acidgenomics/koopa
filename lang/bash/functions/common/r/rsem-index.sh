@@ -3,9 +3,10 @@
 koopa_rsem_index() {
     # """
     # Create a genome index for RSEM aligner.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-10-18.
     #
     # @seealso
+    # - https://deweylab.github.io/RSEM/rsem-prepare-reference.html
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/rsem.py
     #
     # @examples
@@ -79,6 +80,7 @@ koopa_rsem_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
+    # FIXME Rework temporary file handling, similar to STAR and HISAT2.
     dict['tmp_genome_fasta_file']="${dict['tmp_dir']}/genome.fa"
     koopa_decompress \
         "${dict['genome_fasta_file']}" \
