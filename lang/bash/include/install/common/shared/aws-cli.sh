@@ -3,7 +3,7 @@
 main() {
     # """
     # Install AWS CLI.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-10-18.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/userguide/
