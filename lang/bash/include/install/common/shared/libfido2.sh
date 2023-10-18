@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME This requires libudev to be installed.
+# -- UDEV_INCLUDE_DIRS:
+# -- UDEV_LIBRARIES:
+# -- UDEV_LIBRARY_DIRS:
+
 main() {
     # """
     # Install libfido2.
