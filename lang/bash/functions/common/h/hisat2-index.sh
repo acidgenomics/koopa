@@ -5,9 +5,18 @@ koopa_hisat2_index() {
     # Create a genome index for HISAT2 aligner.
     # @note Updated 2023-10-18.
     #
-    # Doesn't currently support compressed files as input.
+    # HISAT2 comes with several index types:
+    # - Hierarchical FM index (HFM) for a reference genome (index base: genome).
+    # - Hierarchical Graph FM index (HGFM) for a reference genome plus SNPs
+    #   (index base: genome_snp).
+    # - Hierarchical Graph FM index (HGFM) for a reference genome plus
+    #   transcripts (index base: genome_tran).
+    # - Hierarchical Graph FM index (HGFM) for a reference genome plus SNPs and
+    #   transcripts (index base: genome_snp_tran).
     #
     # Try using 'r6a.8xlarge' or 'r5a.8xlarge' instance on AWS EC2.
+    #
+    # Doesn't currently support compressed files as input.
     #
     # If you use '--snp', '--ss', and/or '--exon', hisat2-build will need about
     # 200 GB RAM for the human genome size as index building involves a graph
