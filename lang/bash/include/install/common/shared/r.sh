@@ -99,12 +99,7 @@ main() {
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     app['echo']="$(koopa_locate_echo)"
-    if koopa_is_macos
-    then
-        app['gfortran']='/opt/gfortran/bin/gfortran'
-    else
-        app['gfortran']="$(koopa_locate_gfortran --only-system)"
-    fi
+    app['gfortran']="$(koopa_locate_gfortran --only-system)"
     app['gzip']="$(koopa_locate_gzip)"
     app['jar']="$(koopa_locate_jar)"
     app['java']="$(koopa_locate_java)"
