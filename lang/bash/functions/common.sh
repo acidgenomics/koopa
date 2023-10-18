@@ -14672,10 +14672,18 @@ koopa_install_star_fusion() {
 }
 
 koopa_install_star() {
-    koopa_install_app \
-        --installer='star-src' \
-        --name='star' \
-        "$@"
+    if koopa_is_aarch64
+    then
+        koopa_install_app \
+            --installer='star-src' \
+            --name='star' \
+            "$@"
+    else
+        koopa_install_app \
+            --installer='star-conda' \
+            --name='star' \
+            "$@"
+    fi
 }
 
 koopa_install_starship() {
