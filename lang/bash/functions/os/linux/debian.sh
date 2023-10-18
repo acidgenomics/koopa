@@ -82,6 +82,71 @@ koopa_debian_apt_add_microsoft_key() {
     return 0
 }
 
+koopa_debian_apt_add_r_key() {
+    local -A dict
+    koopa_assert_has_no_args "$#"
+    koopa_assert_is_admin
+    dict['key_name']='r'
+    dict['keyserver']='keyserver.ubuntu.com'
+    dict['prefix']="$(koopa_debian_apt_key_prefix)"
+    dict['file']="${dict['prefix']}/koopa-${dict['key_name']}.gpg"
+    if koopa_is_ubuntu_like
+    then
+        dict['key']='E298A3A825C0D65DFD57CBB651716619E084DAB9'
+    else
+        dict['key']='95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
+    fi
+    [[ -f "${dict['file']}" ]] && return 0
+    koopa_gpg_download_key_from_keyserver \
+        --file="${dict['file']}" \
+        --key="${dict['key']}" \
+        --keyserver="${dict['keyserver']}" \
+        --sudo
+    return 0
+}
+
+koopa_debian_apt_add_r_repo() {
+    local -A dict
+    koopa_assert_has_args_le "$#" 1
+    dict['name']='r'
+    dict['os_codename']="$(koopa_debian_os_codename)"
+    dict['version']="${1:-}"
+    if koopa_is_ubuntu_like
+    then
+        dict['os_id']='ubuntu'
+    else
+        dict['os_id']='debian'
+    fi
+    if [[ -z "${dict['version']}" ]]
+    then
+        dict['version']="$(koopa_app_json_version "${dict['name']}")"
+    fi
+    dict['version2']="$(koopa_major_minor_version "${dict['version']}")"
+    case "${dict['version2']}" in
+        '4.'*)
+            dict['version2']='4.0'
+            ;;
+        '3.'*)
+            dict['version2']='3.5'
+            ;;
+    esac
+    dict['version2']="$( \
+        koopa_gsub \
+            --fixed \
+            --pattern='.' \
+            --replacement='' \
+            "${dict['version2']}" \
+    )"
+    dict['url']="https://cloud.r-project.org/bin/linux/${dict['os_id']}"
+    dict['distribution']="${dict['os_codename']}-cran${dict['version2']}/"
+    koopa_debian_apt_add_r_key
+    koopa_debian_apt_add_repo \
+        --distribution="${dict['distribution']}" \
+        --name="${dict['name']}" \
+        --url="${dict['url']}"
+    return 0
+}
+
 koopa_debian_apt_add_repo() {
     local -A dict
     local -a components
@@ -196,71 +261,6 @@ ${dict['url']} ${dict['distribution']} ${components[*]}"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
-    return 0
-}
-
-koopa_debian_apt_add_r_key() {
-    local -A dict
-    koopa_assert_has_no_args "$#"
-    koopa_assert_is_admin
-    dict['key_name']='r'
-    dict['keyserver']='keyserver.ubuntu.com'
-    dict['prefix']="$(koopa_debian_apt_key_prefix)"
-    dict['file']="${dict['prefix']}/koopa-${dict['key_name']}.gpg"
-    if koopa_is_ubuntu_like
-    then
-        dict['key']='E298A3A825C0D65DFD57CBB651716619E084DAB9'
-    else
-        dict['key']='95C0FAF38DB3CCAD0C080A7BDC78B2DDEABC47B7'
-    fi
-    [[ -f "${dict['file']}" ]] && return 0
-    koopa_gpg_download_key_from_keyserver \
-        --file="${dict['file']}" \
-        --key="${dict['key']}" \
-        --keyserver="${dict['keyserver']}" \
-        --sudo
-    return 0
-}
-
-koopa_debian_apt_add_r_repo() {
-    local -A dict
-    koopa_assert_has_args_le "$#" 1
-    dict['name']='r'
-    dict['os_codename']="$(koopa_debian_os_codename)"
-    dict['version']="${1:-}"
-    if koopa_is_ubuntu_like
-    then
-        dict['os_id']='ubuntu'
-    else
-        dict['os_id']='debian'
-    fi
-    if [[ -z "${dict['version']}" ]]
-    then
-        dict['version']="$(koopa_app_json_version "${dict['name']}")"
-    fi
-    dict['version2']="$(koopa_major_minor_version "${dict['version']}")"
-    case "${dict['version2']}" in
-        '4.'*)
-            dict['version2']='4.0'
-            ;;
-        '3.'*)
-            dict['version2']='3.5'
-            ;;
-    esac
-    dict['version2']="$( \
-        koopa_gsub \
-            --fixed \
-            --pattern='.' \
-            --replacement='' \
-            "${dict['version2']}" \
-    )"
-    dict['url']="https://cloud.r-project.org/bin/linux/${dict['os_id']}"
-    dict['distribution']="${dict['os_codename']}-cran${dict['version2']}/"
-    koopa_debian_apt_add_r_key
-    koopa_debian_apt_add_repo \
-        --distribution="${dict['distribution']}" \
-        --name="${dict['name']}" \
-        --url="${dict['url']}"
     return 0
 }
 

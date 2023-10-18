@@ -62,13 +62,7 @@ koopa_r_configure_makevars() {
         app['cc']="$(koopa_locate_cc --only-system)"
         app['cxx']="$(koopa_locate_cxx --only-system)"
         app['echo']="$(koopa_locate_echo)"
-        if koopa_is_macos
-        then
-            app['gfortran']='/opt/gfortran/bin/gfortran'
-        else
-            # FIXME Add support for locating this on macOS.
-            app['gfortran']="$(koopa_locate_gfortran --only-system)"
-        fi
+        app['gfortran']="$(koopa_locate_gfortran --only-system)"
         app['make']="$(koopa_locate_make)"
         app['pkg_config']="$(koopa_locate_pkg_config)"
         app['ranlib']="$(koopa_locate_ranlib --only-system)"

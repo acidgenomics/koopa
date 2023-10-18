@@ -1,30 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE This isn't currently working correctly with clang on macOS Sonoma.
-# Author has only tested using GCC on macOS.
-
-# Same clang linkage issues persist with CLT 15.1.0.0.1.1696033181.
-
-# > In file included from bam_cat.c:49:
-# > ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
-# > #include <htslib/sam.h>
-
-# Problematic part of Makefile:
-# Depend.list: $(SOURCES) parametersDefault.xxd $(HTSLIB_DEP)
-# 	echo $(SOURCES)
-# 	'rm' -f ./Depend.list
-# 	$(CXX) $(CXXFLAGS_common) -MM $^ >> Depend.list
-# include Depend.list
-#
-# File is located here:
-# /opt/koopa/app/htslib/1.18/include/htslib/sam.h
-
-# FIXME Alternatively can build with full llvm on macOS.
-
 main() {
     # """
     # Install STAR.
-    # @note Updated 2023-10-11.
+    # @note Updated 2023-10-18.
     #
     # Pull request to use 'SYSTEM_HTSLIB=1' to unbundle htslib:
     # https://github.com/alexdobin/STAR/pull/1586
@@ -42,11 +21,12 @@ main() {
     build_deps=('coreutils' 'make' 'pkg-config')
     ! koopa_is_macos && deps+=('bzip2')
     deps+=('xz' 'zlib' 'htslib')
+    koopa_is_macos && deps+=('llvm')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     if koopa_is_macos
     then
-        app['cxx']="$(koopa_locate_gcxx)"
+        app['cxx']="$(koopa_locate_clangxx)"
     else
         app['cxx']="$(koopa_locate_cxx --only-system)"
     fi
@@ -68,14 +48,12 @@ ${dict['version']}.tar.gz"
         then
             koopa_append_ldflags '-Wl,-ld_classic'
         fi
-        koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
     fi
     make_args+=(
-        # > "CPPFLAGS=${CPPFLAGS:?}"
-        # > "CXXFLAGS=${CPPFLAGS:?}"
-        # > "LDFLAGS=${LDFLAGS:?}"
         "--jobs=${dict['jobs']}"
+        "CPPFLAGS=${CPPFLAGS:?}"
         "CXX=${app['cxx']}"
+        "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
     )
@@ -84,8 +62,7 @@ ${dict['version']}.tar.gz"
         # Static instead of dynamic build is currently recommended in README.
         # > make_args+=('STARforMac')
         make_args+=(
-            "PKG_CONFIG=${app['pkg_config']} --static"
-            # > "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
+            # > "PKG_CONFIG=${app['pkg_config']} --static"
             'STARforMacStatic' 'STARlongForMacStatic'
         )
     else
@@ -123,6 +100,6 @@ ${dict['version']}.tar.gz"
     koopa_chmod +x 'STAR' 'STARlong'
     koopa_cp 'STAR' "${dict['prefix']}/bin/STAR"
     koopa_cp 'STARlong' "${dict['prefix']}/bin/STARlong"
+    "${dict['prefix']}/bin/STAR" -h
     return 0
 }
-
