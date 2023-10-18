@@ -10429,7 +10429,7 @@ koopa_hisat2_index() {
         > "${dict['splice_sites_file']}"
     index_args+=(
         '-p' "${dict['threads']}"
-        '--exons' "${dict['exons_file']}"
+        '--exon' "${dict['exons_file']}"
         '--seed' "${dict['seed']}"
         '--ss' "${dict['splice_sites_file']}"
         "${dict['genome_fasta_file']}"
@@ -10437,6 +10437,10 @@ koopa_hisat2_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
+    [[ "${dict['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+        koopa_rm "${dict['tmp_genome_fasta_file']}"
+    [[ "${dict['is_tmp_gtf_file']}" -eq 1 ]] && \
+        koopa_rm "${dict['tmp_gtf_file']}"
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
 }
