@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 
-# FIXME Failing to locate our htslib correctly:
-# ./InOutStreams.h:5:10: fatal error: 'htslib/bgzf.h' file not found
-#     5 | #include <htslib/bgzf.h>
-# ./bam_cat.h:4:10: fatal error: 'htslib/sam.h' file not found
-#     4 | #include <htslib/sam.h>
+# FIXME We may only hit this when attempting to build shared on macOS:
+# FIXME Hitting this issue with newest version of clang:
+#
+# SharedMemory.cpp:109:59: error: use of undeclared identifier 'SHM_NORESERVE'
+#  109 |     _shmID=shmget(_key, toReserve, IPC_CREAT | IPC_EXCL | SHM_NORESERVE | 0666); //        _shmID = shmget(shmKey, shmSize, IPC_CREAT | SHM_NORESERVE | SHM_HUGETLB | 0666);
+#      |                                                           ^
+#SharedMemory.cpp:254:72: error: use of undeclared identifier 'SHM_NORESERVE'
+#  254 |         _sharedCounterID=shmget(_counterKey, 1, IPC_CREAT | IPC_EXCL | SHM_NORESERVE | 0666);
+#      |                                                                        ^
+#2 errors generated.
+#gmake: *** [Makefile:113: SharedMemory.o] Error 1
+#gmake: *** Waiting for unfinished jobs....
 
 main() {
     # """
@@ -62,9 +69,19 @@ ${dict['version']}.tar.gz"
         "LDFLAGS=${LDFLAGS:?}"
         'SYSTEM_HTSLIB=1'
         'VERBOSE=1'
-        'STAR'
-        'STARlong'
     )
+    if koopa_is_macos
+    then
+        # Static instead of dynamic build is currently recommended in README.
+        # > make_args+=('STARforMac')
+        make_args+=(
+            "PKG_CONFIG=${app['pkg_config']} --static"
+            # > "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
+            'STARforMacStatic' 'STARlongForMacStatic'
+        )
+    else
+        make_args+=('STAR' 'STARlong')
+    fi
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/source'
