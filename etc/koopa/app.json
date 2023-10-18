@@ -268,7 +268,7 @@
     "build_dependencies": ["make"],
     "date": "2023-10-18",
     "default": true,
-    "dependencies": ["python3.12"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
