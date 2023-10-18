@@ -1,16 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This requires libudev to be installed.
-# -- UDEV_INCLUDE_DIRS:
-# -- UDEV_LIBRARIES:
-# -- UDEV_LIBRARY_DIRS:
-
-# FIXME This depeds on systemd for Linux.
-
 main() {
     # """
     # Install libfido2.
-    # @note Updated 2023-05-26.
+    # @note Updated 2023-10-18.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/libfido2
@@ -30,15 +23,6 @@ ${dict['version']}.tar.gz"
         # Build options --------------------------------------------------------
         '-DBUILD_STATIC_LIBS=OFF'
     )
-    if koopa_is_linux
-    then
-        cmake_args+=(
-            '-DUDEV_INCLUDE_DIRS=/usr/include/x86_64-linux-gnu'
-            '-DUDEV_LIBRARIES=/usr/lib/x86_64-linux-gnu/libudev.so.1'
-            '-DUDEV_LIBRARY_DIRS=/usr/lib/x86_64-linux-gnu'
-            '-DUDEV_RULES_DIR=/usr/lib/udev/rules.d'
-        )
-    fi
     koopa_cmake_build \
         --include-dir='include' \
         --lib-dir='lib' \
