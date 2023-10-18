@@ -3,7 +3,7 @@
 main() {
     # """
     # Install AWS CLI.
-    # @note Updated 2023-05-08.
+    # @note Updated 2023-10-18.
     #
     # @seealso
     # - https://docs.aws.amazon.com/cli/latest/userguide/
@@ -12,7 +12,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    app['python']="$(koopa_locate_python311 --allow-missing)"
+    app['python']="$(koopa_locate_python312 --allow-missing)"
     if [[ ! -x "${app['python']}" ]]
     then
         app['python']='/usr/bin/python3'

@@ -268,12 +268,12 @@
     "build_dependencies": ["make"],
     "date": "2023-10-18",
     "default": true,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.26"
+    "version": "2.13.27"
   },
   "azure-cli": {
     "aliases": {
