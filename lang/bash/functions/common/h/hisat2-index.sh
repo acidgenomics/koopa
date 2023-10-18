@@ -35,7 +35,7 @@ koopa_hisat2_index() {
     #     prepare_tx_gff.py
     # - https://rnabio.org/module-01-inputs/0001/04/01/Indexing/
     # """
-    local -A app dict
+    local -A app bool dict
     local -a index_args
     app['hisat2_build']="$(koopa_locate_hisat2_build)"
     app['hisat2_extract_exons']="$(koopa_locate_hisat2_extract_exons)"
@@ -43,14 +43,13 @@ koopa_hisat2_index() {
         koopa_locate_hisat2_extract_splice_sites \
     )"
     koopa_assert_is_executable "${app[@]}"
+    bool['is_tmp_genome_fasta_file']=0
+    bool['is_tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
     # e.g. 'gencode.v39.annotation.gtf.gz'
     dict['gtf_file']=''
-    # FIXME Rework this as 'bool' instead of 'dict'.
-    dict['is_tmp_genome_fasta_file']=0
-    dict['is_tmp_gtf_file']=0
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=160
     dict['output_dir']=''
@@ -93,8 +92,8 @@ koopa_hisat2_index() {
     done
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--output-dir' "${dict['output_dir']}"
-    dict['ht2_base']="${dict['output_dir']}/index"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -106,12 +105,13 @@ koopa_hisat2_index() {
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['ht2_base']="${dict['output_dir']}/index"
     koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
     if koopa_str_detect_regex \
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        dict['is_tmp_genome_fasta_file']=1
+        bool['is_tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -123,7 +123,7 @@ koopa_hisat2_index() {
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        dict['is_tmp_gtf_file']=1
+        bool['is_tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -149,9 +149,9 @@ koopa_hisat2_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
-    [[ "${dict['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${dict['is_tmp_gtf_file']}" -eq 1 ]] && \
+    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
         koopa_rm "${dict['tmp_gtf_file']}"
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
