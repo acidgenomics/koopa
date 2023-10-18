@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libfido2.
-    # @note Updated 2023-05-26.
+    # @note Updated 2023-10-18.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/libfido2
@@ -19,7 +19,7 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    cmake_args=(
+    cmake_args+=(
         # Build options --------------------------------------------------------
         '-DBUILD_STATIC_LIBS=OFF'
     )
