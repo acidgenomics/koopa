@@ -10370,7 +10370,7 @@ koopa_hisat2_index() {
     koopa_assert_is_executable "${app[@]}"
     dict['genome_fasta_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=200
+    dict['mem_gb_cutoff']=160
     dict['output_dir']=''
     dict['seed']=42
     dict['threads']="$(koopa_cpu_count)"
