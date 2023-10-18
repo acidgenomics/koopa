@@ -3419,7 +3419,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-10-17",
+    "date": "2023-10-18",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3430,7 +3430,9 @@
       "ncurses",
       "python3.12",
       "swig",
-      "zlib"
+      "xz",
+      "zlib",
+      "zstd"
     ],
     "outdated": true,
     "url": ["https://llvm.org/"],
