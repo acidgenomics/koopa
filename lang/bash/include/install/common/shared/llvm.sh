@@ -44,6 +44,7 @@ main() {
         deps+=(
             # Needed for 'gold'.
             'binutils'
+            'xz' # elfutils
             'zstd' # elfutils
             # OpenMP requires 'gelf.h'.
             'elfutils'
