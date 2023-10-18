@@ -60,7 +60,6 @@ ${dict['version']}.tar.gz"
         then
             koopa_append_ldflags '-Wl,-ld_classic'
         fi
-        koopa_append_ldflags '-static-libstdc++' '-static-libgcc'
     fi
     make_args+=(
         "--jobs=${dict['jobs']}"
@@ -75,8 +74,7 @@ ${dict['version']}.tar.gz"
         # Static instead of dynamic build is currently recommended in README.
         # > make_args+=('STARforMac')
         make_args+=(
-            "PKG_CONFIG=${app['pkg_config']} --static"
-            # > "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:?}"
+            # > "PKG_CONFIG=${app['pkg_config']} --static"
             'STARforMacStatic' 'STARlongForMacStatic'
         )
     else
