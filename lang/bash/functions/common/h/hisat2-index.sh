@@ -26,6 +26,7 @@ koopa_hisat2_index() {
     #     modules/hisat2/build/main.nf
     # - https://github.com/chapmanb/cloudbiolinux/blob/master/utils/
     #     prepare_tx_gff.py
+    # - https://rnabio.org/module-01-inputs/0001/04/01/Indexing/
     # """
     local -A app dict
     local -a index_args
@@ -34,7 +35,7 @@ koopa_hisat2_index() {
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=200
+    dict['mem_gb_cutoff']=160
     dict['output_dir']=''
     dict['seed']=42
     dict['threads']="$(koopa_cpu_count)"
