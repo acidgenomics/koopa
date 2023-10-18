@@ -3419,7 +3419,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-10-17",
+    "date": "2023-10-18",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3430,7 +3430,9 @@
       "ncurses",
       "python3.12",
       "swig",
-      "zlib"
+      "xz",
+      "zlib",
+      "zstd"
     ],
     "outdated": true,
     "url": ["https://llvm.org/"],
@@ -3723,11 +3725,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-09-24",
+    "date": "2023-10-18",
     "default": false,
     "dependencies": ["tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.2.0"
+    "version": "2.3.0"
   },
   "mpc": {
     "aliases": {
@@ -4482,10 +4484,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-06",
+    "date": "2023-10-18",
     "default": false,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.1"
+    "version": "0.14.2"
   },
   "proj": {
     "aliases": {

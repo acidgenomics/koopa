@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-10-10.
+    # @note Updated 2023-10-18.
     #
     # @section Compiler settings:
     #
@@ -95,7 +95,7 @@ main() {
     app['ar']="$(koopa_locate_ar --only-system)"
     app['awk']="$(koopa_locate_awk)"
     app['bash']="$(koopa_locate_bash)"
-    app['bzip2']="$(koopa_locate_bzip2)"
+    ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
     app['cc']="$(koopa_locate_cc --only-system)"
     app['cxx']="$(koopa_locate_cxx --only-system)"
     app['echo']="$(koopa_locate_echo)"
@@ -154,7 +154,7 @@ main() {
     conf_dict['perl']="${app['perl']}"
     conf_dict['r_batchsave']='--no-save --no-restore'
     conf_dict['r_browser']="${app['open']}"
-    conf_dict['r_bzipcmd']="${app['bzip2']}"
+    ! koopa_is_macos && conf_dict['r_bzipcmd']="${app['bzip2']}"
     conf_dict['r_gzipcmd']="${app['gzip']}"
     conf_dict['r_libs_site']="\${R_HOME}/site-library"
     conf_dict['r_libs_user']="\${R_LIBS_SITE}"
@@ -226,6 +226,7 @@ main() {
     koopa_assert_is_file \
         "${conf_dict['with_tcl_config']}" \
         "${conf_dict['with_tk_config']}"
+    ! koopa_is_macos && conf_args+=("R_BZIPCMD=${conf_dict['r_bzipcmd']}")
     conf_args+=(
         '--disable-static'
         '--enable-R-profiling'
@@ -240,7 +241,6 @@ main() {
         "--with-blas=${conf_dict['with_blas']}"
         "--with-cairo=${conf_dict['with_cairo']}"
         "--with-jpeglib=${conf_dict['with_jpeglib']}"
-        # > "--with-lapack=${conf_dict['with_lapack']}"
         "--with-libpng=${conf_dict['with_libpng']}"
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
@@ -272,7 +272,6 @@ main() {
         "PERL=${conf_dict['perl']}"
         "R_BATCHSAVE=${conf_dict['r_batchsave']}"
         "R_BROWSER=${conf_dict['r_browser']}"
-        "R_BZIPCMD=${conf_dict['r_bzipcmd']}"
         "R_GZIPCMD=${conf_dict['r_gzipcmd']}"
         "R_LIBS_SITE=${conf_dict['r_libs_site']}"
         "R_LIBS_USER=${conf_dict['r_libs_user']}"
