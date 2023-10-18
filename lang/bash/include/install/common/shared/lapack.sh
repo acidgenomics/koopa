@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAPACK.
-    # @note Updated 2023-10-17.
+    # @note Updated 2023-10-18.
     #
     # @seealso
     # - https://www.netlib.org/lapack/
@@ -13,12 +13,7 @@ main() {
     local -A app dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    if koopa_is_macos
-    then
-        app['fortran']='/opt/gfortran/bin/gfortran'
-    else
-        app['fortran']="$(koopa_locate_gfortran --only-system)"
-    fi
+    app['gfortran']="$(koopa_locate_gfortran --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -32,7 +27,7 @@ main() {
 v${dict['version']}.tar.gz"
     cmake_args=(
         '-DBUILD_SHARED_LIBS=ON'
-        "-DCMAKE_Fortran_COMPILER=${app['fortran']}"
+        "-DCMAKE_Fortran_COMPILER=${app['gfortran']}"
         '-DLAPACKE=ON'
     )
     koopa_download "${dict['url']}"

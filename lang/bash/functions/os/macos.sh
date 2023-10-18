@@ -590,6 +590,15 @@ koopa_macos_install_system_gfortran() {
         "$@"
 }
 
+koopa_macos_install_system_r() {
+    koopa_install_app \
+        --name='r' \
+        --platform='macos' \
+        --prefix="$(koopa_macos_r_prefix)" \
+        --system \
+        "$@"
+}
+
 koopa_macos_install_system_rosetta() {
     local -A app
     koopa_assert_has_no_args "$#"
@@ -598,15 +607,6 @@ koopa_macos_install_system_rosetta() {
     koopa_assert_is_executable "${app[@]}"
     koopa_sudo "${app['softwareupdate']}" --install-rosetta
     return 0
-}
-
-koopa_macos_install_system_r() {
-    koopa_install_app \
-        --name='r' \
-        --platform='macos' \
-        --prefix="$(koopa_macos_r_prefix)" \
-        --system \
-        "$@"
 }
 
 koopa_macos_install_system_xcode_clt() {
@@ -866,15 +866,15 @@ koopa_macos_locate_xattr() {
         "$@"
 }
 
-koopa_macos_locate_xcodebuild() {
-    koopa_locate_app \
-        '/usr/bin/xcodebuild' \
-        "$@"
-}
-
 koopa_macos_locate_xcode_select() {
     koopa_locate_app \
         '/usr/bin/xcode-select' \
+        "$@"
+}
+
+koopa_macos_locate_xcodebuild() {
+    koopa_locate_app \
+        '/usr/bin/xcodebuild' \
         "$@"
 }
 
@@ -966,6 +966,11 @@ koopa_macos_python_prefix() {
     return 0
 }
 
+koopa_macos_r_prefix() {
+    koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
+    return 0
+}
+
 koopa_macos_reload_autofs() {
     local -A app
     koopa_assert_has_no_args "$#"
@@ -973,11 +978,6 @@ koopa_macos_reload_autofs() {
     app['automount']="$(koopa_macos_locate_automount)"
     koopa_assert_is_executable "${app[@]}"
     koopa_sudo "${app['automount']}" -vc
-    return 0
-}
-
-koopa_macos_r_prefix() {
-    koopa_print '/Library/Frameworks/R.framework/Versions/Current/Resources'
     return 0
 }
 
@@ -1115,17 +1115,17 @@ koopa_macos_uninstall_system_python() {
         "$@"
 }
 
-koopa_macos_uninstall_ringcentral() {
+koopa_macos_uninstall_system_r() {
     koopa_uninstall_app \
-        --name='ringcentral' \
+        --name='r' \
         --platform='macos' \
         --system \
         "$@"
 }
 
-koopa_macos_uninstall_system_r() {
+koopa_macos_uninstall_ringcentral() {
     koopa_uninstall_app \
-        --name='r' \
+        --name='ringcentral' \
         --platform='macos' \
         --system \
         "$@"
