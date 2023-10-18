@@ -92,8 +92,8 @@ koopa_hisat2_index() {
     done
     koopa_assert_is_set \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--output-dir' "${dict['output_dir']}"
-    dict['ht2_base']="${dict['output_dir']}/index"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -105,6 +105,7 @@ koopa_hisat2_index() {
     dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['ht2_base']="${dict['output_dir']}/index"
     koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
     if koopa_str_detect_regex \
         --string="${dict['genome_fasta_file']}" \
