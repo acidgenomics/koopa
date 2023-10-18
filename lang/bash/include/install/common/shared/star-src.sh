@@ -1,18 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We may only hit this when attempting to build shared on macOS:
-# FIXME Hitting this issue with newest version of clang:
-#
-# SharedMemory.cpp:109:59: error: use of undeclared identifier 'SHM_NORESERVE'
-#  109 |     _shmID=shmget(_key, toReserve, IPC_CREAT | IPC_EXCL | SHM_NORESERVE | 0666); //        _shmID = shmget(shmKey, shmSize, IPC_CREAT | SHM_NORESERVE | SHM_HUGETLB | 0666);
-#      |                                                           ^
-#SharedMemory.cpp:254:72: error: use of undeclared identifier 'SHM_NORESERVE'
-#  254 |         _sharedCounterID=shmget(_counterKey, 1, IPC_CREAT | IPC_EXCL | SHM_NORESERVE | 0666);
-#      |                                                                        ^
-#2 errors generated.
-#gmake: *** [Makefile:113: SharedMemory.o] Error 1
-#gmake: *** Waiting for unfinished jobs....
-
 main() {
     # """
     # Install STAR.
@@ -34,6 +21,7 @@ main() {
     build_deps=('coreutils' 'make' 'pkg-config')
     ! koopa_is_macos && deps+=('bzip2')
     deps+=('xz' 'zlib' 'htslib')
+    koopa_is_macos && deps+=('llvm')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     if koopa_is_macos
@@ -112,5 +100,6 @@ ${dict['version']}.tar.gz"
     koopa_chmod +x 'STAR' 'STARlong'
     koopa_cp 'STAR' "${dict['prefix']}/bin/STAR"
     koopa_cp 'STARlong' "${dict['prefix']}/bin/STARlong"
+    "${dict['prefix']}/bin/STAR" -h
     return 0
 }
