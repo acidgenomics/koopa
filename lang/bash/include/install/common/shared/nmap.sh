@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Build is currently erroring out without much info on macOS.
+
 main() {
     # """
     # Install nmap.

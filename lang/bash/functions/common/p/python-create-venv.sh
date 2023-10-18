@@ -120,8 +120,8 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        # 2023-10-02.
-        dict['pip_version']='23.2.1'
+        # 2023-10-18.
+        dict['pip_version']='23.3'
         dict['setuptools_version']='68.2.2'
         dict['wheel_version']='0.41.2'
         pip_args=(
