@@ -3,7 +3,7 @@
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-10-13.
+    # @note Updated 2023-10-18.
     #
     # @section apt install:
     #
@@ -54,6 +54,7 @@ END
         'git' \
         'libc-dev' \
         'libgmp-dev' \
+        'libudev-dev' \
         'locales' \
         'lsb-release' \
         'make' \
