@@ -141,7 +141,7 @@ koopa_hisat2_index() {
         > "${dict['splice_sites_file']}"
     index_args+=(
         '-p' "${dict['threads']}"
-        '--exons' "${dict['exons_file']}"
+        '--exon' "${dict['exons_file']}"
         '--seed' "${dict['seed']}"
         '--ss' "${dict['splice_sites_file']}"
         "${dict['genome_fasta_file']}"
