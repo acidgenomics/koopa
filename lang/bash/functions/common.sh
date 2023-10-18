@@ -10330,8 +10330,16 @@ koopa_hisat2_index() {
     local -A app dict
     local -a index_args
     app['hisat2_build']="$(koopa_locate_hisat2_build)"
+    app['hisat2_extract_exons']="$(koopa_locate_hisat2_extract_exons)"
+    app['hisat2_extract_splice_sites']="$( \
+        koopa_locate_hisat2_extract_splice_sites \
+    )"
     koopa_assert_is_executable "${app[@]}"
+    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
+    dict['gtf_file']=''
+    dict['is_tmp_genome_fasta_file']=0
+    dict['is_tmp_gtf_file']=0
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=160
     dict['output_dir']=''
@@ -10347,6 +10355,14 @@ koopa_hisat2_index() {
                 ;;
             '--genome-fasta-file')
                 dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -10370,16 +10386,51 @@ koopa_hisat2_index() {
     then
         koopa_stop "'hisat2-build' requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
-    koopa_assert_is_file "${dict['genome_fasta_file']}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.fa\.gz$' \
-        --string="${dict['genome_fasta_file']}"
+    koopa_assert_is_file \
+        "${dict['genome_fasta_file']}" \
+        "${dict['gtf_file']}"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
+    if koopa_str_detect_regex \
+        --string="${dict['genome_fasta_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        koopa_decompress \
+            "${dict['genome_fasta_file']}" \
+            "${dict['tmp_genome_fasta_file']}"
+    else
+        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+    fi
+    if koopa_str_detect_regex \
+        --string="${dict['gtf_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        dict['is_tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        koopa_decompress \
+            "${dict['gtf_file']}" \
+            "${dict['tmp_gtf_file']}"
+    else
+        dict['tmp_gtf_file']="${dict['gtf_file']}"
+    fi
+    dict['exons_file']="${dict['output_dir']}/exons.tsv"
+    dict['splice_sites_file']="${dict['output_dir']}/splicesites.tsv"
+    "${app['hisat2_extract_exons']}" \
+        "${dict['tmp_gtf_file']}" \
+        > "${dict['exons_file']}"
+    "${app['hisat2_extract_splice_sites']}" \
+        "${dict['tmp_gtf_file']}" \
+        > "${dict['splice_sites_file']}"
     index_args+=(
-        '--seed' "${dict['seed']}"
-        '-f'
         '-p' "${dict['threads']}"
+        '--exons' "${dict['exons_file']}"
+        '--seed' "${dict['seed']}"
+        '--ss' "${dict['splice_sites_file']}"
         "${dict['genome_fasta_file']}"
         "${dict['ht2_base']}"
     )

@@ -30,6 +30,7 @@ koopa_star_index() {
     dict['genome_fasta_file']=''
     # e.g. 'gencode.v39.annotation.gtf.gz'
     dict['gtf_file']=''
+    # FIXME Rework this as 'bool' instead of 'dict'.
     dict['is_tmp_genome_fasta_file']=0
     dict['is_tmp_gtf_file']=0
     dict['mem_gb']="$(koopa_mem_gb)"
