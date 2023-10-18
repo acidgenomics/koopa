@@ -88,7 +88,7 @@ Last-Changed: 2023-10-18
  	echo $(SOURCES)
  	'rm' -f ./Depend.list
  	$(CXX) $(CXXFLAGS_common) -MM $^ >> Depend.list
-@@ -147,7 +147,7 @@
+@@ -133,7 +147,7 @@
  Depend.list: $(SOURCES) parametersDefault.xxd $(HTSLIB_DEP)
  	echo $(SOURCES)
  	'rm' -f ./Depend.list
@@ -170,7 +170,7 @@ Last-Changed: 2023-10-18
 
  #include "IncludeDefine.h"
 -#include SAMTOOLS_BGZF_H
-+#include SAMTOOLS_BGZF_H <htslib/bgzf.h>
++#include <htslib/bgzf.h>
 
  class InOutStreams {
      public:
