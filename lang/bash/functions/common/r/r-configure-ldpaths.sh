@@ -71,10 +71,10 @@ libexec/lib/server}")
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
-        keys=(
+        ! koopa_is_macos && keys+=('bzip2')
+        keys+=(
             # > 'jpeg'
             # > 'libuv'
-            'bzip2'
             'cairo'
             'curl'
             'fontconfig'

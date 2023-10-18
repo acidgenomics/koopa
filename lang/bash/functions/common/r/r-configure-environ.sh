@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-10-18.
     #
     # @section Package library location:
     #
@@ -103,7 +103,7 @@ koopa_r_configure_environ() {
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
-        app['bzip2']="$(koopa_locate_bzip2)"
+        ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
@@ -169,7 +169,8 @@ koopa_r_configure_environ() {
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         # Set the 'PKG_CONFIG_PATH' string.
-        keys=(
+        ! koopa_is_macos && keys+=('bzip2')
+        keys+=(
             'cairo'
             'curl'
             'fontconfig'
@@ -248,6 +249,7 @@ koopa_r_configure_environ() {
             pc_path_arr+=("${sys_pc_path_arr[@]}")
         fi
         conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
+        ! koopa_is_macos && lines+=("R_BZIPCMD=${app['bzip2']}")
         lines+=(
             "EDITOR=${app['vim']}"
             "LN_S=${app['ln']} -s"
@@ -255,7 +257,6 @@ koopa_r_configure_environ() {
             "PAGER=${app['less']}"
             "PKG_CONFIG_PATH=${conf_dict['pkg_config_path']}"
             "R_BROWSER=${app['open']}"
-            "R_BZIPCMD=${app['bzip2']}"
             "R_GZIPCMD=${app['gzip']}"
             "R_PDFVIEWER=${app['open']}"
             "R_PRINTCMD=${app['lpr']}"
