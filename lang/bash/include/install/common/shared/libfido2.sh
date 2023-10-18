@@ -5,6 +5,8 @@
 # -- UDEV_LIBRARIES:
 # -- UDEV_LIBRARY_DIRS:
 
+# FIXME This depeds on systemd for Linux.
+
 main() {
     # """
     # Install libfido2.
@@ -24,10 +26,19 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    cmake_args=(
+    cmake_args+=(
         # Build options --------------------------------------------------------
         '-DBUILD_STATIC_LIBS=OFF'
     )
+    if koopa_is_linux
+    then
+        cmake_args+=(
+            '-DUDEV_INCLUDE_DIRS=/usr/include/x86_64-linux-gnu'
+            '-DUDEV_LIBRARIES=/usr/lib/x86_64-linux-gnu/libudev.so.1'
+            '-DUDEV_LIBRARY_DIRS=/usr/lib/x86_64-linux-gnu'
+            '-DUDEV_RULES_DIR=/usr/lib/udev/rules.d'
+        )
+    fi
     koopa_cmake_build \
         --include-dir='include' \
         --lib-dir='lib' \
