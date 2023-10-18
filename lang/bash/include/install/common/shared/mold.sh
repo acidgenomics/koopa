@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+# FIXME This is now failing on Linux:
+#
+# CMake Error at CMakeLists.txt:178 (find_package):
+#   By not providing "Findmimalloc.cmake" in CMAKE_MODULE_PATH this project has
+#   asked CMake to find a package configuration file provided by "mimalloc",
+#   but CMake did not find one.
+#
+#   Could not find a package configuration file provided by "mimalloc" with any
+#   of the following names:
+#
+#     mimallocConfig.cmake
+#     mimalloc-config.cmake
+#
+#   Add the installation prefix of "mimalloc" to CMAKE_PREFIX_PATH or set
+#   "mimalloc_DIR" to a directory containing one of the above files.  If
+#   "mimalloc" provides a separate development package or SDK, be sure it has
+#   been installed.
+
 main() {
     # """
     # Install mold.
