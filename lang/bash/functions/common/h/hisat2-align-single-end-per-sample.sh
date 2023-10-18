@@ -8,7 +8,7 @@
 koopa_hisat2_align_single_end_per_sample() {
     # """
     # Run HISAT2 aligner on a single-end sample.
-    # @note Updated 2022-04-05.
+    # @note Updated 2023-10-18.
     #
     # @examples
     # > koopa_hisat2_align_single_end_per_sample \
@@ -134,7 +134,7 @@ koopa_hisat2_align_single_end_per_sample() {
         align_args+=("${dict['quality_flag']}")
     fi
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['star']}" "${align_args[@]}"
+    "${app['hisat2']}" "${align_args[@]}"
     # FIXME Convert the SAM file to BAM file here?
     return 0
 }

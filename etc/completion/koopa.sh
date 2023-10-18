@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-10-13.
+    # @note Updated 2023-10-18.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -51,10 +51,11 @@ _koopa_complete() {
                         'ftp'
                         'git'
                         'gpg'
+                        'hisat2'
                         'jekyll'
                         'kallisto'
-                        'rnaeditingindexer'
                         'r'
+                        'rnaeditingindexer'
                         'rsem'
                         'salmon'
                         'sra'
@@ -590,7 +591,7 @@ _koopa_complete() {
                                    _koopa_is_fedora_like
                                 then
                                     args+=('rstudio-server' 'shiny-server')
-                                fi 
+                                fi
                                 if _koopa_is_debian_like
                                 then
                                     args+=('docker' 'r')
@@ -651,6 +652,7 @@ _koopa_complete() {
                             args=('autobump-recipe')
                             ;;
                         'bowtie2' | \
+                        'hisat2' | \
                         'rsem' | \
                         'star')
                             args=('align' 'index')
