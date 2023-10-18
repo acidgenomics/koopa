@@ -66,6 +66,7 @@ koopa_r_configure_makevars() {
         then
             app['gfortran']='/opt/gfortran/bin/gfortran'
         else
+            # FIXME Add support for locating this on macOS.
             app['gfortran']="$(koopa_locate_gfortran --only-system)"
         fi
         app['make']="$(koopa_locate_make)"
@@ -76,142 +77,108 @@ koopa_r_configure_makevars() {
         app['tar']="$(koopa_locate_tar)"
         app['yacc']="$(koopa_locate_yacc)"
         koopa_assert_is_executable "${app[@]}"
-        dict['bzip2']="$(koopa_app_prefix 'bzip2')"
-        dict['gettext']="$(koopa_app_prefix 'gettext')"
-        dict['hdf5']="$(koopa_app_prefix 'hdf5')"
-        dict['libjpeg']="$(koopa_app_prefix 'libjpeg-turbo')"
-        dict['libpng']="$(koopa_app_prefix 'libpng')"
+        koopa_is_macos && dict['gettext']="$(koopa_app_prefix 'gettext')"
         dict['openssl3']="$(koopa_app_prefix 'openssl3')"
-        koopa_add_to_pkg_config_path \
-            "${dict['libjpeg']}/lib/pkgconfig" \
-            "${dict['libpng']}/lib/pkgconfig"
-    fi
-    if [[ "${bool['use_apps']}" -eq 1 ]]
-    then
-        # Custom pkg-config flags here are incompatible for macOS clang with
-        # these packages: fs, httpuv, igraph, nloptr.
-        if koopa_is_linux
-        then
-            # Ensure these values are in sync with Renviron.site file.
-            keys=(
-                # > 'jpeg'
-                # > 'libuv'
-                'cairo'
-                'curl'
-                'fontconfig'
-                'freetype'
-                'fribidi'
-                'gdal'
-                'geos'
-                'glib'
-                'graphviz'
-                'harfbuzz'
-                'icu4c'
-                'imagemagick'
-                'libffi'
-                'libgit2'
-                'libjpeg-turbo'
-                'libpng'
-                'libssh2'
-                'libtiff'
-                'libxml2'
-                'openssl3'
-                'pcre'
-                'pcre2'
-                'pixman'
-                'proj'
-                # > 'python3.12'
-                'readline'
-                'sqlite'
-                'xorg-libice'
-                'xorg-libpthread-stubs'
-                'xorg-libsm'
-                'xorg-libx11'
-                'xorg-libxau'
-                'xorg-libxcb'
-                'xorg-libxdmcp'
-                'xorg-libxext'
-                'xorg-libxrandr'
-                'xorg-libxrender'
-                'xorg-libxt'
-                'xorg-xorgproto'
-                'xz'
-                'zlib'
-                'zstd'
-            )
-            for key in "${keys[@]}"
-            do
-                local prefix
-                prefix="$(koopa_app_prefix "$key")"
-                koopa_assert_is_dir "$prefix"
-                app_pc_path_arr[$key]="$prefix"
-            done
-            for i in "${!app_pc_path_arr[@]}"
-            do
-                case "$i" in
-                    'xorg-xorgproto')
-                        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
+        # Ensure these values are in sync with 'Renviron.site' file.
+        ! koopa_is_macos && keys+=('bzip2')
+        keys+=(
+            'cairo'
+            'curl'
+            'fontconfig'
+            'freetype'
+            'fribidi'
+            'gdal'
+            'geos'
+            'glib'
+            'graphviz'
+            'harfbuzz'
+            'hdf5'
+            'icu4c'
+            'imagemagick'
+            'libffi'
+            'libgit2'
+            'libjpeg-turbo'
+            'libpng'
+            'libssh2'
+            'libtiff'
+            'libxml2'
+            'openssl3'
+            'pcre'
+            'pcre2'
+            'pixman'
+            'proj'
+            'readline'
+            'sqlite'
+            'xorg-libice'
+            'xorg-libpthread-stubs'
+            'xorg-libsm'
+            'xorg-libx11'
+            'xorg-libxau'
+            'xorg-libxcb'
+            'xorg-libxdmcp'
+            'xorg-libxext'
+            'xorg-libxrandr'
+            'xorg-libxrender'
+            'xorg-libxt'
+            'xorg-xorgproto'
+            'xz'
+            'zlib'
+            'zstd'
+        )
+        for key in "${keys[@]}"
+        do
+            local prefix
+            prefix="$(koopa_app_prefix "$key")"
+            koopa_assert_is_dir "$prefix"
+            app_pc_path_arr[$key]="$prefix"
+        done
+        for i in "${!app_pc_path_arr[@]}"
+        do
+            case "$i" in
+                'xorg-xorgproto')
+                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
 share/pkgconfig"
-                        ;;
-                    *)
-                        app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
+                    ;;
+                *)
+                    app_pc_path_arr[$i]="${app_pc_path_arr[$i]}/\
 lib/pkgconfig"
-                        ;;
-                esac
-            done
-            koopa_assert_is_dir "${app_pc_path_arr[@]}"
-            koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
-            pkg_config=(
-                # > 'cairo'
-                # > 'libffi'
-                # > 'libglib-2.0'
-                # > 'libpcre'
-                # > 'pixman-1'
-                # > 'xcb-shm'
-                'fontconfig'
-                'freetype2'
-                'fribidi'
-                'harfbuzz'
-                'icu-i18n'
-                'icu-uc'
-                'libcurl'
-                'libjpeg'
-                'libpcre2-8'
-                'libpng'
-                'libtiff-4'
-                'libxml-2.0'
-                'libzstd'
-                'zlib'
-            )
-            cppflags+=(
-                "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
-            )
-            ldflags+=(
-                "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
-            )
-        fi
-        # NOTE Consider adding 'libiconv' here.
+                    ;;
+            esac
+        done
+        koopa_assert_is_dir "${app_pc_path_arr[@]}"
+        koopa_add_to_pkg_config_path "${app_pc_path_arr[@]}"
+        pkg_config+=(
+            'fontconfig'
+            'freetype2'
+            'fribidi'
+            'harfbuzz'
+            'hdf5'
+            'icu-i18n'
+            'icu-uc'
+            'libcurl'
+            'libjpeg'
+            'libpcre2-8'
+            'libpng'
+            'libtiff-4'
+            'libxml-2.0'
+            'libzstd'
+            'zlib'
+        )
         cppflags+=(
-            "-I${dict['bzip2']}/include"
-            "-I${dict['hdf5']}/include"
-            "-I${dict['libjpeg']}/include"
-            "-I${dict['libpng']}/include"
+            "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
             "-I${dict['openssl3']}/include"
         )
         ldflags+=(
-            "-L${dict['bzip2']}/lib"
-            "-L${dict['hdf5']}/lib"
-            "-L${dict['libjpeg']}/lib"
-            "-L${dict['libpng']}/lib"
+            "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
             "-L${dict['openssl3']}/lib"
         )
         if koopa_is_macos
         then
-            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
             # The new ld linker in Xcode CLT 15 breaks a lot of stuff, so
             # reverting to classic mode here.
+            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
             then
                 ldflags+=('-Wl,-ld_classic')
