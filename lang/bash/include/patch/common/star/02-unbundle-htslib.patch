@@ -1,11 +1,11 @@
 Description: Unbundle htslib
 Author: Michael Steinbaugh <mike@steinbaugh.com>
-Last-Changed: 2023-10-10
+Last-Changed: 2023-10-18
 --- a/source/Makefile
 +++ b/source/Makefile
 @@ -12,12 +12,26 @@
  CXX ?= g++
-
+ 
  # pre-defined flags
 -LDFLAGS_shared := -pthread -Lhtslib -Bstatic -lhts -Bdynamic -lz
 -LDFLAGS_static := -static -static-libgcc -pthread -Lhtslib -lhts -lz
@@ -16,7 +16,7 @@ Last-Changed: 2023-10-10
 +LDFLAGS_Mac :=
 +LDFLAGS_Mac_static := -static-libgcc
  LDFLAGS_gdb := $(LDFLAGS_shared)
-
+ 
 +ifdef SYSTEM_HTSLIB
 +PKG_CONFIG ?= pkg-config
 +HTSLIB_CFLAGS = $(shell $(PKG_CONFIG) --cflags htslib)
@@ -68,15 +68,15 @@ Last-Changed: 2023-10-10
 +	Parameters_readFilesInit.o Parameters_openReadsFiles.o Parameters_closeReadsFiles.o Parameters_readSAMheader.o \
 +	bam_cat.o serviceFuns.o GlobalVariables.o \
  	BAMoutput.o BAMfunctions.o ReadAlign_alignBAM.o BAMbinSortByCoordinate.o signalFromBAM.o bamRemoveDuplicates.o BAMbinSortUnmapped.o
-
+ 
  SOURCES := $(wildcard *.cpp) $(wildcard *.c)
 @@ -105,7 +119,7 @@
-
+ 
  opal/opal.o : opal/opal.cpp opal/opal.h
  	cd opal && \
 -	$(CXX) -c -I./ -std=c++11 $(CPPFLAGS) $(CXXFLAGS) $(CXXFLAGSextra) opal.cpp
 +	$(CXX) -c -I./ -std=c++11 $(CPPFLAGS) $(CXXFLAGS) $(CXXFLAGSextra) $(CXXFLAGS_SIMD) opal.cpp
-
+ 
  .PHONY: clean
  clean:
 @@ -130,7 +144,7 @@
@@ -94,56 +94,101 @@ Last-Changed: 2023-10-10
  STAR$(SFX) : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STAR$(SFX) $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STAR$(SFX) $(OBJECTS) $(LIBS)
-
+ 
  STARstatic$(SFX) : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_main) $(CXXFLAGS)
  STARstatic$(SFX) : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_static) $(LDFLAGS)
  STARstatic$(SFX) : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STAR$(SFX) $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STAR$(SFX) $(OBJECTS) $(LIBS)
-
+ 
  STARlong$(SFX) : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_main) -D'COMPILE_FOR_LONG_READS' $(CXXFLAGS)
  STARlong$(SFX) : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_shared) $(LDFLAGS)
  STARlong$(SFX) : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STARlong$(SFX) $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STARlong$(SFX) $(OBJECTS) $(LIBS)
-
+ 
  STARlongStatic$(SFX) : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_main) -D'COMPILE_FOR_LONG_READS' $(CXXFLAGS)
  STARlongStatic$(SFX) : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_static) $(LDFLAGS)
  STARlongStatic$(SFX) : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STARlong$(SFX) $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STARlong$(SFX) $(OBJECTS) $(LIBS)
-
-
-
+ 
+ 
+ 
  POSIXSHARED : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_main) -DPOSIX_SHARED_MEM $(CXXFLAGS)
  POSIXSHARED : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_shared) $(LDFLAGS)
  POSIXSHARED : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STAR$(SFX) $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STAR$(SFX) $(OBJECTS) $(LIBS)
-
+ 
  gdb : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_gdb) $(CXXFLAGS)
  gdb : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_gdb) $(LDFLAGS)
  gdb : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STAR $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STAR $(OBJECTS) $(LIBS)
-
+ 
  gdb-long : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_gdb) -D'COMPILE_FOR_LONG_READS' $(CXXFLAGS)
  gdb-long : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_gdb) $(LDFLAGS)
  gdb-long : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STARlong $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STARlong $(OBJECTS) $(LIBS)
-
+ 
  STARforMacStatic : CXXFLAGS := $(CXXFLAGSextra) $(CXXFLAGS_main) -D'COMPILE_FOR_MAC' $(CXXFLAGS)
  STARforMacStatic : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_Mac_static) $(LDFLAGS)
  STARforMacStatic : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STAR $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STAR $(OBJECTS) $(LIBS)
-
+ 
  STARlongForMacStatic : CXXFLAGS := -D'COMPILE_FOR_LONG_READS' $(CXXFLAGSextra) $(CXXFLAGS_main) -D'COMPILE_FOR_MAC' $(CXXFLAGS)
  STARlongForMacStatic : LDFLAGS := $(LDFLAGSextra) $(LDFLAGS_Mac_static) $(LDFLAGS)
  STARlongForMacStatic : Depend.list parametersDefault.xxd $(OBJECTS)
 -	$(CXX) -o STARlong $(CXXFLAGS) $(OBJECTS) $(LDFLAGS)
 +	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o STARlong $(OBJECTS) $(LIBS)
+--- a/source/BAMfunctions.cpp
++++ b/source/BAMfunctions.cpp
+@@ -1,5 +1,5 @@
+ #include "BAMfunctions.h"
+-#include "htslib/htslib/kstring.h"
++#include <htslib/kstring.h>
+ 
+ 
+ string bam_cigarString (bam1_t *b) {//output CIGAR string
+
+--- a/source/InOutStreams.h
++++ b/source/InOutStreams.h
+@@ -2,7 +2,7 @@
+ #define INOUTSTREAMS_DEF
+
+ #include "IncludeDefine.h"
+-#include SAMTOOLS_BGZF_H
++#include SAMTOOLS_BGZF_H <htslib/bgzf.h>
+
+ class InOutStreams {
+     public:
+--- a/source/IncludeDefine.h
++++ b/source/IncludeDefine.h
+@@ -30,8 +30,8 @@
+ #define ERROR_OUT string ( __FILE__ ) +":"+ to_string ( (uint) __LINE__ ) +":"+ string ( __FUNCTION__ )
+ 
+ //external libs
+-#define SAMTOOLS_BGZF_H "htslib/htslib/bgzf.h"
+-#define SAMTOOLS_SAM_H  "htslib/htslib/sam.h"
++#define SAMTOOLS_BGZF_H <htslib/bgzf.h>
++#define SAMTOOLS_SAM_H  <htslib/sam.h>
+ 
+ using namespace std;
+ 
+--- a/source/STAR.cpp
++++ b/source/STAR.cpp
+@@ -30,7 +30,7 @@
+ 
+ #include "twoPassRunPass1.h"
+ 
+-#include "htslib/htslib/sam.h"
++#include <htslib/sam.h>
+ #include "parametersDefault.xxd"
+ 
+ void usage(int usageType) {
 --- a/source/bamRemoveDuplicates.cpp
 +++ b/source/bamRemoveDuplicates.cpp
 @@ -1,7 +1,7 @@
@@ -160,14 +205,36 @@ Last-Changed: 2023-10-10
 @@ -52,8 +52,8 @@
  #include <stdlib.h>
  #include <unistd.h>
-
+ 
 -#include "htslib/htslib/bgzf.h"
 -#include "htslib/htslib/sam.h"
 +#include <htslib/bgzf.h>
 +#include <htslib/sam.h>
  #include <cstring>
-
+ 
  #define BUF_SIZE 0x10000
+--- a/source/bam_cat.h
++++ b/source/bam_cat.h
+@@ -1,7 +1,7 @@
+ #ifndef CODE_bam_cat
+ #define CODE_bam_cat
+ 
+-#include "htslib/htslib/sam.h"
++#include <htslib/sam.h>
+ 
+ int bam_cat(int nfn, char * const *fn, const bam_hdr_t *h, const char* outbam);
+ 
+--- a/source/Parameters.cpp
++++ b/source/Parameters.cpp
+@@ -376,7 +376,6 @@
+ 
+     inOut->logMain << "STAR version=" << STAR_VERSION << "\n";
+     inOut->logMain << "STAR compilation time,server,dir=" << COMPILATION_TIME_PLACE << "\n";
+-    inOut->logMain << "STAR git: " << GIT_BRANCH_COMMIT_DIFF << "\n";
+     #ifdef COMPILE_FOR_LONG_READS
+            inOut->logMain << "Compiled for LONG reads" << "\n";
+     #endif
+
 --- a/source/signalFromBAM.h
 +++ b/source/signalFromBAM.h
 @@ -1,6 +1,6 @@
@@ -178,68 +245,3 @@ Last-Changed: 2023-10-10
  #include  <fstream>
  #include <string>
  #include "Stats.h"
---- a/source/InOutStreams.h
-+++ b/source/InOutStreams.h
-@@ -2,7 +2,7 @@
- #define INOUTSTREAMS_DEF
-
- #include "IncludeDefine.h"
--#include SAMTOOLS_BGZF_H
-+#include SAMTOOLS_BGZF_H <htslib/bgzf.h>
-
- class InOutStreams {
-     public:
---- a/source/IncludeDefine.h
-+++ b/source/IncludeDefine.h
-@@ -30,8 +30,8 @@
- #define ERROR_OUT string ( __FILE__ ) +":"+ to_string ( (uint) __LINE__ ) +":"+ string ( __FUNCTION__ )
-
- //external libs
--#define SAMTOOLS_BGZF_H "htslib/htslib/bgzf.h"
--#define SAMTOOLS_SAM_H  "htslib/htslib/sam.h"
-+#define SAMTOOLS_BGZF_H <htslib/bgzf.h>
-+#define SAMTOOLS_SAM_H  <htslib/sam.h>
-
- using namespace std;
-
---- a/source/BAMfunctions.cpp
-+++ b/source/BAMfunctions.cpp
-@@ -1,5 +1,5 @@
- #include "BAMfunctions.h"
--#include "htslib/htslib/kstring.h"
-+#include <htslib/kstring.h>
-
-
- string bam_cigarString (bam1_t *b) {//output CIGAR string
---- a/source/STAR.cpp
-+++ b/source/STAR.cpp
-@@ -30,7 +30,7 @@
-
- #include "twoPassRunPass1.h"
-
--#include "htslib/htslib/sam.h"
-+#include <htslib/sam.h>
- #include "parametersDefault.xxd"
-
- void usage(int usageType) {
---- a/source/bam_cat.h
-+++ b/source/bam_cat.h
-@@ -1,7 +1,7 @@
- #ifndef CODE_bam_cat
- #define CODE_bam_cat
-
--#include "htslib/htslib/sam.h"
-+#include <htslib/sam.h>
-
- int bam_cat(int nfn, char * const *fn, const bam_hdr_t *h, const char* outbam);
-
---- a/source/Parameters.cpp
-+++ b/source/Parameters.cpp
-@@ -376,7 +376,6 @@
-
-     inOut->logMain << "STAR version=" << STAR_VERSION << "\n";
-     inOut->logMain << "STAR compilation time,server,dir=" << COMPILATION_TIME_PLACE << "\n";
--    inOut->logMain << "STAR git: " << GIT_BRANCH_COMMIT_DIFF << "\n";
-     #ifdef COMPILE_FOR_LONG_READS
-            inOut->logMain << "Compiled for LONG reads" << "\n";
-     #endif
