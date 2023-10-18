@@ -6,7 +6,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-10-18.
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
@@ -44,6 +44,7 @@ main() {
         deps+=(
             # Needed for 'gold'.
             'binutils'
+            'zstd' # elfutils
             # OpenMP requires 'gelf.h'.
             'elfutils'
         )
