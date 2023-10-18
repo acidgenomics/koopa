@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't switching the origin correctly to SSH on EC2.
+# git remote set-url origin git@github.com:acidgenomics/koopa.git
+
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
