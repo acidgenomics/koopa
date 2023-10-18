@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME HISAT2 includes 'hisat2_extract_exons.py' that does this.
-# FIXME HISAT2 includes 'hisat2_extract_splice_sites.py' which does this.
 # FIXME Need to include splice site info:
 # > hisat2_extract_splice_sites.py Homo_sapiens.GRCh38.86.gtf > splicesites.tsv
 # > hisat2_extract_exons.py Homo_sapiens.GRCh38.86.gtf > exons.tsv
