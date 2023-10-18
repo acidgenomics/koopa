@@ -17478,7 +17478,7 @@ koopa_locate_hisat2_extract_exons() {
 koopa_locate_hisat2_extract_splice_sites() {
     koopa_locate_app \
         --app-name='hisat2' \
-        --bin-name='hisat2_extract_splite_sites.py' \
+        --bin-name='hisat2_extract_splice_sites.py' \
         "$@"
 }
 
