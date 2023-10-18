@@ -3,7 +3,7 @@
 main() {
     # """
     # Install bcbio-nextgen.
-    # @note Updated 2023-03-27.
+    # @note Updated 2023-10-18.
     #
     # Consider just installing RNA-seq and not variant calling by default,
     # to speed up the installation.
@@ -23,9 +23,11 @@ main() {
     #   - https://github.com/bioconda/bioconda-recipes/issues/13958
     # """
     local -A app dict
-    local -a install_args
-    koopa_activate_app --build-only 'bzip2' 'python3.12'
-    app['python']="$(koopa_locate_python312 --realpath)"
+    local -a build_deps install_args
+    ! koopa_is_macos && build_deps+=('bzip2')
+    build_deps+=('python3.12')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    app['python']="$(koopa_locate_python312)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
