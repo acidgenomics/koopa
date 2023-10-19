@@ -13062,9 +13062,21 @@ koopa_install_libksba() {
         "$@"
 }
 
+koopa_install_liblinear() {
+    koopa_install_app \
+        --name='liblinear' \
+        "$@"
+}
+
 koopa_install_libluv() {
     koopa_install_app \
         --name='libluv' \
+        "$@"
+}
+
+koopa_install_libpcap() {
+    koopa_install_app \
+        --name='libpcap' \
         "$@"
 }
 
@@ -19689,7 +19701,7 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        dict['pip_version']='23.2.1'
+        dict['pip_version']='23.3'
         dict['setuptools_version']='68.2.2'
         dict['wheel_version']='0.41.2'
         pip_args=(
@@ -26856,9 +26868,21 @@ koopa_uninstall_libksba() {
         "$@"
 }
 
+koopa_uninstall_liblinear() {
+    koopa_uninstall_app \
+        --name='liblinear' \
+        "$@"
+}
+
 koopa_uninstall_libluv() {
     koopa_uninstall_app \
         --name='libluv' \
+        "$@"
+}
+
+koopa_uninstall_liblinear() {
+    koopa_uninstall_app \
+        --name='liblinear' \
         "$@"
 }
 
