@@ -3171,7 +3171,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "patch"],
     "date": "2023-10-19",
     "url": ["https://www.csie.ntu.edu.tw/~cjlin/liblinear/"],
     "version": "2.47"
