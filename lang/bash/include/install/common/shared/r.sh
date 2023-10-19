@@ -118,6 +118,7 @@ main() {
     app['yacc']="$(koopa_locate_yacc)"
     app['zip']="$(koopa_locate_zip)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_stop 'FIXME'
     app['lpr']="$(koopa_locate_lpr --allow-missing)"
     app['open']="$(koopa_locate_open --allow-missing)"
     dict['jobs']="$(koopa_cpu_count)"
