@@ -3757,7 +3757,7 @@
     "build_dependencies": ["cmake", "make"],
     "date": "2023-10-18",
     "default": false,
-    "dependencies": ["tbb", "zlib", "zstd"],
+    "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
     "version": "2.3.0"
   },
