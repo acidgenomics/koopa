@@ -4157,9 +4157,9 @@
   },
   "ont-vbz-compression": {
     "build_dependencies": ["cmake"],
-    "date": "2023-03-29",
+    "date": "2023-10-19",
     "default": false,
-    "dependencies": ["hdf5", "zstd"],
+    "dependencies": ["hdf5", "zlib", "zstd"],
     "url": ["https://github.com/nanoporetech/vbz_compression/"],
     "version": "1.0.2"
   },
