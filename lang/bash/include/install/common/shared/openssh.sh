@@ -45,11 +45,11 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
+        # > '--with-audit=bsm'
         "--mandir=${dict['prefix']}/share/man"
         "--prefix=${dict['prefix']}"
         "--sbindir=${dict['prefix']}/bin"
         "--sysconfdir=${dict['prefix']}/etc/ssh"
-        '--with-audit=bsm'
         "--with-kerberos5=${dict['krb5']}"
         "--with-ldns=${dict['ldns']}"
         '--with-md5-passwords'
