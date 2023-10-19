@@ -22,7 +22,7 @@ main() {
     local -a build_deps conf_args deps
     build_deps+=('bison' 'flex')
     deps+=(
-        'liblinear' # FIXME Need to add support.
+        'liblinear'
         'libpcap' # FIXME Need to add support.
         'libssh2'
         'lua'
