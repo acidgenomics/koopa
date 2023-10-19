@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-19.
     #
     # @section Compiler settings:
     #
@@ -118,7 +118,6 @@ main() {
     app['yacc']="$(koopa_locate_yacc)"
     app['zip']="$(koopa_locate_zip)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_stop 'FIXME'
     app['lpr']="$(koopa_locate_lpr --allow-missing)"
     app['open']="$(koopa_locate_open --allow-missing)"
     dict['jobs']="$(koopa_cpu_count)"
@@ -302,7 +301,7 @@ main() {
         bool['r_koopa']=0
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
-        koopa_assert_is_executable "${app[@]}"
+        koopa_assert_is_executable "${app['svn']}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
