@@ -40,15 +40,16 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
-        '--disable-universal'
+        # Recommended options from Homebrew:
+        # > '--disable-universal'
+        # > '--without-nmap-update'
+        # > '--without-zenmap'
         "--prefix=${dict['prefix']}"
         "--with-liblua=${dict['liblua']}"
         "--with-libpcap=${dict['libpcap']}"
         "--with-libpcre=${dict['pcre']}"
         "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
-        '--without-nmap-update'
-        '--without-zenmap'
     )
     dict['url']="https://nmap.org/dist/nmap-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
