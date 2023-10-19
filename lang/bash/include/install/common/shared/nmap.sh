@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Build is currently erroring out without much info on macOS.
+# FIXME Need to require: liblinear, libssh2.
+# FIXME Need to require lua.
 
 main() {
     # """
     # Install nmap.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-10-19.
     #
     # May need to include libcap and liblinear here.
     #
@@ -18,25 +19,35 @@ main() {
     #   https://github.com/nmap/nmap/tree/master/liblua
     # """
     local -A dict
-    local -a conf_args deps
-    koopa_activate_app --build-only 'bison' 'flex'
-    deps=('zlib' 'openssl3' 'pcre')
+    local -a build_deps conf_args deps
+    build_deps+=('bison' 'flex')
+    deps+=(
+        'liblinear' # FIXME Need to add support.
+        'libpcap' # FIXME Need to add support.
+        'libssh2'
+        'lua'
+        'openssl3'
+        'pcre'
+        'zlib'
+    )
+    koopa_activate_app --build-only "${deps[@]}"
     koopa_activate_app "${deps[@]}"
+    dict['liblua']="$(koopa_app_prefix 'lua')"
+    dict['libpcap']="$(koopa_app_prefix 'libpcap')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['pcre']="$(koopa_app_prefix 'pcre')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
+        '--disable-universal'
         "--prefix=${dict['prefix']}"
-        '--with-libdnet=included'
-        '--with-liblinear=included'
-        '--with-liblua=included'
+        "--with-liblua=${dict['liblua']}"
+        "--with-libpcap=${dict['libpcap']}"
         "--with-libpcre=${dict['pcre']}"
-        '--with-libpcre=included'
-        '--with-libssh2=included'
         "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
+        '--without-nmap-update'
         '--without-zenmap'
     )
     dict['url']="https://nmap.org/dist/nmap-${dict['version']}.tar.bz2"
