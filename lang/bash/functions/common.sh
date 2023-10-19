@@ -750,6 +750,18 @@ koopa_app_version() {
     return 0
 }
 
+koopa_append_cflags() {
+    local str
+    koopa_assert_has_args "$#"
+    CFLAGS="${CFLAGS:-}"
+    for str in "$@"
+    do
+        CFLAGS="${CFLAGS} ${str}"
+    done
+    export CFLAGS
+    return 0
+}
+
 koopa_append_cppflags() {
     local str
     koopa_assert_has_args "$#"
