@@ -4019,9 +4019,17 @@
     },
     "bin": ["nmap"],
     "build_dependencies": ["bison", "flex", "make"],
-    "date": "2023-05-30",
+    "date": "2023-10-19",
     "default": false,
-    "dependencies": ["openssl3", "pcre", "zlib"],
+    "dependencies": [
+      "liblinear",
+      "libpcap",
+      "libssh2",
+      "lua",
+      "openssl3",
+      "pcre",
+      "zlib"
+    ],
     "url": "https://nmap.org/",
     "version": "7.94"
   },
