@@ -15,8 +15,8 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://github.com/treesitter/treesitter/archive/\
-v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/tree-sitter/tree-sitter/archive/refs/\
+tags/v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
