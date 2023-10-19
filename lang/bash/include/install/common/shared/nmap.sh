@@ -23,7 +23,7 @@ main() {
     build_deps+=('bison' 'flex')
     deps+=(
         'liblinear'
-        'libpcap' # FIXME Need to add support.
+        'libpcap'
         'libssh2'
         'lua'
         'openssl3'
