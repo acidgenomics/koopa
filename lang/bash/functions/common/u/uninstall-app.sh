@@ -3,10 +3,13 @@
 # FIXME Don't allow the user to uninstall an app that is required for another
 # app. Need to check with our Python JSON parser first.
 
+# e.g. read this into an array and error if not empty.
+# koopa_app_reverse_dependencies 'python3.11'
+
 koopa_uninstall_app() {
     # """
     # Uninstall an application.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-10-19.
     # """
     local -A bool dict
     local -a bin_arr man1_arr
