@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Oxford Nanopore Technologies VBZ compression.
-    # @note Updated 2023-04-04.
+    # @note Updated 2023-10-19.
     #
     # @seealso
     # - https://github.com/nanoporetech/vbz_compression
@@ -12,7 +12,7 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args
-    koopa_activate_app 'zstd' 'hdf5'
+    koopa_activate_app 'zlib' 'zstd' 'hdf5'
     dict['hdf5']="$(koopa_app_prefix 'hdf5')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
