@@ -45,7 +45,6 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args=(
-        # > '--with-audit=bsm'
         "--mandir=${dict['prefix']}/share/man"
         "--prefix=${dict['prefix']}"
         "--sbindir=${dict['prefix']}/bin"
@@ -53,7 +52,6 @@ main() {
         "--with-kerberos5=${dict['krb5']}"
         "--with-ldns=${dict['ldns']}"
         '--with-md5-passwords'
-        '--with-pam'
         "--with-pid-dir=${dict['prefix']}/var/run"
         '--with-security-key-builtin'
         "--with-ssl-dir=${dict['openssl']}"
@@ -64,6 +62,8 @@ main() {
     if koopa_is_macos
     then
         conf_args+=(
+            # > '--with-audit=bsm'
+            # > '--with-pam'
             "--with-libedit=${dict['libedit']}"
             '--with-keychain=apple'
             '--with-privsep-path=/var/empty'
