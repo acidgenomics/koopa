@@ -1467,13 +1467,13 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-12",
+    "date": "2023-10-19",
     "default": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.14.2"
+    "version": "0.15.0"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -5229,9 +5229,9 @@
   "screen": {
     "bin": ["screen"],
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-10-19",
     "default": false,
-    "dependencies": ["ncurses"],
+    "dependencies": ["libxcrypt", "ncurses"],
     "man1": ["screen.1"],
     "url": [
       "https://www.gnu.org/software/screen",

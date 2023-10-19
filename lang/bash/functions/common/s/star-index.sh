@@ -114,10 +114,10 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         dict['tmp_gtf_file']="${dict['gtf_file']}"
     fi
     # Consider erroring instead of merely warning on ALT contig detection,
-    # similar to bcbio-nextgen.
+    # similar to bcbio-nextgen. Currently applies to RefSeq FASTA.
     if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
     then
-        koopa_warn "'${dict['genome_fasta_file']}' contains ALT contigs."
+        koopa_warn "ALT contigs detected in '${dict['genome_fasta_file']}'."
     fi
     # Refer to '--limitGenomeGenerateRAM' for memory optimization.
     index_args+=(
