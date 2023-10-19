@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider taking sqlite out as a dependency here, to make build lighter.
+
 main() {
     # """
     # Install Python.
