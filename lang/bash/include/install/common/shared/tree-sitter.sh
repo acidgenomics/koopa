@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE Consider adding support for node and rust in a future update.
-
 main() {
     # """
     # Install tree-sitter.
-    # @note Updated 2023-06-02.
+    # @note Updated 2023-10-19.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
@@ -17,9 +15,9 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://github.com/treesitter/treesitter/archive/\
-v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}" "${dict['file']}"
+    dict['url']="https://github.com/tree-sitter/tree-sitter/archive/refs/\
+tags/v${dict['version']}.tar.gz"
+    koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
