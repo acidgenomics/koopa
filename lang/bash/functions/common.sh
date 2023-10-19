@@ -13288,6 +13288,12 @@ koopa_install_miller() {
         "$@"
 }
 
+koopa_install_mimalloc() {
+    koopa_install_app \
+        --name='mimalloc' \
+        "$@"
+}
+
 koopa_install_minimap2() {
     koopa_install_app \
         --name='minimap2' \
@@ -27093,6 +27099,12 @@ koopa_uninstall_meson() {
 koopa_uninstall_miller() {
     koopa_uninstall_app \
         --name='miller' \
+        "$@"
+}
+
+koopa_uninstall_mimalloc() {
+    koopa_uninstall_app \
+        --name='mimalloc' \
         "$@"
 }
 
