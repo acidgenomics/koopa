@@ -25,14 +25,13 @@ main() {
         'liblinear'
         'libpcap'
         'libssh2'
-        'lua'
         'openssl3'
         'pcre'
         'zlib'
     )
+    koopa_is_macos && deps+=('lua')
     koopa_activate_app --build-only "${deps[@]}"
     koopa_activate_app "${deps[@]}"
-    dict['liblua']="$(koopa_app_prefix 'lua')"
     dict['libpcap']="$(koopa_app_prefix 'libpcap')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['pcre']="$(koopa_app_prefix 'pcre')"
@@ -45,12 +44,18 @@ main() {
         # > '--without-nmap-update'
         # > '--without-zenmap'
         "--prefix=${dict['prefix']}"
-        "--with-liblua=${dict['liblua']}"
         "--with-libpcap=${dict['libpcap']}"
         "--with-libpcre=${dict['pcre']}"
         "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
     )
+    if koopa_is_macos
+    then
+        dict['liblua']="$(koopa_app_prefix 'lua')"
+        conf_args+=("--with-liblua=${dict['liblua']}")
+    else
+        conf_args+=('--with-liblua=included')
+    fi
     dict['url']="https://nmap.org/dist/nmap-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
