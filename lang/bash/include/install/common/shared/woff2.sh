@@ -29,8 +29,9 @@ v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
-    koopa_cp \
-        --target-directory="${dict['prefix']}/bin" \
-        'builddir'*/'woff2_'*
+    # FIXME Need to rethink this.
+    # > koopa_cp \
+    # >     --target-directory="${dict['prefix']}/bin" \
+    # >     'builddir'*/'woff2_'*
     return 0
 }
