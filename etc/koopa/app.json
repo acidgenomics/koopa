@@ -4736,8 +4736,8 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-10",
-    "default": true,
+    "date": "2023-10-19",
+    "default": false,
     "dependencies": [
       "autoconf",
       "automake",
@@ -4927,7 +4927,7 @@
     "bin": ["rclone"],
     "build_dependencies": ["go"],
     "date": "2023-10-19",
-    "default": true,
+    "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
     "version": "1.64.2"
@@ -5161,12 +5161,13 @@
       "noarch": [],
       "macos-arm64": ["ldc", "make", "python3.12"]
     },
-    "date": "2023-08-21",
+    "date": "2023-10-19",
     "default": false,
     "dependencies": {
-      "noarch": "conda",
+      "noarch": ["conda"],
       "macos-arm64": ["bzip2", "lz4", "xz", "zlib"]
     },
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5177,7 +5178,7 @@
       "https://github.com/biod/sambamba/",
       "https://bioconda.github.io/recipes/sambamba/README.html"
     ],
-    "version": "1.0.1"
+    "version": "1.0"
   },
   "samtools": {
     "bin": ["samtools"],
@@ -5188,7 +5189,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": {
-      "noarch": "conda",
+      "noarch": ["conda"],
       "macos-arm64": ["htslib", "ncurses", "zlib"]
     },
     "supported": {
@@ -5205,9 +5206,9 @@
   },
   "scalene": {
     "bin": ["scalene"],
-    "date": "2023-10-16",
+    "date": "2023-10-19",
     "default": false,
-    "dependencies": ["python3.12"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
