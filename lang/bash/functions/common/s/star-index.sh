@@ -117,7 +117,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     # similar to bcbio-nextgen.
     if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
     then
-        koopa_warn "'${dict['genome_fasta_file']}' contains ALT contigs."
+        koopa_warn "ALT contigs detected in '${dict['genome_fasta_file']}'."
     fi
     # Refer to '--limitGenomeGenerateRAM' for memory optimization.
     index_args+=(
