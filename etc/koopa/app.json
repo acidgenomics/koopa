@@ -5206,9 +5206,9 @@
   },
   "scalene": {
     "bin": ["scalene"],
-    "date": "2023-10-16",
+    "date": "2023-10-19",
     "default": false,
-    "dependencies": ["python3.12"],
+    "dependencies": ["python3.11"],
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
