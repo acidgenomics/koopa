@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to require: liblinear, libssh2.
-# FIXME Need to require lua.
-
 main() {
     # """
     # Install nmap.
@@ -17,6 +14,8 @@ main() {
     # - https://git.alpinelinux.org/aports/tree/main/nmap/APKBUILD
     # - Check supported Lua version at:
     #   https://github.com/nmap/nmap/tree/master/liblua
+    # - Regarding Lua dependency issue on Linux:
+    #   https://seclists.org/nmap-dev/2016/q1/268
     # """
     local -A dict
     local -a build_deps conf_args deps
