@@ -290,6 +290,7 @@ _koopa_complete() {
                         'mdcat'
                         'meson'
                         'miller'
+                        'mimalloc'
                         'minimap2'
                         'misopy'
                         'mold'

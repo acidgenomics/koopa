@@ -3173,6 +3173,7 @@
     },
     "build_dependencies": ["make", "patch"],
     "date": "2023-10-19",
+    "default": false,
     "url": ["https://www.csie.ntu.edu.tw/~cjlin/liblinear/"],
     "version": "2.47"
   },
@@ -3194,6 +3195,7 @@
     },
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
     "date": "2023-10-19",
+    "default": false,
     "url": ["https://www.tcpdump.org/"],
     "version": "1.10.4"
   },
@@ -3710,6 +3712,16 @@
       "https://github.com/johnkerl/miller/"
     ],
     "version": "6.9.0"
+  },
+  "mimalloc": {
+    "aliases": {
+      "homebrew": true
+    },
+    "build_dependencies": ["cmake", "pkg-config"],
+    "date": "2023-10-19",
+    "default": false,
+    "url": ["https://github.com/microsoft/mimalloc"],
+    "version": "2.1.2"
   },
   "minimap2": {
     "bin": ["minimap2"],
