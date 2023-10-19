@@ -4882,11 +4882,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2023-10-17",
+    "date": "2023-10-19",
     "default": true,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.64.1"
+    "version": "1.64.2"
   },
   "readline": {
     "aliases": {
