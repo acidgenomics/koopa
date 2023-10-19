@@ -3,7 +3,7 @@
 main() {
     # """
     # Install screen.
-    # @note Updated 2023-05-24.
+    # @note Updated 2023-10-19.
     #
     # Currently fails to build on macOS using system clang.
     #
@@ -15,6 +15,7 @@ main() {
     local -A dict
     local -a conf_args
     koopa_activate_app --build-only 'autoconf' 'automake'
+    koopa_activate_app 'libxcrypt' 'ncurses'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="$(koopa_gnu_mirror_url)/screen/\
@@ -22,21 +23,19 @@ screen-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    CFLAGS="${CFLAGS:-}"
     if koopa_is_macos
     then
         # Fix error: dereferencing pointer to incomplete type 'struct utmp'.
-        CFLAGS="${CFLAGS:-} -include utmp.h"
+        koopa_append_cflags '-include utmp.h'
         # Fix for Xcode 12 build errors.
         # https://savannah.gnu.org/bugs/index.php?59465
-        CFLAGS="${CFLAGS:-} -Wno-implicit-function-declaration"
+        koopa_append_cflags '-Wno-implicit-function-declaration'
     fi
-    export CFLAGS
     conf_args=(
+        # > '--enable-colors256'
+        # > '--enable-pam'
         # > '--enable-rxvt_osc'
         # > '--enable-telnet'
-        '--enable-pam'
-        '--enable-colors256'
         "--prefix=${dict['prefix']}"
     )
     ./autogen.sh

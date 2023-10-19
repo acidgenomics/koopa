@@ -15,8 +15,6 @@ main() {
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'gettext' 'ncurses' 'pcre2'
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['cxx']="$(koopa_locate_cxx --only-system)"
     app['msgfmt']="$(koopa_locate_msgfmt --realpath)"
     app['msgmerge']="$(koopa_locate_msgmerge --realpath)"
     koopa_assert_is_executable "${app[@]}"
@@ -73,8 +71,6 @@ libpcre2-32.${dict['shared_ext']}"
     then
         cmake_args+=('-DMAC_CODESIGN_ID=OFF')
     fi
-    export CC="${app['cc']}"
-    export CXX="${app['cxx']}"
     dict['url']="https://github.com/fish-shell/fish-shell/releases/download/\
 ${dict['version']}/fish-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"

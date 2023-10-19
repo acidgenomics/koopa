@@ -750,6 +750,18 @@ koopa_app_version() {
     return 0
 }
 
+koopa_append_cflags() {
+    local str
+    koopa_assert_has_args "$#"
+    CFLAGS="${CFLAGS:-}"
+    for str in "$@"
+    do
+        CFLAGS="${CFLAGS} ${str}"
+    done
+    export CFLAGS
+    return 0
+}
+
 koopa_append_cppflags() {
     local str
     koopa_assert_has_args "$#"
@@ -24232,7 +24244,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
     then
-        koopa_warn "'${dict['genome_fasta_file']}' contains ALT contigs."
+        koopa_warn "ALT contigs detected in '${dict['genome_fasta_file']}'."
     fi
     index_args+=(
         '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
