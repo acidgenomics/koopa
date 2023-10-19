@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this build error on Ubuntu 22:
+# checking for el_init in -ledit... no
+# configure: error: libedit not found
+
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-08-31.
+    # @note Updated 2023-10-19.
     #
     # @section Privilege separation:
     #
@@ -20,8 +24,8 @@ main() {
     # """
     local -A dict
     local -a build_deps conf_args deps
-    build_deps=('pkg-config')
-    deps=(
+    build_deps+=('pkg-config')
+    deps+=(
         'zlib'
         'openssl3'
         'ldns'
@@ -45,12 +49,9 @@ main() {
         "--prefix=${dict['prefix']}"
         "--sbindir=${dict['prefix']}/bin"
         "--sysconfdir=${dict['prefix']}/etc/ssh"
-        '--with-audit=bsm'
         "--with-kerberos5=${dict['krb5']}"
         "--with-ldns=${dict['ldns']}"
-        "--with-libedit=${dict['libedit']}"
         '--with-md5-passwords'
-        '--with-pam'
         "--with-pid-dir=${dict['prefix']}/var/run"
         '--with-security-key-builtin'
         "--with-ssl-dir=${dict['openssl']}"
@@ -61,13 +62,19 @@ main() {
     if koopa_is_macos
     then
         conf_args+=(
+            # > '--with-audit=bsm'
+            # > '--with-pam'
+            "--with-libedit=${dict['libedit']}"
             '--with-keychain=apple'
             '--with-privsep-path=/var/empty'
         )
     fi
     if koopa_is_linux
     then
-        conf_args+=("--with-privsep-path=${dict['prefix']}/var/lib/sshd")
+        conf_args+=(
+            '--with-libedit'
+            "--with-privsep-path=${dict['prefix']}/var/lib/sshd"
+        )
     fi
     dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
 portable/openssh-${dict['version']}.tar.gz"

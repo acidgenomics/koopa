@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2023-05-18.
+    # @note Updated 2023-10-19.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -102,6 +102,7 @@ __koopa_activate_koopa() {
     fi
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \
+        '/usr/local/sbin' \
         '/usr/local/bin' \
         "$(_koopa_xdg_local_home)/bin" \
         "$(_koopa_scripts_private_prefix)/bin" \

@@ -13992,10 +13992,10 @@ koopa_install_python_package() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
+    dict['egg_name']=''
     dict['locate_python']='koopa_locate_python312'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['pip_name']=''
-    dict['pkg_name']=''
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_maj_ver']=''
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -14003,20 +14003,20 @@ koopa_install_python_package() {
     while (("$#"))
     do
         case "$1" in
+            '--egg-name='*)
+                dict['egg_name']="${1#*=}"
+                shift 1
+                ;;
+            '--egg-name')
+                dict['egg_name']="${2:?}"
+                shift 2
+                ;;
             '--extra-package='*)
                 extra_pkgs+=("${1#*=}")
                 shift 1
                 ;;
             '--extra-packages')
                 extra_pkgs+=("${2:?}")
-                shift 2
-                ;;
-            '--package-name='*)
-                dict['pkg_name']="${1#*=}"
-                shift 1
-                ;;
-            '--package-name')
-                dict['pkg_name']="${2:?}"
                 shift 2
                 ;;
             '--pip-name='*)
@@ -14060,11 +14060,11 @@ koopa_install_python_package() {
                 ;;
         esac
     done
-    [[ -z "${dict['pkg_name']}" ]] && dict['pkg_name']="${dict['name']}"
-    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['pkg_name']}"
+    [[ -z "${dict['egg_name']}" ]] && dict['egg_name']="${dict['name']}"
+    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['egg_name']}"
     koopa_assert_is_set \
+        '--egg-name' "${dict['egg_name']}" \
         '--name' "${dict['name']}" \
-        '--package-name' "${dict['pkg_name']}" \
         '--pip-name' "${dict['pip_name']}" \
         '--prefix' "${dict['prefix']}" \
         '--version' "${dict['version']}"
@@ -14104,7 +14104,7 @@ koopa_install_python_package() {
     koopa_python_create_venv "${venv_args[@]}"
     dict['record_file']="${dict['libexec']}/lib/\
 python${dict['py_maj_min_ver']}/site-packages/\
-${dict['pkg_name']}-${dict['version']}.dist-info/RECORD"
+${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
     koopa_assert_is_file "${dict['record_file']}"
     readarray -t bin_names <<< "$( \
         koopa_grep \
