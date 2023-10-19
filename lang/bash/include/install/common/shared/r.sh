@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-19.
     #
     # @section Compiler settings:
     #
@@ -301,7 +301,7 @@ main() {
         bool['r_koopa']=0
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
-        koopa_assert_is_executable "${app[@]}"
+        koopa_assert_is_executable "${app['svn']}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
