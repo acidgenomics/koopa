@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for pushing to S3 as a tarball.
+
 koopa_bowtie2_index() {
     # """
     # Generate bowtie2 index.

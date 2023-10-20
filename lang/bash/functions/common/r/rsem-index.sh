@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for pushing to S3 as a tarball.
+
 koopa_rsem_index() {
     # """
     # Create a genome index for RSEM aligner.
