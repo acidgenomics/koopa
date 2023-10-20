@@ -7326,10 +7326,8 @@ koopa_extract() {
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
-    dict['tmpdir']="$( \
-        koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
-.koopa-extract-$(koopa_random_string)" \
-    )"
+    dict['tmpdir']="$(koopa_parent_dir "${dict['file']}")/$(koopa_tmp_string)"
+    dict['tmpdir']="$(koopa_init_dir "${dict['tmpdir']}")"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
     case "${dict['match']}" in
@@ -25492,7 +25490,7 @@ koopa_tex_version() {
 }
 
 koopa_tmp_dir_in_wd() {
-    koopa_init_dir "tmp-koopa-$(koopa_random_string)"
+    koopa_init_dir "$(koopa_tmp_string)"
     return 0
 }
 
@@ -25503,6 +25501,15 @@ koopa_tmp_dir() {
     koopa_assert_is_dir "$x"
     x="$(koopa_realpath "$x")"
     koopa_print "$x"
+    return 0
+}
+
+koopa_tmp_file_in_wd() {
+    local file
+    file="$(koopa_tmp_string)"
+    koopa_touch "$file"
+    koopa_assert_is_file "$file"
+    koopa_realpath "$file"
     return 0
 }
 
@@ -25519,6 +25526,11 @@ koopa_tmp_file() {
 koopa_tmp_log_file() {
     koopa_assert_has_no_args "$#"
     koopa_tmp_file
+    return 0
+}
+
+koopa_tmp_string() {
+    koopa_print ".koopa-tmp-$(koopa_random_string)"
     return 0
 }
 
