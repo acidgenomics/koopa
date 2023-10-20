@@ -4392,7 +4392,7 @@ koopa_cli_app() {
                     ;;
                 'quant')
                     case "${3:-}" in
-                        'paired-end')
+                        'bam')
                             dict['key']="${1:?}-${2:?}-${3:?}"
                             shift 3
                             ;;
@@ -22247,28 +22247,23 @@ koopa_rsem_index() {
 
 koopa_rsem_quant_paired_end_per_sample() {
     local -A app dict
-    local -a align_args
+    local -a quant_args
     app['rsem_calculate_expression']="$(koopa_locate_rsem_calculate_expression)"
     koopa_assert_is_executable "${app[@]}"
+    dict['bam_file']=''
     dict['lib_type']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
-            '--fastq-r1-file='*)
-                dict['fastq_r1_file']="${1#*=}"
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
                 shift 1
                 ;;
-            '--fastq-r1-file')
-                dict['fastq_r1_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-file='*)
-                dict['fastq_r2_file']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-file')
-                dict['fastq_r2_file']="${2:?}"
+            '--bam-file')
+                dict['bam_file']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -22301,10 +22296,8 @@ koopa_rsem_quant_paired_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--bam-file' "${dict['bam_file']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
@@ -22313,42 +22306,48 @@ koopa_rsem_quant_paired_end_per_sample() {
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
+        koopa_stop "RSEM quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    dict['bam_bn']="$(koopa_basename "${dict['bam_file']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
     if [[ -n "${dict['lib_type']}" ]]
     then
         dict['lib_type']="$( \
             koopa_rsem_fastq_library_type "${dict['lib_type']}" \
         )"
-        align_args+=('--strandedness' "${dict['lib_type']}")
+        quant_args+=('--strandedness' "${dict['lib_type']}")
     fi
-    align_args+=(
+    quant_args+=(
         '--bam'
         '--estimate-rspd'
         '--paired-end'
         '--no-bam-output'
         '--num-threads' "${dict['threads']}"
-        "${dict['index_dir']}" # FIXME
-        "${dict['output_dir']}" # FIXME
+        "${dict['index_dir']}"
+        "${dict['bam_file']}"
     )
+    koopa_dl 'Quant args' "${quant_args[*]}"
+    "${app['rsem_calculate_expression']}" "${quant_args[@]}"
     return 0
 }
 
-koopa_rsem_quant_paired_end() {
+koopa_rsem_quant_bam() {
     local -A app bool dict
-    local -a fastq_r1_files
-    local fastq_r1_file
+    local -a bam_files
+    local bam_file
     koopa_assert_has_args "$#"
     bool['aws_s3_output_dir']=0
     bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    dict['fastq_dir']=''
-    dict['fastq_r1_tail']=''
-    dict['fastq_r2_tail']=''
+    dict['bam_dir']=''
     dict['index_dir']=''
-    dict['lib_type']='A'
+    dict['lib_type']=''
     dict['output_dir']=''
-    dict['salmon_index_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -22360,28 +22359,12 @@ koopa_rsem_quant_paired_end() {
                 dict['aws_profile']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-dir='*)
-                dict['fastq_dir']="${1#*=}"
+            '--bam-dir='*)
+                dict['bam_dir']="${1#*=}"
                 shift 1
                 ;;
-            '--fastq-dir')
-                dict['fastq_dir']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
+            '--bam-dir')
+                dict['bam_dir']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -22408,36 +22391,17 @@ koopa_rsem_quant_paired_end() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
-            '--salmon-index-dir='*)
-                dict['salmon_index_dir']="${1#*=}"
-                shift 1
-                ;;
-            '--salmon-index-dir')
-                dict['salmon_index_dir']="${2:?}"
-                shift 2
-                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
     koopa_assert_is_set \
-        '--fastq-dir' "${dict['fastq_dir']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
-        '--fastq-r2-tail' "${dict['fastq_r1_tail']}" \
+        '--bam-dir' "${dict['bam_dir']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
-    if [[ "${dict['lib_type']}" == 'A' ]]
-    then
-        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
-        koopa_assert_is_dir "${dict['salmon_index_dir']}"
-        dict['salmon_index_dir']="$( \
-            koopa_realpath "${dict['salmon_index_dir']}" \
-        )"
-    fi
-    koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
+    dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
@@ -22456,61 +22420,43 @@ koopa_rsem_quant_paired_end() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running RSEM quant.'
     koopa_dl \
-        'Mode' 'paired-end' \
+        'BAM dir' "${dict['bam_dir']}" \
         'Index dir' "${dict['index_dir']}" \
-        'FASTQ dir' "${dict['fastq_dir']}" \
-        'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
-        'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
     if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi
-    readarray -t fastq_r1_files <<< "$( \
+    readarray -t bam_files <<< "$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern="*${dict['fastq_r1_tail']}" \
-            --prefix="${dict['fastq_dir']}" \
+            --pattern="*.bam" \
+            --prefix="${dict['bam_dir']}" \
             --sort \
     )"
-    if koopa_is_array_empty "${fastq_r1_files[@]:-}"
+    if koopa_is_array_empty "${bam_files[@]:-}"
     then
-        koopa_stop "No FASTQs ending with '${dict['fastq_r1_tail']}'."
+        koopa_stop "No BAM files detected in '${dict['bam_dir']}'."
     fi
-    koopa_assert_is_file "${fastq_r1_files[@]}"
+    koopa_assert_is_file "${bam_files[@]}"
     koopa_alert_info "$(koopa_ngettext \
-        --num="${#fastq_r1_files[@]}" \
+        --num="${#bam_files[@]}" \
         --msg1='sample' \
         --msg2='samples' \
         --suffix=' detected.' \
     )"
-    for fastq_r1_file in "${fastq_r1_files[@]}"
+    for bam_file in "${bam_files[@]}"
     do
         local -A dict2
-        dict2['fastq_r1_file']="$fastq_r1_file"
-        dict2['fastq_r2_file']="$( \
-            koopa_sub \
-                --pattern="${dict['fastq_r1_tail']}\$" \
-                --regex \
-                --replacement="${dict['fastq_r2_tail']}" \
-                "${dict2['fastq_r1_file']}" \
-        )"
-        dict2['sample_id']="$( \
-            koopa_sub \
-                --pattern="${dict['fastq_r1_tail']}\$" \
-                --regex \
-                --replacement='' \
-                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
-        )"
+        dict2['bam_file']="$bam_file"
+        dict2['sample_id']="$(koopa_basename_sans_ext "${dict2['bam_file']}")"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
-        koopa_rsem_quant_paired_end_per_sample \
-            --fastq-r1-file="${dict2['fastq_r1_file']}" \
-            --fastq-r2-file="${dict2['fastq_r2_file']}" \
+        koopa_rsem_quant_bam_per_sample \
+            --bam-file="${dict2['bam_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict2['output_dir']}" \
-            --salmon-index-dir="${dict['salmon_index_dir']}"
+            --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
             dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\

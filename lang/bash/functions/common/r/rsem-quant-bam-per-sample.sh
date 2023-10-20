@@ -23,29 +23,25 @@ koopa_rsem_quant_paired_end_per_sample() {
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/rsem.py
     # """
     local -A app dict
-    local -a align_args
+    local -a quant_args
     app['rsem_calculate_expression']="$(koopa_locate_rsem_calculate_expression)"
     koopa_assert_is_executable "${app[@]}"
+    # e.g. 'sample1.bam'.
+    dict['bam_file']=''
     dict['lib_type']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--fastq-r1-file='*)
-                dict['fastq_r1_file']="${1#*=}"
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
                 shift 1
                 ;;
-            '--fastq-r1-file')
-                dict['fastq_r1_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-file='*)
-                dict['fastq_r2_file']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-file')
-                dict['fastq_r2_file']="${2:?}"
+            '--bam-file')
+                dict['bam_file']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -79,10 +75,8 @@ koopa_rsem_quant_paired_end_per_sample() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--bam-file' "${dict['bam_file']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
@@ -91,23 +85,32 @@ koopa_rsem_quant_paired_end_per_sample() {
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
+        koopa_stop "RSEM quant requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    dict['bam_bn']="$(koopa_basename "${dict['bam_file']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
     if [[ -n "${dict['lib_type']}" ]]
     then
         dict['lib_type']="$( \
             koopa_rsem_fastq_library_type "${dict['lib_type']}" \
         )"
-        align_args+=('--strandedness' "${dict['lib_type']}")
+        quant_args+=('--strandedness' "${dict['lib_type']}")
     fi
-    align_args+=(
+    quant_args+=(
         '--bam'
         '--estimate-rspd'
         '--paired-end'
         '--no-bam-output'
         '--num-threads' "${dict['threads']}"
-        "${dict['index_dir']}" # FIXME
-        "${dict['output_dir']}" # FIXME
+        "${dict['index_dir']}"
+        "${dict['bam_file']}"
     )
+    koopa_dl 'Quant args' "${quant_args[*]}"
+    "${app['rsem_calculate_expression']}" "${quant_args[@]}"
     return 0
 }
