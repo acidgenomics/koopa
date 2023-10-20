@@ -10,8 +10,8 @@ koopa_kallisto_index() {
     #
     # @examples
     # > koopa_kallisto_index \
-    # >     --output-dir='salmon-index' \
-    # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
+    # >     --output-dir='kallisto-gencode' \
+    # >     --transcriptome-fasta-file='gencode.v44.transcripts_fixed.fa.gz'
     # """
     local -A app dict
     local -a index_args
@@ -22,10 +22,10 @@ koopa_kallisto_index() {
     dict['kmer_size']=31
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
-    # e.g. 'kallisto-index'.
+    # e.g. 'kallisto-gencode'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    # e.g. 'gencode.v39.transcripts.fa.gz'.
+    # e.g. 'gencode.v44.transcripts_fixed.fa.gz'.
     dict['transcriptome_fasta_file']=''
     index_args=()
     while (("$#"))

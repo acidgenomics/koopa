@@ -16020,9 +16020,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_r1_file']=''
-    dict['fastq_r1_tail']=''
     dict['fastq_r2_file']=''
-    dict['fastq_r2_tail']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['threads']="$(koopa_cpu_count)"
@@ -16038,28 +16036,12 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -16093,12 +16075,15 @@ koopa_kallisto_quant_paired_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
-        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -16110,22 +16095,13 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "${dict['fastq_r1_file']}" \
         "${dict['fastq_r2_file']}" \
         "${dict['index_file']}"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
-    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
+'${dict['fastq_r2_bn']}' into '${dict['output_dir']}'."
     quant_args+=(
         '--bias'
         "--bootstrap-samples=${dict['bootstraps']}"
@@ -16148,10 +16124,12 @@ koopa_kallisto_quant_paired_end_per_sample() {
 }
 
 koopa_kallisto_quant_paired_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
@@ -16162,6 +16140,14 @@ koopa_kallisto_quant_paired_end() {
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -16225,6 +16211,20 @@ koopa_kallisto_quant_paired_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running kallisto quant.'
     koopa_dl \
@@ -16234,6 +16234,10 @@ koopa_kallisto_quant_paired_end() {
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -16255,18 +16259,24 @@ koopa_kallisto_quant_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/\
+        local -A dict2
+        dict2['fastq_r1_file']="$fastq_r1_file"
+        dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
+        dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
+        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_kallisto_quant_paired_end_per_sample \
-            --fastq-r1-file="$fastq_r1_file" \
-            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
-            --fastq-r2-file="$fastq_r2_file" \
-            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+            --fastq-r1-file="${dict2['fastq_r1_file']}" \
+            --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'kallisto quant was successful.'
     return 0
 }
@@ -16278,7 +16288,6 @@ koopa_kallisto_quant_single_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_file']=''
-    dict['fastq_tail']=''
     dict['fragment_length']=200
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -16295,14 +16304,6 @@ koopa_kallisto_quant_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--fragment-length='*)
@@ -16336,10 +16337,14 @@ koopa_kallisto_quant_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--fragment-length' "${dict['fragment_length']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -16348,18 +16353,11 @@ koopa_kallisto_quant_single_end_per_sample() {
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file "${dict['fastq_file']}" "${dict['index_file']}"
-    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['fastq_tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['fastq_bn']}' into \
+'${dict['output_dir']}'."
     quant_args+=(
         "--bootstrap-samples=${dict['bootstraps']}"
         "--fragment-length=${dict['fragment_length']}"
