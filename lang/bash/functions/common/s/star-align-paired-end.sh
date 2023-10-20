@@ -161,9 +161,8 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
-        if [[ -n "${dict['aws_s3_output_dir']}" ]]
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
-            # FIXME Make this a function that we can share across our NGS runners.
             koopa_alert "Syncing '${dict['output_dir']}' to \
 '${dict['aws_s3_output_dir']}'."
             "${app['aws']}" s3 sync \
