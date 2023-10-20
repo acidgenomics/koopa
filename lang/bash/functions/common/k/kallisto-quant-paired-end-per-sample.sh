@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Seeing a segentation fault during kallisto quant:
+# > [   em] quantifying the abundances ...
+#  Segmentation fault      (core dumped)
+
 # NOTE This currently messes up with GENCODE identifiers.
 # Consider correcting the FASTA file here before proceeding.
 # This is a known issue/limitation of kallisto.
