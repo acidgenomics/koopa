@@ -3,7 +3,7 @@
 koopa_hisat2_index() {
     # """
     # Create a genome index for HISAT2 aligner.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-20.
     #
     # HISAT2 comes with several index types:
     # - Hierarchical FM index (HFM) for a reference genome (index base: genome).
@@ -43,8 +43,8 @@ koopa_hisat2_index() {
         koopa_locate_hisat2_extract_splice_sites \
     )"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
@@ -111,7 +111,7 @@ koopa_hisat2_index() {
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
+        bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -123,7 +123,7 @@ koopa_hisat2_index() {
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_gtf_file']=1
+        bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -149,10 +149,14 @@ koopa_hisat2_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_gtf_file']}"
+    fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
 }

@@ -3,7 +3,7 @@
 koopa_rsem_index() {
     # """
     # Create a genome index for RSEM aligner.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - https://deweylab.github.io/RSEM/rsem-prepare-reference.html
@@ -19,8 +19,8 @@ koopa_rsem_index() {
     local -a index_args
     app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
@@ -87,7 +87,7 @@ koopa_rsem_index() {
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
+        bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -99,7 +99,7 @@ koopa_rsem_index() {
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_gtf_file']=1
+        bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -118,10 +118,14 @@ koopa_rsem_index() {
         koopa_cd "${dict['output_dir']}"
         "${app['rsem_prepare_reference']}" "${index_args[@]}"
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_gtf_file']}"
+    fi
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }
