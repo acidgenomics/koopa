@@ -9869,14 +9869,14 @@ koopa_help() {
 }
 
 koopa_hisat2_align_paired_end_per_sample() {
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     app['hisat2']="$(koopa_locate_hisat2)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     dict['fastq_r1_file']=''
-    dict['fastq_r1_tail']=''
     dict['fastq_r2_file']=''
-    dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -9895,28 +9895,12 @@ koopa_hisat2_align_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -9950,12 +9934,15 @@ koopa_hisat2_align_paired_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
-        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -9964,23 +9951,44 @@ koopa_hisat2_align_paired_end_per_sample() {
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
-    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     dict['hisat2_idx']="${dict['index_dir']}/index"
-    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
+    dict['sample_bn']="$(koopa_basename "${dict['output_dir']}")"
+    dict['sam_file']="${dict['output_dir']}/${dict['sample_bn']}.sam"
+    dict['bam_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.bam' \
+            "${dict['sam_file']}" \
+    )"
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
+'${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
     align_args+=(
         '-1' "${dict['fastq_r1_file']}"
         '-2' "${dict['fastq_r2_file']}"
@@ -10004,6 +10012,18 @@ koopa_hisat2_align_paired_end_per_sample() {
     fi
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['hisat2']}" "${align_args[@]}"
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r1_file']}"
+    fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    koopa_samtools_convert_sam_to_bam \
+        --input-sam="${dict['sam_file']}" \
+        --output-bam="${dict['bam_file']}"
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
@@ -23255,7 +23275,8 @@ koopa_samtools_convert_sam_to_bam() {
     local -A app
     local bam_bn input_sam output_bam sam_bn threads
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'samtools'
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app['samtools']}"
     while (("$#"))
     do
         case "$1" in
@@ -23283,14 +23304,14 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_assert_is_set \
         '--input-sam' "$input_sam" \
         '--output-bam' "$output_bam"
-    sam_bn="$(koopa_basename "$input_sam")"
-    bam_bn="$(koopa_basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
         koopa_alert_note "Skipping '${bam_bn}'."
         return 0
     fi
-    koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
+    sam_bn="$(koopa_basename "$input_sam")"
+    bam_bn="$(koopa_basename "$output_bam")"
+    koopa_alert "Converting '${sam_bn}' to '${bam_bn}'."
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
     "${app['samtools']}" view \
