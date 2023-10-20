@@ -7597,35 +7597,31 @@ koopa_fasta_has_alt_contigs() {
     local -A bool dict
     koopa_assert_has_args_eq "$#" 1
     bool['tmp_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['file']="${1:?}"
     dict['status']=1
     koopa_assert_is_file "${dict['file']}"
-    if koopa_str_detect_regex \
-        --string="${dict['file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['file']}"
     then
         bool['tmp_file']=1
-        dict['tmp_file']="$(koopa_tmp_file)"
+        dict['tmp_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
-    else
-        dict['tmp_file']="${dict['file']}"
+        dict['file']="${dict['tmp_file']}"
     fi
     if koopa_file_detect_fixed \
-        --file="${dict['tmp_file']}" \
+        --file="${dict['file']}" \
         --pattern=' ALT_' \
     || koopa_file_detect_fixed \
-        --file="${dict['tmp_file']}" \
+        --file="${dict['file']}" \
         --pattern=' alternate locus group ' \
     || koopa_file_detect_fixed \
-        --file="${dict['tmp_file']}" \
+        --file="${dict['file']}" \
         --pattern=' rl:alt-scaffold '
     then
         dict['status']=0
     fi
     if [[ "${bool['tmp_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_file']}"
+        koopa_rm "${dict['file']}"
     fi
     return "${dict['status']}"
 }
@@ -10420,7 +10416,6 @@ koopa_hisat2_index() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_genome_fasta_file']=0
     bool['tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -10478,9 +10473,7 @@ koopa_hisat2_index() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['ht2_base']="${dict['output_dir']}/index"
     koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
@@ -10489,9 +10482,7 @@ koopa_hisat2_index() {
             "${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
@@ -15337,6 +15328,20 @@ koopa_is_array_non_empty() {
     return 0
 }
 
+koopa_is_aws_s3_uri() {
+    local pattern string
+    koopa_assert_has_args "$#"
+    pattern='s3://'
+    for string in "$@"
+    do
+        koopa_str_detect_fixed \
+            --pattern="$pattern" \
+            --string="$string" \
+        || return 1
+    done
+    return 0
+}
+
 koopa_is_broken_symlink() {
     local file
     koopa_assert_has_args "$#"
@@ -15347,6 +15352,21 @@ koopa_is_broken_symlink() {
             continue
         fi
         return 1
+    done
+    return 0
+}
+
+koopa_is_compressed_file() {
+    local pattern string
+    koopa_assert_has_args "$#"
+    pattern="$(koopa_compress_ext_pattern)"
+    for string in "$@"
+    do
+        [[ -f "$string" ]] || return 1
+        koopa_str_detect_fixed \
+            --pattern="$pattern" \
+            --string="$string" \
+        || return 1
     done
     return 0
 }
@@ -21741,7 +21761,6 @@ koopa_rsem_index() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_genome_fasta_file']=0
     bool['tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -21797,9 +21816,7 @@ koopa_rsem_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
@@ -21808,9 +21825,7 @@ koopa_rsem_index() {
             "${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
@@ -23754,9 +23769,7 @@ GB of RAM."
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['fastq_r1_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
     then
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
@@ -23767,9 +23780,7 @@ GB of RAM."
             "${dict['tmp_fastq_r1_file']}"
         dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['fastq_r2_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
     then
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
@@ -23815,9 +23826,9 @@ koopa_star_align_paired_end() {
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
     bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    dict['aws_s3_output_dir']=''
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
@@ -23888,10 +23899,9 @@ koopa_star_align_paired_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    if koopa_str_detect_fixed \
-        --pattern='s3://' \
-        --string="${dict['output_dir']}"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
+        bool['aws_s3_output_dir']=1
         bool['tmp_output_dir']=1
         dict['aws_s3_output_dir']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
@@ -23899,7 +23909,7 @@ koopa_star_align_paired_end() {
         dict['output_dir']="$(koopa_tmp_dir_in_wd)"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    if [[ -n "${dict['aws_s3_output_dir']}" ]]
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
         koopa_assert_is_executable "${app['aws']}"
@@ -23912,7 +23922,7 @@ koopa_star_align_paired_end() {
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
-    if [[ -n "${dict['aws_s3_output_dir']}" ]]
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi
@@ -24050,9 +24060,7 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['fastq_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['fastq_file']}"
     then
         bool['tmp_fastq_file']=1
         dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
@@ -24218,7 +24226,6 @@ koopa_star_index() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_genome_fasta_file']=0
     bool['tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -24274,9 +24281,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
@@ -24285,9 +24290,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
             "${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"

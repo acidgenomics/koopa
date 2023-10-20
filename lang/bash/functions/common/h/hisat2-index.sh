@@ -45,7 +45,6 @@ koopa_hisat2_index() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_genome_fasta_file']=0
     bool['tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
     # e.g. 'gencode.v39.annotation.gtf.gz'
@@ -107,9 +106,7 @@ koopa_hisat2_index() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['ht2_base']="${dict['output_dir']}/index"
     koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
@@ -118,9 +115,7 @@ koopa_hisat2_index() {
             "${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
