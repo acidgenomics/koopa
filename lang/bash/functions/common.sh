@@ -3092,17 +3092,19 @@ koopa_boolean_nounset() {
     _koopa_boolean_nounset "$@"
 }
 
-koopa_bowtie2_align_per_sample() {
-    local -A app dict
+koopa_bowtie2_align_paired_end_per_sample() {
+    local -A app bool dict
     koopa_assert_has_args "$#"
     app['bowtie2']="$(koopa_locate_bowtie2)"
-    app['tee']="$(koopa_locate_tee)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     dict['fastq_r1_file']=''
-    dict['fastq_r1_tail']=''
     dict['fastq_r2_file']=''
-    dict['fastq_r2_tail']=''
     dict['index_dir']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
@@ -3116,28 +3118,12 @@ koopa_bowtie2_align_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -3163,34 +3149,61 @@ koopa_bowtie2_align_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
-        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
-    koopa_assert_is_dir "${dict['index_dir']}"
-    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
-    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
-    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
-        koopa_alert_note "Skipping '${dict['id']}'."
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
         return 0
     fi
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Aligning '${dict['id']}' in '${dict['output_dir']}'."
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "bowtie2 requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['index_base']="${dict['index_dir']}/bowtie2"
-    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
-    dict['log_file']="${dict['output_dir']}/align.log"
-    align_args=(
+    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['sample_bn']="$(koopa_basename "${dict['output_dir']}")"
+    dict['sam_file']="${dict['output_dir']}/${dict['sample_bn']}.sam"
+    dict['bam_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.bam' \
+            "${dict['sam_file']}" \
+    )"
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
+'${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
+    align_args+=(
         '--local'
         '--sensitive-local'
         '--rg-id' "${dict['id']}"
@@ -3208,13 +3221,28 @@ koopa_bowtie2_align_per_sample() {
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['bowtie2']}" "${align_args[@]}" \
         2>&1 | "${app['tee']}" "${dict['log_file']}"
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r1_file']}"
+    fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    koopa_samtools_convert_sam_to_bam \
+        --input-sam="${dict['sam_file']}" \
+        --output-bam="${dict['bam_file']}"
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
-koopa_bowtie2_align() {
-    local -A dict
+koopa_bowtie2_align_paired_end() {
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
@@ -3223,6 +3251,14 @@ koopa_bowtie2_align() {
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -3278,6 +3314,20 @@ koopa_bowtie2_align() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running bowtie2 align.'
     koopa_dl \
@@ -3286,6 +3336,10 @@ koopa_bowtie2_align() {
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -3307,17 +3361,46 @@ koopa_bowtie2_align() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
-        koopa_bowtie2_align_per_sample \
-            --fastq-r1-file="$fastq_r1_file" \
-            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
-            --fastq-r2-file="$fastq_r2_file" \
-            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+        local -A dict2
+        dict2['fastq_r1_file']="$fastq_r1_file"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
+        koopa_bowtie2_align_paired_end_per_sample \
+            --fastq-r1-file="${dict2['fastq_r1_file']}" \
+            --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
-            --output-dir="${dict['samples_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'bowtie2 align was successful.'
     return 0
 }
@@ -3327,7 +3410,7 @@ koopa_bowtie2_index() {
     local -a index_args
     koopa_assert_has_args "$#"
     app['bowtie2_build']="$(koopa_locate_bowtie2_build)"
-    app['tee']="$(koopa_locate_tee)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['genome_fasta_file']=''
     dict['output_dir']=''
@@ -4107,10 +4190,19 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'bowtie2' | \
-        'rsem')
+        'bowtie2')
             case "${2:-}" in
-                'align' | \
+                'align')
+                    case "${3:-}" in
+                        'paired-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
                 'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
@@ -4292,8 +4384,31 @@ koopa_cli_app() {
             dict['key']="${1:?}"
             shift 1
             ;;
+        'rsem')
+            case "${2:-}" in
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                'quant')
+                    case "${3:-}" in
+                        'bam')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'salmon')
             case "${2:-}" in
+                'detect-fastq-library-type' | \
                 'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
@@ -5606,68 +5721,6 @@ koopa_convert_line_endings_from_lf_to_crlf() {
     do
         "${app['perl']}" -pe 's/(?<!\r)\n/\r\n/g' < "$file" > "${file}.tmp"
         koopa_mv "${file}.tmp" "$file"
-    done
-    return 0
-}
-
-koopa_convert_sam_to_bam() {
-    local -A bool dict
-    local -a pos sam_files
-    local sam_file
-    bool['keep_sam']=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--keep-sam')
-                bool['keep_sam']=1
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_eq "$#" 1
-    dict['prefix']="${1:?}"
-    koopa_assert_is_dir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    readarray -t sam_files <<< "$( \
-        koopa_find \
-            --max-depth=3 \
-            --min-depth=1 \
-            --pattern='*.sam' \
-            --prefix="${dict['prefix']}" \
-            --sort \
-            --type='f' \
-    )"
-    if ! koopa_is_array_non_empty "${sam_files[@]:-}"
-    then
-        koopa_stop "No SAM files detected in '${dict['prefix']}'."
-    fi
-    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    if [[ "${bool['keep_sam']}" -eq 1 ]]
-    then
-        koopa_alert_note 'SAM files will be preserved.'
-    else
-        koopa_alert_note 'SAM files will be deleted.'
-    fi
-    for sam_file in "${sam_files[@]}"
-    do
-        local bam_file
-        bam_file="${sam_file%.sam}.bam"
-        koopa_samtools_convert_sam_to_bam \
-            --input-sam="$sam_file" \
-            --output-bam="$bam_file"
-        if [[ "${bool['keep_sam']}" -eq 0 ]]
-        then
-            koopa_rm "$sam_file"
-        fi
     done
     return 0
 }
@@ -7326,10 +7379,8 @@ koopa_extract() {
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
-    dict['tmpdir']="$( \
-        koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
-.koopa-extract-$(koopa_random_string)" \
-    )"
+    dict['tmpdir']="$(koopa_parent_dir "${dict['file']}")/$(koopa_tmp_string)"
+    dict['tmpdir']="$(koopa_init_dir "${dict['tmpdir']}")"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
     case "${dict['match']}" in
@@ -7596,37 +7647,41 @@ at '${dict['output_file']}'."
 }
 
 koopa_fasta_has_alt_contigs() {
-    local -A dict
+    local -A bool dict
     koopa_assert_has_args_eq "$#" 1
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    bool['tmp_file']=0
     dict['file']="${1:?}"
-    dict['is_tmp_file']=0
     dict['status']=1
     koopa_assert_is_file "${dict['file']}"
-    if koopa_str_detect_regex \
-        --string="${dict['file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['file']}"
     then
-        dict['is_tmp_file']=1
-        dict['tmp_file']="$(koopa_tmp_file)"
+        bool['tmp_file']=1
+        dict['tmp_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
-    else
-        dict['tmp_file']="${dict['file']}"
+        dict['file']="${dict['tmp_file']}"
     fi
     if koopa_file_detect_fixed \
-        --file="${dict['tmp_file']}" \
+        --file="${dict['file']}" \
         --pattern=' ALT_' \
     || koopa_file_detect_fixed \
-        --file="${dict['tmp_file']}" \
+        --file="${dict['file']}" \
         --pattern=' alternate locus group ' \
     || koopa_file_detect_fixed \
-        --file="${dict['tmp_file']}" \
+        --file="${dict['file']}" \
         --pattern=' rl:alt-scaffold '
     then
         dict['status']=0
     fi
-    [[ "${dict['is_tmp_file']}" -eq 1 ]] && koopa_rm "${dict['tmp_file']}"
+    if [[ "${bool['tmp_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['file']}"
+    fi
     return "${dict['status']}"
+}
+
+koopa_fasta_pattern() {
+    koopa_print '\.(fa|fasta|fna)'
+    return 0
 }
 
 koopa_fastq_detect_quality_score() {
@@ -9867,21 +9922,21 @@ koopa_help() {
 }
 
 koopa_hisat2_align_paired_end_per_sample() {
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     app['hisat2']="$(koopa_locate_hisat2)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     dict['fastq_r1_file']=''
-    dict['fastq_r1_tail']=''
     dict['fastq_r2_file']=''
-    dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
+    dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    align_args=()
     while (("$#"))
     do
         case "$1" in
@@ -9893,28 +9948,12 @@ koopa_hisat2_align_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -9941,6 +9980,14 @@ koopa_hisat2_align_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -9948,46 +9995,76 @@ koopa_hisat2_align_paired_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
-        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['hisat2_idx']="${dict['index_dir']}/index"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
-    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict['hisat2_idx']="${dict['index_dir']}/index"
-    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
-    align_args+=(
-        '-1' "${dict['fastq_r1_file']}"
-        '-2' "${dict['fastq_r2_file']}"
-        '-S' "${dict['sam_file']}"
-        '-q'
-        '-x' "${dict['hisat2_idx']}"
-        '--new-summary'
-        '--threads' "${dict['threads']}"
-    )
+    dict['sample_bn']="$(koopa_basename "${dict['output_dir']}")"
+    dict['sam_file']="${dict['output_dir']}/${dict['sample_bn']}.sam"
+    dict['bam_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.bam' \
+            "${dict['sam_file']}" \
+    )"
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
+'${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting FASTQ library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_fastq_library_type \
+                --fastq-r1-file="${dict['fastq_r1_file']}" \
+                --fastq-r2-file="${dict['fastq_r2_file']}" \
+                --index-dir="${dict['salmon_index_dir']}" \
+        )"
+    fi
     dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
@@ -10000,26 +10077,58 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         align_args+=("${dict['quality_flag']}")
     fi
+    align_args+=(
+        '-1' "${dict['fastq_r1_file']}"
+        '-2' "${dict['fastq_r2_file']}"
+        '-S' "${dict['sam_file']}"
+        '-q'
+        '-x' "${dict['hisat2_idx']}"
+        '--new-summary'
+        '--threads' "${dict['threads']}"
+    )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['hisat2']}" "${align_args[@]}"
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r1_file']}"
+    fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    koopa_samtools_convert_sam_to_bam \
+        --input-sam="${dict['sam_file']}" \
+        --output-bam="${dict['bam_file']}"
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
 koopa_hisat2_align_paired_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
-    dict['mode']='paired-end'
     dict['output_dir']=''
+    dict['salmon_index_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -10068,6 +10177,14 @@ koopa_hisat2_align_paired_end() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -10080,18 +10197,44 @@ koopa_hisat2_align_paired_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+        dict['salmon_index_dir']="$( \
+            koopa_realpath "${dict['salmon_index_dir']}" \
+        )"
+    fi
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -10113,37 +10256,66 @@ koopa_hisat2_align_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
+        local -A dict2
+        dict2['fastq_r1_file']="$fastq_r1_file"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_hisat2_align_paired_end_per_sample \
-            --fastq-r1-file="$fastq_r1_file" \
-            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
-            --fastq-r2-file="$fastq_r2_file" \
-            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+            --fastq-r1-file="${dict2['fastq_r1_file']}" \
+            --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --salmon-index-dir="${dict['salmon_index_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'HISAT2 alignment was successful.'
     return 0
 }
 
 koopa_hisat2_align_single_end_per_sample() {
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     koopa_assert_has_args "$#"
     app['hisat2']="$(koopa_locate_hisat2)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_file']=0
     dict['fastq_file']=''
-    dict['fastq_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    align_args=()
     while (("$#"))
     do
         case "$1" in
@@ -10153,14 +10325,6 @@ koopa_hisat2_align_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -10194,31 +10358,46 @@ koopa_hisat2_align_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "HISAT2 align requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['hisat2_idx']="${dict['index_dir']}/index"
     koopa_assert_is_file "${dict['fastq_file']}"
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict['hisat2_idx']="${dict['index_dir']}/index"
-    dict['sam_file']="${dict['output_dir']}/${dict['id']}.sam"
+    dict['sample_bn']="$(koopa_basename "${dict['output_dir']}")"
+    dict['sam_file']="${dict['output_dir']}/${dict['sample_bn']}.sam"
+    dict['bam_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.bam' \
+            "${dict['sam_file']}" \
+    )"
+    koopa_alert "Quantifying '${dict['fastq_bn']}' in '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['fastq_file']}"
+    then
+        bool['tmp_fastq_file']=1
+        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_file']}' to \
+'${dict['tmp_fastq_file']}"
+        koopa_decompress \
+            "${dict['fastq_file']}" \
+            "${dict['tmp_fastq_file']}"
+        dict['fastq_file']="${dict['tmp_fastq_file']}"
+    fi
     align_args+=(
         '-S' "${dict['sam_file']}"
         '-U' "${dict['fastq_file']}"
@@ -10241,23 +10420,45 @@ koopa_hisat2_align_single_end_per_sample() {
     fi
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['hisat2']}" "${align_args[@]}"
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r1_file']}"
+    fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    koopa_samtools_convert_sam_to_bam \
+        --input-sam="${dict['sam_file']}" \
+        --output-bam="${dict['bam_file']}"
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
 koopa_hisat2_align_single_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_files
     local fastq_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
-    dict['mode']='single-end'
     dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -10312,10 +10513,24 @@ koopa_hisat2_align_single_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running HISAT2 aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
@@ -10341,13 +10556,39 @@ koopa_hisat2_align_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
+        local -A dict2
+        dict2['fastq_file']="$fastq_file"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_hisat2_align_single_end_per_sample \
-            --fastq-file="$fastq_file" \
-            --fastq-tail="${dict['fastq_tail']}" \
+            --fastq-file="${dict2['fastq_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'HISAT2 alignment was successful.'
     return 0
 }
@@ -10357,7 +10598,7 @@ koopa_hisat2_fastq_library_type() {
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'A' | 'IU' | 'U')
+        'IU' | 'U')
             return 0
             ;;
         'ISF')
@@ -10385,14 +10626,12 @@ koopa_hisat2_fastq_quality_format() {
     koopa_assert_has_args_eq "$#" 1
     dict['fastq_file']="${1:?}"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict['format']="$( \
-        koopa_fastq_detect_quality_format "${dict['fastq_file']}" \
-    )"
+    dict['format']="$(koopa_fastq_detect_quality_score "${dict['fastq_file']}")"
     case "${dict['format']}" in
-        'Phread+33')
+        'Phred+33')
             dict['flag']='--phred33'
             ;;
-        'Phread+64')
+        'Phred+64')
             dict['flag']='--phred64'
             ;;
         *)
@@ -10412,9 +10651,8 @@ koopa_hisat2_index() {
         koopa_locate_hisat2_extract_splice_sites \
     )"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -10472,52 +10710,50 @@ koopa_hisat2_index() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['ht2_base']="${dict['output_dir']}/index"
     koopa_alert "Generating HISAT2 index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        bool['tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
-        bool['is_tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['exons_file']="${dict['output_dir']}/exons.tsv"
     dict['splice_sites_file']="${dict['output_dir']}/splicesites.tsv"
     "${app['hisat2_extract_exons']}" \
-        "${dict['tmp_gtf_file']}" \
+        "${dict['gtf_file']}" \
         > "${dict['exons_file']}"
     "${app['hisat2_extract_splice_sites']}" \
-        "${dict['tmp_gtf_file']}" \
+        "${dict['gtf_file']}" \
         > "${dict['splice_sites_file']}"
     index_args+=(
         '-p' "${dict['threads']}"
         '--exon' "${dict['exons_file']}"
         '--seed' "${dict['seed']}"
         '--ss' "${dict['splice_sites_file']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         "${dict['ht2_base']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_gtf_file']}"
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
 }
@@ -15329,6 +15565,20 @@ koopa_is_array_non_empty() {
     return 0
 }
 
+koopa_is_aws_s3_uri() {
+    local pattern string
+    koopa_assert_has_args "$#"
+    pattern='s3://'
+    for string in "$@"
+    do
+        koopa_str_detect_fixed \
+            --pattern="$pattern" \
+            --string="$string" \
+        || return 1
+    done
+    return 0
+}
+
 koopa_is_broken_symlink() {
     local file
     koopa_assert_has_args "$#"
@@ -15339,6 +15589,21 @@ koopa_is_broken_symlink() {
             continue
         fi
         return 1
+    done
+    return 0
+}
+
+koopa_is_compressed_file() {
+    local pattern string
+    koopa_assert_has_args "$#"
+    pattern="$(koopa_compress_ext_pattern)"
+    for string in "$@"
+    do
+        [[ -f "$string" ]] || return 1
+        koopa_str_detect_fixed \
+            --pattern="$pattern" \
+            --string="$string" \
+        || return 1
     done
     return 0
 }
@@ -15898,7 +16163,7 @@ koopa_kallisto_fastq_library_type() {
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'A' | 'IU' | 'U')
+        'IU' | 'U')
             return 0
             ;;
         'ISF')
@@ -15921,13 +16186,14 @@ koopa_kallisto_index() {
     koopa_assert_has_args "$#"
     app['kallisto']="$(koopa_locate_kallisto)"
     koopa_assert_is_executable "${app[@]}"
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     dict['kmer_size']=31
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     dict['transcriptome_fasta_file']=''
+    dict['version']="$(koopa_app_version 'kallisto')"
     index_args=()
     while (("$#"))
     do
@@ -15975,9 +16241,13 @@ koopa_kallisto_index() {
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
-        "--threads=${dict['threads']}"
-        "${dict['transcriptome_fasta_file']}"
     )
+    case "${dict['version']}" in
+        '0.50.'*)
+            index_args+=("--threads=${dict['threads']}")
+            ;;
+    esac
+    index_args+=("${dict['transcriptome_fasta_file']}")
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['kallisto']}" index "${index_args[@]}"
     koopa_alert_success "kallisto index created at '${dict['output_dir']}'."
@@ -15992,13 +16262,11 @@ koopa_kallisto_quant_paired_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_r1_file']=''
-    dict['fastq_r1_tail']=''
     dict['fastq_r2_file']=''
-    dict['fastq_r2_tail']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
+    dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    quant_args=()
     while (("$#"))
     do
         case "$1" in
@@ -16010,28 +16278,12 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -16058,6 +16310,14 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -16065,12 +16325,20 @@ koopa_kallisto_quant_paired_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
-        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -16082,22 +16350,30 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "${dict['fastq_r1_file']}" \
         "${dict['fastq_r2_file']}" \
         "${dict['index_file']}"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
-    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
+'${dict['fastq_r2_bn']}' into '${dict['output_dir']}'."
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting FASTQ library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_fastq_library_type \
+                --fastq-r1-file="${dict['fastq_r1_file']}" \
+                --fastq-r2-file="${dict['fastq_r2_file']}" \
+                --index-dir="${dict['salmon_index_dir']}" \
+        )"
+    fi
+    dict['lib_type']="$( \
+        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
+    )"
+    if [[ -n "${dict['lib_type']}" ]]
+    then
+        quant_args+=("${dict['lib_type']}")
+    fi
     quant_args+=(
         '--bias'
         "--bootstrap-samples=${dict['bootstraps']}"
@@ -16106,13 +16382,6 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "--threads=${dict['threads']}"
         '--verbose'
     )
-    dict['lib_type']="$( \
-        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
-    )"
-    if [[ -n "${dict['lib_type']}" ]]
-    then
-        quant_args+=("${dict['lib_type']}")
-    fi
     quant_args+=("${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}")
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app['kallisto']}" quant "${quant_args[@]}"
@@ -16120,20 +16389,31 @@ koopa_kallisto_quant_paired_end_per_sample() {
 }
 
 koopa_kallisto_quant_paired_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
-    dict['mode']='paired-end'
     dict['output_dir']=''
+    dict['salmon_index_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -16182,6 +16462,14 @@ koopa_kallisto_quant_paired_end() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -16194,18 +16482,44 @@ koopa_kallisto_quant_paired_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+        dict['salmon_index_dir']="$( \
+            koopa_realpath "${dict['salmon_index_dir']}" \
+        )"
+    fi
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running kallisto quant.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -16227,18 +16541,48 @@ koopa_kallisto_quant_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
+        local -A dict2
+        dict2['fastq_r1_file']="$fastq_r1_file"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_kallisto_quant_paired_end_per_sample \
-            --fastq-r1-file="$fastq_r1_file" \
-            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
-            --fastq-r2-file="$fastq_r2_file" \
-            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+            --fastq-r1-file="${dict2['fastq_r1_file']}" \
+            --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --salmon-index-dir="${dict['salmon_index_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'kallisto quant was successful.'
     return 0
 }
@@ -16250,14 +16594,12 @@ koopa_kallisto_quant_single_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_file']=''
-    dict['fastq_tail']=''
     dict['fragment_length']=200
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
     dict['sd']=25
-    quant_args=()
     while (("$#"))
     do
         case "$1" in
@@ -16267,14 +16609,6 @@ koopa_kallisto_quant_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--fragment-length='*)
@@ -16308,10 +16642,14 @@ koopa_kallisto_quant_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--fragment-length' "${dict['fragment_length']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -16320,18 +16658,11 @@ koopa_kallisto_quant_single_end_per_sample() {
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['index_file']="${dict['index_dir']}/kallisto.idx"
     koopa_assert_is_file "${dict['fastq_file']}" "${dict['index_file']}"
-    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['fastq_tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' into '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['fastq_bn']}' into \
+'${dict['output_dir']}'."
     quant_args+=(
         "--bootstrap-samples=${dict['bootstraps']}"
         "--fragment-length=${dict['fragment_length']}"
@@ -16349,18 +16680,28 @@ koopa_kallisto_quant_single_end_per_sample() {
 }
 
 koopa_kallisto_quant_single_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_files
     local fastq_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
     dict['index_dir']=''
-    dict['mode']='single-end'
     dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -16406,14 +16747,32 @@ koopa_kallisto_quant_single_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running kallisto quant.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -16435,12 +16794,38 @@ koopa_kallisto_quant_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
+        local -A dict2
+        dict2['fastq_file']="$fastq_file"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_kallisto_quant_single_end_per_sample \
-            --fastq-file="$fastq_file" \
-            --fastq-tail="${dict['fastq_tail']}" \
+            --fastq-file="${dict2['fastq_file']}" \
             --index-dir="${dict['index_dir']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'kallisto quant was successful.'
     return 0
 }
@@ -18127,6 +18512,13 @@ koopa_locate_rscript() {
     koopa_locate_app \
         --app-name='r' \
         --bin-name='Rscript' \
+        "$@"
+}
+
+koopa_locate_rsem_calculate_expression() {
+    koopa_locate_app \
+        --app-name='rsem' \
+        --bin-name='rsem-calcualte-expression' \
         "$@"
 }
 
@@ -21726,21 +22118,41 @@ koopa_roff() {
     return 0
 }
 
+koopa_rsem_fastq_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            to='none'
+            ;;
+        'ISF')
+            to='forward'
+            ;;
+        'ISR')
+            to='reverse'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
 koopa_rsem_index() {
     local -A app bool dict
     local -a index_args
     app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=10
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
     index_args=()
     while (("$#"))
     do
@@ -21790,34 +22202,28 @@ koopa_rsem_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        bool['tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
-        bool['is_tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     index_args+=(
-        '--gtf' "${dict['tmp_gtf_file']}"
+        '--gtf' "${dict['gtf_file']}"
         '--num-threads' "${dict['threads']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         'rsem'
     )
     koopa_dl 'Index args' "${index_args[*]}"
@@ -21825,11 +22231,249 @@ koopa_rsem_index() {
         koopa_cd "${dict['output_dir']}"
         "${app['rsem_prepare_reference']}" "${index_args[@]}"
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_gtf_file']}"
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_rsem_quant_paired_end_per_sample() {
+    local -A app dict
+    local -a quant_args
+    app['rsem_calculate_expression']="$(koopa_locate_rsem_calculate_expression)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bam_file']=''
+    dict['lib_type']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=14
+    dict['threads']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-file')
+                dict['bam_file']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-file' "${dict['bam_file']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "RSEM quant requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_assert_is_dir "${dict['index_dir']}"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    dict['bam_bn']="$(koopa_basename "${dict['bam_file']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
+    if [[ -n "${dict['lib_type']}" ]]
+    then
+        dict['lib_type']="$( \
+            koopa_rsem_fastq_library_type "${dict['lib_type']}" \
+        )"
+        quant_args+=('--strandedness' "${dict['lib_type']}")
+    fi
+    quant_args+=(
+        '--bam'
+        '--estimate-rspd'
+        '--paired-end'
+        '--no-bam-output'
+        '--num-threads' "${dict['threads']}"
+        "${dict['index_dir']}"
+        "${dict['bam_file']}"
+    )
+    koopa_dl 'Quant args' "${quant_args[*]}"
+    "${app['rsem_calculate_expression']}" "${quant_args[@]}"
+    return 0
+}
+
+koopa_rsem_quant_bam() {
+    local -A app bool dict
+    local -a bam_files
+    local bam_file
+    koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
+    dict['bam_dir']=''
+    dict['index_dir']=''
+    dict['lib_type']=''
+    dict['output_dir']=''
+    while (("$#"))
+    do
+        case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
+            '--bam-dir='*)
+                dict['bam_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-dir')
+                dict['bam_dir']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-dir' "${dict['bam_dir']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
+    dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
+    dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_h1 'Running RSEM quant.'
+    koopa_dl \
+        'BAM dir' "${dict['bam_dir']}" \
+        'Index dir' "${dict['index_dir']}" \
+        'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
+    readarray -t bam_files <<< "$( \
+        koopa_find \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*.bam" \
+            --prefix="${dict['bam_dir']}" \
+            --sort \
+    )"
+    if koopa_is_array_empty "${bam_files[@]:-}"
+    then
+        koopa_stop "No BAM files detected in '${dict['bam_dir']}'."
+    fi
+    koopa_assert_is_file "${bam_files[@]}"
+    koopa_alert_info "$(koopa_ngettext \
+        --num="${#bam_files[@]}" \
+        --msg1='sample' \
+        --msg2='samples' \
+        --suffix=' detected.' \
+    )"
+    for bam_file in "${bam_files[@]}"
+    do
+        local -A dict2
+        dict2['bam_file']="$bam_file"
+        dict2['sample_id']="$(koopa_basename_sans_ext "${dict2['bam_file']}")"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
+        koopa_rsem_quant_bam_per_sample \
+            --bam-file="${dict2['bam_file']}" \
+            --index-dir="${dict['index_dir']}" \
+            --lib-type="${dict['lib_type']}" \
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
+    done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
+    koopa_alert_success 'RSEM quant was successful.'
     return 0
 }
 
@@ -21991,10 +22635,9 @@ koopa_salmon_detect_fastq_library_type() {
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
-    dict['lib_type']='A'
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
+    dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))
     do
@@ -22033,9 +22676,9 @@ koopa_salmon_detect_fastq_library_type() {
         '--index-dir' "${dict['index_dir']}"
     koopa_assert_is_file "${dict['fastq_r1_file']}"
     koopa_assert_is_dir "${dict['index_dir']}"
-    quant_args=(
+    quant_args+=(
         "--index=${dict['index_dir']}"
-        "--libType=${dict['lib_type']}"
+        '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
         '--quiet'
@@ -22078,14 +22721,14 @@ koopa_salmon_detect_fastq_library_type() {
 }
 
 koopa_salmon_index() {
-    local -A app dict
+    local -A app bool dict
     local -a index_args
     koopa_assert_has_args "$#"
     app['salmon']="$(koopa_locate_salmon)"
     koopa_assert_is_executable "${app[@]}"
-    dict['decoys']=1
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
-    dict['gencode']=0
+    bool['decoys']=1
+    bool['gencode']=0
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     dict['genome_fasta_file']=''
     dict['kmer_length']=31
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -22123,15 +22766,15 @@ koopa_salmon_index() {
                 shift 2
                 ;;
             '--decoys')
-                dict['decoys']=1
+                bool['decoys']=1
                 shift 1
                 ;;
             '--gencode')
-                dict['gencode']=1
+                bool['gencode']=1
                 shift 1
                 ;;
             '--no-decoys')
-                dict['decoys']=0
+                bool['decoys']=0
                 shift 1
                 ;;
             *)
@@ -22157,19 +22800,19 @@ koopa_salmon_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating salmon index at '${dict['output_dir']}'."
-    if [[ "${dict['gencode']}" -eq 0 ]] && \
+    if [[ "${bool['gencode']}" -eq 0 ]] && \
         koopa_str_detect_regex \
             --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
             --pattern='^gencode\.'
     then
-        dict['gencode']=1
+        bool['gencode']=1
     fi
-    if [[ "${dict['gencode']}" -eq 1 ]]
+    if [[ "${bool['gencode']}" -eq 1 ]]
     then
         koopa_alert_info 'Indexing against GENCODE reference genome.'
         index_args+=('--gencode')
     fi
-    if [[ "${dict['decoys']}" -eq 1 ]]
+    if [[ "${bool['decoys']}" -eq 1 ]]
     then
         koopa_alert 'Preparing decoy-aware reference transcriptome.'
         koopa_assert_is_set \
@@ -22184,9 +22827,8 @@ koopa_salmon_index() {
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['transcriptome_fasta_file']}"
-        dict['tmp_dir']="$(koopa_tmp_dir)"
-        dict['decoys_file']="${dict['tmp_dir']}/decoys.txt"
-        dict['gentrome_fasta_file']="${dict['tmp_dir']}/gentrome.fa.gz"
+        dict['decoys_file']="$(koopa_tmp_file_in_wd)"
+        dict['gentrome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_fasta_generate_chromosomes_file \
             --genome-fasta-file="${dict['genome_fasta_file']}" \
             --output-file="${dict['decoys_file']}"
@@ -22214,6 +22856,12 @@ koopa_salmon_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['salmon']}" index "${index_args[@]}"
+    if [[ "${bool['decoys']}" -eq 1 ]]
+    then
+        koopa_rm \
+            "${dict['decoys_file']}" \
+            "${dict['gentrome_fasta_file']}"
+    fi
     koopa_alert_success "salmon index created at '${dict['output_dir']}'."
     return 0
 }
@@ -22278,6 +22926,11 @@ koopa_salmon_quant_bam_per_sample() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}" \
         '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -22285,19 +22938,13 @@ koopa_salmon_quant_bam_per_sample() {
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['transcriptome_fasta_file']}"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    dict['bam_bn']="$(koopa_basename "${dict['bam_file']}")"
     dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
-    dict['id']="$(koopa_basename_sans_ext "${dict['bam_file']}")"
-    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
     quant_args+=(
         "--alignments=${dict['bam_file']}"
         "--libType=${dict['lib_type']}"
@@ -22313,10 +22960,13 @@ koopa_salmon_quant_bam_per_sample() {
 }
 
 koopa_salmon_quant_bam() {
-    local -A dict
+    local -A app bool dict
     local -a bam_files
     local bam_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['bam_dir']=''
     dict['lib_type']='A'
     dict['output_dir']=''
@@ -22324,6 +22974,14 @@ koopa_salmon_quant_bam() {
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--bam-dir='*)
                 dict['bam_dir']="${1#*=}"
                 shift 1
@@ -22369,15 +23027,33 @@ koopa_salmon_quant_bam() {
     koopa_assert_is_dir "${dict['bam_dir']}"
     koopa_assert_is_file "${dict['transcriptome_fasta_file']}"
     dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
         'Transcriptome FASTA' "${dict['transcriptome_fasta_file']}" \
         'BAM dir' "${dict['bam_dir']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t bam_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -22399,12 +23075,33 @@ koopa_salmon_quant_bam() {
     )"
     for bam_file in "${bam_files[@]}"
     do
+        local -A dict2
+        dict2['bam_file']="$bam_file"
+        dict2['sample_id']="$(koopa_basename_sans_ext "${dict2['bam_file']}")"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_salmon_quant_bam_per_sample \
-            --bam-file="$bam_file" \
+            --bam-file="${dict2['bam_file']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}" \
+            --output-dir="${dict2['output_dir']}" \
             --transcriptome-fasta-file="${dict['transcriptome_fasta_file']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'salmon quant was successful.'
     return 0
 }
@@ -22417,9 +23114,7 @@ koopa_salmon_quant_paired_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_r1_file']=''
-    dict['fastq_r1_tail']=''
     dict['fastq_r2_file']=''
-    dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -22438,28 +23133,12 @@ koopa_salmon_quant_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -22493,12 +23172,15 @@ koopa_salmon_quant_paired_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
-        '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
-        '--fastq-r2-tail' "${dict['fastq_r2_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -22506,22 +23188,13 @@ koopa_salmon_quant_paired_end_per_sample() {
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
-    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
-    dict['fastq_r1_bn']="${dict['fastq_r1_bn']/${dict['fastq_r1_tail']}/}"
-    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
-    dict['fastq_r2_bn']="${dict['fastq_r2_bn']/${dict['fastq_r2_tail']}/}"
-    koopa_assert_are_identical "${dict['fastq_r1_bn']}" "${dict['fastq_r2_bn']}"
-    dict['id']="${dict['fastq_r1_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
+    dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
+'${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     quant_args+=(
         '--gcBias'
         "--index=${dict['index_dir']}"
@@ -22541,20 +23214,30 @@ koopa_salmon_quant_paired_end_per_sample() {
 }
 
 koopa_salmon_quant_paired_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
-    dict['mode']='paired-end'
     dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -22618,15 +23301,33 @@ koopa_salmon_quant_paired_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -22648,18 +23349,47 @@ koopa_salmon_quant_paired_end() {
     )"
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
-        local fastq_r2_file
-        fastq_r2_file="${fastq_r1_file/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
+        local -A dict2
+        dict2['fastq_r1_file']="$fastq_r1_file"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_salmon_quant_paired_end_per_sample \
-            --fastq-r1-file="$fastq_r1_file" \
-            --fastq-r1-tail="${dict['fastq_r1_tail']}" \
-            --fastq-r2-file="$fastq_r2_file" \
-            --fastq-r2-tail="${dict['fastq_r2_tail']}" \
+            --fastq-r1-file="${dict2['fastq_r1_file']}" \
+            --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'salmon quant was successful.'
     return 0
 }
@@ -22672,7 +23402,6 @@ koopa_salmon_quant_single_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_file']=''
-    dict['fastq_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -22689,14 +23418,6 @@ koopa_salmon_quant_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -22730,10 +23451,14 @@ koopa_salmon_quant_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -22741,16 +23466,8 @@ koopa_salmon_quant_single_end_per_sample() {
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
@@ -22770,19 +23487,29 @@ koopa_salmon_quant_single_end_per_sample() {
 }
 
 koopa_salmon_quant_single_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_files
     local fastq_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
-    dict['mode']='single-end'
     dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -22837,14 +23564,32 @@ koopa_salmon_quant_single_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -22866,13 +23611,39 @@ koopa_salmon_quant_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
+        local -A dict2
+        dict2['fastq_file']="$fastq_file"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_salmon_quant_single_end_per_sample \
-            --fastq-file="$fastq_file" \
-            --fastq-tail="${dict['fastq_tail']}" \
+            --fastq-file="${dict2['fastq_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'salmon quant was successful.'
     return 0
 }
@@ -22999,29 +23770,7 @@ pattern '${dict['pattern']}'."
             --input-bam="${dict2['file_2']}" \
             --output-bam="${dict2['file_3']}"
         koopa_cp "${dict2['file_3']}" "${dict2['output']}"
-        koopa_sambamba_index "${dict2['output']}"
-    done
-    return 0
-}
-
-koopa_sambamba_index() {
-    local -A app dict
-    local bam_file
-    koopa_assert_has_args "$#"
-    koopa_assert_is_file "$@"
-    app['sambamba']="$(koopa_locate_sambamba)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['threads']="$(koopa_cpu_count)"
-    for bam_file in "$@"
-    do
-        koopa_assert_is_matching_regex \
-            --pattern='\.bam$' \
-            --string="$bam_file"
-        koopa_alert "Indexing '${bam_file}'."
-        "${app['sambamba']}" index \
-            --nthreads="${dict['threads']}" \
-            --show-progress \
-            "$bam_file"
+        koopa_samtools_index_bam "${dict2['output']}"
     done
     return 0
 }
@@ -23086,27 +23835,30 @@ koopa_sambamba_sort() {
 }
 
 koopa_samtools_convert_sam_to_bam() {
-    local -A app
-    local bam_bn input_sam output_bam sam_bn threads
+    local -A app dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'samtools'
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app['samtools']}"
+    dict['input_sam']=''
+    dict['output_bam']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             '--input-sam='*)
-                input_sam="${1#*=}"
+                dict['input_sam']="${1#*=}"
                 shift 1
                 ;;
             '--input-sam')
-                input_sam="${2:?}"
+                dict['input_sam']="${2:?}"
                 shift 2
                 ;;
             '--output-bam='*)
-                output_bam="${1#*=}"
+                dict['output_bam']="${1#*=}"
                 shift 1
                 ;;
             '--output-bam')
-                output_bam="${2:?}"
+                dict['output_bam']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -23115,24 +23867,100 @@ koopa_samtools_convert_sam_to_bam() {
         esac
     done
     koopa_assert_is_set \
-        '--input-sam' "$input_sam" \
-        '--output-bam' "$output_bam"
-    sam_bn="$(koopa_basename "$input_sam")"
-    bam_bn="$(koopa_basename "$output_bam")"
-    if [[ -f "$output_bam" ]]
+        '--input-sam' "${dict['input_sam']}" \
+        '--output-bam' "${dict['output_bam']}"
+    koopa_assert_is_file "${dict['input_sam']}"
+    dict['input_sam']="$(koopa_realpath "${dict['input_sam']}")"
+    if [[ -f "${dict['output_bam']}" ]]
     then
-        koopa_alert_note "Skipping '${bam_bn}'."
+        koopa_alert_note "Skipping '${dict['output_bam']}'."
         return 0
     fi
-    koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
-    koopa_assert_is_file "$input_sam"
-    threads="$(koopa_cpu_count)"
+    koopa_alert "Converting '${dict['input_sam']}' to '${dict['output_bam']}'."
     "${app['samtools']}" view \
-        -@ "$threads" \
+        -@ "${dict['threads']}" \
         -b \
         -h \
-        -o "$output_bam" \
-        "$input_sam"
+        -o "${dict['output_bam']}" \
+        "${dict['input_sam']}"
+    koopa_assert_is_file "${dict['output_bam']}"
+    return 0
+}
+
+koopa_samtools_convert_sams_to_bams() {
+    local -A bool dict
+    local -a pos sam_files
+    local sam_file
+    bool['keep_sam']=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--keep-sam')
+                bool['keep_sam']=1
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args_eq "$#" 1
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    readarray -t sam_files <<< "$( \
+        koopa_find \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.sam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
+    )"
+    if ! koopa_is_array_non_empty "${sam_files[@]:-}"
+    then
+        koopa_stop "No SAM files detected in '${dict['prefix']}'."
+    fi
+    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
+    if [[ "${bool['keep_sam']}" -eq 1 ]]
+    then
+        koopa_alert_note 'SAM files will be preserved.'
+    else
+        koopa_alert_note 'SAM files will be deleted.'
+    fi
+    for sam_file in "${sam_files[@]}"
+    do
+        local bam_file
+        bam_file="${sam_file%.sam}.bam"
+        koopa_samtools_convert_sam_to_bam \
+            --input-sam="$sam_file" \
+            --output-bam="$bam_file"
+        if [[ "${bool['keep_sam']}" -eq 0 ]]
+        then
+            koopa_rm "$sam_file"
+        fi
+    done
+    return 0
+}
+
+koopa_samtools_index_bam() {
+    local -A app dict
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app['samtools']}"
+    dict['threads']="$(koopa_cpu_count)"
+    "${app['samtools']}" index \
+        -@ "${dict['threads']}" \
+        -M \
+        -b \
+        "$@"
     return 0
 }
 
@@ -23632,12 +24460,12 @@ koopa_ssh_key_info() {
 }
 
 koopa_star_align_paired_end_per_sample() {
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    dict['aws_profile']=''
-    dict['aws_s3_uri']=''
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
@@ -23649,22 +24477,6 @@ koopa_star_align_paired_end_per_sample() {
     while (("$#"))
     do
         case "$1" in
-            '--aws-profile='*)
-                dict['aws_profile']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-profile')
-                dict['aws_profile']="${2:?}"
-                shift 2
-                ;;
-            '--aws-s3-uri='*)
-                dict['aws_s3_uri']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-s3-uri')
-                dict['aws_s3_uri']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r1-file='*)
                 dict['fastq_r1_file']="${1#*=}"
                 shift 1
@@ -23673,28 +24485,12 @@ koopa_star_align_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -23737,27 +24533,42 @@ GB of RAM."
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
-    dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
-    dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
-    koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
-to '${dict['tmp_fastq_r1_file']}"
-    koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
-    koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
-to '${dict['tmp_fastq_r2_file']}"
-    koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
-        '--readFilesIn' \
-            "${dict['tmp_fastq_r1_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+        '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
@@ -23765,38 +24576,34 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_r1_file']}" \
-        "${dict['tmp_fastq_r2_file']}"
-    if [[ -n "${dict['aws_s3_uri']}" ]]
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
     then
-        app['aws']="$(koopa_locate_aws --allow-system)"
-        koopa_assert_is_executable "${app['aws']}"
-        koopa_alert "Syncing '${dict['output_dir']}' \
-to '${dict['aws_s3_uri']}'."
-        "${app['aws']}" s3 sync \
-            --profile "${dict['aws_profile']}" \
-            "${dict['output_dir']}/" \
-            "${dict['aws_s3_uri']}/"
-        koopa_rm "${dict['output_dir']}"
-        koopa_mkdir "${dict['output_dir']}"
+        koopa_rm "${dict['fastq_r1_file']}"
     fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    koopa_rm "${dict['output_dir']}/_STAR"*
+    dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_alert "Indexing BAM file '${dict['bam_file']}'."
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
 koopa_star_align_paired_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    dict['aws_s3_uri']=''
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
     dict['index_dir']=''
-    dict['mode']='paired-end'
     dict['output_dir']=''
     while (("$#"))
     do
@@ -23863,28 +24670,32 @@ koopa_star_align_paired_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    if koopa_str_detect_fixed \
-        --pattern='s3://' \
-        --string="${dict['output_dir']}"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
-        dict['aws_s3_uri']="$( \
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
         )"
-        dict['output_dir']="tmp-koopa-$(koopa_random_string)"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
-
-    if [[ -n "${dict['aws_s3_uri']}" ]]
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
-        koopa_dl 'AWS S3 URI' "${dict['aws_s3_uri']}"
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -23909,39 +24720,61 @@ koopa_star_align_paired_end() {
     do
         local -A dict2
         dict2['fastq_r1_file']="$fastq_r1_file"
-        dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
-        dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
-        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
-        dict2['aws_s3_uri']="${dict['aws_s3_uri']}/${dict2['sample_id']}"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_paired_end_per_sample \
-            --aws-profile="${dict['aws_profile']}" \
-            --aws-s3-uri="${dict2['aws_s3_uri']}" \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
-    [[ -n "${dict['aws_s3_uri']}" ]] && koopa_rm "${dict['output_dir']}"
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'STAR alignment was successful.'
     return 0
 }
 
 koopa_star_align_single_end_per_sample() {
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     koopa_assert_has_args "$#"
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_file']=0
     dict['fastq_file']=''
-    dict['fastq_tail']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=60
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    align_args=()
     while (("$#"))
     do
         case "$1" in
@@ -23951,14 +24784,6 @@ koopa_star_align_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -23984,9 +24809,13 @@ koopa_star_align_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
@@ -23998,62 +24827,59 @@ GB of RAM."
     koopa_assert_is_file "${dict['fastq_file']}"
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict['tmp_fastq_file']="$(koopa_tmp_file)"
-    koopa_alert "Decompressing '${dict['fastq_file']}' \
-to '${dict['tmp_fastq_file']}"
-    koopa_decompress "${dict['fastq_file']}" "${dict['tmp_fastq_file']}"
+    koopa_alert "Quantifying '${dict['fastq_bn']}' in '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['fastq_file']}"
+    then
+        bool['tmp_fastq_file']=1
+        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_file']}' to \
+'${dict['tmp_fastq_file']}"
+        koopa_decompress \
+            "${dict['fastq_file']}" \
+            "${dict['tmp_fastq_file']}"
+        dict['fastq_file']="${dict['tmp_fastq_file']}"
+    fi
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
-        '--readFilesIn' "${dict['tmp_fastq_file']}"
+        '--readFilesIn' "${dict['fastq_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_file']}"
+    if [[ "${bool['tmp_fastq_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_file']}"
+    fi
+    koopa_rm "${dict['output_dir']}/_STAR"*
+    dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_alert "Indexing BAM file '${dict['bam_file']}'."
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
 koopa_star_align_single_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_files
-    local fastq_file 
+    local fastq_file
     koopa_assert_has_args "$#"
-    dict['aws_bucket']=''
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
     dict['index_dir']=''
-    dict['mode']='single-end'
     dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
-            '--aws-bucket='*)
-                dict['aws_bucket']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-bucket')
-                dict['aws_bucket']="${2:?}"
-                shift 2
-                ;;
             '--aws-profile='*)
                 dict['aws_profile']="${1#*=}"
                 shift 1
@@ -24099,12 +24925,6 @@ koopa_star_align_single_end() {
                 ;;
         esac
     done
-    if [[ -n "${dict['aws_bucket']}" ]]
-    then
-        dict['aws_bucket']="$( \
-            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
-        )"
-    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-tail' "${dict['fastq_tail']}" \
@@ -24113,14 +24933,32 @@ koopa_star_align_single_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -24142,14 +24980,38 @@ koopa_star_align_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
+        local -A dict2
+        dict2['fastq_file']="$fastq_file"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_file']}")" \
+        )"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
-            --aws-bucket="${dict['aws_bucket']}" \
-            --aws-profile="${dict['aws_profile']}" \
-            --fastq-file="$fastq_file" \
-            --fastq-tail="${dict['fastq_tail']}" \
+            --fastq-file="${dict2['fastq_file']}" \
             --index-dir="${dict['index_dir']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'STAR alignment was successful.'
     return 0
 }
@@ -24159,16 +25021,14 @@ koopa_star_index() {
     local -a index_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=60
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    index_args=()
     while (("$#"))
     do
         case "$1" in
@@ -24218,40 +25078,35 @@ ${dict['mem_gb_cutoff']} GB of RAM."
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating STAR index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        bool['tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
-        bool['is_tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
-    if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
+    if koopa_fasta_has_alt_contigs "${dict['genome_fasta_file']}"
     then
-        koopa_warn "ALT contigs detected in '${dict['genome_fasta_file']}'."
+        koopa_warn 'ALT contigs detected in genome FASTA file.'
     fi
+    dict['genome_dir_bn']="$(koopa_basename "${dict['output_dir']}")"
     index_args+=(
-        '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
-        '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
+        '--genomeDir' "${dict['genome_dir_bn']}"
+        '--genomeFastaFiles' "${dict['genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
-        '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--sjdbGTFfile' "${dict['gtf_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
@@ -24260,10 +25115,14 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_gtf_file']}"
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }
@@ -25496,6 +26355,11 @@ koopa_tex_version() {
     return 0
 }
 
+koopa_tmp_dir_in_wd() {
+    koopa_init_dir "$(koopa_tmp_string)"
+    return 0
+}
+
 koopa_tmp_dir() {
     local x
     koopa_assert_has_no_args "$#"
@@ -25503,6 +26367,15 @@ koopa_tmp_dir() {
     koopa_assert_is_dir "$x"
     x="$(koopa_realpath "$x")"
     koopa_print "$x"
+    return 0
+}
+
+koopa_tmp_file_in_wd() {
+    local file
+    file="$(koopa_tmp_string)"
+    koopa_touch "$file"
+    koopa_assert_is_file "$file"
+    koopa_realpath "$file"
     return 0
 }
 
@@ -25519,6 +26392,11 @@ koopa_tmp_file() {
 koopa_tmp_log_file() {
     koopa_assert_has_no_args "$#"
     koopa_tmp_file
+    return 0
+}
+
+koopa_tmp_string() {
+    koopa_print ".koopa-tmp-$(koopa_random_string)"
     return 0
 }
 

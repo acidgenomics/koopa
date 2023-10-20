@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# TODO Add support for pushing to S3 as a tarball.
+
 koopa_rsem_index() {
     # """
     # Create a genome index for RSEM aligner.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - https://deweylab.github.io/RSEM/rsem-prepare-reference.html
@@ -19,9 +21,8 @@ koopa_rsem_index() {
     local -a index_args
     app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
-    dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
     # e.g. 'gencode.v39.annotation.gtf.gz'
@@ -31,7 +32,6 @@ koopa_rsem_index() {
     # e.g. 'rsem-index'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
     index_args=()
     while (("$#"))
     do
@@ -83,34 +83,28 @@ koopa_rsem_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['genome_fasta_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        bool['tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['gtf_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
     then
-        bool['is_tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     index_args+=(
-        '--gtf' "${dict['tmp_gtf_file']}"
+        '--gtf' "${dict['gtf_file']}"
         '--num-threads' "${dict['threads']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         'rsem'
     )
     koopa_dl 'Index args' "${index_args[*]}"
@@ -118,10 +112,14 @@ koopa_rsem_index() {
         koopa_cd "${dict['output_dir']}"
         "${app['rsem_prepare_reference']}" "${index_args[@]}"
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_gtf_file']}"
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }

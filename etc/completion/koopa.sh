@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-10-19.
+    # @note Updated 2023-10-20.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -656,7 +656,6 @@ _koopa_complete() {
                             ;;
                         'bowtie2' | \
                         'hisat2' | \
-                        'rsem' | \
                         'star')
                             args=('align' 'index')
                             ;;
@@ -706,7 +705,7 @@ _koopa_complete() {
                             args=('serve')
                             ;;
                         'kallisto' | \
-                        'salmon')
+                        'rsem')
                             args=('index' 'quant')
                             ;;
                         'md5sum')
@@ -714,6 +713,9 @@ _koopa_complete() {
                             ;;
                         'r')
                             args=('bioconda-check' 'check')
+                            ;;
+                        'salmon')
+                            args=('detect-fastq-library-type' 'index' 'quant')
                             ;;
                         'sra')
                             args=(
@@ -769,6 +771,21 @@ _koopa_complete() {
                                     ;;
                             esac
                             ;;
+                        'bowtie2')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
+                                    args=('paired-end')
+                                    ;;
+                            esac
+                            ;;
+                        'hisat2' | \
+                        'star')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
+                                    args=('paired-end' 'single-end')
+                                    ;;
+                            esac
+                            ;;
                         'kallisto')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
@@ -776,17 +793,17 @@ _koopa_complete() {
                                     ;;
                             esac
                             ;;
+                        'rsem')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'quant')
+                                    args=('bam')
+                                    ;;
+                            esac
+                            ;;
                         'salmon')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
                                     args=('bam' 'paired-end' 'single-end')
-                                    ;;
-                            esac
-                            ;;
-                        'star')
-                            case "${COMP_WORDS[COMP_CWORD-1]}" in
-                                'align')
-                                    args=('paired-end' 'single-end')
                                     ;;
                             esac
                             ;;

@@ -1,19 +1,21 @@
 #!/usr/bin/env bash
 
+# TODO Add support for pushing to S3 as a tarball.
+
 koopa_bowtie2_index() {
     # """
     # Generate bowtie2 index.
-    # @note Updated 2022-10-11.
+    # @note Updated 2023-10-20.
     # """
     local -A app dict
     local -a index_args
     koopa_assert_has_args "$#"
     app['bowtie2_build']="$(koopa_locate_bowtie2_build)"
-    app['tee']="$(koopa_locate_tee)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
-    # e.g. 'bowtie2-index'.
+    # e.g. 'indexes/bowtie2-gencode'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))

@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for AWS S3 URI FASTQ input.
-# FIXME Ensure we index all BAM files with samtools.
-# But only do this for 'Aligned.sortedByCoord.out.bam' file,
-# not the 'Aligned.toTranscriptome.out.bam' output.
-
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-07-18.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
@@ -23,20 +18,16 @@ koopa_star_align_paired_end_per_sample() {
     # @examples
     # > koopa_star_align_paired_end_per_sample \
     # >     --fastq-r1-file='fastq/sample1_R1_001.fastq.gz' \
-    # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-file='fastq/sample1_R2_001.fastq.gz' \
-    # >     --fastq-r2-tail="_R2_001.fastq.gz' \
-    # >     --index-dir='star-index' \
-    # >     --output-dir='star'
+    # >     --index-dir='indexes/star-gencode' \
+    # >     --output-dir='quant/star-gencode/sample1'
     # """
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    # e.g. 'default'
-    dict['aws_profile']=''
-    # e.g. 's3://bioinfo/rnaseq/sample1'
-    dict['aws_s3_uri']=''
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     # e.g. 'sample1_R1_001.fastq.gz'.
     dict['fastq_r1_file']=''
     # e.g. 'sample1_R2_001.fastq.gz'.
@@ -53,22 +44,6 @@ koopa_star_align_paired_end_per_sample() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--aws-profile='*)
-                dict['aws_profile']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-profile')
-                dict['aws_profile']="${2:?}"
-                shift 2
-                ;;
-            '--aws-s3-uri='*)
-                dict['aws_s3_uri']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-s3-uri')
-                dict['aws_s3_uri']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r1-file='*)
                 dict['fastq_r1_file']="${1#*=}"
                 shift 1
@@ -77,28 +52,12 @@ koopa_star_align_paired_end_per_sample() {
                 dict['fastq_r1_file']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-r1-tail='*)
-                dict['fastq_r1_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r1-tail')
-                dict['fastq_r1_tail']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r2-file='*)
                 dict['fastq_r2_file']="${1#*=}"
                 shift 1
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-r2-tail='*)
-                dict['fastq_r2_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-r2-tail')
-                dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -142,31 +101,42 @@ GB of RAM."
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
+    dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
+    dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
-    dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
-    dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
-    # FIXME Decompress into temporary inside working directory instead.
-    # Use 'koopa_random_string' to generate a random file basename.
-    koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
-to '${dict['tmp_fastq_r1_file']}"
-    koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
-    # FIXME Decompress into temporary inside working directory instead.
-    # Use 'koopa_random_string' to generate a random file basename.
-    koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
-to '${dict['tmp_fastq_r2_file']}"
-    koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
-        '--readFilesIn' \
-            "${dict['tmp_fastq_r1_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+        '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
@@ -174,22 +144,20 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_r1_file']}" \
-        "${dict['tmp_fastq_r2_file']}"
-    if [[ -n "${dict['aws_s3_uri']}" ]]
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
     then
-        app['aws']="$(koopa_locate_aws --allow-system)"
-        koopa_assert_is_executable "${app['aws']}"
-        koopa_alert "Syncing '${dict['output_dir']}' \
-to '${dict['aws_s3_uri']}'."
-        "${app['aws']}" s3 sync \
-            --profile "${dict['aws_profile']}" \
-            "${dict['output_dir']}/" \
-            "${dict['aws_s3_uri']}/"
-        koopa_rm "${dict['output_dir']}"
-        koopa_mkdir "${dict['output_dir']}"
+        koopa_rm "${dict['fastq_r1_file']}"
     fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    koopa_rm "${dict['output_dir']}/_STAR"*
+    # Ensure genome-level BAM file is indexed for IGV. Can skip indexing of
+    # transcriptome-level 'Aligned.toTranscriptome.out.bam' file.
+    dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_alert "Indexing BAM file '${dict['bam_file']}'."
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }

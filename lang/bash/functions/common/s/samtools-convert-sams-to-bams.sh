@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_convert_sam_to_bam() {
+koopa_samtools_convert_sams_to_bams() {
     # """
     # Convert multiple SAM files in a directory to BAM files.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-10-20.
     # """
     local -A bool dict
     local -a pos sam_files

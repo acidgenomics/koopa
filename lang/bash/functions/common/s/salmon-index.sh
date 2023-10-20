@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
-# FIXME Is setting the '--gencode' flag problematic when we have already cleaned
-# the input FASTA? Need to check this.
+# FIXME Add support for pushing to S3 as a tarball.
 
 koopa_salmon_index() {
     # """
     # Generate salmon index.
-    # @note Updated 2023-02-01.
+    # @note Updated 2023-10-20.
     #
     # @section GENCODE:
     #
@@ -33,14 +32,14 @@ koopa_salmon_index() {
     # >     --output-dir='salmon-index' \
     # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
     # """
-    local -A app dict
+    local -A app bool dict
     local -a index_args
     koopa_assert_has_args "$#"
     app['salmon']="$(koopa_locate_salmon)"
     koopa_assert_is_executable "${app[@]}"
-    dict['decoys']=1
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
-    dict['gencode']=0
+    bool['decoys']=1
+    bool['gencode']=0
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
     dict['genome_fasta_file']=''
     dict['kmer_length']=31
@@ -83,15 +82,15 @@ koopa_salmon_index() {
                 ;;
             # Flags ------------------------------------------------------------
             '--decoys')
-                dict['decoys']=1
+                bool['decoys']=1
                 shift 1
                 ;;
             '--gencode')
-                dict['gencode']=1
+                bool['gencode']=1
                 shift 1
                 ;;
             '--no-decoys')
-                dict['decoys']=0
+                bool['decoys']=0
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -118,19 +117,19 @@ koopa_salmon_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating salmon index at '${dict['output_dir']}'."
-    if [[ "${dict['gencode']}" -eq 0 ]] && \
+    if [[ "${bool['gencode']}" -eq 0 ]] && \
         koopa_str_detect_regex \
             --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
             --pattern='^gencode\.'
     then
-        dict['gencode']=1
+        bool['gencode']=1
     fi
-    if [[ "${dict['gencode']}" -eq 1 ]]
+    if [[ "${bool['gencode']}" -eq 1 ]]
     then
         koopa_alert_info 'Indexing against GENCODE reference genome.'
         index_args+=('--gencode')
     fi
-    if [[ "${dict['decoys']}" -eq 1 ]]
+    if [[ "${bool['decoys']}" -eq 1 ]]
     then
         koopa_alert 'Preparing decoy-aware reference transcriptome.'
         koopa_assert_is_set \
@@ -145,9 +144,8 @@ koopa_salmon_index() {
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['transcriptome_fasta_file']}"
-        dict['tmp_dir']="$(koopa_tmp_dir)"
-        dict['decoys_file']="${dict['tmp_dir']}/decoys.txt"
-        dict['gentrome_fasta_file']="${dict['tmp_dir']}/gentrome.fa.gz"
+        dict['decoys_file']="$(koopa_tmp_file_in_wd)"
+        dict['gentrome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_fasta_generate_chromosomes_file \
             --genome-fasta-file="${dict['genome_fasta_file']}" \
             --output-file="${dict['decoys_file']}"
@@ -175,6 +173,12 @@ koopa_salmon_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['salmon']}" index "${index_args[@]}"
+    if [[ "${bool['decoys']}" -eq 1 ]]
+    then
+        koopa_rm \
+            "${dict['decoys_file']}" \
+            "${dict['gentrome_fasta_file']}"
+    fi
     koopa_alert_success "salmon index created at '${dict['output_dir']}'."
     return 0
 }
