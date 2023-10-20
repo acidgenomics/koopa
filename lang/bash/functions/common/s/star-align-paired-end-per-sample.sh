@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure we index all BAM files with samtools.
-# But only do this for 'Aligned.sortedByCoord.out.bam' file,
-# not the 'Aligned.toTranscriptome.out.bam' output.
-
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
@@ -28,10 +24,12 @@ koopa_star_align_paired_end_per_sample() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     # e.g. 'sample1_R1_001.fastq.gz'.
     dict['fastq_r1_file']=''
     # e.g. 'sample1_R2_001.fastq.gz'.
@@ -125,26 +123,39 @@ GB of RAM."
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
-    dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
-    dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
-    # FIXME Use the same approach as STAR genome index function.
-    # FIXME Only decompress if necessary, otherwise can use original.
-    # FIXME Decompress into temporary inside working directory instead.
-    koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
-to '${dict['tmp_fastq_r1_file']}"
-    koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
-    koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
-to '${dict['tmp_fastq_r2_file']}"
-    koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
+    if koopa_str_detect_regex \
+        --string="${dict['fastq_r1_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_str_detect_regex \
+        --string="${dict['fastq_r2_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
-        '--readFilesIn' \
-            "${dict['tmp_fastq_r1_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+        '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
@@ -152,10 +163,20 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    # FIXME Only remove decompressed temporary file if necessary.
-    koopa_rm "${dict['tmp_fastq_r1_file']}"
-    # FIXME Only remove decompressed temporary file if necessary.
-    koopa_rm "${dict['tmp_fastq_r2_file']}"
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r1_file']}"
+    fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
     koopa_rm "${dict['output_dir']}/_STAR"*
+    # Ensure genome-level BAM file is indexed for IGV. Can skip indexing of
+    # transcriptome-level 'Aligned.toTranscriptome.out.bam' file.
+    dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_alert "Indexing BAM file '${dict['bam_file']}'."
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }

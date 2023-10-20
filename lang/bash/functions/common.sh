@@ -23150,6 +23150,21 @@ koopa_samtools_convert_sam_to_bam() {
     return 0
 }
 
+koopa_samtools_index_bam() {
+    local -A app dict
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app['samtools']}"
+    dict['threads']="$(koopa_cpu_count)"
+    "${app['samtools']}" index \
+        -@ "${dict['threads']}" \
+        -M \
+        -b \
+        "$@"
+    return 0
+}
+
 koopa_sanitize_version() {
     local str
     koopa_assert_has_args "$#"
@@ -23646,10 +23661,12 @@ koopa_ssh_key_info() {
 }
 
 koopa_star_align_paired_end_per_sample() {
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_r1_file']=0
+    bool['tmp_fastq_r2_file']=0
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
@@ -23737,23 +23754,39 @@ GB of RAM."
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
-    dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
-    dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
-    koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
-to '${dict['tmp_fastq_r1_file']}"
-    koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
-    koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
-to '${dict['tmp_fastq_r2_file']}"
-    koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
+    if koopa_str_detect_regex \
+        --string="${dict['fastq_r1_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        bool['tmp_fastq_r1_file']=1
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
+'${dict['tmp_fastq_r1_file']}"
+        koopa_decompress \
+            "${dict['fastq_r1_file']}" \
+            "${dict['tmp_fastq_r1_file']}"
+        dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
+    fi
+    if koopa_str_detect_regex \
+        --string="${dict['fastq_r2_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        bool['tmp_fastq_r2_file']=1
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
+'${dict['tmp_fastq_r2_file']}"
+        koopa_decompress \
+            "${dict['fastq_r2_file']}" \
+            "${dict['tmp_fastq_r2_file']}"
+        dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
-        '--readFilesIn' \
-            "${dict['tmp_fastq_r1_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+        '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
@@ -23761,9 +23794,19 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm "${dict['tmp_fastq_r1_file']}"
-    koopa_rm "${dict['tmp_fastq_r2_file']}"
+    if [[ "${bool['tmp_fastq_r1_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r1_file']}"
+    fi
+    if [[ "${bool['tmp_fastq_r2_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_r2_file']}"
+    fi
     koopa_rm "${dict['output_dir']}/_STAR"*
+    dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_alert "Indexing BAM file '${dict['bam_file']}'."
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
 
