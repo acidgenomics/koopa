@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Double check our automatic strandedness handling here.
-
 koopa_hisat2_align_paired_end_per_sample() {
     # """
     # Run HISAT2 aligner on a paired-end sample.

@@ -5725,68 +5725,6 @@ koopa_convert_line_endings_from_lf_to_crlf() {
     return 0
 }
 
-koopa_convert_sam_to_bam() {
-    local -A bool dict
-    local -a pos sam_files
-    local sam_file
-    bool['keep_sam']=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--keep-sam')
-                bool['keep_sam']=1
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_eq "$#" 1
-    dict['prefix']="${1:?}"
-    koopa_assert_is_dir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    readarray -t sam_files <<< "$( \
-        koopa_find \
-            --max-depth=3 \
-            --min-depth=1 \
-            --pattern='*.sam' \
-            --prefix="${dict['prefix']}" \
-            --sort \
-            --type='f' \
-    )"
-    if ! koopa_is_array_non_empty "${sam_files[@]:-}"
-    then
-        koopa_stop "No SAM files detected in '${dict['prefix']}'."
-    fi
-    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    if [[ "${bool['keep_sam']}" -eq 1 ]]
-    then
-        koopa_alert_note 'SAM files will be preserved.'
-    else
-        koopa_alert_note 'SAM files will be deleted.'
-    fi
-    for sam_file in "${sam_files[@]}"
-    do
-        local bam_file
-        bam_file="${sam_file%.sam}.bam"
-        koopa_samtools_convert_sam_to_bam \
-            --input-sam="$sam_file" \
-            --output-bam="$bam_file"
-        if [[ "${bool['keep_sam']}" -eq 0 ]]
-        then
-            koopa_rm "$sam_file"
-        fi
-    done
-    return 0
-}
-
 koopa_convert_utf8_nfd_to_nfc() {
     local -A app
     koopa_assert_has_args "$#"
@@ -23953,28 +23891,30 @@ koopa_sambamba_sort() {
 }
 
 koopa_samtools_convert_sam_to_bam() {
-    local -A app
-    local bam_bn input_sam output_bam sam_bn threads
+    local -A app dict
     koopa_assert_has_args "$#"
     app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app['samtools']}"
+    dict['input_sam']=''
+    dict['output_bam']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             '--input-sam='*)
-                input_sam="${1#*=}"
+                dict['input_sam']="${1#*=}"
                 shift 1
                 ;;
             '--input-sam')
-                input_sam="${2:?}"
+                dict['input_sam']="${2:?}"
                 shift 2
                 ;;
             '--output-bam='*)
-                output_bam="${1#*=}"
+                dict['output_bam']="${1#*=}"
                 shift 1
                 ;;
             '--output-bam')
-                output_bam="${2:?}"
+                dict['output_bam']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -23983,24 +23923,85 @@ koopa_samtools_convert_sam_to_bam() {
         esac
     done
     koopa_assert_is_set \
-        '--input-sam' "$input_sam" \
-        '--output-bam' "$output_bam"
-    if [[ -f "$output_bam" ]]
+        '--input-sam' "${dict['input_sam']}" \
+        '--output-bam' "${dict['output_bam']}"
+    koopa_assert_is_file "${dict['input_sam']}"
+    dict['input_sam']="$(koopa_realpath "${dict['input_sam']}")"
+    if [[ -f "${dict['output_bam']}" ]]
     then
-        koopa_alert_note "Skipping '${bam_bn}'."
+        koopa_alert_note "Skipping '${dict['output_bam']}'."
         return 0
     fi
-    sam_bn="$(koopa_basename "$input_sam")"
-    bam_bn="$(koopa_basename "$output_bam")"
-    koopa_alert "Converting '${sam_bn}' to '${bam_bn}'."
-    koopa_assert_is_file "$input_sam"
-    threads="$(koopa_cpu_count)"
+    koopa_alert "Converting '${dict['input_sam']}' to '${dict['output_bam']}'."
     "${app['samtools']}" view \
-        -@ "$threads" \
+        -@ "${dict['threads']}" \
         -b \
         -h \
-        -o "$output_bam" \
-        "$input_sam"
+        -o "${dict['output_bam']}" \
+        "${dict['input_sam']}"
+    koopa_assert_is_file "${dict['output_bam']}"
+    return 0
+}
+
+koopa_samtools_convert_sams_to_bams() {
+    local -A bool dict
+    local -a pos sam_files
+    local sam_file
+    bool['keep_sam']=0
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--keep-sam')
+                bool['keep_sam']=1
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args_eq "$#" 1
+    dict['prefix']="${1:?}"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
+    readarray -t sam_files <<< "$( \
+        koopa_find \
+            --max-depth=3 \
+            --min-depth=1 \
+            --pattern='*.sam' \
+            --prefix="${dict['prefix']}" \
+            --sort \
+            --type='f' \
+    )"
+    if ! koopa_is_array_non_empty "${sam_files[@]:-}"
+    then
+        koopa_stop "No SAM files detected in '${dict['prefix']}'."
+    fi
+    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
+    if [[ "${bool['keep_sam']}" -eq 1 ]]
+    then
+        koopa_alert_note 'SAM files will be preserved.'
+    else
+        koopa_alert_note 'SAM files will be deleted.'
+    fi
+    for sam_file in "${sam_files[@]}"
+    do
+        local bam_file
+        bam_file="${sam_file%.sam}.bam"
+        koopa_samtools_convert_sam_to_bam \
+            --input-sam="$sam_file" \
+            --output-bam="$bam_file"
+        if [[ "${bool['keep_sam']}" -eq 0 ]]
+        then
+            koopa_rm "$sam_file"
+        fi
+    done
     return 0
 }
 
