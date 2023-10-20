@@ -19,23 +19,17 @@ main() {
     # """
     local -A app cmake dict
     local -a build_deps cmake_args deps
-    build_deps=(
-        'autoconf'
-        'automake'
-        'patch'
-    )
+    build_deps=('autoconf' 'automake' 'patch')
     deps=(
         'bzip2'
         'xz'
         'zlib'
-        # Need to include this, otherwise libsz won't get burned into rpath.
         'libaec' # hdf5
         'hdf5'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['autoreconf']="$(koopa_locate_autoreconf)"
-    app['cat']="$(koopa_locate_cat --allow-system)"
     app['patch']="$(koopa_locate_patch)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -70,26 +64,17 @@ v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     # This patch step is needed for bifrost to pick up zlib correctly.
     # https://github.com/pachterlab/kallisto/issues/385
-    # Patch diff created with:
-    # > diff -u 'CMakeLists.txt' 'CMakeLists-1.txt' > 'patch-cmakelists.patch'
-    "${app['cat']}" << END > 'patch-cmakelists.patch'
---- CMakeLists.txt	2023-07-07 09:52:04
-+++ CMakeLists-1.txt	2023-07-07 09:54:44
-@@ -72,7 +72,7 @@
-     PREFIX \${PROJECT_SOURCE_DIR}/ext/bifrost
-     SOURCE_DIR \${PROJECT_SOURCE_DIR}/ext/bifrost
-     BUILD_IN_SOURCE 1
--    CONFIGURE_COMMAND mkdir -p build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=\${PREFIX} -DCMAKE_CXX_FLAGS=\${PROJECT_BIFROST_CMAKE_CXX_FLAGS}
-+    CONFIGURE_COMMAND mkdir -p build && cd build && cmake .. -DCMAKE_INSTALL_PREFIX=\${PREFIX} -DCMAKE_CXX_FLAGS=\${PROJECT_BIFROST_CMAKE_CXX_FLAGS} -DZLIB_INCLUDE_DIR=\${ZLIB_INCLUDE_DIR} -DZLIB_LIBRARY=\${ZLIB_LIBRARY}
-     BUILD_COMMAND cd build && make
-     INSTALL_COMMAND ""
- )
-END
-    "${app['patch']}" \
-        --unified \
-        --verbose \
-        'src/CMakeLists.txt' \
-        'patch-cmakelists.patch'
+    if [[ "${dict['version']}" == '0.50.0' ]]
+    then
+        dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
+        dict['patch_file']="${dict['patch_prefix']}/cmakelists.patch"
+        koopa_assert_is_file "${dict['patch_file']}"
+        "${app['patch']}" \
+            --unified \
+            --verbose \
+            'src/CMakeLists.txt' \
+            "${dict['patch_file']}"
+    fi
     # This patch step is needed for autoconf 2.69 compatibility.
     # https://github.com/pachterlab/kallisto/issues/303#issuecomment-884612169
     (
