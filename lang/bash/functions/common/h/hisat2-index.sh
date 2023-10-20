@@ -112,50 +112,48 @@ koopa_hisat2_index() {
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_str_detect_regex \
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['exons_file']="${dict['output_dir']}/exons.tsv"
     dict['splice_sites_file']="${dict['output_dir']}/splicesites.tsv"
     "${app['hisat2_extract_exons']}" \
-        "${dict['tmp_gtf_file']}" \
+        "${dict['gtf_file']}" \
         > "${dict['exons_file']}"
     "${app['hisat2_extract_splice_sites']}" \
-        "${dict['tmp_gtf_file']}" \
+        "${dict['gtf_file']}" \
         > "${dict['splice_sites_file']}"
     index_args+=(
         '-p' "${dict['threads']}"
         '--exon' "${dict['exons_file']}"
         '--seed' "${dict['seed']}"
         '--ss' "${dict['splice_sites_file']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         "${dict['ht2_base']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
     if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
+        koopa_rm "${dict['genome_fasta_file']}"
     fi
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_gtf_file']}"
+        koopa_rm "${dict['gtf_file']}"
     fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
