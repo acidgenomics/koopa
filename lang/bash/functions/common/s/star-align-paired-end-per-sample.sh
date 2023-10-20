@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for AWS S3 URI FASTQ input.
 # FIXME Ensure we index all BAM files with samtools.
 # But only do this for 'Aligned.sortedByCoord.out.bam' file,
 # not the 'Aligned.toTranscriptome.out.bam' output.
@@ -8,7 +7,7 @@
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-07-18.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
@@ -33,10 +32,6 @@ koopa_star_align_paired_end_per_sample() {
     local -a align_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    # e.g. 'default'
-    dict['aws_profile']=''
-    # e.g. 's3://bioinfo/rnaseq/sample1'
-    dict['aws_s3_uri']=''
     # e.g. 'sample1_R1_001.fastq.gz'.
     dict['fastq_r1_file']=''
     # e.g. 'sample1_R2_001.fastq.gz'.
@@ -53,22 +48,6 @@ koopa_star_align_paired_end_per_sample() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--aws-profile='*)
-                dict['aws_profile']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-profile')
-                dict['aws_profile']="${2:?}"
-                shift 2
-                ;;
-            '--aws-s3-uri='*)
-                dict['aws_s3_uri']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-s3-uri')
-                dict['aws_s3_uri']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r1-file='*)
                 dict['fastq_r1_file']="${1#*=}"
                 shift 1
@@ -148,13 +127,12 @@ GB of RAM."
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     dict['tmp_fastq_r1_file']="$(koopa_tmp_file)"
     dict['tmp_fastq_r2_file']="$(koopa_tmp_file)"
+    # FIXME Use the same approach as STAR genome index function.
+    # FIXME Only decompress if necessary, otherwise can use original.
     # FIXME Decompress into temporary inside working directory instead.
-    # Use 'koopa_random_string' to generate a random file basename.
     koopa_alert "Decompressing '${dict['fastq_r1_file']}' \
 to '${dict['tmp_fastq_r1_file']}"
     koopa_decompress "${dict['fastq_r1_file']}" "${dict['tmp_fastq_r1_file']}"
-    # FIXME Decompress into temporary inside working directory instead.
-    # Use 'koopa_random_string' to generate a random file basename.
     koopa_alert "Decompressing '${dict['fastq_r2_file']}' \
 to '${dict['tmp_fastq_r2_file']}"
     koopa_decompress "${dict['fastq_r2_file']}" "${dict['tmp_fastq_r2_file']}"
@@ -174,22 +152,10 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_r1_file']}" \
-        "${dict['tmp_fastq_r2_file']}"
-    if [[ -n "${dict['aws_s3_uri']}" ]]
-    then
-        app['aws']="$(koopa_locate_aws --allow-system)"
-        koopa_assert_is_executable "${app['aws']}"
-        koopa_alert "Syncing '${dict['output_dir']}' \
-to '${dict['aws_s3_uri']}'."
-        "${app['aws']}" s3 sync \
-            --profile "${dict['aws_profile']}" \
-            "${dict['output_dir']}/" \
-            "${dict['aws_s3_uri']}/"
-        koopa_rm "${dict['output_dir']}"
-        koopa_mkdir "${dict['output_dir']}"
-    fi
+    # FIXME Only remove decompressed temporary file if necessary.
+    koopa_rm "${dict['tmp_fastq_r1_file']}"
+    # FIXME Only remove decompressed temporary file if necessary.
+    koopa_rm "${dict['tmp_fastq_r2_file']}"
+    koopa_rm "${dict['output_dir']}/_STAR"*
     return 0
 }
