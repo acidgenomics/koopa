@@ -7596,18 +7596,18 @@ at '${dict['output_file']}'."
 }
 
 koopa_fasta_has_alt_contigs() {
-    local -A dict
+    local -A bool dict
     koopa_assert_has_args_eq "$#" 1
+    bool['tmp_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['file']="${1:?}"
-    dict['is_tmp_file']=0
     dict['status']=1
     koopa_assert_is_file "${dict['file']}"
     if koopa_str_detect_regex \
         --string="${dict['file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        dict['is_tmp_file']=1
+        bool['tmp_file']=1
         dict['tmp_file']="$(koopa_tmp_file)"
         koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
     else
@@ -7625,7 +7625,10 @@ koopa_fasta_has_alt_contigs() {
     then
         dict['status']=0
     fi
-    [[ "${dict['is_tmp_file']}" -eq 1 ]] && koopa_rm "${dict['tmp_file']}"
+    if [[ "${bool['tmp_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['tmp_file']}"
+    fi
     return "${dict['status']}"
 }
 
@@ -10412,8 +10415,8 @@ koopa_hisat2_index() {
         koopa_locate_hisat2_extract_splice_sites \
     )"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
@@ -10476,7 +10479,7 @@ koopa_hisat2_index() {
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
+        bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -10488,7 +10491,7 @@ koopa_hisat2_index() {
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_gtf_file']=1
+        bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -10514,10 +10517,14 @@ koopa_hisat2_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_gtf_file']}"
+    fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
 }
@@ -21731,8 +21738,8 @@ koopa_rsem_index() {
     local -a index_args
     app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
@@ -21794,7 +21801,7 @@ koopa_rsem_index() {
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
+        bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -21806,7 +21813,7 @@ koopa_rsem_index() {
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_gtf_file']=1
+        bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -21825,10 +21832,14 @@ koopa_rsem_index() {
         koopa_cd "${dict['output_dir']}"
         "${app['rsem_prepare_reference']}" "${index_args[@]}"
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
         koopa_rm "${dict['tmp_gtf_file']}"
+    fi
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }
@@ -23636,8 +23647,6 @@ koopa_star_align_paired_end_per_sample() {
     local -a align_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    dict['aws_profile']=''
-    dict['aws_s3_uri']=''
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
@@ -23649,22 +23658,6 @@ koopa_star_align_paired_end_per_sample() {
     while (("$#"))
     do
         case "$1" in
-            '--aws-profile='*)
-                dict['aws_profile']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-profile')
-                dict['aws_profile']="${2:?}"
-                shift 2
-                ;;
-            '--aws-s3-uri='*)
-                dict['aws_s3_uri']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-s3-uri')
-                dict['aws_s3_uri']="${2:?}"
-                shift 2
-                ;;
             '--fastq-r1-file='*)
                 dict['fastq_r1_file']="${1#*=}"
                 shift 1
@@ -23765,39 +23758,25 @@ to '${dict['tmp_fastq_r2_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_r1_file']}" \
-        "${dict['tmp_fastq_r2_file']}"
-    if [[ -n "${dict['aws_s3_uri']}" ]]
-    then
-        app['aws']="$(koopa_locate_aws --allow-system)"
-        koopa_assert_is_executable "${app['aws']}"
-        koopa_alert "Syncing '${dict['output_dir']}' \
-to '${dict['aws_s3_uri']}'."
-        "${app['aws']}" s3 sync \
-            --profile "${dict['aws_profile']}" \
-            "${dict['output_dir']}/" \
-            "${dict['aws_s3_uri']}/"
-        koopa_rm "${dict['output_dir']}"
-        koopa_mkdir "${dict['output_dir']}"
-    fi
+    koopa_rm "${dict['tmp_fastq_r1_file']}"
+    koopa_rm "${dict['tmp_fastq_r2_file']}"
+    koopa_rm "${dict['output_dir']}/_STAR"*
     return 0
 }
 
 koopa_star_align_paired_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
+    dict['aws_s3_output_dir']=''
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
     dict['index_dir']=''
-    dict['mode']='paired-end'
     dict['output_dir']=''
-    dict['output_s3_uri']=''
     while (("$#"))
     do
         case "$1" in
@@ -23867,24 +23846,29 @@ koopa_star_align_paired_end() {
         --pattern='s3://' \
         --string="${dict['output_dir']}"
     then
-        dict['output_s3_uri']="$( \
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
         )"
         dict['output_dir']="$(koopa_tmp_dir_in_wd)"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    if [[ -n "${dict['aws_s3_output_dir']}" ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
-
-    if [[ -n "${dict['aws_s3_uri']}" ]]
+    if [[ -n "${dict['aws_s3_output_dir']}" ]]
     then
-        koopa_dl 'AWS S3 URI' "${dict['aws_s3_uri']}"
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -23913,17 +23897,29 @@ koopa_star_align_paired_end() {
 ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
         dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
-        dict2['aws_s3_uri']="${dict['aws_s3_uri']}/${dict2['sample_id']}"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
+        dict2['output_s3_uri']="${dict['output_s3_uri']}/${dict2['sample_id']}"
         koopa_star_align_paired_end_per_sample \
-            --aws-profile="${dict['aws_profile']}" \
-            --aws-s3-uri="${dict2['aws_s3_uri']}" \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
+        if [[ -n "${dict['aws_s3_output_dir']}" ]]
+        then
+            koopa_alert "Syncing '${dict['output_dir']}' to \
+'${dict['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict['output_dir']}/" \
+                "${dict['aws_s3_output_dir']}/"
+            koopa_rm "${dict['output_dir']}"
+            koopa_mkdir "${dict['output_dir']}"
+        fi
     done
-    [[ -n "${dict['aws_s3_uri']}" ]] && koopa_rm "${dict['output_dir']}"
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'STAR alignment was successful.'
     return 0
 }
@@ -24025,9 +24021,8 @@ to '${dict['tmp_fastq_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_file']}"
+    koopa_rm "${dict['tmp_fastq_file']}"
+    koopa_rm "${dict['output_dir']}/_STAR"*
     return 0
 }
 
@@ -24159,8 +24154,8 @@ koopa_star_index() {
     local -a index_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
@@ -24222,7 +24217,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
+        bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -24234,7 +24229,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_gtf_file']=1
+        bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -24260,9 +24255,9 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]] && \
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
+    [[ "${bool['tmp_gtf_file']}" -eq 1 ]] && \
         koopa_rm "${dict['tmp_gtf_file']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
