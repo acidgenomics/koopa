@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# TODO Add support for FASTQ directory directly from S3.
+# TODO Add support for genome index tarball directly from S3.
+
 koopa_kallisto_quant_paired_end() {
     # """
     # Run kallisto quant on multiple paired-end FASTQs in a directory.
@@ -29,7 +32,6 @@ koopa_kallisto_quant_paired_end() {
     dict['index_dir']=''
     # Using salmon fragment library type conventions here.
     dict['lib_type']='A'
-    dict['mode']='paired-end'
     # e.g. 'quant/kallisto-gencode'.
     dict['output_dir']=''
     while (("$#"))
@@ -125,7 +127,7 @@ koopa_kallisto_quant_paired_end() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running kallisto quant.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
