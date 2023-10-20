@@ -15956,6 +15956,7 @@ koopa_kallisto_index() {
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     dict['transcriptome_fasta_file']=''
+    dict['version']="$(koopa_app_version 'kallisto')"
     index_args=()
     while (("$#"))
     do
@@ -16003,9 +16004,13 @@ koopa_kallisto_index() {
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
-        "--threads=${dict['threads']}"
-        "${dict['transcriptome_fasta_file']}"
     )
+    case "${dict['version']}" in
+        '0.50.'*)
+            index_args+=("--threads=${dict['threads']}")
+            ;;
+    esac
+    index_args+=("${dict['transcriptome_fasta_file']}")
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['kallisto']}" index "${index_args[@]}"
     koopa_alert_success "kallisto index created at '${dict['output_dir']}'."
