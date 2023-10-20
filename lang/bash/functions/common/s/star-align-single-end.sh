@@ -26,9 +26,10 @@ koopa_star_align_single_end() {
     dict['fastq_dir']=''
     # e.g. '_001.fastq.gz'.
     dict['fastq_tail']=''
-    # e.g. 'star-index'.
+    # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
-    # e.g. 'star', or AWS S3 URI 's3://example/quant/star-gencode'.
+    # e.g. 'quant/star-gencode',
+    # or AWS S3 URI 's3://example/quant/star-gencode'.
     dict['output_dir']=''
     while (("$#"))
     do
@@ -138,6 +139,7 @@ koopa_star_align_single_end() {
         local -A dict2
         dict2['fastq_file']="$fastq_file"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_file']}")"
+        # FIXME Rework using koopa_sub.
         dict2['sample_id']="${dict2['sample_id']/${dict['fastq_tail']}/}"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
