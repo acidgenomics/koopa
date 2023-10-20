@@ -3,7 +3,7 @@
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
-    # @note Updated 2023-10-17.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - kallisto index --help
@@ -18,7 +18,7 @@ koopa_kallisto_index() {
     koopa_assert_has_args "$#"
     app['kallisto']="$(koopa_locate_kallisto)"
     koopa_assert_is_executable "${app[@]}"
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     dict['kmer_size']=31
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
@@ -73,7 +73,6 @@ koopa_kallisto_index() {
     dict['index_file']="${dict['output_dir']}/kallisto.idx"
     koopa_alert "Generating kallisto index at '${dict['output_dir']}'."
     index_args+=(
-        # > '--distinguish'
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
