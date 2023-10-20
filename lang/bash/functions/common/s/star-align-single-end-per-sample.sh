@@ -89,6 +89,8 @@ GB of RAM."
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
+    # FIXME Rework this to define the output directory in the parent function.
+    # Refer to our paired-end code for consistency.
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
