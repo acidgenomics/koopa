@@ -23908,12 +23908,12 @@ koopa_star_align_paired_end() {
         )"
         dict['output_dir']="$(koopa_tmp_dir_in_wd)"
     fi
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
         koopa_assert_is_executable "${app['aws']}"
     fi
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
         'Mode' 'paired-end' \
@@ -23954,7 +23954,8 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
         dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
-        dict2['output_s3_uri']="${dict['output_s3_uri']}/${dict2['sample_id']}"
+        dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
         koopa_star_align_paired_end_per_sample \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
@@ -23962,14 +23963,14 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
-            koopa_alert "Syncing '${dict['output_dir']}' to \
-'${dict['aws_s3_output_dir']}'."
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
             "${app['aws']}" s3 sync \
                 --profile "${dict['aws_profile']}" \
-                "${dict['output_dir']}/" \
-                "${dict['aws_s3_output_dir']}/"
-            koopa_rm "${dict['output_dir']}"
-            koopa_mkdir "${dict['output_dir']}"
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
         fi
     done
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
@@ -24097,11 +24098,12 @@ GB of RAM."
 }
 
 koopa_star_align_single_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_files
-    local fastq_file 
+    local fastq_file
     koopa_assert_has_args "$#"
-    dict['aws_bucket']=''
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
@@ -24111,14 +24113,6 @@ koopa_star_align_single_end() {
     while (("$#"))
     do
         case "$1" in
-            '--aws-bucket='*)
-                dict['aws_bucket']="${1#*=}"
-                shift 1
-                ;;
-            '--aws-bucket')
-                dict['aws_bucket']="${2:?}"
-                shift 2
-                ;;
             '--aws-profile='*)
                 dict['aws_profile']="${1#*=}"
                 shift 1
@@ -24164,12 +24158,6 @@ koopa_star_align_single_end() {
                 ;;
         esac
     done
-    if [[ -n "${dict['aws_bucket']}" ]]
-    then
-        dict['aws_bucket']="$( \
-            koopa_strip_trailing_slash "${dict['aws_bucket']}" \
-        )"
-    fi
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-tail' "${dict['fastq_tail']}" \
@@ -24178,6 +24166,20 @@ koopa_star_align_single_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
@@ -24186,6 +24188,10 @@ koopa_star_align_single_end() {
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -24208,13 +24214,15 @@ koopa_star_align_single_end() {
     for fastq_file in "${fastq_files[@]}"
     do
         koopa_star_align_single_end_per_sample \
-            --aws-bucket="${dict['aws_bucket']}" \
-            --aws-profile="${dict['aws_profile']}" \
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict['fastq_tail']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict['output_dir']}"
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'STAR alignment was successful.'
     return 0
 }
