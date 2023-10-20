@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Don't attempt to define the output by the sample name here.
-
 koopa_salmon_quant_single_end_per_sample() {
     # """
     # Run salmon quant on a single-end sample.
-    # @note Updated 2023-06-16.
+    # @note Updated 2023-10-20.
     #
     # Number of bootstraps matches the current recommendation in bcbio-nextgen.
     # Attempting to detect library type (strandedness) automatically by default.
@@ -17,9 +15,8 @@ koopa_salmon_quant_single_end_per_sample() {
     # @examples
     # > koopa_salmon_quant_single_end_per_sample \
     # >     --fastq-file='fastq/sample1_001.fastq.gz' \
-    # >     --fastq-tail='_001.fastq.gz' \
-    # >     --index-dir='salmon-index' \
-    # >     --output-dir='salmon'
+    # >     --index-dir='indexes/salmon-gencode' \
+    # >     --output-dir='quant/salmon-gencode/sample1'
     # """
     local -A app dict
     local -a quant_args
@@ -29,8 +26,6 @@ koopa_salmon_quant_single_end_per_sample() {
     dict['bootstraps']=30
     # e.g. 'sample1.fastq.gz'.
     dict['fastq_file']=''
-    # e.g. '.fastq.gz'.
-    dict['fastq_tail']=''
     # e.g. 'salmon-index'.
     dict['index_dir']=''
     # Detect library fragment type (strandedness) automatically.
@@ -51,14 +46,6 @@ koopa_salmon_quant_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -93,10 +80,14 @@ koopa_salmon_quant_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -104,16 +95,8 @@ koopa_salmon_quant_single_end_per_sample() {
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     # Don't set '--gcBias' here.

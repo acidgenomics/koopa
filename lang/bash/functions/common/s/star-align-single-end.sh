@@ -28,7 +28,6 @@ koopa_star_align_single_end() {
     dict['fastq_tail']=''
     # e.g. 'star-index'.
     dict['index_dir']=''
-    dict['mode']='single-end'
     # e.g. 'star', or AWS S3 URI 's3://example/quant/star-gencode'.
     dict['output_dir']=''
     while (("$#"))
@@ -106,7 +105,7 @@ koopa_star_align_single_end() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
