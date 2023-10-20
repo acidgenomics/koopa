@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# FIXME Add option to delete original compressed file.
+# TODO Add option to delete original compressed file.
 
-# NOTE Consider adding support for extraction of individual files.
+# TODO Consider adding support for extraction of individual files.
 # This is the tar convention -- maybe we can make this work with unzip.
 # > tar -tzvf your_archive.tar.gz
 # > tar -xvzf your_archive.tar.gz your_archive/specific_file.txt
@@ -10,7 +10,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-08-21.
+    # @note Updated 2023-10-20.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -73,10 +73,8 @@ koopa_extract() {
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
-    dict['tmpdir']="$( \
-        koopa_init_dir "$(koopa_parent_dir "${dict['file']}")/\
-.koopa-extract-$(koopa_random_string)" \
-    )"
+    dict['tmpdir']="$(koopa_parent_dir "${dict['file']}")/$(koopa_tmp_string)"
+    dict['tmpdir']="$(koopa_init_dir "${dict['tmpdir']}")"
     dict['tmpfile']="${dict['tmpdir']}/$(koopa_basename "${dict['file']}")"
     koopa_ln "${dict['file']}" "${dict['tmpfile']}"
     # Archiving only -----------------------------------------------------------
