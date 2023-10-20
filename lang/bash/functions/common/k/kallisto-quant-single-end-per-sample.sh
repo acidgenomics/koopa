@@ -48,7 +48,6 @@ koopa_kallisto_quant_single_end_per_sample() {
     dict['output_dir']=''
     # Current recommendation in bcbio-nextgen.
     dict['sd']=25
-    quant_args=()
     while (("$#"))
     do
         case "$1" in

@@ -64,7 +64,6 @@ koopa_kallisto_quant_paired_end_per_sample() {
     # e.g. 'indexes/salmon-gencode'
     dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    quant_args=()
     while (("$#"))
     do
         case "$1" in

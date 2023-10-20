@@ -4190,8 +4190,7 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'bowtie2' | \
-        'rsem')
+        'bowtie2')
             case "${2:-}" in
                 'align')
                     case "${3:-}" in
@@ -4384,6 +4383,28 @@ koopa_cli_app() {
         'rnaeditingindexer')
             dict['key']="${1:?}"
             shift 1
+            ;;
+        'rsem')
+            case "${2:-}" in
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                'quant')
+                    case "${3:-}" in
+                        'paired-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
             ;;
         'salmon')
             case "${2:-}" in
@@ -16309,7 +16330,6 @@ koopa_kallisto_quant_paired_end_per_sample() {
     dict['mem_gb_cutoff']=14
     dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    quant_args=()
     while (("$#"))
     do
         case "$1" in
@@ -16643,7 +16663,6 @@ koopa_kallisto_quant_single_end_per_sample() {
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
     dict['sd']=25
-    quant_args=()
     while (("$#"))
     do
         case "$1" in
@@ -22162,20 +22181,216 @@ koopa_roff() {
     return 0
 }
 
-koopa_rsem_align_paired_end_per_sample() {
+koopa_rsem_fastq_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            to='none'
+            ;;
+        'ISF')
+            to='forward'
+            ;;
+        'ISR')
+            to='reverse'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_rsem_index() {
+    local -A app bool dict
+    local -a index_args
+    app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
+    koopa_assert_is_executable "${app[@]}"
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
+    dict['genome_fasta_file']=''
+    dict['gtf_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=10
+    dict['output_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
+    index_args=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--genome-fasta-file='*)
+                dict['genome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "RSEM requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_file \
+        "${dict['genome_fasta_file']}" \
+        "${dict['gtf_file']}"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
+    then
+        bool['tmp_genome_fasta_file']=1
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            "${dict['genome_fasta_file']}" \
+            "${dict['tmp_genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            "${dict['gtf_file']}" \
+            "${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
+    fi
+    index_args+=(
+        '--gtf' "${dict['gtf_file']}"
+        '--num-threads' "${dict['threads']}"
+        "${dict['genome_fasta_file']}"
+        'rsem'
+    )
+    koopa_dl 'Index args' "${index_args[*]}"
+    (
+        koopa_cd "${dict['output_dir']}"
+        "${app['rsem_prepare_reference']}" "${index_args[@]}"
+    )
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
+    koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_rsem_quant_paired_end_per_sample() {
     local -A app dict
     local -a align_args
     app['rsem_calculate_expression']="$(koopa_locate_rsem_calculate_expression)"
     koopa_assert_is_executable "${app[@]}"
+    dict['lib_type']=''
     dict['threads']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--fastq-r1-file='*)
+                dict['fastq_r1_file']="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r1-file')
+                dict['fastq_r1_file']="${2:?}"
+                shift 2
+                ;;
+            '--fastq-r2-file='*)
+                dict['fastq_r2_file']="${1#*=}"
+                shift 1
+                ;;
+            '--fastq-r2-file')
+                dict['fastq_r2_file']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--fastq-r1-file' "${dict['fastq_r1_file']}" \
+        '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "kallisto quant requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    if [[ -n "${dict['lib_type']}" ]]
+    then
+        dict['lib_type']="$( \
+            koopa_rsem_fastq_library_type "${dict['lib_type']}" \
+        )"
+        align_args+=('--strandedness' "${dict['lib_type']}")
+    fi
     align_args+=(
+        '--bam'
+        '--estimate-rspd'
         '--paired-end'
-        '--strandedness' 'none'
+        '--no-bam-output'
         '--num-threads' "${dict['threads']}"
-        'CORE FLAG'
-        'PAIRED FLAG'
-        "FIXME INDEX DIR"
-        "FIXME SAMPLE NAME"
+        "${dict['index_dir']}" # FIXME
+        "${dict['output_dir']}" # FIXME
     )
     return 0
 }
@@ -22376,131 +22591,6 @@ ${dict2['sample_id']}"
         koopa_rm "${dict['output_dir']}"
     fi
     koopa_alert_success 'RSEM quant was successful.'
-    return 0
-}
-
-koopa_rsem_fastq_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            to='none'
-            ;;
-        'ISF')
-            to='forward'
-            ;;
-        'ISR')
-            to='reverse'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
-koopa_rsem_index() {
-    local -A app bool dict
-    local -a index_args
-    app['rsem_prepare_reference']="$(koopa_locate_rsem_prepare_reference)"
-    koopa_assert_is_executable "${app[@]}"
-    bool['tmp_genome_fasta_file']=0
-    bool['tmp_gtf_file']=0
-    dict['genome_fasta_file']=''
-    dict['gtf_file']=''
-    dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=10
-    dict['output_dir']=''
-    dict['threads']="$(koopa_cpu_count)"
-    index_args=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--genome-fasta-file='*)
-                dict['genome_fasta_file']="${1#*=}"
-                shift 1
-                ;;
-            '--genome-fasta-file')
-                dict['genome_fasta_file']="${2:?}"
-                shift 2
-                ;;
-            '--gtf-file='*)
-                dict['gtf_file']="${1#*=}"
-                shift 1
-                ;;
-            '--gtf-file')
-                dict['gtf_file']="${2:?}"
-                shift 2
-                ;;
-            '--output-dir='*)
-                dict['output_dir']="${1#*=}"
-                shift 1
-                ;;
-            '--output-dir')
-                dict['output_dir']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set \
-        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
-        '--gtf-file' "${dict['gtf_file']}" \
-        '--output-dir' "${dict['output_dir']}"
-    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
-    then
-        koopa_stop "RSEM requires ${dict['mem_gb_cutoff']} GB of RAM."
-    fi
-    koopa_assert_is_file \
-        "${dict['genome_fasta_file']}" \
-        "${dict['gtf_file']}"
-    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
-    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
-    koopa_assert_is_not_dir "${dict['output_dir']}"
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Generating RSEM index at '${dict['output_dir']}'."
-    if koopa_is_compressed_file "${dict['genome_fasta_file']}"
-    then
-        bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
-        koopa_decompress \
-            "${dict['genome_fasta_file']}" \
-            "${dict['tmp_genome_fasta_file']}"
-        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
-    fi
-    if koopa_is_compressed_file "${dict['gtf_file']}"
-    then
-        bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
-        koopa_decompress \
-            "${dict['gtf_file']}" \
-            "${dict['tmp_gtf_file']}"
-        dict['gtf_file']="${dict['tmp_gtf_file']}"
-    fi
-    index_args+=(
-        '--gtf' "${dict['gtf_file']}"
-        '--num-threads' "${dict['threads']}"
-        "${dict['genome_fasta_file']}"
-        'rsem'
-    )
-    koopa_dl 'Index args' "${index_args[*]}"
-    (
-        koopa_cd "${dict['output_dir']}"
-        "${app['rsem_prepare_reference']}" "${index_args[@]}"
-    )
-    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
-    then
-        koopa_rm "${dict['genome_fasta_file']}"
-    fi
-    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
-    then
-        koopa_rm "${dict['gtf_file']}"
-    fi
-    koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
 }
 
