@@ -68,7 +68,7 @@ pattern '${dict['pattern']}'."
             --input-bam="${dict2['file_2']}" \
             --output-bam="${dict2['file_3']}"
         koopa_cp "${dict2['file_3']}" "${dict2['output']}"
-        koopa_sambamba_index "${dict2['output']}"
+        koopa_samtools_index_bam "${dict2['output']}"
     done
     return 0
 }
