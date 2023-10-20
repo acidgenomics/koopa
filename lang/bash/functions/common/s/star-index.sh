@@ -6,8 +6,8 @@ koopa_star_index() {
     # @note Updated 2023-10-20.
     #
     # Doesn't currently support compressed files as input.
-    #
-    # Try using 'r6a.2xlarge' on AWS EC2.
+    # Refer to '--limitGenomeGenerateRAM' for memory optimization.
+    # Recommend using 'r6a.2xlarge' on AWS EC2.
     #
     # @seealso
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
@@ -37,7 +37,6 @@ koopa_star_index() {
     # e.g. 'star-index'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    index_args=()
     while (("$#"))
     do
         case "$1" in
@@ -94,38 +93,36 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_str_detect_regex \
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     # Consider erroring instead of merely warning on ALT contig detection,
     # similar to bcbio-nextgen. Currently applies to RefSeq FASTA.
-    if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
+    if koopa_fasta_has_alt_contigs "${dict['genome_fasta_file']}"
     then
-        koopa_warn "ALT contigs detected in '${dict['genome_fasta_file']}'."
+        koopa_warn 'ALT contigs detected in genome FASTA file.'
     fi
-    # Refer to '--limitGenomeGenerateRAM' for memory optimization.
+    dict['genome_dir_bn']="$(koopa_basename "${dict['output_dir']}")"
     index_args+=(
-        '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
-        '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
+        '--genomeDir' "${dict['genome_dir_bn']}"
+        '--genomeFastaFiles' "${dict['genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
-        '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--sjdbGTFfile' "${dict['gtf_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
@@ -134,10 +131,14 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
-    [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['tmp_gtf_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_gtf_file']}"
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }
