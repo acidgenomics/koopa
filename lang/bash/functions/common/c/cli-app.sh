@@ -322,6 +322,7 @@ koopa_cli_app() {
             ;;
         'salmon')
             case "${2:-}" in
+                'detect-fastq-library-type' | \
                 'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2

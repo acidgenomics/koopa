@@ -34,10 +34,9 @@ koopa_salmon_detect_fastq_library_type() {
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
-    dict['lib_type']='A'
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
+    dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))
     do
@@ -80,7 +79,7 @@ koopa_salmon_detect_fastq_library_type() {
     koopa_assert_is_dir "${dict['index_dir']}"
     quant_args+=(
         "--index=${dict['index_dir']}"
-        "--libType=${dict['lib_type']}"
+        '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
         '--quiet'

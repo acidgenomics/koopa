@@ -705,8 +705,7 @@ _koopa_complete() {
                             args=('serve')
                             ;;
                         'kallisto' | \
-                        'rsem' | \
-                        'salmon')
+                        'rsem')
                             args=('index' 'quant')
                             ;;
                         'md5sum')
@@ -714,6 +713,9 @@ _koopa_complete() {
                             ;;
                         'r')
                             args=('bioconda-check' 'check')
+                            ;;
+                        'salmon')
+                            args=('detect-fastq-library-type' 'index' 'quant')
                             ;;
                         'sra')
                             args=(
