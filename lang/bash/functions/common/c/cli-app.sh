@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-20.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -104,10 +104,19 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'bowtie2' | \
-        'rsem')
+        'bowtie2')
             case "${2:-}" in
-                'align' | \
+                'align')
+                    case "${3:-}" in
+                        'paired-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
                 'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
@@ -289,8 +298,31 @@ koopa_cli_app() {
             dict['key']="${1:?}"
             shift 1
             ;;
+        'rsem')
+            case "${2:-}" in
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                'quant')
+                    case "${3:-}" in
+                        'bam')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'salmon')
             case "${2:-}" in
+                'detect-fastq-library-type' | \
                 'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2

@@ -1,36 +1,33 @@
 #!/usr/bin/env bash
 
-# TODO Add support for FASTQ directory directly from S3.
+# TODO Add support for BAM directory directly from S3.
 # TODO Add support for genome index tarball directly from S3.
 
-koopa_salmon_quant_single_end() {
+koopa_rsem_quant_bam() {
     # """
-    # Run salmon quant on multiple single-end FASTQs in a directory.
+    # Run RSEM quant on multiple paired-end BAMs in a directory.
     # @note Updated 2023-10-20.
     #
     # @examples
-    # > koopa_salmon_quant_single_end \
-    # >     --fastq-dir='fastq' \
-    # >     --fastq-tail='_001.fastq.gz' \
-    # >     --index-dir='indexes/salmon-gencode' \
-    # >     --output-dir='quant/salmon-gencode'
+    # > koopa_rsem_quant_paired_end \
+    # >     --bam-dir='bam' \
+    # >     --index-dir='indexes/rsem-gencode' \
+    # >     --output-dir='quant/rsem-gencode'
     # """
     local -A app bool dict
-    local -a fastq_files
-    local fastq_file
+    local -a bam_files
+    local bam_file
     koopa_assert_has_args "$#"
     bool['aws_s3_output_dir']=0
     bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    # e.g. 'fastq'.
-    dict['fastq_dir']=''
-    # e.g. '.fastq.gz'.
-    dict['fastq_tail']=''
-    # e.g. 'salmon-index'.
+    # e.g. 'bam'.
+    dict['bam_dir']=''
+    # e.g. 'indexes/rsem-gencode'.
     dict['index_dir']=''
-    # Detect library fragment type (strandedness) automatically.
-    dict['lib_type']='A'
-    # e.g. 'salmon', or AWS S3 URI 's3://example/quant/salmon-gencode'.
+    # Using salmon fragment library type conventions here, but not required.
+    dict['lib_type']=''
+    # e.g. 'quant/rsem-gencode'.
     dict['output_dir']=''
     while (("$#"))
     do
@@ -44,20 +41,12 @@ koopa_salmon_quant_single_end() {
                 dict['aws_profile']="${2:?}"
                 shift 2
                 ;;
-            '--fastq-dir='*)
-                dict['fastq_dir']="${1#*=}"
+            '--bam-dir='*)
+                dict['bam_dir']="${1#*=}"
                 shift 1
                 ;;
-            '--fastq-dir')
-                dict['fastq_dir']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
+            '--bam-dir')
+                dict['bam_dir']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -91,13 +80,11 @@ koopa_salmon_quant_single_end() {
         esac
     done
     koopa_assert_is_set \
-        '--fastq-dir' "${dict['fastq_dir']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
+        '--bam-dir' "${dict['bam_dir']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
-    koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
-    dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
+    dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
@@ -114,50 +101,42 @@ koopa_salmon_quant_single_end() {
         koopa_assert_is_executable "${app['aws']}"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_h1 'Running salmon quant.'
+    koopa_h1 'Running RSEM quant.'
     koopa_dl \
-        'Mode' 'single-end' \
+        'BAM dir' "${dict['bam_dir']}" \
         'Index dir' "${dict['index_dir']}" \
-        'FASTQ dir' "${dict['fastq_dir']}" \
-        'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
     if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi
-    readarray -t fastq_files <<< "$( \
+    readarray -t bam_files <<< "$( \
         koopa_find \
             --max-depth=1 \
             --min-depth=1 \
-            --pattern="*${dict['fastq_tail']}" \
-            --prefix="${dict['fastq_dir']}" \
+            --pattern="*.bam" \
+            --prefix="${dict['bam_dir']}" \
             --sort \
     )"
-    if koopa_is_array_empty "${fastq_files[@]:-}"
+    if koopa_is_array_empty "${bam_files[@]:-}"
     then
-        koopa_stop "No FASTQs ending with '${dict['fastq_tail']}'."
+        koopa_stop "No BAM files detected in '${dict['bam_dir']}'."
     fi
-    koopa_assert_is_file "${fastq_files[@]}"
+    koopa_assert_is_file "${bam_files[@]}"
     koopa_alert_info "$(koopa_ngettext \
-        --num="${#fastq_files[@]}" \
+        --num="${#bam_files[@]}" \
         --msg1='sample' \
         --msg2='samples' \
         --suffix=' detected.' \
     )"
-    for fastq_file in "${fastq_files[@]}"
+    for bam_file in "${bam_files[@]}"
     do
         local -A dict2
-        dict2['fastq_file']="$fastq_file"
-        dict2['sample_id']="$( \
-            koopa_sub \
-                --pattern="${dict['fastq_tail']}\$" \
-                --regex \
-                --replacement='' \
-                "$(koopa_basename "${dict2['fastq_file']}")" \
-        )"
+        dict2['bam_file']="$bam_file"
+        dict2['sample_id']="$(koopa_basename_sans_ext "${dict2['bam_file']}")"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
-        koopa_salmon_quant_single_end_per_sample \
-            --fastq-file="${dict2['fastq_file']}" \
+        koopa_rsem_quant_bam_per_sample \
+            --bam-file="${dict2['bam_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
             --output-dir="${dict2['output_dir']}"
@@ -179,6 +158,6 @@ ${dict2['sample_id']}"
     then
         koopa_rm "${dict['output_dir']}"
     fi
-    koopa_alert_success 'salmon quant was successful.'
+    koopa_alert_success 'RSEM quant was successful.'
     return 0
 }

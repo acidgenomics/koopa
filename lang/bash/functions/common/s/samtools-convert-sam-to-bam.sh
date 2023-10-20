@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Switch to a dict approach here.
-# FIXME Rework our location of conda environment tool here instead.
-# FIXME Also add bam sorting and indexing wrappers.
-# FIXME Add minimap2 index function.
-# FIXME Add minimap2 align function.
-
 koopa_samtools_convert_sam_to_bam() {
     # """
     # Convert a SAM file to BAM format.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-10-20.
     #
     # samtools view --help
     # Useful flags:
@@ -22,28 +16,31 @@ koopa_samtools_convert_sam_to_bam() {
     # -o FILE               output file name [stdout]
     # -u                    uncompressed BAM output (implies -b)
     # """
-    local -A app
-    local bam_bn input_sam output_bam sam_bn threads
+    local -A app dict
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'samtools'
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app['samtools']}"
+    dict['input_sam']=''
+    dict['output_bam']=''
+    dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
             '--input-sam='*)
-                input_sam="${1#*=}"
+                dict['input_sam']="${1#*=}"
                 shift 1
                 ;;
             '--input-sam')
-                input_sam="${2:?}"
+                dict['input_sam']="${2:?}"
                 shift 2
                 ;;
             '--output-bam='*)
-                output_bam="${1#*=}"
+                dict['output_bam']="${1#*=}"
                 shift 1
                 ;;
             '--output-bam')
-                output_bam="${2:?}"
+                dict['output_bam']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -52,25 +49,23 @@ koopa_samtools_convert_sam_to_bam() {
                 ;;
         esac
     done
-    # FIXME Rethink this approach, reworking using dict approach.
     koopa_assert_is_set \
-        '--input-sam' "$input_sam" \
-        '--output-bam' "$output_bam"
-    sam_bn="$(koopa_basename "$input_sam")"
-    bam_bn="$(koopa_basename "$output_bam")"
-    if [[ -f "$output_bam" ]]
+        '--input-sam' "${dict['input_sam']}" \
+        '--output-bam' "${dict['output_bam']}"
+    koopa_assert_is_file "${dict['input_sam']}"
+    dict['input_sam']="$(koopa_realpath "${dict['input_sam']}")"
+    if [[ -f "${dict['output_bam']}" ]]
     then
-        koopa_alert_note "Skipping '${bam_bn}'."
+        koopa_alert_note "Skipping '${dict['output_bam']}'."
         return 0
     fi
-    koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
-    koopa_assert_is_file "$input_sam"
-    threads="$(koopa_cpu_count)"
+    koopa_alert "Converting '${dict['input_sam']}' to '${dict['output_bam']}'."
     "${app['samtools']}" view \
-        -@ "$threads" \
+        -@ "${dict['threads']}" \
         -b \
         -h \
-        -o "$output_bam" \
-        "$input_sam"
+        -o "${dict['output_bam']}" \
+        "${dict['input_sam']}"
+    koopa_assert_is_file "${dict['output_bam']}"
     return 0
 }

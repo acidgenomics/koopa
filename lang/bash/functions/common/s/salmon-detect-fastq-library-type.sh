@@ -3,7 +3,7 @@
 koopa_salmon_detect_fastq_library_type() {
     # """
     # Detect library type of input FASTQs.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html#skipquant
@@ -13,13 +13,15 @@ koopa_salmon_detect_fastq_library_type() {
     # @examples
     # Paired-end:
     # > koopa_salmon_detect_fastq_library_type \
-    # >     'DMSO-1_R1_001.fastq.gz' \
-    # >     'DMSO-1_R2_001.fastq.gz'
+    # >     --fastq-r1-file='DMSO-1_R1_001.fastq.gz' \
+    # >     --fastq-r2-file='DMSO-1_R2_001.fastq.gz' \
+    # >     --index-dir='indexes/salmon-gencode'
     # # IU
     #
     # Single-end:
     # > koopa_salmon_detect_fastq_library_type \
-    # >     'DMSO-1_R1_001.fastq.gz'
+    # >     --fastq-r1-file='DMSO-1_R1_001.fastq.gz' \
+    # >     --index-dir='indexes/salmon-gencode'
     # # U
     # """
     local -A app dict
@@ -32,10 +34,9 @@ koopa_salmon_detect_fastq_library_type() {
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
-    dict['lib_type']='A'
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
+    dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
     while (("$#"))
     do
@@ -76,9 +77,9 @@ koopa_salmon_detect_fastq_library_type() {
         '--index-dir' "${dict['index_dir']}"
     koopa_assert_is_file "${dict['fastq_r1_file']}"
     koopa_assert_is_dir "${dict['index_dir']}"
-    quant_args=(
+    quant_args+=(
         "--index=${dict['index_dir']}"
-        "--libType=${dict['lib_type']}"
+        '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
         '--quiet'

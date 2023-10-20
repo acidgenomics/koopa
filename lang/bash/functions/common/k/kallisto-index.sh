@@ -1,32 +1,35 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for pushing to S3 as a tarball.
+
 koopa_kallisto_index() {
     # """
     # Generate kallisto index.
-    # @note Updated 2023-10-17.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - kallisto index --help
     #
     # @examples
     # > koopa_kallisto_index \
-    # >     --output-dir='salmon-index' \
-    # >     --transcriptome-fasta-file='gencode.v39.transcripts.fa.gz'
+    # >     --output-dir='kallisto-gencode' \
+    # >     --transcriptome-fasta-file='gencode.v44.transcripts_fixed.fa.gz'
     # """
     local -A app dict
     local -a index_args
     koopa_assert_has_args "$#"
     app['kallisto']="$(koopa_locate_kallisto)"
     koopa_assert_is_executable "${app[@]}"
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     dict['kmer_size']=31
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
-    # e.g. 'kallisto-index'.
+    # e.g. 'kallisto-gencode'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    # e.g. 'gencode.v39.transcripts.fa.gz'.
+    # e.g. 'gencode.v44.transcripts_fixed.fa.gz'.
     dict['transcriptome_fasta_file']=''
+    dict['version']="$(koopa_app_version 'kallisto')"
     index_args=()
     while (("$#"))
     do
@@ -73,13 +76,16 @@ koopa_kallisto_index() {
     dict['index_file']="${dict['output_dir']}/kallisto.idx"
     koopa_alert "Generating kallisto index at '${dict['output_dir']}'."
     index_args+=(
-        # > '--distinguish'
         "--index=${dict['index_file']}"
         "--kmer-size=${dict['kmer_size']}"
         '--make-unique'
-        "--threads=${dict['threads']}"
-        "${dict['transcriptome_fasta_file']}"
     )
+    case "${dict['version']}" in
+        '0.50.'*)
+            index_args+=("--threads=${dict['threads']}")
+            ;;
+    esac
+    index_args+=("${dict['transcriptome_fasta_file']}")
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['kallisto']}" index "${index_args[@]}"
     koopa_alert_success "kallisto index created at '${dict['output_dir']}'."
