@@ -14,7 +14,8 @@ koopa_hisat2_align_paired_end() {
     # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
     # >     --index-dir='indexes/hisat2-gencode' \
-    # >     --output-dir='quant/hisat2-gencode'
+    # >     --output-dir='quant/hisat2-gencode' \
+    # >     --salmon-index-dir='quant/salmon-gencode'
     # """
     local -A app bool dict
     local -a fastq_r1_files
