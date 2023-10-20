@@ -10556,8 +10556,13 @@ koopa_hisat2_align_single_end() {
     do
         local -A dict2
         dict2['fastq_file']="$fastq_file"
-        dict2['sample_id']="$(koopa_basename "${dict2['fastq_file']}")"
-        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_tail']}/}"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_file']}")" \
+        )"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_hisat2_align_single_end_per_sample \
             --fastq-file="${dict2['fastq_file']}" \
@@ -24612,8 +24617,13 @@ koopa_star_align_single_end() {
     do
         local -A dict2
         dict2['fastq_file']="$fastq_file"
-        dict2['sample_id']="$(koopa_basename "${dict2['fastq_file']}")"
-        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_tail']}/}"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_file']}")" \
+        )"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
             --fastq-file="${dict2['fastq_file']}" \
