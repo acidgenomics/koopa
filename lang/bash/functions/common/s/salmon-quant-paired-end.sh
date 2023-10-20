@@ -161,10 +161,20 @@ koopa_salmon_quant_paired_end() {
     do
         local -A dict2
         dict2['fastq_r1_file']="$fastq_r1_file"
-        dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
-        dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
-        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_salmon_quant_paired_end_per_sample \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
