@@ -22723,7 +22723,6 @@ koopa_salmon_quant_single_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     dict['bootstraps']=30
     dict['fastq_file']=''
-    dict['fastq_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -22740,14 +22739,6 @@ koopa_salmon_quant_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -22781,10 +22772,14 @@ koopa_salmon_quant_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -22792,16 +22787,8 @@ koopa_salmon_quant_single_end_per_sample() {
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
+    dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
@@ -22821,19 +22808,29 @@ koopa_salmon_quant_single_end_per_sample() {
 }
 
 koopa_salmon_quant_single_end() {
-    local -A dict
+    local -A app bool dict
     local -a fastq_files
     local fastq_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
     dict['index_dir']=''
     dict['lib_type']='A'
-    dict['mode']='single-end'
     dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
+            '--aws-profile='*)
+                dict['aws_profile']="${1#*=}"
+                shift 1
+                ;;
+            '--aws-profile')
+                dict['aws_profile']="${2:?}"
+                shift 2
+                ;;
             '--fastq-dir='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -22888,14 +22885,32 @@ koopa_salmon_quant_single_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
+    then
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
+            koopa_strip_trailing_slash "${dict['output_dir']}" \
+        )"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
+    fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running salmon quant.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
+    fi
     readarray -t fastq_files <<< "$( \
         koopa_find \
             --max-depth=1 \
@@ -22917,13 +22932,34 @@ koopa_salmon_quant_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
+        local -A dict2
+        dict2['fastq_file']="$fastq_file"
+        dict2['sample_id']="$(koopa_basename "${dict2['fastq_file']}")"
+        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_tail']}/}"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_salmon_quant_single_end_per_sample \
-            --fastq-file="$fastq_file" \
-            --fastq-tail="${dict['fastq_tail']}" \
+            --fastq-file="${dict2['fastq_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'salmon quant was successful.'
     return 0
 }
@@ -24104,7 +24140,6 @@ koopa_star_align_single_end() {
     dict['fastq_dir']=''
     dict['fastq_tail']=''
     dict['index_dir']=''
-    dict['mode']='single-end'
     dict['output_dir']=''
     while (("$#"))
     do
@@ -24179,7 +24214,7 @@ koopa_star_align_single_end() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
