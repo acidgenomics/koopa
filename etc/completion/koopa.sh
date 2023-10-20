@@ -771,8 +771,7 @@ _koopa_complete() {
                                     ;;
                             esac
                             ;;
-                        'bowtie2' | \
-                        'rsem')
+                        'bowtie2')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'align')
                                     args=('paired-end')
@@ -791,6 +790,13 @@ _koopa_complete() {
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
                                     args=('paired-end' 'single-end')
+                                    ;;
+                            esac
+                            ;;
+                        'rsem')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'quant')
+                                    args=('bam')
                                     ;;
                             esac
                             ;;
