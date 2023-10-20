@@ -3,7 +3,7 @@
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-20.
     #
     # Doesn't currently support compressed files as input.
     #
@@ -25,8 +25,8 @@ koopa_star_index() {
     local -a index_args
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
-    bool['is_tmp_genome_fasta_file']=0
-    bool['is_tmp_gtf_file']=0
+    bool['tmp_genome_fasta_file']=0
+    bool['tmp_gtf_file']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
     # e.g. 'GRCh38.primary_assembly.genome.fa.gz'
     dict['genome_fasta_file']=''
@@ -93,7 +93,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         --string="${dict['genome_fasta_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_genome_fasta_file']=1
+        bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
@@ -105,7 +105,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
-        bool['is_tmp_gtf_file']=1
+        bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file)"
         koopa_decompress \
             "${dict['gtf_file']}" \
@@ -134,9 +134,9 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
-    [[ "${bool['is_tmp_genome_fasta_file']}" -eq 1 ]] && \
+    [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]] && \
         koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['is_tmp_gtf_file']}" -eq 1 ]] && \
+    [[ "${bool['tmp_gtf_file']}" -eq 1 ]] && \
         koopa_rm "${dict['tmp_gtf_file']}"
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
