@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Don't attempt to define the output directory by the sample name here.
+
 # NOTE Attempting to pass '--gencode' flag here currently doesn't work correctly
 # when processing GENCODE-aligned Nanopore guppy > minimap2 > BAM output.
 
 koopa_salmon_quant_bam_per_sample() {
     # """
     # Run salmon quant on a single BAM file.
-    # @note Updated 2023-07-21.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - salmon quant --help-alignment
@@ -15,7 +17,7 @@ koopa_salmon_quant_bam_per_sample() {
     # @examples
     # > koopa_salmon_quant_bam_per_sample \
     # >     --bam-file='bam/sample1.bam' \
-    # >     --output-dir='salmon' \
+    # >     --output-dir='salmon/sample1' \
     # >     --transcriptome-fasta-file='transcriptome.fa.gz'
     # """
     local -A app dict
@@ -90,6 +92,11 @@ koopa_salmon_quant_bam_per_sample() {
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}" \
         '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "salmon quant requires ${dict['mem_gb_cutoff']} GB of RAM."
@@ -102,19 +109,6 @@ koopa_salmon_quant_bam_per_sample() {
     )"
     dict['id']="$(koopa_basename_sans_ext "${dict['bam_file']}")"
     dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
-    # > if [[ "${dict['gencode']}" -eq 0 ]] && \
-    # >     koopa_str_detect_regex \
-    # >         --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
-    # >         --pattern='^gencode\.'
-    # > then
-    # >     dict['gencode']=1
-    # > fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
     quant_args+=(
@@ -126,10 +120,6 @@ koopa_salmon_quant_bam_per_sample() {
         "--targets=${dict['transcriptome_fasta_file']}"
         "--threads=${dict['threads']}"
     )
-    # > if [[ "${dict['gencode']}" -eq 1 ]]
-    # > then
-    # >     quant_args+=('--gencode')
-    # > fi
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app['salmon']}" quant "${quant_args[@]}"
     return 0

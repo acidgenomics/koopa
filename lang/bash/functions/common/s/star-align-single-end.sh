@@ -140,7 +140,6 @@ koopa_star_align_single_end() {
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
             --fastq-file="${dict2['fastq_file']}" \
-            --fastq-tail="${dict['fastq_tail']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]

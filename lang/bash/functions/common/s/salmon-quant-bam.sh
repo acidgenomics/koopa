@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for AWS sync here.
+# FIXME Need to set the output directory per sample here automatically.
+
 koopa_salmon_quant_bam() {
     # """
     # Run salmon quant on multiple transcriptome-aligned BAMs in a directory.

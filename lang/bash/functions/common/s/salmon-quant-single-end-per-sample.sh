@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Don't attempt to define the output by the sample name here.
+
 koopa_salmon_quant_single_end_per_sample() {
     # """
     # Run salmon quant on a single-end sample.
