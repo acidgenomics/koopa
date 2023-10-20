@@ -7630,6 +7630,11 @@ koopa_fasta_has_alt_contigs() {
     return "${dict['status']}"
 }
 
+koopa_fasta_pattern() {
+    koopa_print '\.(fa|fasta|fna)'
+    return 0
+}
+
 koopa_fastq_detect_quality_score() {
     local -A app
     local file
@@ -10478,50 +10483,48 @@ koopa_hisat2_index() {
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_str_detect_regex \
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['exons_file']="${dict['output_dir']}/exons.tsv"
     dict['splice_sites_file']="${dict['output_dir']}/splicesites.tsv"
     "${app['hisat2_extract_exons']}" \
-        "${dict['tmp_gtf_file']}" \
+        "${dict['gtf_file']}" \
         > "${dict['exons_file']}"
     "${app['hisat2_extract_splice_sites']}" \
-        "${dict['tmp_gtf_file']}" \
+        "${dict['gtf_file']}" \
         > "${dict['splice_sites_file']}"
     index_args+=(
         '-p' "${dict['threads']}"
         '--exon' "${dict['exons_file']}"
         '--seed' "${dict['seed']}"
         '--ss' "${dict['splice_sites_file']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         "${dict['ht2_base']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['hisat2_build']}" "${index_args[@]}"
     if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
+        koopa_rm "${dict['genome_fasta_file']}"
     fi
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_gtf_file']}"
+        koopa_rm "${dict['gtf_file']}"
     fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
     return 0
@@ -15926,7 +15929,7 @@ koopa_kallisto_index() {
     koopa_assert_has_args "$#"
     app['kallisto']="$(koopa_locate_kallisto)"
     koopa_assert_is_executable "${app[@]}"
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     dict['kmer_size']=31
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
@@ -21745,7 +21748,6 @@ koopa_rsem_index() {
     dict['mem_gb_cutoff']=10
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
     index_args=()
     while (("$#"))
     do
@@ -21800,29 +21802,27 @@ koopa_rsem_index() {
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_str_detect_regex \
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     index_args+=(
-        '--gtf' "${dict['tmp_gtf_file']}"
+        '--gtf' "${dict['gtf_file']}"
         '--num-threads' "${dict['threads']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         'rsem'
     )
     koopa_dl 'Index args' "${index_args[*]}"
@@ -21832,11 +21832,11 @@ koopa_rsem_index() {
     )
     if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
+        koopa_rm "${dict['genome_fasta_file']}"
     fi
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_gtf_file']}"
+        koopa_rm "${dict['gtf_file']}"
     fi
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
@@ -22087,14 +22087,14 @@ koopa_salmon_detect_fastq_library_type() {
 }
 
 koopa_salmon_index() {
-    local -A app dict
+    local -A app bool dict
     local -a index_args
     koopa_assert_has_args "$#"
     app['salmon']="$(koopa_locate_salmon)"
     koopa_assert_is_executable "${app[@]}"
-    dict['decoys']=1
-    dict['fasta_pattern']='\.(fa|fasta|fna)'
-    dict['gencode']=0
+    bool['decoys']=1
+    bool['gencode']=0
+    dict['fasta_pattern']="$(koopa_fasta_pattern)"
     dict['genome_fasta_file']=''
     dict['kmer_length']=31
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -22132,15 +22132,15 @@ koopa_salmon_index() {
                 shift 2
                 ;;
             '--decoys')
-                dict['decoys']=1
+                bool['decoys']=1
                 shift 1
                 ;;
             '--gencode')
-                dict['gencode']=1
+                bool['gencode']=1
                 shift 1
                 ;;
             '--no-decoys')
-                dict['decoys']=0
+                bool['decoys']=0
                 shift 1
                 ;;
             *)
@@ -22166,19 +22166,19 @@ koopa_salmon_index() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Generating salmon index at '${dict['output_dir']}'."
-    if [[ "${dict['gencode']}" -eq 0 ]] && \
+    if [[ "${bool['gencode']}" -eq 0 ]] && \
         koopa_str_detect_regex \
             --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
             --pattern='^gencode\.'
     then
-        dict['gencode']=1
+        bool['gencode']=1
     fi
-    if [[ "${dict['gencode']}" -eq 1 ]]
+    if [[ "${bool['gencode']}" -eq 1 ]]
     then
         koopa_alert_info 'Indexing against GENCODE reference genome.'
         index_args+=('--gencode')
     fi
-    if [[ "${dict['decoys']}" -eq 1 ]]
+    if [[ "${bool['decoys']}" -eq 1 ]]
     then
         koopa_alert 'Preparing decoy-aware reference transcriptome.'
         koopa_assert_is_set \
@@ -22193,9 +22193,8 @@ koopa_salmon_index() {
         koopa_assert_is_matching_regex \
             --pattern="${dict['fasta_pattern']}" \
             --string="${dict['transcriptome_fasta_file']}"
-        dict['tmp_dir']="$(koopa_tmp_dir)"
-        dict['decoys_file']="${dict['tmp_dir']}/decoys.txt"
-        dict['gentrome_fasta_file']="${dict['tmp_dir']}/gentrome.fa.gz"
+        dict['decoys_file']="$(koopa_tmp_file_in_wd)"
+        dict['gentrome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_fasta_generate_chromosomes_file \
             --genome-fasta-file="${dict['genome_fasta_file']}" \
             --output-file="${dict['decoys_file']}"
@@ -22223,6 +22222,12 @@ koopa_salmon_index() {
     )
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['salmon']}" index "${index_args[@]}"
+    if [[ "${bool['decoys']}" -eq 1 ]]
+    then
+        koopa_rm \
+            "${dict['decoys_file']}" \
+            "${dict['gentrome_fasta_file']}"
+    fi
     koopa_alert_success "salmon index created at '${dict['output_dir']}'."
     return 0
 }
@@ -24161,7 +24166,6 @@ koopa_star_index() {
     dict['mem_gb_cutoff']=60
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    index_args=()
     while (("$#"))
     do
         case "$1" in
@@ -24216,35 +24220,34 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_str_detect_regex \
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
-    if koopa_fasta_has_alt_contigs "${dict['tmp_genome_fasta_file']}"
+    if koopa_fasta_has_alt_contigs "${dict['genome_fasta_file']}"
     then
-        koopa_warn "ALT contigs detected in '${dict['genome_fasta_file']}'."
+        koopa_warn 'ALT contigs detected in genome FASTA file.'
     fi
+    dict['genome_dir_bn']="$(koopa_basename "${dict['output_dir']}")"
     index_args+=(
-        '--genomeDir' "$(koopa_basename "${dict['output_dir']}")"
-        '--genomeFastaFiles' "${dict['tmp_genome_fasta_file']}"
+        '--genomeDir' "${dict['genome_dir_bn']}"
+        '--genomeFastaFiles' "${dict['genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
-        '--sjdbGTFfile' "${dict['tmp_gtf_file']}"
+        '--sjdbGTFfile' "${dict['gtf_file']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
@@ -24253,10 +24256,14 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
-    [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
-    [[ "${bool['tmp_gtf_file']}" -eq 1 ]] && \
-        koopa_rm "${dict['tmp_gtf_file']}"
+    if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['genome_fasta_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_alert_success "STAR index created at '${dict['output_dir']}'."
     return 0
 }
