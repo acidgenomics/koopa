@@ -19,8 +19,8 @@ koopa_star_align_paired_end_per_sample() {
     # > koopa_star_align_paired_end_per_sample \
     # >     --fastq-r1-file='fastq/sample1_R1_001.fastq.gz' \
     # >     --fastq-r2-file='fastq/sample1_R2_001.fastq.gz' \
-    # >     --index-dir='star-index' \
-    # >     --output-dir='star/sample1'
+    # >     --index-dir='indexes/star-gencode' \
+    # >     --output-dir='quant/star-gencode/sample1'
     # """
     local -A app bool dict
     local -a align_args

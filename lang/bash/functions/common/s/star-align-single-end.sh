@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# TODO Add support for FASTQ directory directly from S3.
+# TODO Add support for genome index tarball directly from S3.
+
 koopa_star_align_single_end() {
     # """
     # Run STAR aligner on multiple single-end FASTQs in a directory.
@@ -9,8 +12,8 @@ koopa_star_align_single_end() {
     # > koopa_star_align_single_end \
     # >     --fastq-dir='fastq' \
     # >     --fastq-tail='_001.fastq.gz' \
-    # >     --index-dir='star-index' \
-    # >     --output-dir='star'
+    # >     --index-dir='indexes/star-gencode' \
+    # >     --output-dir='quant/star-gencode'
     # """
     local -A app bool dict
     local -a fastq_files
