@@ -16440,6 +16440,19 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
             --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
     then
