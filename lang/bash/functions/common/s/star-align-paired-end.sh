@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# TODO Add support for import of FASTQ directory directly from S3.
-# TODO Add support for genome index tarball directly from S3. Extract this.
+# TODO Add support for FASTQ directory directly from S3.
+# TODO Add support for genome index tarball directly from S3.
 
 koopa_star_align_paired_end() {
     # """
@@ -109,12 +109,12 @@ koopa_star_align_paired_end() {
         )"
         dict['output_dir']="$(koopa_tmp_dir_in_wd)"
     fi
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
         koopa_assert_is_executable "${app['aws']}"
     fi
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
         'Mode' 'paired-end' \
@@ -155,7 +155,8 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
         dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
-        dict2['output_s3_uri']="${dict['output_s3_uri']}/${dict2['sample_id']}"
+        dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
         koopa_star_align_paired_end_per_sample \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
@@ -163,14 +164,14 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
-            koopa_alert "Syncing '${dict['output_dir']}' to \
-'${dict['aws_s3_output_dir']}'."
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
             "${app['aws']}" s3 sync \
                 --profile "${dict['aws_profile']}" \
-                "${dict['output_dir']}/" \
-                "${dict['aws_s3_output_dir']}/"
-            koopa_rm "${dict['output_dir']}"
-            koopa_mkdir "${dict['output_dir']}"
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
         fi
     done
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
