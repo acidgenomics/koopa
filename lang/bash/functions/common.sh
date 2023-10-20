@@ -22180,6 +22180,28 @@ koopa_rsem_align_paired_end_per_sample() {
     return 0
 }
 
+koopa_rsem_fastq_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            to='none'
+            ;;
+        'ISF')
+            to='forward'
+            ;;
+        'ISR')
+            to='reverse'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
 koopa_rsem_index() {
     local -A app bool dict
     local -a index_args
