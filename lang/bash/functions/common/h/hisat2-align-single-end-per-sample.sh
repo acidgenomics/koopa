@@ -145,6 +145,7 @@ koopa_hisat2_align_single_end_per_sample() {
     koopa_samtools_convert_sam_to_bam \
         --input-sam="${dict['sam_file']}" \
         --output-bam="${dict['bam_file']}"
+    # FIXME May need to delete SAM file here.
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
