@@ -2791,16 +2791,17 @@
   "kallisto": {
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
-    "date": "2023-10-17",
+    "date": "2023-10-20",
     "default": false,
     "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
-    "notes": ["The conda recipe core dumps on Ubuntu during indexing."],
+    "notes": ["kallisto 0.50.0 is core dumping on Ubuntu."],
+    "outdated": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.50.0"
+    "version": "0.48.0"
   },
   "krb5": {
     "aliases": {
@@ -3755,11 +3756,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-10-18",
+    "date": "2023-10-20",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.3.0"
+    "version": "2.3.1"
   },
   "mpc": {
     "aliases": {
@@ -4528,10 +4529,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-18",
+    "date": "2023-10-20",
     "default": false,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.2"
+    "version": "0.14.3"
   },
   "proj": {
     "aliases": {

@@ -1,39 +1,38 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for AWS S3 URI index-dir.
-#   For the index dir, need to copy and extract to a standardized file path.
-#   To do this, we need to update 'koopa_extract' with this functionality.
-# FIXME Add support for finding and downloading FASTQs direct from S3.
+# TODO Add support for FASTQ directory directly from S3.
+# TODO Add support for genome index tarball directly from S3.
 
 koopa_star_align_paired_end() {
     # """
     # Run STAR aligner on multiple paired-end FASTQs in a directory.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-10-20.
     #
     # @examples
     # > koopa_star_align_paired_end \
     # >     --fastq-dir='fastq' \
     # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
-    # >     --index-dir='star-index' \
-    # >     --output-dir='star'
+    # >     --index-dir='indexes/star-gencode' \
+    # >     --output-dir='quant/star-gencode'
     # """
-    local -A dict
+    local -A app bool dict
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
+    bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    dict['aws_s3_uri']=''
     # e.g. 'fastq'.
     dict['fastq_dir']=''
     # e.g. '_R1_001.fastq.gz'.
     dict['fastq_r1_tail']=''
     # e.g. '_R2_001.fastq.gz'.
     dict['fastq_r2_tail']=''
-    # e.g. 'star-index'.
+    # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
-    dict['mode']='paired-end'
-    # e.g. 'star', or AWS S3 URI.
+    # e.g. 'quant/star-gencode',
+    # or AWS S3 URI 's3://example/quant/star-gencode'.
     dict['output_dir']=''
     while (("$#"))
     do
@@ -99,35 +98,35 @@ koopa_star_align_paired_end() {
         '--fastq-r2-tail' "${dict['fastq_r1_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
-    # FIXME Rework this to support S3 URIs.
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
-    # FIXME Alternatively, support a compressed archive and decompress on the
-    # fly here.
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    # FIXME Make this a function: 'koopa_is_aws_s3_uri'.
-    if koopa_str_detect_fixed \
-        --pattern='s3://' \
-        --string="${dict['output_dir']}"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
-        dict['aws_s3_uri']="$( \
+        bool['aws_s3_output_dir']=1
+        bool['tmp_output_dir']=1
+        dict['aws_s3_output_dir']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
         )"
-        dict['output_dir']="tmp-koopa-$(koopa_random_string)"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
+    fi
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-system)"
+        koopa_assert_is_executable "${app['aws']}"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
     koopa_dl \
-        'Mode' "${dict['mode']}" \
+        'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
-
-    if [[ -n "${dict['aws_s3_uri']}" ]]
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
-        koopa_dl 'AWS S3 URI' "${dict['aws_s3_uri']}"
+        koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi
     readarray -t fastq_r1_files <<< "$( \
         koopa_find \
@@ -152,21 +151,44 @@ koopa_star_align_paired_end() {
     do
         local -A dict2
         dict2['fastq_r1_file']="$fastq_r1_file"
-        dict2['fastq_r2_file']="${dict2['fastq_r1_file']/\
-${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
-        dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
-        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
-        dict2['aws_s3_uri']="${dict['aws_s3_uri']}/${dict2['sample_id']}"
+        dict2['fastq_r2_file']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement="${dict['fastq_r2_tail']}" \
+                "${dict2['fastq_r1_file']}" \
+        )"
+        dict2['sample_id']="$( \
+            koopa_sub \
+                --pattern="${dict['fastq_r1_tail']}\$" \
+                --regex \
+                --replacement='' \
+                "$(koopa_basename "${dict2['fastq_r1_file']}")" \
+        )"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_paired_end_per_sample \
-            --aws-profile="${dict['aws_profile']}" \
-            --aws-s3-uri="${dict2['aws_s3_uri']}" \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
-    [[ -n "${dict['aws_s3_uri']}" ]] && koopa_rm "${dict['output_dir']}"
+    if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['output_dir']}"
+    fi
     koopa_alert_success 'STAR alignment was successful.'
     return 0
 }
