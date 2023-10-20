@@ -29,9 +29,10 @@ koopa_star_align_paired_end() {
     dict['fastq_r1_tail']=''
     # e.g. '_R2_001.fastq.gz'.
     dict['fastq_r2_tail']=''
-    # e.g. 'star-index'.
+    # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
-    # e.g. 'star', or AWS S3 URI 's3://example/quant/star-gencode'.
+    # e.g. 'quant/star-gencode',
+    # or AWS S3 URI 's3://example/quant/star-gencode'.
     dict['output_dir']=''
     while (("$#"))
     do

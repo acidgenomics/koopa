@@ -37,7 +37,6 @@ koopa_hisat2_align_paired_end_per_sample() {
     # e.g. 'quant/hisat2-gencode/sample1'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    align_args=()
     while (("$#"))
     do
         case "$1" in
@@ -105,13 +104,13 @@ koopa_hisat2_align_paired_end_per_sample() {
     fi
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
+    dict['hisat2_idx']="${dict['index_dir']}/index"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    dict['hisat2_idx']="${dict['index_dir']}/index"
     dict['sample_bn']="$(koopa_basename "${dict['output_dir']}")"
     dict['sam_file']="${dict['output_dir']}/${dict['sample_bn']}.sam"
     dict['bam_file']="$( \

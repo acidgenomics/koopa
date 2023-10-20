@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-20.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -107,7 +107,17 @@ koopa_cli_app() {
         'bowtie2' | \
         'rsem')
             case "${2:-}" in
-                'align' | \
+                'align')
+                    case "${3:-}" in
+                        'paired-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
                 'index')
                     dict['key']="${1:?}-${2:?}"
                     shift 2
