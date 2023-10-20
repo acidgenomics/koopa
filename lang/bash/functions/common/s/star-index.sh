@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for pushing tarball to S3.
+
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
