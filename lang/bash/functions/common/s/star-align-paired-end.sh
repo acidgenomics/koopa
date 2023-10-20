@@ -155,8 +155,6 @@ ${dict['fastq_r1_tail']}/${dict['fastq_r2_tail']}}"
         dict2['sample_id']="$(koopa_basename "${dict2['fastq_r1_file']}")"
         dict2['sample_id']="${dict2['sample_id']/${dict['fastq_r1_tail']}/}"
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
-        dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
-${dict2['sample_id']}"
         koopa_star_align_paired_end_per_sample \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
@@ -164,6 +162,8 @@ ${dict2['sample_id']}"
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
             koopa_alert "Syncing '${dict2['output_dir']}' to \
 '${dict2['aws_s3_output_dir']}'."
             "${app['aws']}" s3 sync \

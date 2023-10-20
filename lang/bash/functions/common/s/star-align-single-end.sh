@@ -7,7 +7,6 @@ koopa_star_align_single_end() {
     #
     # @examples
     # > koopa_star_align_single_end \
-    # >     --aws-bucket='s3://bioinfo/rnaseq' \
     # >     --fastq-dir='fastq' \
     # >     --fastq-tail='_001.fastq.gz' \
     # >     --index-dir='star-index' \
@@ -134,13 +133,29 @@ koopa_star_align_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
-        # FIXME Need to redefine the output dir here.
-        # FIXME This needs to create a dict2 here, similar to paired end.
+        local -A dict2
+        dict2['fastq_file']="$fastq_file"
+        dict2['sample_id']="$(koopa_basename "${dict2['fastq_file']}")"
+        dict2['sample_id']="${dict2['sample_id']/${dict['fastq_tail']}/}"
+        dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
-            --fastq-file="$fastq_file" \
+            --fastq-file="${dict2['fastq_file']}" \
             --fastq-tail="${dict['fastq_tail']}" \
             --index-dir="${dict['index_dir']}" \
-            --output-dir="${dict['output_dir']}"
+            --output-dir="${dict2['output_dir']}"
+        if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
+        then
+            dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
+${dict2['sample_id']}"
+            koopa_alert "Syncing '${dict2['output_dir']}' to \
+'${dict2['aws_s3_output_dir']}'."
+            "${app['aws']}" s3 sync \
+                --profile "${dict['aws_profile']}" \
+                "${dict2['output_dir']}/" \
+                "${dict2['aws_s3_output_dir']}/"
+            koopa_rm "${dict2['output_dir']}"
+            koopa_mkdir "${dict2['output_dir']}"
+        fi
     done
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
     then
