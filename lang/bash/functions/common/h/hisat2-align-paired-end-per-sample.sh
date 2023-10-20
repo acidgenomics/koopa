@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use tee to write summary stats to log file, similar to
+# our bowtie2 approach.
+
 koopa_hisat2_align_paired_end_per_sample() {
     # """
     # Run HISAT2 aligner on a paired-end sample.
