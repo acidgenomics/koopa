@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for automatic pushing to AWS S3.
-
-# NOTE Make sure our settings match GDC mRNA analysis pipeline:
-# https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/Expression_mRNA_Pipeline/
+# FIXME Update to improve consistency with our paired-end function.
 
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-10-20.
+    #
+    # @seealso
+    # - https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
+    #     Expression_mRNA_Pipeline/
     #
     # @examples
     # > koopa_star_align_single_end_per_sample \
@@ -119,8 +120,8 @@ to '${dict['tmp_fastq_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    koopa_rm \
-        "${dict['output_dir']}/_STAR"* \
-        "${dict['tmp_fastq_file']}"
+    # FIXME Only do this if we have decompressed.
+    koopa_rm "${dict['tmp_fastq_file']}"
+    koopa_rm "${dict['output_dir']}/_STAR"*
     return 0
 }
