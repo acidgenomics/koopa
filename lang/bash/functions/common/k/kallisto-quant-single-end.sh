@@ -3,13 +3,14 @@
 koopa_kallisto_quant_single_end() {
     # """
     # Run kallisto on multiple single-end FASTQ files.
-    # @note Updated 2023-06-16.
+    # @note Updated 2023-10-20.
     #
     # @examples
     # > koopa_kallisto_quant_single_end \
     # >     --fastq-dir='fastq' \
     # >     --fastq-tail='_001.fastq.gz' \
-    # >     --output-dir='kallisto'
+    # >     --index-dir='indexes/kallisto-gencode' \
+    # >     --output-dir='quant/kallisto-gencode'
     # """
     local -A dict
     local -a fastq_files
@@ -103,6 +104,7 @@ koopa_kallisto_quant_single_end() {
     )"
     for fastq_file in "${fastq_files[@]}"
     do
+        # FIXME Rework to support AWS here.
         koopa_kallisto_quant_single_end_per_sample \
             --fastq-file="$fastq_file" \
             --fastq-tail="${dict['fastq_tail']}" \
