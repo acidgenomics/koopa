@@ -24,6 +24,7 @@ koopa_rsem_fastq_library_type() {
     #     strand-specific protocol where all (upstream) read are derived from
     #     the reverse strand, or 0.5 for a non-strand-specific protocol.
     #
+    # For Illumina TruSeq Stranded protocols, use '--strandedness reverse'.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
