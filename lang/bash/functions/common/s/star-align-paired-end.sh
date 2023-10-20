@@ -13,8 +13,8 @@ koopa_star_align_paired_end() {
     # >     --fastq-dir='fastq' \
     # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
-    # >     --index-dir='star-index' \
-    # >     --output-dir='star'
+    # >     --index-dir='indexes/star-gencode' \
+    # >     --output-dir='quant/star-gencode'
     # """
     local -A app bool dict
     local -a fastq_r1_files

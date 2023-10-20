@@ -13,8 +13,8 @@ koopa_salmon_quant_paired_end() {
     # >     --fastq-dir='fastq' \
     # >     --fastq-r1-tail='_R1_001.fastq.gz' \
     # >     --fastq-r2-tail='_R2_001.fastq.gz' \
-    # >     --index-dir='salmon-index' \
-    # >     --output-dir='salmon'
+    # >     --index-dir='indexes/salmon-gencode' \
+    # >     --output-dir='quant/salmon-gencode'
     # """
     local -A app bool dict
     local -a fastq_r1_files
