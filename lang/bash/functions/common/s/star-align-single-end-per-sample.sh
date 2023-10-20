@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Update to improve consistency with our paired-end function.
-
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
@@ -18,11 +16,12 @@ koopa_star_align_single_end_per_sample() {
     # >     --index-dir='star-index' \
     # >     --output-dir='star'
     # """
-    local -A app dict
+    local -A app bool dict
     local -a align_args
     koopa_assert_has_args "$#"
     app['star']="$(koopa_locate_star)"
     koopa_assert_is_executable "${app[@]}"
+    bool['tmp_fastq_file']=0
     # e.g. 'fastq'.
     dict['fastq_file']=''
     # e.g. '_001.fastq.gz'.
@@ -34,7 +33,6 @@ koopa_star_align_single_end_per_sample() {
     # e.g. 'star'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    align_args=()
     while (("$#"))
     do
         case "$1" in
@@ -103,25 +101,42 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    dict['tmp_fastq_file']="$(koopa_tmp_file)"
-    koopa_alert "Decompressing '${dict['fastq_file']}' \
-to '${dict['tmp_fastq_file']}"
-    koopa_decompress "${dict['fastq_file']}" "${dict['tmp_fastq_file']}"
+    if koopa_str_detect_regex \
+        --string="${dict['fastq_file']}" \
+        --pattern="${dict['compress_ext_pattern']}"
+    then
+        bool['tmp_fastq_file']=1
+        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
+        koopa_alert "Decompressing '${dict['fastq_file']}' to \
+'${dict['tmp_fastq_file']}"
+        koopa_decompress \
+            "${dict['fastq_file']}" \
+            "${dict['tmp_fastq_file']}"
+        dict['fastq_file']="${dict['tmp_fastq_file']}"
+    fi
     align_args+=(
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
-        '--readFilesIn' "${dict['tmp_fastq_file']}"
+        '--readFilesIn' "${dict['fastq_file']}"
         '--runMode' 'alignReads'
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    # FIXME Only do this if we have decompressed.
-    koopa_rm "${dict['tmp_fastq_file']}"
+    if [[ "${bool['tmp_fastq_file']}" ]]
+    then
+        koopa_rm "${dict['fastq_file']}"
+    fi
     koopa_rm "${dict['output_dir']}/_STAR"*
+    # Ensure genome-level BAM file is indexed for IGV. Can skip indexing of
+    # transcriptome-level 'Aligned.toTranscriptome.out.bam' file.
+    dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
+    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_alert "Indexing BAM file '${dict['bam_file']}'."
+    koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
