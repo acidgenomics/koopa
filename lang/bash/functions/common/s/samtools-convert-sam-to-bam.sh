@@ -9,7 +9,7 @@
 koopa_samtools_convert_sam_to_bam() {
     # """
     # Convert a SAM file to BAM format.
-    # @note Updated 2023-03-30.
+    # @note Updated 2023-10-20.
     #
     # samtools view --help
     # Useful flags:
@@ -25,7 +25,8 @@ koopa_samtools_convert_sam_to_bam() {
     local -A app
     local bam_bn input_sam output_bam sam_bn threads
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'samtools'
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app['samtools']}"
     while (("$#"))
     do
         case "$1" in
@@ -56,14 +57,14 @@ koopa_samtools_convert_sam_to_bam() {
     koopa_assert_is_set \
         '--input-sam' "$input_sam" \
         '--output-bam' "$output_bam"
-    sam_bn="$(koopa_basename "$input_sam")"
-    bam_bn="$(koopa_basename "$output_bam")"
     if [[ -f "$output_bam" ]]
     then
         koopa_alert_note "Skipping '${bam_bn}'."
         return 0
     fi
-    koopa_h2 "Converting '${sam_bn}' to '${bam_bn}'."
+    sam_bn="$(koopa_basename "$input_sam")"
+    bam_bn="$(koopa_basename "$output_bam")"
+    koopa_alert "Converting '${sam_bn}' to '${bam_bn}'."
     koopa_assert_is_file "$input_sam"
     threads="$(koopa_cpu_count)"
     "${app['samtools']}" view \
