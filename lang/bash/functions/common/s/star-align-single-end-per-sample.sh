@@ -14,7 +14,7 @@ koopa_star_align_single_end_per_sample() {
     # >     --fastq-file='fastq/sample1_001.fastq.gz' \
     # >     --fastq-tail='_001.fastq.gz' \
     # >     --index-dir='star-index' \
-    # >     --output-dir='star'
+    # >     --output-dir='star/sample1'
     # """
     local -A app bool dict
     local -a align_args
@@ -80,6 +80,11 @@ koopa_star_align_single_end_per_sample() {
         '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ -d "${dict['output_dir']}" ]]
+    then
+        koopa_alert_note "Skipping '${dict['output_dir']}'."
+        return 0
+    fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
         koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
@@ -89,20 +94,8 @@ GB of RAM."
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
-    # FIXME Rework this to define the output directory in the parent function.
-    # Refer to our paired-end code for consistency.
-    dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
-    dict['fastq_bn']="${dict['fastq_bn']/${dict['tail']}/}"
-    dict['id']="${dict['fastq_bn']}"
-    dict['output_dir']="${dict['output_dir']}/${dict['id']}"
-    if [[ -d "${dict['output_dir']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['id']}'."
-        return 0
-    fi
-    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['fastq_bn']}' in '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['fastq_file']}"
     then
         bool['tmp_fastq_file']=1
