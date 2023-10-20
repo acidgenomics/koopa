@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for import of FASTQ directory directly on S3.
-# FIXME Add support for genome index tarball directly on S3. Extract this.
-# FIXME Improve consistency with our single-end per directory function.
+# TODO Add support for import of FASTQ directory directly from S3.
+# TODO Add support for genome index tarball directly from S3. Extract this.
 
 koopa_star_align_paired_end() {
     # """
@@ -21,10 +20,9 @@ koopa_star_align_paired_end() {
     local -a fastq_r1_files
     local fastq_r1_file
     koopa_assert_has_args "$#"
+    bool['aws_s3_output_dir']=0
     bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    # e.g. 's3://example/quant/star-gencode'.
-    dict['aws_s3_output_dir']=''
     # e.g. 'fastq'.
     dict['fastq_dir']=''
     # e.g. '_R1_001.fastq.gz'.
@@ -33,7 +31,7 @@ koopa_star_align_paired_end() {
     dict['fastq_r2_tail']=''
     # e.g. 'star-index'.
     dict['index_dir']=''
-    # e.g. 'star', or AWS S3 URI.
+    # e.g. 'star', or AWS S3 URI 's3://example/quant/star-gencode'.
     dict['output_dir']=''
     while (("$#"))
     do
@@ -102,11 +100,9 @@ koopa_star_align_paired_end() {
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    # FIXME Make this a function: 'koopa_is_aws_s3_uri'.
-    if koopa_str_detect_fixed \
-        --pattern='s3://' \
-        --string="${dict['output_dir']}"
+    if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
+        bool['aws_s3_output_dir']=1
         bool['tmp_output_dir']=1
         dict['aws_s3_output_dir']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
@@ -114,7 +110,7 @@ koopa_star_align_paired_end() {
         dict['output_dir']="$(koopa_tmp_dir_in_wd)"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    if [[ -n "${dict['aws_s3_output_dir']}" ]]
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         app['aws']="$(koopa_locate_aws --allow-system)"
         koopa_assert_is_executable "${app['aws']}"
@@ -127,7 +123,7 @@ koopa_star_align_paired_end() {
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
         'Output dir' "${dict['output_dir']}"
-    if [[ -n "${dict['aws_s3_output_dir']}" ]]
+    if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
     then
         koopa_dl 'AWS S3 output dir' "${dict['aws_s3_output_dir']}"
     fi

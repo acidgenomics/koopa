@@ -123,9 +123,7 @@ GB of RAM."
     dict['fastq_r2_bn']="$(koopa_basename "${dict['fastq_r2_file']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['fastq_r1_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['fastq_r1_file']}"
     then
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
@@ -136,9 +134,7 @@ GB of RAM."
             "${dict['tmp_fastq_r1_file']}"
         dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
     fi
-    if koopa_str_detect_regex \
-        --string="${dict['fastq_r2_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['fastq_r2_file']}"
     then
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"

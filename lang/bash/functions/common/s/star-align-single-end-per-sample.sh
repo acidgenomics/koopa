@@ -101,9 +101,7 @@ GB of RAM."
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
-    if koopa_str_detect_regex \
-        --string="${dict['fastq_file']}" \
-        --pattern="${dict['compress_ext_pattern']}"
+    if koopa_is_compressed_file "${dict['fastq_file']}"
     then
         bool['tmp_fastq_file']=1
         dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
