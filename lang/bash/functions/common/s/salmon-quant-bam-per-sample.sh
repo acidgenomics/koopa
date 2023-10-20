@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Don't attempt to define the output directory by the sample name here.
-
-# NOTE Attempting to pass '--gencode' flag here currently doesn't work correctly
-# when processing GENCODE-aligned Nanopore guppy > minimap2 > BAM output.
-
 koopa_salmon_quant_bam_per_sample() {
     # """
     # Run salmon quant on a single BAM file.
     # @note Updated 2023-10-20.
+    #
+    # Attempting to pass '--gencode' flag here currently doesn't work correctly
+    # when processing GENCODE-aligned Nanopore guppy > minimap2 > BAM output.
     #
     # @seealso
     # - salmon quant --help-alignment
@@ -29,15 +27,14 @@ koopa_salmon_quant_bam_per_sample() {
     dict['bam_file']=''
     # Current recommendation in bcbio-nextgen.
     dict['bootstraps']=30
-    # > dict['gencode']=0
     # Detect library fragment type (strandedness) automatically.
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
-    # e.g. 'salmon'.
+    # e.g. 'salmon/sample1'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    # e.g. 'gencode.v39.transcripts.fa.gz'.
+    # e.g. 'gencode.v44.transcripts_fixed.fa.gz'.
     dict['transcriptome_fasta_file']=''
     quant_args=()
     while (("$#"))
@@ -76,11 +73,6 @@ koopa_salmon_quant_bam_per_sample() {
                 dict['transcriptome_fasta_file']="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
-            # > '--gencode')
-            # >     dict['gencode']=1
-            # >     shift 1
-            # >     ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -104,13 +96,13 @@ koopa_salmon_quant_bam_per_sample() {
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['transcriptome_fasta_file']}"
+    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    dict['bam_bn']="$(koopa_basename "${dict['bam_file']}")"
     dict['transcriptome_fasta_file']="$( \
         koopa_realpath "${dict['transcriptome_fasta_file']}" \
     )"
-    dict['id']="$(koopa_basename_sans_ext "${dict['bam_file']}")"
-    dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Quantifying '${dict['id']}' in '${dict['output_dir']}'."
+    koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
     quant_args+=(
         "--alignments=${dict['bam_file']}"
         "--libType=${dict['lib_type']}"
