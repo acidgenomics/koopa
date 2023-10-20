@@ -2791,16 +2791,17 @@
   "kallisto": {
     "bin": ["kallisto"],
     "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
-    "date": "2023-10-17",
+    "date": "2023-10-20",
     "default": false,
     "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
-    "notes": ["The conda recipe core dumps on Ubuntu during indexing."],
+    "notes": ["kallisto 0.50.0 is core dumping on Ubuntu."],
+    "outdated": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.50.0"
+    "version": "0.48.0"
   },
   "krb5": {
     "aliases": {
