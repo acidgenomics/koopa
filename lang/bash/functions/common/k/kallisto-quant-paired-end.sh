@@ -22,6 +22,7 @@ koopa_kallisto_quant_paired_end() {
     koopa_assert_has_args "$#"
     bool['aws_s3_output_dir']=0
     bool['tmp_output_dir']=0
+    dict['aws_profile']="${AWS_PROFILE:-default}"
     # e.g. 'fastq'.
     dict['fastq_dir']=''
     # e.g. '_R1_001.fastq.gz'.
