@@ -23791,13 +23791,13 @@ koopa_star_align_paired_end() {
     local fastq_r1_file
     koopa_assert_has_args "$#"
     dict['aws_profile']="${AWS_PROFILE:-default}"
-    dict['aws_s3_uri']=''
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
     dict['index_dir']=''
     dict['mode']='paired-end'
     dict['output_dir']=''
+    dict['output_s3_uri']=''
     while (("$#"))
     do
         case "$1" in
@@ -23867,10 +23867,10 @@ koopa_star_align_paired_end() {
         --pattern='s3://' \
         --string="${dict['output_dir']}"
     then
-        dict['aws_s3_uri']="$( \
+        dict['output_s3_uri']="$( \
             koopa_strip_trailing_slash "${dict['output_dir']}" \
         )"
-        dict['output_dir']="tmp-koopa-$(koopa_random_string)"
+        dict['output_dir']="$(koopa_tmp_dir_in_wd)"
     fi
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_h1 'Running STAR aligner.'
@@ -25493,6 +25493,11 @@ koopa_tex_version() {
     )"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
+    return 0
+}
+
+koopa_tmp_dir_in_wd() {
+    koopa_init_dir "tmp-koopa-$(koopa_random_string)"
     return 0
 }
 
