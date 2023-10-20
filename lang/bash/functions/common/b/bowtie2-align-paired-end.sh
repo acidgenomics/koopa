@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_bowtie2_align() {
+# FIXME Rework to support AWS.
+
+koopa_bowtie2_align_paired_end() {
     # """
     # Run bowtie2 on a directory containing multiple FASTQ files.
     # @note Updated 2023-04-06.

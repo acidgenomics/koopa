@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-10-19.
+    # @note Updated 2023-10-20.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -769,6 +769,22 @@ _koopa_complete() {
                                     ;;
                             esac
                             ;;
+                        'bowtie2' | \
+                        'rsem')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
+                                    args=('paired-end')
+                                    ;;
+                            esac
+                            ;;
+                        'hisat2' | \
+                        'star')
+                            case "${COMP_WORDS[COMP_CWORD-1]}" in
+                                'align')
+                                    args=('paired-end' 'single-end')
+                                    ;;
+                            esac
+                            ;;
                         'kallisto')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
@@ -780,13 +796,6 @@ _koopa_complete() {
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
                                     args=('bam' 'paired-end' 'single-end')
-                                    ;;
-                            esac
-                            ;;
-                        'star')
-                            case "${COMP_WORDS[COMP_CWORD-1]}" in
-                                'align')
-                                    args=('paired-end' 'single-end')
                                     ;;
                             esac
                             ;;
