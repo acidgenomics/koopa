@@ -3,7 +3,7 @@
 koopa_hisat2_fastq_library_type() {
     # """
     # Convert salmon FASTQ library type to HISAT2 strandedness.
-    # @note Updated 2022-03-25.
+    # @note Updated 2023-10-20.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
@@ -21,7 +21,7 @@ koopa_hisat2_fastq_library_type() {
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'A' | 'IU' | 'U')
+        'IU' | 'U')
             # fr-unstranded.
             return 0
             ;;
