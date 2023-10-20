@@ -104,8 +104,7 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
-        'bowtie2' | \
-        'rsem')
+        'bowtie2')
             case "${2:-}" in
                 'align')
                     case "${3:-}" in
@@ -298,6 +297,28 @@ koopa_cli_app() {
         'rnaeditingindexer')
             dict['key']="${1:?}"
             shift 1
+            ;;
+        'rsem')
+            case "${2:-}" in
+                'index')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                'quant')
+                    case "${3:-}" in
+                        'paired-end')
+                            dict['key']="${1:?}-${2:?}-${3:?}"
+                            shift 3
+                            ;;
+                        *)
+                            koopa_cli_invalid_arg "$@"
+                        ;;
+                    esac
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
             ;;
         'salmon')
             case "${2:-}" in

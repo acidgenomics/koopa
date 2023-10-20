@@ -656,7 +656,6 @@ _koopa_complete() {
                             ;;
                         'bowtie2' | \
                         'hisat2' | \
-                        'rsem' | \
                         'star')
                             args=('align' 'index')
                             ;;
@@ -706,6 +705,7 @@ _koopa_complete() {
                             args=('serve')
                             ;;
                         'kallisto' | \
+                        'rsem' | \
                         'salmon')
                             args=('index' 'quant')
                             ;;
