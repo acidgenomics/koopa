@@ -12,7 +12,6 @@ koopa_star_align_single_end_per_sample() {
     # @examples
     # > koopa_star_align_single_end_per_sample \
     # >     --fastq-file='fastq/sample1_001.fastq.gz' \
-    # >     --fastq-tail='_001.fastq.gz' \
     # >     --index-dir='star-index' \
     # >     --output-dir='star/sample1'
     # """
@@ -24,8 +23,6 @@ koopa_star_align_single_end_per_sample() {
     bool['tmp_fastq_file']=0
     # e.g. 'fastq'.
     dict['fastq_file']=''
-    # e.g. '_001.fastq.gz'.
-    dict['fastq_tail']=''
     # e.g. 'star-index'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -43,14 +40,6 @@ koopa_star_align_single_end_per_sample() {
                 ;;
             '--fastq-file')
                 dict['fastq_file']="${2:?}"
-                shift 2
-                ;;
-            '--fastq-tail='*)
-                dict['fastq_tail']="${1#*=}"
-                shift 1
-                ;;
-            '--fastq-tail')
-                dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -77,7 +66,6 @@ koopa_star_align_single_end_per_sample() {
     done
     koopa_assert_is_set \
         '--fastq-file' "${dict['fastq_file']}" \
-        '--fastq-tail' "${dict['fastq_tail']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     if [[ -d "${dict['output_dir']}" ]]
@@ -95,6 +83,7 @@ GB of RAM."
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_file']}"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['fastq_bn']}' in '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['fastq_file']}"
     then
