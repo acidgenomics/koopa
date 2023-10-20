@@ -31,7 +31,6 @@ koopa_rsem_index() {
     # e.g. 'rsem-index'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
-    dict['tmp_dir']="$(koopa_tmp_dir)"
     index_args=()
     while (("$#"))
     do
@@ -88,29 +87,27 @@ koopa_rsem_index() {
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_genome_fasta_file']=1
-        dict['tmp_genome_fasta_file']="$(koopa_tmp_file)"
+        dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['genome_fasta_file']}" \
             "${dict['tmp_genome_fasta_file']}"
-    else
-        dict['tmp_genome_fasta_file']="${dict['genome_fasta_file']}"
+        dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_str_detect_regex \
         --string="${dict['gtf_file']}" \
         --pattern="${dict['compress_ext_pattern']}"
     then
         bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file)"
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
             "${dict['gtf_file']}" \
             "${dict['tmp_gtf_file']}"
-    else
-        dict['tmp_gtf_file']="${dict['gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     index_args+=(
-        '--gtf' "${dict['tmp_gtf_file']}"
+        '--gtf' "${dict['gtf_file']}"
         '--num-threads' "${dict['threads']}"
-        "${dict['tmp_genome_fasta_file']}"
+        "${dict['genome_fasta_file']}"
         'rsem'
     )
     koopa_dl 'Index args' "${index_args[*]}"
@@ -120,11 +117,11 @@ koopa_rsem_index() {
     )
     if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_genome_fasta_file']}"
+        koopa_rm "${dict['genome_fasta_file']}"
     fi
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
-        koopa_rm "${dict['tmp_gtf_file']}"
+        koopa_rm "${dict['gtf_file']}"
     fi
     koopa_alert_success "RSEM index created at '${dict['output_dir']}'."
     return 0
