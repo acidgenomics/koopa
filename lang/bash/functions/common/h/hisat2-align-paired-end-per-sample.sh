@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Double check our automatic strandedness handling here.
+
 koopa_hisat2_align_paired_end_per_sample() {
     # """
     # Run HISAT2 aligner on a paired-end sample.
@@ -36,6 +38,9 @@ koopa_hisat2_align_paired_end_per_sample() {
     dict['mem_gb_cutoff']=14
     # e.g. 'quant/hisat2-gencode/sample1'.
     dict['output_dir']=''
+    # This is used for automatic strandedness detection.
+    # e.g. 'indexes/salmon-gencode'
+    dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
@@ -81,6 +86,14 @@ koopa_hisat2_align_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -97,6 +110,11 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         koopa_alert_note "Skipping '${dict['output_dir']}'."
         return 0
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
@@ -144,15 +162,16 @@ koopa_hisat2_align_paired_end_per_sample() {
             "${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
-    align_args+=(
-        '-1' "${dict['fastq_r1_file']}"
-        '-2' "${dict['fastq_r2_file']}"
-        '-S' "${dict['sam_file']}"
-        '-q'
-        '-x' "${dict['hisat2_idx']}"
-        '--new-summary'
-        '--threads' "${dict['threads']}"
-    )
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting FASTQ library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_fastq_library_type \
+                --fastq-r1-file="${dict['fastq_r1_file']}" \
+                --fastq-r2-file="${dict['fastq_r2_file']}" \
+                --index-dir="${dict['salmon_index_dir']}" \
+        )"
+    fi
     dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
@@ -165,6 +184,15 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         align_args+=("${dict['quality_flag']}")
     fi
+    align_args+=(
+        '-1' "${dict['fastq_r1_file']}"
+        '-2' "${dict['fastq_r2_file']}"
+        '-S' "${dict['sam_file']}"
+        '-q'
+        '-x' "${dict['hisat2_idx']}"
+        '--new-summary'
+        '--threads' "${dict['threads']}"
+    )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['hisat2']}" "${align_args[@]}"
     if [[ "${bool['tmp_fastq_r1_file']}" ]]

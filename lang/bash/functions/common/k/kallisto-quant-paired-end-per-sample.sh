@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Seeing a segentation fault during kallisto quant:
-# > [   em] quantifying the abundances ...
-#  Segmentation fault      (core dumped)
-
 koopa_kallisto_quant_paired_end_per_sample() {
     # """
     # Run kallisto quant on a paired-end sample.
@@ -64,6 +60,9 @@ koopa_kallisto_quant_paired_end_per_sample() {
     dict['fastq_r2_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
+    # This is used for automatic strandedness detection.
+    # e.g. 'indexes/salmon-gencode'
+    dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     quant_args=()
     while (("$#"))
@@ -110,6 +109,14 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -126,6 +133,11 @@ koopa_kallisto_quant_paired_end_per_sample() {
     then
         koopa_alert_note "Skipping '${dict['output_dir']}'."
         return 0
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
@@ -145,6 +157,23 @@ koopa_kallisto_quant_paired_end_per_sample() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' into '${dict['output_dir']}'."
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting FASTQ library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_fastq_library_type \
+                --fastq-r1-file="${dict['fastq_r1_file']}" \
+                --fastq-r2-file="${dict['fastq_r2_file']}" \
+                --index-dir="${dict['salmon_index_dir']}" \
+        )"
+    fi
+    dict['lib_type']="$( \
+        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
+    )"
+    if [[ -n "${dict['lib_type']}" ]]
+    then
+        quant_args+=("${dict['lib_type']}")
+    fi
     quant_args+=(
         '--bias'
         "--bootstrap-samples=${dict['bootstraps']}"
@@ -153,13 +182,6 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "--threads=${dict['threads']}"
         '--verbose'
     )
-    dict['lib_type']="$( \
-        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
-    )"
-    if [[ -n "${dict['lib_type']}" ]]
-    then
-        quant_args+=("${dict['lib_type']}")
-    fi
     quant_args+=("${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}")
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app['kallisto']}" quant "${quant_args[@]}"

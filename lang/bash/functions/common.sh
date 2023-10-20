@@ -9975,6 +9975,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['output_dir']=''
+    dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
@@ -10019,6 +10020,14 @@ koopa_hisat2_align_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -10034,6 +10043,11 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         koopa_alert_note "Skipping '${dict['output_dir']}'."
         return 0
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
@@ -10081,15 +10095,16 @@ koopa_hisat2_align_paired_end_per_sample() {
             "${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
-    align_args+=(
-        '-1' "${dict['fastq_r1_file']}"
-        '-2' "${dict['fastq_r2_file']}"
-        '-S' "${dict['sam_file']}"
-        '-q'
-        '-x' "${dict['hisat2_idx']}"
-        '--new-summary'
-        '--threads' "${dict['threads']}"
-    )
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting FASTQ library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_fastq_library_type \
+                --fastq-r1-file="${dict['fastq_r1_file']}" \
+                --fastq-r2-file="${dict['fastq_r2_file']}" \
+                --index-dir="${dict['salmon_index_dir']}" \
+        )"
+    fi
     dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
@@ -10102,6 +10117,15 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         align_args+=("${dict['quality_flag']}")
     fi
+    align_args+=(
+        '-1' "${dict['fastq_r1_file']}"
+        '-2' "${dict['fastq_r2_file']}"
+        '-S' "${dict['sam_file']}"
+        '-q'
+        '-x' "${dict['hisat2_idx']}"
+        '--new-summary'
+        '--threads' "${dict['threads']}"
+    )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['hisat2']}" "${align_args[@]}"
     if [[ "${bool['tmp_fastq_r1_file']}" ]]
@@ -10133,6 +10157,7 @@ koopa_hisat2_align_paired_end() {
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['output_dir']=''
+    dict['salmon_index_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -10192,6 +10217,14 @@ koopa_hisat2_align_paired_end() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -10204,6 +10237,14 @@ koopa_hisat2_align_paired_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+        dict['salmon_index_dir']="$( \
+            koopa_realpath "${dict['salmon_index_dir']}" \
+        )"
+    fi
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
@@ -10277,7 +10318,8 @@ koopa_hisat2_align_paired_end() {
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict2['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --salmon-index-dir="${dict['salmon_index_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
             dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
@@ -10596,7 +10638,7 @@ koopa_hisat2_fastq_library_type() {
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'A' | 'IU' | 'U')
+        'IU' | 'U')
             return 0
             ;;
         'ISF')
@@ -16163,7 +16205,7 @@ koopa_kallisto_fastq_library_type() {
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'A' | 'IU' | 'U')
+        'IU' | 'U')
             return 0
             ;;
         'ISF')
@@ -16265,6 +16307,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
     dict['fastq_r2_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
+    dict['salmon_index_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     quant_args=()
     while (("$#"))
@@ -16310,6 +16353,14 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -16325,6 +16376,11 @@ koopa_kallisto_quant_paired_end_per_sample() {
     then
         koopa_alert_note "Skipping '${dict['output_dir']}'."
         return 0
+    fi
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
@@ -16344,6 +16400,23 @@ koopa_kallisto_quant_paired_end_per_sample() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' into '${dict['output_dir']}'."
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting FASTQ library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_fastq_library_type \
+                --fastq-r1-file="${dict['fastq_r1_file']}" \
+                --fastq-r2-file="${dict['fastq_r2_file']}" \
+                --index-dir="${dict['salmon_index_dir']}" \
+        )"
+    fi
+    dict['lib_type']="$( \
+        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
+    )"
+    if [[ -n "${dict['lib_type']}" ]]
+    then
+        quant_args+=("${dict['lib_type']}")
+    fi
     quant_args+=(
         '--bias'
         "--bootstrap-samples=${dict['bootstraps']}"
@@ -16352,13 +16425,6 @@ koopa_kallisto_quant_paired_end_per_sample() {
         "--threads=${dict['threads']}"
         '--verbose'
     )
-    dict['lib_type']="$( \
-        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
-    )"
-    if [[ -n "${dict['lib_type']}" ]]
-    then
-        quant_args+=("${dict['lib_type']}")
-    fi
     quant_args+=("${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}")
     koopa_dl 'Quant args' "${quant_args[*]}"
     "${app['kallisto']}" quant "${quant_args[@]}"
@@ -16379,6 +16445,7 @@ koopa_kallisto_quant_paired_end() {
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['output_dir']=''
+    dict['salmon_index_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -16438,6 +16505,14 @@ koopa_kallisto_quant_paired_end() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -16450,6 +16525,14 @@ koopa_kallisto_quant_paired_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+        dict['salmon_index_dir']="$( \
+            koopa_realpath "${dict['salmon_index_dir']}" \
+        )"
+    fi
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
@@ -16523,7 +16606,8 @@ koopa_kallisto_quant_paired_end() {
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict2['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --salmon-index-dir="${dict['salmon_index_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
             dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
@@ -18472,6 +18556,13 @@ koopa_locate_rscript() {
     koopa_locate_app \
         --app-name='r' \
         --bin-name='Rscript' \
+        "$@"
+}
+
+koopa_locate_rsem_calculate_expression() {
+    koopa_locate_app \
+        --app-name='rsem' \
+        --bin-name='rsem-calcualte-expression' \
         "$@"
 }
 
@@ -22071,6 +22162,24 @@ koopa_roff() {
     return 0
 }
 
+koopa_rsem_align_paired_end_per_sample() {
+    local -A app dict
+    local -a align_args
+    app['rsem_calculate_expression']="$(koopa_locate_rsem_calculate_expression)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['threads']="$(koopa_cpu_count)"
+    align_args+=(
+        '--paired-end'
+        '--strandedness' 'none'
+        '--num-threads' "${dict['threads']}"
+        'CORE FLAG'
+        'PAIRED FLAG'
+        "FIXME INDEX DIR"
+        "FIXME SAMPLE NAME"
+    )
+    return 0
+}
+
 koopa_rsem_index() {
     local -A app bool dict
     local -a index_args
@@ -22374,7 +22483,7 @@ koopa_salmon_detect_fastq_library_type() {
         '--index-dir' "${dict['index_dir']}"
     koopa_assert_is_file "${dict['fastq_r1_file']}"
     koopa_assert_is_dir "${dict['index_dir']}"
-    quant_args=(
+    quant_args+=(
         "--index=${dict['index_dir']}"
         "--libType=${dict['lib_type']}"
         '--no-version-check'

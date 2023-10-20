@@ -36,6 +36,9 @@ koopa_hisat2_align_paired_end() {
     # e.g. 'quant/hisat2-gencode',
     # or AWS S3 URI 's3://example/quant/hisat2-gencode'.
     dict['output_dir']=''
+    # This is used for automatic strandedness detection.
+    # e.g. 'indexes/salmon-gencode'
+    dict['salmon_index_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -96,6 +99,14 @@ koopa_hisat2_align_paired_end() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--salmon-index-dir='*)
+                dict['salmon_index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--salmon-index-dir')
+                dict['salmon_index_dir']="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -109,6 +120,15 @@ koopa_hisat2_align_paired_end() {
         '--index-dir' "${dict['index_dir']}" \
         '--lib-type' "${dict['lib_type']}" \
         '--output-dir' "${dict['output_dir']}"
+    # We're using salmon for automatic library strandedness detection.
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_assert_is_set '--salmon-index-dir' "${dict['salmon_index_dir']}"
+        koopa_assert_is_dir "${dict['salmon_index_dir']}"
+        dict['salmon_index_dir']="$( \
+            koopa_realpath "${dict['salmon_index_dir']}" \
+        )"
+    fi
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
@@ -182,7 +202,8 @@ koopa_hisat2_align_paired_end() {
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict2['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --salmon-index-dir="${dict['salmon_index_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
             dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
