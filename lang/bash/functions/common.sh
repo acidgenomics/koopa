@@ -23136,29 +23136,7 @@ pattern '${dict['pattern']}'."
             --input-bam="${dict2['file_2']}" \
             --output-bam="${dict2['file_3']}"
         koopa_cp "${dict2['file_3']}" "${dict2['output']}"
-        koopa_sambamba_index "${dict2['output']}"
-    done
-    return 0
-}
-
-koopa_sambamba_index() {
-    local -A app dict
-    local bam_file
-    koopa_assert_has_args "$#"
-    koopa_assert_is_file "$@"
-    app['sambamba']="$(koopa_locate_sambamba)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['threads']="$(koopa_cpu_count)"
-    for bam_file in "$@"
-    do
-        koopa_assert_is_matching_regex \
-            --pattern='\.bam$' \
-            --string="$bam_file"
-        koopa_alert "Indexing '${bam_file}'."
-        "${app['sambamba']}" index \
-            --nthreads="${dict['threads']}" \
-            --show-progress \
-            "$bam_file"
+        koopa_samtools_index_bam "${dict2['output']}"
     done
     return 0
 }
