@@ -3755,11 +3755,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-10-18",
+    "date": "2023-10-20",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.3.0"
+    "version": "2.3.1"
   },
   "mpc": {
     "aliases": {
@@ -4528,10 +4528,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-18",
+    "date": "2023-10-20",
     "default": false,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.2"
+    "version": "0.14.3"
   },
   "proj": {
     "aliases": {
