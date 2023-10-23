@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-10-17.
+    # @note Updated 2023-10-23.
     #
     # @section Intel:
     #
@@ -38,16 +38,18 @@ main() {
             dict['arch']='arm64'
             ;;
     esac
-    case "${dict['os']}" in
-        'ventura' | \
-        'monterey' | \
-        'big-sur')
-            dict['os']='big-sur'
-            ;;
-        *)
-            koopa_stop 'Unsupported OS.'
-            ;;
-    esac
+    # > case "${dict['os']}" in
+    # >     'sonoma' | \
+    # >     'ventura' | \
+    # >     'monterey' | \
+    # >     'big-sur')
+    # >         dict['os']='big-sur'
+    # >         ;;
+    # >     *)
+    # >         koopa_stop 'Unsupported OS.'
+    # >         ;;
+    # > esac
+    dict['os']='big-sur'
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['prefix']="${dict['framework_prefix']}/Versions/\
 ${dict['maj_min_ver']}-${dict['arch']}/Resources"

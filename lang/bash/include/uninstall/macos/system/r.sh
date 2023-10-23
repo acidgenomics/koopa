@@ -3,7 +3,7 @@
 main() {
     # """
     # Uninstall R framework binary.
-    # @note Updated 2023-04-25.
+    # @note Updated 2023-10-23.
     # """
     local -a rm_files
     [[ -d '/Library/Frameworks/R.framework' ]] || return 0
@@ -16,5 +16,6 @@ main() {
     )
     koopa_rm --sudo "${rm_files[@]}"
     koopa_macos_uninstall_system_xcode_openmp
+    koopa_macos_uninstall_system_gfortran
     return 0
 }
