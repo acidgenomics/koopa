@@ -74,8 +74,8 @@ ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     fi
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
-    koopa_macos_install_system_gfortran
-    koopa_macos_install_system_xcode_openmp
+    koopa_macos_install_system_r_gfortran
+    koopa_macos_install_system_r_xcode_openmp
     readarray -t deps <<< "$(koopa_app_dependencies 'r')"
     koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
     koopa_cli_install "${deps[@]}"

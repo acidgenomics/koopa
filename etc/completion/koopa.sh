@@ -608,8 +608,8 @@ _koopa_complete() {
                                     'python'
                                     'r'
                                     'r-gfortran'
+                                    'r-xcode-openmp'
                                     'xcode-clt'
-                                    'xcode-openmp'
                                 )
                             fi
                             ;;
