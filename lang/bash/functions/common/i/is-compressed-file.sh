@@ -3,7 +3,7 @@
 koopa_is_compressed_file() {
     # """
     # Does the input contain a compressed file?
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-10-23.
     #
     # File must exist on disk.
     #
@@ -16,7 +16,7 @@ koopa_is_compressed_file() {
     for string in "$@"
     do
         [[ -f "$string" ]] || return 1
-        koopa_str_detect_fixed \
+        koopa_str_detect_regex \
             --pattern="$pattern" \
             --string="$string" \
         || return 1
