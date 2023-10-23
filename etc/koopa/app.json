@@ -4888,6 +4888,19 @@
     "url": ["https://mac.r-project.org/"],
     "version": "12.2"
   },
+  "r-xcode-openmp": {
+    "date": "2023-10-23",
+    "default": true,
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
+    "system": true,
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "14.0.6"
+  },
   "radian": {
     "bin": ["radian"],
     "date": "2023-08-31",
@@ -5978,19 +5991,6 @@
     "default": false,
     "url": ["https://github.com/google/woff2/"],
     "version": "1.0.2"
-  },
-  "xcode-openmp": {
-    "date": "2023-04-11",
-    "default": true,
-    "supported": {
-      "linux-amd64": false,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": true
-    },
-    "system": true,
-    "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
   },
   "xorg-libice": {
     "aliases": {
