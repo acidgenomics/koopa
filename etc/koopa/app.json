@@ -907,12 +907,12 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2023-07-18",
+    "date": "2023-10-23",
     "default": true,
     "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.5.2-0"
+    "version": "23.9.0-0"
   },
   "convmv": {
     "aliases": {
