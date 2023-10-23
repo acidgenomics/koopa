@@ -4802,7 +4802,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.3.2"
+    "version": "4.3.1"
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
