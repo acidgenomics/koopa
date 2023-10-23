@@ -29,13 +29,13 @@ koopa_samtools_sort_bam() {
         dict2['out_file']="${dict2['in_file']}.tmp"
         koopa_assert_is_matching_regex \
             --pattern="\.${dict['format']}\$" \
-            --string="${dict['in_file']}"
-        koopa_alert "Sorting '${dict['in_file']}'."
+            --string="${dict2['in_file']}"
+        koopa_alert "Sorting '${dict2['in_file']}'."
         "${app['samtools']}" sort \
             -@ "${dict['threads']}" \
             -O "${dict['format']}" \
-            -o "${dict['out_file']}" \
-            "${dict['in_file']}"
+            -o "${dict2['out_file']}" \
+            "${dict2['in_file']}"
         koopa_assert_is_file "${dict2['out_file']}"
         koopa_rm "${dict2['in_file']}"
         koopa_mv "${dict2['out_file']}" "${dict2['in_file']}"
