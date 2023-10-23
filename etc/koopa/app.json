@@ -1495,10 +1495,10 @@
     },
     "bin": ["fd"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-24",
+    "date": "2023-10-23",
     "default": true,
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "8.7.0"
+    "version": "8.7.1"
   },
   "ffmpeg": {
     "aliases": {
@@ -2855,7 +2855,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-09-25",
+    "date": "2023-10-23",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
@@ -2863,7 +2863,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.32.8"
+    "version": "2.35.0"
   },
   "ldc": {
     "aliases": {
@@ -3693,12 +3693,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-09-29",
+    "date": "2023-10-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.2.2"
+    "version": "1.2.3"
   },
   "miller": {
     "aliases": {
@@ -4458,12 +4458,12 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2023-05-08",
+    "date": "2023-10-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.2.0"
+    "version": "1.2.1"
   },
   "pixman": {
     "aliases": {
@@ -4596,12 +4596,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-10-17",
+    "date": "2023-10-23",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.30"
+    "version": "2.3.31"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4630,11 +4630,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-10-06",
+    "date": "2023-10-23",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.0.1"
+    "version": "3.0.2"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5098,11 +5098,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-10-17",
+    "date": "2023-10-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5828,14 +5828,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2023-10-23",
     "default": false,
     "prune": false,
     "url": [
       "https://juliastrings.github.io/utf8proc/",
       "https://github.com/JuliaStrings/utf8proc/"
     ],
-    "version": "2.8.0"
+    "version": "2.9.0"
   },
   "vim": {
     "aliases": {
