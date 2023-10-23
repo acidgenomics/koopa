@@ -10046,7 +10046,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     if koopa_is_compressed_file "${dict['fastq_r1_file']}"
     then
         bool['tmp_fastq_r1_file']=1
-        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd).fastq"
         koopa_decompress \
             "${dict['fastq_r1_file']}" \
             "${dict['tmp_fastq_r1_file']}"
@@ -10055,7 +10055,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     if koopa_is_compressed_file "${dict['fastq_r2_file']}"
     then
         bool['tmp_fastq_r2_file']=1
-        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd).fastq"
         koopa_decompress \
             "${dict['fastq_r2_file']}" \
             "${dict['tmp_fastq_r2_file']}"
@@ -10404,7 +10404,7 @@ koopa_hisat2_align_single_end_per_sample() {
     if koopa_is_compressed_file "${dict['fastq_file']}"
     then
         bool['tmp_fastq_file']=1
-        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
+        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd).fastq"
         koopa_decompress \
             "${dict['fastq_file']}" \
             "${dict['tmp_fastq_file']}"
