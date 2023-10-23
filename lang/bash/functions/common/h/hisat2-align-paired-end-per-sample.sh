@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to use tee to write summary stats to log file, similar to
-# our bowtie2 approach.
-
 koopa_hisat2_align_paired_end_per_sample() {
     # """
     # Run HISAT2 aligner on a paired-end sample.
@@ -24,6 +21,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     local -A app bool dict
     local -a align_args
     app['hisat2']="$(koopa_locate_hisat2)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_r1_file']=0
     bool['tmp_fastq_r2_file']=0
@@ -139,6 +137,13 @@ koopa_hisat2_align_paired_end_per_sample() {
             --replacement='.bam' \
             "${dict['sam_file']}" \
     )"
+    dict['log_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.log' \
+            "${dict['sam_file']}" \
+    )"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['fastq_r1_file']}"
@@ -195,7 +200,8 @@ koopa_hisat2_align_paired_end_per_sample() {
         '--threads' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['hisat2']}" "${align_args[@]}"
+    "${app['hisat2']}" "${align_args[@]}" \
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['tmp_fastq_r1_file']}" ]]
     then
         koopa_rm "${dict['fastq_r1_file']}"
