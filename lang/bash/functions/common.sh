@@ -3229,9 +3229,8 @@ koopa_bowtie2_align_paired_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
-    koopa_samtools_convert_sam_to_bam \
-        --input-sam="${dict['sam_file']}" \
-        --output-bam="${dict['bam_file']}"
+    koopa_samtools_convert_sam_to_bam "${dict['sam_file']}"
+    koopa_samtools_sort_bam "${dict['bam_file']}"
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
@@ -10096,9 +10095,8 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
-    koopa_samtools_convert_sam_to_bam \
-        --input-sam="${dict['sam_file']}" \
-        --output-bam="${dict['bam_file']}"
+    koopa_samtools_convert_sam_to_bam "${dict['sam_file']}"
+    koopa_samtools_sort_bam "${dict['bam_file']}"
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
@@ -10428,9 +10426,8 @@ koopa_hisat2_align_single_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
-    koopa_samtools_convert_sam_to_bam \
-        --input-sam="${dict['sam_file']}" \
-        --output-bam="${dict['bam_file']}"
+    koopa_samtools_convert_sam_to_bam "${dict['sam_file']}"
+    koopa_samtools_sort_bam "${dict['bam_file']}"
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
@@ -23777,54 +23774,42 @@ pattern '${dict['pattern']}'."
 
 koopa_samtools_convert_sam_to_bam() {
     local -A app dict
+    local file
     koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
     app['samtools']="$(koopa_locate_samtools)"
-    koopa_assert_is_executable "${app['samtools']}"
-    dict['input_sam']=''
-    dict['output_bam']=''
+    koopa_assert_is_executable "${app[@]}"
     dict['threads']="$(koopa_cpu_count)"
-    while (("$#"))
+    for file in "$@"
     do
-        case "$1" in
-            '--input-sam='*)
-                dict['input_sam']="${1#*=}"
-                shift 1
-                ;;
-            '--input-sam')
-                dict['input_sam']="${2:?}"
-                shift 2
-                ;;
-            '--output-bam='*)
-                dict['output_bam']="${1#*=}"
-                shift 1
-                ;;
-            '--output-bam')
-                dict['output_bam']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
+        local -A dict2
+        dict2['sam_file']="$file"
+        koopa_assert_is_matching_regex \
+            --pattern='\.sam$' \
+            --string="${dict2['sam_file']}"
+        dict2['bam_file']="$( \
+            koopa_sub \
+                --pattern='\.sam$' \
+                --regex \
+                --replacement='.bam' \
+                "${dict2['sam_file']}" \
+        )"
+        if [[ -f "${dict2['bam_file']}" ]]
+        then
+            koopa_alert_note "Skipping '${dict2['bam_file']}'."
+            return 0
+        fi
+        koopa_alert "Converting '${dict2['sam_file']}' to \
+'${dict2['bam_file']}'."
+        "${app['samtools']}" view \
+            -@ "${dict['threads']}" \
+            -b \
+            -h \
+            -o "${dict2['bam_file']}" \
+            "${dict2['sam_file']}"
+        koopa_assert_is_file "${dict2['bam_file']}"
+        koopa_rm "${dict2['sam_file']}"
     done
-    koopa_assert_is_set \
-        '--input-sam' "${dict['input_sam']}" \
-        '--output-bam' "${dict['output_bam']}"
-    koopa_assert_is_file "${dict['input_sam']}"
-    dict['input_sam']="$(koopa_realpath "${dict['input_sam']}")"
-    if [[ -f "${dict['output_bam']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['output_bam']}'."
-        return 0
-    fi
-    koopa_alert "Converting '${dict['input_sam']}' to '${dict['output_bam']}'."
-    "${app['samtools']}" view \
-        -@ "${dict['threads']}" \
-        -b \
-        -h \
-        -o "${dict['output_bam']}" \
-        "${dict['input_sam']}"
-    koopa_assert_is_file "${dict['output_bam']}"
     return 0
 }
 
@@ -23856,7 +23841,7 @@ koopa_samtools_sort_bam() {
     do
         local -A dict2
         dict2['in_file']="$file"
-        dict2['out_file']="${dict2['infile']}.tmp"
+        dict2['out_file']="${dict2['in_file']}.tmp"
         koopa_assert_is_matching_regex \
             --pattern="\.${dict['format']}\$" \
             --string="${dict['in_file']}"
