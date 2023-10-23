@@ -51,6 +51,7 @@ koopa_samtools_convert_sam_to_bam() {
             -o "${dict2['bam_file']}" \
             "${dict2['sam_file']}"
         koopa_assert_is_file "${dict2['bam_file']}"
+        koopa_rm "${dict2['sam_file']}"
     done
     return 0
 }
