@@ -97,6 +97,13 @@ koopa_bowtie2_align_paired_end_per_sample() {
             --replacement='.bam' \
             "${dict['sam_file']}" \
     )"
+    dict['log_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.log' \
+            "${dict['sam_file']}" \
+    )"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['fastq_r1_file']}"
