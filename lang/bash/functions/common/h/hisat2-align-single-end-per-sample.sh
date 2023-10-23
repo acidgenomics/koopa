@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to use tee to write summary stats to log file, similar to
-# our bowtie2 approach.
-
 koopa_hisat2_align_single_end_per_sample() {
     # """
     # Run HISAT2 aligner on a single-end sample.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-10-23.
     #
     # @examples
     # > koopa_hisat2_align_single_end_per_sample \
@@ -18,6 +15,7 @@ koopa_hisat2_align_single_end_per_sample() {
     local -a align_args
     koopa_assert_has_args "$#"
     app['hisat2']="$(koopa_locate_hisat2)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_file']=0
     # e.g. 'sample1_001.fastq.gz'.
@@ -103,6 +101,13 @@ koopa_hisat2_align_single_end_per_sample() {
             --replacement='.bam' \
             "${dict['sam_file']}" \
     )"
+    dict['log_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.log' \
+            "${dict['sam_file']}" \
+    )"
     koopa_alert "Quantifying '${dict['fastq_bn']}' in '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['fastq_file']}"
     then
@@ -136,7 +141,8 @@ koopa_hisat2_align_single_end_per_sample() {
         align_args+=("${dict['quality_flag']}")
     fi
     koopa_dl 'Align args' "${align_args[*]}"
-    "${app['hisat2']}" "${align_args[@]}"
+    "${app['hisat2']}" "${align_args[@]}" \
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['tmp_fastq_r1_file']}" ]]
     then
         koopa_rm "${dict['fastq_r1_file']}"
@@ -145,11 +151,8 @@ koopa_hisat2_align_single_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
-    koopa_samtools_convert_sam_to_bam \
-        --input-sam="${dict['sam_file']}" \
-        --output-bam="${dict['bam_file']}"
-    # FIXME Need to delete the SAM file here.
-    # FIXME We need to sort the BAM file first.
+    koopa_samtools_convert_sam_to_bam "${dict['sam_file']}"
+    koopa_samtools_sort_bam "${dict['bam_file']}"
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
