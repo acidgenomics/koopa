@@ -23847,11 +23847,11 @@ koopa_samtools_sort_bam() {
     local -A app dict
     local file
     koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
     app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
     dict['format']='bam'
     dict['threads']="$(koopa_cpu_count)"
-    koopa_assert_is_file "$@"
     for file in "$@"
     do
         local -A dict2

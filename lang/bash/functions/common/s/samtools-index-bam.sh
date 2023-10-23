@@ -3,11 +3,14 @@
 koopa_samtools_index_bam() {
     # """
     # Index a BAM file with samtools.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-10-23.
+    #
+    # Function is vectorized, supporting multiple BAM files.
+    # Consider adding support for CRAM files in the future.
     #
     # @seealso
-    # - http://www.htslib.org/doc/samtools-index.html
     # - samtools index
+    # - http://www.htslib.org/doc/samtools-index.html
     # """
     local -A app dict
     koopa_assert_has_args "$#"
