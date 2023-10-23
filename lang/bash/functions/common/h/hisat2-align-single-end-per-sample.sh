@@ -145,11 +145,8 @@ koopa_hisat2_align_single_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
-    koopa_samtools_convert_sam_to_bam \
-        --input-sam="${dict['sam_file']}" \
-        --output-bam="${dict['bam_file']}"
-    # FIXME Need to delete the SAM file here.
-    # FIXME We need to sort the BAM file first.
+    koopa_samtools_convert_sam_to_bam "${dict['sam_file']}"
+    koopa_samtools_sort_bam "${dict['bam_file']}"
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
