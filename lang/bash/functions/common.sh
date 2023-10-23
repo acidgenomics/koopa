@@ -10046,7 +10046,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     if koopa_is_compressed_file "${dict['fastq_r1_file']}"
     then
         bool['tmp_fastq_r1_file']=1
-        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
+        dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd --ext='fastq')"
         koopa_decompress \
             "${dict['fastq_r1_file']}" \
             "${dict['tmp_fastq_r1_file']}"
@@ -10055,7 +10055,7 @@ koopa_hisat2_align_paired_end_per_sample() {
     if koopa_is_compressed_file "${dict['fastq_r2_file']}"
     then
         bool['tmp_fastq_r2_file']=1
-        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
+        dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd --ext='fastq')"
         koopa_decompress \
             "${dict['fastq_r2_file']}" \
             "${dict['tmp_fastq_r2_file']}"
@@ -10404,7 +10404,7 @@ koopa_hisat2_align_single_end_per_sample() {
     if koopa_is_compressed_file "${dict['fastq_file']}"
     then
         bool['tmp_fastq_file']=1
-        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
+        dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd --ext='fastq')"
         koopa_decompress \
             "${dict['fastq_file']}" \
             "${dict['tmp_fastq_file']}"
@@ -26274,11 +26274,32 @@ koopa_tmp_dir() {
 }
 
 koopa_tmp_file_in_wd() {
-    local file
-    file="$(koopa_tmp_string)"
-    koopa_touch "$file"
-    koopa_assert_is_file "$file"
-    koopa_realpath "$file"
+    local -A dict
+    dict['ext']=''
+    dict['file']="$(koopa_tmp_string)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--ext='*)
+                dict['ext']="${1#*=}"
+                shift 1
+                ;;
+            '--ext')
+                dict['ext']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    if [[ -n "${dict['ext']}" ]]
+    then
+        dict['file']="${dict['file']}.${dict['ext']}"
+    fi
+    koopa_touch "${dict['file']}"
+    koopa_assert_is_file "${dict['file']}"
+    koopa_realpath "${dict['file']}"
     return 0
 }
 
