@@ -15622,7 +15622,7 @@ koopa_is_compressed_file() {
     for string in "$@"
     do
         [[ -f "$string" ]] || return 1
-        koopa_str_detect_fixed \
+        koopa_str_detect_regex \
             --pattern="$pattern" \
             --string="$string" \
         || return 1
