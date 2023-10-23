@@ -3,7 +3,7 @@
 koopa_bowtie2_align_paired_end_per_sample() {
     # """
     # Run bowtie2 alignment on multiple paired-end FASTQ files.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-10-23.
     # """
     local -A app bool dict
     koopa_assert_has_args "$#"
@@ -97,6 +97,13 @@ koopa_bowtie2_align_paired_end_per_sample() {
             --replacement='.bam' \
             "${dict['sam_file']}" \
     )"
+    dict['log_file']="$( \
+        koopa_sub \
+            --pattern='\.sam$' \
+            --regex \
+            --replacement='.log' \
+            "${dict['sam_file']}" \
+    )"
     koopa_alert "Quantifying '${dict['fastq_r1_bn']}' and \
 '${dict['fastq_r2_bn']}' in '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['fastq_r1_file']}"
@@ -147,9 +154,8 @@ koopa_bowtie2_align_paired_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
-    koopa_samtools_convert_sam_to_bam \
-        --input-sam="${dict['sam_file']}" \
-        --output-bam="${dict['bam_file']}"
+    koopa_samtools_convert_sam_to_bam "${dict['sam_file']}"
+    koopa_samtools_sort_bam "${dict['bam_file']}"
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }
