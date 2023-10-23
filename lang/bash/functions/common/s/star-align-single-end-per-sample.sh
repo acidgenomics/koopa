@@ -110,7 +110,7 @@ GB of RAM."
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
-    if [[ "${bool['tmp_fastq_file']}" ]]
+    if [[ "${bool['tmp_fastq_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['fastq_file']}"
     fi
