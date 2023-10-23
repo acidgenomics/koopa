@@ -508,11 +508,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2023-10-17",
+    "date": "2023-10-23",
     "default": true,
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "23.10.0"
+    "version": "23.10.1"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
