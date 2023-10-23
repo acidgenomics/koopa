@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to use tee to write summary stats to log file, similar to
+# our bowtie2 approach.
+
 koopa_hisat2_align_paired_end_per_sample() {
     # """
     # Run HISAT2 aligner on a paired-end sample.
@@ -204,6 +207,8 @@ koopa_hisat2_align_paired_end_per_sample() {
     koopa_samtools_convert_sam_to_bam \
         --input-sam="${dict['sam_file']}" \
         --output-bam="${dict['bam_file']}"
+    # FIXME Need to delete the SAM file here.
+    # FIXME We need to sort the BAM file first.
     koopa_samtools_index_bam "${dict['bam_file']}"
     return 0
 }

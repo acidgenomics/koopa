@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to parameterize this, supporting multiple SAMs.
+
 koopa_samtools_convert_sam_to_bam() {
     # """
     # Convert a SAM file to BAM format.

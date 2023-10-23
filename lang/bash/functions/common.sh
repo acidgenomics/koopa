@@ -23775,65 +23775,6 @@ pattern '${dict['pattern']}'."
     return 0
 }
 
-koopa_sambamba_sort_per_sample() {
-    local -A app dict
-    koopa_assert_has_args "$#"
-    app['sambamba']="$(koopa_locate_sambamba)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['input']="${1:?}"
-    dict['threads']="$(koopa_cpu_count)"
-    koopa_assert_is_file "${dict['input']}"
-    koopa_assert_is_matching_regex \
-        --pattern='\.bam$' \
-        --string="${dict['input']}"
-    dict['output']="${dict['input']%.bam}.sorted.bam"
-    dict['input_bn']="$(koopa_basename "${dict['input']}")"
-    dict['output_bn']="$(koopa_basename "${dict['output']}")"
-    if [[ -f "${dict['output']}" ]]
-    then
-        koopa_alert_note "Skipping '${dict['output_bn']}'."
-        return 0
-    fi
-    koopa_alert "Sorting '${dict['input_bn']}' to '${dict['output_bn']}'."
-    "${app['sambamba']}" sort \
-        --memory-limit='2GB' \
-        --nthreads="${dict['threads']}" \
-        --out="${dict['output']}" \
-        --show-progress \
-        "${dict['input']}"
-    return 0
-}
-
-koopa_sambamba_sort() {
-    local -A dict
-    local -a bam_files
-    local bam_file
-    koopa_assert_has_args_eq "$#" 1
-    dict['prefix']="${1:?}"
-    koopa_assert_is_dir "${dict['prefix']}"
-    readarray -t bam_files <<< "$( \
-        koopa_find \
-            --exclude='*.filtered.*' \
-            --exclude='*.sorted.*' \
-            --max-depth=3 \
-            --min-depth=1 \
-            --pattern='*.bam' \
-            --prefix="${dict['prefix']}" \
-            --sort \
-            --type='f' \
-    )"
-    if ! koopa_is_array_non_empty "${bam_files[@]:-}"
-    then
-        koopa_stop "No BAM files detected in '${dict['prefix']}'."
-    fi
-    koopa_alert "Sorting BAM files in '${dict['prefix']}'."
-    for bam_file in "${bam_files[@]}"
-    do
-        koopa_sambamba_sort_per_sample "$bam_file"
-    done
-    return 0
-}
-
 koopa_samtools_convert_sam_to_bam() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -23887,68 +23828,6 @@ koopa_samtools_convert_sam_to_bam() {
     return 0
 }
 
-koopa_samtools_convert_sams_to_bams() {
-    local -A bool dict
-    local -a pos sam_files
-    local sam_file
-    bool['keep_sam']=0
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--keep-sam')
-                bool['keep_sam']=1
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_eq "$#" 1
-    dict['prefix']="${1:?}"
-    koopa_assert_is_dir "${dict['prefix']}"
-    dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
-    readarray -t sam_files <<< "$( \
-        koopa_find \
-            --max-depth=3 \
-            --min-depth=1 \
-            --pattern='*.sam' \
-            --prefix="${dict['prefix']}" \
-            --sort \
-            --type='f' \
-    )"
-    if ! koopa_is_array_non_empty "${sam_files[@]:-}"
-    then
-        koopa_stop "No SAM files detected in '${dict['prefix']}'."
-    fi
-    koopa_alert "Converting SAM files in '${dict['prefix']}' to BAM format."
-    if [[ "${bool['keep_sam']}" -eq 1 ]]
-    then
-        koopa_alert_note 'SAM files will be preserved.'
-    else
-        koopa_alert_note 'SAM files will be deleted.'
-    fi
-    for sam_file in "${sam_files[@]}"
-    do
-        local bam_file
-        bam_file="${sam_file%.sam}.bam"
-        koopa_samtools_convert_sam_to_bam \
-            --input-sam="$sam_file" \
-            --output-bam="$bam_file"
-        if [[ "${bool['keep_sam']}" -eq 0 ]]
-        then
-            koopa_rm "$sam_file"
-        fi
-    done
-    return 0
-}
-
 koopa_samtools_index_bam() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -23961,6 +23840,36 @@ koopa_samtools_index_bam() {
         -M \
         -b \
         "$@"
+    return 0
+}
+
+koopa_samtools_sort_bam() {
+    local -A app dict
+    local file
+    koopa_assert_has_args "$#"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['format']='bam'
+    dict['threads']="$(koopa_cpu_count)"
+    koopa_assert_is_file "$@"
+    for file in "$@"
+    do
+        local -A dict2
+        dict2['in_file']="$file"
+        dict2['out_file']="${dict2['infile']}.tmp"
+        koopa_assert_is_matching_regex \
+            --pattern="\.${dict['format']}\$" \
+            --string="${dict['in_file']}"
+        koopa_alert "Sorting '${dict['in_file']}'."
+        "${app['samtools']}" sort \
+            -@ "${dict['threads']}" \
+            -O "${dict['format']}" \
+            -o "${dict['out_file']}" \
+            "${dict['in_file']}"
+        koopa_assert_is_file "${dict2['out_file']}"
+        koopa_rm "${dict2['in_file']}"
+        koopa_mv "${dict2['out_file']}" "${dict2['in_file']}"
+    done
     return 0
 }
 

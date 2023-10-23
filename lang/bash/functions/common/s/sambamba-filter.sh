@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reworking this to a per-file-centric approach instead.
+
 koopa_sambamba_filter() {
     # """
     # Apply multi-step filtering to multiple BAM files in a directory.
