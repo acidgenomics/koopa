@@ -150,8 +150,6 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
-        koopa_alert "Decompressing '${dict['fastq_r1_file']}' to \
-'${dict['tmp_fastq_r1_file']}"
         koopa_decompress \
             "${dict['fastq_r1_file']}" \
             "${dict['tmp_fastq_r1_file']}"
@@ -161,8 +159,6 @@ koopa_hisat2_align_paired_end_per_sample() {
     then
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
-        koopa_alert "Decompressing '${dict['fastq_r2_file']}' to \
-'${dict['tmp_fastq_r2_file']}"
         koopa_decompress \
             "${dict['fastq_r2_file']}" \
             "${dict['tmp_fastq_r2_file']}"
@@ -178,7 +174,6 @@ koopa_hisat2_align_paired_end_per_sample() {
                 --index-dir="${dict['salmon_index_dir']}" \
         )"
     fi
-    koopa_stop "FIXME $PWD"
     dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
