@@ -5110,19 +5110,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-10-23",
+    "date": "2023-10-24",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-10-17",
+    "date": "2023-10-24",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.41"
+    "version": "0.0.42"
   },
   "rust": {
     "aliases": {
