@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-10-17.
+    # @note Updated 2023-10-23.
     #
     # @section Intel:
     #
@@ -38,16 +38,18 @@ main() {
             dict['arch']='arm64'
             ;;
     esac
-    case "${dict['os']}" in
-        'ventura' | \
-        'monterey' | \
-        'big-sur')
-            dict['os']='big-sur'
-            ;;
-        *)
-            koopa_stop 'Unsupported OS.'
-            ;;
-    esac
+    # > case "${dict['os']}" in
+    # >     'sonoma' | \
+    # >     'ventura' | \
+    # >     'monterey' | \
+    # >     'big-sur')
+    # >         dict['os']='big-sur'
+    # >         ;;
+    # >     *)
+    # >         koopa_stop 'Unsupported OS.'
+    # >         ;;
+    # > esac
+    dict['os']='big-sur'
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['prefix']="${dict['framework_prefix']}/Versions/\
 ${dict['maj_min_ver']}-${dict['arch']}/Resources"
@@ -72,8 +74,8 @@ ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     fi
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
-    koopa_macos_install_system_gfortran
-    koopa_macos_install_system_xcode_openmp
+    koopa_macos_install_system_r_gfortran
+    koopa_macos_install_system_r_xcode_openmp
     readarray -t deps <<< "$(koopa_app_dependencies 'r')"
     koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
     koopa_cli_install "${deps[@]}"
