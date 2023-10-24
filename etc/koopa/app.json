@@ -5182,22 +5182,15 @@
   },
   "sambamba": {
     "bin": ["sambamba"],
-    "build_dependencies": {
-      "noarch": [],
-      "macos-arm64": ["ldc", "make", "python3.12"]
-    },
-    "date": "2023-10-19",
+    "date": "2023-10-24",
     "default": false,
-    "dependencies": {
-      "noarch": ["conda"],
-      "macos-arm64": ["bzip2", "lz4", "xz", "zlib"]
-    },
+    "dependencies": ["conda"],
     "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": true,
-      "macos-arm64": true
+      "macos-arm64": false
     },
     "url": [
       "https://github.com/biod/sambamba/",
