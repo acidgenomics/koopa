@@ -280,11 +280,11 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-10-02",
+    "date": "2023-10-24",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.53.0"
+    "version": "2.53.1"
   },
   "bamtools": {
     "bin": ["bamtools"],
