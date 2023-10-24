@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE 1.0.1 will build on Apple Silicon, but 1.0 (current conda) is broken.
+
 koopa_install_sambamba() {
-    if koopa_is_macos && koopa_is_aarch64
-    then
-        koopa_install_app \
-            --name='sambamba' \
-            "$@"
-    else
-        koopa_install_app \
-            --installer='conda-package' \
-            --name='sambamba' \
-            "$@"
-    fi
+    koopa_assert_is_not_aarch64
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='sambamba' \
+        "$@"
 }
