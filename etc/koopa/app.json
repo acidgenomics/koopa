@@ -280,11 +280,11 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-10-02",
+    "date": "2023-10-24",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.53.0"
+    "version": "2.53.1"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -508,11 +508,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2023-10-17",
+    "date": "2023-10-23",
     "default": true,
     "dependencies": ["python3.11"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "23.10.0"
+    "version": "23.10.1"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -1300,10 +1300,10 @@
     "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
   },
   "dotfiles": {
-    "date": "2023-10-18",
+    "date": "2023-10-24",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "0f74597aa50465381618bdb6f01fe8ab82aff9c9"
+    "version": "a845b8699bf56eefcd896d0453f71d79da80dd6c"
   },
   "du-dust": {
     "aliases": {
@@ -4888,6 +4888,19 @@
     "url": ["https://mac.r-project.org/"],
     "version": "12.2"
   },
+  "r-xcode-openmp": {
+    "date": "2023-10-23",
+    "default": true,
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
+    "system": true,
+    "url": ["https://mac.r-project.org/openmp/"],
+    "version": "14.0.6"
+  },
   "radian": {
     "bin": ["radian"],
     "date": "2023-08-31",
@@ -5978,19 +5991,6 @@
     "default": false,
     "url": ["https://github.com/google/woff2/"],
     "version": "1.0.2"
-  },
-  "xcode-openmp": {
-    "date": "2023-04-11",
-    "default": true,
-    "supported": {
-      "linux-amd64": false,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": true
-    },
-    "system": true,
-    "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
   },
   "xorg-libice": {
     "aliases": {

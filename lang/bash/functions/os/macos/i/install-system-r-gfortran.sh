@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_macos_install_system_gfortran() {
+koopa_macos_install_system_r_gfortran() {
     koopa_install_app \
-        --name='gfortran' \
+        --name='r-gfortran' \
         --platform='macos' \
         --system \
         "$@"
