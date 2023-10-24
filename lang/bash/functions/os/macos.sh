@@ -582,9 +582,17 @@ koopa_macos_install_system_python() {
         "$@"
 }
 
-koopa_macos_install_system_gfortran() {
+koopa_macos_install_system_r_gfortran() {
     koopa_install_app \
-        --name='gfortran' \
+        --name='r-gfortran' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_install_system_r_xcode_openmp() {
+    koopa_install_app \
+        --name='r-xcode-openmp' \
         --platform='macos' \
         --system \
         "$@"
@@ -612,14 +620,6 @@ koopa_macos_install_system_rosetta() {
 koopa_macos_install_system_xcode_clt() {
     koopa_install_app \
         --name='xcode-clt' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_install_system_xcode_openmp() {
-    koopa_install_app \
-        --name='xcode-openmp' \
         --platform='macos' \
         --system \
         "$@"
@@ -1082,14 +1082,6 @@ koopa_macos_uninstall_system_docker() {
         "$@"
 }
 
-koopa_macos_uninstall_system_gfortran() {
-    koopa_uninstall_app \
-        --name='gfortran' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
 koopa_macos_uninstall_system_microsoft_onedrive() {
     koopa_uninstall_app \
         --name='microsoft-onedrive' \
@@ -1115,6 +1107,22 @@ koopa_macos_uninstall_system_python() {
         "$@"
 }
 
+koopa_macos_uninstall_system_r_gfortran() {
+    koopa_uninstall_app \
+        --name='r-gfortran' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
+koopa_macos_uninstall_system_r_xcode_openmp() {
+    koopa_uninstall_app \
+        --name='r-xcode-openmp' \
+        --platform='macos' \
+        --system \
+        "$@"
+}
+
 koopa_macos_uninstall_system_r() {
     koopa_uninstall_app \
         --name='r' \
@@ -1134,14 +1142,6 @@ koopa_macos_uninstall_ringcentral() {
 koopa_macos_uninstall_system_xcode_clt() {
     koopa_uninstall_app \
         --name='xcode-clt' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-koopa_macos_uninstall_system_xcode_openmp() {
-    koopa_uninstall_app \
-        --name='xcode-openmp' \
         --platform='macos' \
         --system \
         "$@"
