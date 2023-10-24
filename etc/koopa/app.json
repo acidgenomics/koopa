@@ -4070,7 +4070,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-10-02",
+    "date": "2023-10-24",
     "default": false,
     "dependencies": [
       "ca-certificates",
@@ -4084,10 +4084,9 @@
     ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
-    "outdated": true,
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "18.18.0"
+    "version": "20.8.1"
   },
   "npth": {
     "aliases": {
