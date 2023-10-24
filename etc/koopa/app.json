@@ -4086,7 +4086,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "20.8.1"
+    "version": "20.9.0"
   },
   "npth": {
     "aliases": {
