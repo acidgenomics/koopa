@@ -13,6 +13,7 @@ main() {
     # """
     local -A app dict
     local -a build_deps deps
+    koopa_assert_is_not_aarch64
     build_deps=('ldc' 'make' 'python3.12')
     ! koopa_is_macos && deps+=('bzip2')
     deps+=('lz4' 'xz' 'zlib')
