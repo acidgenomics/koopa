@@ -230,6 +230,12 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://vina.scripps.edu/",
       "https://github.com/ccsb-scripps/AutoDock-Vina/"
@@ -1303,7 +1309,7 @@
     "date": "2023-10-24",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "a845b8699bf56eefcd896d0453f71d79da80dd6c"
+    "version": "567cc2c87ab5e975fee4cdd45c4b3d27d7f95013"
   },
   "du-dust": {
     "aliases": {
@@ -4086,7 +4092,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "20.8.1"
+    "version": "20.9.0"
   },
   "npth": {
     "aliases": {
@@ -5110,19 +5116,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-10-23",
+    "date": "2023-10-24",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.1"
+    "version": "0.1.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-10-17",
+    "date": "2023-10-24",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.41"
+    "version": "0.0.42"
   },
   "rust": {
     "aliases": {
