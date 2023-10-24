@@ -4254,12 +4254,12 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-09-20",
+    "date": "2023-10-24",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.1.3"
+    "version": "3.1.4"
   },
   "oracle-instant-client": {
     "date": "2023-08-31",
