@@ -14750,17 +14750,11 @@ koopa_install_salmon() {
 }
 
 koopa_install_sambamba() {
-    if koopa_is_macos && koopa_is_aarch64
-    then
-        koopa_install_app \
-            --name='sambamba' \
-            "$@"
-    else
-        koopa_install_app \
-            --installer='conda-package' \
-            --name='sambamba' \
-            "$@"
-    fi
+    koopa_assert_is_not_aarch64
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='sambamba' \
+        "$@"
 }
 
 koopa_install_samtools() {

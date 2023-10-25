@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ONT dorado basecaller.
-    # @note Updated 2023-06-27.
+    # @note Updated 2023-10-24.
     #
     # @seealso
     # - https://github.com/nanoporetech/dorado/blob/master/CMakeLists.txt
@@ -16,8 +16,10 @@ main() {
     if koopa_is_macos
     then
         koopa_assert_is_aarch64
+        dict['ext']='zip'
         dict['platform']='osx'
     else
+        dict['ext']='tar.gz'
         dict['platform']='linux'
     fi
     case "${dict['arch']}" in
@@ -29,7 +31,7 @@ main() {
             ;;
     esac
     dict['url']="https://cdn.oxfordnanoportal.com/software/analysis/\
-dorado-${dict['version']}-${dict['platform']}-${dict['arch']}.tar.gz"
+dorado-${dict['version']}-${dict['platform']}-${dict['arch']}.${dict['ext']}"
     koopa_download "${dict['url']}"
     koopa_extract \
         "$(koopa_basename "${dict['url']}")" \
