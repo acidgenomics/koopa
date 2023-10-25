@@ -4882,16 +4882,10 @@ koopa_cli_update() {
 }
 
 koopa_cli() {
-    local -A dict
+    local -A bool dict
     koopa_assert_has_args "$#"
-    dict['nested']=0
+    bool['nested']=0
     case "${1:?}" in
-        '--help' | \
-        '-h')
-            dict['manfile']="$(koopa_man_prefix)/man1/koopa.1"
-            koopa_help "${dict['manfile']}"
-            return 0
-            ;;
         '--version' | \
         '-V' | \
         'version')
@@ -4909,7 +4903,7 @@ koopa_cli() {
         'system' | \
         'uninstall' | \
         'update')
-            dict['nested']=1
+            bool['nested']=1
             dict['key']="cli-${1}"
             shift 1
             ;;
@@ -4917,7 +4911,7 @@ koopa_cli() {
             koopa_cli_invalid_arg "$@"
             ;;
     esac
-    if [[ "${dict['nested']}"  -eq 1 ]]
+    if [[ "${bool['nested']}"  -eq 1 ]]
     then
         dict['fun']="koopa_${dict['key']//-/_}"
         koopa_assert_is_function "${dict['fun']}"
