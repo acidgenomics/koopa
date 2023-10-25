@@ -13181,7 +13181,7 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install --bootstrap 'bash'
+        koopa_cli_install --bootstrap 'bash' 'python3.12'
     fi
     return 0
 }
@@ -17286,8 +17286,11 @@ koopa_locate_app() {
         [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
         koopa_stop "Failed to locate '${dict['app']}'."
     fi
-    [[ -n "${dict['app_name']}" ]] || return 1
-    [[ -n "${dict['bin_name']}" ]] || return 1
+    if [[ "${bool['only_system']}" -eq 0 ]]
+    then
+        [[ -n "${dict['app_name']}" ]] || return 1
+        [[ -n "${dict['bin_name']}" ]] || return 1
+    fi
     if [[ "${bool['allow_koopa_bin']}" -eq 1 ]]
     then
         dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
@@ -18440,6 +18443,10 @@ koopa_locate_pylint() {
         "$@"
 }
 
+koopa_locate_python3() {
+    koopa_locate_python312 "$@"
+}
+
 koopa_locate_python311() {
     koopa_locate_app \
         --app-name='python3.11' \
@@ -18713,6 +18720,13 @@ koopa_locate_swig() {
     koopa_locate_app \
         --app-name='swig' \
         --bin-name='swig' \
+        "$@"
+}
+
+koopa_locate_system_python3() {
+    koopa_locate_app \
+        --only-system \
+        --system-bin-name='python3' \
         "$@"
 }
 
@@ -25899,6 +25913,11 @@ koopa_system_info() {
     koopa_assert_has_no_args "$#"
     app['bash']="$(koopa_locate_bash --allow-system)"
     app['cat']="$(koopa_locate_cat --allow-system)"
+    app['python']="$(koopa_locate_python3 --allow-missing)"
+    if [[ ! -x "${app['python']}" ]]
+    then
+        app['python']="$(koopa_locate_system_python3)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     dict['app_prefix']="$(koopa_app_prefix)"
     dict['arch']="$(koopa_arch)"
@@ -25909,6 +25928,7 @@ koopa_system_info() {
     dict['koopa_url']="$(koopa_koopa_url)"
     dict['koopa_version']="$(koopa_koopa_version)"
     dict['opt_prefix']="$(koopa_opt_prefix)"
+    dict['python_version']="$(koopa_get_version "${app['python']}")"
     dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
 koopa/ascii-turtle.txt"
     koopa_assert_is_file "${dict['ascii_turtle_file']}"
@@ -25963,6 +25983,7 @@ koopa/ascii-turtle.txt"
         "OS: ${dict['os']}"
         "Architecture: ${dict['arch']} / ${dict['arch2']}"
         "Bash: ${dict['bash_version']}"
+        "Python: ${dict['python_version']}"
     )
     app['neofetch']="$(koopa_locate_neofetch --allow-missing)"
     if [[ -x "${app['neofetch']}" ]]
