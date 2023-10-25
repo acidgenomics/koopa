@@ -7,10 +7,24 @@ koopa_cli() {
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
+    #
+    # @seealso
+    # - How to remove last positional argument:
+    #   https://stackoverflow.com/a/26163980/3911732
     # """
     local -A bool dict
     koopa_assert_has_args "$#"
     bool['nested']=0
+    case "${!#}" in
+        '--help' | \
+        '-h')
+            set -- "${@:1:$(($#-1))}"
+            dict['key']="$(koopa_paste --sep='/' "$@")"
+            dict['man_file']="$(koopa_man_prefix)/man1/${dict['key']}.1"
+            koopa_assert_is_file "${dict['man_file']}"
+            koopa_help "${dict['man_file']}"
+            ;;
+    esac
     case "${1:?}" in
         '--version' | \
         '-V' | \
