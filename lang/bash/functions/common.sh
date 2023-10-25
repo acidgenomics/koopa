@@ -13019,6 +13019,7 @@ koopa_install_koopa() {
     bool['interactive']=1
     bool['passwordless_sudo']=0
     bool['shared']=0
+    bool['verbose']=0
     dict['config_prefix']="$(koopa_config_prefix)"
     dict['prefix']=''
     dict['source_prefix']="$(koopa_koopa_prefix)"
@@ -13074,12 +13075,17 @@ koopa_install_koopa() {
                 bool['shared']=0
                 shift 1
                 ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
     [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]] && bool['bootstrap']=1
+    [[ "${bool['verbose']}" -eq 1 ]] && set -x
     if [[ "${bool['interactive']}" -eq 1 ]]
     then
         if koopa_is_admin && [[ -z "${dict['prefix']}" ]]
