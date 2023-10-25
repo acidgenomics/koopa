@@ -20,7 +20,7 @@ install_bash() {
     printf 'Installing %s in %s.\n' 'Bash' "$PREFIX"
     mkdir -p "${PREFIX}/src/bash"
     cd "${PREFIX}/src/bash" || return 1
-    curl -k \
+    curl \
         'https://ftp.gnu.org/gnu/bash/bash-5.2.15.tar.gz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
@@ -36,7 +36,7 @@ install_bash() {
 # >     printf 'Installing %s in %s.\n' 'GNU coreutils' "$PREFIX"
 # >     mkdir -p "${PREFIX}/src/coreutils"
 # >     cd "${PREFIX}/src/coreutils" || return 1
-# >     curl -k \
+# >     curl \
 # >         'https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.gz' \
 # >         -o 'src.tar.gz'
 # >     tar -xzf 'src.tar.gz'
@@ -52,7 +52,7 @@ install_python() {
     printf 'Installing %s in %s.\n' 'Python' "$PREFIX"
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
-    curl -k \
+    curl \
         'https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
