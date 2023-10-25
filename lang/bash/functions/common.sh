@@ -18719,6 +18719,13 @@ koopa_locate_swig() {
         "$@"
 }
 
+koopa_locate_system_python3() {
+    koopa_locate_app \
+        --only-system \
+        --system-bin-name='python3' \
+        "$@"
+}
+
 koopa_locate_system_r() {
     local cmd
     if koopa_is_macos
