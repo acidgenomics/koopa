@@ -13011,9 +13011,6 @@ koopa_install_kallisto() {
 
 koopa_install_koopa() {
     local -A bool dict
-    koopa_assert_is_installed \
-        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
-        'python3' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
     bool['add_to_user_profile']=1
     bool['bootstrap']=0
     bool['interactive']=1
@@ -13084,8 +13081,15 @@ koopa_install_koopa() {
                 ;;
         esac
     done
-    [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]] && bool['bootstrap']=1
     [[ "${bool['verbose']}" -eq 1 ]] && set -x
+    if [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]]
+    then
+        bool['bootstrap']=1
+        koopa_add_to_path_start "${KOOPA_BOOTSTRAP_PREFIX}/bin"
+    fi
+    koopa_assert_is_installed \
+        'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
+        'python3' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
     if [[ "${bool['interactive']}" -eq 1 ]]
     then
         if koopa_is_admin && [[ -z "${dict['prefix']}" ]]
