@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2023-10-06.
+# @note Updated 2023-10-25.
 # """
 
 # Can debug with:
@@ -48,28 +48,28 @@ install_bash() {
 # >     return 0
 # > }
 
-# > install_python() {
-# >     printf 'Installing %s in %s.\n' 'Python' "$PREFIX"
-# >     mkdir -p "${PREFIX}/src/python"
-# >     cd "${PREFIX}/src/python"
-# >     curl \
-# >         'https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz' \
-# >         -o 'src.tar.gz'
-# >     tar -xzf 'src.tar.gz'
-# >     cd 'Python-3.12.0' || return 1
-# >     ./configure --prefix="$PREFIX" --without-ensurepip
-# >     make
-# >     make install
-# >     [ -x "${PREFIX}/bin/python3" ] || return 1
-# >     return 0
-# > }
+install_python() {
+    printf 'Installing %s in %s.\n' 'Python' "$PREFIX"
+    mkdir -p "${PREFIX}/src/python"
+    cd "${PREFIX}/src/python"
+    curl \
+        'https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz' \
+        -o 'src.tar.gz'
+    tar -xzf 'src.tar.gz'
+    cd 'Python-3.12.0' || return 1
+    ./configure --prefix="$PREFIX" --without-ensurepip
+    make
+    make install
+    [ -x "${PREFIX}/bin/python3" ] || return 1
+    return 0
+}
 
 main() {
     printf 'Installing %s in %s.\n' 'koopa bootstrap' "$PREFIX"
     (
         install_bash
         # > install_coreutils
-        # > install_python
+        install_python
     )
     printf 'System bootstrap was successful.\n'
     return 0
