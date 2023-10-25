@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework our '--help' capture and parsing here.
-
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
