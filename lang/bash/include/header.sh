@@ -325,12 +325,15 @@ __koopa_bash_header() {
             __koopa_source_functions "os/${dict['os_id']}"
         fi
         # Check if user is requesting help documentation.
-        case "${1:-}" in
-            '--help' | \
-            '-h')
-                koopa_help_2
-                ;;
-        esac
+        if [[ "$#" -gt 0 ]]
+        then
+            case "${!#}" in
+                '--help' | \
+                '-h')
+                    koopa_help_2
+                    ;;
+            esac
+        fi
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
             if koopa_is_shared_install && koopa_is_admin
