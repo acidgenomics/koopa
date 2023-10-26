@@ -1,16 +1,38 @@
-.TH SORT-LINES 1 2019-10-28 Bash
-.SH NAME
-sort-lines \-
-Sort lines
-.SH SYNOPSIS
-.B sort-lines
-.I file
-.SH DESCRIPTION
-Sort lines, using vim.
-Modifies the file in place.
-.SH EXAMPLE
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "SORT\-LINES" "1" "October 2023" "" ""
+.
+.SH "NAME"
+\fBsort\-lines\fR \- sort lines in a file with vim
+.
+.SH "SYNOPSIS"
+\fBsort\-lines\fR FILE\.\.\.
+.
+.SH "DESCRIPTION"
+Sort lines, using vim\. Modifies the file in place\. Vectorized, supporting multiple files in a single call\.
+.
+.SH "EXAMPLES"
+.
 .nf
-.B sort-lines tx2gene.csv
+
+$ sort\-lines tx2gene\.csv
+
+Input:
+## "ENST00000001146\.7","ENSG00000003137\.9"
+## "ENST00000000412\.8","ENSG00000003056\.8"
+## "ENST00000000442\.11","ENSG00000173153\.17"
+## "ENST00000001008\.6","ENSG00000004478\.8"
+## "ENST00000002125\.9","ENSG00000003509\.16"
+## "ENST00000000233\.10","ENSG00000004059\.11"
+
+Output:
+## "ENST00000000233\.10","ENSG00000004059\.11"
+## "ENST00000000412\.8","ENSG00000003056\.8"
+## "ENST00000000442\.11","ENSG00000173153\.17"
+## "ENST00000001008\.6","ENSG00000004478\.8"
+## "ENST00000001146\.7","ENSG00000003137\.9"
+## "ENST00000002125\.9","ENSG00000003509\.16"
+.
 .fi
-.SH NOTE
-Requires vim.
+
