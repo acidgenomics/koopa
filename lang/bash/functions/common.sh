@@ -4890,7 +4890,7 @@ koopa_cli() {
         '-h')
             set -- "${@:1:$(($#-1))}"
             dict['key']="$(koopa_paste --sep='/' "$@")"
-            dict['man_file']="$(koopa_man_prefix)/man1/${dict['key']}.1"
+            dict['man_file']="$(koopa_man_prefix)/man1/koopa/${dict['key']}.1"
             koopa_assert_is_file "${dict['man_file']}"
             koopa_help "${dict['man_file']}"
             ;;
