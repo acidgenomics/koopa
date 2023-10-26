@@ -11,6 +11,6 @@ Requires definition of `BATCH_FILE_URL` global variable.
 
 ## SEE ALSO
 
-  * [Creating a simple "fetch and run" AWS batch job](https://aws.amazon.com/blogs/compute/creating-a-simple-fetch-and-run-aws-batch-job/)
-  * [FredHutch url-fetch-and-run GitHub repo](https://github.com/FredHutch/url-fetch-and-run)
-  * [Using AWS Batch at Fred Hutch](https://fredhutch.github.io/aws-batch-at-hutch-docs/)
+* [Creating a simple "fetch and run" AWS batch job](https://aws.amazon.com/blogs/compute/creating-a-simple-fetch-and-run-aws-batch-job/)
+* [FredHutch url-fetch-and-run GitHub repo](https://github.com/FredHutch/url-fetch-and-run)
+* [Using AWS Batch at Fred Hutch](https://fredhutch.github.io/aws-batch-at-hutch-docs/)
