@@ -8,77 +8,76 @@
 
 ### Unix standard (general)
 
-  * `--help`, `-h`:
-    Show this help message and exit.
+* `--help`, `-h`:
+  Show this help message and exit.
 
-  * `--version`, `-V`:
-    Version information.
+* `--version`, `-V`:
+  Version information.
 
 ### System configuration
 
-  * `check`:
-    Run system dependency version checks.
+* `check`:
+  Run system dependency version checks.
 
-  * `develop`:
-    Switch koopa installation to developer mode.
+* `develop`:
+  Switch koopa installation to developer mode.
 
-  * `info`:
-    Show system information.
+* `info`:
+  Show system information.
 
-  * `list`:
-    List programs accessible in `PATH`.
+* `list`:
+  List programs accessible in `PATH`.
 
-  * `update`:
-    Update koopa installation to latest version.
-    Run with `--system` flag to also update the system configuration.
+* `update`:
+  Update koopa installation to latest version.
+  Run with `--system` flag to also update the system configuration.
 
 ### Character string return
 
-  * `app-prefix`:
-    Application installation prefix.
-    Refers to applications that don't need to be build using `make`, and can be
-    installed on an external disk, for space-constrained virtual machines.
-    Defaults to "/n/opt/" (with external disk) or "/usr/local/opt" (without
-    external disk) on most machines.
+* `app-prefix`:
+  Application installation prefix.
+  Refers to applications that don't need to be build using `make`, and can be
+  installed on an external disk, for space-constrained virtual machines.
+  Defaults to `"/n/opt/"` (with external disk) or `"/usr/local/opt"` (without
+  external disk) on most machines.
 
-  * `config-prefix`:
-    User-specific local configuration prefix.
-    Defined inside `XDG_CONFIG_HOME`, following recommended XDG configuration.
+* `config-prefix`:
+  User-specific local configuration prefix.
+  Defined inside `XDG_CONFIG_HOME`, following recommended XDG configuration.
 
-  * `header`:
-    Shell script header file path.
-    Can be passed to `source` inside external shell scripts.
-    Useful for experimental scripts that are not currently saved inside koopa.
+* `header`:
+  Shell script header file path.
+  Can be passed to `source` inside external shell scripts.
+  Useful for experimental scripts that are not currently saved inside koopa.
 
-  * `host-id`:
-    General platform identifier string.
-    Intended for identification of cloud platforms, such as
-    `aws` (Amazon Web Services), `azure` (Microsoft Azure),
-    or `gcp` (Google Cloud Platform).
+* `host-id`:
+  General platform identifier string.
+  Intended for identification of cloud platforms, such as `aws` (Amazon Web
+  Services), `azure` (Microsoft Azure), or `gcp` (Google Cloud Platform).
 
-  * `local-app-prefix`:
-    Local application prefix.
-    Defaults to `XDG_DATA_HOME` on most machines.
+* `local-app-prefix`:
+  Local application prefix.
+  Defaults to `XDG_DATA_HOME` on most machines.
 
-  * `make-prefix`:
-    Prefix for `make` application build scripts.
-    Defaults to "/usr/local" on most machines.
+* `make-prefix`:
+  Prefix for `make` application build scripts.
+  Defaults to `"/usr/local"` on most machines.
 
-  * `os-string`:
-    Operating system identifier string.
-    Returns OS name and version, separated by a hyphen.
-    Example: "ubuntu-18" for Ubuntu 18 LTS or "rhel-8" for RHEL 8.
+* `os-string`:
+  Operating system identifier string.
+  Returns OS name and version, separated by a hyphen.
+  Example: "ubuntu-18" for Ubuntu 18 LTS or "rhel-8" for RHEL 8.
 
-  * `prefix`:
-    Return the koopa installation path prefix.
-    Also stored as `KOOPA_PREFIX` environment variable.
+* `prefix`:
+  Return the koopa installation path prefix.
+  Also stored as `KOOPA_PREFIX` environment variable.
 
-  * `r-home`:
-    R installation prefix (`R_HOME`).
+* `r-home`:
+  R installation prefix (`R_HOME`).
 
-  * `variable`:
-    Internal koopa configuration variable.
-    Recommended for use in Python and R scripts only.
+* `variable`:
+  Internal koopa configuration variable.
+  Recommended for use in Python and R scripts only.
 
 ## COPYRIGHT
 

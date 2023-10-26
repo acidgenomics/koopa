@@ -2,7 +2,7 @@
 
 ## SYNOPSIS
 
-`autopad-zeros` `--prefix`="sample" `--pad-width`=2 <file>...
+`autopad-zeros` `--prefix`="sample" `--pad-width`=2 FILE...
 
 ## DESCRIPTION
 
@@ -18,12 +18,12 @@ valid name issues in R. See 'make.names()' for details.
 
 ## OPTIONS
 
-  * `--prefix`:
-    Prefix name.
+* `--prefix`:
+  Prefix name.
 
-  * `--pad-width`:
-    Zero padding width.
-    Manually adjust this when working with >= 100 samples.
+* `--pad-width`:
+  Zero padding width.
+  Manually adjust this when working with >= 100 samples.
 
 ## EXAMPLES
 
