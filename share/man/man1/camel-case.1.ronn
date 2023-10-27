@@ -2,7 +2,7 @@
 
 ## SYNOPSIS
 
-`camel-case` [`--rename`] [`--strict`] [`--prefix`] <string>|<file>...
+`camel-case` [`--rename`] [`--strict`] [`--prefix`] STRING|FILE...
 
 ## DESCRIPTION
 
@@ -11,20 +11,20 @@ File rename mode can be enabled by setting `--rename` flag.
 
 ## OPTIONS
 
-  * `--rename`:
-    Rename input files.
-    Assumes we're renaming files in current working directory, but also supports
-    explicit and/or mixed file paths.
-    Doesn't work recursively.
+* `--rename`:
+  Rename input files.
+  Assumes we're renaming files in current working directory, but also supports
+  explicit and/or mixed file paths.
+  Doesn't work recursively.
 
-  * `--strict`:
-    Enforce strict camel case output, coercing acronyms.
-    For example, 'geneID' becomes 'geneId'.
+* `--strict`:
+  Enforce strict camel case output, coercing acronyms.
+  For example, 'geneID' becomes 'geneId'.
 
-  * `--prefix`:
-    Include 'x' prefix for names that are syntactically invalid in R.
-    Note that this includes input beginning with a number.
-    Disabled by default.
+* `--prefix`:
+  Include 'x' prefix for names that are syntactically invalid in R.
+  Note that this includes input beginning with a number.
+  Disabled by default.
 
 ## NOTE
 
