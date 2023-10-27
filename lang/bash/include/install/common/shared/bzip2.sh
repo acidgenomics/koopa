@@ -13,6 +13,7 @@ main() {
     # - https://github.com/conda-forge/bzip2-feedstock/blob/main/recipe/build.sh
     # - https://opensource.apple.com/source/bzip2/bzip2-16.5/bzip2/
     #     Makefile.auto.html
+    # - https://gitlab.com/bzip2/bzip2
     # - https://gitlab.com/federicomenaquintero/bzip2
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/bzip2.rb
     # - https://github.com/macports/macports-ports/blob/master/archivers/
