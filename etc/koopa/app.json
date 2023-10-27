@@ -4009,7 +4009,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2023-10-11",
+    "date": "2023-10-27",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4021,7 +4021,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.57.0"
+    "version": "1.58.0"
   },
   "nim": {
     "aliases": {
