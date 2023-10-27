@@ -1473,13 +1473,13 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-19",
+    "date": "2023-10-26",
     "default": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.15.0"
+    "version": "0.15.1"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4009,7 +4009,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2023-10-11",
+    "date": "2023-10-27",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4021,7 +4021,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.57.0"
+    "version": "1.58.0"
   },
   "nim": {
     "aliases": {
@@ -5122,11 +5122,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-10-24",
+    "date": "2023-10-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.2"
+    "version": "0.1.3"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
