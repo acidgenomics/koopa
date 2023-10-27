@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-10-23.
+#' @note Updated 2023-10-27.
 #'
 #' @section Restarting R:
 #'
@@ -34,7 +34,7 @@
 #' - Efficient R programming
 #'   https://csgillespie.github.io/efficientR/set-up.html
 #' - Debian example config file by Dirk Eddelbuettel.
-#'
+#-
 #' @seealso
 #' - https://cran.r-project.org/doc/manuals/r-devel/NEWS.html
 #' - `help(topic = "Rprofile")`
@@ -44,8 +44,8 @@
 ## Initialization at start of an R session {{{1
 ## =============================================================================
 
-local({  # nolint
-    Sys.setenv("KOOPA_RPROFILE_SITE" = 1L)
+local({
+    Sys.setenv("KOOPA_RPROFILE_SITE" = 1L) # nolint
     stopifnot(requireNamespace("utils", quietly = TRUE))
     ## Create our named dictionary and boolean flag lists.
     dict <- list(
@@ -84,7 +84,7 @@ local({  # nolint
     ## -------------------------------------------------------------------------
     ## Load per-user secrets that we don't want to save in a shared Renviron.
     if (isTRUE(file.exists(dict[["secretsFile"]]))) {
-        source(dict[["secretsFile"]])
+        source(dict[["secretsFile"]]) # nolint
     }
     ## Functions {{{2
     ## -------------------------------------------------------------------------
@@ -198,10 +198,12 @@ local({  # nolint
         snapshot,
         sep = "/"
     )
+    ## nolint start
     options(
         "install.packages.check.source" = "yes",
         "install.packages.compile.from.source" = "always"
     )
+    ## nolint end
     if (isTRUE(flag[["linux"]]) && isTRUE(flag[["cranBinary"]])) {
         ## Configure the Debian/Ubuntu Posit binary CRAN snapshot.
         ## On Debian/Ubuntu, can access distro codename with 'lsb_release -cs'.
@@ -257,10 +259,12 @@ local({  # nolint
                 snapshot,
                 sep = "/"
             )
+            ## nolint start
             options(
                 "install.packages.check.source" = "no",
                 "install.packages.compile.from.source" = "never"
             )
+            ## nolint end
         }
     }
     ## Prefer binary installs on macOS for CRAN R. Otherwise default to
@@ -268,36 +272,44 @@ local({  # nolint
     ## binaries. Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
     ## environment variable in 'Renviron'.
     if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
-        cran <- "https://cloud.r-project.org"
+        ## > cran <- "https://cloud.r-project.org"
+        cran <- "https://packagemanager.posit.co/cran/latest"
+        ## nolint start
         options(
             "install.packages.check.source" = "no",
             "install.packages.compile.from.source" = "never",
             "pkgType" = "both"
         )
+        ## nolint end
     }
     repos <- getOption("repos")
     repos[["CRAN"]] <- cran
     ## Always include our Acid Genomics repo.
     repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
-    options("repos" = repos)
+    options("repos" = repos) # nolint
     ## Enable Posit Bioconductor mirror on Linux.
     if (isFALSE(flag[["macos"]])) {
+        ## nolint start
         options("BioC_mirror" = "https://packagemanager.posit.co/bioconductor")
+        ## nolint end
     }
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
     if (isTRUE(flag[["interactive"]])) {
         if (isInstalled("AcidDevTools")) {
+            ## nolint start
             options(
                 "defaultPackages" = c(
                     getOption("defaultPackages"),
                     "AcidDevTools"
                 )
             )
+            ## nolint end
         }
     }
     ## Console and interface {{{2
     ## -------------------------------------------------------------------------
+    ## nolint start
     options(
         "browserNLdisabled" = TRUE,
         ## Remove "+" line prefix in output, making code easier to copy.
@@ -308,8 +320,9 @@ local({  # nolint
         "verbose" = FALSE,
         "width" = 80L
     )
+    ## nolint end
     if (isFALSE(flag[["rstudio"]])) {
-        options("prompt" = "> ")
+        options("prompt" = "> ") # nolint
     }
     if (isTRUE(flag[["interactive"]])) {
         ## Turn on auto-completion of installed package names.
@@ -336,8 +349,9 @@ local({  # nolint
     ## > }
     ## Debugging {{{2
     ## -------------------------------------------------------------------------
-    options("warn" = 1L)
+    options("warn" = 1L) # nolint
     ## Improve the verbosity of errors and/or warnings.
+    ## nolint start
     options(
         "deparse.max.lines" = 3L,
         "showErrorCalls" = TRUE,
@@ -345,14 +359,17 @@ local({  # nolint
         ## Set to maximum supported length.
         "warning.length" = 8170L
     )
+    ## nolint end
     ## Note that edgeR and pheatmap currently fail these checks.
+    ## nolint start
     options(
         "warnPartialMatchAttr" = TRUE,
         "warnPartialMatchDollar" = TRUE
     )
+    ## nolint end
     ## Timeouts default to 60 seconds (1 minute), which can be too short for
     ## some large file downloads.
-    options("timeout" = 10000L)
+    options("timeout" = 10000L) # nolint
     ## Improve stack traces for error messages.
     ##
     ## Use either:
@@ -370,18 +387,20 @@ local({  # nolint
     ## - https://github.com/rstudio/rstudio/issues/4723
     ## - https://github.com/rstudio/rstudio/pull/4726
     if (isInstalled("rlang")) {
+        ## nolint start
         options(
             "error" = quote(rlang::entrace()),
             "rlang_backtrace_on_error" = "full",
             "rstudio.errors.suppressed" = FALSE
         )
+        ## nolint end
     }
     ## Quiet down about registered S3 method collisons.
     ## See also:
     ## - https://svn.r-project.org/R/trunk/src/library/base/R/namespace.R
     ## - https://github.com/wch/r-source/blob/master/src/library/base/R/
     ##       namespace.R
-    Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0")
+    Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0") # nolint
     ## Package-specific options {{{2
     ## -------------------------------------------------------------------------
     ## > if (isInstalled("AcidPlots")) {
@@ -409,33 +428,40 @@ local({  # nolint
     if (isInstalled("BiocManager")) {
         ## Overriding the annoying message about manual CRAN configuration.
         ## Check BiocManager repo config with `BiocManager::repositories()`.
-        options("BiocManager.check_repositories" = FALSE)
+        options("BiocManager.check_repositories" = FALSE) # nolint
         ## Enable use of historical snapshots ('MRAN' or 'RSPM') via
         ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
         ## out-of-date Bioconductor versions.
     }
     if (isInstalled("cli")) {
         ## Refer to `cli::ansi_has_hyperlink_support` for hyperlink details.
+        ## nolint start
         options(
             "cli.hyperlink" = FALSE,
             "cli.unicode" = TRUE
         )
+        ## nolint end
     }
     if (isInstalled("crayon")) {
+        ## nolint start
         options(
             "crayon.colors" = 256L,
             "crayon.enabled" = TRUE,
             "crayon.hyperlink" = FALSE
         )
+        ## nolint end
     }
     if (isInstalled("data.table")) {
+        ## nolint start
         options(
             "datatable.print.class" = TRUE,
             "datatable.print.keys" = TRUE,
             "datatable.quiet" = FALSE
         )
+        ## nolint end
     }
     if (isInstalled("formatR")) {
+        ## nolint start
         options(
             "formatR.args.newline" = FALSE,
             "formatR.arrow" = TRUE,
@@ -446,6 +472,7 @@ local({  # nolint
             "formatR.width" = I(80L),
             "formatR.wrap" = TRUE
         )
+        ## nolint end
     }
     if (isInstalled("future")) {
         ## If we have a large dataset, then we might need to adjust the limit
@@ -457,15 +484,15 @@ local({  # nolint
         ##     06_SC_SCT_and_integration.html
         ##
         ## Increase default limit to 4 GB.
-        options("future.globals.maxSize" = 4000L * (1024L ^ 2L))
+        options("future.globals.maxSize" = 4000L * (1024L ^ 2L)) # nolint
     }
     if (isInstalled("ggrepel")) {
-        options("ggrepel.max.overlaps" = Inf)
+        options("ggrepel.max.overlaps" = Inf) # nolint
     }
     if (isInstalled("httr")) {
         ## Enable OAuth token generation using httr on a remote R server.
         ## This is used by googlesheets, for example.
-        options("httr_oob_default" = TRUE)
+        options("httr_oob_default" = TRUE) # nolint
     }
     if (isInstalled("parallel")) {
         ## Improve the default multi-core settings.
@@ -478,10 +505,12 @@ local({  # nolint
         }
         cores <- as.integer(cores)
         ## `install.packages()` looks for "Ncpus" global.
+        ## nolint start
         options(
             "Ncpus" = cores,
             "mc.cores" = cores
         )
+        ## nolint end
     }
     ## > if (isInstalled("pipette")) {
     ## >     ## Ensure we load and save RDS files from a nested dated
@@ -495,20 +524,22 @@ local({  # nolint
     ## >     options("acid.load.dir" = getOption("acid.save.dir"))
     ## > }
     if (isInstalled("readr")) {
+        ## nolint start
         options(
             "readr.num_columns" = 0L,
             "readr.show_progress" = FALSE
         )
+        ## nolint end
     }
     if (isInstalled("Seurat")) {
-        options("Seurat.object.assay.version" = "v5")
+        options("Seurat.object.assay.version" = "v5") # nolint
     }
     if (isInstalled("styler")) {
-        options("styler.cache_root" = "styler")
+        options("styler.cache_root" = "styler") # nolint
     }
     if (isInstalled("reticulate")) {
         ## Ensure that Miniconda is used by default.
-        options("reticulate.conda_binary" = Sys.which("conda"))
+        options("reticulate.conda_binary" = Sys.which("conda")) # nolint
     }
     ## > if (isInstalled("styler")) {
     ## >     ## https://styler.r-lib.org/reference/styler_addins.html
@@ -519,13 +550,15 @@ local({  # nolint
     ## >     )
     ## > }
     if (isInstalled("testthat")) {
+        ## nolint start
         options(
             "testthat.progress.max_fails" = 1L,
             "testthat.progress.verbose_skips" = TRUE
         )
+        ## nolint end
     }
     if (isInstalled("tidyverse")) {
-        options("tidyverse.quiet" = TRUE)
+        options("tidyverse.quiet" = TRUE) # nolint
     }
     ## Quartz {{{2
     ## -------------------------------------------------------------------------
@@ -564,12 +597,11 @@ local({  # nolint
     ## RStudio PATH is now inconsistent with system R due to breaking changes in
     ## internal 'SessionPath.cpp'.
     ## See also:
-    ## - https://github.com/rstudio/rstudio/blob/main/src/cpp/session/
-    ##     modules/SessionPath.cpp
     ## - https://community.rstudio.com/t/how-to-get-rstudio-ide-to-use-the-
     ##     correct-terminal-path-in-mac-os-x/131528
     ## - https://github.com/rstudio/rstudio/issues/10551
     ## - https://github.com/rstudio/rstudio/issues/10311
+    ## nolint start
     if (isTRUE(flag[["rstudio"]]) && isInstalled("later")) {
         Sys.setenv("_PATH" = Sys.getenv("PATH"))
         restoreDefaultPath <- function() {
@@ -579,6 +611,7 @@ local({  # nolint
         }
         later::later(func = restoreDefaultPath, delay = 1L)
     }
+    ## nolint end
     ## Automatic dark/light theme handling {{{3
     ## -------------------------------------------------------------------------
     ## See also:
@@ -589,11 +622,11 @@ local({  # nolint
     dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
     if (
         isTRUE(flag[["interactive"]]) &&
-        isTRUE(flag[["rstudio"]]) &&
-        isTRUE(flag[["macos"]]) &&
-        isTRUE(nzchar(dict[["theme_dark"]])) &&
-        isTRUE(nzchar(dict[["theme_light"]])) &&
-        all(isInstalled(c("later", "rstudioapi")))
+            isTRUE(flag[["rstudio"]]) &&
+            isTRUE(flag[["macos"]]) &&
+            isTRUE(nzchar(dict[["theme_dark"]])) &&
+            isTRUE(nzchar(dict[["theme_light"]])) &&
+            all(isInstalled(c("later", "rstudioapi")))
     ) {
         autoDark <- function() {
             themes <- c(
@@ -631,10 +664,10 @@ local({  # nolint
     ## and not in quiet mode.
     if (
         isTRUE(flag[["interactive"]]) &&
-        isFALSE(length(intersect(
-            x = commandArgs(),
-            y = c("-q", "--quiet", "--silent")
-        )) > 0L)
+            isFALSE(length(intersect(
+                x = commandArgs(),
+                y = c("-q", "--quiet", "--silent")
+            )) > 0L)
     ) {
         pathString <- paste0("  %.", getOption("width") - 2L, "s")
         msg <- sprintf(
@@ -648,7 +681,7 @@ local({  # nolint
             ),
             R.version[["version.string"]],
             normalizePath(R.home(), mustWork = TRUE),
-            normalizePath(.libPaths()[[1L]], mustWork = TRUE),
+            normalizePath(.libPaths()[[1L]], mustWork = TRUE), # nolint
             normalizePath(getwd(), mustWork = TRUE)
         )
         cat(msg)
