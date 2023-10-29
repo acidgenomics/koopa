@@ -603,13 +603,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-02",
+    "date": "2023-10-29",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.26.1"
+    "version": "1.27.0"
   },
   "brotli": {
     "aliases": {
@@ -4306,11 +4306,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-08-31",
+    "date": "2023-10-29",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.7"
+    "version": "3.1.9"
   },
   "parallel": {
     "aliases": {
@@ -5911,10 +5911,10 @@
   "walk": {
     "bin": ["walk"],
     "build_dependencies": ["go"],
-    "date": "2023-10-10",
+    "date": "2023-10-29",
     "default": true,
     "url": ["https://github.com/antonmedv/walk/"],
-    "version": "1.6.2"
+    "version": "1.7.0"
   },
   "wget": {
     "aliases": {
