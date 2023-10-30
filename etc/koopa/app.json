@@ -4157,7 +4157,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-10-19",
+    "date": "2023-10-30",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4166,7 +4166,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.4.1"
+    "version": "0.4.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
