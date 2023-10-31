@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2022-12-30.
+# @note Updated 2023-10-31.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -12,6 +12,9 @@
 #       manage-conda.html
 # - https://docs.conda.io/projects/conda/en/latest/configuration.html
 # - https://bioconda.github.io/#set-up-channels
+# - conda-libmamba-solver details:
+#   https://github.com/conda/conda/releases/tag/23.10.0
+#   https://www.anaconda.com/blog/a-faster-conda-for-a-growing-community
 # """
 
 always_yes: True
@@ -21,7 +24,6 @@ changeps1: False
 channels:
   - conda-forge
   - bioconda
-  # > - defaults
 channel_priority: strict
 envs_dirs:
   - ~/.conda/envs
@@ -31,6 +33,5 @@ pkgs_dirs:
   - ~/.conda/pkgs
 report_errors: True
 show_channel_urls: True
-# Releases starting from 22.11.1 also support "libmamba" solver.
-solver: classic
+solver: libmamba
 update_dependencies: False
