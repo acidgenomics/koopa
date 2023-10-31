@@ -33,6 +33,7 @@ ${dict['os_type']}-${dict['arch']}.sh"
     koopa_add_to_path_end '/sbin'
     koopa_print_env
     "${app['bash']}" "${dict['file']}" -bf -p "${dict['prefix']}"
+    # FIXME Copy the condarc file instead of symlinking.
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"

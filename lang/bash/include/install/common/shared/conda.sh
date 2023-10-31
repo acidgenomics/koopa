@@ -70,6 +70,7 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
+    # FIXME Copy the condarc file instead of symlinking.
     koopa_ln \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
