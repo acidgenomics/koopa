@@ -603,13 +603,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-02",
+    "date": "2023-10-29",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.26.1"
+    "version": "1.27.0"
   },
   "brotli": {
     "aliases": {
@@ -857,10 +857,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-10-13",
+    "date": "2023-10-29",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.40.3"
+    "version": "2.40.4"
   },
   "cli11": {
     "aliases": {
@@ -2469,7 +2469,7 @@
       "h5watch"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-08-15",
+    "date": "2023-10-31",
     "default": false,
     "dependencies": ["libaec", "zlib"],
     "prune": false,
@@ -2477,7 +2477,7 @@
       "https://www.hdfgroup.org/downloads/hdf5/",
       "https://support.hdfgroup.org/ftp/HDF5/releases/"
     ],
-    "version": "1.14.2"
+    "version": "1.14.3"
   },
   "hexyl": {
     "aliases": {
@@ -2567,10 +2567,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-09-24",
+    "date": "2023-10-31",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.119.0"
+    "version": "0.120.1"
   },
   "hyperfine": {
     "aliases": {
@@ -3446,7 +3446,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-10-18",
+    "date": "2023-10-31",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3461,9 +3461,8 @@
       "zlib",
       "zstd"
     ],
-    "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "17.0.3"
+    "version": "17.0.4"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -4157,7 +4156,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-10-19",
+    "date": "2023-10-30",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4166,7 +4165,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.4.1"
+    "version": "0.4.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4306,11 +4305,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-08-31",
+    "date": "2023-10-29",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.7"
+    "version": "3.1.9"
   },
   "parallel": {
     "aliases": {
@@ -5911,10 +5910,10 @@
   "walk": {
     "bin": ["walk"],
     "build_dependencies": ["go"],
-    "date": "2023-10-10",
+    "date": "2023-10-29",
     "default": true,
     "url": ["https://github.com/antonmedv/walk/"],
-    "version": "1.6.2"
+    "version": "1.7.0"
   },
   "wget": {
     "aliases": {

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-07-13.
+    # @note Updated 2023-10-31.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -70,7 +70,7 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
     dict['url']="https://repo.continuum.io/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
-    koopa_ln \
+    koopa_cp \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
     app['conda']="${dict['prefix']}/bin/conda"
