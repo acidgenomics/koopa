@@ -3,7 +3,7 @@
 main() {
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2022-12-01.
+    # @note Updated 2023-10-31.
     # """
     local -A app dict
     app['bash']="$(koopa_locate_bash --allow-system)"
@@ -33,7 +33,7 @@ ${dict['os_type']}-${dict['arch']}.sh"
     koopa_add_to_path_end '/sbin'
     koopa_print_env
     "${app['bash']}" "${dict['file']}" -bf -p "${dict['prefix']}"
-    koopa_ln \
+    koopa_cp \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
     return 0
