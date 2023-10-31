@@ -14245,6 +14245,12 @@ koopa_install_pylint() {
         "$@"
 }
 
+koopa_install_pymol() {
+    koopa_install_app \
+        --name='pymol' \
+        "$@"
+}
+
 koopa_install_pytaglib() {
     koopa_install_app \
         --name='pytaglib' \
@@ -28357,6 +28363,12 @@ koopa_uninstall_pygments() {
 koopa_uninstall_pylint() {
     koopa_uninstall_app \
         --name='pylint' \
+        "$@"
+}
+
+koopa_uninstall_pymol() {
+    koopa_uninstall_app \
+        --name='pymol' \
         "$@"
 }
 
