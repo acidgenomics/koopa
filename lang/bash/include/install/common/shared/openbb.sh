@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-08-17.
+    # @note Updated 2023-10-31.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -34,7 +34,7 @@ refs/tags/v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    dict['conda_env_file']='build/conda/conda-3-9-env.yaml'
+    dict['conda_env_file']='build/conda/conda-3-10-env.yaml'
     koopa_assert_is_file "${dict['conda_env_file']}"
     export PIP_REQUIRE_VIRTUALENV=false
     koopa_print_env

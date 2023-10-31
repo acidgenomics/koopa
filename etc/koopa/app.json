@@ -4646,6 +4646,15 @@
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
     "version": "3.0.2"
   },
+  "pymol": {
+    "bin": ["pymol"],
+    "date": "2023-10-31",
+    "default": false,
+    "dependencies": ["conda"],
+    "outdated": true,
+    "url": ["https://pymol.org/conda/"],
+    "version": "2.4.1"
+  },
   "pytaglib": {
     "bin": ["pyprinttags"],
     "date": "2023-05-20",
