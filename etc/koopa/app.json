@@ -1917,11 +1917,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-09-13",
+    "date": "2023-11-01",
     "default": false,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.02.0"
+    "version": "10.02.1"
   },
   "git": {
     "aliases": {
@@ -5041,6 +5041,23 @@
     "dependencies": ["ruby"],
     "url": ["https://github.com/textmate/rmate/"],
     "version": "1.5.8"
+  },
+  "rmats": {
+    "bin": ["rmats.py"],
+    "date": "2023-11-01",
+    "default": false,
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
+    "url": [
+      "https://rnaseq-mats.sourceforge.io/",
+      "https://bioconda.github.io/recipes/rmats/README.html"
+    ],
+    "version": "4.2.0"
   },
   "ronn": {
     "aliases": {
