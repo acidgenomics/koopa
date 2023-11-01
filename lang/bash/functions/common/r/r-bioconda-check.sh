@@ -3,7 +3,7 @@
 koopa_r_bioconda_check() {
     # """
     # Acid Genomics Bioconda recipe 'R CMD check' workflow.
-    # @note Updated 2023-09-15.
+    # @note Updated 2023-11-01.
     #
     # To test against stable code, use 'archive/HEAD.tar.gz'.
     #
@@ -13,8 +13,7 @@ koopa_r_bioconda_check() {
     local -A dict
     koopa_assert_has_args "$#"
     dict['tmp_dir']="$(koopa_tmp_dir)"
-    dict['conda_cache_prefix']="$(koopa_init_dir "${dict['tmp_dir']}/conda")"
-    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
+    dict['pkg_cache_prefix']="$(koopa_init_dir "${dict['tmp_dir']}/conda")"
     for pkg in "$@"
     do
         local -A dict2
@@ -61,6 +60,7 @@ END
                 "${dict2['pkg2']}"
             )
             koopa_conda_create_env \
+                --package-cache-prefix="${dict['pkg_cache_prefix']}" \
                 --prefix="${dict2['conda_prefix']}" \
                 "${conda_deps[@]}"
             app2['rscript']="${dict2['conda_prefix']}/bin/Rscript"
