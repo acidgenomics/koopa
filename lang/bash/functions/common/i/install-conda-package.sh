@@ -3,7 +3,7 @@
 koopa_install_conda_package() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-11-01.
     #
     # Be sure to excluded nested directories that may exist in 'libexec' 'bin',
     # such as 'bin/scripts' for bowtie2.
@@ -74,8 +74,6 @@ koopa_install_conda_package() {
         '--prefix' "${dict['name']}" \
         '--version' "${dict['name']}"
     create_args=()
-    dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
-    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     create_args+=("--prefix=${dict['libexec']}")
     if [[ -n "${dict['yaml_file']}" ]]
