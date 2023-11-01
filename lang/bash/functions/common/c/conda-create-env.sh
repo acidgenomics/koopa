@@ -3,23 +3,25 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-11-01.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
     #     manage-environments.html#sharing-an-environment
     # - https://github.com/conda/conda/issues/6827
     # """
-    local -A app dict
+    local -A app bool dict
     local -a pos
     local string
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    bool['force']=0
+    bool['latest']=0
+    bool['tmp_pkg_cache_prefix']=0
     dict['env_prefix']="$(koopa_conda_env_prefix)"
-    dict['force']=0
-    dict['latest']=0
+    dict['pkg_cache_prefix']="${CONDA_PKGS_DIRS:-}"
     dict['prefix']=''
     dict['yaml_file']=''
     pos=()
@@ -35,6 +37,14 @@ koopa_conda_create_env() {
                 dict['yaml_file']="${2:?}"
                 shift 2
                 ;;
+            '--package-cache-prefix='*)
+                dict['pkg_cache_prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--package-cache-prefix')
+                dict['pkg_cache_prefix']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -46,11 +56,11 @@ koopa_conda_create_env() {
             # Flags ------------------------------------------------------------
             '--force' | \
             '--reinstall')
-                dict['force']=1
+                bool['force']=1
                 shift 1
                 ;;
             '--latest')
-                dict['latest']=1
+                bool['latest']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -64,12 +74,19 @@ koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ -z "${dict['pkg_cache_prefix']}" ]]
+    then
+        bool['tmp_pkg_cache_prefix']=1
+        dict['pkg_cache_prefix']="$(koopa_tmp_dir)"
+    fi
+    koopa_dl 'conda package cache' "${dict['pkg_cache_prefix']}"
+    export CONDA_PKGS_DIRS="${dict['pkg_cache_prefix']}"
     if [[ -n "${dict['yaml_file']}" ]]
     then
         koopa_assert_has_no_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
-        [[ "${dict['force']}" -eq 0 ]] || return 1
-        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        [[ "${bool['force']}" -eq 0 ]] || return 1
+        [[ "${bool['latest']}" -eq 0 ]] || return 1
         koopa_assert_is_file "${dict['yaml_file']}"
         dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
         koopa_dl 'conda recipe file' "${dict['yaml_file']}"
@@ -83,8 +100,8 @@ koopa_conda_create_env() {
     then
         koopa_assert_has_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
-        [[ "${dict['force']}" -eq 0 ]] || return 1
-        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        [[ "${bool['force']}" -eq 0 ]] || return 1
+        [[ "${bool['latest']}" -eq 0 ]] || return 1
         "${app['conda']}" create \
             --prefix "${dict['prefix']}" \
             --quiet \
@@ -100,7 +117,7 @@ koopa_conda_create_env() {
         # Note that we're using 'salmon@1.4.0' for the environment name but
         # must use 'salmon=1.4.0' in the call to conda below.
         dict2['env_string']="${string//@/=}"
-        if [[ "${dict['latest']}" -eq 1 ]]
+        if [[ "${bool['latest']}" -eq 1 ]]
         then
             if koopa_str_detect_fixed \
                 --string="${dict2['env_string']}" \
@@ -136,7 +153,7 @@ koopa_conda_create_env() {
         dict2['env_prefix']="${dict['env_prefix']}/${dict2['env_name']}"
         if [[ -d "${dict2['env_prefix']}" ]]
         then
-            if [[ "${dict['force']}" -eq 1 ]]
+            if [[ "${bool['force']}" -eq 1 ]]
             then
                 koopa_conda_remove_env "${dict2['env_name']}"
             else
@@ -155,5 +172,9 @@ exists at '${dict2['env_prefix']}'."
         koopa_alert_install_success \
             "${dict2['env_name']}" "${dict2['env_prefix']}"
     done
+    if [[ "${bool['tmp_pkg_cache_prefix']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['pkg_cache_prefix']}"
+    fi
     return 0
 }
