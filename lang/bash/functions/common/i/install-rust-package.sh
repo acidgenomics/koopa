@@ -3,7 +3,7 @@
 koopa_install_rust_package() {
     # """
     # Install Rust package.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-11-01.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -122,6 +122,9 @@ koopa_install_rust_package() {
     )
     [[ "$#" -gt 0 ]] && install_args+=("$@")
     install_args+=("${dict['name']}")
+    # Ensure we put Rust package 'bin/' into PATH, to avoid installer warning.
+    koopa_init_dir "${dict['prefix']}/bin"
+    koopa_add_to_path_start "${dict['prefix']}/bin"
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
     "${app['cargo']}" install "${install_args[@]}"
