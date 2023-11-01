@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenBB terminal.
-    # @note Updated 2023-10-31.
+    # @note Updated 2023-11-01.
     #
     # This may error due to Little Snitch blocking on macOS.
     #
@@ -27,8 +27,6 @@ main() {
         "${dict['conda_env_prefix']}" \
         "${dict['poetry_prefix']}" \
         "${dict['src_prefix']}"
-    dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
-    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
     dict['url']="https://github.com/OpenBB-finance/OpenBBTerminal/archive/\
 refs/tags/v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"

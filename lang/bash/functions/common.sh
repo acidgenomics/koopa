@@ -5244,16 +5244,18 @@ koopa_conda_bin() {
 }
 
 koopa_conda_create_env() {
-    local -A app dict
+    local -A app bool dict
     local -a pos
     local string
     koopa_assert_has_args "$#"
     app['conda']="$(koopa_locate_conda)"
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
+    bool['force']=0
+    bool['latest']=0
+    bool['tmp_pkg_cache_prefix']=0
     dict['env_prefix']="$(koopa_conda_env_prefix)"
-    dict['force']=0
-    dict['latest']=0
+    dict['pkg_cache_prefix']="${CONDA_PKGS_DIRS:-}"
     dict['prefix']=''
     dict['yaml_file']=''
     pos=()
@@ -5268,6 +5270,14 @@ koopa_conda_create_env() {
                 dict['yaml_file']="${2:?}"
                 shift 2
                 ;;
+            '--package-cache-prefix='*)
+                dict['pkg_cache_prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--package-cache-prefix')
+                dict['pkg_cache_prefix']="${2:?}"
+                shift 2
+                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
@@ -5278,11 +5288,11 @@ koopa_conda_create_env() {
                 ;;
             '--force' | \
             '--reinstall')
-                dict['force']=1
+                bool['force']=1
                 shift 1
                 ;;
             '--latest')
-                dict['latest']=1
+                bool['latest']=1
                 shift 1
                 ;;
             '-'*)
@@ -5295,12 +5305,19 @@ koopa_conda_create_env() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ -z "${dict['pkg_cache_prefix']}" ]]
+    then
+        bool['tmp_pkg_cache_prefix']=1
+        dict['pkg_cache_prefix']="$(koopa_tmp_dir)"
+    fi
+    koopa_dl 'conda package cache' "${dict['pkg_cache_prefix']}"
+    export CONDA_PKGS_DIRS="${dict['pkg_cache_prefix']}"
     if [[ -n "${dict['yaml_file']}" ]]
     then
         koopa_assert_has_no_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
-        [[ "${dict['force']}" -eq 0 ]] || return 1
-        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        [[ "${bool['force']}" -eq 0 ]] || return 1
+        [[ "${bool['latest']}" -eq 0 ]] || return 1
         koopa_assert_is_file "${dict['yaml_file']}"
         dict['yaml_file']="$(koopa_realpath "${dict['yaml_file']}")"
         koopa_dl 'conda recipe file' "${dict['yaml_file']}"
@@ -5313,8 +5330,8 @@ koopa_conda_create_env() {
     then
         koopa_assert_has_args "$#"
         koopa_assert_is_dir "${dict['prefix']}"
-        [[ "${dict['force']}" -eq 0 ]] || return 1
-        [[ "${dict['latest']}" -eq 0 ]] || return 1
+        [[ "${bool['force']}" -eq 0 ]] || return 1
+        [[ "${bool['latest']}" -eq 0 ]] || return 1
         "${app['conda']}" create \
             --prefix "${dict['prefix']}" \
             --quiet \
@@ -5328,7 +5345,7 @@ koopa_conda_create_env() {
     do
         local -A dict2
         dict2['env_string']="${string//@/=}"
-        if [[ "${dict['latest']}" -eq 1 ]]
+        if [[ "${bool['latest']}" -eq 1 ]]
         then
             if koopa_str_detect_fixed \
                 --string="${dict2['env_string']}" \
@@ -5363,7 +5380,7 @@ koopa_conda_create_env() {
         dict2['env_prefix']="${dict['env_prefix']}/${dict2['env_name']}"
         if [[ -d "${dict2['env_prefix']}" ]]
         then
-            if [[ "${dict['force']}" -eq 1 ]]
+            if [[ "${bool['force']}" -eq 1 ]]
             then
                 koopa_conda_remove_env "${dict2['env_name']}"
             else
@@ -5382,6 +5399,10 @@ exists at '${dict2['env_prefix']}'."
         koopa_alert_install_success \
             "${dict2['env_name']}" "${dict2['env_prefix']}"
     done
+    if [[ "${bool['tmp_pkg_cache_prefix']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['pkg_cache_prefix']}"
+    fi
     return 0
 }
 
@@ -11956,8 +11977,6 @@ koopa_install_conda_package() {
         '--prefix' "${dict['name']}" \
         '--version' "${dict['name']}"
     create_args=()
-    dict['conda_cache_prefix']="$(koopa_init_dir 'conda')"
-    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
     create_args+=("--prefix=${dict['libexec']}")
     if [[ -n "${dict['yaml_file']}" ]]
@@ -14529,6 +14548,14 @@ koopa_install_rmate() {
     koopa_install_app \
         --installer='ruby-package' \
         --name='rmate' \
+        "$@"
+}
+
+koopa_install_rmats() {
+    koopa_assert_is_not_aarch64
+    koopa_install_app \
+        --name='rmats' \
+        --installer='conda-package' \
         "$@"
 }
 
@@ -20310,8 +20337,7 @@ koopa_r_bioconda_check() {
     local -A dict
     koopa_assert_has_args "$#"
     dict['tmp_dir']="$(koopa_tmp_dir)"
-    dict['conda_cache_prefix']="$(koopa_init_dir "${dict['tmp_dir']}/conda")"
-    export CONDA_PKGS_DIRS="${dict['conda_cache_prefix']}"
+    dict['pkg_cache_prefix']="$(koopa_init_dir "${dict['tmp_dir']}/conda")"
     for pkg in "$@"
     do
         local -A dict2
@@ -20358,6 +20384,7 @@ END
                 "${dict2['pkg2']}"
             )
             koopa_conda_create_env \
+                --package-cache-prefix="${dict['pkg_cache_prefix']}" \
                 --prefix="${dict2['conda_prefix']}" \
                 "${conda_deps[@]}"
             app2['rscript']="${dict2['conda_prefix']}/bin/Rscript"
@@ -28481,6 +28508,12 @@ koopa_uninstall_ripgrep() {
 koopa_uninstall_rmate() {
     koopa_uninstall_app \
         --name='rmate' \
+        "$@"
+}
+
+koopa_uninstall_rmats() {
+    koopa_uninstall_app \
+        --name='rmats' \
         "$@"
 }
 
