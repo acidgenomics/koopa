@@ -14551,6 +14551,14 @@ koopa_install_rmate() {
         "$@"
 }
 
+koopa_install_rmats() {
+    koopa_assert_is_not_aarch64
+    koopa_install_app \
+        --name='rmats' \
+        --installer='conda-package' \
+        "$@"
+}
+
 koopa_install_ronn_ng() {
     koopa_install_app \
         --installer='ruby-package' \
@@ -28500,6 +28508,12 @@ koopa_uninstall_ripgrep() {
 koopa_uninstall_rmate() {
     koopa_uninstall_app \
         --name='rmate' \
+        "$@"
+}
+
+koopa_uninstall_rmats() {
+    koopa_uninstall_app \
+        --name='rmats' \
         "$@"
 }
 
