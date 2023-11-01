@@ -10,6 +10,7 @@ main() {
     # @seealso
     # - https://pymol.org/conda/
     # - https://pymol.org/installers/?C=M;O=D
+    # - https://formulae.brew.sh/formula/pymol
     # """
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
