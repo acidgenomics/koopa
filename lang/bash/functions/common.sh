@@ -16234,7 +16234,6 @@ koopa_kallisto_fastq_library_type() {
     koopa_print "$to"
     return 0
 }
-o#!/usr/bin/env bash
 
 koopa_kallisto_index() {
     local -A app dict
