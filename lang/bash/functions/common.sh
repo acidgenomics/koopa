@@ -14778,6 +14778,8 @@ koopa_install_rust_package() {
     )
     [[ "$#" -gt 0 ]] && install_args+=("$@")
     install_args+=("${dict['name']}")
+    koopa_init_dir "${dict['prefix']}/bin"
+    koopa_add_to_path_start "${dict['prefix']}/bin"
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
     "${app['cargo']}" install "${install_args[@]}"
@@ -16232,6 +16234,7 @@ koopa_kallisto_fastq_library_type() {
     koopa_print "$to"
     return 0
 }
+o#!/usr/bin/env bash
 
 koopa_kallisto_index() {
     local -A app dict
