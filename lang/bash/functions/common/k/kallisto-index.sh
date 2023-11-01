@@ -1,6 +1,7 @@
-#!/usr/bin/env bash
+o#!/usr/bin/env bash
 
 # FIXME Add support for pushing to S3 as a tarball.
+# FIXME Capture console output to log file.
 
 koopa_kallisto_index() {
     # """

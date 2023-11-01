@@ -3,7 +3,7 @@
 main() {
     # """
     # Install kallisto.
-    # @note updated 2023-07-07.
+    # @note updated 2023-11-01.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -64,17 +64,14 @@ v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     # This patch step is needed for bifrost to pick up zlib correctly.
     # https://github.com/pachterlab/kallisto/issues/385
-    if [[ "${dict['version']}" == '0.50.0' ]]
-    then
-        dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
-        dict['patch_file']="${dict['patch_prefix']}/cmakelists.patch"
-        koopa_assert_is_file "${dict['patch_file']}"
-        "${app['patch']}" \
-            --unified \
-            --verbose \
-            'src/CMakeLists.txt' \
-            "${dict['patch_file']}"
-    fi
+    dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
+    dict['patch_file']="${dict['patch_prefix']}/cmakelists.patch"
+    koopa_assert_is_file "${dict['patch_file']}"
+    "${app['patch']}" \
+        --unified \
+        --verbose \
+        'src/CMakeLists.txt' \
+        "${dict['patch_file']}"
     # This patch step is needed for autoconf 2.69 compatibility.
     # https://github.com/pachterlab/kallisto/issues/303#issuecomment-884612169
     (
