@@ -32,7 +32,7 @@ koopa_fastq_read_length() {
                 | "${app['awk']}" 'NR%4==2 {print length}' \
                 | "${app['sort']}" -n \
                 | "${app['uniq']}" -c \
-                | "${app['sort']}" -rh \
+                | "${app['sort']}" -hr \
                 | "${app['head']}" -1 \
                 | "${app['awk']}" '{print $2}' \
         )"
