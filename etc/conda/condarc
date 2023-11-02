@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2023-10-31.
+# @note Updated 2023-11-02.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -24,7 +24,6 @@ changeps1: False
 channels:
   - conda-forge
   - bioconda
-channel_priority: strict
 envs_dirs:
   - ~/.conda/envs
 notify_outdated_conda: False
