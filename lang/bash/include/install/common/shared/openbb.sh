@@ -66,7 +66,8 @@ refs/tags/v${dict['version']}.tar.gz"
     dict['bin_file']="${dict['prefix']}/bin/openbb"
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
-set -euo pipefail
+set -o errexit
+set -o nounset
 
 main() {
     '${app['poetry_python']}' \\

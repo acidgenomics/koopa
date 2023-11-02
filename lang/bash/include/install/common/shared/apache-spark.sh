@@ -23,12 +23,16 @@ spark-${dict['version']}-bin-hadoop${dict['maj_ver']}.tgz"
         "${dict['libexec']}"
     read -r -d '' "dict[pyspark_string]" << END || true
 #!/bin/sh
+set -o errexit
+set -o nounset
 
 SPARK_HOME='${dict['libexec']}'
 SPARK_HOME='\${SPARK_HOME}' '\${SPARK_HOME}/bin/pyspark' "\$@"
 END
     read -r -d '' "dict[sparkr_string]" << END || true
 #!/bin/sh
+set -o errexit
+set -o nounset
 
 SPARK_HOME='${dict['libexec']}'
 SPARK_HOME='\${SPARK_HOME}' '\${SPARK_HOME}/bin/sparkR' "\$@"

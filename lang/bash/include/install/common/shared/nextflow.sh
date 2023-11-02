@@ -25,6 +25,8 @@ main() {
     koopa_cp --target-directory="${dict['libexec']}" 'nextflow'
     read -r -d '' "dict[bin_string]" << END || true
 #!/bin/sh
+set -o errexit
+set -o nounset
 
 export NXF_JAVA_HOME='${dict['temurin']}'
 '${dict['libexec']}/nextflow' "\$@"
