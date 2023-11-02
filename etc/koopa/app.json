@@ -1473,13 +1473,13 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-26",
+    "date": "2023-11-02",
     "default": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.15.1"
+    "version": "0.15.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4646,10 +4646,9 @@
   },
   "pymol": {
     "bin": ["pymol"],
-    "date": "2023-10-31",
+    "date": "2023-11-02",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "url": ["https://pymol.org/conda/"],
     "version": "2.5.7"
   },
