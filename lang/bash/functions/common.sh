@@ -7866,7 +7866,8 @@ koopa_fastq_read_length() {
     do
         local length
         length="$( \
-            "${app['awk']}" 'NR%4==2 {print length}' "$file" \
+            koopa_decompress --stdout "$file" \
+                | "${app['awk']}" 'NR%4==2 {print length}' \
                 | "${app['sort']}" -n \
                 | "${app['uniq']}" -c \
                 | "${app['sort']}" -rh \
