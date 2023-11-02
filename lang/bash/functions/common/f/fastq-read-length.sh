@@ -26,6 +26,7 @@ koopa_fastq_read_length() {
     for file in "$@"
     do
         local length
+        # shellcheck disable=SC2016
         length="$( \
             koopa_decompress --stdout "$file" \
                 | "${app['awk']}" 'NR%4==2 {print length}' \
@@ -33,6 +34,7 @@ koopa_fastq_read_length() {
                 | "${app['uniq']}" -c \
                 | "${app['sort']}" -rh \
                 | "${app['head']}" -1 \
+                | "${app['awk']}" '{print $2}' \
         )"
         [[ -n "$length" ]] || return 1
         koopa_print "$length"
