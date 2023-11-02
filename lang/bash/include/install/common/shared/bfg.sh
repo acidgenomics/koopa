@@ -21,6 +21,8 @@ bfg/${dict['version']}/bfg-${dict['version']}.jar"
     koopa_touch "${dict['bin_file']}"
     "${app['cat']}" > "${dict['bin_file']}" << END
 #!/bin/sh
+set -o errexit
+set -o nounset
 
 ${app['java']} -jar "${dict['libexec']}/bfg.jar" "\$@"
 END
