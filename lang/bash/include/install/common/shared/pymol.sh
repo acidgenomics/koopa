@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME 2.5.7 bundle currently won't install on macOS.
-
 main() {
     # """
     # Install PyMOL.
-    # @note Updated 2023-10-31.
+    # @note Updated 2023-11-02.
     #
     # @seealso
     # - https://pymol.org/conda/
     # - https://pymol.org/installers/?C=M;O=D
     # - https://formulae.brew.sh/formula/pymol
+    # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
+    #     manage-channels.html
     # """
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -19,8 +19,8 @@ main() {
     dict['conda_env_file']='conda.yaml'
     read -r -d '' "dict[conda_env_string]" << END || true
 channels:
-  - schrodinger
   - conda-forge
+  - schrodinger
 dependencies:
   - pymol-bundle =${dict['version']}
   - pyqt
