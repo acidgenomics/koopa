@@ -22,7 +22,7 @@ koopa_fastq_read_length() {
     app['head']="$(koopa_locate_head)"
     app['sort']="$(koopa_locate_sort)"
     app['uniq']="$(koopa_locate_uniq)"
-    koopa_assert_is_exectuable "${app[@]}"
+    koopa_assert_is_executable "${app[@]}"
     for file in "$@"
     do
         local length
