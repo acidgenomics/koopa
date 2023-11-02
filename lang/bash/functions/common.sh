@@ -7853,6 +7853,31 @@ koopa_fastq_number_of_reads() {
     return 0
 }
 
+koopa_fastq_read_length() {
+    local -A app
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['awk']="$(koopa_locate_awk)"
+    app['head']="$(koopa_locate_head)"
+    app['sort']="$(koopa_locate_sort)"
+    app['uniq']="$(koopa_locate_uniq)"
+    koopa_assert_is_exectuable "${app[@]}"
+    for file in "$@"
+    do
+        local length
+        length="$( \
+            "${app['awk']}" 'NR%4==2 {print length}' "$file" \
+                | "${app['sort']}" -n \
+                | "${app['uniq']}" -c \
+                | "${app['sort']}" -rh \
+                | "${app['head']}" -1 \
+        )"
+        [[ -n "$length" ]] || return 1
+        koopa_dl "$file" "$length"
+    done
+    return 0
+}
+
 koopa_file_count() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
