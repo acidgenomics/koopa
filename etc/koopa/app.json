@@ -1306,10 +1306,10 @@
     "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
   },
   "dotfiles": {
-    "date": "2023-10-24",
+    "date": "2023-11-02",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "6a38ee1f7df152518ef8d74e2404acf3a25a7a43"
+    "version": "10a677dce0ecb48518fd297424d63f1b1ad4e9ce"
   },
   "du-dust": {
     "aliases": {
@@ -1473,13 +1473,13 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-26",
+    "date": "2023-11-02",
     "default": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.15.1"
+    "version": "0.15.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4646,10 +4646,9 @@
   },
   "pymol": {
     "bin": ["pymol"],
-    "date": "2023-10-31",
+    "date": "2023-11-02",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "url": ["https://pymol.org/conda/"],
     "version": "2.5.7"
   },
