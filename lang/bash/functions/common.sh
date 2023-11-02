@@ -7873,7 +7873,7 @@ koopa_fastq_read_length() {
                 | "${app['head']}" -1 \
         )"
         [[ -n "$length" ]] || return 1
-        koopa_dl "$file" "$length"
+        koopa_print "$length"
     done
     return 0
 }
