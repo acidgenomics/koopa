@@ -16,6 +16,9 @@ koopa_star_index() {
     #     ngsalign/star.py
     # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
     #     star_genomegenerate.nf
+    # - Regarding optimal '--sjdbOverhang' setting:
+    #   https://www.biostars.org/p/390314/
+    #   https://www.biostars.org/p/93883/
     #
     # @examples
     # > koopa_star_index \
