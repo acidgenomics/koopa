@@ -4753,7 +4753,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-23",
+    "date": "2023-11-03",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4818,11 +4818,11 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.3.1"
+    "version": "4.3.2"
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
-    "date": "2023-10-10",
+    "date": "2023-11-03",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4889,7 +4889,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "85312"
+    "version": "85467"
   },
   "r-gfortran": {
     "date": "2023-10-16",
