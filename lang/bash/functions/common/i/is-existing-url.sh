@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Use koopa_is_url first.
-
 koopa_is_existing_url() {
     # """
     # Check if input is a URL and exists (is active).

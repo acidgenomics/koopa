@@ -15748,6 +15748,54 @@ koopa_is_empty_dir() {
     return 0
 }
 
+koopa_is_existing_aws_s3_uri() {
+    local -A app dict
+    local -a pos
+    local uri
+    koopa_assert_has_args "$#"
+    app['aws']="$(koopa_locate_aws)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['profile']="${AWS_PROFILE:-default}"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_is_aws_s3_uri "$@" || return 1
+    for uri in "$@"
+    do
+        local -A dict2
+        dict2['uri']="$uri"
+        dict2['bucket']="$(koopa_aws_s3_bucket "${dict2['uri']}")"
+        dict2['key']="$(koopa_aws_s3_key "${dict2['uri']}")"
+        "${app['aws']}" --profile="${dict['profile']}" \
+            s3api head-object \
+            --bucket "${dict2['bucket']}" \
+            --key "${dict2['key']}" \
+            || return 1
+        continue
+    done
+    return 0
+}
+
 koopa_is_existing_url() {
     local -A app
     local url
