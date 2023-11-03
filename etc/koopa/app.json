@@ -1796,7 +1796,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-09-13",
+    "date": "2023-11-03",
     "default": false,
     "dependencies": [
       "bison",
@@ -1824,7 +1824,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.7.2"
+    "version": "3.7.3"
   },
   "gdbm": {
     "aliases": {
@@ -2788,11 +2788,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-10-11",
+    "date": "2023-11-03",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.7"
+    "version": "4.0.8"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4506,12 +4506,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2023-08-21",
+    "date": "2023-11-03",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.6.1"
+    "version": "1.7.0"
   },
   "prelude-emacs": {
     "date": "2023-05-30",
