@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to define a function to get S3 bucket name.
-# FIXME Need to define a function to get S3 key.
-
 koopa_is_existing_aws_s3_uri() {
     # """
     # Does the input contain an AWS S3 URI that exists?
@@ -12,9 +9,9 @@ koopa_is_existing_aws_s3_uri() {
     # - https://www.learnaws.org/2023/01/30/aws-s3-cli-check-file/
     #
     # @examples
-    # koopa_is_existing_aws_s3_uri \
-    #     --profile='acidgenomics' \
-    #     's3://koopa.acidgenomics.com/install'
+    # > koopa_is_existing_aws_s3_uri \
+    # >     --profile='acidgenomics' \
+    # >     's3://koopa.acidgenomics.com/install'
     # """
     local -A app dict
     local -a pos
@@ -59,6 +56,8 @@ koopa_is_existing_aws_s3_uri() {
             s3api head-object \
             --bucket "${dict2['bucket']}" \
             --key "${dict2['key']}" \
+            --no-cli-pager \
+            > /dev/null \
             || return 1
         continue
     done
