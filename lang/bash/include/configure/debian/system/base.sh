@@ -3,7 +3,7 @@
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-11-03.
     #
     # @section apt install:
     #
@@ -63,7 +63,8 @@ END
         'sudo' \
         'systemd' \
         'tzdata' \
-        'unzip'
+        'unzip' \
+        'zsh'
     app['dpkg_reconfigure']="$(koopa_debian_locate_dpkg_reconfigure)"
     app['locale_gen']="$(koopa_debian_locate_locale_gen)"
     app['update_locale']="$(koopa_debian_locate_update_locale)"
