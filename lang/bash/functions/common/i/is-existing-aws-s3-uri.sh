@@ -57,7 +57,7 @@ koopa_is_existing_aws_s3_uri() {
             --bucket "${dict2['bucket']}" \
             --key "${dict2['key']}" \
             --no-cli-pager \
-            > /dev/null \
+            &> /dev/null \
             || return 1
         continue
     done
