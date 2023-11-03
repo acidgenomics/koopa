@@ -46,10 +46,6 @@ default '${dict['binary_prefix']}' location."
 ${dict2['name']}-${dict2['version']}.tar.gz"
             dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
-            # > if ! koopa_is_url_active "${dict2['tar_url']}"
-            # > then
-            # >     koopa_stop "No package at '${dict2['tar_url']}'."
-            # > fi
             "${app['aws']}" s3 cp \
                 --only-show-errors \
                 --profile "${dict['aws_profile']}" \
