@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
-koopa_is_url_active() {
+# FIXME Use koopa_is_url first.
+
+koopa_is_existing_url() {
     # """
-    # Check if input is a URL and is active.
-    # @note Updated 2023-04-06.
+    # Check if input is a URL and exists (is active).
+    # @note Updated 2023-11-03.
     #
     # @section cURL approach:
     #
@@ -18,23 +20,19 @@ koopa_is_url_active() {
     #
     # @examples
     # # TRUE:
-    # > koopa_is_url_active 'https://google.com/'
+    # > koopa_is_existing_url 'https://google.com/'
     #
     # # FALSE:
-    # > koopa_is_url_active 'https://google.com/asdf'
+    # > koopa_is_existing_url 'https://google.com/asdf'
     # """
-    local -A app dict
+    local -A app
     local url
     koopa_assert_has_args "$#"
+    koopa_is_url "$@" || return 1
     app['curl']="$(koopa_locate_curl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['url_pattern']='://'
     for url in "$@"
     do
-        koopa_str_detect_fixed \
-            --pattern="${dict['url_pattern']}" \
-            --string="$url" \
-            || return 1
         "${app['curl']}" \
             --disable \
             --fail \
