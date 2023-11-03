@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
+# FIXME Need to resolve this duplicate library warnings on macOS?
+# This may be package specific and not easy to resolve...look into it
+# ld: warning: ignoring duplicate libraries: '-lX11', '-lpng16'
+
+# FIXME Need to improve X11 configuration on macOS:
+# Warning in doTryCatch(return(expr), name, parentenv, handler) :
+#   unable to load shared object '/opt/koopa/app/r-devel/85467/lib/R/modules//R_X11.so':
+#   dlopen(/opt/koopa/app/r-devel/85467/lib/R/modules//R_X11.so, 0x0006): symbol not found in flat namespace '_g_libintl_gettext'
+
 main() {
     # """
     # Install R.
-    # @note Updated 2023-10-19.
+    # @note Updated 2023-11-03.
     #
     # @section Compiler settings:
     #
