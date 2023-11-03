@@ -2161,6 +2161,22 @@ koopa_aws_ecr_login_public() {
     return 0
 }
 
+koopa_aws_s3_bucket() {
+    local string
+    koopa_assert_has_args "$#"
+    koopa_is_aws_s3_uri "$@" || return 1
+    string="$( \
+        koopa_sub \
+            --pattern='^s3://([^/]+)/(.+)$' \
+            --regex \
+            --replacement='\1' \
+            "$@" \
+    )"
+    [[ -n "$string" ]] || return 1
+    koopa_print "$string"
+    return 0
+}
+
 koopa_aws_s3_cp_regex() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -2582,6 +2598,22 @@ koopa_aws_s3_find() {
         done
     fi
     koopa_print "$str"
+    return 0
+}
+
+koopa_aws_s3_key() {
+    local string
+    koopa_assert_has_args "$#"
+    koopa_is_aws_s3_uri "$@" || return 1
+    string="$( \
+        koopa_sub \
+            --pattern='^s3://([^/]+)/(.+)$' \
+            --regex \
+            --replacement='\2' \
+            "$@" \
+    )"
+    [[ -n "$string" ]] || return 1
+    koopa_print "$string"
     return 0
 }
 
@@ -15790,6 +15822,8 @@ koopa_is_existing_aws_s3_uri() {
             s3api head-object \
             --bucket "${dict2['bucket']}" \
             --key "${dict2['key']}" \
+            --no-cli-pager \
+            > /dev/null \
             || return 1
         continue
     done
