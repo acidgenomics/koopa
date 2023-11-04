@@ -4646,9 +4646,15 @@
   },
   "pymol": {
     "bin": ["pymol"],
-    "date": "2023-11-02",
+    "date": "2023-11-04",
     "default": false,
     "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://pymol.org/conda/"],
     "version": "2.5.7"
   },
