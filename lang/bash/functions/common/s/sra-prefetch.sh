@@ -5,6 +5,9 @@ koopa_sra_prefetch() {
     # Prefetch files from SRA (in parallel).
     # @note Updated 2023-11-06.
     #
+    # Alternatively, can sync directly from AWS with:
+    # > aws s3 sync s3://sra-pub-run-odp/sra/<SRR_ID>/ ./<SRR_ID>/
+    #
     # @seealso
     # - Conda build of sratools prefetch isn't currently working on macOS.
     #   https://github.com/ncbi/sra-tools/issues/497
