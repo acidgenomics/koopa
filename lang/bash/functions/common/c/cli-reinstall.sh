@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Need to simplify this to only call 'koopa_cli_install' with --reinstall
+# flag set instead.
+
+# FIXME Need to rework the '--all' flag handling to use 'all' instead, similar
+# to our koopa_cli_install update.
+
 koopa_cli_reinstall() {
     # """
     # Parse user input to 'koopa reinstall'
