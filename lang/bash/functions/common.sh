@@ -14324,6 +14324,7 @@ koopa_install_pylint() {
 }
 
 koopa_install_pymol() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='pymol' \
         "$@"
@@ -18576,13 +18577,6 @@ koopa_locate_pkg_config() {
         "$@"
 }
 
-koopa_locate_prefetch() {
-    koopa_locate_app \
-        --app-name='sratoolkit' \
-        --bin-name='prefetch' \
-        "$@"
-}
-
 koopa_locate_proj() {
     koopa_locate_app \
         --app-name='proj' \
@@ -18812,6 +18806,13 @@ koopa_locate_sox() {
     koopa_locate_app \
         --app-name='sox' \
         --bin-name='sox' \
+        "$@"
+}
+
+koopa_locate_sra_prefetch() {
+    koopa_locate_app \
+        --app-name='ncbi-sra-tools' \
+        --bin-name='prefetch' \
         "$@"
 }
 
@@ -24409,9 +24410,9 @@ koopa_sra_fastq_dump() {
 
 koopa_sra_prefetch() {
     local -A app dict
-    local cmd
-    app['parallel']="$(koopa_locate_parallel)"
-    app['prefetch']="$(koopa_locate_prefetch)"
+    local -a prefetch_cmd
+    app['parallel']="$(koopa_locate_parallel --allow-system)"
+    app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
     dict['jobs']="$(koopa_cpu_count)"
@@ -24447,9 +24448,10 @@ koopa_sra_prefetch() {
     koopa_assert_is_file "${dict['acc_file']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
-    cmd=(
+    prefetch_cmd=(
         "${app['prefetch']}"
         '--force' 'no'
+        '--max-size' '500G'
         '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
@@ -24465,7 +24467,7 @@ koopa_sra_prefetch() {
         --jobs "${dict['jobs']}" \
         --progress \
         --will-cite \
-        "${cmd[*]}"
+        "${prefetch_cmd[*]}"
     return 0
 }
 

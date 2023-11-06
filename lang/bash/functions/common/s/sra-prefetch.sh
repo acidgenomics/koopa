@@ -3,7 +3,7 @@
 koopa_sra_prefetch() {
     # """
     # Prefetch files from SRA (in parallel).
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-11-06.
     #
     # @seealso
     # - Conda build of sratools prefetch isn't currently working on macOS.
@@ -15,9 +15,9 @@ koopa_sra_prefetch() {
     # >     --output-directory='srp049596-prefetch'
     # """
     local -A app dict
-    local cmd
-    app['parallel']="$(koopa_locate_parallel)"
-    app['prefetch']="$(koopa_locate_prefetch)"
+    local -a prefetch_cmd
+    app['parallel']="$(koopa_locate_parallel --allow-system)"
+    app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
     dict['jobs']="$(koopa_cpu_count)"
@@ -55,9 +55,10 @@ koopa_sra_prefetch() {
     koopa_assert_is_file "${dict['acc_file']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
-    cmd=(
+    prefetch_cmd=(
         "${app['prefetch']}"
         '--force' 'no'
+        '--max-size' '500G'
         '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
@@ -73,6 +74,6 @@ koopa_sra_prefetch() {
         --jobs "${dict['jobs']}" \
         --progress \
         --will-cite \
-        "${cmd[*]}"
+        "${prefetch_cmd[*]}"
     return 0
 }
