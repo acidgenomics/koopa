@@ -2,8 +2,8 @@
 
 koopa_sra_fastq_dump() {
     # """
-    # Dump FASTQ files from SRA file list (in parallel).
-    # @note Updated 2022-02-10.
+    # Dump FASTQ files from SRA file list.
+    # @note Updated 2023-11-06.
     #
     # @section fasterq-dump vs. fastq-dump:
     #
@@ -57,15 +57,15 @@ koopa_sra_fastq_dump() {
     # >     --prefetch-directory='srp049596-prefetch' \
     # >     --fastq-directory='srp049596-fastq'
     # """
-    local -A app dict
+    local -A app bool dict
     local -a sra_files
     local sra_file
     app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
     app['gzip']="$(koopa_locate_gzip)"
     app['parallel']="$(koopa_locate_parallel)"
     koopa_assert_is_executable "${app[@]}"
+    bool['compress']=1
     dict['acc_file']=''
-    dict['compress']=1
     dict['fastq_dir']='fastq'
     dict['prefetch_dir']='sra'
     dict['threads']="$(koopa_cpu_count)"
@@ -99,11 +99,11 @@ koopa_sra_fastq_dump() {
                 ;;
             # Flags ------------------------------------------------------------
             '--compress')
-                dict['compress']=1
+                bool['compress']=1
                 shift 1
                 ;;
             '--no-compress')
-                dict['compress']=0
+                bool['compress']=0
                 shift 1
                 ;;
             # Invalid ----------------------------------------------------------
@@ -120,7 +120,7 @@ koopa_sra_fastq_dump() {
     koopa_assert_is_file "${dict['acc_file']}"
     if [[ ! -d "${dict['prefetch_dir']}" ]]
     then
-        koopa_sra_prefetch_parallel \
+        koopa_sra_prefetch \
             --accession-file="${acc_file}" \
             --output-directory="${dict['prefetch_dir']}"
     fi
@@ -160,7 +160,7 @@ koopa_sra_fastq_dump() {
                 "$sra_file"
         fi
     done
-    if [[ "${dict['compress']}" -eq 1 ]]
+    if [[ "${bool['compress']}" -eq 1 ]]
     then
         koopa_alert 'Compressing FASTQ files.'
         koopa_find \

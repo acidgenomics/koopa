@@ -17907,7 +17907,7 @@ koopa_locate_exiftool() {
 
 koopa_locate_fasterq_dump() {
     koopa_locate_app \
-        --app-name='sra-tools' \
+        --app-name='ncbi-sra-tools' \
         --bin-name='fasterq-dump' \
         "$@"
 }
@@ -18728,6 +18728,13 @@ koopa_locate_salmon() {
     koopa_locate_app \
         --app-name='salmon' \
         --bin-name='salmon' \
+        "$@"
+}
+
+koopa_locate_sam_dump() {
+    koopa_locate_app \
+        --app-name='ncbi-sra-tools' \
+        --bin-name='sam-dump' \
         "$@"
 }
 
@@ -24188,6 +24195,94 @@ koopa_spell() {
     return 0
 }
 
+koopa_sra_bam_dump() {
+    local -A app dict
+    local -a sra_files
+    local sra_file
+    app['sam_dump']="$(koopa_locate_sam_dump)"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['acc_file']=''
+    dict['bam_dir']='bam'
+    dict['prefetch_dir']='sra'
+    dict['threads']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--accession-file='*)
+                dict['acc_file']="${1#*=}"
+                shift 1
+                ;;
+            '--accession-file')
+                dict['acc_file']="${2:?}"
+                shift 2
+                ;;
+            '--bam-directory='*)
+                dict['bam_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-directory')
+                dict['bam_dir']="${2:?}"
+                shift 2
+                ;;
+            '--prefetch-directory='*)
+                dict['prefetch_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--prefetch-directory')
+                dict['prefetch_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                shift 1
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--accession-file' "${dict['acc_file']}" \
+        '--prefetch-directory' "${dict['prefetch_dir']}"
+    koopa_assert_is_file "${dict['acc_file']}"
+    if [[ ! -d "${dict['prefetch_dir']}" ]]
+    then
+        koopa_sra_prefetch \
+            --accession-file="${acc_file}" \
+            --output-directory="${dict['prefetch_dir']}"
+    fi
+    koopa_assert_is_dir "${dict['prefetch_dir']}"
+    koopa_alert "Extracting BAM to '${dict['bam_dir']}'."
+    readarray -t sra_files <<< "$(
+        koopa_find \
+            --max-depth=2 \
+            --min-depth=2 \
+            --pattern='*.sra' \
+            --prefix="${dict['prefetch_dir']}" \
+            --sort \
+            --type='f' \
+    )"
+    koopa_assert_is_array_non_empty "${sra_files[@]:-}"
+    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
+    for sra_file in "${sra_files[@]}"
+    do
+        local -A dict2
+        dict2['sra_file']="$sra_file"
+        dict2['id']="$(koopa_basename_sans_ext "${dict2['sra_file']}")"
+        dict2['sam_file']="${dict['bam_dir']}/${dict2['id']}.sam"
+        dict2['bam_file']="${dict['bam_dir']}/${dict2['id']}.bam"
+        [[ -f "${dict2['bam_file']}" ]] && continue
+        koopa_alert "Extracting SAM in '${dict2['sra_file']}' \
+to '${dict2['sam_file']}."
+        "${app['sam_dump']}" \
+            --output-file "${dict2['sam_file']}" \
+            --verbose \
+            "${dict2['sra_file']}"
+        koopa_assert_is_file "${dict2['sam_file']}"
+        koopa_samtools_convert_sam_to_bam "${dict2['sam_file']}"
+        koopa_assert_is_file "${dict2['bam_file']}"
+    done
+    return 0
+}
+
 koopa_sra_download_accession_list() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -24287,15 +24382,15 @@ to '${dict['run_info_file']}'."
 }
 
 koopa_sra_fastq_dump() {
-    local -A app dict
+    local -A app bool dict
     local -a sra_files
     local sra_file
     app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
     app['gzip']="$(koopa_locate_gzip)"
     app['parallel']="$(koopa_locate_parallel)"
     koopa_assert_is_executable "${app[@]}"
+    bool['compress']=1
     dict['acc_file']=''
-    dict['compress']=1
     dict['fastq_dir']='fastq'
     dict['prefetch_dir']='sra'
     dict['threads']="$(koopa_cpu_count)"
@@ -24327,11 +24422,11 @@ koopa_sra_fastq_dump() {
                 shift 2
                 ;;
             '--compress')
-                dict['compress']=1
+                bool['compress']=1
                 shift 1
                 ;;
             '--no-compress')
-                dict['compress']=0
+                bool['compress']=0
                 shift 1
                 ;;
             *)
@@ -24347,7 +24442,7 @@ koopa_sra_fastq_dump() {
     koopa_assert_is_file "${dict['acc_file']}"
     if [[ ! -d "${dict['prefetch_dir']}" ]]
     then
-        koopa_sra_prefetch_parallel \
+        koopa_sra_prefetch \
             --accession-file="${acc_file}" \
             --output-directory="${dict['prefetch_dir']}"
     fi
@@ -24387,7 +24482,7 @@ koopa_sra_fastq_dump() {
                 "$sra_file"
         fi
     done
-    if [[ "${dict['compress']}" -eq 1 ]]
+    if [[ "${bool['compress']}" -eq 1 ]]
     then
         koopa_alert 'Compressing FASTQ files.'
         koopa_find \
