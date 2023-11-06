@@ -1475,6 +1475,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-11-02",
     "default": true,
+    "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
