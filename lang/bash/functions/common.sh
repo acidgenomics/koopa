@@ -1187,6 +1187,19 @@ koopa_assert_is_array_non_empty() {
     return 0
 }
 
+koopa_assert_is_compressed_file() {
+    local arg
+    koopa_assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa_is_compressed_file "$arg"
+        then
+            koopa_stop "Not a compressed file: '${arg}'."
+        fi
+    done
+    return 0
+}
+
 koopa_assert_is_conda_active() {
     koopa_assert_has_no_args "$#"
     if ! koopa_is_conda_active
@@ -1454,6 +1467,18 @@ pattern '${dict['pattern']}'."
     return 0
 }
 
+koopa_is_ncbi_sra_toolkit_configured() {
+    local conf_file
+    conf_file="${HOME:?}/.ncbi/user-settings.mkfg"
+    if [[ ! -f "$conf_file" ]]
+    then
+        koopa_stop \
+            "NCBI SRA Toolkit is not configured at '${conf_file}'." \
+            "Run 'vdb-config --interactive' to resolve."
+    fi
+    return 0
+}
+
 koopa_assert_is_non_existing() {
     local arg
     koopa_assert_has_args "$#"
@@ -1486,6 +1511,19 @@ koopa_assert_is_not_aarch64() {
     then
         koopa_stop 'ARM (aarch64) is not supported.'
     fi
+    return 0
+}
+
+koopa_assert_is_not_compressed_file() {
+    local arg
+    koopa_assert_has_args "$#"
+    for arg in "$@"
+    do
+        if koopa_is_compressed_file "$arg"
+        then
+            koopa_stop "Compressed file: '${arg}'."
+        fi
+    done
     return 0
 }
 
@@ -3225,8 +3263,8 @@ koopa_bowtie2_align_paired_end_per_sample() {
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_r1_file']}" \
-            "${dict['tmp_fastq_r1_file']}"
+            --input-file="${dict['fastq_r1_file']}" \
+            --output-file="${dict['tmp_fastq_r1_file']}"
         dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
     fi
     if koopa_is_compressed_file "${dict['fastq_r2_file']}"
@@ -3234,8 +3272,8 @@ koopa_bowtie2_align_paired_end_per_sample() {
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_r2_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+            --input-file="${dict['fastq_r2_file']}" \
+            --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
     align_args+=(
@@ -5248,6 +5286,132 @@ koopa_compress_ext_pattern() {
     return 0
 }
 
+koopa_compress() {
+    local -A app bool dict
+    local -a cmd_args pos
+    local source_file
+    koopa_assert_has_args "$#"
+    bool['keep']=1
+    bool['verbose']=0
+    dict['format']='gzip'
+    dict['threads']="$(koopa_cpu_count)"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--format='*)
+                dict['format']="${1#*=}"
+                shift 1
+                ;;
+            '--format')
+                dict['format']="${2:?}"
+                shift 2
+                ;;
+            '--keep')
+                bool['keep']=1
+                shift 1
+                ;;
+            '--no-keep' | '--remove')
+                bool['keep']=0
+                shift 1
+                ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
+            '-')
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_is_set '--format' "${dict['format']}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    koopa_assert_is_not_compressed_file "$@"
+    case "${dict['format']}" in
+        'br' | 'brotli')
+            app['cmd']="$(koopa_locate_brotli --allow-system)"
+            dict['ext']='br'
+            ;;
+        'bz2' | 'bzip2')
+            app['cmd']="$( \
+                koopa_locate_pbzip2 --allow-missing --allow-system \
+            )"
+            if [[ -x "${app['cmd']}" ]]
+            then
+                dict['processes']="$(koopa_cpu_count)"
+                cmd_args+=("-p${dict['processes']}")
+            else
+                app['cmd']="$(koopa_locate_bzip2 --allow-system)"
+            fi
+            dict['ext']='bz2'
+            ;;
+        'gz' | 'gzip')
+            app['cmd']="$( \
+                koopa_locate_pigz --allow-system --allow-missing \
+            )"
+            if [[ -x "${app['cmd']}" ]]
+            then
+                dict['processes']="$(koopa_cpu_count)"
+                cmd_args+=('-p' "${dict['processes']}")
+            else
+                app['cmd']="$( \
+                    koopa_locate_gzip --allow-system --allow-missing \
+                )"
+            fi
+            dict['ext']='gz'
+            ;;
+        'lz' | 'lzip')
+            app['cmd']="$(koopa_locate_lzip --allow-system)"
+            dict['ext']='lz'
+            ;;
+        'lz4')
+            app['cmd']="$(koopa_locate_lz4 --allow-system)"
+            dict['ext']='lz4'
+            [[ "${bool['verbose']}" -eq 0 ]] && cmd_args+=('-q')
+            ;;
+        'lzma')
+            app['cmd']="$(koopa_locate_lzma --allow-system)"
+            dict['ext']='lzma'
+            ;;
+        'xz')
+            app['cmd']="$(koopa_locate_xz --allow-system)"
+            dict['ext']='xz'
+            ;;
+        'zst' | 'zstd')
+            app['cmd']="$(koopa_locate_zstd --allow-system)"
+            dict['ext']='zst'
+            [[ "${bool['verbose']}" -eq 0 ]] && cmd_args+=('-q')
+            ;;
+        *)
+            koopa_stop "Unsupported format: '${dict['format']}'."
+            ;;
+    esac
+    koopa_assert_is_executable "${app['cmd']}"
+    cmd_args+=('-k')
+    [[ "${bool['verbose']}" -eq 1 ]] && cmd_args+=('-v')
+    for source_file in "$@"
+    do
+        local target_file
+        source_file="$(koopa_realpath "$source_file")"
+        target_file="${source_file}.${dict['ext']}"
+        koopa_assert_is_not_file "$target_file"
+        koopa_alert "Compressing '${source_file}' to '${target_file}'."
+        "${app['cmd']}" "${cmd_args[@]}" "$source_file"
+        koopa_assert_is_file "$target_file"
+    done
+    if [[ "${bool['keep']}" -eq 0 ]]
+    then
+        koopa_rm "$@"
+    fi
+    return 0
+}
+
 koopa_conda_activate_env() { # {{{1
     local -A bool dict
     koopa_assert_has_args_eq "$#" 1
@@ -6049,21 +6213,36 @@ koopa_datetime() {
     return 0
 }
 
-koopa_decompress() {
+koopa_decompress_single_file() {
     local -A app bool dict
     local -a cmd_args pos
     koopa_assert_has_args "$#"
+    bool['keep']=1
     bool['passthrough']=0
     bool['stdout']=0
+    bool['verbose']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    pos=()
     while (("$#"))
     do
         case "$1" in
+            '--keep')
+                bool['keep']=1
+                shift 1
+                ;;
+            '--no-keep' | '--remove')
+                bool['keep']=0
+                shift 1
+                ;;
             '--stdout')
                 bool['stdout']=1
                 shift 1
                 ;;
-            '-')
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
@@ -6073,12 +6252,37 @@ koopa_decompress() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_le "$#" 2
-    dict['source_file']="${1:?}"
-    dict['target_file']="${2:-}"
-    koopa_assert_is_file "${dict['source_file']}"
-    dict['source_file']="$(koopa_realpath "${dict['source_file']}")"
-    dict['match']="$(koopa_basename "${dict['source_file']}" | koopa_lowercase)"
+    koopa_assert_has_args "$#"
+    dict['input_file']="${1:?}"
+    koopa_assert_is_file "${dict['input_file']}"
+    dict['input_file']="$(koopa_realpath "${dict['input_file']}")"
+    if [[ "${bool['stdout']}" -eq 1 ]]
+    then
+        koopa_assert_has_args_eq "$#" 1
+        dict['output_file']=''
+    else
+        koopa_assert_has_args_le "$#" 2
+        dict['output_file']="${2:-}"
+        if [[ -z "${dict['output_file']}" ]]
+        then
+            dict['output_file']="$( \
+                koopa_sub \
+                    --pattern="${dict['compress_ext_pattern']}" \
+                    --regex \
+                    --replacement='' \
+                    "${dict['input_file']}" \
+            )"
+        fi
+        if [[ "${dict['input_file']}" == "${dict['output_file']}" ]]
+        then
+            return 0
+        fi
+        koopa_assert_is_not_file "${dict['output_file']}"
+    fi
+    dict['match']="$( \
+        koopa_basename "${dict['input_file']}" \
+        | koopa_lowercase \
+    )"
     case "${dict['match']}" in
         *'.z')
             koopa_stop "Use 'uncompress' directly on '.Z' files."
@@ -6091,7 +6295,7 @@ koopa_decompress() {
         *'.tgz' | \
         *'.zip')
             koopa_stop \
-                "Unsupported archive file: '${dict['source_file']}'." \
+                "Unsupported archive file: '${dict['input_file']}'." \
                 "Use 'koopa_extract' instead of 'koopa_decompress'."
             ;;
         *'.br' | \
@@ -6101,122 +6305,156 @@ koopa_decompress() {
         *'.lz4' | \
         *'.lzma' | \
         *'.xz' | \
-        *'.zstd')
+        *'.zst')
             bool['passthrough']=0
             ;;
         *)
             bool['passthrough']=1
             ;;
     esac
-    if [[ "${bool['stdout']}" -eq 1 ]]
-    then
-        if [[ -n "${dict['target_file']}" ]]
-        then
-            koopa_stop 'Target file is not supported for --stdout mode.'
-        fi
-    else
-        if [[ -z "${dict['target_file']}" ]]
-        then
-            dict['target_file']="$( \
-                koopa_sub \
-                    --pattern="${dict['compress_ext_pattern']}" \
-                    --regex \
-                    --replacement='' \
-                    "${dict['source_file']}" \
-            )"
-        fi
-        if [[ "${dict['source_file']}" == "${dict['target_file']}" ]]
-        then
-            return 0
-        fi
-    fi
     if [[ "${bool['passthrough']}" -eq 1 ]]
     then
         if [[ "${bool['stdout']}" -eq 1 ]]
         then
             app['cat']="$(koopa_locate_cat --allow-system)"
             koopa_assert_is_executable "${app['cat']}"
-            "${app['cat']}" "${dict['source_file']}" || true
+            "${app['cat']}" "${dict['input_file']}" || true
         else
-            koopa_alert "Passthrough mode. Copying '${dict['source_file']}' to \
-'${dict['target_file']}'."
-            koopa_cp "${dict['source_file']}" "${dict['target_file']}"
+            koopa_alert "Passthrough mode. Copying '${dict['input_file']}' to \
+'${dict['output_file']}'."
+            koopa_cp "${dict['input_file']}" "${dict['output_file']}"
         fi
         return 0
     fi
     case "${dict['match']}" in
-        *'.br' | \
-        *'.bz2' | \
-        *'.gz' | \
-        *'.lz' | \
-        *'.lz4' | \
-        *'.lzma' | \
-        *'.xz' | \
-        *'.zstd')
-            case "${dict['match']}" in
-                *'.br')
-                    app['cmd']="$(koopa_locate_brotli --allow-system)"
-                    ;;
-                *'.bz2')
-                    app['cmd']="$( \
-                        koopa_locate_pbzip2 --allow-missing --allow-system \
-                    )"
-                    if [[ -x "${app['cmd']}" ]]
-                    then
-                        cmd_args+=("-p$(koopa_cpu_count)")
-                    else
-                        app['cmd']="$(koopa_locate_bzip2 --allow-system)"
-                    fi
-                    ;;
-                *'.gz')
-                    app['cmd']="$( \
-                        koopa_locate_pigz --allow-missing --allow-system \
-                    )"
-                    if [[ -x "${app['cmd']}" ]]
-                    then
-                        cmd_args+=('-p' "$(koopa_cpu_count)")
-                    else
-                        app['cmd']="$(koopa_locate_gzip --allow-system)"
-                    fi
-                    ;;
-                *'.lz')
-                    app['cmd']="$(koopa_locate_lzip --allow-system)"
-                    ;;
-                *'.lz4')
-                    app['cmd']="$(koopa_locate_lz4 --allow-system)"
-                    ;;
-                *'.lzma')
-                    app['cmd']="$(koopa_locate_lzma --allow-system)"
-                    ;;
-                *'.xz')
-                    app['cmd']="$(koopa_locate_xz --allow-system)"
-                    ;;
-                *'.zstd')
-                    app['cmd']="$(koopa_locate_zstd --allow-system)"
-                    ;;
-            esac
-            cmd_args+=(
-                '-c'
-                '-d'
-                '-f'
-                '-k'
-                "${dict['source_file']}"
-            )
+        *'.br')
+            app['cmd']="$(koopa_locate_brotli --allow-system)"
+            ;;
+        *'.bz2')
+            app['cmd']="$( \
+                koopa_locate_pbzip2 --allow-missing --allow-system \
+            )"
+            if [[ -x "${app['cmd']}" ]]
+            then
+                cmd_args+=("-p$(koopa_cpu_count)")
+            else
+                app['cmd']="$(koopa_locate_bzip2 --allow-system)"
+            fi
+            ;;
+        *'.gz')
+            app['cmd']="$( \
+                koopa_locate_pigz --allow-missing --allow-system \
+            )"
+            if [[ -x "${app['cmd']}" ]]
+            then
+                cmd_args+=('-p' "$(koopa_cpu_count)")
+            else
+                app['cmd']="$(koopa_locate_gzip --allow-system)"
+            fi
+            ;;
+        *'.lz')
+            app['cmd']="$(koopa_locate_lzip --allow-system)"
+            ;;
+        *'.lz4')
+            app['cmd']="$(koopa_locate_lz4 --allow-system)"
+            ;;
+        *'.lzma')
+            app['cmd']="$(koopa_locate_lzma --allow-system)"
+            ;;
+        *'.xz')
+            app['cmd']="$(koopa_locate_xz --allow-system)"
+            ;;
+        *'.zst')
+            app['cmd']="$(koopa_locate_zstd --allow-system)"
             ;;
     esac
     koopa_assert_is_executable "${app['cmd']}"
+    cmd_args+=('-c' '-d' '-k')
+    [[ "${bool['verbose']}" -eq 1 ]] && cmd_args+=('-v')
+    cmd_args+=("${dict['input_file']}")
     if [[ "${bool['stdout']}" -eq 1 ]]
     then
         "${app['cmd']}" "${cmd_args[@]}" || true
     else
-        koopa_alert "Decompressing '${dict['source_file']}' to \
-'${dict['target_file']}'."
-        "${app['cmd']}" "${cmd_args[@]}" > "${dict['target_file']}"
+        koopa_alert "Decompressing '${dict['input_file']}' to \
+'${dict['output_file']}'."
+        "${app['cmd']}" "${cmd_args[@]}" > "${dict['output_file']}"
+        koopa_assert_is_file "${dict['output_file']}"
     fi
-    koopa_assert_is_file "${dict['source_file']}"
-    if [[ -n "${dict['target_file']}" ]]
+    koopa_assert_is_file "${dict['input_file']}"
+    if [[ "${bool['keep']}" -eq 0 ]]
     then
-        koopa_assert_is_file "${dict['target_file']}"
+        koopa_rm "${dict['input_file']}"
+    fi
+    return 0
+}
+
+koopa_decompress() {
+    local -A bool dict
+    local -a flags pos
+    local input_file
+    koopa_assert_has_args "$#"
+    bool['single_file']=0
+    dict['input_file']=''
+    dict['output_file']=''
+    flags=()
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--input-file='*)
+                bool['single_file']=1
+                dict['input_file']="${1#*=}"
+                shift 1
+                ;;
+            '--input-file')
+                bool['single_file']=1
+                dict['input_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-file='*)
+                bool['single_file']=1
+                dict['output_file']="${1#*=}"
+                shift 1
+                ;;
+            '--output-file')
+                bool['single_file']=1
+                dict['output_file']="${2:?}"
+                shift 2
+                ;;
+            '--'*)
+                flags+=("$1")
+                shift 1
+                ;;
+            '-')
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    if [[ "${bool['single_file']}" -eq 1 ]]
+    then
+        koopa_assert_has_no_args "$#"
+        koopa_assert_is_set \
+            '--input-file' "${dict['input_file']}"
+            '--output-file' "${dict['output_file']}"
+        koopa_assert_is_file "${dict['input_file']}"
+        koopa_assert_is_not_file "${dict['output_file']}"
+        koopa_decompress_single_file \
+            "${flags[@]}" \
+            "${dict['input_file']}" \
+            "${dict['output_file']}"
+    else
+        koopa_assert_has_args "$#"
+        koopa_assert_is_file "$@"
+        for input_file in "$@"
+        do
+            koopa_decompress_single_file "${flags[@]}" "$input_file"
+        done
     fi
     return 0
 }
@@ -7400,7 +7638,10 @@ koopa_extract() {
             ;;
     esac
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
+    dict['match']="$( \
+        koopa_basename "${dict['file']}" \
+        | koopa_lowercase \
+    )"
     case "${dict['match']}" in
         *'.tar.bz2' | \
         *'.tar.gz' | \
@@ -7420,23 +7661,19 @@ koopa_extract() {
             bool['decompress_only']=1
             ;;
     esac
-    if [[ "${bool['decompress_only']}" -eq 1 ]]
-    then
-        cmd_args+=("${dict['file']}")
-        if [[ -n "${dict['target_dir']}" ]]
-        then
-            dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
-            dict['target_file']="${dict['target_dir']}/${dict['bn']}"
-            cmd_args+=("${dict['target_file']}")
-        fi
-        koopa_decompress "${cmd_args[@]}"
-        return 0
-    fi
     if [[ -z "${dict['target_dir']}" ]]
     then
         dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/${dict['bn']}"
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
+    if [[ "${bool['decompress_only']}" -eq 1 ]]
+    then
+        dict['output_file']="${dict['target_dir']}/${dict['bn']}"
+        koopa_decompress \
+            --input-file="${dict['file']}" \
+            --output-file="${dict['output_file']}"
+        return 0
+    fi
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
     dict['tmpdir']="$(koopa_parent_dir "${dict['file']}")/$(koopa_tmp_string)"
     dict['tmpdir']="$(koopa_init_dir "${dict['tmpdir']}")"
@@ -7716,7 +7953,9 @@ koopa_fasta_has_alt_contigs() {
     then
         bool['tmp_file']=1
         dict['tmp_file']="$(koopa_tmp_file_in_wd)"
-        koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
+        koopa_decompress \
+            --input-file="${dict['file']}" \
+            --output-file="${dict['tmp_file']}"
         dict['file']="${dict['tmp_file']}"
     fi
     if koopa_file_detect_fixed \
@@ -10132,8 +10371,8 @@ koopa_hisat2_align_paired_end_per_sample() {
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd --ext='fastq')"
         koopa_decompress \
-            "${dict['fastq_r1_file']}" \
-            "${dict['tmp_fastq_r1_file']}"
+            --input-file="${dict['fastq_r1_file']}" \
+            --output-file="${dict['tmp_fastq_r1_file']}"
         dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
     fi
     if koopa_is_compressed_file "${dict['fastq_r2_file']}"
@@ -10141,8 +10380,8 @@ koopa_hisat2_align_paired_end_per_sample() {
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd --ext='fastq')"
         koopa_decompress \
-            "${dict['fastq_r2_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+            --input-file="${dict['fastq_r2_file']}" \
+            --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
     if [[ "${dict['lib_type']}" == 'A' ]]
@@ -10490,8 +10729,8 @@ koopa_hisat2_align_single_end_per_sample() {
         bool['tmp_fastq_file']=1
         dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd --ext='fastq')"
         koopa_decompress \
-            "${dict['fastq_file']}" \
-            "${dict['tmp_fastq_file']}"
+            --input-file="${dict['fastq_file']}" \
+            --output-file="${dict['tmp_fastq_file']}"
         dict['fastq_file']="${dict['tmp_fastq_file']}"
     fi
     align_args+=(
@@ -10811,8 +11050,8 @@ koopa_hisat2_index() {
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['genome_fasta_file']}" \
-            "${dict['tmp_genome_fasta_file']}"
+            --input-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_is_compressed_file "${dict['gtf_file']}"
@@ -14324,6 +14563,7 @@ koopa_install_pylint() {
 }
 
 koopa_install_pymol() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='pymol' \
         "$@"
@@ -17610,6 +17850,13 @@ koopa_locate_brew() {
         "$@"
 }
 
+koopa_locate_brotli() {
+    koopa_locate_app \
+        --app-name='brotli' \
+        --bin-name='brotli' \
+        "$@"
+}
+
 koopa_locate_bundle() {
     koopa_locate_app \
         --app-name='ruby-packages' \
@@ -17906,7 +18153,7 @@ koopa_locate_exiftool() {
 
 koopa_locate_fasterq_dump() {
     koopa_locate_app \
-        --app-name='sra-tools' \
+        --app-name='ncbi-sra-tools' \
         --bin-name='fasterq-dump' \
         "$@"
 }
@@ -18576,13 +18823,6 @@ koopa_locate_pkg_config() {
         "$@"
 }
 
-koopa_locate_prefetch() {
-    koopa_locate_app \
-        --app-name='sratoolkit' \
-        --bin-name='prefetch' \
-        "$@"
-}
-
 koopa_locate_proj() {
     koopa_locate_app \
         --app-name='proj' \
@@ -18737,6 +18977,13 @@ koopa_locate_salmon() {
         "$@"
 }
 
+koopa_locate_sam_dump() {
+    koopa_locate_app \
+        --app-name='ncbi-sra-tools' \
+        --bin-name='sam-dump' \
+        "$@"
+}
+
 koopa_locate_sambamba() {
     koopa_locate_app \
         --app-name='sambamba' \
@@ -18812,6 +19059,13 @@ koopa_locate_sox() {
     koopa_locate_app \
         --app-name='sox' \
         --bin-name='sox' \
+        "$@"
+}
+
+koopa_locate_sra_prefetch() {
+    koopa_locate_app \
+        --app-name='ncbi-sra-tools' \
+        --bin-name='prefetch' \
         "$@"
 }
 
@@ -22399,8 +22653,8 @@ koopa_rsem_index() {
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['genome_fasta_file']}" \
-            "${dict['tmp_genome_fasta_file']}"
+            --input-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_is_compressed_file "${dict['gtf_file']}"
@@ -22408,8 +22662,8 @@ koopa_rsem_index() {
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['gtf_file']}" \
-            "${dict['tmp_gtf_file']}"
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     index_args+=(
@@ -24187,6 +24441,81 @@ koopa_spell() {
     return 0
 }
 
+koopa_sra_bam_dump() {
+    local -A app dict
+    local -a sra_files
+    local sra_file
+    app['sam_dump']="$(koopa_locate_sam_dump)"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bam_dir']=''
+    dict['prefetch_dir']=''
+    dict['threads']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--bam-directory='*)
+                dict['bam_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-directory')
+                dict['bam_dir']="${2:?}"
+                shift 2
+                ;;
+            '--prefetch-directory='*)
+                dict['prefetch_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--prefetch-directory')
+                dict['prefetch_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                shift 1
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-directory' "${dict['bam_dir']}" \
+        '--prefetch-directory' "${dict['prefetch_dir']}"
+    koopa_assert_is_file "${dict['acc_file']}"
+    koopa_assert_is_ncbi_sra_toolkit_configured
+    koopa_assert_is_dir "${dict['prefetch_dir']}"
+    koopa_alert "Extracting BAM from '${dict['prefetch_dir']}' \
+in '${dict['bam_dir']}'."
+    readarray -t sra_files <<< "$(
+        koopa_find \
+            --max-depth=2 \
+            --min-depth=2 \
+            --pattern='*.sra' \
+            --prefix="${dict['prefetch_dir']}" \
+            --sort \
+            --type='f' \
+    )"
+    koopa_assert_is_array_non_empty "${sra_files[@]:-}"
+    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
+    for sra_file in "${sra_files[@]}"
+    do
+        local -A dict2
+        dict2['sra_file']="$sra_file"
+        dict2['id']="$(koopa_basename_sans_ext "${dict2['sra_file']}")"
+        dict2['sam_file']="${dict['bam_dir']}/${dict2['id']}.sam"
+        dict2['bam_file']="${dict['bam_dir']}/${dict2['id']}.bam"
+        [[ -f "${dict2['bam_file']}" ]] && continue
+        koopa_alert "Extracting SAM in '${dict2['sra_file']}' \
+to '${dict2['sam_file']}."
+        "${app['sam_dump']}" \
+            --output-file "${dict2['sam_file']}" \
+            --verbose \
+            "${dict2['sra_file']}"
+        koopa_assert_is_file "${dict2['sam_file']}"
+        koopa_samtools_convert_sam_to_bam "${dict2['sam_file']}"
+        koopa_assert_is_file "${dict2['bam_file']}"
+    done
+    return 0
+}
+
 koopa_sra_download_accession_list() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -24286,29 +24615,18 @@ to '${dict['run_info_file']}'."
 }
 
 koopa_sra_fastq_dump() {
-    local -A app dict
-    local -a sra_files
+    local -A app bool dict
+    local -a fastq_files sra_files
     local sra_file
     app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
-    app['gzip']="$(koopa_locate_gzip)"
-    app['parallel']="$(koopa_locate_parallel)"
     koopa_assert_is_executable "${app[@]}"
-    dict['acc_file']=''
-    dict['compress']=1
-    dict['fastq_dir']='fastq'
-    dict['prefetch_dir']='sra'
+    bool['compress']=1
+    dict['fastq_dir']=''
+    dict['prefetch_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
-            '--accession-file='*)
-                dict['acc_file']="${1#*=}"
-                shift 1
-                ;;
-            '--accession-file')
-                dict['acc_file']="${2:?}"
-                shift 2
-                ;;
             '--fastq-directory='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -24326,11 +24644,11 @@ koopa_sra_fastq_dump() {
                 shift 2
                 ;;
             '--compress')
-                dict['compress']=1
+                bool['compress']=1
                 shift 1
                 ;;
             '--no-compress')
-                dict['compress']=0
+                bool['compress']=0
                 shift 1
                 ;;
             *)
@@ -24340,18 +24658,13 @@ koopa_sra_fastq_dump() {
         esac
     done
     koopa_assert_is_set \
-        '--accession-file' "${dict['acc_file']}" \
         '--fastq-directory' "${dict['fastq_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
-    if [[ ! -d "${dict['prefetch_dir']}" ]]
-    then
-        koopa_sra_prefetch_parallel \
-            --accession-file="${acc_file}" \
-            --output-directory="${dict['prefetch_dir']}"
-    fi
+    koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting FASTQ to '${dict['fastq_dir']}'."
+    koopa_alert "Extracting FASTQ from '${dict['prefetch_dir']}' \
+in '${dict['fastq_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
             --max-depth=2 \
@@ -24366,55 +24679,52 @@ koopa_sra_fastq_dump() {
     do
         local id
         id="$(koopa_basename_sans_ext "$sra_file")"
-        if [[ ! -f "${dict['fastq_dir']}/${id}.fastq" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}_1.fastq" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
+        if [[ -f "${dict['fastq_dir']}/${id}.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}_1.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
         then
-            koopa_alert "Extracting FASTQ in '${sra_file}'."
-            "${app['fasterq_dump']}" \
-                --details \
-                --force \
-                --outdir "${dict['fastq_dir']}" \
-                --print-read-nr \
-                --progress \
-                --skip-technical \
-                --split-3 \
-                --strict \
-                --threads "${dict['threads']}" \
-                --verbose \
-                "$sra_file"
+            koopa_alert_info "Skipping '${sra_file}'."
+            continue
         fi
-    done
-    if [[ "${dict['compress']}" -eq 1 ]]
-    then
-        koopa_alert 'Compressing FASTQ files.'
-        koopa_find \
-            --max-depth=1 \
-            --min-depth=1 \
-            --pattern='*.fastq' \
-            --prefix="${dict['fastq_dir']}" \
-            --sort \
-            --type='f' \
-        | "${app['parallel']}" \
-            --bar \
-            --eta \
-            --jobs "${dict['threads']}" \
+        koopa_alert "Extracting FASTQ in '${sra_file}'."
+        "${app['fasterq_dump']}" \
+            --details \
+            --force \
+            --outdir "${dict['fastq_dir']}" \
+            --print-read-nr \
             --progress \
-            --will-cite \
-            "${app['gzip']} --force --verbose {}"
+            --skip-technical \
+            --split-3 \
+            --strict \
+            --threads "${dict['threads']}" \
+            --verbose \
+            "$sra_file"
+    done
+    if [[ "${bool['compress']}" -eq 1 ]]
+    then
+        koopa_alert "Compressing FASTQ files in '${dict['fastq_dir']}'."
+        readarray -t fastq_files <<< "$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.fastq' \
+                --prefix="${dict['fastq_dir']}" \
+                --sort \
+                --type='f' \
+        )"
+        koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
+        koopa_compress --format='gzip' "${fastq_files[@]}"
     fi
     return 0
 }
 
 koopa_sra_prefetch() {
     local -A app dict
-    local cmd
-    app['parallel']="$(koopa_locate_parallel)"
-    app['prefetch']="$(koopa_locate_prefetch)"
+    local -a prefetch_args
+    app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
-    dict['jobs']="$(koopa_cpu_count)"
     dict['output_dir']='sra'
     while (("$#"))
     do
@@ -24445,27 +24755,22 @@ koopa_sra_prefetch() {
         '--accession-file' "${dict['acc_file']}" \
         '--output-directory' "${dict['output_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
+    koopa_assert_is_ncbi_sra_toolkit_configured
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
-    cmd=(
-        "${app['prefetch']}"
+    koopa_alert "Prefetching SRA samples defined in '${dict['acc_file']}' \
+to '${dict['output_dir']}'."
+    prefetch_args+=(
         '--force' 'no'
+        '--max-size' '500G'
         '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
         '--type' 'sra'
         '--verbose'
         '--verify' 'yes'
-        '{}'
+        "${dict['acc_file']}"
     )
-    "${app['parallel']}" \
-        --arg-file "${dict['acc_file']}" \
-        --bar \
-        --eta \
-        --jobs "${dict['jobs']}" \
-        --progress \
-        --will-cite \
-        "${cmd[*]}"
+    "${app['prefetch']}" "${prefetch_args[@]}"
     return 0
 }
 
@@ -24634,8 +24939,8 @@ GB of RAM."
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_r1_file']}" \
-            "${dict['tmp_fastq_r1_file']}"
+            --input-file="${dict['fastq_r1_file']}" \
+            --output-file="${dict['tmp_fastq_r1_file']}"
         dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
     fi
     if koopa_is_compressed_file "${dict['fastq_r2_file']}"
@@ -24643,8 +24948,8 @@ GB of RAM."
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_r2_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+            --input-file="${dict['fastq_r2_file']}" \
+            --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
     align_args+=(
@@ -24919,8 +25224,8 @@ GB of RAM."
         bool['tmp_fastq_file']=1
         dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_file']}" \
-            "${dict['tmp_fastq_file']}"
+            --input-file="${dict['fastq_file']}" \
+            --output-file="${dict['tmp_fastq_file']}"
         dict['fastq_file']="${dict['tmp_fastq_file']}"
     fi
     align_args+=(
@@ -25166,8 +25471,8 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['genome_fasta_file']}" \
-            "${dict['tmp_genome_fasta_file']}"
+            --input-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_is_compressed_file "${dict['gtf_file']}"

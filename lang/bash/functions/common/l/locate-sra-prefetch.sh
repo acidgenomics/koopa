@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_locate_prefetch() {
+koopa_locate_sra_prefetch() {
     koopa_locate_app \
-        --app-name='sratoolkit' \
+        --app-name='ncbi-sra-tools' \
         --bin-name='prefetch' \
         "$@"
 }

@@ -43,7 +43,9 @@ koopa_fasta_has_alt_contigs() {
     then
         bool['tmp_file']=1
         dict['tmp_file']="$(koopa_tmp_file_in_wd)"
-        koopa_decompress "${dict['file']}" "${dict['tmp_file']}"
+        koopa_decompress \
+            --input-file="${dict['file']}" \
+            --output-file="${dict['tmp_file']}"
         dict['file']="${dict['tmp_file']}"
     fi
     if koopa_file_detect_fixed \

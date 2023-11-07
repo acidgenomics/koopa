@@ -113,8 +113,8 @@ GB of RAM."
         bool['tmp_fastq_r1_file']=1
         dict['tmp_fastq_r1_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_r1_file']}" \
-            "${dict['tmp_fastq_r1_file']}"
+            --input-file="${dict['fastq_r1_file']}" \
+            --output-file="${dict['tmp_fastq_r1_file']}"
         dict['fastq_r1_file']="${dict['tmp_fastq_r1_file']}"
     fi
     if koopa_is_compressed_file "${dict['fastq_r2_file']}"
@@ -122,8 +122,8 @@ GB of RAM."
         bool['tmp_fastq_r2_file']=1
         dict['tmp_fastq_r2_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_r2_file']}" \
-            "${dict['tmp_fastq_r2_file']}"
+            --input-file="${dict['fastq_r2_file']}" \
+            --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
     align_args+=(
