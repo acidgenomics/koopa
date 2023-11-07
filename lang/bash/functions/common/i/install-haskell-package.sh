@@ -38,7 +38,7 @@ koopa_install_haskell_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--dependency='*)
                 deps+=("${1#*=}")
                 shift 1

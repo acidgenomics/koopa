@@ -63,22 +63,15 @@ koopa_sra_fastq_dump() {
     app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
     koopa_assert_is_executable "${app[@]}"
     bool['compress']=1
-    dict['acc_file']=''
-    dict['fastq_dir']='fastq'
-    dict['prefetch_dir']='sra'
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. 'sra'.
+    dict['prefetch_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--accession-file='*)
-                dict['acc_file']="${1#*=}"
-                shift 1
-                ;;
-            '--accession-file')
-                dict['acc_file']="${2:?}"
-                shift 2
-                ;;
             '--fastq-directory='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -112,19 +105,13 @@ koopa_sra_fastq_dump() {
         esac
     done
     koopa_assert_is_set \
-        '--accession-file' "${dict['acc_file']}" \
         '--fastq-directory' "${dict['fastq_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
-    if [[ ! -d "${dict['prefetch_dir']}" ]]
-    then
-        koopa_sra_prefetch \
-            --accession-file="${acc_file}" \
-            --output-directory="${dict['prefetch_dir']}"
-    fi
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting FASTQ to '${dict['fastq_dir']}'."
+    koopa_alert "Extracting FASTQ from '${dict['prefetch_dir']}' \
+in '${dict['fastq_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
             --max-depth=2 \
@@ -173,7 +160,8 @@ koopa_sra_fastq_dump() {
                 --sort \
                 --type='f' \
         )"
-        koopa_compress "${fastq_files[@]}"
+        koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
+        koopa_compress --format='gzip' "${fastq_files[@]}"
     fi
     return 0
 }
