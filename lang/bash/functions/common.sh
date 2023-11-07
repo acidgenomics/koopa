@@ -5291,7 +5291,7 @@ koopa_compress() {
     local -a cmd_args pos
     local source_file
     koopa_assert_has_args "$#"
-    bool['keep']=0
+    bool['keep']=1
     bool['verbose']=0
     dict['format']='gzip'
     dict['threads']="$(koopa_cpu_count)"
@@ -24714,7 +24714,7 @@ in '${dict['fastq_dir']}'."
                 --type='f' \
         )"
         koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
-        koopa_compress --format='gzip' "${fastq_files[@]}"
+        koopa_compress --format='gzip' --remove "${fastq_files[@]}"
     fi
     return 0
 }
