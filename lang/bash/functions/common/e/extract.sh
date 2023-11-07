@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 # TODO Add option to delete original compressed file.
-
 # TODO Consider adding support for extraction of individual files.
 # This is the tar convention -- maybe we can make this work with unzip.
 # > tar -tzvf your_archive.tar.gz
@@ -10,7 +9,7 @@
 koopa_extract() {
     # """
     # Extract files from an archive automatically.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-11-07.
     #
     # As suggested by Mendel Cooper in Advanced Bash Scripting Guide.
     #
@@ -64,7 +63,7 @@ koopa_extract() {
             dict['target_file']="${dict['target_dir']}/${dict['bn']}"
             cmd_args+=("${dict['target_file']}")
         fi
-        koopa_decompress "${cmd_args[@]}"
+        koopa_decompress_single_file "${cmd_args[@]}"
         return 0
     fi
     if [[ -z "${dict['target_dir']}" ]]
@@ -97,9 +96,7 @@ koopa_extract() {
                 tar_cmd_args+=('--no-same-owner' '--no-same-permissions')
             fi
             tar_cmd_args+=(
-                # GNU: '--file'.
                 '-f' "${dict['tmpfile']}"
-                # GNU: '--extract'.
                 '-x'
             )
             ;;
