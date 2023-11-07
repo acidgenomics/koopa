@@ -24770,7 +24770,7 @@ to '${dict['output_dir']}'."
         '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
-        '--type' 'all'
+        '--type' 'sra'
         '--verbose'
         '--verify' 'yes'
         '{}'
