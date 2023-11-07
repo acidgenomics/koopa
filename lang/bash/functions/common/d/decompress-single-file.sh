@@ -100,6 +100,7 @@ koopa_decompress_single_file() {
         then
             return 0
         fi
+        koopa_assert_is_not_file "${dict['output_file']}"
     fi
     # Ensure that we're matching against case insensitive basename.
     dict['match']="$( \

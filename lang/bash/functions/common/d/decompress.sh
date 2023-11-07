@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to allow pass of other flags:
-# FIXME We don't need to handle stdout here.
-
 koopa_decompress() {
     # """
     # Decompress multiple files.
