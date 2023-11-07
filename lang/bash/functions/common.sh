@@ -6305,7 +6305,7 @@ koopa_decompress_single_file() {
         *'.lz4' | \
         *'.lzma' | \
         *'.xz' | \
-        *'.zstd')
+        *'.zst')
             bool['passthrough']=0
             ;;
         *)
@@ -6364,7 +6364,7 @@ koopa_decompress_single_file() {
         *'.xz')
             app['cmd']="$(koopa_locate_xz --allow-system)"
             ;;
-        *'.zstd')
+        *'.zst')
             app['cmd']="$(koopa_locate_zstd --allow-system)"
             ;;
     esac
