@@ -55,6 +55,7 @@ koopa_compress() {
     koopa_assert_is_set '--format' "${dict['format']}"
     koopa_assert_has_args "$#"
     koopa_assert_is_file "$@"
+    koopa_assert_is_not_compressed_file "$@"
     case "${dict['format']}" in
         'br' | 'brotli')
             app['cmd']="$(koopa_locate_brotli --allow-system)"
@@ -120,14 +121,13 @@ koopa_compress() {
     for source_file in "$@"
     do
         local target_file
+        source_file="$(koopa_realpath "$source_file")"
         target_file="${source_file}.${dict['ext']}"
         koopa_assert_is_not_file "$target_file"
+        koopa_alert "Compressing '${source_file}' to '${target_file}'."
         "${app['cmd']}" "${cmd_args[@]}" "$source_file"
         koopa_assert_is_file "$target_file"
     done
-    if [[ "${bool['keep']}" -eq 0 ]]
-    then
-        koopa_rm "$@"
-    fi
+    [[ "${bool['keep']}" -eq 0 ]] && koopa_rm "$@"
     return 0
 }
