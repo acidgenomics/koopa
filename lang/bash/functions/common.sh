@@ -24503,7 +24503,7 @@ in '${dict['bam_dir']}'."
         dict2['sam_file']="${dict['bam_dir']}/${dict2['id']}.sam"
         dict2['bam_file']="${dict['bam_dir']}/${dict2['id']}.bam"
         [[ -f "${dict2['bam_file']}" ]] && continue
-        koopa_alert "Extracting SAM in '${dict2['sra_file']}' \
+        koopa_alert "Dumping SAM in '${dict2['sra_file']}' \
 to '${dict2['sam_file']}."
         "${app['sam_dump']}" \
             --output-file "${dict2['sam_file']}" \
@@ -24688,7 +24688,7 @@ in '${dict['fastq_dir']}'."
             koopa_alert_info "Skipping '${sra_file}'."
             continue
         fi
-        koopa_alert "Extracting FASTQ in '${sra_file}'."
+        koopa_alert "Dumping FASTQ in '${sra_file}'."
         "${app['fasterq_dump']}" \
             --details \
             --force \

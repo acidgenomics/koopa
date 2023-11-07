@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Can speed up the sam-dump step by using parallel.
+
 koopa_sra_bam_dump() {
     # """
     # Dump BAM files form SRA file list.
@@ -76,7 +78,7 @@ in '${dict['bam_dir']}'."
         dict2['sam_file']="${dict['bam_dir']}/${dict2['id']}.sam"
         dict2['bam_file']="${dict['bam_dir']}/${dict2['id']}.bam"
         [[ -f "${dict2['bam_file']}" ]] && continue
-        koopa_alert "Extracting SAM in '${dict2['sra_file']}' \
+        koopa_alert "Dumping SAM in '${dict2['sra_file']}' \
 to '${dict2['sam_file']}."
         "${app['sam_dump']}" \
             --output-file "${dict2['sam_file']}" \
