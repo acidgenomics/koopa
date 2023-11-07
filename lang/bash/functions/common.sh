@@ -1467,7 +1467,7 @@ pattern '${dict['pattern']}'."
     return 0
 }
 
-koopa_is_ncbi_sra_toolkit_configured() {
+koopa_assert_is_ncbi_sra_toolkit_configured() {
     local conf_file
     conf_file="${HOME:?}/.ncbi/user-settings.mkfg"
     if [[ ! -f "$conf_file" ]]
