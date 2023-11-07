@@ -1454,6 +1454,18 @@ pattern '${dict['pattern']}'."
     return 0
 }
 
+koopa_is_ncbi_sra_toolkit_configured() {
+    local conf_file
+    conf_file="${HOME:?}/.ncbi/user-settings.mkfg"
+    if [[ ! -f "$conf_file" ]]
+    then
+        koopa_stop \
+            "NCBI SRA Toolkit is not configured at '${conf_file}'." \
+            "Run 'vdb-config --interactive' to resolve."
+    fi
+    return 0
+}
+
 koopa_assert_is_non_existing() {
     local arg
     koopa_assert_has_args "$#"
@@ -5246,6 +5258,10 @@ koopa_compress_ext_pattern() {
     str="\.(${str})\$"
     koopa_print "$str"
     return 0
+}
+
+koopa_compress() {
+    koopa_stop 'FIXME Add support for this'.
 }
 
 koopa_conda_activate_env() { # {{{1
@@ -24383,11 +24399,9 @@ to '${dict['run_info_file']}'."
 
 koopa_sra_fastq_dump() {
     local -A app bool dict
-    local -a sra_files
+    local -a fastq_files sra_files
     local sra_file
     app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
-    app['gzip']="$(koopa_locate_gzip)"
-    app['parallel']="$(koopa_locate_parallel)"
     koopa_assert_is_executable "${app[@]}"
     bool['compress']=1
     dict['acc_file']=''
@@ -24440,6 +24454,7 @@ koopa_sra_fastq_dump() {
         '--fastq-directory' "${dict['fastq_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
+    koopa_assert_is_ncbi_sra_toolkit_configured
     if [[ ! -d "${dict['prefetch_dir']}" ]]
     then
         koopa_sra_prefetch \
@@ -24462,55 +24477,51 @@ koopa_sra_fastq_dump() {
     do
         local id
         id="$(koopa_basename_sans_ext "$sra_file")"
-        if [[ ! -f "${dict['fastq_dir']}/${id}.fastq" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}_1.fastq" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
+        if [[ -f "${dict['fastq_dir']}/${id}.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}_1.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
         then
-            koopa_alert "Extracting FASTQ in '${sra_file}'."
-            "${app['fasterq_dump']}" \
-                --details \
-                --force \
-                --outdir "${dict['fastq_dir']}" \
-                --print-read-nr \
-                --progress \
-                --skip-technical \
-                --split-3 \
-                --strict \
-                --threads "${dict['threads']}" \
-                --verbose \
-                "$sra_file"
+            koopa_alert_info "Skipping '${sra_file}'."
+            continue
         fi
+        koopa_alert "Extracting FASTQ in '${sra_file}'."
+        "${app['fasterq_dump']}" \
+            --details \
+            --force \
+            --outdir "${dict['fastq_dir']}" \
+            --print-read-nr \
+            --progress \
+            --skip-technical \
+            --split-3 \
+            --strict \
+            --threads "${dict['threads']}" \
+            --verbose \
+            "$sra_file"
     done
     if [[ "${bool['compress']}" -eq 1 ]]
     then
-        koopa_alert 'Compressing FASTQ files.'
-        koopa_find \
-            --max-depth=1 \
-            --min-depth=1 \
-            --pattern='*.fastq' \
-            --prefix="${dict['fastq_dir']}" \
-            --sort \
-            --type='f' \
-        | "${app['parallel']}" \
-            --bar \
-            --eta \
-            --jobs "${dict['threads']}" \
-            --progress \
-            --will-cite \
-            "${app['gzip']} --force --verbose {}"
+        koopa_alert "Compressing FASTQ files in '${dict['fastq_dir']}'."
+        readarray -t fastq_files <<< "$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.fastq' \
+                --prefix="${dict['fastq_dir']}" \
+                --sort \
+                --type='f' \
+        )"
+        koopa_compress "${fastq_files[@]}"
     fi
     return 0
 }
 
 koopa_sra_prefetch() {
     local -A app dict
-    local -a prefetch_cmd
-    app['parallel']="$(koopa_locate_parallel --allow-system)"
+    local -a prefetch_args
     app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
-    dict['jobs']="$(koopa_cpu_count)"
     dict['output_dir']='sra'
     while (("$#"))
     do
@@ -24541,10 +24552,11 @@ koopa_sra_prefetch() {
         '--accession-file' "${dict['acc_file']}" \
         '--output-directory' "${dict['output_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
+    koopa_assert_is_ncbi_sra_toolkit_configured
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
-    koopa_alert "Prefetching SRA files to '${dict['output_dir']}'."
-    prefetch_cmd=(
-        "${app['prefetch']}"
+    koopa_alert "Prefetching SRA samples defined in '${dict['acc_file']}' \
+to '${dict['output_dir']}'."
+    prefetch_args+=(
         '--force' 'no'
         '--max-size' '500G'
         '--output-directory' "${dict['output_dir']}"
@@ -24553,16 +24565,9 @@ koopa_sra_prefetch() {
         '--type' 'sra'
         '--verbose'
         '--verify' 'yes'
-        '{}'
+        "${dict['acc_file']}"
     )
-    "${app['parallel']}" \
-        --arg-file "${dict['acc_file']}" \
-        --bar \
-        --eta \
-        --jobs "${dict['jobs']}" \
-        --progress \
-        --will-cite \
-        "${prefetch_cmd[*]}"
+    "${app['prefetch']}" "${prefetch_args[@]}"
     return 0
 }
 
