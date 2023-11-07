@@ -4,8 +4,6 @@ koopa_compress() {
     # """
     # Compress multiple files.
     # @note Updated 2023-11-07.
-    #
-    # Consider adding support for brotli and zstd in a future update.
     # """
     local -A app bool dict
     local -a cmd_args pos
@@ -19,7 +17,7 @@ koopa_compress() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--format='*)
                 dict['format']="${1#*=}"
                 shift 1
@@ -128,6 +126,9 @@ koopa_compress() {
         "${app['cmd']}" "${cmd_args[@]}" "$source_file"
         koopa_assert_is_file "$target_file"
     done
-    [[ "${bool['keep']}" -eq 0 ]] && koopa_rm "$@"
+    if [[ "${bool['keep']}" -eq 0 ]]
+    then
+        koopa_rm "$@"
+    fi
     return 0
 }
