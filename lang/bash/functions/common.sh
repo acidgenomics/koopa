@@ -7637,7 +7637,10 @@ koopa_extract() {
             ;;
     esac
     dict['file']="$(koopa_realpath "${dict['file']}")"
-    dict['match']="$(koopa_basename "${dict['file']}" | koopa_lowercase)"
+    dict['match']="$( \
+        koopa_basename "${dict['file']}" \
+        | koopa_lowercase \
+    )"
     case "${dict['match']}" in
         *'.tar.bz2' | \
         *'.tar.gz' | \
@@ -7657,23 +7660,19 @@ koopa_extract() {
             bool['decompress_only']=1
             ;;
     esac
-    if [[ "${bool['decompress_only']}" -eq 1 ]]
-    then
-        cmd_args+=("${dict['file']}")
-        if [[ -n "${dict['target_dir']}" ]]
-        then
-            dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
-            dict['target_file']="${dict['target_dir']}/${dict['bn']}"
-            cmd_args+=("${dict['target_file']}")
-        fi
-        koopa_decompress_single_file "${cmd_args[@]}"
-        return 0
-    fi
     if [[ -z "${dict['target_dir']}" ]]
     then
         dict['target_dir']="$(koopa_parent_dir "${dict['file']}")/${dict['bn']}"
     fi
     dict['target_dir']="$(koopa_init_dir "${dict['target_dir']}")"
+    if [[ "${bool['decompress_only']}" -eq 1 ]]
+    then
+        dict['output_file']="${dict['target_dir']}/${dict['bn']}"
+        koopa_decompress \
+            --input-file="${dict['file']}" \
+            --output-file="${dict['output_file']}"
+        return 0
+    fi
     koopa_alert "Extracting '${dict['file']}' to '${dict['target_dir']}'."
     dict['tmpdir']="$(koopa_parent_dir "${dict['file']}")/$(koopa_tmp_string)"
     dict['tmpdir']="$(koopa_init_dir "${dict['tmpdir']}")"
