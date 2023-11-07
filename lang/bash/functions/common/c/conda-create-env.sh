@@ -28,7 +28,7 @@ koopa_conda_create_env() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--file='*)
                 dict['yaml_file']="${1#*=}"
                 shift 1

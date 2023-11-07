@@ -35,7 +35,7 @@ koopa_install_ruby_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--name='*)
                 dict['name']="${1#*=}"
                 shift 1

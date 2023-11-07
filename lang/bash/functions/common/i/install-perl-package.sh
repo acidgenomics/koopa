@@ -57,7 +57,7 @@ koopa_install_perl_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--cpan-path='*)
                 dict['cpan_path']="${1#*=}"
                 shift 1

@@ -12,7 +12,7 @@ koopa_write_string() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--file='*)
                 dict['file']="${1#*=}"
                 shift 1

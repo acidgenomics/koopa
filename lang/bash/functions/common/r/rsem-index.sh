@@ -88,8 +88,8 @@ koopa_rsem_index() {
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['genome_fasta_file']}" \
-            "${dict['tmp_genome_fasta_file']}"
+            --input-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_is_compressed_file "${dict['gtf_file']}"
@@ -97,8 +97,8 @@ koopa_rsem_index() {
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['gtf_file']}" \
-            "${dict['tmp_gtf_file']}"
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     index_args+=(

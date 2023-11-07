@@ -26,7 +26,7 @@ koopa_install_python_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--egg-name='*)
                 dict['egg_name']="${1#*=}"
                 shift 1

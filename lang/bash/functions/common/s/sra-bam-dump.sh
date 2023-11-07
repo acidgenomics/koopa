@@ -3,7 +3,7 @@
 koopa_sra_bam_dump() {
     # """
     # Dump BAM files form SRA file list.
-    # @note Updated 2023-11-06.
+    # @note Updated 2023-11-07.
     #
     # @seealso
     # - sam-dump --help
@@ -17,22 +17,15 @@ koopa_sra_bam_dump() {
     app['sam_dump']="$(koopa_locate_sam_dump)"
     app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
-    dict['acc_file']=''
-    dict['bam_dir']='bam'
-    dict['prefetch_dir']='sra'
+    # e.g. 'bam'.
+    dict['bam_dir']=''
+    # e.g. 'sra'.
+    dict['prefetch_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--accession-file='*)
-                dict['acc_file']="${1#*=}"
-                shift 1
-                ;;
-            '--accession-file')
-                dict['acc_file']="${2:?}"
-                shift 2
-                ;;
             '--bam-directory='*)
                 dict['bam_dir']="${1#*=}"
                 shift 1
@@ -57,17 +50,13 @@ koopa_sra_bam_dump() {
         esac
     done
     koopa_assert_is_set \
-        '--accession-file' "${dict['acc_file']}" \
+        '--bam-directory' "${dict['bam_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
-    if [[ ! -d "${dict['prefetch_dir']}" ]]
-    then
-        koopa_sra_prefetch \
-            --accession-file="${acc_file}" \
-            --output-directory="${dict['prefetch_dir']}"
-    fi
+    koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting BAM to '${dict['bam_dir']}'."
+    koopa_alert "Extracting BAM from '${dict['prefetch_dir']}' \
+in '${dict['bam_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
             --max-depth=2 \
