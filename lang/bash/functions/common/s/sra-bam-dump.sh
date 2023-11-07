@@ -52,10 +52,11 @@ koopa_sra_bam_dump() {
     koopa_assert_is_set \
         '--bam-directory' "${dict['bam_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
-    koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting BAM from '${dict['prefetch_dir']}' \
+    dict['prefetch_dir']="$(koopa_realpath "${dict['prefetch_dir']}")"
+    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
+    koopa_alert "Dumping BAM files from '${dict['prefetch_dir']}' \
 in '${dict['bam_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
@@ -67,7 +68,6 @@ in '${dict['bam_dir']}'."
             --type='f' \
     )"
     koopa_assert_is_array_non_empty "${sra_files[@]:-}"
-    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
     for sra_file in "${sra_files[@]}"
     do
         local -A dict2
@@ -76,7 +76,7 @@ in '${dict['bam_dir']}'."
         dict2['sam_file']="${dict['bam_dir']}/${dict2['id']}.sam"
         dict2['bam_file']="${dict['bam_dir']}/${dict2['id']}.bam"
         [[ -f "${dict2['bam_file']}" ]] && continue
-        koopa_alert "Extracting SAM in '${dict2['sra_file']}' \
+        koopa_alert "Dumping SAM in '${dict2['sra_file']}' \
 to '${dict2['sam_file']}."
         "${app['sam_dump']}" \
             --output-file "${dict2['sam_file']}" \
