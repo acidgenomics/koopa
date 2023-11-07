@@ -5319,7 +5319,7 @@ koopa_compress() {
                 bool['verbose']=1
                 shift 1
                 ;;
-            '-')
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
@@ -6426,7 +6426,7 @@ koopa_decompress() {
                 flags+=("$1")
                 shift 1
                 ;;
-            '-')
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
