@@ -27,7 +27,7 @@ koopa_install_node_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--extra-package='*)
                 extra_pkgs+=("${1#*=}")
                 shift 1
