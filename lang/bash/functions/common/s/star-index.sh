@@ -97,8 +97,8 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         bool['tmp_genome_fasta_file']=1
         dict['tmp_genome_fasta_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['genome_fasta_file']}" \
-            "${dict['tmp_genome_fasta_file']}"
+            --input-file="${dict['genome_fasta_file']}" \
+            --output-file="${dict['tmp_genome_fasta_file']}"
         dict['genome_fasta_file']="${dict['tmp_genome_fasta_file']}"
     fi
     if koopa_is_compressed_file "${dict['gtf_file']}"

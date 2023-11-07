@@ -33,7 +33,7 @@ koopa_install_rust_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--name='*)
                 dict['name']="${1#*=}"
                 shift 1

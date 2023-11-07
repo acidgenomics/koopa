@@ -22,7 +22,7 @@ koopa_install_gnu_app() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--compress-ext='*)
                 dict['compress_ext']="${1#*=}"
                 shift 1

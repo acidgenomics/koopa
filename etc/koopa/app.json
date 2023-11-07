@@ -272,14 +272,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-10-23",
+    "date": "2023-11-06",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.28"
+    "version": "2.13.32"
   },
   "azure-cli": {
     "aliases": {
@@ -1475,6 +1475,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-11-02",
     "default": true,
+    "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
@@ -3341,11 +3342,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2023-07-01",
+    "date": "2023-11-07",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.46.0"
+    "version": "1.47.0"
   },
   "libvterm": {
     "aliases": {
@@ -3886,7 +3887,7 @@
       "bioconda": "sra-tools",
       "homebrew": "sratoolkit"
     },
-    "bin": ["fasterq-dump", "vdb-config"],
+    "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
     "date": "2023-10-02",
     "default": false,
@@ -6421,10 +6422,10 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-18",
+    "date": "2023-11-07",
     "default": false,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.38.2"
+    "version": "0.39.0"
   },
   "zip": {
     "aliases": {
