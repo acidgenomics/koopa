@@ -1467,7 +1467,7 @@ pattern '${dict['pattern']}'."
     return 0
 }
 
-koopa_is_ncbi_sra_toolkit_configured() {
+koopa_assert_is_ncbi_sra_toolkit_configured() {
     local conf_file
     conf_file="${HOME:?}/.ncbi/user-settings.mkfg"
     if [[ ! -f "$conf_file" ]]
@@ -24479,10 +24479,11 @@ koopa_sra_bam_dump() {
     koopa_assert_is_set \
         '--bam-directory' "${dict['bam_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
-    koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting BAM from '${dict['prefetch_dir']}' \
+    dict['prefetch_dir']="$(koopa_realpath "${dict['prefetch_dir']}")"
+    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
+    koopa_alert "Dumping BAM files from '${dict['prefetch_dir']}' \
 in '${dict['bam_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
@@ -24494,7 +24495,6 @@ in '${dict['bam_dir']}'."
             --type='f' \
     )"
     koopa_assert_is_array_non_empty "${sra_files[@]:-}"
-    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
     for sra_file in "${sra_files[@]}"
     do
         local -A dict2
@@ -24503,7 +24503,7 @@ in '${dict['bam_dir']}'."
         dict2['sam_file']="${dict['bam_dir']}/${dict2['id']}.sam"
         dict2['bam_file']="${dict['bam_dir']}/${dict2['id']}.bam"
         [[ -f "${dict2['bam_file']}" ]] && continue
-        koopa_alert "Extracting SAM in '${dict2['sra_file']}' \
+        koopa_alert "Dumping SAM in '${dict2['sra_file']}' \
 to '${dict2['sam_file']}."
         "${app['sam_dump']}" \
             --output-file "${dict2['sam_file']}" \
@@ -24660,10 +24660,11 @@ koopa_sra_fastq_dump() {
     koopa_assert_is_set \
         '--fastq-directory' "${dict['fastq_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
-    koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting FASTQ from '${dict['prefetch_dir']}' \
+    dict['prefetch_dir']="$(koopa_realpath "${dict['prefetch_dir']}")"
+    dict['fastq_dir']="$(koopa_init_dir "${dict['fastq_dir']}")"
+    koopa_alert "Dumping FASTQ files from '${dict['prefetch_dir']}' \
 in '${dict['fastq_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
@@ -24687,7 +24688,7 @@ in '${dict['fastq_dir']}'."
             koopa_alert_info "Skipping '${sra_file}'."
             continue
         fi
-        koopa_alert "Extracting FASTQ in '${sra_file}'."
+        koopa_alert "Dumping FASTQ in '${sra_file}'."
         "${app['fasterq_dump']}" \
             --details \
             --force \
@@ -24721,10 +24722,13 @@ in '${dict['fastq_dir']}'."
 
 koopa_sra_prefetch() {
     local -A app dict
-    local -a prefetch_args
+    local -a parallel_cmd
+    app['parallel']="$(koopa_locate_parallel --allow-system)"
     app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
+    dict['jobs']="$(koopa_cpu_count)"
+    [[ "${dict['jobs']}" -gt 4 ]] &&  dict['jobs']=4
     dict['output_dir']='sra'
     while (("$#"))
     do
@@ -24759,7 +24763,8 @@ koopa_sra_prefetch() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Prefetching SRA samples defined in '${dict['acc_file']}' \
 to '${dict['output_dir']}'."
-    prefetch_args+=(
+    parallel_cmd=(
+        "${app['prefetch']}"
         '--force' 'no'
         '--max-size' '500G'
         '--output-directory' "${dict['output_dir']}"
@@ -24768,9 +24773,16 @@ to '${dict['output_dir']}'."
         '--type' 'sra'
         '--verbose'
         '--verify' 'yes'
-        "${dict['acc_file']}"
+        '{}'
     )
-    "${app['prefetch']}" "${prefetch_args[@]}"
+    "${app['parallel']}" \
+        --arg-file "${dict['acc_file']}" \
+        --bar \
+        --eta \
+        --jobs "${dict['jobs']}" \
+        --progress \
+        --will-cite \
+        "${parallel_cmd[*]}"
     return 0
 }
 
