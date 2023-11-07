@@ -91,8 +91,8 @@ GB of RAM."
         bool['tmp_fastq_file']=1
         dict['tmp_fastq_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['fastq_file']}" \
-            "${dict['tmp_fastq_file']}"
+            --input-file="${dict['fastq_file']}" \
+            --output-file="${dict['tmp_fastq_file']}"
         dict['fastq_file']="${dict['tmp_fastq_file']}"
     fi
     align_args+=(

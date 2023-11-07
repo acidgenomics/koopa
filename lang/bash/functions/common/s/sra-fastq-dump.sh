@@ -2,8 +2,8 @@
 
 koopa_sra_fastq_dump() {
     # """
-    # Dump FASTQ files from SRA file list (in parallel).
-    # @note Updated 2022-02-10.
+    # Dump FASTQ files from SRA file list.
+    # @note Updated 2023-11-07.
     #
     # @section fasterq-dump vs. fastq-dump:
     #
@@ -57,30 +57,21 @@ koopa_sra_fastq_dump() {
     # >     --prefetch-directory='srp049596-prefetch' \
     # >     --fastq-directory='srp049596-fastq'
     # """
-    local -A app dict
-    local -a sra_files
+    local -A app bool dict
+    local -a fastq_files sra_files
     local sra_file
     app['fasterq_dump']="$(koopa_locate_fasterq_dump)"
-    app['gzip']="$(koopa_locate_gzip)"
-    app['parallel']="$(koopa_locate_parallel)"
     koopa_assert_is_executable "${app[@]}"
-    dict['acc_file']=''
-    dict['compress']=1
-    dict['fastq_dir']='fastq'
-    dict['prefetch_dir']='sra'
+    bool['compress']=1
+    # e.g. 'fastq'.
+    dict['fastq_dir']=''
+    # e.g. 'sra'.
+    dict['prefetch_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--accession-file='*)
-                dict['acc_file']="${1#*=}"
-                shift 1
-                ;;
-            '--accession-file')
-                dict['acc_file']="${2:?}"
-                shift 2
-                ;;
             '--fastq-directory='*)
                 dict['fastq_dir']="${1#*=}"
                 shift 1
@@ -99,11 +90,11 @@ koopa_sra_fastq_dump() {
                 ;;
             # Flags ------------------------------------------------------------
             '--compress')
-                dict['compress']=1
+                bool['compress']=1
                 shift 1
                 ;;
             '--no-compress')
-                dict['compress']=0
+                bool['compress']=0
                 shift 1
                 ;;
             # Invalid ----------------------------------------------------------
@@ -114,18 +105,13 @@ koopa_sra_fastq_dump() {
         esac
     done
     koopa_assert_is_set \
-        '--accession-file' "${dict['acc_file']}" \
         '--fastq-directory' "${dict['fastq_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
-    if [[ ! -d "${dict['prefetch_dir']}" ]]
-    then
-        koopa_sra_prefetch_parallel \
-            --accession-file="${acc_file}" \
-            --output-directory="${dict['prefetch_dir']}"
-    fi
+    koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting FASTQ to '${dict['fastq_dir']}'."
+    koopa_alert "Extracting FASTQ from '${dict['prefetch_dir']}' \
+in '${dict['fastq_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
             --max-depth=2 \
@@ -140,43 +126,42 @@ koopa_sra_fastq_dump() {
     do
         local id
         id="$(koopa_basename_sans_ext "$sra_file")"
-        if [[ ! -f "${dict['fastq_dir']}/${id}.fastq" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}_1.fastq" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] && \
-            [[ ! -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
+        if [[ -f "${dict['fastq_dir']}/${id}.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}_1.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] || \
+            [[ -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
         then
-            koopa_alert "Extracting FASTQ in '${sra_file}'."
-            "${app['fasterq_dump']}" \
-                --details \
-                --force \
-                --outdir "${dict['fastq_dir']}" \
-                --print-read-nr \
-                --progress \
-                --skip-technical \
-                --split-3 \
-                --strict \
-                --threads "${dict['threads']}" \
-                --verbose \
-                "$sra_file"
+            koopa_alert_info "Skipping '${sra_file}'."
+            continue
         fi
-    done
-    if [[ "${dict['compress']}" -eq 1 ]]
-    then
-        koopa_alert 'Compressing FASTQ files.'
-        koopa_find \
-            --max-depth=1 \
-            --min-depth=1 \
-            --pattern='*.fastq' \
-            --prefix="${dict['fastq_dir']}" \
-            --sort \
-            --type='f' \
-        | "${app['parallel']}" \
-            --bar \
-            --eta \
-            --jobs "${dict['threads']}" \
+        koopa_alert "Extracting FASTQ in '${sra_file}'."
+        "${app['fasterq_dump']}" \
+            --details \
+            --force \
+            --outdir "${dict['fastq_dir']}" \
+            --print-read-nr \
             --progress \
-            --will-cite \
-            "${app['gzip']} --force --verbose {}"
+            --skip-technical \
+            --split-3 \
+            --strict \
+            --threads "${dict['threads']}" \
+            --verbose \
+            "$sra_file"
+    done
+    if [[ "${bool['compress']}" -eq 1 ]]
+    then
+        koopa_alert "Compressing FASTQ files in '${dict['fastq_dir']}'."
+        readarray -t fastq_files <<< "$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.fastq' \
+                --prefix="${dict['fastq_dir']}" \
+                --sort \
+                --type='f' \
+        )"
+        koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
+        koopa_compress --format='gzip' "${fastq_files[@]}"
     fi
     return 0
 }

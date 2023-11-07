@@ -55,7 +55,7 @@ koopa_rsync() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--exclude='*)
                 rsync_args+=("$1")
                 shift 1

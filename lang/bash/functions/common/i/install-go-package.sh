@@ -25,7 +25,7 @@ koopa_install_go_package() {
     while (("$#"))
     do
         case "$1" in
-            # Key value pairs --------------------------------------------------
+            # Key-value pairs --------------------------------------------------
             '--bin-name='*)
                 dict['bin_name']="${1#*=}"
                 shift 1
