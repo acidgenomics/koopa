@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Can speed up the sam-dump step by using parallel.
-
 koopa_sra_bam_dump() {
     # """
     # Dump BAM files form SRA file list.
