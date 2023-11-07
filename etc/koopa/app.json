@@ -3887,7 +3887,7 @@
       "bioconda": "sra-tools",
       "homebrew": "sratoolkit"
     },
-    "bin": ["fasterq-dump", "vdb-config"],
+    "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
     "date": "2023-10-02",
     "default": false,
