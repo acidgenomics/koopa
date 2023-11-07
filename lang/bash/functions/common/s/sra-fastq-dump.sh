@@ -107,7 +107,6 @@ koopa_sra_fastq_dump() {
     koopa_assert_is_set \
         '--fastq-directory' "${dict['fastq_dir']}" \
         '--prefetch-directory' "${dict['prefetch_dir']}"
-    koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
     koopa_alert "Extracting FASTQ from '${dict['prefetch_dir']}' \
