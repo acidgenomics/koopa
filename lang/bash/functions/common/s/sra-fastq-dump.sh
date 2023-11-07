@@ -161,7 +161,7 @@ in '${dict['fastq_dir']}'."
                 --type='f' \
         )"
         koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
-        koopa_compress --format='gzip' "${fastq_files[@]}"
+        koopa_compress --format='gzip' --remove "${fastq_files[@]}"
     fi
     return 0
 }
