@@ -9,7 +9,7 @@ koopa_compress() {
     local -a cmd_args pos
     local source_file
     koopa_assert_has_args "$#"
-    bool['keep']=0
+    bool['keep']=1
     bool['verbose']=0
     dict['format']='gzip'
     dict['threads']="$(koopa_cpu_count)"
