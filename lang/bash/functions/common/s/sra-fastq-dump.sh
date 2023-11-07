@@ -135,7 +135,7 @@ in '${dict['fastq_dir']}'."
             koopa_alert_info "Skipping '${sra_file}'."
             continue
         fi
-        koopa_alert "Extracting FASTQ in '${sra_file}'."
+        koopa_alert "Dumping FASTQ in '${sra_file}'."
         "${app['fasterq_dump']}" \
             --details \
             --force \
