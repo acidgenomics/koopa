@@ -68,8 +68,8 @@ to '${dict['output_dir']}'."
         '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
-        # Alternatively, set this to 'sra'.
-        '--type' 'all'
+        # Alternatively, can set this to 'all'.
+        '--type' 'sra'
         '--verbose'
         '--verify' 'yes'
         '{}'
