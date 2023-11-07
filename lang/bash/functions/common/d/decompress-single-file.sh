@@ -42,6 +42,7 @@ koopa_decompress_single_file() {
     bool['stdout']=0
     bool['verbose']=0
     dict['compress_ext_pattern']="$(koopa_compress_ext_pattern)"
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -63,7 +64,7 @@ koopa_decompress_single_file() {
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
-            '-')
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
