@@ -3342,11 +3342,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2023-07-01",
+    "date": "2023-11-07",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.46.0"
+    "version": "1.47.0"
   },
   "libvterm": {
     "aliases": {
@@ -6422,10 +6422,10 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-18",
+    "date": "2023-11-07",
     "default": false,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.38.2"
+    "version": "0.39.0"
   },
   "zip": {
     "aliases": {
