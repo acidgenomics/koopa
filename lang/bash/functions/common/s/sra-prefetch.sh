@@ -9,6 +9,8 @@ koopa_sra_prefetch() {
     # > aws s3 sync s3://sra-pub-run-odp/sra/<SRR_ID>/ ./<SRR_ID>/
     #
     # @seealso
+    # - https://www.ncbi.nlm.nih.gov/sra/docs/sra-aws-download/
+    # - https://bioinformatics.stackexchange.com/questions/12937/
     # - https://bioinformaticsworkbook.org/dataAcquisition/fileTransfer/sra.html
     #
     # @examples
