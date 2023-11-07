@@ -54,7 +54,9 @@ koopa_sra_bam_dump() {
         '--prefetch-directory' "${dict['prefetch_dir']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     koopa_assert_is_dir "${dict['prefetch_dir']}"
-    koopa_alert "Extracting BAM from '${dict['prefetch_dir']}' \
+    dict['prefetch_dir']="$(koopa_realpath "${dict['prefetch_dir']}")"
+    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
+    koopa_alert "Dumping BAM files from '${dict['prefetch_dir']}' \
 in '${dict['bam_dir']}'."
     readarray -t sra_files <<< "$(
         koopa_find \
@@ -66,7 +68,6 @@ in '${dict['bam_dir']}'."
             --type='f' \
     )"
     koopa_assert_is_array_non_empty "${sra_files[@]:-}"
-    dict['bam_dir']="$(koopa_init_dir "${dict['bam_dir']}")"
     for sra_file in "${sra_files[@]}"
     do
         local -A dict2
