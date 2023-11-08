@@ -6218,6 +6218,7 @@ koopa_decompress_single_file() {
     local -a cmd_args pos
     koopa_assert_has_args "$#"
     bool['keep']=1
+    bool['overwrite']=1
     bool['passthrough']=0
     bool['stdout']=0
     bool['verbose']=0
@@ -6277,7 +6278,10 @@ koopa_decompress_single_file() {
         then
             return 0
         fi
-        koopa_assert_is_not_file "${dict['output_file']}"
+        if [[ "${bool['overwrite']}" -eq 0 ]]
+        then
+            koopa_assert_is_not_file "${dict['output_file']}"
+        fi
     fi
     dict['match']="$( \
         koopa_basename "${dict['input_file']}" \
@@ -6394,6 +6398,7 @@ koopa_decompress() {
     local -a flags pos
     local input_file
     koopa_assert_has_args "$#"
+    bool['overwrite']=1
     bool['single_file']=0
     dict['input_file']=''
     dict['output_file']=''
@@ -6440,10 +6445,13 @@ koopa_decompress() {
     then
         koopa_assert_has_no_args "$#"
         koopa_assert_is_set \
-            '--input-file' "${dict['input_file']}"
+            '--input-file' "${dict['input_file']}" \
             '--output-file' "${dict['output_file']}"
         koopa_assert_is_file "${dict['input_file']}"
-        koopa_assert_is_not_file "${dict['output_file']}"
+        if [[ "${bool['overwrite']}" -eq 0 ]]
+        then
+            koopa_assert_is_not_file "${dict['output_file']}"
+        fi
         koopa_decompress_single_file \
             "${flags[@]}" \
             "${dict['input_file']}" \
@@ -24222,13 +24230,38 @@ pattern '${dict['pattern']}'."
 }
 
 koopa_samtools_convert_sam_to_bam() {
-    local -A app dict
+    local -A app bool dict
+    local -a pos
     local file
     koopa_assert_has_args "$#"
-    koopa_assert_is_file "$@"
     app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
+    bool['keep']=0
     dict['threads']="$(koopa_cpu_count)"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--keep')
+                bool['keep']=1
+                shift 1
+                ;;
+            '--no-keep' | '--remove')
+                bool['keep']=0
+                shift 1
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
     for file in "$@"
     do
         local -A dict2
@@ -24256,8 +24289,13 @@ koopa_samtools_convert_sam_to_bam() {
             -h \
             -o "${dict2['bam_file']}" \
             "${dict2['sam_file']}"
-        koopa_assert_is_file "${dict2['bam_file']}"
-        koopa_rm "${dict2['sam_file']}"
+        koopa_assert_is_file \
+            "${dict2['bam_file']}" \
+            "${dict2['sam_file']}"
+        if [[ "${bool['keep']}" -eq 0 ]]
+        then
+            koopa_rm "${dict2['sam_file']}"
+        fi
     done
     return 0
 }
@@ -24720,6 +24758,11 @@ in '${dict['fastq_dir']}'."
     return 0
 }
 
+koopa_sra_prefetch_from_aws() {
+    s3_uri="s3://sra-pub-run-odp.s3.amazonaws.com/sra/<SRR_ID>/<SRR_ID>"
+    return 0
+}
+
 koopa_sra_prefetch() {
     local -A app dict
     local -a parallel_cmd
@@ -24729,7 +24772,7 @@ koopa_sra_prefetch() {
     dict['acc_file']=''
     dict['jobs']="$(koopa_cpu_count)"
     [[ "${dict['jobs']}" -gt 4 ]] &&  dict['jobs']=4
-    dict['output_dir']='sra'
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
