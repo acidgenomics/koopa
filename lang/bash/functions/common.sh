@@ -6218,6 +6218,7 @@ koopa_decompress_single_file() {
     local -a cmd_args pos
     koopa_assert_has_args "$#"
     bool['keep']=1
+    bool['overwrite']=1
     bool['passthrough']=0
     bool['stdout']=0
     bool['verbose']=0
@@ -6277,7 +6278,10 @@ koopa_decompress_single_file() {
         then
             return 0
         fi
-        koopa_assert_is_not_file "${dict['output_file']}"
+        if [[ "${bool['overwrite']}" -eq 0 ]]
+        then
+            koopa_assert_is_not_file "${dict['output_file']}"
+        fi
     fi
     dict['match']="$( \
         koopa_basename "${dict['input_file']}" \
@@ -6394,6 +6398,7 @@ koopa_decompress() {
     local -a flags pos
     local input_file
     koopa_assert_has_args "$#"
+    bool['overwrite']=1
     bool['single_file']=0
     dict['input_file']=''
     dict['output_file']=''
@@ -6443,7 +6448,10 @@ koopa_decompress() {
             '--input-file' "${dict['input_file']}" \
             '--output-file' "${dict['output_file']}"
         koopa_assert_is_file "${dict['input_file']}"
-        koopa_assert_is_not_file "${dict['output_file']}"
+        if [[ "${bool['overwrite']}" -eq 0 ]]
+        then
+            koopa_assert_is_not_file "${dict['output_file']}"
+        fi
         koopa_decompress_single_file \
             "${flags[@]}" \
             "${dict['input_file']}" \
