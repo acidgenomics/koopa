@@ -424,7 +424,7 @@
       "noarch": [],
       "macos-arm64": ["autoconf", "automake", "make"]
     },
-    "date": "2023-10-17",
+    "date": "2023-11-08",
     "default": false,
     "dependencies": {
       "noarch": ["conda"],
@@ -440,7 +440,7 @@
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
     ],
-    "version": "2.31.0"
+    "version": "2.31.1"
   },
   "bfg": {
     "aliases": {
@@ -5294,10 +5294,10 @@
     },
     "bin": ["sd"],
     "build_dependencies": ["rust"],
-    "date": "2022-12-08",
+    "date": "2023-11-08",
     "default": true,
     "url": ["https://github.com/chmln/sd/"],
-    "version": "0.7.6"
+    "version": "1.0.0"
   },
   "sed": {
     "aliases": {
@@ -6397,10 +6397,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-09-27",
+    "date": "2023-11-08",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.35.2"
+    "version": "4.40.1"
   },
   "yt-dlp": {
     "aliases": {
