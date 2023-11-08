@@ -6440,7 +6440,7 @@ koopa_decompress() {
     then
         koopa_assert_has_no_args "$#"
         koopa_assert_is_set \
-            '--input-file' "${dict['input_file']}"
+            '--input-file' "${dict['input_file']}" \
             '--output-file' "${dict['output_file']}"
         koopa_assert_is_file "${dict['input_file']}"
         koopa_assert_is_not_file "${dict['output_file']}"
@@ -24750,6 +24750,11 @@ in '${dict['fastq_dir']}'."
     return 0
 }
 
+koopa_sra_prefetch_from_aws() {
+    s3_uri="s3://sra-pub-run-odp.s3.amazonaws.com/sra/<SRR_ID>/<SRR_ID>"
+    return 0
+}
+
 koopa_sra_prefetch() {
     local -A app dict
     local -a parallel_cmd
@@ -24759,7 +24764,7 @@ koopa_sra_prefetch() {
     dict['acc_file']=''
     dict['jobs']="$(koopa_cpu_count)"
     [[ "${dict['jobs']}" -gt 4 ]] &&  dict['jobs']=4
-    dict['output_dir']='sra'
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in

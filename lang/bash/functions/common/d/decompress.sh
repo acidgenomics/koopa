@@ -85,7 +85,7 @@ koopa_decompress() {
     then
         koopa_assert_has_no_args "$#"
         koopa_assert_is_set \
-            '--input-file' "${dict['input_file']}"
+            '--input-file' "${dict['input_file']}" \
             '--output-file' "${dict['output_file']}"
         koopa_assert_is_file "${dict['input_file']}"
         koopa_assert_is_not_file "${dict['output_file']}"
