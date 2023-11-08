@@ -3,7 +3,7 @@
 koopa_decompress_single_file() {
     # """
     # Decompress a single compressed file.
-    # @note Updated 2023-11-07.
+    # @note Updated 2023-11-08.
     #
     # Intentionally supports only compression formats. For mixed archiving
     # and compression formats, use 'koopa_extract' instead.
@@ -38,6 +38,7 @@ koopa_decompress_single_file() {
     local -a cmd_args pos
     koopa_assert_has_args "$#"
     bool['keep']=1
+    bool['overwrite']=1
     bool['passthrough']=0
     bool['stdout']=0
     bool['verbose']=0
@@ -100,7 +101,10 @@ koopa_decompress_single_file() {
         then
             return 0
         fi
-        koopa_assert_is_not_file "${dict['output_file']}"
+        if [[ "${bool['overwrite']}" -eq 0 ]]
+        then
+            koopa_assert_is_not_file "${dict['output_file']}"
+        fi
     fi
     # Ensure that we're matching against case insensitive basename.
     dict['match']="$( \
