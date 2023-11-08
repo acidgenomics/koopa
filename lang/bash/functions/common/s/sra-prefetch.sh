@@ -3,7 +3,7 @@
 koopa_sra_prefetch() {
     # """
     # Prefetch files from SRA.
-    # @note Updated 2023-11-07.
+    # @note Updated 2023-11-08.
     #
     # Alternatively, can sync directly from AWS with:
     # > aws s3 sync s3://sra-pub-run-odp/sra/<SRR_ID>/ ./<SRR_ID>/
@@ -12,6 +12,7 @@ koopa_sra_prefetch() {
     # - https://www.ncbi.nlm.nih.gov/sra/docs/sra-aws-download/
     # - https://bioinformatics.stackexchange.com/questions/12937/
     # - https://bioinformaticsworkbook.org/dataAcquisition/fileTransfer/sra.html
+    # - http://barcwiki.wi.mit.edu/wiki/SOPs/qc_SRA
     # - https://stackoverflow.com/questions/14428609/
     # - https://www.gnu.org/software/parallel/man.html
     #
@@ -25,11 +26,13 @@ koopa_sra_prefetch() {
     app['parallel']="$(koopa_locate_parallel --allow-system)"
     app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
+    # e.g. 'SRR_Acc_List.txt'.
     dict['acc_file']=''
     dict['jobs']="$(koopa_cpu_count)"
-    # Set a maximum of 4 transfers at a time, to avoid hammering SRA.
+    # Set a hard limit of 4 concurrent transfers.
     [[ "${dict['jobs']}" -gt 4 ]] &&  dict['jobs']=4
-    dict['output_dir']='sra'
+    # e.g. 'sra'.
+    dict['output_dir']=''
     while (("$#"))
     do
         case "$1" in
@@ -72,12 +75,13 @@ to '${dict['output_dir']}'."
         '--output-directory' "${dict['output_dir']}"
         '--progress'
         '--resume' 'yes'
-        # Alternatively, can set this to 'all'.
         '--type' 'sra'
         '--verbose'
         '--verify' 'yes'
         '{}'
     )
+    # FIXME Let's wrap this as 'koopa_parallel', which should only accept
+    # '--arg-file' and '--command' arguments.
     "${app['parallel']}" \
         --arg-file "${dict['acc_file']}" \
         --bar \
