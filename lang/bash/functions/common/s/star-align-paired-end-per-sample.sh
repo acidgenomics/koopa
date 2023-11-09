@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Work on optimizing aligner settings, following bcbio defaults:
+# https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/bcbio/ngsalign/star.py
+
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
@@ -145,10 +148,29 @@ GB of RAM."
         # > '--alignSJDBoverhangMin' 5
         # > '--alignSJoverhangMin' 8
         # > '--outFilterMismatchNmax' 999
+        # NOTE bcbio uses 10 here.
         # > '--outFilterMultimapNmax' 20
         # > '--outFilterType' 'BySJout'
         # FIXME To enable this, we need to require the GTF file.
         # > '--sjdbGTFfile' "${dict['gtf_file']}"
+        #
+        # bcbio settings:
+        # > '--limitOutSJcollapsed' 2000000
+        # > '--outReadsUnmapped' 'Fastx'
+        # > '--outSAMmapqUnique' 60
+        # > '--outSAMunmapped' 'Within'
+        # Consider setting this for unstranded:
+        # > '--outSAMstrandField' 'intronMotif'
+        # Need to configure splice junctions better?
+        # > '--sjdbFileChrStartEnd' "${dict['sjdb_file']"
+        #
+        # STAR can now generate splice junction databases on the fly.
+        # this is preferable since we can tailor it to the read lengths.
+        #
+        # Here's how to generate splice junction database on the fly:
+        # rlength = fastq.estimate_maximum_read_length(fq1)
+        # cmd = " --sjdbGTFfile %s " % gtf_file
+        # cmd += " --sjdbOverhang %s " % str(rlength - 1)
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
