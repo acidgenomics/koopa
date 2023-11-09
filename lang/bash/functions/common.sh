@@ -24730,11 +24730,9 @@ in '${dict['fastq_dir']}'."
             --details \
             --force \
             --outdir "${dict['fastq_dir']}" \
-            --print-read-nr \
             --progress \
             --skip-technical \
             --split-3 \
-            --strict \
             --threads "${dict['threads']}" \
             --verbose \
             "$sra_file"
