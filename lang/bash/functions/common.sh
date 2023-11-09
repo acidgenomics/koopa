@@ -11067,8 +11067,8 @@ koopa_hisat2_index() {
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['gtf_file']}" \
-            "${dict['tmp_gtf_file']}"
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['exons_file']="${dict['output_dir']}/exons.tsv"
@@ -25595,8 +25595,8 @@ koopa_star_index() {
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['gtf_file']}" \
-            "${dict['tmp_gtf_file']}"
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     if koopa_fasta_has_alt_contigs "${dict['genome_fasta_file']}"
