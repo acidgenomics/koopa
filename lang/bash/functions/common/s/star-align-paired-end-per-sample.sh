@@ -108,7 +108,7 @@ koopa_star_align_paired_end_per_sample() {
     # """
     local -A app bool dict
     local -a align_args
-    app['star']="$(koopa_locate_star)"
+    app['star']="$(koopa_locate_star --realpath)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_r1_file']=0
     bool['tmp_fastq_r2_file']=0
