@@ -5,20 +5,77 @@ koopa_star_align_paired_end_per_sample() {
     # Run STAR aligner on a paired-end sample.
     # @note Updated 2023-10-20.
     #
-    # Potentially useful settings:
-    # * '--outSAMstrandField' 'intronMotif'
-    #   For unstranded RNA-seq data, cufflinks/cuffdiff require spliced
+    # @section On-the-fly splice junction database generation:
+    #
+    # STAR can now generate a splice junction database per sample on the fly.
+    # This is preferable, since we can tailor it for projects containing
+    # samples with variable read lengths. Refer to STAR manual "3.3.1 Using
+    # annotations at the mapping stage" and "5.5 Splice junctions" for
+    # additional details.
+    #
+    # @section ENCODE options (STAR manual 3.3.2):
+    #
+    # * --outFilterType BySJout:
+    #   Reduces the number of spurious junctions.
+    # * --outFilterMultimapNmax 20:
+    #   Max number of multiple alignments allowed for a read. If exceeded, the
+    #   read is considered unmapped.
+    # * --alignSJoverhangMin 8:
+    #   Minimum overhang for unannotated junctions.
+    # * --alignSJDBoverhangMin 1:
+    #   Minimum overhang for annotated junctions.
+    # * --outFilterMismatchNmax 999:
+    #   Maximum number of mismatches per pair. Large number switches off this
+    #   filter.
+    # * --outFilterMismatchNoverReadLmax 0.04:
+    #   Max number of mismatches per pair relative to read length: for 2x100b,
+    #   max number of mis-matches is 0.04*200=8 for the paired read.
+    # * --alignIntronMin 20:
+    #   Minimum intron length.
+    # * --alignIntronMax 1000000:
+    #   Maximum intron length.
+    # * --alignMatesGapMax 1000000:
+    #   Maximum genomic distance between mates.
+    #
+    # @section Transcriptome BAM output (STAR manual 7):
+    #
+    # With '--quantMode TranscriptomeSAM' option STAR will output alignments
+    # translated into transcript coordinates in the
+    # 'Aligned.toTranscriptome.out.bam' file (in addition to alignments in
+    # genomic coordinates in 'Aligned.*.sam/bam' files). These transcriptomic
+    # alignments can be used with various transcript quantification software
+    # that require reads to be mapped to transcriptome, such as RSEM.
+    #
+    # @section Other potentially useful settings:
+    #
+    # * --limitOutSJcollapsed 2000000:
+    #   Used by bcbio. Default is 1000000.
+    # * --outSAMmapqUnique 60:
+    #   Used by bcbio. The mapping quality MAPQ (column 5) is 255 for uniquely
+    #   mapping reads, and 'int(-10*log10(1-1/Nmap))' for multi-mapping reads.
+    #   This scheme is same as the one used by TopHat and is compatible with
+    #   Cufflinks. The default MAPQ=255 for the unique mappers maybe changed
+    #   with '--outSAMmapqUnique' parameter (integer 0 to 255) to ensure
+    #   compatibility with downstream tools such as GATK.
+    # * --outSAMstrandField intronMotif:
+    #   For unstranded RNA-seq data, Cufflinks/Cuffdiff require spliced
     #   alignments with XS strand attribute, which STAR will generate with
     #   '--outSAMstrandField intronMotif' option. As required, the XS strand
-    #     attribute will be generated for all alignments that contain splice
-    #     junctions. The spliced alignments that have undefined strand (i.e.
-    #     containing only non-canonical unannotated junctions) will be
-    #     suppressed.
+    #   attribute will be generated for all alignments that contain splice
+    #   junctions. The spliced alignments that have undefined strand (i.e.
+    #   containing only non-canonical unannotated junctions) will be
+    #   suppressed.
+    # * --outSAMunmapped Within:
+    #   Unmapped reads can be output into the SAM/BAM 'Aligned.*' file(s) with
+    #   '--outSAMunmapped Within' option. '--outSAMunmapped Within KeepPairs'
+    #   will (redundantly) record unmapped mate for each alignment, and, in
+    #   case of unsorted output, keep it adjacent to its mapped mate (this
+    #   only affects multi-mapping reads). uT SAM tag indicates reason for not
+    #   mapping.
     #
     # @seealso
     # - For on-the-fly splice junction database genration, rather than using
     #   the fixed read length during genome indexing:
-    #   STAR manual 3.3.1 Using annotations at the mapping stage.
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
     # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
     #     star/align/main.nf
@@ -27,6 +84,7 @@ koopa_star_align_paired_end_per_sample() {
     # - https://www.biostars.org/p/243683/
     # - https://github.com/hbctraining/Intro-to-rnaseq-hpc-O2/blob/
     #     master/lessons/03_alignment.md
+    # - https://github.com/leipzig/clk/
     #
     # @examples
     # > koopa_star_align_paired_end_per_sample \
@@ -140,73 +198,37 @@ GB of RAM."
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
     align_args+=(
+        '--alignIntronMax' 1000000
+        '--alignIntronMin' 20
+        '--alignMatesGapMax' 1000000
+        '--alignSJDBoverhangMin' 1
+        '--alignSJoverhangMin' 8
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
+        '--limitOutSJcollapsed' 2000000
         '--outFileNamePrefix' "${dict['output_dir']}/"
-        '--outFilterMultimapNmax' 10
+        '--outFilterMismatchNmax' 999
+        '--outFilterMismatchNoverReadLmax' 0.04
+        '--outFilterMultimapNmax' 20
+        '--outFilterType' 'BySJout'
+        '--outReadsUnmapped' 'Fastx'
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
         '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
         '--runMode' 'alignReads'
-        '--runRNGseed' '0'
+        '--runRNGseed' 0
         '--runThreadN' "${dict['threads']}"
         '--twopassMode' 'Basic'
-        #
         # FIXME Need to add these:
         # > '--sjdbGTFfile' "${dict['gtf_file']}"
         # > '--sjdbInsertSave' 'All'
         # > '--sjdbOverhang' "FIXME READ LENGTH - 1"
-        #
-        # ENCODE options:
-        # --outFilterType BySJout
-        #     reduces the number of ”spurious” junctions
-        # --outFilterMultimapNmax 20
-        #     max number of multiple alignments allowed for a read: if exceeded, the read is considered unmapped
-        # --alignSJoverhangMin 8
-        #     minimum overhang for unannotated junctions
-        # --alignSJDBoverhangMin 1
-        #     minimum overhang for annotated junctions
-        # --outFilterMismatchNmax 999
-        #     maximum number of mismatches per pair, large number switches off this filter
-        # --outFilterMismatchNoverReadLmax 0.04
-        #     max number of mismatches per pair relative to read length: for 2x100b, max number of mis-
-        #    matches is 0.04*200=8 for the paired read
-        # --alignIntronMin 20
-        #    minimum intron length
-        # --alignIntronMax 1000000
-        #    maximum intron length
-        # --alignMatesGapMax 1000000
-        #    maximum genomic distance between mates
-        #
-        # FIXME Consider adding these for splicing analysis:
-        # https://github.com/leipzig/clk/
-        # > '--alignIntronMax' 1000000
-        # > '--alignIntronMin' 25
-        # > '--alignMatesGapMax' 1000000
-        # > '--alignSJDBoverhangMin' 5
-        # > '--alignSJoverhangMin' 8
-        # > '--outFilterMismatchNmax' 999
-        # > '--outFilterType' 'BySJout'
-        #
-        # bcbio settings:
-        # > '--limitOutSJcollapsed' 2000000
-        # > '--outReadsUnmapped' 'Fastx'
-        # > '--outSAMmapqUnique' 60
-        # > '--outSAMunmapped' 'Within'
-        #
-        # Consider setting this for unstranded:
-        #
-        # Need to configure splice junctions better?
-        # > '--sjdbFileChrStartEnd' "${dict['sjdb_file']"
-        #
-        # STAR can now generate splice junction databases on the fly.
-        # this is preferable since we can tailor it to the read lengths.
-        #
         # Here's how to generate splice junction database on the fly:
         # rlength = fastq.estimate_maximum_read_length(fq1)
         # cmd = " --sjdbGTFfile %s " % gtf_file
         # cmd += " --sjdbOverhang %s " % str(rlength - 1)
     )
+    # FIXME Ensure we save our aligner args into a file in the output.
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     if [[ "${bool['tmp_fastq_r1_file']}" -eq 1 ]]
