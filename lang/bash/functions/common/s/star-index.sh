@@ -49,7 +49,7 @@ koopa_star_index() {
     # """
     local -A app bool dict
     local -a index_args
-    app['star']="$(koopa_locate_star)"
+    app['star']="$(koopa_locate_star --realpath)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_genome_fasta_file']=0
     bool['tmp_gtf_file']=0
