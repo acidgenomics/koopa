@@ -1,14 +1,24 @@
 #!/usr/bin/env bash
 
-# FIXME Work on optimizing aligner settings, following bcbio defaults:
-# https://raw.githubusercontent.com/bcbio/bcbio-nextgen/master/bcbio/ngsalign/star.py
-
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
     # @note Updated 2023-10-20.
     #
+    # Potentially useful settings:
+    # * '--outSAMstrandField' 'intronMotif'
+    #   For unstranded RNA-seq data, cufflinks/cuffdiff require spliced
+    #   alignments with XS strand attribute, which STAR will generate with
+    #   '--outSAMstrandField intronMotif' option. As required, the XS strand
+    #     attribute will be generated for all alignments that contain splice
+    #     junctions. The spliced alignments that have undefined strand (i.e.
+    #     containing only non-canonical unannotated junctions) will be
+    #     suppressed.
+    #
     # @seealso
+    # - For on-the-fly splice junction database genration, rather than using
+    #   the fixed read length during genome indexing:
+    #   STAR manual 3.3.1 Using annotations at the mapping stage.
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
     # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
     #     star/align/main.nf
@@ -133,6 +143,7 @@ GB of RAM."
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
         '--outFileNamePrefix' "${dict['output_dir']}/"
+        '--outFilterMultimapNmax' 10
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
         '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
@@ -140,6 +151,33 @@ GB of RAM."
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
         '--twopassMode' 'Basic'
+        #
+        # FIXME Need to add these:
+        # > '--sjdbGTFfile' "${dict['gtf_file']}"
+        # > '--sjdbInsertSave' 'All'
+        # > '--sjdbOverhang' "FIXME READ LENGTH - 1"
+        #
+        # ENCODE options:
+        # --outFilterType BySJout
+        #     reduces the number of ”spurious” junctions
+        # --outFilterMultimapNmax 20
+        #     max number of multiple alignments allowed for a read: if exceeded, the read is considered unmapped
+        # --alignSJoverhangMin 8
+        #     minimum overhang for unannotated junctions
+        # --alignSJDBoverhangMin 1
+        #     minimum overhang for annotated junctions
+        # --outFilterMismatchNmax 999
+        #     maximum number of mismatches per pair, large number switches off this filter
+        # --outFilterMismatchNoverReadLmax 0.04
+        #     max number of mismatches per pair relative to read length: for 2x100b, max number of mis-
+        #    matches is 0.04*200=8 for the paired read
+        # --alignIntronMin 20
+        #    minimum intron length
+        # --alignIntronMax 1000000
+        #    maximum intron length
+        # --alignMatesGapMax 1000000
+        #    maximum genomic distance between mates
+        #
         # FIXME Consider adding these for splicing analysis:
         # https://github.com/leipzig/clk/
         # > '--alignIntronMax' 1000000
@@ -148,19 +186,16 @@ GB of RAM."
         # > '--alignSJDBoverhangMin' 5
         # > '--alignSJoverhangMin' 8
         # > '--outFilterMismatchNmax' 999
-        # NOTE bcbio uses 10 here.
-        # > '--outFilterMultimapNmax' 20
         # > '--outFilterType' 'BySJout'
-        # FIXME To enable this, we need to require the GTF file.
-        # > '--sjdbGTFfile' "${dict['gtf_file']}"
         #
         # bcbio settings:
         # > '--limitOutSJcollapsed' 2000000
         # > '--outReadsUnmapped' 'Fastx'
         # > '--outSAMmapqUnique' 60
         # > '--outSAMunmapped' 'Within'
+        #
         # Consider setting this for unstranded:
-        # > '--outSAMstrandField' 'intronMotif'
+        #
         # Need to configure splice junctions better?
         # > '--sjdbFileChrStartEnd' "${dict['sjdb_file']"
         #
