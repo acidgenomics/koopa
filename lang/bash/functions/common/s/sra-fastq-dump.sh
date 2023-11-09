@@ -3,7 +3,7 @@
 koopa_sra_fastq_dump() {
     # """
     # Dump FASTQ files from SRA file list.
-    # @note Updated 2023-11-07.
+    # @note Updated 2023-11-09.
     #
     # @section fasterq-dump vs. fastq-dump:
     #
@@ -140,11 +140,9 @@ in '${dict['fastq_dir']}'."
             --details \
             --force \
             --outdir "${dict['fastq_dir']}" \
-            --print-read-nr \
             --progress \
             --skip-technical \
             --split-3 \
-            --strict \
             --threads "${dict['threads']}" \
             --verbose \
             "$sra_file"
