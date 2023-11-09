@@ -123,6 +123,13 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['gtf_file']}"
+        # STAR recommends using FASTQ read length - 1 here. We're assuming our
+        # input is 150 by default, which is currently typical of commercial
+        # short-read Illumina sequencing vendors, such as Azenta/Genewiz and
+        # Qiagen. When aligning FASTQ files, STAR now supports on-the-fly
+        # generation of the splice junction database per sample, which makes
+        # handling variable read length possible.
+        '--sjdbOverhang' 149
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
