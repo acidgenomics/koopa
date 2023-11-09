@@ -24917,6 +24917,7 @@ koopa_star_align_paired_end_per_sample() {
     bool['tmp_fastq_r2_file']=0
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
+    dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=60
@@ -24940,6 +24941,14 @@ koopa_star_align_paired_end_per_sample() {
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -24966,6 +24975,7 @@ koopa_star_align_paired_end_per_sample() {
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     if [[ -d "${dict['output_dir']}" ]]
@@ -24975,10 +24985,11 @@ koopa_star_align_paired_end_per_sample() {
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
-GB of RAM."
+        koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
+    koopa_assert_is_file "${dict['gtf_file']}"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
@@ -25007,19 +25018,37 @@ GB of RAM."
             --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
+    dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_r1_file']}")"
+    dict['sjdb_overhang']="$((dict['read_length'] - 1))"
     align_args+=(
+        '--alignIntronMax' 1000000
+        '--alignIntronMin' 20
+        '--alignMatesGapMax' 1000000
+        '--alignSJDBoverhangMin' 1
+        '--alignSJoverhangMin' 8
         '--genomeDir' "${dict['index_dir']}"
         '--limitBAMsortRAM' "${dict['limit_bam_sort_ram']}"
+        '--limitOutSJcollapsed' 2000000
         '--outFileNamePrefix' "${dict['output_dir']}/"
+        '--outFilterMismatchNmax' 999
+        '--outFilterMismatchNoverReadLmax' 0.04
+        '--outFilterMultimapNmax' 20
+        '--outFilterType' 'BySJout'
+        '--outReadsUnmapped' 'Fastx'
         '--outSAMtype' 'BAM' 'SortedByCoordinate'
         '--quantMode' 'TranscriptomeSAM'
         '--readFilesIn' "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
         '--runMode' 'alignReads'
-        '--runRNGseed' '0'
+        '--runRNGseed' 0
         '--runThreadN' "${dict['threads']}"
+        '--sjdbGTFfile' "${dict['gtf_file']}"
+        '--sjdbOverhang' "${dict['sjdb_overhang']}"
         '--twopassMode' 'Basic'
     )
     koopa_dl 'Align args' "${align_args[*]}"
+    koopa_write_string \
+        --file="${dict['output_dir']}/star-align-cmd.log" \
+        --string="${app['star']} ${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     if [[ "${bool['tmp_fastq_r1_file']}" -eq 1 ]]
     then
@@ -25471,6 +25500,7 @@ koopa_star_index() {
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=60
     dict['output_dir']=''
+    dict['sjdb_overhang']=149
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
@@ -25510,8 +25540,7 @@ koopa_star_index() {
         '--output-dir' "${dict['output_dir']}"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'genomeGenerate' mode requires \
-${dict['mem_gb_cutoff']} GB of RAM."
+        koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
@@ -25550,6 +25579,7 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['gtf_file']}"
+        '--sjdbOverhang' "${dict['sjdb_overhang']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
     (
