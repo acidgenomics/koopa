@@ -25614,15 +25614,15 @@ koopa_star_index() {
         '--sjdbOverhang' "${dict['sjdb_overhang']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
-    koopa_write_string \
-        --file="${dict['output_dir']}/star-index-cmd.log" \
-        --string="${app['star']} ${index_args[*]}"
     (
         koopa_cd "$(koopa_dirname "${dict['output_dir']}")"
         koopa_rm "${dict['output_dir']}"
         "${app['star']}" "${index_args[@]}"
         koopa_rm '_STARtmp'
     )
+    koopa_write_string \
+        --file="${dict['output_dir']}/star-index-cmd.log" \
+        --string="${app['star']} ${index_args[*]}"
     if [[ "${bool['tmp_genome_fasta_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['genome_fasta_file']}"
