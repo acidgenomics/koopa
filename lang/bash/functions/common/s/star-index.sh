@@ -127,8 +127,8 @@ koopa_star_index() {
         bool['tmp_gtf_file']=1
         dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
         koopa_decompress \
-            "${dict['gtf_file']}" \
-            "${dict['tmp_gtf_file']}"
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     # Consider erroring instead of merely warning on ALT contig detection,
