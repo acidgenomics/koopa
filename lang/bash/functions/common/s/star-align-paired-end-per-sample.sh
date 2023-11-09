@@ -137,6 +137,18 @@ GB of RAM."
         '--runRNGseed' '0'
         '--runThreadN' "${dict['threads']}"
         '--twopassMode' 'Basic'
+        # FIXME Consider adding these for splicing analysis:
+        # https://github.com/leipzig/clk/
+        # > '--alignIntronMax' 1000000
+        # > '--alignIntronMin' 25
+        # > '--alignMatesGapMax' 1000000
+        # > '--alignSJDBoverhangMin' 5
+        # > '--alignSJoverhangMin' 8
+        # > '--outFilterMismatchNmax' 999
+        # > '--outFilterMultimapNmax' 20
+        # > '--outFilterType' 'BySJout'
+        # FIXME To enable this, we need to require the GTF file.
+        # > '--sjdbGTFfile' "${dict['gtf_file']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
