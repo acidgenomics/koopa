@@ -1473,14 +1473,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-02",
+    "date": "2023-11-09",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.15.2"
+    "version": "0.15.3"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2568,10 +2568,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-10-31",
+    "date": "2023-11-09",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.120.2"
+    "version": "0.120.4"
   },
   "hyperfine": {
     "aliases": {
@@ -5153,11 +5153,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-11-06",
+    "date": "2023-11-09",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.4"
+    "version": "0.1.5"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
