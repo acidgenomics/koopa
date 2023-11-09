@@ -25500,7 +25500,7 @@ koopa_star_index() {
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=60
     dict['output_dir']=''
-    dict['sjdb_overhang']=149
+    dict['read_length']=150
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
@@ -25573,6 +25573,7 @@ koopa_star_index() {
         koopa_warn 'ALT contigs detected in genome FASTA file.'
     fi
     dict['genome_dir_bn']="$(koopa_basename "${dict['output_dir']}")"
+    dict['sjdb_overhang']="$((dict['read_length'] - 1))"
     index_args+=(
         '--genomeDir' "${dict['genome_dir_bn']}"
         '--genomeFastaFiles' "${dict['genome_fasta_file']}"
@@ -25582,6 +25583,9 @@ koopa_star_index() {
         '--sjdbOverhang' "${dict['sjdb_overhang']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
+    koopa_write_string \
+        --file="${dict['output_dir']}/star-index-cmd.log" \
+        --string="${app['star']} ${index_args[*]}"
     (
         koopa_cd "$(koopa_dirname "${dict['output_dir']}")"
         koopa_rm "${dict['output_dir']}"
