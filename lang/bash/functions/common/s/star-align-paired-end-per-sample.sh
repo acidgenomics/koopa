@@ -3,7 +3,7 @@
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-11-09.
     #
     # @section On-the-fly splice junction database generation:
     #
@@ -12,6 +12,9 @@ koopa_star_align_paired_end_per_sample() {
     # samples with variable read lengths. Refer to STAR manual "3.3.1 Using
     # annotations at the mapping stage" and "5.5 Splice junctions" for
     # additional details.
+    #
+    # Ensure genome-level BAM file is indexed for IGV. Can skip indexing of
+    # transcriptome-level 'Aligned.toTranscriptome.out.bam' file.
     #
     # @section ENCODE options (STAR manual 3.3.2):
     #
@@ -72,6 +75,10 @@ koopa_star_align_paired_end_per_sample() {
     #   case of unsorted output, keep it adjacent to its mapped mate (this
     #   only affects multi-mapping reads). uT SAM tag indicates reason for not
     #   mapping.
+    # * --sjdbInsertSave All:
+    #   The on the fly genome indices can be saved for reuse with
+    #   '--sjdbInsertSave All' into 'STARgenome' directory inside the current
+    #   run directory.
     #
     # @seealso
     # - For on-the-fly splice junction database genration, rather than using
@@ -103,11 +110,13 @@ koopa_star_align_paired_end_per_sample() {
     dict['fastq_r1_file']=''
     # e.g. 'sample1_R2_001.fastq.gz'.
     dict['fastq_r2_file']=''
-    # e.g. 'star-index'.
+    # e.g. 'gencode.v39.annotation.gtf.gz'
+    dict['gtf_file']=''
+    # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=60
-    # e.g. 'star/sample1'.
+    # e.g. 'quant/star-gencode/sample1'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     align_args=()
@@ -129,6 +138,14 @@ koopa_star_align_paired_end_per_sample() {
                 ;;
             '--fastq-r2-file')
                 dict['fastq_r2_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
             '--index-dir='*)
@@ -156,6 +173,7 @@ koopa_star_align_paired_end_per_sample() {
     koopa_assert_is_set \
         '--fastq-r1-file' "${dict['fastq_r1_file']}" \
         '--fastq-r2-file' "${dict['fastq_r2_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     if [[ -d "${dict['output_dir']}" ]]
@@ -165,10 +183,11 @@ koopa_star_align_paired_end_per_sample() {
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'alignReads' mode requires ${dict['mem_gb_cutoff']} \
-GB of RAM."
+        koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
+    koopa_assert_is_file "${dict['gtf_file']}"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
@@ -197,6 +216,8 @@ GB of RAM."
             --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
+    # FIXME Detect the read length of FASTQ R1 here.
+    # FIXME Then subtract 1 and set that as sjdbOverhang value.
     align_args+=(
         '--alignIntronMax' 1000000
         '--alignIntronMin' 20
@@ -218,15 +239,9 @@ GB of RAM."
         '--runMode' 'alignReads'
         '--runRNGseed' 0
         '--runThreadN' "${dict['threads']}"
+        '--sjdbGTFfile' "${dict['gtf_file']}"
+        '--sjdbOverhang' "${dict['sjdb_overhang']}"
         '--twopassMode' 'Basic'
-        # FIXME Need to add these:
-        # > '--sjdbGTFfile' "${dict['gtf_file']}"
-        # > '--sjdbInsertSave' 'All'
-        # > '--sjdbOverhang' "FIXME READ LENGTH - 1"
-        # Here's how to generate splice junction database on the fly:
-        # rlength = fastq.estimate_maximum_read_length(fq1)
-        # cmd = " --sjdbGTFfile %s " % gtf_file
-        # cmd += " --sjdbOverhang %s " % str(rlength - 1)
     )
     # FIXME Ensure we save our aligner args into a file in the output.
     koopa_dl 'Align args' "${align_args[*]}"
@@ -240,8 +255,6 @@ GB of RAM."
         koopa_rm "${dict['fastq_r2_file']}"
     fi
     koopa_rm "${dict['output_dir']}/_STAR"*
-    # Ensure genome-level BAM file is indexed for IGV. Can skip indexing of
-    # transcriptome-level 'Aligned.toTranscriptome.out.bam' file.
     dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
     koopa_assert_is_file "${dict['bam_file']}"
     koopa_alert "Indexing BAM file '${dict['bam_file']}'."

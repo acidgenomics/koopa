@@ -81,8 +81,7 @@ koopa_star_index() {
         '--output-dir' "${dict['output_dir']}"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'genomeGenerate' mode requires \
-${dict['mem_gb_cutoff']} GB of RAM."
+        koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
