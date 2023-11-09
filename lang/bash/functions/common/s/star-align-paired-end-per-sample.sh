@@ -53,6 +53,8 @@ koopa_star_align_paired_end_per_sample() {
     #
     # * --limitOutSJcollapsed 2000000:
     #   Used by bcbio. Default is 1000000.
+    # * --outSAMattributes NH HI AS NM MD:
+    #   Used by nf-core rnaseq.
     # * --outSAMmapqUnique 60:
     #   Used by bcbio. The mapping quality MAPQ (column 5) is 255 for uniquely
     #   mapping reads, and 'int(-10*log10(1-1/Nmap))' for multi-mapping reads.
@@ -61,13 +63,13 @@ koopa_star_align_paired_end_per_sample() {
     #   with '--outSAMmapqUnique' parameter (integer 0 to 255) to ensure
     #   compatibility with downstream tools such as GATK.
     # * --outSAMstrandField intronMotif:
-    #   For unstranded RNA-seq data, Cufflinks/Cuffdiff require spliced
-    #   alignments with XS strand attribute, which STAR will generate with
-    #   '--outSAMstrandField intronMotif' option. As required, the XS strand
-    #   attribute will be generated for all alignments that contain splice
-    #   junctions. The spliced alignments that have undefined strand (i.e.
-    #   containing only non-canonical unannotated junctions) will be
-    #   suppressed.
+    #   Used by bcbio and nf-core rnaseq. For unstranded RNA-seq data,
+    #   Cufflinks/Cuffdiff require spliced alignments with XS strand attribute,
+    #   which STAR will generate with '--outSAMstrandField intronMotif' option.
+    #   As required, the XS strand attribute will be generated for all
+    #   alignments that contain splice junctions. The spliced alignments that
+    #   have undefined strand (i.e. containing only non-canonical unannotated
+    #   junctions) will be suppressed.
     # * --outSAMunmapped Within:
     #   Unmapped reads can be output into the SAM/BAM 'Aligned.*' file(s) with
     #   '--outSAMunmapped Within' option. '--outSAMunmapped Within KeepPairs'
@@ -75,6 +77,8 @@ koopa_star_align_paired_end_per_sample() {
     #   case of unsorted output, keep it adjacent to its mapped mate (this
     #   only affects multi-mapping reads). uT SAM tag indicates reason for not
     #   mapping.
+    # * --quantTranscriptomeBan Singleend:
+    #   Used by nf-core rnaseq.
     # * --sjdbInsertSave All:
     #   The on the fly genome indices can be saved for reuse with
     #   '--sjdbInsertSave All' into 'STARgenome' directory inside the current
@@ -86,6 +90,8 @@ koopa_star_align_paired_end_per_sample() {
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
     # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
     #     star/align/main.nf
+    # - STAR salmon alignment options:
+    #   https://github.com/nf-core/rnaseq/blob/master/conf/modules.config
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/ngsalign/
     #     star.py
     # - https://www.biostars.org/p/243683/
