@@ -222,8 +222,8 @@ koopa_star_align_paired_end_per_sample() {
             --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
     fi
-    # FIXME Detect the read length of FASTQ R1 here.
-    # FIXME Then subtract 1 and set that as sjdbOverhang value.
+    dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_r1_file']}")"
+    dict['sjdb_overhang']="$((dict['read_length'] - 1))"
     align_args+=(
         '--alignIntronMax' 1000000
         '--alignIntronMin' 20
@@ -249,8 +249,10 @@ koopa_star_align_paired_end_per_sample() {
         '--sjdbOverhang' "${dict['sjdb_overhang']}"
         '--twopassMode' 'Basic'
     )
-    # FIXME Ensure we save our aligner args into a file in the output.
     koopa_dl 'Align args' "${align_args[*]}"
+    koopa_write_string \
+        --file="${dict['output_dir']}/star-align-cmd.log" \
+        --string="${app['star']} ${align_args[*]}"
     "${app['star']}" "${align_args[@]}"
     if [[ "${bool['tmp_fastq_r1_file']}" -eq 1 ]]
     then
