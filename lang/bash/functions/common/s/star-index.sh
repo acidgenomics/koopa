@@ -1,21 +1,42 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for pushing tarball to S3.
+# TODO Add support for automatic compression.
+# TODO Add support for pushing tarball to AWS S3.
 
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-11-09.
     #
     # Doesn't currently support compressed files as input.
-    # Refer to '--limitGenomeGenerateRAM' for memory optimization.
     # Recommend using 'r6a.2xlarge' on AWS EC2.
     #
+    # @section Splice junction database:
+    #
+    # * '--sjdbOverhang' 149:
+    #   STAR recommends using FASTQ read length - 1 here. We're assuming our
+    #   input is 150 by default, which is currently typical of commercial
+    #   short-read Illumina sequencing vendors, such as Azenta/Genewiz and
+    #   Qiagen. When aligning FASTQ files, STAR now supports on-the-fly
+    #   generation of the splice junction database per sample, which makes
+    #   handling variable read length possible.
+    #
+    # @section Other potentially useful settings:
+    #
+    # * --genomeSAindexNbases INT:
+    #   For small genomes, the parameter '--genomeSAindexNbases' must to be
+    #   scaled down, with a typical value of min(14, log2(GenomeLength)/2 - 1).
+    #   For example, for 1 megaBase genome, this is equal to 9, for 100 kiloBase
+    #   genome, this is equal to 7. Refer to "2.2.5 Very small genome" for
+    #   details. The nf-core rnaseq pipeline does this, and uses samtools faidx
+    #   along with gawk to perform the calculation.
+    # * Refer to '--limitGenomeGenerateRAM' for memory optimization.
+    #
     # @seealso
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #     ngsalign/star.py
     # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
     #     star_genomegenerate.nf
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
+    #     ngsalign/star.py
     # - Regarding optimal '--sjdbOverhang' setting:
     #   https://www.biostars.org/p/390314/
     #   https://www.biostars.org/p/93883/
@@ -28,7 +49,7 @@ koopa_star_index() {
     # """
     local -A app bool dict
     local -a index_args
-    app['star']="$(koopa_locate_star)"
+    app['star']="$(koopa_locate_star --realpath)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_genome_fasta_file']=0
     bool['tmp_gtf_file']=0
@@ -40,6 +61,7 @@ koopa_star_index() {
     dict['mem_gb_cutoff']=60
     # e.g. 'star-index'.
     dict['output_dir']=''
+    dict['read_length']=150
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
     do
@@ -81,8 +103,7 @@ koopa_star_index() {
         '--output-dir' "${dict['output_dir']}"
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
-        koopa_stop "STAR 'genomeGenerate' mode requires \
-${dict['mem_gb_cutoff']} GB of RAM."
+        koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     koopa_assert_is_file \
         "${dict['genome_fasta_file']}" \
@@ -117,14 +138,19 @@ ${dict['mem_gb_cutoff']} GB of RAM."
         koopa_warn 'ALT contigs detected in genome FASTA file.'
     fi
     dict['genome_dir_bn']="$(koopa_basename "${dict['output_dir']}")"
+    dict['sjdb_overhang']="$((dict['read_length'] - 1))"
     index_args+=(
         '--genomeDir' "${dict['genome_dir_bn']}"
         '--genomeFastaFiles' "${dict['genome_fasta_file']}"
         '--runMode' 'genomeGenerate'
         '--runThreadN' "${dict['threads']}"
         '--sjdbGTFfile' "${dict['gtf_file']}"
+        '--sjdbOverhang' "${dict['sjdb_overhang']}"
     )
     koopa_dl 'Index args' "${index_args[*]}"
+    koopa_write_string \
+        --file="${dict['output_dir']}/star-index-cmd.log" \
+        --string="${app['star']} ${index_args[*]}"
     (
         koopa_cd "$(koopa_dirname "${dict['output_dir']}")"
         koopa_rm "${dict['output_dir']}"
