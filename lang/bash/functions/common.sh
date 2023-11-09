@@ -18762,9 +18762,8 @@ koopa_locate_openssl() {
 
 koopa_locate_parallel() {
     koopa_locate_app \
-        --app-name='coreutils' \
-        --bin-name='gparallel' \
-        --system-bin-name='parallel' \
+        --app-name='parallel' \
+        --bin-name='parallel' \
         "$@"
 }
 
@@ -24731,11 +24730,9 @@ in '${dict['fastq_dir']}'."
             --details \
             --force \
             --outdir "${dict['fastq_dir']}" \
-            --print-read-nr \
             --progress \
             --skip-technical \
             --split-3 \
-            --strict \
             --threads "${dict['threads']}" \
             --verbose \
             "$sra_file"
