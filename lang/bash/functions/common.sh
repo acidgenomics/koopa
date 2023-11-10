@@ -24912,12 +24912,13 @@ koopa_star_align_paired_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_r1_file']=0
     bool['tmp_fastq_r2_file']=0
+    bool['tmp_gtf_file']=0
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=30
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     align_args=()
@@ -24985,11 +24986,13 @@ koopa_star_align_paired_end_per_sample() {
         koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
-    koopa_assert_is_file "${dict['gtf_file']}"
-    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_dir "${dict['index_dir']}"
+    koopa_assert_is_file \
+        "${dict['fastq_r1_file']}" \
+        "${dict['fastq_r2_file']}" \
+        "${dict['gtf_file']}"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
@@ -25014,6 +25017,15 @@ koopa_star_align_paired_end_per_sample() {
             --input-file="${dict['fastq_r2_file']}" \
             --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_r1_file']}")"
     dict['sjdb_overhang']="$((dict['read_length'] - 1))"
@@ -25055,6 +25067,10 @@ koopa_star_align_paired_end_per_sample() {
     then
         koopa_rm "${dict['fastq_r2_file']}"
     fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_rm "${dict['output_dir']}/_STAR"*
     dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
     koopa_assert_is_file "${dict['bam_file']}"
@@ -25069,11 +25085,13 @@ koopa_star_align_paired_end() {
     local fastq_r1_file
     koopa_assert_has_args "$#"
     bool['aws_s3_output_dir']=0
+    bool['tmp_gtf_file']=0
     bool['tmp_output_dir']=0
     dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_r1_tail']=''
     dict['fastq_r2_tail']=''
+    dict['gtf_file']=''
     dict['index_dir']=''
     dict['output_dir']=''
     while (("$#"))
@@ -25111,6 +25129,14 @@ koopa_star_align_paired_end() {
                 dict['fastq_r2_tail']="${2:?}"
                 shift 2
                 ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict['index_dir']="${1#*=}"
                 shift 1
@@ -25136,10 +25162,13 @@ koopa_star_align_paired_end() {
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-r1-tail' "${dict['fastq_r1_tail']}" \
         '--fastq-r2-tail' "${dict['fastq_r1_tail']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
+    koopa_assert_is_file "${dict['gtf_file']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
@@ -25160,6 +25189,7 @@ koopa_star_align_paired_end() {
     koopa_dl \
         'Mode' 'paired-end' \
         'Index dir' "${dict['index_dir']}" \
+        'GTF file' "${dict['gtf_file']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ R1 tail' "${dict['fastq_r1_tail']}" \
         'FASTQ R2 tail' "${dict['fastq_r2_tail']}" \
@@ -25187,6 +25217,15 @@ koopa_star_align_paired_end() {
         --msg2='samples' \
         --suffix=' detected.' \
     )"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
+    fi
     for fastq_r1_file in "${fastq_r1_files[@]}"
     do
         local -A dict2
@@ -25209,6 +25248,7 @@ koopa_star_align_paired_end() {
         koopa_star_align_paired_end_per_sample \
             --fastq-r1-file="${dict2['fastq_r1_file']}" \
             --fastq-r2-file="${dict2['fastq_r2_file']}" \
+            --gtf-file="${dict['gtf_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
@@ -25225,6 +25265,10 @@ ${dict2['sample_id']}"
             koopa_mkdir "${dict2['output_dir']}"
         fi
     done
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
     then
         koopa_rm "${dict['output_dir']}"
@@ -25240,11 +25284,12 @@ koopa_star_align_single_end_per_sample() {
     app['star']="$(koopa_locate_star --realpath)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_file']=0
+    bool['tmp_gtf_file']=0
     dict['fastq_file']=''
     dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=30
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
@@ -25303,11 +25348,10 @@ koopa_star_align_single_end_per_sample() {
 GB of RAM."
     fi
     dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
-    koopa_assert_is_file "${dict['gtf_file']}"
-    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_dir "${dict['index_dir']}"
+    koopa_assert_is_file "${dict['fastq_file']}" "${dict['gtf_file']}"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    koopa_assert_is_file "${dict['fastq_file']}"
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
@@ -25320,6 +25364,15 @@ GB of RAM."
             --input-file="${dict['fastq_file']}" \
             --output-file="${dict['tmp_fastq_file']}"
         dict['fastq_file']="${dict['tmp_fastq_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_file']}")"
     dict['sjdb_overhang']="$((dict['read_length'] - 1))"
@@ -25357,6 +25410,10 @@ GB of RAM."
     then
         koopa_rm "${dict['fastq_file']}"
     fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     koopa_rm "${dict['output_dir']}/_STAR"*
     dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
     koopa_assert_is_file "${dict['bam_file']}"
@@ -25375,6 +25432,7 @@ koopa_star_align_single_end() {
     dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['fastq_dir']=''
     dict['fastq_tail']=''
+    dict['gtf_file']=''
     dict['index_dir']=''
     dict['output_dir']=''
     while (("$#"))
@@ -25404,6 +25462,14 @@ koopa_star_align_single_end() {
                 dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict['index_dir']="${1#*=}"
                 shift 1
@@ -25428,10 +25494,13 @@ koopa_star_align_single_end() {
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-tail' "${dict['fastq_tail']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
+    koopa_assert_is_file "${dict['gtf_file']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
@@ -25452,6 +25521,7 @@ koopa_star_align_single_end() {
     koopa_dl \
         'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
+        'GTF file' "${dict['gtf_file']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
@@ -25478,6 +25548,15 @@ koopa_star_align_single_end() {
         --msg2='samples' \
         --suffix=' detected.' \
     )"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
+    fi
     for fastq_file in "${fastq_files[@]}"
     do
         local -A dict2
@@ -25492,6 +25571,7 @@ koopa_star_align_single_end() {
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
             --fastq-file="${dict2['fastq_file']}" \
+            --gtf-file="${dict['gtf_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
@@ -25508,6 +25588,10 @@ ${dict2['sample_id']}"
             koopa_mkdir "${dict2['output_dir']}"
         fi
     done
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
     then
         koopa_rm "${dict['output_dir']}"
