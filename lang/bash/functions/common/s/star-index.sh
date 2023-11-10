@@ -18,7 +18,8 @@ koopa_star_index() {
     #   short-read Illumina sequencing vendors, such as Azenta/Genewiz and
     #   Qiagen. When aligning FASTQ files, STAR now supports on-the-fly
     #   generation of the splice junction database per sample, which makes
-    #   handling variable read length possible.
+    #   handling variable read length possible. The GDC analysis pipeline
+    #   currently uses 100 for the index.
     #
     # @section Other potentially useful settings:
     #
@@ -32,6 +33,9 @@ koopa_star_index() {
     # * Refer to '--limitGenomeGenerateRAM' for memory optimization.
     #
     # @seealso
+    # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+    # - https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
+    #     Expression_mRNA_Pipeline/
     # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
     #     star_genomegenerate.nf
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
