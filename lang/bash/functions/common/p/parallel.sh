@@ -11,10 +11,17 @@ koopa_parallel() {
     # - https://www.gnu.org/software/parallel/
     # - https://stackoverflow.com/questions/14428609/
     # - https://stackoverflow.com/questions/6255286/
+    # - https://stackoverflow.com/questions/23577047/
     #
     # @examples
-    # # FIXME Need to add a good working example here with multiple arguments
-    # # per line.
+    # > arg_file="$(koopa_tmp_file)"
+    # > printf '%s\n' 'aaa bbb' 'ccc ddd' 'eee fff' > "$arg_file"
+    # > command="printf '[%s] [%s]\n' {}"
+    # > koopa_parallel --arg-file="$arg_file" --command="$command"
+    # # [aaa] [bbb]
+    # # [ccc] [ddd]
+    # # [eee] [fff]
+    # > koopa_rm "$arg_file"
     # """
     local -A app dict
     local -a parallel_args
@@ -70,8 +77,10 @@ koopa_parallel() {
     parallel_args+=(
         '--arg-file' "${dict['arg_file']}"
         '--bar'
+        '--colsep' ' '
         '--eta'
         '--jobs' "${dict['jobs']}"
+        '--keep-order'
         '--progress'
         '--will-cite'
         "${dict['command']}"

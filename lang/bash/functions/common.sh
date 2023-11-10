@@ -20106,8 +20106,10 @@ koopa_parallel() {
     parallel_args+=(
         '--arg-file' "${dict['arg_file']}"
         '--bar'
+        '--colsep' ' '
         '--eta'
         '--jobs' "${dict['jobs']}"
+        '--keep-order'
         '--progress'
         '--will-cite'
         "${dict['command']}"
