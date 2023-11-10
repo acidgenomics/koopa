@@ -5,9 +5,8 @@ koopa_star_align_single_end_per_sample() {
     # Run STAR aligner on a single-end sample.
     # @note Updated 2023-11-10.
     #
-    # @seealso
-    # - https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
-    #     Expression_mRNA_Pipeline/
+    # These settings are optimized for Homo sapiens GRCh38 reference genome.
+    # Recommend using at least r6a.2xlarge AWS EC2 instance.
     #
     # @examples
     # > koopa_star_align_single_end_per_sample \
@@ -29,7 +28,7 @@ koopa_star_align_single_end_per_sample() {
     # e.g. 'star-index'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=40
     # e.g. 'star'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
