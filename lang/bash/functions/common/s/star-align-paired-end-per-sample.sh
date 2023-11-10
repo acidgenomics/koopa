@@ -122,7 +122,7 @@ koopa_star_align_paired_end_per_sample() {
     # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=30
+    dict['mem_gb_cutoff']=60
     # e.g. 'quant/star-gencode/sample1'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
@@ -234,7 +234,9 @@ koopa_star_align_paired_end_per_sample() {
             --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
+    koopa_alert "Detecting read length in '${dict['fastq_r1_file']}'."
     dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_r1_file']}")"
+    koopa_dl 'Read length' "${dict['read_length']}"
     dict['sjdb_overhang']="$((dict['read_length'] - 1))"
     align_args+=(
         '--alignIntronMax' 1000000
