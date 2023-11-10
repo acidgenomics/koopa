@@ -3,7 +3,7 @@
 koopa_star_align_single_end_per_sample() {
     # """
     # Run STAR aligner on a single-end sample.
-    # @note Updated 2023-11-09.
+    # @note Updated 2023-11-10.
     #
     # @seealso
     # - https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
@@ -21,6 +21,7 @@ koopa_star_align_single_end_per_sample() {
     app['star']="$(koopa_locate_star --realpath)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_file']=0
+    bool['tmp_gtf_file']=0
     # e.g. 'fastq'.
     dict['fastq_file']=''
     # e.g. 'gencode.v39.annotation.gtf.gz'
@@ -28,7 +29,7 @@ koopa_star_align_single_end_per_sample() {
     # e.g. 'star-index'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=30
     # e.g. 'star'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
@@ -90,11 +91,10 @@ koopa_star_align_single_end_per_sample() {
 GB of RAM."
     fi
     dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
-    koopa_assert_is_file "${dict['gtf_file']}"
-    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_dir "${dict['index_dir']}"
+    koopa_assert_is_file "${dict['fastq_file']}" "${dict['gtf_file']}"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    koopa_assert_is_file "${dict['fastq_file']}"
     dict['fastq_file']="$(koopa_realpath "${dict['fastq_file']}")"
     dict['fastq_bn']="$(koopa_basename "${dict['fastq_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
@@ -107,6 +107,15 @@ GB of RAM."
             --input-file="${dict['fastq_file']}" \
             --output-file="${dict['tmp_fastq_file']}"
         dict['fastq_file']="${dict['tmp_fastq_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_file']}")"
     dict['sjdb_overhang']="$((dict['read_length'] - 1))"
@@ -143,6 +152,10 @@ GB of RAM."
     if [[ "${bool['tmp_fastq_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['fastq_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
     fi
     koopa_rm "${dict['output_dir']}/_STAR"*
     dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"

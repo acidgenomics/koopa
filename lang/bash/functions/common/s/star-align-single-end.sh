@@ -6,7 +6,7 @@
 koopa_star_align_single_end() {
     # """
     # Run STAR aligner on multiple single-end FASTQs in a directory.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-11-10.
     #
     # @examples
     # > koopa_star_align_single_end \
@@ -26,6 +26,8 @@ koopa_star_align_single_end() {
     dict['fastq_dir']=''
     # e.g. '_001.fastq.gz'.
     dict['fastq_tail']=''
+    # e.g. 'gencode.v39.annotation.gtf.gz'
+    dict['gtf_file']=''
     # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
     # e.g. 'quant/star-gencode',
@@ -59,6 +61,14 @@ koopa_star_align_single_end() {
                 dict['fastq_tail']="${2:?}"
                 shift 2
                 ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
             '--index-dir='*)
                 dict['index_dir']="${1#*=}"
                 shift 1
@@ -84,10 +94,13 @@ koopa_star_align_single_end() {
     koopa_assert_is_set \
         '--fastq-dir' "${dict['fastq_dir']}" \
         '--fastq-tail' "${dict['fastq_tail']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_dir "${dict['fastq_dir']}" "${dict['index_dir']}"
+    koopa_assert_is_file "${dict['gtf_file']}"
     dict['fastq_dir']="$(koopa_realpath "${dict['fastq_dir']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     if koopa_is_aws_s3_uri "${dict['output_dir']}"
     then
@@ -108,6 +121,7 @@ koopa_star_align_single_end() {
     koopa_dl \
         'Mode' 'single-end' \
         'Index dir' "${dict['index_dir']}" \
+        'GTF file' "${dict['gtf_file']}" \
         'FASTQ dir' "${dict['fastq_dir']}" \
         'FASTQ tail' "${dict['fastq_tail']}" \
         'Output dir' "${dict['output_dir']}"
@@ -134,6 +148,15 @@ koopa_star_align_single_end() {
         --msg2='samples' \
         --suffix=' detected.' \
     )"
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
+    fi
     for fastq_file in "${fastq_files[@]}"
     do
         local -A dict2
@@ -148,6 +171,7 @@ koopa_star_align_single_end() {
         dict2['output_dir']="${dict['output_dir']}/${dict2['sample_id']}"
         koopa_star_align_single_end_per_sample \
             --fastq-file="${dict2['fastq_file']}" \
+            --gtf-file="${dict['gtf_file']}" \
             --index-dir="${dict['index_dir']}" \
             --output-dir="${dict2['output_dir']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
@@ -164,6 +188,10 @@ ${dict2['sample_id']}"
             koopa_mkdir "${dict2['output_dir']}"
         fi
     done
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
     if [[ "${bool['tmp_output_dir']}" -eq 1 ]]
     then
         koopa_rm "${dict['output_dir']}"
