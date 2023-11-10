@@ -5397,18 +5397,22 @@ koopa_compress() {
     [[ "${bool['verbose']}" -eq 1 ]] && cmd_args+=('-v')
     for source_file in "$@"
     do
-        local target_file
-        source_file="$(koopa_realpath "$source_file")"
-        target_file="${source_file}.${dict['ext']}"
-        koopa_assert_is_not_file "$target_file"
-        koopa_alert "Compressing '${source_file}' to '${target_file}'."
-        "${app['cmd']}" "${cmd_args[@]}" "$source_file"
-        koopa_assert_is_file "$target_file"
+        local -A dict2
+        dict2['source_file']="$source_file"
+        dict2['source_file']="$(koopa_realpath "${dict2['source_file']}")"
+        dict2['target_file']="${dict2['source_file']}.${dict['ext']}"
+        koopa_assert_is_not_file "${dict2['target_file']}"
+        koopa_alert "Compressing '${dict2['source_file']}' \
+to '${dict2['target_file']}'."
+        "${app['cmd']}" "${cmd_args[@]}" "${dict2['source_file']}"
+        koopa_assert_is_file \
+            "${dict2['source_file']}" \
+            "${dict2['target_file']}"
+        if [[ "${bool['keep']}" -eq 0 ]]
+        then
+            koopa_rm "${dict2['target_file']}"
+        fi
     done
-    if [[ "${bool['keep']}" -eq 0 ]]
-    then
-        koopa_rm "$@"
-    fi
     return 0
 }
 
@@ -20049,6 +20053,71 @@ koopa_pager() {
     return 0
 }
 
+koopa_parallel() {
+    local -A app dict
+    local -a parallel_args
+    koopa_assert_has_args "$#"
+    app['parallel']="$(koopa_locate_parallel --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arg_file']=''
+    dict['command']=''
+    dict['jobs']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--arg-file='*)
+                dict['arg_file']="${1#*=}"
+                shift 1
+                ;;
+            '--arg-file')
+                dict['arg_file']="${2:?}"
+                shift 2
+                ;;
+            '--command='*)
+                dict['command']="${1#*=}"
+                shift 1
+                ;;
+            '--command')
+                dict['command']="${2:?}"
+                shift 2
+                ;;
+            '--jobs='*)
+                dict['jobs']="${1#*=}"
+                shift 1
+                ;;
+            '--jobs')
+                dict['jobs']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--arg-file' "${dict['arg_file']}" \
+        '--command' "${dict['command']}" \
+        '--jobs' "${dict['jobs']}"
+    koopa_assert_is_matching_fixed \
+        --pattern='{}' \
+        --string="${dict['command']}"
+    koopa_assert_is_file "${dict['arg_file']}"
+    dict['arg_file']="$(koopa_realpath "${dict['arg_file']}")"
+    parallel_args+=(
+        '--arg-file' "${dict['arg_file']}"
+        '--bar'
+        '--colsep' ' '
+        '--eta'
+        '--jobs' "${dict['jobs']}"
+        '--keep-order'
+        '--progress'
+        '--will-cite'
+        "${dict['command']}"
+    )
+    "${app['parallel']}" "${parallel_args[@]}"
+    return 0
+}
+
 koopa_parent_dir() {
     local -A app dict
     local -a pos
@@ -24715,17 +24784,19 @@ in '${dict['fastq_dir']}'."
     koopa_assert_is_array_non_empty "${sra_files[@]:-}"
     for sra_file in "${sra_files[@]}"
     do
-        local id
-        id="$(koopa_basename_sans_ext "$sra_file")"
-        if [[ -f "${dict['fastq_dir']}/${id}.fastq" ]] || \
-            [[ -f "${dict['fastq_dir']}/${id}_1.fastq" ]] || \
-            [[ -f "${dict['fastq_dir']}/${id}.fastq.gz" ]] || \
-            [[ -f "${dict['fastq_dir']}/${id}_1.fastq.gz" ]]
+        local -A dict2
+        dict2['sra_file']="$sra_file"
+        dict2['id']="$(koopa_basename_sans_ext "${dict2['sra_file']}")"
+        if [[ -f "${dict['fastq_dir']}/${dict2['id']}.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${dict['id']}_1.fastq" ]] || \
+            [[ -f "${dict['fastq_dir']}/${dict2['id']}.fastq.gz" ]] || \
+            [[ -f "${dict['fastq_dir']}/${dict2['id']}_1.fastq.gz" ]]
         then
-            koopa_alert_info "Skipping '${sra_file}'."
+            koopa_alert_info "Skipping '${dict2['sra_file']}'."
             continue
         fi
-        koopa_alert "Dumping FASTQ in '${sra_file}'."
+        koopa_alert "Dumping '${dict2['sra_file']}' FASTQ \
+into '${dict['fastq_dir']}'."
         "${app['fasterq_dump']}" \
             --details \
             --force \
@@ -24735,23 +24806,25 @@ in '${dict['fastq_dir']}'."
             --split-3 \
             --threads "${dict['threads']}" \
             --verbose \
-            "$sra_file"
+            "${dict2['sra_file']}"
+        if [[ "${bool['compress']}" -eq 1 ]]
+        then
+            koopa_alert "Compressing '${dict['id']}' FASTQ \
+in '${dict['fastq_dir']}'."
+            readarray -t fastq_files <<< "$( \
+                koopa_find \
+                    --max-depth=1 \
+                    --min-depth=1 \
+                    --pattern="${dict2['id']}*.fastq" \
+                    --prefix="${dict['fastq_dir']}" \
+                    --sort \
+                    --type='f' \
+            )"
+            koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
+            koopa_compress --format='gzip' --remove "${fastq_files[@]}"
+            koopa_assert_is_not_file "${fastq_files[@]}"
+        fi
     done
-    if [[ "${bool['compress']}" -eq 1 ]]
-    then
-        koopa_alert "Compressing FASTQ files in '${dict['fastq_dir']}'."
-        readarray -t fastq_files <<< "$( \
-            koopa_find \
-                --max-depth=1 \
-                --min-depth=1 \
-                --pattern='*.fastq' \
-                --prefix="${dict['fastq_dir']}" \
-                --sort \
-                --type='f' \
-        )"
-        koopa_assert_is_array_non_empty "${fastq_files[@]:-}"
-        koopa_compress --format='gzip' --remove "${fastq_files[@]}"
-    fi
     return 0
 }
 
@@ -24763,7 +24836,6 @@ koopa_sra_prefetch_from_aws() {
 koopa_sra_prefetch() {
     local -A app dict
     local -a parallel_cmd
-    app['parallel']="$(koopa_locate_parallel --allow-system)"
     app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
@@ -24815,14 +24887,10 @@ to '${dict['output_dir']}'."
         '--verify' 'yes'
         '{}'
     )
-    "${app['parallel']}" \
-        --arg-file "${dict['acc_file']}" \
-        --bar \
-        --eta \
-        --jobs "${dict['jobs']}" \
-        --progress \
-        --will-cite \
-        "${parallel_cmd[*]}"
+    koopa_parallel \
+        --arg-file="${dict['acc_file']}" \
+        --command="${parallel_cmd[*]}" \
+        --jobs="${dict['jobs']}"
     return 0
 }
 
@@ -24918,7 +24986,7 @@ koopa_star_align_paired_end_per_sample() {
     dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=40
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     align_args=()
@@ -25291,7 +25359,7 @@ koopa_star_align_single_end_per_sample() {
     dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=40
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))
@@ -25614,7 +25682,7 @@ koopa_star_index() {
     dict['genome_fasta_file']=''
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=40
     dict['output_dir']=''
     dict['read_length']=150
     dict['threads']="$(koopa_cpu_count)"
