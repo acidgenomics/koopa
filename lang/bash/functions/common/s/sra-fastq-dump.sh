@@ -47,6 +47,8 @@ koopa_sra_fastq_dump() {
     #   '*.fastq' file. All other reads in the spot are ignored.
     #
     # @seealso
+    # - https://github.com/ncbi/sra-tools/wiki/HowTo:-fasterq-dump
+    # - https://github.com/ncbi/sra-tools/wiki/08.-prefetch-and-fasterq-dump
     # - https://rnnh.github.io/bioinfo-notebook/docs/fasterq-dump.html
     # - https://edwards.sdsu.edu/research/the-perils-of-fasterq-dump/
     # - https://www.reneshbedre.com/blog/ncbi_sra_toolkit.html
