@@ -3,7 +3,7 @@
 koopa_sra_prefetch() {
     # """
     # Prefetch files from SRA.
-    # @note Updated 2023-11-08.
+    # @note Updated 2023-11-10.
     #
     # Alternatively, can sync directly from AWS with:
     # > aws s3 sync s3://sra-pub-run-odp/sra/<SRR_ID>/ ./<SRR_ID>/
@@ -23,7 +23,6 @@ koopa_sra_prefetch() {
     # """
     local -A app dict
     local -a parallel_cmd
-    app['parallel']="$(koopa_locate_parallel --allow-system)"
     app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     # e.g. 'SRR_Acc_List.txt'.
@@ -80,15 +79,9 @@ to '${dict['output_dir']}'."
         '--verify' 'yes'
         '{}'
     )
-    # FIXME Let's wrap this as 'koopa_parallel', which should only accept
-    # '--arg-file' and '--command' arguments.
-    "${app['parallel']}" \
-        --arg-file "${dict['acc_file']}" \
-        --bar \
-        --eta \
-        --jobs "${dict['jobs']}" \
-        --progress \
-        --will-cite \
-        "${parallel_cmd[*]}"
+    koopa_parallel \
+        --arg-file="${dict['acc_file']}" \
+        --command="${parallel_cmd[*]}" \
+        --jobs="${dict['jobs']}"
     return 0
 }
