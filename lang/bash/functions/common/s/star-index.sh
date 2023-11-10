@@ -6,10 +6,9 @@
 koopa_star_index() {
     # """
     # Create a genome index for STAR aligner.
-    # @note Updated 2023-11-09.
+    # @note Updated 2023-11-10.
     #
-    # Doesn't currently support compressed files as input.
-    # Recommend using 'r6a.2xlarge' on AWS EC2.
+    # Recommend using at least r6a.2xlarge AWS EC2 instance.
     #
     # @section Splice junction database:
     #
@@ -19,7 +18,8 @@ koopa_star_index() {
     #   short-read Illumina sequencing vendors, such as Azenta/Genewiz and
     #   Qiagen. When aligning FASTQ files, STAR now supports on-the-fly
     #   generation of the splice junction database per sample, which makes
-    #   handling variable read length possible.
+    #   handling variable read length possible. The GDC analysis pipeline
+    #   currently uses 100 for the index.
     #
     # @section Other potentially useful settings:
     #
@@ -33,6 +33,9 @@ koopa_star_index() {
     # * Refer to '--limitGenomeGenerateRAM' for memory optimization.
     #
     # @seealso
+    # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+    # - https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
+    #     Expression_mRNA_Pipeline/
     # - https://github.com/nf-core/rnaseq/blob/master/modules/local/
     #     star_genomegenerate.nf
     # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
@@ -58,7 +61,7 @@ koopa_star_index() {
     # e.g. 'gencode.v39.annotation.gtf.gz'
     dict['gtf_file']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=40
     # e.g. 'star-index'.
     dict['output_dir']=''
     dict['read_length']=150

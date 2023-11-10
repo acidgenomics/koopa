@@ -5,6 +5,9 @@ koopa_star_align_paired_end_per_sample() {
     # Run STAR aligner on a paired-end sample.
     # @note Updated 2023-11-10.
     #
+    # These settings are optimized for Homo sapiens GRCh38 reference genome.
+    # Recommend using at least r6a.2xlarge AWS EC2 instance.
+    #
     # @section On-the-fly splice junction database generation:
     #
     # STAR can now generate a splice junction database per sample on the fly.
@@ -18,27 +21,44 @@ koopa_star_align_paired_end_per_sample() {
     #
     # @section ENCODE options (STAR manual 3.3.2):
     #
-    # * --outFilterType BySJout:
+    # * '--outFilterType' 'BySJout':
     #   Reduces the number of spurious junctions.
-    # * --outFilterMultimapNmax 20:
+    # * '--outFilterMultimapNmax' 20:
     #   Max number of multiple alignments allowed for a read. If exceeded, the
     #   read is considered unmapped.
-    # * --alignSJoverhangMin 8:
+    # * '--alignSJoverhangMin' 8:
     #   Minimum overhang for unannotated junctions.
-    # * --alignSJDBoverhangMin 1:
+    # * '--alignSJDBoverhangMin' 1:
     #   Minimum overhang for annotated junctions.
-    # * --outFilterMismatchNmax 999:
+    # * '--outFilterMismatchNmax' 999:
     #   Maximum number of mismatches per pair. Large number switches off this
     #   filter.
-    # * --outFilterMismatchNoverReadLmax 0.04:
+    # * '--outFilterMismatchNoverReadLmax' 0.04:
     #   Max number of mismatches per pair relative to read length: for 2x100b,
     #   max number of mis-matches is 0.04*200=8 for the paired read.
-    # * --alignIntronMin 20:
+    # * '--alignIntronMin' 20:
     #   Minimum intron length.
-    # * --alignIntronMax 1000000:
+    # * '--alignIntronMax' 1000000:
     #   Maximum intron length.
-    # * --alignMatesGapMax 1000000:
+    # * '--alignMatesGapMax' 1000000:
     #   Maximum genomic distance between mates.
+    #
+    # @section GDC pipeline options that differ from ENCODE in STAR manual:
+    #
+    # https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
+    # Expression_mRNA_Pipeline/
+    #
+    # * '--alignIntronMax' 500000
+    # * '--genomeLoad' 'NoSharedMemory'
+    # * '--outFilterMatchNminOverLread' 0.33
+    # * '--outFilterMismatchNmax' 10
+    # * '--outFilterMultimapScoreRange' 1
+    # * '--outFilterScoreMinOverLread' 0.33
+    # * '--outSAMattributes' 'NH' 'HI' 'NM' 'MD' 'AS' 'XS'
+    # * '--outSAMheaderHD' '@HD' 'VN:1.4'
+    # * '--outSAMstrandField' 'intronMotif'
+    # * '--outSAMunmapped' 'Within'
+    # * '--sjdbScore' 2
     #
     # @section Transcriptome BAM output (STAR manual 7):
     #
@@ -51,43 +71,44 @@ koopa_star_align_paired_end_per_sample() {
     #
     # @section Other potentially useful settings:
     #
-    # * --limitOutSJcollapsed 2000000:
+    # * '--limitOutSJcollapsed' 2000000:
     #   Used by bcbio. Default is 1000000.
-    # * --outSAMattributes NH HI AS NM MD:
-    #   Used by nf-core rnaseq.
-    # * --outSAMmapqUnique 60:
+    # * '--outSAMattributes' 'NH' 'HI' 'AS' 'NM' 'MD':
+    #   Used by GDC and nf-core rnaseq.
+    # * '--outSAMmapqUnique' 60:
     #   Used by bcbio. The mapping quality MAPQ (column 5) is 255 for uniquely
     #   mapping reads, and 'int(-10*log10(1-1/Nmap))' for multi-mapping reads.
     #   This scheme is same as the one used by TopHat and is compatible with
     #   Cufflinks. The default MAPQ=255 for the unique mappers maybe changed
     #   with '--outSAMmapqUnique' parameter (integer 0 to 255) to ensure
     #   compatibility with downstream tools such as GATK.
-    # * --outSAMstrandField intronMotif:
-    #   Used by bcbio and nf-core rnaseq. For unstranded RNA-seq data,
+    # * '--outSAMstrandField' 'intronMotif':
+    #   Used by GDC, bcbio and nf-core rnaseq. For unstranded RNA-seq data,
     #   Cufflinks/Cuffdiff require spliced alignments with XS strand attribute,
     #   which STAR will generate with '--outSAMstrandField intronMotif' option.
     #   As required, the XS strand attribute will be generated for all
     #   alignments that contain splice junctions. The spliced alignments that
     #   have undefined strand (i.e. containing only non-canonical unannotated
     #   junctions) will be suppressed.
-    # * --outSAMunmapped Within:
+    # * '--outSAMunmapped' 'Within':
     #   Unmapped reads can be output into the SAM/BAM 'Aligned.*' file(s) with
     #   '--outSAMunmapped Within' option. '--outSAMunmapped Within KeepPairs'
     #   will (redundantly) record unmapped mate for each alignment, and, in
     #   case of unsorted output, keep it adjacent to its mapped mate (this
     #   only affects multi-mapping reads). uT SAM tag indicates reason for not
     #   mapping.
-    # * --quantTranscriptomeBan Singleend:
+    # * '--quantTranscriptomeBan' 'Singleend':
     #   Used by nf-core rnaseq.
-    # * --sjdbInsertSave All:
-    #   The on the fly genome indices can be saved for reuse with
-    #   '--sjdbInsertSave All' into 'STARgenome' directory inside the current
-    #   run directory.
+    # * '--sjdbInsertSave' 'All':
+    #   The on the fly genome indices can be saved for reuse into 'STARgenome'
+    #   directory inside the current run directory.
     #
     # @seealso
     # - For on-the-fly splice junction database genration, rather than using
     #   the fixed read length during genome indexing:
     # - https://github.com/alexdobin/STAR/blob/master/doc/STARmanual.pdf
+    # - https://docs.gdc.cancer.gov/Data/Bioinformatics_Pipelines/
+    #     Expression_mRNA_Pipeline/
     # - https://github.com/nf-core/rnaseq/blob/master/modules/nf-core/
     #     star/align/main.nf
     # - STAR salmon alignment options:
@@ -122,7 +143,7 @@ koopa_star_align_paired_end_per_sample() {
     # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=40
     # e.g. 'quant/star-gencode/sample1'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
