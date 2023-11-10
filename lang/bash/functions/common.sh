@@ -20053,6 +20053,69 @@ koopa_pager() {
     return 0
 }
 
+koopa_parallel() {
+    local -A app dict
+    local -a parallel_args
+    koopa_assert_has_args "$#"
+    app['parallel']="$(koopa_locate_parallel --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['arg_file']=''
+    dict['command']=''
+    dict['jobs']="$(koopa_cpu_count)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--arg-file='*)
+                dict['arg_file']="${1#*=}"
+                shift 1
+                ;;
+            '--arg-file')
+                dict['arg_file']="${2:?}"
+                shift 2
+                ;;
+            '--command='*)
+                dict['command']="${1#*=}"
+                shift 1
+                ;;
+            '--command')
+                dict['command']="${2:?}"
+                shift 2
+                ;;
+            '--jobs='*)
+                dict['jobs']="${1#*=}"
+                shift 1
+                ;;
+            '--jobs')
+                dict['jobs']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--arg-file' "${dict['arg_file']}" \
+        '--command' "${dict['command']}" \
+        '--jobs' "${dict['jobs']}"
+    koopa_assert_is_matching_fixed \
+        --pattern='{}' \
+        --string="${dict['command']}"
+    koopa_assert_is_file "${dict['arg_file']}"
+    dict['arg_file']="$(koopa_realpath "${dict['arg_file']}")"
+    parallel_args+=(
+        '--arg-file' "${dict['arg_file']}"
+        '--bar'
+        '--eta'
+        '--jobs' "${dict['jobs']}"
+        '--progress'
+        '--will-cite'
+        "${dict['command']}"
+    )
+    "${app['parallel']}" "${parallel_args[@]}"
+    return 0
+}
+
 koopa_parent_dir() {
     local -A app dict
     local -a pos
@@ -24771,7 +24834,6 @@ koopa_sra_prefetch_from_aws() {
 koopa_sra_prefetch() {
     local -A app dict
     local -a parallel_cmd
-    app['parallel']="$(koopa_locate_parallel --allow-system)"
     app['prefetch']="$(koopa_locate_sra_prefetch)"
     koopa_assert_is_executable "${app[@]}"
     dict['acc_file']=''
@@ -24823,14 +24885,10 @@ to '${dict['output_dir']}'."
         '--verify' 'yes'
         '{}'
     )
-    "${app['parallel']}" \
-        --arg-file "${dict['acc_file']}" \
-        --bar \
-        --eta \
-        --jobs "${dict['jobs']}" \
-        --progress \
-        --will-cite \
-        "${parallel_cmd[*]}"
+    koopa_parallel \
+        --arg-file="${dict['acc_file']}" \
+        --command="${parallel_cmd[*]}" \
+        --jobs="${dict['jobs']}"
     return 0
 }
 
