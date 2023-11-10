@@ -24918,7 +24918,7 @@ koopa_star_align_paired_end_per_sample() {
     dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=30
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     align_args=()
@@ -25289,7 +25289,7 @@ koopa_star_align_single_end_per_sample() {
     dict['gtf_file']=''
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=30
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
     while (("$#"))

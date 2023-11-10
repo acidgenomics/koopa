@@ -122,7 +122,7 @@ koopa_star_align_paired_end_per_sample() {
     # e.g. 'indexes/star-gencode'.
     dict['index_dir']=''
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=60
+    dict['mem_gb_cutoff']=30
     # e.g. 'quant/star-gencode/sample1'.
     dict['output_dir']=''
     dict['threads']="$(koopa_cpu_count)"
