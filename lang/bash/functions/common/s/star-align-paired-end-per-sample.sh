@@ -3,7 +3,7 @@
 koopa_star_align_paired_end_per_sample() {
     # """
     # Run STAR aligner on a paired-end sample.
-    # @note Updated 2023-11-09.
+    # @note Updated 2023-11-10.
     #
     # @section On-the-fly splice junction database generation:
     #
@@ -112,6 +112,7 @@ koopa_star_align_paired_end_per_sample() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_fastq_r1_file']=0
     bool['tmp_fastq_r2_file']=0
+    bool['tmp_gtf_file']=0
     # e.g. 'sample1_R1_001.fastq.gz'.
     dict['fastq_r1_file']=''
     # e.g. 'sample1_R2_001.fastq.gz'.
@@ -192,11 +193,13 @@ koopa_star_align_paired_end_per_sample() {
         koopa_stop "STAR requires ${dict['mem_gb_cutoff']} GB of RAM."
     fi
     dict['limit_bam_sort_ram']=$(( dict['mem_gb'] * 1000000000 ))
-    koopa_assert_is_file "${dict['gtf_file']}"
-    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_dir "${dict['index_dir']}"
+    koopa_assert_is_file \
+        "${dict['fastq_r1_file']}" \
+        "${dict['fastq_r2_file']}" \
+        "${dict['gtf_file']}"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
-    koopa_assert_is_file "${dict['fastq_r1_file']}" "${dict['fastq_r2_file']}"
     dict['fastq_r1_file']="$(koopa_realpath "${dict['fastq_r1_file']}")"
     dict['fastq_r2_file']="$(koopa_realpath "${dict['fastq_r2_file']}")"
     dict['fastq_r1_bn']="$(koopa_basename "${dict['fastq_r1_file']}")"
@@ -221,6 +224,15 @@ koopa_star_align_paired_end_per_sample() {
             --input-file="${dict['fastq_r2_file']}" \
             --output-file="${dict['tmp_fastq_r2_file']}"
         dict['fastq_r2_file']="${dict['tmp_fastq_r2_file']}"
+    fi
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     dict['read_length']="$(koopa_fastq_read_length "${dict['fastq_r1_file']}")"
     dict['sjdb_overhang']="$((dict['read_length'] - 1))"
@@ -261,6 +273,10 @@ koopa_star_align_paired_end_per_sample() {
     if [[ "${bool['tmp_fastq_r2_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['fastq_r2_file']}"
+    fi
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
     fi
     koopa_rm "${dict['output_dir']}/_STAR"*
     dict['bam_file']="${dict['output_dir']}/Aligned.sortedByCoord.out.bam"
