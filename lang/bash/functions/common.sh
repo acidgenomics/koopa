@@ -5397,18 +5397,22 @@ koopa_compress() {
     [[ "${bool['verbose']}" -eq 1 ]] && cmd_args+=('-v')
     for source_file in "$@"
     do
-        local target_file
-        source_file="$(koopa_realpath "$source_file")"
-        target_file="${source_file}.${dict['ext']}"
-        koopa_assert_is_not_file "$target_file"
-        koopa_alert "Compressing '${source_file}' to '${target_file}'."
-        "${app['cmd']}" "${cmd_args[@]}" "$source_file"
-        koopa_assert_is_file "$target_file"
+        local -A dict2
+        dict2['source_file']="$source_file"
+        dict2['source_file']="$(koopa_realpath "${dict2['source_file']}")"
+        dict2['target_file']="${dict2['source_file']}.${dict['ext']}"
+        koopa_assert_is_not_file "${dict2['target_file']}"
+        koopa_alert "Compressing '${dict2['source_file']}' \
+to '${dict2['target_file']}'."
+        "${app['cmd']}" "${cmd_args[@]}" "${dict2['source_file']}"
+        koopa_assert_is_file \
+            "${dict2['source_file']}" \
+            "${dict2['target_file']}"
+        if [[ "${bool['keep']}" -eq 0 ]]
+        then
+            koopa_rm "${dict2['target_file']}"
+        fi
     done
-    if [[ "${bool['keep']}" -eq 0 ]]
-    then
-        koopa_rm "$@"
-    fi
     return 0
 }
 
