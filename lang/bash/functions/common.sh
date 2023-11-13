@@ -23265,8 +23265,8 @@ koopa_salmon_detect_bam_library_type() {
         -h \
         "${dict['bam_file']}" \
     | "${app['head']}" -n "${dict['n']}" \
-    || true \
-    > "${dict['alignments']}"
+    > "${dict['alignments']}" \
+    || true
     quant_args+=(
         "--alignments=${dict['alignments']}"
         '--libType=A'
