@@ -22,6 +22,7 @@ koopa_bam_read_length() {
     do
         local -A dict2
         dict2['bam_file']="$bam_file"
+        # Using 'true' here to avoid 141 pipefail return error code.
         # shellcheck disable=SC2016
         dict2['num']="$( \
             "${app['samtools']}" view \
@@ -29,7 +30,9 @@ koopa_bam_read_length() {
                 "${dict2['bam_file']}" \
             | "${app['head']}" -n 1000000 \
             | "${app['awk']}" '{print length($10)}' \
-            | "${app['sort']}" -u \
+            | "${app['sort']}" -nu \
+            | "${app['head']}" -n 1 \
+            || true \
         )"
         koopa_print "${dict2['num']}"
     done
