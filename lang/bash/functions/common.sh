@@ -3089,7 +3089,9 @@ koopa_bam_read_length() {
                 "${dict2['bam_file']}" \
             | "${app['head']}" -n 1000000 \
             | "${app['awk']}" '{print length($10)}' \
-            | "${app['sort']}" -u \
+            | "${app['sort']}" -nu \
+            | "${app['head']}" -n 1 \
+            || true \
         )"
         koopa_print "${dict2['num']}"
     done
