@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add support for pushing directly to S3, which is helpful for dealing
+# with really large WGS files.
+
 koopa_sra_bam_dump() {
     # """
     # Dump BAM files form SRA file list.
