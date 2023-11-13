@@ -809,7 +809,7 @@
   },
   "cellranger": {
     "bin": ["cellranger"],
-    "date": "2023-01-03",
+    "date": "2023-11-13",
     "default": false,
     "private": true,
     "supported": {
@@ -821,7 +821,7 @@
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
-    "version": "7.1.0"
+    "version": "7.2.0"
   },
   "cereal": {
     "aliases": {
@@ -1847,11 +1847,11 @@
     },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-06-27",
+    "date": "2023-11-13",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.12.0"
+    "version": "3.12.1"
   },
   "gettext": {
     "aliases": {
@@ -2395,7 +2395,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.2.2"
+    "version": "8.3.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2414,13 +2414,13 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2023-07-03",
+    "date": "2023-11-13",
     "default": false,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.1.19.4"
+    "version": "0.1.20.0"
   },
   "haskell-stack": {
     "aliases": {
