@@ -23215,7 +23215,7 @@ koopa_run_if_installed() {
 }
 
 koopa_salmon_detect_bam_library_type() {
-    local -A app bool dict
+    local -A app dict
     local -a quant_args
     koopa_assert_has_args "$#"
     app['head']="$(koopa_locate_head --allow-system)"
@@ -23223,7 +23223,6 @@ koopa_salmon_detect_bam_library_type() {
     app['salmon']="$(koopa_locate_salmon)"
     app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
-    bool['gencode']=0
     dict['bam_file']=''
     dict['fasta_file']=''
     dict['n']='400000'
@@ -23249,10 +23248,6 @@ koopa_salmon_detect_bam_library_type() {
                 dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
-            '--gencode')
-                bool['gencode']=1
-                shift 1
-                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -23265,13 +23260,6 @@ koopa_salmon_detect_bam_library_type() {
         "${dict['bam_file']}" \
         "${dict['fasta_file']}"
     dict['alignments']="${dict['tmp_dir']}/alignments.sam"
-    if [[ "${bool['gencode']}" -eq 0 ]] && \
-        koopa_str_detect_regex \
-            --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
-            --pattern='^gencode\.'
-    then
-        bool['gencode']=1
-    fi
     "${app['samtools']}" view \
             -@ "${dict['threads']}" \
             -h \
@@ -23279,10 +23267,6 @@ koopa_salmon_detect_bam_library_type() {
         | "${app['head']}" -n "${dict['n']}" \
         > "${dict['alignments']}" \
         || true
-    if [[ "${bool['gencode']}" -eq 1 ]]
-    then
-        quant_args+=('--gencode')
-    fi
     quant_args+=(
         "--alignments=${dict['alignments']}"
         '--libType=A'
