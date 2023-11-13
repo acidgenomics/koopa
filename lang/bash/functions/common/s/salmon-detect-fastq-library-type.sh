@@ -2,7 +2,7 @@
 
 koopa_salmon_detect_fastq_library_type() {
     # """
-    # Detect library type of input FASTQs.
+    # Detect library type (strandedness) of input FASTQs.
     # @note Updated 2023-10-20.
     #
     # @seealso
