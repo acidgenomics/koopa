@@ -33,16 +33,15 @@ koopa_salmon_detect_bam_library_type() {
     local -A app dict
     local -a quant_args
     koopa_assert_has_args "$#"
-    app['head']="$(koopa_locate_head --allow-system)"
     app['jq']="$(koopa_locate_jq --allow-system)"
     app['salmon']="$(koopa_locate_salmon)"
+    app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
     # e.g. 'Aligned.toTranscriptome.out.bam'.
     dict['bam_file']=''
     # e.g. 'gencode.v44.transcripts.fa.gz'.
     dict['fasta_file']=''
-    # FIXME Actually need to truncate the input file to make this happen.
-    # Can use samtools to make a smaller input file.
+    # FIXME Let's use samtools for this step instead.
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
@@ -79,10 +78,15 @@ koopa_salmon_detect_bam_library_type() {
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['fasta_file']}"
-    # FIXME We need to truncate the file to the desired input number of test
-    # reads.
+    dict['alignments']="${dict['tmp_dir']}/alignments.sam"
+    "${app['samtools']}" view \
+        -@ "${dict['threads']}" \
+        -h \
+        "${dict['bam_file']}" \
+    | "${app['head']}" -n "${dict['n']}" \
+    > "${dict['alignments']}"
     quant_args+=(
-        "--alignments=${dict['bam_file']}"
+        "--alignments=${dict['alignments']}"
         '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
@@ -93,12 +97,13 @@ koopa_salmon_detect_bam_library_type() {
     )
     # FIXME Add back pipe to dev null here after working version.
     "${app['salmon']}" quant "${quant_args[@]}"
-    # FIXME This approach doesn't output the json file...need to rethink.
-    # FIXME This seems to output to aux_info/meta_info.json.
-    dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
+    dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
-        "${app['jq']}" --raw-output '.library_types' "${dict['json_file']}" \
+        "${app['jq']}" \
+            --raw-output \
+            '.library_types.[]' \
+            "${dict['json_file']}" \
     )"
     koopa_print "${dict['lib_type']}"
     koopa_rm "${dict['tmp_dir']}"
