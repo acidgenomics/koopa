@@ -3068,6 +3068,34 @@ koopa_aws_s3_sync() {
     return 0
 }
 
+koopa_bam_read_length() {
+    local -A app dict
+    local bam_file
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['awk']="$(koopa_locate_awk)"
+    app['head']="$(koopa_locate_head)"
+    app['samtools']="$(koopa_locate_samtools)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['threads']="$(koopa_cpu_count)"
+    for bam_file in "$@"
+    do
+        local -A dict2
+        dict2['bam_file']="$bam_file"
+        dict2['num']="$( \
+            "${app['samtools']}" view \
+                -@ "${dict['threads']}" \
+                "${dict2['bam_file']}" \
+            | "${app['head']}" -n 1000000 \
+            | "${app['awk']}" '{print length($10)}' \
+            | "${app['sort']}" -u \
+        )"
+        koopa_print "${dict2['num']}"
+    done
+    return 0
+}
+
 koopa_bam_read_type() {
     local -A app dict
     local bam_file
