@@ -20,10 +20,10 @@ koopa_salmon_detect_bam_library_type() {
     # STAR GENCODE transcriptome-level:
     # > koopa_salmon_detect_bam_library_type \
     # >     --bam-file='Aligned.toTranscriptome.out.bam' \
-    # >     --fasta-file='gencode.v44.transcripts.fa.gz'
+    # >     --fasta-file='gencode.v44.transcripts_fixed.fa.gz'
     # # IU
     # """
-    local -A app bool dict
+    local -A app dict
     local -a quant_args
     koopa_assert_has_args "$#"
     app['head']="$(koopa_locate_head --allow-system)"
@@ -31,7 +31,6 @@ koopa_salmon_detect_bam_library_type() {
     app['salmon']="$(koopa_locate_salmon)"
     app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
-    bool['gencode']=0
     # e.g. 'Aligned.toTranscriptome.out.bam'.
     dict['bam_file']=''
     # e.g. 'gencode.v44.transcripts_fixed.fa.gz'.
@@ -60,11 +59,6 @@ koopa_salmon_detect_bam_library_type() {
                 dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
-            '--gencode')
-                bool['gencode']=1
-                shift 1
-                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -78,13 +72,6 @@ koopa_salmon_detect_bam_library_type() {
         "${dict['bam_file']}" \
         "${dict['fasta_file']}"
     dict['alignments']="${dict['tmp_dir']}/alignments.sam"
-    if [[ "${bool['gencode']}" -eq 0 ]] && \
-        koopa_str_detect_regex \
-            --string="$(koopa_basename "${dict['transcriptome_fasta_file']}")" \
-            --pattern='^gencode\.'
-    then
-        bool['gencode']=1
-    fi
     "${app['samtools']}" view \
             -@ "${dict['threads']}" \
             -h \
@@ -92,10 +79,6 @@ koopa_salmon_detect_bam_library_type() {
         | "${app['head']}" -n "${dict['n']}" \
         > "${dict['alignments']}" \
         || true
-    if [[ "${bool['gencode']}" -eq 1 ]]
-    then
-        quant_args+=('--gencode')
-    fi
     quant_args+=(
         "--alignments=${dict['alignments']}"
         '--libType=A'
@@ -106,8 +89,6 @@ koopa_salmon_detect_bam_library_type() {
         "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
-    # FIXME Re-enable this after debugging:
-    # > "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
     "${app['salmon']}" quant "${quant_args[@]}"
     dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
