@@ -23261,12 +23261,12 @@ koopa_salmon_detect_bam_library_type() {
         "${dict['fasta_file']}"
     dict['alignments']="${dict['tmp_dir']}/alignments.sam"
     "${app['samtools']}" view \
-        -@ "${dict['threads']}" \
-        -h \
-        "${dict['bam_file']}" \
-    | "${app['head']}" -n "${dict['n']}" \
-    > "${dict['alignments']}" \
-    || true
+            -@ "${dict['threads']}" \
+            -h \
+            "${dict['bam_file']}" \
+        | "${app['head']}" -n "${dict['n']}" \
+        > "${dict['alignments']}" \
+        || true
     quant_args+=(
         "--alignments=${dict['alignments']}"
         '--libType=A'
@@ -23277,7 +23277,7 @@ koopa_salmon_detect_bam_library_type() {
         "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
-    "${app['salmon']}" quant "${quant_args[@]}"
+    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
     dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \

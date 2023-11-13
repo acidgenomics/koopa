@@ -35,7 +35,6 @@ koopa_salmon_detect_bam_library_type() {
     dict['bam_file']=''
     # e.g. 'gencode.v44.transcripts.fa.gz'.
     dict['fasta_file']=''
-    # FIXME Let's use samtools for this step instead.
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
@@ -74,12 +73,12 @@ koopa_salmon_detect_bam_library_type() {
         "${dict['fasta_file']}"
     dict['alignments']="${dict['tmp_dir']}/alignments.sam"
     "${app['samtools']}" view \
-        -@ "${dict['threads']}" \
-        -h \
-        "${dict['bam_file']}" \
-    | "${app['head']}" -n "${dict['n']}" \
-    > "${dict['alignments']}" \
-    || true
+            -@ "${dict['threads']}" \
+            -h \
+            "${dict['bam_file']}" \
+        | "${app['head']}" -n "${dict['n']}" \
+        > "${dict['alignments']}" \
+        || true
     quant_args+=(
         "--alignments=${dict['alignments']}"
         '--libType=A'
@@ -90,8 +89,7 @@ koopa_salmon_detect_bam_library_type() {
         "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
-    # FIXME Add back pipe to dev null here after working version.
-    "${app['salmon']}" quant "${quant_args[@]}"
+    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
     dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
