@@ -18932,6 +18932,13 @@ koopa_locate_rm() {
         "$@"
 }
 
+koopa_locate_rmats() {
+    koopa_locate_app \
+        --app-name='rmats' \
+        --bin-name='rmats' \
+        "$@"
+}
+
 koopa_locate_ronn() {
     koopa_locate_app \
         --app-name='ronn' \
