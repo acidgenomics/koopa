@@ -23266,7 +23266,7 @@ koopa_salmon_detect_bam_library_type() {
         '--skipQuant'
         "--threads=${dict['threads']}"
     )
-    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
+    "${app['salmon']}" quant "${quant_args[@]}"
     dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
