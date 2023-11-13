@@ -77,6 +77,7 @@ koopa_salmon_detect_bam_library_type() {
         -@ "${dict['threads']}" \
         -h \
         "${dict['bam_file']}" \
+        || true \
     | "${app['head']}" -n "${dict['n']}" \
     > "${dict['alignments']}"
     quant_args+=(
