@@ -3068,6 +3068,67 @@ koopa_aws_s3_sync() {
     return 0
 }
 
+koopa_bam_read_length() {
+    local -A app dict
+    local bam_file
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['awk']="$(koopa_locate_awk)"
+    app['head']="$(koopa_locate_head)"
+    app['samtools']="$(koopa_locate_samtools)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['threads']="$(koopa_cpu_count)"
+    for bam_file in "$@"
+    do
+        local -A dict2
+        dict2['bam_file']="$bam_file"
+        dict2['num']="$( \
+            "${app['samtools']}" view \
+                -@ "${dict['threads']}" \
+                "${dict2['bam_file']}" \
+            | "${app['head']}" -n 1000000 \
+            | "${app['awk']}" '{print length($10)}' \
+            | "${app['sort']}" -nu \
+            | "${app['head']}" -n 1 \
+            || true \
+        )"
+        [[ -n "${dict2['num']}" ]] || return 1
+        koopa_print "${dict2['num']}"
+    done
+    return 0
+}
+
+koopa_bam_read_type() {
+    local -A app dict
+    local bam_file
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['threads']="$(koopa_cpu_count)"
+    for bam_file in "$@"
+    do
+        local -A dict2
+        dict2['bam_file']="$bam_file"
+        dict2['num']="$( \
+            "${app['samtools']}" view \
+                -@ "${dict['threads']}" \
+                -c \
+                -f 1 \
+                "${dict2['bam_file']}" \
+        )"
+        if [[ "${dict2['num']}" -gt 0 ]]
+        then
+            dict2['type']='paired'
+        else
+            dict2['type']='single'
+        fi
+        koopa_print "${dict2['type']}"
+    done
+    return 0
+}
+
 koopa_basename_sans_ext_2() {
     local -A app
     local file
@@ -18932,6 +18993,13 @@ koopa_locate_rm() {
         "$@"
 }
 
+koopa_locate_rmats() {
+    koopa_locate_app \
+        --app-name='rmats' \
+        --bin-name='rmats' \
+        "$@"
+}
+
 koopa_locate_ronn() {
     koopa_locate_app \
         --app-name='ronn' \
@@ -23143,6 +23211,83 @@ koopa_run_if_installed() {
         exe="$(koopa_which_realpath "$arg")"
         "$exe"
     done
+    return 0
+}
+
+koopa_salmon_detect_bam_library_type() {
+    local -A app dict
+    local -a quant_args
+    koopa_assert_has_args "$#"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['jq']="$(koopa_locate_jq --allow-system)"
+    app['salmon']="$(koopa_locate_salmon)"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bam_file']=''
+    dict['fasta_file']=''
+    dict['n']='400000'
+    dict['threads']="$(koopa_cpu_count)"
+    dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
+    dict['output_dir']="${dict['tmp_dir']}/quant"
+    while (("$#"))
+    do
+        case "$1" in
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-file')
+                dict['bam_file']="${2:?}"
+                shift 2
+                ;;
+            '--fasta-file='*)
+                dict['fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--fasta-file')
+                dict['fasta_file']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-file' "${dict['bam_file']}" \
+        '--fasta-file' "${dict['fasta_file']}"
+    koopa_assert_is_file \
+        "${dict['bam_file']}" \
+        "${dict['fasta_file']}"
+    dict['alignments']="${dict['tmp_dir']}/alignments.sam"
+    "${app['samtools']}" view \
+            -@ "${dict['threads']}" \
+            -h \
+            "${dict['bam_file']}" \
+        | "${app['head']}" -n "${dict['n']}" \
+        > "${dict['alignments']}" \
+        || true
+    quant_args+=(
+        "--alignments=${dict['alignments']}"
+        '--libType=A'
+        '--no-version-check'
+        "--output=${dict['output_dir']}"
+        '--quiet'
+        '--skipQuant'
+        "--targets=${dict['fasta_file']}"
+        "--threads=${dict['threads']}"
+    )
+    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
+    dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
+    koopa_assert_is_file "${dict['json_file']}"
+    dict['lib_type']="$( \
+        "${app['jq']}" \
+            --raw-output \
+            '.library_types.[]' \
+            "${dict['json_file']}" \
+    )"
+    koopa_print "${dict['lib_type']}"
+    koopa_rm "${dict['tmp_dir']}"
     return 0
 }
 
