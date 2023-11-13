@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This will output library format in console -- is there a faster way
-# to return this?
-# Library format { type:paired end, relative orientation:inward, strandedness:unstranded }
-#     7     "library_types": [
-#     8         "MU"
-#     9     ],
-
 koopa_salmon_detect_bam_library_type() {
     # """
     # Detect library type (strandedness) of input BAMs.
@@ -33,6 +26,7 @@ koopa_salmon_detect_bam_library_type() {
     local -A app dict
     local -a quant_args
     koopa_assert_has_args "$#"
+    app['head']="$(koopa_locate_head --allow-system)"
     app['jq']="$(koopa_locate_jq --allow-system)"
     app['salmon']="$(koopa_locate_salmon)"
     app['samtools']="$(koopa_locate_samtools)"
