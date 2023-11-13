@@ -3068,6 +3068,34 @@ koopa_aws_s3_sync() {
     return 0
 }
 
+koopa_bam_read_type() {
+    local -A app
+    local bam_file
+    koopa_assert_has_args "$#"
+    koopa_assert_is_file "$@"
+    app['samtools']="$(koopa_locate_samtools)"
+    koopa_assert_is_executable "${app[@]}"
+    for bam_file in "$@"
+    do
+        local -A dict2
+        dict2['bam_file']="$bam_file"
+        dict2['num']="$( \
+            "${app['samtools']}" view \
+                -c \
+                -f 1 \
+                "${dict2['bam_file']}" \
+        )"
+        if [[ "${dict2['num']}" -gt 0 ]]
+        then
+            dict2['type']='single'
+        else
+            dict2['type']='paired'
+        fi
+        koopa_print "${dict2['type']}"
+    done
+    return 0
+}
+
 koopa_basename_sans_ext_2() {
     local -A app
     local file
