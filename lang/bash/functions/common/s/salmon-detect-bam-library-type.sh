@@ -98,7 +98,7 @@ koopa_salmon_detect_bam_library_type() {
     dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
-        "${app['jq']}" --raw-output '.expected_format' "${dict['json_file']}" \
+        "${app['jq']}" --raw-output '.library_types' "${dict['json_file']}" \
     )"
     koopa_print "${dict['lib_type']}"
     koopa_rm "${dict['tmp_dir']}"
