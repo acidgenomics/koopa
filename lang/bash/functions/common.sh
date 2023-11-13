@@ -23218,9 +23218,9 @@ koopa_salmon_detect_bam_library_type() {
     local -A app dict
     local -a quant_args
     koopa_assert_has_args "$#"
-    app['head']="$(koopa_locate_head --allow-system)"
     app['jq']="$(koopa_locate_jq --allow-system)"
     app['salmon']="$(koopa_locate_salmon)"
+    app['samtools']="$(koopa_locate_samtools)"
     koopa_assert_is_executable "${app[@]}"
     dict['bam_file']=''
     dict['fasta_file']=''
@@ -23258,8 +23258,15 @@ koopa_salmon_detect_bam_library_type() {
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['fasta_file']}"
+    dict['alignments']="${dict['tmp_dir']}/alignments.sam"
+    "${app['samtools']}" view \
+        -@ "${dict['threads']}" \
+        -h \
+        "${dict['bam_file']}" \
+    | "${app['head']}" -n "${dict['n']}" \
+    > "${dict['alignments']}"
     quant_args+=(
-        "--alignments=${dict['bam_file']}"
+        "--alignments=${dict['alignments']}"
         '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
@@ -23269,10 +23276,13 @@ koopa_salmon_detect_bam_library_type() {
         "--threads=${dict['threads']}"
     )
     "${app['salmon']}" quant "${quant_args[@]}"
-    dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
+    dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
-        "${app['jq']}" --raw-output '.expected_format' "${dict['json_file']}" \
+        "${app['jq']}" \
+            --raw-output \
+            '.library_types.[]' \
+            "${dict['json_file']}" \
     )"
     koopa_print "${dict['lib_type']}"
     koopa_rm "${dict['tmp_dir']}"
