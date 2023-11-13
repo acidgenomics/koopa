@@ -11,6 +11,7 @@ koopa_salmon_detect_bam_library_type() {
     #
     # @seealso
     # - salmon quant --help-alignment | less
+    # - https://github.com/COMBINE-lab/salmon/blob/master/src/LibraryFormat.cpp
     # - https://www.biostars.org/p/98756/
     #
     # @examples
