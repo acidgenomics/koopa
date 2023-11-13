@@ -23223,7 +23223,7 @@ koopa_salmon_detect_bam_library_type() {
     app['salmon']="$(koopa_locate_salmon)"
     koopa_assert_is_executable "${app[@]}"
     dict['bam_file']=''
-    dict['index_dir']=''
+    dict['tx_fasta_file']=''
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
@@ -23239,12 +23239,12 @@ koopa_salmon_detect_bam_library_type() {
                 dict['bam_file']="${2:?}"
                 shift 2
                 ;;
-            '--index-dir='*)
-                dict['index_dir']="${1#*=}"
+            '--transcriptome-fasta-file='*)
+                dict['tx_fasta_file']="${1#*=}"
                 shift 1
                 ;;
-            '--index-dir')
-                dict['index_dir']="${2:?}"
+            '--transcriptome-fasta-file')
+                dict['tx_fasta_file']="${2:?}"
                 shift 2
                 ;;
             *)
@@ -23254,16 +23254,18 @@ koopa_salmon_detect_bam_library_type() {
     done
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
-        '--index-dir' "${dict['index_dir']}"
-    koopa_assert_is_file "${dict['bam_file']}"
-    koopa_assert_is_dir "${dict['index_dir']}"
+        '--transcriptome-fasta-file' "${dict['tx_fasta_file']}"
+    koopa_assert_is_file \
+        "${dict['bam_file']}" \
+        "${dict['tx_fasta_file']}"
     quant_args+=(
         "--alignments=${dict['bam_file']}"
-        "--index=${dict['index_dir']}"
         '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
+        '--quiet'
         '--skipQuant'
+        "--targets=${dict['tx_fasta_file']}"
         "--threads=${dict['threads']}"
     )
     "${app['salmon']}" quant "${quant_args[@]}"
