@@ -72,7 +72,7 @@ koopa_salmon_detect_bam_library_type() {
         '--libType=A'
         '--no-version-check'
         "--output=${dict['output_dir']}"
-        '--quiet'
+        ## > '--quiet'
         '--skipQuant'
         "--threads=${dict['threads']}"
     )
