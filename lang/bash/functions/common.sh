@@ -3093,6 +3093,7 @@ koopa_bam_read_length() {
             | "${app['head']}" -n 1 \
             || true \
         )"
+        [[ -n "${dict2['num']}" ]] || return 1
         koopa_print "${dict2['num']}"
     done
     return 0
