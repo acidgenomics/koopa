@@ -1,9 +1,26 @@
 #!/usr/bin/env bash
 
+# FIXME Improve support for parallel lzip, xz, zstd.
+# --with-gzip=pigz --with-bzip2=lbzip2 --with-lzip=plzip
+# > tar -I "xz -T0" -cf my_archive.tar.xz ./stuff_to_compress
+# > tar -I "zstd -T0" -cf my_archive.tar.zst ./stuff_to_compress
+
 koopa_compress() {
     # """
     # Compress multiple files.
     # @note Updated 2023-11-10.
+    #
+    # @section xz multithreading support:
+    #
+    # If you are running version 5.2.0 or above of XZ Utils, you can utilize
+    # multiple cores for compression by setting '-T' or '--threads' to an
+    # appropriate value via the environmental variable XZ_DEFAULTS
+    # (e.g. XZ_DEFAULTS="-T 0").
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/12313242/
+    # - https://stackoverflow.com/a/27541309/3911732/
+    # - https://www.reddit.com/r/linux/comments/rf1zty/
     # """
     local -A app bool dict
     local -a cmd_args pos
