@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME This will output library format in console -- is there a faster way
+# to return this?
+# Library format { type:paired end, relative orientation:inward, strandedness:unstranded }
+
 koopa_salmon_detect_bam_library_type() {
     # """
     # Detect library type (strandedness) of input BAMs.
@@ -10,16 +14,16 @@ koopa_salmon_detect_bam_library_type() {
     # - https://www.biostars.org/p/98756/
     #
     # @examples
-    # Paired-end:
+    # STAR GENCODE genome-level:
     # > koopa_salmon_detect_bam_library_type \
-    # >     --bam-file='DMSO-1.bam' \
-    # >     --index-dir='indexes/salmon-gencode'
-    # # IU
+    # >     --bam-file='Aligned.sortedByCoord.out.bam' \
+    # >     --fasta-file='GRCh38.primary_assembly.genome.fa.gz'
+    # # U
     #
-    # Single-end:
+    # STAR GENCODE transcriptome-level:
     # > koopa_salmon_detect_bam_library_type \
-    # >     --bam-file='DMSO-1.bam' \
-    # >     --index-dir='indexes/salmon-gencode'
+    # >     --bam-file='Aligned.toTranscriptome.out.bam' \
+    # >     --fasta-file='gencode.v44.transcripts.fa.gz'
     # # U
     # """
     local -A app dict
@@ -29,9 +33,10 @@ koopa_salmon_detect_bam_library_type() {
     app['jq']="$(koopa_locate_jq --allow-system)"
     app['salmon']="$(koopa_locate_salmon)"
     koopa_assert_is_executable "${app[@]}"
+    # e.g. 'Aligned.toTranscriptome.out.bam'.
     dict['bam_file']=''
     # e.g. 'gencode.v44.transcripts.fa.gz'.
-    dict['tx_fasta_file']=''
+    dict['fasta_file']=''
     dict['n']='400000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
@@ -48,12 +53,12 @@ koopa_salmon_detect_bam_library_type() {
                 dict['bam_file']="${2:?}"
                 shift 2
                 ;;
-            '--transcriptome-fasta-file='*)
-                dict['tx_fasta_file']="${1#*=}"
+            '--fasta-file='*)
+                dict['fasta_file']="${1#*=}"
                 shift 1
                 ;;
-            '--transcriptome-fasta-file')
-                dict['tx_fasta_file']="${2:?}"
+            '--fasta-file')
+                dict['fasta_file']="${2:?}"
                 shift 2
                 ;;
             # Other ------------------------------------------------------------
@@ -64,10 +69,10 @@ koopa_salmon_detect_bam_library_type() {
     done
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
-        '--transcriptome-fasta-file' "${dict['tx_fasta_file']}"
+        '--fasta-file' "${dict['fasta_file']}"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
-        "${dict['tx_fasta_file']}"
+        "${dict['fasta_file']}"
     quant_args+=(
         "--alignments=${dict['bam_file']}"
         '--libType=A'
@@ -75,7 +80,7 @@ koopa_salmon_detect_bam_library_type() {
         "--output=${dict['output_dir']}"
         '--quiet'
         '--skipQuant'
-        "--targets=${dict['tx_fasta_file']}"
+        "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
     # FIXME Add back pipe to dev null here after working version.
