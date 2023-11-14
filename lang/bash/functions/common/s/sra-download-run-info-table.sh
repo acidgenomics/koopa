@@ -11,8 +11,8 @@ koopa_sra_download_run_info_table() {
     # """
     local -A app dict
     koopa_assert_has_args "$#"
-    app['efetch']="$(koopa_locate_efetch)"
-    app['esearch']="$(koopa_locate_esearch)"
+    app['efetch']="$(koopa_locate_efetch --realpath)"
+    app['esearch']="$(koopa_locate_esearch --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['run_info_file']=''
     dict['srp_id']=''
