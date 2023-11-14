@@ -857,10 +857,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-10-29",
+    "date": "2023-11-14",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.40.4"
+    "version": "2.41.0"
   },
   "cli11": {
     "aliases": {
@@ -1797,7 +1797,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-11-03",
+    "date": "2023-11-14",
     "default": false,
     "dependencies": [
       "bison",
@@ -1825,7 +1825,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.7.3"
+    "version": "3.8.0"
   },
   "gdbm": {
     "aliases": {
@@ -1907,10 +1907,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-11-01",
+    "date": "2023-11-14",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.38.0"
+    "version": "2.39.1"
   },
   "ghostscript": {
     "aliases": {
@@ -2782,10 +2782,10 @@
     },
     "bin": ["julia"],
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2023-08-25",
+    "date": "2023-11-14",
     "default": false,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.9.3"
+    "version": "1.9.4"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -3445,7 +3445,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-10-31",
+    "date": "2023-11-14",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3461,7 +3461,7 @@
       "zstd"
     ],
     "url": ["https://llvm.org/"],
-    "version": "17.0.4"
+    "version": "17.0.5"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3766,11 +3766,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-11-06",
+    "date": "2023-11-14",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.3.2"
+    "version": "2.3.3"
   },
   "mpc": {
     "aliases": {
