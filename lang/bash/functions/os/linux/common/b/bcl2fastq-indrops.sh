@@ -11,6 +11,7 @@ koopa_linux_bcl2fastq_indrops() {
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['log_file']='bcl2fastq-indrops.log'
+    # FIXME Rework the tee call here.
     "${app['bcl2fastq']}" \
         --use-bases-mask 'y*,y*,y*,y*' \
         --mask-short-adapter-reads 0 \

@@ -140,6 +140,7 @@ koopa_bowtie2_align_paired_end_per_sample() {
         '-x' "${dict['index_base']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
+    # FIXME Rework the tee call here?
     "${app['bowtie2']}" "${align_args[@]}" \
         2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['tmp_fastq_r1_file']}" -eq 1 ]]
