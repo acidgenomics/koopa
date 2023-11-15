@@ -11990,6 +11990,12 @@ koopa_install_apr() {
         "$@"
 }
 
+koopa_install_aria2() {
+    koopa_install_app \
+        --name='aria2' \
+        "$@"
+}
+
 koopa_install_armadillo() {
     koopa_install_app \
         --name='armadillo' \
@@ -27555,6 +27561,12 @@ koopa_uninstall_apr_util() {
 koopa_uninstall_apr() {
     koopa_uninstall_app \
         --name='apr' \
+        "$@"
+}
+
+koopa_uninstall_aria2() {
+    koopa_uninstall_app \
+        --name='aria2' \
         "$@"
 }
 
