@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Rework to take bucket as first positional argument.
+# FIXME Support parameterization of multiple buckets in a loop.
+
 koopa_aws_s3_delete_versioned_glacier_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
