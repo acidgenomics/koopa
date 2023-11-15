@@ -107,6 +107,26 @@
     "url": ["https://apr.apache.org/"],
     "version": "1.6.3"
   },
+  "aria2": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["aria2c"],
+    "build_dependencies": ["pkg-config"],
+    "date": "2023-11-15",
+    "default": false,
+    "dependencies": [
+      "gettext",
+      "libssh2",
+      "libxml2",
+      "openssl3",
+      "sqlite",
+      "zlib"
+    ],
+    "prune": true,
+    "url": ["https://github.com/aria2/aria2/"],
+    "version": "1.37.0"
+  },
   "armadillo": {
     "aliases": {
       "homebrew": true
