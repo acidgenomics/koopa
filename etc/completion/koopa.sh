@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-11-01.
+    # @note Updated 2023-11-15.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -83,6 +83,7 @@ _koopa_complete() {
                         'apache-spark'
                         'apr'
                         'apr-util'
+                        'aria2'
                         'armadillo'
                         'asdf'
                         'aspell'
