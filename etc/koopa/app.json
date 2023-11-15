@@ -1909,9 +1909,10 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2023-11-13",
+    "date": "2023-11-15",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1919,7 +1920,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.28.0"
+    "version": "0.27.9"
   },
   "gh": {
     "aliases": {
@@ -4135,11 +4136,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2023-10-17",
+    "date": "2023-11-15",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.86.0"
+    "version": "0.87.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4175,7 +4176,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-10-30",
+    "date": "2023-11-15",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4184,7 +4185,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.4.2"
+    "version": "0.4.3"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4447,6 +4448,7 @@
     "date": "2023-09-12",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -6427,14 +6429,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-10-14",
+    "date": "2023-11-15",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.10.13"
+    "version": "2023.11.14"
   },
   "zellij": {
     "aliases": {
