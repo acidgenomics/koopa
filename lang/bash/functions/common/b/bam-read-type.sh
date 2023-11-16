@@ -7,6 +7,10 @@ koopa_bam_read_type() {
     #
     # @seealso
     # - https://www.biostars.org/p/178730/
+    #
+    # @examples
+    # koopa_bam_read_type 'sample1.bam'
+    # # paired
     # """
     local -A app dict
     local bam_file

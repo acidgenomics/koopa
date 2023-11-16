@@ -4,6 +4,17 @@ koopa_rmats() {
     # """
     # Run rMATS analysis on unpaired samples.
     # @note Updated 2023-11-16.
+    #
+    # @examples
+    # # STAR GENCODE-aligned BAM files.
+    # # b1_file:
+    # #   control-1.bam,control-2.bam,control-3.bam
+    # # b2_file:
+    # #   treatment-1.bam,treatment-2.bam,treatment-3.bam
+    # koopa_rmats \
+    #     --genome-fasta-file='GRCh38.primary_assembly.genome.fa.gz' \
+    #     --gtf-file='gencode.v44.annotation.gtf.gz'
+    #     --output-dir='star-gencode'
     # """
     local -A app bool dict
     local -a b1_files b2_files rmats_args
@@ -16,10 +27,12 @@ koopa_rmats() {
     # e.g. 'b2.txt': treated samples.
     dict['b2_file']=''
     dict['cstat']=0.0001
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
+    dict['genome_fasta_file']=''
     # e.g. 'gencode.v44.annotation.gtf.gz'.
     dict['gtf_file']=''
-    # e.g. 'fr-unstranded'.
-    dict['lib_type']=''
+    # Using salmon library type conventions here.
+    dict['lib_type']='A'
     dict['nthread']="$(koopa_cpu_count)"
     # e.g. 'star-gencode'.
     dict['output_dir']=''
@@ -48,6 +61,14 @@ koopa_rmats() {
                 dict['b2_file']="${2:?}"
                 shift 2
                 ;;
+            '--genome-fasta-file='*)
+                dict['genome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
             '--gtf-file='*)
                 dict['gtf_file']="${1#*=}"
                 shift 1
@@ -56,11 +77,11 @@ koopa_rmats() {
                 dict['gtf_file']="${2:?}"
                 shift 2
                 ;;
-            '--output-directory='*)
+            '--output-dir='*)
                 dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
-            '--output-directory')
+            '--output-dir')
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
@@ -73,11 +94,11 @@ koopa_rmats() {
                 dict['cstat']="${2:?}"
                 shift 2
                 ;;
-            '--library-type='*)
+            '--lib-type='*)
                 dict['lib_type']="${1#*=}"
                 shift 1
                 ;;
-            '--library-type')
+            '--lib-type')
                 dict['lib_type']="${2:?}"
                 shift 2
                 ;;
@@ -107,24 +128,18 @@ koopa_rmats() {
         '--alpha-threshold' "${dict['cstat']}" \
         '--b1-file' "${dict['b1_file']}" \
         '--b2-file' "${dict['b2_file']}" \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
         '--gtf-file' "${dict['gtf_file']}" \
-        '--output-directory' "${dict['output_dir']}"
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_file \
         "${dict['b1_file']}" \
         "${dict['b2_file']}" \
+        "${dict['genome_fasta_file']}" \
         "${dict['gtf_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/rmats.log"
-    if koopa_is_compressed_file "${dict['gtf_file']}"
-    then
-        bool['tmp_gtf_file']=1
-        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd --ext='gtf')"
-        koopa_decompress \
-            --input-file="${dict['gtf_file']}" \
-            --output-file="${dict['tmp_gtf_file']}"
-        dict['gtf_file']="${dict['tmp_gtf_file']}"
-    fi
     readarray -t -d ',' b1_files < "${dict['b1_file']}"
     readarray -t -d ',' b2_files < "${dict['b2_file']}"
     koopa_assert_is_matching_regex \
@@ -133,20 +148,39 @@ koopa_rmats() {
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${b2_files[0]}"
-    if [[ -z "${dict['lib_type']}" ]]
+    if [[ "${dict['lib_type']}" == 'A' ]]
     then
-        koopa_stop 'FIXME lib_type'
-        # FIXME Need to remap salmon code to rMATS convention.
-        # FIXME Need to add a function to take salmon library type and convert it
-        # to rMATS convention (e.g. 'fr-unstranded').
+        koopa_alert 'Detecting BAM library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_bam_library_type \
+                --bam-file="${dict['fastq_r1_file']}" \
+                --fasta-file="${dict['genome_fasta_file']}" \
+        )"
     fi
+    dict['lib_type']="$(koopa_rmats_library_type "${dict['lib_type']}")"
     if [[ -z "${dict['read_length']}" ]]
     then
-        koopa_stop 'FIXME read_length'
+        dict['read_length']="$(koopa_bam_read_length "${b1_files[0]}")"
     fi
     if [[ -z "${dict['read_type']}" ]]
     then
-        koopa_stop 'FIXME read_type'
+        dict['read_type']="$(koopa_bam_read_type "${b1_files[0]}")"
+    fi
+    case "${dict['read_type']}" in
+        'paired' | 'single')
+            ;;
+        *)
+            koopa_stop "Unsupported read type: '${dict['read_type']}'."
+            ;;
+    esac
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd --ext='gtf')"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
     rmats_args+=(
         '-t' "${dict['read_type']}"

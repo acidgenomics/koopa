@@ -96,9 +96,7 @@ koopa_rsem_quant_paired_end_per_sample() {
     koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
     if [[ -n "${dict['lib_type']}" ]]
     then
-        dict['lib_type']="$( \
-            koopa_rsem_fastq_library_type "${dict['lib_type']}" \
-        )"
+        dict['lib_type']="$(koopa_rsem_library_type "${dict['lib_type']}")"
         quant_args+=('--strandedness' "${dict['lib_type']}")
     fi
     quant_args+=(
