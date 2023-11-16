@@ -147,7 +147,8 @@ koopa_aws_s3_delete_versioned_objects() {
             --output 'text' \
             --profile "${dict['profile']}" \
             --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}"
+            --version-id "${dict2['version_id']}" \
+        > /dev/null
     done
     return 0
 }
