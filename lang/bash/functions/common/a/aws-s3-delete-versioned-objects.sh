@@ -2,11 +2,10 @@
 
 # TODO Rework this to use 'delete-objects', which requires JSON input but
 # only uses a single call to AWS.
-
 # FIXME Rework to take bucket as first positional argument.
 # FIXME Support parameterization of multiple buckets in a loop.
 
-koopa_aws_s3_delete_versioned_glacier_objects() {
+koopa_aws_s3_delete_versioned_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
     # @note Updated 2023-11-16.
@@ -20,8 +19,9 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \
-    # >     --dry-run \
     # >     --bucket='s3://example-bucket/' \
+    # >     --dry-run \
+    # >     --prefix='subdir' \
     # >     --profile='default' \
     # >     --region='us-east-1'
     # """
@@ -102,7 +102,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Fetching versioned Glacier objects in '${dict['bucket']}'."
+    koopa_alert "Fetching versioned objects in '${dict['bucket']}'."
     dict['json']="$( \
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
@@ -110,12 +110,12 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             --output 'json' \
             --prefix "${dict['prefix']}" \
             --profile "${dict['profile']}" \
-            --query "Versions[?StorageClass=='GLACIER']" \
+            --query "Versions[?IsLatest==\`false\`]" \
             --region "${dict['region']}" \
     )"
     if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
     then
-        koopa_alert_note "No versioned Glacier objects in '${dict['bucket']}'."
+        koopa_alert_note "No versioned objects in '${dict['bucket']}'."
         return 0
     fi
     readarray -t keys <<< "$( \
