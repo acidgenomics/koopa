@@ -126,7 +126,7 @@ koopa_hisat2_align_single_end_per_sample() {
         '--new-summary'
         '--threads' "${dict['threads']}"
     )
-    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_hisat2_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
