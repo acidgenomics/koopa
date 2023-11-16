@@ -22736,6 +22736,8 @@ koopa_rmats() {
             --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
+    koopa_cp "${dict['b1_file']}" "${dict['output_dir']}/b1.txt"
+    koopa_cp "${dict['b2_file']}" "${dict['output_dir']}/b2.txt"
     rmats_args+=(
         '-t' "${dict['read_type']}"
         '--b1' "${dict['b1_file']}"
@@ -22752,10 +22754,6 @@ koopa_rmats() {
     koopa_dl 'rmats' "${rmats_args[*]}"
     "${app['rmats']}" "${rmats_args[@]}" \
         2>&1 | "${app['tee']}" "${dict['log_file']}"
-    koopa_cp \
-        --target-directory="${dict['output_dir']}" \
-        "${dict['b1_file']}" \
-        "${dict['b2_file']}"
     koopa_rm "${dict['tmp_dir']}"
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
