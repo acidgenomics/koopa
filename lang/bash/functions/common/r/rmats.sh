@@ -162,12 +162,13 @@ koopa_rmats() {
         '--tstat' "${dict['nthread']}"
     )
     koopa_dl 'rmats' "${rmats_args[*]}"
-    # FIXME Need to rework out to use tee to provide interactive logging.
-    # Should we call in a subshell here?
-    # tee >(myprogram) | tee -a file.log
-    "${app['rmats']}" "${rmats_args[@]}" \
+    "${app['tee']}" \
+        >("${app['rmats']}" "${rmats_args[@]}") \
         2>&1 | "${app['tee']}" "${dict['log_file']}"
-    # FIXME Ensure we copy the input b1 and b2 files to the output directory.
+    koopa_cp \
+        --target-directory="${dict['output_dir']}" \
+        "${dict['b1_file']}" \
+        "${dict['b2_file']}"
     koopa_rm "${dict['tmp_dir']}"
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
