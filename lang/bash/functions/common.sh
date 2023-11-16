@@ -2299,6 +2299,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
     koopa_assert_is_executable "${app[@]}"
     bool['dryrun']=0
     dict['bucket']=''
+    dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
     dict['region']="${AWS_REGION:-us-east-1}"
     while (("$#"))
@@ -2310,6 +2311,14 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
                 ;;
             '--bucket')
                 dict['bucket']="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
             '--profile='*)
@@ -2362,6 +2371,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             --bucket "${dict['bucket']}" \
             --no-cli-pager \
             --output 'json' \
+            --prefix "${dict['prefix']}" \
             --profile "${dict['profile']}" \
             --query "Versions[?StorageClass=='GLACIER']" \
             --region "${dict['region']}" \
