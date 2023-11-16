@@ -9,7 +9,7 @@
 koopa_aws_s3_delete_versioned_glacier_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
-    # @note Updated 2023-07-18.
+    # @note Updated 2023-11-16.
     #
     # @seealso
     # - aws s3api list-object-versions help
@@ -147,7 +147,8 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             --output 'text' \
             --profile "${dict['profile']}" \
             --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}"
+            --version-id "${dict2['version_id']}" \
+        > /dev/null
     done
     return 0
 }
