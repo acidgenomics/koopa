@@ -86,7 +86,6 @@ koopa_aws_s3_delete_versioned_objects() {
     done
     koopa_assert_is_set \
         '--bucket' "${dict['bucket']}" \
-        '--prefix' "${dict['prefix']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
     koopa_assert_is_matching_regex \
