@@ -765,6 +765,7 @@ _koopa_complete() {
                                 's3')
                                     args=(
                                         'delete-versioned-glacier-objects'
+                                        'delete-versioned-objects'
                                         'dot-clean'
                                         'find'
                                         'list-large-files'
