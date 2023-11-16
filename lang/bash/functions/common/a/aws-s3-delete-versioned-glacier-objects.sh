@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# TODO Rework this to use 'delete-objects', which requires JSON input but
+# only uses a single call to AWS.
+
 # FIXME Rework to take bucket as first positional argument.
 # FIXME Support parameterization of multiple buckets in a loop.
 
