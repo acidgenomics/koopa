@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_rsem_fastq_library_type() {
+koopa_salmon_library_type_to_rsem() {
     # """
-    # Convert salmon FASTQ library type to RSEM conventions.
-    # @note Updated 2023-10-20.
+    # Convert salmon library type to RSEM conventions.
+    # @note Updated 2023-11-16.
     #
     # Recommended approach:
     # --strandedness <none|forward|reverse>
@@ -32,11 +32,11 @@ koopa_rsem_fastq_library_type() {
     # - https://deweylab.github.io/RSEM/rsem-calculate-expression.html
     #
     # @examples
-    # > koopa_rsem_fastq_library_type 'ISF'
+    # > koopa_salmon_library_type_to_rsem 'ISF'
     # # forward
-    # > koopa_rsem_fastq_library_type 'ISR'
+    # > koopa_salmon_library_type_to_rsem 'ISR'
     # # reverse
-    # > koopa_rsem_fastq_library_type 'IU'
+    # > koopa_salmon_library_type_to_rsem 'IU'
     # # none
     # """
     local from to
