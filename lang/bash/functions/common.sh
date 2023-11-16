@@ -10467,7 +10467,9 @@ koopa_hisat2_align_paired_end_per_sample() {
                 --index-dir="${dict['salmon_index_dir']}" \
         )"
     fi
-    dict['lib_type']="$(koopa_hisat2_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_hisat2 "${dict['lib_type']}" \
+    )"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
@@ -10814,7 +10816,9 @@ koopa_hisat2_align_single_end_per_sample() {
         '--new-summary'
         '--threads' "${dict['threads']}"
     )
-    dict['lib_type']="$(koopa_hisat2_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_hisat2 "${dict['lib_type']}" \
+    )"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
@@ -11135,34 +11139,6 @@ koopa_hisat2_index() {
         koopa_rm "${dict['gtf_file']}"
     fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
-    return 0
-}
-
-koopa_hisat2_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            return 0
-            ;;
-        'ISF')
-            to='FR'
-            ;;
-        'ISR')
-            to='RF'
-            ;;
-        'SF')
-            to='F'
-            ;;
-        'SR')
-            to='R'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
     return 0
 }
 
@@ -16724,28 +16700,6 @@ koopa_kallisto_index() {
     return 0
 }
 
-koopa_kallisto_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'MU' | 'OU' | 'U')
-            return 0
-            ;;
-        'ISF')
-            to='--fr-stranded'
-            ;;
-        'ISR')
-            to='--rf-stranded'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
 koopa_kallisto_quant_paired_end_per_sample() {
     local -A app dict
     local -a quant_args
@@ -16859,7 +16813,9 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 --index-dir="${dict['salmon_index_dir']}" \
         )"
     fi
-    dict['lib_type']="$(koopa_kallisto_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_kallisto "${dict['lib_type']}" \
+    )"
     if [[ -n "${dict['lib_type']}" ]]
     then
         quant_args+=("${dict['lib_type']}")
@@ -22611,29 +22567,6 @@ koopa_rm() {
     return 0
 }
 
-koopa_rmats_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'MU' | 'OU' | 'U')
-            to='--fr-unstranded'
-            return 0
-            ;;
-        'ISF')
-            to='--fr-stranded'
-            ;;
-        'ISR')
-            to='--rf-stranded'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
 koopa_rmats() {
     local -A app bool dict
     local -a b1_files b2_files rmats_args
@@ -22761,17 +22694,21 @@ koopa_rmats() {
         koopa_alert 'Detecting BAM library type with salmon.'
         dict['lib_type']="$( \
             koopa_salmon_detect_bam_library_type \
-                --bam-file="${dict['fastq_r1_file']}" \
+                --bam-file="${b1_files[0]}" \
                 --fasta-file="${dict['genome_fasta_file']}" \
         )"
     fi
-    dict['lib_type']="$(koopa_rmats_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_rmats "${dict['lib_type']}" \
+    )"
     if [[ -z "${dict['read_length']}" ]]
     then
+        koopa_alert 'Detecting BAM read length.'
         dict['read_length']="$(koopa_bam_read_length "${b1_files[0]}")"
     fi
     if [[ -z "${dict['read_type']}" ]]
     then
+        koopa_alert 'Detecting BAM read type.'
         dict['read_type']="$(koopa_bam_read_type "${b1_files[0]}")"
     fi
     case "${dict['read_type']}" in
@@ -23023,38 +22960,17 @@ koopa_rsem_index() {
     return 0
 }
 
-koopa_rsem_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            to='none'
-            ;;
-        'ISF')
-            to='forward'
-            ;;
-        'ISR')
-            to='reverse'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
 koopa_rsem_quant_paired_end_per_sample() {
     local -A app dict
     local -a quant_args
     app['rsem_calculate_expression']="$(koopa_locate_rsem_calculate_expression)"
     koopa_assert_is_executable "${app[@]}"
     dict['bam_file']=''
-    dict['lib_type']=''
+    dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=14
     dict['threads']="$(koopa_cpu_count)"
+    dict['transcriptome_fasta_file']=''
     while (("$#"))
     do
         case "$1" in
@@ -23090,6 +23006,14 @@ koopa_rsem_quant_paired_end_per_sample() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--transcriptome-fasta-file='*)
+                dict['transcriptome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict['transcriptome_fasta_file']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -23098,7 +23022,9 @@ koopa_rsem_quant_paired_end_per_sample() {
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--output-dir' "${dict['output_dir']}"
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
     if [[ -d "${dict['output_dir']}" ]]
     then
         koopa_alert_note "Skipping '${dict['output_dir']}'."
@@ -23111,21 +23037,43 @@ koopa_rsem_quant_paired_end_per_sample() {
     koopa_assert_is_file "${dict['bam_file']}"
     koopa_assert_is_dir "${dict['index_dir']}"
     dict['bam_file']="$(koopa_realpath "${dict['bam_file']}")"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${dict['bam_file']}"
     dict['bam_bn']="$(koopa_basename "${dict['bam_file']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
-    if [[ -n "${dict['lib_type']}" ]]
+    if [[ "${dict['lib_type']}" == 'A' ]]
     then
-        dict['lib_type']="$(koopa_rsem_library_type "${dict['lib_type']}")"
-        quant_args+=('--strandedness' "${dict['lib_type']}")
+        koopa_alert 'Detecting BAM library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_bam_library_type \
+                --bam-file="${dict['bam_file']}" \
+                --fasta-file="${dict['transcriptome_fasta_file']}" \
+        )"
     fi
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_rsem "${dict['lib_type']}" \
+    )"
+    koopa_alert 'Detecting BAM read type.'
+    dict['read_type']="$(koopa_bam_read_type "${dict['bam_file']}")"
+    case "${dict['read_type']}" in
+        'paired')
+            quant_args+=('--paired-end')
+            ;;
+        'single')
+            ;;
+        *)
+            koopa_stop "Unsupported read type: '${dict['read_type']}'."
+            ;;
+    esac
     quant_args+=(
         '--bam'
         '--estimate-rspd'
-        '--paired-end'
         '--no-bam-output'
         '--num-threads' "${dict['threads']}"
+        '--strandedness' "${dict['lib_type']}"
         "${dict['index_dir']}"
         "${dict['bam_file']}"
     )
@@ -23144,8 +23092,9 @@ koopa_rsem_quant_bam() {
     dict['aws_profile']="${AWS_PROFILE:-default}"
     dict['bam_dir']=''
     dict['index_dir']=''
-    dict['lib_type']=''
+    dict['lib_type']='A'
     dict['output_dir']=''
+    dict['transcriptome_fasta_file']=''
     while (("$#"))
     do
         case "$1" in
@@ -23189,6 +23138,14 @@ koopa_rsem_quant_bam() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--transcriptome-fasta-file='*)
+                dict['transcriptome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict['transcriptome_fasta_file']="${2:?}"
+                shift 2
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -23197,7 +23154,9 @@ koopa_rsem_quant_bam() {
     koopa_assert_is_set \
         '--bam-dir' "${dict['bam_dir']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--output-dir' "${dict['output_dir']}"
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
     koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
     dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
@@ -23254,7 +23213,8 @@ koopa_rsem_quant_bam() {
             --bam-file="${dict2['bam_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict2['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --transcriptome-fasta-file="${dict['transcriptome_fasta_file']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
             dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
@@ -23421,6 +23381,50 @@ koopa_run_if_installed() {
         exe="$(koopa_which_realpath "$arg")"
         "$exe"
     done
+    return 0
+}
+
+koopa_salmon_library_type_to_rmats() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'MU' | 'OU' | 'U')
+            to='fr-unstranded'
+            ;;
+        'ISF')
+            to='fr-secondstrand'
+            ;;
+        'ISR')
+            to='fr-firststrand'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_salmon_library_type_to_rsem() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            to='none'
+            ;;
+        'ISF')
+            to='forward'
+            ;;
+        'ISR')
+            to='reverse'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
     return 0
 }
 
@@ -23740,6 +23744,56 @@ koopa_salmon_index() {
             "${dict['gentrome_fasta_file']}"
     fi
     koopa_alert_success "salmon index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_salmon_library_type_to_hisat2() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            return 0
+            ;;
+        'ISF')
+            to='FR'
+            ;;
+        'ISR')
+            to='RF'
+            ;;
+        'SF')
+            to='F'
+            ;;
+        'SR')
+            to='R'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_salmon_library_type_to_kallisto() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'MU' | 'OU' | 'U')
+            return 0
+            ;;
+        'ISF')
+            to='--fr-stranded'
+            ;;
+        'ISR')
+            to='--rf-stranded'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
     return 0
 }
 
