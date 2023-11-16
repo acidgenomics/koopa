@@ -1,45 +1,37 @@
 #!/usr/bin/env bash
 
-koopa_hisat2_library_type() {
+koopa_salmon_library_type_to_kallisto() {
     # """
-    # Convert salmon library type to HISAT2 strandedness.
+    # Convert salmon library type to kallisto conventions.
     # @note Updated 2023-11-16.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
-    # - https://rnabio.org/module-09-appendix/0009/12/01/StrandSettings/
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/
-    #     ngsalign/hisat2.py
+    # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
+    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/
+    #     kallisto.py
     #
     # @examples
-    # > koopa_hisat2_library_type 'ISF'
-    # # FR
-    # > koopa_hisat2_library_type 'ISR'
-    # # RF
+    # > koopa_salmon_library_type_to_kallisto 'ISF'
+    # # --fr-stranded
+    # > koopa_salmon_library_type_to_kallisto 'ISR'
+    # # --rf-stranded
     # """
     local from to
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'IU' | 'U')
+        'IU' | 'MU' | 'OU' | 'U')
             # fr-unstranded.
             return 0
             ;;
         'ISF')
             # fr-secondstrand (ligation).
-            to='FR'
+            to='--fr-stranded'
             ;;
         'ISR')
             # fr-firststrand (dUTP).
-            to='RF'
-            ;;
-        'SF')
-            # fr-secondstrand.
-            to='F'
-            ;;
-        'SR')
-            # fr-firststrand.
-            to='R'
+            to='--rf-stranded'
             ;;
         *)
             koopa_stop "Invalid library type: '${1:?}'."
