@@ -139,6 +139,10 @@ koopa_rmats() {
         "${dict['b2_file']}" \
         "${dict['genome_fasta_file']}" \
         "${dict['gtf_file']}"
+    dict['b1_file']="$(koopa_realpath "${dict['b1_file']}")"
+    dict['b2_file']="$(koopa_realpath "${dict['b2_file']}")"
+    dict['genome_fasta_file']="$(koopa_realpath "${dict['genome_fasta_file']}")"
+    dict['gtf_file']="$(koopa_realpath "${dict['gtf_file']}")"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/rmats.log"
