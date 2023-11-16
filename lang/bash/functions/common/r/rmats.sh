@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add a function to take salmon library type and convert it
-# to rMATS convention (e.g. 'fr-unstranded').
-
 koopa_rmats() {
     # """
     # Run rMATS analysis on unpaired samples.
     # @note Updated 2023-11-16.
     # """
     local -A app bool dict
-    local -a rmats_args
+    local -a b1_files b2_files rmats_args
     app['rmats']="$(koopa_locate_rmats)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -128,11 +125,29 @@ koopa_rmats() {
             --output-file="${dict['tmp_gtf_file']}"
         dict['gtf_file']="${dict['tmp_gtf_file']}"
     fi
-    # FIXME Read the files into an array and then check the first file for
-    # strandedness and read length.
-    # FIXME Handle '--library-type'.
-    # FIXME Handle '--read-length'.
-    # FIXME Handle '--read-type'.
+    readarray -t -d ',' b1_files < "${dict['b1_file']}"
+    readarray -t -d ',' b2_files < "${dict['b2_file']}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${b1_files[0]}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${b2_files[0]}"
+    if [[ -z "${dict['lib_type']}" ]]
+    then
+        koopa_stop 'FIXME lib_type'
+        # FIXME Need to remap salmon code to rMATS convention.
+        # FIXME Need to add a function to take salmon library type and convert it
+        # to rMATS convention (e.g. 'fr-unstranded').
+    fi
+    if [[ -z "${dict['read_length']}" ]]
+    then
+        koopa_stop 'FIXME read_length'
+    fi
+    if [[ -z "${dict['read_type']}" ]]
+    then
+        koopa_stop 'FIXME read_type'
+    fi
     rmats_args+=(
         '-t' "${dict['read_type']}"
         '--b1' "${dict['b1_file']}"
@@ -146,6 +161,7 @@ koopa_rmats() {
         '--tmp' "${dict['tmp_dir']}"
         '--tstat' "${dict['nthread']}"
     )
+    koopa_dl 'rmats' "${rmats_args[*]}"
     # FIXME Need to rework out to use tee to provide interactive logging.
     # Should we call in a subshell here?
     # tee >(myprogram) | tee -a file.log
