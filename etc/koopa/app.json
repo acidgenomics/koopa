@@ -426,13 +426,13 @@
     "date": "2023-05-24",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
+    "private": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
     },
-    "private": true,
     "url": [
       "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html"
     ],
@@ -441,14 +441,14 @@
   "bedtools": {
     "bin": ["bedtools"],
     "build_dependencies": {
-      "noarch": [],
-      "macos-arm64": ["autoconf", "automake", "make"]
+      "macos-arm64": ["autoconf", "automake", "make"],
+      "noarch": []
     },
     "date": "2023-11-08",
     "default": false,
     "dependencies": {
-      "noarch": ["conda"],
-      "macos-arm64": ["bzip2", "curl", "xz", "zlib"]
+      "macos-arm64": ["bzip2", "curl", "xz", "zlib"],
+      "noarch": ["conda"]
     },
     "supported": {
       "linux-amd64": true,
@@ -1803,8 +1803,8 @@
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
     "supported": {
-      "noarch": true,
-      "macos-amd64": false
+      "macos-amd64": false,
+      "noarch": true
     },
     "url": ["https://gcc.gnu.org/"],
     "version": "13.2.0"
@@ -4529,12 +4529,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2023-11-03",
+    "date": "2023-11-16",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.7.0"
+    "version": "1.7.1"
   },
   "prelude-emacs": {
     "date": "2023-05-30",
@@ -5254,14 +5254,14 @@
   "samtools": {
     "bin": ["samtools"],
     "build_dependencies": {
-      "noarch": [],
-      "macos-arm64": ["make"]
+      "macos-arm64": ["make"],
+      "noarch": []
     },
     "date": "2023-10-16",
     "default": false,
     "dependencies": {
-      "noarch": ["conda"],
-      "macos-arm64": ["htslib", "ncurses", "zlib"]
+      "macos-arm64": ["htslib", "ncurses", "zlib"],
+      "noarch": ["conda"]
     },
     "supported": {
       "linux-amd64": true,
