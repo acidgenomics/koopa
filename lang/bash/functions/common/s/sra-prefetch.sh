@@ -3,7 +3,7 @@
 koopa_sra_prefetch() {
     # """
     # Prefetch files from SRA.
-    # @note Updated 2023-11-10.
+    # @note Updated 2023-11-16.
     #
     # Alternatively, can sync directly from AWS with:
     # > aws s3 sync s3://sra-pub-run-odp/sra/<SRR_ID>/ ./<SRR_ID>/
@@ -19,7 +19,7 @@ koopa_sra_prefetch() {
     # @examples
     # > koopa_sra_prefetch \
     # >     --accession-file='srp049596-accession-list.txt' \
-    # >     --output-directory='srp049596-prefetch'
+    # >     --output-dir='srp049596-prefetch'
     # """
     local -A app dict
     local -a parallel_cmd
@@ -44,10 +44,12 @@ koopa_sra_prefetch() {
                 dict['acc_file']="${2:?}"
                 shift 2
                 ;;
+            '--output-dir='* | \
             '--output-directory='*)
                 dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir' | \
             '--output-directory')
                 dict['output_dir']="${2:?}"
                 shift 2
@@ -61,7 +63,7 @@ koopa_sra_prefetch() {
     done
     koopa_assert_is_set \
         '--accession-file' "${dict['acc_file']}" \
-        '--output-directory' "${dict['output_dir']}"
+        '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"

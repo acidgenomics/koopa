@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_kallisto_fastq_library_type() {
+koopa_salmon_library_type_to_kallisto() {
     # """
-    # Convert salmon FASTQ library type to kallisto conventions.
-    # @note Updated 2023-10-20.
+    # Convert salmon library type to kallisto conventions.
+    # @note Updated 2023-11-16.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
@@ -12,16 +12,16 @@ koopa_kallisto_fastq_library_type() {
     #     kallisto.py
     #
     # @examples
-    # > koopa_kallisto_fastq_library_type 'ISF'
+    # > koopa_salmon_library_type_to_kallisto 'ISF'
     # # --fr-stranded
-    # > koopa_kallisto_fastq_library_type 'ISR'
+    # > koopa_salmon_library_type_to_kallisto 'ISR'
     # # --rf-stranded
     # """
     local from to
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'IU' | 'U')
+        'IU' | 'MU' | 'OU' | 'U')
             # fr-unstranded.
             return 0
             ;;
