@@ -12,9 +12,11 @@ koopa_rmats() {
     # # b2_file:
     # #   treatment-1.bam,treatment-2.bam,treatment-3.bam
     # koopa_rmats \
+    #     --b1-file='b1.txt' \
+    #     --b2-file='b2.txt' \
     #     --genome-fasta-file='GRCh38.primary_assembly.genome.fa.gz' \
     #     --gtf-file='gencode.v44.annotation.gtf.gz'
-    #     --output-dir='star-gencode'
+    #     --output-dir='rmats/star-gencode/treatment-vs-control'
     # """
     local -A app bool dict
     local -a b1_files b2_files rmats_args
