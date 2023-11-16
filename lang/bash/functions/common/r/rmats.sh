@@ -15,7 +15,7 @@ koopa_rmats() {
     #     --b1-file='b1.txt' \
     #     --b2-file='b2.txt' \
     #     --genome-fasta-file='GRCh38.primary_assembly.genome.fa.gz' \
-    #     --gtf-file='gencode.v44.annotation.gtf.gz'
+    #     --gtf-file='gencode.v44.annotation.gtf.gz' \
     #     --output-dir='rmats/star-gencode/treatment-vs-control'
     # """
     local -A app bool dict
