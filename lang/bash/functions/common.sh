@@ -4513,6 +4513,10 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
+        'rmats')
+            dict['key']="${1:?}"
+            shift 1
+            ;;
         'rnaeditingindexer')
             dict['key']="${1:?}"
             shift 1
