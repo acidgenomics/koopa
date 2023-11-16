@@ -1493,14 +1493,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-09",
+    "date": "2023-11-16",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.15.3"
+    "version": "0.16.0"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -5205,10 +5205,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-10-06",
+    "date": "2023-11-16",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.73.0"
+    "version": "1.74.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -6429,14 +6429,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-11-15",
+    "date": "2023-11-16",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.11.14"
+    "version": "2023.11.16"
   },
   "zellij": {
     "aliases": {
