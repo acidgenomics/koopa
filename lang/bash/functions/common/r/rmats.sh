@@ -153,17 +153,21 @@ koopa_rmats() {
         koopa_alert 'Detecting BAM library type with salmon.'
         dict['lib_type']="$( \
             koopa_salmon_detect_bam_library_type \
-                --bam-file="${dict['fastq_r1_file']}" \
+                --bam-file="${b1_files[0]}" \
                 --fasta-file="${dict['genome_fasta_file']}" \
         )"
     fi
-    dict['lib_type']="$(koopa_rmats_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_rmats "${dict['lib_type']}" \
+    )"
     if [[ -z "${dict['read_length']}" ]]
     then
+        koopa_alert 'Detecting BAM read length.'
         dict['read_length']="$(koopa_bam_read_length "${b1_files[0]}")"
     fi
     if [[ -z "${dict['read_type']}" ]]
     then
+        koopa_alert 'Detecting BAM read type.'
         dict['read_type']="$(koopa_bam_read_type "${b1_files[0]}")"
     fi
     case "${dict['read_type']}" in

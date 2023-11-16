@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_rmats_library_type() {
+koopa_salmon_library_type_to_rmats() {
     # """
     # Convert salmon library type to rMATS conventions.
     # @note Updated 2023-11-16.
@@ -10,26 +10,25 @@ koopa_rmats_library_type() {
     # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
     #
     # @examples
-    # > koopa_rmats_library_type 'IU'
-    # # --fr-unstranded
-    # > koopa_rmats_library_type 'MU'
-    # # --fr-unstranded
+    # > koopa_salmon_library_type_to_rmats 'IU'
+    # # fr-unstranded
+    # > koopa_salmon_library_type_to_rmats 'MU'
+    # # fr-unstranded
+    # > koopa_salmon_library_type_to_rmats 'ISR'
+    # # fr-firststrand
     # """
     local from to
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
         'IU' | 'MU' | 'OU' | 'U')
-            to='--fr-unstranded'
-            return 0
+            to='fr-unstranded'
             ;;
         'ISF')
-            # fr-secondstrand (ligation).
-            to='--fr-stranded'
+            to='fr-secondstrand'
             ;;
         'ISR')
-            # fr-firststrand (dUTP).
-            to='--rf-stranded'
+            to='fr-firststrand'
             ;;
         *)
             koopa_stop "Invalid library type: '${1:?}'."

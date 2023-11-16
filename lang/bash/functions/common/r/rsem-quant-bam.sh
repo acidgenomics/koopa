@@ -6,7 +6,7 @@
 koopa_rsem_quant_bam() {
     # """
     # Run RSEM quant on multiple paired-end BAMs in a directory.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-11-16.
     #
     # @examples
     # > koopa_rsem_quant_paired_end \
@@ -26,9 +26,11 @@ koopa_rsem_quant_bam() {
     # e.g. 'indexes/rsem-gencode'.
     dict['index_dir']=''
     # Using salmon fragment library type conventions here, but not required.
-    dict['lib_type']=''
+    dict['lib_type']='A'
     # e.g. 'quant/rsem-gencode'.
     dict['output_dir']=''
+    # e.g. 'gencode.v44.transcripts_fixed.fa.gz'.
+    dict['transcriptome_fasta_file']=''
     while (("$#"))
     do
         case "$1" in
@@ -73,6 +75,14 @@ koopa_rsem_quant_bam() {
                 dict['output_dir']="${2:?}"
                 shift 2
                 ;;
+            '--transcriptome-fasta-file='*)
+                dict['transcriptome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--transcriptome-fasta-file')
+                dict['transcriptome_fasta_file']="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -82,7 +92,9 @@ koopa_rsem_quant_bam() {
     koopa_assert_is_set \
         '--bam-dir' "${dict['bam_dir']}" \
         '--index-dir' "${dict['index_dir']}" \
-        '--output-dir' "${dict['output_dir']}"
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}" \
+        '--transcriptome-fasta-file' "${dict['transcriptome_fasta_file']}"
     koopa_assert_is_dir "${dict['bam_dir']}" "${dict['index_dir']}"
     dict['bam_dir']="$(koopa_realpath "${dict['bam_dir']}")"
     dict['index_dir']="$(koopa_realpath "${dict['index_dir']}")"
@@ -139,7 +151,8 @@ koopa_rsem_quant_bam() {
             --bam-file="${dict2['bam_file']}" \
             --index-dir="${dict['index_dir']}" \
             --lib-type="${dict['lib_type']}" \
-            --output-dir="${dict2['output_dir']}"
+            --output-dir="${dict2['output_dir']}" \
+            --transcriptome-fasta-file="${dict['transcriptome_fasta_file']}"
         if [[ "${bool['aws_s3_output_dir']}" -eq 1 ]]
         then
             dict2['aws_s3_output_dir']="${dict['aws_s3_output_dir']}/\
