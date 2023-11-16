@@ -10467,7 +10467,7 @@ koopa_hisat2_align_paired_end_per_sample() {
                 --index-dir="${dict['salmon_index_dir']}" \
         )"
     fi
-    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_hisat2_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
@@ -10814,7 +10814,7 @@ koopa_hisat2_align_single_end_per_sample() {
         '--new-summary'
         '--threads' "${dict['threads']}"
     )
-    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$(koopa_hisat2_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
@@ -11001,34 +11001,6 @@ ${dict2['sample_id']}"
     return 0
 }
 
-koopa_hisat2_fastq_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            return 0
-            ;;
-        'ISF')
-            to='FR'
-            ;;
-        'ISR')
-            to='RF'
-            ;;
-        'SF')
-            to='F'
-            ;;
-        'SR')
-            to='R'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
 koopa_hisat2_fastq_quality_format() {
     local -A dict
     koopa_assert_has_args_eq "$#" 1
@@ -11163,6 +11135,34 @@ koopa_hisat2_index() {
         koopa_rm "${dict['gtf_file']}"
     fi
     koopa_alert_success "HISAT2 index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_hisat2_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            return 0
+            ;;
+        'ISF')
+            to='FR'
+            ;;
+        'ISR')
+            to='RF'
+            ;;
+        'SF')
+            to='F'
+            ;;
+        'SR')
+            to='R'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
     return 0
 }
 
@@ -16650,28 +16650,6 @@ koopa_julia_script_prefix() {
     return 0
 }
 
-koopa_kallisto_fastq_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            return 0
-            ;;
-        'ISF')
-            to='--fr-stranded'
-            ;;
-        'ISR')
-            to='--rf-stranded'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
 koopa_kallisto_index() {
     local -A app dict
     local -a index_args
@@ -16743,6 +16721,28 @@ koopa_kallisto_index() {
     koopa_dl 'Index args' "${index_args[*]}"
     "${app['kallisto']}" index "${index_args[@]}"
     koopa_alert_success "kallisto index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_kallisto_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'MU' | 'OU' | 'U')
+            return 0
+            ;;
+        'ISF')
+            to='--fr-stranded'
+            ;;
+        'ISR')
+            to='--rf-stranded'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
     return 0
 }
 
@@ -16859,9 +16859,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
                 --index-dir="${dict['salmon_index_dir']}" \
         )"
     fi
-    dict['lib_type']="$( \
-        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
-    )"
+    dict['lib_type']="$(koopa_kallisto_library_type "${dict['lib_type']}")"
     if [[ -n "${dict['lib_type']}" ]]
     then
         quant_args+=("${dict['lib_type']}")
@@ -22613,6 +22611,214 @@ koopa_rm() {
     return 0
 }
 
+koopa_rmats_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'MU' | 'OU' | 'U')
+            to='--fr-unstranded'
+            return 0
+            ;;
+        'ISF')
+            to='--fr-stranded'
+            ;;
+        'ISR')
+            to='--rf-stranded'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_rmats() {
+    local -A app bool dict
+    local -a b1_files b2_files rmats_args
+    app['rmats']="$(koopa_locate_rmats)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    bool['tmp_gtf_file']=0
+    dict['b1_file']=''
+    dict['b2_file']=''
+    dict['cstat']=0.0001
+    dict['genome_fasta_file']=''
+    dict['gtf_file']=''
+    dict['lib_type']='A'
+    dict['nthread']="$(koopa_cpu_count)"
+    dict['output_dir']=''
+    dict['read_length']=''
+    dict['read_type']=''
+    dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--b1-file='*)
+                dict['b1_file']="${1#*=}"
+                shift 1
+                ;;
+            '--b1-file')
+                dict['b1_file']="${2:?}"
+                shift 2
+                ;;
+            '--b2-file='*)
+                dict['b2_file']="${1#*=}"
+                shift 1
+                ;;
+            '--b2-file')
+                dict['b2_file']="${2:?}"
+                shift 2
+                ;;
+            '--genome-fasta-file='*)
+                dict['genome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            '--alpha-threshold='*)
+                dict['cstat']="${1#*=}"
+                shift 1
+                ;;
+            '--alpha-threshold')
+                dict['cstat']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--read-length='*)
+                dict['read_length']="${1#*=}"
+                shift 1
+                ;;
+            '--read-length')
+                dict['read_length']="${2:?}"
+                shift 2
+                ;;
+            '--read-type='*)
+                dict['read_type']="${1#*=}"
+                shift 1
+                ;;
+            '--read-type')
+                dict['read_type']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--alpha-threshold' "${dict['cstat']}" \
+        '--b1-file' "${dict['b1_file']}" \
+        '--b2-file' "${dict['b2_file']}" \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--gtf-file' "${dict['gtf_file']}" \
+        '--lib-type' "${dict['lib_type']}" \
+        '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_file \
+        "${dict['b1_file']}" \
+        "${dict['b2_file']}" \
+        "${dict['genome_fasta_file']}" \
+        "${dict['gtf_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['log_file']="${dict['output_dir']}/rmats.log"
+    readarray -t -d ',' b1_files < "${dict['b1_file']}"
+    readarray -t -d ',' b2_files < "${dict['b2_file']}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${b1_files[0]}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${b2_files[0]}"
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting BAM library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_bam_library_type \
+                --bam-file="${dict['fastq_r1_file']}" \
+                --fasta-file="${dict['genome_fasta_file']}" \
+        )"
+    fi
+    dict['lib_type']="$(koopa_rmats_library_type "${dict['lib_type']}")"
+    if [[ -z "${dict['read_length']}" ]]
+    then
+        dict['read_length']="$(koopa_bam_read_length "${b1_files[0]}")"
+    fi
+    if [[ -z "${dict['read_type']}" ]]
+    then
+        dict['read_type']="$(koopa_bam_read_type "${b1_files[0]}")"
+    fi
+    case "${dict['read_type']}" in
+        'paired' | 'single')
+            ;;
+        *)
+            koopa_stop "Unsupported read type: '${dict['read_type']}'."
+            ;;
+    esac
+    if koopa_is_compressed_file "${dict['gtf_file']}"
+    then
+        bool['tmp_gtf_file']=1
+        dict['tmp_gtf_file']="$(koopa_tmp_file_in_wd --ext='gtf')"
+        koopa_decompress \
+            --input-file="${dict['gtf_file']}" \
+            --output-file="${dict['tmp_gtf_file']}"
+        dict['gtf_file']="${dict['tmp_gtf_file']}"
+    fi
+    rmats_args+=(
+        '-t' "${dict['read_type']}"
+        '--b1' "${dict['b1_file']}"
+        '--b2' "${dict['b2_file']}"
+        '--cstat' "${dict['cstat']}"
+        '--gtf' "${dict['gtf_file']}"
+        '--libType' "${dict['lib_type']}"
+        '--nthread' "${dict['nthread']}"
+        '--od' "${dict['output_dir']}"
+        '--readLength' "${dict['read_length']}"
+        '--tmp' "${dict['tmp_dir']}"
+        '--tstat' "${dict['nthread']}"
+    )
+    koopa_dl 'rmats' "${rmats_args[*]}"
+    "${app['tee']}" \
+        >("${app['rmats']}" "${rmats_args[@]}") \
+        2>&1 | "${app['tee']}" "${dict['log_file']}"
+    koopa_cp \
+        --target-directory="${dict['output_dir']}" \
+        "${dict['b1_file']}" \
+        "${dict['b2_file']}"
+    koopa_rm "${dict['tmp_dir']}"
+    if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gtf_file']}"
+    fi
+    return 0
+}
+
 koopa_rnaeditingindexer() {
     local -A app dict
     local -a run_args
@@ -22711,28 +22917,6 @@ koopa_roff() {
     )"
     koopa_assert_is_array_non_empty "${files[@]}"
     "${app['ronn']}" --roff "${files[@]}"
-    return 0
-}
-
-koopa_rsem_fastq_library_type() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            to='none'
-            ;;
-        'ISF')
-            to='forward'
-            ;;
-        'ISR')
-            to='reverse'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
     return 0
 }
 
@@ -22839,6 +23023,28 @@ koopa_rsem_index() {
     return 0
 }
 
+koopa_rsem_library_type() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            to='none'
+            ;;
+        'ISF')
+            to='forward'
+            ;;
+        'ISR')
+            to='reverse'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
 koopa_rsem_quant_paired_end_per_sample() {
     local -A app dict
     local -a quant_args
@@ -22911,9 +23117,7 @@ koopa_rsem_quant_paired_end_per_sample() {
     koopa_alert "Quantifying '${dict['bam_bn']}' in '${dict['output_dir']}'."
     if [[ -n "${dict['lib_type']}" ]]
     then
-        dict['lib_type']="$( \
-            koopa_rsem_fastq_library_type "${dict['lib_type']}" \
-        )"
+        dict['lib_type']="$(koopa_rsem_library_type "${dict['lib_type']}")"
         quant_args+=('--strandedness' "${dict['lib_type']}")
     fi
     quant_args+=(
@@ -25004,10 +25208,12 @@ koopa_sra_prefetch() {
                 dict['acc_file']="${2:?}"
                 shift 2
                 ;;
+            '--output-dir='* | \
             '--output-directory='*)
                 dict['output_dir']="${1#*=}"
                 shift 1
                 ;;
+            '--output-dir' | \
             '--output-directory')
                 dict['output_dir']="${2:?}"
                 shift 2
@@ -25020,7 +25226,7 @@ koopa_sra_prefetch() {
     done
     koopa_assert_is_set \
         '--accession-file' "${dict['acc_file']}" \
-        '--output-directory' "${dict['output_dir']}"
+        '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_file "${dict['acc_file']}"
     koopa_assert_is_ncbi_sra_toolkit_configured
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"

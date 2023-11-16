@@ -1,28 +1,26 @@
 #!/usr/bin/env bash
 
-koopa_kallisto_fastq_library_type() {
+koopa_rmats_library_type() {
     # """
-    # Convert salmon FASTQ library type to kallisto conventions.
-    # @note Updated 2023-10-20.
+    # Convert salmon library type to rMATS conventions.
+    # @note Updated 2023-11-16.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
     # - https://littlebitofdata.com/en/2017/08/strandness_in_rnaseq/
-    # - https://github.com/bcbio/bcbio-nextgen/blob/master/bcbio/rnaseq/
-    #     kallisto.py
     #
     # @examples
-    # > koopa_kallisto_fastq_library_type 'ISF'
-    # # --fr-stranded
-    # > koopa_kallisto_fastq_library_type 'ISR'
-    # # --rf-stranded
+    # > koopa_rmats_library_type 'IU'
+    # # --fr-unstranded
+    # > koopa_rmats_library_type 'MU'
+    # # --fr-unstranded
     # """
     local from to
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
     case "$from" in
-        'IU' | 'U')
-            # fr-unstranded.
+        'IU' | 'MU' | 'OU' | 'U')
+            to='--fr-unstranded'
             return 0
             ;;
         'ISF')

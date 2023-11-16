@@ -7,6 +7,10 @@ koopa_bam_read_length() {
     #
     # @seealso
     # - https://www.biostars.org/p/65216/#65226
+    #
+    # @examples
+    # > koopa_bam_read_length 'sample1.bam'
+    # # 150
     # """
     local -A app dict
     local bam_file
