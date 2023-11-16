@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Need to add a function to take salmon library type and convert it
+# to rMATS convention (e.g. 'fr-unstranded').
+
 koopa_rmats() {
     # """
     # Run rMATS analysis on unpaired samples.
@@ -24,7 +27,7 @@ koopa_rmats() {
     # e.g. 'star-gencode'.
     dict['output_dir']=''
     # e.g. '150'.
-    dict['read_length']=150
+    dict['read_length']=''
     # e.g. 'paired'.
     dict['read_type']=''
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
@@ -40,13 +43,63 @@ koopa_rmats() {
                 dict['b1_file']="${2:?}"
                 shift 2
                 ;;
-            # FIXME Parse for '--b2-file'.
-            # FIXME Parse for '--gtf-file'.
-            # FIXME Parse for '--output-directory'.
+            '--b2-file='*)
+                dict['b2_file']="${1#*=}"
+                shift 1
+                ;;
+            '--b2-file')
+                dict['b2_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-directory='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-directory')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
             # Optional key-value pairs -----------------------------------------
-            # FIXME Parse for '--library-type'.
-            # FIXME Parse for '--read-length'.
-            # FIXME Parse for '--read-type'.
+            '--alpha-threshold='*)
+                dict['cstat']="${1#*=}"
+                shift 1
+                ;;
+            '--alpha-threshold')
+                dict['cstat']="${2:?}"
+                shift 2
+                ;;
+            '--library-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--library-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--read-length='*)
+                dict['read_length']="${1#*=}"
+                shift 1
+                ;;
+            '--read-length')
+                dict['read_length']="${2:?}"
+                shift 2
+                ;;
+            '--read-type='*)
+                dict['read_type']="${1#*=}"
+                shift 1
+                ;;
+            '--read-type')
+                dict['read_type']="${2:?}"
+                shift 2
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -54,6 +107,7 @@ koopa_rmats() {
         esac
     done
     koopa_assert_is_set \
+        '--alpha-threshold' "${dict['cstat']}" \
         '--b1-file' "${dict['b1_file']}" \
         '--b2-file' "${dict['b2_file']}" \
         '--gtf-file' "${dict['gtf_file']}" \
