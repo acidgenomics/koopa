@@ -11,13 +11,13 @@ koopa_salmon_detect_bam_library_type() {
     # - https://www.biostars.org/p/98756/
     #
     # @examples
-    # STAR GENCODE genome-level:
+    # STAR GENCODE genome-level.
     # > koopa_salmon_detect_bam_library_type \
     # >     --bam-file='Aligned.sortedByCoord.out.bam' \
     # >     --fasta-file='GRCh38.primary_assembly.genome.fa.gz'
     # # MU
     #
-    # STAR GENCODE transcriptome-level:
+    # STAR GENCODE transcriptome-level.
     # > koopa_salmon_detect_bam_library_type \
     # >     --bam-file='Aligned.toTranscriptome.out.bam' \
     # >     --fasta-file='gencode.v44.transcripts_fixed.fa.gz'

@@ -81,6 +81,7 @@ at '${dict['install_dir']}'."
     koopa_alert "Removing Python installer cruft inside 'anaconda/lib/'."
     koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/\
 site-packages/bcbio'*
+    # FIXME May need to rework the tee call here.
     (
         koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'

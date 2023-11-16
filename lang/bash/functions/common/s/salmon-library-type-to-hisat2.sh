@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_hisat2_fastq_library_type() {
+koopa_salmon_library_type_to_hisat2() {
     # """
-    # Convert salmon FASTQ library type to HISAT2 strandedness.
-    # @note Updated 2023-10-20.
+    # Convert salmon library type to HISAT2 strandedness.
+    # @note Updated 2023-11-16.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/library_type.html
@@ -12,9 +12,9 @@ koopa_hisat2_fastq_library_type() {
     #     ngsalign/hisat2.py
     #
     # @examples
-    # > koopa_hisat2_fastq_library_type 'ISF'
+    # > koopa_salmon_library_type_to_hisat2 'ISF'
     # # FR
-    # > koopa_hisat2_fastq_library_type 'ISR'
+    # > koopa_salmon_library_type_to_hisat2 'ISR'
     # # RF
     # """
     local from to

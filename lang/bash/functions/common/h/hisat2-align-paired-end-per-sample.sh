@@ -174,7 +174,9 @@ koopa_hisat2_align_paired_end_per_sample() {
                 --index-dir="${dict['salmon_index_dir']}" \
         )"
     fi
-    dict['lib_type']="$(koopa_hisat2_fastq_library_type "${dict['lib_type']}")"
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_hisat2 "${dict['lib_type']}" \
+    )"
     if [[ -n "${dict['lib_type']}" ]]
     then
         align_args+=('--rna-strandedness' "${dict['lib_type']}")
@@ -196,6 +198,7 @@ koopa_hisat2_align_paired_end_per_sample() {
         '--threads' "${dict['threads']}"
     )
     koopa_dl 'Align args' "${align_args[*]}"
+    # FIXME Rework the tee call here?
     "${app['hisat2']}" "${align_args[@]}" \
         2>&1 | "${app['tee']}" "${dict['log_file']}"
     if [[ "${bool['tmp_fastq_r1_file']}" -eq 1 ]]

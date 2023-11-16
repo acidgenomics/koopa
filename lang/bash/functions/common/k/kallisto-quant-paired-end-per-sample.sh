@@ -167,7 +167,7 @@ koopa_kallisto_quant_paired_end_per_sample() {
         )"
     fi
     dict['lib_type']="$( \
-        koopa_kallisto_fastq_library_type "${dict['lib_type']}" \
+        koopa_salmon_library_type_to_kallisto "${dict['lib_type']}" \
     )"
     if [[ -n "${dict['lib_type']}" ]]
     then
