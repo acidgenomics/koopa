@@ -22689,6 +22689,7 @@ koopa_rmats() {
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/rmats.log"
+    koopa_alert "Running rMATS analysis in '${dict['output_dir']}'."
     readarray -t -d ',' b1_files < "${dict['b1_file']}"
     readarray -t -d ',' b2_files < "${dict['b2_file']}"
     koopa_assert_is_matching_regex \
@@ -22749,8 +22750,7 @@ koopa_rmats() {
         '--tstat' "${dict['nthread']}"
     )
     koopa_dl 'rmats' "${rmats_args[*]}"
-    "${app['tee']}" \
-        >("${app['rmats']}" "${rmats_args[@]}") \
+    "${app['rmats']}" "${rmats_args[@]}" \
         2>&1 | "${app['tee']}" "${dict['log_file']}"
     koopa_cp \
         --target-directory="${dict['output_dir']}" \
