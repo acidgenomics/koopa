@@ -19823,6 +19823,8 @@ koopa_miso_index() {
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_gff_file']=0
     dict['gff_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=30
     dict['min_exon_size']=1000
     dict['output_dir']=''
     while (("$#"))
@@ -19852,6 +19854,10 @@ koopa_miso_index() {
     koopa_assert_is_set \
         '--gff-file' "${dict['gff_file']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "MISO requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
     koopa_assert_is_file "${dict['gff_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['gff_file']="$(koopa_realpath "${dict['gff_file']}")"

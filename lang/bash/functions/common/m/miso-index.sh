@@ -14,6 +14,8 @@ koopa_miso_index() {
     bool['tmp_gff_file']=0
     # e.g. 'gencode.v44.annotation.gff3.gz'.
     dict['gff_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=30
     # e.g. at least 500.
     dict['min_exon_size']=1000
     # e.g. 'homo-sapiens-grch38-gencode-44'.
@@ -47,6 +49,10 @@ koopa_miso_index() {
     koopa_assert_is_set \
         '--gff-file' "${dict['gff_file']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "MISO requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
     koopa_assert_is_file "${dict['gff_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['gff_file']="$(koopa_realpath "${dict['gff_file']}")"
