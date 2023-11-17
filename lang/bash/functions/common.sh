@@ -18842,6 +18842,13 @@ koopa_locate_miso_index_gff() {
         "$@"
 }
 
+koopa_locate_miso_pe_utils() {
+    koopa_locate_app \
+        --app-name='misopy' \
+        --bin-name='pe_utils' \
+        "$@"
+}
+
 koopa_locate_miso() {
     koopa_locate_app \
         --app-name='misopy' \
@@ -19908,25 +19915,22 @@ koopa_miso_index() {
     return 0
 }
 
-koopa_miso() {
+koopa_miso_run() {
     local -A app bool dict
     local -a miso_args
-    app['index_gff']="$(koopa_locate_miso_index_gff)"
+    koopa_activate_app_conda_env 'misopy'
     app['miso']="$(koopa_locate_miso)"
+    app['pe_utils']="$(koopa_locate_miso_pe_utils)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['paired']=0
     dict['bam_file']=''
-    dict['conda_env_prefix']="$(koopa_app_prefix 'misopy')/libexec"
     dict['genome_fasta_file']=''
-    dict['gff3_file']=''
     dict['index_dir']="$(koopa_tmp_dir_in_wd)"
     dict['lib_type']='A'
     dict['num_proc']="$(koopa_cpu_count)"
     dict['read_length']=''
     dict['output_dir']=''
-    dict['paired_ins_len_mean']=''
-    dict['paired_ins_len_std_dev']=''
     dict['read_type']=''
     while (("$#"))
     do
@@ -19945,14 +19949,6 @@ koopa_miso() {
                 ;;
             '--genome-fasta-file')
                 dict['genome_fasta_file']="${2:?}"
-                shift 2
-                ;;
-            '--gff3-file='*)
-                dict['gff3_file']="${1#*=}"
-                shift 1
-                ;;
-            '--gff3-file')
-                dict['gff3_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -19995,12 +19991,10 @@ koopa_miso() {
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
-        '--gff3-file' "${dict['gff3_file']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
-        "${dict['genome_fasta_file']}" \
-        "${dict['gff3_file']}"
+        "${dict['genome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${dict['bam_file']}"
@@ -20009,8 +20003,6 @@ koopa_miso() {
     dict['log_file']="${dict['output_dir']}/miso.log"
     dict['settings_file']="${dict['output_dir']}/settings.txt"
     koopa_alert "Running MISO analysis in '${dict['output_dir']}'."
-    koopa_assert_is_dir "${dict['conda_env_prefix']}"
-    koopa_conda_activate_env "${dict['conda_env_prefix']}"
     if [[ "${dict['lib_type']}" == 'A' ]]
     then
         koopa_alert 'Detecting BAM library type with salmon.'
@@ -20043,11 +20035,6 @@ koopa_miso() {
             koopa_stop "Unsupported read type: '${dict['read_type']}'."
             ;;
     esac
-    if [[ "${bool['paired']}" -eq 1 ]]
-    then
-        dict['paired_ins_len_mean']='FIXME'
-        dict['paired_ins_len_std_dev']='FIXME'
-    fi
     read -r -d '' "dict[settings_string]" << END || true
 [data]
 filter_results = True
@@ -20057,9 +20044,6 @@ END
     koopa_write_string \
         --file="${dict['settings_file']}" \
         --string="${dict['settings_string']}"
-    koopa_alert "Generating MISO index in '${dict['index_dir']}'."
-    "${app['index_gff']}" --index "${dict['gff3_file']}" "${dict['index_dir']}"
-
     miso_args+=(
         '--run' "${dict['index_dir']}" "${dict['bam_file']}"
         '-p' "${dict['num_proc']}"
@@ -20069,11 +20053,31 @@ END
     )
     if [[ "${bool['paired']}" -eq 1 ]]
     then
+        dict['exons_gff_file']="$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.const_exons.gff' \
+                --prefix="${dict['index_dir']}" \
+                --type='f' \
+        )"
+        koopa_assert_is_file "${dict['exons_gff_file']}"
+        dict['min_exon_size']=500
+        dict['tmp_insert_dist']="$(koopa_tmp_dir_in_wd)"
+        "${app['pe_utils']}" \
+            --compute-insert-len \
+                "${dict['bam_file']}" \
+                "${dict['exons_gff_file']}" \
+            --min-exon-size="${dict['min_exon_size']}" \
+            --output-dir "${dict['tmp_insert_dist']}"
+        dict['insert_length_mean']='FIXME'
+        dict['insert_length_sdev']='FIXME'
         miso_args+=(
             '--paired-end'
-                "${dict['paired_ins_len_mean']}"
-                "${dict['paired_ins_len_std_dev']}"
+                "${dict['insert_length_mean']}"
+                "${dict['insert_length_sdev']}"
         )
+        koopa_rm "${dict['tmp_insert_dist']}"
     fi
     koopa_dl 'miso' "${miso_args[*]}"
     koopa_print "${app['miso']} ${miso_args[*]}" >> "${dict['log_file']}"

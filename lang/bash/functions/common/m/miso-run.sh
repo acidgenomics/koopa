@@ -1,33 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Ensure we activate conda environment instead.
-
-# FIXME Rework to support multiple BAM files in a single call.
-# We should calculate the insert length only on the first sample.
-# FIXME Require miso index as input.
-
-# FIXME This needs to take multiple BAM files as input.
-# FIXME Detect single vs. paired reads.
-# FIXME Detect the read length and set '--read-len' value.
-# FIXME Check for corresponding BAM index file (.bam.bai).
-
-# NOTE Consider setting this for STAR run, which is n-1:
-# If reads were aligned to a set of splice junctions with an overhang constraint — i.e., a requirement that N or more bases from each side of the junction must be covered by the read — then this can be specified using the --overhang-len option:
-# --overhang-len
-# Length of overhang constraints imposed on junctions.
-
-# FIXME Set paired end mode when relevant:
-#
-# The utilities in exon_utils and pe_utils can be used to first get a set of long constitituve exons to map read pairs to, and second compute the insert length distribution and its statistics.
-#
-# https://github.com/bcbio/bcbio-nextgen/pull/1214#issuecomment-191281690
-#
-# insert length is 250 and the standard deviation is 15
-#
-#   --settings-filename=SETTINGS_FILENAME
-#                        Filename specifying MISO settings.#
-
-koopa_miso() {
+koopa_miso_run() {
     # """
     # Run MISO splicing event analysis.
     # @note Updated 2023-11-17.
@@ -92,18 +65,16 @@ koopa_miso() {
     # """
     local -A app bool dict
     local -a miso_args
-    app['index_gff']="$(koopa_locate_miso_index_gff)"
+    koopa_activate_app_conda_env 'misopy'
     app['miso']="$(koopa_locate_miso)"
+    app['pe_utils']="$(koopa_locate_miso_pe_utils)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['paired']=0
     # e.g. 'Aligned.sortedByCoord.out.bam'.
     dict['bam_file']=''
-    dict['conda_env_prefix']="$(koopa_app_prefix 'misopy')/libexec"
-    # e.g. 'FIXME'.
+    # e.g. 'GRCh38.primary_assembly.genome.fa.gz'.
     dict['genome_fasta_file']=''
-    # e.g. 'gencode.v44.annotation.gff3.gz'.
-    dict['gff3_file']=''
     dict['index_dir']="$(koopa_tmp_dir_in_wd)"
     # Using salmon library type conventions here.
     dict['lib_type']='A'
@@ -112,10 +83,6 @@ koopa_miso() {
     dict['read_length']=''
     # e.g. 'miso/star-gencode/treatment-vs-control'.
     dict['output_dir']=''
-    # e.g. 250.
-    dict['paired_ins_len_mean']=''
-    # e.g. 15.
-    dict['paired_ins_len_std_dev']=''
     # e.g. 'paired'.
     dict['read_type']=''
     while (("$#"))
@@ -136,14 +103,6 @@ koopa_miso() {
                 ;;
             '--genome-fasta-file')
                 dict['genome_fasta_file']="${2:?}"
-                shift 2
-                ;;
-            '--gff3-file='*)
-                dict['gff3_file']="${1#*=}"
-                shift 1
-                ;;
-            '--gff3-file')
-                dict['gff3_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -188,12 +147,10 @@ koopa_miso() {
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
-        '--gff3-file' "${dict['gff3_file']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
-        "${dict['genome_fasta_file']}" \
-        "${dict['gff3_file']}"
+        "${dict['genome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${dict['bam_file']}"
@@ -202,8 +159,6 @@ koopa_miso() {
     dict['log_file']="${dict['output_dir']}/miso.log"
     dict['settings_file']="${dict['output_dir']}/settings.txt"
     koopa_alert "Running MISO analysis in '${dict['output_dir']}'."
-    koopa_assert_is_dir "${dict['conda_env_prefix']}"
-    koopa_conda_activate_env "${dict['conda_env_prefix']}"
     if [[ "${dict['lib_type']}" == 'A' ]]
     then
         koopa_alert 'Detecting BAM library type with salmon.'
@@ -236,13 +191,6 @@ koopa_miso() {
             koopa_stop "Unsupported read type: '${dict['read_type']}'."
             ;;
     esac
-    if [[ "${bool['paired']}" -eq 1 ]]
-    then
-        # Need to parse the output file for these values in the header.
-        # What a pain.
-        dict['paired_ins_len_mean']='FIXME'
-        dict['paired_ins_len_std_dev']='FIXME'
-    fi
     read -r -d '' "dict[settings_string]" << END || true
 [data]
 filter_results = True
@@ -252,21 +200,6 @@ END
     koopa_write_string \
         --file="${dict['settings_file']}" \
         --string="${dict['settings_string']}"
-    koopa_alert "Generating MISO index in '${dict['index_dir']}'."
-    # FIXME Split this out to a separate command.
-    # FIXME This only supports a decompressed GFF3 file.
-    #
-    "${app['index_gff']}" --index "${dict['gff3_file']}" "${dict['index_dir']}"
-
-
-
-
-
-
-
-
-
-
     miso_args+=(
         '--run' "${dict['index_dir']}" "${dict['bam_file']}"
         '-p' "${dict['num_proc']}"
@@ -276,12 +209,33 @@ END
     )
     if [[ "${bool['paired']}" -eq 1 ]]
     then
-        # FIXME Need to calculate these values here.
+        dict['exons_gff_file']="$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.const_exons.gff' \
+                --prefix="${dict['index_dir']}" \
+                --type='f' \
+        )"
+        koopa_assert_is_file "${dict['exons_gff_file']}"
+        dict['min_exon_size']=500
+        dict['tmp_insert_dist']="$(koopa_tmp_dir_in_wd)"
+        "${app['pe_utils']}" \
+            --compute-insert-len \
+                "${dict['bam_file']}" \
+                "${dict['exons_gff_file']}" \
+            --min-exon-size="${dict['min_exon_size']}" \
+            --output-dir "${dict['tmp_insert_dist']}"
+        # FIXME Need to parse the calculated values here.
+        # Can use awk or something of the sort.
+        dict['insert_length_mean']='FIXME'
+        dict['insert_length_sdev']='FIXME'
         miso_args+=(
             '--paired-end'
-                "${dict['paired_ins_len_mean']}"
-                "${dict['paired_ins_len_std_dev']}"
+                "${dict['insert_length_mean']}"
+                "${dict['insert_length_sdev']}"
         )
+        koopa_rm "${dict['tmp_insert_dist']}"
     fi
     koopa_dl 'miso' "${miso_args[*]}"
     koopa_print "${app['miso']} ${miso_args[*]}" >> "${dict['log_file']}"
