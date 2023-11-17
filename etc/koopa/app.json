@@ -1752,11 +1752,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-11-13",
+    "date": "2023-11-17",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.44.0"
+    "version": "0.44.1"
   },
   "gatk": {
     "aliases": {
@@ -1909,10 +1909,9 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2023-11-15",
+    "date": "2023-11-17",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1920,7 +1919,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.27.9"
+    "version": "0.28.2"
   },
   "gh": {
     "aliases": {
