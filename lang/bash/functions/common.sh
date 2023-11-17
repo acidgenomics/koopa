@@ -19919,6 +19919,7 @@ koopa_miso_run() {
     local -A app bool dict
     local -a miso_args
     koopa_activate_app_conda_env 'misopy'
+    koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
     app['miso']="$(koopa_locate_miso)"
