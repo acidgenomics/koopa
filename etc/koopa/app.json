@@ -5642,11 +5642,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-07-25",
+    "date": "2023-11-17",
     "default": false,
     "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
-    "version": "2021.10.0"
+    "version": "2021.11.0"
   },
   "tcl-tk": {
     "aliases": {
