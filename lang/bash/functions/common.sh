@@ -24249,7 +24249,7 @@ koopa_salmon_library_type_to_kallisto() {
     return 0
 }
 
-koopa_salmon_library_type_to_rmats() {
+koopa_salmon_library_type_to_miso() {
     local from to
     koopa_assert_has_args_eq "$#" 1
     from="${1:?}"
