@@ -17,6 +17,9 @@
 # https://github.com/bcbio/bcbio-nextgen/pull/1214#issuecomment-191281690
 #
 # insert length is 250 and the standard deviation is 15
+#
+#   --settings-filename=SETTINGS_FILENAME
+#                        Filename specifying MISO settings.#
 
 koopa_miso() {
     # """
@@ -24,6 +27,10 @@ koopa_miso() {
     # @note Updated 2023-11-17.
     #
     # This expects a sorted, indexed BAM file as input.
+    #
+    # May need to set MISO configuration regarding strandedness:
+    # - https://mailman.mit.edu/pipermail/miso-users/
+    #     Week-of-Mon-20130805/000257.html
     #
     # @section Paired-end analysis:
     #
@@ -65,8 +72,11 @@ koopa_miso() {
     # e.g. 'Aligned.sortedByCoord.out.bam'.
     dict['bam_file']=''
     # e.g. 'FIXME'.
+    dict['genome_fasta_file']=''
+    # e.g. 'FIXME'.
     dict['gtf_file']=''
     dict['index_dir']="$(koopa_tmp_dir_in_wd)"
+    dict['num_proc']="$(koopa_cpu_count)"
     # e.g. 150.
     dict['read_length']=''
     # e.g. 'miso/star-gencode/treatment-vs-control'.
@@ -75,21 +85,97 @@ koopa_miso() {
     dict['paired_insert_length_mean']=''
     # e.g. 15.
     dict['paired_insert_length_std_dev']=''
-    # FIXME Set the log file.
+    while (("$#"))
+    do
+        case "$1" in
+            # Required key-value pairs -----------------------------------------
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-file')
+                dict['bam_file']="${2:?}"
+                shift 2
+                ;;
+            '--genome-fasta-file='*)
+                dict['genome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--gtf-file='*)
+                dict['gtf_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gtf-file')
+                dict['gtf_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            # Optional key-value pairs -----------------------------------------
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--read-length='*)
+                dict['read_length']="${1#*=}"
+                shift 1
+                ;;
+            '--read-length')
+                dict['read_length']="${2:?}"
+                shift 2
+                ;;
+            '--read-type='*)
+                dict['read_type']="${1#*=}"
+                shift 1
+                ;;
+            '--read-type')
+                dict['read_type']="${2:?}"
+                shift 2
+                ;;
+            # Other ------------------------------------------------------------
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
         '--gtf-file' "${dict['gtf_file']}" \
         '--output-dir' "${dict['output_dir']}"
-
-    koopa_assert_is_file "${dict['bam_file']}"
+    koopa_assert_is_file \
+        "${dict['bam_file']}" \
+        "${dict['genome_fasta_file']}" \
+        "${dict['gtf_file']}"
     koopa_assert_is_not_dir "${dict['output_dir']}"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/miso.log"
     koopa_alert "Running MISO analysis in '${dict['output_dir']}'."
+    if [[ -z "${dict['read_length']}" ]]
+    then
+        koopa_alert 'Detecting BAM read length.'
+        dict['read_length']="$(koopa_bam_read_length "${dict['bam_file']}")"
+    fi
     koopa_alert "Generating MISO index in '${dict['index_dir']}'."
     "${app['index_gff']}" --index "${dict['gtf_file']}" "${dict['index_dir']}"
     miso_args+=(
-        '--run' "${dict['index_dir']}" "${dict['bam_file']}"
+        '--run' # COMPUTE_GENES_PSI
+            "${dict['index_dir']}" "${dict['bam_file']}"
+        '-p' "${dict['num_proc']}"
         '--output-dir' "${dict['output_dir']}"
         '--read-len' "${dict['read_length']}"
     )
