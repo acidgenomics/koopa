@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_salmon_library_type_to_rmats() {
+koopa_salmon_library_type_to_miso() {
     # """
     # Convert salmon library type to MISO conventions.
     # @note Updated 2023-11-16.
