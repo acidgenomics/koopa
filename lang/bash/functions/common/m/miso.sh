@@ -95,8 +95,8 @@ koopa_miso() {
     dict['bam_file']=''
     # e.g. 'FIXME'.
     dict['genome_fasta_file']=''
-    # e.g. 'FIXME'.
-    dict['gtf_file']=''
+    # e.g. 'gencode.v44.annotation.gff3.gz'.
+    dict['gff3_file']=''
     dict['index_dir']="$(koopa_tmp_dir_in_wd)"
     # Using salmon library type conventions here.
     dict['lib_type']='A'
@@ -131,12 +131,12 @@ koopa_miso() {
                 dict['genome_fasta_file']="${2:?}"
                 shift 2
                 ;;
-            '--gtf-file='*)
-                dict['gtf_file']="${1#*=}"
+            '--gff3-file='*)
+                dict['gff3_file']="${1#*=}"
                 shift 1
                 ;;
-            '--gtf-file')
-                dict['gtf_file']="${2:?}"
+            '--gff3-file')
+                dict['gff3_file']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -181,12 +181,12 @@ koopa_miso() {
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
-        '--gtf-file' "${dict['gtf_file']}" \
+        '--gff3-file' "${dict['gff3_file']}" \
         '--output-dir' "${dict['output_dir']}"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
         "${dict['genome_fasta_file']}" \
-        "${dict['gtf_file']}"
+        "${dict['gff3_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${dict['bam_file']}"
@@ -243,7 +243,8 @@ END
         --file="${dict['settings_file']}" \
         --string="${dict['settings_string']}"
     koopa_alert "Generating MISO index in '${dict['index_dir']}'."
-    "${app['index_gff']}" --index "${dict['gtf_file']}" "${dict['index_dir']}"
+    # FIXME This only supports a decompressed GFF3 file.
+    "${app['index_gff']}" --index "${dict['gff3_file']}" "${dict['index_dir']}"
     miso_args+=(
         '--run' # COMPUTE_GENES_PSI
             "${dict['index_dir']}"
