@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure we activate conda environment instead.
+
+# FIXME Rework to support multiple BAM files in a single call.
+# We should calculate the insert length only on the first sample.
+# FIXME Require miso index as input.
+
 # FIXME This needs to take multiple BAM files as input.
 # FIXME Detect single vs. paired reads.
 # FIXME Detect the read length and set '--read-len' value.
@@ -86,6 +92,8 @@ koopa_miso() {
     # """
     local -A app bool dict
     local -a miso_args
+    # FIXME May want to do this in a subshell instead, to avoid changing PATH.
+    koopa_activate_app 'bedtools' 'samtools'
     app['index_gff']="$(koopa_locate_miso_index_gff)"
     app['miso']="$(koopa_locate_miso)"
     app['tee']="$(koopa_locate_tee --allow-system)"
@@ -229,6 +237,8 @@ koopa_miso() {
     esac
     if [[ "${bool['paired']}" -eq 1 ]]
     then
+        # We need to have bedtools tagBam accessible in PATH.
+        koopa_activate_app 'bedtools'
         # FIXME Need to add suport for calc of these.
         dict['paired_ins_len_mean']='FIXME'
         dict['paired_ins_len_std_dev']='FIXME'
