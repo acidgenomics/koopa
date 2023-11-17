@@ -14,6 +14,7 @@ koopa_activate_app_conda_env() {
     dict['prefix']="$(koopa_app_prefix "${dict['app_name']}")"
     dict['libexec']="${dict['prefix']}/libexec"
     koopa_assert_is_dir "${dict['libexec']}"
+    koopa_alert "Activating conda environment at '${dict['libexec']}'."
     koopa_conda_activate_env "${dict['libexec']}"
     return 0
 }
