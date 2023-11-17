@@ -13,6 +13,9 @@ koopa_install_app() {
     # @note Updated 2023-10-13.
     #
     # Refer to 'locale' for desired LC settings.
+    #
+    # @seealso
+    # - https://stackoverflow.com/questions/692000/
     # """
     local -A app bool dict
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
