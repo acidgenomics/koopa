@@ -19928,7 +19928,7 @@ koopa_miso_run() {
     bool['paired']=0
     dict['bam_file']=''
     dict['genome_fasta_file']=''
-    dict['index_dir']="$(koopa_tmp_dir_in_wd)"
+    dict['index_dir']=''
     dict['lib_type']='A'
     dict['num_proc']="$(koopa_cpu_count)"
     dict['read_length']=''
@@ -19951,6 +19951,14 @@ koopa_miso_run() {
                 ;;
             '--genome-fasta-file')
                 dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
                 shift 2
                 ;;
             '--output-dir='*)
@@ -19993,9 +20001,12 @@ koopa_miso_run() {
     koopa_assert_is_set \
         '--bam-file' "${dict['bam_file']}" \
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    koopa_assert_is_dir "${dict['index_dir']}"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
+        "${dict['bam_file']}.bai" \
         "${dict['genome_fasta_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
