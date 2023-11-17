@@ -20,6 +20,7 @@ koopa_miso_index() {
     dict['min_exon_size']=1000
     # e.g. 'homo-sapiens-grch38-gencode-44'.
     dict['output_dir']=''
+    dict['tmp_exons_dir']="$(koopa_tmp_dir_in_wd)"
     while (("$#"))
     do
         case "$1" in
@@ -58,7 +59,6 @@ koopa_miso_index() {
     dict['gff_file']="$(koopa_realpath "${dict['gff_file']}")"
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/index.log"
-    dict['exons_dir']="${dict['output_dir']}/exons"
     koopa_alert "Generating MISO index at '${dict['output_dir']}'."
     if koopa_is_compressed_file "${dict['gff_file']}"
     then
@@ -78,9 +78,23 @@ koopa_miso_index() {
     "${app['exon_utils']}" \
         --get-const-exons "${dict['gff_file']}" \
         --min-exon-size "${dict['min_exon_size']}" \
-        --output-dir "${dict['exons_dir']}" \
+        --output-dir "${dict['tmp_exons_dir']}" \
         |& "${app['tee']}" -a "${dict['log_file']}"
     unset -v PYTHONUNBUFFERED
+    dict['tmp_exons_gff_file']="$( \
+        koopa_find \
+            --hidden \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*.min_${dict['min_exon_size']}.const_exons.gff" \
+            --prefix="${dict['tmp_exons_dir']}" \
+            --type='f'
+    )"
+    koopa_assert_is_file "${dict['tmp_exons_gff_file']}"
+    koopa_mv \
+        "${dict['tmp_gff_exons_file']}" \
+        "${dict['output_dir']}/min_${dict['min_exon_size']}.const_exons.gff"
+    koopa_rm "${dict['tmp_exons_dir']}"
     if [[ "${bool['tmp_gff_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['gff_file']}"
