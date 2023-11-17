@@ -19875,17 +19875,11 @@ koopa_miso_index() {
         dict['gff_file']="${dict['tmp_gff_file']}"
     fi
     export PYTHONUNBUFFERED=1
-    "${app['index_gff']}" \
-        --index \
-        "${dict['gff_file']}" \
-        "${dict['output_dir']}" \
-        |& "${app['tee']}" -a "${dict['log_file']}"
     "${app['exon_utils']}" \
         --get-const-exons "${dict['gff_file']}" \
         --min-exon-size "${dict['min_exon_size']}" \
         --output-dir "${dict['tmp_exons_dir']}" \
         |& "${app['tee']}" -a "${dict['log_file']}"
-    unset -v PYTHONUNBUFFERED
     dict['tmp_exons_gff_file']="$( \
         koopa_find \
             --hidden \
@@ -19900,6 +19894,12 @@ koopa_miso_index() {
         "${dict['tmp_gff_exons_file']}" \
         "${dict['output_dir']}/min_${dict['min_exon_size']}.const_exons.gff"
     koopa_rm "${dict['tmp_exons_dir']}"
+    "${app['index_gff']}" \
+        --index \
+        "${dict['gff_file']}" \
+        "${dict['output_dir']}" \
+        |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
     if [[ "${bool['tmp_gff_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['gff_file']}"
