@@ -19919,6 +19919,8 @@ koopa_miso_run() {
     local -A app bool dict
     local -a miso_args
     koopa_activate_app_conda_env 'misopy'
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
     app['miso']="$(koopa_locate_miso)"
     app['pe_utils']="$(koopa_locate_miso_pe_utils)"
     app['tee']="$(koopa_locate_tee --allow-system)"
@@ -20063,21 +20065,39 @@ END
         )"
         koopa_assert_is_file "${dict['exons_gff_file']}"
         dict['min_exon_size']=500
-        dict['tmp_insert_dist']="$(koopa_tmp_dir_in_wd)"
+        dict['tmp_insert_dist_dir']="$(koopa_tmp_dir_in_wd)"
         "${app['pe_utils']}" \
             --compute-insert-len \
                 "${dict['bam_file']}" \
                 "${dict['exons_gff_file']}" \
             --min-exon-size="${dict['min_exon_size']}" \
-            --output-dir "${dict['tmp_insert_dist']}"
-        dict['insert_length_mean']='FIXME'
-        dict['insert_length_sdev']='FIXME'
+            --output-dir "${dict['tmp_insert_dist_dir']}"
+        dict['insert_length_file']="$( \
+            koopa_find \
+                --hidden \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern="${dict['tmp_insert_dist_dir']}" \
+                --pattern='*.insert_len' \
+                --type='f' \
+        )"
+        koopa_assert_is_file "${dict['insert_length_file']}"
+        dict['insert_length_mean']="$( \
+            "${app['head']}" -n 1 "${dict['insert_length_file']}" \
+                | "${app['cut']}" -d ',' -f 1 \
+                | "${app['cut']}" -d '=' -f 2 \
+        )"
+        dict['insert_length_sdev']="$( \
+            "${app['head']}" -n 1 "${dict['insert_length_file']}" \
+                | "${app['cut']}" -d ',' -f 2 \
+                | "${app['cut']}" -d '=' -f 2 \
+        )"
         miso_args+=(
             '--paired-end'
                 "${dict['insert_length_mean']}"
                 "${dict['insert_length_sdev']}"
         )
-        koopa_rm "${dict['tmp_insert_dist']}"
+        koopa_rm "${dict['tmp_insert_dist_dir']}"
     fi
     koopa_dl 'miso' "${miso_args[*]}"
     koopa_print "${app['miso']} ${miso_args[*]}" >> "${dict['log_file']}"
