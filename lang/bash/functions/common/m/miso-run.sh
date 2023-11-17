@@ -92,8 +92,6 @@ koopa_miso() {
     # """
     local -A app bool dict
     local -a miso_args
-    # FIXME May want to do this in a subshell instead, to avoid changing PATH.
-    koopa_activate_app 'bedtools' 'samtools'
     app['index_gff']="$(koopa_locate_miso_index_gff)"
     app['miso']="$(koopa_locate_miso)"
     app['tee']="$(koopa_locate_tee --allow-system)"
@@ -101,6 +99,7 @@ koopa_miso() {
     bool['paired']=0
     # e.g. 'Aligned.sortedByCoord.out.bam'.
     dict['bam_file']=''
+    dict['conda_env_prefix']="$(koopa_app_prefix 'misopy')/libexec"
     # e.g. 'FIXME'.
     dict['genome_fasta_file']=''
     # e.g. 'gencode.v44.annotation.gff3.gz'.
@@ -203,6 +202,8 @@ koopa_miso() {
     dict['log_file']="${dict['output_dir']}/miso.log"
     dict['settings_file']="${dict['output_dir']}/settings.txt"
     koopa_alert "Running MISO analysis in '${dict['output_dir']}'."
+    koopa_assert_is_dir "${dict['conda_env_prefix']}"
+    koopa_conda_activate_env "${dict['conda_env_prefix']}"
     if [[ "${dict['lib_type']}" == 'A' ]]
     then
         koopa_alert 'Detecting BAM library type with salmon.'
@@ -237,9 +238,8 @@ koopa_miso() {
     esac
     if [[ "${bool['paired']}" -eq 1 ]]
     then
-        # We need to have bedtools tagBam accessible in PATH.
-        koopa_activate_app 'bedtools'
-        # FIXME Need to add suport for calc of these.
+        # Need to parse the output file for these values in the header.
+        # What a pain.
         dict['paired_ins_len_mean']='FIXME'
         dict['paired_ins_len_std_dev']='FIXME'
     fi
@@ -253,12 +253,22 @@ END
         --file="${dict['settings_file']}" \
         --string="${dict['settings_string']}"
     koopa_alert "Generating MISO index in '${dict['index_dir']}'."
+    # FIXME Split this out to a separate command.
     # FIXME This only supports a decompressed GFF3 file.
+    #
     "${app['index_gff']}" --index "${dict['gff3_file']}" "${dict['index_dir']}"
+
+
+
+
+
+
+
+
+
+
     miso_args+=(
-        '--run' # COMPUTE_GENES_PSI
-            "${dict['index_dir']}"
-            "${dict['bam_file']}"
+        '--run' "${dict['index_dir']}" "${dict['bam_file']}"
         '-p' "${dict['num_proc']}"
         '--output-dir' "${dict['output_dir']}"
         '--read-len' "${dict['read_length']}"
@@ -274,8 +284,7 @@ END
         )
     fi
     koopa_dl 'miso' "${miso_args[*]}"
-    koopa_print "${app['miso']} ${miso_args[*]}" \
-        >> "${dict['log_file']}"
+    koopa_print "${app['miso']} ${miso_args[*]}" >> "${dict['log_file']}"
     "${app['miso']}" "${miso_args[@]}" \
         |& "${app['tee']}" -a "${dict['log_file']}"
     return 0
