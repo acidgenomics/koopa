@@ -439,7 +439,7 @@
     "version": "2.20"
   },
   "bedtools": {
-    "bin": ["bedtools"],
+    "bin": ["bedtools", "tagBam"],
     "build_dependencies": {
       "macos-arm64": ["autoconf", "automake", "make"],
       "noarch": []
