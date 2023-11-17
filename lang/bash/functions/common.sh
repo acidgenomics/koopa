@@ -12,6 +12,7 @@ koopa_activate_app_conda_env() {
     dict['prefix']="$(koopa_app_prefix "${dict['app_name']}")"
     dict['libexec']="${dict['prefix']}/libexec"
     koopa_assert_is_dir "${dict['libexec']}"
+    koopa_alert "Activating conda environment at '${dict['libexec']}'."
     koopa_conda_activate_env "${dict['libexec']}"
     return 0
 }
@@ -19867,6 +19868,7 @@ koopa_miso_index() {
             --output-file="${dict['tmp_gff_file']}"
         dict['gff_file']="${dict['tmp_gff_file']}"
     fi
+    export PYTHONUNBUFFERED=1
     "${app['index_gff']}" \
         --index \
         "${dict['gff_file']}" \
@@ -19877,6 +19879,7 @@ koopa_miso_index() {
         --min-exon-size "${dict['min_exon_size']}" \
         --output-dir "${dict['exons_dir']}" \
         |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
     if [[ "${bool['tmp_gff_file']}" -eq 1 ]]
     then
         koopa_rm "${dict['gff_file']}"
@@ -23182,8 +23185,10 @@ koopa_rmats() {
     koopa_dl 'rmats' "${rmats_args[*]}"
     koopa_print "${app['rmats']} ${rmats_args[*]}" \
         >> "${dict['log_file']}"
+    export PYTHONUNBUFFERED=1
     "${app['rmats']}" "${rmats_args[@]}" \
         |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
     koopa_rm "${dict['tmp_dir']}"
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
