@@ -8,6 +8,10 @@ koopa_rmats() {
     # @seealso
     # - https://rnaseq-mats.sourceforge.io/
     # - https://nf-co.re/rnasplice/
+    # - https://github.com/nf-core/rnasplice/blob/master/modules/
+    #     local/rmats_prep.nf
+    # - https://github.com/nf-core/rnasplice/blob/master/modules/
+    #     local/rmats_post.nf
     #
     # @examples
     # # STAR GENCODE-aligned BAM files.

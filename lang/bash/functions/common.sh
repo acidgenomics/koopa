@@ -18804,6 +18804,13 @@ koopa_locate_minimap2() {
         "$@"
 }
 
+koopa_locate_miso_index_gff() {
+    koopa_locate_app \
+        --app-name='misopy' \
+        --bin-name='index_gff' \
+        "$@"
+}
+
 koopa_locate_miso() {
     koopa_locate_app \
         --app-name='misopy' \
@@ -19773,6 +19780,30 @@ koopa_merge_pdf() {
         -sDEVICE='pdfwrite' \
         -sOutputFile='merge.pdf' \
         "$@"
+    return 0
+}
+
+koopa_miso() {
+    local -A app dict
+    local -a miso_args
+    app['index_gff']="$(koopa_locate_miso_index_gff)"
+    app['miso']="$(koopa_locate_miso)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bam_file']=''
+    dict['read_length']=''
+    dict['output_dir']=''
+    dict['paired_insert_length_mean']=''
+    dict['paired_insert_length_std_dev']=''
+    koopa_assert_is_set \
+        '--bam-file' "${dict['bam_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+
+    miso_args+=(
+        '--output-dir' "${dict['output_dir']}"
+        '--read-len' "${dict['read_length']}"
+        '--run' "${dict['bam_file']}"
+    )
+    "${app['miso']}" "${miso_args[@]}"
     return 0
 }
 
