@@ -5,6 +5,10 @@ koopa_rmats() {
     # Run rMATS analysis on unpaired samples.
     # @note Updated 2023-11-16.
     #
+    # @seealso
+    # - https://rnaseq-mats.sourceforge.io/
+    # - https://nf-co.re/rnasplice/
+    #
     # @examples
     # # STAR GENCODE-aligned BAM files.
     # # b1_file:
