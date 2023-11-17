@@ -19891,7 +19891,7 @@ koopa_miso_index() {
     )"
     koopa_assert_is_file "${dict['tmp_exons_gff_file']}"
     koopa_mv \
-        "${dict['tmp_gff_exons_file']}" \
+        "${dict['tmp_exons_gff_file']}" \
         "${dict['output_dir']}/min_${dict['min_exon_size']}.const_exons.gff"
     koopa_rm "${dict['tmp_exons_dir']}"
     "${app['index_gff']}" \
