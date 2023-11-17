@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Add memory requirement here.
+# Need to require at least 30 GB of RAM I think.
+
 koopa_miso_run() {
     # """
     # Run MISO splicing event analysis.
