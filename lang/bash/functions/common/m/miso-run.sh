@@ -69,6 +69,8 @@ koopa_miso_run() {
     local -A app bool dict
     local -a miso_args
     koopa_activate_app_conda_env 'misopy'
+    # Using our bedtools and samtools instead of the bundled variants in the
+    # misopy conda recipe, due to broken 'libncurses.so.5'.
     koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
