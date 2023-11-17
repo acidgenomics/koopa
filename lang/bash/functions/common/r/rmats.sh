@@ -219,8 +219,10 @@ koopa_rmats() {
     koopa_dl 'rmats' "${rmats_args[*]}"
     koopa_print "${app['rmats']} ${rmats_args[*]}" \
         >> "${dict['log_file']}"
+    export PYTHONUNBUFFERED=1
     "${app['rmats']}" "${rmats_args[@]}" \
         |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
     koopa_rm "${dict['tmp_dir']}"
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
