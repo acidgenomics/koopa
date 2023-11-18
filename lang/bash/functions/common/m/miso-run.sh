@@ -71,8 +71,8 @@ koopa_miso_run() {
     koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
-    app['miso']="$(koopa_locate_miso)"
-    app['pe_utils']="$(koopa_locate_miso_pe_utils)"
+    app['miso']="$(koopa_locate_miso --realpath)"
+    app['pe_utils']="$(koopa_locate_miso_pe_utils --realpath)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['paired']=0
