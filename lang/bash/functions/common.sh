@@ -5,6 +5,18 @@ koopa_acid_emoji() {
     koopa_print '🧪'
 }
 
+koopa_activate_app_conda_env() {
+    local -A dict
+    koopa_assert_has_args_eq "$#" 1
+    dict['app_name']="${1:?}"
+    dict['prefix']="$(koopa_app_prefix "${dict['app_name']}")"
+    dict['libexec']="${dict['prefix']}/libexec"
+    koopa_assert_is_dir "${dict['libexec']}"
+    koopa_alert "Activating conda environment at '${dict['libexec']}'."
+    koopa_conda_activate_env "${dict['libexec']}"
+    return 0
+}
+
 koopa_activate_app() {
     local -A app dict
     local -a pos
@@ -4639,6 +4651,18 @@ koopa_cli_app() {
                     ;;
             esac
             ;;
+        'miso')
+            case "${2:-}" in
+                'index' | \
+                'run')
+                    dict['key']="${1:?}-${2:?}"
+                    shift 2
+                    ;;
+                *)
+                    koopa_cli_invalid_arg "$@"
+                    ;;
+            esac
+            ;;
         'r')
             case "${2:-}" in
                 'bioconda-check' | \
@@ -8995,6 +9019,7 @@ koopa_find() {
                 ;;
         esac
     done
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     case "${dict['engine']}" in
@@ -18804,6 +18829,34 @@ koopa_locate_minimap2() {
         "$@"
 }
 
+koopa_locate_miso_exon_utils() {
+    koopa_locate_app \
+        --app-name='misopy' \
+        --bin-name='exon_utils' \
+        "$@"
+}
+
+koopa_locate_miso_index_gff() {
+    koopa_locate_app \
+        --app-name='misopy' \
+        --bin-name='index_gff' \
+        "$@"
+}
+
+koopa_locate_miso_pe_utils() {
+    koopa_locate_app \
+        --app-name='misopy' \
+        --bin-name='pe_utils' \
+        "$@"
+}
+
+koopa_locate_miso() {
+    koopa_locate_app \
+        --app-name='misopy' \
+        --bin-name='miso' \
+        "$@"
+}
+
 koopa_locate_mkdir() {
     koopa_locate_app \
         --app-name='coreutils' \
@@ -19766,6 +19819,309 @@ koopa_merge_pdf() {
         -sDEVICE='pdfwrite' \
         -sOutputFile='merge.pdf' \
         "$@"
+    return 0
+}
+
+koopa_miso_index() {
+    local -A app bool dict
+    koopa_activate_app_conda_env 'misopy'
+    app['exon_utils']="$(koopa_locate_miso_exon_utils)"
+    app['index_gff']="$(koopa_locate_miso_index_gff)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    bool['tmp_gff_file']=0
+    dict['gff_file']=''
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=30
+    dict['min_exon_size']=1000
+    dict['output_dir']=''
+    dict['tmp_exons_dir']="$(koopa_tmp_dir_in_wd)"
+    while (("$#"))
+    do
+        case "$1" in
+            '--gff-file='*)
+                dict['gff_file']="${1#*=}"
+                shift 1
+                ;;
+            '--gff-file')
+                dict['gff_file']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--gff-file' "${dict['gff_file']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "MISO requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_file "${dict['gff_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['gff_file']="$(koopa_realpath "${dict['gff_file']}")"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['log_file']="${dict['output_dir']}/index.log"
+    koopa_alert "Generating MISO index at '${dict['output_dir']}'."
+    if koopa_is_compressed_file "${dict['gff_file']}"
+    then
+        bool['tmp_gff_file']=1
+        dict['tmp_gff_file']="$(koopa_tmp_file_in_wd)"
+        koopa_decompress \
+            --input-file="${dict['gff_file']}" \
+            --output-file="${dict['tmp_gff_file']}"
+        dict['gff_file']="${dict['tmp_gff_file']}"
+    fi
+    export PYTHONUNBUFFERED=1
+    "${app['exon_utils']}" \
+        --get-const-exons "${dict['gff_file']}" \
+        --min-exon-size "${dict['min_exon_size']}" \
+        --output-dir "${dict['tmp_exons_dir']}" \
+        |& "${app['tee']}" -a "${dict['log_file']}"
+    dict['tmp_exons_gff_file']="$( \
+        koopa_find \
+            --hidden \
+            --max-depth=1 \
+            --min-depth=1 \
+            --pattern="*.min_${dict['min_exon_size']}.const_exons.gff" \
+            --prefix="${dict['tmp_exons_dir']}" \
+            --type='f'
+    )"
+    koopa_assert_is_file "${dict['tmp_exons_gff_file']}"
+    koopa_mv \
+        "${dict['tmp_exons_gff_file']}" \
+        "${dict['output_dir']}/min_${dict['min_exon_size']}.const_exons.gff"
+    koopa_rm "${dict['tmp_exons_dir']}"
+    "${app['index_gff']}" \
+        --index \
+        "${dict['gff_file']}" \
+        "${dict['output_dir']}" \
+        |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
+    if [[ "${bool['tmp_gff_file']}" -eq 1 ]]
+    then
+        koopa_rm "${dict['gff_file']}"
+    fi
+    koopa_alert_success "MISO index created at '${dict['output_dir']}'."
+    return 0
+}
+
+koopa_miso_run() {
+    local -A app bool dict
+    local -a miso_args
+    koopa_activate_app_conda_env 'misopy'
+    koopa_activate_app 'bedtools' 'samtools'
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['head']="$(koopa_locate_head --allow-system)"
+    app['miso']="$(koopa_locate_miso)"
+    app['pe_utils']="$(koopa_locate_miso_pe_utils)"
+    app['tee']="$(koopa_locate_tee --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    bool['paired']=0
+    dict['bam_file']=''
+    dict['genome_fasta_file']=''
+    dict['index_dir']=''
+    dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=30
+    dict['num_proc']="$(koopa_cpu_count)"
+    dict['read_length']=''
+    dict['output_dir']=''
+    dict['read_type']=''
+    while (("$#"))
+    do
+        case "$1" in
+            '--bam-file='*)
+                dict['bam_file']="${1#*=}"
+                shift 1
+                ;;
+            '--bam-file')
+                dict['bam_file']="${2:?}"
+                shift 2
+                ;;
+            '--genome-fasta-file='*)
+                dict['genome_fasta_file']="${1#*=}"
+                shift 1
+                ;;
+            '--genome-fasta-file')
+                dict['genome_fasta_file']="${2:?}"
+                shift 2
+                ;;
+            '--index-dir='*)
+                dict['index_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--index-dir')
+                dict['index_dir']="${2:?}"
+                shift 2
+                ;;
+            '--output-dir='*)
+                dict['output_dir']="${1#*=}"
+                shift 1
+                ;;
+            '--output-dir')
+                dict['output_dir']="${2:?}"
+                shift 2
+                ;;
+            '--lib-type='*)
+                dict['lib_type']="${1#*=}"
+                shift 1
+                ;;
+            '--lib-type')
+                dict['lib_type']="${2:?}"
+                shift 2
+                ;;
+            '--read-length='*)
+                dict['read_length']="${1#*=}"
+                shift 1
+                ;;
+            '--read-length')
+                dict['read_length']="${2:?}"
+                shift 2
+                ;;
+            '--read-type='*)
+                dict['read_type']="${1#*=}"
+                shift 1
+                ;;
+            '--read-type')
+                dict['read_type']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--bam-file' "${dict['bam_file']}" \
+        '--genome-fasta-file' "${dict['genome_fasta_file']}" \
+        '--index-dir' "${dict['index_dir']}" \
+        '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "MISO requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
+    koopa_assert_is_dir "${dict['index_dir']}"
+    koopa_assert_is_file \
+        "${dict['bam_file']}" \
+        "${dict['bam_file']}.bai" \
+        "${dict['genome_fasta_file']}"
+    koopa_assert_is_matching_regex \
+        --pattern='\.bam$' \
+        --string="${dict['bam_file']}"
+    koopa_assert_is_not_dir "${dict['output_dir']}"
+    dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
+    dict['log_file']="${dict['output_dir']}/miso.log"
+    dict['settings_file']="${dict['output_dir']}/settings.txt"
+    koopa_alert "Running MISO analysis in '${dict['output_dir']}'."
+    if [[ "${dict['lib_type']}" == 'A' ]]
+    then
+        koopa_alert 'Detecting BAM library type with salmon.'
+        dict['lib_type']="$( \
+            koopa_salmon_detect_bam_library_type \
+                --bam-file="${dict['bam_file']}" \
+                --fasta-file="${dict['genome_fasta_file']}" \
+        )"
+    fi
+    dict['lib_type']="$( \
+        koopa_salmon_library_type_to_miso "${dict['lib_type']}" \
+    )"
+    if [[ -z "${dict['read_length']}" ]]
+    then
+        koopa_alert 'Detecting BAM read length.'
+        dict['read_length']="$(koopa_bam_read_length "${dict['bam_file']}")"
+    fi
+    if [[ -z "${dict['read_type']}" ]]
+    then
+        koopa_alert 'Detecting BAM read type.'
+        dict['read_type']="$(koopa_bam_read_type "${dict['bam_file']}")"
+    fi
+    case "${dict['read_type']}" in
+        'paired')
+            bool['paired']=1
+            ;;
+        'single')
+            ;;
+        *)
+            koopa_stop "Unsupported read type: '${dict['read_type']}'."
+            ;;
+    esac
+    read -r -d '' "dict[settings_string]" << END || true
+[data]
+filter_results = True
+min_event_reads = 20
+strand = ${dict['lib_type']}
+END
+    koopa_write_string \
+        --file="${dict['settings_file']}" \
+        --string="${dict['settings_string']}"
+    miso_args+=(
+        '--run' "${dict['index_dir']}" "${dict['bam_file']}"
+        '-p' "${dict['num_proc']}"
+        '--output-dir' "${dict['output_dir']}"
+        '--read-len' "${dict['read_length']}"
+        '--settings-filename' "${dict['settings_file']}"
+    )
+    if [[ "${bool['paired']}" -eq 1 ]]
+    then
+        dict['exons_gff_file']="$( \
+            koopa_find \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.const_exons.gff' \
+                --prefix="${dict['index_dir']}" \
+                --type='f' \
+        )"
+        koopa_assert_is_file "${dict['exons_gff_file']}"
+        dict['min_exon_size']=500
+        dict['tmp_insert_dist_dir']="$(koopa_tmp_dir_in_wd)"
+        "${app['pe_utils']}" \
+            --compute-insert-len \
+                "${dict['bam_file']}" \
+                "${dict['exons_gff_file']}" \
+            --min-exon-size="${dict['min_exon_size']}" \
+            --output-dir "${dict['tmp_insert_dist_dir']}"
+        dict['insert_length_file']="$( \
+            koopa_find \
+                --hidden \
+                --max-depth=1 \
+                --min-depth=1 \
+                --pattern='*.insert_len' \
+                --prefix="${dict['tmp_insert_dist_dir']}" \
+                --type='f' \
+        )"
+        koopa_assert_is_file "${dict['insert_length_file']}"
+        dict['insert_length_mean']="$( \
+            "${app['head']}" -n 1 "${dict['insert_length_file']}" \
+                | "${app['cut']}" -d ',' -f 1 \
+                | "${app['cut']}" -d '=' -f 2 \
+        )"
+        dict['insert_length_sdev']="$( \
+            "${app['head']}" -n 1 "${dict['insert_length_file']}" \
+                | "${app['cut']}" -d ',' -f 2 \
+                | "${app['cut']}" -d '=' -f 2 \
+        )"
+        miso_args+=(
+            '--paired-end'
+                "${dict['insert_length_mean']}"
+                "${dict['insert_length_sdev']}"
+        )
+        koopa_rm "${dict['tmp_insert_dist_dir']}"
+    fi
+    koopa_dl 'miso' "${miso_args[*]}"
+    koopa_print "${app['miso']} ${miso_args[*]}" >> "${dict['log_file']}"
+    "${app['miso']}" "${miso_args[@]}" \
+        |& "${app['tee']}" -a "${dict['log_file']}"
     return 0
 }
 
@@ -22890,8 +23246,12 @@ koopa_rmats() {
         '--tstat' "${dict['nthread']}"
     )
     koopa_dl 'rmats' "${rmats_args[*]}"
+    koopa_print "${app['rmats']} ${rmats_args[*]}" \
+        >> "${dict['log_file']}"
+    export PYTHONUNBUFFERED=1
     "${app['rmats']}" "${rmats_args[@]}" \
-        2>&1 | "${app['tee']}" "${dict['log_file']}"
+        |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
     koopa_rm "${dict['tmp_dir']}"
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
@@ -23528,50 +23888,6 @@ koopa_run_if_installed() {
     return 0
 }
 
-koopa_salmon_library_type_to_rmats() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'MU' | 'OU' | 'U')
-            to='fr-unstranded'
-            ;;
-        'ISF')
-            to='fr-secondstrand'
-            ;;
-        'ISR')
-            to='fr-firststrand'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
-koopa_salmon_library_type_to_rsem() {
-    local from to
-    koopa_assert_has_args_eq "$#" 1
-    from="${1:?}"
-    case "$from" in
-        'IU' | 'U')
-            to='none'
-            ;;
-        'ISF')
-            to='forward'
-            ;;
-        'ISR')
-            to='reverse'
-            ;;
-        *)
-            koopa_stop "Invalid library type: '${1:?}'."
-            ;;
-    esac
-    koopa_print "$to"
-    return 0
-}
-
 koopa_salmon_detect_bam_library_type() {
     local -A app dict
     local -a quant_args
@@ -23932,6 +24248,72 @@ koopa_salmon_library_type_to_kallisto() {
             ;;
         'ISR')
             to='--rf-stranded'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_salmon_library_type_to_miso() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'MU' | 'OU' | 'U')
+            to='fr-unstranded'
+            ;;
+        'ISF')
+            to='fr-secondstrand'
+            ;;
+        'ISR')
+            to='fr-firststrand'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_salmon_library_type_to_rmats() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'MU' | 'OU' | 'U')
+            to='fr-unstranded'
+            ;;
+        'ISF')
+            to='fr-secondstrand'
+            ;;
+        'ISR')
+            to='fr-firststrand'
+            ;;
+        *)
+            koopa_stop "Invalid library type: '${1:?}'."
+            ;;
+    esac
+    koopa_print "$to"
+    return 0
+}
+
+koopa_salmon_library_type_to_rsem() {
+    local from to
+    koopa_assert_has_args_eq "$#" 1
+    from="${1:?}"
+    case "$from" in
+        'IU' | 'U')
+            to='none'
+            ;;
+        'ISF')
+            to='forward'
+            ;;
+        'ISR')
+            to='reverse'
             ;;
         *)
             koopa_stop "Invalid library type: '${1:?}'."
