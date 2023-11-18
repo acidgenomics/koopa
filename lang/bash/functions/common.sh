@@ -19825,8 +19825,8 @@ koopa_merge_pdf() {
 koopa_miso_index() {
     local -A app bool dict
     koopa_activate_app_conda_env 'misopy'
-    app['exon_utils']="$(koopa_locate_miso_exon_utils)"
-    app['index_gff']="$(koopa_locate_miso_index_gff)"
+    app['exon_utils']="$(koopa_locate_miso_exon_utils --realpath)"
+    app['index_gff']="$(koopa_locate_miso_index_gff --realpath)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_gff_file']=0
@@ -19923,8 +19923,8 @@ koopa_miso_run() {
     koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
-    app['miso']="$(koopa_locate_miso)"
-    app['pe_utils']="$(koopa_locate_miso_pe_utils)"
+    app['miso']="$(koopa_locate_miso --realpath)"
+    app['pe_utils']="$(koopa_locate_miso_pe_utils --realpath)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['paired']=0
