@@ -9019,6 +9019,7 @@ koopa_find() {
                 ;;
         esac
     done
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     case "${dict['engine']}" in
@@ -19931,6 +19932,8 @@ koopa_miso_run() {
     dict['genome_fasta_file']=''
     dict['index_dir']=''
     dict['lib_type']='A'
+    dict['mem_gb']="$(koopa_mem_gb)"
+    dict['mem_gb_cutoff']=30
     dict['num_proc']="$(koopa_cpu_count)"
     dict['read_length']=''
     dict['output_dir']=''
@@ -20004,6 +20007,10 @@ koopa_miso_run() {
         '--genome-fasta-file' "${dict['genome_fasta_file']}" \
         '--index-dir' "${dict['index_dir']}" \
         '--output-dir' "${dict['output_dir']}"
+    if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
+    then
+        koopa_stop "MISO requires ${dict['mem_gb_cutoff']} GB of RAM."
+    fi
     koopa_assert_is_dir "${dict['index_dir']}"
     koopa_assert_is_file \
         "${dict['bam_file']}" \
@@ -20089,8 +20096,8 @@ END
                 --hidden \
                 --max-depth=1 \
                 --min-depth=1 \
-                --pattern="${dict['tmp_insert_dist_dir']}" \
                 --pattern='*.insert_len' \
+                --prefix="${dict['tmp_insert_dist_dir']}" \
                 --type='f' \
         )"
         koopa_assert_is_file "${dict['insert_length_file']}"
