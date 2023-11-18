@@ -3,7 +3,7 @@
 koopa_find() {
     # """
     # Find files using Rust fd (faster) or GNU findutils (slower).
-    # @note Updated 2023-10-09.
+    # @note Updated 2023-11-17.
     #
     # @section Supported regex types for GNU find:
     #
@@ -175,6 +175,7 @@ koopa_find() {
                 ;;
         esac
     done
+    koopa_assert_is_set '--prefix' "${dict['prefix']}"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     case "${dict['engine']}" in

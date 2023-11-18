@@ -54,6 +54,7 @@ _koopa_complete() {
                         'hisat2'
                         'jekyll'
                         'kallisto'
+                        'miso'
                         'r'
                         'rmats'
                         'rnaeditingindexer'
@@ -714,6 +715,9 @@ _koopa_complete() {
                             ;;
                         'md5sum')
                             args=('check-to-new-md5-file')
+                            ;;
+                        'miso')
+                            args=('index' 'run')
                             ;;
                         'r')
                             args=('bioconda-check' 'check')
