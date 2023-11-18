@@ -3,7 +3,7 @@
 koopa_miso_run() {
     # """
     # Run MISO splicing event analysis.
-    # @note Updated 2023-11-17.
+    # @note Updated 2023-11-18.
     #
     # This expects a sorted, indexed BAM file as input.
     #
@@ -213,11 +213,23 @@ koopa_miso_run() {
             koopa_stop "Unsupported read type: '${dict['read_type']}'."
             ;;
     esac
+    # Refer to '/opt/koopa/opt/misopy/libexec/lib/python2.7/site-packages/
+    # misopy/settings/miso_settings.txt' for default values.
     read -r -d '' "dict[settings_string]" << END || true
 [data]
 filter_results = True
 min_event_reads = 20
 strand = ${dict['lib_type']}
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_chains = 6
+num_processors = ${dict['num_proc']}
 END
     koopa_write_string \
         --file="${dict['settings_file']}" \
