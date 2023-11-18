@@ -84,7 +84,7 @@ koopa_miso_run() {
     # Using salmon library type conventions here.
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=30
+    dict['mem_gb_cutoff']=14
     dict['num_proc']="$(koopa_cpu_count)"
     # e.g. 150.
     dict['read_length']=''

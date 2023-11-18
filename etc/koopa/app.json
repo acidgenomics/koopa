@@ -2809,11 +2809,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-11-03",
+    "date": "2023-11-18",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.8"
+    "version": "4.0.9"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4649,11 +4649,11 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2023-08-06",
+    "date": "2023-11-18",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.16.1"
+    "version": "2.17.0"
   },
   "pylint": {
     "aliases": {
@@ -4682,14 +4682,14 @@
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "date": "2023-05-20",
+    "date": "2023-11-18",
     "default": false,
     "dependencies": ["python3.12", "taglib"],
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
     ],
-    "version": "2.0.0"
+    "version": "2.1.0"
   },
   "pytest": {
     "bin": ["pytest"],
@@ -5174,11 +5174,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-11-09",
+    "date": "2023-11-18",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.5"
+    "version": "0.1.6"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5338,7 +5338,7 @@
   },
   "seqkit": {
     "bin": ["seqkit"],
-    "date": "2023-11-10",
+    "date": "2023-11-18",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -5351,7 +5351,7 @@
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.6.0"
+    "version": "2.6.1"
   },
   "serf": {
     "aliases": {
