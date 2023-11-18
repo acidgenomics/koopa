@@ -3,7 +3,15 @@
 koopa_rmats() {
     # """
     # Run rMATS analysis on unpaired samples.
-    # @note Updated 2023-11-16.
+    # @note Updated 2023-11-17.
+    #
+    # @seealso
+    # - https://rnaseq-mats.sourceforge.io/
+    # - https://nf-co.re/rnasplice/
+    # - https://github.com/nf-core/rnasplice/blob/master/modules/
+    #     local/rmats_prep.nf
+    # - https://github.com/nf-core/rnasplice/blob/master/modules/
+    #     local/rmats_post.nf
     #
     # @examples
     # # STAR GENCODE-aligned BAM files.
@@ -36,7 +44,7 @@ koopa_rmats() {
     # Using salmon library type conventions here.
     dict['lib_type']='A'
     dict['nthread']="$(koopa_cpu_count)"
-    # e.g. 'star-gencode'.
+    # e.g. 'rmats/star-gencode/treatment-vs-control'.
     dict['output_dir']=''
     # e.g. '150'.
     dict['read_length']=''
@@ -209,8 +217,12 @@ koopa_rmats() {
         '--tstat' "${dict['nthread']}"
     )
     koopa_dl 'rmats' "${rmats_args[*]}"
+    koopa_print "${app['rmats']} ${rmats_args[*]}" \
+        >> "${dict['log_file']}"
+    export PYTHONUNBUFFERED=1
     "${app['rmats']}" "${rmats_args[@]}" \
-        2>&1 | "${app['tee']}" "${dict['log_file']}"
+        |& "${app['tee']}" -a "${dict['log_file']}"
+    unset -v PYTHONUNBUFFERED
     koopa_rm "${dict['tmp_dir']}"
     if [[ "${bool['tmp_gtf_file']}" -eq 1 ]]
     then
