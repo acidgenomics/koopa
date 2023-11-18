@@ -20061,6 +20061,16 @@ koopa_miso_run() {
 filter_results = True
 min_event_reads = 20
 strand = ${dict['lib_type']}
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_chains = 6
+num_processors = ${dict['num_proc']}
 END
     koopa_write_string \
         --file="${dict['settings_file']}" \
