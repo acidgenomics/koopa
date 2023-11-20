@@ -1952,7 +1952,7 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "date": "2023-08-31",
+    "date": "2023-11-20",
     "default": true,
     "dependencies": [
       "bash",
@@ -1970,7 +1970,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.42.0"
+    "version": "2.43.0"
   },
   "git-lfs": {
     "aliases": {
