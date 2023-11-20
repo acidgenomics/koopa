@@ -2,6 +2,9 @@
 
 # FIXME Consider adding 'miso_pack --pack my_output1/' step at the end
 # to compress the output.
+# FIXME Write output to temporary directory and then locate '.miso_summary' files instead
+# so we can standardize the output.
+#
 # FIXME Consider adding 'summarize_miso --summarize-samples my_output2/ summaries/' into
 # the target output directory?
 
