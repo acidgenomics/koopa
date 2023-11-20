@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding 'miso_pack --pack my_output1/' step at the end
+# to compress the output.
+# FIXME Consider adding 'summarize_miso --summarize-samples my_output2/ summaries/' into
+# the target output directory?
+
 koopa_miso_run() {
     # """
     # Run MISO splicing event analysis.
-    # @note Updated 2023-11-18.
+    # @note Updated 2023-11-20.
     #
     # This expects a sorted, indexed BAM file as input.
     #
