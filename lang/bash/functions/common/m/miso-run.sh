@@ -1,9 +1,17 @@
 #!/usr/bin/env bash
 
+# FIXME Consider adding 'miso_pack --pack my_output1/' step at the end
+# to compress the output.
+# FIXME Write output to temporary directory and then locate '.miso_summary' files instead
+# so we can standardize the output.
+#
+# FIXME Consider adding 'summarize_miso --summarize-samples my_output2/ summaries/' into
+# the target output directory?
+
 koopa_miso_run() {
     # """
     # Run MISO splicing event analysis.
-    # @note Updated 2023-11-17.
+    # @note Updated 2023-11-20.
     #
     # This expects a sorted, indexed BAM file as input.
     #
@@ -71,8 +79,8 @@ koopa_miso_run() {
     koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(koopa_locate_cut --allow-system)"
     app['head']="$(koopa_locate_head --allow-system)"
-    app['miso']="$(koopa_locate_miso)"
-    app['pe_utils']="$(koopa_locate_miso_pe_utils)"
+    app['miso']="$(koopa_locate_miso --realpath)"
+    app['pe_utils']="$(koopa_locate_miso_pe_utils --realpath)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['paired']=0
@@ -84,7 +92,7 @@ koopa_miso_run() {
     # Using salmon library type conventions here.
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=30
+    dict['mem_gb_cutoff']=14
     dict['num_proc']="$(koopa_cpu_count)"
     # e.g. 150.
     dict['read_length']=''
@@ -213,11 +221,23 @@ koopa_miso_run() {
             koopa_stop "Unsupported read type: '${dict['read_type']}'."
             ;;
     esac
+    # Refer to '/opt/koopa/opt/misopy/libexec/lib/python2.7/site-packages/
+    # misopy/settings/miso_settings.txt' for default values.
     read -r -d '' "dict[settings_string]" << END || true
 [data]
 filter_results = True
 min_event_reads = 20
 strand = ${dict['lib_type']}
+
+[cluster]
+cluster_command = qsub
+
+[sampler]
+burn_in = 500
+lag = 10
+num_iters = 5000
+num_chains = 6
+num_processors = ${dict['num_proc']}
 END
     koopa_write_string \
         --file="${dict['settings_file']}" \
