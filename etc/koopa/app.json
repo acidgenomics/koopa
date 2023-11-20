@@ -3717,12 +3717,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-10-23",
+    "date": "2023-11-20",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.2.3"
+    "version": "1.3.0"
   },
   "miller": {
     "aliases": {
@@ -4649,11 +4649,11 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2023-11-18",
+    "date": "2023-11-20",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.17.0"
+    "version": "2.17.1"
   },
   "pylint": {
     "aliases": {
