@@ -70,7 +70,7 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-10-16",
+    "date": "2023-11-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -79,7 +79,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.2.4"
+    "version": "1.2.5"
   },
   "apr": {
     "aliases": {
@@ -4100,7 +4100,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-10-24",
+    "date": "2023-11-22",
     "default": false,
     "dependencies": [
       "ca-certificates",
@@ -4116,7 +4116,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "20.9.0"
+    "version": "20.10.0"
   },
   "npth": {
     "aliases": {
