@@ -1221,10 +1221,10 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2023-09-24",
+    "date": "2023-11-27",
     "default": false,
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.28.0"
+    "version": "0.29.0"
   },
   "curl": {
     "aliases": {
