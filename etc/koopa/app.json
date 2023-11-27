@@ -2872,8 +2872,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-11-27",
     "default": false,
-    "dependencies": ["gcc"],
-    "notes": ["LAPACK is written in Fortran, which is why we require GCC."],
+    "notes": ["LAPACK is written in Fortran, which is why we require system gfortran."],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.12.0"
