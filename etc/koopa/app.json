@@ -877,10 +877,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-11-14",
+    "date": "2023-11-27",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.41.0"
+    "version": "2.42.0"
   },
   "cli11": {
     "aliases": {
@@ -1302,10 +1302,10 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-11",
+    "date": "2023-11-27",
     "default": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.52.0"
+    "version": "0.53.1"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1493,14 +1493,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-16",
+    "date": "2023-11-27",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.16.0"
+    "version": "0.16.1"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2870,13 +2870,13 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-11-11",
+    "date": "2023-11-27",
     "default": false,
     "dependencies": ["gcc"],
     "notes": ["LAPACK is written in Fortran, which is why we require GCC."],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
-    "version": "3.11.0"
+    "version": "3.12.0"
   },
   "latch": {
     "bin": ["latch"],
@@ -4283,12 +4283,12 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-24",
+    "date": "2023-11-27",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.1.4"
+    "version": "3.2.0"
   },
   "oracle-instant-client": {
     "date": "2023-08-31",
@@ -4559,10 +4559,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-20",
+    "date": "2023-11-27",
     "default": false,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.3"
+    "version": "0.14.4"
   },
   "proj": {
     "aliases": {
@@ -4626,12 +4626,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-11-13",
+    "date": "2023-11-27",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.32"
+    "version": "2.3.33"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4986,11 +4986,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2023-10-19",
+    "date": "2023-11-27",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.64.2"
+    "version": "1.65.0"
   },
   "readline": {
     "aliases": {
@@ -5043,11 +5043,11 @@
     },
     "bin": ["rg"],
     "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2023-11-27",
     "default": true,
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
-    "version": "13.0.0"
+    "version": "14.0.1"
   },
   "ripgrep-all": {
     "aliases": {
@@ -6418,10 +6418,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-11-08",
+    "date": "2023-11-27",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.40.1"
+    "version": "4.40.3"
   },
   "yt-dlp": {
     "aliases": {
