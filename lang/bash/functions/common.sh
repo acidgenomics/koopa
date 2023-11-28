@@ -19933,7 +19933,7 @@ koopa_miso_run() {
     dict['index_dir']=''
     dict['lib_type']='A'
     dict['mem_gb']="$(koopa_mem_gb)"
-    dict['mem_gb_cutoff']=30
+    dict['mem_gb_cutoff']=14
     dict['num_proc']="$(koopa_cpu_count)"
     dict['read_length']=''
     dict['output_dir']=''
@@ -23194,8 +23194,8 @@ koopa_rmats() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/rmats.log"
     koopa_alert "Running rMATS analysis in '${dict['output_dir']}'."
-    readarray -t -d ',' b1_files < "${dict['b1_file']}"
-    readarray -t -d ',' b2_files < "${dict['b2_file']}"
+    read -a b1_files -d ',' -r < "${dict['b1_file']}"
+    read -a b2_files -d ',' -r < "${dict['b2_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${b1_files[0]}"

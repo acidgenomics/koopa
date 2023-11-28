@@ -3,7 +3,7 @@
 koopa_rmats() {
     # """
     # Run rMATS analysis on unpaired samples.
-    # @note Updated 2023-11-17.
+    # @note Updated 2023-11-28.
     #
     # @seealso
     # - https://rnaseq-mats.sourceforge.io/
@@ -155,8 +155,10 @@ koopa_rmats() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/rmats.log"
     koopa_alert "Running rMATS analysis in '${dict['output_dir']}'."
-    readarray -t -d ',' b1_files < "${dict['b1_file']}"
-    readarray -t -d ',' b2_files < "${dict['b2_file']}"
+    # NOTE Usage of readarray here doesn't handle single line not containing
+    # our specified delimiter (i.e. ','), whereas read behaves as expected.
+    read -a b1_files -d ',' -r < "${dict['b1_file']}"
+    read -a b2_files -d ',' -r < "${dict['b2_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${b1_files[0]}"
