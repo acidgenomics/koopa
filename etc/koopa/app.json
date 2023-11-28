@@ -1927,10 +1927,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-11-14",
+    "date": "2023-11-28",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.39.1"
+    "version": "2.39.2"
   },
   "ghostscript": {
     "aliases": {
@@ -2324,11 +2324,11 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2023-07-25",
+    "date": "2023-11-28",
     "default": false,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.11.0"
+    "version": "0.12.0"
   },
   "gzip": {
     "aliases": {
@@ -3479,6 +3479,7 @@
       "zlib",
       "zstd"
     ],
+    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "17.0.5"
   },
@@ -5042,11 +5043,11 @@
     },
     "bin": ["rg"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-27",
+    "date": "2023-11-28",
     "default": true,
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
-    "version": "14.0.1"
+    "version": "14.0.2"
   },
   "ripgrep-all": {
     "aliases": {
