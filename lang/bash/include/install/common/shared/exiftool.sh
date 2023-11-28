@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# TODO Consider adding recommended modules:
-# - Test::Fatal
-# - Unicode::UTF8
-
 main() {
     # """
     # Install exiftool.
