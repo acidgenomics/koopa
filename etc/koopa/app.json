@@ -1465,7 +1465,7 @@
       "unzip",
       "wget"
     ],
-    "date": "2023-04-11",
+    "date": "2023-11-28",
     "default": false,
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
@@ -1473,7 +1473,7 @@
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
     ],
-    "version": "12.60"
+    "version": "12.70"
   },
   "expat": {
     "aliases": {
