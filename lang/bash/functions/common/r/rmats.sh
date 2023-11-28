@@ -158,8 +158,8 @@ koopa_rmats() {
     koopa_alert "Running rMATS analysis in '${dict['output_dir']}'."
     # NOTE Usage of readarray here doesn't handle single line not containing
     # our specified delimiter (i.e. ','), whereas read behaves as expected.
-    read -a b1_files -d ',' -r < "${dict['b1_file']}"
-    read -a b2_files -d ',' -r < "${dict['b2_file']}"
+    read -d ',' -r -a b1_files < "${dict['b1_file']}"
+    read -d ',' -r -a b2_files < "${dict['b2_file']}"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${b1_files[0]}"
