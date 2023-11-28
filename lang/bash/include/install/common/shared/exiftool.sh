@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# TODO Consider adding recommended 'Unicode::UTF8' module.
+# TODO Consider adding recommended modules:
+# - Test::Fatal
+# - Unicode::UTF8
 
 main() {
     # """
