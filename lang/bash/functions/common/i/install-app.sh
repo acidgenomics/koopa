@@ -364,6 +364,7 @@ ${dict['version2']}"
             'LANG=C'
             'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+            "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
