@@ -3,7 +3,7 @@
 koopa_salmon_detect_fastq_library_type() {
     # """
     # Detect library type (strandedness) of input FASTQs.
-    # @note Updated 2023-10-20.
+    # @note Updated 2023-11-29.
     #
     # @seealso
     # - https://salmon.readthedocs.io/en/latest/salmon.html#skipquant
@@ -34,7 +34,7 @@ koopa_salmon_detect_fastq_library_type() {
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
-    dict['n']='400000'
+    dict['n']='1000000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
@@ -106,11 +106,9 @@ koopa_salmon_detect_fastq_library_type() {
         koopa_decompress --stdout "${dict['fastq_r1_file']}" \
             | "${app['head']}" -n "${dict['n']}" \
             > "${dict['unmated_reads']}"
-        quant_args+=(
-            "--unmatedReads=${dict['unmated_reads']}"
-        )
+        quant_args+=("--unmatedReads=${dict['unmated_reads']}")
     fi
-    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
+    "${app['salmon']}" quant "${quant_args[@]}" 1>&2
     dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
