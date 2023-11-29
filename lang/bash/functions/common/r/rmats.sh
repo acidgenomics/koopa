@@ -26,7 +26,6 @@ koopa_rmats() {
     #     --gtf-file='gencode.v44.annotation.gtf.gz' \
     #     --output-dir='rmats/star-gencode/treatment-vs-control'
     # """
-    set -x
     local -A app bool dict
     local -a b1_files b2_files rmats_args
     app['rmats']="$(koopa_locate_rmats)"
