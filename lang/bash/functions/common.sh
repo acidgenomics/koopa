@@ -23083,6 +23083,7 @@ koopa_rmats() {
     app['tr']="$(koopa_locate_tr --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_gtf_file']=0
+    bool['verbose']=0
     dict['b1_file']=''
     dict['b2_file']=''
     dict['cstat']=0.0001
@@ -23169,11 +23170,16 @@ koopa_rmats() {
                 dict['read_type']="${2:?}"
                 shift 2
                 ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
+    [[ "${bool['verbose']}" -eq 1 ]] && set -x
     koopa_assert_is_set \
         '--alpha-threshold' "${dict['cstat']}" \
         '--b1-file' "${dict['b1_file']}" \
