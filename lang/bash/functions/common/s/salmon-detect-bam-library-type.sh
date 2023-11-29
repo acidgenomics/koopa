@@ -85,7 +85,7 @@ koopa_salmon_detect_bam_library_type() {
         '--no-version-check'
         "--output=${dict['output_dir']}"
         '--quiet'
-        # > '--skipQuant'
+        '--skipQuant'
         "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
