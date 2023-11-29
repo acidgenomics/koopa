@@ -23920,7 +23920,7 @@ koopa_salmon_detect_bam_library_type() {
     koopa_assert_is_executable "${app[@]}"
     dict['bam_file']=''
     dict['fasta_file']=''
-    dict['n']='400000'
+    dict['n']='1000000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
@@ -23972,7 +23972,7 @@ koopa_salmon_detect_bam_library_type() {
         "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
-    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
+    "${app['salmon']}" quant "${quant_args[@]}" 1>&2
     dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
