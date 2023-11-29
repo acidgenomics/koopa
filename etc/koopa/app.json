@@ -877,10 +877,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-11-27",
+    "date": "2023-11-29",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.42.0"
+    "version": "2.42.1"
   },
   "cli11": {
     "aliases": {
@@ -4068,11 +4068,11 @@
   },
   "nlohmann-json": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-11-05",
+    "date": "2022-11-29",
     "default": false,
     "prune": false,
     "url": ["https://github.com/nlohmann/json/"],
-    "version": "3.11.2"
+    "version": "3.11.3"
   },
   "nmap": {
     "aliases": {
@@ -5043,11 +5043,11 @@
     },
     "bin": ["rg"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-28",
+    "date": "2023-11-29",
     "default": true,
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
-    "version": "14.0.2"
+    "version": "14.0.3"
   },
   "ripgrep-all": {
     "aliases": {
@@ -6443,10 +6443,10 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-13",
+    "date": "2023-11-29",
     "default": false,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.39.1"
+    "version": "0.39.2"
   },
   "zip": {
     "aliases": {

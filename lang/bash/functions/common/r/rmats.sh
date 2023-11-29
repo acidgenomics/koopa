@@ -3,7 +3,7 @@
 koopa_rmats() {
     # """
     # Run rMATS analysis on unpaired samples.
-    # @note Updated 2023-11-17.
+    # @note Updated 2023-11-28.
     #
     # @seealso
     # - https://rnaseq-mats.sourceforge.io/
@@ -30,6 +30,7 @@ koopa_rmats() {
     local -a b1_files b2_files rmats_args
     app['rmats']="$(koopa_locate_rmats)"
     app['tee']="$(koopa_locate_tee --allow-system)"
+    app['tr']="$(koopa_locate_tr --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_gtf_file']=0
     # e.g. 'b1.txt': control samples.
@@ -155,8 +156,14 @@ koopa_rmats() {
     dict['output_dir']="$(koopa_init_dir "${dict['output_dir']}")"
     dict['log_file']="${dict['output_dir']}/rmats.log"
     koopa_alert "Running rMATS analysis in '${dict['output_dir']}'."
-    readarray -t -d ',' b1_files < "${dict['b1_file']}"
-    readarray -t -d ',' b2_files < "${dict['b2_file']}"
+    # Usage of 'tr' here handles single sample files not containing ',' delim
+    # better than relying on "readarray -d ','" approach.
+    readarray -t b1_files <<< "$( \
+        "${app['tr']}" ',' '\n' < "${dict['b1_file']}" \
+    )"
+    readarray -t b2_files <<< "$( \
+        "${app['tr']}" ',' '\n' < "${dict['b2_file']}" \
+    )"
     koopa_assert_is_matching_regex \
         --pattern='\.bam$' \
         --string="${b1_files[0]}"
