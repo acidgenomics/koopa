@@ -28,7 +28,7 @@ koopa_rmats() {
     # """
     local -A app bool dict
     local -a b1_files b2_files rmats_args
-    app['rmats']="$(koopa_locate_rmats)"
+    app['rmats']="$(koopa_locate_rmats --realpath)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     app['tr']="$(koopa_locate_tr --allow-system)"
     koopa_assert_is_executable "${app[@]}"
