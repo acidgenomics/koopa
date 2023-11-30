@@ -1493,14 +1493,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-27",
+    "date": "2023-11-30",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.16.1"
+    "version": "0.16.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -3786,11 +3786,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-11-14",
+    "date": "2023-11-30",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.3.3"
+    "version": "2.4.0"
   },
   "mpc": {
     "aliases": {

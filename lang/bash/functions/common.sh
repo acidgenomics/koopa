@@ -11965,6 +11965,7 @@ ${dict['version2']}"
             'LANG=C'
             'LC_ALL=C'
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+            "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
@@ -14773,6 +14774,7 @@ koopa_install_pyflakes() {
 
 koopa_install_pygments() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pygments' \
         "$@"
 }
@@ -23078,11 +23080,12 @@ koopa_rm() {
 koopa_rmats() {
     local -A app bool dict
     local -a b1_files b2_files rmats_args
-    app['rmats']="$(koopa_locate_rmats)"
+    app['rmats']="$(koopa_locate_rmats --realpath)"
     app['tee']="$(koopa_locate_tee --allow-system)"
     app['tr']="$(koopa_locate_tr --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['tmp_gtf_file']=0
+    bool['verbose']=0
     dict['b1_file']=''
     dict['b2_file']=''
     dict['cstat']=0.0001
@@ -23169,11 +23172,16 @@ koopa_rmats() {
                 dict['read_type']="${2:?}"
                 shift 2
                 ;;
+            '--verbose')
+                bool['verbose']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
+    [[ "${bool['verbose']}" -eq 1 ]] && set -x
     koopa_assert_is_set \
         '--alpha-threshold' "${dict['cstat']}" \
         '--b1-file' "${dict['b1_file']}" \
@@ -23914,7 +23922,7 @@ koopa_salmon_detect_bam_library_type() {
     koopa_assert_is_executable "${app[@]}"
     dict['bam_file']=''
     dict['fasta_file']=''
-    dict['n']='400000'
+    dict['n']='1000000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
@@ -23966,7 +23974,7 @@ koopa_salmon_detect_bam_library_type() {
         "--targets=${dict['fasta_file']}"
         "--threads=${dict['threads']}"
     )
-    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
+    "${app['salmon']}" quant "${quant_args[@]}" 1>&2
     dict['json_file']="${dict['output_dir']}/aux_info/meta_info.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
@@ -23991,7 +23999,7 @@ koopa_salmon_detect_fastq_library_type() {
     dict['fastq_r1_file']=''
     dict['fastq_r2_file']=''
     dict['index_dir']=''
-    dict['n']='400000'
+    dict['n']='1000000'
     dict['threads']="$(koopa_cpu_count)"
     dict['tmp_dir']="$(koopa_tmp_dir_in_wd)"
     dict['output_dir']="${dict['tmp_dir']}/quant"
@@ -24061,11 +24069,9 @@ koopa_salmon_detect_fastq_library_type() {
         koopa_decompress --stdout "${dict['fastq_r1_file']}" \
             | "${app['head']}" -n "${dict['n']}" \
             > "${dict['unmated_reads']}"
-        quant_args+=(
-            "--unmatedReads=${dict['unmated_reads']}"
-        )
+        quant_args+=("--unmatedReads=${dict['unmated_reads']}")
     fi
-    "${app['salmon']}" quant "${quant_args[@]}" &>/dev/null
+    "${app['salmon']}" quant "${quant_args[@]}" 1>&2
     dict['json_file']="${dict['output_dir']}/lib_format_counts.json"
     koopa_assert_is_file "${dict['json_file']}"
     dict['lib_type']="$( \
