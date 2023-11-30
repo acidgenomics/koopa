@@ -3,7 +3,7 @@
 koopa_basename_sans_ext_2() {
     # """
     # Extract the file basename prior to any dots in file name.
-    # @note Updated 2022-05-16.
+    # @note Updated 2023-11-30.
     #
     # Examples:
     # koopa_basename_sans_ext_2 'dir/hello-world.tar.gz'
@@ -13,7 +13,12 @@ koopa_basename_sans_ext_2() {
     # """
     local -A app
     local file
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local -a pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for file in "$@"
