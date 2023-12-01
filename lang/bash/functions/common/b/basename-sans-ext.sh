@@ -3,7 +3,7 @@
 koopa_basename_sans_ext() {
     # """
     # Extract the file basename without extension.
-    # @note Updated 2020-06-30.
+    # @note Updated 2023-11-30.
     #
     # Examples:
     # koopa_basename_sans_ext 'dir/hello-world.txt'
@@ -15,7 +15,12 @@ koopa_basename_sans_ext() {
     # See also: koopa_file_ext
     # """
     local file
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local -a pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for file in "$@"
     do
         local str
