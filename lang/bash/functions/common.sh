@@ -3281,7 +3281,12 @@ koopa_bam_read_type() {
 koopa_basename_sans_ext_2() {
     local -A app
     local file
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local -a pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for file in "$@"
@@ -3302,7 +3307,12 @@ koopa_basename_sans_ext_2() {
 
 koopa_basename_sans_ext() {
     local file
-    koopa_assert_has_args "$#"
+    if [[ "$#" -eq 0 ]]
+    then
+        local -a pos
+        readarray -t pos <<< "$(</dev/stdin)"
+        set -- "${pos[@]}"
+    fi
     for file in "$@"
     do
         local str
