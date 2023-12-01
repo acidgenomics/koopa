@@ -4572,7 +4572,7 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-09-12",
+    "date": "2023-12-01",
     "default": false,
     "dependencies": [
       "curl",
@@ -4586,7 +4586,7 @@
     "man1": ["proj.1", "projinfo.1"],
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.3.0"
+    "version": "9.3.1"
   },
   "py-spy": {
     "aliases": {
