@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider taking sqlite out as a dependency here, to make build lighter.
-
 main() {
     # """
     # Install Python.
@@ -40,8 +38,8 @@ main() {
     #   https://stackoverflow.com/questions/41328451/
     # """
     local -A app dict
-    local -a conf_args deps
-    koopa_activate_app --build-only 'make' 'pkg-config'
+    local -a build_deps conf_args deps
+    build_deps+=('make' 'pkg-config')
     if ! koopa_is_macos
     then
         deps+=(
@@ -62,6 +60,7 @@ main() {
         'sqlite'
         'xz'
     )
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
