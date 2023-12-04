@@ -623,13 +623,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-22",
+    "date": "2023-12-04",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.29.0"
+    "version": "1.30.0"
   },
   "brotli": {
     "aliases": {
@@ -3693,10 +3693,10 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
-    "date": "2023-06-05",
+    "date": "2023-12-04",
     "default": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.8.1"
+    "version": "0.8.3"
   },
   "mdcat": {
     "aliases": {
@@ -4488,12 +4488,12 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2023-10-23",
+    "date": "2023-12-04",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.2.1"
+    "version": "1.3.2"
   },
   "pixman": {
     "aliases": {
@@ -5809,10 +5809,10 @@
     },
     "bin": ["tuc"],
     "build_dependencies": ["rust"],
-    "date": "2023-02-27",
+    "date": "2023-12-04",
     "default": true,
     "url": ["https://github.com/riquito/tuc/"],
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "udunits": {
     "aliases": {
@@ -6418,10 +6418,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-11-27",
+    "date": "2023-12-04",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.40.3"
+    "version": "4.40.4"
   },
   "yt-dlp": {
     "aliases": {
