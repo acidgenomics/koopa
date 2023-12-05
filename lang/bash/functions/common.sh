@@ -12255,6 +12255,12 @@ koopa_install_aws_cli() {
         "$@"
 }
 
+koopa_install_axel() {
+    koopa_install_app \
+        --name='axel' \
+        "$@"
+}
+
 koopa_install_azure_cli() {
     koopa_install_app \
         --name='azure-cli' \
@@ -28503,6 +28509,12 @@ koopa_uninstall_automake() {
 koopa_uninstall_aws_cli() {
     koopa_uninstall_app \
         --name='aws-cli' \
+        "$@"
+}
+
+koopa_uninstall_axel() {
+    koopa_uninstall_app \
+        --name='axel' \
         "$@"
 }
 
