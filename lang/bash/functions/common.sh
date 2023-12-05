@@ -25417,6 +25417,24 @@ koopa_script_name() {
     return 0
 }
 
+koopa_script_parent_dir() {
+    local script
+    koopa_assert_has_no_args "$#"
+    script="$(koopa_script_source)"
+    [[ -f "$script" ]] || return 1
+    koopa_parent_dir "$script"
+    return 0
+}
+
+koopa_script_source() {
+    local script
+    koopa_assert_has_no_args "$#"
+    script="${BASH_SOURCE[0]}"
+    [[ -f "$script" ]] || return 1
+    koopa_realpath "$script"
+    return 0
+}
+
 koopa_scripts_private_prefix() {
     _koopa_scripts_private_prefix "$@"
 }

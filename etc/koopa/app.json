@@ -1593,7 +1593,7 @@
     },
     "bin": ["fish"],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-03-26",
+    "date": "2023-12-04",
     "default": false,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1601,7 +1601,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.6.1"
+    "version": "3.6.3"
   },
   "flac": {
     "aliases": {
@@ -4493,7 +4493,7 @@
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.3.2"
+    "version": "1.3.3"
   },
   "pixman": {
     "aliases": {
