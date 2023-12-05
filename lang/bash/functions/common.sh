@@ -25460,8 +25460,9 @@ koopa_script_name() {
 koopa_script_parent_dir() {
     local script
     koopa_assert_has_no_args "$#"
-    script="$(koopa_script_source)"
+    script="${BASH_SOURCE[1]}"
     [[ -f "$script" ]] || return 1
+    script="$(koopa_realpath "$script")"
     koopa_parent_dir "$script"
     return 0
 }
