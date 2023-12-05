@@ -8,6 +8,13 @@
 # axel -n5 ftp://ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByExp/sra/SRX/SRX709/SRX709649/SRR1585277/SRR1585277.sra
 #
 # After downloading, can call fastq-dump on the local files.
+#
+# Canonical URL is:
+# ftp://ftp-trace.ncbi.nlm.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR504/SRR504687/SRR504687.sra
+#
+# ENA often contains the FASTQs already split out too, which is nice:
+# ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR504/SRR504687/SRR504687_1.fastq.gz
+# ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR504/SRR504687/SRR504687_2.fastq.gz
 
 koopa_sra_fastq_dump() {
     # """
