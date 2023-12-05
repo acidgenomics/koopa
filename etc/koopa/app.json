@@ -292,14 +292,31 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2023-11-06",
+    "date": "2023-12-05",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.13.32"
+    "version": "2.14.5"
+  },
+  "axel": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["axel"],
+    "build_dependencies": ["gawk", "pkg-config", "xz"],
+    "date": "2023-12-05",
+    "default": false,
+    "dependencies": [
+      "gettext",
+      "openssl3"
+    ],
+    "man1": ["axel.1"],
+    "prune": true,
+    "url": ["https://github.com/axel-download-accelerator/axel/"],
+    "version": "2.17.11"
   },
   "azure-cli": {
     "aliases": {
@@ -345,12 +362,12 @@
     },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-09-25",
+    "date": "2023-12-05",
     "default": true,
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.15"
+    "version": "5.2.21"
   },
   "bash-language-server": {
     "aliases": {
@@ -1593,7 +1610,7 @@
     },
     "bin": ["fish"],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-03-26",
+    "date": "2023-12-05",
     "default": false,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1601,7 +1618,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.6.1"
+    "version": "3.6.4"
   },
   "flac": {
     "aliases": {
@@ -1817,7 +1834,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-11-14",
+    "date": "2023-12-05",
     "default": false,
     "dependencies": [
       "bison",
@@ -1845,7 +1862,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.8.0"
+    "version": "3.8.1"
   },
   "gdbm": {
     "aliases": {
@@ -3632,7 +3649,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-10-31",
+    "date": "2023-12-05",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3656,7 +3673,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.3"
+    "version": "1.5.4"
   },
   "man-db": {
     "aliases": {
@@ -4493,7 +4510,7 @@
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.3.2"
+    "version": "1.3.3"
   },
   "pixman": {
     "aliases": {
@@ -5174,11 +5191,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-11-18",
+    "date": "2023-12-05",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.6"
+    "version": "0.1.7"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
