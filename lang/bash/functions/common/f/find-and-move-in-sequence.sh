@@ -3,9 +3,9 @@
 koopa_find_and_move_in_sequence() {
     # """
     # Find and move files in sequence.
-    # @note Updated 2021-08-14.
+    # @note Updated 2023-12-05.
     # """
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliFindAndMoveInSequence' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
     return 0
 }
