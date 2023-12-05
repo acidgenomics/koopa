@@ -3632,7 +3632,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-10-31",
+    "date": "2023-12-05",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3656,7 +3656,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.3"
+    "version": "1.5.4"
   },
   "man-db": {
     "aliases": {
