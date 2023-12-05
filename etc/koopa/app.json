@@ -345,12 +345,12 @@
     },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-09-25",
+    "date": "2023-12-05",
     "default": true,
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.15"
+    "version": "5.2.21"
   },
   "bash-language-server": {
     "aliases": {
@@ -1593,7 +1593,7 @@
     },
     "bin": ["fish"],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-04",
+    "date": "2023-12-05",
     "default": false,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1601,7 +1601,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.6.3"
+    "version": "3.6.4"
   },
   "flac": {
     "aliases": {
