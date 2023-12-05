@@ -1251,6 +1251,46 @@ koopa_assert_is_executable() {
     return 0
 }
 
+koopa_assert_is_existing_aws_s3_uri() {
+    local -A dict
+    local -a pos
+    local arg
+    koopa_assert_has_args "$#"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            '-'*)
+                koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    for arg in "$@"
+    do
+        if ! koopa_is_existing_aws_s3_uri \
+            --profile="${dict['profile']}" \
+            "$arg"
+        then
+            koopa_stop "Not AWS S3 URI: '${arg}'."
+        fi
+    done
+    return 0
+}
+
 koopa_assert_is_existing() {
     local arg
     koopa_assert_has_args "$#"
@@ -12212,6 +12252,12 @@ koopa_install_automake() {
 koopa_install_aws_cli() {
     koopa_install_app \
         --name='aws-cli' \
+        "$@"
+}
+
+koopa_install_axel() {
+    koopa_install_app \
+        --name='axel' \
         "$@"
 }
 
@@ -25417,6 +25463,25 @@ koopa_script_name() {
     return 0
 }
 
+koopa_script_parent_dir() {
+    local script
+    koopa_assert_has_no_args "$#"
+    script="${BASH_SOURCE[1]}"
+    [[ -f "$script" ]] || return 1
+    script="$(koopa_realpath "$script")"
+    koopa_parent_dir "$script"
+    return 0
+}
+
+koopa_script_source() {
+    local script
+    koopa_assert_has_no_args "$#"
+    script="${BASH_SOURCE[1]}"
+    [[ -f "$script" ]] || return 1
+    koopa_realpath "$script"
+    return 0
+}
+
 koopa_scripts_private_prefix() {
     _koopa_scripts_private_prefix "$@"
 }
@@ -28444,6 +28509,12 @@ koopa_uninstall_automake() {
 koopa_uninstall_aws_cli() {
     koopa_uninstall_app \
         --name='aws-cli' \
+        "$@"
+}
+
+koopa_uninstall_axel() {
+    koopa_uninstall_app \
+        --name='axel' \
         "$@"
 }
 
