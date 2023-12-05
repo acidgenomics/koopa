@@ -301,6 +301,22 @@
     ],
     "version": "2.14.5"
   },
+  "axel": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["axel"],
+    "build_dependencies": ["gawk", "pkg-config", "xz"],
+    "date": "2023-12-05",
+    "default": false,
+    "dependencies": [
+      "gettext",
+      "openssl3"
+    ],
+    "prune": true,
+    "url": ["https://github.com/axel-download-accelerator/axel/"],
+    "version": "2.17.11"
+  },
   "azure-cli": {
     "aliases": {
       "homebrew": true
