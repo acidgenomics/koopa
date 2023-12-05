@@ -4277,9 +4277,10 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_alert_start 'Checking system.'
     koopa_check_exports
     koopa_check_disk '/'
-    koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
 }
@@ -7081,7 +7082,7 @@ koopa_dl() {
 
 koopa_docker_build_all_tags() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDockerBuildAllTags' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
     return 0
 }
 
@@ -8580,7 +8581,7 @@ koopa_file_ext() {
 
 koopa_find_and_move_in_sequence() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliFindAndMoveInSequence' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
     return 0
 }
 
@@ -10494,9 +10495,6 @@ koopa_header() {
         'sh' | \
         'zsh')
             dict['ext']='sh'
-            ;;
-        'r')
-            dict['ext']='R'
             ;;
         *)
             koopa_invalid_arg "${dict['lang']}"
@@ -21020,12 +21018,12 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
-    koopa_r_koopa 'cliPruneAppBinaries' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
     return 0
 }
 
 koopa_prune_apps() {
-    koopa_r_koopa 'cliPruneApps' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
     return 0
 }
 
@@ -22397,50 +22395,6 @@ install-packages-in-site-library.R"
     return 0
 }
 
-koopa_r_koopa() {
-    local -A app dict
-    local -a code pos rscript_args
-    koopa_assert_has_args "$#"
-    app['rscript']="$(koopa_locate_rscript)"
-    koopa_assert_is_executable "${app[@]}"
-    rscript_args=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--vanilla')
-                rscript_args+=('--vanilla')
-                shift 1
-                ;;
-            '--'*)
-                pos+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    dict['fun']="${1:?}"
-    shift 1
-    dict['header_file']="$(koopa_koopa_prefix)/lang/r/include/header.R"
-    koopa_assert_is_file "${dict['header_file']}"
-    code=("source('${dict['header_file']}');")
-    if [[ "${dict['fun']}" != 'header' ]]
-    then
-        code+=("koopa::${dict['fun']}();")
-    fi
-    pos=("$@")
-    "${app['rscript']}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
-    return 0
-}
-
 koopa_r_library_prefix() {
     local -A app dict
     koopa_assert_has_args_le "$#" 1
@@ -22913,7 +22867,8 @@ koopa_remove_from_path_string() {
 
 koopa_rename_camel_case() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliCamelCase' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    return 0
 }
 
 koopa_rename_from_csv() {
@@ -22933,7 +22888,8 @@ koopa_rename_from_csv() {
 
 koopa_rename_kebab_case() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliKebabCase' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    return 0
 }
 
 koopa_rename_lowercase() {
@@ -23007,7 +22963,8 @@ koopa_rename_lowercase() {
 
 koopa_rename_snake_case() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliSnakeCase' "$@"
+    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    return 0
 }
 
 koopa_reset_permissions() {
