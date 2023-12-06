@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-10-16.
+@note Updated 2023-12-06.
 
 @examples
 ./app-dependencies.py 'python3.11'
@@ -32,7 +32,7 @@ def arch() -> str:
     return string
 
 
-def flatten(items, seqtypes=(list, tuple)):
+def flatten(items: list, seqtypes=(list, tuple)) -> list:
     """
     Flatten an arbitrarily nested list.
     @note Updated 2023-03-25.
