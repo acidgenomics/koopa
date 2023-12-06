@@ -17841,10 +17841,18 @@ koopa_locate_7z() {
         "$@"
 }
 
-koopa_locate_anaconda() {
+koopa_locate_anaconda_conda() {
     koopa_locate_app \
         --app-name='anaconda' \
         --bin-name='conda' \
+        --no-allow-koopa-bin \
+        "$@"
+}
+
+koopa_locate_anaconda_python() {
+    koopa_locate_app \
+        --app-name='anaconda' \
+        --bin-name='python3' \
         --no-allow-koopa-bin \
         "$@"
 }
