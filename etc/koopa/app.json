@@ -4643,12 +4643,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-11-27",
+    "date": "2023-12-06",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.33"
+    "version": "2.3.34"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
