@@ -1510,14 +1510,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-30",
+    "date": "2023-12-07",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.16.2"
+    "version": "0.16.3"
   },
   "fastqc": {
     "bin": ["fastqc"],
