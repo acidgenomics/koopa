@@ -11581,7 +11581,7 @@ ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
                 "${dict2['tar_url']}" \
                 "${dict2['tar_file']}"
             koopa_assert_is_file "${dict2['tar_file']}"
-            "${app['tar']}" -Pvxz -f "${dict2['tar_file']}"
+            "${app['tar']}" -Pxz -f "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done
     )
