@@ -4110,6 +4110,7 @@ koopa_camel_case() {
 
 koopa_can_install_binary() {
     local -A dict
+    koopa_can_push_binary && return 1
     dict['credentials']="${HOME:?}/.aws/credentials"
     [[ -f "${dict['credentials']}" ]] || return 1
     koopa_file_detect_fixed \
@@ -4120,8 +4121,8 @@ koopa_can_install_binary() {
 }
 
 koopa_can_push_binary() {
+    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] || return 1
     [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    koopa_can_install_binary || return 1
     return 0
 }
 
@@ -11698,6 +11699,7 @@ koopa_install_app() {
     koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
+    koopa_can_install_binary && bool['binary']=1
     bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
@@ -11795,6 +11797,10 @@ koopa_install_app() {
                 ;;
             '--reinstall')
                 bool['reinstall']=1
+                shift 1
+                ;;
+            '--source')
+                bool['binary']=0
                 shift 1
                 ;;
             '--verbose')
@@ -15449,6 +15455,7 @@ koopa_install_shared_apps() {
     bool['all_supported']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
+    koopa_can_install_binary && bool['binary']=1
     bool['push']=0
     bool['update']=0
     bool['verbose']=0
@@ -15463,6 +15470,10 @@ koopa_install_shared_apps() {
                 ;;
             '--push')
                 bool['push']=1
+                shift 1
+                ;;
+            '--source')
+                bool['binary']=0
                 shift 1
                 ;;
             '--update')
