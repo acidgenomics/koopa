@@ -1944,10 +1944,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-11-28",
+    "date": "2023-12-07",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.39.2"
+    "version": "2.40.0"
   },
   "ghostscript": {
     "aliases": {
