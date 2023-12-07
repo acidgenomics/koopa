@@ -4109,20 +4109,18 @@ koopa_camel_case() {
 }
 
 koopa_can_install_binary() {
-    local -A dict
+    koopa_has_private_access || return 1
     koopa_can_push_binary && return 1
-    dict['credentials']="${HOME:?}/.aws/credentials"
-    [[ -f "${dict['credentials']}" ]] || return 1
-    koopa_file_detect_fixed \
-        --file="${dict['credentials']}" \
-        --pattern='acidgenomics' \
-        || return 1
     return 0
 }
 
 koopa_can_push_binary() {
+    local -A app
+    koopa_has_private_access || return 1
     [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] || return 1
     [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
+    app['aws']="$(koopa_locate_aws --allow-missing)"
+    [[ -x "${app['aws']}" ]] || return 1
     return 0
 }
 
@@ -11706,6 +11704,7 @@ koopa_install_app() {
     bool['prefix_check']=1
     bool['private']=0
     bool['push']=0
+    koopa_can_push_binary && bool['push']=1
     bool['quiet']=0
     bool['reinstall']=0
     bool['update_ldconfig']=0
@@ -11785,6 +11784,10 @@ koopa_install_app() {
                 ;;
             '--bootstrap')
                 bool['bootstrap']=1
+                shift 1
+                ;;
+            '--no-push')
+                bool['push']=0
                 shift 1
                 ;;
             '--push')
@@ -11880,12 +11883,14 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             bool['prefix_check']=0
+            bool['push']=0
             koopa_is_linux && bool['update_ldconfig']=1
             ;;
         'user')
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
+            bool['push']=0
             ;;
     esac
     if [[ "${bool['binary']}" -eq 1 ]] || \
@@ -11898,7 +11903,10 @@ ${dict['version2']}"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
-            koopa_is_empty_dir "${dict['prefix']}" && bool['reinstall']=1
+            if [[ ! -f "${dict['prefix']}/.koopa-install-stdout.log" ]]
+            then
+                bool['reinstall']=1
+            fi
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
                 [[ "${bool['quiet']}" -eq 0 ]] && \
@@ -15445,39 +15453,21 @@ koopa_install_serf() {
 
 koopa_install_shared_apps() {
     local -A app bool dict
-    local -a app_names push_apps
+    local -a app_names
     local app_name
     koopa_assert_is_owner
     bool['all_supported']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
     koopa_can_install_binary && bool['binary']=1
-    bool['push']=0
     bool['update']=0
-    bool['verbose']=0
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=6
     while (("$#"))
     do
         case "$1" in
-            '--binary')
-                bool['binary']=1
-                shift 1
-                ;;
-            '--push')
-                bool['push']=1
-                shift 1
-                ;;
-            '--source')
-                bool['binary']=0
-                shift 1
-                ;;
             '--update')
                 bool['update']=1
-                shift 1
-                ;;
-            '--verbose')
-                bool['verbose']=1
                 shift 1
                 ;;
             '--all-supported')
@@ -15492,10 +15482,6 @@ koopa_install_shared_apps() {
     if [[ "${bool['binary']}" -eq 1 ]]
     then
         koopa_assert_can_install_binary
-        if [[ "${bool['push']}" -eq 1 ]]
-        then
-            koopa_stop 'Pushing binary apps is not supported.'
-        fi
         app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
         [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
     fi
@@ -15519,27 +15505,18 @@ koopa_install_shared_apps() {
     fi
     for app_name in "${app_names[@]}"
     do
-        local -a install_args
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        [[ "${bool['binary']}" -eq 1 ]] && install_args+=('--binary')
-        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
-        install_args+=("$app_name")
-        koopa_cli_install "${install_args[@]}"
-        push_apps+=("$app_name")
+        [[ -f "${prefix}/.koopa-install-stdout.log" ]] && continue
+        koopa_cli_install "$app_name"
     done
-    if [[ "${bool['push']}" -eq 1 ]] && \
-        koopa_is_array_non_empty "${push_apps[@]:-}"
-    then
-        for app_name in "${push_apps[@]}"
-        do
-            koopa_push_app_build "$app_name"
-        done
-    fi
     if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
     then
         koopa_cli_install --reinstall 'aws-cli'
+        if [[ "${bool['binary']}" -eq 1 ]]
+        then
+            koopa_push_app_build 'aws-cli'
+        fi
     fi
     return 0
 }

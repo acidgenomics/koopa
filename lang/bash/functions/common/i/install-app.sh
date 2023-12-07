@@ -10,7 +10,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-10-13.
+    # @note Updated 2023-12-07.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -50,6 +50,7 @@ koopa_install_app() {
     bool['private']=0
     # Push completed build to AWS S3 bucket (shared apps only).
     bool['push']=0
+    koopa_can_push_binary && bool['push']=1
     # This is useful for avoiding duplicate alert messages inside of
     # nested install calls (e.g. Emacs installer handoff to GNU app).
     bool['quiet']=0
@@ -133,6 +134,10 @@ koopa_install_app() {
                 ;;
             '--bootstrap')
                 bool['bootstrap']=1
+                shift 1
+                ;;
+            '--no-push')
+                bool['push']=0
                 shift 1
                 ;;
             '--push')
@@ -233,12 +238,14 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             bool['prefix_check']=0
+            bool['push']=0
             koopa_is_linux && bool['update_ldconfig']=1
             ;;
         'user')
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
+            bool['push']=0
             ;;
     esac
     if [[ "${bool['binary']}" -eq 1 ]] || \
@@ -251,7 +258,10 @@ ${dict['version2']}"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
-            koopa_is_empty_dir "${dict['prefix']}" && bool['reinstall']=1
+            if [[ ! -f "${dict['prefix']}/.koopa-install-stdout.log" ]]
+            then
+                bool['reinstall']=1
+            fi
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
                 [[ "${bool['quiet']}" -eq 0 ]] && \
