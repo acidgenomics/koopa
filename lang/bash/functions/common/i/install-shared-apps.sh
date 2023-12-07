@@ -3,7 +3,7 @@
 koopa_install_shared_apps() {
     # """
     # Build and install multiple shared apps from source.
-    # @note Updated 2023-10-13.
+    # @note Updated 2023-12-07.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -15,6 +15,7 @@ koopa_install_shared_apps() {
     bool['all_supported']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
+    koopa_can_install_binary && bool['binary']=1
     bool['push']=0
     bool['update']=0
     bool['verbose']=0
@@ -30,6 +31,10 @@ koopa_install_shared_apps() {
                 ;;
             '--push')
                 bool['push']=1
+                shift 1
+                ;;
+            '--source')
+                bool['binary']=0
                 shift 1
                 ;;
             '--update')

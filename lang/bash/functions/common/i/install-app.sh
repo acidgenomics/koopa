@@ -29,6 +29,7 @@ koopa_install_app() {
     # Download pre-built binary from our S3 bucket. Inspired by the
     # Homebrew bottle approach.
     bool['binary']=0
+    koopa_can_install_binary && bool['binary']=1
     # Install shared apps in bootstrap mode?
     bool['bootstrap']=0
     # Should we copy the log files into the install prefix?
@@ -140,6 +141,10 @@ koopa_install_app() {
                 ;;
             '--reinstall')
                 bool['reinstall']=1
+                shift 1
+                ;;
+            '--source')
+                bool['binary']=0
                 shift 1
                 ;;
             '--verbose')
