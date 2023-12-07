@@ -11577,12 +11577,11 @@ ${dict2['name']}-${dict2['version']}.tar.gz"
             dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
             "${app['aws']}" s3 cp \
-                --only-show-errors \
                 --profile "${dict['aws_profile']}" \
                 "${dict2['tar_url']}" \
                 "${dict2['tar_file']}"
             koopa_assert_is_file "${dict2['tar_file']}"
-            "${app['tar']}" -Pxzf "${dict2['tar_file']}"
+            "${app['tar']}" -Pvxz -f "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done
     )

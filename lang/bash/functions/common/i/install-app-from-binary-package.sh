@@ -3,7 +3,7 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2023-07-18.
+    # @note Updated 2023-12-07.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
@@ -46,13 +46,13 @@ default '${dict['binary_prefix']}' location."
 ${dict2['name']}-${dict2['version']}.tar.gz"
             dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
+            # Can quiet down with '--only-show-errors' here.
             "${app['aws']}" s3 cp \
-                --only-show-errors \
                 --profile "${dict['aws_profile']}" \
                 "${dict2['tar_url']}" \
                 "${dict2['tar_file']}"
             koopa_assert_is_file "${dict2['tar_file']}"
-            "${app['tar']}" -Pxzf "${dict2['tar_file']}"
+            "${app['tar']}" -Pvxz -f "${dict2['tar_file']}"
             koopa_touch "${prefix}/.koopa-binary"
         done
     )
