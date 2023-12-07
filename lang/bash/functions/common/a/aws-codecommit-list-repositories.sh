@@ -3,7 +3,14 @@
 koopa_aws_codecommit_list_repositories() {
     # """
     # List AWS CodeCommit repositories.
-    # @note Updated 2023-07-18.
+    # @note Updated 2023-12-07.
+    #
+    # @section Keyword support using query:
+    # > keyword='2023'
+    # > query="repositories[?contains(repositoryName, \`${keyword}\`)].\
+    # > repositoryName" \
+    # > aws codecommit list-repositories --query "$query" \
+    # > | jq -r '.[]'
     #
     # @seealso
     # - aws codecommit list-repositories help
