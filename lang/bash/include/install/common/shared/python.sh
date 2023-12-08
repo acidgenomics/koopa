@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Don't allow the installer to link '-L /usr/local/lib'. Need to look
-# into the Makefile and fix this.
+# NOTE To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
+# comment out in 'setup.py':
+# > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+# > add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
 
 main() {
     # """
