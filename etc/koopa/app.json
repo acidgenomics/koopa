@@ -4732,7 +4732,7 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-02",
+    "date": "2023-12-08",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -4752,7 +4752,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.6"
+    "version": "3.11.7"
   },
   "python3.12": {
     "aliases": {
@@ -4760,7 +4760,7 @@
     },
     "bin": ["python3.12", "python3.12-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-02",
+    "date": "2023-12-08",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -4780,7 +4780,7 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.0"
+    "version": "3.12.1"
   },
   "quarto": {
     "aliases": {
