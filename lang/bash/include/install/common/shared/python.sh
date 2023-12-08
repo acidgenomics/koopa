@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Don't allow the installer to link '-L /usr/local/lib'. Need to look
+# into the Makefile and fix this.
+
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-10-03.
+    # @note Updated 2023-12-08.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
