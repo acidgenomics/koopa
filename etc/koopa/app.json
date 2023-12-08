@@ -2605,10 +2605,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-12-05",
+    "date": "2023-12-08",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.121.0"
+    "version": "0.121.1"
   },
   "hyperfine": {
     "aliases": {
@@ -4643,12 +4643,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2023-12-06",
+    "date": "2023-12-08",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.3.34"
+    "version": "2.3.35"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
