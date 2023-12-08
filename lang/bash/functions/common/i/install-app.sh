@@ -10,7 +10,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-12-07.
+    # @note Updated 2023-12-08.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -71,14 +71,6 @@ koopa_install_app() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--cpu='*)
-                dict['cpu_count']="${1#*=}"
-                shift 1
-                ;;
-            '--cpu')
-                dict['cpu_count']="${2:?}"
-                shift 2
-                ;;
             '--installer='*)
                 dict['installer']="${1#*=}"
                 shift 1
@@ -128,28 +120,12 @@ koopa_install_app() {
                 shift 2
                 ;;
             # CLI user-accessible flags ----------------------------------------
-            '--binary')
-                bool['binary']=1
-                shift 1
-                ;;
             '--bootstrap')
                 bool['bootstrap']=1
                 shift 1
                 ;;
-            '--no-push')
-                bool['push']=0
-                shift 1
-                ;;
-            '--push')
-                bool['push']=1
-                shift 1
-                ;;
             '--reinstall')
                 bool['reinstall']=1
-                shift 1
-                ;;
-            '--source')
-                bool['binary']=0
                 shift 1
                 ;;
             '--verbose')

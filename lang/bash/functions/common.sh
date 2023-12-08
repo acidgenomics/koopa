@@ -4923,9 +4923,7 @@ koopa_cli_install() {
     while (("$#"))
     do
         case "$1" in
-            '--binary' | \
             '--bootstrap' | \
-            '--push' | \
             '--reinstall' | \
             '--verbose')
                 flags+=("$1")
@@ -11722,14 +11720,6 @@ koopa_install_app() {
     while (("$#"))
     do
         case "$1" in
-            '--cpu='*)
-                dict['cpu_count']="${1#*=}"
-                shift 1
-                ;;
-            '--cpu')
-                dict['cpu_count']="${2:?}"
-                shift 2
-                ;;
             '--installer='*)
                 dict['installer']="${1#*=}"
                 shift 1
@@ -11778,28 +11768,12 @@ koopa_install_app() {
                 dict['version_key']="${2:?}"
                 shift 2
                 ;;
-            '--binary')
-                bool['binary']=1
-                shift 1
-                ;;
             '--bootstrap')
                 bool['bootstrap']=1
                 shift 1
                 ;;
-            '--no-push')
-                bool['push']=0
-                shift 1
-                ;;
-            '--push')
-                bool['push']=1
-                shift 1
-                ;;
             '--reinstall')
                 bool['reinstall']=1
-                shift 1
-                ;;
-            '--source')
-                bool['binary']=0
                 shift 1
                 ;;
             '--verbose')
