@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2023-10-13.
+    # @note Updated 2023-12-08.
     #
     # @examples
     # > koopa_cli_install --binary --reinstall --verbose 'tmux' 'vim'
@@ -51,9 +51,7 @@ koopa_cli_install() {
     while (("$#"))
     do
         case "$1" in
-            '--binary' | \
             '--bootstrap' | \
-            '--push' | \
             '--reinstall' | \
             '--verbose')
                 flags+=("$1")
