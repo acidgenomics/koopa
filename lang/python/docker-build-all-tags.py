@@ -56,8 +56,9 @@ def list_subdirs(path: str) -> list:
     See also:
     - https://stackoverflow.com/questions/141291/
     """
-    out = next(walk(path))[1]
-    return out
+    lst = next(walk(path))[1]
+    lst = lst.sort()
+    return lst
 
 
 def main(local: str, remote: str) -> bool:
