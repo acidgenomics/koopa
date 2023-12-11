@@ -11,25 +11,17 @@ Examples:
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join
-from platform import machine, system
-from sys import version_info
+from sys import path, version_info
+
+path.insert(0, "koopa")
+
+from koopa import os_id  # noqa
 
 parser = ArgumentParser()
 parser.add_argument("app_name")
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
-
-
-def arch() -> str:
-    """
-    Architecture string.
-    Updated 2023-10-16.
-    """
-    string = machine()
-    if string == "x86_64":
-        string = "amd64"
-    return string
 
 
 def flatten(items: list, seqtypes=(list, tuple)) -> list:
@@ -81,27 +73,6 @@ def get_deps(app_name: str, json_data: dict) -> list:
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
-
-
-def os_id() -> str:
-    """
-    Platform and architecture-specific identifier.
-    Updated 2023-10-16.
-    """
-    string = platform() + "-" + arch()
-    return string
-
-
-def platform() -> str:
-    """
-    Platform string.
-    Updated 2023-03-27.
-    """
-    string = system()
-    string = string.lower()
-    if string == "darwin":
-        string = "macos"
-    return string
 
 
 def print_apps(app_names: list, json_data: dict) -> bool:
