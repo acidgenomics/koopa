@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME For user-specific install, ensure we symlink .bash_profile to .bashrc
+# if the file doesn't exist.
+
 koopa_install_koopa() {
     # """
     # Install koopa.

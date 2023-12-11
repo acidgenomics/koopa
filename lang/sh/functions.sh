@@ -569,6 +569,7 @@ quote=01:warning=01;35"
 }
 
 _koopa_activate_homebrew() {
+    [ -n "${HMS_CLUSTER:-}" ] && return 0
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
     then
