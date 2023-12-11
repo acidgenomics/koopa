@@ -5,8 +5,7 @@ _koopa_activate_homebrew() {
     # Activate Homebrew.
     # @note Updated 2023-12-11.
     # """
-    # Skip this on HMS O2 cluster.
-    [ -n "${HMS_CLUSTER:-}" ] && return 0
+    _koopa_is_macos || return 1
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
     then

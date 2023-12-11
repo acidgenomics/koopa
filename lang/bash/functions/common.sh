@@ -4930,14 +4930,7 @@ koopa_cli_install() {
                 shift 1
                 ;;
             '-'*)
-                if [[ "${bool['allow_custom_args']}" -eq 1 ]]
-                then
-                    bool['custom_args_enabled']=1
-                    pos+=("$1")
-                    shift 1
-                else
-                    koopa_invalid_arg "$1"
-                fi
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
