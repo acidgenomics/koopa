@@ -2,9 +2,9 @@
 
 """
 Parse koopa 'app.json' file.
-@note Updated 2023-12-11.
+Updated 2023-12-11.
 
-@examples
+Examples:
 ./app-json.py \
     --app-name='coreutils' \
     --key='bin'
@@ -26,7 +26,7 @@ _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 def main(json_file: str, app_name: str, key: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-03-27.
+    Updated 2023-03-27.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
