@@ -6,7 +6,8 @@ Updated 2023-12-11.
 """
 
 from argparse import ArgumentParser
-from os.path import isdir
+from os.path import abspath, expanduser, isdir
+from subprocess import run
 from sys import version_info
 
 parser = ArgumentParser()
@@ -217,12 +218,41 @@ dockerBuildAllTags <-
 """
 
 
+def build_tag(local: str, remote: str) -> bool:
+    """
+    Build a Docker tag.
+    Updated 2023-12-11.
+    """
+    run(
+        args=[
+            "koopa",
+            "app",
+            "docker",
+            "build",
+            "--local",
+            local,
+            "--remote",
+            remote,
+        ],
+    )
+    return True
+
+
 def main(local: str, remote: str) -> bool:
     """
     Build all Docker images.
     Updated 2023-12-11.
+
+    Example:
+    local = "~/monorepo/docker/acidgenomics/koopa"
+    remote = "public.ecr.aws/acidgenomics/koopa"
+    main(local=local, remote=remote)
     """
+    local = expanduser(local)
+    local = abspath(local)
     assert isdir(local)
+    # FIXME Need to find all directories, and then run this in a loop.
+    build_tag(local=local, remote=remote)
     return True
 
 
