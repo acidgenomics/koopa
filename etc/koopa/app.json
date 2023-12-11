@@ -1578,6 +1578,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2741,14 +2742,14 @@
       "homebrew": true
     },
     "bin": ["isort"],
-    "date": "2023-01-30",
+    "date": "2023-12-11",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
     ],
-    "version": "5.12.0"
+    "version": "5.13.0"
   },
   "jemalloc": {
     "aliases": {
@@ -3698,11 +3699,11 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2023-09-24",
+    "date": "2023-12-11",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.37.0"
+    "version": "0.38.0"
   },
   "mcfly": {
     "aliases": {
@@ -4564,11 +4565,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-11-13",
+    "date": "2023-12-11",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "procs": {
     "aliases": {
