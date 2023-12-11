@@ -257,6 +257,6 @@ def main(local: str, remote: str) -> bool:
 
 
 if __name__ == "__main__":
-    if not version_info >= (3, 6):
+    if not version_info >= (3, 8):
         raise RuntimeError("Unsupported Python version.")
     main(local=args.local, remote=args.remote)
