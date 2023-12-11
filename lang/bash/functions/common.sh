@@ -5686,13 +5686,8 @@ koopa_conda_activate_env() { # {{{1
 }
 
 koopa_conda_bin() {
-    local cmd file
     koopa_assert_has_args_eq "$#" 1
-    file="${1:?}"
-    koopa_assert_is_file "$file"
-    cmd="$(koopa_python_prefix)/conda-bin.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$file"
+    koopa_python_script 'conda-bin.py' "$@"
     return 0
 }
 
@@ -7056,12 +7051,8 @@ koopa_dl() {
 }
 
 koopa_docker_build_all_tags() {
-    local cmd
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_python_prefix)/docker-build-all-tags.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'docker-build-all-tags.py' "$@"
     return 0
 }
 
@@ -25426,11 +25417,7 @@ koopa_scripts_private_prefix() {
 }
 
 koopa_shared_apps() {
-    local cmd
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_python_prefix)/shared-apps.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'shared-apps.py' "$@"
     return 0
 }
 
