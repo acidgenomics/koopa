@@ -626,13 +626,8 @@ koopa_ansi_escape() {
 }
 
 koopa_app_dependencies() {
-    local app_name cmd
     koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_installed 'python3'
-    app_name="${1:?}"
-    cmd="$(koopa_koopa_prefix)/lang/python/app-dependencies.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$app_name"
+    koopa_python_script 'app-dependencies.py' "$@"
     return 0
 }
 
@@ -670,12 +665,7 @@ koopa_app_json_version() {
 }
 
 koopa_app_json() {
-    local cmd
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'app-json.py' "$@"
     return 0
 }
 
@@ -739,13 +729,8 @@ ${dict2['version']}"
 }
 
 koopa_app_reverse_dependencies() {
-    local app_name cmd
     koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_installed 'python3'
-    app_name="${1:?}"
-    cmd="$(koopa_koopa_prefix)/lang/python/app-reverse-dependencies.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$app_name"
+    koopa_python_script 'app-reverse-dependencies.py' "$@"
     return 0
 }
 
@@ -4276,8 +4261,8 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
-    koopa_alert_start 'Checking system.'
+    koopa_alert 'Checking system.'
+    koopa_python_script 'check-system.py'
     koopa_check_exports
     koopa_check_disk '/'
     koopa_alert_success 'System passed all checks.'
@@ -5705,7 +5690,7 @@ koopa_conda_bin() {
     koopa_assert_has_args_eq "$#" 1
     file="${1:?}"
     koopa_assert_is_file "$file"
-    cmd="$(koopa_koopa_prefix)/lang/python/conda-bin.py"
+    cmd="$(koopa_python_prefix)/conda-bin.py"
     koopa_assert_is_executable "$cmd"
     "$cmd" "$file"
     return 0
@@ -7071,8 +7056,12 @@ koopa_dl() {
 }
 
 koopa_docker_build_all_tags() {
+    local cmd
     koopa_assert_has_args "$#"
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_assert_is_installed 'python3'
+    cmd="$(koopa_python_prefix)/docker-build-all-tags.py"
+    koopa_assert_is_executable "$cmd"
+    "$cmd" "$@"
     return 0
 }
 
@@ -8571,7 +8560,7 @@ koopa_file_ext() {
 
 koopa_find_and_move_in_sequence() {
     koopa_assert_has_args "$#"
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_python_script 'find-and-move-in-sequence.py' "$@"
     return 0
 }
 
@@ -20989,12 +20978,14 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_assert_has_no_args "$#"
+    koopa_python_script 'prune-app-binaries.py'
     return 0
 }
 
 koopa_prune_apps() {
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_assert_has_no_args "$#"
+    koopa_python_script 'prune-apps.py'
     return 0
 }
 
@@ -21325,6 +21316,26 @@ koopa_python_pip_install() {
     koopa_dl "${dl_args[@]}"
     export PIP_REQUIRE_VIRTUALENV='false'
     "${app['python']}" -m pip --isolated install "${install_args[@]}"
+    return 0
+}
+
+koopa_python_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/python"
+    return 0
+}
+
+koopa_python_script() {
+    local -A app dict
+    koopa_assert_has_args "$#"
+    app['python']="$(koopa_locate_python3 --allow-system)"
+    koopa_assert_is_installed "${app[@]}"
+    dict['prefix']="$(koopa_python_prefix)"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['cmd_name']="${1:?}"
+    shift 1
+    app['script']="${dict['prefix']}/${dict['cmd_name']}"
+    koopa_assert_is_executable "${app['script']}"
+    "${app['python']}" "${app['script']}" "$@"
     return 0
 }
 
@@ -22838,7 +22849,7 @@ koopa_remove_from_path_string() {
 
 koopa_rename_camel_case() {
     koopa_assert_has_args "$#"
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_python_script 'rename-camel-case.py' "$@"
     return 0
 }
 
@@ -22859,7 +22870,7 @@ koopa_rename_from_csv() {
 
 koopa_rename_kebab_case() {
     koopa_assert_has_args "$#"
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_python_script 'rename-kebab-case.py' "$@"
     return 0
 }
 
@@ -22934,7 +22945,7 @@ koopa_rename_lowercase() {
 
 koopa_rename_snake_case() {
     koopa_assert_has_args "$#"
-    koopa_stop 'FIXME REWORKING THIS IN PYTHON.'
+    koopa_python_script 'rename-snake-case.py' "$@"
     return 0
 }
 
@@ -25417,7 +25428,7 @@ koopa_scripts_private_prefix() {
 koopa_shared_apps() {
     local cmd
     koopa_assert_is_installed 'python3'
-    cmd="$(koopa_koopa_prefix)/lang/python/shared-apps.py"
+    cmd="$(koopa_python_prefix)/shared-apps.py"
     koopa_assert_is_executable "$cmd"
     "$cmd" "$@"
     return 0
