@@ -8,10 +8,6 @@ koopa_shared_apps() {
     # @examples
     # koopa_shared_apps
     # """
-    local cmd
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_python_prefix)/shared-apps.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'shared-apps.py' "$@"
     return 0
 }

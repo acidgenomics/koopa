@@ -9,12 +9,7 @@ koopa_conda_bin() {
     # koopa_conda_bin \
     #     /opt/koopa/opt/salmon/libexec/conda-meta/salmon-*.json
     # """
-    local cmd file
     koopa_assert_has_args_eq "$#" 1
-    file="${1:?}"
-    koopa_assert_is_file "$file"
-    cmd="$(koopa_python_prefix)/conda-bin.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$file"
+    koopa_python_script 'conda-bin.py' "$@"
     return 0
 }

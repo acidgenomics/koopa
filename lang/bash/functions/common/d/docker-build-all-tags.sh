@@ -3,13 +3,9 @@
 koopa_docker_build_all_tags() {
     # """
     # Build all Docker tags.
-    # @note Updated 2023-12-05.
+    # @note Updated 2023-12-11.
     # """
-    local cmd
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_python_prefix)/docker-build-all-tags.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'docker-build-all-tags.py' "$@"
     return 0
 }
