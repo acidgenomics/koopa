@@ -65,9 +65,6 @@ def main(local: str, remote: str) -> bool:
     Build all Docker images.
     Updated 2023-12-11.
 
-    See also:
-    - https://stackoverflow.com/questions/141291/
-
     Example:
     local = "~/monorepo/docker/acidgenomics/koopa"
     remote = "public.ecr.aws/acidgenomics/koopa"
