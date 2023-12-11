@@ -171,6 +171,6 @@ def main(app_name: str, json_file: str) -> bool:
 
 
 if __name__ == "__main__":
-    if not version_info >= (3, 6):
+    if not version_info >= (3, 8):
         raise RuntimeError("Unsupported Python version.")
     main(app_name=args.app_name, json_file=_json_file)
