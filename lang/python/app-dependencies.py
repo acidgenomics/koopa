@@ -15,31 +15,13 @@ from sys import path, version_info
 
 path.insert(0, "koopa")
 
-from koopa import os_id  # noqa
+from koopa import flatten, os_id  # noqa
 
 parser = ArgumentParser()
 parser.add_argument("app_name")
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
-
-
-def flatten(items: list, seqtypes=(list, tuple)) -> list:
-    """
-    Flatten an arbitrarily nested list.
-    Updated 2023-03-25.
-
-    See also:
-    - https://stackoverflow.com/a/10824086
-    """
-    try:
-        for i, x in enumerate(items):
-            while isinstance(x, seqtypes):
-                items[i : i + 1] = x  # noqa: E203
-                x = items[i]
-    except IndexError:
-        pass
-    return items
 
 
 def get_deps(app_name: str, json_data: dict) -> list:
