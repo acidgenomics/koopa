@@ -11,37 +11,18 @@ Examples:
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, isdir, join
-from platform import machine, system
-from sys import version_info
+from sys import path, version_info
+
+path.insert(0, "koopa")
+
+from koopa import arch, arch2, koopa_opt_prefix, platform  # noqa
 
 parser = ArgumentParser()
-parser.add_argument(
-    "--mode", choices=["all-supported", "default-only"], required=False
-)
+parser.add_argument("--mode", choices=["all-supported", "default-only"], required=False)
 parser.add_argument("app_name")
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
-
-
-def arch() -> str:
-    """
-    Architecture string.
-    Updated 2023-03-27.
-    """
-    string = machine()
-    return string
-
-
-def arch2() -> str:
-    """
-    Architecture string 2.
-    Updated 2023-03-27.
-    """
-    string = arch()
-    if string == "x86_64":
-        string = "amd64"
-    return string
 
 
 def get_deps(app_name: str, json_data: dict) -> list:
@@ -56,36 +37,6 @@ def get_deps(app_name: str, json_data: dict) -> list:
         deps = json_data[app_name]["dependencies"]
     out = list(dict.fromkeys(deps))
     return out
-
-
-def koopa_opt_prefix() -> str:
-    """
-    koopa opt prefix.
-    Updated 2023-05-01.
-    """
-    prefix = abspath(join(koopa_prefix(), "opt"))
-    return prefix
-
-
-def koopa_prefix() -> str:
-    """
-    koopa prefix.
-    Updated 2023-05-01.
-    """
-    prefix = abspath(join(dirname(__file__), "../.."))
-    return prefix
-
-
-def platform() -> str:
-    """
-    Platform string.
-    Updated 2023-03-27.
-    """
-    string = system()
-    string = string.lower()
-    if string == "darwin":
-        string = "macos"
-    return string
 
 
 def print_apps(app_names: list, json_data: dict, mode: str) -> bool:
