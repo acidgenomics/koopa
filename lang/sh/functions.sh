@@ -569,6 +569,7 @@ quote=01:warning=01;35"
 }
 
 _koopa_activate_homebrew() {
+    _koopa_is_macos || return 1
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
     then

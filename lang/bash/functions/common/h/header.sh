@@ -3,14 +3,13 @@
 koopa_header() {
     # """
     # Shared language-specific header file.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-12-05.
     #
     # Useful for private scripts using koopa code outside of package.
     #
     # @examples
     # koopa_header 'bash'
     # koopa_header 'posix'
-    # koopa_header 'r'
     # koopa_header 'sh'
     # koopa_header 'zsh'
     # """
@@ -28,9 +27,6 @@ koopa_header() {
         'sh' | \
         'zsh')
             dict['ext']='sh'
-            ;;
-        'r')
-            dict['ext']='R'
             ;;
         *)
             koopa_invalid_arg "${dict['lang']}"

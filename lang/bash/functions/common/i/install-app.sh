@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# FIXME This currently doesn't work on HMS O2 cluster. Consider reworking.
 # FIXME Our installer should drop an invisible build file into the directory
 # that contains build number and date, for easy checking during updates.
 # FIXME Instead of erroring on an unsupported app, remove it when it exists
@@ -10,7 +11,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-10-13.
+    # @note Updated 2023-12-08.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -29,6 +30,7 @@ koopa_install_app() {
     # Download pre-built binary from our S3 bucket. Inspired by the
     # Homebrew bottle approach.
     bool['binary']=0
+    koopa_can_install_binary && bool['binary']=1
     # Install shared apps in bootstrap mode?
     bool['bootstrap']=0
     # Should we copy the log files into the install prefix?
@@ -49,6 +51,7 @@ koopa_install_app() {
     bool['private']=0
     # Push completed build to AWS S3 bucket (shared apps only).
     bool['push']=0
+    koopa_can_push_binary && bool['push']=1
     # This is useful for avoiding duplicate alert messages inside of
     # nested install calls (e.g. Emacs installer handoff to GNU app).
     bool['quiet']=0
@@ -69,14 +72,6 @@ koopa_install_app() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--cpu='*)
-                dict['cpu_count']="${1#*=}"
-                shift 1
-                ;;
-            '--cpu')
-                dict['cpu_count']="${2:?}"
-                shift 2
-                ;;
             '--installer='*)
                 dict['installer']="${1#*=}"
                 shift 1
@@ -126,16 +121,8 @@ koopa_install_app() {
                 shift 2
                 ;;
             # CLI user-accessible flags ----------------------------------------
-            '--binary')
-                bool['binary']=1
-                shift 1
-                ;;
             '--bootstrap')
                 bool['bootstrap']=1
-                shift 1
-                ;;
-            '--push')
-                bool['push']=1
                 shift 1
                 ;;
             '--reinstall')
@@ -228,12 +215,14 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             bool['prefix_check']=0
+            bool['push']=0
             koopa_is_linux && bool['update_ldconfig']=1
             ;;
         'user')
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
+            bool['push']=0
             ;;
     esac
     if [[ "${bool['binary']}" -eq 1 ]] || \
@@ -246,7 +235,10 @@ ${dict['version2']}"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
-            koopa_is_empty_dir "${dict['prefix']}" && bool['reinstall']=1
+            if [[ ! -f "${dict['prefix']}/.koopa-install-stdout.log" ]]
+            then
+                bool['reinstall']=1
+            fi
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
                 [[ "${bool['quiet']}" -eq 0 ]] && \

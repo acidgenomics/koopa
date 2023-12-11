@@ -626,13 +626,8 @@ koopa_ansi_escape() {
 }
 
 koopa_app_dependencies() {
-    local app_name cmd
     koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_installed 'python3'
-    app_name="${1:?}"
-    cmd="$(koopa_koopa_prefix)/lang/python/app-dependencies.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$app_name"
+    koopa_python_script 'app-dependencies.py' "$@"
     return 0
 }
 
@@ -670,12 +665,7 @@ koopa_app_json_version() {
 }
 
 koopa_app_json() {
-    local cmd
-    koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_koopa_prefix)/lang/python/app-json.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'app-json.py' "$@"
     return 0
 }
 
@@ -739,13 +729,8 @@ ${dict2['version']}"
 }
 
 koopa_app_reverse_dependencies() {
-    local app_name cmd
     koopa_assert_has_args_eq "$#" 1
-    koopa_assert_is_installed 'python3'
-    app_name="${1:?}"
-    cmd="$(koopa_koopa_prefix)/lang/python/app-reverse-dependencies.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$app_name"
+    koopa_python_script 'app-reverse-dependencies.py' "$@"
     return 0
 }
 
@@ -4109,19 +4094,18 @@ koopa_camel_case() {
 }
 
 koopa_can_install_binary() {
-    local -A dict
-    dict['credentials']="${HOME:?}/.aws/credentials"
-    [[ -f "${dict['credentials']}" ]] || return 1
-    koopa_file_detect_fixed \
-        --file="${dict['credentials']}" \
-        --pattern='acidgenomics' \
-        || return 1
+    koopa_has_private_access || return 1
+    koopa_can_push_binary && return 1
     return 0
 }
 
 koopa_can_push_binary() {
+    local -A app
+    koopa_has_private_access || return 1
+    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] || return 1
     [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
-    koopa_can_install_binary || return 1
+    app['aws']="$(koopa_locate_aws --allow-missing)"
+    [[ -x "${app['aws']}" ]] || return 1
     return 0
 }
 
@@ -4277,9 +4261,10 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
+    koopa_alert 'Checking system.'
+    koopa_python_script 'check-system.py'
     koopa_check_exports
     koopa_check_disk '/'
-    koopa_r_koopa 'cliCheckSystem'
     koopa_alert_success 'System passed all checks.'
     return 0
 }
@@ -4923,23 +4908,14 @@ koopa_cli_install() {
     while (("$#"))
     do
         case "$1" in
-            '--binary' | \
             '--bootstrap' | \
-            '--push' | \
             '--reinstall' | \
             '--verbose')
                 flags+=("$1")
                 shift 1
                 ;;
             '-'*)
-                if [[ "${bool['allow_custom_args']}" -eq 1 ]]
-                then
-                    bool['custom_args_enabled']=1
-                    pos+=("$1")
-                    shift 1
-                else
-                    koopa_invalid_arg "$1"
-                fi
+                koopa_invalid_arg "$1"
                 ;;
             *)
                 pos+=("$1")
@@ -5710,13 +5686,8 @@ koopa_conda_activate_env() { # {{{1
 }
 
 koopa_conda_bin() {
-    local cmd file
     koopa_assert_has_args_eq "$#" 1
-    file="${1:?}"
-    koopa_assert_is_file "$file"
-    cmd="$(koopa_koopa_prefix)/lang/python/conda-bin.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$file"
+    koopa_python_script 'conda-bin.py' "$@"
     return 0
 }
 
@@ -7081,7 +7052,7 @@ koopa_dl() {
 
 koopa_docker_build_all_tags() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliDockerBuildAllTags' "$@"
+    koopa_python_script 'docker-build-all-tags.py' "$@"
     return 0
 }
 
@@ -8580,7 +8551,7 @@ koopa_file_ext() {
 
 koopa_find_and_move_in_sequence() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliFindAndMoveInSequence' "$@"
+    koopa_python_script 'find-and-move-in-sequence.py' "$@"
     return 0
 }
 
@@ -9737,9 +9708,15 @@ koopa_git_latest_tag() {
 }
 
 koopa_git_pull() {
-    local -A app
+    local -A app bool
     koopa_assert_has_args "$#"
-    app['git']="$(koopa_locate_git --allow-system)"
+    bool['sys_git']=0
+    app['git']="$(koopa_locate_git --allow-missing)"
+    if [[ ! -x "${app['git']}" ]]
+    then
+        bool['sys_git']=1
+        app['git']="$(koopa_locate_git --allow-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_git_repo "$@"
     (
@@ -9749,8 +9726,14 @@ koopa_git_pull() {
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Pulling Git repo at '${repo}'."
             koopa_cd "$repo"
-            "${app['git']}" fetch --all --quiet
-            "${app['git']}" pull --all --no-rebase --recurse-submodules
+            if [[ "${bool['sys_git']}" -eq 1 ]]
+            then
+                "${app['git']}" fetch --all
+                "${app['git']}" pull --all
+            else
+                "${app['git']}" fetch --all --quiet
+                "${app['git']}" pull --all --no-rebase --recurse-submodules
+            fi
         done
     )
     return 0
@@ -10494,9 +10477,6 @@ koopa_header() {
         'sh' | \
         'zsh')
             dict['ext']='sh'
-            ;;
-        'r')
-            dict['ext']='R'
             ;;
         *)
             koopa_invalid_arg "${dict['lang']}"
@@ -11542,6 +11522,7 @@ koopa_install_apache_spark() {
 
 koopa_install_app_from_binary_package() {
     local -A app dict
+    local prefix
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"
     app['tar']="$(koopa_locate_tar --allow-system)"
@@ -11560,33 +11541,28 @@ install located at '${dict['koopa_prefix']}'. Koopa must be installed at \
 default '${dict['binary_prefix']}' location."
     fi
     koopa_assert_is_dir "$@"
-    (
-        local prefix
-        koopa_cd "${dict['tmp_dir']}"
-        for prefix in "$@"
-        do
-            local -A dict2
-            dict2['prefix']="$(koopa_realpath "$prefix")"
-            dict2['name']="$( \
-                koopa_print "${dict2['prefix']}" \
-                    | koopa_dirname \
-                    | koopa_basename \
-            )"
-            dict2['version']="$(koopa_basename "$prefix")"
-            dict2['tar_file']="${dict['tmp_dir']}/\
-${dict2['name']}-${dict2['version']}.tar.gz"
-            dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
+    for prefix in "$@"
+    do
+        local -A dict2
+        dict2['prefix']="$(koopa_realpath "$prefix")"
+        dict2['name']="$( \
+            koopa_print "${dict2['prefix']}" \
+                | koopa_dirname \
+                | koopa_basename \
+        )"
+        dict2['version']="$(koopa_basename "$prefix")"
+        dict2['tar_file']="${dict['tmp_dir']}/${dict2['name']}-\
+${dict2['version']}.tar.gz"
+        dict2['tar_url']="${dict['s3_bucket']}/${dict['os_string']}/\
 ${dict['arch']}/${dict2['name']}/${dict2['version']}.tar.gz"
-            "${app['aws']}" s3 cp \
-                --only-show-errors \
-                --profile "${dict['aws_profile']}" \
-                "${dict2['tar_url']}" \
-                "${dict2['tar_file']}"
-            koopa_assert_is_file "${dict2['tar_file']}"
-            "${app['tar']}" -Pxzf "${dict2['tar_file']}"
-            koopa_touch "${prefix}/.koopa-binary"
-        done
-    )
+        "${app['aws']}" s3 cp \
+            --profile "${dict['aws_profile']}" \
+            "${dict2['tar_url']}" \
+            "${dict2['tar_file']}"
+        koopa_assert_is_file "${dict2['tar_file']}"
+        "${app['tar']}" -Pxz -f "${dict2['tar_file']}"
+        koopa_touch "${prefix}/.koopa-binary"
+    done
     koopa_rm "${dict['tmp_dir']}"
     return 0
 }
@@ -11700,6 +11676,7 @@ koopa_install_app() {
     koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
+    koopa_can_install_binary && bool['binary']=1
     bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
@@ -11710,6 +11687,7 @@ koopa_install_app() {
     bool['prefix_check']=1
     bool['private']=0
     bool['push']=0
+    koopa_can_push_binary && bool['push']=1
     bool['quiet']=0
     bool['reinstall']=0
     bool['update_ldconfig']=0
@@ -11727,14 +11705,6 @@ koopa_install_app() {
     while (("$#"))
     do
         case "$1" in
-            '--cpu='*)
-                dict['cpu_count']="${1#*=}"
-                shift 1
-                ;;
-            '--cpu')
-                dict['cpu_count']="${2:?}"
-                shift 2
-                ;;
             '--installer='*)
                 dict['installer']="${1#*=}"
                 shift 1
@@ -11783,16 +11753,8 @@ koopa_install_app() {
                 dict['version_key']="${2:?}"
                 shift 2
                 ;;
-            '--binary')
-                bool['binary']=1
-                shift 1
-                ;;
             '--bootstrap')
                 bool['bootstrap']=1
-                shift 1
-                ;;
-            '--push')
-                bool['push']=1
                 shift 1
                 ;;
             '--reinstall')
@@ -11880,12 +11842,14 @@ ${dict['version2']}"
             bool['link_in_man1']=0
             bool['link_in_opt']=0
             bool['prefix_check']=0
+            bool['push']=0
             koopa_is_linux && bool['update_ldconfig']=1
             ;;
         'user')
             bool['link_in_bin']=0
             bool['link_in_man1']=0
             bool['link_in_opt']=0
+            bool['push']=0
             ;;
     esac
     if [[ "${bool['binary']}" -eq 1 ]] || \
@@ -11898,7 +11862,10 @@ ${dict['version2']}"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
-            koopa_is_empty_dir "${dict['prefix']}" && bool['reinstall']=1
+            if [[ ! -f "${dict['prefix']}/.koopa-install-stdout.log" ]]
+            then
+                bool['reinstall']=1
+            fi
             if [[ "${bool['reinstall']}" -eq 1 ]]
             then
                 [[ "${bool['quiet']}" -eq 0 ]] && \
@@ -15445,34 +15412,21 @@ koopa_install_serf() {
 
 koopa_install_shared_apps() {
     local -A app bool dict
-    local -a app_names push_apps
+    local -a app_names
     local app_name
     koopa_assert_is_owner
     bool['all_supported']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
-    bool['push']=0
+    koopa_can_install_binary && bool['binary']=1
     bool['update']=0
-    bool['verbose']=0
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=6
     while (("$#"))
     do
         case "$1" in
-            '--binary')
-                bool['binary']=1
-                shift 1
-                ;;
-            '--push')
-                bool['push']=1
-                shift 1
-                ;;
             '--update')
                 bool['update']=1
-                shift 1
-                ;;
-            '--verbose')
-                bool['verbose']=1
                 shift 1
                 ;;
             '--all-supported')
@@ -15487,10 +15441,6 @@ koopa_install_shared_apps() {
     if [[ "${bool['binary']}" -eq 1 ]]
     then
         koopa_assert_can_install_binary
-        if [[ "${bool['push']}" -eq 1 ]]
-        then
-            koopa_stop 'Pushing binary apps is not supported.'
-        fi
         app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
         [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
     fi
@@ -15514,27 +15464,18 @@ koopa_install_shared_apps() {
     fi
     for app_name in "${app_names[@]}"
     do
-        local -a install_args
         local prefix
         prefix="$(koopa_app_prefix --allow-missing "$app_name")"
-        [[ -d "$prefix" ]] && continue
-        [[ "${bool['binary']}" -eq 1 ]] && install_args+=('--binary')
-        [[ "${bool['verbose']}" -eq 1 ]] && install_args+=('--verbose')
-        install_args+=("$app_name")
-        koopa_cli_install "${install_args[@]}"
-        push_apps+=("$app_name")
+        [[ -f "${prefix}/.koopa-install-stdout.log" ]] && continue
+        koopa_cli_install "$app_name"
     done
-    if [[ "${bool['push']}" -eq 1 ]] && \
-        koopa_is_array_non_empty "${push_apps[@]:-}"
-    then
-        for app_name in "${push_apps[@]}"
-        do
-            koopa_push_app_build "$app_name"
-        done
-    fi
     if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
     then
         koopa_cli_install --reinstall 'aws-cli'
+        if [[ "${bool['binary']}" -eq 1 ]]
+        then
+            koopa_push_app_build 'aws-cli'
+        fi
     fi
     return 0
 }
@@ -17843,10 +17784,18 @@ koopa_locate_7z() {
         "$@"
 }
 
-koopa_locate_anaconda() {
+koopa_locate_anaconda_conda() {
     koopa_locate_app \
         --app-name='anaconda' \
         --bin-name='conda' \
+        --no-allow-koopa-bin \
+        "$@"
+}
+
+koopa_locate_anaconda_python() {
+    koopa_locate_app \
+        --app-name='anaconda' \
+        --bin-name='python3' \
         --no-allow-koopa-bin \
         "$@"
 }
@@ -21020,12 +20969,14 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
-    koopa_r_koopa 'cliPruneAppBinaries' "$@"
+    koopa_assert_has_no_args "$#"
+    koopa_python_script 'prune-app-binaries.py'
     return 0
 }
 
 koopa_prune_apps() {
-    koopa_r_koopa 'cliPruneApps' "$@"
+    koopa_assert_has_no_args "$#"
+    koopa_python_script 'prune-apps.py'
     return 0
 }
 
@@ -21356,6 +21307,26 @@ koopa_python_pip_install() {
     koopa_dl "${dl_args[@]}"
     export PIP_REQUIRE_VIRTUALENV='false'
     "${app['python']}" -m pip --isolated install "${install_args[@]}"
+    return 0
+}
+
+koopa_python_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/python"
+    return 0
+}
+
+koopa_python_script() {
+    local -A app dict
+    koopa_assert_has_args "$#"
+    app['python']="$(koopa_locate_python3 --allow-system)"
+    koopa_assert_is_installed "${app[@]}"
+    dict['prefix']="$(koopa_python_prefix)"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['cmd_name']="${1:?}"
+    shift 1
+    app['script']="${dict['prefix']}/${dict['cmd_name']}"
+    koopa_assert_is_executable "${app['script']}"
+    "${app['python']}" "${app['script']}" "$@"
     return 0
 }
 
@@ -22397,50 +22368,6 @@ install-packages-in-site-library.R"
     return 0
 }
 
-koopa_r_koopa() {
-    local -A app dict
-    local -a code pos rscript_args
-    koopa_assert_has_args "$#"
-    app['rscript']="$(koopa_locate_rscript)"
-    koopa_assert_is_executable "${app[@]}"
-    rscript_args=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--vanilla')
-                rscript_args+=('--vanilla')
-                shift 1
-                ;;
-            '--'*)
-                pos+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    dict['fun']="${1:?}"
-    shift 1
-    dict['header_file']="$(koopa_koopa_prefix)/lang/r/include/header.R"
-    koopa_assert_is_file "${dict['header_file']}"
-    code=("source('${dict['header_file']}');")
-    if [[ "${dict['fun']}" != 'header' ]]
-    then
-        code+=("koopa::${dict['fun']}();")
-    fi
-    pos=("$@")
-    "${app['rscript']}" "${rscript_args[@]}" -e "${code[*]}" "${pos[@]@Q}"
-    return 0
-}
-
 koopa_r_library_prefix() {
     local -A app dict
     koopa_assert_has_args_le "$#" 1
@@ -22913,7 +22840,8 @@ koopa_remove_from_path_string() {
 
 koopa_rename_camel_case() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliCamelCase' "$@"
+    koopa_python_script 'rename-camel-case.py' "$@"
+    return 0
 }
 
 koopa_rename_from_csv() {
@@ -22933,7 +22861,8 @@ koopa_rename_from_csv() {
 
 koopa_rename_kebab_case() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliKebabCase' "$@"
+    koopa_python_script 'rename-kebab-case.py' "$@"
+    return 0
 }
 
 koopa_rename_lowercase() {
@@ -23007,7 +22936,8 @@ koopa_rename_lowercase() {
 
 koopa_rename_snake_case() {
     koopa_assert_has_args "$#"
-    koopa_r_koopa 'cliSnakeCase' "$@"
+    koopa_python_script 'rename-snake-case.py' "$@"
+    return 0
 }
 
 koopa_reset_permissions() {
@@ -25487,11 +25417,7 @@ koopa_scripts_private_prefix() {
 }
 
 koopa_shared_apps() {
-    local cmd
-    koopa_assert_is_installed 'python3'
-    cmd="$(koopa_koopa_prefix)/lang/python/shared-apps.py"
-    koopa_assert_is_executable "$cmd"
-    "$cmd" "$@"
+    koopa_python_script 'shared-apps.py' "$@"
     return 0
 }
 

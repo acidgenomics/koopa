@@ -12,7 +12,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-11-03.
+    # @note Updated 2023-12-05.
     #
     # @section Compiler settings:
     #
@@ -60,7 +60,6 @@ main() {
     local -a build_deps conf_args deps r_pkgs
     local r_pkg
     bool['devel']=0
-    bool['r_koopa']=1
     build_deps=('autoconf' 'automake' 'libtool' 'make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     ! koopa_is_macos && deps+=('bzip2')
@@ -307,7 +306,6 @@ main() {
     fi
     if [[ "${bool['devel']}" -eq 1 ]]
     then
-        bool['r_koopa']=0
         conf_args+=('--program-suffix=dev')
         app['svn']="$(koopa_locate_svn)"
         koopa_assert_is_executable "${app['svn']}"
@@ -349,36 +347,5 @@ R-${dict['maj_ver']}/R-${dict['version']}.tar.gz"
     koopa_check_shared_object \
         --name='libR' \
         --prefix="${dict['prefix']}/lib/R/lib"
-    if [[ "${bool['r_koopa']}" -eq 1 ]]
-    then
-        # Install our internal R koopa package.
-        # NOTE Consider setting 'dependencies = NA' here to lighten the number
-        # of packages that get installed into the system library here.
-        "${app['rscript']}" -e " \
-            options(
-                error = quote(quit(status = 1L)),
-                warn = 1L
-            ); \
-            if (!requireNamespace('BiocManager', quietly = TRUE)) { ; \
-                install.packages('BiocManager'); \
-            } ; \
-            install.packages(
-                pkgs = 'koopa',
-                repos = c(
-                    'https://r.acidgenomics.com',
-                    BiocManager::repositories()
-                ),
-                dependencies = TRUE
-            ); \
-        "
-        dict['site_lib']="${dict['prefix']}/lib/R/site-library"
-        koopa_assert_is_dir "${dict['site_lib']}"
-        r_pkgs=('koopa' 'pipette')
-        for r_pkg in "${r_pkgs[@]}"
-        do
-            koopa_assert_is_dir "${dict['site_lib']}/${r_pkg}"
-            "${app['rscript']}" -e "library(${r_pkg})"
-        done
-    fi
     return 0
 }
