@@ -4,6 +4,7 @@ Updated 2023-12-11.
 """
 
 from os import walk
+from os.path import abspath, dirname, join
 from platform import machine, system
 
 
@@ -13,6 +14,17 @@ def arch() -> str:
     Updated 2023-10-16.
     """
     string = machine()
+    if string == "x86_64":
+        string = "amd64"
+    return string
+
+
+def arch2() -> str:
+    """
+    Architecture string 2.
+    Updated 2023-03-27.
+    """
+    string = arch()
     if string == "x86_64":
         string = "amd64"
     return string
@@ -34,6 +46,24 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
     except IndexError:
         pass
     return items
+
+
+def koopa_opt_prefix() -> str:
+    """
+    koopa opt prefix.
+    Updated 2023-05-01.
+    """
+    prefix = abspath(join(koopa_prefix(), "opt"))
+    return prefix
+
+
+def koopa_prefix() -> str:
+    """
+    koopa prefix.
+    Updated 2023-12-11.
+    """
+    prefix = abspath(join(dirname(__file__), "../../.."))
+    return prefix
 
 
 def list_subdirs(path: str) -> list:
