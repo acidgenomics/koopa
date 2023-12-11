@@ -4678,11 +4678,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-10-23",
+    "date": "2023-12-11",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.0.2"
+    "version": "3.0.3"
   },
   "pymol": {
     "bin": ["pymol"],
