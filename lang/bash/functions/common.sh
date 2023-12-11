@@ -9735,9 +9735,15 @@ koopa_git_latest_tag() {
 }
 
 koopa_git_pull() {
-    local -A app
+    local -A app bool
     koopa_assert_has_args "$#"
-    app['git']="$(koopa_locate_git --allow-system)"
+    bool['sys_git']=0
+    app['git']="$(koopa_locate_git --allow-missing)"
+    if [[ ! -x "${app['git']}" ]]
+    then
+        bool['sys_git']=1
+        app['git']="$(koopa_locate_git --allow-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     koopa_assert_is_git_repo "$@"
     (
@@ -9747,8 +9753,14 @@ koopa_git_pull() {
             repo="$(koopa_realpath "$repo")"
             koopa_alert "Pulling Git repo at '${repo}'."
             koopa_cd "$repo"
-            "${app['git']}" fetch --all --quiet
-            "${app['git']}" pull --all --no-rebase --recurse-submodules
+            if [[ "${bool['sys_git']}" -eq 1 ]]
+            then
+                "${app['git']}" fetch --all
+                "${app['git']}" pull --all
+            else
+                "${app['git']}" fetch --all --quiet
+                "${app['git']}" pull --all --no-rebase --recurse-submodules
+            fi
         done
     )
     return 0
