@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this in Python.
-
 koopa_prune_apps() {
     # """
     # Prune applications.
-    # @note Updated 2023-10-03.
+    # @note Updated 2023-12-11.
     # """
-    koopa_r_koopa 'cliPruneApps' "$@"
+    koopa_assert_has_no_args "$#"
+    # FIXME Add support for this.
+    koopa_python_script 'prune-apps.py'
     return 0
 }

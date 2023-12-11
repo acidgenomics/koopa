@@ -3,8 +3,9 @@
 _koopa_activate_homebrew() {
     # """
     # Activate Homebrew.
-    # @note Updated 2023-07-13.
+    # @note Updated 2023-12-11.
     # """
+    _koopa_is_macos || return 1
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
     then
