@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# NOTE To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
+# comment out in 'setup.py':
+# > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+# > add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-10-03.
+    # @note Updated 2023-12-08.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple

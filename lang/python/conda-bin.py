@@ -2,9 +2,9 @@
 
 """
 Parse conda JSON metadata for files to link in 'bin'.
-@note Updated 2023-05-30.
+Updated 2023-12-11.
 
-@examples
+Examples:
 ./conda-bin.py \
     /opt/koopa/opt/salmon/libexec/conda-meta/salmon-*.json
 """
@@ -22,7 +22,7 @@ args = parser.parse_args()
 def main(json_file: str) -> bool:
     """
     Parse conda JSON metadata for files to link in 'bin'.
-    @note Updated 2023-05-11.
+    Updated 2023-05-11.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
