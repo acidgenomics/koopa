@@ -2,9 +2,9 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-@note Updated 2023-12-11.
+Updated 2023-12-11.
 
-@examples
+Examples:
 ./app-dependencies.py 'python3.11'
 """
 
@@ -24,7 +24,7 @@ _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
 def arch() -> str:
     """
     Architecture string.
-    @note Updated 2023-10-16.
+    Updated 2023-10-16.
     """
     string = machine()
     if string == "x86_64":
@@ -35,9 +35,9 @@ def arch() -> str:
 def flatten(items: list, seqtypes=(list, tuple)) -> list:
     """
     Flatten an arbitrarily nested list.
-    @note Updated 2023-03-25.
+    Updated 2023-03-25.
 
-    @seealso
+    See also:
     - https://stackoverflow.com/a/10824086
     """
     try:
@@ -53,7 +53,7 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
 def get_deps(app_name: str, json_data: dict) -> list:
     """
     Get unique build dependencies and dependencies in an ordered list.
-    @note Updated 2023-10-16.
+    Updated 2023-10-16.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
@@ -86,7 +86,7 @@ def get_deps(app_name: str, json_data: dict) -> list:
 def os_id() -> str:
     """
     Platform and architecture-specific identifier.
-    @note Updated 2023-10-16.
+    Updated 2023-10-16.
     """
     string = platform() + "-" + arch()
     return string
@@ -95,7 +95,7 @@ def os_id() -> str:
 def platform() -> str:
     """
     Platform string.
-    @note Updated 2023-03-27.
+    Updated 2023-03-27.
     """
     string = system()
     string = string.lower()
@@ -107,7 +107,7 @@ def platform() -> str:
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
-    @note Updated 2023-10-16.
+    Updated 2023-10-16.
     """
     sys_dict = {}
     sys_dict["os_id"] = os_id()
@@ -134,7 +134,7 @@ def print_apps(app_names: list, json_data: dict) -> bool:
 def main(app_name: str, json_file: str) -> bool:
     """
     Parse the koopa 'app.json' file for defined values.
-    @note Updated 2023-10-13.
+    Updated 2023-10-13.
     """
     with open(json_file, encoding="utf-8") as con:
         json_data = load(con)
