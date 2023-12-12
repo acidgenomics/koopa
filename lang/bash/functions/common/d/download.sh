@@ -73,11 +73,6 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
     koopa_assert_has_args_le "$#" 2
     dict['url']="${1:?}"
     dict['file']="${2:-}"
-    # FIXME This approach isn't working for Figshare URLs, need to debug.
-    # FIXME This should redirect to target file name:
-    # https://figshare.com/ndownloader/articles/24667905/versions/1
-    # Should return '24667905.zip'.
-    # We likely need to our agent in to avoid 502 Bad Gateway error.
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"
@@ -85,11 +80,7 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
         # contain an extension in the basename.
         if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='.'
         then
-            curl_head_args+=(
-                '--disable'
-                '--head'
-                '--silent'
-            )
+            curl_head_args+=('--disable' '--head' '--silent')
             case "${dict['url']}" in
                 *'sourceforge.net/'*)
                     ;;
