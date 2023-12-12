@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-07-06.
+    # @note Updated 2023-12-12.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -33,7 +33,7 @@ koopa_download() {
     # > wget -qO-
     # """
     local -A app bool dict
-    local -a curl_args pos
+    local -a curl_args curl_head_args pos
     koopa_assert_has_args "$#"
     app['curl']="$(koopa_locate_curl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -73,6 +73,11 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
     koopa_assert_has_args_le "$#" 2
     dict['url']="${1:?}"
     dict['file']="${2:-}"
+    # FIXME This approach isn't working for Figshare URLs, need to debug.
+    # FIXME This should redirect to target file name:
+    # https://figshare.com/ndownloader/articles/24667905/versions/1
+    # Should return '24667905.zip'.
+    # We likely need to our agent in to avoid 502 Bad Gateway error.
     if [[ -z "${dict['file']}" ]]
     then
         dict['file']="$(koopa_basename "${dict['url']}")"
@@ -80,15 +85,22 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
         # contain an extension in the basename.
         if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='.'
         then
+            curl_head_args+=(
+                '--disable'
+                '--head'
+                '--silent'
+            )
+            case "${dict['url']}" in
+                *'sourceforge.net/'*)
+                    ;;
+                *)
+                    curl_head_args+=('--user-agent' "${dict['user_agent']}")
+                    ;;
+            esac
+            curl_head_args+=("${dict['url']}")
             # Fetch the headers only. Note that curl returns these with
             # carriage return escapes '\r'.
-            dict['head']="$( \
-                "${app['curl']}" \
-                    --disable \
-                    --head \
-                    --silent \
-                    "${dict['url']}" \
-            )"
+            dict['head']="$("${app['curl']}" "${curl_head_args[@]}")"
             if koopa_str_detect_fixed \
                 --string="${dict['head']}" \
                 --pattern='X-Filename: '

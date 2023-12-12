@@ -7594,7 +7594,7 @@ koopa_download_github_latest() {
 
 koopa_download() {
     local -A app bool dict
-    local -a curl_args pos
+    local -a curl_args curl_head_args pos
     koopa_assert_has_args "$#"
     app['curl']="$(koopa_locate_curl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -7637,13 +7637,20 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
         dict['file']="$(koopa_basename "${dict['url']}")"
         if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='.'
         then
-            dict['head']="$( \
-                "${app['curl']}" \
-                    --disable \
-                    --head \
-                    --silent \
-                    "${dict['url']}" \
-            )"
+            curl_head_args+=(
+                '--disable'
+                '--head'
+                '--silent'
+            )
+            case "${dict['url']}" in
+                *'sourceforge.net/'*)
+                    ;;
+                *)
+                    curl_head_args+=('--user-agent' "${dict['user_agent']}")
+                    ;;
+            esac
+            curl_head_args+=("${dict['url']}")
+            dict['head']="$("${app['curl']}" "${curl_head_args[@]}")"
             if koopa_str_detect_fixed \
                 --string="${dict['head']}" \
                 --pattern='X-Filename: '
