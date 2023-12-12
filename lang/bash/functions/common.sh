@@ -11866,10 +11866,6 @@ ${dict['version2']}"
                 then
                     dep_install_args+=('--bootstrap')
                 fi
-                if [[ "${bool['push']}" -eq 1 ]]
-                then
-                    dep_install_args+=('--push')
-                fi
                 if [[ "${bool['verbose']}" -eq 1 ]]
                 then
                     dep_install_args+=('--verbose')
