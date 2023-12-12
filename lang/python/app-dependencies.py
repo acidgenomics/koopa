@@ -13,7 +13,7 @@ from json import load
 from os.path import abspath, dirname, join
 from sys import path, version_info
 
-path.insert(0, "koopa")
+path.insert(0, join(dirname(__file__), "koopa"))
 
 from koopa import flatten, os_id  # noqa
 

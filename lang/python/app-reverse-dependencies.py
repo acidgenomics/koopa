@@ -13,12 +13,14 @@ from json import load
 from os.path import abspath, dirname, isdir, join
 from sys import path, version_info
 
-path.insert(0, "koopa")
+path.insert(0, join(dirname(__file__), "koopa"))
 
 from koopa import arch, arch2, koopa_opt_prefix, platform  # noqa
 
 parser = ArgumentParser()
-parser.add_argument("--mode", choices=["all-supported", "default-only"], required=False)
+parser.add_argument(
+    "--mode", choices=["all-supported", "default-only"], required=False
+)
 parser.add_argument("app_name")
 args = parser.parse_args()
 
