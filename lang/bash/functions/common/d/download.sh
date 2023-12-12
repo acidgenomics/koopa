@@ -41,7 +41,7 @@ koopa_download() {
     bool['extract']=0
     bool['progress']=1
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
-rv:109.0) Gecko/20100101 Firefox/111.0"
+rv:120.0) Gecko/20100101 Firefox/120.0"
     pos=()
     while (("$#"))
     do
