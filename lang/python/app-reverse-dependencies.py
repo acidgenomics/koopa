@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-Updated 2023-12-11.
+Updated 2023-12-12.
 
 Examples:
 ./app-reverse-dependencies.py 'python3.11'
@@ -15,7 +15,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), "koopa"))
 
-from koopa import arch, arch2, koopa_opt_prefix, platform  # noqa
+from koopa import arch2, koopa_opt_prefix
 
 parser = ArgumentParser()
 parser.add_argument(

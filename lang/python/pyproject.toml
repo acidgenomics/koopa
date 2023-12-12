@@ -1,6 +1,17 @@
 # https://docs.astral.sh/ruff/configuration/
 # https://www.gpxz.io/blog/ruff
+# https://docs.astral.sh/ruff/rules/module-import-not-at-top-of-file/
 
 [tool.ruff]
+indent-width = 4
 line-length = 80
 target-version = "py38"
+
+[tool.ruff.format]
+quote-style = "double"
+
+# > [tool.ruff.lint]
+# > ignore = ["E402"]
+
+[tool.ruff.lint.per-file-ignores]
+"*.py" = ["E402"]
