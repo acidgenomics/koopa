@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Currently can't get file name for figshare URLs:
+# https://figshare.com/ndownloader/articles/24667905/versions/1
+
 koopa_download() {
     # """
     # Download a file.
