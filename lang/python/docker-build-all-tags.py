@@ -11,10 +11,13 @@ Example:
 """
 
 from argparse import ArgumentParser
-from os import walk
-from os.path import abspath, expanduser, join, isdir
+from os.path import abspath, dirname, expanduser, join, isdir
 from subprocess import run
-from sys import version_info
+from sys import path, version_info
+
+path.insert(0, join(dirname(__file__), "koopa"))
+
+from koopa import list_subdirs  # noqa
 
 parser = ArgumentParser()
 parser.add_argument("--local", required=True)
@@ -46,19 +49,6 @@ def build_tag(local: str, remote: str) -> bool:
         check=True,
     )
     return True
-
-
-def list_subdirs(path: str) -> list:
-    """
-    List subdirectories in a directory.
-    Updated 2023-12-11.
-
-    See also:
-    - https://stackoverflow.com/questions/141291/
-    """
-    lst = next(walk(path))[1]
-    lst = lst.sort()
-    return lst
 
 
 def main(local: str, remote: str) -> bool:
