@@ -2297,9 +2297,10 @@
   },
   "gseapy": {
     "bin": ["gseapy"],
-    "date": "2023-11-10",
+    "build_dependencies": ["rust"],
+    "date": "2023-12-12",
     "default": false,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
