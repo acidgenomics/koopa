@@ -21202,9 +21202,9 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        dict['pip_version']='23.3'
-        dict['setuptools_version']='68.2.2'
-        dict['wheel_version']='0.41.2'
+        dict['pip_version']='23.3.1'
+        dict['setuptools_version']='69.0.2'
+        dict['wheel_version']='0.42.0'
         pip_args=(
             "--python=${app['venv_python']}"
             "pip==${dict['pip_version']}"

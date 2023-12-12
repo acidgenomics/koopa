@@ -3,12 +3,14 @@
 main() {
     # """
     # Install AWS CLI.
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-12-12.
     #
     # @seealso
+    # - https://github.com/aws/aws-cli/tree/v2/
     # - https://docs.aws.amazon.com/cli/latest/userguide/
     #     getting-started-source-install.html
     # - https://github.com/aws/aws-cli/issues/6785
+    # - https://github.com/aws/aws-cli/discussions/8299/
     # """
     local -A app dict
     local -a conf_args
