@@ -269,6 +269,26 @@ local({
                 "install.packages.compile.from.source" = "never"
             )
             ## nolint end
+            ## Debug configuration issues with:
+            ## > source(paste(
+            ## >     "https://docs.rstudio.com",
+            ## >     "rspm",
+            ## >     "admin",
+            ## >     "check-user-agent.R",
+            ## >     sep = "/"
+            ## > ))
+            ## nolint start
+            options("HTTPUserAgent" = sprintf(
+                "R/%s R (%s)",
+                getRversion(),
+                paste(
+                    getRversion(),
+                    R.version[["platform"]],
+                    R.version[["arch"]],
+                    R.version[["os"]]
+                )
+            ))
+            ## nolint end
         }
     }
     ## Prefer binary installs on macOS for CRAN R. Otherwise default to
