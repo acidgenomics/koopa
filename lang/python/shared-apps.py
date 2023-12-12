@@ -11,8 +11,11 @@ Examples:
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, isdir, join
-from platform import machine, system
-from sys import version_info
+from sys import path, version_info
+
+path.insert(0, join(dirname(__file__), "koopa"))
+
+from koopa import arch, koopa_opt_prefix, os_id  # noqa
 
 parser = ArgumentParser()
 parser.add_argument(
@@ -21,56 +24,6 @@ parser.add_argument(
 args = parser.parse_args()
 
 _json_file = abspath(join(dirname(__file__), "../../etc/koopa/app.json"))
-
-
-def arch() -> str:
-    """
-    Architecture string.
-    Updated 2023-10-16.
-    """
-    string = machine()
-    if string == "x86_64":
-        string = "amd64"
-    return string
-
-
-def koopa_opt_prefix() -> str:
-    """
-    koopa opt prefix.
-    Updated 2023-05-01.
-    """
-    prefix = abspath(join(koopa_prefix(), "opt"))
-    return prefix
-
-
-def koopa_prefix() -> str:
-    """
-    koopa prefix.
-    Updated 2023-05-01.
-    """
-    prefix = abspath(join(dirname(__file__), "../.."))
-    return prefix
-
-
-def os_id() -> str:
-    """
-    Platform and architecture-specific identifier.
-    Updated 2023-10-16.
-    """
-    string = platform() + "-" + arch()
-    return string
-
-
-def platform() -> str:
-    """
-    Platform string.
-    Updated 2023-03-27.
-    """
-    string = system()
-    string = string.lower()
-    if string == "darwin":
-        string = "macos"
-    return string
 
 
 def print_apps(app_names: list, json_data: dict, mode: str) -> bool:

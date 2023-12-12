@@ -2749,7 +2749,7 @@
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
     ],
-    "version": "5.13.0"
+    "version": "5.13.1"
   },
   "jemalloc": {
     "aliases": {
