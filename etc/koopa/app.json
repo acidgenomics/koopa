@@ -551,11 +551,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2023-11-08",
+    "date": "2023-12-12",
     "default": true,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "23.11.0"
+    "version": "23.12.0"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -2524,10 +2524,10 @@
     },
     "bin": ["hexyl"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-31",
+    "date": "2023-12-12",
     "default": false,
     "url": ["https://github.com/sharkdp/hexyl/"],
-    "version": "0.13.1"
+    "version": "0.14.0"
   },
   "hisat2": {
     "bin": ["hisat2"],
@@ -6436,10 +6436,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-12-04",
+    "date": "2023-12-12",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.40.4"
+    "version": "4.40.5"
   },
   "yt-dlp": {
     "aliases": {
