@@ -17,7 +17,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), "koopa"))
 
-from koopa import list_subdirs  # noqa
+from koopa import list_subdirs
 
 parser = ArgumentParser()
 parser.add_argument("--local", required=True)

@@ -15,7 +15,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), "koopa"))
 
-from koopa import flatten, os_id  # noqa
+from koopa import flatten, os_id
 
 parser = ArgumentParser()
 parser.add_argument("app_name")
