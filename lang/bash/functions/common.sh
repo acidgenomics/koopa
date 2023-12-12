@@ -12595,6 +12595,7 @@ koopa_install_cpufetch() {
 
 koopa_install_csvkit() {
     koopa_install_app \
+        --installer='python-package' \
         --name='csvkit' \
         "$@"
 }
@@ -14927,6 +14928,7 @@ koopa_install_python_package() {
     koopa_assert_is_function "${dict['locate_python']}"
     app['python']="$("${dict['locate_python']}" --realpath)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_add_to_path_start "$(koopa_parent_dir "${app['python']}")"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$( \
@@ -15367,6 +15369,7 @@ koopa_install_samtools() {
 
 koopa_install_scalene() {
     koopa_install_app \
+        --installer='python-package' \
         --name='scalene' \
         "$@"
 }
@@ -21199,9 +21202,9 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        dict['pip_version']='23.3'
-        dict['setuptools_version']='68.2.2'
-        dict['wheel_version']='0.41.2'
+        dict['pip_version']='23.3.1'
+        dict['setuptools_version']='69.0.2'
+        dict['wheel_version']='0.42.0'
         pip_args=(
             "--python=${app['venv_python']}"
             "pip==${dict['pip_version']}"
