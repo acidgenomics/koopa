@@ -109,6 +109,7 @@ koopa_install_python_package() {
     koopa_assert_is_function "${dict['locate_python']}"
     app['python']="$("${dict['locate_python']}" --realpath)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_add_to_path_start "$(koopa_parent_dir "${app['python']}")"
     dict['libexec']="${dict['prefix']}/libexec"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$( \
