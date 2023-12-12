@@ -2,7 +2,6 @@
 
 main() {
     koopa_install_python_package \
-        --pip-name='black[d]' \
-        --python-version='3.11'
+        --pip-name='black[d]'
     return 0
 }
