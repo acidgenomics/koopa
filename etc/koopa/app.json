@@ -5295,14 +5295,14 @@
   },
   "scalene": {
     "bin": ["scalene"],
-    "date": "2023-10-19",
+    "date": "2023-12-12",
     "default": false,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
     ],
-    "version": "1.5.26"
+    "version": "1.5.31.1"
   },
   "scons": {
     "aliases": {
@@ -5933,9 +5933,9 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-02",
+    "date": "2023-12-12",
     "default": true,
-    "dependencies": ["ncurses", "python3.11"],
+    "dependencies": ["ncurses", "python3.12"],
     "man1": [
       "ex.1",
       "rview.1",
@@ -5948,7 +5948,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.1950"
+    "version": "9.0.2150"
   },
   "visidata": {
     "aliases": {
