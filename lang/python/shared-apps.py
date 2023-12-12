@@ -15,7 +15,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), "koopa"))
 
-from koopa import arch, koopa_opt_prefix, os_id  # noqa
+from koopa import koopa_opt_prefix, os_id
 
 parser = ArgumentParser()
 parser.add_argument(
