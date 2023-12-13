@@ -15449,6 +15449,13 @@ koopa_install_shunit2() {
         "$@"
 }
 
+koopa_install_shyaml() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='shyaml' \
+        "$@"
+}
+
 koopa_install_snakefmt() {
     koopa_install_app \
         --installer='python-package' \
@@ -30260,6 +30267,12 @@ koopa_uninstall_shellcheck() {
 koopa_uninstall_shunit2() {
     koopa_uninstall_app \
         --name='shunit2' \
+        "$@"
+}
+
+koopa_uninstall_shyaml() {
+    koopa_uninstall_app \
+        --name='shyaml' \
         "$@"
 }
 
