@@ -2959,10 +2959,10 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2023-10-05",
+    "date": "2023-12-13",
     "default": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.10"
+    "version": "2.11"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
