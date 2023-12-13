@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-07-06.
+    # @note Updated 2023-12-12.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -33,118 +33,29 @@ koopa_download() {
     # > wget -qO-
     # """
     local -A app bool dict
-    local -a curl_args pos
-    koopa_assert_has_args "$#"
+    local -a curl_args
+    koopa_assert_has_args_le "$#" 2
     app['curl']="$(koopa_locate_curl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    bool['decompress']=0
-    bool['extract']=0
     bool['progress']=1
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
-rv:109.0) Gecko/20100101 Firefox/111.0"
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            # Flags ------------------------------------------------------------
-            '--decompress')
-                bool['decompress']=1
-                shift 1
-                ;;
-            '--extract')
-                bool['extract']=1
-                shift 1
-                ;;
-            '--progress')
-                bool['progress']=1
-                shift 1
-                ;;
-            # Other ------------------------------------------------------------
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args_le "$#" 2
+rv:120.0) Gecko/20100101 Firefox/120.0"
     dict['url']="${1:?}"
     dict['file']="${2:-}"
-    if [[ -z "${dict['file']}" ]]
-    then
-        dict['file']="$(koopa_basename "${dict['url']}")"
-        # Attempt to get remote file name automatically for a URL that doesn't
-        # contain an extension in the basename.
-        if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='.'
-        then
-            # Fetch the headers only. Note that curl returns these with
-            # carriage return escapes '\r'.
-            dict['head']="$( \
-                "${app['curl']}" \
-                    --disable \
-                    --head \
-                    --silent \
-                    "${dict['url']}" \
-            )"
-            if koopa_str_detect_fixed \
-                --string="${dict['head']}" \
-                --pattern='X-Filename: '
-            then
-                app['cut']="$(koopa_locate_cut --allow-system)"
-                koopa_assert_is_executable "${app['cut']}"
-                dict['file']="$( \
-                    koopa_grep \
-                        --string="${dict['head']}" \
-                        --pattern='X-Filename: ' \
-                    | "${app['cut']}" -d ' ' -f 2 \
-                    | koopa_sub \
-                        --pattern='\r$' \
-                        --regex \
-                        --replacement='' \
-                    | koopa_basename \
-                )"
-            fi
-        fi
-        if koopa_str_detect_fixed --string="${dict['file']}" --pattern='%'
-        then
-            dict['file']="$( \
-                koopa_print "${dict['file']}" \
-                | koopa_gsub \
-                    --fixed \
-                    --pattern='%2D' \
-                    --replacement='-' \
-                | koopa_gsub \
-                    --fixed \
-                    --pattern='%2E' \
-                    --replacement='.' \
-                | koopa_gsub \
-                    --fixed \
-                    --pattern='%5F' \
-                    --replacement='_' \
-                | koopa_gsub \
-                    --fixed \
-                    --pattern='%20' \
-                    --replacement='_' \
-            )"
-        fi
-    fi
-    if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='/'
-    then
-        dict['file']="${PWD:?}/${dict['file']}"
-    fi
-    # Inclusion of '--progress' shows a simple progress bar.
+    # Inclusion of '--progress' shows a simpler progress bar.
     curl_args+=(
         '--disable' # Ignore '~/.curlrc'. Must come first.
         '--create-dirs'
         '--fail'
         '--location'
-        '--output' "${dict['file']}"
         '--retry' 5
         '--show-error'
     )
+    if [[ "${bool['progress']}" -eq 0 ]]
+    then
+        # Alternatively, can use '--no-progress-meter'.
+        curl_args+=('--silent')
+    fi
     case "${dict['url']}" in
         *'sourceforge.net/'*)
             ;;
@@ -152,20 +63,61 @@ rv:109.0) Gecko/20100101 Firefox/111.0"
             curl_args+=('--user-agent' "${dict['user_agent']}")
             ;;
     esac
-    if [[ "${bool['progress']}" -eq 0 ]]
+    if [[ -z "${dict['file']}" ]]
     then
-        # Alternatively, can use '--no-progress-meter'.
-        curl_args+=('--silent')
+        dict['bn']="$(koopa_basename "${dict['url']}")"
+        if koopa_str_detect_fixed --string="${dict['bn']}" --pattern='.'
+        then
+            dict['file']="${dict['bn']}"
+            if koopa_str_detect_fixed \
+                --pattern='%' \
+                --string="${dict['file']}"
+            then
+                dict['file']="$( \
+                    koopa_print "${dict['file']}" \
+                    | koopa_gsub \
+                        --fixed \
+                        --pattern='%2D' \
+                        --replacement='-' \
+                    | koopa_gsub \
+                        --fixed \
+                        --pattern='%2E' \
+                        --replacement='.' \
+                    | koopa_gsub \
+                        --fixed \
+                        --pattern='%5F' \
+                        --replacement='_' \
+                    | koopa_gsub \
+                        --fixed \
+                        --pattern='%20' \
+                        --replacement='_' \
+                )"
+            fi
+        fi
+    fi
+    if [[ -n "${dict['file']}" ]]
+    then
+        if ! koopa_str_detect_fixed --string="${dict['file']}" --pattern='/'
+        then
+            dict['file']="${PWD:?}/${dict['file']}"
+        fi
+        curl_args+=('--output' "${dict['file']}")
+        koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
+    else
+        dict['output_dir']="${PWD:?}"
+        curl_args+=(
+            '--output-dir' "${dict['output_dir']}"
+            '--remote-header-name'
+            '--remote-name'
+        )
+        koopa_alert "Downloading '${dict['url']}' in '${dict['output_dir']}' \
+using remote header name."
     fi
     curl_args+=("${dict['url']}")
-    koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
     "${app['curl']}" "${curl_args[@]}"
-    if [[ "${bool['decompress']}" -eq 1 ]]
+    if [[ -n "${dict['file']}" ]]
     then
-        koopa_decompress "${dict['file']}"
-    elif [[ "${bool['extract']}" -eq 1 ]]
-    then
-        koopa_extract "${dict['file']}"
+        koopa_assert_is_file "${dict['file']}"
     fi
     return 0
 }

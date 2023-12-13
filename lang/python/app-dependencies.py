@@ -8,6 +8,9 @@ Examples:
 ./app-dependencies.py 'python3.11'
 """
 
+# FIXME Rework this as only functions in koopa library, and then use
+# argparse to pass CLI arguments in to the function.
+
 from argparse import ArgumentParser
 from json import load
 from os.path import abspath, dirname, join

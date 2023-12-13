@@ -11,7 +11,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-12-08.
+    # @note Updated 2023-12-12.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -280,10 +280,6 @@ ${dict['version2']}"
                 if [[ "${bool['bootstrap']}" -eq 1 ]]
                 then
                     dep_install_args+=('--bootstrap')
-                fi
-                if [[ "${bool['push']}" -eq 1 ]]
-                then
-                    dep_install_args+=('--push')
                 fi
                 if [[ "${bool['verbose']}" -eq 1 ]]
                 then
