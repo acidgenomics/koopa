@@ -6,7 +6,7 @@ koopa_cli_install() {
     # @note Updated 2023-12-11.
     #
     # @examples
-    # > koopa_cli_install --binary --reinstall --verbose 'tmux' 'vim'
+    # > koopa_cli_install --reinstall --verbose 'tmux' 'vim'
     # > koopa_cli_install user 'doom-emacs' 'spacemacs'
     # """
     local -A dict
