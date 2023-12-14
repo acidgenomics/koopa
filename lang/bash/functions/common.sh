@@ -11452,7 +11452,7 @@ koopa_install_all_default() {
 
 koopa_install_all_supported() {
     koopa_assert_has_no_args "$#"
-    koopa_install_shared_apps --all-supported "$@"
+    koopa_install_shared_apps --all "$@"
     return 0
 }
 
