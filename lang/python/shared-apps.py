@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Return supported shared applications defined in 'app.json' file.
+Return shared apps defined in 'app.json' file.
 Updated 2023-12-14.
 
 Examples:
