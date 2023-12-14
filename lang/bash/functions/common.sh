@@ -632,34 +632,34 @@ koopa_app_dependencies() {
 }
 
 koopa_app_json_bin() {
-    local app_name
+    local name
     koopa_assert_has_args "$#"
-    for app_name in "$@"
+    for name in "$@"
     do
         koopa_app_json \
-            --app-name="$app_name" \
+            --name="$name" \
             --key='bin'
     done
 }
 
 koopa_app_json_man1() {
-    local app_name
+    local name
     koopa_assert_has_args "$#"
-    for app_name in "$@"
+    for name in "$@"
     do
         koopa_app_json \
-            --app-name="$app_name" \
+            --name="$name" \
             --key='man1'
     done
 }
 
 koopa_app_json_version() {
-    local app_name
+    local name
     koopa_assert_has_args "$#"
-    for app_name in "$@"
+    for name in "$@"
     do
         koopa_app_json \
-            --app-name="$app_name" \
+            --name="$name" \
             --key='version'
     done
 }

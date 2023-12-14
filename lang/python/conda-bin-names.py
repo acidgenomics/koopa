@@ -21,6 +21,7 @@ path.insert(0, join(dirname(__file__), "koopa"))
 
 from koopa import print_conda_bin_names
 
+
 def main(json_file: str) -> None:
     """
     Main function.

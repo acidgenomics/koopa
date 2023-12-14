@@ -15,7 +15,7 @@ from os.path import dirname, join
 from sys import path, version_info
 
 parser = ArgumentParser()
-parser.add_argument("--app-name", required=True)
+parser.add_argument("--name", required=True)
 parser.add_argument("--key", required=True)
 args = parser.parse_args()
 
