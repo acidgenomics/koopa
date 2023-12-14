@@ -49,10 +49,6 @@ def app_deps(name: str) -> list:
     return lst
 
 
-# FIXME This is close but missing all supported apps...seems like mode isn't passing through?
-# This needs to handle any installed apps that may be non-default.
-
-
 def app_revdeps(name: str, mode: str) -> list:
     """
     Get reverse application dependencies.
@@ -76,7 +72,6 @@ def app_revdeps(name: str, mode: str) -> list:
         i += 1
     if len(lst) <= 0:
         return lst
-    # FIXME We need to not filter any installed non-default apps.
     lst = filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
     return lst
 
