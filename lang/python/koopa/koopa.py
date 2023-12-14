@@ -134,11 +134,12 @@ def docker_build_all_tags(local: str, remote: str) -> bool:
     """
     local = abspath(expanduser(local))
     assert isdir(local)
-    subdirs = list_subdirs(path=local, recursive=False, basename_only=True)
-    for subdir in subdirs:
-        local2 = join(local, subdir)
-        assert isdir(local2)
-        remote2 = remote + ":" + subdir
+    tags = list_subdirs(path=local, recursive=False, basename_only=True)
+    tags = tags.sort()
+    for tag in tags:
+        local2 = join(local, tag)
+        assert isdir(tag)
+        remote2 = remote + ":" + tag
         docker_build_tag(local=local2, remote=remote2)
     return True
 
