@@ -3,7 +3,7 @@
 koopa_install_shared_apps() {
     # """
     # Build and install multiple shared apps from source.
-    # @note Updated 2023-12-07.
+    # @note Updated 2023-12-14.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -12,7 +12,7 @@ koopa_install_shared_apps() {
     local -a app_names
     local app_name
     koopa_assert_is_owner
-    bool['all_supported']=0
+    bool['all']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
     koopa_can_install_binary && bool['binary']=1
@@ -28,8 +28,8 @@ koopa_install_shared_apps() {
                 shift 1
                 ;;
             # Internal flags ---------------------------------------------------
-            '--all-supported')
-                bool['all_supported']=1
+            '--all')
+                bool['all']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -56,11 +56,15 @@ koopa_install_shared_apps() {
     then
         koopa_install_aws_cli --no-dependencies
     fi
-    if [[ "${bool['all_supported']}" -eq 1 ]]
+    if [[ "${bool['all']}" -eq 1 ]]
     then
-        readarray -t app_names <<< "$(koopa_shared_apps --mode='all-supported')"
+        readarray -t app_names <<< "$( \
+            koopa_shared_apps --mode='all' \
+        )"
     else
-        readarray -t app_names <<< "$(koopa_shared_apps)"
+        readarray -t app_names <<< "$( \
+            koopa_shared_apps --mode='default' \
+        )"
     fi
     for app_name in "${app_names[@]}"
     do

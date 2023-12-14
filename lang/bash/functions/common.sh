@@ -632,34 +632,34 @@ koopa_app_dependencies() {
 }
 
 koopa_app_json_bin() {
-    local app_name
+    local name
     koopa_assert_has_args "$#"
-    for app_name in "$@"
+    for name in "$@"
     do
         koopa_app_json \
-            --app-name="$app_name" \
+            --name="$name" \
             --key='bin'
     done
 }
 
 koopa_app_json_man1() {
-    local app_name
+    local name
     koopa_assert_has_args "$#"
-    for app_name in "$@"
+    for name in "$@"
     do
         koopa_app_json \
-            --app-name="$app_name" \
+            --name="$name" \
             --key='man1'
     done
 }
 
 koopa_app_json_version() {
-    local app_name
+    local name
     koopa_assert_has_args "$#"
-    for app_name in "$@"
+    for name in "$@"
     do
         koopa_app_json \
-            --app-name="$app_name" \
+            --name="$name" \
             --key='version'
     done
 }
@@ -5685,9 +5685,9 @@ koopa_conda_activate_env() { # {{{1
     return 0
 }
 
-koopa_conda_bin() {
+koopa_conda_bin_names() {
     koopa_assert_has_args_eq "$#" 1
-    koopa_python_script 'conda-bin.py' "$@"
+    koopa_python_script 'conda-bin-names.py' "$@"
     return 0
 }
 
@@ -11445,12 +11445,14 @@ koopa_install_agat() {
 }
 
 koopa_install_all_default() {
+    koopa_assert_has_no_args "$#"
     koopa_install_shared_apps "$@"
     return 0
 }
 
 koopa_install_all_supported() {
-    koopa_install_shared_apps --all-supported "$@"
+    koopa_assert_has_no_args "$#"
+    koopa_install_shared_apps --all "$@"
     return 0
 }
 
@@ -12499,7 +12501,9 @@ koopa_install_conda_package() {
             --type='f' \
     )"
     koopa_assert_is_file "${dict['json_file']}"
-    readarray -t bin_names <<< "$(koopa_conda_bin "${dict['json_file']}")"
+    readarray -t bin_names <<< "$( \
+        koopa_conda_bin_names "${dict['json_file']}" \
+    )"
     if koopa_is_array_non_empty "${bin_names[@]:-}"
     then
         for bin_name in "${bin_names[@]}"
@@ -15372,7 +15376,7 @@ koopa_install_shared_apps() {
     local -a app_names
     local app_name
     koopa_assert_is_owner
-    bool['all_supported']=0
+    bool['all']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
     koopa_can_install_binary && bool['binary']=1
@@ -15386,8 +15390,8 @@ koopa_install_shared_apps() {
                 bool['update']=1
                 shift 1
                 ;;
-            '--all-supported')
-                bool['all_supported']=1
+            '--all')
+                bool['all']=1
                 shift 1
                 ;;
             *)
@@ -15413,11 +15417,15 @@ koopa_install_shared_apps() {
     then
         koopa_install_aws_cli --no-dependencies
     fi
-    if [[ "${bool['all_supported']}" -eq 1 ]]
+    if [[ "${bool['all']}" -eq 1 ]]
     then
-        readarray -t app_names <<< "$(koopa_shared_apps --mode='all-supported')"
+        readarray -t app_names <<< "$( \
+            koopa_shared_apps --mode='all' \
+        )"
     else
-        readarray -t app_names <<< "$(koopa_shared_apps)"
+        readarray -t app_names <<< "$( \
+            koopa_shared_apps --mode='default' \
+        )"
     fi
     for app_name in "${app_names[@]}"
     do
