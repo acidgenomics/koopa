@@ -14,7 +14,7 @@ from argparse import ArgumentParser
 from os.path import dirname, join
 from sys import path, version_info
 
-path.insert(0, join(dirname(__file__), "koopa"))
+path.extend([join(dirname(__file__), "koopa")])
 
 from koopa import docker_build_all_tags
 
