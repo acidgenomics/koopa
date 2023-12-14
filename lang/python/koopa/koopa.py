@@ -149,24 +149,24 @@ def platform() -> str:
     return string
 
 
-def print_list(obj) -> bool:
+def print_list(obj) -> None:
     """
     Loop across a list and print elements to console.
     Updated 2023-12-14.
     """
     for val in obj:
         print(val)
-    return True
+    return None
 
 
-def print_shared_apps(mode: str) -> bool:
+def print_shared_apps(mode: str) -> None:
     """
     Print shared apps.
     Updated 2023-12-14.
     """
     lst = shared_apps(mode=mode)
     print_list(lst)
-    return True
+    return None
 
 
 def shared_apps(mode: str) -> list:
