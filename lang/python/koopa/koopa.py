@@ -11,6 +11,7 @@ from re import compile, sub
 from subprocess import run
 
 
+# FIXME This is from app-dependencies.py.
 # FIXME Rework this to allow only build_deps or hard deps.
 def get_deps(app_name: str, json_data: dict) -> list:
     """
@@ -45,7 +46,24 @@ def get_deps(app_name: str, json_data: dict) -> list:
     return all_deps
 
 
+# FIXME This is from app-reverse-dependencies.py
+def get_deps2(app_name: str, json_data: dict) -> list:
+    """
+    Get unique dependencies in an ordered list.
+    Updated 2023-05-11.
+    """
+    if app_name not in json_data:
+        raise NameError("Unsupported app: '" + app_name + "'.")
+    deps = []
+    if "dependencies" in json_data[app_name]:
+        deps = json_data[app_name]["dependencies"]
+    out = list(dict.fromkeys(deps))
+    return out
+
+
+# FIXME This is from app-dependencies.py.
 # FIXME Rework this based on the app names.
+# FIXME Need to rework this function to make it more generally useful.
 def print_apps(app_names: list, json_data: dict) -> bool:
     """
     Print relevant apps.
@@ -73,9 +91,49 @@ def print_apps(app_names: list, json_data: dict) -> bool:
     return True
 
 
-def app_dependencies(name: str) -> list:
+# This is from app-reverse-dependencies.py
+def print_apps2(app_names: list, json_data: dict, mode: str) -> bool:
     """
-    Get dependencies for an application.
+    Print relevant apps.
+    Updated 2023-10-16.
+    """
+    sys_dict = {}
+    sys_dict["arch"] = arch2()
+    sys_dict["opt_prefix"] = koopa_opt_prefix()
+    for val in app_names:
+        if mode != "default-only":
+            if isdir(join(sys_dict["opt_prefix"], val)):
+                print(val)
+                continue
+        json = json_data[val]
+        keys = json.keys()
+        if "default" in keys and mode != "all-supported":
+            if not json["default"]:
+                continue
+        if "removed" in keys:
+            if json["removed"]:
+                continue
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
+        print(val)
+    return True
+
+
+
+def app_deps(name: str) -> list:
+    """
+    Get application dependencies.
     Updated 2023-12-14.
     """
     json_data = import_app_json()
@@ -113,6 +171,35 @@ def app_dependencies(name: str) -> list:
     # Refer to `print_apps()` in our `app-dependencies.py` script.
     # > print_apps(app_names=lst, json_data=json_data)
     return lst
+
+
+# FIXME Rename app_name.
+# FIXME Remove json_file.
+# FIXME Need to rework this.
+def app_revdeps(app_name: str, json_file: str, mode: str) -> bool:
+    """
+    Get reverse application dependencies.
+    Updated 2023-10-13.
+    """
+    with open(json_file, encoding="utf-8") as con:
+        json_data = load(con)
+    keys = list(json_data.keys())
+    if app_name not in keys:
+        raise NameError("Unsupported app: '" + app_name + "'.")
+    all_deps = []
+    for key in keys:
+        key_deps = get_deps2(app_name=key, json_data=json_data)
+        all_deps.append(key_deps)
+    deps = []
+    i = 0
+    while i < len(all_deps):
+        if app_name in all_deps[i]:
+            deps.append(keys[i])
+        i += 1
+    if len(deps) <= 0:
+        return True
+    print_apps2(app_names=deps, json_data=json_data, mode=mode)
+    return True
 
 
 def arch() -> str:
@@ -325,12 +412,12 @@ def platform() -> str:
     return string
 
 
-def print_app_dependencies(name: str) -> None:
+def print_app_deps(name: str) -> None:
     """
     Print app dependencies.
     Updated 2023-12-14.
     """
-    lst = app_dependencies(name=name)
+    lst = app_deps(name=name)
     print_list(lst)
     return None
 
@@ -353,6 +440,16 @@ def print_app_json(app_name: str, key: str) -> None:
             print(i)
     else:
         print(value)
+    return None
+
+
+def print_app_revdeps(name: str, mode: str) -> None:
+    """
+    Print app dependencies.
+    Updated 2023-12-14.
+    """
+    lst = app_revdeps(name=name, mode=mode)
+    print_list(lst)
     return None
 
 
