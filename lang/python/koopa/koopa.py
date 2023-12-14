@@ -240,18 +240,21 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     Filter supported app reverse dependencies.
     Updated 2023-12-14.
     """
-    if mode not in ["all_supported", "default_only"]:
+    if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
-    sys_dict = {"arch": arch2(), "opt_prefix": koopa_opt_prefix(), "os_id": os_id()}
+    sys_dict = {
+        "arch": arch2(),
+        "opt_prefix": koopa_opt_prefix(),
+        "os_id": os_id(),
+    }
     lst = []
     for val in names:
-        if mode != "default_only":
-            if isdir(join(sys_dict["opt_prefix"], val)):
-                lst.append(val)
-                continue
+        if isdir(join(sys_dict["opt_prefix"], val)):
+            lst.append(val)
+            continue
         json = json_data[val]
         keys = json.keys()
-        if "default" in keys and mode != "all_supported":
+        if "default" in keys and mode != "all":
             if not json["default"]:
                 continue
         if "removed" in keys:
@@ -468,24 +471,23 @@ def shared_apps(mode: str) -> list:
     Return names of shared apps.
     Updated 2023-12-14.
     """
-    if mode not in ["all_supported", "default_only"]:
+    if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}
     json_data = import_app_json()
     names = json_data.keys()
     out = []
     for val in names:
-        if mode != "default_only":
-            if isdir(join(sys_dict["opt_prefix"], val)):
-                out.append(val)
-                continue
+        if isdir(join(sys_dict["opt_prefix"], val)):
+            out.append(val)
+            continue
         json = json_data[val]
         keys = json.keys()
         if "supported" in json:
             if sys_dict["os_id"] in json["supported"].keys():
                 if not json["supported"][sys_dict["os_id"]]:
                     continue
-        if "default" in keys and mode != "all_supported":
+        if "default" in keys and mode != "all":
             if not json["default"]:
                 continue
         if "removed" in keys:

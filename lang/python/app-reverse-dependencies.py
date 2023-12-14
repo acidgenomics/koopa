@@ -14,18 +14,17 @@ from sys import path, version_info
 
 path.extend([join(dirname(__file__), "koopa")])
 
-from koopa import print_app_revdeps, snake_case
+from koopa import print_app_revdeps
 
 parser = ArgumentParser()
 parser.add_argument(
     "--mode",
-    choices=["all-supported", "default-only"],
+    choices=["all", "default"],
     default="default-only",
     required=False,
 )
 parser.add_argument("name")
 args = parser.parse_args()
-args.mode = snake_case(args.mode)
 
 
 def main(name: str, mode: str) -> bool:
