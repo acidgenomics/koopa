@@ -112,7 +112,7 @@ def list_subdirs(path: str, recursive=False, basename_only=False) -> list:
         lst = [val.path for val in scandir(path) if val.is_dir()]
     if basename_only:
         lst = [basename(val) for val in lst]
-        # Alternative approach using `map()`:
+        # Alternative approach using `map()`.
         # > lst = list(map(basename, lst))
     return lst
 
