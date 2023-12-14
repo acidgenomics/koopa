@@ -7,28 +7,8 @@ from json import load
 from os import scandir, walk
 from os.path import abspath, basename, dirname, expanduser, isdir, isfile, join
 from platform import machine, system
-from re import sub
-
-
-def app_json_data() -> dict:
-    """
-    Koopa app.json data.
-    Updated 2023-12-14.
-    """
-    json_file = app_json_file()
-    with open(json_file, encoding="utf-8") as con:
-        json_data = load(con)
-    return json_data
-
-
-def app_json_file() -> str:
-    """
-    Koopa app.json file.
-    Updated 2023-12-14.
-    """
-    file = join(koopa_prefix(), "etc/koopa/app.json")
-    assert isfile(file)
-    return file
+from re import compile, sub
+from subprocess import run
 
 
 def arch() -> str:
@@ -51,6 +31,30 @@ def arch2() -> str:
     if string == "x86_64":
         string = "amd64"
     return string
+
+
+def conda_bin_names(json_file: str) -> list:
+    """
+    Get the conda bin names from JSON file.
+    Updated 2023-12-14.
+
+    Examples:
+    json_file="/opt/koopa/app/star/2.7.11a/libexec/conda-meta/star-2.7.11a-h0546b6b_0.json"
+    conda_bin_names(json_file=json_file)
+    """
+    json_data = import_json(file)
+    keys = json_data.keys()
+    if "files" not in keys:
+        raise ValueError("Invalid conda JSON file: '" + json_file + "'.")
+    file_list = json_data["files"]
+    bin_names = []
+    pattern = compile(r"^bin/([^/]+)$")
+    for file in file_list:
+        match = pattern.match(file)
+        if match:
+            bin_name = match.group(1)
+            bin_names.append(bin_name)
+    return bin_names
 
 
 def docker_build_all_tags(local: str, remote: str) -> bool:
@@ -123,7 +127,7 @@ def kebab_case(string):
     Kebab case.
     Updated 2023-12-14.
     """
-    string = sub("[^0-9a-zA-Z]+", "-", string)
+    string = sub(pattern="[^0-9a-zA-Z]+", repl="-", string=string)
     string = string.lower()
     return string
 
@@ -146,6 +150,27 @@ def koopa_prefix() -> str:
     prefix = abspath(join(dirname(__file__), "../../.."))
     assert isdir(prefix)
     return prefix
+
+
+def import_app_json() -> dict:
+    """
+    Import app.json data.
+    Updated 2023-12-14.
+    """
+    file = join(koopa_prefix(), "etc/koopa/app.json")
+    assert isfile(file)
+    data = import_json(file)
+    return data
+
+
+def import_json(file: str) -> dict:
+    """
+    Import a JSON file.
+    Updated 2023-12-14.
+    """
+    with open(file, encoding="utf-8") as con:
+        data = load(con)
+    return data
 
 
 def list_subdirs(path: str, recursive=False, basename_only=False) -> list:
@@ -196,13 +221,24 @@ def platform() -> str:
     return string
 
 
+def print_conda_bin_names(json_file: str) -> None:
+    """
+    Print conda bin names.
+    Updated 2023-12-14.
+    """
+    lst = conda_bin_names(json_file=json_file)
+    print_list(lst)
+    return None
+
+
 def print_list(obj) -> None:
     """
     Loop across a list and print elements to console.
     Updated 2023-12-14.
     """
-    for val in obj:
-        print(val)
+    if any(obj):
+        for val in obj:
+            print(val)
     return None
 
 
@@ -224,7 +260,7 @@ def shared_apps(mode: str) -> list:
     if mode not in ["all_supported", "default_only"]:
         raise ValueError("Invalid mode.")
     sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}
-    json_data = app_json_data()
+    json_data = import_app_json()
     app_names = json_data.keys()
     out = []
     for val in app_names:
@@ -262,6 +298,6 @@ def snake_case(string):
     Snake case.
     Updated 2023-12-14.
     """
-    string = sub("[^0-9a-zA-Z]+", "_", string)
+    string = sub(pattern="[^0-9a-zA-Z]+", repl="_", string=string)
     string = string.lower()
     return string
