@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-Updated 2023-12-11.
+Updated 2023-12-14.
 
 Examples:
 ./app-dependencies.py 'python3.11'
