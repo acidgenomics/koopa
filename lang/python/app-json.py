@@ -24,16 +24,16 @@ path.insert(0, join(dirname(__file__), "koopa"))
 from koopa import print_app_json
 
 
-def main(app_name: str, key: str) -> None:
+def main(name: str, key: str) -> None:
     """
     Main function.
     Updated 2023-12-14.
     """
-    print_app_json(app_name=app_name, key=key)
+    print_app_json(name=name, key=key)
     return None
 
 
 if __name__ == "__main__":
     if not version_info >= (3, 8):
         raise RuntimeError("Unsupported Python version.")
-    main(app_name=args.app_name, key=args.key)
+    main(name=args.app_name, key=args.key)
