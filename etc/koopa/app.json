@@ -1784,6 +1784,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4154,11 +4155,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2023-12-12",
+    "date": "2023-12-14",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.88.0"
+    "version": "0.88.1"
   },
   "oniguruma": {
     "aliases": {
