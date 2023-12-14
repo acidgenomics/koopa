@@ -221,6 +221,27 @@ def platform() -> str:
     return string
 
 
+def print_app_json(app_name: str, key: str) -> None:
+    """
+    Print values for an app.json key.
+    Updated 2023-12-14.
+    """
+    json_data = import_app_json()
+    keys = json_data.keys()
+    if app_name not in keys:
+        raise NameError("Unsupported app: '" + app_name + "'.")
+    app_dict = json_data[app_name]
+    if key not in app_dict.keys():
+        raise ValueError("Invalid key: '" + key + "'.")
+    value = app_dict[key]
+    if isinstance(value, list):
+        for i in value:
+            print(i)
+    else:
+        print(value)
+    return None
+
+
 def print_conda_bin_names(json_file: str) -> None:
     """
     Print conda bin names.
