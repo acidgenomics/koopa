@@ -61,6 +61,7 @@ def get_deps2(app_name: str, json_data: dict) -> list:
     return out
 
 
+# FIXME Rename this to filter_supported_apps.
 # FIXME This is from app-dependencies.py.
 # FIXME Rework this based on the app names.
 # FIXME Need to rework this function to make it more generally useful.
@@ -91,6 +92,7 @@ def print_apps(app_names: list, json_data: dict) -> bool:
     return True
 
 
+# This is specific to app-reverse-dependencies.
 # This is from app-reverse-dependencies.py
 def print_apps2(app_names: list, json_data: dict, mode: str) -> bool:
     """
