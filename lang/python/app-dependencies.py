@@ -12,7 +12,7 @@ from argparse import ArgumentParser
 from os.path import dirname, join
 from sys import path, version_info
 
-path.extend([join(dirname(__file__), "koopa")])
+path.insert(0, join(dirname(__file__), "koopa"))
 
 from koopa import print_app_deps
 
