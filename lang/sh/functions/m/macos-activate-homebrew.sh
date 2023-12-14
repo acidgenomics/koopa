@@ -1,11 +1,10 @@
 #!/bin/sh
 
-_koopa_activate_homebrew() {
+_koopa_macos_activate_homebrew() {
     # """
-    # Activate Homebrew.
+    # Activate Homebrew on macOS.
     # @note Updated 2023-12-14.
     # """
-    _koopa_is_macos || return 0
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
     then

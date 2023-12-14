@@ -568,25 +568,6 @@ quote=01:warning=01;35"
     return 0
 }
 
-_koopa_activate_homebrew() {
-    _koopa_is_macos || return 0
-    __kvar_prefix="$(_koopa_homebrew_prefix)"
-    if [ ! -x "${__kvar_prefix}/bin/brew" ]
-    then
-        unset -v __kvar_prefix
-        return 0
-    fi
-    _koopa_add_to_path_start "${__kvar_prefix}/bin"
-    [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
-        export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
-    [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
-        export HOMEBREW_INSTALL_CLEANUP=1
-    [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
-        export HOMEBREW_NO_ENV_HINTS=1
-    unset -v __kvar_prefix
-    return 0
-}
-
 _koopa_activate_julia() {
     [ -x "$(_koopa_bin_prefix)/julia" ] || return 0
     JULIA_DEPOT_PATH="$(_koopa_julia_packages_prefix)"
@@ -1968,6 +1949,24 @@ _koopa_macos_activate_cli_colors() {
 _koopa_macos_activate_egnyte() {
     _koopa_add_to_path_end "${HOME}/Library/Group Containers/\
 FELUD555VC.group.com.egnyte.DesktopApp/CLI"
+    return 0
+}
+
+_koopa_macos_activate_homebrew() {
+    __kvar_prefix="$(_koopa_homebrew_prefix)"
+    if [ ! -x "${__kvar_prefix}/bin/brew" ]
+    then
+        unset -v __kvar_prefix
+        return 0
+    fi
+    _koopa_add_to_path_start "${__kvar_prefix}/bin"
+    [ -z "${HOMEBREW_CLEANUP_MAX_AGE_DAYS:-}" ] && \
+        export HOMEBREW_CLEANUP_MAX_AGE_DAYS=30
+    [ -z "${HOMEBREW_INSTALL_CLEANUP:-}" ] && \
+        export HOMEBREW_INSTALL_CLEANUP=1
+    [ -z "${HOMEBREW_NO_ENV_HINTS:-}" ] && \
+        export HOMEBREW_NO_ENV_HINTS=1
+    unset -v __kvar_prefix
     return 0
 }
 

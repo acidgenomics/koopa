@@ -72,7 +72,6 @@ __koopa_activate_koopa() {
     _koopa_export_history || return 1
     _koopa_export_pager || return 1
     _koopa_activate_ca_certificates || return 1
-    _koopa_activate_homebrew || return 1
     _koopa_activate_ruby || return 1
     _koopa_activate_julia || return 1
     _koopa_activate_python || return 1
@@ -99,6 +98,7 @@ __koopa_activate_koopa() {
     then
         _koopa_macos_activate_cli_colors || return 1
         _koopa_macos_activate_egnyte || return 1
+        _koopa_macos_activate_homebrew || return 1
     fi
     _koopa_activate_micromamba || return 1
     _koopa_add_to_path_start \

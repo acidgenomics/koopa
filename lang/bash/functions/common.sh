@@ -11860,10 +11860,6 @@ ${dict['version2']}"
                     continue
                 fi
                 dep_install_args=()
-                if [[ "${bool['binary']}" -eq 1 ]]
-                then
-                    dep_install_args+=('--binary')
-                fi
                 if [[ "${bool['bootstrap']}" -eq 1 ]]
                 then
                     dep_install_args+=('--bootstrap')
