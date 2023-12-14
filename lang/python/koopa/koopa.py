@@ -4,8 +4,8 @@ Updated 2023-12-14.
 """
 
 from json import load
-from os import walk
-from os.path import abspath, dirname, isdir, isfile, join
+from os import scandir, walk
+from os.path import abspath, basename, dirname, isdir, isfile, join
 from platform import machine, system
 
 
@@ -55,7 +55,7 @@ def arch2() -> str:
 def flatten(items: list, seqtypes=(list, tuple)) -> list:
     """
     Flatten an arbitrarily nested list.
-    Updated 2023-03-25.
+    Updated 2023-12-14.
 
     See also:
     - https://stackoverflow.com/a/10824086
@@ -63,7 +63,7 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i : i + 1] = x
+                items[i: i + 1] = x
                 x = items[i]
     except IndexError:
         pass
@@ -90,16 +90,30 @@ def koopa_prefix() -> str:
     return prefix
 
 
-def list_subdirs(path: str) -> list:
+def list_subdirs(path: str, recursive=False, basename_only=False) -> list:
     """
     List subdirectories in a directory.
-    Updated 2023-12-11.
+    Updated 2023-12-14.
 
     See also:
     - https://stackoverflow.com/questions/141291/
+    - https://stackoverflow.com/questions/800197/
+    - https://www.techiedelight.com/list-all-subdirectories-in-directory-python/
+
+    Examples:
+    list_subdirs(path="/opt/koopa", recursive=False, basename_only=True)
     """
-    lst = next(walk(path))[1]
-    lst = lst.sort()
+    if recursive:
+        lst = []
+        for path, dirs, files in walk(path):
+            for subdir in dirs:
+                lst.append(join(path, subdir))
+    else:
+        lst = [val.path for val in scandir(path) if val.is_dir()]
+    if basename_only:
+        lst = [basename(val) for val in lst]
+        # Alternative approach using `map()`:
+        # > lst = list(map(basename, lst))
     return lst
 
 
