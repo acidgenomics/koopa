@@ -14,7 +14,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), "koopa"))
 
-from koopa import print_app_dependencies
+from koopa import print_app_deps
 
 parser = ArgumentParser()
 parser.add_argument("name")
@@ -26,7 +26,7 @@ def main(name: str) -> None:
     Main function.
     Updated 2023-12-14.
     """
-    print_app_dependencies(name)
+    print_app_deps(name)
     return None
 
 
