@@ -7,6 +7,7 @@ from json import load
 from os import scandir, walk
 from os.path import abspath, basename, dirname, isdir, isfile, join
 from platform import machine, system
+from re import sub
 
 
 def app_json_data() -> dict:
@@ -68,6 +69,16 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
     except IndexError:
         pass
     return items
+
+
+def kebab_case(string):
+    """
+    Kebab case.
+    Updated 2023-12-14.
+    """
+    string = sub("[^0-9a-zA-Z]+", "-", string)
+    string = string.lower()
+    return string
 
 
 def koopa_opt_prefix() -> str:
@@ -165,7 +176,7 @@ def shared_apps(mode: str) -> list:
     """
     if mode not in ["all_supported", "default_only"]:
         raise ValueError("Invalid mode.")
-    sys_dict = {"opt_prefix": koopa_opt_prefix(), "os_id": os_id()}
+    sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}
     json_data = app_json_data()
     app_names = json_data.keys()
     out = []
@@ -197,3 +208,13 @@ def shared_apps(mode: str) -> list:
                 continue
         out.append(val)
     return out
+
+
+def snake_case(string):
+    """
+    Snake case.
+    Updated 2023-12-14.
+    """
+    string = sub("[^0-9a-zA-Z]+", "_", string)
+    string = string.lower()
+    return string

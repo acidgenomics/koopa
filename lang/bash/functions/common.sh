@@ -15415,9 +15415,13 @@ koopa_install_shared_apps() {
     fi
     if [[ "${bool['all_supported']}" -eq 1 ]]
     then
-        readarray -t app_names <<< "$(koopa_shared_apps --mode='all-supported')"
+        readarray -t app_names <<< "$( \
+            koopa_shared_apps --mode='all-supported' \
+        )"
     else
-        readarray -t app_names <<< "$(koopa_shared_apps)"
+        readarray -t app_names <<< "$( \
+            koopa_shared_apps --mode-'default-only' \
+        )"
     fi
     for app_name in "${app_names[@]}"
     do
