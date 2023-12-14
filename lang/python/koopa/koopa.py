@@ -11,6 +11,110 @@ from re import compile, sub
 from subprocess import run
 
 
+# FIXME Rework this to allow only build_deps or hard deps.
+def get_deps(app_name: str, json_data: dict) -> list:
+    """
+    Get unique build dependencies and dependencies in an ordered list.
+    Updated 2023-10-16.
+
+    This makes list unique but keeps order intact, whereas usage of 'set()'
+    can rearrange.
+    """
+    if app_name not in json_data:
+        raise NameError("Unsupported app: '" + app_name + "'.")
+    sys_dict = {}
+    sys_dict["os_id"] = os_id()
+    build_deps = []
+    deps = []
+    if "build_dependencies" in json_data[app_name]:
+        build_deps = json_data[app_name]["build_dependencies"]
+        if isinstance(build_deps, dict):
+            if sys_dict["os_id"] in build_deps.keys():
+                build_deps = build_deps[sys_dict["os_id"]]
+            else:
+                build_deps = build_deps["noarch"]
+    if "dependencies" in json_data[app_name]:
+        deps = json_data[app_name]["dependencies"]
+        if isinstance(deps, dict):
+            if sys_dict["os_id"] in deps.keys():
+                deps = deps[sys_dict["os_id"]]
+            else:
+                deps = deps["noarch"]
+    all_deps = build_deps + deps
+    all_deps = list(dict.fromkeys(all_deps))
+    return all_deps
+
+
+# FIXME Rework this based on the app names.
+def print_apps(app_names: list, json_data: dict) -> bool:
+    """
+    Print relevant apps.
+    Updated 2023-10-16.
+    """
+    sys_dict = {}
+    sys_dict["os_id"] = os_id()
+    for val in app_names:
+        json = json_data[val]
+        keys = json.keys()
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
+        print(val)
+    return True
+
+
+def app_dependencies(name: str) -> list:
+    """
+    Get dependencies for an application.
+    Updated 2023-12-14.
+    """
+    json_data = import_app_json()
+    lst = []
+    keys = json_data.keys()
+    if app_name not in keys:
+        raise NameError("Unsupported app: '" + app_name + "'.")
+    # FIXME Need to import this as a function here.
+    deps = get_deps(app_name=app_name, json_data=json_data)
+    if len(deps) <= 0:
+        return True
+    i = 0
+    lst = []
+    lst.append(deps)
+    while i <= len(deps):
+        lvl1 = []
+        for lvl2 in lst[i]:
+            if isinstance(lvl2, list):
+                for lvl3 in lvl2:
+                    lvl4 = get_deps(app_name=lvl3, json_data=json_data)
+                    if len(lvl4) > 0:
+                        lvl1.append(lvl4)
+            else:
+                lvl3 = get_deps(app_name=lvl2, json_data=json_data)
+                if len(lvl3) > 0:
+                    lvl1.append(lvl3)
+        if len(lvl1) <= 0:
+            break
+        lst.append(lvl1)
+        i = i + 1
+    lst.reverse()
+    lst = flatten(lst)
+    lst = list(dict.fromkeys(lst))
+    # FIXME Need to add an app filtering step here.
+    # Refer to `print_apps()` in our `app-dependencies.py` script.
+    # > print_apps(app_names=lst, json_data=json_data)
+    return lst
+
+
 def arch() -> str:
     """
     Architecture string.
@@ -219,6 +323,16 @@ def platform() -> str:
     if string == "darwin":
         string = "macos"
     return string
+
+
+def print_app_dependencies(name: str) -> None:
+    """
+    Print app dependencies.
+    Updated 2023-12-14.
+    """
+    lst = app_dependencies(name=name)
+    print_list(lst)
+    return None
 
 
 def print_app_json(app_name: str, key: str) -> None:
