@@ -55,6 +55,7 @@ __koopa_activate_koopa() {
     # Activate koopa.
     # @note Updated 2023-05-12.
     # """
+    set -x # FIXME
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         _koopa_activate_path_helper || return 1
