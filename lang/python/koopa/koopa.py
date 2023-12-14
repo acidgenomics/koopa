@@ -13,21 +13,22 @@ from subprocess import run
 
 # FIXME This is from app-dependencies.py.
 # FIXME Rework this to allow only build_deps or hard deps.
-def get_deps(app_name: str, json_data: dict) -> list:
+def extract_app_deps(
+    app_name: str, json_data: dict, include_build_deps=True
+) -> list:
     """
     Get unique build dependencies and dependencies in an ordered list.
-    Updated 2023-10-16.
+    Updated 2023-12-14.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
     """
     if app_name not in json_data:
         raise NameError("Unsupported app: '" + app_name + "'.")
-    sys_dict = {}
-    sys_dict["os_id"] = os_id()
+    sys_dict = {"os_id": os_id()}
     build_deps = []
     deps = []
-    if "build_dependencies" in json_data[app_name]:
+    if include_build_deps and "build_dependencies" in json_data[app_name]:
         build_deps = json_data[app_name]["build_dependencies"]
         if isinstance(build_deps, dict):
             if sys_dict["os_id"] in build_deps.keys():
@@ -44,21 +45,6 @@ def get_deps(app_name: str, json_data: dict) -> list:
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
-
-
-# FIXME This is from app-reverse-dependencies.py
-def get_deps2(app_name: str, json_data: dict) -> list:
-    """
-    Get unique dependencies in an ordered list.
-    Updated 2023-05-11.
-    """
-    if app_name not in json_data:
-        raise NameError("Unsupported app: '" + app_name + "'.")
-    deps = []
-    if "dependencies" in json_data[app_name]:
-        deps = json_data[app_name]["dependencies"]
-    out = list(dict.fromkeys(deps))
-    return out
 
 
 # FIXME Rename this to filter_supported_apps.
@@ -132,34 +118,32 @@ def print_apps2(app_names: list, json_data: dict, mode: str) -> bool:
     return True
 
 
-
 def app_deps(name: str) -> list:
     """
     Get application dependencies.
     Updated 2023-12-14.
     """
     json_data = import_app_json()
-    lst = []
     keys = json_data.keys()
     if app_name not in keys:
         raise NameError("Unsupported app: '" + app_name + "'.")
-    # FIXME Need to import this as a function here.
-    deps = get_deps(app_name=app_name, json_data=json_data)
-    if len(deps) <= 0:
-        return True
-    i = 0
     lst = []
+    # FIXME Need to import this as a function here.
+    deps = extract_app_deps(app_name=app_name, json_data=json_data)
+    if len(deps) <= 0:
+        return lst
+    i = 0
     lst.append(deps)
     while i <= len(deps):
         lvl1 = []
         for lvl2 in lst[i]:
             if isinstance(lvl2, list):
                 for lvl3 in lvl2:
-                    lvl4 = get_deps(app_name=lvl3, json_data=json_data)
+                    lvl4 = extract_app_deps(app_name=lvl3, json_data=json_data)
                     if len(lvl4) > 0:
                         lvl1.append(lvl4)
             else:
-                lvl3 = get_deps(app_name=lvl2, json_data=json_data)
+                lvl3 = extract_app_deps(app_name=lvl2, json_data=json_data)
                 if len(lvl3) > 0:
                     lvl1.append(lvl3)
         if len(lvl1) <= 0:
@@ -190,7 +174,7 @@ def app_revdeps(app_name: str, json_file: str, mode: str) -> bool:
         raise NameError("Unsupported app: '" + app_name + "'.")
     all_deps = []
     for key in keys:
-        key_deps = get_deps2(app_name=key, json_data=json_data)
+        key_deps = extract_app_deps(app_name=key, json_data=json_data, include_build_deps=False)
         all_deps.append(key_deps)
     deps = []
     i = 0
