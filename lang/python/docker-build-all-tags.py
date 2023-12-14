@@ -64,7 +64,7 @@ def main(local: str, remote: str) -> bool:
     local = expanduser(local)
     local = abspath(local)
     assert isdir(local)
-    subdirs = list_subdirs(local)
+    subdirs = list_subdirs(local, recursive=False, basename_only=True)
     for subdir in subdirs:
         local2 = join(local, subdir)
         assert isdir(local2)
