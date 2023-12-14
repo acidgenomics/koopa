@@ -9,7 +9,7 @@ from os.path import abspath, basename, dirname, isdir, isfile, join
 from platform import machine, system
 
 
-def app_json_data() -> list:
+def app_json_data() -> dict:
     """
     Koopa app.json data.
     Updated 2023-12-14.
@@ -158,27 +158,21 @@ def print_shared_apps(mode: str) -> bool:
     return True
 
 
-# FIXME How to set option to pick between two settings here?
-# Like match.arg in R.
-
-# FIXME Need to rework the mode argparse here.
-
-def shared_apps(mode = ["all_supported", "default_only"]) -> list:
+def shared_apps(mode: str) -> list:
     """
     Return names of shared apps.
     Updated 2023-12-14.
     """
-    sys_dict = {}
-    sys_dict["opt_prefix"] = koopa_opt_prefix()
-    sys_dict["os_id"] = os_id()
+    if mode not in ["all_supported", "default_only"]:
+        raise ValueError("Invalid mode.")
+    sys_dict = {"opt_prefix": koopa_opt_prefix(), "os_id": os_id()}
     json_data = app_json_data()
     app_names = json_data.keys()
-    # FIXME Need to assign these into a list and return the list instead.
-    # FIXME Need to rework mode to use underscores here.
+    out = []
     for val in app_names:
         if mode != "default_only":
             if isdir(join(sys_dict["opt_prefix"], val)):
-                print(val)
+                out.append(val)
                 continue
         json = json_data[val]
         keys = json.keys()
@@ -201,5 +195,5 @@ def shared_apps(mode = ["all_supported", "default_only"]) -> list:
         if "user" in keys:
             if json["user"]:
                 continue
-        print(val)
-    return True
+        out.append(val)
+    return out
