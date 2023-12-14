@@ -1784,6 +1784,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
