@@ -42,7 +42,7 @@ def conda_bin_names(json_file: str) -> list:
     json_file="/opt/koopa/app/star/2.7.11a/libexec/conda-meta/star-2.7.11a-h0546b6b_0.json"
     conda_bin_names(json_file=json_file)
     """
-    json_data = import_json(file)
+    json_data = import_json(json_file)
     keys = json_data.keys()
     if "files" not in keys:
         raise ValueError("Invalid conda JSON file: '" + json_file + "'.")
