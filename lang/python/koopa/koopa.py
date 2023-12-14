@@ -134,6 +134,7 @@ def docker_build_all_tags(local: str, remote: str) -> bool:
     """
     local = abspath(expanduser(local))
     assert isdir(local)
+    # FIXME Put "latest" at the end, if it's defined.
     tags = list_subdirs(path=local, recursive=False, basename_only=True)
     tags = tags.sort()
     for tag in tags:
