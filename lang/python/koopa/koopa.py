@@ -52,6 +52,7 @@ def app_deps(name: str) -> list:
 # FIXME This is close but missing all supported apps...seems like mode isn't passing through?
 # This needs to handle any installed apps that may be non-default.
 
+
 def app_revdeps(name: str, mode: str) -> list:
     """
     Get reverse application dependencies.
@@ -241,7 +242,7 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     """
     if mode not in ["all_supported", "default_only"]:
         raise ValueError("Invalid mode.")
-    sys_dict = {"arch": arch2(), "opt_prefix": koopa_opt_prefix()}
+    sys_dict = {"arch": arch2(), "opt_prefix": koopa_opt_prefix(), "os_id": os_id()}
     lst = []
     for val in names:
         if mode != "default_only":
