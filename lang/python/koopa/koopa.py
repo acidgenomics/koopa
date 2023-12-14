@@ -64,7 +64,7 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
     try:
         for i, x in enumerate(items):
             while isinstance(x, seqtypes):
-                items[i: i + 1] = x
+                items[i : i + 1] = x
                 x = items[i]
     except IndexError:
         pass
