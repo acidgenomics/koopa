@@ -572,7 +572,7 @@ quote=01:warning=01;35"
 }
 
 _koopa_activate_homebrew() {
-    _koopa_is_macos || return 1
+    _koopa_is_macos || return 0
     __kvar_prefix="$(_koopa_homebrew_prefix)"
     if [ ! -x "${__kvar_prefix}/bin/brew" ]
     then
@@ -1810,10 +1810,6 @@ _koopa_is_interactive() {
         return 0
     fi
     if _koopa_is_tty
-    then
-        return 0
-    fi
-    if [ -n "${SSH_CONNECTION:-}" ] && [ -n "${TMUX:-}" ]
     then
         return 0
     fi

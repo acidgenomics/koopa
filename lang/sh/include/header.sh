@@ -53,9 +53,8 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa.
-    # @note Updated 2023-05-12.
+    # @note Updated 2023-12-14.
     # """
-    set -x # FIXME
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         _koopa_activate_path_helper || return 1
