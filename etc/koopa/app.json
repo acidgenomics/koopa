@@ -2117,10 +2117,10 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2023-08-10",
+    "date": "2023-12-14",
     "default": false,
     "url": ["https://golang.org/dl/"],
-    "version": "1.21.0"
+    "version": "1.21.5"
   },
   "google-cloud-sdk": {
     "aliases": {
@@ -5201,11 +5201,11 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-12-13",
+    "date": "2023-12-14",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.46"
+    "version": "0.0.47"
   },
   "rust": {
     "aliases": {
