@@ -19,7 +19,7 @@ parser.add_argument("--app-name", required=True)
 parser.add_argument("--key", required=True)
 args = parser.parse_args()
 
-path.insert(0, join(dirname(__file__), "koopa"))
+path.extend([join(dirname(__file__), "koopa")])
 
 from koopa import print_app_json
 
