@@ -11,113 +11,6 @@ from re import compile, sub
 from subprocess import run
 
 
-# FIXME This is from app-dependencies.py.
-# FIXME Rework this to allow only build_deps or hard deps.
-def extract_app_deps(
-    app_name: str, json_data: dict, include_build_deps=True
-) -> list:
-    """
-    Get unique build dependencies and dependencies in an ordered list.
-    Updated 2023-12-14.
-
-    This makes list unique but keeps order intact, whereas usage of 'set()'
-    can rearrange.
-    """
-    if app_name not in json_data:
-        raise NameError("Unsupported app: '" + app_name + "'.")
-    sys_dict = {"os_id": os_id()}
-    build_deps = []
-    deps = []
-    if include_build_deps and "build_dependencies" in json_data[app_name]:
-        build_deps = json_data[app_name]["build_dependencies"]
-        if isinstance(build_deps, dict):
-            if sys_dict["os_id"] in build_deps.keys():
-                build_deps = build_deps[sys_dict["os_id"]]
-            else:
-                build_deps = build_deps["noarch"]
-    if "dependencies" in json_data[app_name]:
-        deps = json_data[app_name]["dependencies"]
-        if isinstance(deps, dict):
-            if sys_dict["os_id"] in deps.keys():
-                deps = deps[sys_dict["os_id"]]
-            else:
-                deps = deps["noarch"]
-    all_deps = build_deps + deps
-    all_deps = list(dict.fromkeys(all_deps))
-    return all_deps
-
-
-# FIXME Rename this to filter_supported_apps.
-# FIXME This is from app-dependencies.py.
-# FIXME Rework this based on the app names.
-# FIXME Need to rework this function to make it more generally useful.
-def print_apps(app_names: list, json_data: dict) -> bool:
-    """
-    Print relevant apps.
-    Updated 2023-10-16.
-    """
-    sys_dict = {}
-    sys_dict["os_id"] = os_id()
-    for val in app_names:
-        json = json_data[val]
-        keys = json.keys()
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
-        print(val)
-    return True
-
-
-# This is specific to app-reverse-dependencies.
-# This is from app-reverse-dependencies.py
-def print_apps2(app_names: list, json_data: dict, mode: str) -> bool:
-    """
-    Print relevant apps.
-    Updated 2023-10-16.
-    """
-    sys_dict = {}
-    sys_dict["arch"] = arch2()
-    sys_dict["opt_prefix"] = koopa_opt_prefix()
-    for val in app_names:
-        if mode != "default-only":
-            if isdir(join(sys_dict["opt_prefix"], val)):
-                print(val)
-                continue
-        json = json_data[val]
-        keys = json.keys()
-        if "default" in keys and mode != "all-supported":
-            if not json["default"]:
-                continue
-        if "removed" in keys:
-            if json["removed"]:
-                continue
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
-        print(val)
-    return True
-
-
 def app_deps(name: str) -> list:
     """
     Get application dependencies.
@@ -125,11 +18,10 @@ def app_deps(name: str) -> list:
     """
     json_data = import_app_json()
     keys = json_data.keys()
-    if app_name not in keys:
-        raise NameError("Unsupported app: '" + app_name + "'.")
+    if name not in keys:
+        raise NameError("Unsupported app: '" + name + "'.")
     lst = []
-    # FIXME Need to import this as a function here.
-    deps = extract_app_deps(app_name=app_name, json_data=json_data)
+    deps = extract_app_deps(name=name, json_data=json_data)
     if len(deps) <= 0:
         return lst
     i = 0
@@ -139,11 +31,11 @@ def app_deps(name: str) -> list:
         for lvl2 in lst[i]:
             if isinstance(lvl2, list):
                 for lvl3 in lvl2:
-                    lvl4 = extract_app_deps(app_name=lvl3, json_data=json_data)
+                    lvl4 = extract_app_deps(name=lvl3, json_data=json_data)
                     if len(lvl4) > 0:
                         lvl1.append(lvl4)
             else:
-                lvl3 = extract_app_deps(app_name=lvl2, json_data=json_data)
+                lvl3 = extract_app_deps(name=lvl2, json_data=json_data)
                 if len(lvl3) > 0:
                     lvl1.append(lvl3)
         if len(lvl1) <= 0:
@@ -153,39 +45,39 @@ def app_deps(name: str) -> list:
     lst.reverse()
     lst = flatten(lst)
     lst = list(dict.fromkeys(lst))
-    # FIXME Need to add an app filtering step here.
-    # Refer to `print_apps()` in our `app-dependencies.py` script.
-    # > print_apps(app_names=lst, json_data=json_data)
+    lst = filter_app_deps(names=lst, json_data=json_data)
     return lst
 
 
-# FIXME Rename app_name.
-# FIXME Remove json_file.
-# FIXME Need to rework this.
-def app_revdeps(app_name: str, json_file: str, mode: str) -> bool:
+# FIXME This is close but missing all supported apps...seems like mode isn't passing through?
+# This needs to handle any installed apps that may be non-default.
+
+def app_revdeps(name: str, mode: str) -> list:
     """
     Get reverse application dependencies.
     Updated 2023-10-13.
     """
-    with open(json_file, encoding="utf-8") as con:
-        json_data = load(con)
+    json_data = import_app_json()
     keys = list(json_data.keys())
-    if app_name not in keys:
-        raise NameError("Unsupported app: '" + app_name + "'.")
+    if name not in keys:
+        raise NameError("Unsupported app: '" + name + "'.")
     all_deps = []
     for key in keys:
-        key_deps = extract_app_deps(app_name=key, json_data=json_data, include_build_deps=False)
+        key_deps = extract_app_deps(
+            name=key, json_data=json_data, include_build_deps=False
+        )
         all_deps.append(key_deps)
-    deps = []
+    lst = []
     i = 0
     while i < len(all_deps):
-        if app_name in all_deps[i]:
-            deps.append(keys[i])
+        if name in all_deps[i]:
+            lst.append(keys[i])
         i += 1
-    if len(deps) <= 0:
-        return True
-    print_apps2(app_names=deps, json_data=json_data, mode=mode)
-    return True
+    if len(lst) <= 0:
+        return lst
+    # FIXME We need to not filter any installed non-default apps.
+    lst = filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
+    return lst
 
 
 def arch() -> str:
@@ -279,6 +171,106 @@ def docker_build_tag(local: str, remote: str) -> bool:
         check=True,
     )
     return True
+
+
+def extract_app_deps(
+    name: str, json_data: dict, include_build_deps=True
+) -> list:
+    """
+    Extract unique build dependencies and dependencies in an ordered list.
+    Updated 2023-12-14.
+
+    This makes list unique but keeps order intact, whereas usage of 'set()'
+    can rearrange.
+    """
+    if name not in json_data:
+        raise NameError("Unsupported app: '" + name + "'.")
+    sys_dict = {"os_id": os_id()}
+    build_deps = []
+    deps = []
+    if include_build_deps and "build_dependencies" in json_data[name]:
+        build_deps = json_data[name]["build_dependencies"]
+        if isinstance(build_deps, dict):
+            if sys_dict["os_id"] in build_deps.keys():
+                build_deps = build_deps[sys_dict["os_id"]]
+            else:
+                build_deps = build_deps["noarch"]
+    if "dependencies" in json_data[name]:
+        deps = json_data[name]["dependencies"]
+        if isinstance(deps, dict):
+            if sys_dict["os_id"] in deps.keys():
+                deps = deps[sys_dict["os_id"]]
+            else:
+                deps = deps["noarch"]
+    all_deps = build_deps + deps
+    all_deps = list(dict.fromkeys(all_deps))
+    return all_deps
+
+
+def filter_app_deps(names: list, json_data: dict) -> list:
+    """
+    Filter supported app dependencies.
+    Updated 2023-12-14.
+    """
+    sys_dict = {"os_id": os_id()}
+    lst = []
+    for val in names:
+        json = json_data[val]
+        keys = json.keys()
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
+        lst.append(val)
+    return lst
+
+
+def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
+    """
+    Filter supported app reverse dependencies.
+    Updated 2023-12-14.
+    """
+    if mode not in ["all_supported", "default_only"]:
+        raise ValueError("Invalid mode.")
+    sys_dict = {"arch": arch2(), "opt_prefix": koopa_opt_prefix()}
+    lst = []
+    for val in names:
+        if mode != "default_only":
+            if isdir(join(sys_dict["opt_prefix"], val)):
+                lst.append(val)
+                continue
+        json = json_data[val]
+        keys = json.keys()
+        if "default" in keys and mode != "all_supported":
+            if not json["default"]:
+                continue
+        if "removed" in keys:
+            if json["removed"]:
+                continue
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"].keys():
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
+        lst.append(val)
+    return lst
 
 
 def flatten(items: list, seqtypes=(list, tuple)) -> list:
@@ -408,16 +400,16 @@ def print_app_deps(name: str) -> None:
     return None
 
 
-def print_app_json(app_name: str, key: str) -> None:
+def print_app_json(name: str, key: str) -> None:
     """
     Print values for an app.json key.
     Updated 2023-12-14.
     """
     json_data = import_app_json()
     keys = json_data.keys()
-    if app_name not in keys:
-        raise NameError("Unsupported app: '" + app_name + "'.")
-    app_dict = json_data[app_name]
+    if name not in keys:
+        raise NameError("Unsupported app: '" + name + "'.")
+    app_dict = json_data[name]
     if key not in app_dict.keys():
         raise ValueError("Invalid key: '" + key + "'.")
     value = app_dict[key]
@@ -479,9 +471,9 @@ def shared_apps(mode: str) -> list:
         raise ValueError("Invalid mode.")
     sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}
     json_data = import_app_json()
-    app_names = json_data.keys()
+    names = json_data.keys()
     out = []
-    for val in app_names:
+    for val in names:
         if mode != "default_only":
             if isdir(join(sys_dict["opt_prefix"], val)):
                 out.append(val)

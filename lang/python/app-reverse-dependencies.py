@@ -23,7 +23,7 @@ parser.add_argument(
     default="default-only",
     required=False,
 )
-parser.add_argument("app_name")
+parser.add_argument("name")
 args = parser.parse_args()
 args.mode = snake_case(args.mode)
 
