@@ -14,17 +14,16 @@ from sys import path, version_info
 
 path.extend([join(dirname(__file__), "koopa")])
 
-from koopa import print_shared_apps, snake_case
+from koopa import print_shared_apps
 
 parser = ArgumentParser()
 parser.add_argument(
     "--mode",
-    choices=["all-supported", "default-only"],
-    default="default-only",
+    choices=["all", "default"],
+    default="default",
     required=False,
 )
 args = parser.parse_args()
-args.mode = snake_case(args.mode)
 
 
 def main(mode: str) -> None:
