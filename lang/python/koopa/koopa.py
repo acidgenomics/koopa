@@ -5,7 +5,7 @@ Updated 2023-12-14.
 
 from json import load
 from os import scandir, walk
-from os.path import abspath, basename, dirname, isdir, isfile, join
+from os.path import abspath, basename, dirname, expanduser, isdir, isfile, join
 from platform import machine, system
 from re import sub
 
@@ -51,6 +51,53 @@ def arch2() -> str:
     if string == "x86_64":
         string = "amd64"
     return string
+
+
+def docker_build_all_tags(local: str, remote: str) -> bool:
+    """
+    Build all Docker tags.
+    Updated 2023-12-14.
+
+    Example:
+    local = "~/monorepo/docker/acidgenomics/koopa"
+    remote = "public.ecr.aws/acidgenomics/koopa"
+    main(local=local, remote=remote)
+    """
+    local = abspath(expanduser(local))
+    assert isdir(local)
+    subdirs = list_subdirs(path=local, recursive=False, basename_only=True)
+    for subdir in subdirs:
+        local2 = join(local, subdir)
+        assert isdir(local2)
+        remote2 = remote + ":" + subdir
+        docker_build_tag(local=local2, remote=remote2)
+    return True
+
+
+def docker_build_tag(local: str, remote: str) -> bool:
+    """
+    Build a Docker tag.
+    Updated 2023-12-11.
+
+    Examples:
+    local = "~/monorepo/docker/acidgenomics/koopa/ubuntu"
+    remote = "public.ecr.aws/acidgenomics/koopa:ubuntu"
+    build_tag(local=local, remote=remote)
+    """
+    run(
+        args=[
+            "koopa",
+            "app",
+            "docker",
+            "build",
+            "--local",
+            local,
+            "--remote",
+            remote,
+        ],
+        check=True,
+    )
+    return True
 
 
 def flatten(items: list, seqtypes=(list, tuple)) -> list:

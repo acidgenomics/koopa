@@ -27,13 +27,13 @@ args = parser.parse_args()
 args.mode = snake_case(args.mode)
 
 
-def main(mode: str) -> bool:
+def main(mode: str) -> None:
     """
     Main function.
     Updated 2023-12-14.
     """
     print_shared_apps(mode=mode)
-    return True
+    return None
 
 
 if __name__ == "__main__":
