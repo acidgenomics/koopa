@@ -2,10 +2,10 @@
 
 """
 Parse conda JSON metadata for files to link in 'bin'.
-Updated 2023-12-11.
+Updated 2023-12-14.
 
 Examples:
-./conda-bin.py \
+./conda-bin-names.py \
     /opt/koopa/opt/salmon/libexec/conda-meta/salmon-*.json
 """
 

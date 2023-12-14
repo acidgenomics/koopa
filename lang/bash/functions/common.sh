@@ -5685,9 +5685,9 @@ koopa_conda_activate_env() { # {{{1
     return 0
 }
 
-koopa_conda_bin() {
+koopa_conda_bin_names() {
     koopa_assert_has_args_eq "$#" 1
-    koopa_python_script 'conda-bin.py' "$@"
+    koopa_python_script 'conda-bin-names.py' "$@"
     return 0
 }
 
@@ -12499,7 +12499,9 @@ koopa_install_conda_package() {
             --type='f' \
     )"
     koopa_assert_is_file "${dict['json_file']}"
-    readarray -t bin_names <<< "$(koopa_conda_bin "${dict['json_file']}")"
+    readarray -t bin_names <<< "$( \
+        koopa_conda_bin_names "${dict['json_file']}" \
+    )"
     if koopa_is_array_non_empty "${bin_names[@]:-}"
     then
         for bin_name in "${bin_names[@]}"
