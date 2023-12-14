@@ -14,15 +14,17 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), "koopa"))
 
-from koopa import print_shared_apps
+from koopa import print_shared_apps, snake_case
 
 parser = ArgumentParser()
 parser.add_argument(
-    "--mode", choices=["all-supported", "default-only"], required=False
+    "--mode",
+    choices=["all-supported", "default-only"],
+    default="default-only",
+    required=False,
 )
 args = parser.parse_args()
-
-# FIXME Need to convert mode return to snake_case.
+args.mode = snake_case(args.mode)
 
 
 def main(mode: str) -> bool:
