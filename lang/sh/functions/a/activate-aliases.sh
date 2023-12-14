@@ -5,13 +5,10 @@ _koopa_activate_aliases() {
     # Activate (non-shell-specific) aliases.
     # @note Updated 2023-09-19.
     # """
-    echo 'FIXME HELLO THERE 1'
     _koopa_is_interactive || return 0
-    echo 'FIXME HELLO THERE 2'
     _koopa_activate_coreutils_aliases
     __kvar_bin_prefix="$(_koopa_bin_prefix)"
     __kvar_xdg_data_home="$(_koopa_xdg_data_home)"
-
     alias ......='cd ../../../../../'
     alias .....='cd ../../../../'
     alias ....='cd ../../../'
