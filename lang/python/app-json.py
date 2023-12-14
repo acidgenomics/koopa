@@ -36,4 +36,4 @@ def main(name: str, key: str) -> None:
 if __name__ == "__main__":
     if not version_info >= (3, 8):
         raise RuntimeError("Unsupported Python version.")
-    main(name=args.app_name, key=args.key)
+    main(name=args.name, key=args.key)
