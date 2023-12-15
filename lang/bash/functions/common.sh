@@ -19052,6 +19052,13 @@ koopa_locate_pylint() {
         "$@"
 }
 
+koopa_locate_pytest() {
+    koopa_locate_app \
+        --app-name='pytest' \
+        --bin-name='pytest' \
+        "$@"
+}
+
 koopa_locate_python3() {
     koopa_locate_python312 "$@"
 }
