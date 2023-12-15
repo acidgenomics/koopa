@@ -309,10 +309,7 @@
     "build_dependencies": ["gawk", "pkg-config", "xz"],
     "date": "2023-12-05",
     "default": false,
-    "dependencies": [
-      "gettext",
-      "openssl3"
-    ],
+    "dependencies": ["gettext", "openssl3"],
     "man1": ["axel.1"],
     "prune": true,
     "url": ["https://github.com/axel-download-accelerator/axel/"],
@@ -2892,7 +2889,9 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-11-27",
     "default": false,
-    "notes": ["LAPACK is written in Fortran, which is why we require system gfortran."],
+    "notes": [
+      "LAPACK is written in Fortran, which is why we require system gfortran."
+    ],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.12.0"
@@ -5497,7 +5496,12 @@
     "version": "1.12.0"
   },
   "sphinx": {
-    "bin": ["sphinx"],
+    "bin": [
+      "sphinx-apidoc",
+      "sphinx-autogen",
+      "sphinx-build",
+      "sphinx-quickstart"
+    ],
     "date": "2023-12-15",
     "dependencies": ["python3.12"],
     "url": [
