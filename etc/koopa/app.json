@@ -877,10 +877,10 @@
     },
     "bin": ["cheat"],
     "build_dependencies": ["go"],
-    "date": "2022-12-13",
+    "date": "2022-12-15",
     "default": false,
     "url": ["https://github.com/cheat/cheat/"],
-    "version": "4.4.1"
+    "version": "4.4.2"
   },
   "chemacs": {
     "date": "2023-09-13",
