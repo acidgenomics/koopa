@@ -4,15 +4,20 @@
 source "$(koopa header bash)"
 
 run_pytest_cov() {
-    local python_prefix
+    local -A app dict
+    app['pytest']="$(koopa_locate_pytest)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['python_prefix']="$(koopa_python_prefix)"
+    dict['module_prefix']="${dict['python_prefix']}/koopa"
+    koopa_assert_is_dir "${dict['python_prefix']}" "${dict['module_prefix']}"
     python_prefix="$(koopa_python_prefix)"
-    export PYTHONPATH="${python_prefix}/koopa"
-    pytest \
+    export PYTHONPATH="${dict['module_prefix']}"
+    "${app['pytest']}" \
         --cov='koopa' \
         --cov-report='term' \
         --cov-report='html' \
         --cov-fail-under=80 \
-        "$python_prefix"
+        "${dict['python_prefix']}"
     return 0
 }
 
