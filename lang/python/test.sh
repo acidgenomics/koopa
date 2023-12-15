@@ -10,7 +10,6 @@ run_pytest_cov() {
     dict['python_prefix']="$(koopa_python_prefix)"
     dict['module_prefix']="${dict['python_prefix']}/koopa"
     koopa_assert_is_dir "${dict['python_prefix']}" "${dict['module_prefix']}"
-    python_prefix="$(koopa_python_prefix)"
     export PYTHONPATH="${dict['module_prefix']}"
     "${app['pytest']}" \
         --cov='koopa' \
