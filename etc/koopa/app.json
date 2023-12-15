@@ -309,10 +309,7 @@
     "build_dependencies": ["gawk", "pkg-config", "xz"],
     "date": "2023-12-05",
     "default": false,
-    "dependencies": [
-      "gettext",
-      "openssl3"
-    ],
+    "dependencies": ["gettext", "openssl3"],
     "man1": ["axel.1"],
     "prune": true,
     "url": ["https://github.com/axel-download-accelerator/axel/"],
@@ -2892,7 +2889,9 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-11-27",
     "default": false,
-    "notes": ["LAPACK is written in Fortran, which is why we require system gfortran."],
+    "notes": [
+      "LAPACK is written in Fortran, which is why we require system gfortran."
+    ],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
     "version": "3.12.0"
@@ -4871,7 +4870,7 @@
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
-    "date": "2023-11-03",
+    "date": "2023-12-15",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4939,7 +4938,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "85467"
+    "version": "85688"
   },
   "r-gfortran": {
     "date": "2023-10-16",
@@ -5495,6 +5494,21 @@
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.12.0"
+  },
+  "sphinx": {
+    "bin": [
+      "sphinx-apidoc",
+      "sphinx-autogen",
+      "sphinx-build",
+      "sphinx-quickstart"
+    ],
+    "date": "2023-12-15",
+    "dependencies": ["python3.12"],
+    "url": [
+      "https://www.sphinx-doc.org/",
+      "https://github.com/sphinx-doc/sphinx/"
+    ],
+    "version": "7.2.6"
   },
   "sqlite": {
     "aliases": {
