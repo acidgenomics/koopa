@@ -14779,7 +14779,6 @@ koopa_install_pytaglib() {
 
 koopa_install_pytest() {
     koopa_install_app \
-        --installer='python-package' \
         --name='pytest' \
         "$@"
 }
@@ -15483,6 +15482,13 @@ koopa_install_sox() {
 koopa_install_spdlog() {
     koopa_install_app \
         --name='spdlog' \
+        "$@"
+}
+
+koopa_install_sphinx() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='sphinx' \
         "$@"
 }
 
@@ -19043,6 +19049,13 @@ koopa_locate_pylint() {
     koopa_locate_app \
         --app-name='pylint' \
         --bin-name='pylint' \
+        "$@"
+}
+
+koopa_locate_pytest() {
+    koopa_locate_app \
+        --app-name='pytest' \
+        --bin-name='pytest' \
         "$@"
 }
 
@@ -30301,6 +30314,12 @@ koopa_uninstall_sox() {
 koopa_uninstall_spdlog() {
     koopa_uninstall_app \
         --name='spdlog' \
+        "$@"
+}
+
+koopa_uninstall_sphinx() {
+    koopa_uninstall_app \
+        --name='sphinx' \
         "$@"
 }
 
