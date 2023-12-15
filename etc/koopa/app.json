@@ -5496,6 +5496,16 @@
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.12.0"
   },
+  "sphinx": {
+    "bin": ["sphinx"],
+    "date": "2023-12-15",
+    "dependencies": ["python3.12"],
+    "url": [
+      "https://www.sphinx-doc.org/",
+      "https://github.com/sphinx-doc/sphinx/"
+    ],
+    "version": "7.2.6"
+  },
   "sqlite": {
     "aliases": {
       "debian": "sqlite3",

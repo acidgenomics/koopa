@@ -15486,6 +15486,13 @@ koopa_install_spdlog() {
         "$@"
 }
 
+koopa_install_sphinx() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='sphinx' \
+        "$@"
+}
+
 koopa_install_sqlite() {
     koopa_install_app \
         --name='sqlite' \
@@ -30301,6 +30308,12 @@ koopa_uninstall_sox() {
 koopa_uninstall_spdlog() {
     koopa_uninstall_app \
         --name='spdlog' \
+        "$@"
+}
+
+koopa_uninstall_sphinx() {
+    koopa_uninstall_app \
+        --name='sphinx' \
         "$@"
 }
 
