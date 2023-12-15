@@ -14779,7 +14779,6 @@ koopa_install_pytaglib() {
 
 koopa_install_pytest() {
     koopa_install_app \
-        --installer='python-package' \
         --name='pytest' \
         "$@"
 }
