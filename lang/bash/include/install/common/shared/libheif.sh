@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This needs to bundle:
-# libde265
-
 main() {
     # """
     # Install libheif.
@@ -14,7 +11,12 @@ main() {
     # """
     local -A dict
     local -a deps
-    deps+=('libde256' 'libjpeg-turbo' 'libpng')
+    deps+=(
+        'zlib'
+        'libde265'
+        'libjpeg-turbo'
+        'libpng'
+    )
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
