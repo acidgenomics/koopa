@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add support for libjpeg-turbo and libpng.
-
 main() {
     # """
     # Install libheif.
