@@ -2673,13 +2673,14 @@
       "magick-script"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-17",
     "default": false,
     "dependencies": [
       "bzip2",
       "fontconfig",
       "freetype",
       "jpeg",
+      "libheif",
       "libpng",
       "libtiff",
       "libtool",
@@ -3158,7 +3159,6 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-12-17",
     "default": false,
-    "dependencies": ["libjpeg-turbo", "libpng"],
     "prune": false,
     "url": ["https://www.libde265.org/"],
     "version": "1.17.5"
