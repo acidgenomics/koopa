@@ -40,6 +40,7 @@ main() {
         'xz'
         'freetype'
         'jpeg'
+        'libde265'
         'libheif'
         'libpng'
         'libtiff'
