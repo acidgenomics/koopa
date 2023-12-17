@@ -67,6 +67,7 @@ main() {
     conf_args=(
         '--disable-static'
         "--prefix=${dict['prefix']}"
+        '--with-heic=yes'
         '--with-modules'
     )
     dict['url']="https://imagemagick.org/archive/releases/\
