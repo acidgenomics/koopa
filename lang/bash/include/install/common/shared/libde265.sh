@@ -14,14 +14,17 @@ main() {
     local -a conf_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    conf_args=(
-        '--disable-arm'
+    conf_args+=(
         '--disable-dec265'
         '--disable-dependency-tracking'
         '--disable-sherlock265'
         '--disable-silent-rules'
         "--prefix=${dict['prefix']}"
     )
+    if koopa_is_macos
+    then
+        conf_args+=('--disable-arm')
+    fi
     dict['url']="https://github.com/strukturag/libde265/releases/download/\
 v${dict['version']}/libde265-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
