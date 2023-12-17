@@ -3022,6 +3022,14 @@
     ],
     "version": "1.7.3"
   },
+  "libde265": {
+    "build_dependencies": ["make"],
+    "date": "2023-12-17",
+    "default": false,
+    "prune": false,
+    "url": ["https://github.com/strukturag/libde265/"],
+    "version": "1.0.14"
+  },
   "libdeflate": {
     "aliases": {
       "conda": true

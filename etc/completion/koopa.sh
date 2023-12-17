@@ -243,6 +243,7 @@ _koopa_complete() {
                         'libassuan'
                         'libcbor'
                         'libconfig'
+                        'libde265'
                         'libdeflate'
                         'libedit'
                         'libev'
