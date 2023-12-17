@@ -6453,6 +6453,31 @@ releases/current-production-release"
     return 0
 }
 
+koopa_convert_heic_to_jpeg() {
+    local -A app
+    local prefix
+    koopa_assert_has_args "$#"
+    app['magick']="$(koopa_locate_magick)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        local -a heic_files
+        readarray -t heic_files <<< "$( \
+            koopa_find \
+                --pattern='*.heic' \
+                --prefix="$prefix" \
+                --sort \
+                --type='f' \
+        )"
+        "${app['magick']}" mogrify \
+            -format 'jpg' \
+            -monitor \
+            "${heic_files[@]}"
+    done
+    return 0
+}
+
 koopa_datetime() {
     local -A app
     local str
@@ -18767,6 +18792,13 @@ koopa_locate_magick_core_config() {
     koopa_locate_app \
         --app-name='imagemagick' \
         --bin-name='MagickCore-config' \
+        "$@"
+}
+
+koopa_locate_magick() {
+    koopa_locate_app \
+        --app-name='imagemagick' \
+        --bin-name='magick' \
         "$@"
 }
 
