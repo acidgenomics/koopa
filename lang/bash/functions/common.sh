@@ -13797,6 +13797,12 @@ koopa_install_libconfig() {
         "$@"
 }
 
+koopa_install_libde265() {
+    koopa_install_app \
+        --name='libde265' \
+        "$@"
+}
+
 koopa_install_libdeflate() {
     koopa_install_app \
         --name='libdeflate' \
@@ -29350,6 +29356,12 @@ koopa_uninstall_libcbor() {
 koopa_uninstall_libconfig() {
     koopa_uninstall_app \
         --name='libconfig' \
+        "$@"
+}
+
+koopa_uninstall_libde265() {
+    koopa_uninstall_app \
+        --name='libde265' \
         "$@"
 }
 
