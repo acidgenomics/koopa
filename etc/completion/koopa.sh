@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-12-15.
+    # @note Updated 2023-12-17.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -253,6 +253,7 @@ _koopa_complete() {
                         'libgeotiff'
                         'libgit2'
                         'libgpg-error'
+                        'libheif'
                         'libiconv'
                         'libjpeg-turbo'
                         'libksba'

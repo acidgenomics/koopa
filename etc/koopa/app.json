@@ -3154,6 +3154,15 @@
     "url": ["https://gnupg.org/download/"],
     "version": "1.47"
   },
+  "libheif": {
+    "build_dependencies": ["cmake", "pkg-config"],
+    "date": "2023-12-17",
+    "default": false,
+    "dependencies": ["libjpeg-turbo", "libpng"],
+    "prune": false,
+    "url": ["https://www.libde265.org/"],
+    "version": "1.17.5"
+  },
   "libiconv": {
     "aliases": {
       "homebrew": true

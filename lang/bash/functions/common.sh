@@ -13857,6 +13857,12 @@ koopa_install_libgpg_error() {
         "$@"
 }
 
+koopa_install_libheif() {
+    koopa_install_app \
+        --name='libheif' \
+        "$@"
+}
+
 koopa_install_libiconv() {
     koopa_install_app \
         --name='libiconv' \
@@ -29404,6 +29410,12 @@ koopa_uninstall_libgit2() {
 koopa_uninstall_libgpg_error() {
     koopa_uninstall_app \
         --name='libgpg-error' \
+        "$@"
+}
+
+koopa_uninstall_libheif() {
+    koopa_uninstall_app \
+        --name='libheif' \
         "$@"
 }
 
