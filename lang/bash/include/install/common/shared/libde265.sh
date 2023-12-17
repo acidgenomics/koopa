@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is failing to build on macOS ARM currently.
-
 main() {
     # """
     # Install libde265.
@@ -9,15 +7,18 @@ main() {
     #
     # @seealso
     # - https://formulae.brew.sh/formula/libde265/
+    # - https://ports.macports.org/port/libde265/
+    # - https://github.com/strukturag/libde265/issues/284
     # """
     local -A dict
     local -a conf_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
-        # > '--disable-dec265'
-        # > '--disable-sherlock265'
+        '--disable-arm'
+        '--disable-dec265'
         '--disable-dependency-tracking'
+        '--disable-sherlock265'
         '--disable-silent-rules'
         "--prefix=${dict['prefix']}"
     )
