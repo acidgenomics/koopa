@@ -638,13 +638,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-04",
+    "date": "2023-12-17",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.30.0"
+    "version": "1.30.1"
   },
   "brotli": {
     "aliases": {
@@ -892,10 +892,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-11-29",
+    "date": "2023-12-17",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.42.1"
+    "version": "2.42.3"
   },
   "cli11": {
     "aliases": {
@@ -4360,11 +4360,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-12-13",
+    "date": "2023-12-17",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.10"
+    "version": "3.1.11"
   },
   "parallel": {
     "aliases": {
@@ -5218,11 +5218,11 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-12-14",
+    "date": "2023-12-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.47"
+    "version": "0.0.48"
   },
   "rust": {
     "aliases": {
