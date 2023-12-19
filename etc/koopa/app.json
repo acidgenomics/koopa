@@ -948,12 +948,12 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2023-11-16",
+    "date": "2023-12-19",
     "default": true,
     "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.10.0-1"
+    "version": "23.11.0-1"
   },
   "convmv": {
     "aliases": {
@@ -3945,23 +3945,23 @@
     },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
-    "date": "2023-10-02",
+    "date": "2023-12-19",
     "default": false,
     "dependencies": ["libxml2", "ncbi-vdb"],
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.8"
+    "version": "3.0.10"
   },
   "ncbi-vdb": {
     "aliases": {
       "bioconda": "ncbi-vdb"
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-10-09",
+    "date": "2023-12-19",
     "default": false,
     "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin", "zlib"],
     "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.0.8"
+    "version": "3.0.10"
   },
   "ncurses": {
     "aliases": {
