@@ -1537,10 +1537,10 @@
     },
     "bin": ["fd"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-23",
+    "date": "2023-12-19",
     "default": true,
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "8.7.1"
+    "version": "9.0.0"
   },
   "ffmpeg": {
     "aliases": {
@@ -5240,10 +5240,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-11-16",
+    "date": "2023-12-19",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.74.0"
+    "version": "1.74.1"
   },
   "salmon": {
     "bin": ["salmon"],
