@@ -6453,6 +6453,31 @@ releases/current-production-release"
     return 0
 }
 
+koopa_convert_heic_to_jpeg() {
+    local -A app
+    local prefix
+    koopa_assert_has_args "$#"
+    app['magick']="$(koopa_locate_magick)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_assert_is_dir "$@"
+    for prefix in "$@"
+    do
+        local -a heic_files
+        readarray -t heic_files <<< "$( \
+            koopa_find \
+                --pattern='*.heic' \
+                --prefix="$prefix" \
+                --sort \
+                --type='f' \
+        )"
+        "${app['magick']}" mogrify \
+            -format 'jpg' \
+            -monitor \
+            "${heic_files[@]}"
+    done
+    return 0
+}
+
 koopa_datetime() {
     local -A app
     local str
@@ -13797,6 +13822,12 @@ koopa_install_libconfig() {
         "$@"
 }
 
+koopa_install_libde265() {
+    koopa_install_app \
+        --name='libde265' \
+        "$@"
+}
+
 koopa_install_libdeflate() {
     koopa_install_app \
         --name='libdeflate' \
@@ -13854,6 +13885,12 @@ koopa_install_libgit2() {
 koopa_install_libgpg_error() {
     koopa_install_app \
         --name='libgpg-error' \
+        "$@"
+}
+
+koopa_install_libheif() {
+    koopa_install_app \
+        --name='libheif' \
         "$@"
 }
 
@@ -18755,6 +18792,13 @@ koopa_locate_magick_core_config() {
     koopa_locate_app \
         --app-name='imagemagick' \
         --bin-name='MagickCore-config' \
+        "$@"
+}
+
+koopa_locate_magick() {
+    koopa_locate_app \
+        --app-name='imagemagick' \
+        --bin-name='magick' \
         "$@"
 }
 
@@ -29347,6 +29391,12 @@ koopa_uninstall_libconfig() {
         "$@"
 }
 
+koopa_uninstall_libde265() {
+    koopa_uninstall_app \
+        --name='libde265' \
+        "$@"
+}
+
 koopa_uninstall_libdeflate() {
     koopa_uninstall_app \
         --name='libdeflate' \
@@ -29404,6 +29454,12 @@ koopa_uninstall_libgit2() {
 koopa_uninstall_libgpg_error() {
     koopa_uninstall_app \
         --name='libgpg-error' \
+        "$@"
+}
+
+koopa_uninstall_libheif() {
+    koopa_uninstall_app \
+        --name='libheif' \
         "$@"
 }
 
