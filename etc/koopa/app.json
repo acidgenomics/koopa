@@ -45,11 +45,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-11-06",
+    "date": "2023-12-18",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.7.3"
+    "version": "2.8.0"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -638,13 +638,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-04",
+    "date": "2023-12-17",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.30.0"
+    "version": "1.30.1"
   },
   "brotli": {
     "aliases": {
@@ -877,10 +877,10 @@
     },
     "bin": ["cheat"],
     "build_dependencies": ["go"],
-    "date": "2022-12-13",
+    "date": "2022-12-15",
     "default": false,
     "url": ["https://github.com/cheat/cheat/"],
-    "version": "4.4.1"
+    "version": "4.4.2"
   },
   "chemacs": {
     "date": "2023-09-13",
@@ -892,10 +892,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-11-29",
+    "date": "2023-12-17",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.42.1"
+    "version": "2.42.3"
   },
   "cli11": {
     "aliases": {
@@ -948,12 +948,12 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2023-11-16",
+    "date": "2023-12-19",
     "default": true,
     "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.10.0-1"
+    "version": "23.11.0-1"
   },
   "convmv": {
     "aliases": {
@@ -1537,10 +1537,10 @@
     },
     "bin": ["fd"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-23",
+    "date": "2023-12-19",
     "default": true,
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "8.7.1"
+    "version": "9.0.0"
   },
   "ffmpeg": {
     "aliases": {
@@ -1778,7 +1778,7 @@
       "conda": "gatk4"
     },
     "bin": ["gatk"],
-    "date": "2023-10-16",
+    "date": "2023-12-18",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1833,7 +1833,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-12-05",
+    "date": "2023-12-20",
     "default": false,
     "dependencies": [
       "bison",
@@ -1861,7 +1861,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.8.1"
+    "version": "3.8.2"
   },
   "gdbm": {
     "aliases": {
@@ -2673,13 +2673,14 @@
       "magick-script"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-17",
     "default": false,
     "dependencies": [
       "bzip2",
       "fontconfig",
       "freetype",
       "jpeg",
+      "libheif",
       "libpng",
       "libtiff",
       "libtool",
@@ -3021,6 +3022,14 @@
     ],
     "version": "1.7.3"
   },
+  "libde265": {
+    "build_dependencies": ["make"],
+    "date": "2023-12-20",
+    "default": false,
+    "prune": false,
+    "url": ["https://github.com/strukturag/libde265/"],
+    "version": "1.0.15"
+  },
   "libdeflate": {
     "aliases": {
       "conda": true
@@ -3153,6 +3162,14 @@
     "prune": false,
     "url": ["https://gnupg.org/download/"],
     "version": "1.47"
+  },
+  "libheif": {
+    "build_dependencies": ["cmake", "pkg-config"],
+    "date": "2023-12-20",
+    "default": false,
+    "prune": false,
+    "url": ["https://www.libde265.org/"],
+    "version": "1.17.6"
   },
   "libiconv": {
     "aliases": {
@@ -3864,11 +3881,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2023-11-17",
+    "date": "2023-12-18",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.18"
+    "version": "1.19"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -3928,23 +3945,23 @@
     },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
-    "date": "2023-10-02",
+    "date": "2023-12-19",
     "default": false,
     "dependencies": ["libxml2", "ncbi-vdb"],
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.0.8"
+    "version": "3.0.10"
   },
   "ncbi-vdb": {
     "aliases": {
       "bioconda": "ncbi-vdb"
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-10-09",
+    "date": "2023-12-19",
     "default": false,
     "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin", "zlib"],
     "prune": false,
     "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.0.8"
+    "version": "3.0.10"
   },
   "ncurses": {
     "aliases": {
@@ -4343,11 +4360,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-12-13",
+    "date": "2023-12-17",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.10"
+    "version": "3.1.11"
   },
   "parallel": {
     "aliases": {
@@ -5149,7 +5166,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2023-10-18",
+    "date": "2023-12-19",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5159,7 +5176,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2023.09.1+494"
+    "version": "2023.12.0+369"
   },
   "rsync": {
     "aliases": {
@@ -5201,11 +5218,11 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-12-14",
+    "date": "2023-12-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.47"
+    "version": "0.0.48"
   },
   "rust": {
     "aliases": {
@@ -5223,10 +5240,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-11-16",
+    "date": "2023-12-19",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.74.0"
+    "version": "1.74.1"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -5446,14 +5463,15 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-09-18",
+    "date": "2023-12-20",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakemake/",
+      "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "7.32.4"
+    "version": "8.0.0"
   },
   "sox": {
     "aliases": {
