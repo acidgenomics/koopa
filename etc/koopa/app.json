@@ -2054,7 +2054,7 @@
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/-/releases"
     ],
-    "version": "2.79.0"
+    "version": "2.78.3"
   },
   "gmp": {
     "aliases": {
@@ -3904,7 +3904,7 @@
   },
   "mypy": {
     "bin": ["dmypy", "mypy", "mypyc"],
-    "date": "2023-09-11",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -3912,7 +3912,7 @@
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "1.5.1"
+    "version": "1.8.0"
   },
   "nano": {
     "aliases": {
@@ -4023,7 +4023,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2023-09-29",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4035,19 +4035,19 @@
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.9.2"
+    "version": "0.9.4"
   },
   "nettle": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["gmp", "m4"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/nettle/?C=M;O=D"],
-    "version": "3.9"
+    "version": "3.9.1"
   },
   "nextflow": {
     "bin": ["nextflow"],
@@ -4087,10 +4087,10 @@
       "homebrew": true
     },
     "bin": ["nim"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://nim-lang.org/"],
-    "version": "2.0.0"
+    "version": "2.0.2"
   },
   "ninja": {
     "aliases": {
@@ -4098,7 +4098,7 @@
       "homebrew": true
     },
     "bin": ["ninja"],
-    "date": "2022-09-29",
+    "date": "2022-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
@@ -4192,11 +4192,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2022-08-30",
+    "date": "2023-12-22",
     "default": false,
     "prune": false,
     "url": ["https://github.com/kkos/oniguruma/"],
-    "version": "6.9.8"
+    "version": "6.9.9"
   },
   "ont-bonito": {
     "bin": ["bonito"],
@@ -4296,7 +4296,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-19",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "krb5",
@@ -4312,7 +4312,7 @@
       "https://github.com/openssh/openssh-portable",
       "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
     ],
-    "version": "9.5p1"
+    "version": "9.6p1"
   },
   "openssl3": {
     "aliases": {
@@ -4330,7 +4330,7 @@
     "version": "3.2.0"
   },
   "oracle-instant-client": {
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4340,7 +4340,7 @@
     },
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
-    "version": "21.11.0.0.0-1"
+    "version": "21.12.0.0.0-1"
   },
   "p7zip": {
     "bin": ["7z", "7za", "7zr"],
@@ -4376,14 +4376,14 @@
     },
     "bin": ["parallel"],
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": true,
     "man1": ["parallel.1"],
     "url": [
       "https://www.gnu.org/software/parallel/",
       "https://ftp.gnu.org/gnu/parallel/?C=M;O=D"
     ],
-    "version": "20230822"
+    "version": "20231122"
   },
   "password-store": {
     "aliases": {
@@ -4474,19 +4474,18 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2023-07-03",
+    "date": "2023-12-22",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.38.0"
+    "version": "5.38.2"
   },
   "picard": {
     "bin": ["picard"],
-    "date": "2023-09-12",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4498,7 +4497,7 @@
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "pigz": {
     "bin": ["pigz", "unpigz"],
@@ -4575,11 +4574,11 @@
     "version": "1.7.1"
   },
   "prelude-emacs": {
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://github.com/bbatsov/prelude/"],
     "user": true,
-    "version": "b57ff48e0985a6ef0f1ed9b279ec487c55982334"
+    "version": "ac5fd5c9e3b33c744c447471a119b3ea63c5e8e6"
   },
   "prettier": {
     "aliases": {
@@ -4658,14 +4657,14 @@
       "homebrew": true
     },
     "bin": ["pycodestyle"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
     ],
-    "version": "2.11.0"
+    "version": "2.11.1"
   },
   "pyenv": {
     "aliases": {
@@ -4981,7 +4980,7 @@
     "version": "12.2"
   },
   "r-xcode-openmp": {
-    "date": "2023-10-23",
+    "date": "2023-12-22",
     "default": true,
     "supported": {
       "linux-amd64": false,
@@ -4991,7 +4990,7 @@
     },
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
+    "version": "16.0.4"
   },
   "radian": {
     "bin": ["radian"],
