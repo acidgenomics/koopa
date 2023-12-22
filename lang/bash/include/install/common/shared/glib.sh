@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME This is now erroring on lack of Python packaging.
+# glib 2.79 update errors due to lack of Python packaging:
 # ../meson.build:2379:26: ERROR: python is missing modules: packaging
 
 main() {
