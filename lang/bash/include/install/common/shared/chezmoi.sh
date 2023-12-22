@@ -3,12 +3,12 @@
 main() {
     # """
     # Install chezmoi.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://www.chezmoi.io/
     # - https://github.com/twpayne/chezmoi
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/chezmoi.rb
+    # - https://formulae.brew.sh/formula/chezmoi
     # - https://ports.macports.org/port/chezmoi/details/
     # """
     local -A dict
@@ -16,7 +16,7 @@ main() {
     dict['ldflags']="-X main.version=${dict['version']}"
     dict['url']="https://github.com/twpayne/chezmoi/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_install_go_package \
+    koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --url="${dict['url']}" \
         --version="${dict['version']}"

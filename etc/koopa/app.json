@@ -299,7 +299,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.15.0"
+    "version": "2.15.3"
   },
   "axel": {
     "aliases": {
@@ -2296,14 +2296,14 @@
   "gseapy": {
     "bin": ["gseapy"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-12",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "gsl": {
     "aliases": {
@@ -3668,7 +3668,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2023-12-11",
+    "date": "2023-12-21",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3692,7 +3692,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.5"
+    "version": "1.5.6"
   },
   "man-db": {
     "aliases": {
@@ -4211,7 +4211,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-12-05",
+    "date": "2023-12-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4220,7 +4220,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4623,6 +4623,13 @@
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
     "version": "9.3.1"
+  },
+  "pup": {
+    "bin": ["pup"],
+    "build_dependencies": ["go"],
+    "date": "2023-12-22",
+    "url": ["https://github.com/ericchiang/pup"],
+    "version": "0.4.0"
   },
   "py-spy": {
     "aliases": {
