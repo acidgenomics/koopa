@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ICU4C.
-    # @note Updated 2023-04-10.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://unicode-org.github.io/icu/userguide/icu4c/build.html
@@ -29,6 +29,7 @@ main() {
     dict['url']="https://github.com/unicode-org/icu/releases/download/\
 release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
     koopa_download "${dict['url']}"
+    # NOTE This step can error due to broken 'LICENSE' symlink.
     koopa_extract "$(koopa_basename "${dict['url']}")" 'icu'
     koopa_cd 'icu/source'
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
