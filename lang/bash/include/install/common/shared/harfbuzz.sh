@@ -61,12 +61,9 @@ ${dict['version']}.tar.gz"
         '-Dintrospection=disabled'
         '-Dlibdir=lib'
     )
+    # FIXME Consider making this 'koopa_meson_ninja_build'.
     "${app['meson']}" setup "${meson_args[@]}" 'build'
-    "${app['ninja']}" -j "${dict['jobs']}" -C 'build'
-    "${app['ninja']}" -C 'build' install
-    # Alternate build approach using meson:
-    # > "${app['meson']}" compile -C 'build'
-    # > "${app['meson']}" test -C 'build'
-    # > "${app['meson']}" install -C 'build'
+    "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build'
+    "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build' install
     return 0
 }

@@ -825,7 +825,6 @@
       "libffi",
       "libpng",
       "libxml2",
-      "lzo",
       "pcre2",
       "pixman",
       "xorg-libpthread-stubs",
