@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME This is failing to detect lzo header correctly:
-# ../util/cairo-script/cairo-script-file.c
-# ../util/cairo-script/cairo-script-file.c:45:10: fatal error: 'lzo/lzo2a.h' file not found
-# #include <lzo/lzo2a.h>
-
 main() {
     # """
     # Install Cairo.
