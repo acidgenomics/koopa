@@ -812,7 +812,7 @@
       "fedora": "cairo-devel",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["meson", "ninja", "pkg-config"],
     "date": "2023-12-22",
     "default": false,
     "dependencies": [
@@ -821,6 +821,7 @@
       "freetype",
       "gettext",
       "glib",
+      "icu4c",
       "libffi",
       "libpng",
       "libxml2",
@@ -4994,11 +4995,11 @@
   },
   "radian": {
     "bin": ["radian"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://github.com/randy3k/radian/"],
-    "version": "0.6.7"
+    "version": "0.6.9"
   },
   "ranger-fm": {
     "aliases": {
