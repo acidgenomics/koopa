@@ -3,7 +3,11 @@
 koopa_install_go_package() {
     # """
     # Install a Go package.
-    # @note Updated 2023-08-29.
+    # @note Updated 2023-12-22.
+    #
+    # @seealso
+    # - https://pkg.go.dev/cmd/go#hdr-Module_maintenance
+    # - https://stackoverflow.com/questions/66518161/
     # """
     local -A app dict
     local -a build_args
@@ -97,6 +101,11 @@ koopa_install_go_package() {
             '--version')
                 dict['version']="${2:?}"
                 shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--mod-init')
+                bool['mod_init']=1
+                shift 1
                 ;;
             # Other ------------------------------------------------------------
             *)
