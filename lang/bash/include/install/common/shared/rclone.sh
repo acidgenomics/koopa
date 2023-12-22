@@ -22,7 +22,7 @@ v${dict['version']}.tar.gz"
         "github.com/rclone/rclone/fs.Version=v${dict['version']}"
     )
     dict['ldflags']="${ldflags[*]}"
-    koopa_install_go_package \
+    koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --name="${dict['name']}" \
         --prefix="${dict['prefix']}" \
