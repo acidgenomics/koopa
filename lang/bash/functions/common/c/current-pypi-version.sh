@@ -14,7 +14,7 @@ koopa_current_pypi_version() {
     # # 69.0.2
     # # 0.42.0
     # """
-    local -A app dict
+    local -A app
     local name
     koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"

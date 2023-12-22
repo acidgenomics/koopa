@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 
-koopa_current_github_release() {
+koopa_current_github_release_version() {
     # """
-    # Get the latest release version from GitHub.
+    # Get the current (latest) release version from GitHub.
     # @note Updated 2023-04-05.
     #
     # @examples
-    # > koopa_current_github_release 'acidgenomics/koopa'
+    # > koopa_current_github_release_version 'acidgenomics/koopa'
+    # # 0.14.0
     # """
     local -A app
     local repo
     koopa_assert_has_args "$#"
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
+    app['cut']="$(koopa_locate_cut)"
+    app['sed']="$(koopa_locate_sed)"
     koopa_assert_is_executable "${app[@]}"
     for repo in "$@"
     do
