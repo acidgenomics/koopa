@@ -6321,6 +6321,25 @@ koopa_cpu_count() {
     _koopa_cpu_count "$@"
 }
 
+koopa_current_aws_cli_version() {
+    local -A app
+    local string
+    koopa_assert_has_no_args "$#"
+    app['gh']="$(koopa_locate_gh)"
+    app['head']="$(koopa_locate_head)"
+    app['jq']="$(koopa_locate_jq)"
+    app['sort']="$(koopa_locate_sort)"
+    string="$( \
+        "${app['gh']}" api 'https://api.github.com/repos/aws/aws-cli/tags' \
+            | "${app['jq']}" --raw-output '.[].name' \
+            | "${app['sort']}" -nr \
+            | "${app['head']}" -n 1 \
+    )"
+    [[ -n "$string" ]] || return 1
+    koopa_print "$string"
+    return 0
+}
+
 koopa_current_bcbio_nextgen_version() {
     local -A app
     local str
@@ -18466,6 +18485,13 @@ koopa_locate_gfortran() {
             --bin-name='gfortran' \
             "$@"
     fi
+}
+
+koopa_locate_gh() {
+    koopa_locate_app \
+        --app-name='gh' \
+        --bin-name='gh' \
+        "$@"
 }
 
 koopa_locate_ghcup() {
