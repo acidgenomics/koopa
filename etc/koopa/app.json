@@ -1903,7 +1903,7 @@
     "build_dependencies": ["make"],
     "date": "2023-12-22",
     "default": false,
-    "dependencies": ["bison", "libiconv", "libunistring", "libxml2", "ncurses"],
+    "dependencies": ["bison", "icu4c", "libiconv", "libunistring", "libxml2", "ncurses"],
     "prune": false,
     "url": [
       "https://www.gnu.org/software/gettext/",
@@ -2954,7 +2954,7 @@
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
       "https://github.com/gwsw/less/",
-      "https://ftp.gnu.org/gnu/less/"
+      "https://ftp.gnu.org/gnu/less/?C=M;O=D"
     ],
     "version": "643"
   },
@@ -3068,8 +3068,8 @@
     "default": false,
     "prune": false,
     "url": [
-      "http://software.schmorp.de/pkg/libev.html",
-      "http://dist.schmorp.de/libev/"
+      "http://dist.schmorp.de/libev/",
+      "http://software.schmorp.de/pkg/libev.html"
     ],
     "version": "4.33"
   },
@@ -3105,23 +3105,23 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-05-26",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libcbor"],
-    "url": ["https://developers.yubico.com/libfido2/"],
-    "version": "1.13.0"
+    "url": ["https://developers.yubico.com/libfido2/Releases/"],
+    "version": "1.14.0"
   },
   "libgcrypt": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "patch", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.10.2"
+    "version": "1.10.3"
   },
   "libgeotiff": {
     "aliases": {
@@ -3226,12 +3226,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.6.4"
+    "version": "1.6.5"
   },
   "liblinear": {
     "aliases": {
@@ -3296,12 +3296,12 @@
   },
   "libsolv": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/openSUSE/libsolv/"],
-    "version": "0.7.24"
+    "version": "0.7.27"
   },
   "libssh2": {
     "aliases": {
@@ -3350,7 +3350,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libjpeg-turbo", "zstd"],
     "prune": false,
@@ -3358,7 +3358,7 @@
       "https://download.osgeo.org/libtiff/",
       "https://download.osgeo.org/libtiff/?C=M&O=D"
     ],
-    "version": "4.5.1"
+    "version": "4.6.0"
   },
   "libtool": {
     "aliases": {
@@ -3440,27 +3440,27 @@
     },
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["icu4c", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/-/releases"],
-    "version": "2.11.5"
+    "version": "2.12.3"
   },
   "libxslt": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-24",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["icu4c", "libgcrypt", "libxml2"],
     "url": [
       "http://xmlsoft.org/XSLT/",
       "https://gitlab.gnome.org/GNOME/libxslt/-/releases"
     ],
-    "version": "1.1.38"
+    "version": "1.1.39"
   },
   "libyaml": {
     "aliases": {
@@ -3505,7 +3505,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-11-14",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3520,9 +3520,8 @@
       "zlib",
       "zstd"
     ],
-    "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "17.0.5"
+    "version": "17.0.6"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3692,7 +3691,6 @@
       "yaml-cpp",
       "zstd"
     ],
-    "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -3707,7 +3705,7 @@
     },
     "bin": ["gman"],
     "build_dependencies": ["make"],
-    "date": "2023-02-08",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["gdbm", "libpipeline"],
     "man1": ["gman.1"],
@@ -3715,7 +3713,7 @@
       "https://man-db.nongnu.org/",
       "https://gitlab.com/man-db/man-db/-/releases"
     ],
-    "version": "2.11.2"
+    "version": "2.12.0"
   },
   "markdownlint-cli": {
     "aliases": {
@@ -3745,11 +3743,11 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.0.3"
+    "version": "2.1.0"
   },
   "meson": {
     "aliases": {
