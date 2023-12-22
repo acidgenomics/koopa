@@ -32,6 +32,11 @@ release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
     # NOTE This step can error due to broken 'LICENSE' symlink.
     koopa_extract "$(koopa_basename "${dict['url']}")" 'icu'
     koopa_cd 'icu/source'
+    # Broken LICENSE symlink causes make file fail for 74.2.
+    if [[ -f 'LICENSE' ]] && [[ ! -e 'LICENSE' ]]
+    then
+        koopa_rm 'LICENSE'
+    fi
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     koopa_make_build "${conf_args[@]}"
     return 0
