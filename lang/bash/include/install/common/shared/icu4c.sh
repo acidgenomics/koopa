@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Details regarding broken LICENSE file in 74.2 update:
+# - https://github.com/unicode-org/icu/pull/2749#issuecomment-1858570143
+# - https://github.com/Homebrew/homebrew-core/pull/153108
+
 main() {
     # """
     # Install ICU4C.
