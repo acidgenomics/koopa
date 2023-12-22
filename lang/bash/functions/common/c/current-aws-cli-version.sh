@@ -4,6 +4,8 @@ koopa_current_aws_cli_version() {
     # """
     # Get the current AWS CLI version.
     # @note Updated 2023-12-22.
+    #
+    # May need to authenticate first with 'gh auth login'.
     # """
     local -A app
     local string
