@@ -2296,14 +2296,14 @@
   "gseapy": {
     "bin": ["gseapy"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-12",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "gsl": {
     "aliases": {
@@ -4211,7 +4211,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-12-05",
+    "date": "2023-12-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4220,7 +4220,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
