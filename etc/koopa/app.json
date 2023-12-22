@@ -2129,7 +2129,7 @@
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "448.0.0"
+    "version": "458.0.1"
   },
   "googletest": {
     "aliases": {
