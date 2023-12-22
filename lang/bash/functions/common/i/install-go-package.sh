@@ -6,6 +6,7 @@ koopa_install_go_package() {
     # @note Updated 2023-12-22.
     #
     # @seealso
+    # - go help install
     # - https://pkg.go.dev/cmd/go#hdr-Module_maintenance
     # - https://stackoverflow.com/questions/66518161/
     # """
@@ -102,11 +103,6 @@ koopa_install_go_package() {
                 dict['version']="${2:?}"
                 shift 2
                 ;;
-            # Flags ------------------------------------------------------------
-            '--mod-init')
-                bool['mod_init']=1
-                shift 1
-                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -118,6 +114,7 @@ koopa_install_go_package() {
         '--prefix' "${dict['prefix']}" \
         '--url' "${dict['url']}" \
         '--version' "${dict['version']}"
+    export GOBIN="${dict['prefix']}/bin"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     [[ -z "${dict['bin_name']}" ]] && dict['bin_name']="${dict['name']}"
