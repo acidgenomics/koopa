@@ -3991,6 +3991,140 @@ koopa_brew_version() {
     return 0
 }
 
+koopa_build_go_package() {
+    local -A app dict
+    local -a build_args
+    koopa_assert_is_install_subshell
+    koopa_activate_app --build-only 'go'
+    app['go']="$(koopa_locate_go)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['bin_name']=''
+    dict['build_cmd']=''
+    dict['gocache']="$(koopa_init_dir 'gocache')"
+    dict['gopath']="$(koopa_init_dir 'go')"
+    dict['ldflags']=''
+    dict['mod']=''
+    dict['name']="${KOOPA_INSTALL_NAME:?}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['tags']=''
+    dict['url']=''
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--bin-name='*)
+                dict['bin_name']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-name')
+                dict['bin_name']="${2:?}"
+                shift 2
+                ;;
+            '--build-cmd='*)
+                dict['build_cmd']="${1#*=}"
+                shift 1
+                ;;
+            '--build-cmd')
+                dict['build_cmd']="${2:?}"
+                shift 2
+                ;;
+            '--ldflags='*)
+                dict['ldflags']="${1#*=}"
+                shift 1
+                ;;
+            '--ldflags')
+                dict['ldflags']="${2:?}"
+                shift 2
+                ;;
+            '--mod='*)
+                dict['mod']="${1#*=}"
+                shift 1
+                ;;
+            '--mod')
+                dict['mod']="${2:?}"
+                shift 2
+                ;;
+            '--name='*)
+                dict['name']="${1#*=}"
+                shift 1
+                ;;
+            '--name')
+                dict['name']="${2:?}"
+                shift 2
+                ;;
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
+                shift 1
+                ;;
+            '--prefix')
+                dict['prefix']="${2:?}"
+                shift 2
+                ;;
+            '--tags='*)
+                dict['tags']="${1#*=}"
+                shift 1
+                ;;
+            '--tags')
+                dict['tags']="${2:?}"
+                shift 2
+                ;;
+            '--url='*)
+                dict['url']="${1#*=}"
+                shift 1
+                ;;
+            '--url')
+                dict['url']="${2:?}"
+                shift 2
+                ;;
+            '--version='*)
+                dict['version']="${1#*=}"
+                shift 1
+                ;;
+            '--version')
+                dict['version']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set \
+        '--name' "${dict['name']}" \
+        '--prefix' "${dict['prefix']}" \
+        '--url' "${dict['url']}" \
+        '--version' "${dict['version']}"
+    export GOBIN="${dict['prefix']}/bin"
+    export GOCACHE="${dict['gocache']}"
+    export GOPATH="${dict['gopath']}"
+    [[ -z "${dict['bin_name']}" ]] && dict['bin_name']="${dict['name']}"
+    if [[ -n "${dict['ldflags']}" ]]
+    then
+        build_args+=('-ldflags' "${dict['ldflags']}")
+    fi
+    if [[ -n "${dict['mod']}" ]]
+    then
+        build_args+=('-mod' "${dict['mod']}")
+    fi
+    if [[ -n "${dict['tags']}" ]]
+    then
+        build_args+=('-tags' "${dict['tags']}")
+    fi
+    build_args+=('-o' "${dict['prefix']}/bin/${dict['bin_name']}")
+    if [[ -n "${dict['build_cmd']}" ]]
+    then
+        build_args+=("${dict['build_cmd']}")
+    fi
+    koopa_download "${dict['url']}"
+    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_cd 'src'
+    koopa_print_env
+    koopa_dl 'go build args' "${build_args[*]}"
+    "${app['go']}" build "${build_args[@]}"
+    koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
+    return 0
+}
+
 koopa_cache_functions_dir() {
     local -A app
     local prefix
@@ -6319,6 +6453,25 @@ koopa_cp() {
 
 koopa_cpu_count() {
     _koopa_cpu_count "$@"
+}
+
+koopa_current_aws_cli_version() {
+    local -A app
+    local string
+    koopa_assert_has_no_args "$#"
+    app['gh']="$(koopa_locate_gh)"
+    app['head']="$(koopa_locate_head)"
+    app['jq']="$(koopa_locate_jq)"
+    app['sort']="$(koopa_locate_sort)"
+    string="$( \
+        "${app['gh']}" api 'https://api.github.com/repos/aws/aws-cli/tags' \
+            | "${app['jq']}" --raw-output '.[].name' \
+            | "${app['sort']}" -nr \
+            | "${app['head']}" -n 1 \
+    )"
+    [[ -n "$string" ]] || return 1
+    koopa_print "$string"
+    return 0
 }
 
 koopa_current_bcbio_nextgen_version() {
@@ -13045,79 +13198,23 @@ koopa_install_gnutls() {
 
 koopa_install_go_package() {
     local -A app dict
-    local -a build_args
     koopa_assert_is_install_subshell
     koopa_activate_app --build-only 'go'
     app['go']="$(koopa_locate_go)"
     koopa_assert_is_executable "${app[@]}"
-    dict['bin_name']=''
-    dict['build_cmd']=''
     dict['gocache']="$(koopa_init_dir 'gocache')"
     dict['gopath']="$(koopa_init_dir 'go')"
-    dict['ldflags']=''
-    dict['mod']=''
-    dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['tags']=''
     dict['url']=''
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
     while (("$#"))
     do
         case "$1" in
-            '--bin-name='*)
-                dict['bin_name']="${1#*=}"
-                shift 1
-                ;;
-            '--bin-name')
-                dict['bin_name']="${2:?}"
-                shift 2
-                ;;
-            '--build-cmd='*)
-                dict['build_cmd']="${1#*=}"
-                shift 1
-                ;;
-            '--build-cmd')
-                dict['build_cmd']="${2:?}"
-                shift 2
-                ;;
-            '--ldflags='*)
-                dict['ldflags']="${1#*=}"
-                shift 1
-                ;;
-            '--ldflags')
-                dict['ldflags']="${2:?}"
-                shift 2
-                ;;
-            '--mod='*)
-                dict['mod']="${1#*=}"
-                shift 1
-                ;;
-            '--mod')
-                dict['mod']="${2:?}"
-                shift 2
-                ;;
-            '--name='*)
-                dict['name']="${1#*=}"
-                shift 1
-                ;;
-            '--name')
-                dict['name']="${2:?}"
-                shift 2
-                ;;
             '--prefix='*)
                 dict['prefix']="${1#*=}"
                 shift 1
                 ;;
             '--prefix')
                 dict['prefix']="${2:?}"
-                shift 2
-                ;;
-            '--tags='*)
-                dict['tags']="${1#*=}"
-                shift 1
-                ;;
-            '--tags')
-                dict['tags']="${2:?}"
                 shift 2
                 ;;
             '--url='*)
@@ -13128,50 +13225,19 @@ koopa_install_go_package() {
                 dict['url']="${2:?}"
                 shift 2
                 ;;
-            '--version='*)
-                dict['version']="${1#*=}"
-                shift 1
-                ;;
-            '--version')
-                dict['version']="${2:?}"
-                shift 2
-                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
         esac
     done
     koopa_assert_is_set \
-        '--name' "${dict['name']}" \
         '--prefix' "${dict['prefix']}" \
-        '--url' "${dict['url']}" \
-        '--version' "${dict['version']}"
+        '--url' "${dict['url']}"
+    export GOBIN="${dict['prefix']}/bin"
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
-    [[ -z "${dict['bin_name']}" ]] && dict['bin_name']="${dict['name']}"
-    if [[ -n "${dict['ldflags']}" ]]
-    then
-        build_args+=('-ldflags' "${dict['ldflags']}")
-    fi
-    if [[ -n "${dict['mod']}" ]]
-    then
-        build_args+=('-mod' "${dict['mod']}")
-    fi
-    if [[ -n "${dict['tags']}" ]]
-    then
-        build_args+=('-tags' "${dict['tags']}")
-    fi
-    build_args+=('-o' "${dict['prefix']}/bin/${dict['bin_name']}")
-    if [[ -n "${dict['build_cmd']}" ]]
-    then
-        build_args+=("${dict['build_cmd']}")
-    fi
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
     koopa_print_env
-    koopa_dl 'go build args' "${build_args[*]}"
-    "${app['go']}" build "${build_args[@]}"
+    "${app['go']}" install "${dict['url']}"
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }
@@ -14752,6 +14818,12 @@ koopa_install_procs() {
 koopa_install_proj() {
     koopa_install_app \
         --name='proj' \
+        "$@"
+}
+
+koopa_install_pup() {
+    koopa_install_app \
+        --name='pup' \
         "$@"
 }
 
@@ -18466,6 +18538,13 @@ koopa_locate_gfortran() {
             --bin-name='gfortran' \
             "$@"
     fi
+}
+
+koopa_locate_gh() {
+    koopa_locate_app \
+        --app-name='gh' \
+        --bin-name='gh' \
+        "$@"
 }
 
 koopa_locate_ghcup() {
@@ -30054,6 +30133,12 @@ koopa_uninstall_procs() {
 koopa_uninstall_proj() {
     koopa_uninstall_app \
         --name='proj' \
+        "$@"
+}
+
+koopa_uninstall_pup() {
+    koopa_uninstall_app \
+        --name='pup' \
         "$@"
 }
 

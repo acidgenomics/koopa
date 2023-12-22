@@ -3,7 +3,7 @@
 main() {
     # """
     # Install hugo.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-12-22.
     #
     # The '-s' and '-w' ldflags help shrink the size of the binary.
     # Refer to 'go tool link' for details.
@@ -21,7 +21,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/gohugoio/hugo/archive/\
 v${dict['version']}.tar.gz"
-    koopa_install_go_package \
+    koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --tags="${dict['tags']}" \
         --url="${dict['url']}"

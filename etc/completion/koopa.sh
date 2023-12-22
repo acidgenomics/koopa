@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-12-17.
+    # @note Updated 2023-12-22.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -352,6 +352,7 @@ _koopa_complete() {
                         'private'
                         'procs'
                         'proj'
+                        'pup'
                         'py-spy'
                         'pybind11'
                         'pycodestyle'

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install yq.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/yq.rb
@@ -13,6 +13,6 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/mikefarah/yq/archive/\
 v${dict['version']}.tar.gz"
-    koopa_install_go_package --url="${dict['url']}"
+    koopa_build_go_package --url="${dict['url']}"
     return 0
 }
