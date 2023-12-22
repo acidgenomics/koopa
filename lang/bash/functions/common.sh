@@ -20607,7 +20607,6 @@ koopa_mv() {
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
-        koopa_assert_is_existing "$@"
         dict['target_dir']="$( \
             koopa_strip_trailing_slash "${dict['target_dir']}" \
         )"
