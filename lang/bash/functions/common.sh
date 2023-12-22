@@ -13155,6 +13155,10 @@ koopa_install_go_package() {
                 dict['version']="${2:?}"
                 shift 2
                 ;;
+            '--mod-init')
+                bool['mod_init']=1
+                shift 1
+                ;;
             *)
                 koopa_invalid_arg "$1"
                 ;;
@@ -14771,6 +14775,12 @@ koopa_install_procs() {
 koopa_install_proj() {
     koopa_install_app \
         --name='proj' \
+        "$@"
+}
+
+koopa_install_pup() {
+    koopa_install_app \
+        --name='pup' \
         "$@"
 }
 
@@ -30080,6 +30090,12 @@ koopa_uninstall_procs() {
 koopa_uninstall_proj() {
     koopa_uninstall_app \
         --name='proj' \
+        "$@"
+}
+
+koopa_uninstall_pup() {
+    koopa_uninstall_app \
+        --name='pup' \
         "$@"
 }
 
