@@ -6576,27 +6576,78 @@ koopa_current_gencode_version() {
     return 0
 }
 
+koopa_current_github_release() {
+    local -A app
+    local repo
+    koopa_assert_has_args "$#"
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    for repo in "$@"
+    do
+        local -A dict
+        dict['repo']="$repo"
+        dict['url']="https://api.github.com/repos/${dict['repo']}/\
+releases/latest"
+        dict['version']="$( \
+            koopa_parse_url "${dict['url']}" \
+                | koopa_grep --pattern='"tag_name":' \
+                | "${app['cut']}" -d '"' -f '4' \
+                | "${app['sed']}" 's/^v//' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
+    return 0
+}
+
+koopa_current_github_tag() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 1
+    app['gh']="$(koopa_locate_gh)"
+    app['head']="$(koopa_locate_head)"
+    app['jq']="$(koopa_locate_jq)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['repo']="${1:?}"
+    dict['url']="https://api.github.com/repos/${dict['repo']}/tags"
+    dict['version']="$( \
+        "${app['gh']}" api "${dict['url']}" \
+            | "${app['jq']}" --raw-output '.[].name' \
+            | "${app['sort']}" -nr \
+            | "${app['head']}" -n 1 \
+    )"
+    [[ -n "${dict['version']}" ]] || return 1
+    koopa_print "${dict['version']}"
+    return 0
+}
+
 koopa_current_latch_version() {
     koopa_current_pypi_package_version 'latch'
     return 0
 }
 
-koopa_current_pypi_package_version() {
+koopa_current_pypi_version() {
     local -A app dict
-    koopa_assert_has_args_eq "$#" 1
+    local name
+    koopa_assert_has_args "$#"
     app['awk']="$(koopa_locate_awk)"
     app['curl']="$(koopa_locate_curl)"
     app['pup']="$(koopa_locate_pup)"
     koopa_assert_is_executable "${app[@]}"
-    dict['name']="${1:?}"
-    dict['url']="https://pypi.org/project/${dict['name']}/"
-    dict['version']="$( \
-        "${app['curl']}" -s "${dict['url']}" \
-            | "${app['pup']}" 'h1 text{}' \
-            | "${app['awk']}" 'NF {$1=$1; print $2}' \
-    )"
-    [[ -n "${dict['version']}" ]] || return 1
-    koopa_print "${dict['version']}"
+    for name in "$@"
+    do
+        local -A dict
+        dict['name']="$name"
+        dict['url']="https://pypi.org/project/${dict['name']}/"
+        dict['version']="$( \
+            "${app['curl']}" -s "${dict['url']}" \
+                | "${app['pup']}" 'h1 text{}' \
+                | "${app['awk']}" 'NF {$1=$1; print $2}' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
     return 0
 }
 
@@ -10167,31 +10218,6 @@ koopa_git_submodule_init() {
             done
         done
     )
-    return 0
-}
-
-koopa_github_latest_release() {
-    local -A app
-    local repo
-    koopa_assert_has_args "$#"
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    for repo in "$@"
-    do
-        local -A dict
-        dict['repo']="$repo"
-        dict['url']="https://api.github.com/repos/${dict['repo']}/\
-releases/latest"
-        dict['str']="$( \
-            koopa_parse_url "${dict['url']}" \
-                | koopa_grep --pattern='"tag_name":' \
-                | "${app['cut']}" -d '"' -f '4' \
-                | "${app['sed']}" 's/^v//' \
-        )"
-        [[ -n "${dict['str']}" ]] || return 1
-        koopa_print "${dict['str']}"
-    done
     return 0
 }
 
