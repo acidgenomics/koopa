@@ -2679,6 +2679,7 @@
       "bzip2",
       "fontconfig",
       "freetype",
+      "icu4c",
       "jpeg",
       "libheif",
       "libpng",
