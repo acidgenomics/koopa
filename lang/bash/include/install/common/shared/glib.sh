@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 
+# NOTE glib 2.79 update errors due to lack of Python packaging:
+# ../meson.build:2379:26: ERROR: python is missing modules: packaging
+
 main() {
     # """
     # Install glib.
-    # @note Updated 2023-08-31.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://developer.gnome.org/glib/
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/glib.rb
+    # - https://formulae.brew.sh/formula/glib
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/glib2.html
     # """
     local -A app dict

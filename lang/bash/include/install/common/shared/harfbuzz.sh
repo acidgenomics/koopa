@@ -18,19 +18,24 @@ main() {
     # - https://github.com/harfbuzz/harfbuzz/blob/main/.circleci/config.yml
     # """
     local -A app dict
-    koopa_activate_app --build-only \
-        'cmake' \
-        'meson' \
-        'ninja' \
+    local -a build_deps deps
+    build_deps=(
+        'cmake'
+        'meson'
+        'ninja'
         'pkg-config'
-    koopa_activate_app \
-        'zlib' \
-        'gettext' \
-        'libffi' \
-        'pcre2' \
-        'glib' \
-        'freetype' \
+    )
+    deps=(
+        'zlib'
+        'gettext'
+        'libffi'
+        'pcre2'
+        'glib'
+        'freetype'
         'icu4c'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['meson']="$(koopa_locate_meson)"
     app['ninja']="$(koopa_locate_ninja)"
     koopa_assert_is_executable "${app[@]}"
@@ -43,9 +48,9 @@ ${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     meson_args=(
-        "--prefix=${dict['prefix']}"
         '--buildtype=release'
         '--default-library=shared'
+        "--prefix=${dict['prefix']}"
         '-Dcairo=disabled'
         '-Dcoretext=enabled'
         '-Dfreetype=enabled'
@@ -56,11 +61,9 @@ ${dict['version']}.tar.gz"
         '-Dintrospection=disabled'
         '-Dlibdir=lib'
     )
+    # FIXME Consider making this 'koopa_meson_ninja_build'.
     "${app['meson']}" setup "${meson_args[@]}" 'build'
-    "${app['ninja']}" -j "${dict['jobs']}" -C 'build'
-    "${app['ninja']}" -C 'build' install
-    # Alternate build approach using meson:
-    # > "${app['meson']}" compile -C 'build'
-    # > "${app['meson']}" test -C 'build'
+    "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build'
+    "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build' install
     return 0
 }

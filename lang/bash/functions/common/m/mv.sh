@@ -3,7 +3,7 @@
 koopa_mv() {
     # """
     # Move a file or directory with GNU mv.
-    # @note Updated 2023-04-05.
+    # @note Updated 2023-12-22.
     #
     # The '-t' flag is not supported for BSD variant.
     #
@@ -81,7 +81,10 @@ koopa_mv() {
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
-        koopa_assert_is_existing "$@"
+        # NOTE This will error on broken symlinks, so disabling. Ran into this
+        # assert check when attempting to install ICU4C 74.2 with broken
+        # 'LICENSE' symlink.
+        # > koopa_assert_is_existing "$@"
         dict['target_dir']="$( \
             koopa_strip_trailing_slash "${dict['target_dir']}" \
         )"

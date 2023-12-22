@@ -21,6 +21,8 @@ main() {
         '13.0.0')
             dict['platform_version']='21'
             ;;
+        '16.0.4' | \
+        '15.0.7' | \
         '14.0.6' | \
         '12.0.1' | \
         '11.0.1')
@@ -51,4 +53,3 @@ ${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
         '/usr/local/lib/libomp.dylib'
     return 0
 }
-

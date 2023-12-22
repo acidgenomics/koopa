@@ -53,20 +53,21 @@
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://arrow.apache.org/"],
-    "version": "12.0.0"
+    "version": "14.0.2"
   },
   "apache-spark": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["pyspark", "sparkR"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12", "r", "temurin"],
     "url": ["https://spark.apache.org/"],
-    "version": "3.4.1"
+    "version": "3.5.0"
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
@@ -132,12 +133,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["hdf5", "zlib"],
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "12.6.3"
+    "version": "12.6.7"
   },
   "asdf": {
     "aliases": {
@@ -156,19 +157,20 @@
     },
     "bin": ["aspell"],
     "build_dependencies": ["make"],
-    "date": "2022-08-30",
+    "date": "2023-12-22",
     "default": false,
     "man1": ["aspell.1"],
     "url": ["http://aspell.net/"],
-    "version": "0.60.8"
+    "version": "0.60.8.1"
   },
   "aspera-connect": {
     "aliases": {
       "homebrew": "ibm-aspera-connect"
     },
     "bin": ["ascp"],
-    "date": "2023-10-17",
+    "date": "2023-12-22",
     "default": false,
+    "notes": ["IBM deletes old source versions."],
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -176,7 +178,7 @@
       "macos-arm64": false
     },
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.7.445"
+    "version": "4.2.8.540"
   },
   "attr": {
     "aliases": {
@@ -246,10 +248,9 @@
   },
   "autodock-vina": {
     "bin": ["vina"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -260,7 +261,7 @@
       "https://vina.scripps.edu/",
       "https://github.com/ccsb-scripps/AutoDock-Vina/"
     ],
-    "version": "1.2.3"
+    "version": "1.2.5"
   },
   "autoflake": {
     "bin": ["autoflake"],
@@ -320,18 +321,17 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-10-24",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.53.1"
+    "version": "2.55.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -372,25 +372,25 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["node"],
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "4.9.2"
+    "version": "5.0.0"
   },
   "bashcov": {
     "bin": ["bashcov"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["ruby"],
     "url": [
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
     ],
-    "version": "3.0.3"
+    "version": "3.1.1"
   },
   "bat": {
     "aliases": {
@@ -449,7 +449,7 @@
       "macos-arm64": false
     },
     "url": [
-      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html"
+      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
     ],
     "version": "2.20"
   },
@@ -515,17 +515,18 @@
     "version": "1.0"
   },
   "bioconda-utils": {
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "notes": ["This is hanging on macOS currently."],
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
+      "macos-amd64": false,
       "macos-arm64": false
     },
     "url": ["https://github.com/bioconda/bioconda-utils/"],
-    "version": "2.4.0"
+    "version": "2.11.1"
   },
   "bison": {
     "aliases": {
@@ -557,7 +558,7 @@
   },
   "blast": {
     "bin": ["blastn", "blastp"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -570,7 +571,7 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.14.1"
+    "version": "2.15.0"
   },
   "boost": {
     "aliases": {
@@ -586,12 +587,12 @@
       ],
       "homebrew": true
     },
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.boost.org/"],
-    "version": "1.83.0"
+    "version": "1.84.0"
   },
   "bottom": {
     "aliases": {
@@ -661,7 +662,7 @@
   },
   "bustools": {
     "bin": ["bustools"],
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -675,7 +676,7 @@
       "https://github.com/BUStools/bustools/",
       "https://bioconda.github.io/recipes/bustools/README.html"
     ],
-    "version": "0.43.0"
+    "version": "0.43.1"
   },
   "byobu": {
     "bin": [
@@ -785,22 +786,22 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "prune": false,
     "url": ["https://c-ares.org/"],
-    "version": "1.19.1"
+    "version": "1.24.0"
   },
   "ca-certificates": {
     "aliases": {
       "debian": true,
       "homebrew": true
     },
-    "date": "2023-08-25",
+    "date": "2023-12-22",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2023-08-22"
+    "version": "2023-12-12"
   },
   "cairo": {
     "aliases": {
@@ -808,8 +809,8 @@
       "fedora": "cairo-devel",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-26",
+    "build_dependencies": ["meson", "ninja", "pkg-config"],
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "expat",
@@ -817,10 +818,10 @@
       "freetype",
       "gettext",
       "glib",
+      "icu4c",
       "libffi",
       "libpng",
       "libxml2",
-      "lzo",
       "pcre2",
       "pixman",
       "xorg-libpthread-stubs",
@@ -836,11 +837,11 @@
     ],
     "prune": false,
     "url": [
-      "https://www.cairographics.org/releases/",
+      "https://www.cairographics.org/releases/?C=M;O=D",
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.16.0"
+    "version": "1.18.0"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -909,7 +910,7 @@
     "version": "2.3.2"
   },
   "cloudbiolinux": {
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -918,7 +919,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
-    "version": "39eb5ac3d45654404d703ffb450a67947458df37"
+    "version": "cd1b727402e20f3b2c98a9bd116724ebdde83181"
   },
   "cmake": {
     "aliases": {
@@ -928,12 +929,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-10-06",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.27.7"
+    "version": "3.28.1"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -948,12 +949,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2023-12-19",
+    "date": "2023-12-22",
     "default": true,
-    "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.11.0-1"
+    "version": "23.11.0-2"
   },
   "convmv": {
     "aliases": {
@@ -1249,13 +1249,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-11",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.4.0"
+    "version": "8.5.0"
   },
   "dash": {
     "aliases": {
@@ -1275,7 +1275,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2023-10-17",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1288,7 +1288,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.3"
+    "version": "3.5.4"
   },
   "delta": {
     "aliases": {
@@ -1333,18 +1333,18 @@
     "version": "0.8.0"
   },
   "doom-emacs": {
-    "date": "2023-09-13",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
+    "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2023-12-07",
+    "date": "2023-12-22",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "a15641daf1b25a58e26677d18d8fb3e75e4876a0"
+    "version": "cc7ffe863b29cc560e08be6a0260aee49a646273"
   },
   "du-dust": {
     "aliases": {
@@ -1374,7 +1374,7 @@
     "prune": false,
     "url": [
       "https://www.gnu.org/software/ed/ed.html",
-      "http://ftpmirror.gnu.org/ed/"
+      "http://mirror.rit.edu/gnu/ed/?C=M;O=D"
     ],
     "version": "1.19"
   },
@@ -1398,7 +1398,7 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bzip2", "xz", "zlib", "zstd"],
     "prune": false,
@@ -1409,7 +1409,7 @@
       "macos-arm64": false
     },
     "url": ["https://fedorahosted.org/elfutils/"],
-    "version": "0.189"
+    "version": "0.190"
   },
   "emacs": {
     "aliases": {
@@ -1484,6 +1484,7 @@
     "default": false,
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
+    "outdated": true,
     "url": [
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
@@ -1519,7 +1520,7 @@
   },
   "fastqc": {
     "bin": ["fastqc"],
-    "date": "2023-10-16",
+    "date": "2023-1016",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1548,12 +1549,12 @@
     },
     "bin": ["ffmpeg", "ffprobe"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-07",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["lame"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
-    "version": "6.0"
+    "version": "6.1"
   },
   "ffq": {
     "bin": ["ffq"],
@@ -1663,7 +1664,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-17",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "freetype",
@@ -1680,7 +1681,7 @@
     ],
     "prune": false,
     "url": ["https://www.fltk.org/"],
-    "version": "1.3.8"
+    "version": "1.3.9"
   },
   "fmt": {
     "aliases": {
@@ -1800,13 +1801,13 @@
     },
     "bin": ["awk", "gawk"],
     "build_dependencies": ["make"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["gettext", "mpfr", "readline"],
     "man1": ["awk.1", "gawk.1"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/?C=M;O=D"],
-    "version": "5.2.2"
+    "version": "5.3.0"
   },
   "gcc": {
     "aliases": {
@@ -1896,15 +1897,15 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
-    "dependencies": ["bison", "libiconv", "libunistring", "libxml2", "ncurses"],
+    "dependencies": ["bison", "icu4c", "libiconv", "libunistring", "libxml2", "ncurses"],
     "prune": false,
     "url": [
       "https://www.gnu.org/software/gettext/",
       "https://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
     ],
-    "version": "0.22"
+    "version": "0.22.4"
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
@@ -1994,10 +1995,10 @@
     },
     "bin": ["git-lfs"],
     "build_dependencies": ["go", "make"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://git-lfs.github.com/"],
-    "version": "3.4.0"
+    "version": "3.4.1"
   },
   "gitui": {
     "aliases": {
@@ -2005,28 +2006,27 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-12",
+    "date": "2023-12-22",
     "default": false,
-    "outdated": true,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.24.2"
+    "version": "0.24.3"
   },
   "glances": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-05-19",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.4.0.2"
+    "version": "3.4.0.3"
   },
   "glib": {
     "aliases": {
@@ -2041,7 +2041,7 @@
       "pkg-config",
       "python3.12"
     ],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libffi", "pcre2", "zlib"],
     "prune": false,
@@ -2049,7 +2049,7 @@
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/-/releases"
     ],
-    "version": "2.76.5"
+    "version": "2.78.3"
   },
   "gmp": {
     "aliases": {
@@ -2102,12 +2102,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
     "prune": false,
     "url": ["https://www.gnutls.org/"],
-    "version": "3.8.1"
+    "version": "3.8.2"
   },
   "go": {
     "aliases": {
@@ -2125,11 +2125,11 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-10-02",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "448.0.0"
+    "version": "458.0.1"
   },
   "googletest": {
     "aliases": {
@@ -2162,7 +2162,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["expat"],
     "prune": false,
@@ -2170,7 +2170,7 @@
       "https://www.graphviz.org/download/source/",
       "https://gitlab.com/graphviz/graphviz/-/releases"
     ],
-    "version": "8.1.0"
+    "version": "9.0.0"
   },
   "grep": {
     "aliases": {
@@ -2561,7 +2561,7 @@
   },
   "htseq": {
     "bin": ["htseq-count"],
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -2575,12 +2575,12 @@
       "https://github.com/htseq/htseq/",
       "https://bioconda.github.io/recipes/htseq/README.html"
     ],
-    "version": "2.0.3"
+    "version": "2.0.4"
   },
   "htslib": {
     "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2023-07-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
@@ -2589,7 +2589,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.18"
+    "version": "1.19"
   },
   "httpie": {
     "aliases": {
@@ -2641,7 +2641,7 @@
       "uconv"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "man1": [
       "derb.1",
@@ -2658,7 +2658,7 @@
     ],
     "prune": false,
     "url": ["https://icu.unicode.org/"],
-    "version": "73.2"
+    "version": "74.2"
   },
   "imagemagick": {
     "aliases": {
@@ -2673,7 +2673,7 @@
       "magick-script"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-17",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -2712,18 +2712,18 @@
     ],
     "prune": false,
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.1-15"
+    "version": "7.1.1-23"
   },
   "ipython": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["ipython"],
-    "date": "2023-10-02",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "8.16.1"
+    "version": "8.19.0"
   },
   "isl": {
     "aliases": {
@@ -2949,7 +2949,7 @@
     "url": [
       "https://www.greenwoodsoftware.com/less/index.html",
       "https://github.com/gwsw/less/",
-      "https://ftp.gnu.org/gnu/less/"
+      "https://ftp.gnu.org/gnu/less/?C=M;O=D"
     ],
     "version": "643"
   },
@@ -3063,8 +3063,8 @@
     "default": false,
     "prune": false,
     "url": [
-      "http://software.schmorp.de/pkg/libev.html",
-      "http://dist.schmorp.de/libev/"
+      "http://dist.schmorp.de/libev/",
+      "http://software.schmorp.de/pkg/libev.html"
     ],
     "version": "4.33"
   },
@@ -3100,23 +3100,23 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-05-26",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libcbor"],
-    "url": ["https://developers.yubico.com/libfido2/"],
-    "version": "1.13.0"
+    "url": ["https://developers.yubico.com/libfido2/Releases/"],
+    "version": "1.14.0"
   },
   "libgcrypt": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "patch", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.10.2"
+    "version": "1.10.3"
   },
   "libgeotiff": {
     "aliases": {
@@ -3221,12 +3221,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.6.4"
+    "version": "1.6.5"
   },
   "liblinear": {
     "aliases": {
@@ -3291,12 +3291,12 @@
   },
   "libsolv": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/openSUSE/libsolv/"],
-    "version": "0.7.24"
+    "version": "0.7.27"
   },
   "libssh2": {
     "aliases": {
@@ -3345,7 +3345,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libjpeg-turbo", "zstd"],
     "prune": false,
@@ -3353,7 +3353,7 @@
       "https://download.osgeo.org/libtiff/",
       "https://download.osgeo.org/libtiff/?C=M&O=D"
     ],
-    "version": "4.5.1"
+    "version": "4.6.0"
   },
   "libtool": {
     "aliases": {
@@ -3435,27 +3435,27 @@
     },
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["icu4c", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/-/releases"],
-    "version": "2.11.5"
+    "version": "2.12.3"
   },
   "libxslt": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-24",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["icu4c", "libgcrypt", "libxml2"],
     "url": [
       "http://xmlsoft.org/XSLT/",
       "https://gitlab.gnome.org/GNOME/libxslt/-/releases"
     ],
-    "version": "1.1.38"
+    "version": "1.1.39"
   },
   "libyaml": {
     "aliases": {
@@ -3500,7 +3500,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2023-11-14",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3515,9 +3515,8 @@
       "zlib",
       "zstd"
     ],
-    "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "17.0.5"
+    "version": "17.0.6"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3687,7 +3686,6 @@
       "yaml-cpp",
       "zstd"
     ],
-    "notes": ["Seeing build issues on Ubuntu 20 (Latch Pod)."],
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -3702,7 +3700,7 @@
     },
     "bin": ["gman"],
     "build_dependencies": ["make"],
-    "date": "2023-02-08",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["gdbm", "libpipeline"],
     "man1": ["gman.1"],
@@ -3710,7 +3708,7 @@
       "https://man-db.nongnu.org/",
       "https://gitlab.com/man-db/man-db/-/releases"
     ],
-    "version": "2.11.2"
+    "version": "2.12.0"
   },
   "markdownlint-cli": {
     "aliases": {
@@ -3740,11 +3738,11 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.0.3"
+    "version": "2.1.0"
   },
   "meson": {
     "aliases": {
@@ -3901,7 +3899,7 @@
   },
   "mypy": {
     "bin": ["dmypy", "mypy", "mypyc"],
-    "date": "2023-09-11",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -3909,7 +3907,7 @@
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "1.5.1"
+    "version": "1.8.0"
   },
   "nano": {
     "aliases": {
@@ -4020,7 +4018,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2023-09-29",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4032,19 +4030,19 @@
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.9.2"
+    "version": "0.9.4"
   },
   "nettle": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["gmp", "m4"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/nettle/?C=M;O=D"],
-    "version": "3.9"
+    "version": "3.9.1"
   },
   "nextflow": {
     "bin": ["nextflow"],
@@ -4084,10 +4082,10 @@
       "homebrew": true
     },
     "bin": ["nim"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://nim-lang.org/"],
-    "version": "2.0.0"
+    "version": "2.0.2"
   },
   "ninja": {
     "aliases": {
@@ -4095,7 +4093,7 @@
       "homebrew": true
     },
     "bin": ["ninja"],
-    "date": "2022-09-29",
+    "date": "2022-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
@@ -4189,11 +4187,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2022-08-30",
+    "date": "2023-12-22",
     "default": false,
     "prune": false,
     "url": ["https://github.com/kkos/oniguruma/"],
-    "version": "6.9.8"
+    "version": "6.9.9"
   },
   "ont-bonito": {
     "bin": ["bonito"],
@@ -4293,7 +4291,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-19",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "krb5",
@@ -4309,7 +4307,7 @@
       "https://github.com/openssh/openssh-portable",
       "https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/"
     ],
-    "version": "9.5p1"
+    "version": "9.6p1"
   },
   "openssl3": {
     "aliases": {
@@ -4327,7 +4325,7 @@
     "version": "3.2.0"
   },
   "oracle-instant-client": {
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4337,7 +4335,7 @@
     },
     "system": true,
     "url": ["https://www.oracle.com/database/technologies/instant-client.html"],
-    "version": "21.11.0.0.0-1"
+    "version": "21.12.0.0.0-1"
   },
   "p7zip": {
     "bin": ["7z", "7za", "7zr"],
@@ -4373,14 +4371,14 @@
     },
     "bin": ["parallel"],
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": true,
     "man1": ["parallel.1"],
     "url": [
       "https://www.gnu.org/software/parallel/",
       "https://ftp.gnu.org/gnu/parallel/?C=M;O=D"
     ],
-    "version": "20230822"
+    "version": "20231122"
   },
   "password-store": {
     "aliases": {
@@ -4471,19 +4469,18 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2023-07-03",
+    "date": "2023-12-22",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.38.0"
+    "version": "5.38.2"
   },
   "picard": {
     "bin": ["picard"],
-    "date": "2023-09-12",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4495,7 +4492,7 @@
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "pigz": {
     "bin": ["pigz", "unpigz"],
@@ -4572,11 +4569,11 @@
     "version": "1.7.1"
   },
   "prelude-emacs": {
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://github.com/bbatsov/prelude/"],
     "user": true,
-    "version": "b57ff48e0985a6ef0f1ed9b279ec487c55982334"
+    "version": "ac5fd5c9e3b33c744c447471a119b3ea63c5e8e6"
   },
   "prettier": {
     "aliases": {
@@ -4628,6 +4625,8 @@
     "bin": ["pup"],
     "build_dependencies": ["go"],
     "date": "2023-12-22",
+    "default": false,
+    "prune": true,
     "url": ["https://github.com/ericchiang/pup"],
     "version": "0.4.0"
   },
@@ -4655,14 +4654,14 @@
       "homebrew": true
     },
     "bin": ["pycodestyle"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
     ],
-    "version": "2.11.0"
+    "version": "2.11.1"
   },
   "pyenv": {
     "aliases": {
@@ -4978,7 +4977,7 @@
     "version": "12.2"
   },
   "r-xcode-openmp": {
-    "date": "2023-10-23",
+    "date": "2023-12-22",
     "default": true,
     "supported": {
       "linux-amd64": false,
@@ -4988,15 +4987,15 @@
     },
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
-    "version": "14.0.6"
+    "version": "16.0.4"
   },
   "radian": {
     "bin": ["radian"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://github.com/randy3k/radian/"],
-    "version": "0.6.7"
+    "version": "0.6.9"
   },
   "ranger-fm": {
     "aliases": {
@@ -5217,11 +5216,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-12-05",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.8"
+    "version": "0.1.9"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5299,13 +5298,12 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
       "noarch": ["conda"]
     },
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5316,7 +5314,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.18"
+    "version": "1.19"
   },
   "scalene": {
     "bin": ["scalene"],
@@ -5333,12 +5331,12 @@
     "aliases": {
       "homebrew": true
     },
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
-    "version": "4.5.2"
+    "version": "4.6.0"
   },
   "screen": {
     "bin": ["screen"],
@@ -5459,14 +5457,14 @@
   },
   "snakefmt": {
     "bin": ["snakefmt"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html"
     ],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -5497,19 +5495,19 @@
     "version": "14.4.2"
   },
   "spacemacs": {
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
-    "version": "b86a074437503677d21e2172bd175b37edbdb029"
+    "version": "b2511bba47aad1913f0080b6a11f3719dba32368"
   },
   "spacevim": {
     "date": "2023-08-31",
     "default": false,
-    "url": ["https://github.com/SpaceVim/SpaceVim/"],
+    "url": ["https://gitlab.com/SpaceVim/SpaceVim/"],
     "user": true,
-    "version": "6f0728c625bf5861b44b8bd1048fba5f095f2327"
+    "version": "e1fc546d7f43a87d8dc3179ca93db970c83926e9"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -5543,14 +5541,14 @@
     },
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "notes": ["Need to update install script for minor version bumps."],
     "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.43.0"
+    "version": "3.44.2"
   },
   "staden-io-lib": {
     "aliases": {
@@ -5759,7 +5757,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21+35"
+    "version": "21.0.1+12"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
@@ -5786,7 +5784,7 @@
       "texindex"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-04-13",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["gettext", "libiconv", "ncurses", "perl"],
     "man1": [
@@ -5799,7 +5797,7 @@
     ],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/texinfo/?C=M;O=D"],
-    "version": "7.0.3"
+    "version": "7.1"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
@@ -6165,7 +6163,7 @@
       "homebrew": "libx11"
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6180,7 +6178,7 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libx11/-/tags"
     ],
-    "version": "1.8.6"
+    "version": "1.8.7"
   },
   "xorg-libxau": {
     "aliases": {
@@ -6260,7 +6258,7 @@
       "homebrew": "libxrandr"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6277,7 +6275,7 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/tags"
     ],
-    "version": "1.5.3"
+    "version": "1.5.4"
   },
   "xorg-libxrender": {
     "aliases": {
@@ -6359,7 +6357,7 @@
       "homebrew": "xtrans"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["xorg-xorgproto"],
     "notes": ["1.5.0 fails to build on macOS due to missing stropts.h."],
@@ -6427,7 +6425,7 @@
       "xzmore"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": true,
     "man1": [
       "lzcat.1",
@@ -6456,7 +6454,7 @@
     ],
     "prune": false,
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.4.4"
+    "version": "5.4.5"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -6471,14 +6469,14 @@
       "homebrew": true
     },
     "bin": ["yapf"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/yapf/",
       "https://github.com/google/yapf/"
     ],
-    "version": "0.40.1"
+    "version": "0.40.2"
   },
   "yq": {
     "aliases": {
