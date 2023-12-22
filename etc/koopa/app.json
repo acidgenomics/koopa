@@ -3111,7 +3111,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "patch", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["libgpg-error"],
