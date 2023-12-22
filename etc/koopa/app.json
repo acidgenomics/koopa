@@ -248,7 +248,7 @@
   },
   "autodock-vina": {
     "bin": ["vina"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -262,7 +262,7 @@
       "https://vina.scripps.edu/",
       "https://github.com/ccsb-scripps/AutoDock-Vina/"
     ],
-    "version": "1.2.3"
+    "version": "1.2.5"
   },
   "autoflake": {
     "bin": ["autoflake"],
@@ -322,11 +322,11 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-10-24",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.53.1"
+    "version": "2.55.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -374,25 +374,25 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["node"],
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "4.9.2"
+    "version": "5.0.0"
   },
   "bashcov": {
     "bin": ["bashcov"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["ruby"],
     "url": [
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
     ],
-    "version": "3.0.3"
+    "version": "3.1.1"
   },
   "bat": {
     "aliases": {
@@ -451,7 +451,7 @@
       "macos-arm64": false
     },
     "url": [
-      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html"
+      "https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software.html"
     ],
     "version": "2.20"
   },
@@ -517,7 +517,7 @@
     "version": "1.0"
   },
   "bioconda-utils": {
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -527,7 +527,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/bioconda/bioconda-utils/"],
-    "version": "2.4.0"
+    "version": "2.11.1"
   },
   "bison": {
     "aliases": {
@@ -559,7 +559,7 @@
   },
   "blast": {
     "bin": ["blastn", "blastp"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -572,7 +572,7 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.14.1"
+    "version": "2.15.0"
   },
   "boost": {
     "aliases": {
@@ -588,12 +588,12 @@
       ],
       "homebrew": true
     },
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.boost.org/"],
-    "version": "1.83.0"
+    "version": "1.84.0"
   },
   "bottom": {
     "aliases": {
@@ -663,7 +663,7 @@
   },
   "bustools": {
     "bin": ["bustools"],
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -677,7 +677,7 @@
       "https://github.com/BUStools/bustools/",
       "https://bioconda.github.io/recipes/bustools/README.html"
     ],
-    "version": "0.43.0"
+    "version": "0.43.1"
   },
   "byobu": {
     "bin": [
@@ -787,22 +787,22 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "prune": false,
     "url": ["https://c-ares.org/"],
-    "version": "1.19.1"
+    "version": "1.24.0"
   },
   "ca-certificates": {
     "aliases": {
       "debian": true,
       "homebrew": true
     },
-    "date": "2023-08-25",
+    "date": "2023-12-22",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2023-08-22"
+    "version": "2023-12-12"
   },
   "cairo": {
     "aliases": {
@@ -811,7 +811,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-26",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "expat",
@@ -838,11 +838,11 @@
     ],
     "prune": false,
     "url": [
-      "https://www.cairographics.org/releases/",
+      "https://www.cairographics.org/releases/?C=M;O=D",
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.16.0"
+    "version": "1.18.0"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -911,7 +911,7 @@
     "version": "2.3.2"
   },
   "cloudbiolinux": {
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -920,7 +920,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/chapmanb/cloudbiolinux/"],
-    "version": "39eb5ac3d45654404d703ffb450a67947458df37"
+    "version": "cd1b727402e20f3b2c98a9bd116724ebdde83181"
   },
   "cmake": {
     "aliases": {
@@ -930,12 +930,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-10-06",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.27.7"
+    "version": "3.28.1"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -950,12 +950,12 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2023-12-19",
+    "date": "2023-12-22",
     "default": true,
     "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "23.11.0-1"
+    "version": "23.11.0-2"
   },
   "convmv": {
     "aliases": {
@@ -1251,13 +1251,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-11",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.4.0"
+    "version": "8.5.0"
   },
   "dash": {
     "aliases": {
@@ -1277,7 +1277,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2023-10-17",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1290,7 +1290,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.3"
+    "version": "3.5.4"
   },
   "delta": {
     "aliases": {
@@ -1335,18 +1335,18 @@
     "version": "0.8.0"
   },
   "doom-emacs": {
-    "date": "2023-09-13",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["emacs"],
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "7bdf7cf7c0bbaa76d983ef8930bfe90cd3c8a85e"
+    "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2023-12-07",
+    "date": "2023-12-22",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "a15641daf1b25a58e26677d18d8fb3e75e4876a0"
+    "version": "cc7ffe863b29cc560e08be6a0260aee49a646273"
   },
   "du-dust": {
     "aliases": {
@@ -1376,7 +1376,7 @@
     "prune": false,
     "url": [
       "https://www.gnu.org/software/ed/ed.html",
-      "http://ftpmirror.gnu.org/ed/"
+      "http://mirror.rit.edu/gnu/ed/?C=M;O=D"
     ],
     "version": "1.19"
   },
@@ -1400,7 +1400,7 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bzip2", "xz", "zlib", "zstd"],
     "prune": false,
@@ -1411,7 +1411,7 @@
       "macos-arm64": false
     },
     "url": ["https://fedorahosted.org/elfutils/"],
-    "version": "0.189"
+    "version": "0.190"
   },
   "emacs": {
     "aliases": {
