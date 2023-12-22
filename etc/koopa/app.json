@@ -520,10 +520,12 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "notes": ["This is hanging on macOS currently."],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
-      "macos-amd64": true,
+      "macos-amd64": false,
       "macos-arm64": false
     },
     "url": ["https://github.com/bioconda/bioconda-utils/"],
@@ -1486,6 +1488,7 @@
     "default": false,
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
+    "outdated": true,
     "url": [
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
@@ -1521,7 +1524,7 @@
   },
   "fastqc": {
     "bin": ["fastqc"],
-    "date": "2023-10-16",
+    "date": "2023-1016",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1550,12 +1553,12 @@
     },
     "bin": ["ffmpeg", "ffprobe"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-03-07",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["lame"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
-    "version": "6.0"
+    "version": "6.1"
   },
   "ffq": {
     "bin": ["ffq"],
@@ -1665,7 +1668,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-17",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "freetype",
@@ -1682,7 +1685,7 @@
     ],
     "prune": false,
     "url": ["https://www.fltk.org/"],
-    "version": "1.3.8"
+    "version": "1.3.9"
   },
   "fmt": {
     "aliases": {
@@ -1802,13 +1805,13 @@
     },
     "bin": ["awk", "gawk"],
     "build_dependencies": ["make"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["gettext", "mpfr", "readline"],
     "man1": ["awk.1", "gawk.1"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/?C=M;O=D"],
-    "version": "5.2.2"
+    "version": "5.3.0"
   },
   "gcc": {
     "aliases": {
@@ -1898,7 +1901,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bison", "libiconv", "libunistring", "libxml2", "ncurses"],
     "prune": false,
@@ -1906,7 +1909,7 @@
       "https://www.gnu.org/software/gettext/",
       "https://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
     ],
-    "version": "0.22"
+    "version": "0.22.4"
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
@@ -1996,10 +1999,10 @@
     },
     "bin": ["git-lfs"],
     "build_dependencies": ["go", "make"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://git-lfs.github.com/"],
-    "version": "3.4.0"
+    "version": "3.4.1"
   },
   "gitui": {
     "aliases": {
@@ -2007,28 +2010,28 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2023-09-12",
+    "date": "2023-12-22",
     "default": false,
     "outdated": true,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.24.2"
+    "version": "0.24.3"
   },
   "glances": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-05-19",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.4.0.2"
+    "version": "3.4.0.3"
   },
   "glib": {
     "aliases": {
@@ -2043,7 +2046,7 @@
       "pkg-config",
       "python3.12"
     ],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["libffi", "pcre2", "zlib"],
     "prune": false,
@@ -2051,7 +2054,7 @@
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/-/releases"
     ],
-    "version": "2.76.5"
+    "version": "2.79.0"
   },
   "gmp": {
     "aliases": {
@@ -2104,12 +2107,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
     "prune": false,
     "url": ["https://www.gnutls.org/"],
-    "version": "3.8.1"
+    "version": "3.8.2"
   },
   "go": {
     "aliases": {
@@ -2127,7 +2130,7 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-10-02",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
@@ -2164,7 +2167,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["expat"],
     "prune": false,
@@ -2172,7 +2175,7 @@
       "https://www.graphviz.org/download/source/",
       "https://gitlab.com/graphviz/graphviz/-/releases"
     ],
-    "version": "8.1.0"
+    "version": "9.0.0"
   },
   "grep": {
     "aliases": {
@@ -2563,7 +2566,7 @@
   },
   "htseq": {
     "bin": ["htseq-count"],
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -2577,12 +2580,12 @@
       "https://github.com/htseq/htseq/",
       "https://bioconda.github.io/recipes/htseq/README.html"
     ],
-    "version": "2.0.3"
+    "version": "2.0.4"
   },
   "htslib": {
     "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2023-07-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
@@ -2591,7 +2594,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.18"
+    "version": "1.19"
   },
   "httpie": {
     "aliases": {
@@ -2643,7 +2646,7 @@
       "uconv"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "man1": [
       "derb.1",
@@ -2660,7 +2663,7 @@
     ],
     "prune": false,
     "url": ["https://icu.unicode.org/"],
-    "version": "73.2"
+    "version": "74.2"
   },
   "imagemagick": {
     "aliases": {
@@ -2675,7 +2678,7 @@
       "magick-script"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-17",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -2714,18 +2717,18 @@
     ],
     "prune": false,
     "url": ["https://imagemagick.org/"],
-    "version": "7.1.1-15"
+    "version": "7.1.1-23"
   },
   "ipython": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["ipython"],
-    "date": "2023-10-02",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "8.16.1"
+    "version": "8.19.0"
   },
   "isl": {
     "aliases": {
@@ -5219,11 +5222,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-12-05",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.8"
+    "version": "0.1.9"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5301,7 +5304,7 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2023-10-16",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
@@ -5318,7 +5321,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.18"
+    "version": "1.19"
   },
   "scalene": {
     "bin": ["scalene"],
