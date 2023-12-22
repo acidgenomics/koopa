@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 main() {
+    # """
     # Install gettext.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-12-22.
     #
     # Note that 'libintl.h' is included with glibc.
     #
@@ -19,14 +20,17 @@ main() {
     #     cc1-undefined-reference-to-libintl-textdomain
     # """
     local -A dict
-    local -a conf_args install_args
+    local -a conf_args deps install_args
     local conf_arg
-    koopa_activate_app \
-        'bison' \
-        'libiconv' \
-        'libunistring' \
-        'ncurses' \
+    deps+=(
+        'bison'
+        'libiconv'
+        'libunistring'
+        'ncurses'
+        'icu4c'
         'libxml2'
+    )
+    koopa_activate_app "${deps[@]}"
     dict['bison']="$(koopa_app_prefix 'bison')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['libunistring']="$(koopa_app_prefix 'libunistring')"
