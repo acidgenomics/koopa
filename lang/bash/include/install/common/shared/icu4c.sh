@@ -29,14 +29,15 @@ main() {
     dict['url']="https://github.com/unicode-org/icu/releases/download/\
 release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
     koopa_download "${dict['url']}"
-    # NOTE This step can error due to broken 'LICENSE' symlink.
+    # This step can error due to broken 'LICENSE' symlink in 74.2.
     koopa_extract "$(koopa_basename "${dict['url']}")" 'icu'
-    koopa_cd 'icu/source'
-    # Broken LICENSE symlink causes make file fail for 74.2.
-    if [[ -f 'LICENSE' ]] && [[ ! -e 'LICENSE' ]]
+    # Broken LICENSE symlink causes make to fail.
+    if [[ ! -e 'icu/LICENSE' ]]
     then
-        koopa_rm 'LICENSE'
+        koopa_rm 'icu/LICENSE'
+        koopa_touch 'icu/LICENSE'
     fi
+    koopa_cd 'icu/source'
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     koopa_make_build "${conf_args[@]}"
     return 0
