@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SQLite.
-    # @note Updated 2023-08-31.
+    # @note Updated 2023-12-22.
     #
     # Year mappings for installers are here:
     # https://www.sqlite.org/chronology.html
@@ -22,18 +22,27 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
-        '3.43.'* | '3.42.'* | '3.41.'*)
+        '3.44.'* | \
+        '3.43.'* | \
+        '3.42.'* | \
+        '3.41.'*)
             dict['year']='2023'
             ;;
-        '3.40.'* | '3.39.'* | '3.38.'* | \
+        '3.40.'* | \
+        '3.39.'* | \
+        '3.38.'* | \
         '3.37.2')
             dict['year']='2022'
             ;;
-        '3.37.'* | '3.36.'* | '3.35.'* | \
+        '3.37.'* | \
+        '3.36.'* | \
+        '3.35.'* | \
         '3.34.1')
             dict['year']='2021'
             ;;
-        '3.34.'* | '3.33.'* | '3.32.'*)
+        '3.34.'* | \
+        '3.33.'* | \
+        '3.32.'*)
             dict['year']='2020'
             ;;
         *)

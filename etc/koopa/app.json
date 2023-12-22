@@ -251,7 +251,6 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -333,7 +332,6 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -521,7 +519,6 @@
     "default": false,
     "dependencies": ["conda"],
     "notes": ["This is hanging on macOS currently."],
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -954,7 +951,6 @@
     "bin": ["conda"],
     "date": "2023-12-22",
     "default": true,
-    "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "23.11.0-2"
@@ -2012,7 +2008,6 @@
     "build_dependencies": ["rust"],
     "date": "2023-12-22",
     "default": false,
-    "outdated": true,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
@@ -4630,6 +4625,8 @@
     "bin": ["pup"],
     "build_dependencies": ["go"],
     "date": "2023-12-22",
+    "default": false,
+    "prune": true,
     "url": ["https://github.com/ericchiang/pup"],
     "version": "0.4.0"
   },
@@ -5307,7 +5304,6 @@
       "macos-arm64": ["htslib", "ncurses", "zlib"],
       "noarch": ["conda"]
     },
-    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5335,12 +5331,12 @@
     "aliases": {
       "homebrew": true
     },
-    "date": "2023-05-08",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
-    "version": "4.5.2"
+    "version": "4.6.0"
   },
   "screen": {
     "bin": ["screen"],
@@ -5461,14 +5457,14 @@
   },
   "snakefmt": {
     "bin": ["snakefmt"],
-    "date": "2023-05-30",
+    "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html"
     ],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -5499,19 +5495,19 @@
     "version": "14.4.2"
   },
   "spacemacs": {
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["emacs"],
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
-    "version": "b86a074437503677d21e2172bd175b37edbdb029"
+    "version": "b2511bba47aad1913f0080b6a11f3719dba32368"
   },
   "spacevim": {
     "date": "2023-08-31",
     "default": false,
-    "url": ["https://github.com/SpaceVim/SpaceVim/"],
+    "url": ["https://gitlab.com/SpaceVim/SpaceVim/"],
     "user": true,
-    "version": "6f0728c625bf5861b44b8bd1048fba5f095f2327"
+    "version": "e1fc546d7f43a87d8dc3179ca93db970c83926e9"
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -5545,14 +5541,14 @@
     },
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["readline", "zlib"],
     "man1": ["sqlite3.1"],
     "notes": ["Need to update install script for minor version bumps."],
     "prune": false,
     "url": ["https://www.sqlite.org/download.html"],
-    "version": "3.43.0"
+    "version": "3.44.2"
   },
   "staden-io-lib": {
     "aliases": {
@@ -5761,7 +5757,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21+35"
+    "version": "21.0.1+12"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
@@ -5788,7 +5784,7 @@
       "texindex"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-04-13",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["gettext", "libiconv", "ncurses", "perl"],
     "man1": [
@@ -5801,7 +5797,7 @@
     ],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/texinfo/?C=M;O=D"],
-    "version": "7.0.3"
+    "version": "7.1"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
@@ -6167,7 +6163,7 @@
       "homebrew": "libx11"
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6182,7 +6178,7 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libx11/-/tags"
     ],
-    "version": "1.8.6"
+    "version": "1.8.7"
   },
   "xorg-libxau": {
     "aliases": {
@@ -6262,7 +6258,7 @@
       "homebrew": "libxrandr"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6279,7 +6275,7 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxrandr/-/tags"
     ],
-    "version": "1.5.3"
+    "version": "1.5.4"
   },
   "xorg-libxrender": {
     "aliases": {
@@ -6361,7 +6357,7 @@
       "homebrew": "xtrans"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["xorg-xorgproto"],
     "notes": ["1.5.0 fails to build on macOS due to missing stropts.h."],
@@ -6429,7 +6425,7 @@
       "xzmore"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": true,
     "man1": [
       "lzcat.1",
@@ -6458,7 +6454,7 @@
     ],
     "prune": false,
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.4.4"
+    "version": "5.4.5"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -6473,14 +6469,14 @@
       "homebrew": true
     },
     "bin": ["yapf"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/yapf/",
       "https://github.com/google/yapf/"
     ],
-    "version": "0.40.1"
+    "version": "0.40.2"
   },
   "yq": {
     "aliases": {
