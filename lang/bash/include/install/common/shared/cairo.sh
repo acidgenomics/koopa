@@ -14,6 +14,7 @@ main() {
     # - https://cairographics.org/releases/
     # - https://github.com/conda-forge/cairo-feedstock
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/cairo.rb
+    # - https://www.linuxfromscratch.org/blfs/view/svn/x/cairo.html
     # """
     local -A app dict
     local -a build_deps deps meson_args
@@ -32,7 +33,8 @@ main() {
         'pcre2'
         'glib'
         'libpng'
-        'lzo'
+        # Inclusion of lzo is causing build failure with 1.18.0.
+        # > 'lzo'
         'pixman'
         'xorg-xorgproto'
         'xorg-xcb-proto'
@@ -57,27 +59,25 @@ main() {
         '-Dfontconfig=enabled'
         '-Dfreetype=enabled'
         '-Dglib=enabled'
-        '-Dglib=enabled'
+        '-Dlibdir=lib'
         '-Dpng=enabled'
         '-Dxcb=enabled'
+        '-Dxlib-xcb=enabled'
         '-Dxlib=enabled'
         '-Dzlib=enabled'
     )
     if koopa_is_macos
     then
-        conf_args+=('-Dquartz=enabled')
+        meson_args+=('-Dquartz=disabled')
     fi
     dict['url']="https://cairographics.org/releases/\
 cairo-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    # FIXME Consider making this 'koopa_meson_ninja_build'.
     "${app['meson']}" setup "${meson_args[@]}" 'build'
-    "${app['ninja']}" -j "${dict['jobs']}" -C 'build'
-    "${app['ninja']}" -C 'build' install
-    # Alternate meson approach:
-    # > "${app['meson']}" compile -C 'build'
-    # > "${app['meson']}" test -C 'build'
-    # > "${app['meson']}" install -C 'build'
+    "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build'
+    "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build' install
     return 0
 }
