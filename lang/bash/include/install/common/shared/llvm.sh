@@ -6,7 +6,7 @@
 main() {
     # """
     # Install LLVM (clang).
-    # @note Updated 2023-10-18.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://llvm.org/docs/GettingStarted.html
@@ -34,6 +34,7 @@ main() {
         'zlib'
         'libedit'
         'libffi'
+        'icu4c' # libxml2
         'libxml2'
         'ncurses'
         'python3.12'
