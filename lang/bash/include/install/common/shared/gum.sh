@@ -3,7 +3,7 @@
 main() {
     # """
     # Install gum.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://github.com/charmbracelet/gum
@@ -15,7 +15,7 @@ main() {
     dict['ldflags']="-s -w -X main.Version=${dict['version']}"
     dict['url']="https://github.com/charmbracelet/gum/archive/\
 v${dict['version']}.tar.gz"
-    koopa_install_go_package \
+    koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}" \
