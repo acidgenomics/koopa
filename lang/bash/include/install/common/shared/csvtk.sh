@@ -3,7 +3,7 @@
 main() {
     # """
     # Install csvtk.
-    # @note Updated 2023-08-30.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://github.com/shenwei356/csvtk
@@ -15,7 +15,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/shenwei356/csvtk/archive/refs/\
 tags/v${dict['version']}.tar.gz"
-    koopa_install_go_package \
+    koopa_build_go_package \
         --build-cmd="${dict['build_cmd']}" \
         --ldflags="${dict['ldflags']}" \
         --url="${dict['url']}"
