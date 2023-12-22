@@ -53,20 +53,21 @@
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
+    "date": "2023-12-22",
     "default": false,
     "url": ["https://arrow.apache.org/"],
-    "version": "12.0.0"
+    "version": "14.0.2"
   },
   "apache-spark": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["pyspark", "sparkR"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12", "r", "temurin"],
     "url": ["https://spark.apache.org/"],
-    "version": "3.4.1"
+    "version": "3.5.0"
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
