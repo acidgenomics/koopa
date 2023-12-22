@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SpaceVim.
-    # @note Updated 2023-04-06.
+    # @note Updated 2023-12-22.
     #
     # @seealso
     # - https://spacevim.org
@@ -15,7 +15,7 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['url']='https://github.com/SpaceVim/SpaceVim.git'
+    dict['url']='https://gitlab.com/SpaceVim/SpaceVim.git'
     dict['xdg_data_home']="$(koopa_xdg_data_home)"
     # Symlink the font cache, to avoid unnecessary copy step.
     if koopa_is_macos
