@@ -6486,6 +6486,29 @@ koopa_current_bioconductor_version() {
     return 0
 }
 
+koopa_current_conda_package_version() {
+    local -A app
+    local name
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk)"
+    app['conda']="$(koopa_locate_conda)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    for name in "$@"
+    do
+        local -A dict
+        dict['name']="$name"
+        dict['version']="$( \
+            "${app['conda']}" search "${dict['name']}" \
+                | "${app['tail']}" -n 1 \
+                | "${app['awk']}" '{print $2}' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
+    return 0
+}
+
 koopa_current_ensembl_version() {
     local -A app
     local str
@@ -6636,7 +6659,7 @@ koopa_current_latch_version() {
     return 0
 }
 
-koopa_current_pypi_version() {
+koopa_current_pypi_package_version() {
     local -A app
     local name
     koopa_assert_has_args "$#"

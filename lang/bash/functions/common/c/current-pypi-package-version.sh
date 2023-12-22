@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_current_pypi_version() {
+koopa_current_pypi_package_version() {
     # """
     # Current Python package version at PyPi.
     # @note Updated 2023-12-22.
@@ -9,7 +9,7 @@ koopa_current_pypi_version() {
     # prints the second column in the string, which contains the version.
     #
     # @examples
-    # > koopa_current_pypi_version 'pip' 'setuptools' 'wheel'
+    # > koopa_current_pypi_package_version 'pip' 'setuptools' 'wheel'
     # # 23.3.2
     # # 69.0.2
     # # 0.42.0
