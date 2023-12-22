@@ -133,12 +133,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2023-12-22",
     "default": false,
     "dependencies": ["hdf5", "zlib"],
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "12.6.3"
+    "version": "12.6.7"
   },
   "asdf": {
     "aliases": {
@@ -157,19 +157,20 @@
     },
     "bin": ["aspell"],
     "build_dependencies": ["make"],
-    "date": "2022-08-30",
+    "date": "2023-12-22",
     "default": false,
     "man1": ["aspell.1"],
     "url": ["http://aspell.net/"],
-    "version": "0.60.8"
+    "version": "0.60.8.1"
   },
   "aspera-connect": {
     "aliases": {
       "homebrew": "ibm-aspera-connect"
     },
     "bin": ["ascp"],
-    "date": "2023-10-17",
+    "date": "2023-12-22",
     "default": false,
+    "notes": ["IBM deletes old source versions."],
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -177,7 +178,7 @@
       "macos-arm64": false
     },
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.7.445"
+    "version": "4.2.8.540"
   },
   "attr": {
     "aliases": {
