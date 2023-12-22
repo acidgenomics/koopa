@@ -6456,21 +6456,7 @@ koopa_cpu_count() {
 }
 
 koopa_current_aws_cli_version() {
-    local -A app
-    local string
-    koopa_assert_has_no_args "$#"
-    app['gh']="$(koopa_locate_gh)"
-    app['head']="$(koopa_locate_head)"
-    app['jq']="$(koopa_locate_jq)"
-    app['sort']="$(koopa_locate_sort)"
-    string="$( \
-        "${app['gh']}" api 'https://api.github.com/repos/aws/aws-cli/tags' \
-            | "${app['jq']}" --raw-output '.[].name' \
-            | "${app['sort']}" -nr \
-            | "${app['head']}" -n 1 \
-    )"
-    [[ -n "$string" ]] || return 1
-    koopa_print "$string"
+    koopa_current_github_tag_version 'aws/aws-cli'
     return 0
 }
 
@@ -6497,6 +6483,29 @@ koopa_current_bioconductor_version() {
     str="$(koopa_parse_url 'https://bioconductor.org/bioc-version')"
     [[ -n "$str" ]] || return 1
     koopa_print "$str"
+    return 0
+}
+
+koopa_current_conda_package_version() {
+    local -A app
+    local name
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk)"
+    app['conda']="$(koopa_locate_conda)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    for name in "$@"
+    do
+        local -A dict
+        dict['name']="$name"
+        dict['version']="$( \
+            "${app['conda']}" search "${dict['name']}" \
+                | "${app['tail']}" -n 1 \
+                | "${app['awk']}" '{print $2}' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
     return 0
 }
 
@@ -6573,6 +6582,104 @@ koopa_current_gencode_version() {
     )"
     [[ -n "${dict['str']}" ]] || return 1
     koopa_print "${dict['str']}"
+    return 0
+}
+
+koopa_current_github_release_version() {
+    local -A app
+    local repo
+    koopa_assert_has_args "$#"
+    app['cut']="$(koopa_locate_cut)"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    for repo in "$@"
+    do
+        local -A dict
+        dict['repo']="$repo"
+        dict['url']="https://api.github.com/repos/${dict['repo']}/\
+releases/latest"
+        dict['version']="$( \
+            koopa_parse_url "${dict['url']}" \
+                | koopa_grep --pattern='"tag_name":' \
+                | "${app['cut']}" -d '"' -f '4' \
+                | "${app['sed']}" 's/^v//' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
+    return 0
+}
+
+koopa_current_github_tag_version() {
+    local -A app
+    local repo
+    koopa_assert_has_args "$#"
+    app['head']="$(koopa_locate_head)"
+    app['jq']="$(koopa_locate_jq)"
+    app['sed']="$(koopa_locate_sed)"
+    app['sort']="$(koopa_locate_sort)"
+    koopa_assert_is_executable "${app[@]}"
+    for repo in "$@"
+    do
+        local -A dict
+        dict['repo']="$repo"
+        dict['url']="https://api.github.com/repos/${dict['repo']}/tags"
+        dict['version']="$( \
+            koopa_parse_url "${dict['url']}" \
+                | "${app['jq']}" --raw-output '.[].name' \
+                | "${app['sort']}" --reverse --version-sort \
+                | "${app['head']}" --lines=1 \
+                | "${app['sed']}" 's/^v//' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
+    return 0
+}
+
+koopa_current_google_cloud_sdk_version() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    app['awk']="$(koopa_locate_awk)"
+    app['pup']="$(koopa_locate_pup)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['url']='https://cloud.google.com/sdk/docs/release-notes'
+    dict['version']="$( \
+        koopa_parse_url "${dict['url']}" \
+            | "${app['pup']}" 'h2 text{}' \
+            | "${app['awk']}" 'NR==1 {print $1}' \
+    )"
+    [[ -n "${dict['version']}" ]] || return 1
+    koopa_print "${dict['version']}"
+    return 0
+}
+
+koopa_current_latch_version() {
+    koopa_current_pypi_package_version 'latch'
+    return 0
+}
+
+koopa_current_pypi_package_version() {
+    local -A app
+    local name
+    koopa_assert_has_args "$#"
+    app['awk']="$(koopa_locate_awk)"
+    app['curl']="$(koopa_locate_curl)"
+    app['pup']="$(koopa_locate_pup)"
+    koopa_assert_is_executable "${app[@]}"
+    for name in "$@"
+    do
+        local -A dict
+        dict['name']="$name"
+        dict['url']="https://pypi.org/project/${dict['name']}/"
+        dict['version']="$( \
+            "${app['curl']}" -s "${dict['url']}" \
+                | "${app['pup']}" 'h1 text{}' \
+                | "${app['awk']}" 'NF {$1=$1; print $2}' \
+        )"
+        [[ -n "${dict['version']}" ]] || return 1
+        koopa_print "${dict['version']}"
+    done
     return 0
 }
 
@@ -10143,31 +10250,6 @@ koopa_git_submodule_init() {
             done
         done
     )
-    return 0
-}
-
-koopa_github_latest_release() {
-    local -A app
-    local repo
-    koopa_assert_has_args "$#"
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    app['sed']="$(koopa_locate_sed --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    for repo in "$@"
-    do
-        local -A dict
-        dict['repo']="$repo"
-        dict['url']="https://api.github.com/repos/${dict['repo']}/\
-releases/latest"
-        dict['str']="$( \
-            koopa_parse_url "${dict['url']}" \
-                | koopa_grep --pattern='"tag_name":' \
-                | "${app['cut']}" -d '"' -f '4' \
-                | "${app['sed']}" 's/^v//' \
-        )"
-        [[ -n "${dict['str']}" ]] || return 1
-        koopa_print "${dict['str']}"
-    done
     return 0
 }
 
@@ -19161,6 +19243,13 @@ koopa_locate_proj() {
         "$@"
 }
 
+koopa_locate_pup() {
+    koopa_locate_app \
+        --app-name='pup' \
+        --bin-name='pup' \
+        "$@"
+}
+
 koopa_locate_pyenv() {
     koopa_locate_app \
         --app-name='pyenv' \
@@ -20518,7 +20607,6 @@ koopa_mv() {
     mv_args+=("$@")
     if [[ -n "${dict['target_dir']}" ]]
     then
-        koopa_assert_is_existing "$@"
         dict['target_dir']="$( \
             koopa_strip_trailing_slash "${dict['target_dir']}" \
         )"
