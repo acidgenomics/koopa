@@ -6,7 +6,7 @@
 main() {
     # """
     # Install ImageMagick.
-    # @note Updated 2023-12-17.
+    # @note Updated 2023-12-22.
     #
     # Also consider requiring:
     # - ghostscript
@@ -45,6 +45,7 @@ main() {
         'libpng'
         'libtiff'
         'libtool'
+        'icu4c' # libxml2
         'libxml2'
         'libzip'
         'fontconfig'
