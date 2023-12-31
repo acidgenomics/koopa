@@ -550,11 +550,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2023-12-12",
+    "date": "2023-12-31",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "23.12.0"
+    "version": "23.12.1"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -639,13 +639,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-17",
+    "date": "2023-12-31",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.30.1"
+    "version": "1.31.0"
   },
   "brotli": {
     "aliases": {
@@ -2821,18 +2821,18 @@
     },
     "bin": ["julia"],
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2023-11-14",
+    "date": "2023-12-31",
     "default": false,
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.9.4"
+    "version": "1.10.0"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-11-18",
+    "date": "2023-12-31",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.9"
+    "version": "4.0.10"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3729,10 +3729,10 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-04",
+    "date": "2023-12-31",
     "default": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.8.3"
+    "version": "0.8.4"
   },
   "mdcat": {
     "aliases": {
@@ -3753,12 +3753,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2023-11-20",
+    "date": "2023-12-31",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.3.0"
+    "version": "1.3.1"
   },
   "miller": {
     "aliases": {
@@ -4523,12 +4523,12 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2023-12-04",
+    "date": "2023-12-31",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.3.3"
+    "version": "1.4.0"
   },
   "pixman": {
     "aliases": {
@@ -4737,7 +4737,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-10-25",
+    "date": "2023-12-31",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -4745,7 +4745,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.4.3"
+    "version": "7.4.4"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -5248,10 +5248,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-12-19",
+    "date": "2023-12-31",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.74.1"
+    "version": "1.75.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -5603,10 +5603,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2023-07-30",
+    "date": "2023-12-31",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   "stow": {
     "aliases": {
@@ -6004,7 +6004,7 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2023-07-18",
+    "date": "2023-12-31",
     "default": true,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
@@ -6012,7 +6012,7 @@
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "2.11.1"
+    "version": "3.0"
   },
   "vulture": {
     "aliases": {
@@ -6496,14 +6496,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-11-16",
+    "date": "2023-12-31",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.11.16"
+    "version": "2023.12.30"
   },
   "zellij": {
     "aliases": {
