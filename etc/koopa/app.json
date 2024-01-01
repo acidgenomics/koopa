@@ -3166,8 +3166,14 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-20",
+    "date": "2024-01-01",
     "default": false,
+    "dependencies": [
+      "libde265",
+      "libjpeg-turbo",
+      "libpng",
+      "zlib"
+    ],
     "prune": false,
     "url": ["https://www.libde265.org/"],
     "version": "1.17.6"
