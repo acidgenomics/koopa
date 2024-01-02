@@ -1609,7 +1609,7 @@
     },
     "bin": ["fish"],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-05",
+    "date": "2024-01-02",
     "default": false,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1617,7 +1617,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.6.4"
+    "version": "3.7.0"
   },
   "flac": {
     "aliases": {
@@ -1688,11 +1688,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-28",
+    "date": "2024-01-02",
     "default": false,
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "10.1.1"
+    "version": "10.2.0"
   },
   "fontconfig": {
     "aliases": {
@@ -1768,11 +1768,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2023-11-17",
+    "date": "2024-01-02",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.44.1"
+    "version": "0.45.0"
   },
   "gatk": {
     "aliases": {
@@ -2865,11 +2865,11 @@
     },
     "bin": ["ksh"],
     "build_dependencies": ["make"],
-    "date": "2023-09-15",
+    "date": "2024-01-02",
     "default": false,
     "man1": ["ksh.1"],
     "url": ["https://github.com/ksh93/ksh/"],
-    "version": "1.0.7"
+    "version": "1.0.8"
   },
   "lame": {
     "aliases": {
@@ -5883,10 +5883,10 @@
     },
     "bin": ["tuc"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-04",
+    "date": "2024-01-02",
     "default": true,
     "url": ["https://github.com/riquito/tuc/"],
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "udunits": {
     "aliases": {
