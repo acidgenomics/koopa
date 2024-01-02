@@ -1842,6 +1842,7 @@
       "expat",
       "geos",
       "hdf5",
+      "icu4c",
       "libdeflate",
       "libiconv",
       "libjpeg-turbo",
