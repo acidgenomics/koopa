@@ -9,13 +9,13 @@ _koopa_activate_alacritty() {
         unset -v __kvar_prefix
         return 0
     fi
-    __kvar_conf_file="${__kvar_prefix}/alacritty.yml"
+    __kvar_conf_file="${__kvar_prefix}/alacritty.toml"
     if [ ! -f "$__kvar_conf_file" ]
     then
         unset -v __kvar_conf_file __kvar_prefix
         return 0
     fi
-    __kvar_color_file_bn="colors-$(_koopa_color_mode).yml"
+    __kvar_color_file_bn="colors-$(_koopa_color_mode).toml"
     __kvar_color_file="${__kvar_prefix}/${__kvar_color_file_bn}"
     if [ ! -f "$__kvar_color_file" ]
     then
@@ -28,8 +28,8 @@ _koopa_activate_alacritty() {
     fi
     if ! grep -q "$__kvar_color_file_bn" "$__kvar_conf_file"
     then
-        __kvar_pattern="^  - \"~/\.config/alacritty/colors.*\.yml\"$"
-        __kvar_replacement="  - \"~/.config/alacritty/${__kvar_color_file_bn}\""
+        __kvar_pattern='colors-.+\.toml'
+        __kvar_replacement="${__kvar_color_file_bn}"
         perl -i -l -p \
             -e "s|${__kvar_pattern}|${__kvar_replacement}|" \
             "$__kvar_conf_file"
