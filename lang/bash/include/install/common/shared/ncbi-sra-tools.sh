@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-08-31.
+    # @note Updated 2023-01-02.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -24,8 +24,8 @@ main() {
     # """
     local -A app cmake dict
     local -a build_deps cmake_args deps
-    build_deps=('bison' 'flex' 'ncbi-vdb' 'python3.12')
-    deps=('libxml2')
+    build_deps+=('bison' 'flex' 'ncbi-vdb' 'python3.12')
+    deps+=('icu4c' 'libxml2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python312 --realpath)"
