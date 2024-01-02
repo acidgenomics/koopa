@@ -4265,11 +4265,11 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-11-13",
+    "date": "2024-01-02",
     "default": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.25"
+    "version": "0.3.26"
   },
   "openjpeg": {
     "aliases": {
