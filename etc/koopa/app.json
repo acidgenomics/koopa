@@ -639,13 +639,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-31",
+    "date": "2024-01-02",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.31.0"
+    "version": "1.32.0"
   },
   "brotli": {
     "aliases": {
@@ -4530,12 +4530,12 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2023-12-31",
+    "date": "2024-01-02",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "pixman": {
     "aliases": {
@@ -5225,11 +5225,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2023-12-22",
+    "date": "2024-01-02",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.9"
+    "version": "0.1.10"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5610,10 +5610,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2023-12-31",
+    "date": "2024-01-02",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.17.0"
+    "version": "1.17.1"
   },
   "stow": {
     "aliases": {
