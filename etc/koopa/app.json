@@ -3952,9 +3952,9 @@
     },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
-    "date": "2023-12-19",
+    "date": "2024-01-02",
     "default": false,
-    "dependencies": ["libxml2", "ncbi-vdb"],
+    "dependencies": ["icu4c", "libxml2", "ncbi-vdb"],
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.0.10"
   },
