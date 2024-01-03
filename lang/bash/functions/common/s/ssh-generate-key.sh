@@ -51,6 +51,7 @@ koopa_ssh_generate_key() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    # NOTE Consider restricting access permissions to this directory.
     dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
     for key_name in "$@"
     do
@@ -71,8 +72,7 @@ koopa_ssh_generate_key() {
             '-q'
         )
         case "${dict2['key_name']}" in
-            *'-ed25519' | \
-            *'_ed25519')
+            *'-ed25519' | *'_ed25519')
                 # Ed25519.
                 ssh_args+=(
                     '-a' 100
@@ -80,8 +80,7 @@ koopa_ssh_generate_key() {
                     '-t' 'ed25519'
                 )
                 ;;
-            *'-rsa' | \
-            *'_rsa')
+            *'-rsa' | *'_rsa')
                 # RSA 4096.
                 ssh_args+=(
                     '-b' 4096
