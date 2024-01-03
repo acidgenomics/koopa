@@ -26047,65 +26047,81 @@ to '${dict['output_dir']}'."
 
 koopa_ssh_generate_key() {
     local -A app dict
-    local -a ssh_args
-    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system)"
+    local -a pos
+    local key_name
+    koopa_assert_has_args "$#"
+    app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['hostname']="$(koopa_hostname)"
-    dict['key_name']='id_rsa' # or 'id_ed25519'.
     dict['prefix']="${HOME:?}/.ssh"
     dict['user']="$(koopa_user_name)"
     while (("$#"))
     do
         case "$1" in
-            '--key-name='*)
-                dict['key_name']="${1#*=}"
+            '--prefix='*)
+                dict['prefix']="${1#*=}"
                 shift 1
                 ;;
-            '--key-name')
-                dict['key_name']="${2:?}"
+            '--prefix')
+                dict['prefix']="${2:?}"
                 shift 2
                 ;;
-            *)
+            '-'*)
                 koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
                 ;;
         esac
     done
-    file="${dict['prefix']}/${dict['key_name']}"
-    if [[ -f "${dict['file']}" ]]
-    then
-        koopa_alert_note "SSH key exists at '${dict['file']}'."
-        return 0
-    fi
-    koopa_alert "Generating SSH key at '${dict['file']}'."
-    ssh_args=(
-        '-C' "${dict['user']}@${dict['hostname']}"
-        '-N' ''
-        '-f' "${dict['file']}"
-        '-q'
-    )
-    case "${dict['key_name']}" in
-        *'_ed25519')
-            ssh_args+=(
-                '-a' 100
-                '-o'
-                '-t' 'ed25519'
-            )
-            ;;
-        *'_rsa')
-            ssh_args+=(
-                '-b' 4096
-                '-t' 'rsa'
-            )
-            ;;
-        *)
-            koopa_stop "Unsupported key: '${dict['key_name']}'."
-            ;;
-    esac
-    koopa_dl \
-        'ssh-keygen' "${app['ssh_keygen']}" \
-        'args' "${ssh_args[*]}"
-    "${app['ssh_keygen']}" "${ssh_args[@]}"
-    koopa_alert_success "Generated SSH key at '${dict['file']}'."
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
+    for key_name in "$@"
+    do
+        local -A dict2
+        local -a ssh_args
+        dict2['key_name']="$key_name"
+        dict2['file']="${dict['prefix']}/${dict2['key_name']}"
+        if [[ -f "${dict2['file']}" ]]
+        then
+            koopa_alert_note "SSH key exists at '${dict2['file']}'."
+            return 0
+        fi
+        koopa_alert "Generating SSH key at '${dict2['file']}'."
+        ssh_args+=(
+            '-C' "${dict['user']}@${dict['hostname']}"
+            '-N' ''
+            '-f' "${dict2['file']}"
+            '-q'
+        )
+        case "${dict2['key_name']}" in
+            *'-ed25519' | \
+            *'_ed25519')
+                ssh_args+=(
+                    '-a' 100
+                    '-o'
+                    '-t' 'ed25519'
+                )
+                ;;
+            *'-rsa' | \
+            *'_rsa')
+                ssh_args+=(
+                    '-b' 4096
+                    '-t' 'rsa'
+                )
+                ;;
+            *)
+                koopa_stop "Unsupported key: '${dict2['key_name']}'."
+                ;;
+        esac
+        koopa_dl \
+            'ssh-keygen' "${app['ssh_keygen']}" \
+            'args' "${ssh_args[*]}"
+        "${app['ssh_keygen']}" "${ssh_args[@]}"
+        koopa_alert_success "Generated SSH key at '${dict2['file']}'."
+    done
     return 0
 }
 
