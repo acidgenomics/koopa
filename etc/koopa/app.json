@@ -893,10 +893,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2023-12-17",
+    "date": "2024-01-03",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.42.3"
+    "version": "2.43.0"
   },
   "cli11": {
     "aliases": {
@@ -5225,11 +5225,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-01-02",
+    "date": "2024-01-03",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.10"
+    "version": "0.1.11"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
