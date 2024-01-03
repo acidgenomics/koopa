@@ -26097,16 +26097,14 @@ koopa_ssh_generate_key() {
             '-q'
         )
         case "${dict2['key_name']}" in
-            *'-ed25519' | \
-            *'_ed25519')
+            *'-ed25519' | *'_ed25519')
                 ssh_args+=(
                     '-a' 100
                     '-o'
                     '-t' 'ed25519'
                 )
                 ;;
-            *'-rsa' | \
-            *'_rsa')
+            *'-rsa' | *'_rsa')
                 ssh_args+=(
                     '-b' 4096
                     '-t' 'rsa'
