@@ -40,6 +40,7 @@ main() {
         'libjpeg-turbo'
         'libpng'
         'libtiff'
+        'icu4c' # libxml2
         'libxml2'
         'lz4'
         'openjpeg'
