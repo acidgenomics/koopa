@@ -1317,10 +1317,10 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-27",
+    "date": "2024-01-08",
     "default": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.53.1"
+    "version": "0.54.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1574,7 +1574,7 @@
     "version": "0.3.0"
   },
   "fgbio": {
-    "date": "2023-12-13",
+    "date": "2024-01-08",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1584,7 +1584,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
-    "version": "2.2.0"
+    "version": "2.2.1"
   },
   "findutils": {
     "aliases": {
@@ -1688,11 +1688,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-01-02",
+    "date": "2024-01-08",
     "default": false,
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "10.2.0"
+    "version": "10.2.1"
   },
   "fontconfig": {
     "aliases": {
@@ -2606,10 +2606,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2023-12-08",
+    "date": "2024-01-08",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.121.1"
+    "version": "0.121.2"
   },
   "hyperfine": {
     "aliases": {
@@ -2916,13 +2916,13 @@
       "homebrew": true
     },
     "build_dependencies": ["gnupg", "libarchive", "xz"],
-    "date": "2023-10-16",
+    "date": "2024-01-08",
     "default": false,
     "url": [
       "https://wiki.dlang.org/LDC",
       "https://github.com/ldc-developers/ldc/"
     ],
-    "version": "1.35.0"
+    "version": "1.36.0"
   },
   "ldns": {
     "aliases": {
@@ -3529,7 +3529,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-16",
+    "date": "2024-01-08",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "prune": false,
@@ -3540,7 +3540,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.32"
+    "version": "8.7.34"
   },
   "lsd": {
     "aliases": {
@@ -4367,11 +4367,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2023-12-17",
+    "date": "2024-01-08",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.11"
+    "version": "3.1.11.1"
   },
   "parallel": {
     "aliases": {
@@ -5094,11 +5094,11 @@
     },
     "bin": ["rg"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-29",
+    "date": "2024-01-08",
     "default": true,
     "dependencies": ["pcre2"],
     "url": ["https://github.com/BurntSushi/ripgrep/"],
-    "version": "14.0.3"
+    "version": "14.1.0"
   },
   "ripgrep-all": {
     "aliases": {
@@ -5154,14 +5154,14 @@
     "version": "0.7.3"
   },
   "ronn-ng": {
-    "date": "2023-06-29",
+    "date": "2024-01-08",
     "default": false,
     "dependencies": ["ruby"],
     "url": [
       "https://github.com/apjanke/ronn-ng/",
       "https://rubygems.org/gems/ronn-ng/"
     ],
-    "version": "0.9.1"
+    "version": "0.10.1"
   },
   "rsem": {
     "bin": ["rsem-calculate-expression", "rsem-prepare-reference"],
@@ -5233,11 +5233,11 @@
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2023-12-17",
+    "date": "2024-01-08",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.48"
+    "version": "0.0.49"
   },
   "rust": {
     "aliases": {
@@ -5477,7 +5477,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2023-12-21",
+    "date": "2024-01-08",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5485,7 +5485,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.0.1"
+    "version": "8.1.0"
   },
   "sox": {
     "aliases": {
@@ -6011,7 +6011,7 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2023-12-31",
+    "date": "2024-01-08",
     "default": true,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
@@ -6019,7 +6019,7 @@
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "3.0"
+    "version": "3.0.1"
   },
   "vulture": {
     "aliases": {
