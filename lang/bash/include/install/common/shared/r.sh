@@ -9,6 +9,9 @@
 #   unable to load shared object '/opt/koopa/app/r-devel/85467/lib/R/modules//R_X11.so':
 #   dlopen(/opt/koopa/app/r-devel/85467/lib/R/modules//R_X11.so, 0x0006): symbol not found in flat namespace '_g_libintl_gettext'
 
+# NOTE Consider adding this for newest macOS only:
+# A new configure option --with-newAccelerate makes use of Apple's ‘new’ BLAS / LAPACK interfaces in their Accelerate framework. Those interfaces are only available in macOS 13.3 or later, and building requires SDK 13.3 or later (from the Command Line Tools or Xcode 14.3 or later).
+
 main() {
     # """
     # Install R.
