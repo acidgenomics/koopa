@@ -1834,7 +1834,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2023-12-20",
+    "date": "2024-01-09",
     "default": false,
     "dependencies": [
       "bison",
@@ -1863,7 +1863,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.8.2"
+    "version": "3.8.3"
   },
   "gdbm": {
     "aliases": {
@@ -1945,10 +1945,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2023-12-13",
+    "date": "2024-01-09",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.40.1"
+    "version": "2.41.0"
   },
   "ghostscript": {
     "aliases": {
@@ -5037,11 +5037,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2023-11-27",
+    "date": "2024-01-09",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.65.0"
+    "version": "1.65.1"
   },
   "readline": {
     "aliases": {
