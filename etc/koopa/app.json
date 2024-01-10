@@ -1352,13 +1352,13 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["rust"],
-    "date": "2023-05-06",
+    "date": "2024-01-10",
     "default": true,
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.8.6"
+    "version": "0.9.0"
   },
   "ed": {
     "aliases": {
@@ -2553,12 +2553,12 @@
     },
     "bin": ["htop"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2023-02-06",
+    "date": "2024-01-10",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": ["htop.1"],
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
-    "version": "3.2.2"
+    "version": "3.3.0"
   },
   "htseq": {
     "bin": ["htseq-count"],
@@ -4178,11 +4178,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2023-12-14",
+    "date": "2024-01-10",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.88.1"
+    "version": "0.89.0"
   },
   "oniguruma": {
     "aliases": {
