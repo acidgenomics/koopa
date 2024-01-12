@@ -4530,12 +4530,12 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2024-01-02",
+    "date": "2024-01-12",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "pixman": {
     "aliases": {
