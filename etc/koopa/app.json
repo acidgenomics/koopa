@@ -893,10 +893,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-01-03",
+    "date": "2024-01-12",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.43.0"
+    "version": "2.44.0"
   },
   "cli11": {
     "aliases": {
@@ -1327,10 +1327,10 @@
       "homebrew": "docker-credential-helper"
     },
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-07-17",
+    "date": "2024-01-12",
     "default": false,
     "url": ["https://github.com/docker/docker-credential-helpers/"],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "doom-emacs": {
     "date": "2023-12-22",
@@ -4530,9 +4530,10 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2024-01-02",
+    "date": "2024-01-12",
     "default": false,
     "dependencies": ["python3.12"],
+    "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
     "version": "1.4.1"
@@ -4589,11 +4590,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2023-12-11",
+    "date": "2024-01-12",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.1.1"
+    "version": "3.2.0"
   },
   "procs": {
     "aliases": {
@@ -5225,11 +5226,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-01-03",
+    "date": "2024-01-12",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.11"
+    "version": "0.1.13"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5520,12 +5521,12 @@
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-07-08",
+    "date": "2024-01-12",
     "default": false,
     "dependencies": ["fmt"],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
-    "version": "1.12.0"
+    "version": "1.13.0"
   },
   "sphinx": {
     "bin": [
@@ -5841,6 +5842,14 @@
     "default": false,
     "url": ["https://github.com/XAMPPRocky/tokei/"],
     "version": "12.1.2"
+  },
+  "tqdm": {
+    "bin": ["tqdm"],
+    "date": "2024-01-12",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "url": ["https://pypi.org/project/tqdm/"],
+    "version": "4.66.1"
   },
   "tree": {
     "aliases": {
