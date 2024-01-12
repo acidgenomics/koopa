@@ -4533,9 +4533,10 @@
     "date": "2024-01-12",
     "default": false,
     "dependencies": ["python3.12"],
+    "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.4.2"
+    "version": "1.4.1"
   },
   "pixman": {
     "aliases": {
