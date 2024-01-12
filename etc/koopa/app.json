@@ -5230,7 +5230,7 @@
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.12"
+    "version": "0.1.13"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
