@@ -15847,6 +15847,13 @@ koopa_install_tokei() {
         "$@"
 }
 
+koopa_install_tqdm() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='tqdm' \
+        "$@"
+}
+
 koopa_install_tree_sitter() {
     koopa_install_app \
         --name='tree-sitter' \
@@ -30697,6 +30704,12 @@ koopa_uninstall_tmux() {
 koopa_uninstall_tokei() {
     koopa_uninstall_app \
         --name='tokei' \
+        "$@"
+}
+
+koopa_uninstall_tqdm() {
+    koopa_uninstall_app \
+        --name='tqdm' \
         "$@"
 }
 

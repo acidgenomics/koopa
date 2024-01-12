@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2023-12-22.
+    # @note Updated 2024-01-12.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -423,6 +423,7 @@ _koopa_complete() {
                         'tl-expected'
                         'tmux'
                         'tokei'
+                        'tqdm'
                         'tree'
                         'tree-sitter'
                         'tryceratops'
