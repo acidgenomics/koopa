@@ -893,10 +893,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-01-12",
+    "date": "2024-01-16",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.44.0"
+    "version": "2.45.0"
   },
   "cli11": {
     "aliases": {
@@ -3593,14 +3593,14 @@
   },
   "luigi": {
     "bin": ["luigi"],
-    "date": "2023-10-05",
+    "date": "2024-01-16",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.4.0"
+    "version": "3.5.0"
   },
   "lz4": {
     "aliases": {
@@ -3747,11 +3747,11 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-22",
+    "date": "2024-01-16",
     "default": true,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.1.0"
+    "version": "2.1.1"
   },
   "meson": {
     "aliases": {
@@ -4590,11 +4590,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-01-12",
+    "date": "2024-01-16",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.2.0"
+    "version": "3.2.2"
   },
   "procs": {
     "aliases": {
@@ -5478,7 +5478,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-01-11",
+    "date": "2024-01-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5486,7 +5486,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.1.1"
+    "version": "8.2.0"
   },
   "sox": {
     "aliases": {
@@ -6020,7 +6020,7 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2024-01-08",
+    "date": "2024-01-16",
     "default": true,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
@@ -6028,7 +6028,7 @@
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "3.0.1"
+    "version": "3.0.2"
   },
   "vulture": {
     "aliases": {
