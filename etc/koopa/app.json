@@ -610,6 +610,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1945,10 +1946,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-01-11",
+    "date": "2024-01-17",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.42.0"
+    "version": "2.42.1"
   },
   "ghostscript": {
     "aliases": {
@@ -4590,11 +4591,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-01-16",
+    "date": "2024-01-17",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.2.2"
+    "version": "3.2.4"
   },
   "procs": {
     "aliases": {
