@@ -5479,7 +5479,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-01-16",
+    "date": "2024-01-18",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5487,7 +5487,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.2.0"
+    "version": "8.2.1"
   },
   "sox": {
     "aliases": {
