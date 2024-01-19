@@ -1424,6 +1424,7 @@
     "dependencies": [
       "gmp",
       "gnutls",
+      "icu4c",
       "libtasn1",
       "libunistring",
       "libxml2",
