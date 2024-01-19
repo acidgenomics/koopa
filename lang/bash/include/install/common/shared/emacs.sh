@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Emacs.
-    # @note Updated 2023-08-30.
+    # @note Updated 2024-01-19.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/emacs.rb
@@ -15,18 +15,21 @@ main() {
     # - https://www.emacswiki.org/emacs/EmacsForMacOS
     # - https://emacs.stackexchange.com/questions/28840/
     # """
-    local -a conf_args install_args
+    local -a conf_args deps install_args
     local conf_arg
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
-        'gmp' \
-        'ncurses' \
-        'libtasn1' \
-        'libunistring' \
-        'libxml2' \
-        'nettle' \
-        'texinfo' \
+    deps+=(
+        'gmp'
+        'ncurses'
+        'libtasn1'
+        'libunistring'
+        'icu4c' # libxml2
+        'libxml2'
+        'nettle'
+        'texinfo'
         'gnutls'
+    )
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app "${deps[@]}"
     conf_args=(
         # Used in Homebrew formula:
         # > '--with-gnutls'
