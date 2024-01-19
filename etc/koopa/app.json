@@ -1419,7 +1419,7 @@
     },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
-    "date": "2023-07-30",
+    "date": "2024-01-19",
     "default": true,
     "dependencies": [
       "gmp",
@@ -1434,7 +1434,7 @@
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "29.1"
+    "version": "29.2"
   },
   "ensembl-perl-api": {
     "date": "2023-08-31",
