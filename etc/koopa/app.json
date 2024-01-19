@@ -610,6 +610,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1341,10 +1342,10 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-01-12",
+    "date": "2024-01-16",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "1b52f3289b40c82077ad291b9b919d572988bddd"
+    "version": "bd1a49577a0ca5ab22734ab7383f2dee34db4fa5"
   },
   "du-dust": {
     "aliases": {
@@ -1418,11 +1419,12 @@
     },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
-    "date": "2023-07-30",
+    "date": "2024-01-19",
     "default": true,
     "dependencies": [
       "gmp",
       "gnutls",
+      "icu4c",
       "libtasn1",
       "libunistring",
       "libxml2",
@@ -1433,7 +1435,7 @@
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "29.1"
+    "version": "29.2"
   },
   "ensembl-perl-api": {
     "date": "2023-08-31",
@@ -1945,10 +1947,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-01-11",
+    "date": "2024-01-17",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.42.0"
+    "version": "2.42.1"
   },
   "ghostscript": {
     "aliases": {
@@ -4530,13 +4532,13 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2024-01-12",
+    "date": "2024-01-16",
     "default": false,
     "dependencies": ["python3.12"],
     "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.4.1"
+    "version": "1.4.3"
   },
   "pixman": {
     "aliases": {
@@ -4590,11 +4592,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-01-16",
+    "date": "2024-01-17",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.2.2"
+    "version": "3.2.4"
   },
   "procs": {
     "aliases": {
@@ -5478,7 +5480,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-01-16",
+    "date": "2024-01-18",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5486,7 +5488,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.2.0"
+    "version": "8.2.1"
   },
   "sox": {
     "aliases": {
