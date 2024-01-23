@@ -45,11 +45,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2023-12-18",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.8.0"
+    "version": "2.8.1"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -145,11 +145,11 @@
       "homebrew": true
     },
     "bin": ["asdf"],
-    "date": "2023-09-13",
+    "date": "2024-01-23",
     "default": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.13.1"
+    "version": "0.14.0"
   },
   "aspell": {
     "aliases": {
@@ -1511,14 +1511,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-11",
+    "date": "2024-01-23",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.17.1"
+    "version": "0.17.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1929,9 +1929,10 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2023-11-17",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2583,7 +2584,7 @@
   "htslib": {
     "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
@@ -2592,7 +2593,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19"
+    "version": "1.19.1"
   },
   "httpie": {
     "aliases": {
@@ -2831,11 +2832,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2023-12-31",
+    "date": "2024-01-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.10"
+    "version": "4.0.11"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4072,7 +4073,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2023-10-27",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4084,7 +4085,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.58.0"
+    "version": "1.59.0"
   },
   "nim": {
     "aliases": {
@@ -4220,7 +4221,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2023-12-22",
+    "date": "2024-01-23",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4229,7 +4230,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.5.1"
+    "version": "0.5.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -5228,11 +5229,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-01-12",
+    "date": "2024-01-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.13"
+    "version": "0.1.14"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5310,7 +5311,7 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2023-12-22",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
@@ -5326,7 +5327,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19"
+    "version": "1.19.1"
   },
   "scalene": {
     "bin": ["scalene"],
@@ -5480,7 +5481,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-01-18",
+    "date": "2024-01-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5488,7 +5489,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.2.1"
+    "version": "8.2.4"
   },
   "sox": {
     "aliases": {
@@ -5592,9 +5593,10 @@
   },
   "star-fusion": {
     "bin": ["STAR-Fusion"],
-    "date": "2023-10-16",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -6037,14 +6039,14 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2023-10-06",
+    "date": "2024-01-23",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.10"
+    "version": "2.11"
   },
   "walk": {
     "bin": ["walk"],
