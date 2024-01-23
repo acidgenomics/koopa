@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2023-08-31.
+    # @note Updated 2024-01-23.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -19,6 +19,7 @@ main() {
         'c-ares'
         'jemalloc'
         'libev'
+        'icu4c' # libxml2
         'libxml2'
         'openssl3'
         'zlib'
