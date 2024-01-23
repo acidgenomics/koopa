@@ -1770,11 +1770,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-01-02",
+    "date": "2024-01-23",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.45.0"
+    "version": "0.46.0"
   },
   "gatk": {
     "aliases": {
@@ -5489,7 +5489,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.2.4"
+    "version": "8.3.1"
   },
   "sox": {
     "aliases": {
