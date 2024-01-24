@@ -5693,7 +5693,7 @@
       "fedora": "taglib-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "pkg-config"],
+    "build_dependencies": ["cmake", "git", "pkg-config"],
     "date": "2024-01-24",
     "default": false,
     "dependencies": ["zlib"],
