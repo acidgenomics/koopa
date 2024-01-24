@@ -3,7 +3,7 @@
 main() {
     # """
     # Install TagLib.
-    # @note Updated 2023-07-03.
+    # @note Updated 2024-01-24.
     #
     # @seealso
     # - https://stackoverflow.com/questions/29200461
@@ -13,8 +13,10 @@ main() {
     # - https://cmake.org/pipermail/cmake/2012-June/050792.html
     # - https://github.com/gabime/spdlog/issues/1190
     # """
-    local -A cmake dict
+    local -A app cmake dict
     local -a cmake_args
+    app['git']="$(koopa_locate_git)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'zlib'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -36,11 +38,13 @@ main() {
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
         "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
-    dict['url']="https://github.com/taglib/taglib/archive/refs/tags/\
-v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_git_clone \
+        --prefix='src' \
+        --tag="v${dict['version']}" \
+        --url='https://github.com/taglib/taglib'
     koopa_cd 'src'
+    # Required for 'utfcpp' submodule as of v2.0 release.
+    "${app['git']}" submodule update --init
     koopa_cmake_build \
         --include-dir='include' \
         --lib-dir='lib' \
