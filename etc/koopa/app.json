@@ -5317,6 +5317,7 @@
       "macos-arm64": ["htslib", "ncurses", "zlib"],
       "noarch": ["conda"]
     },
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5327,7 +5328,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19.2"
+    "version": "1.19.1"
   },
   "scalene": {
     "bin": ["scalene"],
