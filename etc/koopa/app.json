@@ -1929,7 +1929,7 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2024-01-23",
+    "date": "2024-01-24",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1940,7 +1940,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.28.2"
+    "version": "0.28.3"
   },
   "gh": {
     "aliases": {
@@ -3776,13 +3776,13 @@
     },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2023-12-14",
+    "date": "2024-01-24",
     "default": false,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.10.0"
+    "version": "6.11.0"
   },
   "mimalloc": {
     "aliases": {
@@ -5311,7 +5311,7 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2024-01-23",
+    "date": "2024-01-24",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
@@ -5327,7 +5327,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19.1"
+    "version": "1.19.2"
   },
   "scalene": {
     "bin": ["scalene"],
@@ -5693,12 +5693,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-07-01",
+    "date": "2024-01-24",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "1.13.1"
+    "version": "2.0"
   },
   "tar": {
     "aliases": {
