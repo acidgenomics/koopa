@@ -1770,11 +1770,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-01-02",
+    "date": "2024-01-23",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.45.0"
+    "version": "0.46.0"
   },
   "gatk": {
     "aliases": {
@@ -1929,7 +1929,7 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2024-01-23",
+    "date": "2024-01-24",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1940,7 +1940,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.28.2"
+    "version": "0.28.3"
   },
   "gh": {
     "aliases": {
@@ -3776,13 +3776,13 @@
     },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2023-12-14",
+    "date": "2024-01-24",
     "default": false,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.10.0"
+    "version": "6.11.0"
   },
   "mimalloc": {
     "aliases": {
@@ -5311,12 +5311,13 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2024-01-23",
+    "date": "2024-01-24",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
       "noarch": ["conda"]
     },
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5489,7 +5490,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.2.4"
+    "version": "8.3.1"
   },
   "sox": {
     "aliases": {
@@ -5693,12 +5694,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-07-01",
+    "date": "2024-01-24",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "1.13.1"
+    "version": "2.0"
   },
   "tar": {
     "aliases": {
