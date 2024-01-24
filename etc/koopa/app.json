@@ -3217,7 +3217,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-10-17",
+    "date": "2024-01-24",
     "default": false,
     "prune": false,
     "url": [
@@ -3225,7 +3225,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.0.1"
+    "version": "3.0.2"
   },
   "libksba": {
     "aliases": {
@@ -5042,11 +5042,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-01-09",
+    "date": "2024-01-24",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.65.1"
+    "version": "1.65.2"
   },
   "readline": {
     "aliases": {
