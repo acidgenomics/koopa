@@ -4740,6 +4740,7 @@
     "date": "2023-11-18",
     "default": false,
     "dependencies": ["python3.12", "taglib"],
+    "notes": ["Not yet compatible with taglib 2.0 release."],
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
@@ -5693,13 +5694,14 @@
       "fedora": "taglib-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "pkg-config"],
+    "build_dependencies": ["cmake", "git", "pkg-config"],
     "date": "2024-01-24",
     "default": false,
     "dependencies": ["zlib"],
+    "outdated": true,
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "2.0"
+    "version": "1.13.1"
   },
   "tar": {
     "aliases": {
