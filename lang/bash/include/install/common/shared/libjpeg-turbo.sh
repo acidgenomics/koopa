@@ -6,7 +6,7 @@
 main() {
     # """
     # Install libjpeg-turbo.
-    # @note Updated 2023-05-15.
+    # @note Updated 2024-01-24.
     #
     # @seealso
     # - https://libjpeg-turbo.org/
@@ -23,8 +23,8 @@ main() {
         '-DENABLE_STATIC=OFF'
         '-DWITH_JPEG8=ON'
     )
-    dict['url']="https://downloads.sourceforge.net/project/libjpeg-turbo/\
-${dict['version']}/libjpeg-turbo-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/libjpeg-turbo/libjpeg-turbo/releases/\
+download/${dict['version']}/libjpeg-turbo-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
