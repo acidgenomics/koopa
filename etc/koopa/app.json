@@ -312,9 +312,10 @@
     "default": false,
     "dependencies": ["gettext", "openssl3"],
     "man1": ["axel.1"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/axel-download-accelerator/axel/"],
-    "version": "2.17.12"
+    "version": "2.17.11"
   },
   "azure-cli": {
     "aliases": {
