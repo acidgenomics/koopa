@@ -2833,11 +2833,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-01-23",
+    "date": "2024-01-30",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.11"
+    "version": "4.0.12"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4330,12 +4330,12 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-11-27",
+    "date": "2024-01-30",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.2.0"
+    "version": "3.2.1"
   },
   "oracle-instant-client": {
     "date": "2023-12-22",
@@ -5492,7 +5492,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.4.1"
+    "version": "8.4.2"
   },
   "sox": {
     "aliases": {
