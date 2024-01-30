@@ -1,9 +1,18 @@
 #!/usr/bin/env bash
 
+# NOTE Hitting build errors with 2.17.12 on macOS:
+#
+# 1 error generated.
+# gmake[2]: *** [Makefile:767: src/axel-random.o] Error 1
+# gmake[2]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.ikHlYXZ9jB/src'
+# gmake[1]: *** [Makefile:914: all-recursive] Error 1
+# gmake[1]: Leaving directory '/private/var/folders/l1/8y8sjzmn15v49jgrqglghcfr0000gn/T/tmp.ikHlYXZ9jB/src'
+# gmake: *** [Makefile:464: all] Error 2
+
 main() {
     # """
-    # Install aria2.
-    # @note Updated 2023-12-05.
+    # Install axel.
+    # @note Updated 2024-01-30.
     #
     # @seealso
     # - https://github.com/axel-download-accelerator/axel
