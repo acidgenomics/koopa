@@ -308,13 +308,13 @@
     },
     "bin": ["axel"],
     "build_dependencies": ["gawk", "pkg-config", "xz"],
-    "date": "2023-12-05",
+    "date": "2024-01-30",
     "default": false,
     "dependencies": ["gettext", "openssl3"],
     "man1": ["axel.1"],
     "prune": true,
     "url": ["https://github.com/axel-download-accelerator/axel/"],
-    "version": "2.17.11"
+    "version": "2.17.12"
   },
   "azure-cli": {
     "aliases": {
@@ -347,10 +347,10 @@
     },
     "bin": ["bandwhich"],
     "build_dependencies": ["rust"],
-    "date": "2023-10-16",
+    "date": "2024-01-29",
     "default": false,
     "url": ["https://github.com/imsnif/bandwhich/"],
-    "version": "0.21.1"
+    "version": "0.22.2"
   },
   "bash": {
     "aliases": {
@@ -550,11 +550,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2024-01-26",
+    "date": "2024-01-29",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "24.1.0"
+    "version": "24.1.1"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -2609,10 +2609,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-01-08",
+    "date": "2024-01-29",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.121.2"
+    "version": "0.122.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3731,7 +3731,7 @@
     "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.38.0"
+    "version": "0.39.0"
   },
   "mcfly": {
     "aliases": {
@@ -4749,7 +4749,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2023-12-31",
+    "date": "2024-01-29",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -4757,7 +4757,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "7.4.4"
+    "version": "8.0.0"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -5230,11 +5230,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-01-23",
+    "date": "2024-01-30",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.14"
+    "version": "0.1.15"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5483,7 +5483,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-01-25",
+    "date": "2024-01-30",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5491,7 +5491,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.3.2"
+    "version": "8.4.1"
   },
   "sox": {
     "aliases": {
@@ -5581,6 +5581,7 @@
     "date": "2023-10-13",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
