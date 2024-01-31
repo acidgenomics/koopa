@@ -3,13 +3,17 @@
 _koopa_emacs() {
     # """
     # Emacs alias that provides 24-bit color support.
-    # @note Updated 2023-09-13.
+    # @note Updated 2024-01-31.
     #
     # Check that configuration is correct with 'infocmp xterm-24bit'.
+    #
+    # Alternatively can set 'export COLORTERM=truecolor'.
     #
     # @seealso
     # - https://emacs.stackexchange.com/questions/51100/
     # - https://github.com/kovidgoyal/kitty/issues/1141
+    # - https://chadaustin.me/2024/01/truecolor-terminal-emacs/
+    # - https://news.ycombinator.com/item?id=39189881
     # """
     if _koopa_is_macos
     then
