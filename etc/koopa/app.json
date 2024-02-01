@@ -1512,14 +1512,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-25",
+    "date": "2024-02-01",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.17.3"
+    "version": "0.18.0"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1771,11 +1771,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-01-23",
+    "date": "2024-02-01",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.46.0"
+    "version": "0.46.1"
   },
   "gatk": {
     "aliases": {
@@ -1949,10 +1949,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-01-17",
+    "date": "2024-02-01",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.42.1"
+    "version": "2.43.1"
   },
   "ghostscript": {
     "aliases": {
@@ -5399,6 +5399,7 @@
     "date": "2023-11-18",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
