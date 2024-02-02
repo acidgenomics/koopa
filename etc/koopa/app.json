@@ -5231,19 +5231,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-01-30",
+    "date": "2024-02-02",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.1.15"
+    "version": "0.2.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2024-01-25",
+    "date": "2024-02-02",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.50"
+    "version": "0.0.51"
   },
   "rust": {
     "aliases": {
