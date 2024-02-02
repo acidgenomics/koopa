@@ -1319,10 +1319,10 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-08",
+    "date": "2024-02-02",
     "default": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.54.0"
+    "version": "0.55.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -5485,7 +5485,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-01-30",
+    "date": "2024-02-02",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5493,7 +5493,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.4.2"
+    "version": "8.4.3"
   },
   "sox": {
     "aliases": {
