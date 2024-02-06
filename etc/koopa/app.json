@@ -641,13 +641,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-02",
+    "date": "2024-02-06",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.32.0"
+    "version": "1.33.1"
   },
   "brotli": {
     "aliases": {
@@ -1205,11 +1205,11 @@
     },
     "bin": ["cpufetch"],
     "build_dependencies": ["make"],
-    "date": "2023-05-06",
+    "date": "2024-02-06",
     "default": false,
     "man1": ["cpufetch.1"],
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
-    "version": "1.04"
+    "version": "1.05"
   },
   "csvkit": {
     "bin": [
@@ -2833,11 +2833,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-01-30",
+    "date": "2024-02-06",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.0.12"
+    "version": "4.1.0"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4594,11 +4594,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-01-17",
+    "date": "2024-02-06",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.2.4"
+    "version": "3.2.5"
   },
   "procs": {
     "aliases": {
@@ -5231,19 +5231,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-02-02",
+    "date": "2024-02-06",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.2.0"
+    "version": "0.2.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2024-02-02",
+    "date": "2024-02-06",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.51"
+    "version": "0.0.52"
   },
   "rust": {
     "aliases": {
@@ -5485,7 +5485,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-02-02",
+    "date": "2024-02-06",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5493,7 +5493,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.4.3"
+    "version": "8.4.4"
   },
   "sox": {
     "aliases": {
