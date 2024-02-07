@@ -293,14 +293,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-01-02",
+    "date": "2024-02-07",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.15.6"
+    "version": "2.15.17"
   },
   "axel": {
     "aliases": {
@@ -322,11 +322,11 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2023-12-22",
+    "date": "2024-02-07",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.55.0"
+    "version": "2.57.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -2120,21 +2120,21 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2023-12-14",
+    "date": "2024-02-07",
     "default": false,
     "url": ["https://golang.org/dl/"],
-    "version": "1.21.5"
+    "version": "1.22.0"
   },
   "google-cloud-sdk": {
     "aliases": {
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2023-12-22",
+    "date": "2024-02-07",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "458.0.1"
+    "version": "463.0.0"
   },
   "googletest": {
     "aliases": {
@@ -2905,7 +2905,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2023-12-12",
+    "date": "2024-02-07",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
@@ -2913,7 +2913,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.37.0"
+    "version": "2.38.8"
   },
   "ldc": {
     "aliases": {
@@ -3151,12 +3151,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-15",
+    "date": "2024-02-07",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.7.1"
+    "version": "1.7.2"
   },
   "libgpg-error": {
     "aliases": {
@@ -4182,11 +4182,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-01-10",
+    "date": "2024-02-07",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.89.0"
+    "version": "0.90.1"
   },
   "oniguruma": {
     "aliases": {
@@ -4222,7 +4222,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-01-23",
+    "date": "2024-02-07",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4231,7 +4231,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.5.2"
+    "version": "0.5.3"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -5485,7 +5485,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-02-06",
+    "date": "2024-02-07",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5493,7 +5493,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.4.4"
+    "version": "8.4.7"
   },
   "sox": {
     "aliases": {
