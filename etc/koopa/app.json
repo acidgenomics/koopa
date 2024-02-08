@@ -1519,7 +1519,7 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.1"
+    "version": "0.18.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -5261,10 +5261,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-12-31",
+    "date": "2024-02-08",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.75.0"
+    "version": "1.76.0"
   },
   "salmon": {
     "bin": ["salmon"],
