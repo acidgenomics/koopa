@@ -1512,14 +1512,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-02-01",
+    "date": "2024-02-08",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.0"
+    "version": "0.18.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -3409,11 +3409,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2023-11-07",
+    "date": "2024-02-08",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.47.0"
+    "version": "1.48.0"
   },
   "libvterm": {
     "aliases": {
@@ -5261,10 +5261,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2023-12-31",
+    "date": "2024-02-08",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.75.0"
+    "version": "1.76.0"
   },
   "salmon": {
     "bin": ["salmon"],
