@@ -6512,10 +6512,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2023-12-12",
+    "date": "2024-02-09",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.40.5"
+    "version": "4.40.7"
   },
   "yt-dlp": {
     "aliases": {
