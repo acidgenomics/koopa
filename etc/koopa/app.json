@@ -1512,14 +1512,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-02-20",
+    "date": "2024-02-22",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.3"
+    "version": "0.18.4"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2011,13 +2011,13 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-22",
+    "date": "2024-02-22",
     "default": false,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.24.3"
+    "version": "0.25.0"
   },
   "glances": {
     "aliases": {
@@ -4772,7 +4772,7 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-08",
+    "date": "2024-02-22",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -4792,7 +4792,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.7"
+    "version": "3.11.8"
   },
   "python3.12": {
     "aliases": {
@@ -4800,7 +4800,7 @@
     },
     "bin": ["python3.12", "python3.12-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-08",
+    "date": "2024-02-22",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -4820,7 +4820,7 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.1"
+    "version": "3.12.2"
   },
   "quarto": {
     "aliases": {
@@ -5880,14 +5880,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-04",
+    "date": "2024-02-22",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.20.8"
+    "version": "0.21.0"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6585,10 +6585,10 @@
     },
     "bin": ["zoxide"],
     "build_dependencies": ["rust"],
-    "date": "2024-02-20",
+    "date": "2024-02-22",
     "default": true,
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
-    "version": "0.9.3"
+    "version": "0.9.4"
   },
   "zsh": {
     "aliases": {
