@@ -4580,7 +4580,7 @@
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.0"
+    "version": "1.8.1"
   },
   "prelude-emacs": {
     "date": "2023-12-22",
