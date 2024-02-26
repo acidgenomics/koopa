@@ -641,13 +641,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-02-06",
+    "date": "2024-02-26",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.33.1"
+    "version": "1.34.0"
   },
   "brotli": {
     "aliases": {
@@ -895,10 +895,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-02-20",
+    "date": "2024-02-26",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.46.1"
+    "version": "2.47.0"
   },
   "cli11": {
     "aliases": {
@@ -2011,13 +2011,13 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2024-02-22",
+    "date": "2024-02-26",
     "default": false,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.25.0"
+    "version": "0.25.1"
   },
   "glances": {
     "aliases": {
@@ -4575,12 +4575,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2023-11-16",
+    "date": "2024-02-26",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.7.1"
+    "version": "1.8.0"
   },
   "prelude-emacs": {
     "date": "2023-12-22",
@@ -4716,11 +4716,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2023-12-11",
+    "date": "2024-02-26",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.0.3"
+    "version": "3.1.0"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -5485,7 +5485,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-02-20",
+    "date": "2024-02-26",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5493,7 +5493,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.4.11"
+    "version": "8.5.3"
   },
   "sox": {
     "aliases": {
@@ -6512,10 +6512,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2024-02-20",
+    "date": "2024-02-26",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.41.1"
+    "version": "4.42.1"
   },
   "yt-dlp": {
     "aliases": {
