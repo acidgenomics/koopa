@@ -3892,11 +3892,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-02-20",
+    "date": "2024-02-28",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.20"
+    "version": "1.21"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
