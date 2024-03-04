@@ -27239,12 +27239,17 @@ koopa_status() {
 }
 
 koopa_stop() {
+    local -A bool
+    bool['verbose']="${KOOPA_VERBOSE:-0}"
     koopa_msg 'red-bold' 'red' 'Error:' "$@" >&2
-    set +o errexit
-    set +o errtrace
-    set +o xtrace
-    trap '' ERR
-    koopa_stack_trace
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        set +o errexit
+        set +o errtrace
+        set +o xtrace
+        trap '' ERR
+        koopa_stack_trace
+    fi
     exit 1
 }
 
