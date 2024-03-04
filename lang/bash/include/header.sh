@@ -11,7 +11,8 @@ __koopa_error_trap() {
     # """
     local status
     status="$?"
-    koopa_stop "Exit status ${status} at line ${BASH_LINENO[0]}."
+    __koopa_print "Exit status ${status} at line ${BASH_LINENO[0]}."
+    exit 1
 }
 
 __koopa_exit_trap() {
