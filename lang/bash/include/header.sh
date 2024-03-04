@@ -11,6 +11,9 @@ __koopa_error_trap() {
     # """
     local status
     status="$?"
+    # Alternatively, can use 'koopa_stop' here instead if we know our Bash
+    # library is properly sourced first. This will provide better stack trace
+    # information.
     __koopa_print "Exit status ${status} at line ${BASH_LINENO[0]}."
     exit 1
 }
