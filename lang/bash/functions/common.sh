@@ -26157,6 +26157,29 @@ koopa_ssh_key_info() {
     return 0
 }
 
+koopa_stack_trace() {
+    local cnt i
+    koopa_assert_has_no_args "$#"
+    set +o xtrace
+    printf '\nStack trace:\n'
+    (( cnt = ${#FUNCNAME[@]} ))
+    (( i = 0 ))
+    while (( i < cnt ))
+    do
+        local line
+        printf '[%3d] %s\n' "${i}" "${FUNCNAME[i]}"
+        if (( i > 0 ))
+        then
+            line="${BASH_LINENO[$((i - 1))]}"
+        else
+            line="${LINENO}"
+        fi
+        printf '      file "%s" line %d\n' "${BASH_SOURCE[i]}" "${line}"
+        (( i++ ))
+    done
+    return 0
+}
+
 koopa_star_align_paired_end_per_sample() {
     local -A app bool dict
     local -a align_args
@@ -27216,7 +27239,17 @@ koopa_status() {
 }
 
 koopa_stop() {
-    koopa_msg 'red-bold' 'red' '!! Error:' "$@" >&2
+    local -A bool
+    bool['verbose']="${KOOPA_VERBOSE:-0}"
+    koopa_msg 'red-bold' 'red' 'Error:' "$@" >&2
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        set +o errexit
+        set +o errtrace
+        set +o xtrace
+        trap '' ERR
+        koopa_stack_trace
+    fi
     exit 1
 }
 
