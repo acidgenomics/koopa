@@ -1,5 +1,23 @@
 #!/usr/bin/env bash
 
+__koopa_error_trap() {
+    # """
+    # Set a trap for any errors.
+    # @note Updated 2024-03-04.
+    #
+    # @seealso
+    # - https://github.com/TritonDataCenter/sdc-headnode/blob/master/
+    #     buildtools/lib/error_handler.sh
+    # """
+    local status
+    status="$?"
+    # Alternatively, can use 'koopa_stop' here instead if we know our Bash
+    # library is properly sourced first. This will provide better stack trace
+    # information.
+    __koopa_print "Exit status ${status} at line ${BASH_LINENO[0]}."
+    exit 1
+}
+
 __koopa_exit_trap() {
     # """
     # Kill all processes whose parent is this process.
@@ -182,6 +200,7 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['activate']}" -eq 0 ]]
     then
+        trap __koopa_error_trap ERR
         trap __koopa_exit_trap EXIT
         # Disable all user-defined aliases.
         unalias -a
