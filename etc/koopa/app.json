@@ -6008,7 +6008,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-12",
+    "date": "2024-03-05",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": [
@@ -6023,7 +6023,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.0.2150"
+    "version": "9.1.0100"
   },
   "visidata": {
     "aliases": {
