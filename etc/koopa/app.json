@@ -5839,6 +5839,7 @@
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
     "man1": ["tmux.1"],
+    "prune": false,
     "url": ["https://github.com/tmux/tmux/"],
     "version": "3.4"
   },
