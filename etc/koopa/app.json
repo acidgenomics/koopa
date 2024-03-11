@@ -6532,7 +6532,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.03.10"
+    "version": "2024.3.10"
   },
   "zellij": {
     "aliases": {
