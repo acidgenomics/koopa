@@ -28,6 +28,7 @@
     "date": "2023-08-31",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -45,11 +46,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-01-23",
+    "date": "2024-03-11",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.8.1"
+    "version": "2.8.3"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -647,7 +648,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.35.0"
+    "version": "1.36.1"
   },
   "brotli": {
     "aliases": {
@@ -1772,11 +1773,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-02-01",
+    "date": "2024-03-11",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.46.1"
+    "version": "0.47.0"
   },
   "gatk": {
     "aliases": {
@@ -4751,7 +4752,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2024-03-04",
+    "date": "2024-03-11",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -4759,7 +4760,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "8.1.0"
+    "version": "8.1.1"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -5044,11 +5045,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-01-24",
+    "date": "2024-03-11",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.65.2"
+    "version": "1.66.0"
   },
   "readline": {
     "aliases": {
@@ -5232,11 +5233,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-03-07",
+    "date": "2024-03-11",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.1"
+    "version": "0.3.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5882,14 +5883,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-02-22",
+    "date": "2024-03-11",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.21.0"
+    "version": "0.22.1"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6524,14 +6525,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2023-12-31",
+    "date": "2024-03-11",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2023.12.30"
+    "version": "2024.03.10"
   },
   "zellij": {
     "aliases": {
