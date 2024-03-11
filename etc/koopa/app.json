@@ -5882,7 +5882,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["coreutils", "make", "pkg-config"],
     "date": "2024-03-11",
     "default": false,
     "prune": false,
