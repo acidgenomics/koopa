@@ -8,6 +8,11 @@ main() {
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/
     #     Formula/tree-sitter.rb
+    # - Build issue with BSD install:
+    #   - https://github.com/tree-sitter/tree-sitter/issues/3157
+    #   - https://github.com/macports/macports-ports/blob/
+    #     76faa188751724c04931ebb3dfb4d18152424cfc/devel/tree-sitter/files/
+    #     patch-makefile-install.diff
     # """
     local -A app dict
     koopa_activate_app --build-only 'make' 'pkg-config'
