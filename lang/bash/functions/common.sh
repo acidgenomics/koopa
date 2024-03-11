@@ -18805,6 +18805,13 @@ koopa_locate_id() {
         "$@"
 }
 
+koopa_locate_install() {
+    koopa_locate_app \
+        --app-name='coreutils' \
+        --bin-name='ginstall' \
+        "$@"
+}
+
 koopa_locate_jar() {
     koopa_locate_app \
         --app-name='temurin' \
