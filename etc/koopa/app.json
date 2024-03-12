@@ -5495,7 +5495,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.5.5"
+    "version": "8.6.0"
   },
   "sox": {
     "aliases": {
