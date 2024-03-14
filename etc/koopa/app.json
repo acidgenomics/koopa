@@ -72,7 +72,7 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2023-11-22",
+    "date": "2024-03-14",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -81,7 +81,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.2.5"
+    "version": "1.3.0"
   },
   "apr": {
     "aliases": {
@@ -266,14 +266,14 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
-    "date": "2024-02-20",
+    "date": "2024-03-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.3.0"
+    "version": "2.3.1"
   },
   "automake": {
     "aliases": {
@@ -800,11 +800,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2023-12-22",
+    "date": "2024-03-14",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2023-12-12"
+    "version": "2024-03-11"
   },
   "cairo": {
     "aliases": {
@@ -1252,13 +1252,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-03-14",
     "default": true,
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.5.0"
+    "version": "8.6.0"
   },
   "dash": {
     "aliases": {
@@ -1773,11 +1773,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-03-11",
+    "date": "2024-03-14",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.47.0"
+    "version": "0.48.0"
   },
   "gatk": {
     "aliases": {
@@ -2458,13 +2458,13 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2023-11-13",
+    "date": "2024-03-14",
     "default": false,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.1.20.0"
+    "version": "0.1.22.0"
   },
   "haskell-stack": {
     "aliases": {
@@ -3766,12 +3766,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2024-02-20",
+    "date": "2024-03-14",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.3.2"
+    "version": "1.4.0"
   },
   "miller": {
     "aliases": {
@@ -3800,7 +3800,7 @@
   "minimap2": {
     "bin": ["minimap2"],
     "build_dependencies": ["make"],
-    "date": "2023-10-16",
+    "date": "2024-03-14",
     "default": false,
     "dependencies": ["zlib"],
     "supported": {
@@ -3813,7 +3813,7 @@
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.26"
+    "version": "2.27"
   },
   "misopy": {
     "bin": ["miso"],
@@ -5487,7 +5487,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-07",
+    "date": "2024-03-14",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5495,7 +5495,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.6.0"
+    "version": "8.7.0"
   },
   "sox": {
     "aliases": {
