@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2023-10-31.
+    # @note Updated 2024-03-12.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
@@ -18,7 +18,7 @@ main() {
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['os_type']="$(koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['py_version']='3.11'
+    dict['py_version']='3.12'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in
