@@ -1614,7 +1614,7 @@
     },
     "bin": ["fish"],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-01-02",
+    "date": "2024-03-19",
     "default": false,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1622,7 +1622,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.7.0"
+    "version": "3.7.1"
   },
   "flac": {
     "aliases": {
@@ -5486,7 +5486,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-14",
+    "date": "2024-03-19",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5494,7 +5494,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.7.0"
+    "version": "8.9.0"
   },
   "sox": {
     "aliases": {
