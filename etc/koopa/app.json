@@ -896,10 +896,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-03-04",
+    "date": "2024-03-18",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.47.1"
+    "version": "2.47.2"
   },
   "cli11": {
     "aliases": {
@@ -1614,7 +1614,7 @@
     },
     "bin": ["fish"],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-01-02",
+    "date": "2024-03-19",
     "default": false,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["fish.1"],
@@ -1622,7 +1622,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "3.7.0"
+    "version": "3.7.1"
   },
   "flac": {
     "aliases": {
@@ -1773,11 +1773,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-03-14",
+    "date": "2024-03-18",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.48.0"
+    "version": "0.48.1"
   },
   "gatk": {
     "aliases": {
@@ -2426,7 +2426,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2023-10-17",
+    "date": "2024-03-18",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2439,7 +2439,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.3.0"
+    "version": "8.3.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2967,10 +2967,10 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2023-12-13",
+    "date": "2024-03-18",
     "default": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.11"
+    "version": "2.12"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3779,13 +3779,13 @@
     },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2024-01-24",
+    "date": "2024-03-18",
     "default": false,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.11.0"
+    "version": "6.12.0"
   },
   "mimalloc": {
     "aliases": {
@@ -4373,11 +4373,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2024-03-04",
+    "date": "2024-03-18",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.12.2"
+    "version": "3.1.12.3"
   },
   "parallel": {
     "aliases": {
@@ -4740,15 +4740,14 @@
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "date": "2023-11-18",
+    "date": "2024-03-18",
     "default": false,
     "dependencies": ["python3.12", "taglib"],
-    "notes": ["Not yet compatible with taglib 2.0 release."],
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
     ],
-    "version": "2.1.0"
+    "version": "3.0.0"
   },
   "pytest": {
     "bin": ["pytest"],
@@ -5487,7 +5486,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-16",
+    "date": "2024-03-19",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5495,7 +5494,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.8.0"
+    "version": "8.9.0"
   },
   "sox": {
     "aliases": {
@@ -5700,13 +5699,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "pkg-config"],
-    "date": "2024-01-24",
+    "date": "2024-03-18",
     "default": false,
     "dependencies": ["zlib"],
-    "outdated": true,
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "1.13.1"
+    "version": "2.0"
   },
   "tar": {
     "aliases": {
@@ -5882,15 +5880,15 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["coreutils", "make", "pkg-config"],
-    "date": "2024-03-11",
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2024-03-18",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.22.1"
+    "version": "0.22.2"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
