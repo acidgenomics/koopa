@@ -552,11 +552,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2024-02-20",
+    "date": "2024-03-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "24.2.0"
+    "version": "24.3.0"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -1239,10 +1239,10 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2023-11-27",
+    "date": "2024-03-16",
     "default": false,
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.29.0"
+    "version": "0.30.0"
   },
   "curl": {
     "aliases": {
@@ -1300,10 +1300,10 @@
     },
     "bin": ["delta"],
     "build_dependencies": ["rust"],
-    "date": "2023-06-03",
+    "date": "2024-03-16",
     "default": true,
     "url": ["https://github.com/dandavison/delta/"],
-    "version": "0.16.5"
+    "version": "0.17.0"
   },
   "diff-so-fancy": {
     "aliases": {
@@ -1514,14 +1514,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-07",
+    "date": "2024-03-16",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.6"
+    "version": "0.18.7"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2612,10 +2612,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-03-07",
+    "date": "2024-03-16",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.123.8"
+    "version": "0.124.0"
   },
   "hyperfine": {
     "aliases": {
@@ -2835,11 +2835,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-03-07",
+    "date": "2024-03-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.1.4"
+    "version": "4.1.5"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3835,11 +3835,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-03-04",
+    "date": "2024-03-16",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.4.1"
+    "version": "2.30.0"
   },
   "mpc": {
     "aliases": {
@@ -4256,14 +4256,14 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2023-11-10",
+    "date": "2024-03-16",
     "default": false,
     "dependencies": ["conda", "poetry"],
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.2.4"
+    "version": "3.2.5"
   },
   "openblas": {
     "aliases": {
@@ -5233,11 +5233,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-03-11",
+    "date": "2024-03-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.2"
+    "version": "0.3.3"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5487,7 +5487,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-14",
+    "date": "2024-03-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5495,7 +5495,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.7.0"
+    "version": "8.8.0"
   },
   "sox": {
     "aliases": {
