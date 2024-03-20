@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Check if we need to reinstall any reverse dependencies
+
 # FIXME This isn't detecting supported app correctly now.
 # FIXME This currently doesn't work on HMS O2 cluster. Consider reworking.
 # FIXME Our installer should drop an invisible build file into the directory
