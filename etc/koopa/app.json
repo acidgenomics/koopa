@@ -2447,10 +2447,10 @@
     },
     "bin": ["cabal"],
     "build_dependencies": ["haskell-ghcup"],
-    "date": "2023-05-08",
+    "date": "2024-03-22",
     "default": false,
     "url": ["https://www.haskell.org/cabal/download.html"],
-    "version": "3.10.1.0"
+    "version": "3.10.3.0"
   },
   "haskell-ghcup": {
     "aliases": {
