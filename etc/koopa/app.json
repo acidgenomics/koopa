@@ -25,7 +25,7 @@
   "agat": {
     "bin": ["agat"],
     "build_dependencies": ["patch"],
-    "date": "2023-08-31",
+    "date": "2024-03-21",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -36,7 +36,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/NBISweden/AGAT/"],
-    "version": "1.2.0"
+    "version": "1.3.1"
   },
   "anaconda": {
     "date": "2024-03-12",
@@ -932,12 +932,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-03-21",
     "default": true,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.28.1"
+    "version": "3.29.0"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1514,14 +1514,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-16",
+    "date": "2024-03-21",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.7"
+    "version": "0.18.8"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1951,10 +1951,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-03-04",
+    "date": "2024-03-21",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.45.0"
+    "version": "2.46.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2447,10 +2447,10 @@
     },
     "bin": ["cabal"],
     "build_dependencies": ["haskell-ghcup"],
-    "date": "2023-05-08",
+    "date": "2024-03-22",
     "default": false,
     "url": ["https://www.haskell.org/cabal/download.html"],
-    "version": "3.10.1.0"
+    "version": "3.10.3.0"
   },
   "haskell-ghcup": {
     "aliases": {
@@ -2974,14 +2974,14 @@
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-10-17",
+    "date": "2024-03-21",
     "default": false,
     "prune": false,
     "url": [
       "https://gitlab.dkrz.de/k202009/libaec/-/releases",
       "https://github.com/MathisRosenhauer/libaec/"
     ],
-    "version": "1.1.2"
+    "version": "1.1.3"
   },
   "libarchive": {
     "aliases": {
@@ -3153,12 +3153,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-02-07",
+    "date": "2024-03-21",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.7.2"
+    "version": "1.8.0"
   },
   "libgpg-error": {
     "aliases": {
@@ -5262,10 +5262,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-02-08",
+    "date": "2024-03-21",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.76.0"
+    "version": "1.77.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -5621,10 +5621,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2024-01-02",
+    "date": "2024-03-02",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.17.1"
+    "version": "1.18.0"
   },
   "stow": {
     "aliases": {
@@ -5771,13 +5771,13 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2023-10-13",
+    "date": "2024-03-22",
     "default": false,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21.0.1+12"
+    "version": "21.0.2+13"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
