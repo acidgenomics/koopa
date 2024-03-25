@@ -2013,27 +2013,27 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2024-02-26",
+    "date": "2024-03-25",
     "default": false,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.25.1"
+    "version": "0.25.2"
   },
   "glances": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2023-12-22",
+    "date": "2024-03-25",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.4.0.3"
+    "version": "3.4.0.5"
   },
   "glib": {
     "aliases": {
@@ -3043,11 +3043,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-09-18",
+    "date": "2024-03-25",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.19"
+    "version": "1.20"
   },
   "libedit": {
     "aliases": {
@@ -3554,10 +3554,10 @@
     },
     "bin": ["lsd"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-28",
+    "date": "2024-03-25",
     "default": false,
-    "url": ["https://github.com/Peltoche/lsd/"],
-    "version": "1.0.0"
+    "url": ["https://github.com/lsd-rs/lsd/"],
+    "version": "1.1.1"
   },
   "lua": {
     "aliases": {
@@ -5232,11 +5232,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-03-16",
+    "date": "2024-03-25",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.3"
+    "version": "0.3.4"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5486,7 +5486,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-19",
+    "date": "2024-03-25",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5494,7 +5494,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.9.0"
+    "version": "8.10.0"
   },
   "sox": {
     "aliases": {
@@ -5621,10 +5621,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2024-03-02",
+    "date": "2024-03-25",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.18.0"
+    "version": "1.18.1"
   },
   "stow": {
     "aliases": {
@@ -6513,10 +6513,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2024-02-26",
+    "date": "2024-03-25",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.42.1"
+    "version": "4.43.1"
   },
   "yt-dlp": {
     "aliases": {
