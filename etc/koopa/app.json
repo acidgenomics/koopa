@@ -46,11 +46,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-03-11",
+    "date": "2024-03-26",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.8.3"
+    "version": "2.8.4"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -1356,13 +1356,13 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-10",
+    "date": "2024-03-26",
     "default": true,
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.9.0"
+    "version": "1.0.0"
   },
   "ed": {
     "aliases": {
@@ -3554,10 +3554,10 @@
     },
     "bin": ["lsd"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-25",
+    "date": "2024-03-26",
     "default": false,
     "url": ["https://github.com/lsd-rs/lsd/"],
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "lua": {
     "aliases": {
@@ -3682,7 +3682,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2024-03-04",
+    "date": "2024-03-26",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3705,7 +3705,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.6"
+    "version": "1.5.8"
   },
   "man-db": {
     "aliases": {
