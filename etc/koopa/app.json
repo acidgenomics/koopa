@@ -1514,14 +1514,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-21",
+    "date": "2024-03-27",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.8"
+    "version": "0.18.9"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -5089,11 +5089,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-11-03",
+    "date": "2024-03-27",
     "default": false,
     "prune": false,
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
-    "version": "14.2.4"
+    "version": "14.2.5"
   },
   "ripgrep": {
     "aliases": {
@@ -5486,7 +5486,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-25",
+    "date": "2024-03-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5494,7 +5494,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.10.0"
+    "version": "8.10.2"
   },
   "sox": {
     "aliases": {
@@ -6622,7 +6622,7 @@
       "zstdmt"
     ],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2024-03-27",
     "default": true,
     "dependencies": ["lz4", "zlib"],
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
@@ -6631,6 +6631,6 @@
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
     ],
-    "version": "1.5.5"
+    "version": "1.5.6"
   }
 }
