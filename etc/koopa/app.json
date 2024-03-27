@@ -3800,7 +3800,7 @@
   "minimap2": {
     "bin": ["minimap2"],
     "build_dependencies": ["make"],
-    "date": "2024-03-14",
+    "date": "2024-03-27",
     "default": false,
     "dependencies": ["zlib"],
     "supported": {
@@ -3813,7 +3813,7 @@
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.27"
+    "version": "2.28"
   },
   "misopy": {
     "bin": ["miso"],
