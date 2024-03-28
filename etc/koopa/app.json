@@ -46,11 +46,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-03-11",
+    "date": "2024-03-26",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.8.3"
+    "version": "2.8.4"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
@@ -1356,13 +1356,13 @@
     },
     "bin": ["dust"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-10",
+    "date": "2024-03-26",
     "default": true,
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
     ],
-    "version": "0.9.0"
+    "version": "1.0.0"
   },
   "ed": {
     "aliases": {
@@ -1514,14 +1514,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-21",
+    "date": "2024-03-27",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.8"
+    "version": "0.18.9"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -3554,10 +3554,10 @@
     },
     "bin": ["lsd"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-25",
+    "date": "2024-03-26",
     "default": false,
     "url": ["https://github.com/lsd-rs/lsd/"],
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "lua": {
     "aliases": {
@@ -3682,7 +3682,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2024-03-04",
+    "date": "2024-03-26",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3705,7 +3705,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.6"
+    "version": "1.5.8"
   },
   "man-db": {
     "aliases": {
@@ -3800,7 +3800,7 @@
   "minimap2": {
     "bin": ["minimap2"],
     "build_dependencies": ["make"],
-    "date": "2024-03-14",
+    "date": "2024-03-27",
     "default": false,
     "dependencies": ["zlib"],
     "supported": {
@@ -3813,7 +3813,7 @@
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.27"
+    "version": "2.28"
   },
   "misopy": {
     "bin": ["miso"],
@@ -4659,11 +4659,11 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2023-07-17",
+    "date": "2024-03-28",
     "default": false,
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "2.11.1"
+    "version": "2.12.0"
   },
   "pycodestyle": {
     "aliases": {
@@ -5089,11 +5089,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2022-11-03",
+    "date": "2024-03-27",
     "default": false,
     "prune": false,
     "url": ["https://github.com/DaanDeMeyer/reproc/"],
-    "version": "14.2.4"
+    "version": "14.2.5"
   },
   "ripgrep": {
     "aliases": {
@@ -5486,7 +5486,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-25",
+    "date": "2024-03-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5494,7 +5494,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.10.0"
+    "version": "8.10.2"
   },
   "sox": {
     "aliases": {
@@ -6622,7 +6622,7 @@
       "zstdmt"
     ],
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2024-03-27",
     "default": true,
     "dependencies": ["lz4", "zlib"],
     "man1": ["unzstd.1", "zstd.1", "zstdcat.1", "zstdgrep.1", "zstdless.1"],
@@ -6631,6 +6631,6 @@
       "https://facebook.github.io/zstd/",
       "https://github.com/facebook/zstd/"
     ],
-    "version": "1.5.5"
+    "version": "1.5.6"
   }
 }
