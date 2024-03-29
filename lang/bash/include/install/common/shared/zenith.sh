@@ -7,7 +7,7 @@ main() {
     local -A dict
     dict['git']='https://github.com/bvaisvil/zenith.git'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['tag']="v${dict['version']}"
+    dict['tag']="${dict['version']}"
     koopa_install_rust_package \
         --git="${dict['git']}" \
         --tag="${dict['tag']}"
