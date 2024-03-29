@@ -2426,7 +2426,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2024-03-18",
+    "date": "2024-03-29",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2439,7 +2439,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "8.3.1"
+    "version": "8.4.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2471,7 +2471,7 @@
       "homebrew": true
     },
     "bin": ["stack"],
-    "date": "2024-03-07",
+    "date": "2024-03-29",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -2483,7 +2483,7 @@
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.15.3"
+    "version": "2.15.5"
   },
   "hdf5": {
     "aliases": {
@@ -5486,7 +5486,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-03-27",
+    "date": "2024-03-29",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5494,7 +5494,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.10.2"
+    "version": "8.10.4"
   },
   "sox": {
     "aliases": {
@@ -5621,10 +5621,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2024-03-25",
+    "date": "2024-03-29",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.18.1"
+    "version": "1.18.2"
   },
   "stow": {
     "aliases": {
@@ -6000,6 +6000,14 @@
       "https://github.com/JuliaStrings/utf8proc/"
     ],
     "version": "2.9.0"
+  },
+  "uv": {
+    "bin": ["uv"],
+    "date": "2024-03-29",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "url": ["https://pypi.org/project/uv/"],
+    "version": "0.1.26"
   },
   "vim": {
     "aliases": {
@@ -6542,6 +6550,17 @@
     "default": false,
     "url": ["https://github.com/zellij-org/zellij/"],
     "version": "0.39.2"
+  },
+  "zenith": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["zenith"],
+    "build_dependencies": ["rust"],
+    "date": "2024-03-29",
+    "default": true,
+    "url": ["https://github.com/bvaisvil/zenith/"],
+    "version": "0.14.0"
   },
   "zip": {
     "aliases": {

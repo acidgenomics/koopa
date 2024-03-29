@@ -15961,6 +15961,13 @@ koopa_install_utf8proc() {
         "$@"
 }
 
+koopa_install_uv() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='uv' \
+        "$@"
+}
+
 koopa_install_vim() {
     koopa_install_app \
         --name='vim' \
@@ -16143,6 +16150,12 @@ koopa_install_zellij() {
     koopa_install_app \
         --installer='rust-package' \
         --name='zellij' \
+        "$@"
+}
+
+koopa_install_zenith() {
+    koopa_install_app \
+        --name='zenith' \
         "$@"
 }
 
@@ -30857,6 +30870,12 @@ koopa_uninstall_utf8proc() {
         "$@"
 }
 
+koopa_uninstall_uv() {
+    koopa_uninstall_app \
+        --name='uv' \
+        "$@"
+}
+
 koopa_uninstall_vim() {
     koopa_uninstall_app \
         --name='vim' \
@@ -31034,6 +31053,12 @@ koopa_uninstall_yt_dlp() {
 koopa_uninstall_zellij() {
     koopa_uninstall_app \
         --name='zellij' \
+        "$@"
+}
+
+koopa_uninstall_zenith() {
+    koopa_uninstall_app \
+        --name='zenith' \
         "$@"
 }
 

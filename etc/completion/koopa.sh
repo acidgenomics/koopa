@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-01-12.
+    # @note Updated 2024-04-29.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -434,6 +434,7 @@ _koopa_complete() {
                         'units'
                         'unzip'
                         'utf8proc'
+                        'uv'
                         'vim'
                         'visidata'
                         'vulture'
@@ -462,6 +463,7 @@ _koopa_complete() {
                         'yapf'
                         'yt-dlp'
                         'zellij'
+                        'zenith'
                         'zip'
                         'zlib'
                         'zopfli'
