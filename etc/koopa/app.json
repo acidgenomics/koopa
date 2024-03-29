@@ -6004,7 +6004,7 @@
   "uv": {
     "bin": ["uv"],
     "date": "2024-03-29",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
     "version": "0.1.26"
@@ -6558,7 +6558,7 @@
     "bin": ["zenith"],
     "build_dependencies": ["rust"],
     "date": "2024-03-29",
-    "default": true,
+    "default": false,
     "url": ["https://github.com/bvaisvil/zenith/"],
     "version": "0.14.0"
   },
