@@ -6462,7 +6462,7 @@
       "xzmore"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-04-01",
     "default": true,
     "man1": [
       "lzcat.1",
@@ -6491,7 +6491,7 @@
     ],
     "prune": false,
     "url": ["https://tukaani.org/xz/"],
-    "version": "5.4.5"
+    "version": "5.4.6"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
