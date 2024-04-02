@@ -1321,10 +1321,10 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-07",
+    "date": "2024-04-02",
     "default": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.56.1"
+    "version": "0.57.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -3885,12 +3885,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2023-07-08",
+    "date": "2024-04-02",
     "default": false,
     "dependencies": ["boost"],
     "prune": false,
     "url": ["https://msgpack.org/", "https://github.com/msgpack/msgpack-c/"],
-    "version": "6.1.0"
+    "version": "6.1.1"
   },
   "multiqc": {
     "bin": ["multiqc"],
@@ -6003,11 +6003,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-03-29",
+    "date": "2024-04-02",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.26"
+    "version": "0.1.27"
   },
   "vim": {
     "aliases": {
