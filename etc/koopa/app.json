@@ -5232,11 +5232,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-03-25",
+    "date": "2024-04-01",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.4"
+    "version": "0.3.5"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
