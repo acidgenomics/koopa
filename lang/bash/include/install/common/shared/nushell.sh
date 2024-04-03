@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nushell.
-    # @note Updated 2023-08-29.
+    # @note Updated 2024-04-03.
     #
     # @seealso
     # - https://www.nushell.sh/book/installation.html#build-from-source
@@ -15,10 +15,8 @@ main() {
     local -A dict
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app 'zlib'
-    dict['features']='extra'
     dict['name']='nu'
     koopa_install_rust_package \
-        --features="${dict['features']}" \
         --name="${dict['name']}" \
         --with-openssl
     return 0
