@@ -4184,11 +4184,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-03-07",
+    "date": "2024-04-03",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.91.0"
+    "version": "0.92.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4224,7 +4224,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-02-07",
+    "date": "2024-04-03",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4233,7 +4233,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.5.3"
+    "version": "0.6.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -6003,11 +6003,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-04-02",
+    "date": "2024-04-03",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.27"
+    "version": "0.1.28"
   },
   "vim": {
     "aliases": {
