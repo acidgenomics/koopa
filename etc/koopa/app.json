@@ -2907,7 +2907,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2024-03-20",
+    "date": "2024-04-04",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
@@ -2915,7 +2915,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.39.5"
+    "version": "2.39.7"
   },
   "ldc": {
     "aliases": {
@@ -4061,14 +4061,14 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2023-10-16",
+    "date": "2024-04-04",
     "default": true,
     "dependencies": ["temurin"],
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "23.10.0"
+    "version": "23.10.1"
   },
   "nghttp2": {
     "aliases": {
