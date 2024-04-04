@@ -1839,7 +1839,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-02-20",
+    "date": "2024-04-04",
     "default": false,
     "dependencies": [
       "bison",
@@ -1868,7 +1868,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.8.4"
+    "version": "3.8.5"
   },
   "gdbm": {
     "aliases": {
