@@ -1951,10 +1951,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-03-21",
+    "date": "2024-04-04",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.46.0"
+    "version": "2.47.0"
   },
   "ghostscript": {
     "aliases": {
@@ -4076,7 +4076,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2024-03-04",
+    "date": "2024-04-04",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4088,7 +4088,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.60.0"
+    "version": "1.61.0"
   },
   "nim": {
     "aliases": {
