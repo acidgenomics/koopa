@@ -2835,11 +2835,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-03-16",
+    "date": "2024-04-08",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.1.5"
+    "version": "4.1.6"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4332,12 +4332,12 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-01-30",
+    "date": "2024-04-09",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.2.1"
+    "version": "3.3.0"
   },
   "oracle-instant-client": {
     "date": "2023-12-22",
@@ -5262,10 +5262,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-04-01",
+    "date": "2024-04-09",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.77.1"
+    "version": "1.77.2"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -5699,12 +5699,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "pkg-config"],
-    "date": "2024-03-18",
+    "date": "2024-04-09",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "2.0"
+    "version": "2.0.1"
   },
   "tar": {
     "aliases": {
@@ -6003,11 +6003,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-04-05",
+    "date": "2024-04-09",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.29"
+    "version": "0.1.31"
   },
   "vim": {
     "aliases": {
@@ -6531,14 +6531,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-03-11",
+    "date": "2024-04-09",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.3.10"
+    "version": "2024.4.9"
   },
   "zellij": {
     "aliases": {
