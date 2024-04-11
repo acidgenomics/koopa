@@ -1514,14 +1514,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-27",
+    "date": "2024-04-11",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.9"
+    "version": "0.18.10"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4184,11 +4184,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-04-04",
+    "date": "2024-04-11",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.92.1"
+    "version": "0.92.2"
   },
   "oniguruma": {
     "aliases": {
