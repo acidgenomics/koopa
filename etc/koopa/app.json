@@ -552,11 +552,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2024-03-16",
+    "date": "2024-04-15",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "24.3.0"
+    "version": "24.4.0"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -896,10 +896,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-04-01",
+    "date": "2024-04-15",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.47.3"
+   "version": "2.47.4"
   },
   "cli11": {
     "aliases": {
@@ -1773,11 +1773,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-04-04",
+    "date": "2024-04-15",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.49.0"
+    "version": "0.50.0"
   },
   "gatk": {
     "aliases": {
@@ -1915,7 +1915,7 @@
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
-    "date": "2023-10-16",
+    "date": "2024-04-15",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1928,7 +1928,7 @@
       "https://github.com/daler/gffutils/",
       "https://bioconda.github.io/recipes/gffutils/README.html"
     ],
-    "version": "0.12"
+    "version": "0.13"
   },
   "gget": {
     "bin": ["gget"],
@@ -2019,7 +2019,7 @@
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.25.2"
+    "version": "0.26.1"
   },
   "glances": {
     "aliases": {
@@ -5232,11 +5232,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-04-01",
+    "date": "2024-04-11",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.5"
+    "version": "0.3.6"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5728,11 +5728,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-11-17",
+    "date": "2024-04-15",
     "default": false,
     "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
-    "version": "2021.11.0"
+    "version": "2021.12.0"
   },
   "tcl-tk": {
     "aliases": {
@@ -5881,14 +5881,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-18",
+    "date": "2024-04-15",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.22.2"
+    "version": "0.22.5"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
