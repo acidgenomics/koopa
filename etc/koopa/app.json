@@ -952,11 +952,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-03-12",
+    "date": "2024-04-15",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.1.2-0"
+    "version": "24.3.0-0"
   },
   "convmv": {
     "aliases": {
@@ -2587,7 +2587,7 @@
   "htslib": {
     "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2024-01-23",
+    "date": "2024-04-16",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
@@ -2596,7 +2596,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19.1"
+    "version": "1.20"
   },
   "httpie": {
     "aliases": {
@@ -2612,10 +2612,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-03-16",
+    "date": "2024-04-16",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.124.0"
+    "version": "0.125.0"
   },
   "hyperfine": {
     "aliases": {
@@ -5314,7 +5314,7 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2024-01-24",
+    "date": "2024-04-16",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
@@ -5331,7 +5331,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19.1"
+    "version": "1.20"
   },
   "scalene": {
     "bin": ["scalene"],
@@ -6003,11 +6003,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-04-09",
+    "date": "2024-04-16",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.31"
+    "version": "0.1.32"
   },
   "vim": {
     "aliases": {
@@ -6546,10 +6546,10 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-29",
+    "date": "2024-04-16",
     "default": false,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.39.2"
+    "version": "0.40.0"
   },
   "zenith": {
     "aliases": {
