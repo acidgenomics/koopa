@@ -12891,6 +12891,12 @@ koopa_install_du_dust() {
         "$@"
 }
 
+koopa_install_duckdb() {
+    koopa_install_app \
+        --name='duckdb' \
+        "$@"
+}
+
 koopa_install_ed() {
     koopa_install_app \
         --name='ed' \
@@ -29019,6 +29025,12 @@ koopa_uninstall_dotfiles() {
 koopa_uninstall_du_dust() {
     koopa_uninstall_app \
         --name='du-dust' \
+        "$@"
+}
+
+koopa_uninstall_duckdb() {
+    koopa_uninstall_app \
+        --name='duckdb' \
         "$@"
 }
 
