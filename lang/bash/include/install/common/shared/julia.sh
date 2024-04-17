@@ -45,6 +45,7 @@ END
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
     app['julia']="${dict['prefix']}/bin/julia"
+    koopa_assert_is_executable "${app['julia']}"
     "${app['julia']}" --version
     return 0
 }
