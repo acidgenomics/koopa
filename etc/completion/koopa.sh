@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-04-29.
+    # @note Updated 2024-04-16.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -145,6 +145,7 @@ _koopa_complete() {
                         'docker-credential-helpers'
                         'dotfiles'
                         'du-dust'
+                        'duckdb'
                         'ed'
                         'editorconfig'
                         'emacs'
