@@ -2841,8 +2841,8 @@
       "homebrew-cask": true
     },
     "bin": ["julia"],
-    "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2024-03-04",
+    "date": "2024-04-17",
+    "dependencies": ["conda"],
     "default": false,
     "supported": {
       "linux-amd64": true,
