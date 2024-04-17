@@ -552,11 +552,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2024-03-16",
+    "date": "2024-04-15",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "24.3.0"
+    "version": "24.4.0"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -896,10 +896,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-04-01",
+    "date": "2024-04-15",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.47.3"
+   "version": "2.47.4"
   },
   "cli11": {
     "aliases": {
@@ -952,11 +952,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-03-12",
+    "date": "2024-04-15",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.1.2-0"
+    "version": "24.3.0-0"
   },
   "convmv": {
     "aliases": {
@@ -1363,6 +1363,20 @@
       "https://crates.io/crates/du-dust/"
     ],
     "version": "1.0.0"
+  },
+  "duckdb": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["duckdb"],
+    "build_dependencies": ["cmake", "python3.12"],
+    "date": "2024-04-16",
+    "default": false,
+    "url": [
+      "https://duckdb.org/",
+      "https://github.com/duckdb/duckdb/"
+    ],
+    "version": "0.10.1"
   },
   "ed": {
     "aliases": {
@@ -1773,11 +1787,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-04-04",
+    "date": "2024-04-15",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.49.0"
+    "version": "0.50.0"
   },
   "gatk": {
     "aliases": {
@@ -1915,7 +1929,7 @@
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
-    "date": "2023-10-16",
+    "date": "2024-04-15",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1928,7 +1942,7 @@
       "https://github.com/daler/gffutils/",
       "https://bioconda.github.io/recipes/gffutils/README.html"
     ],
-    "version": "0.12"
+    "version": "0.13"
   },
   "gget": {
     "bin": ["gget"],
@@ -1951,10 +1965,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-04-04",
+    "date": "2024-04-17",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.47.0"
+    "version": "2.48.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2019,7 +2033,7 @@
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.25.2"
+    "version": "0.26.1"
   },
   "glances": {
     "aliases": {
@@ -2587,7 +2601,7 @@
   "htslib": {
     "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2024-01-23",
+    "date": "2024-04-16",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl3", "xz", "zlib"],
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
@@ -2596,7 +2610,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19.1"
+    "version": "1.20"
   },
   "httpie": {
     "aliases": {
@@ -2612,10 +2626,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-03-16",
+    "date": "2024-04-16",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.124.0"
+    "version": "0.125.0"
   },
   "hyperfine": {
     "aliases": {
@@ -2830,6 +2844,12 @@
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "date": "2024-03-04",
     "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
     "version": "1.10.2"
   },
@@ -3530,6 +3550,7 @@
       "zlib",
       "zstd"
     ],
+    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "18.1.0"
   },
@@ -4773,7 +4794,7 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-02-22",
+    "date": "2024-04-15",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -4793,7 +4814,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.8"
+    "version": "3.11.9"
   },
   "python3.12": {
     "aliases": {
@@ -4801,7 +4822,7 @@
     },
     "bin": ["python3.12", "python3.12-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-02-22",
+    "date": "2024-04-15",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -4821,7 +4842,7 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.2"
+    "version": "3.12.3"
   },
   "quarto": {
     "aliases": {
@@ -5232,11 +5253,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-04-01",
+    "date": "2024-04-11",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.5"
+    "version": "0.3.6"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5314,7 +5335,7 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2024-01-24",
+    "date": "2024-04-16",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
@@ -5331,7 +5352,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.19.1"
+    "version": "1.20"
   },
   "scalene": {
     "bin": ["scalene"],
@@ -5543,13 +5564,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2023-12-15",
+    "date": "2024-04-17",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.2.6"
+    "version": "7.3.5"
   },
   "sqlite": {
     "aliases": {
@@ -5728,11 +5749,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-11-17",
+    "date": "2024-04-15",
     "default": false,
     "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
-    "version": "2021.11.0"
+    "version": "2021.12.0"
   },
   "tcl-tk": {
     "aliases": {
@@ -5881,14 +5902,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-18",
+    "date": "2024-04-15",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.22.2"
+    "version": "0.22.5"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6003,11 +6024,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-04-09",
+    "date": "2024-04-16",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.31"
+    "version": "0.1.32"
   },
   "vim": {
     "aliases": {
@@ -6546,10 +6567,10 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2023-11-29",
+    "date": "2024-04-16",
     "default": false,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.39.2"
+    "version": "0.40.0"
   },
   "zenith": {
     "aliases": {

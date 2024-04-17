@@ -2,8 +2,8 @@
 
 main() {
     # """
-    # Install Julia (from source).
-    # @note Updated 2023-06-01.
+    # Install Julia.
+    # @note Updated 2024-04-17.
     #
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
@@ -11,10 +11,9 @@ main() {
     # - https://docs.julialang.org/en/v1/devdocs/llvm/
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md#llvm
     # - https://github.com/JuliaLang/julia/blob/master/Make.inc
-    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/julia.rb
+    # - https://github.com/conda-forge/julia-feedstock
+    # - https://formulae.brew.sh/formula/julia
     # - https://ports.macports.org/port/julia/details/
-    # - https://git.alpinelinux.org/aports/tree/community/
-    #     julia/APKBUILD?h=3.6-stable
     # """
     local -A app dict
     local -a build_deps
@@ -36,7 +35,6 @@ prefix=${dict['prefix']}
 libexecdir=${dict['prefix']}/lib
 sysconfdir=${dict['prefix']}/etc
 USE_BINARYBUILDER=1
-VERBOSE=1
 END
     koopa_write_string \
         --file='Make.user' \
@@ -46,5 +44,8 @@ END
     koopa_print "${dict['make_user_string']}"
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
+    app['julia']="${dict['prefix']}/bin/julia"
+    koopa_assert_is_executable "${app['julia']}"
+    "${app['julia']}" --version
     return 0
 }
