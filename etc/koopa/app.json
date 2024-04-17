@@ -1364,6 +1364,20 @@
     ],
     "version": "1.0.0"
   },
+  "duckdb": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["duckdb"],
+    "build_dependencies": ["cmake", "python3.12"],
+    "date": "2024-04-16",
+    "default": false,
+    "url": [
+      "https://duckdb.org/",
+      "https://github.com/duckdb/duckdb/"
+    ],
+    "version": "0.10.1"
+  },
   "ed": {
     "aliases": {
       "debian": true,
@@ -1951,10 +1965,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-04-04",
+    "date": "2024-04-17",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.47.0"
+    "version": "2.48.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3530,6 +3544,7 @@
       "zlib",
       "zstd"
     ],
+    "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "18.1.0"
   },
@@ -5543,13 +5558,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2023-12-15",
+    "date": "2024-04-17",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.2.6"
+    "version": "7.3.5"
   },
   "sqlite": {
     "aliases": {
