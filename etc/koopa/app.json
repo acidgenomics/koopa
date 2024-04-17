@@ -2844,6 +2844,12 @@
     "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
     "date": "2024-03-04",
     "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
     "version": "1.10.2"
   },
