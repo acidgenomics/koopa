@@ -6,7 +6,7 @@
     ],
     "settings": {
         "terminal.integrated.env.osx": {
-            "PYTHONPATH": "${workspaceFolder}/lang/python/modules"
+            "PYTHONPATH": "${workspaceFolder}/lang/python"
         }
     }
 }

@@ -21559,7 +21559,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     app['python']="$(koopa_locate_python3 --allow-system)"
     koopa_assert_is_installed "${app[@]}"
-    dict['prefix']="$(koopa_python_prefix)"
+    dict['prefix']="$(koopa_python_prefix)/scripts"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['cmd_name']="${1:?}"
     shift 1
