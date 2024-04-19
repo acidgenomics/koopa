@@ -8,9 +8,8 @@ run_pytest_cov() {
     app['pytest']="$(koopa_locate_pytest)"
     koopa_assert_is_executable "${app[@]}"
     dict['python_prefix']="$(koopa_python_prefix)"
-    dict['modules_prefix']="${dict['python_prefix']}/modules"
-    koopa_assert_is_dir "${dict['modules_prefix']}"
-    export PYTHONPATH="${dict['modules_prefix']}"
+    koopa_assert_is_dir "${dict['python_prefix']}"
+    export PYTHONPATH="${dict['python_prefix']}"
     "${app['pytest']}" \
         --cov='tests' \
         --cov-report='term' \

@@ -19,7 +19,7 @@ parser.add_argument("--name", required=True)
 parser.add_argument("--key", required=True)
 args = parser.parse_args()
 
-path.insert(0, join(dirname(__file__), "../modules"))
+path.insert(0, join(dirname(__file__), ".."))
 
 from koopa import print_app_json
 
