@@ -17,7 +17,7 @@ parser = ArgumentParser()
 parser.add_argument("json_file")
 args = parser.parse_args()
 
-path.insert(0, join(dirname(__file__), "../modules"))
+path.insert(0, join(dirname(__file__), ".."))
 
 from koopa import print_conda_bin_names
 
