@@ -315,9 +315,9 @@ def koopa_opt_prefix() -> str:
 def koopa_prefix() -> str:
     """
     koopa prefix.
-    Updated 2023-12-14.
+    Updated 2024-04-19.
     """
-    prefix = abspath(join(dirname(__file__), "../../.."))
+    prefix = abspath(join(dirname(__file__), "../../../.."))
     assert isdir(prefix)
     return prefix
 
