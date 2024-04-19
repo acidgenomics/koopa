@@ -1528,14 +1528,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-04-11",
+    "date": "2024-04-19",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.10"
+    "version": "0.18.11"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -5253,11 +5253,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-04-11",
+    "date": "2024-04-19",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.3.6"
+    "version": "0.4.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5507,7 +5507,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-04-05",
+    "date": "2024-04-19",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5515,7 +5515,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.10.6"
+    "version": "8.10.8"
   },
   "sox": {
     "aliases": {
@@ -5570,7 +5570,7 @@
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.3.5"
+    "version": "7.3.7"
   },
   "sqlite": {
     "aliases": {
@@ -6024,11 +6024,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-04-16",
+    "date": "2024-04-19",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.32"
+    "version": "0.1.34"
   },
   "vim": {
     "aliases": {
