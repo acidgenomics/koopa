@@ -112,6 +112,11 @@ _koopa_activate_aliases() {
     then
         alias pyenv='_koopa_activate_pyenv; pyenv'
     fi
+    # python.
+    if [ -x "${__kvar_bin_prefix}/python3" ]
+    then
+        alias python3-dev='_koopa_alias_python3_dev'
+    fi
     # r.
     if [ -x '/usr/local/bin/R' ] || [ -x '/usr/bin/R' ]
     then
