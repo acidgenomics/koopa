@@ -1,8 +1,12 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
+    "folders": [
+        {
+            "path": "."
+        }
     ],
-    "settings": {}
+    "settings": {
+        "terminal.integrated.env.osx": {
+            "PYTHONPATH": "${workspaceFolder}/lang/python/modules"
+        }
+    }
 }
