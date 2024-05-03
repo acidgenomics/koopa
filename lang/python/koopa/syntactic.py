@@ -1,19 +1,16 @@
 """
 Syntactically valid names.
-Updated 2024-04-19.
+Updated 2024-05-03.
 """
-
-# FIXME Need to rework to improve consistency with r-syntactic package, after
-# we update handling for accented characters and greek character coercion.
 
 from re import sub
 from unicodedata import combining, normalize
 
 
-def _syntactic(string: str) -> str:
+def _syntactic_engine(string: str) -> str:
     """
     Reformat string into syntactically valid kebab case.
-    Updated 2024-04-19.
+    Updated 2024-05-03.
     """
     assert len(string) > 0
     string = remove_accents(string)
@@ -50,10 +47,9 @@ def _syntactic(string: str) -> str:
 def kebab_case(string):
     """
     Kebab case.
-    Updated 2023-12-14.
+    Updated 2025-05-03.
     """
-    string = sub(pattern="[^0-9a-zA-Z]+", repl="-", string=string)
-    string = string.lower()
+    string = _syntactic_engine(string=string)
     return string
 
 
@@ -73,8 +69,8 @@ def remove_accents(string: str) -> str:
 def snake_case(string):
     """
     Snake case.
-    Updated 2023-12-14.
+    Updated 2024-05-03.
     """
-    string = sub(pattern="[^0-9a-zA-Z]+", repl="_", string=string)
-    string = string.lower()
+    string = _syntactic_engine(string=string)
+    string = string.replace("-", "_")
     return string
