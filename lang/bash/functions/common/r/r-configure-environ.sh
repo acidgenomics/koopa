@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2023-10-18.
+    # @note Updated 2024-05-03.
     #
     # @section Package library location:
     #
@@ -84,6 +84,7 @@ koopa_r_configure_environ() {
     # - Debian example config file by Dirk Eddelbuettel.
     # - http://mac.r-project.org/
     # - https://cran.r-project.org/bin/macosx/tools/
+    # - https://github.com/quarto-dev/quarto-cli/pull/8177
     # """
     local -A app app_pc_path_arr bool conf_dict dict
     local -a keys lines path_arr pc_path_arr
@@ -155,7 +156,13 @@ koopa_r_configure_environ() {
     then
         path_arr+=("${dict['bin_prefix']}")
     fi
-    path_arr+=('/usr/bin' '/bin')
+    # Quarto documents may fail unless 'sbin' is in PATH.
+    path_arr+=(
+        '/usr/bin'
+        '/bin'
+        '/usr/sbin'
+        '/sbin'
+    )
     if koopa_is_macos
     then
         path_arr+=(
