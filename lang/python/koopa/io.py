@@ -13,17 +13,16 @@ from koopa.os import koopa_prefix
 def extract_conda_bin_names(json_file: str) -> list:
     """
     Extract the conda bin names from JSON metadata file.
-    Updated 2024-04-19.
+    Updated 2024-05-03.
 
     Examples:
-    json_file='/opt/koopa/opt/star/libexec/conda-meta/star-XXX.json'
+    json_file='/opt/koopa/opt/anaconda/conda-meta/conda-*.json'
     conda_bin_names(json_file=json_file)
     """
     json_data = import_json(json_file)
     keys = json_data.keys()
-    # FIXME Use f-string to return parsed value here instead.
     if "files" not in keys:
-        raise ValueError("Invalid conda JSON file: '" + json_file + "'.")
+        raise ValueError(f"Invalid JSON file: {json_file!r}.")
     file_list = json_data["files"]
     bin_names = []
     pattern = compile(r"^bin/([^/]+)$")
