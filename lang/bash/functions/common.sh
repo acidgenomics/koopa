@@ -21795,7 +21795,12 @@ koopa_r_configure_environ() {
     then
         path_arr+=("${dict['bin_prefix']}")
     fi
-    path_arr+=('/usr/bin' '/bin')
+    path_arr+=(
+        '/usr/bin'
+        '/bin'
+        '/usr/sbin'
+        '/sbin'
+    )
     if koopa_is_macos
     then
         path_arr+=(
