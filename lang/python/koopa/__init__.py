@@ -1,3 +1,3 @@
 """
-Koopa Python modules.
+Koopa modules.
 """
