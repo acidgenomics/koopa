@@ -21,7 +21,9 @@ def build_all_tags(local: str, remote: str) -> bool:
     """
     local = abspath(expanduser(local))
     assert isdir(local)
-    tags = list_subdirs(path=local, recursive=False, sort=True, basename=True)
+    tags = list_subdirs(
+        path=local, recursive=False, sort=True, basename_only=True
+    )
     for tag in tags:
         local2 = join(local, tag)
         assert isdir(tag)
