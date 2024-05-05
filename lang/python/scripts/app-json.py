@@ -2,7 +2,7 @@
 
 """
 Parse koopa 'app.json' file.
-Updated 2024-04-19.
+Updated 2024-05-05.
 
 Examples:
 ./app-json.py \
@@ -21,7 +21,7 @@ args = parser.parse_args()
 
 path.insert(0, join(dirname(__file__), ".."))
 
-from koopa import print_app_json
+from koopa.cli import print_app_json
 
 
 def main(name: str, key: str) -> None:

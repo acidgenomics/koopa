@@ -2,7 +2,7 @@
 
 """
 Solve app dependencies defined in 'app.json' file.
-Updated 2024-04-19.
+Updated 2024-05-05.
 
 Examples:
 ./app-dependencies.py 'python3.11'
@@ -14,7 +14,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), ".."))
 
-from koopa import print_app_deps
+from koopa.cli import print_app_deps
 
 parser = ArgumentParser()
 parser.add_argument("name")
