@@ -2,7 +2,7 @@
 
 """
 Parse conda JSON metadata for files to link in 'bin'.
-Updated 2024-04-19.
+Updated 2024-05-05.
 
 Examples:
 ./conda-bin-names.py \
@@ -19,7 +19,7 @@ args = parser.parse_args()
 
 path.insert(0, join(dirname(__file__), ".."))
 
-from koopa import print_conda_bin_names
+from koopa.cli import print_conda_bin_names
 
 
 def main(json_file: str) -> None:

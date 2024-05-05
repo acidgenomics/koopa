@@ -2,7 +2,7 @@
 
 """
 Return shared apps defined in 'app.json' file.
-Updated 2024-04-19.
+Updated 2024-05-05.
 
 Examples:
 ./shared-apps.py
@@ -14,7 +14,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), ".."))
 
-from koopa import print_shared_apps
+from koopa.cli import print_shared_apps
 
 parser = ArgumentParser()
 parser.add_argument(
