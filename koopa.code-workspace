@@ -1,8 +1,26 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
+    "folders": [
+        {
+            "path": "."
+        }
     ],
-    "settings": {}
+    "settings": {
+        "python.analysis.exclude": [
+            "./app",
+            "./bin",
+            "./etc",
+            "./lang/bash",
+            "./lang/r",
+            "./lang/sh",
+            "./lang/zsh",
+            "./opt",
+            "./share"
+        ],
+        "python.analysis.extraPaths": [
+            "./lang/python"
+        ],
+        "terminal.integrated.env.osx": {
+            "PYTHONPATH": "${workspaceFolder}/lang/python"
+        }
+    }
 }
