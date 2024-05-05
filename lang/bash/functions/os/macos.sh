@@ -613,7 +613,9 @@ koopa_macos_install_system_rosetta() {
     koopa_assert_is_admin
     app['softwareupdate']="$(koopa_macos_locate_softwareupdate)"
     koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['softwareupdate']}" --install-rosetta
+    koopa_sudo "${app['softwareupdate']}" \
+        --install-rosetta \
+        --agree-to-license
     return 0
 }
 
