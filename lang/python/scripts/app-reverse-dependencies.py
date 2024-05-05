@@ -20,7 +20,7 @@ parser = ArgumentParser()
 parser.add_argument(
     "--mode",
     choices=["all", "default"],
-    default="default-only",
+    default="default",
     required=False,
 )
 parser.add_argument("name")
