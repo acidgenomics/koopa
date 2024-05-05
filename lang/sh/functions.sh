@@ -140,6 +140,10 @@ _koopa_activate_aliases() {
     then
         alias pyenv='_koopa_activate_pyenv; pyenv'
     fi
+    if [ -x "${__kvar_bin_prefix}/python3" ]
+    then
+        alias python3-dev='_koopa_alias_python3_dev'
+    fi
     if [ -x '/usr/local/bin/R' ] || [ -x '/usr/bin/R' ]
     then
         alias R='R --no-restore --no-save --quiet'
@@ -1286,6 +1290,10 @@ _koopa_alias_nvim_fzf() {
 
 _koopa_alias_nvim_vanilla() {
     nvim -u 'NONE' "$@"
+}
+
+_koopa_alias_python3_dev() {
+    PYTHONPATH="$(pwd)" python3
 }
 
 _koopa_alias_sha256() {

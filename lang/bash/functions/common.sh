@@ -21559,7 +21559,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     app['python']="$(koopa_locate_python3 --allow-system)"
     koopa_assert_is_installed "${app[@]}"
-    dict['prefix']="$(koopa_python_prefix)"
+    dict['prefix']="$(koopa_python_prefix)/scripts"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['cmd_name']="${1:?}"
     shift 1
@@ -21795,7 +21795,12 @@ koopa_r_configure_environ() {
     then
         path_arr+=("${dict['bin_prefix']}")
     fi
-    path_arr+=('/usr/bin' '/bin')
+    path_arr+=(
+        '/usr/bin'
+        '/bin'
+        '/usr/sbin'
+        '/sbin'
+    )
     if koopa_is_macos
     then
         path_arr+=(

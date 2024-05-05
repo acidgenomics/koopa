@@ -2,7 +2,7 @@
 
 """
 Build all Docker tags.
-Updated 2023-12-14.
+Updated 2024-04-19.
 
 Example:
 ./docker-build-all-tags.py \
@@ -14,9 +14,9 @@ from argparse import ArgumentParser
 from os.path import dirname, join
 from sys import path, version_info
 
-path.insert(0, join(dirname(__file__), "koopa"))
+path.insert(0, join(dirname(__file__), ".."))
 
-from koopa import docker_build_all_tags
+from koopa.shell.docker import build_all_tags
 
 parser = ArgumentParser()
 parser.add_argument("--local", required=True)
@@ -27,9 +27,9 @@ args = parser.parse_args()
 def main(local: str, remote: str) -> None:
     """
     Main function.
-    Updated 2023-12-14.
+    Updated 2024-04-19.
     """
-    docker_build_all_tags(local=local, remote=remote)
+    build_all_tags(local=local, remote=remote)
     return None
 
 
