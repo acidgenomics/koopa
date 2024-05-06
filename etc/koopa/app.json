@@ -4930,7 +4930,7 @@
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
-    "date": "2024-03-05",
+    "date": "2024-05-06",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4998,7 +4998,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "86054"
+    "version": "86526"
   },
   "r-gfortran": {
     "date": "2023-10-16",
