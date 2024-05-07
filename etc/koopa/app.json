@@ -1787,11 +1787,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-05-06",
+    "date": "2024-05-07",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.51.0"
+    "version": "0.52.0"
   },
   "gatk": {
     "aliases": {
