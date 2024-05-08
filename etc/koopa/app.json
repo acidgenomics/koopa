@@ -1557,10 +1557,10 @@
     },
     "bin": ["fd"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2024-05-08",
     "default": true,
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "10.0.0"
+    "version": "10.1.0"
   },
   "ffmpeg": {
     "aliases": {
@@ -4598,12 +4598,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-03-04",
+    "date": "2024-05-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.2"
+    "version": "1.8.3"
   },
   "prelude-emacs": {
     "date": "2023-12-22",
@@ -6024,11 +6024,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-06",
+    "date": "2024-05-08",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.39"
+    "version": "0.1.41"
   },
   "vim": {
     "aliases": {
