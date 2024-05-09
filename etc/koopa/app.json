@@ -1528,14 +1528,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2024-05-09",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.14"
+    "version": "0.18.15"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4705,12 +4705,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-04-08",
+    "date": "2024-05-09",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -6024,11 +6024,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-08",
+    "date": "2024-05-09",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.41"
+    "version": "0.1.42"
   },
   "vim": {
     "aliases": {
