@@ -1345,10 +1345,10 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-03-15",
+    "date": "2024-05-06",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "7266459d47e3676f547b8aa35e3307f9a2c76d44"
+    "version": "7cf5fb13520ba1096380a5fb05ad14adc224f24a"
   },
   "du-dust": {
     "aliases": {
@@ -1528,14 +1528,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2024-05-09",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.14"
+    "version": "0.18.15"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1557,10 +1557,10 @@
     },
     "bin": ["fd"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2024-05-08",
     "default": true,
     "url": ["https://github.com/sharkdp/fd/"],
-    "version": "10.0.0"
+    "version": "10.1.0"
   },
   "ffmpeg": {
     "aliases": {
@@ -1787,11 +1787,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-05-06",
+    "date": "2024-05-07",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.51.0"
+    "version": "0.52.0"
   },
   "gatk": {
     "aliases": {
@@ -1853,7 +1853,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-04-04",
+    "date": "2024-05-10",
     "default": false,
     "dependencies": [
       "bison",
@@ -1882,7 +1882,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.8.5"
+    "version": "3.9.0"
   },
   "gdbm": {
     "aliases": {
@@ -1965,10 +1965,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-05-06",
+    "date": "2024-05-08",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.49.0"
+    "version": "2.49.1"
   },
   "ghostscript": {
     "aliases": {
@@ -2317,14 +2317,14 @@
   "gseapy": {
     "bin": ["gseapy"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-04",
+    "date": "2024-05-08",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.1.2"
+    "version": "1.1.3"
   },
   "gsl": {
     "aliases": {
@@ -2987,10 +2987,10 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2024-03-18",
+    "date": "2024-05-10",
     "default": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.12"
+    "version": "2.13"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3240,7 +3240,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-01-24",
+    "date": "2024-05-08",
     "default": false,
     "prune": false,
     "url": [
@@ -3248,7 +3248,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.0.2"
+    "version": "3.0.3"
   },
   "libksba": {
     "aliases": {
@@ -4245,7 +4245,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-04-26",
+    "date": "2024-05-10",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4254,7 +4254,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.6.1"
+    "version": "0.6.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4598,12 +4598,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-03-04",
+    "date": "2024-05-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.2"
+    "version": "1.8.3"
   },
   "prelude-emacs": {
     "date": "2023-12-22",
@@ -4705,12 +4705,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-04-08",
+    "date": "2024-05-09",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5253,11 +5253,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-05-06",
+    "date": "2024-05-10",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.3"
+    "version": "0.4.4"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6024,11 +6024,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-06",
+    "date": "2024-05-09",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.39"
+    "version": "0.1.42"
   },
   "vim": {
     "aliases": {
