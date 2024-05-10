@@ -1853,7 +1853,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-04-04",
+    "date": "2024-05-10",
     "default": false,
     "dependencies": [
       "bison",
@@ -1882,7 +1882,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.8.5"
+    "version": "3.9.0"
   },
   "gdbm": {
     "aliases": {
@@ -4245,7 +4245,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-04-26",
+    "date": "2024-05-10",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4254,7 +4254,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.6.1"
+    "version": "0.6.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
