@@ -3,7 +3,7 @@
 koopa_update_system_homebrew() {
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2023-06-13.
+    # @note Updated 2024-05-06.
     #
     # @seealso
     # - brew linkage --test
@@ -45,6 +45,7 @@ koopa_update_system_homebrew() {
     taps=(
         'homebrew/cask'
         'homebrew/cask-drivers'
+        'homebrew/cask-versions'
         'homebrew/core'
     )
     for tap in "${taps[@]}"
