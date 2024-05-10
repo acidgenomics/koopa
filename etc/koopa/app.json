@@ -2987,10 +2987,10 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2024-03-18",
+    "date": "2024-05-10",
     "default": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.12"
+    "version": "2.13"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -5253,11 +5253,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-05-06",
+    "date": "2024-05-10",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.3"
+    "version": "0.4.4"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
