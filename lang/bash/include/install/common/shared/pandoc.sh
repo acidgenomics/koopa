@@ -3,11 +3,12 @@
 main() {
     # """
     # Install Pandoc.
-    # @note Updated 2023-09-06.
+    # @note Updated 2024-05-13.
     #
     # Note that 'pandoc-lua-engine' is required for R pkgdown.
     #
     # @seealso
+    # - https://pandoc.org/releases.html
     # - https://github.com/jgm/pandoc/blob/main/CONTRIBUTING.md
     # - https://github.com/jgm/pandoc/blob/main/INSTALL.md
     # - https://hackage.haskell.org/package/pandoc
@@ -21,6 +22,7 @@ main() {
         --dependency='zlib' \
         --extra-package='pandoc-cli' \
         --extra-package='pandoc-lua-engine' \
-        --extra-package='pandoc-server'
+        --extra-package='pandoc-server' \
+        --ghc-version='9.6.5'
     return 0
 }
