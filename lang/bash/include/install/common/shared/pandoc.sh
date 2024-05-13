@@ -6,6 +6,7 @@ main() {
     # @note Updated 2024-05-13.
     #
     # Note that 'pandoc-lua-engine' is required for R pkgdown.
+    # Can fail to build when 'pandoc-server' is included.
     #
     # @seealso
     # - https://pandoc.org/releases.html
@@ -22,7 +23,6 @@ main() {
         --dependency='zlib' \
         --extra-package='pandoc-cli' \
         --extra-package='pandoc-lua-engine' \
-        --extra-package='pandoc-server' \
         --ghc-version='9.6.5'
     return 0
 }
