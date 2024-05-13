@@ -294,14 +294,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-04-18",
+    "date": "2024-05-13",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.15.39"
+    "version": "2.15.48"
   },
   "axel": {
     "aliases": {
@@ -896,10 +896,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-05-06",
+    "date": "2024-05-13",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-   "version": "2.48.0"
+   "version": "2.48.1"
   },
   "cli11": {
     "aliases": {
@@ -1321,10 +1321,10 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-04-02",
+    "date": "2024-05-13",
     "default": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.57.0"
+    "version": "0.58.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1787,11 +1787,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-05-07",
+    "date": "2024-05-13",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.52.0"
+    "version": "0.52.1"
   },
   "gatk": {
     "aliases": {
@@ -1965,10 +1965,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-05-08",
+    "date": "2024-05-13",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.49.1"
+    "version": "2.49.2"
   },
   "ghostscript": {
     "aliases": {
@@ -2485,7 +2485,7 @@
       "homebrew": true
     },
     "bin": ["stack"],
-    "date": "2024-03-29",
+    "date": "2024-05-13",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -2497,7 +2497,7 @@
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.15.5"
+    "version": "2.15.7"
   },
   "hdf5": {
     "aliases": {
@@ -2942,13 +2942,13 @@
       "homebrew": true
     },
     "build_dependencies": ["gnupg", "libarchive", "xz"],
-    "date": "2024-03-04",
+    "date": "2024-05-13",
     "default": false,
     "url": [
       "https://wiki.dlang.org/LDC",
       "https://github.com/ldc-developers/ldc/"
     ],
-    "version": "1.37.0"
+    "version": "1.38.0"
   },
   "ldns": {
     "aliases": {
@@ -3763,10 +3763,10 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-31",
+    "date": "2024-05-13",
     "default": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "mdcat": {
     "aliases": {
@@ -4097,7 +4097,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2024-04-04",
+    "date": "2024-05-13",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4109,7 +4109,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.61.0"
+    "version": "1.62.0"
   },
   "nim": {
     "aliases": {
@@ -4394,11 +4394,11 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2024-04-08",
+    "date": "2024-05-13",
     "default": false,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.1.13"
+    "version": "3.2"
   },
   "parallel": {
     "aliases": {
@@ -4739,11 +4739,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-02-26",
+    "date": "2024-05-13",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -5507,7 +5507,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-06",
+    "date": "2024-05-13",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5515,7 +5515,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.11.3"
+    "version": "8.11.4"
   },
   "sox": {
     "aliases": {
@@ -6542,10 +6542,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2024-03-25",
+    "date": "2024-05-13",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.43.1"
+    "version": "4.44.1"
   },
   "yt-dlp": {
     "aliases": {
