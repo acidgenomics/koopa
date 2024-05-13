@@ -1322,7 +1322,8 @@
     "bin": ["difft"],
     "build_dependencies": ["rust"],
     "date": "2024-05-13",
-    "default": true,
+    "default": false,
+    "notes": ["This is not currently building on macOS Monterey 12.7."],
     "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.58.0"
   },
