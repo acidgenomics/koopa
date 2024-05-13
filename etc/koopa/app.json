@@ -2041,14 +2041,14 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-03-25",
+    "date": "2024-05-13",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "3.4.0.5"
+    "version": "4.0.2"
   },
   "glib": {
     "aliases": {
