@@ -4740,11 +4740,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-05-13",
+    "date": "2024-05-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.1.1"
+    "version": "3.2.0"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -6025,11 +6025,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-09",
+    "date": "2024-05-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.42"
+    "version": "0.1.43"
   },
   "vim": {
     "aliases": {
