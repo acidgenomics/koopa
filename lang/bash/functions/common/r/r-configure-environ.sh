@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2024-05-03.
+    # @note Updated 2024-05-14.
     #
     # @section Package library location:
     #
@@ -123,6 +123,12 @@ koopa_r_configure_environ() {
         app['open']="$(koopa_locate_open --allow-missing --only-system)"
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
+    dict['arch']="$(koopa_arch)"
+    # Apple Silicon convention is 'arm64' but RStudio expects 'aarch64'.
+    if koopa_is_macos && koopa_is_aarch64
+    then
+        dict['arch']='aarch64'
+    fi
     dict['bin_prefix']="$(koopa_bin_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
@@ -141,14 +147,15 @@ koopa_r_configure_environ() {
     then
         path_arr+=(
             '/usr/lib/rstudio-server/bin/quarto/bin'
-            '/usr/lib/rstudio-server/bin/quarto/bin/tools'
+            "/usr/lib/rstudio-server/bin/quarto/bin/tools/${dict['arch']}"
             '/usr/lib/rstudio-server/bin/postback'
         )
     elif koopa_is_macos
     then
         path_arr+=(
             '/Applications/RStudio.app/Contents/Resources/app/quarto/bin'
-            '/Applications/RStudio.app/Contents/Resources/app/quarto/bin/tools'
+            "/Applications/RStudio.app/Contents/Resources/app/quarto/bin/\
+tools/${dict['arch']}"
             '/Applications/RStudio.app/Contents/Resources/app/bin/postback'
         )
     fi
