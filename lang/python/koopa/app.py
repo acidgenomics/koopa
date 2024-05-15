@@ -193,6 +193,7 @@ def prune_app_binaries(dry_run=False) -> list:
     }
     url = "s3://" + dict["bucket"] + "/" + dict["subdir"] + "/"
     print(f"Pruning binaries in {url!r}.")
+    # Return AWS JSON using CLI.
     json = run(
         args=[
             "aws",
@@ -208,21 +209,30 @@ def prune_app_binaries(dry_run=False) -> list:
         capture_output=True,
         check=True,
     )
+    # Parse JSON return from AWS CLI.
     json = loads(json.stdout)
     json = json["Contents"]
-    json_app = []
-    json_dt = []
-    json_key = []
+    # Prepare our lists of values from JSON.
+    apps = []
+    dts = []
+    keys = []
     for item in json:
-        json_app.append(item["Key"].split("/")[-2])
-        json_dt.append(datetime.fromisoformat(item["LastModified"]))
-        json_key.append(item["Key"])
-    # First, sort by timestamp (newest to oldest).
-    idx1 = argsort(json_dt, reverse=True)
-    print(idx1)
-    # FIXME Sort by app name and then timestamp.
-    # FIXME Skip any apps that only have a single key.
-    return json_key[0:4]
+        keys.append(item["Key"])
+        # Get the name of app from the key.
+        apps.append(item["Key"].split("/")[-2])
+        # Convert AWS `LastModified` value from ISO8601 to Python datetime.
+        dts.append(datetime.fromisoformat(item["LastModified"]))
+    # Sort lists by timestamp (newest to oldest).
+    idx = argsort(dts, reverse=True)
+    apps = [apps[i] for i in idx]
+    dts = [dts[i] for i in idx]
+    keys = [keys[i] for i in idx]
+    # Get index positions of first unique app build.
+    idx = unique_pos(apps)
+    keys_ok = [keys[i] for i in idx]
+    keys_ko = [x for x in keys_ok if x not in set(keys_ok)]
+    keys_ko.sort()
+    return keys_ko
 
 
 def shared_apps(mode: str) -> list:
