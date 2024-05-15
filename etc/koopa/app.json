@@ -2041,14 +2041,14 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-05-13",
+    "date": "2024-05-15",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   "glib": {
     "aliases": {
@@ -2627,10 +2627,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-04-16",
+    "date": "2024-05-15",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.125.0"
+    "version": "0.126.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3916,11 +3916,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-02-28",
+    "date": "2024-05-15",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.21"
+    "version": "1.22"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -5643,10 +5643,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2024-03-29",
+    "date": "2024-05-15",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.18.2"
+    "version": "1.19.0"
   },
   "stow": {
     "aliases": {
@@ -6025,11 +6025,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-14",
+    "date": "2024-05-15",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.43"
+    "version": "0.1.44"
   },
   "vim": {
     "aliases": {
