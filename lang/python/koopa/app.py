@@ -5,7 +5,7 @@ Updated 2025-05-05.
 
 from json import loads
 from os.path import isdir, join
-from subprocess import PIPE, run
+from subprocess import run
 
 from koopa.data import flatten
 from koopa.io import import_app_json
@@ -204,10 +204,11 @@ def prune_app_binaries() -> list:
             "--output",
             "json",
         ],
+        capture_output=True,
         check=True,
-        stdout=PIPE,
     )
     json = loads(json.stdout)
+    print(json)
     return list(dict)
 
 
