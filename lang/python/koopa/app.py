@@ -3,6 +3,7 @@ Application management functions.
 Updated 2025-05-05.
 """
 
+from datetime import datetime
 from json import loads
 from os.path import isdir, join
 from subprocess import run
@@ -180,7 +181,7 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
-def prune_app_binaries() -> list:
+def prune_app_binaries(dry_run=False) -> list:
     """
     Prune app binaries.
     Updated 2024-05-15.
@@ -208,8 +209,17 @@ def prune_app_binaries() -> list:
         check=True,
     )
     json = loads(json.stdout)
-    print(json)
-    return list(dict)
+    json = json["Contents"]
+    json_app = []
+    json_dt = []
+    json_key = []
+    for item in json:
+        json_app.append(item["Key"].split("/")[-2])
+        json_dt.append(datetime.fromisoformat(item["LastModified"]))
+        json_key.append(item["Key"])
+    # FIXME Sort by app name and then timestamp.
+    # FIXME Skip any apps that only have a single key.
+    return json_key[0:4]
 
 
 def shared_apps(mode: str) -> list:
