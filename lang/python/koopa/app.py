@@ -8,7 +8,7 @@ from json import loads
 from os.path import isdir, join
 from subprocess import run
 
-from koopa.data import flatten
+from koopa.data import argsort, flatten, unique_pos
 from koopa.io import import_app_json
 from koopa.os import arch2, koopa_opt_prefix, os_id
 
@@ -217,6 +217,9 @@ def prune_app_binaries(dry_run=False) -> list:
         json_app.append(item["Key"].split("/")[-2])
         json_dt.append(datetime.fromisoformat(item["LastModified"]))
         json_key.append(item["Key"])
+    # First, sort by timestamp (newest to oldest).
+    idx1 = argsort(json_dt, reverse=True)
+    print(idx1)
     # FIXME Sort by app name and then timestamp.
     # FIXME Skip any apps that only have a single key.
     return json_key[0:4]
