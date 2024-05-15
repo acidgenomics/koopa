@@ -4,13 +4,14 @@ Updated 2024-05-15.
 """
 
 
-def argsort(object, reverse=False):
+def argsort(object, reverse=False) -> list:
     """
     Return the indices that would sort an array.
     Updated 2024-05-15.
 
     See also:
     - https://stackoverflow.com/questions/3071415/
+    - https://stackoverflow.com/questions/6422700
     - https://numpy.org/doc/stable/reference/generated/numpy.argsort.html
     - https://docs.python.org/3/howto/sorting.html
     """
