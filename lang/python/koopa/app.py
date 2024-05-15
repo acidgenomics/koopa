@@ -3,7 +3,9 @@ Application management functions.
 Updated 2025-05-05.
 """
 
+from json import loads
 from os.path import isdir, join
+from subprocess import PIPE, run
 
 from koopa.data import flatten
 from koopa.io import import_app_json
@@ -176,6 +178,37 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
                 continue
         lst.append(val)
     return lst
+
+
+def prune_app_binaries() -> list:
+    """
+    Prune app binaries.
+    Updated 2024-05-15.
+    """
+    dict = {
+        "bucket": "private.koopa.acidgenomics.com",
+        "profile": "acidgenomics",
+        "subdir": "binaries",
+    }
+    url = "s3://" + dict["bucket"] + "/" + dict["subdir"] + "/"
+    print(f"Pruning binaries in {url!r}.")
+    json = run(
+        args=[
+            "aws",
+            "--profile",
+            dict["profile"],
+            "s3api",
+            "list-objects",
+            "--bucket",
+            dict["bucket"],
+            "--output",
+            "json",
+        ],
+        check=True,
+        stdout=PIPE,
+    )
+    json = loads(json.stdout)
+    return list(dict)
 
 
 def shared_apps(mode: str) -> list:
