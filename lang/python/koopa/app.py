@@ -16,7 +16,7 @@ from koopa.os import arch2, koopa_opt_prefix, os_id
 def app_deps(name: str) -> list:
     """
     Get application dependencies.
-    Updated 2024-05-05.
+    Updated 2024-05-16.
     """
     json_data = import_app_json()
     keys = json_data.keys()
@@ -24,7 +24,7 @@ def app_deps(name: str) -> list:
         raise NameError(f"Unsupported app: {name!r}.")
     lst = []
     deps = extract_app_deps(name=name, json_data=json_data)
-    if len(deps) <= 0:
+    if not deps:
         return lst
     i = 0
     lst.append(deps)
@@ -34,13 +34,13 @@ def app_deps(name: str) -> list:
             if isinstance(lvl2, list):
                 for lvl3 in lvl2:
                     lvl4 = extract_app_deps(name=lvl3, json_data=json_data)
-                    if len(lvl4) > 0:
+                    if lvl4:
                         lvl1.append(lvl4)
             else:
                 lvl3 = extract_app_deps(name=lvl2, json_data=json_data)
-                if len(lvl3) > 0:
+                if lvl3:
                     lvl1.append(lvl3)
-        if len(lvl1) <= 0:
+        if not lvl1:
             break
         lst.append(lvl1)
         i = i + 1
@@ -72,7 +72,7 @@ def app_revdeps(name: str, mode: str) -> list:
         if name in all_deps[i]:
             lst.append(keys[i])
         i += 1
-    if len(lst) <= 0:
+    if not lst:
         return lst
     lst = filter_app_revdeps(names=lst, json_data=json_data, mode=mode)
     return lst
@@ -181,18 +181,21 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
-def prune_app_binaries(dry_run=False) -> list:
+def prune_app_binaries(dry_run=False) -> None:
     """
     Prune app binaries.
-    Updated 2024-05-15.
+    Updated 2024-05-16.
+
+    See also:
+    - https://stackoverflow.com/questions/27274996/
     """
     dict = {
         "bucket": "private.koopa.acidgenomics.com",
         "profile": "acidgenomics",
         "subdir": "binaries",
     }
-    url = "s3://" + dict["bucket"] + "/" + dict["subdir"] + "/"
-    print(f"Pruning binaries in {url!r}.")
+    base_uri = "s3://" + dict["bucket"] + "/" + dict["subdir"] + "/"
+    print(f"Pruning binaries in {base_uri!r}.")
     # Return AWS JSON using CLI.
     json = run(
         args=[
@@ -205,6 +208,8 @@ def prune_app_binaries(dry_run=False) -> list:
             dict["bucket"],
             "--output",
             "json",
+            "--prefix",
+            dict["subdir"] + "/",
         ],
         capture_output=True,
         check=True,
@@ -230,9 +235,22 @@ def prune_app_binaries(dry_run=False) -> list:
     # Get index positions of first unique app build.
     idx = unique_pos(apps)
     keys_ok = [keys[i] for i in idx]
-    keys_ko = [x for x in keys_ok if x not in set(keys_ok)]
+    keys_ko = [x for x in keys if x not in set(keys_ok)]
+    if not keys_ko:
+        raise ValueError("No app binaries to prune.")
     keys_ko.sort()
-    return keys_ko
+    # Print the binaries to prune and return in dry-run mode.
+    if dry_run:
+        print(keys_ko)
+        return None
+    # Prune app binaries.
+    for key in keys_ko:
+        uri = base_uri + key
+        run(
+            args=["aws", "--profile", dict["profile"], "s3", "rm", uri],
+            check=True,
+        )
+    return None
 
 
 def shared_apps(mode: str) -> list:
