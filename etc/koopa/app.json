@@ -3174,12 +3174,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-03-21",
+    "date": "2024-05-16",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.8.0"
+    "version": "1.8.1"
   },
   "libgpg-error": {
     "aliases": {
@@ -4055,7 +4055,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2024-01-02",
+    "date": "2024-05-16",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4067,7 +4067,7 @@
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.9.5"
+    "version": "0.10.0"
   },
   "nettle": {
     "aliases": {
@@ -4278,14 +4278,14 @@
   },
   "openbb": {
     "bin": ["openbb"],
-    "date": "2024-03-16",
+    "date": "2024-05-16",
     "default": false,
     "dependencies": ["conda", "poetry"],
     "url": [
       "https://openbb.co/",
       "https://github.com/OpenBB-finance/OpenBBTerminal/"
     ],
-    "version": "3.2.5"
+    "version": "4.2.0"
   },
   "openblas": {
     "aliases": {
@@ -5508,7 +5508,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-13",
+    "date": "2024-05-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5516,7 +5516,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.11.4"
+    "version": "8.11.5"
   },
   "sox": {
     "aliases": {
