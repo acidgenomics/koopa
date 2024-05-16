@@ -14575,12 +14575,6 @@ koopa_install_ont_vbz_compression() {
         "$@"
 }
 
-koopa_install_openbb() {
-    koopa_install_app \
-        --name='openbb' \
-        "$@"
-}
-
 koopa_install_openblas() {
     koopa_install_app \
         --name='openblas' \
@@ -21208,7 +21202,6 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
-    koopa_assert_has_no_args "$#"
     koopa_python_script 'prune-app-binaries.py'
     return 0
 }
