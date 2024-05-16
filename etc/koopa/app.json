@@ -4277,15 +4277,8 @@
     "version": "1.0.2"
   },
   "openbb": {
-    "bin": ["openbb"],
     "date": "2024-05-16",
-    "default": false,
-    "dependencies": ["conda", "poetry"],
-    "url": [
-      "https://openbb.co/",
-      "https://github.com/OpenBB-finance/OpenBBTerminal/"
-    ],
-    "version": "4.2.0"
+    "removed": true
   },
   "openblas": {
     "aliases": {

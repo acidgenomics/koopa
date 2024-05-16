@@ -14575,12 +14575,6 @@ koopa_install_ont_vbz_compression() {
         "$@"
 }
 
-koopa_install_openbb() {
-    koopa_install_app \
-        --name='openbb' \
-        "$@"
-}
-
 koopa_install_openblas() {
     koopa_install_app \
         --name='openblas' \
