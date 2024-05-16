@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Prune app binaries.
+Prune apps.
 Updated 2024-05-16.
 
 Examples:
-./prune-app-binaries.py
+./prune-apps.py
 """
 
 from argparse import ArgumentParser, BooleanOptionalAction
@@ -14,7 +14,7 @@ from sys import path, version_info
 
 path.insert(0, join(dirname(__file__), ".."))
 
-from koopa.app import prune_app_binaries
+from koopa.app import prune_apps
 
 parser = ArgumentParser()
 parser.add_argument("--dry-run", action=BooleanOptionalAction)
@@ -26,7 +26,7 @@ def main(dry_run=False) -> None:
     Main function.
     Updated 2024-05-16.
     """
-    prune_app_binaries(dry_run=dry_run)
+    prune_apps(dry_run=dry_run)
     return None
 
 
