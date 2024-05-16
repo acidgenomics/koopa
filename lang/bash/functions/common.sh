@@ -21207,7 +21207,6 @@ koopa_prune_app_binaries() {
 }
 
 koopa_prune_apps() {
-    koopa_assert_has_no_args "$#"
     koopa_python_script 'prune-apps.py'
     return 0
 }
