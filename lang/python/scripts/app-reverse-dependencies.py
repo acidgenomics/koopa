@@ -2,7 +2,7 @@
 
 """
 Solve app reverse dependencies defined in 'app.json' file.
-Updated 2024-05-05.
+Updated 2024-05-16.
 
 Examples:
 ./app-reverse-dependencies.py 'python3.11'
@@ -27,13 +27,13 @@ parser.add_argument("name")
 args = parser.parse_args()
 
 
-def main(name: str, mode: str) -> bool:
+def main(name: str, mode: str) -> None:
     """
     Main function.
     Updated 2023-12-14.
     """
     print_app_revdeps(name=name, mode=mode)
-    return True
+    return None
 
 
 if __name__ == "__main__":

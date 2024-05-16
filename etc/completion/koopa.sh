@@ -327,7 +327,6 @@ _koopa_complete() {
                         'oniguruma'
                         'ont-dorado'
                         'ont-vbz-compression'
-                        'openbb'
                         'openblas'
                         'openjpeg'
                         'openldap'

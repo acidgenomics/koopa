@@ -2041,14 +2041,14 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-05-13",
+    "date": "2024-05-15",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.0.2"
+    "version": "4.0.3"
   },
   "glib": {
     "aliases": {
@@ -2627,10 +2627,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-04-16",
+    "date": "2024-05-15",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.125.0"
+    "version": "0.126.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3174,12 +3174,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-03-21",
+    "date": "2024-05-16",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.8.0"
+    "version": "1.8.1"
   },
   "libgpg-error": {
     "aliases": {
@@ -3916,11 +3916,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-02-28",
+    "date": "2024-05-15",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.21"
+    "version": "1.22"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4055,7 +4055,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2024-01-02",
+    "date": "2024-05-16",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4067,7 +4067,7 @@
     ],
     "man1": ["nvim.1"],
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.9.5"
+    "version": "0.10.0"
   },
   "nettle": {
     "aliases": {
@@ -4277,15 +4277,8 @@
     "version": "1.0.2"
   },
   "openbb": {
-    "bin": ["openbb"],
-    "date": "2024-03-16",
-    "default": false,
-    "dependencies": ["conda", "poetry"],
-    "url": [
-      "https://openbb.co/",
-      "https://github.com/OpenBB-finance/OpenBBTerminal/"
-    ],
-    "version": "3.2.5"
+    "date": "2024-05-16",
+    "removed": true
   },
   "openblas": {
     "aliases": {
@@ -5508,7 +5501,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-13",
+    "date": "2024-05-16",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5516,7 +5509,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.11.4"
+    "version": "8.11.5"
   },
   "sox": {
     "aliases": {
@@ -5643,10 +5636,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2024-03-29",
+    "date": "2024-05-15",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.18.2"
+    "version": "1.19.0"
   },
   "stow": {
     "aliases": {
@@ -6025,11 +6018,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-14",
+    "date": "2024-05-15",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.43"
+    "version": "0.1.44"
   },
   "vim": {
     "aliases": {
