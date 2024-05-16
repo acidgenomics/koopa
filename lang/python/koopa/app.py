@@ -194,8 +194,8 @@ def prune_app_binaries(dry_run=False) -> None:
         "profile": "acidgenomics",
         "subdir": "binaries",
     }
-    base_uri = "s3://" + dict["bucket"] + "/" + dict["subdir"] + "/"
-    print(f"Pruning binaries in {base_uri!r}.")
+    bucket_uri = "s3://" + dict["bucket"] + "/"
+    print(f"Pruning binaries in {bucket_uri!r}.")
     # Return AWS JSON using CLI.
     json = run(
         args=[
@@ -223,8 +223,9 @@ def prune_app_binaries(dry_run=False) -> None:
     keys = []
     for item in json:
         keys.append(item["Key"])
-        # Get the name of app from the key.
-        apps.append(item["Key"].split("/")[-2])
+        # Convert app-specific key from "<OS>/<ARCH>/<APP>/<VERSION>.tar.gz" to
+        # "<OS>/<ARCH>/<APP>/<VERSION>" for duplicate parsing.
+        apps.append("/".join(item["Key"].split("/")[0:-1]))
         # Convert AWS `LastModified` value from ISO8601 to Python datetime.
         dts.append(datetime.fromisoformat(item["LastModified"]))
     # Sort lists by timestamp (newest to oldest).
@@ -245,7 +246,7 @@ def prune_app_binaries(dry_run=False) -> None:
         return None
     # Prune app binaries.
     for key in keys_ko:
-        uri = base_uri + key
+        uri = bucket_uri + key
         run(
             args=["aws", "--profile", dict["profile"], "s3", "rm", uri],
             check=True,
