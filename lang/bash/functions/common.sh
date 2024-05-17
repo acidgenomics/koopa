@@ -14888,6 +14888,12 @@ koopa_install_poetry() {
         "$@"
 }
 
+koopa_install_postgresql() {
+    koopa_install_app \
+        --name='postgresql' \
+        "$@"
+}
+
 koopa_install_prettier() {
     koopa_install_app \
         --name='prettier' \
@@ -30300,6 +30306,12 @@ koopa_uninstall_pkg_config() {
 koopa_uninstall_poetry() {
     koopa_uninstall_app \
         --name='poetry' \
+        "$@"
+}
+
+koopa_uninstall_postgresql() {
+    koopa_uninstall_app \
+        --name='postgresql' \
         "$@"
 }
 
