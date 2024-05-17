@@ -4600,6 +4600,24 @@
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.8.3"
   },
+  "postgresql": {
+    "build_dependencies": ["make", "pkg-config"],
+    "default": false,
+    "dependencies": [
+      "icu4c",
+      "libxml2",
+      "libxslt",
+      "lz4",
+      "openssl3",
+      "perl",
+      "readline"
+    ],
+    "url": [
+      "https://www.postgresql.org/",
+      "https://ftp.postgresql.org/pub/source/"
+    ],
+    "version": "14.12"
+  },
   "prelude-emacs": {
     "date": "2023-12-22",
     "default": false,
