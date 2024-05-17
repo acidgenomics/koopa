@@ -6,6 +6,7 @@ main() {
     # @note 2024-05-17.
     #
     # @seealso
+    # - https://formulae.brew.sh/formula/postgresql@16
     # - https://formulae.brew.sh/formula/postgresql@14
     # """
     local -A dict
