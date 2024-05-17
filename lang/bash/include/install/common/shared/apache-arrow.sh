@@ -49,6 +49,10 @@ main() {
         # Build dependencies ---------------------------------------------------
         "-DLLVM_ROOT=${dict['llvm_root']}"
     )
+    if ! koopa_is_aarch64
+    then
+        cmake_args+=('-DARROW_MIMALLOC=ON')
+    fi
     dict['url']="https://www.apache.org/dyn/closer.lua?action=download&\
 filename=arrow/arrow-${dict['version']}/apache-arrow-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
