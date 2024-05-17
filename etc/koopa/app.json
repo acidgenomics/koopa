@@ -610,7 +610,7 @@
   },
   "bowtie2": {
     "bin": ["bowtie2"],
-    "date": "2023-10-16",
+    "date": "2024-05-17",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -621,7 +621,7 @@
       "macos-arm64": false
     },
     "url": ["https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"],
-    "version": "2.5.2"
+    "version": "2.5.3"
   },
   "bpytop": {
     "aliases": {
@@ -1530,14 +1530,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-09",
+    "date": "2024-05-17",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.15"
+    "version": "0.18.16"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1978,11 +1978,11 @@
     },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-07",
+    "date": "2024-05-17",
     "default": false,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.03.0"
+    "version": "10.03.1"
   },
   "git": {
     "aliases": {
@@ -2042,14 +2042,14 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-05-15",
+    "date": "2024-05-17",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.0.3"
+    "version": "4.0.4"
   },
   "glib": {
     "aliases": {
@@ -3917,11 +3917,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-05-15",
+    "date": "2024-05-17",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.22"
+    "version": "1.22.1"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -5520,7 +5520,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-16",
+    "date": "2024-05-17",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5528,7 +5528,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.11.5"
+    "version": "8.11.6"
   },
   "sox": {
     "aliases": {
