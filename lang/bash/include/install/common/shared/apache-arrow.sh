@@ -14,9 +14,10 @@ main() {
     # - https://arrow.apache.org/docs/python/parquet.html
     # """
     local -A dict
-    local -a cmake_args deps
-    deps=('llvm' 'openssl3')
-    koopa_activate_app --build-only 'pkg-config'
+    local -a build_deps cmake_args deps
+    build_deps+=('pkg-config' 'python3.12')
+    deps+=('llvm' 'openssl3')
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['llvm_root']="$(koopa_app_prefix 'llvm')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -39,7 +40,8 @@ main() {
         '-DARROW_FILESYSTEM=ON'
         '-DARROW_FLIGHT=ON'
         '-DARROW_FLIGHT_SQL=ON'
-        '-DARROW_GANDIVA=ON'
+        # Currently hitting libgandiva LLVM linker errors on macOS.
+        # > '-DARROW_GANDIVA=ON'
         '-DARROW_HDFS=ON'
         '-DARROW_JSON=ON'
         '-DARROW_ORC=ON'
