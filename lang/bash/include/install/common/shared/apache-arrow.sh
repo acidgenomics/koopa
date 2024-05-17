@@ -23,15 +23,6 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
-        # > '-DARROW_INSTALL_NAME_RPATH=OFF'
-        # > '-DARROW_PROTOBUF_USE_SHARED=ON'
-        # > '-DARROW_WITH_BROTLI=ON'
-        # > '-DARROW_WITH_BZ2=ON'
-        # > '-DARROW_WITH_LZ4=ON'
-        # > '-DARROW_WITH_SNAPPY=ON'
-        # > '-DARROW_WITH_UTF8PROC=ON'
-        # > '-DARROW_WITH_ZLIB=ON'
-        # > '-DARROW_WITH_ZSTD=ON'
         '-DARROW_ACERO=ON'
         '-DARROW_COMPUTE=ON'
         '-DARROW_CSV=ON'
