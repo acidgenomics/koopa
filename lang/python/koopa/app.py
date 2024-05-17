@@ -181,6 +181,14 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
+def prune_apps(dry_run=False) -> None:
+    """
+    Prune apps.
+    Updated 2024-05-16.
+    """
+    return None
+
+
 def prune_app_binaries(dry_run=False) -> None:
     """
     Prune app binaries.
