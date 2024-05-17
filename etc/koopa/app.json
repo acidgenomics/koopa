@@ -53,8 +53,9 @@
     "version": "2.9.1"
   },
   "apache-arrow": {
-    "build_dependencies": ["cmake", "ninja", "pkg-config"],
-    "date": "2024-05-06",
+    "build_dependencies": ["cmake", "ninja", "pkg-config", "python3.11"],
+    "date": "2024-05-17",
+    "dependencies": ["llvm", "openssl3"],
     "default": false,
     "url": ["https://arrow.apache.org/"],
     "version": "16.0.0"
@@ -1346,10 +1347,10 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-05-06",
+    "date": "2024-05-16",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "7cf5fb13520ba1096380a5fb05ad14adc224f24a"
+    "version": "872dca85d20f79bead03d0b96b7048c6b2b60506"
   },
   "du-dust": {
     "aliases": {
@@ -4598,6 +4599,24 @@
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "1.8.3"
+  },
+  "postgresql": {
+    "build_dependencies": ["make", "pkg-config"],
+    "default": false,
+    "dependencies": [
+      "icu4c",
+      "libxml2",
+      "libxslt",
+      "lz4",
+      "openssl3",
+      "perl",
+      "readline"
+    ],
+    "url": [
+      "https://www.postgresql.org/",
+      "https://ftp.postgresql.org/pub/source/"
+    ],
+    "version": "14.12"
   },
   "prelude-emacs": {
     "date": "2023-12-22",

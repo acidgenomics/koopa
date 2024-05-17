@@ -14888,6 +14888,12 @@ koopa_install_poetry() {
         "$@"
 }
 
+koopa_install_postgresql() {
+    koopa_install_app \
+        --name='postgresql' \
+        "$@"
+}
+
 koopa_install_prettier() {
     koopa_install_app \
         --name='prettier' \
@@ -21207,7 +21213,6 @@ koopa_prune_app_binaries() {
 }
 
 koopa_prune_apps() {
-    koopa_assert_has_no_args "$#"
     koopa_python_script 'prune-apps.py'
     return 0
 }
@@ -30304,6 +30309,12 @@ koopa_uninstall_poetry() {
         "$@"
 }
 
+koopa_uninstall_postgresql() {
+    koopa_uninstall_app \
+        --name='postgresql' \
+        "$@"
+}
+
 koopa_uninstall_prettier() {
     koopa_uninstall_app \
         --name='prettier' \
@@ -31291,6 +31302,7 @@ koopa_update_system_homebrew() {
     taps=(
         'homebrew/cask'
         'homebrew/cask-drivers'
+        'homebrew/cask-fonts'
         'homebrew/cask-versions'
         'homebrew/core'
     )
