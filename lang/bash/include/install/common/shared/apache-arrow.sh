@@ -10,6 +10,7 @@ main() {
     # - https://arrow.apache.org/docs/developers/cpp/building.html
     # - https://formulae.brew.sh/formula/apache-arrow
     # - https://github.com/conda-forge/arrow-cpp-feedstock
+    # - https://arrow.apache.org/docs/python/parquet.html
     # """
     local -A dict
     local -a cmake_args
