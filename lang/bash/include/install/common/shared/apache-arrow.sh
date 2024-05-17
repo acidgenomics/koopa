@@ -41,7 +41,7 @@ main() {
         '-DARROW_FLIGHT=ON'
         '-DARROW_FLIGHT_SQL=ON'
         # Currently hitting libgandiva LLVM linker errors on macOS.
-        # > '-DARROW_GANDIVA=ON'
+        '-DARROW_GANDIVA=OFF'
         '-DARROW_HDFS=ON'
         '-DARROW_JSON=ON'
         '-DARROW_ORC=ON'
