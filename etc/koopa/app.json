@@ -54,7 +54,8 @@
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config"],
-    "date": "2024-05-06",
+    "date": "2024-05-17",
+    "dependencies": ["llvm", "openssl3"],
     "default": false,
     "url": ["https://arrow.apache.org/"],
     "version": "16.0.0"
