@@ -53,7 +53,7 @@
     "version": "2.9.1"
   },
   "apache-arrow": {
-    "build_dependencies": ["cmake", "ninja", "pkg-config", "python3.12"],
+    "build_dependencies": ["cmake", "ninja", "pkg-config", "python3.11"],
     "date": "2024-05-17",
     "dependencies": ["llvm", "openssl3"],
     "default": false,

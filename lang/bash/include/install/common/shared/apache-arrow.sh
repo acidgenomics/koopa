@@ -15,7 +15,7 @@ main() {
     # """
     local -A dict
     local -a build_deps cmake_args deps
-    build_deps+=('pkg-config' 'python3.12')
+    build_deps+=('pkg-config' 'python3.11')
     deps+=('llvm' 'openssl3')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
