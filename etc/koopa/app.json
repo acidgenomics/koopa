@@ -1982,7 +1982,7 @@
     "default": false,
     "man1": ["gs.1"],
     "url": ["https://www.ghostscript.com/"],
-    "version": "10.03.1"
+    "version": "10.03.0"
   },
   "git": {
     "aliases": {
@@ -4616,7 +4616,7 @@
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "14.12"
+    "version": "16.3"
   },
   "prelude-emacs": {
     "date": "2023-12-22",
