@@ -2029,13 +2029,13 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-25",
+    "date": "2024-05-21",
     "default": false,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.26.1"
+    "version": "0.26.2"
   },
   "glances": {
     "aliases": {
@@ -3622,14 +3622,14 @@
   },
   "luigi": {
     "bin": ["luigi"],
-    "date": "2024-01-16",
+    "date": "2024-05-21",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.5.0"
+    "version": "3.5.1"
   },
   "lz4": {
     "aliases": {
@@ -3765,10 +3765,10 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-13",
+    "date": "2024-05-21",
     "default": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.8.5"
+    "version": "0.8.6"
   },
   "mdcat": {
     "aliases": {
@@ -4099,7 +4099,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2024-05-13",
+    "date": "2024-05-21",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4111,7 +4111,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.62.0"
+    "version": "1.62.1"
   },
   "nim": {
     "aliases": {
@@ -4233,7 +4233,7 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2023-12-12",
+    "date": "2024-05-21",
     "default": false,
     "dependencies": ["python3.11", "zlib"],
     "supported": {
@@ -4243,11 +4243,11 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "0.7.3"
+    "version": "0.8.1"
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-05-10",
+    "date": "2024-05-21",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4256,7 +4256,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.6.2"
+    "version": "0.7.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4752,11 +4752,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-05-14",
+    "date": "2024-05-21",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.2.0"
+    "version": "3.2.2"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -6037,11 +6037,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-15",
+    "date": "2024-05-21",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.44"
+    "version": "0.1.45"
   },
   "vim": {
     "aliases": {

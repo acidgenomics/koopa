@@ -2,7 +2,6 @@
 
 koopa_install_mcfly() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='mcfly' \
         "$@"
 }
