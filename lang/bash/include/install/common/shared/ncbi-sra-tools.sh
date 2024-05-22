@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # FIXME 3.1.1 is failing to build on Apple Silicon:
+# https://github.com/ncbi/sra-tools/issues/937
 #
 # /bin/sh: -c: line 0: unexpected EOF while looking for matching `"'
 # /bin/sh: -c: line 1: syntax error: unexpected end of file
