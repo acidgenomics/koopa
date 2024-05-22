@@ -3,7 +3,7 @@
 main() {
     # """
     # Install NCBI VDB.
-    # @note Updated 2023-10-09.
+    # @note Updated 2024-05-22.
     #
     # VDB is the database engine that all SRA tools use.
     #
@@ -42,15 +42,6 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    # Workaround to allow 'clang/aarch64' build to use 'gcc/arm64' directory.
-    # Issue ref: https://github.com/ncbi/ncbi-vdb/issues/65
-    if koopa_is_macos && koopa_is_aarch64
-    then
-        (
-            koopa_cd 'interfaces/cc/clang'
-            koopa_ln '../gcc/arm64' 'arm64'
-        )
-    fi
     if koopa_is_root
     then
         # Disable creation of these files:
