@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
+# FIXME 3.1.1 is failing to build on Apple Silicon:
+#
+# /bin/sh: -c: line 0: unexpected EOF while looking for matching `"'
+# /bin/sh: -c: line 1: syntax error: unexpected end of file
+# gmake[2]: *** [tools/external/driver-tool/CMakeFiles/sratools.dir/build.make:79: tools/external/driver-tool/CMakeFiles/sratools.dir/sratools.cpp.o] Error 2
+# gmake[2]: Leaving directory '/private/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmp.jubUtdSORo/src-cmake-a3d764cd37'
+# gmake[1]: *** [CMakeFiles/Makefile2:2920: tools/external/driver-tool/CMakeFiles/sratools.dir/all] Error 2
+# gmake[1]: Leaving directory '/private/var/folders/9b/4gh0pghx1b71jjd0wjh5mj880000gn/T/tmp.jubUtdSORo/src-cmake-a3d764cd37'
+# gmake: *** [Makefile:169: all] Error 2
+
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2023-01-02.
+    # @note Updated 2024-05-22.
     #
     # Currently, we need to build sra-tools relative to a hard-coded path
     # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
@@ -80,6 +90,6 @@ ${dict['version']}.tar.gz"
             'build/install.sh'
     fi
     # If build fails, set '--jobs=1' here for better debugging info.
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build --jobs=1 --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
