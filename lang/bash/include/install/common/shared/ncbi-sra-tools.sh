@@ -91,6 +91,6 @@ ${dict['version']}.tar.gz"
             'build/install.sh'
     fi
     # If build fails, set '--jobs=1' here for better debugging info.
-    koopa_cmake_build --jobs=1 --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
