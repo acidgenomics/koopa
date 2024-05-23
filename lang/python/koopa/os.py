@@ -1,6 +1,6 @@
 """
 Operative system (platform)-specific variables.
-Updated 2024-05-01.
+Updated 2024-05-23.
 """
 
 from os.path import abspath, dirname, isdir, join
@@ -32,10 +32,9 @@ def arch2() -> str:
 def koopa_opt_prefix() -> str:
     """
     Koopa opt prefix.
-    Updated 2023-12-14.
+    Updated 2024-05-23.
     """
     prefix = join(koopa_prefix(), "opt")
-    assert isdir(prefix)
     return prefix
 
 
