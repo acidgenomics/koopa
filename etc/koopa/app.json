@@ -1372,13 +1372,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-04-16",
+    "date": "2024-05-23",
     "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "0.10.1"
+    "version": "0.10.3"
   },
   "ed": {
     "aliases": {
@@ -2857,11 +2857,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-05-06",
+    "date": "2024-05-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.2.0"
+    "version": "4.2.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -5266,11 +5266,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-05-10",
+    "date": "2024-05-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.4"
+    "version": "0.4.5"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6037,11 +6037,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-21",
+    "date": "2024-05-23",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.45"
+    "version": "0.2.2"
   },
   "vim": {
     "aliases": {
