@@ -4084,14 +4084,14 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-04-04",
+    "date": "2024-04-23",
     "default": true,
     "dependencies": ["temurin"],
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "23.10.1"
+    "version": "24.04.1"
   },
   "nghttp2": {
     "aliases": {
