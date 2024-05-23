@@ -6619,11 +6619,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-05-23",
     "default": false,
     "prune": false,
     "url": ["https://www.zlib.net/"],
-    "version": "1.3"
+    "version": "1.3.1"
   },
   "zopfli": {
     "bin": ["zopfli", "zopflipng"],
