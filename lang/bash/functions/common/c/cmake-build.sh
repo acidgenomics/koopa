@@ -150,6 +150,5 @@ koopa_cmake_build() {
     "${app['cmake']}" \
         --install "${dict['build_dir']}" \
         --prefix "${dict['prefix']}"
-    # > koopa_rm "${dict['build_dir']}"
     return 0
 }
