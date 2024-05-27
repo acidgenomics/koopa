@@ -5520,7 +5520,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-17",
+    "date": "2024-05-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5528,7 +5528,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.11.6"
+    "version": "8.12.0"
   },
   "sox": {
     "aliases": {
@@ -6565,14 +6565,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-04-09",
+    "date": "2024-05-26",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.4.9"
+    "version": "2024.5.26"
   },
   "zellij": {
     "aliases": {
