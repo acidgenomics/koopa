@@ -183,6 +183,18 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
+def installed_apps() -> list:
+    """
+    Installed apps.
+    Updated 2024-05-28.
+    """
+    app_prefix = koopa_app_prefix()
+    names = list_subdirs(
+        path=app_prefix, recursive=False, sort=True, basename_only=True
+    )
+    return names
+
+
 def prune_apps(dry_run=False) -> None:
     """
     Prune apps.
@@ -191,9 +203,7 @@ def prune_apps(dry_run=False) -> None:
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
     supported_names = json_data.keys()
-    installed_names = list_subdirs(
-        path=app_prefix, recursive=False, sort=True, basename_only=True
-    )
+    installed_names = installed_apps()
     opt_prefix = koopa_opt_prefix()
     for name in installed_names:
         prune = True

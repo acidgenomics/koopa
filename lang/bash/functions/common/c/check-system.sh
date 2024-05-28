@@ -3,11 +3,9 @@
 koopa_check_system() {
     # """
     # Check system.
-    # @note Updated 2023-12-11.
+    # @note Updated 2024-05-28.
     # """
     koopa_assert_has_no_args "$#"
-    koopa_alert 'Checking system.'
-    # FIXME Need to add support for this.
     koopa_python_script 'check-system.py'
     koopa_check_exports
     koopa_check_disk '/'
