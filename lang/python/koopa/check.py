@@ -28,7 +28,9 @@ def check_installed_apps() -> bool:
         assert isdir(path)
         linked_ver = basename(path)
         current_ver = json_data[name]["version"]
-        # FIXME Need to sanitize hash version (e.g. for dotfiles)
+        # Sanitize commit hashes.
+        if len(current_ver) == 40:
+            current_ver = current_ver[:7]
         if linked_ver == current_ver:
             continue
         print(f"{name} ({linked_ver} != {current_ver})")
