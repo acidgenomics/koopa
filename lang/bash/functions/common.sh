@@ -22764,6 +22764,7 @@ koopa_r_script() {
     local -a pos rscript_cmd
     koopa_assert_has_args "$#"
     app['r']=''
+    bool['system']=0
     bool['vanilla']=0
     while (("$#"))
     do
@@ -22775,6 +22776,10 @@ koopa_r_script() {
             '--r')
                 app['r']="${2:?}"
                 shift 2
+                ;;
+            '--system')
+                bool['system']=1
+                shift 1
                 ;;
             '--vanilla')
                 bool['vanilla']=1
@@ -22790,7 +22795,12 @@ koopa_r_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['r']}" ]]
     then
-        app['r']="$(koopa_locate_r --allow-system)"
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            app['r']="$(koopa_locate_system_r)"
+        else
+            app['r']="$(koopa_locate_r)"
+        fi
     fi
     app['rscript']="${app['r']}script"
     koopa_assert_is_installed "${app[@]}"
@@ -23168,7 +23178,7 @@ koopa_remove_from_path_string() {
 
 koopa_rename_camel_case() {
     koopa_assert_has_args "$#"
-    koopa_python_script 'rename-camel-case.py' "$@"
+    koopa_r_script --system 'rename-camel-case.R' "$@"
     return 0
 }
 
@@ -23189,7 +23199,7 @@ koopa_rename_from_csv() {
 
 koopa_rename_kebab_case() {
     koopa_assert_has_args "$#"
-    koopa_python_script 'rename-kebab-case.py' "$@"
+    koopa_r_script --system 'rename-kebab-case.R' "$@"
     return 0
 }
 
@@ -23264,7 +23274,7 @@ koopa_rename_lowercase() {
 
 koopa_rename_snake_case() {
     koopa_assert_has_args "$#"
-    koopa_python_script 'rename-snake-case.py' "$@"
+    koopa_r_script --system 'rename-snake-case.R' "$@"
     return 0
 }
 

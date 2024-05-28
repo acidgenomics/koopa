@@ -9,6 +9,7 @@ koopa_r_script() {
     local -a pos rscript_cmd
     koopa_assert_has_args "$#"
     app['r']=''
+    bool['system']=0
     bool['vanilla']=0
     while (("$#"))
     do
@@ -23,6 +24,10 @@ koopa_r_script() {
                 shift 2
                 ;;
             # Flags ------------------------------------------------------------
+            '--system')
+                bool['system']=1
+                shift 1
+                ;;
             '--vanilla')
                 bool['vanilla']=1
                 shift 1
@@ -38,7 +43,12 @@ koopa_r_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['r']}" ]]
     then
-        app['r']="$(koopa_locate_r --allow-system)"
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            app['r']="$(koopa_locate_system_r)"
+        else
+            app['r']="$(koopa_locate_r)"
+        fi
     fi
     app['rscript']="${app['r']}script"
     koopa_assert_is_installed "${app[@]}"
