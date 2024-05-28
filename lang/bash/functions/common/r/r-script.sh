@@ -1,25 +1,31 @@
 #!/usr/bin/env bash
 
-koopa_python_script() {
+koopa_r_script() {
     # """
-    # Run a Python script.
+    # Run an R script.
     # @note Updated 2024-05-28.
     # """
-    local -A app dict
-    local -a pos
+    local -A app bool dict
+    local -a pos rscript_cmd
     koopa_assert_has_args "$#"
-    app['python']=''
+    app['r']=''
+    bool['vanilla']=0
     while (("$#"))
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--python='*)
-                app['python']="${1#*=}"
+            '--r='*)
+                app['r']="${1#*=}"
                 shift 1
                 ;;
-            '--python')
-                app['python']="${2:?}"
+            '--r')
+                app['r']="${2:?}"
                 shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--vanilla')
+                bool['vanilla']=1
+                shift 1
                 ;;
             # Other ------------------------------------------------------------
             *)
@@ -30,17 +36,23 @@ koopa_python_script() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ -z "${app['python']}" ]]
+    if [[ -z "${app['r']}" ]]
     then
-        app['python']="$(koopa_locate_python3 --allow-system)"
+        app['r']="$(koopa_locate_r --allow-system)"
     fi
+    app['rscript']="${app['r']}script"
     koopa_assert_is_installed "${app[@]}"
-    dict['prefix']="$(koopa_python_scripts_prefix)"
+    dict['prefix']="$(koopa_r_scripts_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['cmd_name']="${1:?}"
     shift 1
     dict['script']="${dict['prefix']}/${dict['cmd_name']}"
     koopa_assert_is_executable "${dict['script']}"
-    "${app['python']}" "${dict['script']}" "$@"
+    rscript_cmd+=("${app['rscript']}")
+    if [[ "${bool['vanilla']}" -eq 1 ]]
+    then
+        rscript_cmd+=('--vanilla')
+    fi
+    "${rscript_cmd[@]}" "${dict['script']}" "$@"
     return 0
 }
