@@ -9,11 +9,11 @@ Examples:
 """
 
 from os.path import dirname, join
-from sys import path, version_info
+from sys import exit, path, version_info
 
 path.insert(0, join(dirname(__file__), ".."))
 
-from koopa.cli import check_system
+from koopa.check import check_installed_apps
 
 
 def main() -> None:
@@ -21,7 +21,9 @@ def main() -> None:
     Main function.
     Updated 2024-05-28.
     """
-    check_system()
+    ok = check_installed_apps()
+    if not ok:
+        exit(1)
     return None
 
 
