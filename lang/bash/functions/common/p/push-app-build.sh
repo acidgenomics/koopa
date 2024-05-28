@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to add skip for broken symlink in opt.
-
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2023-07-18.
+    # @note Updated 2024-05-28.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
