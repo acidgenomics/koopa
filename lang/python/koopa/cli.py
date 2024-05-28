@@ -7,6 +7,14 @@ from koopa.app import app_deps, app_revdeps, shared_apps
 from koopa.io import extract_conda_bin_names, import_app_json
 
 
+def check_system() -> None:
+    """
+    Check system integrity.
+    Updated 2024-05-28.
+    """
+    return None
+
+
 def print_app_deps(name: str) -> None:
     """
     Print app dependencies.
