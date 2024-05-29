@@ -20,7 +20,7 @@ path <- normalizePath(
 source(file.path(dirname(dirname(path)), "functions.R"))
 
 main <- function() {
-    syntacticRename(fun = "kebabCase")
+    syntacticRename(fun = "camelCase")
 }
 
 main()
