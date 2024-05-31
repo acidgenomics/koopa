@@ -3988,16 +3988,8 @@
     "version": "3.1.1"
   },
   "ncbi-vdb": {
-    "aliases": {
-      "bioconda": "ncbi-vdb"
-    },
-    "build_dependencies": ["cmake"],
-    "date": "2024-05-23",
-    "default": false,
-    "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin", "zlib"],
-    "prune": false,
-    "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.1.1"
+    "date": "2024-05-31",
+    "removed": true
   },
   "ncurses": {
     "aliases": {
