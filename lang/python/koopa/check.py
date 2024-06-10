@@ -13,7 +13,7 @@ from koopa.os import koopa_opt_prefix
 def check_installed_apps() -> bool:
     """
     Check system integrity.
-    Updated 2024-05-28.
+    Updated 2024-05-31.
     """
     ok = True
     opt_prefix = koopa_opt_prefix()
@@ -27,12 +27,16 @@ def check_installed_apps() -> bool:
         path = realpath(path)
         assert isdir(path)
         linked_ver = basename(path)
+        if "removed" in json_data[name].keys() and json_data[name]["removed"]:
+            ok = False
+            print(f"{name} (removed)")
+            continue
         current_ver = json_data[name]["version"]
         # Sanitize commit hashes.
         if len(current_ver) == 40:
             current_ver = current_ver[:7]
-        if linked_ver == current_ver:
+        if linked_ver != current_ver:
+            ok = False
+            print(f"{name} ({linked_ver} != {current_ver})")
             continue
-        print(f"{name} ({linked_ver} != {current_ver})")
-        ok = False
     return ok
