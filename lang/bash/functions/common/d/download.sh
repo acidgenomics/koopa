@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-12-12.
+    # @note Updated 2024-06-11.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -47,6 +47,8 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--disable' # Ignore '~/.curlrc'. Must come first.
         '--create-dirs'
         '--fail'
+        # Not ideal but this plays nice with corporate gateways.
+        '--insecure'
         '--location'
         '--retry' 5
         '--show-error'
