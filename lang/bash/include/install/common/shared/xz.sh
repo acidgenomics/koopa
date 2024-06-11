@@ -4,6 +4,8 @@
 # - https://tukaani.org/xz-backdoor/
 # - https://github.com/orgs/Homebrew/discussions/5243
 
+# FIXME Hitting curl 403 error on MacBook (2024-06-11).
+
 main() {
     # """
     # Install xz.
