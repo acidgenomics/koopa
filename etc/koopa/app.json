@@ -1253,13 +1253,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-14",
+    "date": "2024-06-11",
     "default": true,
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.6.0"
+    "version": "8.8.0"
   },
   "dash": {
     "aliases": {
