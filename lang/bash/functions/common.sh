@@ -10268,7 +10268,7 @@ koopa_git_submodule_init() {
 koopa_gnu_mirror_url() {
     local server
     koopa_assert_has_no_args "$#"
-    server='https://ftpmirror.gnu.org'
+    server='https://ftp.gnu.org/gnu'
     koopa_print "$server"
     return 0
 }
