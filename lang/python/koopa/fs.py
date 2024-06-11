@@ -12,7 +12,7 @@ def list_subdirs(
 ) -> list:
     """
     List subdirectories in a directory.
-    Updated 2024-05-05.
+    Updated 2024-05-28.
 
     For recursive listing, consider using a merge sort approach:
     https://www.freecodecamp.org/news/how-to-sort-recursively-in-python/
@@ -37,5 +37,5 @@ def list_subdirs(
         # > lst = list(map(basename, lst))
         lst = [basename(val) for val in lst]
     if sort:
-        lst = list.sort()
+        lst.sort()
     return lst

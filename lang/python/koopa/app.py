@@ -1,16 +1,18 @@
 """
 Application management functions.
-Updated 2025-05-05.
+Updated 2025-05-28.
 """
 
 from datetime import datetime
 from json import loads
-from os.path import isdir, join
+from os.path import isdir, islink, join, realpath
+from shutil import rmtree
 from subprocess import run
 
 from koopa.data import argsort, flatten, unique_pos
+from koopa.fs import list_subdirs
 from koopa.io import import_app_json
-from koopa.os import arch2, koopa_opt_prefix, os_id
+from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
 
 
 def app_deps(name: str) -> list:
@@ -181,11 +183,56 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
     return lst
 
 
+def installed_apps() -> list:
+    """
+    Installed apps.
+    Updated 2024-05-28.
+    """
+    app_prefix = koopa_app_prefix()
+    names = list_subdirs(
+        path=app_prefix, recursive=False, sort=True, basename_only=True
+    )
+    return names
+
+
 def prune_apps(dry_run=False) -> None:
     """
     Prune apps.
-    Updated 2024-05-16.
+    Updated 2024-05-28.
     """
+    app_prefix = koopa_app_prefix()
+    json_data = import_app_json()
+    supported_names = json_data.keys()
+    installed_names = installed_apps()
+    opt_prefix = koopa_opt_prefix()
+    for name in installed_names:
+        prune = True
+        if name not in supported_names:
+            raise ValueError(f"{name!r} is not a supported app.")
+        json = json_data[name]
+        if "prune" in json.keys():
+            if not json["prune"]:
+                prune = False
+        if not prune:
+            continue
+        opt_path = join(opt_prefix, name)
+        if not islink(opt_path):
+            raise ValueError(f"{name!r} is not linked in {opt_prefix!r}.")
+        linked_subdir = realpath(opt_path)
+        subdirs = list_subdirs(
+            path=join(app_prefix, name),
+            recursive=False,
+            sort=True,
+            basename_only=False,
+        )
+        for subdir in subdirs:
+            if subdir == linked_subdir:
+                continue
+            if dry_run:
+                print(f"[dry-run] Pruning {subdir!r}.")
+                continue
+            print(f"Pruning {subdir!r}.")
+            rmtree(subdir)
     return None
 
 

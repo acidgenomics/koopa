@@ -4407,7 +4407,6 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
-    koopa_alert 'Checking system.'
     koopa_python_script 'check-system.py'
     koopa_check_exports
     koopa_check_disk '/'
@@ -21549,23 +21548,47 @@ koopa_python_pip_install() {
     return 0
 }
 
-koopa_python_prefix() {
-    koopa_print "$(koopa_koopa_prefix)/lang/python"
-    return 0
-}
-
 koopa_python_script() {
     local -A app dict
+    local -a pos
     koopa_assert_has_args "$#"
-    app['python']="$(koopa_locate_python3 --allow-system)"
+    app['python']=''
+    while (("$#"))
+    do
+        case "$1" in
+            '--python='*)
+                app['python']="${1#*=}"
+                shift 1
+                ;;
+            '--python')
+                app['python']="${2:?}"
+                shift 2
+                ;;
+            *)
+                pos+=("${1:?}")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    if [[ -z "${app['python']}" ]]
+    then
+        app['python']="$(koopa_locate_python3 --allow-system)"
+    fi
     koopa_assert_is_installed "${app[@]}"
-    dict['prefix']="$(koopa_python_prefix)/scripts"
+    dict['prefix']="$(koopa_python_scripts_prefix)"
     koopa_assert_is_dir "${dict['prefix']}"
     dict['cmd_name']="${1:?}"
     shift 1
-    app['script']="${dict['prefix']}/${dict['cmd_name']}"
-    koopa_assert_is_executable "${app['script']}"
-    "${app['python']}" "${app['script']}" "$@"
+    dict['script']="${dict['prefix']}/${dict['cmd_name']}"
+    koopa_assert_is_executable "${dict['script']}"
+    "${app['python']}" "${dict['script']}" "$@"
+    return 0
+}
+
+koopa_python_scripts_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/python/scripts"
     return 0
 }
 
@@ -22605,16 +22628,15 @@ koopa_r_gfortran_libs() {
 }
 
 koopa_r_install_packages_in_site_library() {
-    local -A app dict
+    local -A app
     koopa_assert_has_args_ge "$#" 2
     app['r']="${1:?}"
-    app['rscript']="${app['r']}script"
     koopa_assert_is_executable "${app[@]}"
     shift 1
-    dict['script']="$(koopa_koopa_prefix)/lang/r/\
-install-packages-in-site-library.R"
-    koopa_assert_is_file "${dict['script']}"
-    "${app['rscript']}" "${dict['script']}" "$@"
+    koopa_r_script \
+        --r="${app['r']}" \
+        'install-packages-in-site-library.R' \
+        "$@"
     return 0
 }
 
@@ -22724,17 +22746,81 @@ koopa_r_remove_packages_in_system_library() {
     shift 1
     bool['system']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    dict['script']="$(koopa_koopa_prefix)/lang/r/\
+    dict['script']="$(koopa_r_scripts_prefix)/\
 remove-packages-in-system-library.R"
-    koopa_assert_is_file "${dict['script']}"
+    koopa_assert_is_executable "${dict['script']}"
     rscript_cmd=()
     if [[ "${bool['system']}" -eq 1 ]]
     then
         rscript_cmd+=('koopa_sudo')
     fi
     rscript_cmd+=("${app['rscript']}")
-    koopa_assert_is_executable "${app[@]}"
     "${rscript_cmd[@]}" "${dict['script']}" "$@"
+    return 0
+}
+
+koopa_r_script() {
+    local -A app bool dict
+    local -a pos rscript_cmd
+    koopa_assert_has_args "$#"
+    app['r']=''
+    bool['system']=0
+    bool['vanilla']=0
+    while (("$#"))
+    do
+        case "$1" in
+            '--r='*)
+                app['r']="${1#*=}"
+                shift 1
+                ;;
+            '--r')
+                app['r']="${2:?}"
+                shift 2
+                ;;
+            '--system')
+                bool['system']=1
+                shift 1
+                ;;
+            '--vanilla')
+                bool['vanilla']=1
+                shift 1
+                ;;
+            *)
+                pos+=("${1:?}")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    koopa_assert_has_args "$#"
+    if [[ -z "${app['r']}" ]]
+    then
+        if [[ "${bool['system']}" -eq 1 ]]
+        then
+            app['r']="$(koopa_locate_system_r)"
+        else
+            app['r']="$(koopa_locate_r)"
+        fi
+    fi
+    app['rscript']="${app['r']}script"
+    koopa_assert_is_installed "${app[@]}"
+    dict['prefix']="$(koopa_r_scripts_prefix)"
+    koopa_assert_is_dir "${dict['prefix']}"
+    dict['cmd_name']="${1:?}"
+    shift 1
+    dict['script']="${dict['prefix']}/${dict['cmd_name']}"
+    koopa_assert_is_executable "${dict['script']}"
+    rscript_cmd+=("${app['rscript']}")
+    if [[ "${bool['vanilla']}" -eq 1 ]]
+    then
+        rscript_cmd+=('--vanilla')
+    fi
+    "${rscript_cmd[@]}" "${dict['script']}" "$@"
+    return 0
+}
+
+koopa_r_scripts_prefix() {
+    koopa_print "$(koopa_koopa_prefix)/lang/r/scripts"
     return 0
 }
 
@@ -22775,11 +22861,13 @@ koopa_r_system_packages_non_base() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
     app['r']="${1:?}"
-    app['rscript']="${app['r']}script"
     koopa_assert_is_executable "${app[@]}"
-    dict['script']="$(koopa_koopa_prefix)/lang/r/system-packages-non-base.R"
-    koopa_assert_is_file "${dict['script']}"
-    dict['string']="$("${app['rscript']}" --vanilla "${dict['script']}")"
+    dict['string']="$( \
+        koopa_r_script \
+            --r="${app['r']}" \
+            --vanilla \
+            'system-packages-non-base.R' \
+    )"
     [[ -n "${dict['string']}" ]] || return 0
     koopa_print "${dict['string']}"
     return 0
@@ -23090,7 +23178,7 @@ koopa_remove_from_path_string() {
 
 koopa_rename_camel_case() {
     koopa_assert_has_args "$#"
-    koopa_python_script 'rename-camel-case.py' "$@"
+    koopa_r_script --system 'rename-camel-case.R' "$@"
     return 0
 }
 
@@ -23111,7 +23199,7 @@ koopa_rename_from_csv() {
 
 koopa_rename_kebab_case() {
     koopa_assert_has_args "$#"
-    koopa_python_script 'rename-kebab-case.py' "$@"
+    koopa_r_script --system 'rename-kebab-case.R' "$@"
     return 0
 }
 
@@ -23186,7 +23274,7 @@ koopa_rename_lowercase() {
 
 koopa_rename_snake_case() {
     koopa_assert_has_args "$#"
-    koopa_python_script 'rename-snake-case.py' "$@"
+    koopa_r_script --system 'rename-snake-case.R' "$@"
     return 0
 }
 
