@@ -9,6 +9,7 @@ koopa_gnu_mirror_url() {
     # - https://ftpmirror.gnu.org (primary mirror)
     # - ftp://aeneas.mit.edu/pub/gnu
     # - https://gnu.mirror.constant.com
+    # - http://mirror.rit.edu/gnu
     #
     # @seealso
     # - https://www.gnu.org/prep/ftp.en.html
@@ -16,8 +17,7 @@ koopa_gnu_mirror_url() {
     # """
     local server
     koopa_assert_has_no_args "$#"
-    # > server='http://mirror.rit.edu/gnu'
-    server='https://ftpmirror.gnu.org'
+    server='https://ftp.gnu.org/gnu'
     koopa_print "$server"
     return 0
 }
