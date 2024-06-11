@@ -3,10 +3,9 @@
 koopa_rename_camel_case() {
     # """
     # Rename files with camel case formatting.
-    # @note Updated 2023-12-11.
+    # @note Updated 2024-05-28.
     # """
     koopa_assert_has_args "$#"
-    # FIXME Need to add support for this.
-    koopa_python_script 'rename-camel-case.py' "$@"
+    koopa_r_script --system 'rename-camel-case.R' "$@"
     return 0
 }

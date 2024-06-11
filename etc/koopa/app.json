@@ -1372,13 +1372,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-04-16",
+    "date": "2024-05-23",
     "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "0.10.1"
+    "version": "0.10.3"
   },
   "ed": {
     "aliases": {
@@ -2042,14 +2042,14 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-05-17",
+    "date": "2024-05-26",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.0.4"
+    "version": "4.0.6"
   },
   "glib": {
     "aliases": {
@@ -2364,11 +2364,11 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2024-05-06",
+    "date": "2024-05-26",
     "default": false,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.14.0"
+    "version": "0.14.1"
   },
   "gzip": {
     "aliases": {
@@ -2857,11 +2857,11 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-05-06",
+    "date": "2024-05-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.2.0"
+    "version": "4.2.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3753,11 +3753,11 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2024-05-06",
+    "date": "2024-05-26",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.40.0"
+    "version": "0.41.0"
   },
   "mcfly": {
     "aliases": {
@@ -3985,19 +3985,11 @@
     "default": false,
     "dependencies": ["icu4c", "libxml2", "ncbi-vdb"],
     "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "ncbi-vdb": {
-    "aliases": {
-      "bioconda": "ncbi-vdb"
-    },
-    "build_dependencies": ["cmake"],
-    "date": "2024-05-23",
-    "default": false,
-    "dependencies": ["bison", "flex", "hdf5", "python3.12", "temurin", "zlib"],
-    "prune": false,
-    "url": ["https://github.com/ncbi/ncbi-vdb/"],
-    "version": "3.1.0"
+    "date": "2024-05-31",
+    "removed": true
   },
   "ncurses": {
     "aliases": {
@@ -4084,14 +4076,14 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-04-04",
+    "date": "2024-04-23",
     "default": true,
     "dependencies": ["temurin"],
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "23.10.1"
+    "version": "24.04.1"
   },
   "nghttp2": {
     "aliases": {
@@ -5266,11 +5258,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-05-10",
+    "date": "2024-05-23",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.4"
+    "version": "0.4.5"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5520,7 +5512,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-17",
+    "date": "2024-05-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5528,7 +5520,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.11.6"
+    "version": "8.12.0"
   },
   "sox": {
     "aliases": {
@@ -6037,11 +6029,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-21",
+    "date": "2024-05-26",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.1.45"
+    "version": "0.2.4"
   },
   "vim": {
     "aliases": {
@@ -6565,14 +6557,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-04-09",
+    "date": "2024-05-26",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.4.9"
+    "version": "2024.5.26"
   },
   "zellij": {
     "aliases": {

@@ -1,6 +1,6 @@
 """
 Operative system (platform)-specific variables.
-Updated 2024-05-23.
+Updated 2024-05-28.
 """
 
 from os.path import abspath, dirname, isdir, join
@@ -27,6 +27,15 @@ def arch2() -> str:
     if string == "x86_64":
         string = "amd64"
     return string
+
+
+def koopa_app_prefix() -> str:
+    """
+    Koopa app prefix.
+    Updated 2024-05-28.
+    """
+    prefix = join(koopa_prefix(), "app")
+    return prefix
 
 
 def koopa_opt_prefix() -> str:
