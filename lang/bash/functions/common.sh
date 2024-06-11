@@ -7903,6 +7903,7 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--disable' # Ignore '~/.curlrc'. Must come first.
         '--create-dirs'
         '--fail'
+        '--insecure'
         '--location'
         '--retry' 5
         '--show-error'
