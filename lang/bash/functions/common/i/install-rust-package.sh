@@ -127,6 +127,8 @@ koopa_install_rust_package() {
     koopa_add_to_path_start "${dict['prefix']}/bin"
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
+    # NOTE This step can run into chown permission issues when installing from
+    # a deescalated admin account for a shared install.
     "${app['cargo']}" install "${install_args[@]}"
     return 0
 }
