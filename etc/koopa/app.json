@@ -1253,13 +1253,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-14",
+    "date": "2024-06-11",
     "default": true,
     "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.6.0"
+    "version": "8.8.0"
   },
   "dash": {
     "aliases": {
@@ -1347,10 +1347,10 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-05-16",
+    "date": "2024-06-12",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "872dca85d20f79bead03d0b96b7048c6b2b60506"
+    "version": "dc37119f849acb3880fcc211c08f78398672ba69"
   },
   "du-dust": {
     "aliases": {
@@ -2125,12 +2125,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-06-12",
     "default": false,
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
     "prune": false,
     "url": ["https://www.gnutls.org/"],
-    "version": "3.8.2"
+    "version": "3.8.4"
   },
   "go": {
     "aliases": {
@@ -3883,11 +3883,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2022-09-26",
+    "date": "2024-06-12",
     "default": false,
     "prune": false,
     "url": ["https://www.bytereef.org/mpdecimal/"],
-    "version": "2.5.1"
+    "version": "4.0.0"
   },
   "mpfr": {
     "aliases": {
@@ -4827,7 +4827,7 @@
     },
     "bin": ["python3.12", "python3.12-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-04-15",
+    "date": "2024-06-12",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -4847,7 +4847,7 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.3"
+    "version": "3.12.4"
   },
   "quarto": {
     "aliases": {
