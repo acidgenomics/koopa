@@ -16309,7 +16309,7 @@ koopa_is_admin() {
     koopa_is_root && return 0
     koopa_is_installed 'sudo' || return 1
     koopa_has_passwordless_sudo && return 0
-    app['groups']="$(koopa_locate_groups --allow-system)"
+    app['groups']="$(koopa_locate_groups --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['groups']="$("${app['groups']}")"
     dict['pattern']='\b(admin|root|sudo|wheel)\b'
