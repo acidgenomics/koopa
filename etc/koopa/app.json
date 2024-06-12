@@ -2538,7 +2538,7 @@
       "https://www.hdfgroup.org/downloads/hdf5/",
       "https://support.hdfgroup.org/ftp/HDF5/releases/"
     ],
-    "version": "1.14.4"
+    "version": "1.14.4-2"
   },
   "hexyl": {
     "aliases": {
