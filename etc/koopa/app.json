@@ -3883,11 +3883,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2022-09-26",
+    "date": "2024-06-12",
     "default": false,
     "prune": false,
     "url": ["https://www.bytereef.org/mpdecimal/"],
-    "version": "2.5.1"
+    "version": "4.0.0"
   },
   "mpfr": {
     "aliases": {
