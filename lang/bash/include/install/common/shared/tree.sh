@@ -20,6 +20,8 @@ refs/tags/${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    # Recommended by Homebrew.
+    koopa_append_cflags '-fomit-frame-pointer'
     koopa_print_env
     "${app['make']}"
     "${app['make']}" \
