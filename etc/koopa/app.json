@@ -2530,7 +2530,7 @@
       "h5watch"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-10-31",
+    "date": "2024-06-12",
     "default": false,
     "dependencies": ["libaec", "zlib"],
     "prune": false,
@@ -2538,7 +2538,7 @@
       "https://www.hdfgroup.org/downloads/hdf5/",
       "https://support.hdfgroup.org/ftp/HDF5/releases/"
     ],
-    "version": "1.14.3"
+    "version": "1.14.4"
   },
   "hexyl": {
     "aliases": {
