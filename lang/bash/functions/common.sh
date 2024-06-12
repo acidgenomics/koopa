@@ -7907,6 +7907,10 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--retry' 5
         '--show-error'
     )
+    if koopa_is_macos && [[ -d '/Applications/Zscaler' ]]
+    then
+        curl_args+=('--insecure')
+    fi
     if [[ "${bool['progress']}" -eq 0 ]]
     then
         curl_args+=('--silent')
@@ -16305,7 +16309,7 @@ koopa_is_admin() {
     koopa_is_root && return 0
     koopa_is_installed 'sudo' || return 1
     koopa_has_passwordless_sudo && return 0
-    app['groups']="$(koopa_locate_groups --allow-system)"
+    app['groups']="$(koopa_locate_groups --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['groups']="$("${app['groups']}")"
     dict['pattern']='\b(admin|root|sudo|wheel)\b'

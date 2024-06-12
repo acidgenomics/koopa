@@ -4,6 +4,8 @@
 # - https://tukaani.org/xz-backdoor/
 # - https://github.com/orgs/Homebrew/discussions/5243
 
+# FIXME Hitting curl 403 error on MacBook (2024-06-11).
+
 main() {
     # """
     # Install xz.
@@ -24,8 +26,8 @@ main() {
         '--disable-static'
         "--prefix=${dict['prefix']}"
     )
-    dict['url']="https://downloads.sourceforge.net/project/lzmautils/\
-xz-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/tukaani-project/xz/releases/\
+download/v${dict['version']}/xz-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'

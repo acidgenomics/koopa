@@ -3,7 +3,7 @@
 main() {
     # """
     # Install tree.
-    # @note Updated 2023-06-02.
+    # @note Updated 2024-06-12.
     #
     # @seealso
     # - https://www.linuxfromscratch.org/blfs/view/svn/general/tree.html
@@ -15,11 +15,13 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="http://mama.indstate.edu/users/ice/tree/src/\
-tree-${dict['version']}.tgz"
+    dict['url']="https://github.com/Old-Man-Programmer/tree/archive/\
+refs/tags/${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    # Recommended by Homebrew.
+    koopa_append_cflags '-fomit-frame-pointer'
     koopa_print_env
     "${app['make']}"
     "${app['make']}" \
