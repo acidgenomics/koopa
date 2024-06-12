@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2023-12-12.
+    # @note Updated 2024-06-12.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -51,6 +51,11 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--retry' 5
         '--show-error'
     )
+    # Handle self-signed TLS certificate issue weirdness with Zscaler.
+    if koopa_is_macos && [[ -d '/Applications/Zscaler' ]]
+    then
+        curl_args+=('--insecure')
+    fi
     if [[ "${bool['progress']}" -eq 0 ]]
     then
         # Alternatively, can use '--no-progress-meter'.
