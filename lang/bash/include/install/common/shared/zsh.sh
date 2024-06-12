@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2023-04-11.
+    # @note Updated 2024-06-12.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -27,14 +27,12 @@ main() {
     # - https://github.com/TACC/Lmod/issues/434
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app \
-        'ncurses' \
-        'pcre' \
-        'texinfo'
+    local -a conf_args deps
+    deps+=('ncurses' 'pcre' 'texinfo')
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    conf_args=(
+    conf_args+=(
         '--enable-cap'
         '--enable-etcdir=/etc'
         '--enable-maildir-support'
@@ -45,6 +43,10 @@ main() {
         "--prefix=${dict['prefix']}"
         '--with-tcsetpgrp'
     )
+    if koopa_is_macos
+    then
+        koopa_append_cflags '-Wno-implicit-function-declaration'
+    fi
     dict['url']="https://downloads.sourceforge.net/project/zsh/zsh/\
 ${dict['version']}/zsh-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
