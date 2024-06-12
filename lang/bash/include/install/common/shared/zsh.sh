@@ -23,6 +23,8 @@ main() {
     #       ${name}/${name}/${version}/${file}" (redirects)
     #
     # @seealso
+    # - https://github.com/conda-forge/zsh-feedstock
+    # - https://formulae.brew.sh/formula/zsh
     # - https://github.com/Homebrew/legacy-homebrew/issues/25719
     # - https://github.com/TACC/Lmod/issues/434
     # """
@@ -33,16 +35,19 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args+=(
-        '--enable-cap'
-        '--enable-etcdir=/etc'
-        '--enable-maildir-support'
-        '--enable-multibyte'
+        # Configuration common with conda-forge:
         '--enable-pcre'
-        '--enable-unicode9'
-        '--enable-zsh-secure-free'
         "--prefix=${dict['prefix']}"
         '--with-tcsetpgrp'
+        # Additional configuration defined in Homebrew:
+        # > '--enable-cap'
+        # > '--enable-etcdir=/etc'
+        # > '--enable-maildir-support'
+        # > '--enable-multibyte'
+        # > '--enable-unicode9'
+        # > '--enable-zsh-secure-free'
     )
+    # Recommended fix for build issue with clang.
     if koopa_is_macos
     then
         koopa_append_cflags '-Wno-implicit-function-declaration'
