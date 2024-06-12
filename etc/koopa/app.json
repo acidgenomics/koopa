@@ -2125,12 +2125,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-06-12",
     "default": false,
     "dependencies": ["gmp", "libtasn1", "libunistring", "nettle"],
     "prune": false,
     "url": ["https://www.gnutls.org/"],
-    "version": "3.8.2"
+    "version": "3.8.4"
   },
   "go": {
     "aliases": {
