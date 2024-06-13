@@ -3,27 +3,28 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2023-06-12.
-    #
-    # If system doesn't have gettext (msgfmt) installed:
-    # Note that this doesn't work on Ubuntu 18 LTS.
-    # NO_GETTEXT=YesPlease
+    # @note Updated 2024-06-13.
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/git.rb
+    # - https://github.com/conda-forge/git-feedstock
+    # - https://formulae.brew.sh/formula/git
+    # - https://stackoverflow.com/questions/27798181
     # """
     local -A app dict
-    local -a conf_args
-    koopa_activate_app --build-only 'autoconf' 'make'
-    koopa_activate_app \
-        'expat' \
-        'zlib' \
-        'gettext' \
-        'openssl3' \
-        'curl' \
-        'pcre2' \
+    local -a build_deps conf_args deps
+    build_deps+=('autoconf' 'make')
+    deps+=(
+        'expat'
+        'zlib'
+        'gettext'
+        'openssl3'
+        'curl'
+        'pcre2'
         'libiconv'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['bash']="$(koopa_locate_bash)"
     app['less']="$(koopa_locate_less)"
     app['make']="$(koopa_locate_make)"
@@ -79,8 +80,14 @@ git-manpages-${dict['version']}.tar.xz"
     "${app['make']}" configure
     ./configure --help
     ./configure "${conf_args[@]}"
-    "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
-    "${app['make']}" install
+    "${app['make']}" \
+        --jobs="${dict['jobs']}" \
+        NO_INSTALL_HARDLINKS='YesPlease' \
+        VERBOSE=1
+    "${app['make']}" \
+        NO_INSTALL_HARDLINKS='YesPlease' \
+        install
+    koopa_alert 'Installing subtree.'
     (
         koopa_cd 'contrib/subtree'
         "${app['make']}" --jobs="${dict['jobs']}"
@@ -88,8 +95,11 @@ git-manpages-${dict['version']}.tar.xz"
             --target-directory="${dict['prefix']}/bin" \
             'git-subtree'
     )
+    # FIXME git isn't picking this up on work laptop as expected.
+    # Run 'git credential-osxkeychain' command to check support.
     if koopa_is_macos
     then
+        koopa_alert 'Installing osxkeychain.'
         (
             koopa_cd 'contrib/credential/osxkeychain'
             "${app['make']}" --jobs="${dict['jobs']}"
