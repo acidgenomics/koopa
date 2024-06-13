@@ -46,11 +46,11 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-05-06",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://airflow.apache.org/"],
-    "version": "2.9.1"
+    "version": "2.9.2"
   },
   "apache-arrow": {
     "build_dependencies": ["cmake", "ninja", "pkg-config", "python3.11"],
@@ -73,7 +73,7 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2024-04-26",
+    "date": "2024-06-13",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -82,7 +82,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.3.1"
+    "version": "1.3.2"
   },
   "apr": {
     "aliases": {
@@ -643,13 +643,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2024-06-13",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.38.0"
+    "version": "1.39.0"
   },
   "brotli": {
     "aliases": {
@@ -897,10 +897,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-05-13",
+    "date": "2024-06-13",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-   "version": "2.48.1"
+   "version": "2.49.0"
   },
   "cli11": {
     "aliases": {
@@ -953,11 +953,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-04-15",
+    "date": "2024-06-13",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.3.0-0"
+    "version": "24.4.0-0"
   },
   "convmv": {
     "aliases": {
@@ -1372,13 +1372,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-05-23",
-    "default": false,
+    "date": "2024-06-13",
+    "default": true,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "0.10.3"
+    "version": "1.0.0"
   },
   "ed": {
     "aliases": {
@@ -1404,14 +1404,14 @@
     },
     "bin": ["editorconfig"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-04-01",
+    "date": "2024-06-13",
     "default": true,
     "dependencies": ["pcre2"],
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
     ],
-    "version": "0.12.7"
+    "version": "0.12.8"
   },
   "elfutils": {
     "aliases": {
@@ -1530,14 +1530,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-17",
+    "date": "2024-06-13",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.16"
+    "version": "0.18.18"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1777,11 +1777,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-04-26",
+    "date": "2024-06-13",
     "default": false,
     "prune": false,
     "url": ["https://github.com/fribidi/fribidi/"],
-    "version": "1.0.14"
+    "version": "1.0.15"
   },
   "fzf": {
     "aliases": {
@@ -1789,11 +1789,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-05-13",
+    "date": "2024-06-13",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.52.1"
+    "version": "0.53.0"
   },
   "gatk": {
     "aliases": {
@@ -1906,11 +1906,11 @@
     },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2023-11-13",
+    "date": "2024-06-13",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.12.1"
+    "version": "3.12.2"
   },
   "gettext": {
     "aliases": {
@@ -1967,10 +1967,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-05-13",
+    "date": "2024-06-13",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.49.2"
+    "version": "2.50.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2029,27 +2029,27 @@
     },
     "bin": ["gitui"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-21",
+    "date": "2024-6-13",
     "default": false,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
     ],
-    "version": "0.26.2"
+    "version": "0.26.3"
   },
   "glances": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-05-26",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.0.6"
+    "version": "4.0.8"
   },
   "glib": {
     "aliases": {
@@ -2538,7 +2538,7 @@
       "https://www.hdfgroup.org/downloads/hdf5/",
       "https://support.hdfgroup.org/ftp/HDF5/releases/"
     ],
-    "version": "1.14.4-2"
+    "version": "1.14.4-3"
   },
   "hexyl": {
     "aliases": {
@@ -2628,10 +2628,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-05-15",
+    "date": "2024-06-13",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.126.0"
+    "version": "0.127.0"
   },
   "hyperfine": {
     "aliases": {
@@ -2843,7 +2843,7 @@
       "homebrew-cask": true
     },
     "bin": ["julia"],
-    "date": "2024-05-06",
+    "date": "2024-06-13",
     "dependencies": ["conda"],
     "default": false,
     "supported": {
@@ -2853,15 +2853,15 @@
       "macos-arm64": false
     },
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.10.3"
+    "version": "1.10.4"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-05-23",
+    "date": "2024-06-13",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.2.1"
+    "version": "4.2.2"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3558,7 +3558,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-01-08",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "prune": false,
@@ -3569,7 +3569,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.34"
+    "version": "8.7.40"
   },
   "lsd": {
     "aliases": {
@@ -3765,10 +3765,10 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-21",
+    "date": "2024-06-13",
     "default": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.8.6"
+    "version": "0.9.0"
   },
   "mdcat": {
     "aliases": {
@@ -3789,12 +3789,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2024-03-14",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.4.0"
+    "version": "1.4.1"
   },
   "miller": {
     "aliases": {
@@ -3858,11 +3858,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-05-06",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.31.0"
+    "version": "2.32.0"
   },
   "mpc": {
     "aliases": {
@@ -3917,11 +3917,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-05-17",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.22.1"
+    "version": "1.22.2"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4199,11 +4199,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-05-06",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.93.0"
+    "version": "0.94.2"
   },
   "oniguruma": {
     "aliases": {
@@ -4239,7 +4239,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-05-21",
+    "date": "2024-06-13",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4248,7 +4248,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4340,12 +4340,12 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-04-09",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.3.0"
+    "version": "3.3.1"
   },
   "oracle-instant-client": {
     "date": "2023-12-22",
@@ -4544,13 +4544,13 @@
       "homebrew": true
     },
     "bin": ["pipx"],
-    "date": "2024-04-01",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.12"],
     "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/"],
-    "version": "1.5.0"
+    "version": "1.6.0"
   },
   "pixman": {
     "aliases": {
@@ -4622,11 +4622,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-02-06",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.2.5"
+    "version": "3.3.2"
   },
   "procs": {
     "aliases": {
@@ -4647,7 +4647,7 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-03-04",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": [
       "curl",
@@ -4661,7 +4661,7 @@
     "man1": ["proj.1", "projinfo.1"],
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.4.0"
+    "version": "9.4.1"
   },
   "pup": {
     "bin": ["pup"],
@@ -4710,12 +4710,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-05-09",
+    "date": "2024-06-13",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.1"
+    "version": "2.4.3"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4744,11 +4744,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-05-21",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.2.2"
+    "version": "3.2.3"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -4777,7 +4777,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2024-05-06",
+    "date": "2024-06-13",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -4785,7 +4785,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "8.2.0"
+    "version": "8.2.2"
   },
   "python3.10": {
     "bin": ["python3.10", "python3.10-config"],
@@ -5258,11 +5258,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-05-23",
+    "date": "2024-06-13",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.5"
+    "version": "0.4.8"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5512,7 +5512,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-05-27",
+    "date": "2024-06-13",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5520,7 +5520,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.12.0"
+    "version": "8.14.0"
   },
   "sox": {
     "aliases": {
@@ -6029,11 +6029,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-05-26",
+    "date": "2024-06-13",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.2.4"
+    "version": "0.2.11"
   },
   "vim": {
     "aliases": {
@@ -6557,14 +6557,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-05-26",
+    "date": "2024-05-27",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.5.26"
+    "version": "2024.5.27"
   },
   "zellij": {
     "aliases": {
