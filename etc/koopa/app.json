@@ -1347,10 +1347,10 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-06-12",
+    "date": "2024-06-13",
     "default": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "dc37119f849acb3880fcc211c08f78398672ba69"
+    "version": "e5c76fc257b65e8a2eb3ae701f273b1abc5950ef"
   },
   "du-dust": {
     "aliases": {
@@ -1992,7 +1992,7 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "date": "2023-11-20",
+    "date": "2024-06-13",
     "default": true,
     "dependencies": [
       "bash",
@@ -2010,7 +2010,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.43.0"
+    "version": "2.45.2"
   },
   "git-lfs": {
     "aliases": {
