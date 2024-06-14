@@ -19960,13 +19960,17 @@ koopa_make_build() {
     local -a conf_args pos targets
     local target
     koopa_assert_has_args "$#"
-    if [[ "${KOOPA_INSTALL_NAME:?}" == 'make' ]]
-    then
-        app['make']="$(koopa_locate_make --only-system)"
-    else
-        koopa_activate_app --build-only 'make'
-        app['make']="$(koopa_locate_make)"
-    fi
+    case "${KOOPA_INSTALL_NAME:?}" in
+        'aws-cli')
+            app['make']="$(koopa_locate_make --allow-system)"
+            ;;
+        'make')
+            app['make']="$(koopa_locate_make --only-system)"
+            ;;
+        *)
+            app['make']="$(koopa_locate_make)"
+            ;;
+    esac
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     while (("$#"))
