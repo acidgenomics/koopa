@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 # Minimal build reprex:
 # https://github.com/ncbi/sra-tools/issues/937
 # > cd ${TMPDIR}
@@ -42,7 +41,7 @@ main() {
     #     recipes/ncbi-vdb
     # """
     local -A app cmake dict
-    local -a build_deps deps
+    local -a build_deps cmake_args cmake_std_args deps
     build_deps+=('bison' 'flex' 'python3.12')
     deps+=('zlib' 'icu4c' 'libxml2' 'hdf5')
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -77,6 +76,8 @@ ${dict['version']}.tar.gz"
     then
         # Disable creation of these files and directories:
         # - /etc/ncbi/
+        # - /etc/profile.d/ncbi-vdb.csh
+        # - /etc/profile.d/ncbi-vdb.sh
         # - /etc/profile.d/sra-tools.csh
         # - /etc/profile.d/sra-tools.sh
         # shellcheck disable=SC2016
@@ -84,28 +85,44 @@ ${dict['version']}.tar.gz"
             --fixed \
             --pattern='[ "$EUID" -eq 0 ]' \
             --replacement='[ "$EUID" -eq -1 ]' \
+            'ncbi-vdb/build/install-root.sh'
+        # shellcheck disable=SC2016
+        koopa_find_and_replace_in_file \
+            --fixed \
+            --pattern='[ "$EUID" -eq 0 ]' \
+            --replacement='[ "$EUID" -eq -1 ]' \
+            'ncbi-vdb/libs/kfg/install.sh'
+        # shellcheck disable=SC2016
+        koopa_find_and_replace_in_file \
+            --fixed \
+            --pattern='[ "$EUID" -eq 0 ]' \
+            --replacement='[ "$EUID" -eq -1 ]' \
             'sra-tools/build/install.sh'
     fi
-    koopa_mkdir 'build'
-    koopa_cd 'build'
+    readarray -t cmake_std_args <<< "$( \
+        koopa_cmake_std_args --prefix="${dict['prefix']}" \
+    )"
     # Build ncbi-vdb ===========================================================
     koopa_append_cflags '-DH5_USE_110_API'
     export JAVA_HOME="${dict['temurin']}"
+    cmake_args=(
+        "${cmake_std_args[@]}"
+        "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
+    )
     "${app['cmake']}" \
-        -D Python3_EXECUTABLE="${cmake['python3_executable']}" \
-        -S "$(koopa_realpath '../ncbi-vdb')" \
-        -B 'ncbi-vdb'
-    "${app['cmake']}" --build 'ncbi-vdb'
+        -B 'ncbi-vdb-build' \
+        -S "$(koopa_realpath 'ncbi-vdb')" \
+        "${cmake_args[@]}"
+    "${app['cmake']}" --build 'ncbi-vdb-build'
     # Build and install sra-tools ==============================================
-    "${app['cmake']}" \
-        -D CMAKE_INSTALL_PREFIX="${dict['prefix']}" \
-        -D LIBXML2_INCLUDE_DIR="${cmake['libxml2_include_dir']}" \
-        -D LIBXML2_LIBRARIES="${cmake['libxml2_libraries']}" \
-        -D NO_JAVA='ON' \
-        -D Python3_EXECUTABLE="${cmake['python3_executable']}" \
-        -D VDB_LIBDIR="$(koopa_realpath 'ncbi-vdb/lib')" \
-        -S "$(koopa_realpath '../sra-tools')" \
-        -B 'sra-tools'
-    "${app['cmake']}" --build 'sra-tools' --target 'install'
+    cmake_args=(
+        "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
+        "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"
+        '-DNO_JAVA=ON'
+        "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
+        "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb-build/lib')"
+    )
+    koopa_cd 'sra-tools'
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
