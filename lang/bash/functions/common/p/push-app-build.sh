@@ -19,7 +19,7 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     koopa_can_push_binary || return 1
     app['aws']="$(koopa_locate_aws)"
-    app['tar']="$(koopa_locate_tar --allow-system)"
+    app['tar']="$(koopa_locate_tar --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['opt_prefix']="$(koopa_opt_prefix)"
@@ -59,9 +59,8 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         # * -g / --gzip
         # * -v / --verbose
         "${app['tar']}" \
-            -Pcgvv \
-            --totals \
-            --file="${dict2['local_tar']}" \
+            -c -Pgvv \
+            -f "${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
         "${app['aws']}" s3 cp \
