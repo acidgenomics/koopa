@@ -64,17 +64,21 @@ libxml2.${dict['shared_ext']}"
     koopa_assert_is_file \
         "${cmake['libxml2_libraries']}" \
         "${cmake['python3_executable']}"
-    # Build VDB ================================================================
+    dict['vdb_url']="https://github.com/ncbi/ncbi-vdb/archive/refs/tags/\
+${dict['version']}.tar.gz"
+    koopa_download "${dict['vdb_url']}" 'ncbi-vdb.tar.gz'
+    koopa_extract 'ncbi-vdb.tar.gz' 'ncbi-vdb'
+    dict['sra_url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
+${dict['version']}.tar.gz"
+    koopa_download "${dict['sra_url']}" 'sra-tools.tar.gz'
+    koopa_extract 'sra-tools.tar.gz' 'sra-tools'
+    # Build ncbi-vdb ===========================================================
     koopa_append_cflags '-DH5_USE_110_API'
     export JAVA_HOME="${dict['temurin']}"
     cmake_args=(
         # > '-DLIBS_ONLY=ON'
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
     )
-    dict['vdb_url']="https://github.com/ncbi/ncbi-vdb/archive/refs/tags/\
-${dict['version']}.tar.gz"
-    koopa_download "${dict['vdb_url']}"
-    koopa_extract "$(koopa_basename "${dict['vdb_url']}")" 'ncbi-vdb'
     koopa_cd 'ncbi-vdb'
     if koopa_is_root
     then
@@ -95,13 +99,9 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'libs/kfg/install.sh'
     fi
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
-    (
-        koopa_cd "${dict['prefix']}"
-        koopa_ln 'lib' 'lib64'
-    )
+    koopa_cmake_build --prefix='.' "${cmake_args[@]}"
     koopa_cd '..'
-    # Build SRA toolkit ========================================================
+    # Build sra-tools ==========================================================
     dict['vdb']="$(koopa_realpath 'ncbi-vdb')"
     cmake['vdb_bindir']="${dict['vdb']}"
     cmake['vdb_libdir']="${dict['vdb']}/lib"
@@ -112,7 +112,7 @@ ${dict['version']}.tar.gz"
         "${cmake['vdb_libdir']}"
     if koopa_is_macos
     then
-        cmake['vdb_incdir']="${dict['vdb']}/src/interfaces"
+        cmake['vdb_incdir']="${dict['vdb']}/interfaces"
     fi
     cmake_args=(
         # Build options --------------------------------------------------------
@@ -125,10 +125,6 @@ ${dict['version']}.tar.gz"
         "-DVDB_INCDIR=${cmake['vdb_incdir']}"
         "-DVDB_LIBDIR=${cmake['vdb_libdir']}"
     )
-    dict['sra_url']="https://github.com/ncbi/sra-tools/archive/refs/tags/\
-${dict['version']}.tar.gz"
-    koopa_download "${dict['sra_url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'sra-tools'
     koopa_cd 'sra-tools'
     if koopa_is_root
     then
