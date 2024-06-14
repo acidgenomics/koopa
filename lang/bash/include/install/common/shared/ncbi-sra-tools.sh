@@ -83,19 +83,22 @@ ${dict['version']}.tar.gz"
     readarray -t cmake_std_args <<< "$( \
         koopa_cmake_std_args --prefix="${dict['prefix']}" \
     )"
-    # Build ncbi-vdb (without install) =========================================
     koopa_append_cflags '-DH5_USE_110_API'
     export JAVA_HOME="${dict['temurin']}"
+    koopa_print_env
+    koopa_mkdir 'build'
+    koopa_cd 'build'
+    # Build ncbi-vdb (without install) =========================================
     cmake_args=(
         "${cmake_std_args[@]}"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
     )
     "${app['cmake']}" \
-        -B 'ncbi-vdb-build' \
-        -S "$(koopa_realpath 'ncbi-vdb')" \
+        -B 'ncbi-vdb' \
+        -S "$(koopa_realpath '../ncbi-vdb')" \
         "${cmake_args[@]}"
     "${app['cmake']}" \
-        --build 'ncbi-vdb-build' \
+        --build 'ncbi-vdb' \
         --parallel "${dict['jobs']}"
     # Build and install sra-tools ==============================================
     cmake_args=(
@@ -105,7 +108,13 @@ ${dict['version']}.tar.gz"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
         "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb-build/lib')"
     )
-    koopa_cd 'sra-tools'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    "${app['cmake']}" \
+        -B 'sra-tools' \
+        -S "$(koopa_realpath '../sra-tools')" \
+        "${cmake_args[@]}"
+    "${app['cmake']}" \
+        --build 'sra-tools' \
+        --parallel "${dict['jobs']}" \
+        --target 'install'
     return 0
 }
