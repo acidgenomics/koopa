@@ -3983,7 +3983,7 @@
     "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
     "date": "2024-05-23",
     "default": false,
-    "dependencies": ["icu4c", "libxml2"],
+    "dependencies": ["hdf5", "icu4c", "libxml2", "zlib"],
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.1.1"
   },
