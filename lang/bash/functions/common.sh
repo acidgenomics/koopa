@@ -5010,6 +5010,25 @@ koopa_cli_configure() {
     return 0
 }
 
+koopa_cli_develop() {
+    local -A dict
+    dict['key']=''
+    case "${1:-}" in
+        'edit-app-json')
+            dict['key']="${1:?}"
+            shift 1
+            ;;
+    esac
+    [[ -z "${dict['key']}" ]] && koopa_cli_invalid_arg "$@"
+    dict['fun']="$(koopa_which_function "${dict['key']}" || true)"
+    if ! koopa_is_function "${dict['fun']}"
+    then
+        koopa_stop 'Unsupported command.'
+    fi
+    "${dict['fun']}" "$@"
+    return 0
+}
+
 koopa_cli_install() {
     local -A dict
     local -a flags pos
@@ -5376,6 +5395,7 @@ koopa_cli() {
             ;;
         'app' | \
         'configure' | \
+        'develop' | \
         'install' | \
         'reinstall' | \
         'system' | \
@@ -7978,6 +7998,16 @@ using remote header name."
     then
         koopa_assert_is_file "${dict['file']}"
     fi
+    return 0
+}
+
+koopa_edit_app_json() {
+    local -A app dict
+    app['editor']="${EDITOR:-vim}"
+    koopa_assert_is_installed "${app[@]}"
+    dict['json_file']="$(koopa_koopa_prefix)/etc/koopa/app.json"
+    koopa_assert_is_file "${dict['json_file']}"
+    "${app['editor']}" "${dict['json_file']}"
     return 0
 }
 
