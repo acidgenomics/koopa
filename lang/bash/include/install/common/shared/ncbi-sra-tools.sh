@@ -1,32 +1,11 @@
 #!/usr/bin/env bash
 
-# Minimal build reprex:
-# https://github.com/ncbi/sra-tools/issues/937
-# > cd ${TMPDIR}
-# > git clone https://github.com/ncbi/ncbi-vdb.git
-# > git clone https://github.com/ncbi/sra-tools.git
-# > mkdir build
-# > cd build
-# > cmake -S "$(cd ../ncbi-vdb; pwd)" -B ncbi-vdb
-# > cmake --build ncbi-vdb
- #> cmake -D VDB_LIBDIR="${PWD}/ncbi-vdb/lib" -D CMAKE_INSTALL_PREFIX="${PWD}/sratoolkit" -S "$(cd ../sra-tools; pwd)" -B sra-tools
-# > cmake --build sra-tools --target install
-# > ./sratoolkit/bin/prefetch --version
-
 main() {
     # """
     # Install SRA toolkit.
     # @note Updated 2024-06-14.
     #
     # VDB is the database engine that all SRA tools use.
-    #
-    # Currently, we need to build sra-tools relative to a hard-coded path
-    # ('../ncbi-vdb') to ncbi-vdb source code, to ensure that zlib and bzip2
-    # headers get linked correctly. For reference, these are defined inside
-    # the 'interfaces' subdirectory.
-    #
-    # CMake configuration will pick up Python Framework on macOS unless we
-    # set the desired target manually.
     #
     # @seealso
     # - https://github.com/ncbi/sra-tools/wiki/
@@ -39,6 +18,7 @@ main() {
     # - https://github.com/ncbi/ncbi-vdb/wiki/
     # - https://github.com/bioconda/bioconda-recipes/tree/master/
     #     recipes/ncbi-vdb
+    # - https://github.com/ncbi/sra-tools/issues/937
     # """
     local -A app cmake dict
     local -a build_deps cmake_args cmake_std_args deps
@@ -49,6 +29,7 @@ main() {
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
@@ -102,7 +83,7 @@ ${dict['version']}.tar.gz"
     readarray -t cmake_std_args <<< "$( \
         koopa_cmake_std_args --prefix="${dict['prefix']}" \
     )"
-    # Build ncbi-vdb ===========================================================
+    # Build ncbi-vdb (without install) =========================================
     koopa_append_cflags '-DH5_USE_110_API'
     export JAVA_HOME="${dict['temurin']}"
     cmake_args=(
@@ -113,7 +94,9 @@ ${dict['version']}.tar.gz"
         -B 'ncbi-vdb-build' \
         -S "$(koopa_realpath 'ncbi-vdb')" \
         "${cmake_args[@]}"
-    "${app['cmake']}" --build 'ncbi-vdb-build'
+    "${app['cmake']}" \
+        --build 'ncbi-vdb-build' \
+        --parallel "${dict['jobs']}"
     # Build and install sra-tools ==============================================
     cmake_args=(
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
