@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2024-06-13.
+    # @note Updated 2024-06-14.
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -95,8 +95,6 @@ git-manpages-${dict['version']}.tar.xz"
             --target-directory="${dict['prefix']}/bin" \
             'git-subtree'
     )
-    # FIXME git isn't picking this up on work laptop as expected.
-    # Run 'git credential-osxkeychain' command to check support.
     if koopa_is_macos
     then
         koopa_alert 'Installing osxkeychain.'
