@@ -29,7 +29,8 @@ main() {
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    # > dict['jobs']="$(koopa_cpu_count)"
+    dict['jobs']=1
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
@@ -106,7 +107,7 @@ ${dict['version']}.tar.gz"
         "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"
         '-DNO_JAVA=ON'
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
-        "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb-build/lib')"
+        "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb/lib')"
     )
     "${app['cmake']}" \
         -B 'sra-tools' \
