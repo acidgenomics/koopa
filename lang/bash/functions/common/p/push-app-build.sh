@@ -52,14 +52,15 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
         koopa_alert "Creating archive at '${dict2['local_tar']}'."
+        # FIXME This doesn't work with macOS tar argh...
         # tar options:
         # * -P / --absolute-names (gtar)
         # * -P / --absolute-paths (bsdtar)
         # * -c / --create
-        # * -g / --gzip
         # * -v / --verbose
+        # * -z / --gzip
         "${app['tar']}" \
-            -c -Pgvv \
+            -Pcvvz \
             -f "${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
