@@ -21,16 +21,13 @@ main() {
     # - https://github.com/ncbi/sra-tools/issues/937
     # """
     local -A app cmake dict
-    local -a build_deps cmake_args cmake_std_args deps
+    local -a build_deps cmake_args cmake_std_args
     build_deps+=('bison' 'flex' 'python3.12')
-    deps+=('zlib' 'icu4c' 'libxml2' 'hdf5')
     koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
-    # > dict['jobs']="$(koopa_cpu_count)"
-    dict['jobs']=1
+    dict['jobs']="$(koopa_cpu_count)"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
@@ -81,18 +78,17 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'sra-tools/build/install.sh'
     fi
-    # FIXME Take this out if not in use.
     readarray -t cmake_std_args <<< "$( \
         koopa_cmake_std_args --prefix="${dict['prefix']}" \
     )"
     koopa_append_cflags '-DH5_USE_110_API'
     export JAVA_HOME="${dict['temurin']}"
-    koopa_print_env
     koopa_mkdir 'build'
     koopa_cd 'build'
+    koopa_print_env
     # Build ncbi-vdb (without install) =========================================
     cmake_args=(
-        # > "${cmake_std_args[@]}"
+        "${cmake_std_args[@]}"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
     )
     "${app['cmake']}" \
@@ -104,11 +100,10 @@ ${dict['version']}.tar.gz"
         --parallel "${dict['jobs']}"
     # Build and install sra-tools ==============================================
     cmake_args=(
-        # > "${cmake_std_args[@]}"
+        "${cmake_std_args[@]}"
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"
-        '-DNO_JAVA=ON'
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
         "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb/lib')"
     )
