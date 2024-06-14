@@ -11794,7 +11794,7 @@ koopa_install_app_from_binary_package() {
     local prefix
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"
-    app['tar']="$(koopa_locate_tar --allow-system)"
+    app['tar']="$(koopa_locate_tar --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['aws_profile']="${AWS_PROFILE:-acidgenomics}"
@@ -21345,7 +21345,7 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
         koopa_alert "Creating archive at '${dict2['local_tar']}'."
         "${app['tar']}" \
-            -c -Pgvv \
+            -Pcvvz \
             -f "${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
