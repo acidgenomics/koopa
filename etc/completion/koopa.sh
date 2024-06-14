@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-04-17.
+    # @note Updated 2024-06-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -30,6 +30,7 @@ _koopa_complete() {
                 '--version'
                 'app'
                 'configure'
+                'develop'
                 'header'
                 'install'
                 'reinstall'
@@ -70,8 +71,11 @@ _koopa_complete() {
                 'configure')
                     args=('system' 'user')
                     ;;
+                'develop')
+                    args=('edit-app-json')
+                    ;;
                 'header')
-                    args=('bash' 'posix' 'r' 'zsh')
+                    args=('bash' 'posix' 'zsh')
                     ;;
                 'install' | \
                 'reinstall' | \

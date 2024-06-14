@@ -5,7 +5,7 @@
 main() {
     # """
     # Install fontconfig.
-    # @note Updated 2023-04-10.
+    # @note Updated 2024-06-12.
     #
     # @seealso
     # - https://www.freedesktop.org/wiki/Software/fontconfig/
@@ -17,12 +17,15 @@ main() {
     #     trunk/PKGBUILD
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
-        'gperf' \
-        'freetype' \
+    local -a conf_args deps
+    deps+=(
+        'gperf'
+        'freetype'
+        'icu4c'
         'libxml2'
+    )
+    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(

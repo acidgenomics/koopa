@@ -1571,7 +1571,7 @@ _koopa_emacs() {
 _koopa_export_editor() {
     if [ -z "${EDITOR:-}" ]
     then
-        __kvar_editor="$(_koopa_bin_prefix)/vim"
+        __kvar_editor="$(_koopa_bin_prefix)/nvim"
         [ -x "$__kvar_editor" ] || __kvar_editor='vim'
         EDITOR="$__kvar_editor"
         unset -v __kvar_editor

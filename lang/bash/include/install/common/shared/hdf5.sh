@@ -3,7 +3,7 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2023-10-09.
+    # @note Updated 2024-06-12.
     #
     # @seealso
     # - https://www.hdfgroup.org/downloads/hdf5/source-code/
@@ -21,8 +21,13 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-    dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
+    dict['version2']="$( \
+        koopa_gsub \
+            --fixed \
+            --pattern='-' \
+            --replacement='.' \
+            "${dict['version']}" \
+    )"
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-fortran'
@@ -48,9 +53,8 @@ main() {
             koopa_append_ldflags '-Wl,-ld_classic'
         fi
     fi
-    dict['url']="https://support.hdfgroup.org/ftp/HDF5/releases/\
-hdf5-${dict['maj_min_ver']}/hdf5-${dict['mmp_ver']}/src/\
-hdf5-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/HDFGroup/hdf5/releases/download/\
+hdf5_${dict['version2']}/hdf5-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
