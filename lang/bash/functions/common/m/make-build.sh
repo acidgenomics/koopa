@@ -3,19 +3,25 @@
 koopa_make_build() {
     # """
     # Build with GNU Make.
-    # @note Updated 2023-10-17.
+    # @note Updated 2024-06-14.
     # """
     local -A app dict
     local -a conf_args pos targets
     local target
     koopa_assert_has_args "$#"
-    if [[ "${KOOPA_INSTALL_NAME:?}" == 'make' ]]
-    then
-        app['make']="$(koopa_locate_make --only-system)"
-    else
-        koopa_activate_app --build-only 'make'
-        app['make']="$(koopa_locate_make)"
-    fi
+    case "${KOOPA_INSTALL_NAME:?}" in
+        'aws-cli')
+            # Handle edge-case aws-cli bootstrap.
+            app['make']="$(koopa_locate_make --allow-system)"
+            ;;
+        'make')
+            app['make']="$(koopa_locate_make --only-system)"
+            ;;
+        *)
+            # > koopa_activate_app --build-only 'make'
+            app['make']="$(koopa_locate_make)"
+            ;;
+    esac
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     while (("$#"))
