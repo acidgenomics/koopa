@@ -81,6 +81,7 @@ ${dict['version']}.tar.gz"
             --replacement='[ "$EUID" -eq -1 ]' \
             'sra-tools/build/install.sh'
     fi
+    # FIXME Take this out if not in use.
     readarray -t cmake_std_args <<< "$( \
         koopa_cmake_std_args --prefix="${dict['prefix']}" \
     )"
@@ -91,7 +92,7 @@ ${dict['version']}.tar.gz"
     koopa_cd 'build'
     # Build ncbi-vdb (without install) =========================================
     cmake_args=(
-        "${cmake_std_args[@]}"
+        # > "${cmake_std_args[@]}"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
     )
     "${app['cmake']}" \
@@ -103,6 +104,8 @@ ${dict['version']}.tar.gz"
         --parallel "${dict['jobs']}"
     # Build and install sra-tools ==============================================
     cmake_args=(
+        # > "${cmake_std_args[@]}"
+        "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"
         '-DNO_JAVA=ON'
