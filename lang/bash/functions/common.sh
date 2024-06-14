@@ -4239,17 +4239,20 @@ koopa_camel_case() {
     return 0
 }
 
+koopa_can_build_binary() {
+    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]]
+}
+
 koopa_can_install_binary() {
-    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] && return 1
+    koopa_can_build_binary && return 1
     koopa_has_private_access || return 1
-    koopa_can_push_binary && return 1
     return 0
 }
 
 koopa_can_push_binary() {
     local -A app
     koopa_has_private_access || return 1
-    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] || return 1
+    koopa_can_build_binary || return 1
     [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     app['aws']="$(koopa_locate_aws --allow-missing)"
     [[ -x "${app['aws']}" ]] || return 1
@@ -15618,6 +15621,7 @@ koopa_install_shared_apps() {
     bool['all']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
+    bool['builder']=0
     koopa_can_install_binary && bool['binary']=1
     bool['update']=0
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -15638,11 +15642,14 @@ koopa_install_shared_apps() {
                 ;;
         esac
     done
+    if [[ "${bool['binary']}" -eq 1 ]] || [[ "${bool['builder']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
+        [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
+    fi
     if [[ "${bool['binary']}" -eq 1 ]]
     then
         koopa_assert_can_install_binary
-        app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
-        [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then

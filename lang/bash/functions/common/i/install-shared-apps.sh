@@ -3,7 +3,7 @@
 koopa_install_shared_apps() {
     # """
     # Build and install multiple shared apps from source.
-    # @note Updated 2023-12-14.
+    # @note Updated 2024-06-14.
     #
     # The approach calling 'koopa_cli_install' internally on apps array
     # can run into weird compilation issues on macOS.
@@ -15,6 +15,7 @@ koopa_install_shared_apps() {
     bool['all']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
+    bool['builder']=0
     koopa_can_install_binary && bool['binary']=1
     bool['update']=0
     dict['mem_gb']="$(koopa_mem_gb)"
@@ -38,11 +39,14 @@ koopa_install_shared_apps() {
                 ;;
         esac
     done
+    if [[ "${bool['binary']}" -eq 1 ]] || [[ "${bool['builder']}" -eq 1 ]]
+    then
+        app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
+        [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
+    fi
     if [[ "${bool['binary']}" -eq 1 ]]
     then
         koopa_assert_can_install_binary
-        app['aws']="$(koopa_locate_aws --allow-missing --allow-system)"
-        [[ ! -x "${app['aws']}" ]] && bool['aws_bootstrap']=1
     fi
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
