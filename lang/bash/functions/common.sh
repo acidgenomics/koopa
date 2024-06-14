@@ -15621,8 +15621,9 @@ koopa_install_shared_apps() {
     bool['all']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
-    bool['builder']=0
     koopa_can_install_binary && bool['binary']=1
+    bool['builder']=0
+    koopa_can_build_binary && bool['builder']=1
     bool['update']=0
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=6
