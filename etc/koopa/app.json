@@ -2853,7 +2853,7 @@
       "macos-arm64": false
     },
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.10.4"
+    "version": "1.10.3"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
