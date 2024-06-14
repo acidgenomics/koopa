@@ -363,12 +363,12 @@
     },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-05",
+    "date": "2024-06-14",
     "default": true,
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.21"
+    "version": "5.2.26"
   },
   "bash-language-server": {
     "aliases": {
