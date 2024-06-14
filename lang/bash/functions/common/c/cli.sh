@@ -3,7 +3,7 @@
 koopa_cli() {
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
-    # @note Updated 2023-10-26.
+    # @note Updated 2024-06-13.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -39,6 +39,7 @@ koopa_cli() {
         # Nested CLI runners ---------------------------------------------------
         'app' | \
         'configure' | \
+        'develop' | \
         'install' | \
         'reinstall' | \
         'system' | \
