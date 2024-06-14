@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
+# FIXME Bootstrap is failing to link against system python correctly ugh.
+# FIXME Returning library not loaded Python3
+# https://stackoverflow.com/questions/49132419/python-on-macos-dyld-library-not-loaded-error
+
 main() {
     # """
     # Install AWS CLI.
-    # @note Updated 2023-12-12.
+    # @note Updated 2024-06-14.
     #
     # @seealso
     # - https://github.com/aws/aws-cli/tree/v2/
@@ -39,5 +43,8 @@ ${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_make_build "${conf_args[@]}"
+    app['aws']="${dict['prefix']}/bin/aws"
+    koopa_assert_is_exectuable "${app['aws']}"
+    "${app['aws']}" --version
     return 0
 }
