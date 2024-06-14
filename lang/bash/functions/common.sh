@@ -21345,12 +21345,8 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
         koopa_alert "Creating archive at '${dict2['local_tar']}'."
         "${app['tar']}" \
-            --absolute-names \
-            --create \
-            --gzip \
+            -Pcgvv \
             --totals \
-            --verbose \
-            --verbose \
             --file="${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
