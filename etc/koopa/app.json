@@ -1967,10 +1967,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-06-13",
+    "date": "2024-06-14",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.50.0"
+    "version": "2.51.0"
   },
   "ghostscript": {
     "aliases": {
@@ -4865,7 +4865,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-04-24",
+    "date": "2024-06-14",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -5258,11 +5258,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-06-13",
+    "date": "2024-06-14",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.8"
+    "version": "0.4.9"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5288,10 +5288,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-05-06",
+    "date": "2024-06-14",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.78.0"
+    "version": "1.79.0"
   },
   "salmon": {
     "bin": ["salmon"],
