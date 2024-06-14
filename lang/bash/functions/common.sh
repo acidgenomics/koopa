@@ -21314,7 +21314,7 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     koopa_can_push_binary || return 1
     app['aws']="$(koopa_locate_aws)"
-    app['tar']="$(koopa_locate_tar)"
+    app['tar']="$(koopa_locate_tar --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['opt_prefix']="$(koopa_opt_prefix)"
