@@ -3,7 +3,7 @@
 koopa_push_app_build() {
     # """
     # Create a tarball of app build, and push to S3 bucket.
-    # @note Updated 2024-05-28.
+    # @note Updated 2024-06-14.
     #
     # @examples
     # > koopa_push_app_build 'emacs' 'vim'
@@ -19,7 +19,7 @@ koopa_push_app_build() {
     koopa_assert_has_args "$#"
     koopa_can_push_binary || return 1
     app['aws']="$(koopa_locate_aws)"
-    app['tar']="$(koopa_locate_tar)"
+    app['tar']="$(koopa_locate_tar --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['opt_prefix']="$(koopa_opt_prefix)"
@@ -52,14 +52,16 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
         koopa_alert "Pushing '${dict2['prefix']}' to '${dict2['remote_tar']}'."
         koopa_mkdir "${dict['tmp_dir']}/${dict2['name']}"
         koopa_alert "Creating archive at '${dict2['local_tar']}'."
+        # FIXME This doesn't work with macOS tar argh...
+        # tar options:
+        # * -P / --absolute-names (gtar)
+        # * -P / --absolute-paths (bsdtar)
+        # * -c / --create
+        # * -v / --verbose
+        # * -z / --gzip
         "${app['tar']}" \
-            --absolute-names \
-            --create \
-            --gzip \
-            --totals \
-            --verbose \
-            --verbose \
-            --file="${dict2['local_tar']}" \
+            -Pcvvz \
+            -f "${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
         "${app['aws']}" s3 cp \

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2023-05-30.
+    # @note Updated 2024-06-15.
     #
     # Check supported platforms with:
     # > ./Configure LIST
@@ -40,7 +40,7 @@ main() {
     then
         conf_args+=('-Wl,--enable-new-dtags')
     fi
-    export CPPFLAGS="-fPIC ${CPPFLAGS:-}"
+    koopa_append_cppflags '-fPIC'
     dict['url']="https://www.openssl.org/source/\
 openssl-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"

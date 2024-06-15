@@ -6,7 +6,7 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2023-10-25.
+    # @note Updated 2024-06-15.
     # """
     local -A bool dict
     bool['add_to_user_profile']=1
@@ -159,7 +159,6 @@ koopa_install_koopa() {
         koopa_alert_info 'Shared installation detected.'
         koopa_alert_note 'Admin (sudo) permissions are required.'
         koopa_assert_is_admin
-        koopa_rm --sudo "${dict['prefix']}"
         koopa_cp --sudo "${dict['source_prefix']}" "${dict['prefix']}"
         koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
@@ -186,7 +185,10 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install --bootstrap 'bash' 'python3.12'
+        koopa_cli_install --bootstrap \
+            'bash' \
+            'coreutils' \
+            'python3.12'
     fi
     return 0
 }
