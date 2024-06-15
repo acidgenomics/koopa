@@ -162,11 +162,12 @@ koopa_install_koopa() {
         koopa_alert_info 'Shared installation detected.'
         koopa_alert_note 'Admin (sudo) permissions are required.'
         koopa_assert_is_admin
-        koopa_rm --sudo "${dict['prefix']}"
         koopa_cp --sudo "${dict['source_prefix']}" "${dict['prefix']}"
         koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
     else
+        # FIXME Need to think of overwrite of target prefix here which will
+        # contain bootstrap.
         koopa_cp "${dict['source_prefix']}" "${dict['prefix']}"
     fi
     export KOOPA_PREFIX="${dict['prefix']}"
