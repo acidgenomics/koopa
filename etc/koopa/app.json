@@ -363,12 +363,12 @@
     },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-06-14",
+    "date": "2024-06-15",
     "default": true,
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.26"
+    "version": "5.2.21"
   },
   "bash-language-server": {
     "aliases": {
@@ -5070,11 +5070,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-03-11",
+    "date": "2024-06-15",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.66.0"
+    "version": "1.67.0"
   },
   "readline": {
     "aliases": {
