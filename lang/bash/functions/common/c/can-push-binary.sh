@@ -7,7 +7,7 @@ koopa_can_push_binary() {
     # """
     local -A app
     koopa_has_private_access || return 1
-    [[ "${KOOPA_BUILDER:-0}" -eq 1 ]] || return 1
+    koopa_can_build_binary || return 1
     [[ -n "${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" ]] || return 1
     app['aws']="$(koopa_locate_aws --allow-missing)"
     [[ -x "${app['aws']}" ]] || return 1

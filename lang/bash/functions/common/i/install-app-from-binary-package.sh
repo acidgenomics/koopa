@@ -3,7 +3,7 @@
 koopa_install_app_from_binary_package() {
     # """
     # Install app from pre-built binary package.
-    # @note Updated 2023-12-07.
+    # @note Updated 2024-06-14.
     #
     # @examples
     # > koopa_install_app_from_binary_package \
@@ -14,7 +14,7 @@ koopa_install_app_from_binary_package() {
     local prefix
     koopa_assert_has_args "$#"
     app['aws']="$(koopa_locate_aws --allow-system)"
-    app['tar']="$(koopa_locate_tar --allow-system)"
+    app['tar']="$(koopa_locate_tar --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
     dict['aws_profile']="${AWS_PROFILE:-acidgenomics}"
