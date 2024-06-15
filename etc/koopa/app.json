@@ -791,11 +791,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-06-15",
     "default": false,
     "prune": false,
     "url": ["https://c-ares.org/"],
-    "version": "1.24.0"
+    "version": "1.30.0"
   },
   "ca-certificates": {
     "aliases": {
