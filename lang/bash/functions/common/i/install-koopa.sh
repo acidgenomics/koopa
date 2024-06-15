@@ -152,10 +152,7 @@ koopa_install_koopa() {
             fi
         fi
     fi
-    if [[ -f "${dict['prefix']}/activate" ]]
-    then
-        koopa_stop "koopa is already installed at '${dict['prefix']}'."
-    fi
+    koopa_assert_is_not_dir "${dict['prefix']}"
     koopa_rm "${dict['config_prefix']}"
     if [[ "${bool['shared']}" -eq 1 ]]
     then
@@ -166,8 +163,6 @@ koopa_install_koopa() {
         koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
     else
-        # FIXME Need to think of overwrite of target prefix here which will
-        # contain bootstrap.
         koopa_cp "${dict['source_prefix']}" "${dict['prefix']}"
     fi
     export KOOPA_PREFIX="${dict['prefix']}"
