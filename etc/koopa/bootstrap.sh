@@ -19,7 +19,7 @@ then
     then
         XDG_DATA_HOME="${HOME:?}/.local/share"
     fi
-    PREFIX="${XDG_DATA_HOME}/koopa/bootstrap"
+    PREFIX="${XDG_DATA_HOME}/koopa-bootstrap"
 fi
 PATH="${PREFIX}/bin:/usr/bin:/bin"
 export PATH PREFIX
