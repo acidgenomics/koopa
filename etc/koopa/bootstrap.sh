@@ -82,7 +82,7 @@ main() {
         install_python
     )
     rm -fr "${PREFIX}/src"
-    printf 'System bootstrap was successful.\n'
+    printf 'Bootstrap installation was successful.\n'
     return 0
 }
 
