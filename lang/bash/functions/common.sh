@@ -18056,16 +18056,16 @@ koopa_locate_anaconda_python() {
 koopa_locate_app() {
     local -A bool dict
     local -a pos
+    bool['allow_bootstrap']=0
     bool['allow_koopa_bin']=1
     bool['allow_missing']=0
     bool['allow_system']=0
+    bool['only_bootstrap']=0
     bool['only_system']=0
     bool['realpath']=0
     dict['app']=''
     dict['app_name']=''
     dict['bin_name']=''
-    dict['bin_prefix']="$(koopa_bin_prefix)"
-    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['system_bin_name']=''
     pos=()
     while (("$#"))
@@ -18094,6 +18094,10 @@ koopa_locate_app() {
             '--system-bin-name')
                 dict['system_bin_name']="${2:?}"
                 shift 2
+                ;;
+            '--allow-bootstrap')
+                bool['allow_bootstrap']=1
+                shift 1
                 ;;
             '--allow-missing')
                 bool['allow_missing']=1
@@ -18126,6 +18130,7 @@ koopa_locate_app() {
     done
     if [[ "${bool['only_system']}" -eq 1 ]]
     then
+        bool['allow_bootstrap']=0
         bool['allow_koopa_bin']=0
         bool['allow_system']=1
     fi
@@ -18152,8 +18157,23 @@ koopa_locate_app() {
         [[ -n "${dict['app_name']}" ]] || return 1
         [[ -n "${dict['bin_name']}" ]] || return 1
     fi
+    if [[ "${bool['allow_bootstrap']}" -eq 1 ]]
+    then
+        dict['bs_prefix']="$(koopa_bootstrap_prefix)"
+        dict['app']="${dict['bs_prefix']}/bin/${dict['bin_name']}"
+    fi
+    if [[ -x "${dict['app']}" ]]
+    then
+        if [[ "${bool['realpath']}" -eq 1 ]]
+        then
+            dict['app']="$(koopa_realpath "${dict['app']}")"
+        fi
+        koopa_print "${dict['app']}"
+        return 0
+    fi
     if [[ "${bool['allow_koopa_bin']}" -eq 1 ]]
     then
+        dict['bin_prefix']="$(koopa_bin_prefix)"
         dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
     fi
     if [[ -x "${dict['app']}" ]]
@@ -18167,6 +18187,7 @@ koopa_locate_app() {
     fi
     if [[ "${bool['only_system']}" -eq 0 ]]
     then
+        dict['opt_prefix']="$(koopa_opt_prefix)"
         dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
     fi
