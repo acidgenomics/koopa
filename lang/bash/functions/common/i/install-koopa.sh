@@ -6,7 +6,7 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2023-10-25.
+    # @note Updated 2024-06-15.
     # """
     local -A bool dict
     bool['add_to_user_profile']=1
@@ -152,7 +152,10 @@ koopa_install_koopa() {
             fi
         fi
     fi
-    koopa_assert_is_not_dir "${dict['prefix']}"
+    if [[ -f "${dict['prefix']}/activate" ]]
+    then
+        koopa_stop "koopa is already installed at '${dict['prefix']}'."
+    fi
     koopa_rm "${dict['config_prefix']}"
     if [[ "${bool['shared']}" -eq 1 ]]
     then
@@ -186,7 +189,10 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
-        koopa_cli_install --bootstrap 'bash' 'python3.12'
+        koopa_cli_install --bootstrap \
+            'bash' \
+            'coreutils' \
+            'python3.12'
     fi
     return 0
 }
