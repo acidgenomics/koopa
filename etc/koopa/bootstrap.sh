@@ -61,10 +61,10 @@ install_python() {
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
     curl \
-        'https://www.python.org/ftp/python/3.12.3/Python-3.12.3.tgz' \
+        'https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'Python-3.12.3' || return 1
+    cd 'Python-3.11.9' || return 1
     ./configure --prefix="$PREFIX" --without-ensurepip
     make
     make install
