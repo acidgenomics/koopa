@@ -3420,7 +3420,7 @@ koopa_boolean_nounset() {
 }
 
 koopa_bootstrap_prefix() {
-    koopa_print "$(koopa_xdg_data_home)/koopa/bootstrap"
+    koopa_print "$(koopa_xdg_data_home)/koopa-bootstrap"
     return 0
 }
 
@@ -13908,17 +13908,13 @@ koopa_install_koopa() {
             fi
         fi
     fi
-    if [[ -f "${dict['prefix']}/activate" ]]
-    then
-        koopa_stop "koopa is already installed at '${dict['prefix']}'."
-    fi
+    koopa_assert_is_not_dir "${dict['prefix']}"
     koopa_rm "${dict['config_prefix']}"
     if [[ "${bool['shared']}" -eq 1 ]]
     then
         koopa_alert_info 'Shared installation detected.'
         koopa_alert_note 'Admin (sudo) permissions are required.'
         koopa_assert_is_admin
-        koopa_rm --sudo "${dict['prefix']}"
         koopa_cp --sudo "${dict['source_prefix']}" "${dict['prefix']}"
         koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
