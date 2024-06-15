@@ -49,10 +49,33 @@ install_coreutils() {
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd 'coreutils-9.4' || return 1
-    ./configure --prefix="${PREFIX:?}" --program-prefix='g'
+    ./configure --prefix="$PREFIX" --program-prefix='g'
     make
     make install
     [ -x "${PREFIX}/bin/gcp" ] || return 1
+    return 0
+}
+
+install_openssl3() {
+    printf 'Installing openssl3.\n'
+    mkdir -p "${PREFIX}/src/openssl3"
+    cd "${PREFIX}/src/openssl3" || return 1
+    curl \
+        'https://www.openssl.org/source/openssl-3.3.1.tar.gz' \
+        -o 'src.tar.gz'
+    tar -xzf 'src.tar.gz'
+    cd 'openssl-3.3.1' || return 1
+    ./config \
+        --libdir='lib' \
+        --openssldir="$PREFIX" \
+        --prefix="$PREFIX" \
+        "-Wl,-rpath,${PREFIX}/lib" \
+        'no-zlib' \
+        'shared'
+    make depend
+    make
+    make install_sw
+    [ -x "${PREFIX}/bin/openssl" ] || return 1
     return 0
 }
 
@@ -65,7 +88,9 @@ install_python() {
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd 'Python-3.11.9' || return 1
-    ./configure --prefix="$PREFIX" --without-ensurepip
+    ./configure \
+        --prefix="$PREFIX" \
+        --with-openssl="$PREFIX"
     make
     make install
     [ -x "${PREFIX}/bin/python3" ] || return 1
@@ -77,6 +102,7 @@ main() {
     rm -fr "$PREFIX"
     mkdir -p "$PREFIX"
     (
+        install_openssl3
         install_bash
         install_coreutils
         install_python
