@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-06-13.
+    # @note Updated 2024-06-15.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -604,7 +604,7 @@ _koopa_complete() {
                             fi
                             ;;
                         'system')
-                            args+=('bootstrap' 'homebrew')
+                            args+=('homebrew')
                             if _koopa_is_linux
                             then
                                 args+=('pihole' 'pivpn' 'wine')
@@ -633,6 +633,7 @@ _koopa_complete() {
                             ;;
                         'user')
                             args+=(
+                                'bootstrap'
                                 'doom-emacs'
                                 'prelude-emacs'
                                 'spacemacs'

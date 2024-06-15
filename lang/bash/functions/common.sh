@@ -3419,6 +3419,11 @@ koopa_boolean_nounset() {
     _koopa_boolean_nounset "$@"
 }
 
+koopa_bootstrap_prefix() {
+    koopa_print "$(koopa_xdg_data_home)/koopa/bootstrap"
+    return 0
+}
+
 koopa_bowtie2_align_paired_end_per_sample() {
     local -A app bool dict
     koopa_assert_has_args "$#"
@@ -15811,13 +15816,6 @@ koopa_install_swig() {
         "$@"
 }
 
-koopa_install_system_bootstrap() {
-    koopa_install_app \
-        --name='bootstrap' \
-        --system \
-        "$@"
-}
-
 koopa_install_system_homebrew_bundle() {
     koopa_install_app \
         --name='homebrew-bundle' \
@@ -15969,6 +15967,13 @@ koopa_install_units() {
 koopa_install_unzip() {
     koopa_install_app \
         --name='unzip' \
+        "$@"
+}
+
+koopa_install_user_bootstrap() {
+    koopa_install_app \
+        --name='bootstrap' \
+        --user \
         "$@"
 }
 
@@ -30853,13 +30858,6 @@ koopa_uninstall_swig() {
         "$@"
 }
 
-koopa_uninstall_system_bootstrap() {
-    koopa_uninstall_app \
-        --name='bootstrap' \
-        --system \
-        "$@"
-}
-
 koopa_uninstall_system_homebrew() {
     koopa_uninstall_app \
         --name='homebrew' \
@@ -30990,6 +30988,14 @@ koopa_uninstall_units() {
 koopa_uninstall_unzip() {
     koopa_uninstall_app \
         --name='unzip' \
+        "$@"
+}
+
+koopa_uninstall_user_bootstrap() {
+    koopa_uninstall_app \
+        --name='bootstrap' \
+        --prefix="$(koopa_bootstrap_prefix)" \
+        --user \
         "$@"
 }
 
