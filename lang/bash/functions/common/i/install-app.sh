@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME For builder machines that push app binaries, make sure we also build
+# reverse dependencies after app update.
 # FIXME Our installer should drop an invisible build file into the directory
 # that contains build number and date, for easy checking during updates.
 # FIXME Instead of erroring on an unsupported app, remove it when it exists
