@@ -120,6 +120,7 @@
     "default": false,
     "dependencies": [
       "gettext",
+      "icu4c",
       "libssh2",
       "libxml2",
       "openssl3",

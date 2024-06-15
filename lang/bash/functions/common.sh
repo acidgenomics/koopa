@@ -12229,7 +12229,7 @@ ${dict['version2']}"
             then
                 if koopa_is_macos
                 then
-                    app['bash']='/usr/local/bin/bash'
+                    app['bash']="$(koopa_locate_bash --allow-bootstrap)"
                 else
                     app['bash']="$(koopa_locate_bash --allow-system)"
                 fi
