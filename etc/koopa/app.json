@@ -5533,10 +5533,9 @@
       "homebrew": true
     },
     "bin": ["sox"],
-    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
     "default": false,
-    "dependencies": ["flac"],
+    "dependencies": ["conda"],
     "man1": ["sox.1"],
     "url": [
       "http://sox.sourceforge.net/sox.html",
