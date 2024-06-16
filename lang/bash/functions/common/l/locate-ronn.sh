@@ -2,7 +2,7 @@
 
 koopa_locate_ronn() {
     koopa_locate_app \
-        --app-name='ronn' \
+        --app-name='ronn-ng' \
         --bin-name='ronn' \
         "$@"
 }

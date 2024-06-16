@@ -15320,13 +15320,6 @@ koopa_install_ronn_ng() {
         "$@"
 }
 
-koopa_install_ronn() {
-    koopa_install_app \
-        --installer='ruby-package' \
-        --name='ronn' \
-        "$@"
-}
-
 koopa_install_rsem() {
     koopa_assert_is_not_aarch64
     koopa_install_app \
@@ -19476,7 +19469,7 @@ koopa_locate_rmats() {
 
 koopa_locate_ronn() {
     koopa_locate_app \
-        --app-name='ronn' \
+        --app-name='ronn-ng' \
         --bin-name='ronn' \
         "$@"
 }
