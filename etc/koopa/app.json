@@ -5183,6 +5183,7 @@
     "date": "2022-09-26",
     "default": false,
     "dependencies": ["ruby"],
+    "removed": true,
     "url": [
       "https://github.com/rtomayko/ronn/",
       "https://rubygems.org/gems/ronn/"
@@ -5190,7 +5191,8 @@
     "version": "0.7.3"
   },
   "ronn-ng": {
-    "date": "2024-01-08",
+    "bin": ["ronn"],
+    "date": "2024-06-16",
     "default": false,
     "dependencies": ["ruby"],
     "url": [
@@ -5255,6 +5257,7 @@
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
+    "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.2.2"
