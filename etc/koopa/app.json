@@ -120,6 +120,7 @@
     "default": false,
     "dependencies": [
       "gettext",
+      "icu4c",
       "libssh2",
       "libxml2",
       "openssl3",
@@ -790,11 +791,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-06-15",
     "default": false,
     "prune": false,
     "url": ["https://c-ares.org/"],
-    "version": "1.24.0"
+    "version": "1.30.0"
   },
   "ca-certificates": {
     "aliases": {
@@ -1841,8 +1842,10 @@
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
     "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
       "macos-amd64": false,
-      "noarch": true
+      "macos-arm64": false
     },
     "url": ["https://gcc.gnu.org/"],
     "version": "13.2.0"
@@ -5180,6 +5183,7 @@
     "date": "2022-09-26",
     "default": false,
     "dependencies": ["ruby"],
+    "removed": true,
     "url": [
       "https://github.com/rtomayko/ronn/",
       "https://rubygems.org/gems/ronn/"
@@ -5187,7 +5191,8 @@
     "version": "0.7.3"
   },
   "ronn-ng": {
-    "date": "2024-01-08",
+    "bin": ["ronn"],
+    "date": "2024-06-16",
     "default": false,
     "dependencies": ["ruby"],
     "url": [
@@ -5252,6 +5257,7 @@
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
+    "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
     "version": "3.2.2"
@@ -5527,10 +5533,9 @@
       "homebrew": true
     },
     "bin": ["sox"],
-    "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
     "default": false,
-    "dependencies": ["flac"],
+    "dependencies": ["conda"],
     "man1": ["sox.1"],
     "url": [
       "http://sox.sourceforge.net/sox.html",

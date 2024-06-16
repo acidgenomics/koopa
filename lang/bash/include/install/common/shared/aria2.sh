@@ -5,7 +5,7 @@
 main() {
     # """
     # Install aria2.
-    # @note Updated 2023-11-15.
+    # @note Updated 2024-06-15.
     #
     # @seealso
     # - https://github.com/aria2/aria2
@@ -19,6 +19,7 @@ main() {
         'gettext'
         'openssl3'
         'libssh2'
+        'icu4c'
         'libxml2'
         'sqlite'
     )

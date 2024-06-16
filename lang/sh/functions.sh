@@ -62,6 +62,7 @@ _koopa_activate_aliases() {
     alias h='history'
     alias k='_koopa_alias_k'
     alias kb='_koopa_alias_kb'
+    alias kbs='_koopa_alias_kbs'
     alias kdev='_koopa_alias_kdev'
     alias l='_koopa_alias_l'
     alias l.='l -d .*'
@@ -1207,6 +1208,11 @@ _koopa_alias_kb() {
     __kvar_bash_prefix="$(_koopa_koopa_prefix)/lang/bash"
     [ -d "$__kvar_bash_prefix" ] || return 1
     cd "$__kvar_bash_prefix" || return 1
+    return 0
+}
+
+_koopa_alias_kbs() {
+    _koopa_add_to_path_start "$(_koopa_xdg_data_home)/koopa-bootstrap/bin"
     return 0
 }
 

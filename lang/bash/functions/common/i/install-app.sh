@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME For builder machines that push app binaries, make sure we also build
+# reverse dependencies after app update.
 # FIXME Our installer should drop an invisible build file into the directory
 # that contains build number and date, for easy checking during updates.
 # FIXME Instead of erroring on an unsupported app, remove it when it exists
@@ -10,7 +12,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2023-12-14.
+    # @note Updated 2024-06-15.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -328,7 +330,7 @@ ${dict['version2']}"
             then
                 if koopa_is_macos
                 then
-                    app['bash']='/usr/local/bin/bash'
+                    app['bash']="$(koopa_locate_bash --allow-bootstrap)"
                 else
                     app['bash']="$(koopa_locate_bash --allow-system)"
                 fi
