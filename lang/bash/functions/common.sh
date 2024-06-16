@@ -3420,8 +3420,7 @@ koopa_boolean_nounset() {
 }
 
 koopa_bootstrap_prefix() {
-    koopa_print "$(koopa_xdg_data_home)/koopa-bootstrap"
-    return 0
+    _koopa_bootstrap_prefix "$@"
 }
 
 koopa_bowtie2_align_paired_end_per_sample() {
@@ -13007,6 +13006,7 @@ koopa_install_fd_find() {
 
 koopa_install_ffmpeg() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='ffmpeg' \
         "$@"
 }
