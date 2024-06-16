@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This isn't checking man linkage correctly currently.
+
 koopa_check_system() {
     # """
     # Check system.
