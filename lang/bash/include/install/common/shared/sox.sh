@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Currently failing to build with Xcode CLT 15.3:
+# https://github.com/Homebrew/homebrew-core/blob/2fc9fa519f9dbcf9c973d5f60db164f491207f8d/Formula/s/sox.rb
+
+# Likely need to apply this patch:
+# https://raw.githubusercontent.com/Homebrew/formula-patches/03cf8088210822aa2c1ab544ed58ea04c897d9c4/libtool/configure-pre-0.4.2.418-big_sur.diff
+
 main() {
     # """
     # Install SoX.
