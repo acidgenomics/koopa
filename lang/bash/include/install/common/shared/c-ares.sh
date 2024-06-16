@@ -3,7 +3,7 @@
 main() {
     # """
     # Install c-ares.
-    # @note Updated 2023-04-06.
+    # @note Updated 2024-06-15.
     #
     # @seealso
     # - https://c-ares.org/
@@ -13,7 +13,8 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://c-ares.org/download/c-ares-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/c-ares/c-ares/releases/download/\
+v${dict['version']}/c-ares-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
