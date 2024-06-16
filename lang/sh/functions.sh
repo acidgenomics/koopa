@@ -1365,6 +1365,11 @@ _koopa_boolean_nounset() {
     return 0
 }
 
+_koopa_bootstrap_prefix() {
+    _koopa_print "$(_koopa_xdg_data_home)/koopa-bootstrap"
+    return 0
+}
+
 _koopa_check_multiple_users() {
     _koopa_is_aws_ec2 || return 0
     __kvar_n="$(_koopa_logged_in_user_count)"
