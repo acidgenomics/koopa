@@ -4867,7 +4867,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-06-14",
+    "date": "2024-06-16",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4933,7 +4933,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.4.0"
+    "version": "4.4.1"
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
