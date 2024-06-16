@@ -12229,7 +12229,7 @@ ${dict['version2']}"
             then
                 if koopa_is_macos
                 then
-                    app['bash']='/usr/local/bin/bash'
+                    app['bash']="$(koopa_locate_bash --allow-bootstrap)"
                 else
                     app['bash']="$(koopa_locate_bash --allow-system)"
                 fi
@@ -15320,13 +15320,6 @@ koopa_install_ronn_ng() {
         "$@"
 }
 
-koopa_install_ronn() {
-    koopa_install_app \
-        --installer='ruby-package' \
-        --name='ronn' \
-        "$@"
-}
-
 koopa_install_rsem() {
     koopa_assert_is_not_aarch64
     koopa_install_app \
@@ -15734,6 +15727,7 @@ koopa_install_snakemake() {
 
 koopa_install_sox() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='sox' \
         "$@"
 }
@@ -19476,7 +19470,7 @@ koopa_locate_rmats() {
 
 koopa_locate_ronn() {
     koopa_locate_app \
-        --app-name='ronn' \
+        --app-name='ronn-ng' \
         --bin-name='ronn' \
         "$@"
 }
