@@ -1570,13 +1570,12 @@
       "homebrew": true
     },
     "bin": ["ffmpeg", "ffprobe"],
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-04-05",
+    "date": "2024-06-16",
     "default": false,
-    "dependencies": ["lame"],
+    "dependencies": ["conda"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
-    "version": "7.0"
+    "version": "7.0.1"
   },
   "ffq": {
     "bin": ["ffq"],
