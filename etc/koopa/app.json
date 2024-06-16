@@ -1842,8 +1842,10 @@
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
     "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
       "macos-amd64": false,
-      "noarch": true
+      "macos-arm64": false
     },
     "url": ["https://gcc.gnu.org/"],
     "version": "13.2.0"
