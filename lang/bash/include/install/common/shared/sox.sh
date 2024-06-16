@@ -24,6 +24,7 @@ main() {
     # @seealso
     # - https://formulae.brew.sh/formula/sox
     # - https://ports.macports.org/port/sox/
+    # - https://github.com/conda-forge/sox-feedstock
     # """
     local -A dict
     local -a conf_args
