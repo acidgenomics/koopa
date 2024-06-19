@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2023-12-14.
+#' @note Updated 2024-06-19.
 #'
 #' @section Restarting R:
 #'
@@ -296,8 +296,8 @@ local({
     ## binaries. Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
     ## environment variable in 'Renviron'.
     if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
-        ## > cran <- "https://cloud.r-project.org"
-        cran <- "https://packagemanager.posit.co/cran/latest"
+        ## > cran <- "https://packagemanager.posit.co/cran/latest"
+        cran <- "https://cloud.r-project.org"
         ## nolint start
         options(
             "install.packages.check.source" = "no",
