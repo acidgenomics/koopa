@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Build without osxkeychain support. Just use caching instead.
+
 main() {
     # """
     # Install Git.
