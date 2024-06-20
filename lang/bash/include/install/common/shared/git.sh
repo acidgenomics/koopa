@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2024-06-14.
+    # @note Updated 2024-06-20.
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -95,24 +95,24 @@ git-manpages-${dict['version']}.tar.xz"
             --target-directory="${dict['prefix']}/bin" \
             'git-subtree'
     )
-    if koopa_is_macos
-    then
-        koopa_alert 'Installing osxkeychain.'
-        (
-            koopa_cd 'contrib/credential/osxkeychain'
-            "${app['make']}" --jobs="${dict['jobs']}"
-            koopa_cp \
-                --target-directory="${dict['prefix']}/bin" \
-                'git-credential-osxkeychain'
-        )
-        read -r -d '' "dict[gitconfig_string]" << END || true
-[credential]
-    helper = osxkeychain
-END
-        dict['gitconfig_file']="${dict['prefix']}/etc/gitconfig"
-        koopa_append_string \
-            --file="${dict['gitconfig_file']}" \
-            --string="${dict['gitconfig_string']}"
-    fi
+# >     if koopa_is_macos
+# >     then
+# >         koopa_alert 'Installing osxkeychain.'
+# >         (
+# >             koopa_cd 'contrib/credential/osxkeychain'
+# >             "${app['make']}" --jobs="${dict['jobs']}"
+# >             koopa_cp \
+# >                 --target-directory="${dict['prefix']}/bin" \
+# >                 'git-credential-osxkeychain'
+# >         )
+# >         read -r -d '' "dict[gitconfig_string]" << END || true
+# > [credential]
+# >     helper = osxkeychain
+# > END
+# >         dict['gitconfig_file']="${dict['prefix']}/etc/gitconfig"
+# >         koopa_append_string \
+# >             --file="${dict['gitconfig_file']}" \
+# >             --string="${dict['gitconfig_string']}"
+# >     fi
     return 0
 }
