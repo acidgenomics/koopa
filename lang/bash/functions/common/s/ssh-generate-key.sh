@@ -3,7 +3,7 @@
 koopa_ssh_generate_key() {
     # """
     # Generate SSH key.
-    # @note Updated 2024-01-03.
+    # @note Updated 2024-06-18.
     #
     # This script is called inside our Linux VM configuration function, so
     # don't use assert here.
@@ -21,12 +21,12 @@ koopa_ssh_generate_key() {
     local -A app dict
     local -a pos
     local key_name
-    koopa_assert_has_args "$#"
     app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['hostname']="$(koopa_hostname)"
     dict['prefix']="${HOME:?}/.ssh"
     dict['user']="$(koopa_user_name)"
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -49,10 +49,13 @@ koopa_ssh_generate_key() {
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    # NOTE Consider restricting access permissions to this directory.
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        pos=('id_rsa')
+    fi
+    set -- "${pos[@]}"
     dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
+    koopa_chmod 0700 "${dict['prefix']}"
     for key_name in "$@"
     do
         local -A dict2

@@ -10728,9 +10728,9 @@ koopa_has_private_access() {
     local file
     file="${HOME}/.aws/credentials"
     [[ -f "$file" ]] || return 1
-    koopa_file_detect_fixed \
+    koopa_file_detect_regex \
         --file="$file" \
-        --pattern='[acidgenomics]'
+        --pattern='^[acidgenomics]$'
 }
 
 koopa_header() {
@@ -12478,6 +12478,13 @@ koopa_install_autoflake() {
 koopa_install_automake() {
     koopa_install_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_install_aws_azure_login() {
+    koopa_install_app \
+        --installer='node-package' \
+        --name='aws-azure-login' \
         "$@"
 }
 
@@ -26259,12 +26266,12 @@ koopa_ssh_generate_key() {
     local -A app dict
     local -a pos
     local key_name
-    koopa_assert_has_args "$#"
     app['ssh_keygen']="$(koopa_locate_ssh_keygen --allow-system --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['hostname']="$(koopa_hostname)"
     dict['prefix']="${HOME:?}/.ssh"
     dict['user']="$(koopa_user_name)"
+    pos=()
     while (("$#"))
     do
         case "$1" in
@@ -26285,9 +26292,13 @@ koopa_ssh_generate_key() {
                 ;;
         esac
     done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
+    if [[ "${#pos[@]}" -eq 0 ]]
+    then
+        pos=('id_rsa')
+    fi
+    set -- "${pos[@]}"
     dict['prefix']="$(koopa_init_dir "${dict['prefix']}")"
+    koopa_chmod 0700 "${dict['prefix']}"
     for key_name in "$@"
     do
         local -A dict2
@@ -28878,6 +28889,12 @@ koopa_uninstall_autoflake() {
 koopa_uninstall_automake() {
     koopa_uninstall_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_uninstall_aws_azure_login() {
+    koopa_uninstall_app \
+        --name='aws-azure-login' \
         "$@"
 }
 
