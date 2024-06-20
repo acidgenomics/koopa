@@ -10728,9 +10728,9 @@ koopa_has_private_access() {
     local file
     file="${HOME}/.aws/credentials"
     [[ -f "$file" ]] || return 1
-    koopa_file_detect_fixed \
+    koopa_file_detect_regex \
         --file="$file" \
-        --pattern='[acidgenomics]'
+        --pattern='^[acidgenomics]$'
 }
 
 koopa_header() {
@@ -12478,6 +12478,13 @@ koopa_install_autoflake() {
 koopa_install_automake() {
     koopa_install_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_install_aws_azure_login() {
+    koopa_install_app \
+        --installer='node-package' \
+        --name='aws-azure-login' \
         "$@"
 }
 
@@ -28882,6 +28889,12 @@ koopa_uninstall_autoflake() {
 koopa_uninstall_automake() {
     koopa_uninstall_app \
         --name='automake' \
+        "$@"
+}
+
+koopa_uninstall_aws_azure_login() {
+    koopa_uninstall_app \
+        --name='aws-azure-login' \
         "$@"
 }
 
