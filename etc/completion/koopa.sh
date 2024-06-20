@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-06-16.
+    # @note Updated 2024-06-20.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -100,6 +100,7 @@ _koopa_complete() {
                         'autodock-vina'
                         'autoflake'
                         'automake'
+                        'aws-azure-login'
                         'aws-cli'
                         'azure-cli'
                         'bamtools'

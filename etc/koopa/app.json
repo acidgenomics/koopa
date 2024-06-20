@@ -290,6 +290,14 @@
     "url": ["https://ftp.gnu.org/gnu/automake/?C=M;O=D"],
     "version": "1.16.5"
   },
+  "aws-azure-login": {
+    "bin": ["aws-azure-login"],
+    "date": "2024-06-20",
+    "default": false,
+    "dependencies": ["aws-cli", "node"],
+    "url": ["https://www.npmjs.com/package/aws-azure-login"],
+    "version": "3.6.3"
+  },
   "aws-cli": {
     "aliases": {
       "homebrew": "awscli"
