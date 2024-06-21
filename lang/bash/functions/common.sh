@@ -11810,7 +11810,7 @@ koopa_install_app_from_binary_package() {
     app['tar']="$(koopa_locate_tar --only-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch2)" # e.g. 'amd64'.
-    dict['aws_profile']="${AWS_PROFILE:-acidgenomics}"
+    dict['aws_profile']='acidgenomics'
     dict['binary_prefix']='/opt/koopa'
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['os_string']="$(koopa_os_string)"
