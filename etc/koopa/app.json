@@ -333,11 +333,11 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2024-02-07",
+    "date": "2024-06-21",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.57.0"
+    "version": "2.61.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -1413,14 +1413,14 @@
     },
     "bin": ["editorconfig"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-06-13",
+    "date": "2024-06-21",
     "default": true,
     "dependencies": ["pcre2"],
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
     ],
-    "version": "0.12.8"
+    "version": "0.12.9"
   },
   "elfutils": {
     "aliases": {
@@ -1539,14 +1539,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-06-13",
+    "date": "2024-06-21",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.18"
+    "version": "0.18.19"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2158,11 +2158,11 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2024-02-07",
+    "date": "2024-06-21",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "463.0.0"
+    "version": "481.0.0"
   },
   "googletest": {
     "aliases": {
@@ -4249,7 +4249,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-06-13",
+    "date": "2024-06-21",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4258,7 +4258,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.7.1"
+    "version": "0.7.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -5272,11 +5272,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-06-14",
+    "date": "2024-06-21",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.4.9"
+    "version": "0.4.10"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6042,11 +6042,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-06-13",
+    "date": "2024-06-21",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.2.11"
+    "version": "0.2.13"
   },
   "vim": {
     "aliases": {
@@ -6560,10 +6560,10 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2024-05-13",
+    "date": "2024-06-21",
     "default": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.44.1"
+    "version": "4.44.2"
   },
   "yt-dlp": {
     "aliases": {
