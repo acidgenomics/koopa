@@ -2150,6 +2150,7 @@
     "bin": ["go"],
     "date": "2024-02-07",
     "default": false,
+    "outdated": true,
     "url": ["https://golang.org/dl/"],
     "version": "1.22.0"
   },
