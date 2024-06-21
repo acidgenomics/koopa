@@ -21294,6 +21294,8 @@ ${dict['percent_str']}% "
 }
 
 koopa_prune_app_binaries() {
+    koopa_assert_has_no_args "$#"
+    koopa_assert_can_push_binary
     koopa_python_script 'prune-app-binaries.py'
     return 0
 }
