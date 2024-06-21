@@ -333,11 +333,11 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2024-02-07",
+    "date": "2024-06-21",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.57.0"
+    "version": "2.61.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -2158,11 +2158,11 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2024-02-07",
+    "date": "2024-06-21",
     "default": false,
     "dependencies": ["python3.11"],
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "463.0.0"
+    "version": "481.0.0"
   },
   "googletest": {
     "aliases": {
