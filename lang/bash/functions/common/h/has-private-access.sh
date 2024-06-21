@@ -10,5 +10,5 @@ koopa_has_private_access() {
     [[ -f "$file" ]] || return 1
     koopa_file_detect_regex \
         --file="$file" \
-        --pattern='^[acidgenomics]$'
+        --pattern='^\[acidgenomics\]$'
 }

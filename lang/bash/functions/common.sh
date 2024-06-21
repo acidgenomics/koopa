@@ -1030,6 +1030,15 @@ koopa_assert_can_install_binary() {
     return 0
 }
 
+koopa_assert_can_push_binary() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_can_push_binary
+    then
+        koopa_stop 'System not configured to push binaries.'
+    fi
+    return 0
+}
+
 koopa_assert_has_args_eq() {
     if [[ "$#" -ne 2 ]]
     then
@@ -10730,7 +10739,7 @@ koopa_has_private_access() {
     [[ -f "$file" ]] || return 1
     koopa_file_detect_regex \
         --file="$file" \
-        --pattern='^[acidgenomics]$'
+        --pattern='^\[acidgenomics\]$'
 }
 
 koopa_header() {
@@ -21341,7 +21350,7 @@ koopa_push_app_build() {
     local -A app dict
     local name
     koopa_assert_has_args "$#"
-    koopa_can_push_binary || return 1
+    koopa_assert_can_push_binary
     app['aws']="$(koopa_locate_aws)"
     app['tar']="$(koopa_locate_tar --only-system)"
     koopa_assert_is_executable "${app[@]}"
