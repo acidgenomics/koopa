@@ -10,12 +10,15 @@ koopa_read() {
     koopa_assert_has_args_eq "$#" 2
     dict['default']="${2:-}"
     dict['prompt']="${1:?} [${dict['default']}]: "
-    read_args=(
+    read_args+=(
         '-e'
-        '-i' "${dict['default']}"
         '-p' "${dict['prompt']}"
         '-r'
     )
+    if [[ -n "${dict['default']}" ]]
+    then
+        read_args+=('-i' "${dict['default']}")
+    fi
     # shellcheck disable=SC2162
     read "${read_args[@]}" "dict[choice]"
     [[ -z "${dict['choice']}" ]] && dict['choice']="${dict['default']}"
