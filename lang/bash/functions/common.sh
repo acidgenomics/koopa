@@ -23104,13 +23104,10 @@ koopa_read() {
     dict['prompt']="${1:?} [${dict['default']}]: "
     read_args+=(
         '-e'
+        '-i' "${dict['default']}"
         '-p' "${dict['prompt']}"
         '-r'
     )
-    if [[ -n "${dict['default']}" ]]
-    then
-        read_args+=('-i' "${dict['default']}")
-    fi
     read "${read_args[@]}" "dict[choice]"
     [[ -z "${dict['choice']}" ]] && dict['choice']="${dict['default']}"
     koopa_print "${dict['choice']}"
