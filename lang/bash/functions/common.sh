@@ -23100,7 +23100,7 @@ koopa_read() {
     local -A dict
     local -a read_args
     koopa_assert_has_args_eq "$#" 2
-    dict['default']="${2:?}"
+    dict['default']="${2:-}"
     dict['prompt']="${1:?} [${dict['default']}]: "
     read_args=(
         '-e'
