@@ -31,7 +31,7 @@ koopa_docker_build() {
     #       on-an-m1-mac/
     #
     # @examples
-    # > local="${HOME}/.config/koopa/docker/acidgenomics/koopa/debian"
+    # > local="${HOME}/monorepo/docker/acidgenomics/koopa/debian"
     # > remote='public.ecr.aws/acidgenomics/koopa:debian'
     # > koopa app docker build --local="$local" --remote="$remote"
     # """
