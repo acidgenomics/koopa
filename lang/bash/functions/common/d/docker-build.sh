@@ -32,7 +32,7 @@ koopa_docker_build() {
     #
     # @examples
     # > local="${HOME}/.config/koopa/docker/acidgenomics/koopa/debian"
-    # > remote='public.ecr.aws/x3y6k8r3/koopa:debian'
+    # > remote='public.ecr.aws/acidgenomics/koopa:debian'
     # > koopa app docker build --local="$local" --remote="$remote"
     # """
     local -A app dict
