@@ -1,12 +1,12 @@
 """
 Docker image management functions.
-Updated 2024-05-05.
+Updated 2024-06-23.
 """
 
 from os.path import abspath, expanduser, isdir, join
 from subprocess import run
 
-from koopa.shell import list_subdirs
+from koopa.fs import list_subdirs
 
 
 def build_all_tags(local: str, remote: str) -> bool:
