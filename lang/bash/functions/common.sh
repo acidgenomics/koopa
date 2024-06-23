@@ -7396,7 +7396,7 @@ koopa_docker_build() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut)"
     app['date']="$(koopa_locate_date)"
-    app['docker']="$(koopa_locate_docker)"
+    app['docker']="$(koopa_locate_docker --realpath)"
     app['sort']="$(koopa_locate_sort)"
     koopa_assert_is_executable "${app[@]}"
     dict['default_tag']='latest'
@@ -7445,6 +7445,8 @@ koopa_docker_build() {
         '--remote' "${dict['remote_url']}"
     koopa_assert_is_dir "${dict['local_dir']}"
     koopa_assert_is_file "${dict['local_dir']}/Dockerfile"
+    dict['docker_bin']="$(koopa_parent_dir "${app['docker']}")"
+    koopa_add_to_path_start "${dict['docker_bin']}"
     build_args=()
     platforms=()
     tags=()
