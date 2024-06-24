@@ -4604,7 +4604,7 @@
     "version": "1.8.3"
   },
   "postgresql": {
-    "bin": ["psql"],
+    "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["make", "pkg-config"],
     "default": false,
     "dependencies": [
