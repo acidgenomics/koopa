@@ -36,7 +36,9 @@ koopa_zsh_compaudit_set_permissions() {
         # Alternative method:
         # > access="${access:(-3)}"
         case "$access" in
-            '744' | '755')
+            '700' | \
+            '744' | \
+            '755')
                 ;;
             *)
                 koopa_alert "Fixing write access at '${prefix}'."
