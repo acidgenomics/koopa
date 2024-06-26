@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Need to rework this.
+
 koopa_sys_group_name() {
     # """
     # Return the appropriate group name to use with koopa installation.
