@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Only apply sudo when group is admin group or root.
+
 koopa_sys_ln() {
     # """
     # Create a symlink quietly.

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Only apply sudo when group is admin group or root.
+
 koopa_sys_set_permissions() {
     # """
     # Set permissions on target prefix(es).
@@ -61,6 +63,8 @@ koopa_sys_set_permissions() {
     koopa_assert_has_args "$#"
     if [[ "${bool['shared']}" -eq 1 ]]
     then
+        # FIXME Need to rework sys_group_name if non-admin group for a shared
+        # install. This is an edge case but currently used on EC2.
         bool['group']="$(koopa_sys_group_name)"
         bool['user']="$(koopa_sys_user_name)"
     else
