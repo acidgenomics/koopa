@@ -31673,11 +31673,14 @@ koopa_zsh_compaudit_set_permissions() {
         fi
         access="$(koopa_stat_access_octal "$prefix")"
         access="${access: -3}"
-        if [[ "$access" != '755' ]]
-        then
-            koopa_alert "Fixing write access at '${prefix}'."
-            koopa_chmod --recursive 'g-w' "$prefix"
-        fi
+        case "$access" in
+            '744' | '755')
+                ;;
+            *)
+                koopa_alert "Fixing write access at '${prefix}'."
+                koopa_chmod --recursive 'g-w' "$prefix"
+                ;;
+        esac
     done
     return 0
 }
