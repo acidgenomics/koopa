@@ -12254,6 +12254,8 @@ ${dict['version2']}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
+            "HTTPS_PROXY=${HTTPS_PROXY:-}"
+            "HTTP_PROXY=${HTTP_PROXY:-}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
@@ -12263,6 +12265,7 @@ ${dict['version2']}"
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
+            "http_proxy=${http_proxy:-}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
         then
