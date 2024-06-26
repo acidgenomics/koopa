@@ -61,6 +61,8 @@ koopa_sys_set_permissions() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
+    # FIXME Only do this if koopa install group matches the sys group.
+    # FIXME That's the better way to detect if install is shared.
     if [[ "${bool['shared']}" -eq 1 ]]
     then
         # FIXME Need to rework sys_group_name if non-admin group for a shared
