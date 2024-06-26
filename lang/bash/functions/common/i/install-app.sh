@@ -489,16 +489,16 @@ man1/${dict2['name']}"
                     done
                 fi
             fi
-            [[ "${bool['push']}" -eq 1 ]] && \
+            if [[ "${bool['push']}" -eq 1 ]]
+            then
                 koopa_push_app_build "${dict['name']}"
+            fi
             ;;
         'system')
-            [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
+            if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+            then
                 koopa_linux_update_ldconfig
-            ;;
-        'user')
-            [[ -d "${dict['prefix']}" ]] && \
-                koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            fi
             ;;
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]

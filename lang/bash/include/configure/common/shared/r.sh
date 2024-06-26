@@ -72,12 +72,13 @@ main() {
         then
             koopa_rm "${dict['site_library']}"
         fi
-        koopa_sys_mkdir "${dict['site_library']}"
+        koopa_mkdir "${dict['site_library']}"
     fi
     koopa_r_migrate_non_base_packages "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        koopa_sys_set_permissions --recursive --sudo "${dict['site_library']}"
+        # FIXME Need to rethink permission handling.
+        # > koopa_sys_set_permissions --recursive --sudo "${dict['site_library']}"
         if koopa_is_linux
         then
             app['rstudio_server']="$( \
