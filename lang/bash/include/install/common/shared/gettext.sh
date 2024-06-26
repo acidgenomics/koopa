@@ -38,7 +38,6 @@ main() {
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
-
     conf_args=(
         '--disable-csharp'
         '--disable-debug'
