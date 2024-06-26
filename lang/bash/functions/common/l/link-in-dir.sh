@@ -64,7 +64,9 @@ koopa_link_in_dir() {
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
-    # > koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
-    koopa_sys_ln "${dict['source']}" "${dict['target']}"
+    # FIXME This is problematic on non-standard admin installs.
+    # May need to rethink debug this.
+    # > koopa_sys_ln "${dict['source']}" "${dict['target']}"
+    koopa_ln "${dict['source']}" "${dict['target']}"
     return 0
 }

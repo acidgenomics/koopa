@@ -17851,7 +17851,7 @@ koopa_link_in_dir() {
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
-    koopa_sys_ln "${dict['source']}" "${dict['target']}"
+    koopa_ln "${dict['source']}" "${dict['target']}"
     return 0
 }
 

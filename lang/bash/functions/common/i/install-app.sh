@@ -12,7 +12,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-06-15.
+    # @note Updated 2024-06-26.
     #
     # Refer to 'locale' for desired LC settings.
     #
