@@ -27925,7 +27925,7 @@ koopa_switch_to_develop() {
     dict['branch']='develop'
     dict['origin']='origin'
     dict['prefix']="$(koopa_koopa_prefix)"
-    dict['remote_url']='git@github.com:acidgenomics/koopa.git'
+    dict['ssh_url']='git@github.com:acidgenomics/koopa.git'
     dict['user']="$(koopa_user_name)"
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
@@ -27938,7 +27938,7 @@ koopa_switch_to_develop() {
         if koopa_is_github_ssh_enabled
         then
             "${app['git']}" remote set-url \
-                "${dict['origin']}" "${dict['remote_url']}"
+                "${dict['origin']}" "${dict['ssh_url']}"
         fi
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"
