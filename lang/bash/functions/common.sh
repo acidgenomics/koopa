@@ -7939,7 +7939,6 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
     dict['url']="${1:?}"
     dict['file']="${2:-}"
     curl_args+=(
-        '--disable' # Ignore '~/.curlrc'. Must come first.
         '--create-dirs'
         '--fail'
         '--location'

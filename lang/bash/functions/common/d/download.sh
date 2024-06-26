@@ -44,7 +44,7 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
     dict['file']="${2:-}"
     # Inclusion of '--progress' shows a simpler progress bar.
     curl_args+=(
-        '--disable' # Ignore '~/.curlrc'. Must come first.
+        # > '--disable' # Ignore '~/.curlrc'. Must come first.
         '--create-dirs'
         '--fail'
         '--location'
