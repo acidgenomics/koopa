@@ -53,9 +53,15 @@
     "version": "2.9.2"
   },
   "apache-arrow": {
-    "build_dependencies": ["cmake", "ninja", "pkg-config", "python3.11"],
+    "build_dependencies": [
+      "cmake",
+      "curl",
+      "ninja",
+      "pkg-config",
+      "python3.11"
+    ],
     "date": "2024-05-17",
-    "dependencies": ["curl", "openssl3"],
+    "dependencies": ["openssl3"],
     "default": false,
     "url": ["https://arrow.apache.org/"],
     "version": "16.0.0"
