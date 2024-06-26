@@ -45,18 +45,11 @@ main() {
         '-DARROW_JSON=ON'
         '-DARROW_ORC=ON'
         '-DARROW_PARQUET=ON'
+        # AWS related code is failing to build on Ubuntu 22, so disabling.
         '-DARROW_S3=OFF'
         '-DPARQUET_BUILD_EXECUTABLES=ON'
         # Build dependencies ---------------------------------------------------
         # > "-DLLVM_ROOT=${dict['llvm_root']}"
-        # If not building with LLVM, can use system.
-        # https://github.com/apache/arrow/issues/34999
-        # FIXME Don't use system, as jemalloc may not be installed.
-        # > '-Djemalloc_SOURCE=SYSTEM'
-        # FIXME Need to point to jemalloc files:
-        # > "-DjemallocAlt_INCLUDE_DIR:PATH"
-        # > "-DjemallocAlt_LIB:FILEPATH"
-        # FIXME Need to add recipe support for jemalloc.
     )
     if ! koopa_is_aarch64
     then
