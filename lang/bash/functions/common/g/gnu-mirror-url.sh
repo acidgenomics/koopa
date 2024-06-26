@@ -17,9 +17,8 @@ koopa_gnu_mirror_url() {
     # """
     local server
     koopa_assert_has_no_args "$#"
-    # FIXME Once we have sources, change to:
-    # > server='https://koopa.acidgenomics.com/src/gnu'
-    server='https://ftpmirror.gnu.org'
+    # > server='https://ftpmirror.gnu.org'
+    server='https://koopa.acidgenomics.com/src/gnu'
     koopa_print "$server"
     return 0
 }
