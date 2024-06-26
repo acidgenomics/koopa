@@ -5881,7 +5881,7 @@
       "homebrew": true
     },
     "bin": ["tmux"],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["bison", "make", "pkg-config"],
     "date": "2024-02-20",
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
