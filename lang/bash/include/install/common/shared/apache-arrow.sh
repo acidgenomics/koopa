@@ -19,6 +19,7 @@ main() {
     deps+=(
         # > 'llvm'
         'openssl3'
+        'curl'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
