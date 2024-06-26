@@ -3565,7 +3565,7 @@
     ],
     "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "18.1.6"
+    "version": "18.1.0"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
