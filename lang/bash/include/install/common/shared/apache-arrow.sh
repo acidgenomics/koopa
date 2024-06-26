@@ -45,7 +45,7 @@ main() {
         '-DARROW_JSON=ON'
         '-DARROW_ORC=ON'
         '-DARROW_PARQUET=ON'
-        '-DARROW_S3=ON'
+        '-DARROW_S3=OFF'
         '-DPARQUET_BUILD_EXECUTABLES=ON'
         # Build dependencies ---------------------------------------------------
         # > "-DLLVM_ROOT=${dict['llvm_root']}"
