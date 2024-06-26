@@ -3547,7 +3547,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2024-03-07",
+    "date": "2024-06-26",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3565,7 +3565,7 @@
     ],
     "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "18.1.0"
+    "version": "18.1.6"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
