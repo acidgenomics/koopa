@@ -47,7 +47,12 @@ main() {
         # > "-DLLVM_ROOT=${dict['llvm_root']}"
         # If not building with LLVM, can use system.
         # https://github.com/apache/arrow/issues/34999
-        '-Djemalloc_SOURCE=SYSTEM'
+        # FIXME Don't use system, as jemalloc may not be installed.
+        # > '-Djemalloc_SOURCE=SYSTEM'
+        # FIXME Need to point to jemalloc files:
+        # > "-DjemallocAlt_INCLUDE_DIR:PATH"
+        # > "-DjemallocAlt_LIB:FILEPATH"
+        # FIXME Need to add recipe support for jemalloc.
     )
     if ! koopa_is_aarch64
     then
