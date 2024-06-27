@@ -22171,6 +22171,7 @@ abort,verbose"
         koopa_sudo_write_string \
             --file="${dict['file']}" \
             --string="${dict['string']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     else
         koopa_rm "${dict['file']}"
         koopa_write_string \
@@ -27970,6 +27971,7 @@ koopa_sudo_write_string() {
 koopa_sudo() {
     local -A app
     local -a cmd
+    local orig_umask
     if [[ "$#" -eq 0 ]]
     then
         local -a pos
@@ -27977,6 +27979,8 @@ koopa_sudo() {
         set -- "${pos[@]}"
     fi
     koopa_assert_has_args "$#"
+    orig_umask="$(umask)"
+    umask 0022
     if ! koopa_is_root
     then
         koopa_assert_is_admin
@@ -27986,6 +27990,7 @@ koopa_sudo() {
     fi
     cmd+=("$@")
     "${cmd[@]}"
+    umask "$orig_umask"
     return 0
 }
 

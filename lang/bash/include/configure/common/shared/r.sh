@@ -50,24 +50,16 @@ main() {
         then
             koopa_rm --sudo "${dict['local_r']}"
         fi
-        if [[ ! -d "${dict['site_library']}" ]]
-        then
-            koopa_mkdir --sudo "${dict['site_library']}"
-            koopa_chmod --sudo '0775' "${dict['site_library']}"
-            koopa_chown --sudo --recursive \
-                "${dict['user']}:${dict['group']}" \
-                "${dict['site_library']}"
-            koopa_chmod --sudo --recursive \
-                'g+rw' "${dict['site_library']}"
-        fi
+        koopa_mkdir --sudo "${dict['site_library']}"
+        koopa_chmod --sudo '0775' "${dict['site_library']}"
+        koopa_chown --sudo --recursive \
+            "${dict['user']}:${dict['group']}" \
+            "${dict['site_library']}"
+        koopa_chmod --sudo --recursive \
+            'g+rw' "${dict['site_library']}"
     else
-        if [[ ! -d "${dict['site_library']}" ]]
-        then
-            koopa_mkdir "${dict['site_library']}"
-        fi
+        koopa_mkdir "${dict['site_library']}"
     fi
-    # FIXME Turn this off after debugging
-    umask
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
