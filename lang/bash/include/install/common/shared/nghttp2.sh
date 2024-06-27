@@ -2,7 +2,8 @@
 
 # NOTE Consider adding support for cunit here in a future update.
 
-# FIXME This is failing to build on Ubuntu 22.
+# NOTE This is failing to build on Ubuntu 22.
+# Can confirm that this is specific to 22 and builds on 24 LTS (2024-06-27).
 
 main() {
     # """
