@@ -54,7 +54,7 @@ main() {
     dict['cares']="$(koopa_app_prefix 'c-ares')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libuv']="$(koopa_app_prefix 'libuv')"
-    dict['nghttp2']="$(koopa_app_prefix 'nghttp2')"
+    # > dict['nghttp2']="$(koopa_app_prefix 'nghttp2')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
