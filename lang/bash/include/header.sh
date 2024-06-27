@@ -228,7 +228,7 @@ __koopa_bash_header() {
         trap __koopa_exit_trap EXIT
         # Disable all user-defined aliases.
         unalias -a
-        __koopa_check_umask || return 1
+        # > __koopa_check_umask || return 1
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then
