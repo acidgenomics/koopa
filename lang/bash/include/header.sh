@@ -12,6 +12,7 @@ __koopa_check_umask() {
     local umask_var
     umask_var="$(umask)"
     case "$umask_var" in
+        '0002' | '002' | \
         '0022' | '022')
             return 0
             ;;
