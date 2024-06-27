@@ -118,6 +118,14 @@ koopa_debian_apt_configure_sources() {
         koopa_alert_note "System is configured to use new 'ubuntu.sources'."
         return 0
     fi
+    # Skip if sources list doesn't contain any deb definitions.
+    if ! koopa_file_detect_regex \
+        --file="${dict['sources_list']}" \
+        --pattern='^deb\s'
+    then
+        koopa_alert_note "Failed to detect 'deb' in '${dict['sources_list']}'."
+        return 0
+    fi
     koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
     codenames['main']="${dict['os_codename']}"
     codenames['security']="${dict['os_codename']}-security"
