@@ -66,13 +66,13 @@ main() {
             koopa_mkdir "${dict['site_library']}"
         fi
     fi
+    # FIXME Turn this off after debugging
+    umask
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_copy_files_into_etc "${app['r']}"
-    # FIXME This is messing up configuration files on Debian, skip this or
-    # debug.
-    # > koopa_r_configure_java "${app['r']}"
+    koopa_r_configure_java "${app['r']}"
     koopa_r_migrate_non_base_packages "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
