@@ -12,7 +12,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-06-27.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -354,6 +354,7 @@ ${dict['version2']}"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
             "http_proxy=${http_proxy:-}"
+            "https_proxy=${https_proxy:-}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
         then

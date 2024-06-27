@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This is currently failing on EC2 with proxy server, need to debug.
-
-# FIXME This command is currently failing, need to debug:
-# > koopa_gpg_download_key_from_keyserver \
-# >     --file="/usr/share/keyrings/koopa-r.gpg" \
-# >     --key="E298A3A825C0D65DFD57CBB651716619E084DAB9" \
-# >     --keyserver="keyserver.ubuntu.com" \
-# >     --sudo
-
 koopa_gpg_download_key_from_keyserver() {
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
-    # @note Updated 2023-04-05.
+    # @note Updated 2024-06-27.
     #
     # @seealso
     # - https://superuser.com/a/1643115/589630
@@ -68,20 +59,20 @@ koopa_gpg_download_key_from_keyserver() {
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
-    set -x # FIXME
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
+        --keyserver "hkp://${dict['keyserver']}:80" \
+        --keyserver-options "http-proxy=${http_proxy:-}" \
         --quiet \
-        --keyserver "${dict['keyserver']}" \
         --recv-keys "${dict['key']}"
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
         --list-public-keys "${dict['key']}"
     "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
         --export \
-        --quiet \
+        --homedir "${dict['tmp_dir']}" \
         --output "${dict['tmp_file']}" \
+        --quiet \
         "${dict['key']}"
     koopa_assert_is_file "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"

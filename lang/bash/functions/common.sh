@@ -10431,20 +10431,20 @@ koopa_gpg_download_key_from_keyserver() {
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
-    set -x # FIXME
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
+        --keyserver "hkp://${dict['keyserver']}:80" \
+        --keyserver-options "http-proxy=${http_proxy:-}" \
         --quiet \
-        --keyserver "${dict['keyserver']}" \
         --recv-keys "${dict['key']}"
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
         --list-public-keys "${dict['key']}"
     "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
         --export \
-        --quiet \
+        --homedir "${dict['tmp_dir']}" \
         --output "${dict['tmp_file']}" \
+        --quiet \
         "${dict['key']}"
     koopa_assert_is_file "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
@@ -12325,6 +12325,7 @@ ${dict['version2']}"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
             "http_proxy=${http_proxy:-}"
+            "https_proxy=${https_proxy:-}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
         then
