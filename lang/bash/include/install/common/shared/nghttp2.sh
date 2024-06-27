@@ -52,6 +52,6 @@ v${dict['version']}/nghttp2-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_make_build --jobs=1 "${conf_args[@]}"
+    koopa_make_build "${conf_args[@]}"
     return 0
 }
