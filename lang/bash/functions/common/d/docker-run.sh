@@ -101,13 +101,15 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
-    # Ensure proxy server settings pass through.
-    run_args+=(
-        -e "HTTP_PROXY=${HTTP_PROXY:-}"
-        -e "HTTPS_PROXY=${HTTPS_PROXY:-}"
-        -e "http_proxy=${http_proxy:-}"
-        -e "https_proxy=${https_proxy:-}"
-    )
+    # Ensure proxy server settings pass through, if defined in environment.
+    [[ -n "${HTTP_PROXY:-}" ]] &&
+        run_args+=('-e' "HTTP_PROXY=${HTTP_PROXY:?}")
+    [[ -n "${HTTPS_PROXY:-}" ]] &&
+        run_args+=('-e' "HTTPS_PROXY=${HTTPS_PROXY:?}")
+    [[ -n "${http_proxy:-}" ]] &&
+        run_args+=('-e' "http_proxy=${http_proxy:?}")
+    [[ -n "${https_proxy:-}" ]] &&
+        run_args+=('-e' "https_proxy=${https_proxy:?}")
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }

@@ -51,8 +51,9 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--retry' 5
         '--show-error'
     )
-    # Handle self-signed TLS certificate issue weirdness with Zscaler.
-    if koopa_is_macos && [[ -d '/Applications/Zscaler' ]]
+    # If running through proxy server, set insecure to ignore self-signed
+    # certificate error.
+    if [[ -n "${http_proxy:-}" ]]
     then
         curl_args+=('--insecure')
     fi

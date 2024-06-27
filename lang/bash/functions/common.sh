@@ -7842,6 +7842,14 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
+    [[ -n "${HTTP_PROXY:-}" ]] &&
+        run_args+=('-e' "HTTP_PROXY=${HTTP_PROXY:?}")
+    [[ -n "${HTTPS_PROXY:-}" ]] &&
+        run_args+=('-e' "HTTPS_PROXY=${HTTPS_PROXY:?}")
+    [[ -n "${http_proxy:-}" ]] &&
+        run_args+=('-e' "http_proxy=${http_proxy:?}")
+    [[ -n "${https_proxy:-}" ]] &&
+        run_args+=('-e' "https_proxy=${https_proxy:?}")
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }
@@ -7984,7 +7992,7 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--retry' 5
         '--show-error'
     )
-    if koopa_is_macos && [[ -d '/Applications/Zscaler' ]]
+    if [[ -n "${http_proxy:-}" ]]
     then
         curl_args+=('--insecure')
     fi

@@ -43,6 +43,7 @@ main() {
         'openssl3'
         'python3.11'
         'c-ares'
+        # Hitting an nghttp2 build issue on Ubuntu 22, so disabling here.
         # > 'nghttp2'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
