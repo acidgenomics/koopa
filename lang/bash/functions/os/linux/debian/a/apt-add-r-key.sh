@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting a key export error with proxy server:
+# keyserver receive failed: Connection timed out
+
+# FIXME Need to look into keyserver function for download issue.
+
 koopa_debian_apt_add_r_key() {
     # """
     # Add the R key.
-    # @note Updated 2023-04-06.
+    # @note Updated 2024-06-27.
     #
     # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
     # file is deprecated in Debian, but currently the only supported method for
