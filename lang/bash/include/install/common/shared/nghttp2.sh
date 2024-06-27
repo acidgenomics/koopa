@@ -2,10 +2,12 @@
 
 # NOTE Consider adding support for cunit here in a future update.
 
+# FIXME This is failing to build on Ubuntu 22.
+
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2024-01-23.
+    # @note Updated 2024-06-27.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -50,6 +52,6 @@ v${dict['version']}/nghttp2-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    koopa_make_build --jobs=1 "${conf_args[@]}"
     return 0
 }
