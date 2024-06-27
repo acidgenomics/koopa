@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2023-10-09.
+    # @note Updated 2024-06-27
     #
     # The default Java path differs depending on the system.
     #
@@ -78,5 +78,13 @@ koopa_r_configure_java() {
     fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
+    # Avoid issue of modified ldpaths returning 0600, unreadable to users.
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        dict['ldpaths']="${dict['r_prefix']}/etc/ldpaths"
+        koopa_assert_is_file "${dict['ldpaths']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
+    fi
     return 0
 }

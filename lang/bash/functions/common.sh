@@ -22231,6 +22231,13 @@ koopa_r_configure_java() {
     fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
+        dict['ldpaths']="${dict['r_prefix']}/etc/ldpaths"
+        koopa_assert_is_file "${dict['ldpaths']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
+    fi
     return 0
 }
 
