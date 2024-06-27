@@ -207,7 +207,7 @@ __koopa_bash_header() {
         # Ensure scripts create files with expected permissions. This is
         # standard on Debian and macOS. Systems that change from this default
         # to a more restrictive setting (i.e. 0077) can break install scripts.
-        umask 022
+        umask 0022
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then
