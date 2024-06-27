@@ -49,6 +49,11 @@ main() {
     koopa_r_configure_java "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
+        dict['local_site_library']='/usr/local/lib/R/site-library'
+        if [[ -d "${dict['local_site_library']}" ]]
+        then
+            koopa_rm --sudo "${dict['local_site_library']}"
+        fi
         if [[ -L "${dict['site_library']}" ]]
         then
             koopa_rm --sudo "${dict['site_library']}"
@@ -60,17 +65,6 @@ main() {
             "${dict['site_library']}"
         koopa_chmod --sudo --recursive \
             'g+rw' "${dict['site_library']}"
-        # Ensure default site-library for Debian/Ubuntu is writable.
-        dict['site_library_2']='/usr/local/lib/R/site-library'
-        if [[ -d "${dict['site_library_2']}" ]]
-        then
-            koopa_chmod --sudo '0775' "${dict['site_library_2']}"
-            koopa_chown --sudo --recursive \
-                "${dict['admin_user']}:${dict['admin_group']}" \
-                "${dict['site_library_2']}"
-            koopa_chmod --sudo --recursive \
-                'g+rw' "${dict['site_library_2']}"
-        fi
     else
         if [[ -L "${dict['site_library']}" ]]
         then
