@@ -171,7 +171,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2023-05-18.
+    # @note Updated 2024-06-27.
     #
     # @seealso
     # - shopt
@@ -204,6 +204,10 @@ __koopa_bash_header() {
         trap __koopa_exit_trap EXIT
         # Disable all user-defined aliases.
         unalias -a
+        # Ensure scripts create files with expected permissions. This is
+        # standard on Debian and macOS. Systems that change from this default
+        # to a more restrictive setting (i.e. 0077) can break install scripts.
+        umask 022
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then

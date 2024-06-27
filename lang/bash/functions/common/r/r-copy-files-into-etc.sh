@@ -41,7 +41,7 @@ koopa_r_copy_files_into_etc() {
         if [[ "${bool['system']}" -eq 1 ]]
         then
             koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
-            koopa_chmod 0644 "${dict2['target']}"
+            koopa_chmod --sudo 0644 "${dict2['target']}"
         else
             koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi

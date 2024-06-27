@@ -36,13 +36,6 @@ koopa_r_configure_java() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    # Debian/Ubuntu configuration seems to be a bit buggy and munges symlinks
-    # in etc when running this, so disabling for the moment.
-    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_debian_like
-    then
-        koopa_alert_note 'Skipping Java configuration.'
-        return 0
-    fi
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
