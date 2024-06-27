@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2024-06-27
+    # @note Updated 2024-06-27.
     #
     # The default Java path differs depending on the system.
     #
@@ -36,6 +36,13 @@ koopa_r_configure_java() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    # Debian/Ubuntu configuration seems to be a bit buggy and munges symlinks
+    # in etc when running this, so disabling for the moment.
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_debian_like
+    then
+        koopa_alert_note 'Skipping Java configuration.'
+        return 0
+    fi
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
@@ -78,13 +85,5 @@ koopa_r_configure_java() {
     fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
-    # Avoid issue of modified ldpaths returning 0600, unreadable to users.
-    if [[ "${bool['system']}" -eq 1 ]]
-    then
-        dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        dict['ldpaths']="${dict['r_prefix']}/etc/ldpaths"
-        koopa_assert_is_file "${dict['ldpaths']}"
-        koopa_chmod --sudo 0644 "${dict['ldpaths']}"
-    fi
     return 0
 }

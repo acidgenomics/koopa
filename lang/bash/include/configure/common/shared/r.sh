@@ -41,37 +41,38 @@ main() {
         readarray -t deps <<< "$(koopa_app_dependencies 'r')"
         koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
         koopa_cli_install "${deps[@]}"
+
+    fi
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        dict['local_r']='/usr/local/lib/R'
+        if [[ -d "${dict['local_r']}" ]]
+        then
+            koopa_rm --sudo "${dict['local_r']}"
+        fi
+        if [[ ! -d "${dict['site_library']}" ]]
+        then
+            koopa_mkdir --sudo "${dict['site_library']}"
+            koopa_chmod --sudo '0775' "${dict['site_library']}"
+            koopa_chown --sudo --recursive \
+                "${dict['user']}:${dict['group']}" \
+                "${dict['site_library']}"
+            koopa_chmod --sudo --recursive \
+                'g+rw' "${dict['site_library']}"
+        fi
+    else
+        if [[ ! -d "${dict['site_library']}" ]]
+        then
+            koopa_mkdir "${dict['site_library']}"
+        fi
     fi
     koopa_r_configure_environ "${app['r']}"
     koopa_r_configure_ldpaths "${app['r']}"
     koopa_r_configure_makevars "${app['r']}"
     koopa_r_copy_files_into_etc "${app['r']}"
-    koopa_r_configure_java "${app['r']}"
-    if [[ "${bool['system']}" -eq 1 ]]
-    then
-        dict['local_site_library']='/usr/local/lib/R/site-library'
-        if [[ -d "${dict['local_site_library']}" ]]
-        then
-            koopa_rm --sudo "${dict['local_site_library']}"
-        fi
-        if [[ -L "${dict['site_library']}" ]]
-        then
-            koopa_rm --sudo "${dict['site_library']}"
-        fi
-        koopa_mkdir --sudo "${dict['site_library']}"
-        koopa_chmod --sudo '0775' "${dict['site_library']}"
-        koopa_chown --sudo --recursive \
-            "${dict['user']}:${dict['group']}" \
-            "${dict['site_library']}"
-        koopa_chmod --sudo --recursive \
-            'g+rw' "${dict['site_library']}"
-    else
-        if [[ -L "${dict['site_library']}" ]]
-        then
-            koopa_rm "${dict['site_library']}"
-        fi
-        koopa_mkdir "${dict['site_library']}"
-    fi
+    # FIXME This is messing up configuration files on Debian, skip this or
+    # debug.
+    # > koopa_r_configure_java "${app['r']}"
     koopa_r_migrate_non_base_packages "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then

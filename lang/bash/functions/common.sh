@@ -22189,6 +22189,11 @@ koopa_r_configure_java() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_debian_like
+    then
+        koopa_alert_note 'Skipping Java configuration.'
+        return 0
+    fi
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
         bool['use_apps']=0
@@ -22231,13 +22236,6 @@ koopa_r_configure_java() {
     fi
     koopa_assert_is_executable "${app[@]}"
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
-    if [[ "${bool['system']}" -eq 1 ]]
-    then
-        dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
-        dict['ldpaths']="${dict['r_prefix']}/etc/ldpaths"
-        koopa_assert_is_file "${dict['ldpaths']}"
-        koopa_chmod --sudo 0644 "${dict['ldpaths']}"
-    fi
     return 0
 }
 
@@ -22716,6 +22714,7 @@ koopa_r_copy_files_into_etc() {
         if [[ "${bool['system']}" -eq 1 ]]
         then
             koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
+            koopa_chmod 0644 "${dict2['target']}"
         else
             koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi
