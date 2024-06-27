@@ -195,6 +195,7 @@ libexec/lib/server}")
         koopa_sudo_write_string \
             --file="${dict['file']}" \
             --string="${dict['string']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     else
         if [[ ! -f "${dict['file_bak']}" ]]
         then
