@@ -12336,6 +12336,7 @@ ${dict['version2']}"
             "HTTPS_PROXY=${HTTPS_PROXY:-}"
             "HTTP_PROXY=${HTTP_PROXY:-}"
             'KOOPA_ACTIVATE=0'
+            "KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:-}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${bool['verbose']}"
