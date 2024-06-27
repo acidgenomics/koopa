@@ -3,7 +3,7 @@
 main() {
     # """
     # Apply bootstrap configuration to our Debian/Ubuntu builder instances.
-    # @note Updated 2023-11-03.
+    # @note Updated 2024-06-27.
     #
     # @section apt install:
     #
@@ -80,7 +80,7 @@ END
         --frontend='noninteractive' locales
     koopa_sudo "${app['update_locale']}" LANG='en_US.UTF-8'
     # > koopa_debian_needrestart_noninteractive
-    koopa_enable_passwordless_sudo
+    # > koopa_enable_passwordless_sudo
     koopa_linux_configure_system_sshd
     koopa_alert_success 'Configuration of system defaults was successful.'
     return 0
