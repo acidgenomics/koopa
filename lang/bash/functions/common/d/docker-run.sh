@@ -3,7 +3,7 @@
 koopa_docker_run() {
     # """
     # Run Docker image.
-    # @note Updated 2023-06-29.
+    # @note Updated 2024-06-27.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -101,6 +101,13 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
+    # Ensure proxy server settings pass through.
+    run_args+=(
+        -e "HTTP_PROXY=${HTTP_PROXY:-}"
+        -e "HTTPS_PROXY=${HTTPS_PROXY:-}"
+        -e "http_proxy=${http_proxy:-}"
+        -e "https_proxy=${https_proxy:-}"
+    )
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }
