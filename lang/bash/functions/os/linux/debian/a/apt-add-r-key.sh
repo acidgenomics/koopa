@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting a key export error with proxy server:
-# keyserver receive failed: Connection timed out
-
-# FIXME Need to look into keyserver function for download issue.
-
 koopa_debian_apt_add_r_key() {
     # """
     # Add the R key.

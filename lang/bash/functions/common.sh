@@ -10431,6 +10431,7 @@ koopa_gpg_download_key_from_keyserver() {
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
+    set -x # FIXME
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
         --quiet \
