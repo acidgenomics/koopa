@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is currently failing on EC2 with proxy server, need to debug.
+
 koopa_gpg_download_key_from_keyserver() {
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
