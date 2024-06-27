@@ -406,6 +406,20 @@ END
     return 0
 }
 
+koopa_admin_group_id() {
+    local -A app dict
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group_name']="$(koopa_admin_group_name)"
+    dict['group_id']="$( \
+        koopa_getent 'group' "${dict['group_name']}" \
+        | "${app['cut']}" -d ':' -f 3 \
+    )"
+    [[ -n "${dict['group_id']}" ]] || return 1
+    koopa_print "${dict['group_id']}"
+    return 0
+}
+
 koopa_admin_group_name() {
     local group
     koopa_assert_has_no_args "$#"
@@ -434,6 +448,16 @@ koopa_admin_group_name() {
         koopa_stop 'Failed to determine admin group.'
     fi
     koopa_print "$group"
+    return 0
+}
+
+koopa_admin_user_id() {
+    koopa_print '0'
+    return 0
+}
+
+koopa_admin_user_name() {
+    koopa_print 'root'
     return 0
 }
 
@@ -9751,6 +9775,33 @@ koopa_get_version() {
         [[ -n "${dict['str']}" ]] || return 1
         koopa_print "${dict['str']}"
     done
+    return 0
+}
+
+koopa_getent() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 2
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    if [[ "${1:?}" = 'hosts' ]]
+    then
+        dict['str']="$( \
+            "${app['sed']}" 's/#.*//' "/etc/${1:?}" \
+            | "${app['grep']}" -w "${2:?}" \
+        )"
+    elif [[ "${2:?}" = '<->' ]]
+    then
+        dict['str']="$( \
+            "${app['grep']}" ":${2:?}:[^:]*$" "/etc/${1:?}" \
+        )"
+    else
+        dict['str']="$( \
+            "${app['grep']}" "^${2:?}:" "/etc/${1:?}" \
+        )"
+    fi
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
     return 0
 }
 

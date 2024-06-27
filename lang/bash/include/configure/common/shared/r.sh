@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure R.
-    # @note Updated 2023-10-24.
+    # @note Updated 2024-06-27.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -27,6 +27,13 @@ main() {
     dict['name']='r'
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        dict['admin_user']="$(koopa_admin_user_name)"
+        dict['admin_group']="$(koopa_admin_group_name)"
+        dict['user']="$(koopa_user_name)"
+        dict['group']="$(koopa_group_name)"
+    fi
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_macos
@@ -42,9 +49,6 @@ main() {
     koopa_r_configure_java "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        dict['group']="$(koopa_admin_group_name)"
-        dict['user']='root'
-        # > dict['user']="$(koopa_user_name)"
         if [[ -L "${dict['site_library']}" ]]
         then
             koopa_rm --sudo "${dict['site_library']}"
@@ -62,7 +66,7 @@ main() {
         then
             koopa_chmod --sudo '0775' "${dict['site_library_2']}"
             koopa_chown --sudo --recursive \
-                "${dict['user']}:${dict['group']}" \
+                "${dict['admin_user']}:${dict['admin_group']}" \
                 "${dict['site_library_2']}"
             koopa_chmod --sudo --recursive \
                 'g+rw' "${dict['site_library_2']}"
@@ -77,8 +81,11 @@ main() {
     koopa_r_migrate_non_base_packages "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        # FIXME Need to rethink permission handling.
-        # > koopa_sys_set_permissions --recursive --sudo "${dict['site_library']}"
+        koopa_chown --sudo --recursive \
+            "${dict['user']}:${dict['group']}" \
+            "${dict['site_library']}"
+        koopa_chmod --sudo --recursive \
+            'g+rw' "${dict['site_library']}"
         if koopa_is_linux
         then
             app['rstudio_server']="$( \
