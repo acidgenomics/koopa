@@ -4189,7 +4189,6 @@
       "c-ares",
       "icu4c",
       "libuv",
-      "nghttp2",
       "openssl3",
       "python3.11",
       "zlib"

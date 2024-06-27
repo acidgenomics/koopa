@@ -43,7 +43,7 @@ main() {
         'openssl3'
         'python3.11'
         'c-ares'
-        'nghttp2'
+        # > 'nghttp2'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -75,9 +75,9 @@ cacert.pem"
         '--shared-libuv'
         "--shared-libuv-includes=${dict['libuv']}/include"
         "--shared-libuv-libpath=${dict['libuv']}/lib"
-        '--shared-nghttp2'
-        "--shared-nghttp2-includes=${dict['nghttp2']}/include"
-        "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
+        # > '--shared-nghttp2'
+        # > "--shared-nghttp2-includes=${dict['nghttp2']}/include"
+        # > "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
         '--shared-openssl'
         "--shared-openssl-includes=${dict['openssl']}/include"
         "--shared-openssl-libpath=${dict['openssl']}/lib"
