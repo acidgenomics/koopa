@@ -375,6 +375,12 @@ koopa_debian_apt_configure_sources() {
 '${dict['sources_list']}'. File does not exist."
         return 0
     fi
+    if koopa_is_ubuntu_like && \
+        [[ -f '/etc/apt/sources.list.d/ubuntu.sources' ]]
+    then
+        koopa_alert_note "System is configured to use new 'ubuntu.sources'."
+        return 0
+    fi
     koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
     codenames['main']="${dict['os_codename']}"
     codenames['security']="${dict['os_codename']}-security"
