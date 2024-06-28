@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Check if we need to update ownership after change in 2024-06.
+
 koopa_update_koopa() {
     # """
     # Update koopa installation.
