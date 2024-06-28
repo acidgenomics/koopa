@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename in koopa cli to 'koopa install-all-apps'
+
 koopa_install_all_supported() {
     # """
     # Install all supported apps.
