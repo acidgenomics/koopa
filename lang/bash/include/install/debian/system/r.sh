@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This installing R 4.1.2 on Ubuntu 22, which we don't want.
+# Need to check this inside of Docker to see if behavior is consistent.
+
 main() {
     # """
     # Install latest version of R from CRAN.
