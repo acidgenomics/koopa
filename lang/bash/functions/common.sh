@@ -10463,6 +10463,7 @@ koopa_gpg_download_key_from_keyserver() {
         --quiet \
         "${dict['key']}"
     koopa_assert_is_file "${dict['tmp_file']}"
+    koopa_chmod 0644 "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"
