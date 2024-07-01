@@ -3,7 +3,7 @@
 koopa_debian_apt_get() {
     # """
     # Non-interactive variant of apt-get, with saner defaults.
-    # @note Updated 2023-05-12.
+    # @note Updated 2024-07-01.
     #
     # @section Automatic dpkg configuration:
     #
@@ -55,6 +55,10 @@ koopa_debian_apt_get() {
         '-o' 'Dpkg::Options::=--force-confdef'
         '-o' 'Dpkg::Options::=--force-confold'
     )
+    if [[ -n "${http_proxy:-}" ]]
+    then
+        apt_args+=('-o' "Acquire::http::Proxy='${http_proxy:?}';")
+    fi
     # Dropping into a subshell here so we don't inherit any shell changes.
     (
         koopa_add_to_path_end '/usr/sbin' '/sbin'

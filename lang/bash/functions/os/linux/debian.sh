@@ -457,6 +457,26 @@ END
     return 0
 }
 
+koopa_debian_apt_delete_key() {
+    local -A dict
+    local name
+    koopa_assert_has_args "$#"
+    koopa_assert_is_admin
+    dict['prefix']="$(koopa_debian_apt_key_prefix)"
+    for name in "$@"
+    do
+        local file
+        file="${dict['prefix']}/koopa-${name}.gpg"
+        if [[ ! -f "$file" ]]
+        then
+            koopa_alert_note "File does not exist: '${file}'."
+            continue
+        fi
+        koopa_rm --sudo "$file"
+    done
+    return 0
+}
+
 koopa_debian_apt_delete_repo() {
     local -A dict
     local name
@@ -571,6 +591,10 @@ koopa_debian_apt_get() {
         '-o' 'Dpkg::Options::=--force-confdef'
         '-o' 'Dpkg::Options::=--force-confold'
     )
+    if [[ -n "${http_proxy:-}" ]]
+    then
+        apt_args+=('-o' "Acquire::http::Proxy='${http_proxy:?}';")
+    fi
     (
         koopa_add_to_path_end '/usr/sbin' '/sbin'
         export DEBCONF_NONINTERACTIVE_SEEN='true'
