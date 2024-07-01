@@ -9,7 +9,7 @@ koopa_gpg_download_key_from_keyserver() {
     # - https://superuser.com/a/1643115/589630
     # """
     local -A app dict
-    local -a cp
+    local -a cp gpg_args
     koopa_assert_has_args "$#"
     app['gpg']="$(koopa_locate_gpg --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -59,12 +59,17 @@ koopa_gpg_download_key_from_keyserver() {
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
-    "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
-        --keyserver "hkp://${dict['keyserver']}:80" \
-        --keyserver-options "http-proxy=${http_proxy:-}" \
-        --quiet \
-        --recv-keys "${dict['key']}"
+    gpg_args=(
+        '--homedir' "${dict['tmp_dir']}"
+        '--keyserver' "hkp://${dict['keyserver']}:80"
+        '--quiet'
+        '--recv-keys' "${dict['key']}"
+    )
+    if [[ -n "${http_proxy:-}" ]]
+    then
+        gpg_args+=('--keyserver-options' "http-proxy=${http_proxy:-}")
+    fi
+    "${app['gpg']}" "${gpg_args[@]}"
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
         --list-public-keys "${dict['key']}"
