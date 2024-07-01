@@ -62,13 +62,15 @@ koopa_gpg_download_key_from_keyserver() {
     gpg_args=(
         '--homedir' "${dict['tmp_dir']}"
         '--keyserver' "hkp://${dict['keyserver']}:80"
-        '--quiet'
-        '--recv-keys' "${dict['key']}"
     )
     if [[ -n "${http_proxy:-}" ]]
     then
-        gpg_args+=('--keyserver-options' "http-proxy=${http_proxy:-}")
+        gpg_args+=('--keyserver-options' "http-proxy=${http_proxy:?}")
     fi
+    gpg_args+=(
+        '--quiet'
+        '--recv-keys' "${dict['key']}"
+    )
     "${app['gpg']}" "${gpg_args[@]}"
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
