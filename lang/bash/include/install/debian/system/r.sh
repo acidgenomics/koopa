@@ -92,10 +92,13 @@ main() {
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
     koopa_debian_apt_install "${pkgs[@]}"
+    if [[ -n "${http_proxy:-}" ]]
+    then
+        koopa_debian_apt_delete_repo 'r'
+        koopa_debian_apt_delete_key 'r'
+    fi
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
     koopa_configure_r "${app['r']}"
-    koopa_debian_apt_delete_repo 'r'
-    koopa_debian_apt_delete_key 'r'
     return 0
 }
