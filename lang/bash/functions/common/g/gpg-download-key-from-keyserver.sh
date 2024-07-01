@@ -8,12 +8,12 @@ koopa_gpg_download_key_from_keyserver() {
     # @seealso
     # - https://superuser.com/a/1643115/589630
     # """
-    local -A app dict
+    local -A app bool dict
     local -a cp gpg_args
     koopa_assert_has_args "$#"
     app['gpg']="$(koopa_locate_gpg --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['sudo']=0
+    bool['sudo']=0
     dict['tmp_dir']="$(koopa_tmp_dir)"
     dict['tmp_file']="${dict['tmp_dir']}/export.gpg"
     while (("$#"))
@@ -46,7 +46,7 @@ koopa_gpg_download_key_from_keyserver() {
                 ;;
             # Flags ------------------------------------------------------------
             '--sudo')
-                dict['sudo']=1
+                bool['sudo']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -58,7 +58,7 @@ koopa_gpg_download_key_from_keyserver() {
     [[ -f "${dict['file']}" ]] && return 0
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
-    [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
+    [[ "${bool['sudo']}" -eq 1 ]] && cp+=('--sudo')
     gpg_args=(
         '--homedir' "${dict['tmp_dir']}"
         '--keyserver' "hkp://${dict['keyserver']}:80"
@@ -82,8 +82,12 @@ koopa_gpg_download_key_from_keyserver() {
         --quiet \
         "${dict['key']}"
     koopa_assert_is_file "${dict['tmp_file']}"
-    koopa_chmod 0644 "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
+    # Harden against restrictive umask blocking key access.
+    if [[ "${bool['sudo']}" -eq 1 ]]
+    then
+        koopa_chmod --sudo 0644 "${dict['tmp_file']}"
+    fi
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"
     return 0
