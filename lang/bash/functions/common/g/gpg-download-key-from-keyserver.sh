@@ -86,7 +86,7 @@ koopa_gpg_download_key_from_keyserver() {
     # Harden against restrictive umask blocking key access.
     if [[ "${bool['sudo']}" -eq 1 ]]
     then
-        koopa_chmod --sudo 0644 "${dict['tmp_file']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     fi
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"

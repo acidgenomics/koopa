@@ -10473,7 +10473,7 @@ koopa_gpg_download_key_from_keyserver() {
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
     if [[ "${bool['sudo']}" -eq 1 ]]
     then
-        koopa_chmod --sudo 0644 "${dict['tmp_file']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     fi
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"
