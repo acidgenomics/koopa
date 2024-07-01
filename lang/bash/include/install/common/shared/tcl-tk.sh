@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Hitting file download issue with sourceforge on EC2.
-
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2023-06-02.
+    # @note Updated 2024-07-01.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -32,17 +30,18 @@ main() {
     koopa_activate_app --build-only 'pkg-config'
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['url_stem']='https://prdownloads.sourceforge.net/tcl'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['url_stem']="https://downloads.sourceforge.net/project/tcl/\
+Tcl/${dict['version']}"
+    dict['tcl_url']="${dict['url_stem']}/tcl${dict['version']}-src.tar.gz"
+    dict['tk_url']="${dict['url_stem']}/tk${dict['version']}-src.tar.gz"
     conf_args=(
         '--disable-static'
         '--enable-shared'
         '--enable-threads'
         "--prefix=${dict['prefix']}"
     )
-    dict['tcl_url']="${dict['url_stem']}/tcl${dict['version']}-src.tar.gz"
-    dict['tk_url']="${dict['url_stem']}/tk${dict['version']}-src.tar.gz"
     koopa_download "${dict['tcl_url']}"
     koopa_download "${dict['tk_url']}"
     koopa_extract "$(koopa_basename "${dict['tcl_url']}")" 'tcl-src'
