@@ -35,7 +35,8 @@ koopa_r_configure_ldpaths() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
-        # > bool['use_apps']=0
+        # FIXME This is breaking aws cli on EC2 Ubuntu 22, need to debug.
+        bool['use_apps']=0
         koopa_alert_note 'Skipping ldpaths configuration.'
         return 0
     fi
