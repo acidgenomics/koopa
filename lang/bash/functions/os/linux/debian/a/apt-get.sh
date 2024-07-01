@@ -57,7 +57,7 @@ koopa_debian_apt_get() {
     )
     if [[ -n "${http_proxy:-}" ]]
     then
-        apt_args+=('-o' "Acquire::http::Proxy='${http_proxy:?}';")
+        apt_args+=('-o' "Acquire::http::Proxy=${http_proxy:?};")
     fi
     # Dropping into a subshell here so we don't inherit any shell changes.
     (

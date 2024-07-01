@@ -593,7 +593,7 @@ koopa_debian_apt_get() {
     )
     if [[ -n "${http_proxy:-}" ]]
     then
-        apt_args+=('-o' "Acquire::http::Proxy='${http_proxy:?}';")
+        apt_args+=('-o' "Acquire::http::Proxy=${http_proxy:?};")
     fi
     (
         koopa_add_to_path_end '/usr/sbin' '/sbin'
