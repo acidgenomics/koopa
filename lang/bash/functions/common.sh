@@ -22289,7 +22289,8 @@ koopa_r_configure_ldpaths() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
-        bool['use_apps']=0
+        koopa_alert_note 'Skipping ldpaths configuration.'
+        return 0
     fi
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
