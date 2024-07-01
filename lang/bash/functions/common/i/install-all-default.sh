@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Rename this in cli to 'koopa install-default-apps'
+
 koopa_install_all_default() {
     # """
     # Install all default apps.

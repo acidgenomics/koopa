@@ -1364,6 +1364,7 @@
   "dotfiles": {
     "date": "2024-06-27",
     "default": true,
+    "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
     "version": "c4f4012085d183b562cfbbc751780cf7f3599462"
   },

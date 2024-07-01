@@ -2135,7 +2135,7 @@ koopa_aws_ec2_stop() {
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_alert "Stopping EC2 instance '${dict['id']}'."
     "${app['aws']}" ec2 stop-instances \
-        --instance-id "${dict['id']}" \
+        --instance-ids "${dict['id']}" \
         --no-cli-pager \
         --output 'text' \
         --profile "${dict['profile']}"
@@ -2167,7 +2167,7 @@ koopa_aws_ec2_terminate() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     "${app['aws']}" ec2 terminate-instances \
-        --instance-id "${dict['id']}" \
+        --instance-ids "${dict['id']}" \
         --no-cli-pager \
         --output 'text' \
         --profile "${dict['profile']}"
