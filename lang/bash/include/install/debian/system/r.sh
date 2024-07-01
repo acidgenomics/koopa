@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME This installing R 4.1.2 on Ubuntu 22, which we don't want.
-# Need to check this inside of Docker to see if behavior is consistent.
-
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2023-05-15.
+    # @note Updated 2024-07-01.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -98,5 +95,7 @@ main() {
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
     koopa_configure_r "${app['r']}"
+    koopa_debian_apt_delete_repo 'r'
+    koopa_debian_apt_delete_key 'r'
     return 0
 }
