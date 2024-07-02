@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME We need to improve linkage to openssl3 here, otherwise seeing
+# library linkage error on Ubuntu 22.
+
 main() {
     # """
     # Install AWS CLI.
-    # @note Updated 2024-06-15.
+    # @note Updated 2024-07-02.
     #
     # @seealso
     # - https://github.com/aws/aws-cli/tree/v2/
@@ -13,7 +16,10 @@ main() {
     # - https://github.com/aws/aws-cli/discussions/8299/
     # """
     local -A app dict
-    local -a conf_args
+    local -a conf_args deps
+    # Need to include this, otherwise we hit ssl linkage issues on Ubuntu.
+    deps+=('openssl3')
+    koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python311 --allow-missing)"
     if [[ ! -x "${app['python']}" ]]
     then
