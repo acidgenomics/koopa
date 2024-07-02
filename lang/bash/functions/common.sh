@@ -7818,7 +7818,15 @@ koopa_docker_run() {
             ;;
     esac
     "${app['docker']}" pull "${dict['image']}"
-    run_args=('--interactive' '--tty')
+    [[ -n "${HTTP_PROXY:-}" ]] &&
+        run_args+=('--env' "HTTP_PROXY=${HTTP_PROXY:?}")
+    [[ -n "${HTTPS_PROXY:-}" ]] &&
+        run_args+=('--env' "HTTPS_PROXY=${HTTPS_PROXY:?}")
+    [[ -n "${http_proxy:-}" ]] &&
+        run_args+=('--env' "http_proxy=${http_proxy:?}")
+    [[ -n "${https_proxy:-}" ]] &&
+        run_args+=('--env' "https_proxy=${https_proxy:?}")
+    run_args+=('--interactive' '--tty')
     if [[ "${dict['bind']}" -eq 1 ]]
     then
         if [[ "${HOME:?}" == "${PWD:?}" ]]
@@ -7842,14 +7850,6 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
-    [[ -n "${HTTP_PROXY:-}" ]] &&
-        run_args+=('-e' "HTTP_PROXY=${HTTP_PROXY:?}")
-    [[ -n "${HTTPS_PROXY:-}" ]] &&
-        run_args+=('-e' "HTTPS_PROXY=${HTTPS_PROXY:?}")
-    [[ -n "${http_proxy:-}" ]] &&
-        run_args+=('-e' "http_proxy=${http_proxy:?}")
-    [[ -n "${https_proxy:-}" ]] &&
-        run_args+=('-e' "https_proxy=${https_proxy:?}")
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }
@@ -22289,6 +22289,7 @@ koopa_r_configure_ldpaths() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
     then
+        bool['use_apps']=0
         koopa_alert_note 'Skipping ldpaths configuration.'
         return 0
     fi
