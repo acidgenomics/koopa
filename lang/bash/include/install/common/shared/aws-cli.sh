@@ -6,6 +6,8 @@
 # FIXME Including openssl3 here still isn't fixing linkage issue...this may
 # be an open problem with aws-cli
 
+# FIXME Can work on burning LD_LIBRARY_PATH with openssl3 in the main aws binary.
+
 main() {
     # """
     # Install AWS CLI.
