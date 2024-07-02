@@ -2,6 +2,9 @@
 
 # FIXME We need to improve linkage to openssl3 here, otherwise seeing
 # library linkage error on Ubuntu 22.
+#
+# FIXME Including openssl3 here still isn't fixing linkage issue...this may
+# be an open problem with aws-cli
 
 main() {
     # """
