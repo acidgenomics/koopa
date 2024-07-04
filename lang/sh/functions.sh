@@ -1435,7 +1435,21 @@ _koopa_cpu_count() {
     fi
     __kvar_bin_prefix="$(_koopa_bin_prefix)"
     __kvar_getconf='/usr/bin/getconf'
-    __kvar_nproc="${__kvar_bin_prefix}/gnproc"
+    if [ -d "$__kvar_bin_prefix" ] && [ -x "${__kvar_bin_prefix}/gnproc" ]
+    then
+        __kvar_nproc="${__kvar_bin_prefix}/gnproc"
+    else
+        __kvar_nproc=''
+    fi
+    if [ -d "$__kvar_bin_prefix" ] && [ -x "${__kvar_bin_prefix}/python3" ]
+    then
+        __kvar_python="${__kvar_bin_prefix}/python3"
+    elif [ -x '/usr/bin/python3' ]
+    then
+        __kvar_python='/usr/bin/python3'
+    else
+        __kvar_python=''
+    fi
     __kvar_sysctl='/usr/sbin/sysctl'
     if [ -x "$__kvar_nproc" ]
     then
@@ -1449,9 +1463,10 @@ _koopa_cpu_count() {
             "$__kvar_sysctl" -n 'hw.ncpu' \
             | cut -d ' ' -f 2 \
         )"
-    else
+    elif [ -x "$__kvar_python" ]
+    then
         __kvar_num="$( \
-            python3 -c \
+            "$__kvar_python" -c \
                 "import multiprocessing; print(multiprocessing.cpu_count())" \
             2>/dev/null \
             || true \
@@ -1464,6 +1479,7 @@ _koopa_cpu_count() {
         __kvar_getconf \
         __kvar_nproc \
         __kvar_num \
+        __kvar_python \
         __kvar_sysctl
     return 0
 }
