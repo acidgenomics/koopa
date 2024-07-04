@@ -3,7 +3,7 @@
 koopa_aws_ec2_terminate() {
     # """
     # Terminate current AWS EC2 instance.
-    # @note Updated 2023-07-18.
+    # @note Updated 2024-06-28.
     #
     # Since this is a destructive action, don't make available in the koopa CLI.
     #
@@ -36,7 +36,7 @@ koopa_aws_ec2_terminate() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     "${app['aws']}" ec2 terminate-instances \
-        --instance-id "${dict['id']}" \
+        --instance-ids "${dict['id']}" \
         --no-cli-pager \
         --output 'text' \
         --profile "${dict['profile']}"

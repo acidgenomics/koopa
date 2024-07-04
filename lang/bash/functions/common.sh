@@ -406,6 +406,20 @@ END
     return 0
 }
 
+koopa_admin_group_id() {
+    local -A app dict
+    app['cut']="$(koopa_locate_cut --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['group_name']="$(koopa_admin_group_name)"
+    dict['group_id']="$( \
+        koopa_getent 'group' "${dict['group_name']}" \
+        | "${app['cut']}" -d ':' -f 3 \
+    )"
+    [[ -n "${dict['group_id']}" ]] || return 1
+    koopa_print "${dict['group_id']}"
+    return 0
+}
+
 koopa_admin_group_name() {
     local group
     koopa_assert_has_no_args "$#"
@@ -434,6 +448,16 @@ koopa_admin_group_name() {
         koopa_stop 'Failed to determine admin group.'
     fi
     koopa_print "$group"
+    return 0
+}
+
+koopa_admin_user_id() {
+    koopa_print '0'
+    return 0
+}
+
+koopa_admin_user_name() {
+    koopa_print 'root'
     return 0
 }
 
@@ -1180,7 +1204,9 @@ koopa_assert_is_admin() {
     koopa_assert_has_no_args "$#"
     if ! koopa_is_admin
     then
-        koopa_stop 'Administrator account is required.'
+        koopa_stop \
+            'Administrator account is required.' \
+            "You may need to run 'sudo -v' to elevate current user."
     fi
     return 0
 }
@@ -2109,7 +2135,7 @@ koopa_aws_ec2_stop() {
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     koopa_alert "Stopping EC2 instance '${dict['id']}'."
     "${app['aws']}" ec2 stop-instances \
-        --instance-id "${dict['id']}" \
+        --instance-ids "${dict['id']}" \
         --no-cli-pager \
         --output 'text' \
         --profile "${dict['profile']}"
@@ -2141,7 +2167,7 @@ koopa_aws_ec2_terminate() {
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
     "${app['aws']}" ec2 terminate-instances \
-        --instance-id "${dict['id']}" \
+        --instance-ids "${dict['id']}" \
         --no-cli-pager \
         --output 'text' \
         --profile "${dict['profile']}"
@@ -4257,6 +4283,14 @@ koopa_can_build_binary() {
 }
 
 koopa_can_install_binary() {
+    case "${KOOPA_CAN_INSTALL_BINARY:-}" in
+        '0')
+            return 1
+            ;;
+        '1')
+            return 0
+            ;;
+    esac
     koopa_can_build_binary && return 1
     koopa_has_private_access || return 1
     return 0
@@ -7396,7 +7430,7 @@ koopa_docker_build() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut)"
     app['date']="$(koopa_locate_date)"
-    app['docker']="$(koopa_locate_docker)"
+    app['docker']="$(koopa_locate_docker --realpath)"
     app['sort']="$(koopa_locate_sort)"
     koopa_assert_is_executable "${app[@]}"
     dict['default_tag']='latest'
@@ -7445,6 +7479,8 @@ koopa_docker_build() {
         '--remote' "${dict['remote_url']}"
     koopa_assert_is_dir "${dict['local_dir']}"
     koopa_assert_is_file "${dict['local_dir']}/Dockerfile"
+    dict['docker_bin']="$(koopa_parent_dir "${app['docker']}")"
+    koopa_add_to_path_start "${dict['docker_bin']}"
     build_args=()
     platforms=()
     tags=()
@@ -7806,6 +7842,14 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
+    [[ -n "${HTTP_PROXY:-}" ]] &&
+        run_args+=('-e' "HTTP_PROXY=${HTTP_PROXY:?}")
+    [[ -n "${HTTPS_PROXY:-}" ]] &&
+        run_args+=('-e' "HTTPS_PROXY=${HTTPS_PROXY:?}")
+    [[ -n "${http_proxy:-}" ]] &&
+        run_args+=('-e' "http_proxy=${http_proxy:?}")
+    [[ -n "${https_proxy:-}" ]] &&
+        run_args+=('-e' "https_proxy=${https_proxy:?}")
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }
@@ -7874,6 +7918,11 @@ koopa_dotfiles_config_link() {
     return 0
 }
 
+koopa_dotfiles_private_prefix() {
+    koopa_print "$(koopa_config_prefix)/dotfiles-private"
+    return 0
+}
+
 koopa_dotfiles_prefix() {
     _koopa_dotfiles_prefix "$@"
 }
@@ -7937,14 +7986,13 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
     dict['url']="${1:?}"
     dict['file']="${2:-}"
     curl_args+=(
-        '--disable' # Ignore '~/.curlrc'. Must come first.
         '--create-dirs'
         '--fail'
         '--location'
         '--retry' 5
         '--show-error'
     )
-    if koopa_is_macos && [[ -d '/Applications/Zscaler' ]]
+    if [[ -n "${http_proxy:-}" ]]
     then
         curl_args+=('--insecure')
     fi
@@ -9746,6 +9794,33 @@ koopa_get_version() {
     return 0
 }
 
+koopa_getent() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 2
+    app['grep']="$(koopa_locate_grep --allow-system)"
+    app['sed']="$(koopa_locate_sed --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    if [[ "${1:?}" = 'hosts' ]]
+    then
+        dict['str']="$( \
+            "${app['sed']}" 's/#.*//' "/etc/${1:?}" \
+            | "${app['grep']}" -w "${2:?}" \
+        )"
+    elif [[ "${2:?}" = '<->' ]]
+    then
+        dict['str']="$( \
+            "${app['grep']}" ":${2:?}:[^:]*$" "/etc/${1:?}" \
+        )"
+    else
+        dict['str']="$( \
+            "${app['grep']}" "^${2:?}:" "/etc/${1:?}" \
+        )"
+    fi
+    [[ -n "${dict['str']}" ]] || return 1
+    koopa_print "${dict['str']}"
+    return 0
+}
+
 koopa_git_branch() {
     local -A app
     koopa_assert_has_args "$#"
@@ -10318,7 +10393,7 @@ koopa_git_submodule_init() {
 koopa_gnu_mirror_url() {
     local server
     koopa_assert_has_no_args "$#"
-    server='https://ftp.gnu.org/gnu'
+    server='https://ftpmirror.gnu.org'
     koopa_print "$server"
     return 0
 }
@@ -10374,17 +10449,18 @@ koopa_gpg_download_key_from_keyserver() {
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
+        --keyserver "hkp://${dict['keyserver']}:80" \
+        --keyserver-options "http-proxy=${http_proxy:-}" \
         --quiet \
-        --keyserver "${dict['keyserver']}" \
         --recv-keys "${dict['key']}"
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
         --list-public-keys "${dict['key']}"
     "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
         --export \
-        --quiet \
+        --homedir "${dict['tmp_dir']}" \
         --output "${dict['tmp_file']}" \
+        --quiet \
         "${dict['key']}"
     koopa_assert_is_file "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
@@ -10616,6 +10692,10 @@ koopa_grep() {
     fi
 }
 
+koopa_group_id() {
+    _koopa_group_id "$@"
+}
+
 koopa_group_name() {
     _koopa_group_name "$@"
 }
@@ -10740,6 +10820,18 @@ koopa_has_private_access() {
     koopa_file_detect_regex \
         --file="$file" \
         --pattern='^\[acidgenomics\]$'
+}
+
+koopa_has_standard_umask() {
+    case "$(umask)" in
+        '0002' | '002' | \
+        '0022' | '022')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 koopa_header() {
@@ -12249,7 +12341,10 @@ ${dict['version2']}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
+            "HTTPS_PROXY=${HTTPS_PROXY:-}"
+            "HTTP_PROXY=${HTTP_PROXY:-}"
             'KOOPA_ACTIVATE=0'
+            "KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:-}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${bool['verbose']}"
@@ -12258,6 +12353,8 @@ ${dict['version2']}"
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
+            "http_proxy=${http_proxy:-}"
+            "https_proxy=${https_proxy:-}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
         then
@@ -12334,11 +12431,6 @@ ${dict['version2']}"
     fi
     case "${dict['mode']}" in
         'shared')
-            if [[ "${bool['auto_prefix']}" -eq 1 ]]
-            then
-                koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
-            fi
-            koopa_sys_set_permissions --recursive "${dict['prefix']}"
             if [[ "${bool['link_in_opt']}" -eq 1 ]]
             then
                 koopa_link_in_opt \
@@ -12394,16 +12486,16 @@ man1/${dict2['name']}"
                     done
                 fi
             fi
-            [[ "${bool['push']}" -eq 1 ]] && \
+            if [[ "${bool['push']}" -eq 1 ]]
+            then
                 koopa_push_app_build "${dict['name']}"
+            fi
             ;;
         'system')
-            [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
+            if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+            then
                 koopa_linux_update_ldconfig
-            ;;
-        'user')
-            [[ -d "${dict['prefix']}" ]] && \
-                koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            fi
             ;;
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]
@@ -13931,8 +14023,15 @@ koopa_install_koopa() {
         koopa_alert_info 'Shared installation detected.'
         koopa_alert_note 'Admin (sudo) permissions are required.'
         koopa_assert_is_admin
+        dict['user_id']="$(koopa_user_id)"
+        dict['group_id']="$(koopa_group_id)"
         koopa_cp --sudo "${dict['source_prefix']}" "${dict['prefix']}"
-        koopa_sys_set_permissions --recursive --sudo "${dict['prefix']}"
+        koopa_chown \
+            --dereference \
+            --recursive \
+            --sudo \
+            "${dict['user_id']}:${dict['group_id']}" \
+            "${dict['prefix']}"
         koopa_add_make_prefix_link "${dict['prefix']}"
     else
         koopa_cp "${dict['source_prefix']}" "${dict['prefix']}"
@@ -17854,7 +17953,7 @@ koopa_link_in_dir() {
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
-    koopa_sys_ln "${dict['source']}" "${dict['target']}"
+    koopa_ln "${dict['source']}" "${dict['target']}"
     return 0
 }
 
@@ -21493,8 +21592,7 @@ ${dict['py_maj_min_ver']}"
         if [[ ! -d "${dict['app_prefix']}" ]]
         then
             koopa_alert "Configuring venv prefix at '${dict['app_prefix']}'."
-            koopa_sys_mkdir "${dict['app_prefix']}"
-            koopa_sys_set_permissions "$(koopa_dirname "${dict['app_prefix']}")"
+            koopa_mkdir "${dict['app_prefix']}"
         fi
         koopa_link_in_opt \
             --name="${dict['app_bn']}" \
@@ -21502,7 +21600,7 @@ ${dict['py_maj_min_ver']}"
     fi
     [[ -d "${dict['prefix']}" ]] && koopa_rm "${dict['prefix']}"
     koopa_assert_is_not_dir "${dict['prefix']}"
-    koopa_sys_mkdir "${dict['prefix']}"
+    koopa_mkdir "${dict['prefix']}"
     unset -v PYTHONPATH
     venv_args=()
     if [[ "${bool['pip']}" -eq 0 ]]
@@ -21540,7 +21638,6 @@ ${dict['py_maj_min_ver']}"
         pip_args+=("${pkgs[@]}")
         koopa_python_pip_install "${pip_args[@]}"
     fi
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
     return 0
 }
 
@@ -22103,6 +22200,7 @@ abort,verbose"
         koopa_sudo_write_string \
             --file="${dict['file']}" \
             --string="${dict['string']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     else
         koopa_rm "${dict['file']}"
         koopa_write_string \
@@ -22121,9 +22219,10 @@ koopa_r_configure_java() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
+    if [[ "${bool['system']}" -eq 1 ]]
     then
-        bool['use_apps']=0
+        koopa_has_standard_umask || return 0
+        koopa_is_linux && bool['use_apps']=0
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
@@ -22328,6 +22427,7 @@ libexec/lib/server}")
         koopa_sudo_write_string \
             --file="${dict['file']}" \
             --string="${dict['string']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     else
         if [[ ! -f "${dict['file_bak']}" ]]
         then
@@ -22640,6 +22740,7 @@ koopa_r_copy_files_into_etc() {
         if [[ "${bool['system']}" -eq 1 ]]
         then
             koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
+            koopa_chmod --sudo 0644 "${dict2['target']}"
         else
             koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi
@@ -23098,9 +23199,9 @@ koopa_read() {
     local -A dict
     local -a read_args
     koopa_assert_has_args_eq "$#" 2
-    dict['default']="${2:?}"
+    dict['default']="${2:-}"
     dict['prompt']="${1:?} [${dict['default']}]: "
-    read_args=(
+    read_args+=(
         '-e'
         '-i' "${dict['default']}"
         '-p' "${dict['prompt']}"
@@ -27928,7 +28029,7 @@ koopa_switch_to_develop() {
     dict['branch']='develop'
     dict['origin']='origin'
     dict['prefix']="$(koopa_koopa_prefix)"
-    dict['remote_url']='git@github.com:acidgenomics/koopa.git'
+    dict['ssh_url']='git@github.com:acidgenomics/koopa.git'
     dict['user']="$(koopa_user_name)"
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
@@ -27941,7 +28042,7 @@ koopa_switch_to_develop() {
         if koopa_is_github_ssh_enabled
         then
             "${app['git']}" remote set-url \
-                "${dict['origin']}" "${dict['remote_url']}"
+                "${dict['origin']}" "${dict['ssh_url']}"
         fi
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"
@@ -27949,135 +28050,6 @@ koopa_switch_to_develop() {
         "${app['git']}" checkout --track "${dict['origin']}/${dict['branch']}"
     )
     koopa_zsh_compaudit_set_permissions
-    return 0
-}
-
-koopa_sys_group_name() {
-    local group
-    koopa_assert_has_no_args "$#"
-    if koopa_is_shared_install
-    then
-        group="$(koopa_admin_group_name)"
-    else
-        group="$(koopa_group_name)"
-    fi
-    koopa_print "$group"
-    return 0
-}
-
-koopa_sys_ln() {
-    local -A dict
-    koopa_assert_has_args_eq "$#" 2
-    dict['source']="${1:?}"
-    dict['target']="${2:?}"
-    koopa_rm "${dict['target']}"
-    koopa_ln "${dict['source']}" "${dict['target']}"
-    koopa_sys_set_permissions --no-dereference "${dict['target']}"
-    return 0
-}
-
-koopa_sys_mkdir() {
-    koopa_assert_has_args "$#"
-    koopa_mkdir "$@"
-    koopa_sys_set_permissions "$@"
-    return 0
-}
-
-koopa_sys_set_permissions() {
-    local -A bool
-    local -a chmod_args chown_args pos
-    local arg
-    koopa_assert_has_args "$#"
-    bool['dereference']=1
-    bool['recursive']=0
-    bool['shared']=1
-    bool['sudo']=0
-    chmod_args=()
-    chown_args=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--dereference' | \
-            '-H')
-                bool['dereference']=1
-                shift 1
-                ;;
-            '--no-dereference' | \
-            '-h')
-                bool['dereference']=0
-                shift 1
-                ;;
-            '--recursive' | \
-            '-R' | \
-            '-r')
-                bool['recursive']=1
-                shift 1
-                ;;
-            '--sudo' | \
-            '-S')
-                bool['sudo']=1
-                shift 1
-                ;;
-            '--user' | \
-            '-u')
-                bool['shared']=0
-                shift 1
-                ;;
-            '-'*)
-                koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_assert_has_args "$#"
-    if [[ "${bool['shared']}" -eq 1 ]]
-    then
-        bool['group']="$(koopa_sys_group_name)"
-        bool['user']="$(koopa_sys_user_name)"
-    else
-        bool['group']="$(koopa_group_name)"
-        bool['user']="$(koopa_user_name)"
-    fi
-    chown_args+=('--no-dereference')
-    if [[ "${bool['recursive']}" -eq 1 ]]
-    then
-        chmod_args+=('--recursive')
-        chown_args+=('--recursive')
-    fi
-    if [[ "${bool['sudo']}" -eq 1 ]]
-    then
-        chmod_args+=('--sudo')
-        chown_args+=('--sudo')
-    fi
-    if koopa_is_shared_install
-    then
-        chmod_args+=('u+rw,g+rw,o+r,o-w')
-    else
-        chmod_args+=('u+rw,g+r,g-w,o+r,o-w')
-    fi
-    chown_args+=("${bool['user']}:${bool['group']}")
-    for arg in "$@"
-    do
-        if [[ "${bool['dereference']}" -eq 1 ]] && [[ -L "$arg" ]]
-        then
-            arg="$(koopa_realpath "$arg")"
-        fi
-        chmod_args+=("$arg")
-        chown_args+=("$arg")
-        koopa_chmod "${chmod_args[@]}"
-        koopa_chown "${chown_args[@]}"
-    done
-    return 0
-}
-
-koopa_sys_user_name() {
-    koopa_assert_has_no_args "$#"
-    koopa_print "$(koopa_user_name)"
     return 0
 }
 
@@ -31797,11 +31769,16 @@ koopa_zsh_compaudit_set_permissions() {
         fi
         access="$(koopa_stat_access_octal "$prefix")"
         access="${access: -3}"
-        if [[ "$access" != '755' ]]
-        then
-            koopa_alert "Fixing write access at '${prefix}'."
-            koopa_chmod --recursive 'g-w' "$prefix"
-        fi
+        case "$access" in
+            '700' | \
+            '744' | \
+            '755')
+                ;;
+            *)
+                koopa_alert "Fixing write access at '${prefix}'."
+                koopa_chmod --recursive 'g-w' "$prefix"
+                ;;
+        esac
     done
     return 0
 }

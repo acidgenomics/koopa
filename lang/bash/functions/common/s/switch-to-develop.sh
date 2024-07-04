@@ -3,10 +3,13 @@
 # FIXME This isn't switching the origin correctly to SSH on EC2.
 # git remote set-url origin git@github.com:acidgenomics/koopa.git
 
+# FIXME This is hanging on new EC2 instance, need to debug.
+# I think it is likely the 'koopa_is_github_ssh_enabled' step.
+
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2023-05-14.
+    # @note Updated 2024-06-26.
     #
     # @seealso
     # - https://stackoverflow.com/questions/49297153/
@@ -19,7 +22,7 @@ koopa_switch_to_develop() {
     dict['branch']='develop'
     dict['origin']='origin'
     dict['prefix']="$(koopa_koopa_prefix)"
-    dict['remote_url']='git@github.com:acidgenomics/koopa.git'
+    dict['ssh_url']='git@github.com:acidgenomics/koopa.git'
     dict['user']="$(koopa_user_name)"
     koopa_alert "Switching koopa at '${dict['prefix']}' to '${dict['branch']}'."
     (
@@ -32,7 +35,7 @@ koopa_switch_to_develop() {
         if koopa_is_github_ssh_enabled
         then
             "${app['git']}" remote set-url \
-                "${dict['origin']}" "${dict['remote_url']}"
+                "${dict['origin']}" "${dict['ssh_url']}"
         fi
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"

@@ -3,7 +3,7 @@
 koopa_macos_enable_plist_file() {
     # """
     # Enable a disabled plist file correponding to a launch agent or daemon.
-    # @note Updated 2023-05-01.
+    # @note Updated 2024-06-28.
     # """
     local -A app
     local file
@@ -13,11 +13,10 @@ koopa_macos_enable_plist_file() {
     koopa_assert_is_not_file "$@"
     for file in "$@"
     do
-
-        local -A dict
-        dict['daemon']=0
+        local -A bool dict
+        bool['daemon']=0
+        bool['sudo']=1
         dict['enabled_file']="$file"
-        dict['sudo']=1
         dict['disabled_file']="$(koopa_dirname "${dict['enabled_file']}")/\
 disabled/$(koopa_basename "${dict['enabled_file']}")"
         koopa_alert "Enabling '${dict['enabled_file']}'."
@@ -25,21 +24,21 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
             --string="${dict['enabled_file']}" \
             --pattern='/LaunchDaemons/'
         then
-            dict['daemon']=1
+            bool['daemon']=1
         fi
         if koopa_str_detect_regex \
             --string="${dict['enabled_file']}" \
             --pattern="^${HOME:?}"
         then
-            dict['sudo']=0
+            bool['sudo']=0
         fi
-        if [[ "${dict['sudo']}" -eq 1 ]]
+        if [[ "${bool['sudo']}" -eq 1 ]]
         then
             koopa_assert_is_admin
             koopa_mv --sudo \
                 "${dict['disabled_file']}" \
                 "${dict['enabled_file']}"
-            if [[ "${dict['daemon']}" -eq 1 ]]
+            if [[ "${bool['daemon']}" -eq 1 ]]
             then
                 koopa_sudo \
                     "${app['launchctl']}" load "${dict['enabled_file']}"
@@ -48,7 +47,7 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
             koopa_mv \
                 "${dict['disabled_file']}" \
                 "${dict['enabled_file']}"
-            if [[ "${dict['daemon']}" -eq 1 ]]
+            if [[ "${bool['daemon']}" -eq 1 ]]
             then
                 "${app['launchctl']}" load "${dict['enabled_file']}"
             fi

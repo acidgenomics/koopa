@@ -3,7 +3,7 @@
 koopa_r_copy_files_into_etc() {
     # """
     # Copy R config files into 'etc/'.
-    # @note Updated 2023-07-12.
+    # @note Updated 2024-06-27.
     #
     # Don't copy Makevars file across machines.
     # """
@@ -41,6 +41,7 @@ koopa_r_copy_files_into_etc() {
         if [[ "${bool['system']}" -eq 1 ]]
         then
             koopa_cp --sudo "${dict2['source']}" "${dict2['target']}"
+            koopa_chmod --sudo 0644 "${dict2['target']}"
         else
             koopa_cp "${dict2['source']}" "${dict2['target']}"
         fi
