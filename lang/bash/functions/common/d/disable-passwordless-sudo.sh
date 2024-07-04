@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Add option for current user only.
+
 koopa_disable_passwordless_sudo() {
     # """
     # Disable passwordless sudo access for all admin users.

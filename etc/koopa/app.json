@@ -53,9 +53,15 @@
     "version": "2.9.2"
   },
   "apache-arrow": {
-    "build_dependencies": ["cmake", "ninja", "pkg-config", "python3.11"],
+    "build_dependencies": [
+      "cmake",
+      "curl",
+      "ninja",
+      "pkg-config",
+      "python3.11"
+    ],
     "date": "2024-05-17",
-    "dependencies": ["llvm", "openssl3"],
+    "dependencies": ["openssl3"],
     "default": false,
     "url": ["https://arrow.apache.org/"],
     "version": "16.0.0"
@@ -1356,10 +1362,11 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-06-14",
+    "date": "2024-06-27",
     "default": true,
+    "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "c3bc3cce0b4285cc956674fdc01a56a20f1663e1"
+    "version": "c4f4012085d183b562cfbbc751780cf7f3599462"
   },
   "du-dust": {
     "aliases": {
@@ -2150,6 +2157,7 @@
     "bin": ["go"],
     "date": "2024-02-07",
     "default": false,
+    "outdated": true,
     "url": ["https://golang.org/dl/"],
     "version": "1.22.0"
   },
@@ -3546,7 +3554,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2024-03-07",
+    "date": "2024-06-26",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3562,6 +3570,7 @@
       "zlib",
       "zstd"
     ],
+    "notes": ["FIXME Currently failing to build on Ubuntu 22 instance."],
     "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "18.1.0"
@@ -4181,7 +4190,6 @@
       "c-ares",
       "icu4c",
       "libuv",
-      "nghttp2",
       "openssl3",
       "python3.11",
       "zlib"
@@ -4603,7 +4611,7 @@
     "version": "1.8.3"
   },
   "postgresql": {
-    "bin": ["psql"],
+    "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["make", "pkg-config"],
     "default": false,
     "dependencies": [
@@ -5873,7 +5881,7 @@
       "homebrew": true
     },
     "bin": ["tmux"],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["bison", "make", "pkg-config"],
     "date": "2024-02-20",
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
