@@ -3,7 +3,7 @@
 koopa_docker_build() {
     # """
     # Build and push a multi-architecture Docker image using buildx.
-    # @note Updated 2023-03-16.
+    # @note Updated 2024-06-23.
     #
     # @details
     # Potentially useful arguments:
@@ -31,8 +31,8 @@ koopa_docker_build() {
     #       on-an-m1-mac/
     #
     # @examples
-    # > local="${HOME}/.config/koopa/docker/acidgenomics/koopa/debian"
-    # > remote='public.ecr.aws/x3y6k8r3/koopa:debian'
+    # > local="${HOME}/monorepo/docker/acidgenomics/koopa/debian"
+    # > remote='public.ecr.aws/acidgenomics/koopa:debian'
     # > koopa app docker build --local="$local" --remote="$remote"
     # """
     local -A app dict
@@ -41,7 +41,7 @@ koopa_docker_build() {
     koopa_assert_has_args "$#"
     app['cut']="$(koopa_locate_cut)"
     app['date']="$(koopa_locate_date)"
-    app['docker']="$(koopa_locate_docker)"
+    app['docker']="$(koopa_locate_docker --realpath)"
     app['sort']="$(koopa_locate_sort)"
     koopa_assert_is_executable "${app[@]}"
     dict['default_tag']='latest'
@@ -94,6 +94,8 @@ koopa_docker_build() {
         '--remote' "${dict['remote_url']}"
     koopa_assert_is_dir "${dict['local_dir']}"
     koopa_assert_is_file "${dict['local_dir']}/Dockerfile"
+    dict['docker_bin']="$(koopa_parent_dir "${app['docker']}")"
+    koopa_add_to_path_start "${dict['docker_bin']}"
     build_args=()
     platforms=()
     tags=()

@@ -8,12 +8,11 @@ main() {
     # Consider adding tmux to enabled login shells in a future update.
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
-        'libevent' \
-        'ncurses' \
-        'utf8proc'
+    local -a build_deps conf_args deps
+    build_deps+=('bison' 'pkg-config')
+    deps+=('libevent' 'ncurses' 'utf8proc')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(

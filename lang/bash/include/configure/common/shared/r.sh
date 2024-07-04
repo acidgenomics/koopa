@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure R.
-    # @note Updated 2023-10-24.
+    # @note Updated 2024-06-27.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -27,6 +27,13 @@ main() {
     dict['name']='r'
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     dict['site_library']="${dict['r_prefix']}/site-library"
+    if [[ "${bool['system']}" -eq 1 ]]
+    then
+        dict['admin_user']="$(koopa_admin_user_name)"
+        dict['admin_group']="$(koopa_admin_group_name)"
+        dict['user']="$(koopa_user_name)"
+        dict['group']="$(koopa_group_name)"
+    fi
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
     if [[ "${bool['system']}" -eq 1 ]] && koopa_is_macos
@@ -34,20 +41,14 @@ main() {
         readarray -t deps <<< "$(koopa_app_dependencies 'r')"
         koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
         koopa_cli_install "${deps[@]}"
+
     fi
-    koopa_r_configure_environ "${app['r']}"
-    koopa_r_configure_ldpaths "${app['r']}"
-    koopa_r_configure_makevars "${app['r']}"
-    koopa_r_copy_files_into_etc "${app['r']}"
-    koopa_r_configure_java "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        dict['group']="$(koopa_admin_group_name)"
-        dict['user']='root'
-        # > dict['user']="$(koopa_user_name)"
-        if [[ -L "${dict['site_library']}" ]]
+        dict['local_r']='/usr/local/lib/R'
+        if [[ -d "${dict['local_r']}" ]]
         then
-            koopa_rm --sudo "${dict['site_library']}"
+            koopa_rm --sudo "${dict['local_r']}"
         fi
         koopa_mkdir --sudo "${dict['site_library']}"
         koopa_chmod --sudo '0775' "${dict['site_library']}"
@@ -56,28 +57,22 @@ main() {
             "${dict['site_library']}"
         koopa_chmod --sudo --recursive \
             'g+rw' "${dict['site_library']}"
-        # Ensure default site-library for Debian/Ubuntu is writable.
-        dict['site_library_2']='/usr/local/lib/R/site-library'
-        if [[ -d "${dict['site_library_2']}" ]]
-        then
-            koopa_chmod --sudo '0775' "${dict['site_library_2']}"
-            koopa_chown --sudo --recursive \
-                "${dict['user']}:${dict['group']}" \
-                "${dict['site_library_2']}"
-            koopa_chmod --sudo --recursive \
-                'g+rw' "${dict['site_library_2']}"
-        fi
     else
-        if [[ -L "${dict['site_library']}" ]]
-        then
-            koopa_rm "${dict['site_library']}"
-        fi
-        koopa_sys_mkdir "${dict['site_library']}"
+        koopa_mkdir "${dict['site_library']}"
     fi
+    koopa_r_configure_environ "${app['r']}"
+    koopa_r_configure_ldpaths "${app['r']}"
+    koopa_r_configure_makevars "${app['r']}"
+    koopa_r_copy_files_into_etc "${app['r']}"
+    koopa_r_configure_java "${app['r']}"
     koopa_r_migrate_non_base_packages "${app['r']}"
     if [[ "${bool['system']}" -eq 1 ]]
     then
-        koopa_sys_set_permissions --recursive --sudo "${dict['site_library']}"
+        koopa_chown --sudo --recursive \
+            "${dict['user']}:${dict['group']}" \
+            "${dict['site_library']}"
+        koopa_chmod --sudo --recursive \
+            'g+rw' "${dict['site_library']}"
         if koopa_is_linux
         then
             app['rstudio_server']="$( \

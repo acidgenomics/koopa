@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# FIXME Ubuntu 24 has moved to a new format, defined in:
+# /etc/apt/sources.list.d/ubuntu.sources
+
 koopa_debian_apt_configure_sources() {
     # """
     # Configure apt sources.
-    # @note Updated 2023-06-29.
+    # @note Updated 2024-06-27.
     #
     # Note that new Debian 12 Docker base image moves configuration to
     # /etc/apt/sources.list.d/debian.sources
@@ -106,6 +109,21 @@ koopa_debian_apt_configure_sources() {
     then
         koopa_alert_info "Skipping apt configuration at \
 '${dict['sources_list']}'. File does not exist."
+        return 0
+    fi
+    # Ubuntu 24 LTS has changed to new ubuntu.sources format.
+    if koopa_is_ubuntu_like && \
+        [[ -f '/etc/apt/sources.list.d/ubuntu.sources' ]]
+    then
+        koopa_alert_note "System is configured to use new 'ubuntu.sources'."
+        return 0
+    fi
+    # Skip if sources list doesn't contain any deb definitions.
+    if ! koopa_file_detect_regex \
+        --file="${dict['sources_list']}" \
+        --pattern='^deb\s'
+    then
+        koopa_alert_note "Failed to detect 'deb' in '${dict['sources_list']}'."
         return 0
     fi
     koopa_alert "Configuring apt sources in '${dict['sources_list']}'."
