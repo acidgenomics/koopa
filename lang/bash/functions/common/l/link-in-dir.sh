@@ -3,7 +3,7 @@
 koopa_link_in_dir() {
     # """
     # Symlink multiple programs in a directory.
-    # @note Updated 2023-04-06.
+    # @note Updated 2024-06-26.
     #
     # @usage
     # > koopa_link_in_dir \
@@ -64,7 +64,6 @@ koopa_link_in_dir() {
     dict['prefix']="$(koopa_realpath "${dict['prefix']}")"
     dict['target']="${dict['prefix']}/${dict['name']}"
     koopa_assert_is_existing "${dict['source']}"
-    # > koopa_alert "Linking '${dict['source']}' -> '${dict['target']}'."
-    koopa_sys_ln "${dict['source']}" "${dict['target']}"
+    koopa_ln "${dict['source']}" "${dict['target']}"
     return 0
 }

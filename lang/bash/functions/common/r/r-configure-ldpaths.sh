@@ -3,7 +3,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2023-10-09.
+    # @note Updated 2024-06-27.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -195,6 +195,7 @@ libexec/lib/server}")
         koopa_sudo_write_string \
             --file="${dict['file']}" \
             --string="${dict['string']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     else
         if [[ ! -f "${dict['file_bak']}" ]]
         then

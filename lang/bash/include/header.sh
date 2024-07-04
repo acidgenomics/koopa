@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+# > __koopa_check_umask() {
+# >     # """
+# >     # Return with error on overly restrictive umask.
+# >     # @note Updated 2024-06-27.
+# >     #
+# >     # Ensure scripts create files with expected permissions. This is
+# >     # standard on Debian and macOS. Systems that change from this default to
+# >     # a more restrictive setting (i.e. 0077) can break install scripts.
+# >     # """
+# >     local umask_var
+# >     umask_var="$(umask)"
+# >     case "$umask_var" in
+# >         '0002' | '002' | \
+# >         '0022' | '022')
+# >             return 0
+# >             ;;
+# >     esac
+# >     __koopa_warn \
+# >         "Unsupported umask detected: '${umask_var}'." \
+# >         "Check config in '/etc/profile', '/etc/profile.d', '~/.profile'." \
+# >         "Contact your server administrator and request '0022' instead."
+# >     return 1
+# > }
+
 __koopa_error_trap() {
     # """
     # Set a trap for any errors.
@@ -171,7 +195,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2023-05-18.
+    # @note Updated 2024-06-27.
     #
     # @seealso
     # - shopt
@@ -204,6 +228,7 @@ __koopa_bash_header() {
         trap __koopa_exit_trap EXIT
         # Disable all user-defined aliases.
         unalias -a
+        # > __koopa_check_umask || return 1
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then

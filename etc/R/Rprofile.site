@@ -628,6 +628,8 @@ local({
     ## - https://github.com/rstudio/rstudio/issues/10311
     ## nolint start
     if (isTRUE(flag[["rstudio"]]) && isInstalled("later")) {
+        ## FIXME We may want to only do this on macOS.
+        ## FIXME Consider informing the user if later package is not installed.
         Sys.setenv("_PATH" = Sys.getenv("PATH"))
         restoreDefaultPath <- function() {
             Sys.setenv("RSTUDIO_PATH" = Sys.getenv("PATH"))
@@ -653,6 +655,7 @@ local({
             isTRUE(nzchar(dict[["theme_light"]])) &&
             all(isInstalled(c("later", "rstudioapi")))
     ) {
+        ## FIXME Consider informing the user if later package is not installed.
         autoDark <- function() {
             themes <- c(
                 "dark" = dict[["theme_dark"]],

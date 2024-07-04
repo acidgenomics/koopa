@@ -3,6 +3,25 @@
 # NOTE Rework this using a cmake dict.
 # NOTE Check that files and dirs exist, where relevant.
 
+# FIXME Hitting build issue on Ubuntu 22:
+# In file included from /tmp/tmp.T9ukeZ8kih/src/llvm/include/llvm/ADT/APFloat.h:18,
+#                  from /tmp/tmp.T9ukeZ8kih/src/clang/include/clang/AST/APNumericStorage.h:12,
+#                  from /tmp/tmp.T9ukeZ8kih/src/clang/include/clang/AST/Decl.h:16,
+#                  from /tmp/tmp.T9ukeZ8kih/src/clang/lib/Sema/CoroutineStmtBuilder.h:16,
+#                  from /tmp/tmp.T9ukeZ8kih/src/clang/lib/Sema/TreeTransform.h:16,
+#                  from /tmp/tmp.T9ukeZ8kih/src/clang/lib/Sema/SemaOpenMP.cpp:14:
+# In destructor 'llvm::APInt::~APInt()',
+#     inlined from 'llvm::APSInt::~APSInt()' at /tmp/tmp.T9ukeZ8kih/src/llvm/include/llvm/ADT/APSInt.h:23:21,
+#     inlined from 'bool checkOMPArraySectionConstantForReduction(clang::ASTContext&, const clang::OMPArraySectionExpr*, bool&, llvm::SmallVectorImpl<llvm::APSInt>&)' at /tmp/tmp.T9ukeZ8kih/src/clang/lib/Sema/SemaOpenMP.cpp:19384:45,
+#     inlined from 'bool actOnOMPReductionKindClause(clang::Sema&, {anonymous}::DSAStackTy*, clang::OpenMPClauseKind, llvm::ArrayRef<clang::Expr*>, clang::SourceLocation, clang::SourceLocation, clang::SourceLocation, clang::SourceLocation, clang::CXXScopeSpec&, const clang::DeclarationNameInfo&, llvm::ArrayRef<clang::Expr*>, {anonymous}::ReductionData&)' at /tmp/tmp.T9ukeZ8kih/src/clang/lib/Sema/SemaOpenMP.cpp:19742:68:
+# /tmp/tmp.T9ukeZ8kih/src/llvm/include/llvm/ADT/APInt.h:170:18: warning: 'void operator delete [](void*)' called on a pointer to an unallocated object '1' [-Wfree-nonheap-object]
+#   170 |       delete[] U.pVal;
+#       |                  ^~~~
+# gmake[2]: Leaving directory '/tmp/tmp.T9ukeZ8kih/src/llvm-cmake-e7bf67f405'
+# [ 37%] Built target obj.clangSema
+# gmake[1]: Leaving directory '/tmp/tmp.T9ukeZ8kih/src/llvm-cmake-e7bf67f405'
+# gmake: *** [Makefile:159: all] Error 2
+
 main() {
     # """
     # Install LLVM (clang).

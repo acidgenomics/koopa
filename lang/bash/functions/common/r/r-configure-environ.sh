@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2024-05-14.
+    # @note Updated 2024-06-27.
     #
     # @section Package library location:
     #
@@ -444,6 +444,7 @@ abort,verbose"
         koopa_sudo_write_string \
             --file="${dict['file']}" \
             --string="${dict['string']}"
+        koopa_chmod --sudo 0644 "${dict['file']}"
     else
         koopa_rm "${dict['file']}"
         koopa_write_string \

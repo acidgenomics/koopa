@@ -3,14 +3,14 @@
 koopa_read() {
     # """
     # Read a string from the user.
-    # @note Updated 2022-02-01.
+    # @note Updated 2024-06-23.
     # """
     local -A dict
     local -a read_args
     koopa_assert_has_args_eq "$#" 2
-    dict['default']="${2:?}"
+    dict['default']="${2:-}"
     dict['prompt']="${1:?} [${dict['default']}]: "
-    read_args=(
+    read_args+=(
         '-e'
         '-i' "${dict['default']}"
         '-p' "${dict['prompt']}"

@@ -3,7 +3,7 @@
 koopa_sudo() {
     # """
     # Execute command as a system admin.
-    # @note Updated 2023-05-01.
+    # @note Updated 2024-06-27.
     #
     # @seealso
     # - https://www.sudo.ws/
