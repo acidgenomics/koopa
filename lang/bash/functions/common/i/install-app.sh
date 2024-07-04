@@ -12,7 +12,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-06-15.
+    # @note Updated 2024-06-27.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -342,7 +342,10 @@ ${dict['version2']}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
+            "HTTPS_PROXY=${HTTPS_PROXY:-}"
+            "HTTP_PROXY=${HTTP_PROXY:-}"
             'KOOPA_ACTIVATE=0'
+            "KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:-}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${bool['verbose']}"
@@ -351,6 +354,8 @@ ${dict['version2']}"
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
+            "http_proxy=${http_proxy:-}"
+            "https_proxy=${https_proxy:-}"
         )
         if [[ "${dict['mode']}" == 'shared' ]]
         then
@@ -427,11 +432,13 @@ ${dict['version2']}"
     fi
     case "${dict['mode']}" in
         'shared')
-            if [[ "${bool['auto_prefix']}" -eq 1 ]]
-            then
-                koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
-            fi
-            koopa_sys_set_permissions --recursive "${dict['prefix']}"
+            # This is problematic on installs where user is not always in
+            # sudo group or at elevated permissions, so disabling.
+            # > if [[ "${bool['auto_prefix']}" -eq 1 ]]
+            # > then
+            # >     koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
+            # > fi
+            # > koopa_sys_set_permissions --recursive "${dict['prefix']}"
             if [[ "${bool['link_in_opt']}" -eq 1 ]]
             then
                 koopa_link_in_opt \
@@ -487,16 +494,16 @@ man1/${dict2['name']}"
                     done
                 fi
             fi
-            [[ "${bool['push']}" -eq 1 ]] && \
+            if [[ "${bool['push']}" -eq 1 ]]
+            then
                 koopa_push_app_build "${dict['name']}"
+            fi
             ;;
         'system')
-            [[ "${bool['update_ldconfig']}" -eq 1 ]] && \
+            if [[ "${bool['update_ldconfig']}" -eq 1 ]]
+            then
                 koopa_linux_update_ldconfig
-            ;;
-        'user')
-            [[ -d "${dict['prefix']}" ]] && \
-                koopa_sys_set_permissions --recursive --user "${dict['prefix']}"
+            fi
             ;;
     esac
     if [[ "${bool['quiet']}" -eq 0 ]]

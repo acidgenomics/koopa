@@ -43,7 +43,8 @@ main() {
         'openssl3'
         'python3.11'
         'c-ares'
-        'nghttp2'
+        # Hitting an nghttp2 build issue on Ubuntu 22, so disabling here.
+        # > 'nghttp2'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -54,7 +55,7 @@ main() {
     dict['cares']="$(koopa_app_prefix 'c-ares')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libuv']="$(koopa_app_prefix 'libuv')"
-    dict['nghttp2']="$(koopa_app_prefix 'nghttp2')"
+    # > dict['nghttp2']="$(koopa_app_prefix 'nghttp2')"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
@@ -75,9 +76,9 @@ cacert.pem"
         '--shared-libuv'
         "--shared-libuv-includes=${dict['libuv']}/include"
         "--shared-libuv-libpath=${dict['libuv']}/lib"
-        '--shared-nghttp2'
-        "--shared-nghttp2-includes=${dict['nghttp2']}/include"
-        "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
+        # > '--shared-nghttp2'
+        # > "--shared-nghttp2-includes=${dict['nghttp2']}/include"
+        # > "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
         '--shared-openssl'
         "--shared-openssl-includes=${dict['openssl']}/include"
         "--shared-openssl-libpath=${dict['openssl']}/lib"

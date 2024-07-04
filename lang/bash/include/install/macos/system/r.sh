@@ -3,7 +3,7 @@
 main() {
     # """
     # Install R framework binary.
-    # @note Updated 2023-10-24.
+    # @note Updated 2024-06-27.
     #
     # @section Intel:
     #
@@ -56,7 +56,7 @@ ${dict['maj_min_ver']}-${dict['arch']}/Resources"
     if [[ "${bool['backup']}" -eq 1 ]]
     then
         koopa_alert "Backing up site library."
-        koopa_mv "${dict['prefix']}/site-library" 'site-library'
+        koopa_mv --sudo "${dict['prefix']}/site-library" 'site-library'
     fi
     dict['url']="https://cran.r-project.org/bin/macosx/\
 ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
@@ -69,7 +69,7 @@ ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     if [[ "${bool['backup']}" -eq 1 ]]
     then
         koopa_alert "Restoring site library."
-        koopa_mv 'site-library' "${dict['prefix']}/site-library"
+        koopa_mv --sudo 'site-library' "${dict['prefix']}/site-library"
     fi
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"

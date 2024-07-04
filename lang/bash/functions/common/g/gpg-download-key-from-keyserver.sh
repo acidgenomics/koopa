@@ -3,7 +3,7 @@
 koopa_gpg_download_key_from_keyserver() {
     # """
     # Download a GPG key from a keyserver to a local file, without importing.
-    # @note Updated 2023-04-05.
+    # @note Updated 2024-06-27.
     #
     # @seealso
     # - https://superuser.com/a/1643115/589630
@@ -61,17 +61,18 @@ koopa_gpg_download_key_from_keyserver() {
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
+        --keyserver "hkp://${dict['keyserver']}:80" \
+        --keyserver-options "http-proxy=${http_proxy:-}" \
         --quiet \
-        --keyserver "${dict['keyserver']}" \
         --recv-keys "${dict['key']}"
     "${app['gpg']}" \
         --homedir "${dict['tmp_dir']}" \
         --list-public-keys "${dict['key']}"
     "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
         --export \
-        --quiet \
+        --homedir "${dict['tmp_dir']}" \
         --output "${dict['tmp_file']}" \
+        --quiet \
         "${dict['key']}"
     koopa_assert_is_file "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
