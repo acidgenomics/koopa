@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pkg-config.
-    # @note Updated 2024-06-11.
+    # @note Updated 2024-06-26.
     #
     # Requires cmp and diff to be installed.
     #
@@ -51,7 +51,9 @@ main() {
         "--with-pc-path=${dict['pc_path']}"
         "--with-system-include-path=${dict['sys_inc']}"
     )
-    dict['url']="http://fresh-center.net/linux/misc/\
+# >     dict['url']="http://fresh-center.net/linux/misc/\
+# > pkg-config-${dict['version']}.tar.gz"
+    dict['url']="https://pkgconfig.freedesktop.org/releases/\
 pkg-config-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'

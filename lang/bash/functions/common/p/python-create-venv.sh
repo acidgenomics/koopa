@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2024-06-14.
+    # @note Updated 2024-06-26.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
@@ -94,8 +94,7 @@ ${dict['py_maj_min_ver']}"
         if [[ ! -d "${dict['app_prefix']}" ]]
         then
             koopa_alert "Configuring venv prefix at '${dict['app_prefix']}'."
-            koopa_sys_mkdir "${dict['app_prefix']}"
-            koopa_sys_set_permissions "$(koopa_dirname "${dict['app_prefix']}")"
+            koopa_mkdir "${dict['app_prefix']}"
         fi
         koopa_link_in_opt \
             --name="${dict['app_bn']}" \
@@ -103,7 +102,7 @@ ${dict['py_maj_min_ver']}"
     fi
     [[ -d "${dict['prefix']}" ]] && koopa_rm "${dict['prefix']}"
     koopa_assert_is_not_dir "${dict['prefix']}"
-    koopa_sys_mkdir "${dict['prefix']}"
+    koopa_mkdir "${dict['prefix']}"
     unset -v PYTHONPATH
     venv_args=()
     if [[ "${bool['pip']}" -eq 0 ]]
@@ -142,6 +141,7 @@ ${dict['py_maj_min_ver']}"
         pip_args+=("${pkgs[@]}")
         koopa_python_pip_install "${pip_args[@]}"
     fi
-    koopa_sys_set_permissions --recursive "${dict['prefix']}"
+    # FIXME Need to rethink this step, which handles non-admin better.
+    # > koopa_sys_set_permissions --recursive "${dict['prefix']}"
     return 0
 }
