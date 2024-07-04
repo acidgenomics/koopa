@@ -7991,6 +7991,7 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--location'
         '--retry' 5
         '--show-error'
+        '--verbose'
     )
     if [[ -n "${http_proxy:-}" ]]
     then
