@@ -31356,10 +31356,11 @@ koopa_unlink_in_opt() {
 
 koopa_update_koopa() {
     local -A dict
-    local -a prefixes
+    local -a chown prefixes
     local prefix
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
+    dict['group_id']="$(koopa_group_id)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['user_id']="$(koopa_user_id)"
     if ! koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
@@ -31367,15 +31368,24 @@ koopa_update_koopa() {
         koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
         return 1
     fi
-    prefixes=("${dict['koopa_prefix']}/lang/zsh")
+    chown=('koopa_chown')
+    koopa_is_shared_install && chown+=('--sudo')
+    prefixes=(
+        "${dict['koopa_prefix']}"
+        "${dict['koopa_prefix']}/lang/zsh"
+    )
     for prefix in "${prefixes[@]}"
     do
-        if [[ "$(koopa_stat_user_id "$prefix")" == "${dict['user_id']}" ]]
+        if [[ "$(koopa_stat_user_id "$prefix")" == "${dict['user_id']}" ]] && \
+            [[ "$(koopa_stat_group_id "$prefix")" == "${dict['group_id']}" ]]
         then
             continue
         fi
-        koopa_alert "Fixing ownership of '${prefix}'."
-        koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
+        koopa_alert "Resetting ownership of '${prefix}' to \
+'${dict['user_id']}:${dict['group_id']}'."
+        "${chown[@]}" --recursive \
+            "${dict['user_id']}:${dict['group_id']}" \
+            "$prefix"
     done
     koopa_git_pull "${dict['koopa_prefix']}"
     koopa_zsh_compaudit_set_permissions
