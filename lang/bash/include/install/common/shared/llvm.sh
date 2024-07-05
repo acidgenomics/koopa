@@ -66,6 +66,7 @@ main() {
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    # FIXME Alternatively, consider setting to a max of 4 cores here.
     koopa_is_linux && dict['jobs']=1
     dict['libedit']="$(koopa_app_prefix 'libedit')"
     dict['libffi']="$(koopa_app_prefix 'libffi')"
