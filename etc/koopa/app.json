@@ -142,12 +142,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-07-05",
     "default": false,
     "dependencies": ["hdf5", "zlib"],
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "12.6.7"
+    "version": "14.0.0"
   },
   "asdf": {
     "aliases": {
@@ -177,7 +177,7 @@
       "homebrew": "ibm-aspera-connect"
     },
     "bin": ["ascp"],
-    "date": "2023-12-22",
+    "date": "2024-07-05",
     "default": false,
     "notes": ["IBM deletes old source versions."],
     "supported": {
@@ -187,7 +187,7 @@
       "macos-arm64": false
     },
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.8.540"
+    "version": "4.2.11.768"
   },
   "attr": {
     "aliases": {
@@ -441,8 +441,9 @@
     "build_dependencies": ["bzip2", "python3.12"],
     "date": "2023-10-16",
     "default": false,
+    "notes": ["Installer is too slow, so disabling at the moment."],
     "supported": {
-      "linux-amd64": true,
+      "linux-amd64": false,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
@@ -1362,11 +1363,11 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-07-04",
+    "date": "2024-07-05",
     "default": true,
     "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "453ee111c4c9f3da85992caebafcbb93904df927"
+    "version": "44541166a34dd940610896f17b49947058a1a4e7"
   },
   "du-dust": {
     "aliases": {
@@ -3553,8 +3554,8 @@
       "fedora": "llvm-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2024-06-26",
+    "build_dependencies": ["cmake", "gcc", "git", "perl", "pkg-config"],
+    "date": "2024-07-05",
     "default": false,
     "dependencies": [
       "binutils",
@@ -4109,8 +4110,8 @@
       "debian": "libnghttp2-dev",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2024-05-21",
+    "build_dependencies": ["gcc", "make", "pkg-config", "python3.12"],
+    "date": "2024-07-05",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4120,6 +4121,7 @@
       "openssl3",
       "zlib"
     ],
+    "notes": ["Fails to build with gcc 11 on Ubuntu 22."],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
     "version": "1.62.1"
@@ -4873,10 +4875,10 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2024-05-03",
+    "date": "2024-07-05",
     "default": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.4.554"
+    "version": "1.5.53"
   },
   "r": {
     "aliases": {
@@ -5235,7 +5237,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2024-05-14",
+    "date": "2024-07-14",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5245,7 +5247,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2024.04.1+748"
+    "version": "2024.04.2+764"
   },
   "rsync": {
     "aliases": {
@@ -5269,14 +5271,14 @@
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-04-06",
+    "date": "2023-07-05",
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.2.2"
+    "version": "3.3.3"
   },
   "ruff": {
     "bin": ["ruff"],

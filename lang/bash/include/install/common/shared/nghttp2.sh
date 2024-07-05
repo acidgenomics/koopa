@@ -2,13 +2,10 @@
 
 # NOTE Consider adding support for cunit here in a future update.
 
-# NOTE This is failing to build on Ubuntu 22.
-# Can confirm that this is specific to 22 and builds on 24 LTS (2024-06-27).
-
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-07-05.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -16,8 +13,10 @@ main() {
     #     libnghttp2.rb
     # """
     local -A app dict
-    local -a conf_args deps
-    koopa_activate_app --build-only 'pkg-config' 'python3.12'
+    local -a build_deps conf_args deps
+    build_deps=('pkg-config' 'python3.12')
+    # This fails to build with GCC 11 on Ubuntu 22, so requiring our GCC.
+    koopa_is_linux && build_deps+=('gcc')
     deps=(
         'c-ares'
         'jemalloc'
@@ -27,6 +26,7 @@ main() {
         'openssl3'
         'zlib'
     )
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
