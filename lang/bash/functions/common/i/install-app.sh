@@ -437,13 +437,6 @@ ${dict['version2']}"
     fi
     case "${dict['mode']}" in
         'shared')
-            # This is problematic on installs where user is not always in
-            # sudo group or at elevated permissions, so disabling.
-            # > if [[ "${bool['auto_prefix']}" -eq 1 ]]
-            # > then
-            # >     koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
-            # > fi
-            # > koopa_sys_set_permissions --recursive "${dict['prefix']}"
             if [[ "${bool['link_in_opt']}" -eq 1 ]]
             then
                 koopa_link_in_opt \
