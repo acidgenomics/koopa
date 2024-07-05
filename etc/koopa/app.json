@@ -142,12 +142,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-07-05",
     "default": false,
     "dependencies": ["hdf5", "zlib"],
     "prune": false,
     "url": ["http://arma.sourceforge.net/download.html"],
-    "version": "12.6.7"
+    "version": "14.0.0"
   },
   "asdf": {
     "aliases": {
