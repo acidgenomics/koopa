@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 
-koopa_linux_update_etc_profile_d() {
+koopa_linux_update_profile_d() {
     # """
-    # Link shared 'zzz-koopa.sh' configuration file into '/etc/profile.d/'.
-    # @note Updated 2023-04-06.
+    # Link shared koopa configuration file into '/etc/profile.d/'.
+    # @note Updated 2024-07-05.
     # """
     local -A dict
     koopa_assert_has_no_args "$#"
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['file']='/etc/profile.d/zzz-koopa.sh'
+    dict['file']="$(koopa_linux_profile_d_file)"
+    dict['today']="$(koopa_today)"
     # Early return if file exists and is not a symlink.
     # Previous verisons of koopa prior to 2020-05-09 created a symlink here.
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
@@ -25,7 +26,7 @@ koopa_linux_update_etc_profile_d() {
 _koopa_activate_shared_profile() {
     # """
     # Activate koopa shell for all users.
-    # @note Updated 2023-03-13.
+    # @note Updated ${dict['today']}.
     # @seealso
     # - https://koopa.acidgenomics.com/
     # """
