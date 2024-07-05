@@ -92,7 +92,7 @@ main() {
             "${dict['gcc']}"
         app['cc']="${dict['gcc']}/bin/gcc"
         app['cxx']="${dict['gcc']}/bin/g++"
-        koopa_assert_is_exectuable "${app['cc']}" "${app['cxx']}"
+        koopa_assert_is_executable "${app['cc']}" "${app['cxx']}"
     fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
