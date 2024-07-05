@@ -4873,10 +4873,10 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2024-05-03",
+    "date": "2024-07-05",
     "default": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.4.554"
+    "version": "1.5.53"
   },
   "r": {
     "aliases": {
