@@ -3554,8 +3554,8 @@
       "fedora": "llvm-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2024-06-26",
+    "build_dependencies": ["cmake", "gcc", "git", "perl", "pkg-config"],
+    "date": "2024-07-05",
     "default": false,
     "dependencies": [
       "binutils",
