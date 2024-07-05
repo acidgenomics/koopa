@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-06-20.
+    # @note Updated 2024-07-05.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -179,7 +179,6 @@ _koopa_complete() {
                         'fzf'
                         'gatk'
                         'gawk'
-                        'gcc'
                         'gdal'
                         'gdbm'
                         'geos'
@@ -485,6 +484,7 @@ _koopa_complete() {
                             'bcbio-nextgen'
                             'cloudbiolinux'
                             'elfutils'
+                            'gcc'
                             'lmod'
                             'ont-bonito'
                         )
