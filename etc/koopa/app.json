@@ -177,7 +177,7 @@
       "homebrew": "ibm-aspera-connect"
     },
     "bin": ["ascp"],
-    "date": "2023-12-22",
+    "date": "2024-07-05",
     "default": false,
     "notes": ["IBM deletes old source versions."],
     "supported": {
@@ -187,7 +187,7 @@
       "macos-arm64": false
     },
     "url": ["https://www.ibm.com/aspera/connect/"],
-    "version": "4.2.8.540"
+    "version": "4.2.11.768"
   },
   "attr": {
     "aliases": {
