@@ -441,6 +441,7 @@
     "build_dependencies": ["bzip2", "python3.12"],
     "date": "2023-10-16",
     "default": false,
+    "notes": ["Installer is too slow, so disabling at the moment."],
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
