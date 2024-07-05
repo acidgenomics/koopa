@@ -3,20 +3,19 @@
 koopa_system_info() {
     # """
     # System information.
-    # @note Updated 2023-10-25.
+    # @note Updated 2024-07-05.
     # """
     local -A app dict
     local -a info nf_info
     koopa_assert_has_no_args "$#"
-    app['bash']="$(koopa_locate_bash --allow-system)"
+    app['bash']="$( \
+        koopa_locate_bash --allow-bootstrap --allow-system --realpath \
+    )"
     app['cat']="$(koopa_locate_cat --allow-system)"
-    app['python']="$(koopa_locate_python3 --allow-missing)"
-    if [[ ! -x "${app['python']}" ]]
-    then
-        app['python']="$(koopa_locate_system_python3)"
-    fi
+    app['python']="$( \
+        koopa_locate_python3 --allow-bootstrap --allow-system --realpath \
+    )"
     koopa_assert_is_executable "${app[@]}"
-    dict['app_prefix']="$(koopa_app_prefix)"
     dict['arch']="$(koopa_arch)"
     dict['arch2']="$(koopa_arch2)"
     dict['bash_version']="$(koopa_get_version "${app['bash']}")"
@@ -24,7 +23,6 @@ koopa_system_info() {
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['koopa_url']="$(koopa_koopa_url)"
     dict['koopa_version']="$(koopa_koopa_version)"
-    dict['opt_prefix']="$(koopa_opt_prefix)"
     dict['python_version']="$(koopa_get_version "${app['python']}")"
     dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
 koopa/ascii-turtle.txt"
@@ -54,8 +52,6 @@ koopa/ascii-turtle.txt"
         'Configuration'
         '-------------'
         "Koopa Prefix: ${dict['koopa_prefix']}"
-        "App Prefix: ${dict['app_prefix']}"
-        "Opt Prefix: ${dict['opt_prefix']}"
         "Config Prefix: ${dict['config_prefix']}"
     )
     if koopa_is_macos
@@ -79,8 +75,10 @@ koopa/ascii-turtle.txt"
         '------------------'
         "OS: ${dict['os']}"
         "Architecture: ${dict['arch']} / ${dict['arch2']}"
-        "Bash: ${dict['bash_version']}"
-        "Python: ${dict['python_version']}"
+        "Bash: ${app['bash']}"
+        "Bash Version: ${dict['bash_version']}"
+        "Python: ${app['python']}"
+        "Python Version: ${dict['python_version']}"
     )
     app['neofetch']="$(koopa_locate_neofetch --allow-missing)"
     if [[ -x "${app['neofetch']}" ]]
