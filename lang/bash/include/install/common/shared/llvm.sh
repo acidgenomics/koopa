@@ -85,9 +85,14 @@ main() {
     then
         dict['binutils']="$(koopa_app_prefix 'binutils')"
         dict['elfutils']="$(koopa_app_prefix 'elfutils')"
+        dict['gcc']="$(koopa_app_prefix 'gcc')"
         koopa_assert_is_dir \
             "${dict['binutils']}" \
-            "${dict['elfutils']}"
+            "${dict['elfutils']}" \
+            "${dict['gcc']}"
+        app['cc']="${dict['gcc']}/bin/gcc"
+        app['cxx']="${dict['gcc']}/bin/g++"
+        koopa_assert_is_exectuable "${app['cc']}" "${app['cxx']}"
     fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
@@ -177,6 +182,9 @@ site-packages"
     if koopa_is_linux
     then
         cmake_args+=(
+            # Use our GCC instead of relying on system.
+            "-DCMAKE_C_COMPILER=${app['cc']}"
+            "-DCMAKE_CXX_COMPILER=${app['cxx']}"
             # Ensure OpenMP picks up ELF.
             "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
             "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
