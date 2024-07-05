@@ -1851,7 +1851,7 @@
     },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
-    "date": "2023-10-10",
+    "date": "2024-07-05",
     "default": false,
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
@@ -1862,7 +1862,7 @@
       "macos-arm64": false
     },
     "url": ["https://gcc.gnu.org/"],
-    "version": "13.2.0"
+    "version": "14.1.0"
   },
   "gdal": {
     "aliases": {
