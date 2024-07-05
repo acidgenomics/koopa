@@ -442,6 +442,13 @@ koopa_linux_install_elfutils() {
         "$@"
 }
 
+koopa_linux_install_gcc() {
+    koopa_install_app \
+        --name='gcc' \
+        --platform='linux' \
+        "$@"
+}
+
 koopa_linux_install_lmod() {
     koopa_install_app \
         --name='lmod' \
@@ -733,6 +740,12 @@ koopa_linux_uninstall_elfutils() {
     koopa_uninstall_app \
         --name='elfutils' \
         --platform='linux' \
+        "$@"
+}
+
+koopa_linux_uninstall_gcc() {
+    koopa_uninstall_app \
+        --name='gcc' \
         "$@"
 }
 

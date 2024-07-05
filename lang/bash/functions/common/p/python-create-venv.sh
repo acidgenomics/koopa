@@ -141,7 +141,5 @@ ${dict['py_maj_min_ver']}"
         pip_args+=("${pkgs[@]}")
         koopa_python_pip_install "${pip_args[@]}"
     fi
-    # FIXME Need to rethink this step, which handles non-admin better.
-    # > koopa_sys_set_permissions --recursive "${dict['prefix']}"
     return 0
 }

@@ -3,7 +3,7 @@
 koopa_linux_bcbio_nextgen_patch_devel() {
     # """
     # Patch bcbio-nextgen development install.
-    # @note Updated 2023-04-05.
+    # @note Updated 2024-07-05.
     # """
     local -A app dict
     local -a cache_files
@@ -81,13 +81,13 @@ at '${dict['install_dir']}'."
     koopa_alert "Removing Python installer cruft inside 'anaconda/lib/'."
     koopa_rm "${dict['install_dir']}/anaconda/lib/python"*'/\
 site-packages/bcbio'*
-    # FIXME May need to rework the tee call here.
     (
         koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
         koopa_alert "Patching installation via 'setup.py' script."
-        "${app['bcbio_python']}" setup.py install
-    ) 2>&1 | "${app['tee']}" "${dict['tmp_log_file']}"
+        "${app['bcbio_python']}" setup.py install \
+            |& "${app['tee']}" -a "${dict['tmp_log_file']}"
+    )
     koopa_alert_success "Patching of '${dict['name']}' was successful."
     return 0
 }

@@ -342,10 +342,7 @@ ${dict['version2']}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars=(
             "HOME=${HOME:?}"
-            "HTTPS_PROXY=${HTTPS_PROXY:-}"
-            "HTTP_PROXY=${HTTP_PROXY:-}"
             'KOOPA_ACTIVATE=0'
-            "KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:-}"
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
             'KOOPA_INSTALL_APP_SUBSHELL=1'
             "KOOPA_VERBOSE=${bool['verbose']}"
@@ -354,9 +351,17 @@ ${dict['version2']}"
             "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
-            "http_proxy=${http_proxy:-}"
-            "https_proxy=${https_proxy:-}"
         )
+        [[ -n "${KOOPA_CAN_INSTALL_BINARY:-}" ]] && \
+            env_vars+=("KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:?}")
+        [[ -n "${HTTP_PROXY:-}" ]] && \
+            env_vars+=("HTTP_PROXY=${HTTP_PROXY:?}")
+        [[ -n "${HTTPS_PROXY:-}" ]] && \
+            env_vars+=("HTTPS_PROXY=${HTTPS_PROXY:?}")
+        [[ -n "${http_proxy:-}" ]] && \
+            env_vars+=("http_proxy=${http_proxy:?}")
+        [[ -n "${https_proxy:-}" ]] && \
+            env_vars+=("https_proxy=${https_proxy:?}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             PKG_CONFIG_PATH=''
@@ -432,13 +437,6 @@ ${dict['version2']}"
     fi
     case "${dict['mode']}" in
         'shared')
-            # This is problematic on installs where user is not always in
-            # sudo group or at elevated permissions, so disabling.
-            # > if [[ "${bool['auto_prefix']}" -eq 1 ]]
-            # > then
-            # >     koopa_sys_set_permissions "$(koopa_dirname "${dict['prefix']}")"
-            # > fi
-            # > koopa_sys_set_permissions --recursive "${dict['prefix']}"
             if [[ "${bool['link_in_opt']}" -eq 1 ]]
             then
                 koopa_link_in_opt \

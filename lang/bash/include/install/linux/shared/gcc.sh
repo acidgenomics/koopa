@@ -1,20 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Consider building this with full LLVM on macOS.
-
-# FIXME This is still failing on my Intel MacBook, CLT 15.1.0.0.1.1696033181.
-# FIXME Try building just fortran to see if we can reproduce faster.
-
-# Potentially related to build error:
-# https://opensource.apple.com/source/llvmgcc42/
-# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2336.11/
-# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2335.9/libgfortran/generated/maxloc1_16_r10.c
-# https://opensource.apple.com/source/llvmgcc42/llvmgcc42-2336.11/libgfortran/generated/maxloc1_16_r16.c.auto.html
-
 main() {
     # """
     # Install GCC.
-    # @note Updated 2023-10-11.
+    # @note Updated 2024-07-05.
     #
     # Do not run './configure' from within the source directory.
     # Instead, you need to run configure from outside the source directory,
@@ -92,7 +81,7 @@ main() {
     #   https://www.linuxquestions.org/questions/linux-software-2/
     #     compiling-gcc-not-baking-rpath-correctly-4175661913/
     # """
-    local -A app bool dict
+    local -A app dict
     local -a conf_args langs
     koopa_activate_app --build-only 'make'
     app['make']="$(koopa_locate_make)"
@@ -114,75 +103,18 @@ main() {
     dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         '-v'
+        '--disable-multilib'
+        '--enable-default-pie'
         "--enable-languages=${dict['langs']}"
         "--prefix=${dict['prefix']}"
         "--with-gmp=${dict['gmp']}"
         "--with-mpc=${dict['mpc']}"
         "--with-mpfr=${dict['mpfr']}"
     )
-    if koopa_is_linux
-    then
-        conf_args+=(
-            '--disable-multilib'
-            '--enable-default-pie'
-        )
-    elif koopa_is_macos
-    then
-        app['patch']="$(koopa_locate_patch)"
-        koopa_assert_is_executable "${app['patch']}"
-        bool['homebrew_patch']=0
-        koopa_is_aarch64 && bool['homebrew_patch']=1
-        bool['math_h_patch']=0
-        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-        dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-        dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
-        dict['maj_min_ver2']="${dict['maj_min_ver']//./-}"
-        dict['patch_prefix']="$(koopa_patch_prefix)/macos/\
-gcc/${dict['version']}"
-        dict['sysroot']="$(koopa_macos_sdk_prefix)"
-        koopa_assert_is_dir \
-            "${dict['patch_prefix']}" \
-            "${dict['sysroot']}"
-        conf_args+=(
-            "--with-sysroot=${dict['sysroot']}"
-            '--with-system-zlib'
-        )
-        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-        then
-            # > koopa_is_aarch64 && bool['math_h_patch']=1
-            app['ld']="$(koopa_macos_locate_ld_classic)"
-            koopa_assert_is_executable "${app['ld']}"
-            conf_args+=("--with-ld=${app['ld']}")
-        fi
-    fi
     dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
 gcc-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    if koopa_is_macos && [[ "${bool['homebrew_patch']}" -eq 1 ]]
-    then
-        dict['patch_file']="${dict['patch_prefix']}/homebrew.diff"
-        koopa_assert_is_file "${dict['patch_file']}"
-        (
-            koopa_cd 'src'
-            "${app['patch']}" \
-                --input="${dict['patch_file']}" \
-                --strip=1 \
-                --verbose
-        )
-    fi
-    if koopa_is_macos && [[ "${bool['math_h_patch']}" -eq 1 ]]
-    then
-        dict['patch_file']="${dict['patch_prefix']}/math-h.diff"
-        koopa_assert_is_file "${dict['patch_file']}"
-        (
-            koopa_cd 'src'
-            "${app['patch']}" \
-                --input="${dict['patch_file']}" \
-                --strip=1 \
-                --verbose
-        )
-    fi
     koopa_mkdir 'build'
     koopa_cd 'build'
     koopa_print_env

@@ -21,7 +21,7 @@ main() {
         '--enable-docs=no'
         "--prefix=${dict['prefix']}"
     )
-    # FIXME Switch to 'xz' with next update.
+    # TODO Switch to 'xz' with next update.
     dict['url']="https://www.x.org/archive/individual/lib/\
 xtrans-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
