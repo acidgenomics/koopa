@@ -259,8 +259,9 @@ site-packages/bcbio'*
         koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
         koopa_alert "Patching installation via 'setup.py' script."
-        "${app['bcbio_python']}" setup.py install
-    ) 2>&1 | "${app['tee']}" "${dict['tmp_log_file']}"
+        "${app['bcbio_python']}" setup.py install \
+            |& "${app['tee']}" -a "${dict['tmp_log_file']}"
+    )
     koopa_alert_success "Patching of '${dict['name']}' was successful."
     return 0
 }
