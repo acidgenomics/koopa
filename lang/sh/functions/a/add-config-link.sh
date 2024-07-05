@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME Move to Bash library.
-
 _koopa_add_config_link() {
     # """
     # Add a symlink into the koopa configuration directory.

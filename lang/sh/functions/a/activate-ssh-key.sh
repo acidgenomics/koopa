@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME How to skip if the user has a passkey set?
-
 _koopa_activate_ssh_key() {
     # """
     # Import an SSH key automatically.

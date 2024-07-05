@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2024-06-12.
+    # @note Updated 2024-07-04.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -50,6 +50,7 @@ rv:120.0) Gecko/20100101 Firefox/120.0"
         '--location'
         '--retry' 5
         '--show-error'
+        '--verbose'
     )
     # If running through proxy server, set insecure to ignore self-signed
     # certificate error.
