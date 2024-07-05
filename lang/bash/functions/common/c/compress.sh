@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Improve support for parallel lzip, xz, zstd.
+# TODO Improve support for parallel lzip, xz, zstd.
 # --with-gzip=pigz --with-bzip2=lbzip2 --with-lzip=plzip
 # > tar -I "xz -T0" -cf my_archive.tar.xz ./stuff_to_compress
 # > tar -I "zstd -T0" -cf my_archive.tar.zst ./stuff_to_compress

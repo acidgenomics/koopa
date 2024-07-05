@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2024-07-03.
+# @note Updated 2024-07-04.
 # """
 
 # Can debug with:
@@ -226,7 +226,7 @@ main() {
     rm -fr "$PREFIX"
     mkdir -p "$PREFIX"
     (
-        set -x
+        # > set -x
         export CPPFLAGS="-I${PREFIX:?}/include"
         export LDFLAGS="-L${PREFIX:?}/lib -Wl,-rpath,${PREFIX:?}/lib"
         export LIBRARY_PATH="${PREFIX:?}/lib:/usr/lib"
