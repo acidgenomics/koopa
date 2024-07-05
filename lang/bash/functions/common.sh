@@ -31359,8 +31359,10 @@ koopa_update_koopa() {
     koopa_assert_has_no_args "$#"
     koopa_assert_is_owner
     dict['group_id']="$(koopa_group_id)"
+    dict['group_name']="$(koopa_group_name)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['user_id']="$(koopa_user_id)"
+    dict['user_name']="$(koopa_user_name)"
     if ! koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
         koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
@@ -31380,7 +31382,8 @@ koopa_update_koopa() {
             continue
         fi
         koopa_alert "Resetting ownership of '${prefix}' to \
-'${dict['user_id']}:${dict['group_id']}'."
+'${dict['user_name']}:${dict['group_name']}' \
+(${dict['user_id']}:${dict['group_id']})."
         "${chown[@]}" --recursive \
             "${dict['user_id']}:${dict['group_id']}" \
             "$prefix"
