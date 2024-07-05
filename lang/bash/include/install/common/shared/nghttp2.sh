@@ -2,9 +2,6 @@
 
 # NOTE Consider adding support for cunit here in a future update.
 
-# NOTE This is failing to build on Ubuntu 22.
-# Can confirm that this is specific to 22 and builds on 24 LTS (2024-06-27).
-
 main() {
     # """
     # Install nghttp2.
@@ -17,23 +14,9 @@ main() {
     # """
     local -A app dict
     local -a build_deps conf_args deps
-    build_deps=(
-        'pkg-config'
-        'python3.12'
-    )
-    if koopa_is_linux
-    then
-        app['gcc']="$(koopa_locate_gcc --only-system)"
-        dict['gcc_ver']="$(koopa_get_version "${app['gcc']}")"
-        dict['gcc_ver']="$(koopa_major_version "${dict['gcc_ver']}")"
-        if [[ "${dict['gcc_ver']}" -lt 12 ]]
-        then
-            koopa_alert_note 'Unsupported system GCC detected.'
-            build_deps+=('gcc')
-            # FIXME Rework this
-            # > export CC='/opt/koopa/opt/gcc/bin/gcc'
-        fi
-    fi
+    build_deps=('pkg-config' 'python3.12')
+    # This fails to build with GCC 11 on Ubuntu 22, so requiring our GCC.
+    koopa_is_linux && build_deps+=('gcc')
     deps=(
         'c-ares'
         'jemalloc'

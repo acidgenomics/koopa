@@ -4110,8 +4110,8 @@
       "debian": "libnghttp2-dev",
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2024-05-21",
+    "build_dependencies": ["gcc", "make", "pkg-config", "python3.12"],
+    "date": "2024-07-05",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4121,7 +4121,7 @@
       "openssl3",
       "zlib"
     ],
-    "notes": ["Currently failing to build on Ubuntu 22."],
+    "notes": ["Fails to build with gcc 11 on Ubuntu 22."],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
     "version": "1.62.1"
