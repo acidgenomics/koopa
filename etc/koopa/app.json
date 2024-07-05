@@ -4121,6 +4121,7 @@
       "openssl3",
       "zlib"
     ],
+    "notes": ["Currently failing to build on Ubuntu 22."],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
     "version": "1.62.1"
