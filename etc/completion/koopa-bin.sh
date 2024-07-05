@@ -6,7 +6,7 @@ __kvar_words+=('--strict')
 complete -W "${__kvar_words[*]}" camel-case
 unset -v __kvar_words
 
-# FIXME Need to add support for these:
+# TODO Need to add support for these:
 # - autopad-zeros
 # - camel-case
 # - clone
@@ -48,4 +48,3 @@ unset -v __kvar_words
 # - snake-case
 # - sort-lines
 # - tar-multiple-dirs
-
