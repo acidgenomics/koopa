@@ -24,7 +24,7 @@ def check_installed_apps() -> bool:
             raise ValueError(f"Unsupported app: {name!r}.")
         path = join(opt_prefix, name)
         if not islink(path):
-            print(f"{name} not linked at {path}.")
+            print(f"{name} not linked at {path}")
             continue
         path = realpath(path)
         assert isdir(path)
