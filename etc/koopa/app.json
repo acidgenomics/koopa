@@ -3570,7 +3570,7 @@
       "zlib",
       "zstd"
     ],
-    "notes": ["FIXME Currently failing to build on Ubuntu 22 instance."],
+    "notes": ["Currently failing to build on Ubuntu 22 instance."],
     "outdated": true,
     "url": ["https://llvm.org/"],
     "version": "18.1.0"
