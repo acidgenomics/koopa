@@ -29,6 +29,8 @@ main() {
         then
             koopa_alert_note 'Unsupported system GCC detected.'
             build_deps+=('gcc')
+            # FIXME Rework this
+            export CC='/opt/koopa/opt/gcc/bin/gcc'
         fi
     fi
     deps=(
