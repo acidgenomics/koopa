@@ -5,7 +5,7 @@
 main() {
     # """
     # Install Armadillo.
-    # @note Updated 2023-10-17.
+    # @note Updated 2024-07-05.
     #
     # @seealso
     # - http://arma.sourceforge.net/download.html
@@ -20,7 +20,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=('-DALLOW_OPENBLAS_MACOS=ON')
-    dict['url']="http://sourceforge.net/projects/arma/files/\
+    dict['url']="https://downloads.sourceforge.net/project/arma/\
 armadillo-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
