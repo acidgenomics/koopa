@@ -8,7 +8,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-07-05.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -16,8 +16,21 @@ main() {
     #     libnghttp2.rb
     # """
     local -A app dict
-    local -a conf_args deps
-    koopa_activate_app --build-only 'pkg-config' 'python3.12'
+    local -a build_deps conf_args deps
+    build_deps=(
+        'pkg-config'
+        'python3.12'
+    )
+    if koopa_is_linux
+    then
+        app['gcc']="$(koopa_locate_gcc --only-system)"
+        dict['gcc_ver']="$(koopa_major_version "${app['gcc']}")"
+        if [[ "${dict['gcc_ver']}" -lt 12 ]]
+        then
+            koopa_alert_note 'Unsupported system GCC detected.'
+            build_deps+=('gcc')
+        fi
+    fi
     deps=(
         'c-ares'
         'jemalloc'
