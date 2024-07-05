@@ -85,13 +85,11 @@ main() {
     then
         dict['binutils']="$(koopa_app_prefix 'binutils')"
         dict['elfutils']="$(koopa_app_prefix 'elfutils')"
-        dict['gcc']="$(koopa_app_prefix 'gcc')"
         koopa_assert_is_dir \
             "${dict['binutils']}" \
-            "${dict['elfutils']}" \
-            "${dict['gcc']}"
-        app['cc']="${dict['gcc']}/bin/gcc"
-        app['cxx']="${dict['gcc']}/bin/g++"
+            "${dict['elfutils']}"
+        app['cc']="$(koopa_locate_gcc)"
+        app['cxx']="$(koopa_locate_gcxx)"
         koopa_assert_is_executable "${app['cc']}" "${app['cxx']}"
     fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
