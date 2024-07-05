@@ -442,7 +442,7 @@
     "date": "2023-10-16",
     "default": false,
     "supported": {
-      "linux-amd64": true,
+      "linux-amd64": false,
       "linux-arm64": false,
       "macos-amd64": false,
       "macos-arm64": false
