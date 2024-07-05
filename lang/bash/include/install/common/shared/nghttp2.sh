@@ -30,7 +30,7 @@ main() {
             koopa_alert_note 'Unsupported system GCC detected.'
             build_deps+=('gcc')
             # FIXME Rework this
-            export CC='/opt/koopa/opt/gcc/bin/gcc'
+            # > export CC='/opt/koopa/opt/gcc/bin/gcc'
         fi
     fi
     deps=(
@@ -42,6 +42,7 @@ main() {
         'openssl3'
         'zlib'
     )
+    koopa_activate_app --build-only "${deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
