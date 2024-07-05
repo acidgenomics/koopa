@@ -13236,16 +13236,6 @@ koopa_install_gawk() {
         "$@"
 }
 
-koopa_install_gcc() {
-    if koopa_is_macos && koopa_is_x86_64
-    then
-        koopa_stop 'Unsupported platform.'
-    fi
-    koopa_install_app \
-        --name='gcc' \
-        "$@"
-}
-
 koopa_install_gdal() {
     koopa_install_app \
         --name='gdal' \
@@ -29376,12 +29366,6 @@ koopa_uninstall_gatk() {
 koopa_uninstall_gawk() {
     koopa_uninstall_app \
         --name='gawk' \
-        "$@"
-}
-
-koopa_uninstall_gcc() {
-    koopa_uninstall_app \
-        --name='gcc' \
         "$@"
 }
 
