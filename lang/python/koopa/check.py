@@ -1,6 +1,6 @@
 """
 System check functions.
-Updated 2024-05-28.
+Updated 2024-07-05.
 """
 
 from os.path import basename, isdir, islink, join, realpath
@@ -13,7 +13,7 @@ from koopa.os import koopa_opt_prefix
 def check_installed_apps() -> bool:
     """
     Check system integrity.
-    Updated 2024-05-31.
+    Updated 2024-07-05.
     """
     ok = True
     opt_prefix = koopa_opt_prefix()
@@ -23,7 +23,9 @@ def check_installed_apps() -> bool:
         if name not in json_data.keys():
             raise ValueError(f"Unsupported app: {name!r}.")
         path = join(opt_prefix, name)
-        assert islink(path)
+        if not islink(path):
+            print(f"{name} not linked at {path}.")
+            continue
         path = realpath(path)
         assert isdir(path)
         linked_ver = basename(path)
