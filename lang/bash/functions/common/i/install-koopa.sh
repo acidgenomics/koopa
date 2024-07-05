@@ -181,7 +181,7 @@ koopa_install_koopa() {
         fi
         if koopa_is_linux
         then
-            koopa_linux_update_etc_profile_d
+            koopa_linux_update_profile_d
         fi
     fi
     if [[ "${bool['add_to_user_profile']}" -eq 1 ]]
