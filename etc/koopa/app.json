@@ -4729,12 +4729,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-07-04",
+    "date": "2024-07-05",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.5"
+    "version": "2.4.6"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5077,11 +5077,11 @@
       "homebrew": true
     },
     "bin": ["rbenv"],
-    "date": "2022-08-30",
+    "date": "2024-07-05",
     "default": false,
     "prune": false,
     "url": ["https://github.com/rbenv/rbenv/"],
-    "version": "1.2.0"
+    "version": "1.3.0"
   },
   "rclone": {
     "aliases": {
@@ -5280,11 +5280,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-07-04",
+    "date": "2024-07-05",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.5.0"
+    "version": "0.5.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5534,7 +5534,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-07-04",
+    "date": "2024-07-05",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5542,7 +5542,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.15.1"
+    "version": "8.15.2"
   },
   "sox": {
     "aliases": {
