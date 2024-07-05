@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO Look into installing with snap on Ubuntu 22+.
+
 main() {
     # """
     # Install Docker.
