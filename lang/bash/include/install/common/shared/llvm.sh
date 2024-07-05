@@ -65,6 +65,8 @@ main() {
     app['python']="$(koopa_locate_python312 --realpath)"
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(koopa_cpu_count)"
+    koopa_is_linux && dict['jobs']=1
     dict['libedit']="$(koopa_app_prefix 'libedit')"
     dict['libffi']="$(koopa_app_prefix 'libffi')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
@@ -210,6 +212,7 @@ llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/llvm'
     koopa_cmake_build \
+        --jobs="${dict['jobs']}" \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
     return 0
