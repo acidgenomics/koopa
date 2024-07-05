@@ -259,8 +259,9 @@ site-packages/bcbio'*
         koopa_cd "${dict['git_dir']}"
         koopa_rm 'tests/test_automated_output'
         koopa_alert "Patching installation via 'setup.py' script."
-        "${app['bcbio_python']}" setup.py install
-    ) 2>&1 | "${app['tee']}" "${dict['tmp_log_file']}"
+        "${app['bcbio_python']}" setup.py install \
+            |& "${app['tee']}" -a "${dict['tmp_log_file']}"
+    )
     koopa_alert_success "Patching of '${dict['name']}' was successful."
     return 0
 }
@@ -676,6 +677,11 @@ koopa_linux_proc_cmdline() {
     return 0
 }
 
+koopa_linux_profile_d_file() {
+    koopa_print '/etc/profile.d/zzz-koopa.sh'
+    return 0
+}
+
 koopa_linux_remove_user_from_group() {
     local -A app dict
     koopa_assert_has_args_le "$#" 2
@@ -780,13 +786,23 @@ koopa_linux_uninstall_system_pivpn() {
         "$@"
 }
 
-koopa_linux_update_etc_profile_d() {
+koopa_linux_update_ldconfig() {
+    local -A app
+    koopa_assert_has_no_args "$#"
+    app['ldconfig']="$(koopa_linux_locate_ldconfig)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_sudo "${app['ldconfig']}" || true
+    return 0
+}
+
+koopa_linux_update_profile_d() {
     local -A dict
     koopa_assert_has_no_args "$#"
     koopa_is_shared_install || return 0
     koopa_assert_is_admin
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['file']='/etc/profile.d/zzz-koopa.sh'
+    dict['file']="$(koopa_linux_profile_d_file)"
+    dict['today']="$(koopa_today)"
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
     then
         return 0
@@ -805,13 +821,4 @@ END
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
-}
-
-koopa_linux_update_ldconfig() {
-    local -A app
-    koopa_assert_has_no_args "$#"
-    app['ldconfig']="$(koopa_linux_locate_ldconfig)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['ldconfig']}" || true
-    return 0
 }

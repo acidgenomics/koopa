@@ -14041,7 +14041,7 @@ koopa_install_koopa() {
         fi
         if koopa_is_linux
         then
-            koopa_linux_update_etc_profile_d
+            koopa_linux_update_profile_d
         fi
     fi
     if [[ "${bool['add_to_user_profile']}" -eq 1 ]]
@@ -29702,6 +29702,7 @@ koopa_uninstall_kallisto() {
 koopa_uninstall_koopa() {
     local -A bool dict
     bool['uninstall_koopa']=1
+    dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
     dict['config_prefix']="$(koopa_config_prefix)"
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     if koopa_is_interactive
@@ -29713,12 +29714,16 @@ koopa_uninstall_koopa() {
         )"
     fi
     [[ "${bool['uninstall_koopa']}" -eq 0 ]] && return 1
-    koopa_rm --verbose "${dict['config_prefix']}"
+    koopa_rm --verbose \
+        "${dict['bootstrap_prefix']}" \
+        "${dict['config_prefix']}"
     if koopa_is_shared_install
     then
+        koopa_assert_is_admin
         if koopa_is_linux
         then
-            koopa_rm --sudo --verbose '/etc/profile.d/zzz-koopa.sh'
+            dict['profile_d_file']="$(koopa_linux_profile_d_file)"
+            koopa_rm --sudo --verbose "${dict['profile_d_file']}"
         fi
         koopa_rm --sudo --verbose "${dict['koopa_prefix']}"
     else
