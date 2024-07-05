@@ -24,7 +24,8 @@ main() {
     if koopa_is_linux
     then
         app['gcc']="$(koopa_locate_gcc --only-system)"
-        dict['gcc_ver']="$(koopa_major_version "${app['gcc']}")"
+        dict['gcc_ver']="$(koopa_get_version "${app['gcc']}")"
+        dict['gcc_ver']="$(koopa_major_version "${dict['gcc_ver']}")"
         if [[ "${dict['gcc_ver']}" -lt 12 ]]
         then
             koopa_alert_note 'Unsupported system GCC detected.'
