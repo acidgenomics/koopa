@@ -3558,6 +3558,7 @@
     "build_dependencies": [
       "cmake",
       "git",
+      "ninja",
       "perl",
       "pkg-config",
       "swig"
