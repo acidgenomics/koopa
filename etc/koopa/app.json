@@ -3578,14 +3578,6 @@
       "zlib",
       "zstd"
     ],
-    "notes": ["Currently failing to build on Ubuntu."],
-    "outdated": true,
-    "supported": {
-      "linux-amd64": false,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": true
-    },
     "url": ["https://llvm.org/"],
     "version": "18.1.8"
   },
