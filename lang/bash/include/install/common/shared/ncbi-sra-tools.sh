@@ -23,9 +23,9 @@ main() {
     local -A app cmake dict
     local -a build_deps cmake_args cmake_std_args deps
     build_deps+=('bison' 'flex' 'python3.12')
-    deps+=('icu4c' 'libxml2')
     koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    # > deps+=('icu4c' 'libxml2')
+    # > koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
@@ -103,16 +103,13 @@ ${dict['version']}.tar.gz"
     # Build and install sra-tools ==============================================
     cmake_args=(
         "${cmake_std_args[@]}"
+        # > '-DNO_JAVA=ON'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
         "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb/lib')"
     )
-    if koopa_is_linux
-    then
-        cmake_args+=('-DNO_JAVA=ON')
-    fi
     "${app['cmake']}" \
         -B 'sra-tools' \
         -S "$(koopa_realpath '../sra-tools')" \
