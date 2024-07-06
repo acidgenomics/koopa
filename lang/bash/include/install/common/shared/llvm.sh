@@ -34,7 +34,7 @@ main() {
         'perl'
         'pkg-config'
     )
-    koopa_is_linux && build_deps+=('gcc')
+    # > koopa_is_linux && build_deps+=('gcc')
     deps=(
         'zlib'
         'libedit'
@@ -66,8 +66,10 @@ main() {
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
-    # FIXME Alternatively, consider setting to a max of 4 cores here.
-    koopa_is_linux && dict['jobs']=1
+    if koopa_is_linux && [[ "${dict['jobs']}" -gt 4 ]]
+    then
+        dict['jobs']=4
+    fi
     dict['libedit']="$(koopa_app_prefix 'libedit')"
     dict['libffi']="$(koopa_app_prefix 'libffi')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
@@ -91,9 +93,9 @@ main() {
         koopa_assert_is_dir \
             "${dict['binutils']}" \
             "${dict['elfutils']}"
-        app['cc']="$(koopa_locate_gcc)"
-        app['cxx']="$(koopa_locate_gcxx)"
-        koopa_assert_is_executable "${app['cc']}" "${app['cxx']}"
+        # > app['cc']="$(koopa_locate_gcc)"
+        # > app['cxx']="$(koopa_locate_gcxx)"
+        # > koopa_assert_is_executable "${app['cc']}" "${app['cxx']}"
     fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
@@ -184,8 +186,8 @@ site-packages"
     then
         cmake_args+=(
             # Use our GCC instead of relying on system.
-            "-DCMAKE_C_COMPILER=${app['cc']}"
-            "-DCMAKE_CXX_COMPILER=${app['cxx']}"
+            # > "-DCMAKE_C_COMPILER=${app['cc']}"
+            # > "-DCMAKE_CXX_COMPILER=${app['cxx']}"
             # Ensure OpenMP picks up ELF.
             "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
             "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
