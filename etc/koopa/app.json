@@ -5589,7 +5589,7 @@
     "version": "e1fc546d7f43a87d8dc3179ca93db970c83926e9"
   },
   "spdlog": {
-    "build_dependencies": ["cmake", "pkg-config"],
+    "build_dependencies": ["cmake", "gcc", "pkg-config"],
     "date": "2024-05-06",
     "default": false,
     "dependencies": ["fmt"],
