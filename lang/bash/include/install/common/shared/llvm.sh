@@ -66,6 +66,7 @@ main() {
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    # NOTE This may only be an issue on Ubuntu 22.
     if koopa_is_linux && [[ "${dict['jobs']}" -gt 4 ]]
     then
         dict['jobs']=4
