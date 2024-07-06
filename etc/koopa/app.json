@@ -4412,7 +4412,7 @@
       "pkg-config"
     ],
     "date": "2024-07-04",
-    "default": false,
+    "default": true,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "3.2.1"
