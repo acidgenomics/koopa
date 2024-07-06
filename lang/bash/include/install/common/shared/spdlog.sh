@@ -5,7 +5,7 @@
 main() {
     # """
     # Install spdlog.
-    # @note Updated 2023-07-08.
+    # @note Updated 2024-07-06.
     #
     # @seealso
     # - https://github.com/gabime/spdlog/
@@ -15,9 +15,12 @@ main() {
     #     packages/spdlog/trunk/PKGBUILD
     # """
     local -A cmake dict
-    local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'fmt'
+    local -a build_deps cmake_args deps
+    build_deps=('pkg-config')
+    koopa_is_linux && build_deps+=('gcc')
+    deps=('fmt')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['fmt']="$(koopa_app_prefix 'fmt')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
