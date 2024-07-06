@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2024-06-14.
+    # @note Updated 2024-07-06.
     #
     # VDB is the database engine that all SRA tools use.
     #
