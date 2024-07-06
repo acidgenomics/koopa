@@ -4412,8 +4412,9 @@
       "pkg-config"
     ],
     "date": "2024-07-04",
-    "default": true,
+    "default": false,
     "dependencies": ["zlib"],
+    "notes": ["Hitting proxy issue related to zip download."],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "3.2.1"
   },
