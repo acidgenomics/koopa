@@ -3,7 +3,7 @@
 main() {
     # """
     # Install SRA toolkit.
-    # @note Updated 2024-06-14.
+    # @note Updated 2024-07-06.
     #
     # VDB is the database engine that all SRA tools use.
     #
@@ -21,9 +21,11 @@ main() {
     # - https://github.com/ncbi/sra-tools/issues/937
     # """
     local -A app cmake dict
-    local -a build_deps cmake_args cmake_std_args
+    local -a build_deps cmake_args cmake_std_args deps
     build_deps+=('bison' 'flex' 'python3.12')
     koopa_activate_app --build-only "${build_deps[@]}"
+    # > deps+=('icu4c' 'libxml2')
+    # > koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
@@ -101,6 +103,7 @@ ${dict['version']}.tar.gz"
     # Build and install sra-tools ==============================================
     cmake_args=(
         "${cmake_std_args[@]}"
+        # > '-DNO_JAVA=ON'
         "-DCMAKE_INSTALL_PREFIX=${dict['prefix']}"
         "-DLIBXML2_INCLUDE_DIR=${cmake['libxml2_include_dir']}"
         "-DLIBXML2_LIBRARIES=${cmake['libxml2_libraries']}"

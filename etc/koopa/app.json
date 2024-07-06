@@ -1727,9 +1727,10 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-07-04",
     "default": false,
+    "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "11.0.0"
+    "version": "10.2.1"
   },
   "fontconfig": {
     "aliases": {
@@ -3554,8 +3555,15 @@
       "fedora": "llvm-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "gcc", "git", "perl", "pkg-config"],
-    "date": "2024-07-05",
+    "build_dependencies": [
+      "cmake",
+      "git",
+      "ninja",
+      "perl",
+      "pkg-config",
+      "swig"
+    ],
+    "date": "2024-07-06",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3566,15 +3574,12 @@
       "libxml2",
       "ncurses",
       "python3.12",
-      "swig",
       "xz",
       "zlib",
       "zstd"
     ],
-    "notes": ["Currently failing to build on Ubuntu 22 instance."],
-    "outdated": true,
     "url": ["https://llvm.org/"],
-    "version": "18.1.0"
+    "version": "18.1.8"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -4000,10 +4005,15 @@
       "homebrew": "sratoolkit"
     },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
-    "build_dependencies": ["bison", "cmake", "flex", "python3.12"],
-    "date": "2024-05-23",
+    "date": "2024-07-06",
     "default": false,
-    "dependencies": ["hdf5", "libxml2", "temurin"],
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": ["https://github.com/ncbi/sra-tools/"],
     "version": "3.1.1"
   },
@@ -4402,7 +4412,7 @@
       "pkg-config"
     ],
     "date": "2024-07-04",
-    "default": false,
+    "default": true,
     "dependencies": ["zlib"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "3.2.1"
@@ -5581,6 +5591,7 @@
     "date": "2024-05-06",
     "default": false,
     "dependencies": ["fmt"],
+    "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.14.1"

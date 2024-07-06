@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# NOTE Doesn't currently support fmt 11.
+
 main() {
     # """
     # Install spdlog.
-    # @note Updated 2023-07-08.
+    # @note Updated 2024-07-06.
     #
     # @seealso
     # - https://github.com/gabime/spdlog/
@@ -13,9 +15,11 @@ main() {
     #     packages/spdlog/trunk/PKGBUILD
     # """
     local -A cmake dict
-    local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'fmt'
+    local -a build_deps cmake_args deps
+    build_deps=('pkg-config')
+    deps=('fmt')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['fmt']="$(koopa_app_prefix 'fmt')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -26,7 +30,7 @@ main() {
         # Build options --------------------------------------------------------
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_SHARED=ON'
-        '-DSPDLOG_BUILD_TESTS=ON'
+        '-DSPDLOG_BUILD_TESTS=OFF'
         '-DSPDLOG_FMT_EXTERNAL=ON'
         # Dependency paths -----------------------------------------------------
         "-Dfmt_DIR=${cmake['fmt_dir']}"
