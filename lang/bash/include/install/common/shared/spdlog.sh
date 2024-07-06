@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME This is failing to build on Ubuntu 22. Need to debug.
+# NOTE Doesn't currently support fmt 11.
 
 main() {
     # """
