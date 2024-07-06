@@ -78,12 +78,14 @@ main() {
     dict['python']="$(koopa_app_prefix 'python3.12')"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     koopa_assert_is_dir \
         "${dict['libedit']}" \
         "${dict['libffi']}" \
         "${dict['ncurses']}" \
         "${dict['python']}" \
+        "${dict['xz']}" \
         "${dict['zlib']}"
     if koopa_is_linux
     then
@@ -155,6 +157,8 @@ libncursesw.${dict['shared_ext']}"
         "-DFFI_INCLUDE_DIR=${dict['libffi']}/include"
         "-DFFI_LIBRARY_DIR=${dict['libffi']}/lib"
         "-DGIT_EXECUTABLE=${app['git']}"
+        "-DLIBLZMA_INCLUDE_DIR=${dict['xz']}/include"
+        "-DLIBLZMA_LIBRARY=${dict['xz']}/lib/liblzma.${dict['shared_ext']}"
         "-DLibEdit_INCLUDE_DIRS=${dict['libedit']}/include"
         "-DLibEdit_LIBRARIES=${dict['libedit']}/lib/\
 libedit.${dict['shared_ext']}"
