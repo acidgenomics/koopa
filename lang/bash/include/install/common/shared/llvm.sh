@@ -153,7 +153,7 @@ main() {
         # > '-DLLVM_INSTALL_UTILS=ON'
         # > '-DLLVM_OPTIMIZED_TABLEGEN=ON'
         # > '-DLLVM_POLLY_LINK_INTO_TOOLS=ON'
-        # > '-DLLVM_TARGETS_TO_BUILD=all' # FIXME
+        # > '-DLLVM_TARGETS_TO_BUILD=all'
         # External dependencies ------------------------------------------------
         "-DCURSES_INCLUDE_DIRS=${dict['ncurses']}/include"
         "-DCURSES_LIBRARIES=${dict['ncurses']}/lib/\
@@ -185,31 +185,17 @@ libncursesw.${dict['shared_ext']}"
     )
     if koopa_is_linux
     then
-        # FIXME Consider addining '-DLLVM_USE_INTEL_JITEVENTS=ON' for Linux x86.
-        # This is currently used in conda-forge recipe.
         cmake_args+=(
-            # > '-DCLANG_DEFAULT_CXX_STDLIB=libstdc++'
-            # FIXME Use our GCC instead of relying on system?
-            # > "-DCMAKE_C_COMPILER=${app['cc']}"
-            # > "-DCMAKE_CXX_COMPILER=${app['cxx']}"
-            # Parts of Polly fail to correctly build with PIC.
-            #'-DCMAKE_POSITION_INDEPENDENT_CODE=ON'
-            # Ensure OpenMP picks up ELF.
             "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
             "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
 libelf.${dict['shared_ext']}"
-            # Enable llvm gold plugin for LTO.
             "-DLLVM_BINUTILS_INCDIR=${dict['binutils']}/include"
-            #'-DLLVM_ENABLE_LIBCXX=OFF'
         )
     elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir "${dict['sysroot']}"
         cmake_args+=(
-            # > '-DLIBCXX_PSTL_CPU_BACKEND=libdispatch'
-            # > '-DLLVM_BUILD_LLVM_C_DYLIB=ON'
-            # > '-DLLVM_ENABLE_LIBCXX=ON'
             "-DDEFAULT_SYSROOT=${dict['sysroot']}"
             '-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF'
         )
@@ -219,8 +205,8 @@ llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/llvm'
-    # FIXME Can try building with '--ninja' here.
     koopa_cmake_build \
+        --ninja \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
     return 0
