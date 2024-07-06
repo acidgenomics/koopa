@@ -17,7 +17,8 @@ main() {
     local -A cmake dict
     local -a build_deps cmake_args deps
     build_deps=('pkg-config')
-    koopa_is_linux && build_deps+=('gcc')
+    # FIXME See if changing compiler helps with this.
+    # > koopa_is_linux && build_deps+=('gcc')
     deps=('fmt')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -31,7 +32,7 @@ main() {
         # Build options --------------------------------------------------------
         '-DSPDLOG_BUILD_BENCH=OFF'
         '-DSPDLOG_BUILD_SHARED=ON'
-        '-DSPDLOG_BUILD_TESTS=ON'
+        '-DSPDLOG_BUILD_TESTS=OFF'
         '-DSPDLOG_FMT_EXTERNAL=ON'
         # Dependency paths -----------------------------------------------------
         "-Dfmt_DIR=${cmake['fmt_dir']}"
