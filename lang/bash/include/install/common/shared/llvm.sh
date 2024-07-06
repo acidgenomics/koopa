@@ -67,10 +67,10 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     # NOTE This may only be an issue on Ubuntu 22.
-    if koopa_is_linux && [[ "${dict['jobs']}" -gt 4 ]]
-    then
-        dict['jobs']=4
-    fi
+    # > if koopa_is_linux && [[ "${dict['jobs']}" -gt 4 ]]
+    # > then
+    # >     dict['jobs']=4
+    # > fi
     dict['libedit']="$(koopa_app_prefix 'libedit')"
     dict['libffi']="$(koopa_app_prefix 'libffi')"
     dict['libxml2']="$(koopa_app_prefix 'libxml2')"
@@ -147,6 +147,8 @@ main() {
         '-DLLVM_INCLUDE_TESTS=OFF'
         '-DLLVM_INSTALL_UTILS=ON'
         '-DLLVM_OPTIMIZED_TABLEGEN=ON'
+        "-DLLVM_PARALLEL_COMPILE_JOBS=${dict['jobs']}" # FIXME
+        '-DLLVM_PARALLEL_LINK_JOBS=1' # FIXME
         '-DLLVM_POLLY_LINK_INTO_TOOLS=ON'
         '-DLLVM_TARGETS_TO_BUILD=all'
         # External dependencies ------------------------------------------------
