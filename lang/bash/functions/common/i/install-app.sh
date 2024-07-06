@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Need to check that app is supported by parsing app.json file with
+# Python, instead of just checking if function is defined in Bash library.
+# We may be able to define this as 'koopa_is_app_supported'.
+# With this approach, add support for platform-specific exclusion, such as
+# 'ubuntu-22-amd64' for programs that fail to build only on a specific platform.
 # FIXME For builder machines that push app binaries, make sure we also build
 # reverse dependencies after app update.
 # FIXME Our installer should drop an invisible build file into the directory

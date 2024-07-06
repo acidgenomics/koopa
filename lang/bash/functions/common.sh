@@ -7767,7 +7767,7 @@ koopa_docker_run() {
     local -A app dict
     local -a pos run_args
     koopa_assert_has_args "$#"
-    app['docker']="$(koopa_locate_docker)"
+    app['docker']="$(koopa_locate_docker --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['arm']=0
     dict['bash']=0
@@ -7806,6 +7806,7 @@ koopa_docker_run() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
     dict['image']="${1:?}"
+    koopa_add_to_path_start "$(koopa_parent_dir "${app['docker']}")"
     case "${dict['image']}" in
         *'.dkr.ecr.'*'.amazonaws.com/'*)
             koopa_aws_ecr_login_private
@@ -14551,7 +14552,9 @@ koopa_install_nanopolish() {
 }
 
 koopa_install_ncbi_sra_tools() {
+    koopa_assert_is_not_aarch64
     koopa_install_app \
+        --installer='ncbi-sra-tools-conda' \
         --name='ncbi-sra-tools' \
         "$@"
 }
