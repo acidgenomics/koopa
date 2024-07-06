@@ -107,6 +107,10 @@ ${dict['version']}.tar.gz"
         "-DPython3_EXECUTABLE=${cmake['python3_executable']}"
         "-DVDB_LIBDIR=$(koopa_realpath 'ncbi-vdb/lib')"
     )
+    if koopa_is_linux
+    then
+        cmake_args+=('-DNO_JAVA=ON')
+    fi
     "${app['cmake']}" \
         -B 'sra-tools' \
         -S "$(koopa_realpath '../sra-tools')" \
