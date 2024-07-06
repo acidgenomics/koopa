@@ -47,6 +47,7 @@ main() {
     deps=(
         'xz' # lzma
         'zlib'
+        'zstd'
         'libedit'
         'libffi'
         'ncurses'
@@ -57,7 +58,6 @@ main() {
         deps+=(
             # Needed for 'gold'.
             'binutils'
-            'zstd' # elfutils
             # OpenMP requires 'gelf.h'.
             'elfutils'
         )
@@ -80,13 +80,15 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zstd']="$(koopa_app_prefix 'zstd')"
     koopa_assert_is_dir \
         "${dict['libedit']}" \
         "${dict['libffi']}" \
         "${dict['ncurses']}" \
         "${dict['python']}" \
         "${dict['xz']}" \
-        "${dict['zlib']}"
+        "${dict['zlib']}" \
+        "${dict['zstd']}"
     if koopa_is_linux
     then
         dict['binutils']="$(koopa_app_prefix 'binutils')"
@@ -111,7 +113,6 @@ main() {
     )
     koopa_is_macos && projects+=('flang')
     runtimes=(
-        # > 'compiler-rt'
         'libcxx'
         'libcxxabi'
         'libunwind'
@@ -125,32 +126,33 @@ main() {
     dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
     dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
     cmake_args=(
-        # Build options --------------------------------------------------------
-        '-DLIBCXX_INSTALL_MODULES=ON'
-        '-DLIBOMP_INSTALL_ALIASES=OFF'
-        '-DLLDB_ENABLE_CURSES=ON'
-        '-DLLDB_ENABLE_LUA=OFF'
-        '-DLLDB_ENABLE_LZMA=ON'
-        '-DLLDB_ENABLE_PYTHON=ON'
-        '-DLLDB_USE_SYSTEM_DEBUGSERVER=ON'
-        '-DLLVM_ENABLE_ASSERTIONS=OFF'
-        '-DLLVM_ENABLE_EH=ON'
-        '-DLLVM_ENABLE_FFI=ON'
-        '-DLLVM_ENABLE_LIBEDIT=ON'
-        '-DLLVM_ENABLE_LIBXML2=OFF'
         "-DLLVM_ENABLE_PROJECTS=${dict['projects']}"
-        '-DLLVM_ENABLE_RTTI=ON'
         "-DLLVM_ENABLE_RUNTIMES=${dict['runtimes']}"
-        '-DLLVM_ENABLE_TERMINFO=ON'
-        '-DLLVM_ENABLE_Z3_SOLVER=OFF'
-        '-DLLVM_INCLUDE_BENCHMARKS=OFF'
-        '-DLLVM_INCLUDE_DOCS=OFF'
-        '-DLLVM_INCLUDE_TESTS=OFF'
-        '-DLLVM_INSTALL_UTILS=ON'
-        '-DLLVM_LINK_LLVM_DYLIB=ON'
-        '-DLLVM_OPTIMIZED_TABLEGEN=ON'
-        '-DLLVM_POLLY_LINK_INTO_TOOLS=ON'
-        '-DLLVM_TARGETS_TO_BUILD=all' # FIXME
+        # Build options --------------------------------------------------------
+        # > '-DLIBCXX_INSTALL_MODULES=ON'
+        # > '-DLIBOMP_INSTALL_ALIASES=OFF'
+        # > '-DLLDB_ENABLE_CURSES=ON'
+        # > '-DLLDB_ENABLE_LUA=OFF'
+        # > '-DLLDB_ENABLE_LZMA=ON'
+        # > '-DLLDB_ENABLE_PYTHON=ON'
+        # > '-DLLDB_USE_SYSTEM_DEBUGSERVER=ON'
+        # > '-DLLVM_ENABLE_ASSERTIONS=OFF'
+        # > '-DLLVM_ENABLE_EH=ON'
+        # > '-DLLVM_ENABLE_FFI=ON'
+        # > '-DLLVM_ENABLE_LIBEDIT=ON'
+        # > '-DLLVM_ENABLE_LIBXML2=OFF'
+        # > '-DLLVM_ENABLE_RTTI=ON'
+        # > '-DLLVM_ENABLE_TERMINFO=ON'
+        # > '-DLLVM_ENABLE_Z3_SOLVER=OFF'
+        # > '-DLLVM_ENABLE_ZLIB=ON'
+        # > '-DLLVM_ENABLE_ZSTD=ON'
+        # > '-DLLVM_INCLUDE_BENCHMARKS=OFF'
+        # > '-DLLVM_INCLUDE_DOCS=OFF'
+        # > '-DLLVM_INCLUDE_TESTS=OFF'
+        # > '-DLLVM_INSTALL_UTILS=ON'
+        # > '-DLLVM_OPTIMIZED_TABLEGEN=ON'
+        # > '-DLLVM_POLLY_LINK_INTO_TOOLS=ON'
+        # > '-DLLVM_TARGETS_TO_BUILD=all' # FIXME
         # External dependencies ------------------------------------------------
         "-DCURSES_INCLUDE_DIRS=${dict['ncurses']}/include"
         "-DCURSES_LIBRARIES=${dict['ncurses']}/lib/\
@@ -177,44 +179,38 @@ libpython${dict['py_maj_min_ver']}.${dict['shared_ext']}"
 libncursesw.${dict['shared_ext']}"
         "-DZLIB_INCLUDE_DIR=${dict['zlib']}/include"
         "-DZLIB_LIBRARY=${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-        # Additional Python binding fixes --------------------------------------
-# FIXME Are these safe to take out?
-# >         "-DCLANG_PYTHON_BINDINGS_VERSIONS=${dict['py_maj_min_ver']}"
-# >         "-DLLDB_PYTHON_EXE_RELATIVE_PATH=../../python/${dict['py_ver']}/\
-# > bin/python${dict['py_maj_min_ver']}"
-# >         "-DLLDB_PYTHON_RELATIVE_PATH=libexec/python${dict['py_maj_min_ver']}/\
-# > site-packages"
+        "-DZstd_INCLUDE_DIR=${dict['zstd']}/include"
+        "-DZstd_LIBRARY=${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
     )
     if koopa_is_linux
     then
         # FIXME Consider addining '-DLLVM_USE_INTEL_JITEVENTS=ON' for Linux x86.
         # This is currently used in conda-forge recipe.
         cmake_args+=(
-            '-DCLANG_DEFAULT_CXX_STDLIB=libstdc++'
+            # > '-DCLANG_DEFAULT_CXX_STDLIB=libstdc++'
             # FIXME Use our GCC instead of relying on system?
             # > "-DCMAKE_C_COMPILER=${app['cc']}"
             # > "-DCMAKE_CXX_COMPILER=${app['cxx']}"
             # Parts of Polly fail to correctly build with PIC.
-            '-DCMAKE_POSITION_INDEPENDENT_CODE=ON'
+            #'-DCMAKE_POSITION_INDEPENDENT_CODE=ON'
             # Ensure OpenMP picks up ELF.
             "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
             "-DLIBOMPTARGET_DEP_LIBELF_LIBRARIES=${dict['elfutils']}/lib/\
 libelf.${dict['shared_ext']}"
             # Enable llvm gold plugin for LTO.
             "-DLLVM_BINUTILS_INCDIR=${dict['binutils']}/include"
-            '-DLLVM_ENABLE_LIBCXX=OFF'
+            #'-DLLVM_ENABLE_LIBCXX=OFF'
         )
     elif koopa_is_macos
     then
         dict['sysroot']="$(koopa_macos_sdk_prefix)"
         koopa_assert_is_dir "${dict['sysroot']}"
         cmake_args+=(
+            # > '-DLIBCXX_PSTL_CPU_BACKEND=libdispatch'
+            # > '-DLLVM_BUILD_LLVM_C_DYLIB=ON'
+            # > '-DLLVM_ENABLE_LIBCXX=ON'
             "-DDEFAULT_SYSROOT=${dict['sysroot']}"
-            '-DLIBCXX_PSTL_CPU_BACKEND=libdispatch'
-            '-DLLVM_BUILD_LLVM_C_DYLIB=ON'
             '-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF'
-            '-DLLVM_ENABLE_LIBCXX=ON'
-            '-DLLVM_LINK_LLVM_DYLIB=ON'
         )
     fi
     dict['url']="https://github.com/llvm/llvm-project/releases/download/\
