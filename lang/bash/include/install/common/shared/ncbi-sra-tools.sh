@@ -21,9 +21,11 @@ main() {
     # - https://github.com/ncbi/sra-tools/issues/937
     # """
     local -A app cmake dict
-    local -a build_deps cmake_args cmake_std_args
+    local -a build_deps cmake_args cmake_std_args deps
     build_deps+=('bison' 'flex' 'python3.12')
+    deps+=('libxml')
     koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
