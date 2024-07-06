@@ -89,13 +89,13 @@ main() {
     projects+=(
         'clang'
         'clang-tools-extra'
+        'flang'
         'lld'
         'lldb'
         'mlir'
         'openmp'
         'polly'
     )
-    koopa_is_macos && projects+=('flang')
     runtimes+=(
         'libcxx'
         'libcxxabi'
