@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 
 # NOTE Rework this using a cmake dict.
-# NOTE Check that files and dirs exist, where relevant.
-
-# FIXME Build with ninja.
-# FIXME Need to debug build failure on Ubuntu.
-# FIXME Do we need to include swig for build?
 
 main() {
     # """
@@ -40,10 +35,8 @@ main() {
         'git'
         'perl'
         'pkg-config'
-        # > 'ninja' FIXME
         'swig'
     )
-    # > koopa_is_linux && build_deps+=('gcc')
     deps=(
         'xz' # lzma
         'zlib'
@@ -55,12 +48,7 @@ main() {
     )
     if koopa_is_linux
     then
-        deps+=(
-            # Needed for 'gold'.
-            'binutils'
-            # OpenMP requires 'gelf.h'.
-            'elfutils'
-        )
+        deps+=('binutils' 'elfutils')
     fi
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
@@ -93,17 +81,12 @@ main() {
     then
         dict['binutils']="$(koopa_app_prefix 'binutils')"
         dict['elfutils']="$(koopa_app_prefix 'elfutils')"
-        koopa_assert_is_dir \
-            "${dict['binutils']}" \
-            "${dict['elfutils']}"
-        # FIXME Consider requiring build with latest GCC.
-        # > app['cc']="$(koopa_locate_gcc)"
-        # > app['cxx']="$(koopa_locate_gcxx)"
-        # > koopa_assert_is_executable "${app['cc']}" "${app['cxx']}"
+        koopa_assert_is_dir "${dict['binutils']}" "${dict['elfutils']}"
     fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
-    projects=(
+    # NOTE Not all of these build currently on Ubuntu.
+    projects+=(
         'clang'
         'clang-tools-extra'
         'lld'
@@ -112,7 +95,7 @@ main() {
         'polly'
     )
     koopa_is_macos && projects+=('flang')
-    runtimes=(
+    runtimes+=(
         'libcxx'
         'libcxxabi'
         'libunwind'
@@ -125,10 +108,14 @@ main() {
     fi
     dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
     dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
-    cmake_args=(
-        # FIXME Turn these back on
-        # > "-DLLVM_ENABLE_PROJECTS=${dict['projects']}"
-        # > "-DLLVM_ENABLE_RUNTIMES=${dict['runtimes']}"
+    if koopa_is_macos
+    then
+        cmake_args+=(
+            "-DLLVM_ENABLE_PROJECTS=${dict['projects']}"
+            "-DLLVM_ENABLE_RUNTIMES=${dict['runtimes']}"
+        )
+    fi
+    cmake_args+=(
         # Build options --------------------------------------------------------
         # > '-DLIBCXX_INSTALL_MODULES=ON'
         # > '-DLIBOMP_INSTALL_ALIASES=OFF'
