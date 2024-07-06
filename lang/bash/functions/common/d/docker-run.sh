@@ -17,7 +17,7 @@ koopa_docker_run() {
     local -A app dict
     local -a pos run_args
     koopa_assert_has_args "$#"
-    app['docker']="$(koopa_locate_docker)"
+    app['docker']="$(koopa_locate_docker --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['arm']=0
     dict['bash']=0
@@ -58,6 +58,7 @@ koopa_docker_run() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args_eq "$#" 1
     dict['image']="${1:?}"
+    koopa_add_to_path_start "$(koopa_parent_dir "${app['docker']}")"
     case "${dict['image']}" in
         *'.dkr.ecr.'*'.amazonaws.com/'*)
             # Requiring authenticated pulls here.
