@@ -1727,9 +1727,10 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-07-04",
     "default": false,
+    "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "11.0.0"
+    "version": "10.2.1"
   },
   "fontconfig": {
     "aliases": {
