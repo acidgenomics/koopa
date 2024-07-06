@@ -3,6 +3,8 @@
 # NOTE Rework this using a cmake dict.
 # NOTE Check that files and dirs exist, where relevant.
 
+# FIXME Need to debug build failure on Ubuntu.
+
 main() {
     # """
     # Install LLVM (clang).
@@ -66,7 +68,7 @@ main() {
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
-    # NOTE This may only be an issue on Ubuntu 22.
+    # FIXME This may only be an issue on Ubuntu 22.
     # > if koopa_is_linux && [[ "${dict['jobs']}" -gt 4 ]]
     # > then
     # >     dict['jobs']=4
@@ -94,12 +96,14 @@ main() {
         koopa_assert_is_dir \
             "${dict['binutils']}" \
             "${dict['elfutils']}"
+        # FIXME Consider requiring build with latest GCC.
         # > app['cc']="$(koopa_locate_gcc)"
         # > app['cxx']="$(koopa_locate_gcxx)"
         # > koopa_assert_is_executable "${app['cc']}" "${app['cxx']}"
     fi
     dict['py_ver']="$(koopa_get_version "${app['python']}")"
     dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
+    # FIXME May need to match projects and runtimes with homebrew.
     projects=(
         # > 'bolt'
         # > 'cross-project-tests'
@@ -147,8 +151,8 @@ main() {
         '-DLLVM_INCLUDE_TESTS=OFF'
         '-DLLVM_INSTALL_UTILS=ON'
         '-DLLVM_OPTIMIZED_TABLEGEN=ON'
-        "-DLLVM_PARALLEL_COMPILE_JOBS=${dict['jobs']}" # FIXME
-        '-DLLVM_PARALLEL_LINK_JOBS=1' # FIXME
+        # > "-DLLVM_PARALLEL_COMPILE_JOBS=${dict['jobs']}"  # FIXME
+        # > '-DLLVM_PARALLEL_LINK_JOBS=1'  # FIXME
         '-DLLVM_POLLY_LINK_INTO_TOOLS=ON'
         '-DLLVM_TARGETS_TO_BUILD=all'
         # External dependencies ------------------------------------------------

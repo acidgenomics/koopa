@@ -3555,7 +3555,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
-    "date": "2024-07-05",
+    "date": "2024-07-06",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3571,8 +3571,14 @@
       "zlib",
       "zstd"
     ],
-    "notes": ["Currently failing to build on Ubuntu 22 instance."],
+    "notes": ["Currently failing to build on Ubuntu."],
     "outdated": true,
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": true
+    },
     "url": ["https://llvm.org/"],
     "version": "18.1.0"
   },
