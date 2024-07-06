@@ -126,8 +126,9 @@ main() {
     dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
     dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
     cmake_args=(
-        "-DLLVM_ENABLE_PROJECTS=${dict['projects']}"
-        "-DLLVM_ENABLE_RUNTIMES=${dict['runtimes']}"
+        # FIXME Turn these back on
+        # > "-DLLVM_ENABLE_PROJECTS=${dict['projects']}"
+        # > "-DLLVM_ENABLE_RUNTIMES=${dict['runtimes']}"
         # Build options --------------------------------------------------------
         # > '-DLIBCXX_INSTALL_MODULES=ON'
         # > '-DLIBOMP_INSTALL_ALIASES=OFF'
