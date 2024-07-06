@@ -40,7 +40,7 @@ main() {
         'git'
         'perl'
         'pkg-config'
-        'ninja'
+        # > 'ninja' FIXME
         'swig'
     )
     # > koopa_is_linux && build_deps+=('gcc')
@@ -219,8 +219,8 @@ llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src/llvm'
+    # FIXME Can try building with '--ninja' here.
     koopa_cmake_build \
-        --ninja \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
     return 0
