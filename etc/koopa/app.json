@@ -3586,7 +3586,7 @@
       "macos-arm64": true
     },
     "url": ["https://llvm.org/"],
-    "version": "18.1.0"
+    "version": "18.1.8"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
