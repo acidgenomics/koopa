@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting proxy issue related to zip dependency download.
+
 main() {
     # """
     # Install Pandoc.
