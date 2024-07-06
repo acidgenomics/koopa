@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This is failing to build on Ubuntu 22. Need to debug.
+
 main() {
     # """
     # Install spdlog.
