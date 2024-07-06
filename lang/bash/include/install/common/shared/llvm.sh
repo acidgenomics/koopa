@@ -89,23 +89,18 @@ main() {
     projects+=(
         'clang'
         'clang-tools-extra'
+        'flang'
         'lld'
         'lldb'
         'mlir'
+        'openmp'
         'polly'
     )
-    koopa_is_macos && projects+=('flang')
     runtimes+=(
         'libcxx'
         'libcxxabi'
         'libunwind'
     )
-    if koopa_is_macos
-    then
-        runtimes+=('openmp')
-    else
-        projects+=('openmp')
-    fi
     dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
     dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
     if koopa_is_macos
