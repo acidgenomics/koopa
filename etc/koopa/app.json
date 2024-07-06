@@ -3554,7 +3554,14 @@
       "fedora": "llvm-devel",
       "homebrew": true
     },
-    "build_dependencies": ["cmake", "git", "perl", "pkg-config"],
+    "build_dependencies": [
+      "cmake",
+      "git",
+      "ninja",
+      "perl",
+      "pkg-config",
+      "swig"
+    ],
     "date": "2024-07-06",
     "default": false,
     "dependencies": [
@@ -3566,7 +3573,6 @@
       "libxml2",
       "ncurses",
       "python3.12",
-      "swig",
       "xz",
       "zlib",
       "zstd"
