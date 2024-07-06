@@ -5594,6 +5594,7 @@
     "date": "2024-05-06",
     "default": false,
     "dependencies": ["fmt"],
+    "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
     "version": "1.14.1"
