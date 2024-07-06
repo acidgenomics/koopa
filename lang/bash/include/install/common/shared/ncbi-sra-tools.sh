@@ -23,7 +23,7 @@ main() {
     local -A app cmake dict
     local -a build_deps cmake_args cmake_std_args deps
     build_deps+=('bison' 'flex' 'python3.12')
-    deps+=('libxml2')
+    deps+=('icu4c' 'libxml2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
