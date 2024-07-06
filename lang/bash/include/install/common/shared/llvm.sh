@@ -143,6 +143,7 @@ main() {
         "-DLLVM_ENABLE_RUNTIMES=${dict['runtimes']}"
         '-DLLVM_ENABLE_TERMINFO=ON'
         '-DLLVM_ENABLE_Z3_SOLVER=OFF'
+        '-DLLVM_INCLUDE_BENCHMARKS=OFF'
         '-DLLVM_INCLUDE_DOCS=OFF'
         '-DLLVM_INCLUDE_TESTS=OFF'
         '-DLLVM_INSTALL_UTILS=ON'
@@ -186,6 +187,8 @@ libncursesw.${dict['shared_ext']}"
     )
     if koopa_is_linux
     then
+        # FIXME Consider addining '-DLLVM_USE_INTEL_JITEVENTS=ON' for Linux x86.
+        # This is currently used in conda-forge recipe.
         cmake_args+=(
             '-DCLANG_DEFAULT_CXX_STDLIB=libstdc++'
             # FIXME Use our GCC instead of relying on system?
