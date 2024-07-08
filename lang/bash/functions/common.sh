@@ -15663,6 +15663,7 @@ koopa_install_rust() {
 
 koopa_install_salmon() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='salmon' \
         "$@"
 }
