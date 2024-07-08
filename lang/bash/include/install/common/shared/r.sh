@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-# FIXME Need to resolve this duplicate library warnings on macOS?
+# NOTE Need to resolve this duplicate library warnings on macOS?
 # This may be package specific and not easy to resolve...look into it
 # ld: warning: ignoring duplicate libraries: '-lX11', '-lpng16'
 
-# FIXME Need to improve X11 configuration on macOS:
+# NOTE Need to improve X11 configuration on macOS:
 # Warning in doTryCatch(return(expr), name, parentenv, handler) :
 #   unable to load shared object '/opt/koopa/app/r-devel/85467/lib/R/modules//R_X11.so':
 #   dlopen(/opt/koopa/app/r-devel/85467/lib/R/modules//R_X11.so, 0x0006): symbol not found in flat namespace '_g_libintl_gettext'
@@ -15,7 +15,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2023-12-05.
+    # @note Updated 2024-07-08.
     #
     # @section Compiler settings:
     #
@@ -314,9 +314,12 @@ main() {
         koopa_assert_is_executable "${app['svn']}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
+        # FIXME Rework this as an array and then paste with ','.
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
         # Can debug subversion linkage with:
         # > "${app['svn']}" --version --verbose
+        koopa_alert "Cloning from '${dict['svn_url']}' with subversion \
+into '${dict['rtop']}'."
         "${app['svn']}" \
             --non-interactive \
             --trust-server-cert-failures="${dict['trust_cert']}" \
