@@ -5028,6 +5028,12 @@
       "zlib",
       "zstd"
     ],
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": [
       "https://svn.r-project.org/R/",
       "https://stat.ethz.ch/R/daily/",
