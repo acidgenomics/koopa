@@ -4967,7 +4967,7 @@
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
-    "date": "2024-05-06",
+    "date": "2024-07-08",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -5028,6 +5028,12 @@
       "zlib",
       "zstd"
     ],
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": [
       "https://svn.r-project.org/R/",
       "https://stat.ethz.ch/R/daily/",
@@ -5035,7 +5041,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "86526"
+    "version": "86886"
   },
   "r-gfortran": {
     "date": "2023-10-16",
