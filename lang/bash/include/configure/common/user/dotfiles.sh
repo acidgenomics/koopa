@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure dotfiles for current user.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-07-08.
     #
     # This also configures chezmoi to use our koopa managed dotfiles repo.
     #
@@ -46,6 +46,12 @@ main() {
     "${app['bash']}" "${dict['install_script']}"
     if [[ "${bool['auto_config']}" -eq 1 ]]
     then
+        dict['work_prefix']="$(koopa_dotfiles_work_prefix)"
+        dict['work_install_script']="${dict['work_prefix']}/install"
+        if [[ -f "${dict['work_install_script']}" ]]
+        then
+            "${app['bash']}" "${dict['work_install_script']}"
+        fi
         dict['private_prefix']="$(koopa_dotfiles_private_prefix)"
         dict['private_install_script']="${dict['private_prefix']}/install"
         if [[ -f "${dict['private_install_script']}" ]]

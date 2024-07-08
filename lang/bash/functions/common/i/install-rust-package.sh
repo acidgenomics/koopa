@@ -3,7 +3,7 @@
 koopa_install_rust_package() {
     # """
     # Install Rust package.
-    # @note Updated 2023-11-01.
+    # @note Updated 2024-07-08.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -18,12 +18,17 @@ koopa_install_rust_package() {
     # - https://news.ycombinator.com/item?id=29570931
     # """
     local -A app bool dict
-    local -a install_args pos
+    local -a build_deps install_args pos
     koopa_assert_is_install_subshell
-    koopa_activate_app --build-only 'rust'
+    build_deps+=(
+        'rust'
+        # > 'git'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
     bool['openssl']=0
+    dict['cargo_config_file']="$(koopa_rust_cargo_config_file)"
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:-}"
@@ -111,9 +116,19 @@ koopa_install_rust_package() {
         done
         export RUSTFLAGS="${rustflags[*]}"
     fi
-    install_args=(
-        '--config' 'net.git-fetch-with-cli=true'
-        '--config' 'net.retry=5'
+    if [[ -f "${dict['cargo_config_file']}" ]]
+    then
+        koopa_alert "Using cargo config at '${dict['cargo_config_file']}'."
+        koopa_cp --verbose \
+            "${dict['cargo_config_file']}" \
+            "${CARGO_HOME:?}/config.toml"
+    else
+        install_args+=(
+            '--config' 'net.git-fetch-with-cli=true'
+            '--config' 'net.retry=5'
+        )
+    fi
+    install_args+=(
         '--jobs' "${dict['jobs']}"
         '--locked'
         '--root' "${dict['prefix']}"
@@ -123,12 +138,10 @@ koopa_install_rust_package() {
     [[ "$#" -gt 0 ]] && install_args+=("$@")
     install_args+=("${dict['name']}")
     # Ensure we put Rust package 'bin/' into PATH, to avoid installer warning.
-    koopa_init_dir "${dict['prefix']}/bin"
-    koopa_add_to_path_start "${dict['prefix']}/bin"
+    dict['bin_prefix']="$(koopa_init_dir "${dict['prefix']}/bin")"
+    koopa_add_to_path_start "${dict['bin_prefix']}"
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
-    # NOTE This step can run into chown permission issues when installing from
-    # a deescalated admin account for a shared install.
     "${app['cargo']}" install "${install_args[@]}"
     return 0
 }
