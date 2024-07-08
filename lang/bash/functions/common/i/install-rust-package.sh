@@ -3,7 +3,7 @@
 koopa_install_rust_package() {
     # """
     # Install Rust package.
-    # @note Updated 2023-11-01.
+    # @note Updated 2024-07-08.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -18,9 +18,13 @@ koopa_install_rust_package() {
     # - https://news.ycombinator.com/item?id=29570931
     # """
     local -A app bool dict
-    local -a install_args pos
+    local -a build_deps install_args pos
     koopa_assert_is_install_subshell
-    koopa_activate_app --build-only 'git' 'rust'
+    build_deps+=(
+        'rust'
+        # > 'git'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
     bool['openssl']=0
@@ -138,8 +142,6 @@ koopa_install_rust_package() {
     koopa_add_to_path_start "${dict['bin_prefix']}"
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
-    # NOTE This step can run into chown permission issues when installing from
-    # a deescalated admin account for a shared install.
     "${app['cargo']}" install "${install_args[@]}"
     return 0
 }
