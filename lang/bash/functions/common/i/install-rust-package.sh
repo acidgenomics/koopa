@@ -93,6 +93,7 @@ koopa_install_rust_package() {
     koopa_assert_is_dir "${dict['cargo_home']}"
     export CARGO_HOME="${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
+    koopa_activate_app --build-only 'git'
     if [[ "${bool['openssl']}" -eq 1 ]]
     then
         koopa_activate_app 'openssl3'
@@ -113,7 +114,7 @@ koopa_install_rust_package() {
     fi
     install_args=(
         '--config' 'net.git-fetch-with-cli=true'
-        '--config' 'net.retry=5'
+        # > '--config' 'net.retry=5'
         '--jobs' "${dict['jobs']}"
         '--locked'
         '--root' "${dict['prefix']}"
