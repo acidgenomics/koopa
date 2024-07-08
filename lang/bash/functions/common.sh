@@ -7919,13 +7919,18 @@ koopa_dotfiles_config_link() {
     return 0
 }
 
+koopa_dotfiles_prefix() {
+    _koopa_dotfiles_prefix "$@"
+}
+
 koopa_dotfiles_private_prefix() {
     koopa_print "$(koopa_config_prefix)/dotfiles-private"
     return 0
 }
 
-koopa_dotfiles_prefix() {
-    _koopa_dotfiles_prefix "$@"
+koopa_dotfiles_work_prefix() {
+    koopa_print "$(koopa_config_prefix)/dotfiles-work"
+    return 0
 }
 
 koopa_download_cran_latest() {
