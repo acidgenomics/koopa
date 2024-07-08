@@ -13694,8 +13694,10 @@ koopa_install_haskell_package() {
         'ghc' "${dict['ghc_version']}" \
             --isolate "${dict['ghc_prefix']}"
     koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
-    koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
-    koopa_init_dir "${dict['prefix']}/bin"
+    dict['bin_prefix']="$(koopa_init_dir "${dict['prefix']}/bin")"
+    koopa_add_to_path_start \
+        "${dict['ghc_prefix']}/bin" \
+        "${dict['bin_prefix']}"
     "${app['cabal']}" update
     dict['cabal_config_file']="${dict['cabal_dir']}/config"
     koopa_assert_is_file "${dict['cabal_config_file']}"
