@@ -1180,12 +1180,12 @@ _koopa_alias_colorls() {
     return 0
 }
 
-_koopa_alias_emacs() {
-    _koopa_emacs "$@"
-}
-
 _koopa_alias_emacs_vanilla() {
     emacs --no-init-file --no-window-system "$@"
+}
+
+_koopa_alias_emacs() {
+    _koopa_emacs "$@"
 }
 
 _koopa_alias_glances() {
@@ -1198,6 +1198,10 @@ _koopa_alias_glances() {
         --config "${HOME}/.config/glances/glances.conf" \
         "$@"
     return 0
+}
+
+_koopa_alias_k() {
+    cd "$(_koopa_koopa_prefix)" || return 1
 }
 
 _koopa_alias_kb() {
@@ -1273,10 +1277,6 @@ _koopa_alias_kdev() {
         __kvar_koopa_prefix \
         __kvar_rcfile
     return 0
-}
-
-_koopa_alias_k() {
-    cd "$(_koopa_koopa_prefix)" || return 1
 }
 
 _koopa_alias_l() {
