@@ -13,7 +13,7 @@ from koopa.os import koopa_opt_prefix
 def check_installed_apps() -> bool:
     """
     Check system integrity.
-    Updated 2024-07-05.
+    Updated 2024-07-08.
     """
     ok = True
     opt_prefix = koopa_opt_prefix()
@@ -24,6 +24,7 @@ def check_installed_apps() -> bool:
             raise ValueError(f"Unsupported app: {name!r}.")
         path = join(opt_prefix, name)
         if not islink(path):
+            ok = False
             print(f"{name} not linked at {path}")
             continue
         path = realpath(path)
