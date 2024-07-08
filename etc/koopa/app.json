@@ -5330,21 +5330,15 @@
   },
   "salmon": {
     "bin": ["salmon"],
-    "build_dependencies": ["cmake", "make", "patch"],
-    "date": "2023-10-17",
+    "date": "2024-07-08",
     "default": false,
-    "dependencies": [
-      "boost",
-      "bzip2",
-      "cereal",
-      "icu4c",
-      "jemalloc",
-      "libiconv",
-      "staden-io-lib",
-      "tbb",
-      "xz",
-      "zlib"
-    ],
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
