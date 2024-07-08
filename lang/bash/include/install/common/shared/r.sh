@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Hitting this r-devel issue on EC2:
+# svn: E175013: Access to '/R/!svn/rvr/62763/trunk/src/gnuwin32/fixed/etc/Rprofile.site' forbidden
+# Is this due to umask?
+
 # NOTE Need to resolve this duplicate library warnings on macOS?
 # This may be package specific and not easy to resolve...look into it
 # ld: warning: ignoring duplicate libraries: '-lX11', '-lpng16'
