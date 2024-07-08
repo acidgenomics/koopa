@@ -7919,13 +7919,18 @@ koopa_dotfiles_config_link() {
     return 0
 }
 
+koopa_dotfiles_prefix() {
+    _koopa_dotfiles_prefix "$@"
+}
+
 koopa_dotfiles_private_prefix() {
     koopa_print "$(koopa_config_prefix)/dotfiles-private"
     return 0
 }
 
-koopa_dotfiles_prefix() {
-    _koopa_dotfiles_prefix "$@"
+koopa_dotfiles_work_prefix() {
+    koopa_print "$(koopa_config_prefix)/dotfiles-work"
+    return 0
 }
 
 koopa_download_cran_latest() {
@@ -13689,8 +13694,10 @@ koopa_install_haskell_package() {
         'ghc' "${dict['ghc_version']}" \
             --isolate "${dict['ghc_prefix']}"
     koopa_assert_is_dir "${dict['ghc_prefix']}/bin"
-    koopa_add_to_path_start "${dict['ghc_prefix']}/bin"
-    koopa_init_dir "${dict['prefix']}/bin"
+    dict['bin_prefix']="$(koopa_init_dir "${dict['prefix']}/bin")"
+    koopa_add_to_path_start \
+        "${dict['ghc_prefix']}/bin" \
+        "${dict['bin_prefix']}"
     "${app['cabal']}" update
     dict['cabal_config_file']="${dict['cabal_dir']}/config"
     koopa_assert_is_file "${dict['cabal_config_file']}"
@@ -13870,6 +13877,7 @@ koopa_install_jupyterlab() {
 
 koopa_install_kallisto() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='kallisto' \
         "$@"
 }
@@ -15545,12 +15553,16 @@ koopa_install_ruff() {
 
 koopa_install_rust_package() {
     local -A app bool dict
-    local -a install_args pos
+    local -a build_deps install_args pos
     koopa_assert_is_install_subshell
-    koopa_activate_app --build-only 'rust'
+    build_deps+=(
+        'rust'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
     bool['openssl']=0
+    dict['cargo_config_file']="$(koopa_rust_cargo_config_file)"
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:-}"
@@ -15631,9 +15643,19 @@ koopa_install_rust_package() {
         done
         export RUSTFLAGS="${rustflags[*]}"
     fi
-    install_args=(
-        '--config' 'net.git-fetch-with-cli=true'
-        '--config' 'net.retry=5'
+    if [[ -f "${dict['cargo_config_file']}" ]]
+    then
+        koopa_alert "Using cargo config at '${dict['cargo_config_file']}'."
+        koopa_cp --verbose \
+            "${dict['cargo_config_file']}" \
+            "${CARGO_HOME:?}/config.toml"
+    else
+        install_args+=(
+            '--config' 'net.git-fetch-with-cli=true'
+            '--config' 'net.retry=5'
+        )
+    fi
+    install_args+=(
         '--jobs' "${dict['jobs']}"
         '--locked'
         '--root' "${dict['prefix']}"
@@ -15642,8 +15664,8 @@ koopa_install_rust_package() {
     )
     [[ "$#" -gt 0 ]] && install_args+=("$@")
     install_args+=("${dict['name']}")
-    koopa_init_dir "${dict['prefix']}/bin"
-    koopa_add_to_path_start "${dict['prefix']}/bin"
+    dict['bin_prefix']="$(koopa_init_dir "${dict['prefix']}/bin")"
+    koopa_add_to_path_start "${dict['bin_prefix']}"
     koopa_print_env
     koopa_dl 'cargo install args' "${install_args[*]}"
     "${app['cargo']}" install "${install_args[@]}"
@@ -15658,6 +15680,7 @@ koopa_install_rust() {
 
 koopa_install_salmon() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='salmon' \
         "$@"
 }
@@ -24418,6 +24441,10 @@ koopa_run_if_installed() {
         "$exe"
     done
     return 0
+}
+
+koopa_rust_cargo_config_file() {
+    koopa_print "${HOME:?}/.cargo/config.toml"
 }
 
 koopa_salmon_detect_bam_library_type() {

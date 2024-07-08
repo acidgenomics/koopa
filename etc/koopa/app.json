@@ -1367,7 +1367,7 @@
     "default": true,
     "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "7e159bfccd858aa6f596e43240851079d16c2f8c"
+    "version": "2ef518a763289cb2c2a21ebc78934987d97f9c62"
   },
   "du-dust": {
     "aliases": {
@@ -2885,10 +2885,15 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
-    "date": "2023-11-01",
+    "date": "2024-07-08",
     "default": false,
-    "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -4967,7 +4972,7 @@
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
-    "date": "2024-05-06",
+    "date": "2024-07-08",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -5028,6 +5033,12 @@
       "zlib",
       "zstd"
     ],
+    "supported": {
+      "linux-amd64": false,
+      "linux-arm64": false,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
     "url": [
       "https://svn.r-project.org/R/",
       "https://stat.ethz.ch/R/daily/",
@@ -5035,7 +5046,7 @@
       "https://developer.r-project.org/SVNtips.html",
       "https://developer.r-project.org/blosxom.cgi/R-devel/NEWS"
     ],
-    "version": "86526"
+    "version": "86886"
   },
   "r-gfortran": {
     "date": "2023-10-16",
@@ -5330,21 +5341,15 @@
   },
   "salmon": {
     "bin": ["salmon"],
-    "build_dependencies": ["cmake", "make", "patch"],
-    "date": "2023-10-17",
+    "date": "2024-07-08",
     "default": false,
-    "dependencies": [
-      "boost",
-      "bzip2",
-      "cereal",
-      "icu4c",
-      "jemalloc",
-      "libiconv",
-      "staden-io-lib",
-      "tbb",
-      "xz",
-      "zlib"
-    ],
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/COMBINE-lab/salmon/",
       "https://bioconda.github.io/recipes/salmon/README.html"
