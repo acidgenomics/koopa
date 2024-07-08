@@ -3,7 +3,7 @@
 main() {
     # """
     # Install full Anaconda distribution.
-    # @note Updated 2023-10-31.
+    # @note Updated 2024-07-08.
     # """
     local -A app dict
     app['bash']="$(koopa_locate_bash --allow-system)"
