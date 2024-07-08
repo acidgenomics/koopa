@@ -2885,10 +2885,15 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "build_dependencies": ["autoconf", "automake", "cmake", "make", "patch"],
-    "date": "2023-11-01",
+    "date": "2024-07-08",
     "default": false,
-    "dependencies": ["bzip2", "hdf5", "libaec", "xz", "zlib"],
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
