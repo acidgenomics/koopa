@@ -15553,10 +15553,11 @@ koopa_install_rust_package() {
     local -A app bool dict
     local -a install_args pos
     koopa_assert_is_install_subshell
-    koopa_activate_app --build-only 'rust'
+    koopa_activate_app --build-only 'git' 'rust'
     app['cargo']="$(koopa_locate_cargo)"
     koopa_assert_is_executable "${app[@]}"
     bool['openssl']=0
+    dict['cargo_config_file']="$(koopa_rust_cargo_config_file)"
     dict['cargo_home']="$(koopa_init_dir 'cargo')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:-}"
@@ -15619,7 +15620,6 @@ koopa_install_rust_package() {
     koopa_assert_is_dir "${dict['cargo_home']}"
     export CARGO_HOME="${dict['cargo_home']}"
     export RUST_BACKTRACE='full' # or '1'.
-    koopa_activate_app --build-only 'git'
     if [[ "${bool['openssl']}" -eq 1 ]]
     then
         koopa_activate_app 'openssl3'
@@ -15638,8 +15638,19 @@ koopa_install_rust_package() {
         done
         export RUSTFLAGS="${rustflags[*]}"
     fi
-    install_args=(
-        '--config' 'net.git-fetch-with-cli=true'
+    if [[ -f "${dict['cargo_config_file']}" ]]
+    then
+        koopa_alert "Using cargo config at '${dict['cargo_config_file']}'."
+        koopa_cp --verbose \
+            "${dict['cargo_config_file']}" \
+            "${CARGO_HOME:?}/config.toml"
+    else
+        install_args+=(
+            '--config' 'net.git-fetch-with-cli=true'
+            '--config' 'net.retry=5'
+        )
+    fi
+    install_args+=(
         '--jobs' "${dict['jobs']}"
         '--locked'
         '--root' "${dict['prefix']}"
@@ -24399,6 +24410,10 @@ koopa_run_if_installed() {
         "$exe"
     done
     return 0
+}
+
+koopa_rust_cargo_config_file() {
+    koopa_print "${HOME:?}/.cargo/config.toml"
 }
 
 koopa_r_version() {
