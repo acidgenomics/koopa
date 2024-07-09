@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Rework this to not change default channels to conda-forge and bioconda.
+# Instead, set this in the 'conda-package' recipes, reworking as 'conda-forge'
+# and 'bioconda' packages instead.
+
 main() {
     # """
     # Install Miniconda.
