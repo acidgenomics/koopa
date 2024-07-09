@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Ensure that our config doesn't change default channels and doesn't
+# set conda-forge, bioconda here automatically.
+
 main() {
     # """
     # Install full Anaconda distribution.
