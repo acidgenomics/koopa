@@ -5036,8 +5036,8 @@
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
-      "macos-amd64": false,
-      "macos-arm64": false
+      "macos-amd64": true,
+      "macos-arm64": true
     },
     "url": [
       "https://svn.r-project.org/R/",
