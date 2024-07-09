@@ -1927,6 +1927,7 @@ _koopa_locate_shell() {
     if [ -n "$__kvar_shell" ]
     then
         _koopa_print "$__kvar_shell"
+        unset -v __kvar_shell
         return 0
     fi
     __kvar_pid="${$}"
@@ -1953,9 +1954,16 @@ _koopa_locate_shell() {
         elif [ -n "${ZSH_VERSION:-}" ]
         then
             __kvar_shell='zsh'
+        else
+            __kvar_shell='sh'
         fi
     fi
     [ -n "$__kvar_shell" ] || return 1
+    case "$__kvar_shell" in
+        '/bin/sh' | 'sh')
+            __kvar_shell="$(_koopa_realpath '/bin/sh')"
+            ;;
+    esac
     _koopa_print "$__kvar_shell"
     unset -v __kvar_pid __kvar_shell
     return 0
@@ -2276,6 +2284,7 @@ _koopa_shell_name() {
     __kvar_shell="$(basename "$__kvar_shell")"
     [ -n "$__kvar_shell" ] || return 1
     _koopa_print "$__kvar_shell"
+    unset -v __kvar_shell
     return 0
 }
 

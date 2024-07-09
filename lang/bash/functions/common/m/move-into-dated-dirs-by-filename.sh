@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Work on adding support for macOS screenshots:
+# Screenshot YYYY-MM-DD at H.M.S AM.png
+
 koopa_move_into_dated_dirs_by_filename() {
     # """
     # Move into dated directories by filename.
