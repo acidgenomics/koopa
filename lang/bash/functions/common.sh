@@ -25983,6 +25983,10 @@ koopa_shared_ext() {
     return 0
 }
 
+koopa_shell_name() {
+    _koopa_shell_name "$@"
+}
+
 koopa_snake_case() {
     local -a out
     if [[ "$#" -eq 0 ]]
