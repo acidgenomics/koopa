@@ -4622,7 +4622,7 @@
     },
     "bin": ["poetry"],
     "date": "2024-05-08",
-    "default": false,
+    "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
