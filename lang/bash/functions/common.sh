@@ -15714,6 +15714,13 @@ koopa_install_scalene() {
         "$@"
 }
 
+koopa_install_scanpy() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='scanpy' \
+        "$@"
+}
+
 koopa_install_scons() {
     koopa_install_app \
         --name='scons' \
@@ -30764,6 +30771,12 @@ koopa_uninstall_samtools() {
 koopa_uninstall_scalene() {
     koopa_uninstall_app \
         --name='scalene' \
+        "$@"
+}
+
+koopa_uninstall_scanpy() {
+    koopa_uninstall_app \
+        --name='scanpy' \
         "$@"
 }
 

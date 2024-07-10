@@ -395,6 +395,7 @@ _koopa_complete() {
                         'sambamba'
                         'samtools'
                         'scalene'
+                        'scanpy'
                         'scons'
                         'screen'
                         'sd'
