@@ -5410,6 +5410,14 @@
     ],
     "version": "1.5.31.1"
   },
+  "scanpy": {
+    "bin": ["scanpy"],
+    "date": "2024-07-10",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "url": ["https://scanpy.readthedocs.io/"],
+    "version": "1.10.2"
+  },
   "scons": {
     "aliases": {
       "homebrew": true
