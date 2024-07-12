@@ -3,7 +3,7 @@
 koopa_cli() {
     # """
     # Main koopa CLI function, corresponding to 'koopa' binary.
-    # @note Updated 2024-06-13.
+    # @note Updated 2024-07-12.
     #
     # Need to update corresponding Bash completion file in
     # 'etc/completion/koopa.sh'.
@@ -32,7 +32,9 @@ koopa_cli() {
             dict['key']='koopa-version'
             shift 1
             ;;
-        'header')
+        'header' | \
+        'install-all-apps' | \
+        'install-default-apps')
             dict['key']="$1"
             shift 1
             ;;

@@ -310,14 +310,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-06-14",
+    "date": "2024-07-12",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.16.0"
+    "version": "2.17.11"
   },
   "axel": {
     "aliases": {
@@ -659,13 +659,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-06-13",
+    "date": "2024-07-12",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.39.0"
+    "version": "1.39.2"
   },
   "brotli": {
     "aliases": {
@@ -958,14 +958,14 @@
   },
   "colorls": {
     "bin": ["colorls"],
-    "date": "2022-09-26",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["ruby"],
     "url": [
       "https://github.com/athityakumar/colorls/",
       "https://rubygems.org/gems/colorls/"
     ],
-    "version": "1.4.6"
+    "version": "1.5.0"
   },
   "conda": {
     "bin": ["conda"],
@@ -1363,11 +1363,11 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-07-09",
+    "date": "2024-07-10",
     "default": true,
     "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "624473752acf21503bc1ead7d4ecc92d762f9a55"
+    "version": "c1cbf0b4ecd68ba1956ea10508504d5b3729192c"
   },
   "du-dust": {
     "aliases": {
@@ -1749,13 +1749,13 @@
   "fq": {
     "bin": ["fq"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-07",
+    "date": "2024-07-12",
     "default": false,
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
     ],
-    "version": "0.11.0"
+    "version": "0.12.0"
   },
   "fqtk": {
     "bin": ["fqtk"],
@@ -1806,11 +1806,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-06-13",
+    "date": "2024-07-12",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.53.0"
+    "version": "0.54.0"
   },
   "gatk": {
     "aliases": {
@@ -2494,13 +2494,13 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2024-03-14",
+    "date": "2024-07-12",
     "default": false,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.1.22.0"
+    "version": "0.1.30.0"
   },
   "haskell-stack": {
     "aliases": {
@@ -2639,11 +2639,11 @@
       "homebrew": true
     },
     "bin": ["http", "https"],
-    "date": "2023-05-20",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
-    "version": "3.2.2"
+    "version": "3.2.3"
   },
   "hugo": {
     "bin": ["hugo"],
@@ -3220,7 +3220,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-01-01",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": [
       "libde265",
@@ -3230,7 +3230,7 @@
     ],
     "prune": false,
     "url": ["https://www.libde265.org/"],
-    "version": "1.17.6"
+    "version": "1.18.0"
   },
   "libiconv": {
     "aliases": {
@@ -3591,6 +3591,7 @@
     "date": "2024-07-04",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
+    "outdated": true,
     "prune": false,
     "supported": {
       "linux-amd64": true,
@@ -3619,11 +3620,11 @@
     },
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-15",
+    "date": "2024-07-12",
     "default": false,
     "prune": false,
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
-    "version": "5.4.6"
+    "version": "5.4.7"
   },
   "luajit": {
     "aliases": {
@@ -3795,10 +3796,10 @@
     },
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
-    "date": "2024-06-13",
+    "date": "2024-07-12",
     "default": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.9.0"
+    "version": "0.9.1"
   },
   "mdcat": {
     "aliases": {
@@ -3819,12 +3820,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2024-06-13",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.4.1"
+    "version": "1.5.0"
   },
   "miller": {
     "aliases": {
@@ -3947,11 +3948,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-07-04",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.22.3"
+    "version": "1.23.0"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4622,7 +4623,7 @@
     },
     "bin": ["poetry"],
     "date": "2024-05-08",
-    "default": false,
+    "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
@@ -4747,12 +4748,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-07-05",
+    "date": "2024-07-12",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.6"
+    "version": "2.4.7"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5410,6 +5411,14 @@
     ],
     "version": "1.5.31.1"
   },
+  "scanpy": {
+    "bin": ["scanpy"],
+    "date": "2024-07-10",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "url": ["https://scanpy.readthedocs.io/"],
+    "version": "1.10.2"
+  },
   "scons": {
     "aliases": {
       "homebrew": true
@@ -5552,7 +5561,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-07-05",
+    "date": "2024-07-12",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5560,7 +5569,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.15.2"
+    "version": "8.16.0"
   },
   "sox": {
     "aliases": {
@@ -5958,11 +5967,11 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2023-05-24",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.3.2"
+    "version": "2.3.3"
   },
   "tuc": {
     "aliases": {
@@ -6069,11 +6078,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-07-04",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.2.21"
+    "version": "0.2.24"
   },
   "vim": {
     "aliases": {
@@ -6597,14 +6606,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-07-04",
+    "date": "2024-07-12",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.7.2"
+    "version": "2024.7.9"
   },
   "zellij": {
     "aliases": {
