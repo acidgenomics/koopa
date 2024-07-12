@@ -33,6 +33,8 @@ _koopa_complete() {
                 'develop'
                 'header'
                 'install'
+                'install-all-apps'
+                'install-default-apps'
                 'reinstall'
                 'system'
                 'uninstall'
@@ -395,6 +397,7 @@ _koopa_complete() {
                         'sambamba'
                         'samtools'
                         'scalene'
+                        'scanpy'
                         'scons'
                         'screen'
                         'sd'
@@ -490,14 +493,12 @@ _koopa_complete() {
                         )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
-                        'install')
-                            args+=('all' 'private' 'system' 'user')
+                        'install' | \
+                        'uninstall')
+                            args+=('private' 'system' 'user')
                             ;;
                         'reinstall')
                             args+=('--all-revdeps' '--only-revdeps')
-                            ;;
-                        'uninstall')
-                            args+=('private' 'system' 'user')
                             ;;
                     esac
                     ;;
@@ -594,9 +595,6 @@ _koopa_complete() {
                             ;;
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
-                        'all')
-                            args=('default' 'supported')
-                            ;;
                         'private')
                             args+=('ont-guppy')
                             if _koopa_is_linux
