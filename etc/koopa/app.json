@@ -3952,7 +3952,7 @@
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.23.0"
+    "version": "1.23"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
