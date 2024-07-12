@@ -3,7 +3,7 @@
 koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2023-12-11.
+    # @note Updated 2024-07-12.
     #
     # @examples
     # > koopa_cli_install --reinstall --verbose 'tmux' 'vim'
@@ -15,21 +15,6 @@ koopa_cli_install() {
     koopa_assert_has_args "$#"
     dict['stem']='install'
     case "${1:-}" in
-        'all')
-            shift 1
-            case "${1:-}" in
-                'default' | 'supported')
-                    dict['fun']="koopa_install_all_${1:?}"
-                    koopa_assert_is_function "${dict['fun']}"
-                    shift 1
-                    "${dict['fun']}" "$@"
-                    return 0
-                    ;;
-                *)
-                    koopa_stop 'Unsupported mode.'
-                    ;;
-                esac
-            ;;
         'koopa')
             shift 1
             koopa_install_koopa "$@"
@@ -41,9 +26,6 @@ koopa_cli_install() {
             ;;
         'app' | 'shared-apps')
             koopa_stop 'Unsupported command.'
-            ;;
-        '--all')
-            koopa_defunct 'koopa install all default'
             ;;
     esac
     flags=()
