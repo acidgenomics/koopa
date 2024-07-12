@@ -33,6 +33,8 @@ _koopa_complete() {
                 'develop'
                 'header'
                 'install'
+                'install-all-apps'
+                'install-default-apps'
                 'reinstall'
                 'system'
                 'uninstall'
@@ -595,9 +597,6 @@ _koopa_complete() {
                             ;;
                     esac
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
-                        'all')
-                            args=('default' 'supported')
-                            ;;
                         'private')
                             args+=('ont-guppy')
                             if _koopa_is_linux
