@@ -5087,21 +5087,6 @@ koopa_cli_install() {
     koopa_assert_has_args "$#"
     dict['stem']='install'
     case "${1:-}" in
-        'all')
-            shift 1
-            case "${1:-}" in
-                'default' | 'supported')
-                    dict['fun']="koopa_install_all_${1:?}"
-                    koopa_assert_is_function "${dict['fun']}"
-                    shift 1
-                    "${dict['fun']}" "$@"
-                    return 0
-                    ;;
-                *)
-                    koopa_stop 'Unsupported mode.'
-                    ;;
-                esac
-            ;;
         'koopa')
             shift 1
             koopa_install_koopa "$@"
@@ -5113,9 +5098,6 @@ koopa_cli_install() {
             ;;
         'app' | 'shared-apps')
             koopa_stop 'Unsupported command.'
-            ;;
-        '--all')
-            koopa_defunct 'koopa install all default'
             ;;
     esac
     flags=()
@@ -5440,7 +5422,9 @@ koopa_cli() {
             dict['key']='koopa-version'
             shift 1
             ;;
-        'header')
+        'header' | \
+        'install-all-apps' | \
+        'install-default-apps')
             dict['key']="$1"
             shift 1
             ;;
@@ -11865,13 +11849,7 @@ koopa_install_agat() {
         "$@"
 }
 
-koopa_install_all_default() {
-    koopa_assert_has_no_args "$#"
-    koopa_install_shared_apps "$@"
-    return 0
-}
-
-koopa_install_all_supported() {
+koopa_install_all_apps() {
     koopa_assert_has_no_args "$#"
     koopa_install_shared_apps --all "$@"
     return 0
@@ -13015,6 +12993,12 @@ koopa_install_deeptools() {
         --installer='conda-package' \
         --name='deeptools' \
         "$@"
+}
+
+koopa_install_default_apps() {
+    koopa_assert_has_no_args "$#"
+    koopa_install_shared_apps "$@"
+    return 0
 }
 
 koopa_install_delta() {
@@ -15711,6 +15695,13 @@ koopa_install_scalene() {
     koopa_install_app \
         --installer='python-package' \
         --name='scalene' \
+        "$@"
+}
+
+koopa_install_scanpy() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='scanpy' \
         "$@"
 }
 
@@ -30764,6 +30755,12 @@ koopa_uninstall_samtools() {
 koopa_uninstall_scalene() {
     koopa_uninstall_app \
         --name='scalene' \
+        "$@"
+}
+
+koopa_uninstall_scanpy() {
+    koopa_uninstall_app \
+        --name='scanpy' \
         "$@"
 }
 
