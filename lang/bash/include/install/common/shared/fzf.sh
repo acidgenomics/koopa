@@ -3,7 +3,7 @@
 main() {
     # """
     # Install fzf.
-    # @note Updated 2023-06-01.
+    # @note Updated 2024-07-12.
     #
     # @seealso
     # - https://github.com/junegunn/fzf/blob/master/BUILD.md
@@ -22,7 +22,7 @@ main() {
     export GOCACHE="${dict['gocache']}"
     export GOPATH="${dict['gopath']}"
     dict['url']="https://github.com/junegunn/fzf/\
-archive/${dict['version']}.tar.gz"
+archive/v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
