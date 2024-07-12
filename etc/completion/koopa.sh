@@ -493,14 +493,12 @@ _koopa_complete() {
                         )
                     fi
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
-                        'install')
-                            args+=('all' 'private' 'system' 'user')
+                        'install' | \
+                        'uninstall')
+                            args+=('private' 'system' 'user')
                             ;;
                         'reinstall')
                             args+=('--all-revdeps' '--only-revdeps')
-                            ;;
-                        'uninstall')
-                            args+=('private' 'system' 'user')
                             ;;
                     esac
                     ;;
