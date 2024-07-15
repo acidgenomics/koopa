@@ -11,17 +11,17 @@ channels:
   - defaults
 ```
 
+Useful debugging commands:
+
+```sh
+conda config --json --show
+conda config --json --show-sources
+```
+
 See also:
 
-# - 'conda config --json --show' and 'conda config --json --show-sources'.
-# - https://conda.io/projects/conda/en/latest/user-guide/configuration/
-#       use-condarc.html
-# - https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/
-#       admin-multi-user-install.html
-# - https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/
-#       manage-conda.html
-# - https://docs.conda.io/projects/conda/en/latest/configuration.html
-# - https://bioconda.github.io/#set-up-channels
-# - conda-libmamba-solver details:
-#   https://github.com/conda/conda/releases/tag/23.10.0
-#   https://www.anaconda.com/blog/a-faster-conda-for-a-growing-community
+- [How to use condarc](https://conda.io/projects/conda/en/latest/user-guide/configuration/use-condarc.html)
+- [Admin multi-user install](https://docs.conda.io/projects/conda/en/latest/user-guide/configuration/admin-multi-user-install.html)
+- [Manging conda](https://docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-conda.html)
+- [Conda configuration](https://docs.conda.io/projects/conda/en/latest/configuration.html)
+- [Bioconda channel setup](https://bioconda.github.io/#set-up-channels)
