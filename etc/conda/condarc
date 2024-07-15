@@ -3,6 +3,8 @@ auto_activate_base: False
 auto_update_conda: False
 changeps1: False
 channels:
+  - conda-forge
+  - bioconda
   - defaults
 envs_dirs:
   - ~/.conda/envs
