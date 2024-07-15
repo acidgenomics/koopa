@@ -2,6 +2,7 @@
 
 install_from_conda() {
     koopa_install_conda_package
+    return 0
 }
 
 install_from_source() {
@@ -96,9 +97,9 @@ v${dict['version']}.tar.gz"
 main() {
     if koopa_is_aarch64
     then
-        install_from_source "$@"
+        install_from_source
     else
-        install_from_conda "$@"
+        install_from_conda
     fi
     return 0
 }
