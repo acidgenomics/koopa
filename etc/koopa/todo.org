@@ -1,6 +1,9 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Need to automatically reinstall reverse dependencies when an app such as conda, node, etc. is updated.
+** TODO Add support for platform/architecture-specific dependencies.
+    Useful for installation of kallisto, salmon, star, ncbi-sra-tools
 ** TODO Add Docker image support for rhel7, rhel8, ubuntu20, ubuntu22 so we can test our installer support better across platforms.
 ** TODO Need to rework recipes that depend on gcc. This is not a reliable toolchain on macOS.
     hdf5, lapack, openblas, r, star, zip
