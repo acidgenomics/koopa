@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Check if we already have conda-forge and bioconda channels enabled.
-# Tell the user that these are custom and show the channel sources.
-#
-# conda config --show channels
-# conda config --show-sources
-
 koopa_install_conda_package() {
     # """
     # Install a conda environment as an application.
