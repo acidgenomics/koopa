@@ -15304,6 +15304,13 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
     return 0
 }
 
+koopa_install_python310() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.10' \
+        "$@"
+}
+
 koopa_install_python311() {
     koopa_install_app \
         --installer='python' \
@@ -30600,6 +30607,12 @@ koopa_uninstall_python311() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
+}
+
+koopa_uninstall_python312() {
+    koopa_uninstall_app \
+        --name='python3.12' \
+        "$@"
 }
 
 koopa_uninstall_quarto() {
