@@ -6,7 +6,7 @@
 main() {
     # """
     # Install Lua.
-    # @note Updated 2023-04-11.
+    # @note Updated 2024-07-15.
     #
     # @seealso
     # - http://www.lua.org/manual/
@@ -25,7 +25,7 @@ main() {
     then
         dict['platform']='linux'
     fi
-    dict['url']="http://www.lua.org/ftp/lua-${dict['version']}.tar.gz"
+    dict['url']="https://www.lua.org/ftp/lua-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
