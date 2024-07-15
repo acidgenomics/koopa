@@ -1363,11 +1363,11 @@
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
-    "date": "2024-07-10",
+    "date": "2024-07-15",
     "default": true,
     "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "c1cbf0b4ecd68ba1956ea10508504d5b3729192c"
+    "version": "26c498a2a82455c521cb5e914203d92cdb6f80ed"
   },
   "du-dust": {
     "aliases": {
@@ -3952,7 +3952,7 @@
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.23.0"
+    "version": "1.23"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4660,11 +4660,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-06-13",
+    "date": "2024-07-15",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.3.2"
+    "version": "3.3.3"
   },
   "procs": {
     "aliases": {
@@ -4826,10 +4826,32 @@
     "version": "8.2.2"
   },
   "python3.10": {
+    "aliases": {
+      "homebrew": "python@3.10"
+    },
     "bin": ["python3.10", "python3.10-config"],
-    "date": "2023-07-28",
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2024-07-15",
+    "default": false,
+    "dependencies": [
+      "bzip2",
+      "expat",
+      "libedit",
+      "libffi",
+      "libxcrypt",
+      "mpdecimal",
+      "ncurses",
+      "openssl3",
+      "readline",
+      "sqlite",
+      "unzip",
+      "xz",
+      "zlib"
+    ],
     "man1": ["python3.10.1"],
-    "removed": true
+    "prune": false,
+    "url": ["https://www.python.org/"],
+    "version": "3.10.14"
   },
   "python3.11": {
     "aliases": {
@@ -5305,11 +5327,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-07-05",
+    "date": "2024-07-15",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.5.1"
+    "version": "0.5.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5618,13 +5640,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2024-04-17",
+    "date": "2024-07-15",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.3.7"
+    "version": "7.4.3"
   },
   "sqlite": {
     "aliases": {

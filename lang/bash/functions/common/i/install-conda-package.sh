@@ -3,7 +3,7 @@
 koopa_install_conda_package() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2023-11-01.
+    # @note Updated 2024-07-15.
     #
     # Be sure to excluded nested directories that may exist in 'libexec' 'bin',
     # such as 'bin/scripts' for bowtie2.
@@ -13,10 +13,12 @@ koopa_install_conda_package() {
     # @seealso
     # - https://github.com/conda/conda/issues/7741
     # """
-    local -A dict
+    local -A app dict
     local -a bin_names create_args pos
     local bin_name
     koopa_assert_is_install_subshell
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -75,6 +77,16 @@ koopa_install_conda_package() {
         '--version' "${dict['name']}"
     create_args=()
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['channels']="$("${app['conda']}" config --show channels)"
+    if ! koopa_str_detect_fixed \
+            --pattern='conda-forge' \
+            --string="${dict['channels']}"
+    then
+        create_args+=(
+            '--channel=conda-forge'
+            '--channel=bioconda'
+        )
+    fi
     create_args+=("--prefix=${dict['libexec']}")
     if [[ -n "${dict['yaml_file']}" ]]
     then
@@ -82,6 +94,9 @@ koopa_install_conda_package() {
     else
         create_args+=("${dict['name']}==${dict['version']}")
     fi
+    koopa_dl 'conda create env args' "${create_args[*]}"
+    "${app['conda']}" config --json --show
+    "${app['conda']}" config --json --show-sources
     koopa_conda_create_env "${create_args[@]}"
     dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
