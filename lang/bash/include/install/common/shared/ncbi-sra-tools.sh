@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package --name='sra-tools'
+    return 0
+}
+
+install_from_source() {
     # """
-    # Install SRA toolkit.
-    # @note Updated 2024-07-06.
+    # Install SRA toolkit from source.
+    # @note Updated 2024-07-15.
     #
     # VDB is the database engine that all SRA tools use.
     #
@@ -21,7 +26,7 @@ main() {
     # - https://github.com/ncbi/sra-tools/issues/937
     # """
     local -A app cmake dict
-    local -a build_deps cmake_args cmake_std_args deps
+    local -a build_deps cmake_args cmake_std_args
     build_deps+=('bison' 'flex' 'python3.12')
     koopa_activate_app --build-only "${build_deps[@]}"
     # > deps+=('icu4c' 'libxml2')
@@ -118,5 +123,15 @@ ${dict['version']}.tar.gz"
         --build 'sra-tools' \
         --parallel "${dict['jobs']}" \
         --target 'install'
+    return 0
+}
+
+main() {
+    if koopa_is_aarch64
+    then
+        install_from_source
+    else
+        install_from_conda
+    fi
     return 0
 }
