@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+}
+
+install_from_source() {
     # """
-    # Install kallisto.
-    # @note updated 2023-11-01.
+    # Install kallisto from source.
+    # @note updated 2024-07-15.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -86,5 +90,15 @@ v${dict['version']}.tar.gz"
     koopa_cd 'src'
     export KOOPA_CPU_COUNT=1
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    return 0
+}
+
+main() {
+    if koopa_is_aarch64
+    then
+        install_from_source "$@"
+    else
+        install_from_conda "$@"
+    fi
     return 0
 }

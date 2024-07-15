@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+}
+
+install_from_source() {
     # """
-    # Install salmon.
-    # @note Updated 2023-10-10.
+    # Install salmon from source.
+    # @note Updated 2024-07-15.
     #
     # @seealso
     # - https://github.com/COMBINE-lab/salmon/
@@ -113,5 +117,15 @@ v${dict['version']}.tar.gz"
     app['salmon']="${dict['prefix']}/bin/salmon"
     koopa_assert_is_executable "${app['salmon']}"
     "${app['salmon']}" --version
+    return 0
+}
+
+main() {
+    if koopa_is_aarch64
+    then
+        install_from_source "$@"
+    else
+        install_from_conda "$@"
+    fi
     return 0
 }
