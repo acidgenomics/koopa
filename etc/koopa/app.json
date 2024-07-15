@@ -4660,11 +4660,11 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-06-13",
+    "date": "2024-07-15",
     "default": false,
     "dependencies": ["node"],
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.3.2"
+    "version": "3.3.3"
   },
   "procs": {
     "aliases": {
@@ -5327,11 +5327,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-07-05",
+    "date": "2024-07-15",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.5.1"
+    "version": "0.5.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5640,13 +5640,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2024-04-17",
+    "date": "2024-07-15",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.3.7"
+    "version": "7.4.3"
   },
   "sqlite": {
     "aliases": {
