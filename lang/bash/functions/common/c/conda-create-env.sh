@@ -3,7 +3,7 @@
 koopa_conda_create_env() {
     # """
     # Create a conda environment.
-    # @note Updated 2023-11-01.
+    # @note Updated 2024-07-15.
     #
     # @seealso
     # - https://conda.io/projects/conda/en/latest/user-guide/tasks/
@@ -28,6 +28,15 @@ koopa_conda_create_env() {
     while (("$#"))
     do
         case "$1" in
+            # Passthrough key-value pairs --------------------------------------
+            '--channel='*)
+                pos+=("$1")
+                shift 1
+                ;;
+            '--channel')
+                pos+=("$1" "$2")
+                shift 2
+                ;;
             # Key-value pairs --------------------------------------------------
             '--file='*)
                 dict['yaml_file']="${1#*=}"

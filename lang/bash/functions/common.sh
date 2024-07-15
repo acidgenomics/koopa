@@ -5910,6 +5910,14 @@ koopa_conda_create_env() {
     while (("$#"))
     do
         case "$1" in
+            '--channel='*)
+                pos+=("$1")
+                shift 1
+                ;;
+            '--channel')
+                pos+=("$1" "$2")
+                shift 2
+                ;;
             '--file='*)
                 dict['yaml_file']="${1#*=}"
                 shift 1
@@ -12828,10 +12836,12 @@ koopa_install_colorls() {
 }
 
 koopa_install_conda_package() {
-    local -A dict
+    local -A app dict
     local -a bin_names create_args pos
     local bin_name
     koopa_assert_is_install_subshell
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -12888,6 +12898,16 @@ koopa_install_conda_package() {
         '--version' "${dict['name']}"
     create_args=()
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['channels']="$("${app['conda']}" config --show channels)"
+    if ! koopa_str_detect_fixed \
+            --pattern='conda-forge' \
+            --string="${dict['channels']}"
+    then
+        create_args+=(
+            '--channel=conda-forge'
+            '--channel=bioconda'
+        )
+    fi
     create_args+=("--prefix=${dict['libexec']}")
     if [[ -n "${dict['yaml_file']}" ]]
     then
@@ -12895,6 +12915,9 @@ koopa_install_conda_package() {
     else
         create_args+=("${dict['name']}==${dict['version']}")
     fi
+    koopa_dl 'conda create env args' "${create_args[*]}"
+    "${app['conda']}" config --json --show
+    "${app['conda']}" config --json --show-sources
     koopa_conda_create_env "${create_args[@]}"
     dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
@@ -13861,7 +13884,6 @@ koopa_install_jupyterlab() {
 
 koopa_install_kallisto() {
     koopa_install_app \
-        --installer='conda-package' \
         --name='kallisto' \
         "$@"
 }
@@ -14547,9 +14569,7 @@ koopa_install_nanopolish() {
 }
 
 koopa_install_ncbi_sra_tools() {
-    koopa_assert_is_not_aarch64
     koopa_install_app \
-        --installer='ncbi-sra-tools-conda' \
         --name='ncbi-sra-tools' \
         "$@"
 }
@@ -15304,6 +15324,13 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
     return 0
 }
 
+koopa_install_python310() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.10' \
+        "$@"
+}
+
 koopa_install_python311() {
     koopa_install_app \
         --installer='python' \
@@ -15664,7 +15691,6 @@ koopa_install_rust() {
 
 koopa_install_salmon() {
     koopa_install_app \
-        --installer='conda-package' \
         --name='salmon' \
         "$@"
 }
@@ -15897,18 +15923,9 @@ koopa_install_star_fusion() {
 }
 
 koopa_install_star() {
-    if koopa_is_aarch64
-    then
-        koopa_install_app \
-            --installer='star-src' \
-            --name='star' \
-            "$@"
-    else
-        koopa_install_app \
-            --installer='star-conda' \
-            --name='star' \
-            "$@"
-    fi
+    koopa_install_app \
+        --name='star' \
+        "$@"
 }
 
 koopa_install_starship() {
@@ -30600,6 +30617,12 @@ koopa_uninstall_python311() {
         "${dict['bin_prefix']}/python3" \
         "${dict['opt_prefix']}/python"
     return 0
+}
+
+koopa_uninstall_python312() {
+    koopa_uninstall_app \
+        --name='python3.12' \
+        "$@"
 }
 
 koopa_uninstall_quarto() {
