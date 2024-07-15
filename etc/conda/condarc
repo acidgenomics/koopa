@@ -1,6 +1,6 @@
 # """
 # Conda configuration.
-# @note Updated 2023-11-11.
+# @note Updated 2024-07-15.
 #
 # @seealso
 # - 'conda config --json --show' and 'conda config --json --show-sources'.
@@ -22,8 +22,8 @@ auto_activate_base: False
 auto_update_conda: False
 changeps1: False
 channels:
-  - conda-forge
-  - bioconda
+  # > - conda-forge
+  # > - bioconda
   - defaults
 envs_dirs:
   - ~/.conda/envs
