@@ -2179,10 +2179,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-07-15",
     "default": false,
     "url": ["https://github.com/google/googletest/"],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "gperf": {
     "aliases": {
@@ -5646,7 +5646,7 @@
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.4.3"
+    "version": "7.4.4"
   },
   "sqlite": {
     "aliases": {
