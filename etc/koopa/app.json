@@ -913,10 +913,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-07-04",
+    "date": "2024-07-15",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-   "version": "2.50.0"
+   "version": "2.51.0"
   },
   "cli11": {
     "aliases": {
@@ -2157,11 +2157,11 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2024-02-07",
+    "date": "2024-07-15",
     "default": false,
     "outdated": true,
     "url": ["https://golang.org/dl/"],
-    "version": "1.22.0"
+    "version": "1.22.5"
   },
   "google-cloud-sdk": {
     "aliases": {
@@ -4201,7 +4201,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2023-11-22",
+    "date": "2024-07-15",
     "default": false,
     "dependencies": [
       "ca-certificates",
@@ -4216,7 +4216,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "20.10.0"
+    "version": "20.15.1"
   },
   "npth": {
     "aliases": {
