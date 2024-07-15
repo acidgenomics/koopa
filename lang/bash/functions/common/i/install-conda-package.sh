@@ -101,7 +101,8 @@ koopa_install_conda_package() {
         create_args+=("${dict['name']}==${dict['version']}")
     fi
     koopa_dl 'conda create env args' "${create_args[*]}"
-    "${app['conda']}" config --show-sources
+    "${app['conda']}" config --json --show
+    "${app['conda']}" config --json --show-sources
     koopa_conda_create_env "${create_args[@]}"
     dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
