@@ -16,7 +16,9 @@ koopa_r_migrate_non_base_packages() {
     koopa_is_array_non_empty "${pkgs[@]:-}" || return 0
     koopa_alert 'Migrating non-base packages to site library.'
     koopa_dl 'Packages' "$(koopa_to_string "${pkgs[@]}")"
+    # FIXME This doesn't seem to be erroring on warning as expected.
     koopa_r_install_packages_in_site_library "${app['r']}" "${pkgs[@]}"
+    # FIXME This doesn't seem to be erroring on warning as expected.
     koopa_r_remove_packages_in_system_library "${app['r']}" "${pkgs[@]}"
     return 0
 }
