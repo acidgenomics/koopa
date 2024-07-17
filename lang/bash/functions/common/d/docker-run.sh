@@ -3,7 +3,7 @@
 koopa_docker_run() {
     # """
     # Run Docker image.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-07-17.
     #
     # No longer using bind mounts by default.
     # Use named volumes, which have better cross-platform compatiblity, instead.
@@ -73,7 +73,16 @@ koopa_docker_run() {
             ;;
     esac
     "${app['docker']}" pull "${dict['image']}"
-    run_args=('--interactive' '--tty')
+    run_args+=('--interactive' '--tty')
+    # Ensure proxy server settings pass through, if defined in environment.
+    [[ -n "${HTTP_PROXY:-}" ]] &&
+        run_args+=('--env' "HTTP_PROXY=${HTTP_PROXY:?}")
+    [[ -n "${HTTPS_PROXY:-}" ]] &&
+        run_args+=('--env' "HTTPS_PROXY=${HTTPS_PROXY:?}")
+    [[ -n "${http_proxy:-}" ]] &&
+        run_args+=('--env' "http_proxy=${http_proxy:?}")
+    [[ -n "${https_proxy:-}" ]] &&
+        run_args+=('--env' "https_proxy=${https_proxy:?}")
     # Legacy bind mounts approach, now disabled by default.
     # Useful for quickly checking whether a local script will run.
     if [[ "${dict['bind']}" -eq 1 ]]
@@ -102,15 +111,6 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
-    # Ensure proxy server settings pass through, if defined in environment.
-    [[ -n "${HTTP_PROXY:-}" ]] &&
-        run_args+=('-e' "HTTP_PROXY=${HTTP_PROXY:?}")
-    [[ -n "${HTTPS_PROXY:-}" ]] &&
-        run_args+=('-e' "HTTPS_PROXY=${HTTPS_PROXY:?}")
-    [[ -n "${http_proxy:-}" ]] &&
-        run_args+=('-e' "http_proxy=${http_proxy:?}")
-    [[ -n "${https_proxy:-}" ]] &&
-        run_args+=('-e' "https_proxy=${https_proxy:?}")
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }
