@@ -13849,6 +13849,12 @@ koopa_install_jemalloc() {
         "$@"
 }
 
+koopa_install_jfrog_cli() {
+    koopa_install_app \
+        --name='jfrog-cli' \
+        "$@"
+}
+
 koopa_install_jless() {
     koopa_install_app \
         --name='jless' \
@@ -29703,6 +29709,12 @@ koopa_uninstall_isort() {
 koopa_uninstall_jemalloc() {
     koopa_uninstall_app \
         --name='jemalloc' \
+        "$@"
+}
+
+koopa_uninstall_jfrog_cli() {
+    koopa_uninstall_app \
+        --name='jfrog-cli' \
         "$@"
 }
 
