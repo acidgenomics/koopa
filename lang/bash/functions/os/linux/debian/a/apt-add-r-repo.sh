@@ -3,7 +3,7 @@
 koopa_debian_apt_add_r_repo() {
     # """
     # Add R apt repo.
-    # @note Updated 2023-05-10.
+    # @note Updated 2024-07-17.
     # """
     local -A dict
     koopa_assert_has_args_le "$#" 1

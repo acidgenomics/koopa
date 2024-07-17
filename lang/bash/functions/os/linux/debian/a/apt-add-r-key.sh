@@ -3,7 +3,7 @@
 koopa_debian_apt_add_r_key() {
     # """
     # Add the R key.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-07-17.
     #
     # Addition of signing key via keyserver directly into /etc/apt/trusted.gpg'
     # file is deprecated in Debian, but currently the only supported method for
