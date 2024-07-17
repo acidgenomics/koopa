@@ -2806,6 +2806,16 @@
     "url": ["http://jemalloc.net/", "https://github.com/jemalloc/jemalloc/"],
     "version": "5.3.0"
   },
+  "jfrog-cli": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["jf"],
+    "date": "2024-07-17",
+    "default": false,
+    "url": ["https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"],
+    "version": "2.59.1"
+  },
   "jless": {
     "aliases": {
       "homebrew": true
