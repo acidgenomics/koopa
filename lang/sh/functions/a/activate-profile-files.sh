@@ -35,10 +35,5 @@ _koopa_activate_profile_files() {
         # shellcheck source=/dev/null
         . "${HOME:?}/.secrets-work"
     fi
-    if [ -r "${HOME:?}/.secrets-private" ]
-    then
-        # shellcheck source=/dev/null
-        . "${HOME:?}/.secrets-private"
-    fi
     return 0
 }
