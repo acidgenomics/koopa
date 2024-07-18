@@ -345,7 +345,12 @@ ${dict['version2']}"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
-        env_vars=(
+        # FIXME Consider passing these environment variables through:
+        # - DEFAULT_CA_BUNDLE_PATH
+        # - REQUESTS_CA_BUNDLE
+        # - SSL_CERT_FILE
+        # (may be helpful for installation behind proxy)
+        env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
