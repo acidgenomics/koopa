@@ -180,6 +180,11 @@ _koopa_activate_aliases() {
         # shellcheck source=/dev/null
         . "${HOME:?}/.aliases-private"
     fi
+    if [ -f "${HOME:?}/.aliases-work" ]
+    then
+        # shellcheck source=/dev/null
+        . "${HOME:?}/.aliases-work"
+    fi
     unset -v __kvar_bin_prefix __kvar_xdg_data_home
     return 0
 }
