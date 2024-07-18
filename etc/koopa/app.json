@@ -868,6 +868,7 @@
     "date": "2024-05-06",
     "default": false,
     "private": true,
+    "outdated": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
