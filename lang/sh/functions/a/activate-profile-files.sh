@@ -10,15 +10,15 @@ _koopa_activate_profile_files() {
         # shellcheck source=/dev/null
         . "${HOME:?}/.profile-personal"
     fi
-    if [ -r "${HOME:?}/.profile-private" ]
-    then
-        # shellcheck source=/dev/null
-        . "${HOME:?}/.profile-private"
-    fi
     if [ -r "${HOME:?}/.profile-work" ]
     then
         # shellcheck source=/dev/null
         . "${HOME:?}/.profile-work"
+    fi
+    if [ -r "${HOME:?}/.profile-private" ]
+    then
+        # shellcheck source=/dev/null
+        . "${HOME:?}/.profile-private"
     fi
     if [ -r "${HOME:?}/.secrets" ]
     then
@@ -30,15 +30,15 @@ _koopa_activate_profile_files() {
         # shellcheck source=/dev/null
         . "${HOME:?}/.secrets-personal"
     fi
-    if [ -r "${HOME:?}/.secrets-private" ]
-    then
-        # shellcheck source=/dev/null
-        . "${HOME:?}/.secrets-private"
-    fi
     if [ -r "${HOME:?}/.secrets-work" ]
     then
         # shellcheck source=/dev/null
         . "${HOME:?}/.secrets-work"
+    fi
+    if [ -r "${HOME:?}/.secrets-private" ]
+    then
+        # shellcheck source=/dev/null
+        . "${HOME:?}/.secrets-private"
     fi
     return 0
 }

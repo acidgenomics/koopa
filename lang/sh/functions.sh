@@ -744,13 +744,13 @@ _koopa_activate_profile_files() {
     then
         . "${HOME:?}/.profile-personal"
     fi
-    if [ -r "${HOME:?}/.profile-private" ]
-    then
-        . "${HOME:?}/.profile-private"
-    fi
     if [ -r "${HOME:?}/.profile-work" ]
     then
         . "${HOME:?}/.profile-work"
+    fi
+    if [ -r "${HOME:?}/.profile-private" ]
+    then
+        . "${HOME:?}/.profile-private"
     fi
     if [ -r "${HOME:?}/.secrets" ]
     then
@@ -760,13 +760,13 @@ _koopa_activate_profile_files() {
     then
         . "${HOME:?}/.secrets-personal"
     fi
-    if [ -r "${HOME:?}/.secrets-private" ]
-    then
-        . "${HOME:?}/.secrets-private"
-    fi
     if [ -r "${HOME:?}/.secrets-work" ]
     then
         . "${HOME:?}/.secrets-work"
+    fi
+    if [ -r "${HOME:?}/.secrets-private" ]
+    then
+        . "${HOME:?}/.secrets-private"
     fi
     return 0
 }
