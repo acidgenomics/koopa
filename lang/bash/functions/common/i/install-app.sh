@@ -17,7 +17,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-07-18.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -346,9 +346,6 @@ ${dict['version2']}"
         koopa_assert_is_executable "${app[@]}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         # FIXME Consider passing these environment variables through:
-        # - DEFAULT_CA_BUNDLE_PATH
-        # - REQUESTS_CA_BUNDLE
-        # - SSL_CERT_FILE
         # (may be helpful for installation behind proxy)
         env_vars+=(
             "HOME=${HOME:?}"
@@ -364,6 +361,14 @@ ${dict['version2']}"
         )
         [[ -n "${KOOPA_CAN_INSTALL_BINARY:-}" ]] && \
             env_vars+=("KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:?}")
+        # TLS/SSL CA certificates ----------------------------------------------
+        [[ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ]] && \
+            env_vars+=("DEFAULT_CA_BUNDLE_PATH=${DEFAULT_CA_BUNDLE_PATH:-}")
+        [[ -n "${REQUESTS_CA_BUNDLE:-}" ]] && \
+            env_vars+=("REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE:-}")
+        [[ -n "${SSL_CERT_FILE:-}" ]] && \
+            env_vars+=("SSL_CERT_FILE=${SSL_CERT_FILE:-}")
+        # HTTP proxy server ----------------------------------------------------
         [[ -n "${HTTP_PROXY:-}" ]] && \
             env_vars+=("HTTP_PROXY=${HTTP_PROXY:?}")
         [[ -n "${HTTPS_PROXY:-}" ]] && \

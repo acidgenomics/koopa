@@ -12335,7 +12335,7 @@ ${dict['version2']}"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
-        env_vars=(
+        env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
@@ -12349,6 +12349,12 @@ ${dict['version2']}"
         )
         [[ -n "${KOOPA_CAN_INSTALL_BINARY:-}" ]] && \
             env_vars+=("KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:?}")
+        [[ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ]] && \
+            env_vars+=("DEFAULT_CA_BUNDLE_PATH=${DEFAULT_CA_BUNDLE_PATH:-}")
+        [[ -n "${REQUESTS_CA_BUNDLE:-}" ]] && \
+            env_vars+=("REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE:-}")
+        [[ -n "${SSL_CERT_FILE:-}" ]] && \
+            env_vars+=("SSL_CERT_FILE=${SSL_CERT_FILE:-}")
         [[ -n "${HTTP_PROXY:-}" ]] && \
             env_vars+=("HTTP_PROXY=${HTTP_PROXY:?}")
         [[ -n "${HTTPS_PROXY:-}" ]] && \
