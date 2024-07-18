@@ -345,8 +345,6 @@ ${dict['version2']}"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
-        # FIXME Consider passing these environment variables through:
-        # (may be helpful for installation behind proxy)
         env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -377,6 +375,9 @@ ${dict['version2']}"
             env_vars+=("http_proxy=${http_proxy:?}")
         [[ -n "${https_proxy:-}" ]] && \
             env_vars+=("https_proxy=${https_proxy:?}")
+        # Application-specific variables ---------------------------------------
+        [[ -n "${GOPROXY:-}" ]] && \
+            env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             PKG_CONFIG_PATH=''

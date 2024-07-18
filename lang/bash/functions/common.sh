@@ -12363,6 +12363,8 @@ ${dict['version2']}"
             env_vars+=("http_proxy=${http_proxy:?}")
         [[ -n "${https_proxy:-}" ]] && \
             env_vars+=("https_proxy=${https_proxy:?}")
+        [[ -n "${GOPROXY:-}" ]] && \
+            env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             PKG_CONFIG_PATH=''
