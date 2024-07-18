@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Write an aws s3 sync variant that automatically excludes ignored files in a git repo.   Very useful for separating code and data on AWS.
+** TODO Write a function that detects ignored files in submodules.
 ** TODO Need to automatically reinstall reverse dependencies when an app such as conda, node, etc. is updated.
 ** TODO Add support for platform/architecture-specific dependencies.
     Useful for installation of kallisto, salmon, star, ncbi-sra-tools
