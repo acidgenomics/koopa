@@ -764,10 +764,6 @@ _koopa_activate_profile_files() {
     then
         . "${HOME:?}/.secrets-work"
     fi
-    if [ -r "${HOME:?}/.secrets-private" ]
-    then
-        . "${HOME:?}/.secrets-private"
-    fi
     return 0
 }
 
