@@ -3,13 +3,15 @@
 _koopa_activate_ca_certificates() {
     # """
     # Activate CA certificates for OpenSSL.
-    # @note Updated 2023-06-12.
+    # @note Updated 2024-07-18.
     #
     # @seealso
-    # - REQUESTS_CA_BUNDLE
-    # - SSL_CERT_FILE
     # - https://stackoverflow.com/questions/51925384/
+    # - https://curl.se/docs/caextract.html
     # """
+    [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
+    [ -n "${REQUESTS_CA_BUNDLE:-}" ] && return 0
+    [ -n "${SSL_CERT_FILE:-}" ] && return 0
     __kvar_prefix="$(_koopa_opt_prefix)/ca-certificates"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -24,6 +26,7 @@ _koopa_activate_ca_certificates() {
         return 0
     fi
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
+    export REQUESTS_CA_BUNDLE="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
     unset -v __kvar_file __kvar_prefix
     return 0

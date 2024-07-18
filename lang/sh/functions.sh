@@ -350,6 +350,9 @@ _koopa_activate_broot() {
 }
 
 _koopa_activate_ca_certificates() {
+    [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
+    [ -n "${REQUESTS_CA_BUNDLE:-}" ] && return 0
+    [ -n "${SSL_CERT_FILE:-}" ] && return 0
     __kvar_prefix="$(_koopa_opt_prefix)/ca-certificates"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -364,6 +367,7 @@ _koopa_activate_ca_certificates() {
         return 0
     fi
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
+    export REQUESTS_CA_BUNDLE="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
     unset -v __kvar_file __kvar_prefix
     return 0
