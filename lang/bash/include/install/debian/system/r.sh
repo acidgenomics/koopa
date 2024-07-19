@@ -3,7 +3,7 @@
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2023-05-15.
+    # @note Updated 2024-07-17.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -14,7 +14,7 @@ main() {
     #
     # @seealso
     # - https://cran.r-project.org/bin/linux/debian/
-    # - https://cran.r-project.org/bin/linux/ubuntu/README.html
+    # - https://cran.r-project.org/bin/linux/ubuntu/
     # """
     local -A app dict
     local -a dep_pkgs pkgs
