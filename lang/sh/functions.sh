@@ -194,6 +194,10 @@ _koopa_activate_aliases() {
     then
         . "${HOME:?}/.aliases-private"
     fi
+    if [ -f "${HOME:?}/.aliases-work" ]
+    then
+        . "${HOME:?}/.aliases-work"
+    fi
     unset -v __kvar_bin_prefix __kvar_xdg_data_home
     return 0
 }
@@ -346,6 +350,9 @@ _koopa_activate_broot() {
 }
 
 _koopa_activate_ca_certificates() {
+    [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
+    [ -n "${REQUESTS_CA_BUNDLE:-}" ] && return 0
+    [ -n "${SSL_CERT_FILE:-}" ] && return 0
     __kvar_prefix="$(_koopa_opt_prefix)/ca-certificates"
     if [ ! -d "$__kvar_prefix" ]
     then
@@ -360,6 +367,7 @@ _koopa_activate_ca_certificates() {
         return 0
     fi
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
+    export REQUESTS_CA_BUNDLE="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
     unset -v __kvar_file __kvar_prefix
     return 0
@@ -731,15 +739,31 @@ _koopa_activate_pipx() {
     return 0
 }
 
-_koopa_activate_profile_private() {
-    __kvar_file="${HOME:?}/.profile-private"
-    if [ ! -r "$__kvar_file" ]
+_koopa_activate_profile_files() {
+    if [ -r "${HOME:?}/.profile-personal" ]
     then
-        unset -v __kvar_file
-        return 0
+        . "${HOME:?}/.profile-personal"
     fi
-    . "$__kvar_file"
-    unset -v __kvar_file
+    if [ -r "${HOME:?}/.profile-work" ]
+    then
+        . "${HOME:?}/.profile-work"
+    fi
+    if [ -r "${HOME:?}/.profile-private" ]
+    then
+        . "${HOME:?}/.profile-private"
+    fi
+    if [ -r "${HOME:?}/.secrets" ]
+    then
+        . "${HOME:?}/.secrets"
+    fi
+    if [ -r "${HOME:?}/.secrets-personal" ]
+    then
+        . "${HOME:?}/.secrets-personal"
+    fi
+    if [ -r "${HOME:?}/.secrets-work" ]
+    then
+        . "${HOME:?}/.secrets-work"
+    fi
     return 0
 }
 
@@ -847,19 +871,6 @@ _koopa_activate_ruby() {
     export GEM_HOME="$__kvar_prefix"
     _koopa_add_to_path_start "${__kvar_prefix}/bin"
     unset -v __kvar_prefix
-    return 0
-}
-
-_koopa_activate_secrets() {
-    __kvar_file="${1:-}"
-    [ -z "$__kvar_file" ] && __kvar_file="${HOME:?}/.secrets"
-    if [ ! -r "$__kvar_file" ]
-    then
-        unset -v __kvar_file
-        return 0
-    fi
-    . "$__kvar_file"
-    unset -v __kvar_file
     return 0
 }
 
