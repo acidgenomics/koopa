@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Hit this error when disabling google-drive:
+# Unload failed: 5: Input/output error
+#
+# Can consider hiding error in launchctl step but that's a bit hacky. See
+# if there is a better way to force unload.
+
 koopa_macos_disable_plist_file() {
     # """
     # Disable a plist file correponding to a launch agent or daemon.
