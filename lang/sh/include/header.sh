@@ -53,7 +53,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa.
-    # @note Updated 2023-12-14.
+    # @note Updated 2024-07-18.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -64,7 +64,7 @@ __koopa_activate_koopa() {
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     [ "${KOOPA_MINIMAL:-0}" -eq 0 ] || return 0
     _koopa_export_home || return 1
-    _koopa_activate_profile_private || return 1
+    _koopa_activate_profile_files || return 1
     _koopa_export_koopa_cpu_count || return 1
     _koopa_export_koopa_shell || return 1
     _koopa_activate_xdg || return 1
@@ -91,7 +91,6 @@ __koopa_activate_koopa() {
     _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1
     _koopa_activate_ripgrep || return 1
-    _koopa_activate_secrets || return 1
     # This is problematic for keys with a passkey, so disabling at the moment.
     # > _koopa_activate_ssh_key || return 1
     _koopa_activate_tealdeer || return 1

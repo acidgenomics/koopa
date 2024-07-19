@@ -53,6 +53,7 @@ koopa_macos_brew_cask_outdated() {
         dict['str']="$( \
             koopa_grep \
                 --file="${dict['tmp_file']}" \
+                --fixed \
                 --invert-match \
                 --pattern='(latest)' \
             | "${app['cut']}" -d ' ' -f '1' \

@@ -3,7 +3,7 @@
 koopa_macos_brew_cask_outdated() {
     # """
     # List outdated Homebrew casks.
-    # @note Updated 2023-04-05.
+    # @note Updated 2024-07-17.
     #
     # Need help with capturing output:
     # - https://stackoverflow.com/questions/58344963/
@@ -39,6 +39,7 @@ koopa_macos_brew_cask_outdated() {
         dict['str']="$( \
             koopa_grep \
                 --file="${dict['tmp_file']}" \
+                --fixed \
                 --invert-match \
                 --pattern='(latest)' \
             | "${app['cut']}" -d ' ' -f '1' \

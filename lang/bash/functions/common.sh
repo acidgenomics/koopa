@@ -7811,7 +7811,15 @@ koopa_docker_run() {
             ;;
     esac
     "${app['docker']}" pull "${dict['image']}"
-    run_args=('--interactive' '--tty')
+    run_args+=('--interactive' '--tty')
+    [[ -n "${HTTP_PROXY:-}" ]] &&
+        run_args+=('--env' "HTTP_PROXY=${HTTP_PROXY:?}")
+    [[ -n "${HTTPS_PROXY:-}" ]] &&
+        run_args+=('--env' "HTTPS_PROXY=${HTTPS_PROXY:?}")
+    [[ -n "${http_proxy:-}" ]] &&
+        run_args+=('--env' "http_proxy=${http_proxy:?}")
+    [[ -n "${https_proxy:-}" ]] &&
+        run_args+=('--env' "https_proxy=${https_proxy:?}")
     if [[ "${dict['bind']}" -eq 1 ]]
     then
         if [[ "${HOME:?}" == "${PWD:?}" ]]
@@ -7835,14 +7843,6 @@ koopa_docker_run() {
     then
         run_args+=('bash' '-il')
     fi
-    [[ -n "${HTTP_PROXY:-}" ]] &&
-        run_args+=('-e' "HTTP_PROXY=${HTTP_PROXY:?}")
-    [[ -n "${HTTPS_PROXY:-}" ]] &&
-        run_args+=('-e' "HTTPS_PROXY=${HTTPS_PROXY:?}")
-    [[ -n "${http_proxy:-}" ]] &&
-        run_args+=('-e' "http_proxy=${http_proxy:?}")
-    [[ -n "${https_proxy:-}" ]] &&
-        run_args+=('-e' "https_proxy=${https_proxy:?}")
     "${app['docker']}" run "${run_args[@]}"
     return 0
 }
@@ -12335,7 +12335,7 @@ ${dict['version2']}"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
-        env_vars=(
+        env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
             "KOOPA_CPU_COUNT=${dict['cpu_count']}"
@@ -12349,6 +12349,12 @@ ${dict['version2']}"
         )
         [[ -n "${KOOPA_CAN_INSTALL_BINARY:-}" ]] && \
             env_vars+=("KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:?}")
+        [[ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ]] && \
+            env_vars+=("DEFAULT_CA_BUNDLE_PATH=${DEFAULT_CA_BUNDLE_PATH:-}")
+        [[ -n "${REQUESTS_CA_BUNDLE:-}" ]] && \
+            env_vars+=("REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE:-}")
+        [[ -n "${SSL_CERT_FILE:-}" ]] && \
+            env_vars+=("SSL_CERT_FILE=${SSL_CERT_FILE:-}")
         [[ -n "${HTTP_PROXY:-}" ]] && \
             env_vars+=("HTTP_PROXY=${HTTP_PROXY:?}")
         [[ -n "${HTTPS_PROXY:-}" ]] && \
@@ -12357,6 +12363,8 @@ ${dict['version2']}"
             env_vars+=("http_proxy=${http_proxy:?}")
         [[ -n "${https_proxy:-}" ]] && \
             env_vars+=("https_proxy=${https_proxy:?}")
+        [[ -n "${GOPROXY:-}" ]] && \
+            env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             PKG_CONFIG_PATH=''
@@ -13150,7 +13158,6 @@ koopa_install_ffq() {
 }
 
 koopa_install_fgbio() {
-    koopa_assert_is_not_aarch64
     koopa_install_app \
         --installer='conda-package' \
         --name='fgbio' \
@@ -13846,6 +13853,12 @@ koopa_install_isort() {
 koopa_install_jemalloc() {
     koopa_install_app \
         --name='jemalloc' \
+        "$@"
+}
+
+koopa_install_jfrog_cli() {
+    koopa_install_app \
+        --name='jfrog-cli' \
         "$@"
 }
 
@@ -29703,6 +29716,12 @@ koopa_uninstall_isort() {
 koopa_uninstall_jemalloc() {
     koopa_uninstall_app \
         --name='jemalloc' \
+        "$@"
+}
+
+koopa_uninstall_jfrog_cli() {
+    koopa_uninstall_app \
+        --name='jfrog-cli' \
         "$@"
 }
 
