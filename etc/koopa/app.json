@@ -2890,15 +2890,9 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "date": "2024-07-21",
+    "date": "2024-07-22",
     "default": false,
     "dependencies": ["conda"],
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
-    },
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
