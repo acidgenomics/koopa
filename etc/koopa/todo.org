@@ -1,6 +1,8 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Improve build support for applications on Apple Silicon and Linux ARM:
+agat, aspera-connect, autodock, autodock-adfr, autodock-vina, bamtools, bcbio-nextgen, bcl2fastq, bioawk, bioconda-utils, blast, bowtie2, bustools, deeptools, entrez-direct, fastqc, ffq, fqtk, gatk, gffutils, gget, hadolint, haskell-stack, hisat2, htseq, julia, minimap2, misopy, nanopolish, ont-guppy, picard, private-bcl2fastq, private-cellranger, pymol, rmats, rsem, rstudio-server, sambamba, seqkit, shiny-server, star-fusion, subread, umis
 ** TODO Write an aws s3 sync variant that automatically excludes ignored files in a git repo.   Very useful for separating code and data on AWS.
 ** TODO Write a function that detects ignored files in submodules.
 ** TODO Need to automatically reinstall reverse dependencies when an app such as conda, node, etc. is updated.
