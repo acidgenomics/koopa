@@ -8,7 +8,7 @@ install_from_conda() {
 install_from_source() {
     # """
     # Install kallisto from source.
-    # @note updated 2024-07-15.
+    # @note updated 2024-07-22.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -64,7 +64,7 @@ install_from_source() {
         "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
     dict['url']="https://github.com/pachterlab/kallisto/archive/refs/tags/\
-v${dict['version']}.tar.gz"
+V${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     # This patch step is needed for bifrost to pick up zlib correctly.
