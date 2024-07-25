@@ -1339,11 +1339,11 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-13",
+    "date": "2024-07-21",
     "default": false,
     "notes": ["This is not currently building on macOS Monterey 12.7."],
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.58.0"
+    "version": "0.59.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -2890,21 +2890,15 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "date": "2024-07-08",
+    "date": "2024-07-22",
     "default": false,
     "dependencies": ["conda"],
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
-    },
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.50.1"
+    "version": "0.51.0"
   },
   "krb5": {
     "aliases": {
@@ -3675,12 +3669,12 @@
     },
     "bin": ["lz4", "lz4c", "lz4cat", "unlz4"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-06-01",
+    "date": "2024-07-22",
     "default": false,
     "man1": ["lz4.1", "lz4c.1", "lz4cat.1", "unlz4.1"],
     "prune": false,
     "url": ["https://lz4.github.io/lz4/", "https://github.com/lz4/lz4/"],
-    "version": "1.9.4"
+    "version": "1.10.0"
   },
   "lzip": {
     "aliases": {
@@ -4753,12 +4747,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-07-12",
+    "date": "2024-07-21",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.7"
+    "version": "2.4.8"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4787,11 +4781,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-06-13",
+    "date": "2024-07-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.2.5"
+    "version": "3.2.6"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -4820,7 +4814,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2024-06-13",
+    "date": "2024-07-21",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -4828,7 +4822,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "8.2.2"
+    "version": "8.3.1"
   },
   "python3.10": {
     "aliases": {
@@ -5332,11 +5326,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-07-19",
+    "date": "2024-07-21",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.5.3"
+    "version": "0.5.4"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5645,13 +5639,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2024-07-19",
+    "date": "2024-07-21",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.4.6"
+    "version": "7.4.7"
   },
   "sqlite": {
     "aliases": {
@@ -6105,11 +6099,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-07-19",
+    "date": "2024-07-21",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.2.26"
+    "version": "0.2.27"
   },
   "vim": {
     "aliases": {
