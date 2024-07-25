@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# FIXME Add support for linking ~/Documents/today as well.
+
 _koopa_activate_today_bucket() {
     # """
     # Create a dated file today bucket.
