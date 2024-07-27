@@ -1548,14 +1548,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-07-19",
+    "date": "2024-07-27",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.18.22"
+    "version": "0.18.23"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1801,11 +1801,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-07-19",
+    "date": "2024-07-27",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.54.1"
+    "version": "0.54.2"
   },
   "gatk": {
     "aliases": {
@@ -2379,11 +2379,11 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2024-05-26",
+    "date": "2024-07-27",
     "default": false,
     "man1": ["gum.1"],
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.14.1"
+    "version": "0.14.3"
   },
   "gzip": {
     "aliases": {
@@ -3219,7 +3219,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-07-12",
+    "date": "2024-07-27",
     "default": false,
     "dependencies": [
       "libde265",
@@ -3229,7 +3229,7 @@
     ],
     "prune": false,
     "url": ["https://www.libde265.org/"],
-    "version": "1.18.0"
+    "version": "1.18.1"
   },
   "libiconv": {
     "aliases": {
@@ -3819,12 +3819,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2024-07-12",
+    "date": "2024-07-27",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.5.0"
+    "version": "1.5.1"
   },
   "miller": {
     "aliases": {
@@ -4234,11 +4234,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-07-04",
+    "date": "2024-07-27",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.95.0"
+    "version": "0.96.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4814,7 +4814,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2024-07-21",
+    "date": "2024-07-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -4822,7 +4822,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "8.3.1"
+    "version": "8.3.2"
   },
   "python3.10": {
     "aliases": {
@@ -5326,11 +5326,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-07-21",
+    "date": "2024-07-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.5.4"
+    "version": "0.5.5"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5356,10 +5356,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-06-14",
+    "date": "2024-07-27",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.79.0"
+    "version": "1.80.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -5717,10 +5717,10 @@
     },
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
-    "date": "2024-05-15",
+    "date": "2024-07-27",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.19.0"
+    "version": "1.20.1"
   },
   "stow": {
     "aliases": {
@@ -6099,11 +6099,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-07-21",
+    "date": "2024-07-27",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.2.27"
+    "version": "0.2.30"
   },
   "vim": {
     "aliases": {
@@ -6627,14 +6627,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-07-19",
+    "date": "2024-07-27",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.7.16"
+    "version": "2024.7.25"
   },
   "zellij": {
     "aliases": {
