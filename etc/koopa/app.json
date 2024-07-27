@@ -5359,7 +5359,7 @@
     "date": "2024-07-27",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.80.0"
+    "version": "1.79.0"
   },
   "salmon": {
     "bin": ["salmon"],
