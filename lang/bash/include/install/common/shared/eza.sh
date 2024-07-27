@@ -14,8 +14,8 @@ main() {
     # Install eza.
     # @note Updated 2024-07-27.
     # """
-    koopa_activate_app 'libgit2'
-    export LIBGIT2_NO_VENDOR=1
+    # > koopa_activate_app 'libgit2'
+    # > export LIBGIT2_NO_VENDOR=1
     koopa_install_rust_package
     return 0
 }
