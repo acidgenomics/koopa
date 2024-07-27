@@ -1550,6 +1550,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-07-27",
     "default": true,
+    "dependencies": ["libgit2"],
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
