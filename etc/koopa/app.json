@@ -1801,11 +1801,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-07-27",
+    "date": "2024-07-31",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.54.2"
+    "version": "0.54.3"
   },
   "gatk": {
     "aliases": {
@@ -2174,10 +2174,10 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-07-15",
+    "date": "2024-07-31",
     "default": false,
     "url": ["https://github.com/google/googletest/"],
-    "version": "1.15.0"
+    "version": "1.15.2"
   },
   "gperf": {
     "aliases": {
@@ -2502,7 +2502,7 @@
       "homebrew": true
     },
     "bin": ["stack"],
-    "date": "2024-05-13",
+    "date": "2024-07-31",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -2514,7 +2514,7 @@
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "2.15.7"
+    "version": "3.1.1"
   },
   "hdf5": {
     "aliases": {
@@ -2643,10 +2643,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-07-19",
+    "date": "2024-07-31",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.129.0"
+    "version": "0.130.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3806,11 +3806,11 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2024-01-16",
+    "date": "2024-07-31",
     "default": true,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.1.1"
+    "version": "2.3.0"
   },
   "meson": {
     "aliases": {
@@ -4111,14 +4111,14 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-04-23",
+    "date": "2024-08-01",
     "default": true,
-    "dependencies": ["temurin"],
+    "dependencies": ["conda"],
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "24.04.1"
+    "version": "24.04.4"
   },
   "nghttp2": {
     "aliases": {
@@ -4234,11 +4234,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-07-27",
+    "date": "2024-07-31",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.96.0"
+    "version": "0.96.1"
   },
   "oniguruma": {
     "aliases": {
@@ -4416,12 +4416,12 @@
       "haskell-ghcup",
       "pkg-config"
     ],
-    "date": "2024-07-04",
+    "date": "2024-07-31",
     "default": false,
     "dependencies": ["zlib"],
     "notes": ["Hitting proxy issue related to zip download."],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.2.1"
+    "version": "3.3"
   },
   "parallel": {
     "aliases": {
@@ -4671,10 +4671,10 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2024-03-07",
+    "date": "2024-07-31",
     "default": false,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.5"
+    "version": "0.14.6"
   },
   "proj": {
     "aliases": {
@@ -5361,6 +5361,14 @@
     "url": ["https://www.rust-lang.org/"],
     "version": "1.79.0"
   },
+  "s5cmd": {
+    "bin": ["s5cmd"],
+    "build_dependencies": ["go"],
+    "date": "2024-08-01",
+    "default": false,
+    "url": ["https://github.com/peak/s5cmd"],
+    "version": "2.2.2"
+  },
   "salmon": {
     "bin": ["salmon"],
     "date": "2024-07-08",
@@ -5639,13 +5647,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2024-07-21",
+    "date": "2024-07-31",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "7.4.7"
+    "version": "8.0.2"
   },
   "sqlite": {
     "aliases": {
@@ -6099,11 +6107,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-07-27",
+    "date": "2024-07-31",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.2.30"
+    "version": "0.2.32"
   },
   "vim": {
     "aliases": {
