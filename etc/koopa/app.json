@@ -4111,14 +4111,14 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-04-23",
+    "date": "2024-08-01",
     "default": true,
-    "dependencies": ["temurin"],
+    "dependencies": ["conda"],
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "24.04.1"
+    "version": "24.04.4"
   },
   "nghttp2": {
     "aliases": {

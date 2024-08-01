@@ -14620,6 +14620,7 @@ koopa_install_nettle() {
 
 koopa_install_nextflow() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='nextflow' \
         "$@"
 }
