@@ -14620,6 +14620,7 @@ koopa_install_nettle() {
 
 koopa_install_nextflow() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='nextflow' \
         "$@"
 }
@@ -15700,6 +15701,12 @@ koopa_install_rust_package() {
 koopa_install_rust() {
     koopa_install_app \
         --name='rust' \
+        "$@"
+}
+
+koopa_install_s5cmd() {
+    koopa_install_app \
+        --name='s5cmd' \
         "$@"
 }
 
@@ -30774,6 +30781,12 @@ koopa_uninstall_ruff() {
 koopa_uninstall_rust() {
     koopa_uninstall_app \
         --name='rust' \
+        "$@"
+}
+
+koopa_uninstall_s5cmd() {
+    koopa_uninstall_app \
+        --name='s5cmd' \
         "$@"
 }
 
