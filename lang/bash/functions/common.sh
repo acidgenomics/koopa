@@ -15704,6 +15704,12 @@ koopa_install_rust() {
         "$@"
 }
 
+koopa_install_s5cmd() {
+    koopa_install_app \
+        --name='s5cmd' \
+        "$@"
+}
+
 koopa_install_salmon() {
     koopa_install_app \
         --name='salmon' \
@@ -30775,6 +30781,12 @@ koopa_uninstall_ruff() {
 koopa_uninstall_rust() {
     koopa_uninstall_app \
         --name='rust' \
+        "$@"
+}
+
+koopa_uninstall_s5cmd() {
+    koopa_uninstall_app \
+        --name='s5cmd' \
         "$@"
 }
 
