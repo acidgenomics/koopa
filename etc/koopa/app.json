@@ -5361,6 +5361,14 @@
     "url": ["https://www.rust-lang.org/"],
     "version": "1.79.0"
   },
+  "s5cmd": {
+    "bin": ["s5cmd"],
+    "build_dependencies": ["go"],
+    "date": "2024-08-01",
+    "default": false,
+    "url": ["https://github.com/peak/s5cmd"],
+    "version": "2.2.2"
+  },
   "salmon": {
     "bin": ["salmon"],
     "date": "2024-07-08",
