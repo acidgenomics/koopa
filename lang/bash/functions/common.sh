@@ -7268,8 +7268,8 @@ koopa_disable_passwordless_sudo() {
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
-        koopa_alert "Removing sudo permission file at '${file}'."
-        koopa_rm --sudo "$file"
+        koopa_alert "Removing sudo permission file at '${dict['file']}'."
+        koopa_rm --sudo "${dict['file']}"
     fi
     koopa_alert_success 'Passwordless sudo is disabled.'
     return 0
