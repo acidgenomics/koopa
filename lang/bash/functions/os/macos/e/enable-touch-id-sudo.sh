@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider reworking with patch approach instead.
+
 koopa_macos_enable_touch_id_sudo() {
     # """
     # Enable sudo authentication via Touch ID PAM.
