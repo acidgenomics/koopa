@@ -22004,6 +22004,7 @@ koopa_r_configure_environ() {
     then
         ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
+        app['conda']="$(koopa_locate_conda)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
         app['ln']="$(koopa_locate_ln)"
@@ -22027,9 +22028,11 @@ koopa_r_configure_environ() {
         dict['arch']='aarch64'
     fi
     dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     lines+=(
+        "KOOPA_PREFIX=${dict['koopa_prefix']}"
         'R_BATCHSAVE=--no-save --no-restore'
         "R_LIBS_SITE=\${R_HOME}/site-library"
         "R_LIBS_USER=\${R_LIBS_SITE}"
@@ -22181,7 +22184,9 @@ tools/${dict['arch']}"
         'R_REMOTES_UPGRADE=always'
     )
     lines+=(
-        "WORKON_HOME=\${HOME}/.virtualenvs"
+        "RETICULATE_CONDA=${app['conda']}"
+        "RETICULATE_PYTHON=\${HOME}/venv/r-reticulate/bin/python3"
+        "WORKON_HOME=\${HOME}/venv"
     )
     lines+=(
         'STRINGI_DISABLE_ICU_BUNDLE=1'
