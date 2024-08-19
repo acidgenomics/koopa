@@ -5,7 +5,7 @@
 koopa_disable_passwordless_sudo() {
     # """
     # Disable passwordless sudo access for all admin users.
-    # @note Updated 2022-03-26.
+    # @note Updated 2024-08-12.
     # """
     local -A dict
     koopa_assert_has_no_args "$#"
@@ -14,8 +14,8 @@ koopa_disable_passwordless_sudo() {
     dict['file']="/etc/sudoers.d/koopa-${dict['group']}"
     if [[ -f "${dict['file']}" ]]
     then
-        koopa_alert "Removing sudo permission file at '${file}'."
-        koopa_rm --sudo "$file"
+        koopa_alert "Removing sudo permission file at '${dict['file']}'."
+        koopa_rm --sudo "${dict['file']}"
     fi
     koopa_alert_success 'Passwordless sudo is disabled.'
     return 0
