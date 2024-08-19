@@ -3,7 +3,7 @@
 main() {
     # """
     # Install latest version of R from CRAN.
-    # @note Updated 2024-07-17.
+    # @note Updated 2024-08-13.
     #
     # In case of missing files in '/etc/R', such as ldpaths or Makeconf:
     # > sudo apt purge r-base-core
@@ -44,6 +44,7 @@ main() {
         'libbz2-dev'
         'libcairo2-dev'
         'libcurl4-openssl-dev'
+        'libglpk-dev'
         'libjpeg-dev'
         'liblapack-dev'
         'liblzma-dev'
