@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2024-07-17.
+#' @note Updated 2024-08-13.
 #'
 #' @section Restarting R:
 #'
@@ -48,21 +48,21 @@ local({
     Sys.setenv("KOOPA_RPROFILE_SITE" = 1L) # nolint
     stopifnot(requireNamespace("utils", quietly = TRUE))
     ## Create our named dictionary and boolean flag lists.
-    dict <- list(
-        "osVersion" = utils::osVersion,
-        "secretsFile" = file.path("~", ".Rsecrets"),
-        "seed" = 1123581321L,  # Fibonacci sequence.
-        "sysname" = Sys.info()[["sysname"]]
-    )
-    flag <- list(
-        "conda" = isTRUE(as.integer(Sys.getenv("CONDA_SHLVL")) > 0L),
-        "cranBinary" = FALSE,
-        "interactive" = isTRUE(interactive()),
-        "linux" = identical(dict[["sysname"]], "Linux"),
-        "macos" = identical(dict[["sysname"]], "Darwin"),
-        "rstudio" = isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY"))),
-        "vscode" = isTRUE(nzchar(Sys.getenv("VSCODE_INIT_R")))
-    )
+    dict <- list()
+    dict[["koopaPrefix"]] <- Sys.getenv("KOOPA_PREFIX")
+    dict[["osVersion"]] <- utils::osVersion
+    dict[["secretsFile"]] <- file.path("~", ".Rsecrets")
+    dict[["seed"]] <- 1123581321L  # Fibonacci sequence.
+    dict[["sysname"]] <- Sys.info()[["sysname"]]
+    dict[["condaBinary"]] <- file.path(dict[["koopaPrefix"]], "bin", "conda")
+    flag <- list()
+    flag[["conda"]] <- isTRUE(as.integer(Sys.getenv("CONDA_SHLVL")) > 0L)
+    flag[["cranBinary"]] <- FALSE
+    flag[["interactive"]] <- isTRUE(interactive())
+    flag[["linux"]] <- identical(dict[["sysname"]], "Linux")
+    flag[["macos"]] <- identical(dict[["sysname"]], "Darwin")
+    flag[["rstudio"]] <- isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
+    flag[["vscode"]] <- isTRUE(nzchar(Sys.getenv("VSCODE_INIT_R")))
     if (isTRUE(flag[["linux"]])) {
         flag[["cranBinary"]] <- identical(
             x = R.home(),
@@ -565,8 +565,9 @@ local({
         options("styler.cache_root" = "styler") # nolint
     }
     if (isInstalled("reticulate")) {
-        ## Ensure that Miniconda is used by default.
-        options("reticulate.conda_binary" = Sys.which("conda")) # nolint
+        ## https://rstudio.github.io/reticulate/reference/conda-tools.html
+        ## https://rstudio.github.io/reticulate/articles/versions.html
+        options("reticulate.conda_binary" = dict[["condaBinary"]]) # nolint
     }
     ## > if (isInstalled("styler")) {
     ## >     ## https://styler.r-lib.org/reference/styler_addins.html
