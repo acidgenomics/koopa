@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-08-13.
     #
     # @section Package library location:
     #
@@ -106,6 +106,7 @@ koopa_r_configure_environ() {
     then
         ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
+        app['conda']="$(koopa_locate_conda)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
         app['ln']="$(koopa_locate_ln)"
@@ -130,9 +131,11 @@ koopa_r_configure_environ() {
         dict['arch']='aarch64'
     fi
     dict['bin_prefix']="$(koopa_bin_prefix)"
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['r_prefix']="$(koopa_r_prefix "${app['r']}")"
     koopa_assert_is_dir "${dict['r_prefix']}"
     lines+=(
+        "KOOPA_PREFIX=${dict['koopa_prefix']}"
         'R_BATCHSAVE=--no-save --no-restore'
         "R_LIBS_SITE=\${R_HOME}/site-library"
         "R_LIBS_USER=\${R_LIBS_SITE}"
@@ -323,8 +326,12 @@ tools/${dict['arch']}"
     lines+=(
         # Default path to virtual environments.
         # Check with 'virtualenv_list()'.
+        # https://rstudio.github.io/reticulate/reference/conda-tools.html
         # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-        "WORKON_HOME=\${HOME}/.virtualenvs"
+        # https://rstudio.github.io/reticulate/articles/versions.html
+        "RETICULATE_CONDA=${app['conda']}"
+        "RETICULATE_PYTHON=\${HOME}/venv/r-reticulate/bin/python3"
+        "WORKON_HOME=\${HOME}/venv"
     )
     # stringi
     # --------------------------------------------------------------------------
