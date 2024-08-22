@@ -310,14 +310,14 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-07-12",
+    "date": "2024-08-22",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.17.11"
+    "version": "2.17.25"
   },
   "axel": {
     "aliases": {
@@ -5100,11 +5100,11 @@
   },
   "radian": {
     "bin": ["radian"],
-    "date": "2023-12-22",
+    "date": "2024-08-22",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://github.com/randy3k/radian/"],
-    "version": "0.6.9"
+    "version": "0.6.13"
   },
   "ranger-fm": {
     "aliases": {
