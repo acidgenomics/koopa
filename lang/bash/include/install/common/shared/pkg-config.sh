@@ -3,12 +3,15 @@
 main() {
     # """
     # Install pkg-config.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-09-04.
     #
     # Requires cmp and diff to be installed.
     #
     # Alternate mirror that is less reliable:
     # https://pkg-config.freedesktop.org/releases/
+    #
+    # Return PKG_CONFIG_PATH with:
+    # pkg-config --variable pc_path pkg-config
     #
     # @seealso
     # - https://www.freedesktop.org/wiki/Software/pkg-config/
@@ -23,7 +26,14 @@ main() {
     if koopa_is_linux
     then
         dict['sys_inc']='/usr/include'
-        pc_path+=("/usr/lib/${dict['arch']}-linux-gnu/pkgconfig")
+        if [[ -d "/usr/lib/${dict['arch']}-linux-gnu/pkgconfig" ]]
+        then
+            pc_path+=("/usr/lib/${dict['arch']}-linux-gnu/pkgconfig")
+        fi
+        if [[ -d '/usr/lib64/pkgconfig' ]]
+        then
+            pc_path+=('/usr/lib64/pkgconfig')
+        fi
         if [[ -d '/usr/lib/pkgconfig' ]]
         then
             pc_path+=('/usr/lib/pkgconfig')
@@ -41,18 +51,20 @@ main() {
         # https://gitlab.freedesktop.org/pkg-config/pkg-config/-/issues/81
         koopa_append_cflags '-Wno-int-conversion'
     fi
-    koopa_assert_is_dir "${dict['sys_inc']}" "${pc_path[@]}"
-    dict['pc_path']="$(koopa_paste --sep=':' "${pc_path[@]}")"
-    conf_args=(
+    koopa_assert_is_dir "${dict['sys_inc']}"
+    conf_args+=(
         '--disable-debug'
         '--disable-host-tool'
         "--prefix=${dict['prefix']}"
         '--with-internal-glib'
-        "--with-pc-path=${dict['pc_path']}"
         "--with-system-include-path=${dict['sys_inc']}"
     )
-# >     dict['url']="http://fresh-center.net/linux/misc/\
-# > pkg-config-${dict['version']}.tar.gz"
+    if koopa_is_array_non_empty "${pc_path[@]}"
+    then
+        koopa_assert_is_dir "${pc_path[@]}"
+        dict['pc_path']="$(koopa_paste --sep=':' "${pc_path[@]}")"
+        conf_args+=("--with-pc-path=${dict['pc_path']}")
+    fi
     dict['url']="https://pkgconfig.freedesktop.org/releases/\
 pkg-config-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
