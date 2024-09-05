@@ -11717,7 +11717,7 @@ koopa_homebrew_prefix() {
 koopa_hostname() {
     local -A app dict
     koopa_assert_has_no_args "$#"
-    app['uname']="$(koopa_locate_uname)"
+    app['uname']="$(koopa_locate_uname --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     dict['string']="$("${app['uname']}" -n)"
     [[ -n "${dict['string']}" ]] || return 1
