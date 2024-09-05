@@ -31861,11 +31861,13 @@ koopa_zsh_compaudit_set_permissions() {
     )
     for prefix in "${prefixes[@]}"
     do
-        local access
+        local access stat_user_id
         [[ -d "$prefix" ]] || continue
-        if [[ "$(koopa_stat_user_id "$prefix")" != "${dict['user_id']}" ]]
+        stat_user_id="$(koopa_stat_user_id "$prefix")"
+        if [[ "$stat_user_id" != "${dict['user_id']}" ]]
         then
-            koopa_alert "Fixing ownership at '${prefix}'."
+            koopa_alert "Changing ownership at '${prefix}' from \
+'${stat_user_id}' to '${dict['user_id']}'."
             koopa_chown --recursive --sudo "${dict['user_id']}" "$prefix"
         fi
         access="$(koopa_stat_access_octal "$prefix")"
