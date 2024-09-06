@@ -40,7 +40,7 @@ main() {
             --replacement='' \
             "${dict['version']}"
     )"
-    dict['url']="https://prdownloads.sourceforge.net/project/infozip/\
+    dict['url']="https://downloads.sourceforge.net/project/infozip/\
 UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
 unzip${dict['version2']}.tar.gz"
     koopa_download "${dict['url']}"
