@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider switching to binary install for supported platforms.
+# This will help with proxy server issues.
+
 main() {
     # """
     # Install Pandoc.
