@@ -1391,7 +1391,7 @@
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
     "date": "2024-06-13",
-    "default": true,
+    "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
