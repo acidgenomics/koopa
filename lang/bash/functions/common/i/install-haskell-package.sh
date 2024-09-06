@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME This needs to set http_proxy if defined.
+
 koopa_install_haskell_package() {
     # """
     # Install a Haskell package using Cabal and GHCup.
