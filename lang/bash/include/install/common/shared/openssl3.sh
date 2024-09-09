@@ -3,12 +3,13 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2024-06-15.
+    # @note Updated 2024-09-09.
     #
     # Check supported platforms with:
     # > ./Configure LIST
     #
     # @seealso
+    # - https://openssl-library.org/source/
     # - https://wiki.openssl.org/index.php/Compilation_and_Installation
     # - https://www.openssl.org/docs/man3.0/man7/migration_guide.html
     # - https://docs.python.org/3/using/unix.html
@@ -41,8 +42,8 @@ main() {
         conf_args+=('-Wl,--enable-new-dtags')
     fi
     koopa_append_cppflags '-fPIC'
-    dict['url']="https://www.openssl.org/source/\
-openssl-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/openssl/openssl/releases/download/\
+openssl-${dict['version']}/openssl-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
