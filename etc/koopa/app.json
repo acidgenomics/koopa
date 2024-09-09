@@ -4410,16 +4410,9 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "build_dependencies": [
-      "git",
-      "haskell-cabal",
-      "haskell-ghcup",
-      "pkg-config"
-    ],
-    "date": "2024-07-31",
+    "date": "2024-09-09",
     "default": false,
-    "dependencies": ["zlib"],
-    "notes": ["Hitting proxy issue related to zip download."],
+    "dependencies": ["conda"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "3.3"
   },
