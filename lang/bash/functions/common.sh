@@ -4459,7 +4459,6 @@ koopa_check_shared_object() {
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
     koopa_python_script 'check-system.py'
-    koopa_check_exports
     koopa_check_disk '/'
     koopa_alert_success 'System passed all checks.'
     return 0
