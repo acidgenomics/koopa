@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_source() {
     # """
     # Install Pandoc.
     # @note Updated 2024-05-13.
@@ -24,5 +29,10 @@ main() {
         --extra-package='pandoc-cli' \
         --extra-package='pandoc-lua-engine' \
         --ghc-version='9.6.5'
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }
