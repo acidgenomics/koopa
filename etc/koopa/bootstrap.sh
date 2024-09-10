@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2024-07-04.
+# @note Updated 2024-09-10.
 # """
 
 # Can debug with:
@@ -86,7 +86,7 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://ftp.gnu.org/gnu/bash/bash-5.2.21.tar.gz' \
+        'https://ftp.gnu.org/gnu/bash/bash-5.2.32.tar.gz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd 'bash-5.2.21' || return 1
