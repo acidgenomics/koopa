@@ -99,20 +99,11 @@ _koopa_activate_zsh_fpath() {
     koopa_prefix="$(_koopa_koopa_prefix)"
     version="${ZSH_VERSION:?}"
     maj_min_ver="$(_koopa_major_minor_version "$version")"
-    if [[ -d "/usr/share/zsh/${maj_min_ver}/functions" ]]
-    then
-        prefixes+=(
-            "/usr/share/zsh/${maj_min_ver}/functions"
-            '/usr/share/zsh/site-functions'
-        )
-    fi
-    if ! _koopa_is_macos
-    then
-        prefixes+=(
-            "${koopa_prefix}/opt/zsh/share/zsh/${maj_min_ver}/functions"
-        )
-    fi
     prefixes+=(
+        "/usr/share/zsh/${maj_min_ver}/functions"
+        '/usr/share/zsh/site-functions'
+        "${koopa_prefix}/opt/zsh/share/zsh/${maj_min_ver}/functions"
+        "${koopa_prefix}/opt/zsh/share/zsh/site-functions"
         '/usr/local/share/zsh/site-functions'
         "${koopa_prefix}/lang/zsh/functions"
     )
