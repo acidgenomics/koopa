@@ -102,8 +102,8 @@ _koopa_activate_zsh_fpath() {
     prefixes+=(
         "/usr/share/zsh/${maj_min_ver}/functions"
         '/usr/share/zsh/site-functions'
-        "${koopa_prefix}/opt/zsh/share/zsh/${maj_min_ver}/functions"
-        "${koopa_prefix}/opt/zsh/share/zsh/site-functions"
+        "${koopa_prefix}/app/zsh/${version}/share/zsh/${maj_min_ver}/functions"
+        "${koopa_prefix}/app/zsh/${version}/share/zsh/site-functions"
         '/usr/local/share/zsh/site-functions'
         "${koopa_prefix}/lang/zsh/functions"
     )
