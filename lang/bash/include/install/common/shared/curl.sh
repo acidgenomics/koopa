@@ -3,7 +3,7 @@
 main() {
     # """
     # Install cURL.
-    # @note Updated 2023-04-12.
+    # @note Updated 2024-09-10.
     #
     # The '--enable-versioned-symbols' avoids issue with curl installed in
     # both '/usr' and '/usr/local'.
@@ -19,14 +19,19 @@ main() {
     # - https://stackoverflow.com/questions/30017397
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
-        'ca-certificates' \
-        'zlib' \
-        'zstd' \
+    local -a build_deps conf_args deps
+    build_deps+=('pkg-config')
+    deps+=(
+        'ca-certificates'
+        'zlib'
+        'zstd'
         'openssl3'
+        'libssh2'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
+    dict['libssh2']="$(koopa_app_prefix 'libssh2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['ssl']="$(koopa_app_prefix 'openssl3')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -45,6 +50,7 @@ cacert.pem"
         '--enable-versioned-symbols'
         "--prefix=${dict['prefix']}"
         "--with-ca-bundle=${dict['ca_bundle']}"
+        "--with-libssh2=${dict['libssh2']}"
         "--with-openssl=${dict['ssl']}"
         "--with-zlib=${dict['zlib']}"
         "--with-zstd=${dict['zstd']}"
@@ -53,7 +59,6 @@ cacert.pem"
         '--without-libidn2'
         '--without-libpsl'
         '--without-librtmp'
-        '--without-libssh2'
         '--without-nghttp2'
     )
     if koopa_is_macos
