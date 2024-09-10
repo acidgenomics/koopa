@@ -1272,7 +1272,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-06-11",
     "default": true,
-    "dependencies": ["ca-certificates", "openssl3", "zlib", "zstd"],
+    "dependencies": ["ca-certificates", "libssh2", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
@@ -2878,7 +2878,7 @@
       "macos-arm64": false
     },
     "url": ["https://julialang.org/", "https://github.com/JuliaLang/julia/"],
-    "version": "1.10.5"
+    "version": "1.10.4"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
