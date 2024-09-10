@@ -378,12 +378,12 @@
     },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-06-15",
+    "date": "2024-09-10",
     "default": true,
     "man1": ["bash.1"],
     "prune": false,
     "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.21"
+    "version": "5.2.32"
   },
   "bash-language-server": {
     "aliases": {
