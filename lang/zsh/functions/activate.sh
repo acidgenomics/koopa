@@ -92,17 +92,31 @@ _koopa_activate_zsh_extras() {
 _koopa_activate_zsh_fpath() {
     # """
     # Activate Zsh FPATH.
-    # @note Updated 2023-05-18.
+    # @note Updated 2024-09-10.
     # """
-    local koopa_fpath koopa_prefix
+    local -a prefixes
+    local koopa_prefix maj_min_ver version
     koopa_prefix="$(_koopa_koopa_prefix)"
-    koopa_fpath="${koopa_prefix}/lang/zsh/functions"
-    if [[ ! -d "$koopa_fpath" ]]
+    version="${ZSH_VERSION:?}"
+    maj_min_ver="$(_koopa_major_minor_version "$version")"
+    if [[ -d "/usr/share/zsh/${maj_min_ver}/functions" ]]
     then
-        _koopa_warn "FPATH directory is missing: '${koopa_fpath}'."
-        return 1
+        prefixes+=(
+            "/usr/share/zsh/${maj_min_ver}/functions"
+            '/usr/share/zsh/site-functions'
+        )
     fi
-    _koopa_add_to_fpath_start "$koopa_fpath"
+    if ! _koopa_is_macos
+    then
+        prefixes+=(
+            "${koopa_prefix}/opt/zsh/share/zsh/${maj_min_ver}/functions"
+        )
+    fi
+    prefixes+=(
+        '/usr/local/share/zsh/site-functions'
+        "${koopa_prefix}/lang/zsh/functions"
+    )
+    _koopa_add_to_fpath_start "${prefixes[@]}"
     return 0
 }
 
