@@ -35,17 +35,16 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args+=(
-        # Configuration common with conda-forge:
-        '--enable-pcre'
         "--prefix=${dict['prefix']}"
+        '--enable-cap'
+        '--enable-etcdir=/etc'
+        '--enable-maildir-support'
+        '--enable-multibyte'
+        '--enable-pcre'
+        '--enable-unicode9'
+        '--enable-zsh-secure-free'
         '--with-tcsetpgrp'
-        # Additional configuration defined in Homebrew:
-        # > '--enable-cap'
-        # > '--enable-etcdir=/etc'
-        # > '--enable-maildir-support'
-        # > '--enable-multibyte'
-        # > '--enable-unicode9'
-        # > '--enable-zsh-secure-free'
+        'DL_EXT=bundle'
     )
     # Recommended fix for build issue with clang.
     if koopa_is_macos
