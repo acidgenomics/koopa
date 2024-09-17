@@ -31,6 +31,6 @@ def main(dry_run=False) -> None:
 
 
 if __name__ == "__main__":
-    if not version_info >= (3, 8):
+    if not version_info >= (3, 6):
         raise RuntimeError("Unsupported Python version.")
     main(dry_run=args.dry_run)
