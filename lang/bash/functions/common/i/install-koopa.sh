@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We need to pass through the system path here to detect git
-# correct, so we don't fail on lmod-based platforms.
-
 # FIXME For user-specific install, ensure we symlink .bash_profile to .bashrc
 # if the file doesn't exist.
 
