@@ -20157,6 +20157,7 @@ koopa_make_build() {
     esac
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    targets=()
     while (("$#"))
     do
         case "$1" in
