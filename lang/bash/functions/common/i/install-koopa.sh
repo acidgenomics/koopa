@@ -82,12 +82,17 @@ koopa_install_koopa() {
                 ;;
         esac
     done
-    [[ "${bool['verbose']}" -eq 1 ]] && set -x
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        set -x
+        koopa_print_env
+    fi
     if [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]]
     then
         bool['bootstrap']=1
         koopa_add_to_path_start "${KOOPA_BOOTSTRAP_PREFIX}/bin"
     fi
+    # FIXME This step is failing for install on lmod system.
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
         'python3' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
