@@ -17,7 +17,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-07-18.
+    # @note Updated 2024-09-17.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -388,13 +388,18 @@ ${dict['version2']}"
             then
                 koopa_activate_pkg_config "${app['pkg_config']}"
             fi
-            PKG_CONFIG_PATH="$( \
-                koopa_gsub \
-                    --regex \
-                    --pattern='/usr/local[^\:]+:' \
-                    --replacement='' \
-                    "$PKG_CONFIG_PATH"
-            )"
+            # Strip '/usr/local' from pkg-config, which requires Perl.
+            app['perl']="$(koopa_locate_perl --allow-missing)"
+            if [[ -x "${app['perl']}" ]]
+            then
+                PKG_CONFIG_PATH="$( \
+                    koopa_gsub \
+                        --regex \
+                        --pattern='/usr/local[^\:]+:' \
+                        --replacement='' \
+                        "$PKG_CONFIG_PATH"
+                )"
+            fi
             env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
             unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \

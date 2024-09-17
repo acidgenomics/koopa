@@ -12374,13 +12374,17 @@ ${dict['version2']}"
             then
                 koopa_activate_pkg_config "${app['pkg_config']}"
             fi
-            PKG_CONFIG_PATH="$( \
-                koopa_gsub \
-                    --regex \
-                    --pattern='/usr/local[^\:]+:' \
-                    --replacement='' \
-                    "$PKG_CONFIG_PATH"
-            )"
+            app['perl']="$(koopa_locate_perl --allow-missing)"
+            if [[ -x "${app['perl']}" ]]
+            then
+                PKG_CONFIG_PATH="$( \
+                    koopa_gsub \
+                        --regex \
+                        --pattern='/usr/local[^\:]+:' \
+                        --replacement='' \
+                        "$PKG_CONFIG_PATH"
+                )"
+            fi
             env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
             unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
