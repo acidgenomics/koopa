@@ -18363,24 +18363,7 @@ bin/${dict['bin_name']}"
     fi
     if [[ ! -x "${dict['app']}" ]] && [[ "${bool['allow_system']}" -eq 1 ]]
     then
-        [[ -z "${dict['system_bin_name']}" ]] && \
-            dict['system_bin_name']="${dict['bin_name']}"
-        if [[ -x "/usr/local/bin/${dict['system_bin_name']}" ]]
-        then
-            dict['app']="/usr/local/bin/${dict['system_bin_name']}"
-        elif [[ -x "/usr/bin/${dict['system_bin_name']}" ]]
-        then
-            dict['app']="/usr/bin/${dict['system_bin_name']}"
-        elif [[ -x "/bin/${dict['system_bin_name']}" ]]
-        then
-            dict['app']="/bin/${dict['system_bin_name']}"
-        elif [[ -x "/usr/sbin/${dict['system_bin_name']}" ]]
-        then
-            dict['app']="/usr/sbin/${dict['system_bin_name']}"
-        elif [[ -x "/sbin/${dict['system_bin_name']}" ]]
-        then
-            dict['app']="/sbin/${dict['system_bin_name']}"
-        fi
+        dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
     fi
     if [[ -x "${dict['app']}" ]]
     then
