@@ -4373,7 +4373,7 @@
       "homebrew": "openssl@3"
     },
     "bin": ["openssl"],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "perl", "pkg-config"],
     "date": "2024-09-09",
     "default": false,
     "dependencies": ["ca-certificates"],
