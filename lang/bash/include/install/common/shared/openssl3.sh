@@ -22,7 +22,7 @@ main() {
     build_deps+=(
         'make'
         'pkg-config'
-        # > 'perl'
+        'perl'
     )
     deps+=('ca-certificates')
     koopa_activate_app --build-only "${build_deps[@]}"
