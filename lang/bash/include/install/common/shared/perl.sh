@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Perl.
-    # @note Updated 2023-04-13.
+    # @note Updated 2024-09-17.
     #
     # @section Regarding parallel build failures on Ubunutu:
     # make can error at this step when running in parallel.
