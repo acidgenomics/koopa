@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# FIXME This check is failing for systems that use lmod during koopa install.
-
 _koopa_is_installed() {
     # """
     # Is the requested program name installed?
