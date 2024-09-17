@@ -392,17 +392,23 @@ ${dict['version2']}"
                 koopa_activate_pkg_config "${app['pkg_config']}"
             fi
             # Strip '/usr/local' from pkg-config, which requires Perl.
-            app['perl']="$(koopa_locate_perl --allow-missing)"
-            if [[ -x "${app['perl']}" ]]
-            then
-                PKG_CONFIG_PATH="$( \
-                    koopa_gsub \
-                        --regex \
-                        --pattern='/usr/local[^\:]+:' \
-                        --replacement='' \
-                        "$PKG_CONFIG_PATH"
-                )"
-            fi
+            # FIXME Hitting a regex issue on HPC, so disabling this step to
+            # debug further.
+            # # Regexp modifiers "/l" and "/a" are mutually exclusive at -e line 1, at end of line
+            # # Regexp modifier "/l" may not appear twice at -e line 1, at end of line
+            # # syntax error at -e line 1, near "s/\\/usr\\/local["
+            # FIXME Rework this as 'koopa_remove_from_pkg_config_path' function.
+            # > app['perl']="$(koopa_locate_perl --allow-missing)"
+            # > if [[ -x "${app['perl']}" ]]
+            # > then
+            # >     PKG_CONFIG_PATH="$( \
+            # >         koopa_gsub \
+            # >             --regex \
+            # >             --pattern='/usr/local[^\:]+:' \
+            # >             --replacement='' \
+            # >             "$PKG_CONFIG_PATH"
+            # >     )"
+            # > fi
             env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
             unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
