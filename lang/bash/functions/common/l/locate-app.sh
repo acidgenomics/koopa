@@ -121,6 +121,10 @@ koopa_locate_app() {
         [[ -n "${dict['app_name']}" ]] || return 1
         [[ -n "${dict['bin_name']}" ]] || return 1
     fi
+    if [[ -n "${dict['system_bin_name']}" ]]
+    then
+        dict['system_bin_name']="${dict['bin_name']}"
+    fi
     if [[ "${bool['allow_bootstrap']}" -eq 1 ]]
     then
         dict['bs_prefix']="$(koopa_bootstrap_prefix)"
@@ -172,7 +176,7 @@ bin/${dict['bin_name']}"
     if [[ "${bool['allow_system']}" -eq 1 ]]
     then
         koopa_stop \
-            "Failed to locate '${dict['system_bin_name']}'."
+            "Failed to locate '${dict['bin_name']}'."
     else
         koopa_stop \
             "Failed to locate '${dict['bin_name']}'." \
