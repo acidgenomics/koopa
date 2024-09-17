@@ -12058,6 +12058,7 @@ koopa_install_app() {
     koopa_can_push_binary && bool['push']=1
     bool['quiet']=0
     bool['reinstall']=0
+    bool['system_path']="${KOOPA_INSTALL_APP_SYSTEM_PATH:-0}"
     bool['update_ldconfig']=0
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
@@ -12332,7 +12333,13 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        if [[ "${bool['system_path']}" -eq 1 ]]
+        then
+            dict['path']="${PATH:?}"
+        else
+            path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+            dict['path']="$(koopa_paste --sep=':' "${path_arr[@]}")"
+        fi
         env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -12341,7 +12348,7 @@ ${dict['version2']}"
             "KOOPA_VERBOSE=${bool['verbose']}"
             'LANG=C'
             'LC_ALL=C'
-            "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+            "PATH=${dict['path']}"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
