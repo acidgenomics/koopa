@@ -12336,6 +12336,17 @@ ${dict['version2']}"
         if [[ "${bool['system_path']}" -eq 1 ]]
         then
             dict['path']="${PATH:?}"
+            env_vars+=(
+                "CC=${CC:-}"
+                "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                "CXX=${CXX:-}"
+                "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                "F77=${F77:-}"
+                "FC=${FC:-}"
+                "INCLUDE=${INCLUDE:-}"
+                "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                "LIBRARY_PATH=${LIBRARY_PATH:-}"
+            )
         else
             path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
             dict['path']="$(koopa_paste --sep=':' "${path_arr[@]}")"
@@ -12372,16 +12383,32 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            PKG_CONFIG_PATH=''
-            app['pkg_config']="$( \
-                koopa_locate_pkg_config --allow-missing --only-system \
-            )"
-            if [[ -x "${app['pkg_config']}" ]]
+            if [[ "${bool['system_path']}" -eq 1 ]]
             then
-                koopa_activate_pkg_config "${app['pkg_config']}"
+                env_vars+=(
+                    "CC=${CC:-}"
+                    "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                    "CXX=${CXX:-}"
+                    "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                    "F77=${F77:-}"
+                    "FC=${FC:-}"
+                    "INCLUDE=${INCLUDE:-}"
+                    "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                    "LIBRARY_PATH=${LIBRARY_PATH:-}"
+                    "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+                )
+            else
+                PKG_CONFIG_PATH=''
+                app['pkg_config']="$( \
+                    koopa_locate_pkg_config --allow-missing --only-system \
+                )"
+                if [[ -x "${app['pkg_config']}" ]]
+                then
+                    koopa_activate_pkg_config "${app['pkg_config']}"
+                fi
+                env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+                unset -v PKG_CONFIG_PATH
             fi
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
-            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then

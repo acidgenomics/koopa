@@ -349,6 +349,17 @@ ${dict['version2']}"
         if [[ "${bool['system_path']}" -eq 1 ]]
         then
             dict['path']="${PATH:?}"
+            env_vars+=(
+                "CC=${CC:-}"
+                "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                "CXX=${CXX:-}"
+                "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                "F77=${F77:-}"
+                "FC=${FC:-}"
+                "INCLUDE=${INCLUDE:-}"
+                "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                "LIBRARY_PATH=${LIBRARY_PATH:-}"
+            )
         else
             path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
             dict['path']="$(koopa_paste --sep=':' "${path_arr[@]}")"
@@ -388,34 +399,52 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            PKG_CONFIG_PATH=''
-            app['pkg_config']="$( \
-                koopa_locate_pkg_config --allow-missing --only-system \
-            )"
-            if [[ -x "${app['pkg_config']}" ]]
+            if [[ "${bool['system_path']}" -eq 1 ]]
             then
-                koopa_activate_pkg_config "${app['pkg_config']}"
+                # FIXME Does this help fix gcc issue with lmod?
+                env_vars+=(
+                    "CC=${CC:-}"
+                    "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                    "CXX=${CXX:-}"
+                    "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                    "F77=${F77:-}"
+                    "FC=${FC:-}"
+                    "INCLUDE=${INCLUDE:-}"
+                    "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                    "LIBRARY_PATH=${LIBRARY_PATH:-}"
+                    "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+                )
+            else
+                # FIXME Rethink and rework our pkg-config approach here.
+                PKG_CONFIG_PATH=''
+                app['pkg_config']="$( \
+                    koopa_locate_pkg_config --allow-missing --only-system \
+                )"
+                if [[ -x "${app['pkg_config']}" ]]
+                then
+                    koopa_activate_pkg_config "${app['pkg_config']}"
+                fi
+                # Strip '/usr/local' from pkg-config, which requires Perl.
+                # FIXME Hitting a regex issue on HPC, so disabling this step to
+                # debug further.
+                # # Regexp modifiers "/l" and "/a" are mutually exclusive at -e line 1, at end of line
+                # # Regexp modifier "/l" may not appear twice at -e line 1, at end of line
+                # # syntax error at -e line 1, near "s/\\/usr\\/local["
+                # FIXME Rework this as 'koopa_remove_from_pkg_config_path' function.
+                # > app['perl']="$(koopa_locate_perl --allow-missing)"
+                # > if [[ -x "${app['perl']}" ]]
+                # > then
+                # >     PKG_CONFIG_PATH="$( \
+                # >         koopa_gsub \
+                # >             --regex \
+                # >             --pattern='/usr/local[^\:]+:' \
+                # >             --replacement='' \
+                # >             "$PKG_CONFIG_PATH"
+                # >     )"
+                # > fi
+                env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+                unset -v PKG_CONFIG_PATH
             fi
-            # Strip '/usr/local' from pkg-config, which requires Perl.
-            # FIXME Hitting a regex issue on HPC, so disabling this step to
-            # debug further.
-            # # Regexp modifiers "/l" and "/a" are mutually exclusive at -e line 1, at end of line
-            # # Regexp modifier "/l" may not appear twice at -e line 1, at end of line
-            # # syntax error at -e line 1, near "s/\\/usr\\/local["
-            # FIXME Rework this as 'koopa_remove_from_pkg_config_path' function.
-            # > app['perl']="$(koopa_locate_perl --allow-missing)"
-            # > if [[ -x "${app['perl']}" ]]
-            # > then
-            # >     PKG_CONFIG_PATH="$( \
-            # >         koopa_gsub \
-            # >             --regex \
-            # >             --pattern='/usr/local[^\:]+:' \
-            # >             --replacement='' \
-            # >             "$PKG_CONFIG_PATH"
-            # >     )"
-            # > fi
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
-            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
