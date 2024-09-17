@@ -345,6 +345,8 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
+        # FIXME Allow the user to override PATH hardening, which shouldn't
+        # be allowed by default but is useful on some HPC systems.
         path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
         env_vars+=(
             "HOME=${HOME:?}"
