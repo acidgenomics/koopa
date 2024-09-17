@@ -121,7 +121,7 @@ koopa_locate_app() {
         [[ -n "${dict['app_name']}" ]] || return 1
         [[ -n "${dict['bin_name']}" ]] || return 1
     fi
-    if [[ -n "${dict['system_bin_name']}" ]]
+    if [[ -z "${dict['system_bin_name']}" ]]
     then
         dict['system_bin_name']="${dict['bin_name']}"
     fi
