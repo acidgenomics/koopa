@@ -404,6 +404,7 @@ ${dict['version2']}"
                 # FIXME Does this help fix gcc issue with lmod?
                 env_vars+=(
                     "CC=${CC:-}"
+                    "CPATH=${CPATH:-}"
                     "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
                     "CXX=${CXX:-}"
                     "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
