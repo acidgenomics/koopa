@@ -28,7 +28,8 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_has_no_envs
+    # This is too strict on some HPC systems, so disabling.
+    # > koopa_assert_has_no_envs
     koopa_assert_is_installed 'python3'
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
