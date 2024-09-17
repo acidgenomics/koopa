@@ -3,7 +3,7 @@
 koopa_make_build() {
     # """
     # Build with GNU Make.
-    # @note Updated 2024-06-14.
+    # @note Updated 2024-09-17.
     # """
     local -A app dict
     local -a conf_args pos targets
@@ -24,6 +24,7 @@ koopa_make_build() {
     esac
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
+    targets=()
     while (("$#"))
     do
         case "$1" in
