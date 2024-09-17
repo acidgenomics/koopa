@@ -12041,7 +12041,6 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_has_no_envs
     koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
@@ -21567,7 +21566,6 @@ koopa_python_create_venv() {
     local -A app bool dict
     local -a pip_args pkgs pos venv_args
     koopa_assert_has_args "$#"
-    koopa_assert_has_no_envs
     app['python']=''
     bool['binary']=1
     bool['pip']=1
