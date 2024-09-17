@@ -20157,7 +20157,6 @@ koopa_make_build() {
     esac
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
-    targets=()
     while (("$#"))
     do
         case "$1" in
@@ -20184,7 +20183,10 @@ koopa_make_build() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_is_array_empty "${targets[@]}" && targets+=('install')
+    if koopa_is_array_empty "${targets[@]:-}"
+    then
+        targets+=('install')
+    fi
     conf_args+=("$@")
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
