@@ -13973,7 +13973,11 @@ koopa_install_koopa() {
                 ;;
         esac
     done
-    [[ "${bool['verbose']}" -eq 1 ]] && set -x
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        set -x
+        koopa_print_env
+    fi
     if [[ -d "${KOOPA_BOOTSTRAP_PREFIX:-}" ]]
     then
         bool['bootstrap']=1
