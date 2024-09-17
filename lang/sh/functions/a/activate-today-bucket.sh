@@ -1,11 +1,9 @@
 #!/bin/sh
 
-# TODO Add support for linking '~/Documents/today' as well.
-
 _koopa_activate_today_bucket() {
     # """
     # Create a dated file today bucket.
-    # @note Updated 2023-03-10.
+    # @note Updated 2024-09-17.
     #
     # Also adds a '~/today' symlink for quick access.
     #
@@ -22,13 +20,22 @@ _koopa_activate_today_bucket() {
     #        make symbolic links instead of hard links
     # """
     __kvar_bucket_dir="${KOOPA_BUCKET:-}"
-    [ -z "$__kvar_bucket_dir" ] && __kvar_bucket_dir="${HOME:?}/bucket"
-    if [ ! -d "$__kvar_bucket_dir" ]
+    if [ -n "$__kvar_bucket_dir" ]
     then
+        [ -d "$KOOPA_BUCKET" ] || return 1
+        __kvar_today_link="${HOME:?}/today"
+    elif [ -d "${HOME:?}/bucket" ]
+    then
+        __kvar_bucket_dir="${HOME:?}/bucket"
+        __kvar_today_link="${HOME:?}/today"
+    elif [ -d "${HOME:?}/Documents/bucket" ]
+    then
+        __kvar_bucket_dir="${HOME:?}/Documents/bucket"
+        __kvar_today_link="${HOME:?}/Documents/today"
+    else
         unset -v __kvar_bucket_dir
         return 0
     fi
-    __kvar_today_link="${HOME:?}/today"
     __kvar_today_subdirs="$(date '+%Y/%m/%d')"
     if _koopa_str_detect_posix \
         "$(_koopa_realpath "$__kvar_today_link")" \
