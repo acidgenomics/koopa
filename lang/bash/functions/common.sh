@@ -16624,6 +16624,10 @@ koopa_is_broken_symlink() {
     return 0
 }
 
+koopa_is_compiler_supported() {
+    return 0
+}
+
 koopa_is_compressed_file() {
     local pattern string
     koopa_assert_has_args "$#"

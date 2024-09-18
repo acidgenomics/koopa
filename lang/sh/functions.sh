@@ -1277,7 +1277,7 @@ _koopa_alias_kdev() {
         KOOPA_CAN_INSTALL_BINARY="${KOOPA_CAN_INSTALL_BINARY:-}" \
         LANG='C' \
         LC_ALL='C' \
-        PATH='/usr/bin:/bin' \
+        PATH="${PATH:?}" \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TMPDIR="${TMPDIR:-/tmp}" \
