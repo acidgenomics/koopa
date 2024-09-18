@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# FIXME Set inherit_env=1 automatically when Lmod modules are loaded.
+# FIXME Ensure we error if conda environment is active.
+# FIXME Ensure we error if python virtual environment is active.
+
 # FIXME Need to check that app is supported by parsing app.json file with
 # Python, instead of just checking if function is defined in Bash library.
 # We may be able to define this as 'koopa_is_app_supported'.
