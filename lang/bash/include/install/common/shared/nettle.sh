@@ -12,10 +12,11 @@ main() {
     # - https://stackoverflow.com/questions/7965990
     # - https://gist.github.com/morgant/1753095
     # """
-    local -a conf_args install_args
+    local -a conf_args deps install_args
     local conf_arg
-    koopa_activate_app 'gmp' 'm4'
-    conf_args=(
+    deps+=('gmp' 'm4' 'openssl3')
+    koopa_activate_app "${deps[@]}"
+    conf_args+=(
         '--disable-dependency-tracking'
         '--disable-static'
         '--enable-mini-gmp'
