@@ -2,8 +2,6 @@
 
 # FIXME Consider erroring if compiler is too old (e.g. GCC 4).
 # We should run compiler checks before allowing the install to proceed.
-
-# FIXME Set inherit_env=1 automatically when Lmod modules are loaded.
 # FIXME Ensure we error if conda environment is active.
 # FIXME Ensure we error if python virtual environment is active.
 
@@ -35,8 +33,10 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    # This is too strict on some HPC systems, so disabling.
-    # > koopa_assert_has_no_envs
+    # Ensure we don't accidentally build against Conda compilers.
+    koopa_assert_conda_env_is_not_active
+    # Some HPCs run with Python venv loaded, so disabling.
+    # > koopa_assert_python_venv_is_not_active
     koopa_assert_is_installed 'python3'
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
@@ -53,6 +53,8 @@ koopa_install_app() {
     bool['deps']=1
     # Allow current environment variables to pass through for compiltion.
     bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
+    # When Lmod modules are active, ensure we inherit environment variables.
+    koopa_is_lmod_active && bool['inherit_env']=1
     # Perform the installation in an isolated subshell?
     bool['isolate']=1
     # Will any individual programs be linked into koopa 'bin/'?
@@ -409,6 +411,7 @@ ${dict['version2']}"
         then
             if [[ "${bool['inherit_env']}" -eq 1 ]]
             then
+                # FIXME Only set these when defined (see above).
                 env_vars+=(
                     "CC=${CC:-}"
                     "CPATH=${CPATH:-}"
