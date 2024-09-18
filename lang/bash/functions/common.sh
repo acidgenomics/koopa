@@ -12060,6 +12060,7 @@ koopa_install_app() {
     bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
+    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
     bool['isolate']=1
     bool['link_in_bin']=''
     bool['link_in_man1']=''
@@ -12070,7 +12071,6 @@ koopa_install_app() {
     koopa_can_push_binary && bool['push']=1
     bool['quiet']=0
     bool['reinstall']=0
-    bool['system_path']="${KOOPA_INSTALL_APP_SYSTEM_PATH:-0}"
     bool['update_ldconfig']=0
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
@@ -12345,7 +12345,7 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        if [[ "${bool['system_path']}" -eq 1 ]]
+        if [[ "${bool['inherit_env']}" -eq 1 ]]
         then
             dict['path']="${PATH:?}"
             env_vars+=(
@@ -12395,7 +12395,7 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            if [[ "${bool['system_path']}" -eq 1 ]]
+            if [[ "${bool['inherit_env']}" -eq 1 ]]
             then
                 env_vars+=(
                     "CC=${CC:-}"

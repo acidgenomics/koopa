@@ -4,6 +4,8 @@
 # - https://github.com/unicode-org/icu/pull/2749#issuecomment-1858570143
 # - https://github.com/Homebrew/homebrew-core/pull/153108
 
+# FIXME Error if user is attempting to compile with GCC 4.
+
 main() {
     # """
     # Install ICU4C.
@@ -45,7 +47,7 @@ release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
     # GCC 4 has compilation issues:
     # https://github.com/gagolews/stringi/issues/431
-    koopa_append_cxxflags '-std=c++11'
+    # > koopa_append_cxxflags '-std=c++11'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
