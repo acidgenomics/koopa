@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Consider erroring if compiler is too old (e.g. GCC 4).
+# We should run compiler checks before allowing the install to proceed.
+
 # FIXME Set inherit_env=1 automatically when Lmod modules are loaded.
 # FIXME Ensure we error if conda environment is active.
 # FIXME Ensure we error if python virtual environment is active.
