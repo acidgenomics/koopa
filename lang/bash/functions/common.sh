@@ -795,6 +795,18 @@ koopa_append_cppflags() {
     return 0
 }
 
+koopa_append_cxxflags() {
+    local str
+    koopa_assert_has_args "$#"
+    CXXFLAGS="${CXXFLAGS:-}"
+    for str in "$@"
+    do
+        CXXFLAGS="${CXXFLAGS} ${str}"
+    done
+    export CXXFLAGS
+    return 0
+}
+
 koopa_append_ldflags() {
     local str
     koopa_assert_has_args "$#"
@@ -12387,6 +12399,7 @@ ${dict['version2']}"
             then
                 env_vars+=(
                     "CC=${CC:-}"
+                    "CPATH=${CPATH:-}"
                     "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
                     "CXX=${CXX:-}"
                     "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
