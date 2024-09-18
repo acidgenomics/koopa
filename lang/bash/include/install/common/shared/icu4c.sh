@@ -45,9 +45,6 @@ release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
     fi
     koopa_cd 'icu/source'
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    # GCC 4 has compilation issues:
-    # https://github.com/gagolews/stringi/issues/431
-    # > koopa_append_cxxflags '-std=c++11'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
