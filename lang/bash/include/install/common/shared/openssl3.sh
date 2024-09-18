@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2024-09-09.
+    # @note Updated 2024-09-17.
     #
     # Check supported platforms with:
     # > ./Configure LIST
@@ -18,9 +18,15 @@ main() {
     # - https://gist.github.com/fumiyas/b4aaee83e113e061d1ee8ab95b35608b
     # """
     local -A app dict
-    local -a conf_args
-    koopa_activate_app --build-only 'make' 'pkg-config'
-    koopa_activate_app 'ca-certificates'
+    local -a build_deps conf_args deps
+    build_deps+=(
+        'make'
+        'pkg-config'
+        'perl'
+    )
+    deps+=('ca-certificates')
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"

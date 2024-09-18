@@ -795,6 +795,18 @@ koopa_append_cppflags() {
     return 0
 }
 
+koopa_append_cxxflags() {
+    local str
+    koopa_assert_has_args "$#"
+    CXXFLAGS="${CXXFLAGS:-}"
+    for str in "$@"
+    do
+        CXXFLAGS="${CXXFLAGS} ${str}"
+    done
+    export CXXFLAGS
+    return 0
+}
+
 koopa_append_ldflags() {
     local str
     koopa_assert_has_args "$#"
@@ -12048,6 +12060,7 @@ koopa_install_app() {
     bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
+    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
     bool['isolate']=1
     bool['link_in_bin']=''
     bool['link_in_man1']=''
@@ -12332,7 +12345,24 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        if [[ "${bool['inherit_env']}" -eq 1 ]]
+        then
+            dict['path']="${PATH:?}"
+            env_vars+=(
+                "CC=${CC:-}"
+                "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                "CXX=${CXX:-}"
+                "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                "F77=${F77:-}"
+                "FC=${FC:-}"
+                "INCLUDE=${INCLUDE:-}"
+                "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                "LIBRARY_PATH=${LIBRARY_PATH:-}"
+            )
+        else
+            path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+            dict['path']="$(koopa_paste --sep=':' "${path_arr[@]}")"
+        fi
         env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -12341,7 +12371,7 @@ ${dict['version2']}"
             "KOOPA_VERBOSE=${bool['verbose']}"
             'LANG=C'
             'LC_ALL=C'
-            "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+            "PATH=${dict['path']}"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
@@ -12365,27 +12395,33 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            PKG_CONFIG_PATH=''
-            app['pkg_config']="$( \
-                koopa_locate_pkg_config --allow-missing --only-system \
-            )"
-            if [[ -x "${app['pkg_config']}" ]]
+            if [[ "${bool['inherit_env']}" -eq 1 ]]
             then
-                koopa_activate_pkg_config "${app['pkg_config']}"
-            fi
-            app['perl']="$(koopa_locate_perl --allow-missing)"
-            if [[ -x "${app['perl']}" ]]
-            then
-                PKG_CONFIG_PATH="$( \
-                    koopa_gsub \
-                        --regex \
-                        --pattern='/usr/local[^\:]+:' \
-                        --replacement='' \
-                        "$PKG_CONFIG_PATH"
+                env_vars+=(
+                    "CC=${CC:-}"
+                    "CPATH=${CPATH:-}"
+                    "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                    "CXX=${CXX:-}"
+                    "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                    "F77=${F77:-}"
+                    "FC=${FC:-}"
+                    "INCLUDE=${INCLUDE:-}"
+                    "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                    "LIBRARY_PATH=${LIBRARY_PATH:-}"
+                    "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+                )
+            else
+                PKG_CONFIG_PATH=''
+                app['pkg_config']="$( \
+                    koopa_locate_pkg_config --allow-missing --only-system \
                 )"
+                if [[ -x "${app['pkg_config']}" ]]
+                then
+                    koopa_activate_pkg_config "${app['pkg_config']}"
+                fi
+                env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+                unset -v PKG_CONFIG_PATH
             fi
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
-            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
@@ -20183,7 +20219,10 @@ koopa_make_build() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_is_array_empty "${targets[@]}" && targets+=('install')
+    if koopa_is_array_empty "${targets[@]:-}"
+    then
+        targets+=('install')
+    fi
     conf_args+=("$@")
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"

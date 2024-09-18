@@ -3,7 +3,7 @@
 koopa_make_build() {
     # """
     # Build with GNU Make.
-    # @note Updated 2024-06-14.
+    # @note Updated 2024-09-17.
     # """
     local -A app dict
     local -a conf_args pos targets
@@ -52,7 +52,13 @@ koopa_make_build() {
         esac
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    koopa_is_array_empty "${targets[@]}" && targets+=('install')
+    # Alternatively, can use '${arr[@]+"${arr[@]}"}' idiom here to support
+    # Bash 4.2, which is common on some legacy HPC systems.
+    # https://stackoverflow.com/questions/7577052
+    if koopa_is_array_empty "${targets[@]:-}"
+    then
+        targets+=('install')
+    fi
     conf_args+=("$@")
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"

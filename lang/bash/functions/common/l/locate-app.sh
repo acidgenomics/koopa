@@ -159,6 +159,7 @@ koopa_locate_app() {
         dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
     fi
+    # FIXME This is failing to locate correctly on HPC with Lmod.
     if [[ ! -x "${dict['app']}" ]] && [[ "${bool['allow_system']}" -eq 1 ]]
     then
         dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
