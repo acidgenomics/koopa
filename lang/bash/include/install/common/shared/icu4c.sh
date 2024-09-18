@@ -21,7 +21,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['kebab_version']="$(koopa_kebab_case "${dict['version']}")"
     dict['snake_version']="$(koopa_snake_case "${dict['version']}")"
-    conf_args=(
+    conf_args+=(
         '--disable-samples'
         '--disable-static'
         '--disable-tests'
@@ -43,6 +43,9 @@ release-${dict['kebab_version']}/icu4c-${dict['snake_version']}-src.tgz"
     fi
     koopa_cd 'icu/source'
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
+    # GCC 4 has compilation issues:
+    # https://github.com/gagolews/stringi/issues/431
+    koopa_append_cxxflags '-std=c++11'
     koopa_make_build "${conf_args[@]}"
     return 0
 }
