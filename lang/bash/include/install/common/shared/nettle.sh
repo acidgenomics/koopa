@@ -3,7 +3,7 @@
 main() {
     # """
     # Install nettle.
-    # @note Updated 2023-08-30.
+    # @note Updated 2024-09-18.
     #
     # Need to make sure libhogweed installs.
     # - https://stackoverflow.com/questions/9508851/how-to-compile-gnutls
@@ -25,6 +25,10 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
+    if koopa_is_linux
+    then
+        koopa_append_cppflags '-gdwarf-4'
+    fi
     koopa_install_gnu_app "${install_args[@]}"
     return 0
 }
