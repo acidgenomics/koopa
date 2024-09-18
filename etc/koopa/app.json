@@ -4113,7 +4113,7 @@
   "nextflow": {
     "bin": ["nextflow"],
     "date": "2024-08-01",
-    "default": true,
+    "default": false,
     "dependencies": ["conda"],
     "url": [
       "https://www.nextflow.io/",
