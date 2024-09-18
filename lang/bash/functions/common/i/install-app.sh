@@ -17,7 +17,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-09-17.
+    # @note Updated 2024-09-18.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -44,6 +44,8 @@ koopa_install_app() {
     bool['copy_log_files']=0
     # Automatically install required dependencies (shared apps only).
     bool['deps']=1
+    # Allow current environment variables to pass through for compiltion.
+    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
     # Perform the installation in an isolated subshell?
     bool['isolate']=1
     # Will any individual programs be linked into koopa 'bin/'?
@@ -63,7 +65,6 @@ koopa_install_app() {
     # nested install calls (e.g. Emacs installer handoff to GNU app).
     bool['quiet']=0
     bool['reinstall']=0
-    bool['system_path']="${KOOPA_INSTALL_APP_SYSTEM_PATH:-0}"
     bool['update_ldconfig']=0
     bool['verbose']=0
     dict['app_prefix']="$(koopa_app_prefix)"
@@ -346,7 +347,7 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        if [[ "${bool['system_path']}" -eq 1 ]]
+        if [[ "${bool['inherit_env']}" -eq 1 ]]
         then
             dict['path']="${PATH:?}"
             env_vars+=(
@@ -399,9 +400,8 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            if [[ "${bool['system_path']}" -eq 1 ]]
+            if [[ "${bool['inherit_env']}" -eq 1 ]]
             then
-                # FIXME Does this help fix gcc issue with lmod?
                 env_vars+=(
                     "CC=${CC:-}"
                     "CPATH=${CPATH:-}"
