@@ -26,6 +26,7 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
+    # FIXME We need to set DWARF 4 for GCC 13 when building on CentOS 7.
     if koopa_is_linux
     then
         koopa_append_cppflags '-gdwarf-4'
