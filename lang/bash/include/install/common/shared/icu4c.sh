@@ -4,6 +4,8 @@
 # - https://github.com/unicode-org/icu/pull/2749#issuecomment-1858570143
 # - https://github.com/Homebrew/homebrew-core/pull/153108
 
+# FIXME Error if user is attempting to compile with GCC 4.
+
 main() {
     # """
     # Install ICU4C.
@@ -21,7 +23,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['kebab_version']="$(koopa_kebab_case "${dict['version']}")"
     dict['snake_version']="$(koopa_snake_case "${dict['version']}")"
-    conf_args=(
+    conf_args+=(
         '--disable-samples'
         '--disable-static'
         '--disable-tests'

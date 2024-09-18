@@ -17,7 +17,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-09-17.
+    # @note Updated 2024-09-18.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -44,6 +44,8 @@ koopa_install_app() {
     bool['copy_log_files']=0
     # Automatically install required dependencies (shared apps only).
     bool['deps']=1
+    # Allow current environment variables to pass through for compiltion.
+    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
     # Perform the installation in an isolated subshell?
     bool['isolate']=1
     # Will any individual programs be linked into koopa 'bin/'?
@@ -345,7 +347,24 @@ ${dict['version2']}"
         app['env']="$(koopa_locate_env --allow-system)"
         app['tee']="$(koopa_locate_tee --allow-system)"
         koopa_assert_is_executable "${app[@]}"
-        path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+        if [[ "${bool['inherit_env']}" -eq 1 ]]
+        then
+            dict['path']="${PATH:?}"
+            env_vars+=(
+                "CC=${CC:-}"
+                "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                "CXX=${CXX:-}"
+                "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                "F77=${F77:-}"
+                "FC=${FC:-}"
+                "INCLUDE=${INCLUDE:-}"
+                "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                "LIBRARY_PATH=${LIBRARY_PATH:-}"
+            )
+        else
+            path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
+            dict['path']="$(koopa_paste --sep=':' "${path_arr[@]}")"
+        fi
         env_vars+=(
             "HOME=${HOME:?}"
             'KOOPA_ACTIVATE=0'
@@ -354,7 +373,7 @@ ${dict['version2']}"
             "KOOPA_VERBOSE=${bool['verbose']}"
             'LANG=C'
             'LC_ALL=C'
-            "PATH=$(koopa_paste --sep=':' "${path_arr[@]}")"
+            "PATH=${dict['path']}"
             "PWD=${HOME:?}"
             "TMPDIR=${TMPDIR:-/tmp}"
         )
@@ -381,28 +400,52 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
-            PKG_CONFIG_PATH=''
-            app['pkg_config']="$( \
-                koopa_locate_pkg_config --allow-missing --only-system \
-            )"
-            if [[ -x "${app['pkg_config']}" ]]
+            if [[ "${bool['inherit_env']}" -eq 1 ]]
             then
-                koopa_activate_pkg_config "${app['pkg_config']}"
-            fi
-            # Strip '/usr/local' from pkg-config, which requires Perl.
-            app['perl']="$(koopa_locate_perl --allow-missing)"
-            if [[ -x "${app['perl']}" ]]
-            then
-                PKG_CONFIG_PATH="$( \
-                    koopa_gsub \
-                        --regex \
-                        --pattern='/usr/local[^\:]+:' \
-                        --replacement='' \
-                        "$PKG_CONFIG_PATH"
+                env_vars+=(
+                    "CC=${CC:-}"
+                    "CPATH=${CPATH:-}"
+                    "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
+                    "CXX=${CXX:-}"
+                    "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
+                    "F77=${F77:-}"
+                    "FC=${FC:-}"
+                    "INCLUDE=${INCLUDE:-}"
+                    "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+                    "LIBRARY_PATH=${LIBRARY_PATH:-}"
+                    "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
+                )
+            else
+                # FIXME Rethink and rework our pkg-config approach here.
+                PKG_CONFIG_PATH=''
+                app['pkg_config']="$( \
+                    koopa_locate_pkg_config --allow-missing --only-system \
                 )"
+                if [[ -x "${app['pkg_config']}" ]]
+                then
+                    koopa_activate_pkg_config "${app['pkg_config']}"
+                fi
+                # Strip '/usr/local' from pkg-config, which requires Perl.
+                # FIXME Hitting a regex issue on HPC, so disabling this step to
+                # debug further.
+                # # Regexp modifiers "/l" and "/a" are mutually exclusive at -e line 1, at end of line
+                # # Regexp modifier "/l" may not appear twice at -e line 1, at end of line
+                # # syntax error at -e line 1, near "s/\\/usr\\/local["
+                # FIXME Rework this as 'koopa_remove_from_pkg_config_path' function.
+                # > app['perl']="$(koopa_locate_perl --allow-missing)"
+                # > if [[ -x "${app['perl']}" ]]
+                # > then
+                # >     PKG_CONFIG_PATH="$( \
+                # >         koopa_gsub \
+                # >             --regex \
+                # >             --pattern='/usr/local[^\:]+:' \
+                # >             --replacement='' \
+                # >             "$PKG_CONFIG_PATH"
+                # >     )"
+                # > fi
+                env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+                unset -v PKG_CONFIG_PATH
             fi
-            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
-            unset -v PKG_CONFIG_PATH
             if [[ -d "${dict['prefix']}" ]] && \
                 [[ "${dict['mode']}" != 'system' ]]
             then
