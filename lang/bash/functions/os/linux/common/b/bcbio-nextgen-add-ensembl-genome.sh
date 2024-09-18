@@ -45,7 +45,6 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     local -A app dict
     local -a indexes
     koopa_assert_has_args "$#"
-    koopa_assert_has_no_envs
     app['bcbio_setup_genome']="$(koopa_linux_locate_bcbio_setup_genome)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['touch']="$(koopa_locate_touch)"

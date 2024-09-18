@@ -1075,6 +1075,17 @@ koopa_assert_can_push_binary() {
     return 0
 }
 
+koopa_assert_conda_env_is_not_active() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_conda_env_active
+    then
+        koopa_stop \
+            'Active Conda environment detected.' \
+            "Run 'conda deactivate' command before proceeding."
+    fi
+    return 0
+}
+
 koopa_assert_has_args_eq() {
     if [[ "$#" -ne 2 ]]
     then
@@ -1161,23 +1172,6 @@ koopa_assert_has_no_args() {
     return 0
 }
 
-koopa_assert_has_no_envs() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_has_no_environments
-    then
-        koopa_stop "\
-Active environment detected.
-       (conda and/or python venv)
-
-Deactivate using:
-    venv:  deactivate
-    conda: conda deactivate
-
-Deactivate venv prior to conda, otherwise conda python may be left in PATH."
-    fi
-    return 0
-}
-
 koopa_assert_has_no_flags() {
     koopa_assert_has_args "$#"
     while (("$#"))
@@ -1241,15 +1235,6 @@ koopa_assert_is_compressed_file() {
             koopa_stop "Not a compressed file: '${arg}'."
         fi
     done
-    return 0
-}
-
-koopa_assert_is_conda_active() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_is_conda_active
-    then
-        koopa_stop 'No active Conda environment detected.'
-    fi
     return 0
 }
 
@@ -1770,6 +1755,17 @@ koopa_assert_is_writable() {
             koopa_stop "Not writable: '${arg}'."
         fi
     done
+    return 0
+}
+
+koopa_assert_python_venv_is_not_active() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_python_venv_active
+    then
+        koopa_stop \
+            'Active Python virtual environment detected.' \
+            "Run 'deactivate' command before proceeding."
+    fi
     return 0
 }
 
@@ -10806,9 +10802,10 @@ koopa_has_monorepo() {
     [[ -d "$(koopa_monorepo_prefix)" ]]
 }
 
-koopa_has_no_environments() {
+koopa_has_no_active_envs() {
     koopa_assert_has_no_args "$#"
-    koopa_is_conda_active && return 1
+    koopa_is_conda_env_active && return 1
+    koopa_is_lmod_active && return 1
     koopa_is_python_venv_active && return 1
     return 0
 }
@@ -12053,6 +12050,7 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
+    koopa_assert_conda_env_is_not_active
     koopa_assert_is_installed 'python3'
     bool['auto_prefix']=0
     bool['binary']=0
@@ -12061,6 +12059,7 @@ koopa_install_app() {
     bool['copy_log_files']=0
     bool['deps']=1
     bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
+    koopa_is_lmod_active && bool['inherit_env']=1
     bool['isolate']=1
     bool['link_in_bin']=''
     bool['link_in_man1']=''
@@ -16640,10 +16639,6 @@ koopa_is_compressed_file() {
     return 0
 }
 
-koopa_is_conda_active() {
-    [[ -n "${CONDA_DEFAULT_ENV:-}" ]]
-}
-
 koopa_is_conda_env_active() {
     [[ "${CONDA_SHLVL:-1}" -gt 1 ]] && return 0
     [[ "${CONDA_DEFAULT_ENV:-base}" != 'base' ]] && return 0
@@ -16958,6 +16953,10 @@ koopa_is_koopa_app() {
 
 koopa_is_linux() {
     _koopa_is_linux "$@"
+}
+
+koopa_is_lmod_active() {
+    [[ -n "${LOADEDMODULES:-}" ]]
 }
 
 koopa_is_macos() {

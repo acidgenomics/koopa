@@ -4102,7 +4102,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-09-18",
     "default": false,
     "dependencies": ["gmp", "m4", "openssl3"],
     "prune": false,
