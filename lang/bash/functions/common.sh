@@ -18373,7 +18373,7 @@ koopa_locate_app() {
     then
         dict['path']="${PATH:?}"
         dict['bin_prefix']="$(koopa_bin_prefix)"
-        koopa_remove_from_path_string "${dict['bin_prefix']}"
+        koopa_remove_from_path "${dict['bin_prefix']}"
         dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
         export PATH="${dict['path']}"
         if [[ -x "${dict['app']}" ]]
@@ -23474,8 +23474,8 @@ koopa_reload_shell() {
     return 0
 }
 
-koopa_remove_from_path_string() {
-    _koopa_remove_from_path_string "$@"
+koopa_remove_from_path() {
+    _koopa_remove_from_path "$@"
 }
 
 koopa_rename_camel_case() {
