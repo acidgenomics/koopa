@@ -2294,6 +2294,18 @@ _koopa_remove_from_path_string() {
     return 0
 }
 
+_koopa_remove_from_path() {
+    PATH="${PATH:-}"
+    for __kvar_dir in "$@"
+    do
+        [ -d "$__kvar_dir" ] || continue
+        PATH="$(_koopa_remove_from_path_string "$PATH" "$__kvar_dir")"
+    done
+    export PATH
+    unset -v __kvar_dir
+    return 0
+}
+
 _koopa_scripts_private_prefix() {
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
     return 0
