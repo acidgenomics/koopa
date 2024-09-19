@@ -195,7 +195,7 @@ __koopa_warn() {
 __koopa_bash_header() {
     # """
     # Bash header.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-09-19.
     #
     # @seealso
     # - shopt
@@ -204,7 +204,7 @@ __koopa_bash_header() {
     # """
     case "${BASH_VERSION:-}" in
         '1.'* | '2.'* | '3.'*)
-            return 1
+            return 0
             ;;
     esac
     local -A app bool dict
@@ -297,7 +297,7 @@ __koopa_bash_header() {
         shopt -s sourcepath
         shopt -u xpg_echo
         case "${BASH_VERSION:-}" in
-            '1.'* | '2.'* | '3.'* | '4.'*)
+            '4.'*)
                 ;;
             *)
                 # Bash 5+ supported options.

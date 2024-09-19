@@ -131,7 +131,7 @@ __koopa_zsh_header() {
         bool['header_path']="${(%):-%N}"
         if [[ -L "${bool['header_path']}" ]]
         then
-            bool[header_path]="$(__koopa_realpath "${bool['header_path']}")"
+            bool['header_path']="$(__koopa_realpath "${bool['header_path']}")"
         fi
         KOOPA_PREFIX="$( \
             cd "$(dirname "${bool['header_path']}")/../../.." \
