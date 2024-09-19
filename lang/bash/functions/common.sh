@@ -1066,6 +1066,13 @@ koopa_assert_can_install_binary() {
     return 0
 }
 
+koopa_assert_can_install_from_source() {
+    koopa_assert_has_no_args "$#"
+    koopa_assert_conda_env_is_not_active
+    koopa_assert_is_installed 'python3'
+    return 0
+}
+
 koopa_assert_can_push_binary() {
     koopa_assert_has_no_args "$#"
     if ! koopa_can_push_binary
@@ -12050,15 +12057,14 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_conda_env_is_not_active
-    koopa_assert_is_installed 'python3'
+    koopa_assert_can_install_from_source
     bool['auto_prefix']=0
     bool['binary']=0
     koopa_can_install_binary && bool['binary']=1
     bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
-    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
+    bool['inherit_env']="${KOOPA_INHERIT_ENV:-0}"
     koopa_is_lmod_active && bool['inherit_env']=1
     bool['isolate']=1
     bool['link_in_bin']=''
@@ -16621,10 +16627,6 @@ koopa_is_broken_symlink() {
         fi
         return 1
     done
-    return 0
-}
-
-koopa_is_compiler_supported() {
     return 0
 }
 
