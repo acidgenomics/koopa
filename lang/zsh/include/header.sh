@@ -114,18 +114,56 @@ __koopa_zsh_header() {
     then
         bool['checks']=0
     fi
+    setopt alwaystoend
+    setopt autocd
+    setopt autopushd
+    unsetopt banghist
+    unsetopt beep
+    unsetopt chasedots
+    unsetopt chaselinks
+    setopt combiningchars
+    setopt completealiases
+    setopt completeinword
+    setopt extendedglob
+    setopt extendedhistory
+    unsetopt flowcontrol
+    setopt histexpiredupsfirst
+    setopt histignoredups
+    setopt histignorespace
+    setopt histverify
+    setopt incappendhistory
+    setopt interactivecomments
+    setopt longlistjobs
+    setopt markdirs
+    setopt pushdignoredups
+    setopt pushdminus
+    setopt sharehistory
+    unsetopt vi
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
         setopt sourcetrace
         setopt verbose
         setopt xtrace
+    else
+        unsetopt sourcetrace
+        unsetopt verbose
+        unsetopt xtrace
     fi
     if [[ "${bool['checks']}" -eq 1 ]]
     then
         setopt errexit
         setopt nounset
         setopt pipefail
+    else
+        unsetopt errexit
+        unsetopt nounset
+        unsetopt pipefail
     fi
+    # Fix the 'DELETE' key. Can use '\e[3~' instead of '^[[3~' here.
+    bindkey '^[[3~' delete-char
+    # Make 'HOME' and 'END' keys work intuitively.
+    bindkey '^[[H' beginning-of-line
+    bindkey '^[[F' end-of-line
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         bool['header_path']="${(%):-%N}"
