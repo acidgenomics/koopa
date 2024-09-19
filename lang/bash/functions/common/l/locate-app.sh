@@ -125,11 +125,20 @@ koopa_locate_app() {
     fi
     if [[ "${bool['only_system']}" -eq 1 ]]
     then
-        # FIXME Need to add koopa_remove_from_path_string here.
-        # FIXME Add only system support here.
-        # FIXME Remove koopa from current PATH.
-        koopa_stop 'FIXME'
-        # FIXME Reassign back to expected PATH.
+        dict['path']="${PATH:?}"
+        dict['bin_prefix']="$(koopa_bin_prefix)"
+        koopa_remove_from_path_string "${dict['bin_prefix']}"
+        dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
+        export PATH="${dict['path']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
+            koopa_print "${dict['app']}"
+            return 0
+        fi
     fi
     if [[ "${bool['allow_bootstrap']}" -eq 1 ]]
     then
