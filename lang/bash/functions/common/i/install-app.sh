@@ -49,7 +49,7 @@ koopa_install_app() {
     # Automatically install required dependencies (shared apps only).
     bool['deps']=1
     # Allow current environment variables to pass through for compiltion.
-    bool['inherit_env']="${KOOPA_INHERIT_ENV:-0}"
+    bool['inherit_env']=0
     # When Lmod modules are active, ensure we inherit environment variables.
     koopa_is_lmod_active && bool['inherit_env']=1
     # Perform the installation in an isolated subshell?
