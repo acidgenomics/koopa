@@ -283,7 +283,7 @@ __koopa_bash_header() {
     shopt -u dirspell
     shopt -u dotglob
     shopt -u execfail
-    shopt -u expand_aliases
+    shopt -s expand_aliases
     shopt -u extdebug
     shopt -s extglob
     shopt -s extquote
