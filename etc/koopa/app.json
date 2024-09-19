@@ -6718,7 +6718,7 @@
     "bin": ["zsh"],
     "build_dependencies": ["make"],
     "date": "2022-09-26",
-    "default": true,
+    "default": false,
     "dependencies": ["ncurses", "pcre", "texinfo"],
     "man1": ["zsh.1"],
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],
