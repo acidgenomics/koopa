@@ -230,92 +230,117 @@ __koopa_bash_header() {
         unalias -a
         # > __koopa_check_umask || return 1
     fi
+    # Check all set values with 'set +o'.
+    # Note that '+o' here means disable, '-o' means enable.
+    set +o allexport  # -a
+    set -o braceexpand  # -B
+    set -o hashall  # -h
+    set -o histexpand  # -H
+    set -o history
+    set +o ignoreeof
+    set -o interactive-comments
+    set +o keyword  # -k
+    set -o monitor  # -m
+    set +o noclobber  # -C
+    set +o noexec  # -n
+    set +o noglob  # -f
+    set +o notify  # -b
+    set +o onecmd  # -t
+    set +o posix
+    set +o physical  # -P
+    set +o privileged  # -p
     if [[ "${bool['checks']}" -eq 1 ]]
     then
-        # Compare with current values defined in '~/.bash_profile'.
-        # Check all values with 'set +o'.
-        # Note that '+o' here means disable, '-o' means enable.
-        set +o allexport  # -a
-        set -o braceexpand  # -B
         set -o errexit  # -e
         set -o errtrace  # -E
         set -o functrace  # -T
-        set -o hashall  # -h
-        set -o histexpand  # -H
-        set -o history
-        set +o ignoreeof
-        set -o interactive-comments
-        set +o keyword  # -k
-        set -o monitor  # -m
-        set +o noclobber  # -C
-        set +o noexec  # -n
-        set +o noglob  # -f
-        set +o notify  # -b
         set -o nounset  # -u
-        set +o onecmd  # -t
         set -o pipefail
-        set +o posix
-        set +o physical  # -P
-        set +o verbose  # -v
-        set +o xtrace  # -x
-        # Check all values with 'shopt'.
-        shopt -s autocd
-        shopt -u cdable_vars
-        shopt -s cdspell
-        shopt -u checkhash
-        shopt -u checkjobs
-        shopt -s checkwinsize
-        shopt -s cmdhist
-        shopt -u direxpand
-        shopt -u dirspell
-        shopt -u dotglob
-        shopt -u execfail
-        shopt -u expand_aliases
-        shopt -u extdebug
-        shopt -s extglob
-        shopt -s extquote
-        shopt -u failglob
-        shopt -s force_fignore
-        shopt -s globstar
-        shopt -s gnu_errfmt
-        shopt -s histappend
-        shopt -s histreedit
-        shopt -u histverify
-        shopt -s hostcomplete
-        shopt -u huponexit
-        shopt -s interactive_comments
-        shopt -u lastpipe
-        shopt -u lithist
-        shopt -u mailwarn
-        shopt -s no_empty_cmd_completion
-        shopt -s nocaseglob
-        shopt -u nocasematch
-        shopt -u nullglob
-        shopt -s progcomp
-        shopt -s promptvars
-        shopt -s shift_verbose
-        shopt -s sourcepath
-        shopt -u xpg_echo
-        case "${BASH_VERSION:-}" in
-            '4.'*)
-                ;;
-            *)
-                # Bash 5+ supported options.
-                shopt -u assoc_expand_once
-                shopt -s complete_fullquote
-                shopt -s globasciiranges
-                shopt -s inherit_errexit
-                shopt -u localvar_inherit
-                shopt -u localvar_unset
-                shopt -u progcomp_alias
-                ;;
-        esac
+    else
+        set +o errexit
+        set +o errtrace
+        set +o functrace
+        set +o nounset
+        set +o pipefail
     fi
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
         set -o verbose # -v
         set -o xtrace # -x
+    else
+        set +o verbose
+        set +o xtrace
     fi
+    # Check all values with 'shopt'.
+    shopt -s autocd
+    shopt -u cdable_vars
+    shopt -s cdspell
+    shopt -u checkhash
+    shopt -u checkjobs
+    shopt -s checkwinsize
+    shopt -s cmdhist
+    shopt -u direxpand
+    shopt -u dirspell
+    shopt -u dotglob
+    shopt -u execfail
+    shopt -u expand_aliases
+    shopt -u extdebug
+    shopt -s extglob
+    shopt -s extquote
+    shopt -u failglob
+    shopt -s force_fignore
+    shopt -s globstar
+    shopt -s gnu_errfmt
+    shopt -s histappend
+    shopt -s histreedit
+    shopt -u histverify
+    shopt -s hostcomplete
+    shopt -u huponexit
+    shopt -s interactive_comments
+    shopt -u lastpipe
+    shopt -u lithist
+    shopt -u mailwarn
+    shopt -s no_empty_cmd_completion
+    shopt -s nocaseglob
+    shopt -u nocasematch
+    shopt -u nullglob
+    shopt -s progcomp
+    shopt -s promptvars
+    shopt -s shift_verbose
+    shopt -s sourcepath
+    shopt -u xpg_echo
+    case "${BASH_VERSION:-}" in
+        '4.'*)
+            ;;
+        *)
+            # Bash 5+ supported options.
+            shopt -u assoc_expand_once
+            shopt -s complete_fullquote
+            shopt -s globasciiranges
+            shopt -s inherit_errexit
+            shopt -u localvar_inherit
+            shopt -u localvar_unset
+            shopt -u progcomp_alias
+            ;;
+    esac
+    # Map key bindings to default editor.
+    # Bash currently uses Emacs by default.
+    case "${EDITOR:-}" in
+        'emacs' | \
+        *'/emacs')
+            set -o emacs
+            set +o vi
+            ;;
+        'nvim' | \
+        'vi' | \
+        'vim' | \
+        *'/nvim' | \
+        *'/vi' | \
+        *'/vim')
+            set +o emacs
+            set -o vi
+            ;;
+    esac
     if [[ -z "${KOOPA_PREFIX:-}" ]]
     then
         dict['header_path']="${BASH_SOURCE[0]}"
