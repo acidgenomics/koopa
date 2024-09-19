@@ -127,7 +127,7 @@ koopa_locate_app() {
     then
         dict['path']="${PATH:?}"
         dict['bin_prefix']="$(koopa_bin_prefix)"
-        koopa_remove_from_path_string "${dict['bin_prefix']}"
+        koopa_remove_from_path "${dict['bin_prefix']}"
         dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
         export PATH="${dict['path']}"
         if [[ -x "${dict['app']}" ]]
