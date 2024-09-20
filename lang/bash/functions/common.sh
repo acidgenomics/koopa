@@ -1067,7 +1067,7 @@ koopa_assert_can_install_binary() {
 }
 
 koopa_assert_can_install_from_source() {
-    local -A app version
+    local -A app ver1 ver2
     koopa_assert_has_no_args "$#"
     koopa_assert_conda_env_is_not_active
     app['cc']="$(koopa_locate_cc --only-system)"
@@ -1077,12 +1077,22 @@ koopa_assert_can_install_from_source() {
     app['perl']="$(koopa_locate_perl --only-system)"
     app['python']="$(koopa_locate_python3 --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    version['cc']="$(koopa_get_version "${app['cc']}")"
-    version['git']="$(koopa_get_version "${app['git']}")"
-    version['ld']="$(koopa_get_version "${app['ld']}")"
-    version['make']="$(koopa_get_version "${app['make']}")"
-    version['perl']="$(koopa_get_version "${app['perl']}")"
-    version['python']="$(koopa_get_version "${app['python']}")"
+    ver1['cc']="$(koopa_get_version "${app['cc']}")"
+    ver1['git']="$(koopa_get_version "${app['git']}")"
+    ver1['make']="$(koopa_get_version "${app['make']}")"
+    ver1['perl']="$(koopa_get_version "${app['perl']}")"
+    ver1['python']="$(koopa_get_version "${app['python']}")"
+    if koopa_is_macos
+    then
+        ver2['cc']='14.0'
+    elif koopa_is_linux
+    then
+        ver2['cc']='4.8'
+    fi
+    ver2['git']='1.8'
+    ver2['make']='3.8'
+    ver2['perl']='5.16'
+    ver2['python']='3.6'
     return 0
 }
 
