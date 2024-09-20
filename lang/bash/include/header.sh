@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME Migrate bashrc source code from ~/.bashrc to here, to ensure consistent
+# performance between ~/.bashrc and ~/.bash_profile
+# FIXME Can we check /etc/bashrc has already been loaded?
+# FIXME Add support for sourcing:
+# ~/.bashrc.d/
+# ~/.bashrc-personal
+# ~/.bashrc-work
+# ~/.bash_profile-personal
+# ~/.bash_profile-work
+
 # > __koopa_check_umask() {
 # >     # """
 # >     # Return with error on overly restrictive umask.
