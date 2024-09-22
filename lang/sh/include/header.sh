@@ -36,14 +36,6 @@ __koopa_posix_header() {
         __koopa_activate_koopa || return 1
     else
         unalias -a
-        if [ "${KOOPA_INSTALL_APP_SUBSHELL:-0}" -eq 0 ]
-        then
-            # This is problematic with some Linux systems, so disabling.
-            # > PATH='/usr/bin:/bin'
-            # > PATH="${KOOPA_PREFIX}/bin:${PATH}"
-            # > export PATH
-            _koopa_add_to_path_start "$KOOPA_PREFIX"
-        fi
     fi
     if [ "${KOOPA_TEST:-0}" -eq 1 ]
     then
@@ -61,6 +53,7 @@ __koopa_activate_koopa() {
     then
         _koopa_activate_path_helper || return 1
     fi
+    # FIXME Rethink this, maybe only add conditionally?
     _koopa_add_to_path_start "$(_koopa_bootstrap_prefix)/bin" || return 1
     _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
