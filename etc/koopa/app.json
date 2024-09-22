@@ -2894,12 +2894,13 @@
     "date": "2024-09-22",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.51.1"
+    "version": "0.51.0"
   },
   "krb5": {
     "aliases": {
