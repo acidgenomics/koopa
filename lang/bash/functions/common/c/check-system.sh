@@ -6,9 +6,10 @@
 koopa_check_system() {
     # """
     # Check system.
-    # @note Updated 2024-09-09.
+    # @note Updated 2024-09-20.
     # """
     koopa_assert_has_no_args "$#"
+    koopa_assert_can_install_from_source
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
     # > koopa_check_exports

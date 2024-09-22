@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2024-09-10.
+# @note Updated 2024-09-22.
 # """
 
 # Can debug with:
@@ -89,7 +89,7 @@ install_bash() {
         'https://ftp.gnu.org/gnu/bash/bash-5.2.32.tar.gz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'bash-5.2.21' || return 1
+    cd 'bash-5.2.32' || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install
@@ -108,10 +108,10 @@ install_coreutils() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://ftp.gnu.org/gnu/coreutils/coreutils-9.4.tar.gz' \
+        'https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.gz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'coreutils-9.4' || return 1
+    cd 'coreutils-9.5' || return 1
     if is_root
     then
         export FORCE_UNSAFE_CONFIGURE=1
@@ -134,10 +134,10 @@ install_openssl3() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://www.openssl.org/source/openssl-3.3.1.tar.gz' \
+        'https://www.openssl.org/source/openssl-3.3.2.tar.gz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'openssl-3.3.1' || return 1
+    cd 'openssl-3.3.2' || return 1
     ./config \
         --libdir='lib' \
         --openssldir="$PREFIX" \
@@ -163,10 +163,10 @@ install_python() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz' \
+        'https://www.python.org/ftp/python/3.12.6/Python-3.12.6.tgz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'Python-3.11.9' || return 1
+    cd 'Python-3.12.6' || return 1
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --prefix="$PREFIX" \

@@ -18,7 +18,6 @@ koopa_python_create_venv() {
     local -A app bool dict
     local -a pip_args pkgs pos venv_args
     koopa_assert_has_args "$#"
-    # > koopa_assert_has_no_envs
     app['python']=''
     bool['binary']=1
     bool['pip']=1

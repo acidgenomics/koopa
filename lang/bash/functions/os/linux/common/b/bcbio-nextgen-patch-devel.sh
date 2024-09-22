@@ -7,7 +7,6 @@ koopa_linux_bcbio_nextgen_patch_devel() {
     # """
     local -A app dict
     local -a cache_files
-    koopa_assert_has_no_envs
     app['bcbio_python']="$(koopa_linux_locate_bcbio_python)"
     app['tee']="$(koopa_locate_tee)"
     koopa_assert_is_executable "${app[@]}"

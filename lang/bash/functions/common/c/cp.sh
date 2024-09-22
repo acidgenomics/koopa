@@ -18,7 +18,7 @@ koopa_cp() {
     # """
     local -A app dict
     local -a cp cp_args mkdir pos rm
-    app['cp']="$(koopa_locate_cp --allow-system)"
+    app['cp']="$(koopa_locate_cp --allow-system --realpath)"
     dict['sudo']=0
     dict['symlink']=0
     dict['target_dir']=''

@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME Consider erroring if compiler is too old (e.g. GCC 4).
+# We should run compiler checks before allowing the install to proceed.
+# FIXME Ensure we error if conda environment is active.
+# FIXME Ensure we error if python virtual environment is active.
+
 # FIXME Need to check that app is supported by parsing app.json file with
 # Python, instead of just checking if function is defined in Bash library.
 # We may be able to define this as 'koopa_is_app_supported'.
@@ -13,6 +18,7 @@
 # and has been removed (e.g. 'llama', 'python3.10').
 # FIXME Alternatively, in the 'install --all' situation, just ignore existing
 # directories from removed apps that are no longer supported.
+# FIXME We need to add a trap so the installer cleans up on failure.
 
 koopa_install_app() {
     # """
@@ -28,9 +34,7 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    # This is too strict on some HPC systems, so disabling.
-    # > koopa_assert_has_no_envs
-    koopa_assert_is_installed 'python3'
+    koopa_assert_can_install_from_source
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
     bool['auto_prefix']=0
@@ -45,7 +49,9 @@ koopa_install_app() {
     # Automatically install required dependencies (shared apps only).
     bool['deps']=1
     # Allow current environment variables to pass through for compiltion.
-    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
+    bool['inherit_env']=0
+    # When Lmod modules are active, ensure we inherit environment variables.
+    koopa_is_lmod_active && bool['inherit_env']=1
     # Perform the installation in an isolated subshell?
     bool['isolate']=1
     # Will any individual programs be linked into koopa 'bin/'?
@@ -402,6 +408,7 @@ ${dict['version2']}"
         then
             if [[ "${bool['inherit_env']}" -eq 1 ]]
             then
+                # FIXME Only set these when defined (see above).
                 env_vars+=(
                     "CC=${CC:-}"
                     "CPATH=${CPATH:-}"

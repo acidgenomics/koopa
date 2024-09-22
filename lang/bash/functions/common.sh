@@ -1066,11 +1066,52 @@ koopa_assert_can_install_binary() {
     return 0
 }
 
+koopa_assert_can_install_from_source() {
+    local -A app ver1 ver2
+    koopa_assert_has_no_args "$#"
+    koopa_assert_conda_env_is_not_active
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['ld']="$(koopa_locate_ld --only-system)"
+    app['make']="$(koopa_locate_make --only-system)"
+    app['perl']="$(koopa_locate_perl --only-system)"
+    app['python']="$(koopa_locate_python3 --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    ver1['cc']="$(koopa_get_version "${app['cc']}")"
+    ver1['git']="$(koopa_get_version "${app['git']}")"
+    ver1['make']="$(koopa_get_version "${app['make']}")"
+    ver1['perl']="$(koopa_get_version "${app['perl']}")"
+    ver1['python']="$(koopa_get_version "${app['python']}")"
+    if koopa_is_macos
+    then
+        ver2['cc']='14.0'
+    elif koopa_is_linux
+    then
+        ver2['cc']='4.8'
+    fi
+    ver2['git']='1.8'
+    ver2['make']='3.8'
+    ver2['perl']='5.16'
+    ver2['python']='3.6'
+    return 0
+}
+
 koopa_assert_can_push_binary() {
     koopa_assert_has_no_args "$#"
     if ! koopa_can_push_binary
     then
         koopa_stop 'System not configured to push binaries.'
+    fi
+    return 0
+}
+
+koopa_assert_conda_env_is_not_active() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_conda_env_active
+    then
+        koopa_stop \
+            'Active Conda environment detected.' \
+            "Run 'conda deactivate' command before proceeding."
     fi
     return 0
 }
@@ -1161,23 +1202,6 @@ koopa_assert_has_no_args() {
     return 0
 }
 
-koopa_assert_has_no_envs() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_has_no_environments
-    then
-        koopa_stop "\
-Active environment detected.
-       (conda and/or python venv)
-
-Deactivate using:
-    venv:  deactivate
-    conda: conda deactivate
-
-Deactivate venv prior to conda, otherwise conda python may be left in PATH."
-    fi
-    return 0
-}
-
 koopa_assert_has_no_flags() {
     koopa_assert_has_args "$#"
     while (("$#"))
@@ -1241,15 +1265,6 @@ koopa_assert_is_compressed_file() {
             koopa_stop "Not a compressed file: '${arg}'."
         fi
     done
-    return 0
-}
-
-koopa_assert_is_conda_active() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_is_conda_active
-    then
-        koopa_stop 'No active Conda environment detected.'
-    fi
     return 0
 }
 
@@ -1770,6 +1785,17 @@ koopa_assert_is_writable() {
             koopa_stop "Not writable: '${arg}'."
         fi
     done
+    return 0
+}
+
+koopa_assert_python_venv_is_not_active() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_python_venv_active
+    then
+        koopa_stop \
+            'Active Python virtual environment detected.' \
+            "Run 'deactivate' command before proceeding."
+    fi
     return 0
 }
 
@@ -4470,6 +4496,7 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
+    koopa_assert_can_install_from_source
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
     koopa_alert_success 'System passed all checks.'
@@ -6438,7 +6465,7 @@ koopa_convert_utf8_nfd_to_nfc() {
 koopa_cp() {
     local -A app dict
     local -a cp cp_args mkdir pos rm
-    app['cp']="$(koopa_locate_cp --allow-system)"
+    app['cp']="$(koopa_locate_cp --allow-system --realpath)"
     dict['sudo']=0
     dict['symlink']=0
     dict['target_dir']=''
@@ -8308,7 +8335,7 @@ koopa_extract() {
         *'.tbz2' | \
         *'.tgz')
             local -a tar_cmd_args
-            app['tar']="$(koopa_locate_tar --allow-system)"
+            app['tar']="$(koopa_locate_tar --allow-system --realpath)"
             koopa_assert_is_executable "${app['tar']}"
             if koopa_is_gnu "${app['tar']}"
             then
@@ -10806,9 +10833,10 @@ koopa_has_monorepo() {
     [[ -d "$(koopa_monorepo_prefix)" ]]
 }
 
-koopa_has_no_environments() {
+koopa_has_no_active_envs() {
     koopa_assert_has_no_args "$#"
-    koopa_is_conda_active && return 1
+    koopa_is_conda_env_active && return 1
+    koopa_is_lmod_active && return 1
     koopa_is_python_venv_active && return 1
     return 0
 }
@@ -12053,14 +12081,15 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_is_installed 'python3'
+    koopa_assert_can_install_from_source
     bool['auto_prefix']=0
     bool['binary']=0
     koopa_can_install_binary && bool['binary']=1
     bool['bootstrap']=0
     bool['copy_log_files']=0
     bool['deps']=1
-    bool['inherit_env']="${KOOPA_INSTALL_APP_INHERIT_ENV:-0}"
+    bool['inherit_env']=0
+    koopa_is_lmod_active && bool['inherit_env']=1
     bool['isolate']=1
     bool['link_in_bin']=''
     bool['link_in_man1']=''
@@ -16640,10 +16669,6 @@ koopa_is_compressed_file() {
     return 0
 }
 
-koopa_is_conda_active() {
-    [[ -n "${CONDA_DEFAULT_ENV:-}" ]]
-}
-
 koopa_is_conda_env_active() {
     [[ "${CONDA_SHLVL:-1}" -gt 1 ]] && return 0
     [[ "${CONDA_DEFAULT_ENV:-base}" != 'base' ]] && return 0
@@ -16958,6 +16983,10 @@ koopa_is_koopa_app() {
 
 koopa_is_linux() {
     _koopa_is_linux "$@"
+}
+
+koopa_is_lmod_active() {
+    [[ -n "${LOADEDMODULES:-}" ]]
 }
 
 koopa_is_macos() {
@@ -18144,7 +18173,7 @@ koopa_list_path_priority() {
 koopa_ln() {
     local -A app dict
     local -a ln ln_args mkdir pos rm
-    app['ln']="$(koopa_locate_ln --allow-system)"
+    app['ln']="$(koopa_locate_ln --allow-system --realpath)"
     dict['sudo']=0
     dict['target_dir']=''
     dict['verbose']=0
@@ -18264,6 +18293,7 @@ koopa_locate_app() {
     bool['allow_bootstrap']=0
     bool['allow_koopa_bin']=1
     bool['allow_missing']=0
+    bool['allow_opt_bin']=1
     bool['allow_system']=0
     bool['only_bootstrap']=0
     bool['only_system']=0
@@ -18357,67 +18387,90 @@ koopa_locate_app() {
         [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
         koopa_stop "Failed to locate '${dict['app']}'."
     fi
-    if [[ "${bool['only_system']}" -eq 0 ]]
-    then
-        [[ -n "${dict['app_name']}" ]] || return 1
-        [[ -n "${dict['bin_name']}" ]] || return 1
-    fi
+    [[ -n "${dict['app_name']}" ]] || return 1
+    [[ -n "${dict['bin_name']}" ]] || return 1
     if [[ -z "${dict['system_bin_name']}" ]]
     then
         dict['system_bin_name']="${dict['bin_name']}"
+    fi
+    if [[ "${bool['only_system']}" -eq 1 ]]
+    then
+        dict['path']="${PATH:?}"
+        dict['bin_prefix']="$(koopa_bin_prefix)"
+        koopa_remove_from_path "${dict['bin_prefix']}"
+        dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
+        export PATH="${dict['path']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
+            koopa_print "${dict['app']}"
+            return 0
+        fi
     fi
     if [[ "${bool['allow_bootstrap']}" -eq 1 ]]
     then
         dict['bs_prefix']="$(koopa_bootstrap_prefix)"
         dict['app']="${dict['bs_prefix']}/bin/${dict['bin_name']}"
-    fi
-    if [[ -x "${dict['app']}" ]]
-    then
-        if [[ "${bool['realpath']}" -eq 1 ]]
+        if [[ -x "${dict['app']}" ]]
         then
-            dict['app']="$(koopa_realpath "${dict['app']}")"
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
+            koopa_print "${dict['app']}"
+            return 0
         fi
-        koopa_print "${dict['app']}"
-        return 0
     fi
     if [[ "${bool['allow_koopa_bin']}" -eq 1 ]]
     then
         dict['bin_prefix']="$(koopa_bin_prefix)"
         dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
-    fi
-    if [[ -x "${dict['app']}" ]]
-    then
-        if [[ "${bool['realpath']}" -eq 1 ]]
+        if [[ -x "${dict['app']}" ]]
         then
-            dict['app']="$(koopa_realpath "${dict['app']}")"
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
+            koopa_print "${dict['app']}"
+            return 0
         fi
-        koopa_print "${dict['app']}"
-        return 0
     fi
-    if [[ "${bool['only_system']}" -eq 0 ]]
+    if [[ "${bool['allow_opt_bin']}" -eq 1 ]]
     then
         dict['opt_prefix']="$(koopa_opt_prefix)"
         dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
 bin/${dict['bin_name']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
+            koopa_print "${dict['app']}"
+            return 0
+        fi
     fi
-    if [[ ! -x "${dict['app']}" ]] && [[ "${bool['allow_system']}" -eq 1 ]]
+    if [[ "${bool['allow_system']}" -eq 1 ]]
     then
         dict['app']="$(koopa_which "${dict['system_bin_name']}" || true)"
-    fi
-    if [[ -x "${dict['app']}" ]]
-    then
-        if [[ "${bool['realpath']}" -eq 1 ]]
+        if [[ -x "${dict['app']}" ]]
         then
-            dict['app']="$(koopa_realpath "${dict['app']}")"
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(koopa_realpath "${dict['app']}")"
+            fi
+            koopa_print "${dict['app']}"
+            return 0
         fi
-        koopa_print "${dict['app']}"
-        return 0
     fi
     [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
     if [[ "${bool['allow_system']}" -eq 1 ]]
     then
         koopa_stop \
-            "Failed to locate '${dict['bin_name']}'."
+            "Failed to locate '${dict['system_bin_name']}'."
     else
         koopa_stop \
             "Failed to locate '${dict['bin_name']}'." \
@@ -20660,7 +20713,7 @@ koopa_missing_arg() {
 koopa_mkdir() {
     local -A app dict
     local -a mkdir mkdir_args pos
-    app['mkdir']="$(koopa_locate_mkdir --allow-system)"
+    app['mkdir']="$(koopa_locate_mkdir --allow-system --realpath)"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
@@ -20865,7 +20918,7 @@ ${dict['c2']}${string}${dict['nc']}"
 koopa_mv() {
     local -A app dict
     local -a mkdir mv mv_args pos rm
-    app['mv']="$(koopa_locate_mv --allow-system)"
+    app['mv']="$(koopa_locate_mv --allow-system --realpath)"
     koopa_is_macos && app['mv']='/bin/mv'
     koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
@@ -23445,8 +23498,8 @@ koopa_reload_shell() {
     return 0
 }
 
-koopa_remove_from_path_string() {
-    _koopa_remove_from_path_string "$@"
+koopa_remove_from_path() {
+    _koopa_remove_from_path "$@"
 }
 
 koopa_rename_camel_case() {
@@ -23628,7 +23681,7 @@ koopa_rg_unique() {
 koopa_rm() {
     local -A app dict
     local -a pos rm rm_args
-    app['rm']="$(koopa_locate_rm --allow-system)"
+    app['rm']="$(koopa_locate_rm --allow-system --realpath)"
     dict['sudo']=0
     dict['verbose']=0
     pos=()

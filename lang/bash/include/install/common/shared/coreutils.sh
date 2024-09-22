@@ -3,7 +3,7 @@
 main() {
     # """
     # Install GNU coreutils.
-    # @note Updated 2023-08-29.
+    # @note Updated 2024-09-22.
     # """
     local -a conf_args deps install_args
     local conf_arg
@@ -12,11 +12,7 @@ main() {
     koopa_is_linux && deps+=('attr')
     deps+=('gmp')
     koopa_activate_app "${deps[@]}"
-    conf_args=(
-        '--program-prefix=g'
-        '--with-gmp'
-        '--without-selinux'
-    )
+    conf_args+=('--program-prefix=g')
     for conf_arg in "${conf_args[@]}"
     do
         install_args+=('-D' "$conf_arg")

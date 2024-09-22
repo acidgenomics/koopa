@@ -3,11 +3,11 @@
 koopa_mkdir() {
     # """
     # Create directories with parents automatically.
-    # @note Updated 2023-04-06.
+    # @note Updated 2024-09-22.
     # """
     local -A app dict
     local -a mkdir mkdir_args pos
-    app['mkdir']="$(koopa_locate_mkdir --allow-system)"
+    app['mkdir']="$(koopa_locate_mkdir --allow-system --realpath)"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
