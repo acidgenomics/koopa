@@ -4521,12 +4521,12 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-09-22",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.38.2"
+    "version": "5.40.0"
   },
   "picard": {
     "bin": ["picard"],
