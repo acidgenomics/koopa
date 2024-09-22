@@ -4496,6 +4496,7 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
+    koopa_assert_can_install_from_source
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
     koopa_alert_success 'System passed all checks.'
@@ -6464,7 +6465,7 @@ koopa_convert_utf8_nfd_to_nfc() {
 koopa_cp() {
     local -A app dict
     local -a cp cp_args mkdir pos rm
-    app['cp']="$(koopa_locate_cp --allow-system)"
+    app['cp']="$(koopa_locate_cp --allow-system --realpath)"
     dict['sudo']=0
     dict['symlink']=0
     dict['target_dir']=''
@@ -18172,7 +18173,7 @@ koopa_list_path_priority() {
 koopa_ln() {
     local -A app dict
     local -a ln ln_args mkdir pos rm
-    app['ln']="$(koopa_locate_ln --allow-system)"
+    app['ln']="$(koopa_locate_ln --allow-system --realpath)"
     dict['sudo']=0
     dict['target_dir']=''
     dict['verbose']=0
@@ -20917,7 +20918,7 @@ ${dict['c2']}${string}${dict['nc']}"
 koopa_mv() {
     local -A app dict
     local -a mkdir mv mv_args pos rm
-    app['mv']="$(koopa_locate_mv --allow-system)"
+    app['mv']="$(koopa_locate_mv --allow-system --realpath)"
     koopa_is_macos && app['mv']='/bin/mv'
     koopa_assert_is_executable "${app[@]}"
     dict['sudo']=0
