@@ -53,6 +53,7 @@ __koopa_activate_koopa() {
     then
         _koopa_activate_path_helper || return 1
     fi
+    # FIXME Rethink this, maybe only add conditionally?
     _koopa_add_to_path_start "$(_koopa_bootstrap_prefix)/bin" || return 1
     _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
