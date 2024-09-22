@@ -1102,7 +1102,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2023-08-31",
+    "date": "2024-09-22",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1216,7 +1216,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.4"
+    "version": "9.5"
   },
   "cpufetch": {
     "aliases": {
