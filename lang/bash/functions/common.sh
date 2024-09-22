@@ -8335,7 +8335,7 @@ koopa_extract() {
         *'.tbz2' | \
         *'.tgz')
             local -a tar_cmd_args
-            app['tar']="$(koopa_locate_tar --allow-system)"
+            app['tar']="$(koopa_locate_tar --allow-system --realpath)"
             koopa_assert_is_executable "${app['tar']}"
             if koopa_is_gnu "${app['tar']}"
             then
@@ -20713,7 +20713,7 @@ koopa_missing_arg() {
 koopa_mkdir() {
     local -A app dict
     local -a mkdir mkdir_args pos
-    app['mkdir']="$(koopa_locate_mkdir --allow-system)"
+    app['mkdir']="$(koopa_locate_mkdir --allow-system --realpath)"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
@@ -23681,7 +23681,7 @@ koopa_rg_unique() {
 koopa_rm() {
     local -A app dict
     local -a pos rm rm_args
-    app['rm']="$(koopa_locate_rm --allow-system)"
+    app['rm']="$(koopa_locate_rm --allow-system --realpath)"
     dict['sudo']=0
     dict['verbose']=0
     pos=()
