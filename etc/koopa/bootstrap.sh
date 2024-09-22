@@ -163,10 +163,10 @@ install_python() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://www.python.org/ftp/python/3.11.9/Python-3.11.9.tgz' \
+        'https://www.python.org/ftp/python/3.12.6/Python-3.12.6.tgz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'Python-3.11.9' || return 1
+    cd 'Python-3.12.6' || return 1
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --prefix="$PREFIX" \

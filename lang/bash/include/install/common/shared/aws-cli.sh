@@ -3,7 +3,7 @@
 main() {
     # """
     # Install AWS CLI.
-    # @note Updated 2024-06-15.
+    # @note Updated 2024-09-22.
     #
     # @seealso
     # - https://github.com/aws/aws-cli/tree/v2/
@@ -14,10 +14,10 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    app['python']="$(koopa_locate_python311 --allow-missing)"
+    app['python']="$(koopa_locate_python312 --allow-missing)"
     if [[ ! -x "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python311 --allow-bootstrap)"
+        app['python']="$(koopa_locate_python312 --allow-bootstrap)"
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
