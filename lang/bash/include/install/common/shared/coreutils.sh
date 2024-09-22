@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Need to address this new warning:
-# configure: WARNING: unrecognized options: --with-gmp
-
 main() {
     # """
     # Install GNU coreutils.
