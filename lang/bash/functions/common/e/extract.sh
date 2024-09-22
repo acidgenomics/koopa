@@ -75,7 +75,7 @@ koopa_extract() {
         *'.tbz2' | \
         *'.tgz')
             local -a tar_cmd_args
-            app['tar']="$(koopa_locate_tar --allow-system)"
+            app['tar']="$(koopa_locate_tar --allow-system --realpath)"
             koopa_assert_is_executable "${app['tar']}"
             if koopa_is_gnu "${app['tar']}"
             then
