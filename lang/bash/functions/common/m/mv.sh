@@ -17,7 +17,7 @@ koopa_mv() {
     # """
     local -A app dict
     local -a mkdir mv mv_args pos rm
-    app['mv']="$(koopa_locate_mv --allow-system)"
+    app['mv']="$(koopa_locate_mv --allow-system --realpath)"
     # GNU mv currently has issues with NFS shares on macOS.
     koopa_is_macos && app['mv']='/bin/mv'
     koopa_assert_is_executable "${app[@]}"
