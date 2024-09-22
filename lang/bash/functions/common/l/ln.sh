@@ -9,7 +9,7 @@ koopa_ln() {
     # """
     local -A app dict
     local -a ln ln_args mkdir pos rm
-    app['ln']="$(koopa_locate_ln --allow-system)"
+    app['ln']="$(koopa_locate_ln --allow-system --realpath)"
     dict['sudo']=0
     dict['target_dir']=''
     dict['verbose']=0

@@ -3,7 +3,7 @@
 _koopa_alias_kdev() {
     # """
     # Koopa 'kdev' shortcut alias.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-09-18.
     #
     # Potentially useful Bash options:
     # * --debugger
@@ -45,6 +45,7 @@ _koopa_alias_kdev() {
     fi
     __kvar_rcfile="${__kvar_koopa_prefix}/lang/bash/include/header.sh"
     [ -f "$__kvar_rcfile" ] || return 1
+    # > PATH='/usr/bin:/bin'
     "$__kvar_env" -i \
         AWS_CLOUDFRONT_DISTRIBUTION_ID="${AWS_CLOUDFRONT_DISTRIBUTION_ID:-}" \
         HOME="${HOME:?}" \
@@ -55,7 +56,7 @@ _koopa_alias_kdev() {
         KOOPA_CAN_INSTALL_BINARY="${KOOPA_CAN_INSTALL_BINARY:-}" \
         LANG='C' \
         LC_ALL='C' \
-        PATH='/usr/bin:/bin' \
+        PATH="${PATH:?}" \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TMPDIR="${TMPDIR:-/tmp}" \

@@ -1277,7 +1277,7 @@ _koopa_alias_kdev() {
         KOOPA_CAN_INSTALL_BINARY="${KOOPA_CAN_INSTALL_BINARY:-}" \
         LANG='C' \
         LC_ALL='C' \
-        PATH='/usr/bin:/bin' \
+        PATH="${PATH:?}" \
         SUDO_PS1="${SUDO_PS1:-}" \
         SUDO_USER="${SUDO_USER:-}" \
         TMPDIR="${TMPDIR:-/tmp}" \
@@ -2291,6 +2291,18 @@ _koopa_remove_from_path_string() {
         __kvar_dir \
         __kvar_str1 \
         __kvar_str2
+    return 0
+}
+
+_koopa_remove_from_path() {
+    PATH="${PATH:-}"
+    for __kvar_dir in "$@"
+    do
+        [ -d "$__kvar_dir" ] || continue
+        PATH="$(_koopa_remove_from_path_string "$PATH" "$__kvar_dir")"
+    done
+    export PATH
+    unset -v __kvar_dir
     return 0
 }
 

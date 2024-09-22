@@ -45,7 +45,6 @@ koopa_linux_bcbio_nextgen_add_ensembl_genome() {
     local -A app dict
     local -a indexes
     koopa_assert_has_args "$#"
-    koopa_assert_has_no_envs
     app['bcbio_setup_genome']="$(koopa_linux_locate_bcbio_setup_genome)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     app['touch']="$(koopa_locate_touch)"
@@ -183,7 +182,6 @@ koopa_linux_bcbio_nextgen_add_genome() {
 koopa_linux_bcbio_nextgen_patch_devel() {
     local -A app dict
     local -a cache_files
-    koopa_assert_has_no_envs
     app['bcbio_python']="$(koopa_linux_locate_bcbio_python)"
     app['tee']="$(koopa_locate_tee)"
     koopa_assert_is_executable "${app[@]}"
