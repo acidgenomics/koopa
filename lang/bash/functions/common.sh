@@ -19215,6 +19215,14 @@ koopa_locate_lesspipe() {
         "$@"
 }
 
+koopa_locate_libtool() {
+    koopa_locate_app \
+        --app-name='libtool' \
+        --bin-name='glibtool' \
+        --system-bin-name='libtool' \
+        "$@"
+}
+
 koopa_locate_libtoolize() {
     koopa_locate_app \
         --app-name='libtool' \
