@@ -5587,7 +5587,7 @@
   "snakemake": {
     "bin": ["snakemake"],
     "date": "2024-09-22",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakemake/",
