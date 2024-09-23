@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# NOTE To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
-# comment out in 'setup.py':
-# > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
-# > add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
-
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-12-08.
+    # @note Updated 2024-09-23.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -25,6 +20,11 @@ main() {
     # GCC install does not match exactly (major and minor version).
     # https://github.com/orgs/Homebrew/discussions/3734
     #
+    # To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
+    # comment out in 'setup.py':
+    # > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+    # > add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+    #
     # See also:
     # - https://devguide.python.org/
     # - https://docs.python.org/3/using/unix.html
@@ -34,10 +34,8 @@ main() {
     # - Latest configuration recipe:
     #   https://github.com/python/cpython/blob/3.12/configure
     # - macOS install recipes:
-    #   https://github.com/Homebrew/homebrew-core/blob/master/
-    #     Formula/python@3.11.rb
-    #   https://github.com/macports/macports-ports/blob/master/lang/
-    #     python311/Portfile
+    #   https://formulae.brew.sh/formula/python@3.12
+    #   https://ports.macports.org/port/python312/
     # - OpenSSL configuration issues:
     #   https://stackoverflow.com/questions/45954528/
     #   https://stackoverflow.com/questions/41328451/
@@ -49,7 +47,7 @@ main() {
     then
         deps+=(
             'bzip2'
-            'expat'
+            # > 'expat'
             'libedit'
             'libffi'
             'libxcrypt'
@@ -60,6 +58,7 @@ main() {
         )
     fi
     deps+=(
+        'expat'
         'mpdecimal'
         'openssl3'
         'sqlite'
@@ -80,7 +79,7 @@ main() {
         "${dict['prefix']}/lib"
     koopa_add_to_path_start "${dict['prefix']}/bin"
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    conf_args=(
+    conf_args+=(
         # > '--enable-lto'
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
