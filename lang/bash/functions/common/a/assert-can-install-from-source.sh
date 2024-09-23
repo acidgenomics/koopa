@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME On macOS check for Xcode CLT and error: unsupported system.
+#
 # FIXME Don't allow CLT:
 # 16.0.0.0.1.1724870825
 
