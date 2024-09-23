@@ -13,7 +13,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2023-12-08.
+    # @note Updated 2024-09-23.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -52,18 +52,9 @@ main() {
     build_deps+=('make' 'pkg-config')
     if ! koopa_is_macos
     then
-        dict['xcode_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-        case "${dict['xcode_maj_ver']}" in
-            '16')
-                koopa_stop "Xcode CLT 16 currently has a bug in
-'pyexpat.cpython-312-darwin.so'. Revert to CLT 15."
-                ;;
-            *)
-                ;;
-        esac
         deps+=(
             'bzip2'
-            'expat'
+            # > 'expat'
             'libedit'
             'libffi'
             'libxcrypt'
@@ -74,6 +65,7 @@ main() {
         )
     fi
     deps+=(
+        'expat'
         'mpdecimal'
         'openssl3'
         'sqlite'
@@ -94,7 +86,7 @@ main() {
         "${dict['prefix']}/lib"
     koopa_add_to_path_start "${dict['prefix']}/bin"
     koopa_add_rpath_to_ldflags "${dict['prefix']}/lib"
-    conf_args=(
+    conf_args+=(
         # > '--enable-lto'
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
