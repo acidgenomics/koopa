@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# NOTE Consider switching to CMake build approach in future update.
+
 # NOTE Latest 2.1.2 release isn't building successfully on macOS due to
 # libtool configuration issues.
 
