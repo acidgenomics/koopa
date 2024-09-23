@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME We're now hitting an expat build issue on macOS with Xcode CLT:
-# 16.0 fails
-# 15.3 works
-# [ERROR] _elementtree failed to import: dlopen(/private/var/folders/7y/tyrwvbh90rl36vn_0z3lcfd00000gn/T/tmp.IAINmfvWdH/src/build/lib.macosx-14.7-x86_64-3.12/pyexpat.cpython-312-darwin.so, 0x0002): Symbol not found: _XML_SetReparseDeferralEnabled
-
-# NOTE To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
-# comment out in 'setup.py':
-# > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
-# > add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
-
 main() {
     # """
     # Install Python.
@@ -30,6 +20,11 @@ main() {
     # GCC install does not match exactly (major and minor version).
     # https://github.com/orgs/Homebrew/discussions/3734
     #
+    # To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
+    # comment out in 'setup.py':
+    # > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
+    # > add_dir_to_list(self.compiler.include_dirs, '/usr/local/include')
+    #
     # See also:
     # - https://devguide.python.org/
     # - https://docs.python.org/3/using/unix.html
@@ -39,10 +34,8 @@ main() {
     # - Latest configuration recipe:
     #   https://github.com/python/cpython/blob/3.12/configure
     # - macOS install recipes:
-    #   https://github.com/Homebrew/homebrew-core/blob/master/
-    #     Formula/python@3.11.rb
-    #   https://github.com/macports/macports-ports/blob/master/lang/
-    #     python311/Portfile
+    #   https://formulae.brew.sh/formula/python@3.12
+    #   https://ports.macports.org/port/python312/
     # - OpenSSL configuration issues:
     #   https://stackoverflow.com/questions/45954528/
     #   https://stackoverflow.com/questions/41328451/
