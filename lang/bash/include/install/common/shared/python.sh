@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# FIXME We're now hitting an expat build issue on macOS with Xcode CLT:
+# 16.0 fails
+# 15.3 works
+# [ERROR] _elementtree failed to import: dlopen(/private/var/folders/7y/tyrwvbh90rl36vn_0z3lcfd00000gn/T/tmp.IAINmfvWdH/src/build/lib.macosx-14.7-x86_64-3.12/pyexpat.cpython-312-darwin.so, 0x0002): Symbol not found: _XML_SetReparseDeferralEnabled
+
 # NOTE To restrict compiler access to '/usr/local/lib' and '/usr/local/include',
 # comment out in 'setup.py':
 # > add_dir_to_list(self.compiler.library_dirs, '/usr/local/lib')
