@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Don't allow CLT:
+# 16.0.0.0.1.1724870825
+
 # FIXME Need to add a koopa_compare_versions function here.
 # https://stackoverflow.com/questions/4023830
 # koopa_compare_versions AAA OP BBB
