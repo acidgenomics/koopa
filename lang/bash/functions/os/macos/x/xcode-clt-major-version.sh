@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Take this out and just use 'koopa_major_version' call instead.
+
 koopa_macos_xcode_clt_major_version() {
     # """
     # Xcode CLT major version.

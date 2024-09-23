@@ -6053,7 +6053,7 @@
     "default": false,
     "prune": false,
     "url": ["https://github.com/neovim/unibilium/"],
-    "version": "2.1.2"
+    "version": "2.1.1"
   },
   "units": {
     "aliases": {
