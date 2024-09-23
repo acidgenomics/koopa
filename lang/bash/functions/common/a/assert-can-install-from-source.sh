@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME On macOS check for Xcode CLT and error: unsupported system.
+
 # FIXME Need to add a koopa_compare_versions function here.
 # https://stackoverflow.com/questions/4023830
 # koopa_compare_versions AAA OP BBB
