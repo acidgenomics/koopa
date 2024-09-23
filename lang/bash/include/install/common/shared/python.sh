@@ -52,6 +52,15 @@ main() {
     build_deps+=('make' 'pkg-config')
     if ! koopa_is_macos
     then
+        dict['xcode_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+        case "${dict['xcode_maj_ver']}" in
+            '16')
+                koopa_stop "Xcode CLT 16 currently has a bug in
+'pyexpat.cpython-312-darwin.so'. Revert to CLT 15."
+                ;;
+            *)
+                ;;
+        esac
         deps+=(
             'bzip2'
             'expat'
