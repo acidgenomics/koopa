@@ -22136,11 +22136,12 @@ koopa_r_configure_environ() {
     then
         bool['use_apps']=0
     fi
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
-        app['conda']="$(koopa_locate_conda)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
         app['ln']="$(koopa_locate_ln)"
