@@ -6,6 +6,10 @@ _koopa_activate_mcfly() {
     # @note Updated 2023-03-10.
     #
     # Use "mcfly search 'query'" to query directly.
+    #
+    # Light mode is still buggy:
+    # - https://github.com/cantino/mcfly/issues/150
+    # - https://github.com/cantino/mcfly/issues/386
     # """
     [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
     _koopa_is_root && return 0
