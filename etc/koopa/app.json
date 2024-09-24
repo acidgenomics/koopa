@@ -1391,13 +1391,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-09-09",
+    "date": "2024-09-24",
     "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "ed": {
     "aliases": {
@@ -2471,7 +2471,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "9.0.0"
+    "version": "10.0.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3036,12 +3036,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-22",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.7.5"
+    "version": "3.7.6"
   },
   "libassuan": {
     "aliases": {
@@ -3737,7 +3737,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2024-09-09",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3760,7 +3760,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.9"
+    "version": "1.5.10"
   },
   "man-db": {
     "aliases": {
@@ -3789,7 +3789,7 @@
     "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.41.0"
+    "version": "0.42.0"
   },
   "mcfly": {
     "aliases": {
@@ -4775,11 +4775,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-09-22",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.3.0"
+    "version": "3.3.1"
   },
   "pymol": {
     "bin": ["pymol"],

@@ -2017,6 +2017,22 @@ koopa_aws_ec2_instance_id() {
     return 0
 }
 
+koopa_aws_ec2_instance_type() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    if koopa_is_ubuntu_like
+    then
+        app['ec2metadata']='/usr/bin/ec2metadata'
+    else
+        app['ec2metadata']='/usr/bin/ec2-metadata'
+    fi
+    koopa_assert_is_executable "${app[@]}"
+    dict['string']="$("${app['ec2metadata']}" --instance-type)"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
 koopa_aws_ec2_list_running_instances() {
     local -A app bool dict
     local -a filters
