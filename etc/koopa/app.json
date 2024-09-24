@@ -5131,11 +5131,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-09-09",
+    "date": "2024-09-24",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.68.0"
+    "version": "1.68.1"
   },
   "readline": {
     "aliases": {
