@@ -116,6 +116,9 @@ _koopa_activate_zsh_plugins() {
     # Activate Zsh plugins.
     # Updated 2024-09-24.
     #
+    # Plugins are managed with chezmoi in dotfiles repo, documented here:
+    # https://github.com/acidgenomics/dotfiles/blob/main/.chezmoiexternal.toml
+    #
     # Debug plugins via:
     # > zsh -df
     #
