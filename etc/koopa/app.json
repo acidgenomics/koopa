@@ -5131,13 +5131,7 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-<<<<<<< HEAD
     "date": "2024-09-27",
-||||||| d512999d8b32
-    "date": "2024-09-09",
-=======
-    "date": "2024-09-24",
->>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
