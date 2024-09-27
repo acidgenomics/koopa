@@ -437,22 +437,8 @@
     "version": "1.07.1"
   },
   "bcbio-nextgen": {
-    "bin": ["bcbio_nextgen.py"],
-    "build_dependencies": ["bzip2", "python3.12"],
-    "date": "2023-10-16",
-    "default": false,
-    "notes": ["Installer is too slow, so disabling at the moment."],
-    "supported": {
-      "linux-amd64": false,
-      "linux-arm64": false,
-      "macos-amd64": false,
-      "macos-arm64": false
-    },
-    "url": [
-      "https://bcbio-nextgen.readthedocs.io/",
-      "https://github.com/bcbio/bcbio-nextgen/"
-    ],
-    "version": "1.2.9"
+    "date": "2024-09-27",
+    "removed": true
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
@@ -1365,11 +1351,11 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2024-09-19",
+    "date": "2024-09-24",
     "default": true,
     "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4044b2908bdddea1246c9a05943dccb606c3c2a7"
+    "version": "d955543871e9ca88b3ce973e5f96ffbf7f70a1f8"
   },
   "du-dust": {
     "aliases": {
@@ -1391,13 +1377,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-09-09",
+    "date": "2024-09-24",
     "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "ed": {
     "aliases": {
@@ -1549,14 +1535,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.19.4"
+    "version": "0.20.0"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1790,11 +1776,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-06-13",
+    "date": "2024-09-27",
     "default": false,
     "prune": false,
     "url": ["https://github.com/fribidi/fribidi/"],
-    "version": "1.0.15"
+    "version": "1.0.16"
   },
   "fzf": {
     "aliases": {
@@ -1963,7 +1949,7 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2024-01-24",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1974,7 +1960,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.28.3"
+    "version": "0.29.0"
   },
   "gh": {
     "aliases": {
@@ -2458,7 +2444,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2024-07-04",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2471,7 +2457,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "9.0.0"
+    "version": "10.0.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2955,7 +2941,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2024-04-18",
+    "date": "2024-09-24",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
@@ -2963,7 +2949,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.40.6"
+    "version": "2.52.4"
   },
   "ldc": {
     "aliases": {
@@ -3036,12 +3022,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-22",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.7.5"
+    "version": "3.7.6"
   },
   "libassuan": {
     "aliases": {
@@ -3459,11 +3445,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2024-02-08",
+    "date": "2024-09-27",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.48.0"
+    "version": "1.49.0"
   },
   "libvterm": {
     "aliases": {
@@ -3735,32 +3721,15 @@
     "version": "4.4.1"
   },
   "mamba": {
-    "bin": ["micromamba"],
-    "build_dependencies": ["cmake", "ninja"],
-    "date": "2024-09-09",
+    "bin": ["mamba"],
+    "date": "2024-09-27",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "cli11",
-      "curl",
-      "fmt",
-      "libarchive",
-      "libsolv",
-      "nlohmann-json",
-      "openssl3",
-      "python3.12",
-      "reproc",
-      "spdlog",
-      "termcolor",
-      "tl-expected",
-      "yaml-cpp",
-      "zstd"
-    ],
+    "dependencies": ["conda"],
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.9"
+    "version": "2.0.0"
   },
   "man-db": {
     "aliases": {
@@ -3789,7 +3758,7 @@
     "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.41.0"
+    "version": "0.42.0"
   },
   "mcfly": {
     "aliases": {
@@ -3808,11 +3777,11 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.4.0"
+    "version": "2.5.0"
   },
   "meson": {
     "aliases": {
@@ -3890,11 +3859,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-08-19",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.33.0"
+    "version": "2.34.0"
   },
   "mpc": {
     "aliases": {
@@ -4775,11 +4744,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-09-22",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.3.0"
+    "version": "3.3.1"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -5131,11 +5100,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-09-09",
+    "date": "2024-09-27",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.68.0"
+    "version": "1.68.1"
   },
   "readline": {
     "aliases": {
@@ -5322,11 +5291,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.6.7"
+    "version": "0.6.8"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5573,6 +5542,14 @@
     "url": ["https://github.com/0k/shyaml/"],
     "version": "0.6.2"
   },
+  "simdjson": {
+    "build_dependencies": ["cmake"],
+    "date": "2024-09-27",
+    "default": false,
+    "prune": false,
+    "url": ["https://simdjson.org"],
+    "version": "3.10.1"
+  },
   "snakefmt": {
     "bin": ["snakefmt"],
     "date": "2023-12-22",
@@ -5586,15 +5563,17 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
+    "date": "2024-09-22",
+    "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.20.4"
+    "version": "8.20.5"
   },
   "sox": {
     "aliases": {
@@ -5935,13 +5914,13 @@
     },
     "bin": ["tmux"],
     "build_dependencies": ["bison", "make", "pkg-config"],
-    "date": "2024-02-20",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
     "man1": ["tmux.1"],
     "prune": false,
     "url": ["https://github.com/tmux/tmux/"],
-    "version": "3.4"
+    "version": "3.5"
   },
   "tokei": {
     "aliases": {
@@ -6103,11 +6082,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.15"
+    "version": "0.4.16"
   },
   "vim": {
     "aliases": {
