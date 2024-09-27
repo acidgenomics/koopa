@@ -11,10 +11,10 @@
 # e.g. koopa_compare_versions 2.0 >= 1.0
 # Need to support these ops: =, >, >=, <, <=
 
-koopa_assert_can_install_from_source() {
+koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2024-09-19.
+    # @note Updated 2024-09-23.
     # """
     local -A app ver1 ver2
     koopa_assert_has_no_args "$#"
