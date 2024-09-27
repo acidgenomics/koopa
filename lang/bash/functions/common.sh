@@ -16003,6 +16003,12 @@ koopa_install_shyaml() {
         "$@"
 }
 
+koopa_install_simdjson() {
+    koopa_install_app \
+        --name='simdjson' \
+        "$@"
+}
+
 koopa_install_snakefmt() {
     koopa_install_app \
         --installer='python-package' \
@@ -31012,6 +31018,12 @@ koopa_uninstall_shunit2() {
 koopa_uninstall_shyaml() {
     koopa_uninstall_app \
         --name='shyaml' \
+        "$@"
+}
+
+koopa_uninstall_simdjson() {
+    koopa_uninstall_app \
+        --name='simdjson' \
         "$@"
 }
 
