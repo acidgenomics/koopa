@@ -6616,23 +6616,6 @@ koopa_current_aws_cli_version() {
     return 0
 }
 
-koopa_current_bcbio_nextgen_version() {
-    local -A app
-    local str
-    koopa_assert_has_no_args "$#"
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    str="$( \
-        koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
-bcbio-nextgen/master/requirements-conda.txt" \
-            | koopa_grep --pattern='bcbio-nextgen=' \
-            | "${app['cut']}" -d '=' -f '2' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
-    return 0
-}
-
 koopa_current_bioconductor_version() {
     local str
     koopa_assert_has_no_args "$#"
