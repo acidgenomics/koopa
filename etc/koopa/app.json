@@ -1365,11 +1365,11 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2024-09-19",
+    "date": "2024-09-24",
     "default": true,
     "dependencies": ["chezmoi"],
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4044b2908bdddea1246c9a05943dccb606c3c2a7"
+    "version": "d955543871e9ca88b3ce973e5f96ffbf7f70a1f8"
   },
   "du-dust": {
     "aliases": {
@@ -1391,13 +1391,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-09-09",
+    "date": "2024-09-24",
     "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "ed": {
     "aliases": {
@@ -2955,7 +2955,7 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2024-04-18",
+    "date": "2024-09-24",
     "default": true,
     "dependencies": ["python3.11"],
     "url": [
@@ -2963,7 +2963,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.40.6"
+    "version": "2.52.4"
   },
   "ldc": {
     "aliases": {
@@ -3036,12 +3036,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-22",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.7.5"
+    "version": "3.7.6"
   },
   "libassuan": {
     "aliases": {
@@ -3737,7 +3737,13 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
+<<<<<<< HEAD
     "date": "2024-09-27",
+||||||| d512999d8b32
+    "date": "2024-09-09",
+=======
+    "date": "2024-09-24",
+>>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3760,7 +3766,13 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
+<<<<<<< HEAD
     "version": "2.0.0"
+||||||| d512999d8b32
+    "version": "1.5.9"
+=======
+    "version": "1.5.10"
+>>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
   },
   "man-db": {
     "aliases": {
@@ -3789,7 +3801,7 @@
     "default": false,
     "dependencies": ["node"],
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.41.0"
+    "version": "0.42.0"
   },
   "mcfly": {
     "aliases": {
@@ -4775,11 +4787,11 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-09-22",
+    "date": "2024-09-24",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.3.0"
+    "version": "3.3.1"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -5131,7 +5143,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
+<<<<<<< HEAD
     "date": "2024-09-27",
+||||||| d512999d8b32
+    "date": "2024-09-09",
+=======
+    "date": "2024-09-24",
+>>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
@@ -5586,8 +5604,16 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
+<<<<<<< HEAD
     "date": "2024-09-27",
     "default": true,
+||||||| d512999d8b32
+    "date": "2024-09-22",
+    "default": true,
+=======
+    "date": "2024-09-22",
+    "default": false,
+>>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakemake/",

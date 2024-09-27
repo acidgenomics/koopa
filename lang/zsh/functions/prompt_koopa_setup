@@ -14,7 +14,7 @@ _koopa_zsh_prompt() {
 _koopa_zsh_prompt_string() {
     # """
     # Zsh prompt string (PS1).
-    # @note Updated 2023-03-09.
+    # @note Updated 2024-09-24.
     #
     # This is a modified, lighter version of Pure, by Sindre Sorhus.
     #
@@ -41,24 +41,22 @@ _koopa_zsh_prompt_string() {
     # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
     #       robbyrussell.zsh-theme
     # """
-    local dict
+    local -A dict
     [[ "$#" -eq 0 ]] || return 1
-    declare -A dict=(
-        [newline]=$'\n'
-        [prompt]='❯' # default is '%%'.
-        [prompt_color]="${fg[magenta]}"
-        [user]='%n@%m'
-        [user_color]="${fg[cyan]}"
-        [wd]='%~'
-        [wd_color]="${fg[blue]}"
-    )
+    dict['newline']=$'\n'
+    dict['prompt']='❯' # default is '%%'.
+    dict['prompt_color']="${fg['magenta']}"
+    dict['user']='%n@%m'
+    dict['user_color']="${fg['cyan']}"
+    dict['wd']='%~'
+    dict['wd_color']="${fg['blue']}"
     printf '%s%s%s%s%s%s ' \
-        "${dict[newline]}" \
-        "%F%{${dict[user_color]}%}${dict[user]}%f" \
-        "${dict[newline]}" \
-        "%F%{${dict[wd_color]}%}${dict[wd]}%f" \
-        "${dict[newline]}" \
-        "%F%{${dict[prompt_color]}%}${dict[prompt]}%f"
+        "${dict['newline']}" \
+        "%F%{${dict['user_color']}%}${dict['user']}%f" \
+        "${dict['newline']}" \
+        "%F%{${dict['wd_color']}%}${dict['wd']}%f" \
+        "${dict['newline']}" \
+        "%F%{${dict['prompt_color']}%}${dict['prompt']}%f"
     return 0
 }
 
