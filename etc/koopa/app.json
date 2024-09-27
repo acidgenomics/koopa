@@ -3735,28 +3735,10 @@
     "version": "4.4.1"
   },
   "mamba": {
-    "bin": ["micromamba"],
-    "build_dependencies": ["cmake", "ninja", "pkg-config"],
+    "bin": ["mamba"],
     "date": "2024-09-27",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "cli11",
-      "curl",
-      "fmt",
-      "libarchive",
-      "libsolv",
-      "nlohmann-json",
-      "openssl3",
-      "python3.12",
-      "reproc",
-      "simdjson",
-      "spdlog",
-      "termcolor",
-      "tl-expected",
-      "yaml-cpp",
-      "zstd"
-    ],
+    "dependencies": ["conda"],
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
