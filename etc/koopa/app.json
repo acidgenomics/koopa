@@ -3737,13 +3737,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-<<<<<<< HEAD
     "date": "2024-09-27",
-||||||| d512999d8b32
-    "date": "2024-09-09",
-=======
-    "date": "2024-09-24",
->>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3766,13 +3760,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-<<<<<<< HEAD
     "version": "2.0.0"
-||||||| d512999d8b32
-    "version": "1.5.9"
-=======
-    "version": "1.5.10"
->>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
   },
   "man-db": {
     "aliases": {
