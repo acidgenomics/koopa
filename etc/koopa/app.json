@@ -5586,16 +5586,10 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-<<<<<<< HEAD
     "date": "2024-09-27",
     "default": true,
-||||||| d512999d8b32
-    "date": "2024-09-22",
-    "default": true,
-=======
     "date": "2024-09-22",
     "default": false,
->>>>>>> 6f948008e85de861a9f375daa1a1a4de1e1956c9
     "dependencies": ["python3.12"],
     "url": [
       "https://github.com/snakemake/snakemake/",
