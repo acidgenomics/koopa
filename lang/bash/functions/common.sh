@@ -5766,6 +5766,34 @@ koopa_cmake_std_args() {
     return 0
 }
 
+koopa_compare_versions() {
+    if [[ "$1" == "$2" ]]
+    then
+        return 0
+    fi
+    local -a ver1 ver2
+    local IFS=.
+    local i
+    ver1=($1)
+    ver2=($2)
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if ((10#${ver1[i]:=0} >= 10#${ver2[i]:=0}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} <= 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
 koopa_compress_ext_pattern() {
     local -a formats
     local str
@@ -13189,7 +13217,6 @@ koopa_install_expat() {
 
 koopa_install_eza() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='eza' \
         "$@"
 }
