@@ -251,18 +251,6 @@ _koopa_activate_bat() {
     return 0
 }
 
-_koopa_activate_bcbio_nextgen() {
-    __kvar_prefix="$(_koopa_bcbio_nextgen_prefix)"
-    if [ ! -d "$__kvar_prefix" ]
-    then
-        unset -v __kvar_prefix
-        return 0
-    fi
-    _koopa_add_to_path_end "${__kvar_prefix}/tools/bin"
-    unset -v __kvar_prefix
-    return 0
-}
-
 _koopa_activate_bottom() {
     [ -x "$(_koopa_bin_prefix)/btm" ] || return 0
     __kvar_prefix="$(_koopa_xdg_config_home)/bottom"
@@ -1367,11 +1355,6 @@ _koopa_asdf_prefix() {
 
 _koopa_aspera_connect_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
-    return 0
-}
-
-_koopa_bcbio_nextgen_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/bcbio-nextgen"
     return 0
 }
 

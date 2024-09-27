@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-08-01.
+    # @note Updated 2024-09-27.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -411,6 +411,7 @@ _koopa_complete() {
                         'shellcheck'
                         'shunit2'
                         'shyaml'
+                        'simdjson'
                         'snakefmt'
                         'snakemake'
                         'sox'
@@ -488,7 +489,6 @@ _koopa_complete() {
                         args+=(
                             'apptainer'
                             'aspera-connect'
-                            'bcbio-nextgen'
                             'cloudbiolinux'
                             'elfutils'
                             'gcc'

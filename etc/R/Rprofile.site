@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2024-08-13.
+#' @note Updated 2024-09-24.
 #'
 #' @section Restarting R:
 #'
@@ -312,13 +312,14 @@ local({
     repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
     options("repos" = repos) # nolint
     ## Enable Posit Bioconductor mirror on Linux.
-    ## > if (isFALSE(flag[["macos"]])) {
-    ## >     ## nolint start
-    ## >     options(
-    ## >         "BioC_mirror" = "https://packagemanager.posit.co/bioconductor"
-    ## >     )
-    ## >     ## nolint end
-    ## > }
+    if (isFALSE(flag[["macos"]])) {
+        ## nolint start
+        options(
+            "BIOCONDUCTOR_CONFIG_FILE" = "https://packagemanager.posit.co/bioconductor/config.yaml",
+            "BioC_mirror" = "https://packagemanager.posit.co/bioconductor"
+        )
+        ## nolint end
+    }
     ## Default packages {{{2
     ## -------------------------------------------------------------------------
     if (isTRUE(flag[["interactive"]])) {

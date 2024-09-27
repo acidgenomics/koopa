@@ -23,7 +23,7 @@
 koopa_install_app() {
     # """
     # Install application in a versioned directory structure.
-    # @note Updated 2024-09-18.
+    # @note Updated 2024-09-23.
     #
     # Refer to 'locale' for desired LC settings.
     #
@@ -34,7 +34,7 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_can_install_from_source
+    koopa_check_build_system
     # When enabled, this will change permissions on the top level directory
     # of the automatically generated prefix.
     bool['auto_prefix']=0

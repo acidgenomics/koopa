@@ -1066,36 +1066,6 @@ koopa_assert_can_install_binary() {
     return 0
 }
 
-koopa_assert_can_install_from_source() {
-    local -A app ver1 ver2
-    koopa_assert_has_no_args "$#"
-    koopa_assert_conda_env_is_not_active
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['git']="$(koopa_locate_git --allow-system)"
-    app['ld']="$(koopa_locate_ld --only-system)"
-    app['make']="$(koopa_locate_make --only-system)"
-    app['perl']="$(koopa_locate_perl --only-system)"
-    app['python']="$(koopa_locate_python3 --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    ver1['cc']="$(koopa_get_version "${app['cc']}")"
-    ver1['git']="$(koopa_get_version "${app['git']}")"
-    ver1['make']="$(koopa_get_version "${app['make']}")"
-    ver1['perl']="$(koopa_get_version "${app['perl']}")"
-    ver1['python']="$(koopa_get_version "${app['python']}")"
-    if koopa_is_macos
-    then
-        ver2['cc']='14.0'
-    elif koopa_is_linux
-    then
-        ver2['cc']='4.8'
-    fi
-    ver2['git']='1.8'
-    ver2['make']='3.8'
-    ver2['perl']='5.16'
-    ver2['python']='3.6'
-    return 0
-}
-
 koopa_assert_can_push_binary() {
     koopa_assert_has_no_args "$#"
     if ! koopa_can_push_binary
@@ -2042,6 +2012,22 @@ koopa_aws_ec2_instance_id() {
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['string']="$("${app['ec2metadata']}" --instance-id)"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
+koopa_aws_ec2_instance_type() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    if koopa_is_ubuntu_like
+    then
+        app['ec2metadata']='/usr/bin/ec2metadata'
+    else
+        app['ec2metadata']='/usr/bin/ec2-metadata'
+    fi
+    koopa_assert_is_executable "${app[@]}"
+    dict['string']="$("${app['ec2metadata']}" --instance-type)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"
     return 0
@@ -4372,6 +4358,36 @@ koopa_cd() {
     return 0
 }
 
+koopa_check_build_system() {
+    local -A app ver1 ver2
+    koopa_assert_has_no_args "$#"
+    koopa_assert_conda_env_is_not_active
+    app['cc']="$(koopa_locate_cc --only-system)"
+    app['git']="$(koopa_locate_git --allow-system)"
+    app['ld']="$(koopa_locate_ld --only-system)"
+    app['make']="$(koopa_locate_make --only-system)"
+    app['perl']="$(koopa_locate_perl --only-system)"
+    app['python']="$(koopa_locate_python3 --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    ver1['cc']="$(koopa_get_version "${app['cc']}")"
+    ver1['git']="$(koopa_get_version "${app['git']}")"
+    ver1['make']="$(koopa_get_version "${app['make']}")"
+    ver1['perl']="$(koopa_get_version "${app['perl']}")"
+    ver1['python']="$(koopa_get_version "${app['python']}")"
+    if koopa_is_macos
+    then
+        ver2['cc']='14.0'
+    elif koopa_is_linux
+    then
+        ver2['cc']='4.8'
+    fi
+    ver2['git']='1.8'
+    ver2['make']='3.8'
+    ver2['perl']='5.16'
+    ver2['python']='3.6'
+    return 0
+}
+
 koopa_check_disk() {
     local -A dict
     koopa_assert_has_args "$#"
@@ -4496,7 +4512,7 @@ koopa_check_shared_object() {
 
 koopa_check_system() {
     koopa_assert_has_no_args "$#"
-    koopa_assert_can_install_from_source
+    koopa_check_build_system
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
     koopa_alert_success 'System passed all checks.'
@@ -5766,6 +5782,34 @@ koopa_cmake_std_args() {
     return 0
 }
 
+koopa_compare_versions() {
+    if [[ "$1" == "$2" ]]
+    then
+        return 0
+    fi
+    local -a ver1 ver2
+    local IFS=.
+    local i
+    ver1=($1)
+    ver2=($2)
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if ((10#${ver1[i]:=0} >= 10#${ver2[i]:=0}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} <= 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
 koopa_compress_ext_pattern() {
     local -a formats
     local str
@@ -6569,23 +6613,6 @@ koopa_cpu_count() {
 
 koopa_current_aws_cli_version() {
     koopa_current_github_tag_version 'aws/aws-cli'
-    return 0
-}
-
-koopa_current_bcbio_nextgen_version() {
-    local -A app
-    local str
-    koopa_assert_has_no_args "$#"
-    app['cut']="$(koopa_locate_cut --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    str="$( \
-        koopa_parse_url "https://raw.githubusercontent.com/bcbio/\
-bcbio-nextgen/master/requirements-conda.txt" \
-            | koopa_grep --pattern='bcbio-nextgen=' \
-            | "${app['cut']}" -d '=' -f '2' \
-    )"
-    [[ -n "$str" ]] || return 1
-    koopa_print "$str"
     return 0
 }
 
@@ -12081,7 +12108,7 @@ koopa_install_app() {
     local -a bash_vars bin_arr env_vars man1_arr path_arr pos
     local i
     koopa_assert_has_args "$#"
-    koopa_assert_can_install_from_source
+    koopa_check_build_system
     bool['auto_prefix']=0
     bool['binary']=0
     koopa_can_install_binary && bool['binary']=1
@@ -13189,7 +13216,6 @@ koopa_install_expat() {
 
 koopa_install_eza() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='eza' \
         "$@"
 }
@@ -14527,6 +14553,7 @@ koopa_install_make() {
 
 koopa_install_mamba() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='mamba' \
         "$@"
 }
@@ -15957,6 +15984,12 @@ koopa_install_shyaml() {
     koopa_install_app \
         --installer='python-package' \
         --name='shyaml' \
+        "$@"
+}
+
+koopa_install_simdjson() {
+    koopa_install_app \
+        --name='simdjson' \
         "$@"
 }
 
@@ -22092,11 +22125,12 @@ koopa_r_configure_environ() {
     then
         bool['use_apps']=0
     fi
+    app['conda']="$(koopa_locate_conda)"
+    koopa_assert_is_executable "${app[@]}"
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then
         ! koopa_is_macos && app['bzip2']="$(koopa_locate_bzip2)"
         app['cat']="$(koopa_locate_cat)"
-        app['conda']="$(koopa_locate_conda)"
         app['gzip']="$(koopa_locate_gzip)"
         app['less']="$(koopa_locate_less)"
         app['ln']="$(koopa_locate_ln)"
@@ -30968,6 +31002,12 @@ koopa_uninstall_shunit2() {
 koopa_uninstall_shyaml() {
     koopa_uninstall_app \
         --name='shyaml' \
+        "$@"
+}
+
+koopa_uninstall_simdjson() {
+    koopa_uninstall_app \
+        --name='simdjson' \
         "$@"
 }
 
