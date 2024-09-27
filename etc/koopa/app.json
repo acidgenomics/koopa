@@ -5560,6 +5560,7 @@
     "build_dependencies": ["cmake"],
     "date": "2024-09-27",
     "default": false,
+    "prune": false,
     "url": ["https://simdjson.org"],
     "version": "3.10.1"
   },
