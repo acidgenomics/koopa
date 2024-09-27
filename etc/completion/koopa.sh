@@ -489,7 +489,6 @@ _koopa_complete() {
                         args+=(
                             'apptainer'
                             'aspera-connect'
-                            'bcbio-nextgen'
                             'cloudbiolinux'
                             'elfutils'
                             'gcc'
