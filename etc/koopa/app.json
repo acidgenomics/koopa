@@ -1549,14 +1549,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.19.4"
+    "version": "0.20.0"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1790,11 +1790,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-06-13",
+    "date": "2024-09-27",
     "default": false,
     "prune": false,
     "url": ["https://github.com/fribidi/fribidi/"],
-    "version": "1.0.15"
+    "version": "1.0.16"
   },
   "fzf": {
     "aliases": {
@@ -1963,7 +1963,7 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2024-01-24",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1974,7 +1974,7 @@
       "macos-arm64": false
     },
     "url": ["https://bioconda.github.io/recipes/gget/README.html"],
-    "version": "0.28.3"
+    "version": "0.29.0"
   },
   "gh": {
     "aliases": {
@@ -2458,7 +2458,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2024-07-04",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2471,7 +2471,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "9.0.0"
+    "version": "10.0.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3459,11 +3459,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2024-02-08",
+    "date": "2024-09-27",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.48.0"
+    "version": "1.49.0"
   },
   "libvterm": {
     "aliases": {
@@ -3737,7 +3737,7 @@
   "mamba": {
     "bin": ["micromamba"],
     "build_dependencies": ["cmake", "ninja"],
-    "date": "2024-09-09",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -3760,7 +3760,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "1.5.9"
+    "version": "2.0.0"
   },
   "man-db": {
     "aliases": {
@@ -3808,11 +3808,11 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.4.0"
+    "version": "2.5.0"
   },
   "meson": {
     "aliases": {
@@ -3890,11 +3890,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-08-19",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.33.0"
+    "version": "2.34.0"
   },
   "mpc": {
     "aliases": {
@@ -5131,11 +5131,11 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-09-09",
+    "date": "2024-09-27",
     "default": false,
     "man1": ["rclone.1"],
     "url": ["https://rclone.org/"],
-    "version": "1.68.0"
+    "version": "1.68.1"
   },
   "readline": {
     "aliases": {
@@ -5322,11 +5322,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.6.7"
+    "version": "0.6.8"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5586,7 +5586,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["python3.12"],
     "url": [
@@ -5594,7 +5594,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.20.4"
+    "version": "8.20.5"
   },
   "sox": {
     "aliases": {
@@ -5935,13 +5935,13 @@
     },
     "bin": ["tmux"],
     "build_dependencies": ["bison", "make", "pkg-config"],
-    "date": "2024-02-20",
+    "date": "2024-09-27",
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
     "man1": ["tmux.1"],
     "prune": false,
     "url": ["https://github.com/tmux/tmux/"],
-    "version": "3.4"
+    "version": "3.5"
   },
   "tokei": {
     "aliases": {
@@ -6103,11 +6103,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-09-22",
+    "date": "2024-09-27",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.15"
+    "version": "0.4.16"
   },
   "vim": {
     "aliases": {
