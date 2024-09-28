@@ -105,7 +105,14 @@ koopa_macos_brew_upgrade_casks() {
                 cask='homebrew/cask/macvim'
                 ;;
         esac
-        "${app['brew']}" reinstall --cask --force "$cask" || true
+        "${app['brew']}" \
+            reinstall \
+            --cask \
+            --display-times \
+            --force \
+            --verbose \
+            "$cask" \
+            || true
         case "$cask" in
             'r')
                 app['r']="$(koopa_macos_r_prefix)/bin/R"
