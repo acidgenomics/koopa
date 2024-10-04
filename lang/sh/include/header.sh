@@ -53,11 +53,7 @@ __koopa_activate_koopa() {
     then
         _koopa_activate_path_helper || return 1
     fi
-    # Conditionally add bootstrap prefix to path.
-    if [ ! -x "${KOOPA_PREFIX}/bin/gmake" ]
-    then
-        _koopa_add_to_path_start "$(_koopa_bootstrap_prefix)/bin" || return 1
-    fi
+    _koopa_activate_bootstrap || return 1
     _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     [ "${KOOPA_MINIMAL:-0}" -eq 0 ] || return 0
