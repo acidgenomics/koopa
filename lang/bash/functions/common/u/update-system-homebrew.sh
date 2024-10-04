@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME Need to improve cleanup of deprecated / removed casks:
+# TODO Need to improve cleanup of deprecated / removed casks:
 # brew uninstall --cask font-ibm-plex 2>/dev/null || true
 # To do this, parse the cask list output and only run the uninstall command
 # if installed.
