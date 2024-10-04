@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This should automatically update all installed apps as well.
+# FIXME Consider adding adding automatic app pruning here too.
+
 koopa_update_koopa() {
     # """
     # Update koopa installation.

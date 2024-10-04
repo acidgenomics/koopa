@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME How to improve sudo handling here so it doesn't prompt for password
+# so often?
+
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
@@ -35,7 +38,19 @@ koopa_macos_brew_upgrade_casks() {
                 cask='homebrew/cask/macvim'
                 ;;
         esac
-        "${app['brew']}" reinstall --cask --force "$cask" || true
+        # Potentially useful flags:
+        # * --no-quarantine
+        # * --require-sha
+        # * --skip-cask-deps
+        # * --zap
+        "${app['brew']}" \
+            reinstall \
+            --cask \
+            --display-times \
+            --force \
+            --verbose \
+            "$cask" \
+            || true
         case "$cask" in
             'r')
                 app['r']="$(koopa_macos_r_prefix)/bin/R"
