@@ -47,14 +47,17 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa.
-    # @note Updated 2024-07-18.
+    # @note Updated 2024-10-04.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
         _koopa_activate_path_helper || return 1
     fi
-    # FIXME Rethink this, maybe only add conditionally?
-    _koopa_add_to_path_start "$(_koopa_bootstrap_prefix)/bin" || return 1
+    # Conditionally add bootstrap prefix to path.
+    if [ ! -x "${KOOPA_PREFIX}/bin/gmake" ]
+    then
+        _koopa_add_to_path_start "$(_koopa_bootstrap_prefix)/bin" || return 1
+    fi
     _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
     _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
     [ "${KOOPA_MINIMAL:-0}" -eq 0 ] || return 0
