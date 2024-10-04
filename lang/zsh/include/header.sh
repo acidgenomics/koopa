@@ -80,7 +80,9 @@ __koopa_warn() {
 __koopa_zsh_header() {
     # """
     # Zsh header.
-    # @note Updated 2024-09-19.
+    # @note Updated 2024-10-04.
+    #
+    # macOS Monterey 12.7 is pinned to Zsh 5.8.
     # """
     case "${ZSH_VERSION:-}" in
         '1.'* | \
@@ -94,8 +96,7 @@ __koopa_zsh_header() {
         '5.4' | '5.4.'* | \
         '5.5' | '5.5.'* | \
         '5.6' | '5.6.'* | \
-        '5.7' | '5.7.'* | \
-        '5.8' | '5.8.'*)
+        '5.7' | '5.7.'*)
             return 0
             ;;
     esac
