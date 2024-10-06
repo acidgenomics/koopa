@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# FIXME Need to document that we need to update python3.12 check here on
+# a version bump, say to python3.13.
+
 _koopa_activate_bootstrap() {
     # """
     # Conditionally activate koopa bootstrap in current path.
