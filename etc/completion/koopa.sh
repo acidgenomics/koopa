@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-09-27.
+    # @note Updated 2024-10-14.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -374,6 +374,7 @@ _koopa_complete() {
                         'python3.10'
                         'python3.11'
                         'python3.12'
+                        'python3.13'
                         'quarto'
                         'r'
                         'r-devel'
