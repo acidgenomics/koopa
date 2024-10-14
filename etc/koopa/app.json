@@ -4849,7 +4849,7 @@
     },
     "bin": ["python3.12", "python3.12-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -4869,7 +4869,35 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.6"
+    "version": "3.12.7"
+  },
+  "python3.13": {
+    "aliases": {
+      "homebrew": "python@3.13"
+    },
+    "bin": ["python3.13", "python3.13-config"],
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2024-10-14",
+    "default": true,
+    "dependencies": [
+      "bzip2",
+      "expat",
+      "libedit",
+      "libffi",
+      "libxcrypt",
+      "mpdecimal",
+      "ncurses",
+      "openssl3",
+      "readline",
+      "sqlite",
+      "unzip",
+      "xz",
+      "zlib"
+    ],
+    "man1": ["python3.13.1"],
+    "prune": false,
+    "url": ["https://www.python.org/"],
+    "version": "3.13.0"
   },
   "quarto": {
     "aliases": {
