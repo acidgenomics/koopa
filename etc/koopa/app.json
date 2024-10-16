@@ -956,11 +956,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-07-08",
+    "date": "2024-10-16",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.5.0-0"
+    "version": "24.7.1-0"
   },
   "convmv": {
     "aliases": {
