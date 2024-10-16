@@ -13364,6 +13364,12 @@ koopa_install_gdbm() {
         "$@"
 }
 
+koopa_install_gentropy() {
+    koopa_install_app \
+        --name='gentropy' \
+        "$@"
+}
+
 koopa_install_geos() {
     koopa_install_app \
         --name='geos' \
@@ -19691,6 +19697,13 @@ koopa_locate_python3() {
     koopa_locate_app \
         --app-name='python3.12' \
         --bin-name='python3' \
+        "$@"
+}
+
+koopa_locate_python310() {
+    koopa_locate_app \
+        --app-name='python3.10' \
+        --bin-name='python3.10' \
         "$@"
 }
 
@@ -29594,6 +29607,12 @@ koopa_uninstall_gdal() {
 koopa_uninstall_gdbm() {
     koopa_uninstall_app \
         --name='gdbm' \
+        "$@"
+}
+
+koopa_uninstall_gentropy() {
+    koopa_uninstall_app \
+        --name='gentropy' \
         "$@"
 }
 

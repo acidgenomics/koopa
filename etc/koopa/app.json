@@ -1899,6 +1899,17 @@
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.23"
   },
+  "gentropy": {
+    "bin": ["gentropy"],
+    "date": "2024-10-16",
+    "default": true,
+    "dependencies": ["python3.10"],
+    "url": [
+      "https://pypi.org/project/gentropy/",
+      "https://github.com/opentargets/gentropy"
+    ],
+    "version": "1.7.0"
+  },
   "geos": {
     "aliases": {
       "debian": "libgeos-dev",

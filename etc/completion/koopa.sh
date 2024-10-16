@@ -183,6 +183,7 @@ _koopa_complete() {
                         'gawk'
                         'gdal'
                         'gdbm'
+                        'gentropy'
                         'geos'
                         'gettext'
                         'gffutils'
