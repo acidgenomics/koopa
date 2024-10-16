@@ -1902,7 +1902,7 @@
   "gentropy": {
     "bin": ["gentropy"],
     "date": "2024-10-16",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.10"],
     "url": [
       "https://pypi.org/project/gentropy/",
