@@ -365,10 +365,10 @@
     },
     "bin": ["bandwhich"],
     "build_dependencies": ["rust"],
-    "date": "2024-08-19",
+    "date": "2024-10-14",
     "default": false,
     "url": ["https://github.com/imsnif/bandwhich/"],
-    "version": "0.23.0"
+    "version": "0.23.1"
   },
   "bash": {
     "aliases": {
@@ -555,11 +555,11 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2024-08-19",
+    "date": "2024-10-14",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "24.8.0"
+    "version": "24.10.0"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -900,10 +900,10 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-   "version": "2.52.2"
+   "version": "2.52.4"
   },
   "cli11": {
     "aliases": {
@@ -1377,13 +1377,13 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-09-24",
+    "date": "2024-10-14",
     "default": false,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "ed": {
     "aliases": {
@@ -1535,14 +1535,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.0"
+    "version": "0.20.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1856,7 +1856,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-08-19",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": [
       "bison",
@@ -1885,7 +1885,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.9.2"
+    "version": "3.9.3"
   },
   "gdbm": {
     "aliases": {
@@ -1898,6 +1898,17 @@
     "prune": false,
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.23"
+  },
+  "gentropy": {
+    "bin": ["gentropy"],
+    "date": "2024-10-16",
+    "default": false,
+    "dependencies": ["python3.10"],
+    "url": [
+      "https://pypi.org/project/gentropy/",
+      "https://github.com/opentargets/gentropy"
+    ],
+    "version": "1.7.0"
   },
   "geos": {
     "aliases": {
@@ -1968,10 +1979,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.57.0"
+    "version": "2.58.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3001,10 +3012,10 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2024-08-19",
+    "date": "2024-10-14",
     "default": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.14"
+    "version": "2.15"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3022,12 +3033,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-24",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.7.6"
+    "version": "3.7.7"
   },
   "libassuan": {
     "aliases": {
@@ -3077,11 +3088,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2024-08-19",
+    "date": "2024-10-14",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.21"
+    "version": "1.22"
   },
   "libedit": {
     "aliases": {
@@ -3445,11 +3456,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.49.0"
+    "version": "1.49.1"
   },
   "libvterm": {
     "aliases": {
@@ -3575,7 +3586,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-07-04",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "outdated": true,
@@ -3587,7 +3598,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.43"
+    "version": "8.7.53"
   },
   "lsd": {
     "aliases": {
@@ -3722,14 +3733,14 @@
   },
   "mamba": {
     "bin": ["mamba"],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["conda"],
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.0.0"
+    "version": "2.0.1"
   },
   "man-db": {
     "aliases": {
@@ -3803,13 +3814,13 @@
     },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2024-03-18",
+    "date": "2024-10-14",
     "default": false,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.12.0"
+    "version": "6.13.0"
   },
   "mimalloc": {
     "aliases": {
@@ -3859,11 +3870,11 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.34.0"
+    "version": "2.34.1"
   },
   "mpc": {
     "aliases": {
@@ -3918,11 +3929,11 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.25"
+    "version": "1.25.1"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4244,7 +4255,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-09-20",
+    "date": "2024-10-14",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -4253,7 +4264,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4380,11 +4391,11 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["conda"],
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.4"
+    "version": "3.5"
   },
   "parallel": {
     "aliases": {
@@ -4500,7 +4511,7 @@
   },
   "picard": {
     "bin": ["picard"],
-    "date": "2023-12-22",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -4514,7 +4525,7 @@
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.2.0"
+    "version": "3.3.0"
   },
   "pigz": {
     "bin": ["pigz", "unpigz"],
@@ -4710,12 +4721,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.13"
+    "version": "2.4.15"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4763,6 +4774,17 @@
     },
     "url": ["https://pymol.org/conda/"],
     "version": "2.5.7"
+  },
+  "pyright": {
+    "bin": ["pyright"],
+    "date": "2024-10-16",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "url": [
+      "https://pypi.org/project/pyright/",
+      "https://github.com/microsoft/pyright"
+    ],
+    "version": "1.1.385"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5319,11 +5341,11 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.6.8"
+    "version": "0.6.9"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5591,9 +5613,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-09-27",
-    "default": true,
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
@@ -5601,7 +5621,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.20.5"
+    "version": "8.23.0"
   },
   "sox": {
     "aliases": {
@@ -5650,13 +5670,13 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2024-07-31",
+    "date": "2024-10-14",
     "dependencies": ["python3.12"],
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "8.0.2"
+    "version": "8.1.3"
   },
   "sqlite": {
     "aliases": {
@@ -5868,10 +5888,10 @@
     },
     "bin": ["tldr"],
     "build_dependencies": ["rust"],
-    "date": "2022-11-04",
+    "date": "2024-10-14",
     "default": false,
     "url": ["https://github.com/dbrgn/tealdeer/"],
-    "version": "1.6.1"
+    "version": "1.7.0"
   },
   "temurin": {
     "aliases": {
@@ -5942,13 +5962,13 @@
     },
     "bin": ["tmux"],
     "build_dependencies": ["bison", "make", "pkg-config"],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
     "man1": ["tmux.1"],
     "prune": false,
     "url": ["https://github.com/tmux/tmux/"],
-    "version": "3.5"
+    "version": "3.5a"
   },
   "tokei": {
     "aliases": {
@@ -5988,14 +6008,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-09",
+    "date": "2024-10-14",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.23.0"
+    "version": "0.24.3"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6110,11 +6130,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-09-27",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.16"
+    "version": "0.4.20"
   },
   "vim": {
     "aliases": {
@@ -6161,14 +6181,14 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.12"
+    "version": "2.13"
   },
   "walk": {
     "bin": ["walk"],
@@ -6638,14 +6658,14 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-08-19",
+    "date": "2024-10-14",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.8.6"
+    "version": "2024.10.7"
   },
   "zellij": {
     "aliases": {

@@ -13364,6 +13364,12 @@ koopa_install_gdbm() {
         "$@"
 }
 
+koopa_install_gentropy() {
+    koopa_install_app \
+        --name='gentropy' \
+        "$@"
+}
+
 koopa_install_geos() {
     koopa_install_app \
         --name='geos' \
@@ -15264,6 +15270,13 @@ koopa_install_pymol() {
     koopa_assert_is_not_aarch64
     koopa_install_app \
         --name='pymol' \
+        "$@"
+}
+
+koopa_install_pyright() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='pyright' \
         "$@"
 }
 
@@ -19684,6 +19697,13 @@ koopa_locate_python3() {
     koopa_locate_app \
         --app-name='python3.12' \
         --bin-name='python3' \
+        "$@"
+}
+
+koopa_locate_python310() {
+    koopa_locate_app \
+        --app-name='python3.10' \
+        --bin-name='python3.10' \
         "$@"
 }
 
@@ -29590,6 +29610,12 @@ koopa_uninstall_gdbm() {
         "$@"
 }
 
+koopa_uninstall_gentropy() {
+    koopa_uninstall_app \
+        --name='gentropy' \
+        "$@"
+}
+
 koopa_uninstall_geos() {
     koopa_uninstall_app \
         --name='geos' \
@@ -30754,6 +30780,12 @@ koopa_uninstall_pylint() {
 koopa_uninstall_pymol() {
     koopa_uninstall_app \
         --name='pymol' \
+        "$@"
+}
+
+koopa_uninstall_pyright() {
+    koopa_uninstall_app \
+        --name='pyright' \
         "$@"
 }
 
