@@ -15267,6 +15267,13 @@ koopa_install_pymol() {
         "$@"
 }
 
+koopa_install_pyright() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='pyright' \
+        "$@"
+}
+
 koopa_install_pytaglib() {
     koopa_install_app \
         --name='pytaglib' \
@@ -30754,6 +30761,12 @@ koopa_uninstall_pylint() {
 koopa_uninstall_pymol() {
     koopa_uninstall_app \
         --name='pymol' \
+        "$@"
+}
+
+koopa_uninstall_pyright() {
+    koopa_uninstall_app \
+        --name='pyright' \
         "$@"
 }
 
