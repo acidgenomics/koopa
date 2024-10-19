@@ -19,6 +19,7 @@
     "default": true,
     "dependencies": ["perl"],
     "man1": ["ack.1"],
+    "prune": true,
     "url": ["https://beyondgrep.com/"],
     "version": "3.7.0"
   },
@@ -29,6 +30,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -41,6 +43,7 @@
   "anaconda": {
     "date": "2024-07-08",
     "default": false,
+    "prune": true,
     "url": ["https://repo.continuum.io/archive/"],
     "version": "2024.06-1"
   },
@@ -49,6 +52,7 @@
     "date": "2024-09-22",
     "default": false,
     "dependencies": ["python3.11"],
+    "prune": true,
     "url": ["https://airflow.apache.org/"],
     "version": "2.10.2"
   },
@@ -63,6 +67,7 @@
     "date": "2024-07-19",
     "dependencies": ["openssl3"],
     "default": false,
+    "prune": true,
     "url": ["https://arrow.apache.org/"],
     "version": "17.0.0"
   },
@@ -74,6 +79,7 @@
     "date": "2024-05-06",
     "default": false,
     "dependencies": ["python3.12", "r", "temurin"],
+    "prune": true,
     "url": ["https://spark.apache.org/"],
     "version": "3.5.1"
   },
@@ -81,6 +87,7 @@
     "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2024-09-09",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -169,6 +176,7 @@
     "date": "2023-12-22",
     "default": false,
     "man1": ["aspell.1"],
+    "prune": true,
     "url": ["http://aspell.net/"],
     "version": "0.60.8.1"
   },
@@ -180,6 +188,7 @@
     "date": "2024-07-05",
     "default": false,
     "notes": ["IBM deletes old source versions."],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -234,6 +243,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -246,6 +256,7 @@
   "autodock-adfr": {
     "date": "2023-10-16",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -260,6 +271,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -277,6 +289,7 @@
     "date": "2024-03-14",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
@@ -301,6 +314,7 @@
     "date": "2024-06-20",
     "default": false,
     "dependencies": ["aws-cli", "node"],
+    "prune": true,
     "url": ["https://www.npmjs.com/package/aws-azure-login"],
     "version": "3.6.3"
   },
@@ -313,6 +327,7 @@
     "date": "2024-09-22",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
@@ -342,6 +357,7 @@
     "date": "2024-06-21",
     "default": false,
     "dependencies": ["python3.11"],
+    "prune": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
     "version": "2.61.0"
   },
@@ -350,6 +366,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -367,6 +384,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-10-14",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/imsnif/bandwhich/"],
     "version": "0.23.1"
   },
@@ -393,6 +411,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["node"],
+    "prune": true,
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
@@ -404,6 +423,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["ruby"],
+    "prune": true,
     "url": [
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
@@ -418,6 +438,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-10-11",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/sharkdp/bat"],
     "version": "0.24.0"
   },
@@ -433,12 +454,15 @@
     "default": true,
     "dependencies": ["ed"],
     "man1": ["bc.1"],
+    "prune": true,
     "url": ["https://ftp.gnu.org/gnu/bc/?C=M;O=D"],
     "version": "1.07.1"
   },
   "bcbio-nextgen": {
+    "bin": ["bcbio_nextgen.py"],
     "date": "2024-09-27",
-    "removed": true
+    "removed": true,
+    "url": ["https://github.com/bcbio/bcbio-nextgen/"]
   },
   "bcl2fastq": {
     "bin": ["bcl2fastq"],
@@ -447,6 +471,7 @@
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "private": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -470,6 +495,7 @@
       "macos-arm64": ["bzip2", "curl", "xz", "zlib"],
       "noarch": ["conda"]
     },
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -490,6 +516,7 @@
     "date": "2022-09-22",
     "default": false,
     "dependencies": ["temurin"],
+    "prune": true,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
     "version": "1.14.0"
   },
@@ -510,6 +537,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -524,6 +552,7 @@
     "default": false,
     "dependencies": ["conda"],
     "notes": ["This is hanging on macOS currently."],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -558,6 +587,7 @@
     "date": "2024-10-14",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
     "version": "24.10.0"
   },
@@ -566,6 +596,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -607,6 +638,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-08-31",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/ClementTsang/bottom/"],
     "version": "0.9.6"
   },
@@ -616,6 +648,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -633,6 +666,7 @@
     "date": "2022-09-26",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/bpytop/",
       "https://github.com/aristocratos/bpytop/"
@@ -645,8 +679,10 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-09",
+    "date": "2024-10-19",
     "default": false,
+    "outdated": true,
+    "prune": true,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
@@ -671,6 +707,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -747,6 +784,7 @@
       "byobu-ulevel.1",
       "byobu.1"
     ],
+    "prune": true,
     "url": ["https://www.byobu.org/", "https://launchpad.net/byobu/+download"],
     "version": "5.133"
   },
@@ -855,6 +893,7 @@
     "default": false,
     "private": true,
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -887,6 +926,7 @@
     "build_dependencies": ["go"],
     "date": "2022-12-15",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/cheat/cheat/"],
     "version": "4.4.2"
   },
@@ -902,6 +942,7 @@
     "build_dependencies": ["go"],
     "date": "2024-10-14",
     "default": true,
+    "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
    "version": "2.52.4"
   },
@@ -919,6 +960,7 @@
   "cloudbiolinux": {
     "date": "2023-12-22",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -948,6 +990,7 @@
     "date": "2024-07-12",
     "default": false,
     "dependencies": ["ruby"],
+    "prune": true,
     "url": [
       "https://github.com/athityakumar/colorls/",
       "https://rubygems.org/gems/colorls/"
@@ -956,11 +999,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-07-08",
+    "date": "2024-10-16",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.5.0-0"
+    "version": "24.7.1-0"
   },
   "convmv": {
     "aliases": {
@@ -971,6 +1014,7 @@
     "build_dependencies": ["make"],
     "date": "2022-09-26",
     "default": true,
+    "prune": true,
     "url": "https://www.j3e.de/linux/convmv/?C=M;O=D",
     "version": "2.05"
   },
@@ -1213,6 +1257,7 @@
     "date": "2024-08-19",
     "default": false,
     "man1": ["cpufetch.1"],
+    "prune": true,
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
     "version": "1.06"
   },
@@ -1237,6 +1282,7 @@
     "default": false,
     "dependencies": ["python3.12"],
     "homebrew": true,
+    "prune": true,
     "url": ["https://csvkit.readthedocs.io/"],
     "version": "1.3.0"
   },
@@ -1245,6 +1291,7 @@
     "build_dependencies": ["go"],
     "date": "2024-03-16",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/shenwei356/csvtk/"],
     "version": "0.30.0"
   },
@@ -1274,6 +1321,7 @@
     "default": false,
     "dependencies": ["libedit"],
     "man1": ["dash.1"],
+    "prune": true,
     "url": [
       "http://gondor.apana.org.au/~herbert/dash/",
       "https://git.kernel.org/pub/scm/utils/dash/dash.git"
@@ -1286,6 +1334,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1306,6 +1355,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-09-22",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.18.2"
   },
@@ -1316,6 +1366,7 @@
     "bin": ["diff-so-fancy"],
     "date": "2023-06-12",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/so-fancy/diff-so-fancy/"],
     "version": "1.4.4"
   },
@@ -1327,7 +1378,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-08-19",
     "default": false,
-    "notes": ["This is not currently building on macOS Monterey 12.7."],
+    "prune": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.60.0"
   },
@@ -1338,6 +1389,7 @@
     "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2024-01-12",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/docker/docker-credential-helpers/"],
     "version": "0.8.1"
   },
@@ -1345,17 +1397,19 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["emacs"],
+    "prune": true,
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
     "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2024-10-04",
+    "date": "2024-10-17",
     "default": true,
     "dependencies": ["chezmoi"],
+    "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "8a9baca58b25ead95a79d914c6ce4149ae0be3a2"
+    "version": "2f82876a914d642e47ad1c87dafe07db28b599c6"
   },
   "du-dust": {
     "aliases": {
@@ -1365,6 +1419,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-07-19",
     "default": true,
+    "prune": true,
     "url": [
       "https://github.com/bootandy/dust/",
       "https://crates.io/crates/du-dust/"
@@ -1379,6 +1434,7 @@
     "build_dependencies": ["cmake", "python3.12"],
     "date": "2024-10-14",
     "default": false,
+    "prune": true,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
@@ -1412,6 +1468,7 @@
     "date": "2024-06-21",
     "default": true,
     "dependencies": ["pcre2"],
+    "prune": true,
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
@@ -1464,6 +1521,7 @@
   "ensembl-perl-api": {
     "date": "2023-08-31",
     "default": false,
+    "prune": true,
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
     "version": "110"
   },
@@ -1472,6 +1530,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1511,6 +1570,7 @@
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
     "outdated": true,
+    "prune": true,
     "url": [
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
@@ -1535,20 +1595,21 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.2"
+    "version": "0.20.4"
   },
   "fastqc": {
     "bin": ["fastqc"],
     "date": "2023-1016",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1566,6 +1627,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-09-09",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/sharkdp/fd/"],
     "version": "10.2.0"
   },
@@ -1578,6 +1640,7 @@
     "default": false,
     "dependencies": ["conda"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
+    "prune": true,
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
     "version": "7.0.1"
   },
@@ -1904,6 +1967,7 @@
     "date": "2024-10-16",
     "default": false,
     "dependencies": ["python3.10"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/gentropy/",
       "https://github.com/opentargets/gentropy"
@@ -1946,6 +2010,7 @@
     "date": "2024-04-15",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1964,6 +2029,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -1979,10 +2045,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.58.0"
+    "version": "2.59.0"
   },
   "ghostscript": {
     "aliases": {
@@ -1993,6 +2060,7 @@
     "date": "2024-09-22",
     "default": false,
     "man1": ["gs.1"],
+    "prune": true,
     "url": ["https://www.ghostscript.com/"],
     "version": "10.04.0"
   },
@@ -2032,6 +2100,7 @@
     "build_dependencies": ["go", "make"],
     "date": "2023-12-22",
     "default": false,
+    "prune": true,
     "url": ["https://git-lfs.github.com/"],
     "version": "3.4.1"
   },
@@ -2043,6 +2112,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-6-13",
     "default": false,
+    "prune": true,
     "url": [
       "https://github.com/extrawurst/gitui/",
       "https://crates.io/crates/gitui"
@@ -2057,6 +2127,7 @@
     "date": "2024-07-04",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
@@ -2150,22 +2221,23 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2024-09-22",
+    "date": "2024-10-19",
     "default": false,
-    "outdated": true,
+    "prune": true,
     "url": ["https://golang.org/dl/"],
-    "version": "1.23.1"
+    "version": "1.23.2"
   },
   "google-cloud-sdk": {
     "aliases": {
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2024-06-21",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["python3.11"],
+    "prune": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "481.0.0"
+    "version": "497.0.0"
   },
   "googletest": {
     "aliases": {
@@ -2174,6 +2246,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-07-31",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/google/googletest/"],
     "version": "1.15.2"
   },
@@ -2218,6 +2291,7 @@
     "default": true,
     "dependencies": ["pcre2"],
     "man1": ["ggrep.1"],
+    "prune": true,
     "url": [
       "https://www.gnu.org/software/grep/",
       "https://ftp.gnu.org/gnu/grep/?C=M;O=D"
@@ -2232,6 +2306,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-03-06",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/pemistahl/grex/"],
     "version": "1.4.5"
   },
@@ -2335,6 +2410,7 @@
     "date": "2024-05-08",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
@@ -2365,6 +2441,7 @@
     "date": "2023-08-11",
     "default": false,
     "dependencies": ["node"],
+    "prune": true,
     "url": [
       "https://github.com/aksakalli/gtop/",
       "https://www.npmjs.com/package/gtop/"
@@ -2380,6 +2457,7 @@
     "date": "2024-09-09",
     "default": false,
     "man1": ["gum.1"],
+    "prune": true,
     "url": ["https://github.com/charmbracelet/gum/"],
     "version": "0.14.5"
   },
@@ -2439,6 +2517,7 @@
     ],
     "date": "2023-10-16",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2478,6 +2557,7 @@
     "build_dependencies": ["haskell-ghcup"],
     "date": "2024-03-22",
     "default": false,
+    "prune": true,
     "url": ["https://www.haskell.org/cabal/download.html"],
     "version": "3.10.3.0"
   },
@@ -2489,6 +2569,7 @@
     "build_dependencies": ["curl"],
     "date": "2024-07-12",
     "default": false,
+    "prune": true,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
@@ -2502,6 +2583,7 @@
     "bin": ["stack"],
     "date": "2024-07-31",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2561,6 +2643,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-12-12",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/sharkdp/hexyl/"],
     "version": "0.14.0"
   },
@@ -2569,6 +2652,7 @@
     "date": "2023-10-10",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2592,6 +2676,7 @@
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": ["htop.1"],
+    "prune": true,
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
     "version": "3.3.0"
   },
@@ -2600,6 +2685,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2635,16 +2721,18 @@
     "date": "2024-07-12",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.3"
   },
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
+    "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.134.3"
+    "version": "0.136.2"
   },
   "hyperfine": {
     "aliases": {
@@ -2654,6 +2742,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-10-05",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/sharkdp/hyperfine/"],
     "version": "1.18.0"
   },
@@ -2759,6 +2848,7 @@
     "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
     "version": "8.19.0"
   },
@@ -2782,6 +2872,7 @@
     "date": "2023-12-13",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
@@ -2806,6 +2897,7 @@
     "bin": ["jf"],
     "date": "2024-07-17",
     "default": false,
+    "prune": true,
     "url": ["https://www.jfrog.com/confluence/display/CLI/JFrog+CLI"],
     "version": "2.59.1"
   },
@@ -2823,6 +2915,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "prune": true,
     "url": [
       "https://jless.io/",
       "https://github.com/PaulJuliusMartinez/jless/"
@@ -2858,6 +2951,7 @@
     "default": true,
     "dependencies": ["gettext", "m4", "oniguruma"],
     "man1": ["jq.1"],
+    "prune": true,
     "url": ["https://github.com/stedolan/jq/"],
     "version": "1.7.1"
   },
@@ -2869,6 +2963,7 @@
     "date": "2024-09-09",
     "dependencies": ["conda"],
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -2883,6 +2978,7 @@
     "date": "2024-09-09",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
     "version": "4.2.5"
   },
@@ -2892,6 +2988,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "url": [
       "https://pachterlab.github.io/kallisto/",
       "https://github.com/pachterlab/kallisto/",
@@ -2920,6 +3017,7 @@
     "date": "2024-08-19",
     "default": false,
     "man1": ["ksh.1"],
+    "prune": true,
     "url": ["https://github.com/ksh93/ksh/"],
     "version": "1.0.10"
   },
@@ -2932,6 +3030,7 @@
     "date": "2022-08-30",
     "default": false,
     "man1": ["lame.1"],
+    "prune": true,
     "url": ["https://lame.sourceforge.io/"],
     "version": "3.100"
   },
@@ -2955,6 +3054,7 @@
     "date": "2024-09-24",
     "default": true,
     "dependencies": ["python3.11"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
@@ -2969,6 +3069,7 @@
     "build_dependencies": ["gnupg", "libarchive", "xz"],
     "date": "2024-07-04",
     "default": false,
+    "prune": true,
     "url": [
       "https://wiki.dlang.org/LDC",
       "https://github.com/ldc-developers/ldc/"
@@ -2983,6 +3084,7 @@
     "date": "2023-05-26",
     "default": false,
     "dependencies": ["openssl3"],
+    "prune": true,
     "url": ["https://nlnetlabs.nl/projects/ldns/about/"],
     "version": "1.8.3"
   },
@@ -3014,6 +3116,7 @@
     "build_dependencies": ["make"],
     "date": "2024-10-14",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
     "version": "2.15"
   },
@@ -3059,6 +3162,7 @@
     "build_dependencies": ["cmake", "make"],
     "date": "2023-05-26",
     "default": false,
+    "prune": false,
     "url": ["https://github.com/PJK/libcbor/"],
     "version": "0.10.2"
   },
@@ -3069,6 +3173,7 @@
     "build_dependencies": ["make"],
     "date": "2023-08-17",
     "default": false,
+    "prune": false,
     "url": [
       "https://hyperrealm.github.io/libconfig/",
       "https://github.com/hyperrealm/libconfig/"
@@ -3156,6 +3261,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["libcbor"],
+    "prune": false,
     "url": ["https://developers.yubico.com/libfido2/Releases/"],
     "version": "1.14.0"
   },
@@ -3294,6 +3400,7 @@
     "build_dependencies": ["make", "patch"],
     "date": "2023-10-19",
     "default": false,
+    "prune": false,
     "url": ["https://www.csie.ntu.edu.tw/~cjlin/liblinear/"],
     "version": "2.47"
   },
@@ -3316,6 +3423,7 @@
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
     "date": "2023-10-19",
     "default": false,
+    "prune": false,
     "url": ["https://www.tcpdump.org/"],
     "version": "1.10.4"
   },
@@ -3456,11 +3564,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.49.1"
+    "version": "1.49.2"
   },
   "libvterm": {
     "aliases": {
@@ -3510,6 +3618,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["icu4c", "libgcrypt", "libxml2"],
+    "prune": false,
     "url": [
       "http://xmlsoft.org/XSLT/",
       "https://gitlab.gnome.org/GNOME/libxslt/-/releases"
@@ -3581,6 +3690,7 @@
       "zlib",
       "zstd"
     ],
+    "prune": true,
     "url": ["https://llvm.org/"],
     "version": "19.1.0"
   },
@@ -3608,6 +3718,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-09-09",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/lsd-rs/lsd/"],
     "version": "1.1.5"
   },
@@ -3654,6 +3765,7 @@
     "date": "2024-09-09",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
@@ -3736,6 +3848,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["conda"],
+    "prune": false,
     "url": [
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
@@ -3754,6 +3867,7 @@
     "default": true,
     "dependencies": ["gdbm", "libpipeline"],
     "man1": ["gman.1"],
+    "prune": true,
     "url": [
       "https://man-db.nongnu.org/",
       "https://gitlab.com/man-db/man-db/-/releases"
@@ -3768,6 +3882,7 @@
     "date": "2024-05-26",
     "default": false,
     "dependencies": ["node"],
+    "prune": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
     "version": "0.42.0"
   },
@@ -3779,6 +3894,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-08-19",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.9.2"
   },
@@ -3791,6 +3907,7 @@
     "date": "2024-09-27",
     "default": true,
     "dependencies": ["openssl3"],
+    "prune": true,
     "url": ["https://github.com/lunaryorn/mdcat/"],
     "version": "2.5.0"
   },
@@ -3816,6 +3933,7 @@
     "build_dependencies": ["go"],
     "date": "2024-10-14",
     "default": false,
+    "prune": true,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
@@ -3829,6 +3947,7 @@
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2023-10-19",
     "default": false,
+    "prune": false,
     "url": ["https://github.com/microsoft/mimalloc"],
     "version": "2.1.2"
   },
@@ -3838,6 +3957,7 @@
     "date": "2024-03-27",
     "default": false,
     "dependencies": ["zlib"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -3855,6 +3975,7 @@
     "date": "2023-01-10",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -3873,6 +3994,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
+    "prune": false,
     "url": ["https://github.com/rui314/mold/"],
     "version": "2.34.1"
   },
@@ -3932,6 +4054,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
     "version": "1.25.1"
   },
@@ -3941,6 +4064,7 @@
     "default": false,
     "dependencies": ["python3.12"],
     "man1": ["mutagen-inspect.1"],
+    "prune": true,
     "url": [
       "https://mutagen.readthedocs.io/",
       "https://github.com/quodlibet/mutagen/"
@@ -3949,15 +4073,16 @@
   },
   "mypy": {
     "bin": ["dmypy", "mypy", "mypyc"],
-    "date": "2023-12-22",
+    "date": "2024-10-17",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://www.mypy-lang.org/",
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "1.8.0"
+    "version": "1.12.0"
   },
   "nano": {
     "aliases": {
@@ -3969,6 +4094,7 @@
     "date": "2023-02-08",
     "default": true,
     "dependencies": ["gettext", "ncurses"],
+    "prune": true,
     "url": ["https://www.nano-editor.org/"],
     "version": "7.2"
   },
@@ -3977,6 +4103,7 @@
     "date": "2022-10-11",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -3995,6 +4122,7 @@
     "date": "2024-07-06",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4056,6 +4184,7 @@
     "date": "2022-08-30",
     "default": false,
     "man1": ["neofetch.1"],
+    "prune": true,
     "url": ["https://github.com/dylanaraps/neofetch/"],
     "version": "7.1.0"
   },
@@ -4076,6 +4205,7 @@
       "zlib"
     ],
     "man1": ["nvim.1"],
+    "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
     "version": "0.10.0"
   },
@@ -4096,6 +4226,7 @@
     "date": "2024-08-01",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "url": [
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
@@ -4131,6 +4262,7 @@
     "bin": ["nim"],
     "date": "2023-12-22",
     "default": false,
+    "prune": true,
     "url": ["https://nim-lang.org/"],
     "version": "2.0.2"
   },
@@ -4172,6 +4304,7 @@
       "pcre",
       "zlib"
     ],
+    "prune": true,
     "url": "https://nmap.org/",
     "version": "7.94"
   },
@@ -4215,11 +4348,12 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-09-22",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["openssl3"],
+    "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.98.0"
+    "version": "0.99.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4244,6 +4378,7 @@
     "date": "2024-05-21",
     "default": false,
     "dependencies": ["python3.11", "zlib"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -4257,6 +4392,7 @@
     "bin": ["dorado"],
     "date": "2024-10-14",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": true,
@@ -4271,6 +4407,7 @@
     "date": "2023-05-31",
     "default": false,
     "private": true,
+    "prune": true,
     "url": [
       "https://community.nanoporetech.com/",
       "https://nanoporetech.com/support/nanopore-sequencing-data-analysis"
@@ -4282,6 +4419,7 @@
     "date": "2023-10-19",
     "default": false,
     "dependencies": ["hdf5", "zlib", "zstd"],
+    "prune": false,
     "url": ["https://github.com/nanoporetech/vbz_compression/"],
     "version": "1.0.2"
   },
@@ -4341,6 +4479,7 @@
       "openssl3",
       "zlib"
     ],
+    "prune": false,
     "url": [
       "https://www.openssh.com/portable.html",
       "https://github.com/openssh/openssh-portable",
@@ -4366,6 +4505,7 @@
   "oracle-instant-client": {
     "date": "2023-12-22",
     "default": false,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4382,6 +4522,7 @@
     "date": "2023-05-31",
     "default": true,
     "man1": ["7z.1.gz", "7za.1.gz", "7zr.1.gz"],
+    "prune": true,
     "url": ["https://github.com/p7zip-project/p7zip/"],
     "version": "17.05"
   },
@@ -4394,6 +4535,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
     "version": "3.5"
   },
@@ -4407,6 +4549,7 @@
     "date": "2023-12-22",
     "default": true,
     "man1": ["parallel.1"],
+    "prune": true,
     "url": [
       "https://www.gnu.org/software/parallel/",
       "https://ftp.gnu.org/gnu/parallel/?C=M;O=D"
@@ -4422,6 +4565,7 @@
     "date": "2022-08-30",
     "default": false,
     "man1": ["pass.1"],
+    "prune": true,
     "url": ["https://www.passwordstore.org/"],
     "version": "1.7.4"
   },
@@ -4446,6 +4590,7 @@
     "default": true,
     "dependencies": ["bzip2"],
     "man1": ["pbzip2.1"],
+    "prune": true,
     "url": [
       "https://web.archive.org/web/20180226093549/compression.ca/pbzip2/"
     ],
@@ -4514,6 +4659,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4534,6 +4680,7 @@
     "default": true,
     "dependencies": ["zlib", "zopfli"],
     "man1": ["pigz.1", "unpigz.1"],
+    "prune": true,
     "url": ["https://zlib.net/pigz/"],
     "version": "2.8"
   },
@@ -4595,12 +4742,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-05-08",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.3"
+    "version": "1.8.4"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
@@ -4615,6 +4762,7 @@
       "perl",
       "readline"
     ],
+    "prune": true,
     "url": [
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
@@ -4624,6 +4772,7 @@
   "prelude-emacs": {
     "date": "2023-12-22",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/bbatsov/prelude/"],
     "user": true,
     "version": "ac5fd5c9e3b33c744c447471a119b3ea63c5e8e6"
@@ -4636,6 +4785,7 @@
     "date": "2024-07-15",
     "default": false,
     "dependencies": ["node"],
+    "prune": true,
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
     "version": "3.3.3"
   },
@@ -4647,6 +4797,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-07-31",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/dalance/procs/"],
     "version": "0.14.6"
   },
@@ -4691,6 +4842,7 @@
     "date": "2022-09-30",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://github.com/benfred/py-spy/"],
     "version": "0.3.14"
   },
@@ -4710,6 +4862,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
@@ -4721,18 +4874,19 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.15"
+    "version": "2.4.16"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
     "date": "2023-08-31",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
@@ -4747,6 +4901,7 @@
     "date": "2024-05-06",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
     "version": "2.18.0"
   },
@@ -4758,6 +4913,7 @@
     "date": "2024-09-24",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
     "version": "3.3.1"
   },
@@ -4766,6 +4922,7 @@
     "date": "2023-11-04",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -4780,6 +4937,7 @@
     "date": "2024-10-16",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
@@ -4791,6 +4949,7 @@
     "date": "2024-03-18",
     "default": false,
     "dependencies": ["python3.12", "taglib"],
+    "prune": true,
     "url": [
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
@@ -4802,6 +4961,7 @@
     "date": "2024-09-22",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/pytest/",
       "https://docs.pytest.org/",
@@ -4928,6 +5088,7 @@
     "bin": ["quarto"],
     "date": "2024-07-05",
     "default": true,
+    "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
     "version": "1.5.53"
   },
@@ -5000,6 +5161,7 @@
       "zstd"
     ],
     "man1": ["R.1", "Rscript.1"],
+    "prune": true,
     "url": [
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
@@ -5070,6 +5232,7 @@
       "zlib",
       "zstd"
     ],
+    "prune": true,
     "supported": {
       "linux-amd64": false,
       "linux-arm64": false,
@@ -5116,6 +5279,7 @@
     "date": "2024-08-22",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://github.com/randy3k/radian/"],
     "version": "0.6.13"
   },
@@ -5127,6 +5291,7 @@
     "date": "2022-09-26",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/ranger-fm/",
       "https://github.com/ranger/ranger/"
@@ -5153,6 +5318,7 @@
     "date": "2024-09-27",
     "default": false,
     "man1": ["rclone.1"],
+    "prune": true,
     "url": ["https://rclone.org/"],
     "version": "1.68.1"
   },
@@ -5187,6 +5353,7 @@
     "default": true,
     "dependencies": ["perl"],
     "man1": ["rename.1"],
+    "prune": true,
     "url": ["https://metacpan.org/dist/File-Rename/"],
     "version": "2.01"
   },
@@ -5210,6 +5377,7 @@
     "date": "2024-09-09",
     "default": true,
     "dependencies": ["pcre2"],
+    "prune": true,
     "url": ["https://github.com/BurntSushi/ripgrep/"],
     "version": "14.1.1"
   },
@@ -5221,6 +5389,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-08-28",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/phiresky/ripgrep-all/"],
     "version": "1.0.0-alpha.5"
   },
@@ -5232,6 +5401,7 @@
     "date": "2022-09-30",
     "default": false,
     "dependencies": ["ruby"],
+    "prune": true,
     "url": ["https://github.com/textmate/rmate/"],
     "version": "1.5.8"
   },
@@ -5240,6 +5410,7 @@
     "date": "2023-11-01",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5253,25 +5424,20 @@
     "version": "4.2.0"
   },
   "ronn": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["ronn"],
     "date": "2022-09-26",
-    "default": false,
-    "dependencies": ["ruby"],
     "removed": true,
     "url": [
       "https://github.com/rtomayko/ronn/",
       "https://rubygems.org/gems/ronn/"
-    ],
-    "version": "0.7.3"
+    ]
   },
   "ronn-ng": {
     "bin": ["ronn"],
     "date": "2024-06-16",
     "default": false,
     "dependencies": ["ruby"],
+    "prune": true,
     "url": [
       "https://github.com/apjanke/ronn-ng/",
       "https://rubygems.org/gems/ronn-ng/"
@@ -5283,6 +5449,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5319,6 +5486,7 @@
     "default": true,
     "dependencies": ["lz4", "openssl3", "xxhash", "zlib", "zstd"],
     "man1": ["rsync.1"],
+    "prune": true,
     "url": ["https://download.samba.org/pub/rsync/src/?C=M;O=D"],
     "version": "3.2.7"
   },
@@ -5341,19 +5509,21 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.6.9"
+    "version": "0.7.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2024-09-22",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.57"
+    "version": "0.0.58"
   },
   "rust": {
     "aliases": {
@@ -5371,16 +5541,18 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-09-09",
+    "date": "2024-10-19",
     "default": true,
+    "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.81.0"
+    "version": "1.82.0"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
     "build_dependencies": ["go"],
     "date": "2024-08-01",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/peak/s5cmd"],
     "version": "2.2.2"
   },
@@ -5389,6 +5561,7 @@
     "date": "2024-07-08",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5407,6 +5580,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5432,6 +5606,7 @@
       "noarch": ["conda"]
     },
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5449,6 +5624,7 @@
     "date": "2023-12-12",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
@@ -5460,6 +5636,7 @@
     "date": "2024-07-10",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://scanpy.readthedocs.io/"],
     "version": "1.10.2"
   },
@@ -5481,6 +5658,7 @@
     "default": false,
     "dependencies": ["libxcrypt", "ncurses"],
     "man1": ["screen.1"],
+    "prune": true,
     "url": [
       "https://www.gnu.org/software/screen",
       "https://ftp.gnu.org/gnu/screen/?C=M;O=D"
@@ -5495,6 +5673,7 @@
     "build_dependencies": ["rust"],
     "date": "2023-11-08",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/chmln/sd/"],
     "version": "1.0.0"
   },
@@ -5520,6 +5699,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5558,6 +5738,7 @@
     ],
     "date": "2024-03-08",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/koalaman/shellcheck/"],
     "version": "0.10.0"
   },
@@ -5581,6 +5762,7 @@
     "bin": ["shunit2"],
     "date": "2022-08-30",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/kward/shunit2/"],
     "version": "2.1.8"
   },
@@ -5589,6 +5771,7 @@
     "date": "2023-12-13",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://github.com/0k/shyaml/"],
     "version": "0.6.2"
   },
@@ -5605,6 +5788,7 @@
     "date": "2023-12-22",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html"
@@ -5613,15 +5797,16 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.23.0"
+    "version": "8.23.2"
   },
   "sox": {
     "aliases": {
@@ -5632,6 +5817,7 @@
     "default": false,
     "dependencies": ["conda"],
     "man1": ["sox.1"],
+    "prune": true,
     "url": [
       "http://sox.sourceforge.net/sox.html",
       "https://sourceforge.net/projects/sox/files/sox/"
@@ -5642,6 +5828,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["emacs"],
+    "prune": true,
     "url": ["https://github.com/syl20bnr/spacemacs/"],
     "user": true,
     "version": "b2511bba47aad1913f0080b6a11f3719dba32368"
@@ -5649,6 +5836,7 @@
   "spacevim": {
     "date": "2023-08-31",
     "default": false,
+    "prune": true,
     "url": ["https://gitlab.com/SpaceVim/SpaceVim/"],
     "user": true,
     "version": "e1fc546d7f43a87d8dc3179ca93db970c83926e9"
@@ -5672,6 +5860,7 @@
     ],
     "date": "2024-10-14",
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
@@ -5712,6 +5901,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5730,6 +5920,7 @@
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5750,8 +5941,9 @@
     "build_dependencies": ["cmake", "rust"],
     "date": "2024-07-27",
     "default": true,
+    "prune": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.20.1"
+    "version": "1.21.1"
   },
   "stow": {
     "aliases": {
@@ -5762,6 +5954,7 @@
     "date": "2023-08-30",
     "default": false,
     "dependencies": ["perl"],
+    "prune": true,
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
   },
@@ -5770,6 +5963,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -5890,6 +6084,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-10-14",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/dbrgn/tealdeer/"],
     "version": "1.7.0"
   },
@@ -5978,6 +6173,7 @@
     "build_dependencies": ["rust"],
     "date": "2022-09-26",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/XAMPPRocky/tokei/"],
     "version": "12.1.2"
   },
@@ -5986,6 +6182,7 @@
     "date": "2024-01-12",
     "default": true,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pypi.org/project/tqdm/"],
     "version": "4.66.1"
   },
@@ -6000,6 +6197,7 @@
     "date": "2023-08-31",
     "default": true,
     "man1": ["tree.1"],
+    "prune": true,
     "url": ["https://mama.indstate.edu/users/ice/tree/"],
     "version": "2.1.1"
   },
@@ -6022,6 +6220,7 @@
     "date": "2024-09-09",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pypi.org/project/tryceratops/"],
     "version": "2.4.0"
   },
@@ -6033,6 +6232,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-01-02",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.2.0"
   },
@@ -6059,6 +6259,7 @@
     "date": "2023-10-16",
     "default": false,
     "dependencies": ["conda"],
+    "prune": true,
     "supported": {
       "linux-amd64": true,
       "linux-arm64": false,
@@ -6130,11 +6331,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.20"
+    "version": "0.4.24"
   },
   "vim": {
     "aliases": {
@@ -6166,15 +6368,16 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2024-01-16",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "3.0.2"
+    "version": "3.1"
   },
   "vulture": {
     "aliases": {
@@ -6184,6 +6387,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
@@ -6195,6 +6399,7 @@
     "build_dependencies": ["go"],
     "date": "2024-07-04",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/antonmedv/walk/"],
     "version": "1.10.0"
   },
@@ -6267,6 +6472,7 @@
     "date": "2022-08-25",
     "default": true,
     "man1": ["gwhich.1"],
+    "prune": true,
     "url": ["https://ftp.gnu.org/gnu/which/?C=M;O=D"],
     "version": "2.21"
   },
@@ -6275,6 +6481,7 @@
     "build_dependencies": ["brotli", "cmake", "make"],
     "date": "2023-05-15",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/google/woff2/"],
     "version": "1.0.2"
   },
@@ -6541,6 +6748,7 @@
     "build_dependencies": ["rust"],
     "date": "2022-09-26",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/BurntSushi/xsv/"],
     "version": "0.13.0"
   },
@@ -6636,6 +6844,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["python3.12"],
+    "prune": true,
     "url": [
       "https://pypi.org/project/yapf/",
       "https://github.com/google/yapf/"
@@ -6650,6 +6859,7 @@
     "build_dependencies": ["go"],
     "date": "2024-08-19",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
     "version": "4.44.3"
   },
@@ -6661,6 +6871,7 @@
     "date": "2024-10-14",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
+    "prune": true,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
@@ -6675,6 +6886,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-05-06",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/zellij-org/zellij/"],
     "version": "0.40.1"
   },
@@ -6686,6 +6898,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-05-06",
     "default": false,
+    "prune": true,
     "url": ["https://github.com/bvaisvil/zenith/"],
     "version": "0.14.1"
   },
@@ -6723,6 +6936,7 @@
     "build_dependencies": ["cmake"],
     "date": "2023-05-15",
     "default": false,
+    "prune": false,
     "url": ["https://github.com/google/zopfli/"],
     "version": "1.0.3"
   },
@@ -6734,6 +6948,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-09-22",
     "default": true,
+    "prune": true,
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
     "version": "0.9.6"
   },
@@ -6749,6 +6964,7 @@
     "default": false,
     "dependencies": ["ncurses", "pcre", "texinfo"],
     "man1": ["zsh.1"],
+    "prune": false,
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],
     "version": "5.9"
   },
