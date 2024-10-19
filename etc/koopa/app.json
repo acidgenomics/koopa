@@ -645,13 +645,13 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-09-09",
+    "date": "2024-10-19",
     "default": false,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.44.0"
+    "version": "1.44.1"
   },
   "brotli": {
     "aliases": {
@@ -1535,14 +1535,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.2"
+    "version": "0.20.4"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1979,10 +1979,10 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.58.0"
+    "version": "2.59.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2641,10 +2641,10 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-09-22",
+    "date": "2024-10-14",
     "default": false,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.134.3"
+    "version": "0.136.2"
   },
   "hyperfine": {
     "aliases": {
@@ -3456,11 +3456,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.49.1"
+    "version": "1.49.2"
   },
   "libvterm": {
     "aliases": {
@@ -4215,11 +4215,11 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-09-22",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["openssl3"],
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.98.0"
+    "version": "0.99.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4595,12 +4595,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-05-08",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.3"
+    "version": "1.8.4"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
@@ -4721,12 +4721,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.15"
+    "version": "2.4.16"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5341,19 +5341,19 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.6.9"
+    "version": "0.7.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2024-09-22",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.57"
+    "version": "0.0.58"
   },
   "rust": {
     "aliases": {
@@ -5371,10 +5371,10 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-09-09",
+    "date": "2024-10-19",
     "default": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.81.0"
+    "version": "1.82.0"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
@@ -5613,7 +5613,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
@@ -5621,7 +5621,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.23.0"
+    "version": "8.23.2"
   },
   "sox": {
     "aliases": {
@@ -5751,7 +5751,7 @@
     "date": "2024-07-27",
     "default": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.20.1"
+    "version": "1.21.1"
   },
   "stow": {
     "aliases": {
@@ -6130,11 +6130,11 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-10-14",
+    "date": "2024-10-19",
     "default": false,
     "dependencies": ["python3.12"],
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.20"
+    "version": "0.4.24"
   },
   "vim": {
     "aliases": {
@@ -6166,7 +6166,7 @@
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2024-01-16",
+    "date": "2024-10-19",
     "default": true,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
@@ -6174,7 +6174,7 @@
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "3.0.2"
+    "version": "3.1"
   },
   "vulture": {
     "aliases": {
