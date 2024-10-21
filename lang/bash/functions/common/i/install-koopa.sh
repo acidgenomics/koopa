@@ -124,8 +124,6 @@ koopa_install_koopa() {
             --pattern="^${HOME:?}"
         then
             bool['shared']=0
-        else
-            bool['shared']=1
         fi
         if [[ "${bool['shared']}" -eq 1 ]]
         then
