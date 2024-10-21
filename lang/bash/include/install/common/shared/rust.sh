@@ -3,7 +3,9 @@
 main() {
     # """
     # Install Rust (via rustup).
-    # @note Updated 2023-05-01.
+    # @note Updated 2024-10-21.
+    #
+    # Consider using 'rustup toolchain install' here.
     # """
     local -A app dict
     app['cut']="$(koopa_locate_cut --allow-system)"
@@ -30,8 +32,10 @@ main() {
     koopa_assert_is_installed "${app['rustup']}"
     koopa_add_to_path_start "$(koopa_realpath "${dict['tmp_prefix']}/bin")"
     koopa_print_env
-    "${app['rustup']}" install "${dict['version']}"
-    "${app['rustup']}" default "${dict['version']}"
+    "${app['rustup']}" --verbose \
+        install "${dict['version']}"
+    "${app['rustup']}" --verbose \
+        default "${dict['version']}"
     dict['toolchain']="$( \
         "${app['rustup']}" toolchain list \
         | "${app['head']}" -n 1 \
