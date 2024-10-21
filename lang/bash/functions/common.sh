@@ -14105,7 +14105,7 @@ koopa_install_koopa() {
                 dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
-        dict['koopa_prefix']="$( \
+        dict['prefix']="$( \
             koopa_read \
                 'Install prefix' \
                 "${dict['prefix']}" \

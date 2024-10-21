@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# FIXME For user-specific install, ensure we symlink .bash_profile to .bashrc
+# TODO For user-specific install, ensure we symlink .bash_profile to .bashrc
 # if the file doesn't exist.
 
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-10-21.
     # """
     local -A bool dict
     bool['add_to_user_profile']=1
@@ -92,7 +92,6 @@ koopa_install_koopa() {
         bool['bootstrap']=1
         koopa_add_to_path_start "${KOOPA_BOOTSTRAP_PREFIX}/bin"
     fi
-    # FIXME This step is failing for install on lmod system.
     koopa_assert_is_installed \
         'cp' 'curl' 'cut' 'find' 'git' 'grep' 'mkdir' 'mktemp' 'mv' 'perl' \
         'python3' 'readlink' 'rm' 'sed' 'tar' 'tr' 'unzip'
@@ -115,7 +114,7 @@ koopa_install_koopa() {
                 dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
-        dict['koopa_prefix']="$( \
+        dict['prefix']="$( \
             koopa_read \
                 'Install prefix' \
                 "${dict['prefix']}" \
