@@ -3,7 +3,7 @@
 koopa_install_rust_package() {
     # """
     # Install Rust package.
-    # @note Updated 2024-07-08.
+    # @note Updated 2024-10-21.
     #
     # Cargo documentation:
     # https://doc.rust-lang.org/cargo/
@@ -21,8 +21,8 @@ koopa_install_rust_package() {
     local -a build_deps install_args pos
     koopa_assert_is_install_subshell
     build_deps+=(
-        'rust'
         # > 'git'
+        'rust'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     app['cargo']="$(koopa_locate_cargo)"
@@ -97,6 +97,7 @@ koopa_install_rust_package() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_dir "${dict['cargo_home']}"
     export CARGO_HOME="${dict['cargo_home']}"
+    export CARGO_NET_GIT_FETCH_WITH_CLI=1
     export RUST_BACKTRACE='full' # or '1'.
     if [[ "${bool['openssl']}" -eq 1 ]]
     then
