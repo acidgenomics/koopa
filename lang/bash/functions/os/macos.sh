@@ -87,7 +87,7 @@ koopa_macos_brew_upgrade_casks() {
     koopa_assert_is_executable "${app[@]}"
     koopa_alert 'Checking casks.'
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
-    if koopa_is_array_non_empty "${casks[@]:-}"
+    if koopa_is_array_empty "${casks[@]:-}"
     then
         return 0
     fi
