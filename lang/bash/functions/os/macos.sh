@@ -87,7 +87,10 @@ koopa_macos_brew_upgrade_casks() {
     koopa_assert_is_executable "${app[@]}"
     koopa_alert 'Checking casks.'
     readarray -t casks <<< "$(koopa_macos_brew_cask_outdated)"
-    koopa_is_array_non_empty "${casks[@]:-}" || return 0
+    if koopa_is_array_empty "${casks[@]:-}"
+    then
+        return 0
+    fi
     koopa_dl \
         "$(koopa_ngettext \
             --num="${#casks[@]}" \
@@ -95,6 +98,7 @@ koopa_macos_brew_upgrade_casks() {
             --msg2='outdated casks' \
         )" \
         "$(koopa_to_string "${casks[@]}")"
+    koopa_sudo_trigger
     for cask in "${casks[@]}"
     do
         case "$cask" in
@@ -114,19 +118,15 @@ koopa_macos_brew_upgrade_casks() {
             "$cask" \
             || true
         case "$cask" in
-            'r')
-                app['r']="$(koopa_macos_r_prefix)/bin/R"
-                koopa_configure_r "${app['r']}"
-                ;;
             'google-'*)
-                koopa_macos_disable_google_keystone || true
+                koopa_macos_disable_google_keystone
                 ;;
             'gpg-suite'*)
                 koopa_macos_disable_gpg_updater
                 ;;
-            'macvim')
-                "${app['brew']}" unlink 'vim'
-                "${app['brew']}" link 'vim'
+            'r')
+                app['r']="$(koopa_macos_r_prefix)/bin/R"
+                koopa_configure_r "${app['r']}"
                 ;;
         esac
     done
