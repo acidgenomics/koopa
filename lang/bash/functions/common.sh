@@ -15768,8 +15768,8 @@ koopa_install_rust_package() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_is_dir "${dict['cargo_home']}"
     export CARGO_HOME="${dict['cargo_home']}"
-    export CARGO_NET_GIT_FETCH_WITH_CLI=1
-    export RUST_BACKTRACE='full' # or '1'.
+    export CARGO_NET_GIT_FETCH_WITH_CLI='true'
+    export RUST_BACKTRACE='full'
     if [[ "${bool['openssl']}" -eq 1 ]]
     then
         koopa_activate_app 'openssl3'
