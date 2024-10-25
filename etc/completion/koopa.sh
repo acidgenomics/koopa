@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-10-16.
+    # @note Updated 2024-10-25.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -425,6 +425,7 @@ _koopa_complete() {
                         'star'
                         'starship'
                         'stow'
+                        'streamlit'
                         'subread'
                         'subversion'
                         'swig'
