@@ -5,6 +5,9 @@ koopa_reset_permissions() {
     # Reset default permissions on a specified directory recursively.
     # @note Updated 2023-04-05.
     #
+    # By default this changes group, which may be unwanted on some systems
+    # for accounts that aren't admin and can't easily change the group back.
+    #
     # @examples
     # > koopa_reset_permissions "${PWD:?}"
     # """

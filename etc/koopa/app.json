@@ -324,7 +324,7 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-09-22",
+    "date": "2024-10-25",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -332,7 +332,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.17.55"
+    "version": "2.18.10"
   },
   "axel": {
     "aliases": {
@@ -679,7 +679,7 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": false,
     "outdated": true,
     "prune": true,
@@ -687,7 +687,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.44.0"
+    "version": "1.44.2"
   },
   "brotli": {
     "aliases": {
@@ -1376,11 +1376,11 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-08-19",
+    "date": "2024-10-25",
     "default": false,
     "prune": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.60.0"
+    "version": "0.61.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1595,14 +1595,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.4"
+    "version": "0.20.5"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2045,11 +2045,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.59.0"
+    "version": "2.60.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2072,7 +2072,7 @@
     },
     "bin": ["git"],
     "build_dependencies": ["autoconf", "make"],
-    "date": "2024-06-13",
+    "date": "2024-10-25",
     "default": true,
     "dependencies": [
       "bash",
@@ -2090,7 +2090,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.45.2"
+    "version": "2.47.0"
   },
   "git-lfs": {
     "aliases": {
@@ -2124,7 +2124,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-07-04",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -2132,7 +2132,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.1.2"
+    "version": "4.2.0"
   },
   "glib": {
     "aliases": {
@@ -3304,12 +3304,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-05-16",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.8.1"
+    "version": "1.8.2"
   },
   "libgpg-error": {
     "aliases": {
@@ -3918,12 +3918,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2024-09-22",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.5.2"
+    "version": "1.6.0"
   },
   "miller": {
     "aliases": {
@@ -4239,7 +4239,7 @@
       "homebrew": true
     },
     "build_dependencies": ["gcc", "make", "pkg-config", "python3.12"],
-    "date": "2024-09-09",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4251,7 +4251,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.63.0"
+    "version": "1.64.0"
   },
   "nim": {
     "aliases": {
@@ -4348,12 +4348,12 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.99.0"
+    "version": "0.99.1"
   },
   "oniguruma": {
     "aliases": {
@@ -4390,7 +4390,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-10-14",
+    "date": "2024-10-25",
     "default": false,
     "prune": true,
     "supported": {
@@ -4400,7 +4400,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.8.1"
+    "version": "0.8.2"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4495,12 +4495,12 @@
     },
     "bin": ["openssl"],
     "build_dependencies": ["make", "perl", "pkg-config"],
-    "date": "2024-09-09",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.3.2"
+    "version": "3.4.0"
   },
   "oracle-instant-client": {
     "date": "2023-12-22",
@@ -4795,11 +4795,11 @@
     },
     "bin": ["procs"],
     "build_dependencies": ["rust"],
-    "date": "2024-07-31",
+    "date": "2024-10-25",
     "default": false,
     "prune": true,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.6"
+    "version": "0.14.8"
   },
   "proj": {
     "aliases": {
@@ -4934,7 +4934,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2024-10-16",
+    "date": "2024-10-25",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -4942,7 +4942,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.385"
+    "version": "1.1.386"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5509,12 +5509,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.7.0"
+    "version": "0.7.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5797,7 +5797,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5806,7 +5806,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.23.2"
+    "version": "8.24.1"
   },
   "sox": {
     "aliases": {
@@ -5957,6 +5957,19 @@
     "prune": true,
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
+  },
+  "streamlit": {
+    "bin": ["streamlit"],
+    "date": "2024-10-25",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": [
+      "https://pypi.org/project/streamlit/",
+      "https://streamlit.io/",
+      "https://github.com/streamlit/streamlit"
+    ],
+    "version": "1.39.0"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6331,12 +6344,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-10-19",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.24"
+    "version": "0.4.26"
   },
   "vim": {
     "aliases": {
@@ -6868,7 +6881,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-10-14",
+    "date": "2024-10-25",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6876,7 +6889,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.10.7"
+    "version": "2024.10.22"
   },
   "zellij": {
     "aliases": {
