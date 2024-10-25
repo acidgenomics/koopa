@@ -5958,6 +5958,19 @@
     "url": ["https://www.gnu.org/software/stow/"],
     "version": "2.3.1"
   },
+  "streamlit": {
+    "bin": ["streamlit"],
+    "date": "2024-10-25",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": [
+      "https://pypi.org/project/streamlit/",
+      "https://streamlit.io/",
+      "https://github.com/streamlit/streamlit"
+    ],
+    "version": "1.39.0"
+  },
   "subread": {
     "bin": ["featureCounts"],
     "date": "2023-10-16",

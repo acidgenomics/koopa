@@ -16084,6 +16084,13 @@ koopa_install_stow() {
         "$@"
 }
 
+koopa_install_streamlit() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='streamlit' \
+        "$@"
+}
+
 koopa_install_subread() {
     koopa_assert_is_not_aarch64
     koopa_install_app \
@@ -31125,6 +31132,12 @@ koopa_uninstall_starship() {
 koopa_uninstall_stow() {
     koopa_uninstall_app \
         --name='stow' \
+        "$@"
+}
+
+koopa_uninstall_streamlit() {
+    koopa_uninstall_app \
+        --name='streamlit' \
         "$@"
 }
 
