@@ -64,12 +64,12 @@
       "pkg-config",
       "python3.11"
     ],
-    "date": "2024-07-19",
+    "date": "2024-10-28",
     "dependencies": ["openssl3"],
     "default": false,
     "prune": true,
     "url": ["https://arrow.apache.org/"],
-    "version": "17.0.0"
+    "version": "18.0.0"
   },
   "apache-spark": {
     "aliases": {
@@ -940,11 +940,11 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-10-14",
+    "date": "2024-10-28",
     "default": true,
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-   "version": "2.52.4"
+   "version": "2.53.1"
   },
   "cli11": {
     "aliases": {
@@ -1851,11 +1851,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-09-09",
+    "date": "2024-10-28",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.55.0"
+    "version": "0.56.0"
   },
   "gatk": {
     "aliases": {
@@ -2045,11 +2045,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-10-25",
+    "date": "2024-10-28",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.60.0"
+    "version": "2.60.1"
   },
   "ghostscript": {
     "aliases": {
@@ -3304,12 +3304,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-10-25",
+    "date": "2024-10-28",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.8.2"
+    "version": "1.8.3"
   },
   "libgpg-error": {
     "aliases": {
@@ -4874,12 +4874,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-10-19",
+    "date": "2024-10-28",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.16"
+    "version": "2.4.17"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -6344,12 +6344,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-10-25",
+    "date": "2024-10-28",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.26"
+    "version": "0.4.27"
   },
   "vim": {
     "aliases": {
