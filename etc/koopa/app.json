@@ -85,7 +85,7 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2024-09-09",
+    "date": "2024-11-01",
     "default": false,
     "prune": true,
     "supported": {
@@ -95,7 +95,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.3.4"
+    "version": "1.3.5"
   },
   "apr": {
     "aliases": {
@@ -1289,11 +1289,11 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2024-03-16",
+    "date": "2024-11-01",
     "default": false,
     "prune": true,
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.30.0"
+    "version": "0.31.0"
   },
   "curl": {
     "aliases": {
@@ -1595,14 +1595,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-25",
+    "date": "2024-11-01",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.5"
+    "version": "0.20.6"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1665,6 +1665,7 @@
     "date": "2024-07-19",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
     "version": "2.3.0"
   },
@@ -1862,7 +1863,7 @@
       "conda": "gatk4"
     },
     "bin": ["gatk"],
-    "date": "2024-07-04",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1876,7 +1877,7 @@
       "https://gatk.broadinstitute.org/",
       "https://bioconda.github.io/recipes/gatk4/README.html"
     ],
-    "version": "4.5.0.0"
+    "version": "4.6.1.0"
   },
   "gawk": {
     "aliases": {
@@ -2124,7 +2125,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-10-25",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -2132,7 +2133,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.2.0"
+    "version": "4.2.1"
   },
   "glib": {
     "aliases": {
@@ -2641,11 +2642,11 @@
     },
     "bin": ["hexyl"],
     "build_dependencies": ["rust"],
-    "date": "2023-12-12",
+    "date": "2024-11-01",
     "default": false,
     "prune": true,
     "url": ["https://github.com/sharkdp/hexyl/"],
-    "version": "0.14.0"
+    "version": "0.15.0"
   },
   "hisat2": {
     "bin": ["hisat2"],
@@ -2718,12 +2719,12 @@
       "homebrew": true
     },
     "bin": ["http", "https"],
-    "date": "2024-07-12",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
-    "version": "3.2.3"
+    "version": "3.2.4"
   },
   "hugo": {
     "bin": ["hugo"],
@@ -2975,12 +2976,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-09-09",
+    "date": "2024-11-01",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.2.5"
+    "version": "4.3.0"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3304,12 +3305,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-10-28",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["libssh2", "openssl3", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.8.3"
+    "version": "1.8.4"
   },
   "libgpg-error": {
     "aliases": {
@@ -3324,7 +3325,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-08-19",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": [
       "libde265",
@@ -3334,7 +3335,7 @@
     ],
     "prune": false,
     "url": ["https://www.libde265.org/"],
-    "version": "1.18.2"
+    "version": "1.19.1"
   },
   "libiconv": {
     "aliases": {
@@ -3690,6 +3691,7 @@
       "zlib",
       "zstd"
     ],
+    "outdated": true,
     "prune": true,
     "url": ["https://llvm.org/"],
     "version": "19.1.0"
@@ -4839,12 +4841,12 @@
       "homebrew": true
     },
     "bin": ["py-spy"],
-    "date": "2022-09-30",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://github.com/benfred/py-spy/"],
-    "version": "0.3.14"
+    "version": "0.4.0"
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.12"],
@@ -4934,7 +4936,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2024-10-25",
+    "date": "2024-11-01",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -4942,7 +4944,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.386"
+    "version": "1.1.387"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5509,12 +5511,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-10-25",
+    "date": "2024-11-01",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.7.1"
+    "version": "0.7.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5695,7 +5697,7 @@
   },
   "seqkit": {
     "bin": ["seqkit"],
-    "date": "2024-04-08",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -5710,7 +5712,7 @@
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.8.1"
+    "version": "2.8.2"
   },
   "serf": {
     "aliases": {
@@ -5797,7 +5799,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-10-25",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5806,7 +5808,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.24.1"
+    "version": "8.25.1"
   },
   "sox": {
     "aliases": {
@@ -6062,11 +6064,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-07-04",
+    "date": "2024-11-01",
     "default": false,
     "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
-    "version": "2021.13.0"
+    "version": "2022.0.0"
   },
   "tcl-tk": {
     "aliases": {
@@ -6230,12 +6232,12 @@
   },
   "tryceratops": {
     "bin": ["tryceratops"],
-    "date": "2024-09-09",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/tryceratops/"],
-    "version": "2.4.0"
+    "version": "2.4.1"
   },
   "tuc": {
     "aliases": {
@@ -6344,12 +6346,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-10-28",
+    "date": "2024-11-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.27"
+    "version": "0.4.29"
   },
   "vim": {
     "aliases": {
