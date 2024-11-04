@@ -6262,7 +6262,7 @@
     "bin": ["tuc"],
     "build_dependencies": ["rust"],
     "date": "2024-01-02",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.2.0"
@@ -6400,7 +6400,7 @@
     },
     "bin": ["vd", "visidata"],
     "date": "2024-10-19",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
     "prune": true,
@@ -6429,7 +6429,7 @@
     "bin": ["walk"],
     "build_dependencies": ["go"],
     "date": "2024-07-04",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/antonmedv/walk/"],
     "version": "1.10.0"
@@ -6778,7 +6778,7 @@
     "bin": ["xsv"],
     "build_dependencies": ["rust"],
     "date": "2022-09-26",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/BurntSushi/xsv/"],
     "version": "0.13.0"
@@ -6978,7 +6978,7 @@
     "bin": ["zoxide"],
     "build_dependencies": ["rust"],
     "date": "2024-09-22",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
     "version": "0.9.6"
