@@ -3112,8 +3112,8 @@
       "homebrew": true
     },
     "bin": ["less"],
-    "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "build_dependencies": ["autoconf", "groff", "make"],
+    "date": "2024-11-04",
     "default": true,
     "dependencies": ["ncurses", "pcre2"],
     "man1": ["less.1"],
@@ -3123,7 +3123,7 @@
       "https://github.com/gwsw/less/",
       "https://ftp.gnu.org/gnu/less/?C=M;O=D"
     ],
-    "version": "643"
+    "version": "668"
   },
   "lesspipe": {
     "aliases": {
