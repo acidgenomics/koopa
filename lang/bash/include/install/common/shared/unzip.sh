@@ -40,9 +40,11 @@ main() {
             --replacement='' \
             "${dict['version']}"
     )"
-    dict['url']="https://downloads.sourceforge.net/project/infozip/\
-UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
-unzip${dict['version2']}.tar.gz"
+# >     dict['url']="https://downloads.sourceforge.net/project/infozip/\
+# > UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
+# > unzip${dict['version2']}.tar.gz"
+    dict['url']="https://koopa.acidgenomics.com/src/unzip/\
+${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_apply_debian_patch_set \
