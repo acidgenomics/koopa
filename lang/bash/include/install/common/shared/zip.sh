@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zip.
-    # @note Updated 2023-10-16.
+    # @note Updated 2024-11-04.
     #
     # Upstream is unmaintained so we use the Debian patchset:
     # https://packages.debian.org/sid/zip
@@ -41,9 +41,10 @@ main() {
             --replacement='' \
             "${dict['version']}"
     )"
-    dict['url']="https://downloads.sourceforge.net/project/infozip/\
-Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/\
-zip${dict['version2']}.tar.gz"
+# >     dict['url']="https://downloads.sourceforge.net/project/infozip/\
+# > Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/\
+# > zip${dict['version2']}.tar.gz"
+    dict['url']="koopa.acidgenomics.com/src/zip/${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_apply_debian_patch_set \
@@ -89,4 +90,3 @@ zip${dict['version2']}.tar.gz"
     "${app['zip']}" -v
     return 0
 }
-
