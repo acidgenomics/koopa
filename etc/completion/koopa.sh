@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-10-25.
+    # @note Updated 2024-11-04.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -138,6 +138,7 @@ _koopa_complete() {
                         'cli11'
                         'cmake'
                         'colorls'
+                        'commitizen'
                         'conda'
                         'coreutils'
                         'cpufetch'
