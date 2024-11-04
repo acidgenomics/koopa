@@ -5393,7 +5393,7 @@
     "bin": ["rg"],
     "build_dependencies": ["rust"],
     "date": "2024-09-09",
-    "default": true,
+    "default": false,
     "dependencies": ["pcre2"],
     "prune": true,
     "url": ["https://github.com/BurntSushi/ripgrep/"],
