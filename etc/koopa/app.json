@@ -997,6 +997,22 @@
     ],
     "version": "1.5.0"
   },
+  "commitizen": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["cz", "git-cz"],
+    "date": "2024-11-04",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": [
+      "https://pypi.org/project/commitizen/",
+      "https://github.com/commitizen-tools/commitizen/",
+      "https://commitizen-tools.github.io/commitizen/"
+    ],
+    "version": "3.30.0"
+  },
   "conda": {
     "bin": ["conda"],
     "date": "2024-10-16",
@@ -1432,14 +1448,14 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.12"],
-    "date": "2024-10-14",
+    "date": "2024-11-04",
     "default": false,
     "prune": true,
     "url": [
       "https://duckdb.org/",
       "https://github.com/duckdb/duckdb/"
     ],
-    "version": "1.1.2"
+    "version": "1.1.3"
   },
   "ed": {
     "aliases": {
@@ -2729,11 +2745,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-10-14",
+    "date": "2024-11-04",
     "default": false,
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.136.2"
+    "version": "0.137.0"
   },
   "hyperfine": {
     "aliases": {
@@ -6883,7 +6899,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-10-25",
+    "date": "2024-11-04",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6891,7 +6907,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.10.22"
+    "version": "2024.11.4"
   },
   "zellij": {
     "aliases": {
@@ -6899,11 +6915,11 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2024-11-04",
     "default": false,
     "prune": true,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.40.1"
+    "version": "0.41.1"
   },
   "zenith": {
     "aliases": {
