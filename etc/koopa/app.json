@@ -5690,7 +5690,7 @@
     "bin": ["sd"],
     "build_dependencies": ["rust"],
     "date": "2023-11-08",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/chmln/sd/"],
     "version": "1.0.0"
