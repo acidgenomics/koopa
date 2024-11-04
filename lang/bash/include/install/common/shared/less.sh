@@ -3,7 +3,7 @@
 main() {
     # """
     # Install less.
-    # @note Updated 2023-04-10.
+    # @note Updated 2024-11-04.
     #
     # Need to include autoconf and groff when building from GitHub.
     #
@@ -20,7 +20,10 @@ main() {
         "--prefix=${dict['prefix']}"
         '--with-regex=pcre2'
     )
-    dict['url']="https://www.greenwoodsoftware.com/less/less-608.tar.gz"
+# >     dict['url']="https://www.greenwoodsoftware.com/less/\
+# > less-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/gwsw/less/archive/refs/tags/\
+v${dict['version']}-rel.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
