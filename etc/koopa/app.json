@@ -5560,7 +5560,7 @@
       "rustfmt"
     ],
     "date": "2024-10-19",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
     "version": "1.82.0"
@@ -5690,7 +5690,7 @@
     "bin": ["sd"],
     "build_dependencies": ["rust"],
     "date": "2023-11-08",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/chmln/sd/"],
     "version": "1.0.0"
@@ -5958,7 +5958,7 @@
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
     "date": "2024-07-27",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.21.1"
@@ -6262,7 +6262,7 @@
     "bin": ["tuc"],
     "build_dependencies": ["rust"],
     "date": "2024-01-02",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.2.0"
@@ -6340,7 +6340,7 @@
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
     "build_dependencies": ["make", "patch"],
     "date": "2023-04-06",
-    "default": true,
+    "default": false,
     "man1": ["funzip.1", "unzip.1", "unzipsfx.1", "zipgrep.1", "zipinfo.1"],
     "prune": false,
     "url": ["http://infozip.sourceforge.net/UnZip.html"],
@@ -6400,7 +6400,7 @@
     },
     "bin": ["vd", "visidata"],
     "date": "2024-10-19",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
     "prune": true,
@@ -6429,7 +6429,7 @@
     "bin": ["walk"],
     "build_dependencies": ["go"],
     "date": "2024-07-04",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/antonmedv/walk/"],
     "version": "1.10.0"
@@ -6778,7 +6778,7 @@
     "bin": ["xsv"],
     "build_dependencies": ["rust"],
     "date": "2022-09-26",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/BurntSushi/xsv/"],
     "version": "0.13.0"
@@ -6942,7 +6942,7 @@
     "bin": ["zip"],
     "build_dependencies": ["make", "patch"],
     "date": "2023-10-09",
-    "default": true,
+    "default": false,
     "dependencies": ["bzip2"],
     "man1": ["zip.1"],
     "prune": false,
@@ -6978,7 +6978,7 @@
     "bin": ["zoxide"],
     "build_dependencies": ["rust"],
     "date": "2024-09-22",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
     "version": "0.9.6"
