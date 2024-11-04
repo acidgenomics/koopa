@@ -9,7 +9,7 @@
 koopa_switch_to_develop() {
     # """
     # Switch koopa install to development version.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-11-04.
     #
     # @seealso
     # - https://stackoverflow.com/questions/49297153/
@@ -32,11 +32,12 @@ koopa_switch_to_develop() {
             koopa_alert_note "Already on 'develop' branch."
             return 0
         fi
-        if koopa_is_github_ssh_enabled
-        then
-            "${app['git']}" remote set-url \
-                "${dict['origin']}" "${dict['ssh_url']}"
-        fi
+        # This can time out on some systems, so disabling.
+        # > if koopa_is_github_ssh_enabled
+        # > then
+        # >     "${app['git']}" remote set-url \
+        # >         "${dict['origin']}" "${dict['ssh_url']}"
+        # > fi
         "${app['git']}" remote set-branches \
             --add "${dict['origin']}" "${dict['branch']}"
         "${app['git']}" fetch "${dict['origin']}"
