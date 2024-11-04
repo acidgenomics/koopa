@@ -12937,6 +12937,13 @@ koopa_install_colorls() {
         "$@"
 }
 
+koopa_install_commitizen() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='commitizen' \
+        "$@"
+}
+
 koopa_install_conda_package() {
     local -A app dict
     local -a bin_names create_args pos
@@ -29331,6 +29338,12 @@ koopa_uninstall_cmake() {
 koopa_uninstall_colorls() {
     koopa_uninstall_app \
         --name='colorls' \
+        "$@"
+}
+
+koopa_uninstall_commitizen() {
+    koopa_uninstall_app \
+        --name='commitizen' \
         "$@"
 }
 
