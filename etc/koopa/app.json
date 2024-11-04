@@ -5560,7 +5560,7 @@
       "rustfmt"
     ],
     "date": "2024-10-19",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
     "version": "1.82.0"
@@ -5958,7 +5958,7 @@
     "bin": ["starship"],
     "build_dependencies": ["cmake", "rust"],
     "date": "2024-07-27",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.21.1"
