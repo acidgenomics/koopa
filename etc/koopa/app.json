@@ -1370,7 +1370,7 @@
     "bin": ["delta"],
     "build_dependencies": ["rust"],
     "date": "2024-09-22",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.18.2"
