@@ -4605,7 +4605,7 @@
   "pbzip2": {
     "bin": ["pbzip2"],
     "build_dependencies": ["make"],
-    "default": true,
+    "default": false,
     "dependencies": ["bzip2"],
     "man1": ["pbzip2.1"],
     "prune": true,
