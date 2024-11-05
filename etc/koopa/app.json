@@ -49,12 +49,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-09-22",
+    "date": "2024-11-05",
     "default": false,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.10.2"
+    "version": "2.10.3"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -324,7 +324,7 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-10-25",
+    "date": "2024-11-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -332,7 +332,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.18.10"
+    "version": "2.19.1"
   },
   "axel": {
     "aliases": {
@@ -2551,7 +2551,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2024-09-27",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2564,7 +2564,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "10.0.1"
+    "version": "10.1.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -5516,14 +5516,14 @@
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-05",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.3.3"
+    "version": "3.3.6"
   },
   "ruff": {
     "bin": ["ruff"],
@@ -5815,7 +5815,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-11-01",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5824,7 +5824,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.25.1"
+    "version": "8.25.2"
   },
   "sox": {
     "aliases": {
@@ -6362,12 +6362,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-11-01",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.29"
+    "version": "0.4.30"
   },
   "vim": {
     "aliases": {
