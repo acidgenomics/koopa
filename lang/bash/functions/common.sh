@@ -21845,9 +21845,7 @@ ${dict['py_maj_min_ver']}"
     then
         pip_args+=(
             "--python=${app['venv_python']}"
-            'pip'
-            'setuptools'
-            'wheel'
+            'pip' 'setuptools' 'wheel'
         )
         koopa_python_pip_install "${pip_args[@]}"
     fi
