@@ -841,11 +841,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2024-07-18",
+    "date": "2024-09-24",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2024-07-02"
+    "version": "2024-09-24"
   },
   "cairo": {
     "aliases": {
