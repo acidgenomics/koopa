@@ -21843,20 +21843,15 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        dict['pip_version']='24.2'
-        dict['setuptools_version']='75.1.0'
-        dict['wheel_version']='0.44.0'
-        pip_args=(
+        pip_args+=(
             "--python=${app['venv_python']}"
-            "pip==${dict['pip_version']}"
-            "setuptools==${dict['setuptools_version']}"
-            "wheel==${dict['wheel_version']}"
+            'pip' 'setuptools' 'wheel'
         )
         koopa_python_pip_install "${pip_args[@]}"
     fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
-        pip_args=("--python=${app['venv_python']}")
+        pip_args+=("--python=${app['venv_python']}")
         if [[ "${bool['binary']}" -eq 0 ]]
         then
             pip_args+=('--no-binary=:all:')
