@@ -49,12 +49,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-09-22",
+    "date": "2024-11-05",
     "default": false,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.10.2"
+    "version": "2.10.3"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -62,7 +62,7 @@
       "curl",
       "ninja",
       "pkg-config",
-      "python3.11"
+      "python3.12"
     ],
     "date": "2024-10-28",
     "dependencies": ["openssl3"],
@@ -324,7 +324,7 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-10-25",
+    "date": "2024-11-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -332,7 +332,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.18.10"
+    "version": "2.19.1"
   },
   "axel": {
     "aliases": {
@@ -354,12 +354,12 @@
       "homebrew": true
     },
     "bin": ["az"],
-    "date": "2024-06-21",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": ["python3.11"],
     "prune": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.61.0"
+    "version": "2.65.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -841,11 +841,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2024-07-18",
+    "date": "2024-09-24",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2024-07-02"
+    "version": "2024-09-24"
   },
   "cairo": {
     "aliases": {
@@ -1425,7 +1425,7 @@
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "c3193226df6e96207e8a619f3d7cd767409ab773"
+    "version": "cdc6b9ff52f0d49ac9b5a1150b0f772dad55acf1"
   },
   "du-dust": {
     "aliases": {
@@ -1611,14 +1611,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.6"
+    "version": "0.20.7"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1936,7 +1936,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-10-14",
+    "date": "2024-11-08",
     "default": false,
     "dependencies": [
       "bison",
@@ -1965,7 +1965,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.9.3"
+    "version": "3.10.0"
   },
   "gdbm": {
     "aliases": {
@@ -2062,11 +2062,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-10-28",
+    "date": "2024-11-08",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.60.1"
+    "version": "2.61.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2249,12 +2249,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2024-10-19",
+    "date": "2024-11-05",
     "default": false,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "497.0.0"
+    "version": "499.0.0"
   },
   "googletest": {
     "aliases": {
@@ -2551,7 +2551,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2024-09-27",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2564,7 +2564,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "10.0.1"
+    "version": "10.1.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2745,11 +2745,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-11-04",
+    "date": "2024-11-08",
     "default": false,
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.137.0"
+    "version": "0.138.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3341,7 +3341,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": false,
     "dependencies": [
       "libde265",
@@ -3351,7 +3351,7 @@
     ],
     "prune": false,
     "url": ["https://www.libde265.org/"],
-    "version": "1.19.1"
+    "version": "1.19.2"
   },
   "libiconv": {
     "aliases": {
@@ -4952,7 +4952,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -4960,7 +4960,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.387"
+    "version": "1.1.388"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5481,7 +5481,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2024-07-14",
+    "date": "2024-11-05",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5491,7 +5491,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2024.04.2+764"
+    "version": "2024.09.0+375"
   },
   "rsync": {
     "aliases": {
@@ -5516,14 +5516,14 @@
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-07-05",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.3.3"
+    "version": "3.3.6"
   },
   "ruff": {
     "bin": ["ruff"],
@@ -5815,7 +5815,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-11-01",
+    "date": "2024-11-05",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5824,7 +5824,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.25.1"
+    "version": "8.25.2"
   },
   "sox": {
     "aliases": {
@@ -6362,12 +6362,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.29"
+    "version": "0.5.0"
   },
   "vim": {
     "aliases": {

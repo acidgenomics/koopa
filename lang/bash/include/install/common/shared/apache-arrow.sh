@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Arrow.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-11-05.
     #
     # @seealso
     # - https://arrow.apache.org/install/
@@ -18,7 +18,7 @@ main() {
     build_deps+=(
         'curl'
         'pkg-config'
-        'python3.11'
+        'python3.12'
     )
     deps+=(
         # > 'llvm'
