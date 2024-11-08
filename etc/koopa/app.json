@@ -1611,14 +1611,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.6"
+    "version": "0.20.7"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1936,7 +1936,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-10-14",
+    "date": "2024-11-08",
     "default": false,
     "dependencies": [
       "bison",
@@ -1965,7 +1965,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.9.3"
+    "version": "3.10.0"
   },
   "gdbm": {
     "aliases": {
@@ -2062,11 +2062,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-10-28",
+    "date": "2024-11-08",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.60.1"
+    "version": "2.61.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2745,11 +2745,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-11-04",
+    "date": "2024-11-08",
     "default": false,
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.137.0"
+    "version": "0.138.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3341,7 +3341,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": false,
     "dependencies": [
       "libde265",
@@ -3351,7 +3351,7 @@
     ],
     "prune": false,
     "url": ["https://www.libde265.org/"],
-    "version": "1.19.1"
+    "version": "1.19.2"
   },
   "libiconv": {
     "aliases": {
@@ -4952,7 +4952,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2024-11-01",
+    "date": "2024-11-08",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -4960,7 +4960,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.387"
+    "version": "1.1.388"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -6362,12 +6362,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-11-05",
+    "date": "2024-11-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.4.30"
+    "version": "0.5.0"
   },
   "vim": {
     "aliases": {
