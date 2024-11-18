@@ -4240,7 +4240,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-08-01",
+    "date": "2024-11-18",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4248,7 +4248,7 @@
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "24.04.4"
+    "version": "24.10.0"
   },
   "nghttp2": {
     "aliases": {
