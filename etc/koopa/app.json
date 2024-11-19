@@ -4211,7 +4211,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2024-05-16",
+    "date": "2024-11-19",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4224,7 +4224,7 @@
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.10.0"
+    "version": "0.10.2"
   },
   "nettle": {
     "aliases": {
@@ -6376,7 +6376,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-05",
+    "date": "2024-11-19",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": [
@@ -6391,7 +6391,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1.0100"
+    "version": "9.1.0850"
   },
   "visidata": {
     "aliases": {
