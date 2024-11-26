@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-11-04.
+    # @note Updated 2024-11-26.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -74,7 +74,15 @@ _koopa_complete() {
                     args=('system' 'user')
                     ;;
                 'develop')
-                    args=('edit-app-json')
+                    args=(
+                        'cache-functions'
+                        'edit-app-json'
+                        'log'
+                        'prune-app-binaries'
+                        'push-all-app-builds'
+                        'push-app-build'
+                        'roff'
+                    )
                     ;;
                 'header')
                     args=('bash' 'posix' 'zsh')
@@ -513,30 +521,19 @@ _koopa_complete() {
                     ;;
                 'system')
                     args=(
-                        'cache-functions'
                         'check'
-                        'delete-cache'
                         'disable-passwordless-sudo'
                         'enable-passwordless-sudo'
-                        'find-non-symlinked-make-files'
-                        'fix-sudo-setrlimit-error'
                         'host-id'
                         'info'
-                        'log'
+                        'list'
                         'os-string'
                         'prefix'
-                        'prune-app-binaries'
                         'prune-apps'
-                        'push-all-app-builds'
-                        'push-app-build'
-                        'reload-shell'
-                        'roff'
-                        'set-permissions'
                         'switch-to-develop'
                         'test'
                         'version'
                         'which'
-                        'yq'
                         'zsh-compaudit-set-permissions'
                     )
                     if _koopa_is_macos
