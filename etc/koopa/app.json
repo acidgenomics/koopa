@@ -41,11 +41,11 @@
     "version": "1.4.1"
   },
   "anaconda": {
-    "date": "2024-07-08",
+    "date": "2024-11-25",
     "default": false,
     "prune": true,
     "url": ["https://repo.continuum.io/archive/"],
-    "version": "2024.06-1"
+    "version": "2024.10-1"
   },
   "apache-airflow": {
     "bin": ["airflow"],
@@ -64,12 +64,12 @@
       "pkg-config",
       "python3.12"
     ],
-    "date": "2024-10-28",
+    "date": "2024-11-25",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://arrow.apache.org/"],
-    "version": "18.0.0"
+    "version": "18.1.0"
   },
   "apache-spark": {
     "aliases": {
@@ -1015,11 +1015,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-10-16",
+    "date": "2024-11-25",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.7.1-0"
+    "version": "24.9.2-0"
   },
   "convmv": {
     "aliases": {
@@ -1305,11 +1305,11 @@
   "csvtk": {
     "bin": ["csvtk"],
     "build_dependencies": ["go"],
-    "date": "2024-11-01",
+    "date": "2024-11-25",
     "default": false,
     "prune": true,
     "url": ["https://github.com/shenwei356/csvtk/"],
-    "version": "0.31.0"
+    "version": "0.31.1"
   },
   "curl": {
     "aliases": {
@@ -1608,14 +1608,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-11-18",
+    "date": "2024-11-25",
     "default": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.8"
+    "version": "0.20.9"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2749,11 +2749,11 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-11-08",
+    "date": "2024-11-25",
     "default": false,
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.138.0"
+    "version": "0.139.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3345,12 +3345,12 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-11-18",
+    "date": "2024-11-25",
     "default": false,
     "dependencies": ["libde265", "libjpeg-turbo", "libpng", "zlib"],
     "prune": false,
     "url": ["https://www.libde265.org/"],
-    "version": "1.19.3"
+    "version": "1.19.5"
   },
   "libiconv": {
     "aliases": {
@@ -3862,7 +3862,7 @@
   },
   "mamba": {
     "bin": ["mamba"],
-    "date": "2024-11-18",
+    "date": "2024-11-25",
     "default": false,
     "dependencies": ["conda"],
     "prune": false,
@@ -3870,7 +3870,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.0.2"
+    "version": "2.0.4"
   },
   "man-db": {
     "aliases": {
@@ -3896,12 +3896,12 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2024-05-26",
+    "date": "2024-11-25",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.42.0"
+    "version": "0.43.0"
   },
   "mcfly": {
     "aliases": {
@@ -3921,12 +3921,12 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2024-11-18",
-    "default": false,
+    "date": "2024-11-25",
+    "default": true,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.6.1"
+    "version": "2.7.0"
   },
   "meson": {
     "aliases": {
@@ -4068,12 +4068,12 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-10-14",
+    "date": "2024-11-25",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.25.1"
+    "version": "1.25.2"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4211,7 +4211,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2024-05-16",
+    "date": "2024-11-19",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4224,7 +4224,7 @@
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.10.0"
+    "version": "0.10.2"
   },
   "nettle": {
     "aliases": {
@@ -4891,12 +4891,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-11-18",
+    "date": "2024-11-25",
     "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.18"
+    "version": "2.4.19"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5526,21 +5526,21 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-11-18",
+    "date": "2024-11-25",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.7.4"
+    "version": "0.8.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2024-10-19",
+    "date": "2024-11-25",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.58"
+    "version": "0.0.59"
   },
   "rust": {
     "aliases": {
@@ -6361,12 +6361,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-11-18",
+    "date": "2024-11-25",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.2"
+    "version": "0.5.4"
   },
   "vim": {
     "aliases": {
@@ -6376,7 +6376,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-03-05",
+    "date": "2024-11-19",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": [
@@ -6391,7 +6391,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1.0100"
+    "version": "9.1.0850"
   },
   "visidata": {
     "aliases": {
@@ -6914,11 +6914,11 @@
     },
     "bin": ["zellij"],
     "build_dependencies": ["rust"],
-    "date": "2024-11-04",
+    "date": "2024-11-25",
     "default": false,
     "prune": true,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.41.1"
+    "version": "0.41.2"
   },
   "zenith": {
     "aliases": {
