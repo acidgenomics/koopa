@@ -4799,12 +4799,12 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2024-07-15",
+    "date": "2024-11-26",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.3.3"
+    "version": "3.4.1"
   },
   "procs": {
     "aliases": {
