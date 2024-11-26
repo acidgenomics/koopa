@@ -1420,12 +1420,12 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2024-11-01",
+    "date": "2024-11-26",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "cdc6b9ff52f0d49ac9b5a1150b0f772dad55acf1"
+    "version": "1a004a1e3923c10fb66cfe56f874c5e5eea4c02c"
   },
   "du-dust": {
     "aliases": {
@@ -4240,7 +4240,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-11-18",
+    "date": "2024-11-26",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4248,7 +4248,7 @@
       "https://www.nextflow.io/",
       "https://github.com/nextflow-io/nextflow/"
     ],
-    "version": "24.10.0"
+    "version": "24.10.1"
   },
   "nghttp2": {
     "aliases": {

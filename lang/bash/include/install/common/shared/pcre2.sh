@@ -3,22 +3,27 @@
 main() {
     # """
     # Install PCRE2.
-    # @note Updated 2023-04-11.
+    # @note Updated 2024-11-26.
     #
     # @seealso
     # - https://www.pcre.org/
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/pcre2.rb
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only \
-        'autoconf' \
-        'automake' \
-        'libtool' \
+    local -a build_deps conf_args deps
+    build_deps=(
+        'autoconf'
+        'automake'
+        'libtool'
         'pkg-config'
-    koopa_activate_app \
-        'zlib' \
-        'bzip2'
+    )
+    deps=('zlib')
+    if ! koopa_is_macos
+    then
+        deps+=('bzip2')
+    fi
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
