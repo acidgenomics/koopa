@@ -29,10 +29,6 @@ koopa_cli_system() {
                     ;;
             esac
             ;;
-        'log')
-            dict['key']='view-latest-tmp-log-file'
-            shift 1
-            ;;
         'prefix')
             case "${2:-}" in
                 '')
@@ -57,33 +53,23 @@ koopa_cli_system() {
             dict['key']='which-realpath'
             shift 1
             ;;
-        'cache-functions' | \
         'disable-passwordless-sudo' | \
         'enable-passwordless-sudo' | \
-        'find-non-symlinked-make-files' | \
-        'host-id' | \
+        'hostname' | \
         'os-string' | \
-        'prune-app-binaries' | \
         'prune-apps' | \
-        'push-all-app-builds' | \
-        'push-app-build' | \
-        'reload-shell' | \
-        'roff' | \
-        'set-permissions' | \
         'switch-to-develop' | \
         'test' | \
-        'variable' | \
-        'variables' | \
         'zsh-compaudit-set-permissions')
             dict['key']="${1:?}"
             shift 1
             ;;
         # Defunct --------------------------------------------------------------
-        'conda-create-env')
-            koopa_defunct 'koopa app conda create-env'
+        'cache-functions')
+            koopa_defunct 'koopa develop cache-functions'
             ;;
-        'conda-remove-env')
-            koopa_defunct 'koopa app conda remove-env'
+        'edit-app-json')
+            koopa_defunct 'koopa develop edit-app-json'
             ;;
     esac
     # Platform specific.
