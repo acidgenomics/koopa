@@ -311,12 +311,12 @@
   },
   "aws-azure-login": {
     "bin": ["aws-azure-login"],
-    "date": "2024-06-20",
+    "date": "2024-11-16",
     "default": false,
     "dependencies": ["aws-cli", "node"],
     "prune": true,
     "url": ["https://www.npmjs.com/package/aws-azure-login"],
-    "version": "3.6.3"
+    "version": "3.6.4"
   },
   "aws-cli": {
     "aliases": {
