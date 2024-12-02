@@ -3922,7 +3922,7 @@
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
     "date": "2024-11-25",
-    "default": true,
+    "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://github.com/lunaryorn/mdcat/"],
