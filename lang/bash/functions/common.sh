@@ -298,7 +298,21 @@ koopa_add_conda_env_to_path() {
 }
 
 koopa_add_config_link() {
-    _koopa_add_config_link "$@"
+    local -A dict
+    koopa_assert_has_args_ge "$#" 2
+    dict['config_prefix']="$(koopa_config_prefix)"
+    while [[ "$#" -ge 2 ]]
+    do
+        local -A dict2
+        dict2['source_file']="${1:?}"
+        dict2['dest_name']="${2:?}"
+        shift 2
+        koopa_assert_is_existing "${dict2['source_file']}"
+        dict2['dest_file']="${dict['config_prefix']}/${dict2['dest_name']}"
+        koopa_is_symlink "${dict2['dest_file']}" && continue
+        koopa_ln --verbose "${dict2['source_file']}" "$dict2['dest_file']}"
+    done
+    return 0
 }
 
 koopa_add_make_prefix_link() {
@@ -13522,7 +13536,7 @@ koopa_install_gnu_app() {
                 shift 2
                 ;;
             '--non-gnu-mirror')
-                dict['mirror']='https://mirrors.sarata.com/non-gnu'
+                dict['mirror']='https://download.savannah.nongnu.org/releases'
                 shift 1
                 ;;
             '-D')
