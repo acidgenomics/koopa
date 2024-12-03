@@ -17,7 +17,7 @@ koopa_add_config_link() {
         koopa_assert_is_existing "${dict2['source_file']}"
         dict2['dest_file']="${dict['config_prefix']}/${dict2['dest_name']}"
         koopa_is_symlink "${dict2['dest_file']}" && continue
-        koopa_ln --verbose "${dict2['source_file']}" "$dict2['dest_file']}"
+        koopa_ln --verbose "${dict2['source_file']}" "${dict2['dest_file']}"
     done
     return 0
 }
