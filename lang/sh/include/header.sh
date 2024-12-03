@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-12-03.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -109,9 +109,6 @@ __koopa_activate_koopa() {
         || return 1
     if ! _koopa_is_subshell
     then
-        _koopa_add_config_link \
-            "${KOOPA_PREFIX}/activate" 'activate' \
-            || return 1
         _koopa_activate_today_bucket || return 1
         _koopa_check_multiple_users || return 1
     fi
