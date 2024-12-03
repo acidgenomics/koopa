@@ -1,11 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to rework the fixing ownership check for non-admin install.
-
 koopa_zsh_compaudit_set_permissions() {
     # """
     # Fix ZSH permissions, to ensure 'compaudit' checks pass during 'compinit'.
-    # @note Updated 2024-06-26.
+    # @note Updated 2024-12-03.
     #
     # @seealso
     # - echo "$FPATH" (string) or echo "$fpath" (array)
