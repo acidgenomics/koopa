@@ -3,7 +3,7 @@
 koopa_uninstall_koopa() {
     # """
     # Uninstall koopa.
-    # @note Updated 2024-07-05.
+    # @note Updated 2024-12-03.
     # """
     local -A bool dict
     bool['uninstall_koopa']=1
@@ -22,9 +22,8 @@ koopa_uninstall_koopa() {
     koopa_rm --verbose \
         "${dict['bootstrap_prefix']}" \
         "${dict['config_prefix']}"
-    if koopa_is_shared_install
+    if koopa_is_shared_install && koopa_is_admin
     then
-        koopa_assert_is_admin
         if koopa_is_linux
         then
             dict['profile_d_file']="$(koopa_linux_profile_d_file)"
