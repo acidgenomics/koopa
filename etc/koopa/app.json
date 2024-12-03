@@ -1639,7 +1639,7 @@
     "bin": ["fd"],
     "build_dependencies": ["rust"],
     "date": "2024-09-09",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/sharkdp/fd/"],
     "version": "10.2.0"
