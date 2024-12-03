@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME Hit this error when disabling google-drive:
+# NOTE Hit this error when disabling google-drive:
 # Unload failed: 5: Input/output error
-#
-# Can consider hiding error in launchctl step but that's a bit hacky. See
-# if there is a better way to force unload.
 
 koopa_macos_disable_plist_file() {
     # """
     # Disable a plist file correponding to a launch agent or daemon.
-    # @note Updated 2024-06-28.
+    # @note Updated 2024-12-03.
+    #
+    # @seealso
+    # - https://apple.stackexchange.com/questions/226253
+    # - https://uko.codes/killing-microsoft-defender-on-a-mac
     # """
     local -A app
     local file
@@ -43,18 +44,20 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
             koopa_assert_is_admin
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
+                koopa_alert "Unloading '${dict['enabled_file']}'."
                 koopa_sudo \
-                    "${app['launchctl']}" unload "${dict['enabled_file']}"
+                    "${app['launchctl']}" unload -w "${dict['enabled_file']}"
             fi
-            koopa_mv --sudo \
+            koopa_mv --sudo --verbose \
                 "${dict['enabled_file']}" \
                 "${dict['disabled_file']}"
         else
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
-                "${app['launchctl']}" unload "${dict['enabled_file']}"
+                koopa_alert "Unloading '${dict['enabled_file']}'."
+                "${app['launchctl']}" unload -w "${dict['enabled_file']}"
             fi
-            koopa_mv \
+            koopa_mv --verbose \
                 "${dict['enabled_file']}" \
                 "${dict['disabled_file']}"
         fi

@@ -208,7 +208,28 @@ koopa_macos_disable_gpg_updater() {
         '/Library/LaunchAgents/org.gpgtools.updater.plist'
 }
 
-koopa_macos_disable_microsoft_teams_updater() { # {[[1
+koopa_macos_disable_microsoft_defender() {
+    local -A app
+    local -a plist_files
+    koopa_assert_has_no_args "$#"
+    app['systemextensionsctl']="$(koopa_macos_locate_systemextensionsctl)"
+    koopa_assert_is_executable "${app[@]}"
+    plist_files=(
+        '/Library/LaunchAgents/com.microsoft.dlp.agent.plist'
+        '/Library/LaunchAgents/com.microsoft.wdav.tray.plist'
+        '/Library/LaunchDaemons/com.microsoft.dlp.daemon.plist'
+        '/Library/LaunchDaemons/com.microsoft.fresno.plist'
+        '/Library/LaunchDaemons/com.microsoft.fresno.uninstall.plist'
+    )
+    koopa_macos_disable_plist_file "${plist_files[@]}"
+    "${app['systemextensionsctl']}" list
+    koopa_alert_note "Reboot to disable \
+Microsoft Defender Endpoint Security Extension (com.microsoft.wdav.epsext) and \
+Microsoft Defender Network Extension (com.microsoft.wdav.netext)."
+    return 0
+}
+
+koopa_macos_disable_microsoft_teams_updater() {
     koopa_assert_has_no_args "$#"
     koopa_macos_disable_plist_file \
         '/Library/LaunchDaemons/com.microsoft.teams.TeamsUpdaterDaemon.plist'
@@ -248,18 +269,20 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
             koopa_assert_is_admin
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
+                koopa_alert "Unloading '${dict['enabled_file']}'."
                 koopa_sudo \
-                    "${app['launchctl']}" unload "${dict['enabled_file']}"
+                    "${app['launchctl']}" unload -w "${dict['enabled_file']}"
             fi
-            koopa_mv --sudo \
+            koopa_mv --sudo --verbose \
                 "${dict['enabled_file']}" \
                 "${dict['disabled_file']}"
         else
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
-                "${app['launchctl']}" unload "${dict['enabled_file']}"
+                koopa_alert "Unloading '${dict['enabled_file']}'."
+                "${app['launchctl']}" unload -w "${dict['enabled_file']}"
             fi
-            koopa_mv \
+            koopa_mv --verbose \
                 "${dict['enabled_file']}" \
                 "${dict['disabled_file']}"
         fi
@@ -369,6 +392,24 @@ koopa_macos_enable_gpg_updater() {
         '/Library/LaunchAgents/org.gpgtools.updater.plist'
 }
 
+koopa_macos_enable_microsoft_defender() {
+    local -A app
+    local -a plist_files
+    koopa_assert_has_no_args "$#"
+    app['systemextensionsctl']="$(koopa_macos_locate_systemextensionsctl)"
+    koopa_assert_is_executable "${app[@]}"
+    plist_files=(
+        '/Library/LaunchAgents/com.microsoft.dlp.agent.plist'
+        '/Library/LaunchAgents/com.microsoft.wdav.tray.plist'
+        '/Library/LaunchDaemons/com.microsoft.dlp.daemon.plist'
+        '/Library/LaunchDaemons/com.microsoft.fresno.plist'
+        '/Library/LaunchDaemons/com.microsoft.fresno.uninstall.plist'
+    )
+    koopa_macos_enable_plist_file "${plist_files[@]}"
+    "${app['systemextensionsctl']}" list
+    return 0
+}
+
 koopa_macos_enable_microsoft_teams_updater() {
     koopa_assert_has_no_args "$#"
     koopa_macos_enable_plist_file \
@@ -407,21 +448,23 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
         if [[ "${bool['sudo']}" -eq 1 ]]
         then
             koopa_assert_is_admin
-            koopa_mv --sudo \
+            koopa_mv --sudo --verbose \
                 "${dict['disabled_file']}" \
                 "${dict['enabled_file']}"
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
+                koopa_alert "Loading '${dict['enabled_file']}'."
                 koopa_sudo \
-                    "${app['launchctl']}" load "${dict['enabled_file']}"
+                    "${app['launchctl']}" load -w "${dict['enabled_file']}"
             fi
         else
-            koopa_mv \
+            koopa_mv --verbose \
                 "${dict['disabled_file']}" \
                 "${dict['enabled_file']}"
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
-                "${app['launchctl']}" load "${dict['enabled_file']}"
+                koopa_alert "Loading '${dict['enabled_file']}'."
+                "${app['launchctl']}" load -w "${dict['enabled_file']}"
             fi
         fi
     done
@@ -866,6 +909,12 @@ koopa_macos_locate_sw_vers() {
 koopa_macos_locate_sysctl() {
     koopa_locate_app \
         '/usr/sbin/sysctl' \
+        "$@"
+}
+
+koopa_macos_locate_systemextensionsctl() {
+    koopa_locate_app \
+        '/usr/bin/systemextensionsctl' \
         "$@"
 }
 
