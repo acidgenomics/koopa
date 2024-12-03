@@ -3,7 +3,7 @@
 koopa_install_gnu_app() {
     # """
     # Build and install a GNU package from source.
-    # @note Updated 2023-08-29.
+    # @note Updated 2024-12-03.
     #
     # Positional arguments are passed to 'conf_args' array.
     # """
@@ -84,7 +84,8 @@ koopa_install_gnu_app() {
                 # Alternative URLs:
                 # - https://download.savannah.gnu.org/releases
                 # - https://download.savannah.nongnu.org/releases
-                dict['mirror']='https://mirrors.sarata.com/non-gnu'
+                # - https://mirrors.sarata.com/non-gnu
+                dict['mirror']='https://download.savannah.nongnu.org/releases'
                 shift 1
                 ;;
             # Configuration passthrough support --------------------------------

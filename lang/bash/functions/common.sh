@@ -13536,7 +13536,7 @@ koopa_install_gnu_app() {
                 shift 2
                 ;;
             '--non-gnu-mirror')
-                dict['mirror']='https://mirrors.sarata.com/non-gnu'
+                dict['mirror']='https://download.savannah.nongnu.org/releases'
                 shift 1
                 ;;
             '-D')
