@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2024-06-20.
+    # @note Updated 2024-12-03.
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -57,7 +57,7 @@ main() {
         "--with-zlib=${dict['zlib']}"
         '--without-tcltk'
     )
-    dict['url']="${dict['url_base']}/git-${dict['version']}.tar.gz"
+    dict['url']="${dict['url_base']}/git-${dict['version']}.tar.xz"
     dict['htmldocs_url']="${dict['url_base']}/\
 git-htmldocs-${dict['version']}.tar.xz"
     dict['manpages_url']="${dict['url_base']}/\
