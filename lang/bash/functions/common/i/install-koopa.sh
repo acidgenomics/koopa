@@ -6,7 +6,7 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2024-10-21.
+    # @note Updated 2024-12-03.
     # """
     local -A bool dict
     bool['add_to_user_profile']=1
