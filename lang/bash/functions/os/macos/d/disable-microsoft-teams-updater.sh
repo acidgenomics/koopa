@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-koopa_macos_disable_microsoft_teams_updater() { # {[[1
+koopa_macos_disable_microsoft_teams_updater() {
     # """
     # Disable Microsoft Teams updater.
     # @note Updated 2022-02-16.

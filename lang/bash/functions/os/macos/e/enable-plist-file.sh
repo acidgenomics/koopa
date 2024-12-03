@@ -3,7 +3,7 @@
 koopa_macos_enable_plist_file() {
     # """
     # Enable a disabled plist file correponding to a launch agent or daemon.
-    # @note Updated 2024-06-28.
+    # @note Updated 2024-12-03.
     # """
     local -A app
     local file
@@ -35,21 +35,23 @@ disabled/$(koopa_basename "${dict['enabled_file']}")"
         if [[ "${bool['sudo']}" -eq 1 ]]
         then
             koopa_assert_is_admin
-            koopa_mv --sudo \
+            koopa_mv --sudo --verbose \
                 "${dict['disabled_file']}" \
                 "${dict['enabled_file']}"
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
+                koopa_alert "Loading '${dict['enabled_file']}'."
                 koopa_sudo \
-                    "${app['launchctl']}" load "${dict['enabled_file']}"
+                    "${app['launchctl']}" load -w "${dict['enabled_file']}"
             fi
         else
-            koopa_mv \
+            koopa_mv --verbose \
                 "${dict['disabled_file']}" \
                 "${dict['enabled_file']}"
             if [[ "${bool['daemon']}" -eq 1 ]]
             then
-                "${app['launchctl']}" load "${dict['enabled_file']}"
+                koopa_alert "Loading '${dict['enabled_file']}'."
+                "${app['launchctl']}" load -w "${dict['enabled_file']}"
             fi
         fi
     done
