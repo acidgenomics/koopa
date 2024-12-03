@@ -1434,7 +1434,7 @@
     "bin": ["dust"],
     "build_dependencies": ["rust"],
     "date": "2024-07-19",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": [
       "https://github.com/bootandy/dust/",
@@ -1514,7 +1514,7 @@
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
     "date": "2024-03-25",
-    "default": true,
+    "default": false,
     "dependencies": [
       "gmp",
       "gnutls",
@@ -1609,7 +1609,7 @@
     "bin": ["eza"],
     "build_dependencies": ["rust"],
     "date": "2024-12-03",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
@@ -1639,7 +1639,7 @@
     "bin": ["fd"],
     "build_dependencies": ["rust"],
     "date": "2024-09-09",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/sharkdp/fd/"],
     "version": "10.2.0"
@@ -3912,7 +3912,7 @@
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
     "date": "2024-08-19",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.9.2"
