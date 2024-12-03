@@ -1434,7 +1434,7 @@
     "bin": ["dust"],
     "build_dependencies": ["rust"],
     "date": "2024-07-19",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": [
       "https://github.com/bootandy/dust/",
@@ -1609,7 +1609,7 @@
     "bin": ["eza"],
     "build_dependencies": ["rust"],
     "date": "2024-12-03",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
@@ -3912,7 +3912,7 @@
     "bin": ["mcfly"],
     "build_dependencies": ["rust"],
     "date": "2024-08-19",
-    "default": true,
+    "default": false,
     "prune": true,
     "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.9.2"
