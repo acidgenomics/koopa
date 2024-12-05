@@ -5332,11 +5332,10 @@ koopa_cli_system() {
             dict['key']="${1:?}"
             shift 1
             ;;
-        'cache-functions')
-            koopa_defunct 'koopa develop cache-functions'
-            ;;
-        'edit-app-json')
-            koopa_defunct 'koopa develop edit-app-json'
+        'cache-functions' | \
+        'edit-app-json' | \
+        'prune-app-binaries')
+            koopa_defunct "koopa develop ${1:?}"
             ;;
     esac
     if [[ -z "${dict['key']}" ]]
@@ -12442,8 +12441,12 @@ ${dict['version2']}"
         )
         [[ -n "${KOOPA_CAN_INSTALL_BINARY:-}" ]] && \
             env_vars+=("KOOPA_CAN_INSTALL_BINARY=${KOOPA_CAN_INSTALL_BINARY:?}")
+        [[ -n "${AWS_CA_BUNDLE:-}" ]] && \
+            env_vars+=("AWS_CA_BUNDLE=${AWS_CA_BUNDLE:-}")
         [[ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ]] && \
             env_vars+=("DEFAULT_CA_BUNDLE_PATH=${DEFAULT_CA_BUNDLE_PATH:-}")
+        [[ -n "${NODE_EXTRA_CA_CERTS:-}" ]] && \
+            env_vars+=("NODE_EXTRA_CA_CERTS=${NODE_EXTRA_CA_CERTS:-}")
         [[ -n "${REQUESTS_CA_BUNDLE:-}" ]] && \
             env_vars+=("REQUESTS_CA_BUNDLE=${REQUESTS_CA_BUNDLE:-}")
         [[ -n "${SSL_CERT_FILE:-}" ]] && \
