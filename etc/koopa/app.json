@@ -26,7 +26,7 @@
   "agat": {
     "bin": ["agat"],
     "build_dependencies": ["patch"],
-    "date": "2024-09-22",
+    "date": "2024-12-06",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -38,7 +38,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/NBISweden/AGAT/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "anaconda": {
     "date": "2024-11-25",
@@ -3781,7 +3781,7 @@
   },
   "luigi": {
     "bin": ["luigi"],
-    "date": "2024-09-09",
+    "date": "2024-12-06",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -3789,7 +3789,7 @@
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.5.2"
+    "version": "3.6.0"
   },
   "lz4": {
     "aliases": {
@@ -4893,12 +4893,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-12-05",
+    "date": "2024-12-06",
     "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.20"
+    "version": "2.4.21"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
