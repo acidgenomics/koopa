@@ -2998,12 +2998,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-12-05",
+    "date": "2024-12-10",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.3.2"
+    "version": "4.3.3"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4010,12 +4010,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-10-14",
+    "date": "2024-12-10",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.34.1"
+    "version": "2.35.0"
   },
   "mpc": {
     "aliases": {
@@ -4551,12 +4551,12 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2024-10-14",
+    "date": "2024-12-10",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.5"
+    "version": "3.6"
   },
   "parallel": {
     "aliases": {
@@ -4761,12 +4761,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-10-19",
+    "date": "2024-12-10",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.4"
+    "version": "1.8.5"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
@@ -4893,12 +4893,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-12-06",
+    "date": "2024-12-10",
     "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.21"
+    "version": "2.4.22"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -6363,12 +6363,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-12-05",
+    "date": "2024-12-10",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.6"
+    "version": "0.5.7"
   },
   "vim": {
     "aliases": {
@@ -6416,7 +6416,7 @@
       "homebrew": true
     },
     "bin": ["vulture"],
-    "date": "2024-10-14",
+    "date": "2024-12-10",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6424,7 +6424,7 @@
       "https://pypi.org/project/vulture/",
       "https://github.com/jendrikseipp/vulture/"
     ],
-    "version": "2.13"
+    "version": "2.14"
   },
   "walk": {
     "bin": ["walk"],
@@ -6889,18 +6889,18 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2024-11-18",
+    "date": "2024-12-10",
     "default": true,
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.44.5"
+    "version": "4.44.6"
   },
   "yt-dlp": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-12-05",
+    "date": "2024-12-10",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6908,7 +6908,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.12.3"
+    "version": "2024.12.6"
   },
   "zellij": {
     "aliases": {
