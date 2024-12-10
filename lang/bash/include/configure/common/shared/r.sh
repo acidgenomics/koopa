@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure R.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-12-10.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -36,13 +36,12 @@ main() {
     fi
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_macos
-    then
-        readarray -t deps <<< "$(koopa_app_dependencies 'r')"
-        koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
-        koopa_cli_install "${deps[@]}"
-
-    fi
+    # > if [[ "${bool['system']}" -eq 1 ]] && koopa_is_macos
+    # > then
+    # >     readarray -t deps <<< "$(koopa_app_dependencies 'r')"
+    # >     koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
+    # >     koopa_cli_install "${deps[@]}"
+    # > fi
     if [[ "${bool['system']}" -eq 1 ]]
     then
         dict['local_r']='/usr/local/lib/R'
