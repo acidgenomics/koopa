@@ -65,11 +65,10 @@ koopa_cli_system() {
             shift 1
             ;;
         # Defunct --------------------------------------------------------------
-        'cache-functions')
-            koopa_defunct 'koopa develop cache-functions'
-            ;;
-        'edit-app-json')
-            koopa_defunct 'koopa develop edit-app-json'
+        'cache-functions' | \
+        'edit-app-json' | \
+        'prune-app-binaries')
+            koopa_defunct "koopa develop ${1:?}"
             ;;
     esac
     # Platform specific.
