@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2024-09-24.
+    # @note Updated 2024-12-10.
     #
     # @section Package library location:
     #
@@ -98,10 +98,7 @@ koopa_r_configure_environ() {
     bool['system']=0
     bool['use_apps']=1
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
-    then
-        bool['use_apps']=0
-    fi
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     app['conda']="$(koopa_locate_conda)"
     koopa_assert_is_executable "${app[@]}"
     if [[ "${bool['use_apps']}" -eq 1 ]]

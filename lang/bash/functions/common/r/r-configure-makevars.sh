@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Need to not use sudo permission on linux here:
-# /opt/koopa/app/r/4.3.1/lib/R/etc/Makevars.site
-# Need to check our boolean flag handling here.
-
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2023-10-11.
+    # @note Updated 2024-12-10.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -35,20 +31,11 @@ koopa_r_configure_makevars() {
     koopa_assert_is_executable "${app[@]}"
     bool['system']=0
     bool['use_apps']=1
-    bool['use_openmp']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if [[ "${bool['system']}" -eq 1 ]]
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
+    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_macos
     then
-        if koopa_is_linux
-        then
-            bool['use_apps']=0
-        elif koopa_is_macos
-        then
-            bool['use_openmp']=1
-        fi
-    fi
-    if koopa_is_macos && [[ "${bool['use_openmp']}" -eq 1 ]]
-    then
+        # Ensure we configure OpenMP for system clang.
         koopa_assert_is_file '/usr/local/include/omp.h'
         # Can also set 'SHLIB_OPENMP_CXXFLAGS', 'SHLIB_OPENMP_FFLAGS'.
         conf_dict['shlib_openmp_cflags']='-Xclang -fopenmp'

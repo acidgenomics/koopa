@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-12-10.
     #
     # The default Java path differs depending on the system.
     #
@@ -39,7 +39,7 @@ koopa_r_configure_java() {
     if [[ "${bool['system']}" -eq 1 ]]
     then
         koopa_has_standard_umask || return 0
-        koopa_is_linux && bool['use_apps']=0
+        bool['use_apps']=0
     fi
     if [[ "${bool['use_apps']}" -eq 1 ]]
     then

@@ -3,7 +3,7 @@
 koopa_r_configure_ldpaths() {
     # """
     # Configure 'ldpaths' file for system R LD linker configuration.
-    # @note Updated 2024-06-27.
+    # @note Updated 2024-12-10.
     #
     # For some reason, 'LD_LIBRARY_PATH' doesn't get sorted alphabetically
     # correctly on macOS.
@@ -33,10 +33,7 @@ koopa_r_configure_ldpaths() {
     bool['use_apps']=1
     bool['use_local']=0
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
-    if [[ "${bool['system']}" -eq 1 ]] && koopa_is_linux
-    then
-        bool['use_apps']=0
-    fi
+    [[ "${bool['system']}" -eq 1 ]] && bool['use_apps']=0
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
