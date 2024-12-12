@@ -22469,10 +22469,15 @@ koopa_r_configure_java() {
             dict['java_home']='/usr/lib/jvm/default-java'
         elif koopa_is_macos
         then
-            dict['java_home']="$(/usr/libexec/java_home)"
+            dict['java_home']="$(/usr/libexec/java_home || true)"
         fi
     fi
-    koopa_assert_is_dir "${dict['java_home']}"
+    if [[ ! -d "${dict['java_home']}" ]]
+    then
+        koopa_alert_note "Failed to detected system Java. \
+Skipping configuration."
+        return 0
+    fi
     app['jar']="${dict['java_home']}/bin/jar"
     app['java']="${dict['java_home']}/bin/java"
     app['javac']="${dict['java_home']}/bin/javac"
