@@ -3,7 +3,7 @@
 koopa_r_configure_java() {
     # """
     # Update R Java configuration.
-    # @note Updated 2024-12-10.
+    # @note Updated 2024-12-12.
     #
     # The default Java path differs depending on the system.
     #
@@ -50,6 +50,7 @@ koopa_r_configure_java() {
             dict['java_home']='/usr/lib/jvm/default-java'
         elif koopa_is_macos
         then
+            # NOTE This will error if Temurin cask isn't installed.
             dict['java_home']="$(/usr/libexec/java_home)"
         fi
     fi
