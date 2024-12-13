@@ -75,7 +75,7 @@ main() {
     koopa_h2 'Finder'
     koopa_alert "Enabling visibility of '/Volumes' in Finder."
     koopa_sudo "${app['chflags']}" nohidden '/Volumes'
-    # > koopa_h2 'Spotlight'
+    koopa_h2 'Spotlight'
     # > koopa_alert 'Disabling Spotlight.'
     # Load new settings before rebuilding the index.
     # > "${app['killall']" 'mds' > /dev/null 2>&1
@@ -87,6 +87,7 @@ main() {
     # Hide Spotlight tray-icon (and subsequent helper).
     # > koopa_chmod --sudo '0600' \
     # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
+    "${app['mdutil']}" -s /
     koopa_h2 'Time Machine'
     koopa_alert 'Disabling Time Machine backups.'
     koopa_sudo "${app['tmutil']}" disable
