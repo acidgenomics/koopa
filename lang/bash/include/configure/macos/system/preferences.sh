@@ -75,12 +75,12 @@ main() {
     koopa_h2 'Finder'
     koopa_alert "Enabling visibility of '/Volumes' in Finder."
     koopa_sudo "${app['chflags']}" nohidden '/Volumes'
-    koopa_h2 'Spotlight'
-    koopa_alert 'Disabling Spotlight.'
+    # > koopa_h2 'Spotlight'
+    # > koopa_alert 'Disabling Spotlight.'
     # Load new settings before rebuilding the index.
     # > "${app['killall']" 'mds' > /dev/null 2>&1
     # Ensure indexing is disabled for the main volume.
-    koopa_sudo "${app['mdutil']}" -i off '/'
+    # > koopa_sudo "${app['mdutil']}" -i off '/'
     # For reference, how to rebuild the index from scratch.
     # > koopa_sudo "${app['mdutil']}" -E '/'
     # > "${app['mdutil']}" -s '/'
