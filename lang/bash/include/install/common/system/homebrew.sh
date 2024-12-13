@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Homebrew.
-    # @note Updated 2023-05-20.
+    # @note Updated 2024-12-13.
     #
     # @seealso
     # - https://docs.brew.sh/Installation
@@ -33,7 +33,8 @@ main() {
 master/${dict['file']}"
     koopa_download "${dict['url']}" "${dict['file']}"
     koopa_chmod 'u+x' "${dict['file']}"
-    NONINTERACTIVE=1 "./${dict['file']}" || true
+    koopa_sudo_trigger
+    NONINTERACTIVE=1 "./${dict['file']}"
     app['brew']="$(koopa_locate_brew)"
     koopa_assert_is_executable "${app[@]}"
     koopa_brew_reset_permissions
