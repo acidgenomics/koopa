@@ -6,13 +6,12 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2024-12-03.
+    # @note Updated 2024-12-13.
     # """
     local -A bool dict
     bool['add_to_user_profile']=1
     bool['bootstrap']=0
     bool['interactive']=1
-    bool['passwordless_sudo']=0
     bool['shared']=0
     bool['verbose']=0
     dict['config_prefix']="$(koopa_config_prefix)"
@@ -54,14 +53,6 @@ koopa_install_koopa() {
                 ;;
             '--non-interactive')
                 bool['interactive']=0
-                shift 1
-                ;;
-            '--passwordless-sudo')
-                bool['passwordless_sudo']=1
-                shift 1
-                ;;
-            '--no-passwordless-sudo')
-                bool['passwordless_sudo']=0
                 shift 1
                 ;;
             '--shared')
@@ -125,14 +116,6 @@ koopa_install_koopa() {
         then
             bool['shared']=0
         fi
-        if [[ "${bool['shared']}" -eq 1 ]]
-        then
-            bool['passwordless_sudo']="$( \
-                koopa_read_yn \
-                    'Enable passwordless sudo' \
-                    "${bool['passwordless_sudo']}" \
-            )"
-        fi
         if ! koopa_is_defined_in_user_profile && \
             [[ ! -L "${dict['user_profile']}" ]]
         then
@@ -175,16 +158,9 @@ koopa_install_koopa() {
         koopa_cp "${dict['source_prefix']}" "${dict['prefix']}"
     fi
     export KOOPA_PREFIX="${dict['prefix']}"
-    if [[ "${bool['shared']}" -eq 1 ]]
+    if [[ "${bool['shared']}" -eq 1 ]] && koopa_is_linux
     then
-        if [[ "${bool['passwordless_sudo']}" -eq 1 ]]
-        then
-            koopa_enable_passwordless_sudo
-        fi
-        if koopa_is_linux
-        then
-            koopa_linux_update_profile_d
-        fi
+        koopa_linux_update_profile_d
     fi
     if [[ "${bool['add_to_user_profile']}" -eq 1 ]]
     then

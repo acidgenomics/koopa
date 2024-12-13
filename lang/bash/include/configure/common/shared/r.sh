@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure R.
-    # @note Updated 2024-12-10.
+    # @note Updated 2024-12-12.
     #
     # Add shared R configuration symlinks in '${R_HOME}/etc'.
     #
@@ -12,7 +12,6 @@ main() {
     # - https://cran.r-project.org/bin/linux/debian/
     # """
     local -A app bool dict
-    local -a deps
     koopa_assert_has_args_le "$#" 1
     app['r']="${1:-}"
     [[ -z "${app['r']}" ]] && app['r']="$(koopa_locate_r)"
@@ -36,12 +35,6 @@ main() {
     fi
     koopa_alert_configure_start "${dict['name']}" "${app['r']}"
     koopa_assert_is_dir "${dict['r_prefix']}"
-    # > if [[ "${bool['system']}" -eq 1 ]] && koopa_is_macos
-    # > then
-    # >     readarray -t deps <<< "$(koopa_app_dependencies 'r')"
-    # >     koopa_dl 'R dependencies' "$(koopa_to_string "${deps[@]}")"
-    # >     koopa_cli_install "${deps[@]}"
-    # > fi
     if [[ "${bool['system']}" -eq 1 ]]
     then
         dict['local_r']='/usr/local/lib/R'
