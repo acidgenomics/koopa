@@ -3389,7 +3389,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-09-22",
+    "date": "2024-12-13",
     "default": false,
     "prune": false,
     "url": [
@@ -3397,7 +3397,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.0.4"
+    "version": "3.1.0"
   },
   "libksba": {
     "aliases": {
@@ -6900,7 +6900,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-12-10",
+    "date": "2024-12-13",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6908,7 +6908,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.12.6"
+    "version": "2024.12.13"
   },
   "zellij": {
     "aliases": {
