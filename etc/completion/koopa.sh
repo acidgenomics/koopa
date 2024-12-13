@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-11-26.
+    # @note Updated 2024-12-13.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -568,7 +568,7 @@ _koopa_complete() {
                             then
                                 args+=('lmod' 'rstudio-server' 'sshd')
                             fi
-                            if _koopa_is_debian_like || _koopa_is_macos
+                            if _koopa_is_debian_like
                             then
                                 args+=('base')
                             elif _koopa_is_macos
