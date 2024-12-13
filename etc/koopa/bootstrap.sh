@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2024-09-22.
+# @note Updated 2024-12-13.
 # """
 
 # Can debug with:
@@ -223,6 +223,7 @@ export CPU_COUNT PATH PREFIX
 
 main() {
     printf 'Installing koopa bootstrap in %s.\n' "$PREFIX"
+    printf 'This will install openssl3, zlib, bash, python and coreutils.\n'
     rm -fr "$PREFIX"
     mkdir -p "$PREFIX"
     (
