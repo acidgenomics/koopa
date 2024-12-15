@@ -22,6 +22,7 @@ main() {
     app['pmset']="$(koopa_macos_locate_pmset)"
     app['tmutil']="$(koopa_macos_locate_tmutil)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_sudo_trigger
     koopa_h2 'Startup and Lock Screen'
     # For reference, here's how to set computer name from the command line.
     # > local comp_name
