@@ -3,19 +3,20 @@
 main() {
     # """
     # Install gettext.
-    # @note Updated 2023-12-22.
+    # @note Updated 2024-12-24.
     #
     # Note that 'libintl.h' is included with glibc.
     #
     # Potentially useful configuration options:
-    # * '--with-included-glib'?
+    # * '--with-included-glib'
     # * '--with-included-libxml'
     # * '--with-libtermcap-prefix[=DIR]'
     # * '--with-libtextstyle-prefix[=DIR]'
     # * '--without-libintl-prefix'
     #
     # @seealso
-    # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/gettext.rb
+    # - https://github.com/conda-forge/gettext-feedstock
+    # - https://formulae.brew.sh/formula/gettext
     # - https://gcc-help.gcc.gnu.narkive.com/CYebbZqg/
     #     cc1-undefined-reference-to-libintl-textdomain
     # """
@@ -28,8 +29,11 @@ main() {
         'libunistring'
         'ncurses'
         'icu4c'
-        'libxml2'
     )
+    if ! koopa_is_macos
+    then
+        deps+=('libxml2')
+    fi
     koopa_activate_app "${deps[@]}"
     dict['bison']="$(koopa_app_prefix 'bison')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
@@ -38,22 +42,39 @@ main() {
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
-    conf_args=(
+    conf_args+=(
+        # > '--disable-debug'
+        # > '--disable-silent-rules'
+        # > '--enable-nls'
+        # > '--with-included-gettext'
+        # > '--with-included-glib'
+        # > '--with-included-libcroco'
+        # > '--without-cvs'
+        # > '--without-git'
+        # > '--without-xz'
         '--disable-csharp'
-        '--disable-debug'
         '--disable-dependency-tracking'
         '--disable-java'
-        '--disable-silent-rules'
+        '--disable-native-java'
+        '--disable-openmp'
         '--disable-static'
-        '--enable-nls'
-        '--with-emacs'
-        '--with-included-gettext'
+        '--enable-fast-install'
         "--with-bison-prefix=${dict['bison']}"
         "--with-libiconv-prefix=${dict['libiconv']}"
         "--with-libncurses-prefix=${dict['ncurses']}"
         "--with-libunistring-prefix=${dict['libunistring']}"
-        "--with-libxml2-prefix=${dict['libxml2']}"
+        '--without-emacs'
     )
+    # macOS iconv implementation is slightly broken since Sonoma.
+    # upstream bug report, https://savannah.gnu.org/bugs/index.php?66541
+    if koopa_is_macos
+    then
+        export am_cv_func_iconv_works='yes'
+    else
+        conf_args+=(
+            "--with-libxml2-prefix=${dict['libxml2']}"
+        )
+    fi
     for conf_arg in "${conf_args[@]}"
     do
         install_args+=('-D' "$conf_arg")
