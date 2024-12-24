@@ -16,7 +16,7 @@
       "wget"
     ],
     "date": "2023-04-11",
-    "default": true,
+    "default": false,
     "dependencies": ["perl"],
     "man1": ["ack.1"],
     "prune": true,
@@ -49,12 +49,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2024-11-05",
+    "date": "2024-12-19",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.10.3"
+    "version": "2.10.4"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -161,11 +161,11 @@
       "homebrew": true
     },
     "bin": ["asdf"],
-    "date": "2024-09-09",
+    "date": "2024-12-19",
     "default": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.14.1"
+    "version": "0.15.0"
   },
   "aspell": {
     "aliases": {
@@ -940,11 +940,11 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-12-03",
+    "date": "2024-12-19",
     "default": true,
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.55.0"
+    "version": "2.56.0"
   },
   "cli11": {
     "aliases": {
@@ -1392,11 +1392,11 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-25",
+    "date": "2024-12-23",
     "default": false,
     "prune": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.61.0"
+    "version": "0.62.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1420,12 +1420,12 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2024-12-03",
+    "date": "2024-12-19",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "11baa0f27e2e31b4bdb5b93ffe5f15f50db93afd"
+    "version": "639813bf3891b3f0f56a2e260db2c4bb4454ba4f"
   },
   "du-dust": {
     "aliases": {
@@ -1608,14 +1608,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-12-12",
+    "date": "2024-12-19",
     "default": false,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.12"
+    "version": "0.20.13"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1869,7 +1869,7 @@
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.56.3"
+    "version": "0.57.0"
   },
   "gatk": {
     "aliases": {
@@ -2066,11 +2066,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-12-05",
+    "date": "2024-12-23",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.63.2"
+    "version": "2.64.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2749,12 +2749,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2024-11-25",
+    "date": "2024-12-19",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.139.0"
+    "version": "0.140.0"
   },
   "hyperfine": {
     "aliases": {
@@ -2998,12 +2998,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2024-12-10",
+    "date": "2024-12-19",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.3.3"
+    "version": "4.3.4"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3090,14 +3090,14 @@
       "homebrew": true
     },
     "build_dependencies": ["gnupg", "libarchive", "xz"],
-    "date": "2024-07-04",
+    "date": "2024-12-19",
     "default": false,
     "prune": true,
     "url": [
       "https://wiki.dlang.org/LDC",
       "https://github.com/ldc-developers/ldc/"
     ],
-    "version": "1.39.0"
+    "version": "1.40.0"
   },
   "ldns": {
     "aliases": {
@@ -3137,11 +3137,11 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2024-11-18",
+    "date": "2024-12-23",
     "default": true,
     "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.16"
+    "version": "2.17"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3216,11 +3216,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2024-10-14",
+    "date": "2024-12-19",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.22"
+    "version": "1.23"
   },
   "libedit": {
     "aliases": {
@@ -3715,7 +3715,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-10-14",
+    "date": "2024-12-19",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "outdated": true,
@@ -3727,7 +3727,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.53"
+    "version": "8.7.55"
   },
   "lsd": {
     "aliases": {
@@ -3923,12 +3923,12 @@
     },
     "bin": ["mdcat"],
     "build_dependencies": ["rust"],
-    "date": "2024-11-25",
+    "date": "2024-12-19",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.7.0"
+    "version": "2.7.1"
   },
   "meson": {
     "aliases": {
@@ -3937,12 +3937,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2024-10-25",
+    "date": "2024-12-19",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   "miller": {
     "aliases": {
@@ -4010,12 +4010,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-12-10",
+    "date": "2024-12-19",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.35.0"
+    "version": "2.35.1"
   },
   "mpc": {
     "aliases": {
@@ -4070,12 +4070,15 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-11-25",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.25.2"
+    "url": [
+      "https://pypi.org/project/multiqc/",
+      "https://bioconda.github.io/recipes/multiqc/README.html"
+    ],
+    "version": "1.26"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4367,12 +4370,12 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-11-18",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.100.0"
+    "version": "0.101.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4409,7 +4412,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-11-18",
+    "date": "2024-12-19",
     "default": false,
     "prune": true,
     "supported": {
@@ -4419,7 +4422,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.8.3"
+    "version": "0.9.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4893,12 +4896,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-12-10",
+    "date": "2024-12-23",
     "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.22"
+    "version": "2.5.0"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4929,12 +4932,12 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-12-03",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.3.2"
+    "version": "3.3.3"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -4953,7 +4956,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2024-12-05",
+    "date": "2024-12-19",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -4961,7 +4964,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.390"
+    "version": "1.1.391"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5369,7 +5372,7 @@
       "wget"
     ],
     "date": "2023-04-11",
-    "default": true,
+    "default": false,
     "dependencies": ["perl"],
     "man1": ["rename.1"],
     "prune": true,
@@ -5528,12 +5531,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-12-12",
+    "date": "2024-12-19",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.8.3"
+    "version": "0.8.4"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5816,7 +5819,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-12-03",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5825,7 +5828,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.25.5"
+    "version": "8.26.0"
   },
   "sox": {
     "aliases": {
@@ -6363,12 +6366,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-12-12",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.8"
+    "version": "0.5.11"
   },
   "vim": {
     "aliases": {
@@ -6900,7 +6903,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-12-13",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6908,7 +6911,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.12.13"
+    "version": "2024.12.23"
   },
   "zellij": {
     "aliases": {
