@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libassuan.
-    # @note Updated 2023-05-08.
+    # @note Updated 2024-12-24.
     # """
     local -A dict
     local -a conf_args
@@ -13,12 +13,15 @@ main() {
     dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    conf_args=(
+    conf_args+=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
         "--prefix=${dict['prefix']}"
         "--with-libgpg-error-prefix=${dict['libgpg_error']}"
     )
+    # Fixes duplicate symbols errors
+    # https://lists.gnupg.org/pipermail/gnupg-devel/2024-July/035614.html
+    koopa_append_cflags '-std=gnu89'
     dict['url']="${dict['gcrypt_url']}/libassuan/\
 libassuan-${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
