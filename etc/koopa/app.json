@@ -3197,12 +3197,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "2.5.6"
+    "version": "3.0.1"
   },
   "libcbor": {
     "aliases": {
@@ -3319,12 +3319,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.10.3"
+    "version": "1.11.0"
   },
   "libgeotiff": {
     "aliases": {
@@ -3365,11 +3365,11 @@
       "homebrew": true
     },
     "build_dependencies": ["bzip2", "make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.47"
+    "version": "1.51"
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -3430,12 +3430,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["libgpg-error"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.6.5"
+    "version": "1.6.7"
   },
   "liblinear": {
     "aliases": {
@@ -4384,11 +4384,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.6"
+    "version": "1.8"
   },
   "nushell": {
     "aliases": {
@@ -4737,12 +4737,12 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-09-30",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["libassuan", "libgpg-error", "libiconv", "ncurses"],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "1.2.1"
+    "version": "1.3.1"
   },
   "pipx": {
     "aliases": {
