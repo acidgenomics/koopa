@@ -65,13 +65,10 @@ main() {
         "--with-libunistring-prefix=${dict['libunistring']}"
         '--without-emacs'
     )
-    # macOS iconv implementation is slightly broken since Sonoma.
-    # upstream bug report, https://savannah.gnu.org/bugs/index.php?66541
-    if koopa_is_macos
+    if koopa_is_linux
     then
-        export am_cv_func_iconv_works='yes'
-    else
         conf_args+=(
+            '--with-included-gettext'
             "--with-libxml2-prefix=${dict['libxml2']}"
         )
     fi
