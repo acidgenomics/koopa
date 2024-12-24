@@ -1392,11 +1392,11 @@
     },
     "bin": ["difft"],
     "build_dependencies": ["rust"],
-    "date": "2024-10-25",
+    "date": "2024-12-23",
     "default": false,
     "prune": true,
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.61.0"
+    "version": "0.62.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -2066,11 +2066,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-12-05",
+    "date": "2024-12-23",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.63.2"
+    "version": "2.64.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3137,11 +3137,11 @@
     },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["make"],
-    "date": "2024-11-18",
+    "date": "2024-12-23",
     "default": true,
     "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.16"
+    "version": "2.17"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -4070,12 +4070,15 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-11-25",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://bioconda.github.io/recipes/multiqc/README.html"],
-    "version": "1.25.2"
+    "url": [
+      "https://pypi.org/project/multiqc/",
+      "https://bioconda.github.io/recipes/multiqc/README.html"
+    ],
+    "version": "1.26"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4367,12 +4370,12 @@
     },
     "bin": ["nu"],
     "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-11-18",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.100.0"
+    "version": "0.101.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4893,12 +4896,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-12-19",
+    "date": "2024-12-23",
     "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.4.23"
+    "version": "2.5.0"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4929,12 +4932,12 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2024-12-03",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.3.2"
+    "version": "3.3.3"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -5816,7 +5819,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-12-03",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5825,7 +5828,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.25.5"
+    "version": "8.26.0"
   },
   "sox": {
     "aliases": {
@@ -6363,12 +6366,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-12-19",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.10"
+    "version": "0.5.11"
   },
   "vim": {
     "aliases": {
@@ -6900,7 +6903,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-12-13",
+    "date": "2024-12-23",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6908,7 +6911,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.12.13"
+    "version": "2024.12.23"
   },
   "zellij": {
     "aliases": {
