@@ -379,7 +379,10 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://github.com/pezmaster31/bamtools"],
+    "url": [
+      "https://bioconda.github.io/recipes/bamtools/README.html",
+      "https://github.com/pezmaster31/bamtools"
+    ],
     "version": "2.5.2"
   },
   "bandwhich": {
@@ -402,19 +405,22 @@
     },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-09-10",
+    "date": "2024-12-24",
     "default": true,
     "man1": ["bash.1"],
     "prune": false,
-    "url": ["https://www.gnu.org/software/bash/"],
-    "version": "5.2.32"
+    "url": [
+      "https://www.gnu.org/software/bash/",
+      "https://ftp.gnu.org/gnu/bash/?C=M;O=D"
+    ],
+    "version": "5.2.37"
   },
   "bash-language-server": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
@@ -422,11 +428,11 @@
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "5.0.0"
+    "version": "5.4.2"
   },
   "bashcov": {
     "bin": ["bashcov"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["ruby"],
     "prune": true,
@@ -434,7 +440,7 @@
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
     ],
-    "version": "3.1.1"
+    "version": "3.1.3"
   },
   "bat": {
     "aliases": {
@@ -509,6 +515,7 @@
       "macos-arm64": true
     },
     "url": [
+      "https://bioconda.github.io/recipes/bedtools/README.html",
       "https://bedtools.readthedocs.io/",
       "https://github.com/arq5x/bedtools2/"
     ],
@@ -531,12 +538,12 @@
       "homebrew": true
     },
     "build_dependencies": ["bison", "flex"],
-    "date": "2023-08-31",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["texinfo", "zlib"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/binutils/?C=M;O=D"],
-    "version": "2.41"
+    "version": "2.43.1"
   },
   "bioawk": {
     "bin": ["bioawk"],
@@ -550,7 +557,10 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://github.com/lh3/bioawk"],
+    "url": [
+      "https://bioconda.github.io/recipes/bioawk/README.html",
+      "https://github.com/lh3/bioawk"
+    ],
     "version": "1.0"
   },
   "bioconda-utils": {
@@ -565,8 +575,11 @@
       "macos-amd64": false,
       "macos-arm64": false
     },
-    "url": ["https://github.com/bioconda/bioconda-utils/"],
-    "version": "2.11.1"
+    "url": [
+      "https://bioconda.github.io/recipes/bioconda-utils/README.html",
+      "https://github.com/bioconda/bioconda-utils/"
+    ],
+    "version": "3.6.1"
   },
   "bison": {
     "aliases": {
@@ -599,7 +612,7 @@
   },
   "blast": {
     "bin": ["blastn", "blastp"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -613,7 +626,7 @@
       "https://blast.ncbi.nlm.nih.gov/doc/blast-help/",
       "https://bioconda.github.io/recipes/blast/README.html"
     ],
-    "version": "2.15.0"
+    "version": "2.16.0"
   },
   "boost": {
     "aliases": {
@@ -629,12 +642,12 @@
       ],
       "homebrew": true
     },
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.boost.org/"],
-    "version": "1.84.0"
+    "version": "1.87.0"
   },
   "bottom": {
     "aliases": {
@@ -642,18 +655,17 @@
     },
     "bin": ["btm"],
     "build_dependencies": ["rust"],
-    "date": "2023-08-31",
+    "date": "2024-12-24",
     "default": false,
     "prune": true,
     "url": ["https://github.com/ClementTsang/bottom/"],
-    "version": "0.9.6"
+    "version": "0.10.2"
   },
   "bowtie2": {
     "bin": ["bowtie2"],
-    "date": "2024-05-17",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -661,8 +673,11 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"],
-    "version": "2.5.3"
+    "url": [
+      "https://bioconda.github.io/recipes/bowtie2/README.html",
+      "https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"
+    ],
+    "version": "2.5.4"
   },
   "bpytop": {
     "aliases": {
@@ -710,7 +725,7 @@
   },
   "bustools": {
     "bin": ["bustools"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -725,7 +740,7 @@
       "https://github.com/BUStools/bustools/",
       "https://bioconda.github.io/recipes/bustools/README.html"
     ],
-    "version": "0.43.1"
+    "version": "0.44.1"
   },
   "byobu": {
     "bin": [
@@ -836,22 +851,22 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-06-15",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://c-ares.org/"],
-    "version": "1.30.0"
+    "version": "1.34.4"
   },
   "ca-certificates": {
     "aliases": {
       "debian": true,
       "homebrew": true
     },
-    "date": "2024-09-24",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2024-09-24"
+    "version": "2024-11-26"
   },
   "cairo": {
     "aliases": {
@@ -860,7 +875,7 @@
       "homebrew": true
     },
     "build_dependencies": ["meson", "ninja", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": [
       "expat",
@@ -891,7 +906,7 @@
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.18.0"
+    "version": "1.18.2"
   },
   "cellranger": {
     "bin": ["cellranger"],
@@ -957,11 +972,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-02-08",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://github.com/CLIUtils/CLI11/"],
-    "version": "2.3.2"
+    "version": "2.4.2"
   },
   "cloudbiolinux": {
     "date": "2023-12-22",
@@ -984,12 +999,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2024-03-21",
+    "date": "2024-12-24",
     "default": true,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.29.0"
+    "version": "3.31.3"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1008,7 +1023,7 @@
       "homebrew": true
     },
     "bin": ["cz", "git-cz"],
-    "date": "2024-11-04",
+    "date": "2024-12-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -1017,7 +1032,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "3.30.0"
+    "version": "4.1.0"
   },
   "conda": {
     "bin": ["conda"],
@@ -1300,13 +1315,13 @@
       "in2csv",
       "sql2csv"
     ],
-    "date": "2023-12-12",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["python3.12"],
     "homebrew": true,
     "prune": true,
     "url": ["https://csvkit.readthedocs.io/"],
-    "version": "1.3.0"
+    "version": "2.0.1"
   },
   "csvtk": {
     "bin": ["csvtk"],
@@ -1325,13 +1340,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-06-11",
+    "date": "2024-12-24",
     "default": true,
     "dependencies": ["ca-certificates", "libssh2", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.8.0"
+    "version": "8.11.1"
   },
   "dash": {
     "aliases": {
@@ -1352,7 +1367,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1364,10 +1379,11 @@
       "macos-arm64": false
     },
     "url": [
+      "https://bioconda.github.io/recipes/deeptools/README.html",
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.4"
+    "version": "3.5.5"
   },
   "delta": {
     "aliases": {
@@ -1409,20 +1425,20 @@
       "homebrew": "docker-credential-helper"
     },
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2024-01-12",
+    "date": "2024-12-24",
     "default": false,
     "prune": true,
     "url": ["https://github.com/docker/docker-credential-helpers/"],
-    "version": "0.8.1"
+    "version": "0.8.2"
   },
   "doom-emacs": {
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["emacs"],
     "prune": true,
     "url": ["https://github.com/doomemacs/doomemacs/"],
     "user": true,
-    "version": "03d692f129633e3bf0bd100d91b3ebf3f77db6d1"
+    "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
     "build_dependencies": ["git"],
@@ -1468,7 +1484,7 @@
     },
     "bin": ["ed"],
     "build_dependencies": ["lzip", "make", "pkg-config"],
-    "date": "2023-03-22",
+    "date": "2024-12-24",
     "default": false,
     "man1": ["ed.1"],
     "prune": false,
@@ -1476,7 +1492,7 @@
       "https://www.gnu.org/software/ed/ed.html",
       "http://mirror.rit.edu/gnu/ed/?C=M;O=D"
     ],
-    "version": "1.19"
+    "version": "1.20.2"
   },
   "editorconfig": {
     "aliases": {
@@ -1499,7 +1515,7 @@
       "homebrew": true
     },
     "build_dependencies": ["m4", "make"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["bzip2", "xz", "zlib", "zstd"],
     "prune": false,
@@ -1510,7 +1526,7 @@
       "macos-arm64": false
     },
     "url": ["https://fedorahosted.org/elfutils/"],
-    "version": "0.190"
+    "version": "0.192"
   },
   "emacs": {
     "aliases": {
@@ -1519,7 +1535,7 @@
     },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
-    "date": "2024-03-25",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": [
       "gmp",
@@ -1535,18 +1551,18 @@
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "29.3"
+    "version": "29.4"
   },
   "ensembl-perl-api": {
-    "date": "2023-08-31",
+    "date": "2024-12-24",
     "default": false,
     "prune": true,
     "url": ["https://useast.ensembl.org/info/docs/api/api_installation.html"],
-    "version": "110"
+    "version": "113"
   },
   "entrez-direct": {
     "bin": ["efetch", "esearch"],
-    "date": "2023-10-16",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -1560,7 +1576,7 @@
       "https://www.ncbi.nlm.nih.gov/home/tools/",
       "https://bioconda.github.io/recipes/entrez-direct/README.html"
     ],
-    "version": "16.2"
+    "version": "22.4"
   },
   "exa": {
     "bin": ["exa"],
@@ -1584,7 +1600,7 @@
       "unzip",
       "wget"
     ],
-    "date": "2023-11-28",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["perl"],
     "man1": ["exiftool.1"],
@@ -1594,7 +1610,7 @@
       "https://exiftool.org/",
       "https://metacpan.org/dist/Image-ExifTool/"
     ],
-    "version": "12.70"
+    "version": "13.10"
   },
   "expat": {
     "aliases": {
@@ -1602,11 +1618,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "xz"],
-    "date": "2022-11-08",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://libexpat.github.io/"],
-    "version": "2.5.0"
+    "version": "2.6.4"
   },
   "eza": {
     "aliases": {
@@ -1635,7 +1651,10 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://github.com/s-andrews/FastQC/"],
+    "url": [
+      "https://bioconda.github.io/recipes/fastqc/README.html",
+      "https://github.com/s-andrews/FastQC/"
+    ],
     "version": "0.12.1"
   },
   "fd-find": {
@@ -1655,17 +1674,17 @@
       "homebrew": true
     },
     "bin": ["ffmpeg", "ffprobe"],
-    "date": "2024-06-16",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "prune": true,
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
-    "version": "7.0.1"
+    "version": "7.1"
   },
   "ffq": {
     "bin": ["ffq"],
-    "date": "2023-10-16",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
     "supported": {
@@ -1678,15 +1697,14 @@
       "https://github.com/pachterlab/ffq/",
       "https://bioconda.github.io/recipes/ffq/README.html"
     ],
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "fgbio": {
-    "date": "2024-07-19",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
-    "version": "2.3.0"
+    "version": "2.4.0"
   },
   "findutils": {
     "aliases": {
@@ -1696,14 +1714,14 @@
     },
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
     "build_dependencies": ["make"],
-    "date": "2022-08-29",
+    "date": "2024-12-24",
     "default": true,
     "man1": ["gfind.1", "glocate.1", "gupdatedb.1", "gxargs.1"],
     "url": [
       "https://www.gnu.org/software/findutils/",
       "https://ftp.gnu.org/gnu/findutils/?C=M;O=D"
     ],
-    "version": "4.9.0"
+    "version": "4.10.0"
   },
   "fish": {
     "aliases": {
@@ -1738,7 +1756,7 @@
       "homebrew": true
     },
     "bin": ["flake8"],
-    "date": "2023-08-31",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["python3.12"],
     "url": [
@@ -1746,7 +1764,7 @@
       "https://flake8.pycqa.org/",
       "https://github.com/PyCQA/flake8/"
     ],
-    "version": "6.1.0"
+    "version": "7.1.1"
   },
   "flex": {
     "aliases": {
@@ -1766,7 +1784,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": [
       "freetype",
@@ -1783,19 +1801,18 @@
     ],
     "prune": false,
     "url": ["https://www.fltk.org/"],
-    "version": "1.3.9"
+    "version": "1.4.1"
   },
   "fmt": {
     "aliases": {
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-07-04",
+    "date": "2024-12-24",
     "default": false,
-    "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "10.2.1"
+    "version": "11.0.2"
   },
   "fontconfig": {
     "aliases": {
@@ -1846,11 +1863,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-12-24",
     "default": false,
     "prune": false,
     "url": ["https://www.freetype.org/"],
-    "version": "2.13.2"
+    "version": "2.13.3"
   },
   "fribidi": {
     "aliases": {
@@ -1904,13 +1921,13 @@
     },
     "bin": ["awk", "gawk"],
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": true,
     "dependencies": ["gettext", "mpfr", "readline"],
     "man1": ["awk.1", "gawk.1"],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/gawk/?C=M;O=D"],
-    "version": "5.3.0"
+    "version": "5.3.1"
   },
   "gcc": {
     "aliases": {
@@ -1918,7 +1935,7 @@
     },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
-    "date": "2024-07-05",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
@@ -1929,7 +1946,7 @@
       "macos-arm64": false
     },
     "url": ["https://gcc.gnu.org/"],
-    "version": "14.1.0"
+    "version": "14.2.0"
   },
   "gdal": {
     "aliases": {
@@ -1975,16 +1992,16 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2022-09-26",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["readline"],
     "prune": false,
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
-    "version": "1.23"
+    "version": "1.24"
   },
   "gentropy": {
     "bin": ["gentropy"],
-    "date": "2024-10-16",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["python3.10"],
     "prune": true,
@@ -1992,7 +2009,7 @@
       "https://pypi.org/project/gentropy/",
       "https://github.com/opentargets/gentropy"
     ],
-    "version": "1.7.0"
+    "version": "2.0.1"
   },
   "geos": {
     "aliases": {
@@ -2015,7 +2032,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": [
       "bison",
@@ -2030,7 +2047,7 @@
       "https://www.gnu.org/software/gettext/",
       "https://ftp.gnu.org/pub/gnu/gettext/?C=M;O=D"
     ],
-    "version": "0.22.4"
+    "version": "0.23"
   },
   "gffutils": {
     "bin": ["gffutils-cli"],
@@ -2063,7 +2080,10 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://bioconda.github.io/recipes/gget/README.html"],
+    "url": [
+      "https://bioconda.github.io/recipes/gget/README.html",
+      "https://github.com/pachterlab/gget"
+    ],
     "version": "0.29.0"
   },
   "gh": {
@@ -2125,11 +2145,11 @@
     },
     "bin": ["git-lfs"],
     "build_dependencies": ["go", "make"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "prune": true,
     "url": ["https://git-lfs.github.com/"],
-    "version": "3.4.1"
+    "version": "3.6.0"
   },
   "gitui": {
     "aliases": {
@@ -2174,7 +2194,7 @@
       "pkg-config",
       "python3.12"
     ],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["libffi", "pcre2", "zlib"],
     "prune": false,
@@ -2182,7 +2202,7 @@
       "https://docs.gtk.org/glib/",
       "https://gitlab.gnome.org/GNOME/glib/-/releases"
     ],
-    "version": "2.78.3"
+    "version": "2.82.4"
   },
   "gmp": {
     "aliases": {
@@ -2205,7 +2225,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "date": "2023-10-06",
+    "date": "2024-12-24",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -2226,7 +2246,7 @@
     ],
     "prune": false,
     "url": ["https://gnupg.org/download/"],
-    "version": "2.4.3"
+    "version": "2.4.7"
   },
   "gnutls": {
     "aliases": {
@@ -2248,23 +2268,23 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2024-10-19",
+    "date": "2024-12-24",
     "default": false,
     "prune": true,
     "url": ["https://golang.org/dl/"],
-    "version": "1.23.2"
+    "version": "1.23.4"
   },
   "google-cloud-sdk": {
     "aliases": {
       "homebrew-cask": true
     },
     "bin": ["gcloud"],
-    "date": "2024-11-05",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "499.0.0"
+    "version": "504.0.1"
   },
   "googletest": {
     "aliases": {
@@ -2298,7 +2318,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-24",
     "default": false,
     "dependencies": ["expat"],
     "prune": false,
@@ -2306,7 +2326,7 @@
       "https://www.graphviz.org/download/source/",
       "https://gitlab.com/graphviz/graphviz/-/releases"
     ],
-    "version": "9.0.0"
+    "version": "12.2.1"
   },
   "grep": {
     "aliases": {
