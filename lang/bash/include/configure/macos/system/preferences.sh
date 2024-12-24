@@ -8,7 +8,7 @@
 main() {
     # """
     # Configure macOS system preferences.
-    # @note Updated 2023-06-02.
+    # @note Updated 2024-12-15.
     #
     # """
     local -A app
@@ -22,6 +22,7 @@ main() {
     app['pmset']="$(koopa_macos_locate_pmset)"
     app['tmutil']="$(koopa_macos_locate_tmutil)"
     koopa_assert_is_executable "${app[@]}"
+    koopa_sudo_trigger
     koopa_h2 'Startup and Lock Screen'
     # For reference, here's how to set computer name from the command line.
     # > local comp_name
@@ -53,11 +54,11 @@ main() {
     # > koopa_sudo "${app['systemsetup']}" \
     # >     -settimezone 'America/New_York' \
     # >     > /dev/null
-    # Show language menu in the top right corner of the boot screen.
-    # > koopa_sudo "${app['defaults']}" write \
-    # >     '/Library/Preferences/com.apple.loginwindow' \
-    # >     'showInputMenu' \
-    # >     -bool true
+    koopa_alert 'Enabling language input in menu bar.'
+    koopa_sudo "${app['defaults']}" write \
+        '/Library/Preferences/com.apple.loginwindow' \
+        'showInputMenu' \
+        -bool true
     koopa_h2 'Power management'
     koopa_alert 'Configuring power management.'
     # How to restore power management defaults.
@@ -66,7 +67,7 @@ main() {
     koopa_sudo "${app['pmset']}" -c 'displaysleep' 15
     # Check current settings.
     "${app['pmset']}" -g
-    koopa_h2 'Screen'
+    # > koopa_h2 'Screen'
     # Enable HiDPI display modes (requires restart).
     # > koopa_sudo "${app['defaults']}" write \
     # >     '/Library/Preferences/com.apple.windowserver' \
@@ -76,21 +77,18 @@ main() {
     koopa_alert "Enabling visibility of '/Volumes' in Finder."
     koopa_sudo "${app['chflags']}" nohidden '/Volumes'
     koopa_h2 'Spotlight'
-    koopa_alert 'Disabling Spotlight.'
+    koopa_alert 'Enabling Spotlight indexing for main volume.'
+    koopa_sudo "${app['mdutil']}" -i on '/'
+    # For reference, how to rebuild the index from scratch:
     # Load new settings before rebuilding the index.
     # > "${app['killall']" 'mds' > /dev/null 2>&1
-    # Ensure indexing is disabled for the main volume.
-    koopa_sudo "${app['mdutil']}" -i off '/'
-    # For reference, how to rebuild the index from scratch.
     # > koopa_sudo "${app['mdutil']}" -E '/'
     # > "${app['mdutil']}" -s '/'
-    # Hide Spotlight tray-icon (and subsequent helper).
-    # > koopa_chmod --sudo '0600' \
-    # >     '/System/Library/CoreServices/Search.bundle/Contents/MacOS/Search'
+    "${app['mdutil']}" -s /
     koopa_h2 'Time Machine'
     koopa_alert 'Disabling Time Machine backups.'
     koopa_sudo "${app['tmutil']}" disable
     "${app['tmutil']}" listlocalsnapshotdates '/'
-    koopa_alert_note 'Some of these changes require logout to take effect.'
+    koopa_alert_note 'Some of these changes may require restart to take effect.'
     return 0
 }

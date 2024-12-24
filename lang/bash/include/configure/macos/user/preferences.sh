@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+# TODO Add support for disabling alert sounds.
+# TODO Add support for disabling window snapping on macOS 15.
+
 main() {
     # """
     # Configure macOS user defaults.
-    # @note Updated 2023-09-28.
+    # @note Updated 2024-12-18.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
