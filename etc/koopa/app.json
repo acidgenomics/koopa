@@ -1680,7 +1680,7 @@
     "man1": ["ffmpeg.1", "ffprobe.1"],
     "prune": true,
     "url": ["https://ffmpeg.org/", "https://github.com/FFmpeg/FFmpeg/"],
-    "version": "7.1"
+    "version": "7.1.0"
   },
   "ffq": {
     "bin": ["ffq"],
