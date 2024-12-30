@@ -24,6 +24,10 @@ install_from_source() {
     deps+=(
         'boost'
         'cereal'
+        'zlib'
+        'zstd' # curl
+        'openssl3' # curl
+        'libssh2' # curl
         'curl'
         'icu4c'
         'jemalloc'
@@ -31,7 +35,6 @@ install_from_source() {
         'staden-io-lib'
         'tbb'
         'xz'
-        'zlib'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"

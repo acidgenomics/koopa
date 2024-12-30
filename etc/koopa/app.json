@@ -6153,7 +6153,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6166,7 +6166,7 @@
     ],
     "prune": false,
     "url": ["https://www.tcl-lang.org/"],
-    "version": "8.6.13"
+    "version": "9.0.1"
   },
   "tealdeer": {
     "aliases": {
@@ -6185,13 +6185,13 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2024-04-29",
+    "date": "2024-12-30",
     "default": false,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21.0.3+9"
+    "version": "21.0.5+11"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
@@ -6218,7 +6218,7 @@
       "texindex"
     ],
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["gettext", "libiconv", "ncurses", "perl"],
     "man1": [
@@ -6231,7 +6231,7 @@
     ],
     "prune": false,
     "url": ["https://ftp.gnu.org/gnu/texinfo/?C=M;O=D"],
-    "version": "7.1"
+    "version": "7.2"
   },
   "tl-expected": {
     "build_dependencies": ["cmake"],
@@ -6271,12 +6271,12 @@
   },
   "tqdm": {
     "bin": ["tqdm"],
-    "date": "2024-01-12",
+    "date": "2024-12-30",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/tqdm/"],
-    "version": "4.66.1"
+    "version": "4.67.1"
   },
   "tree": {
     "aliases": {
@@ -6286,12 +6286,14 @@
     },
     "bin": ["tree"],
     "build_dependencies": ["make"],
-    "date": "2023-08-31",
+    "date": "2024-12-30",
     "default": true,
     "man1": ["tree.1"],
     "prune": true,
-    "url": ["https://mama.indstate.edu/users/ice/tree/"],
-    "version": "2.1.1"
+    "url": [
+      "https://github.com/Old-Man-Programmer/tree"
+    ],
+    "version": "2.2.1"
   },
   "tree-sitter": {
     "aliases": {
