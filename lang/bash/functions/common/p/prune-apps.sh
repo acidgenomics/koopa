@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# TODO Ensure we delete any broken symlinks in 'bin' and 'man' directories.
+
 koopa_prune_apps() {
     # """
     # Prune applications.

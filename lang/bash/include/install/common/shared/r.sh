@@ -77,6 +77,8 @@ main() {
         'gettext'
         'icu4c'
         'readline'
+        'openssl3' # curl
+        'libssh2' # curl
         'curl'
         'libjpeg-turbo'
         'libpng'
@@ -104,7 +106,6 @@ main() {
         'xorg-libxt'
         'cairo'
         'tcl-tk'
-        'openssl3'
     )
     koopa_activate_app "${deps[@]}"
     app['ar']="$(koopa_locate_ar --only-system)"

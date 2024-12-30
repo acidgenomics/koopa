@@ -3,7 +3,7 @@
 main() {
     # """
     # Install FLTK.
-    # @note Updated 2023-10-17.
+    # @note Updated 2024-12-26.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/fltk
@@ -49,8 +49,8 @@ main() {
             "--x-libraries=${dict['x11']}/lib"
         )
     fi
-    dict['url']="https://www.fltk.org/pub/fltk/${dict['version']}/\
-fltk-${dict['version']}-source.tar.gz"
+    dict['url']="https://github.com/fltk/fltk/releases/download/\
+release-${dict['version']}/fltk-${dict['version']}-source.tar.bz2"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
