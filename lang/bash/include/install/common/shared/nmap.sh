@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Build is currently failing without much of a log.
-
 main() {
     # """
     # Install nmap.
