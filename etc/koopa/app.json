@@ -4786,7 +4786,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["meson", "ninja", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
     "prune": false,
@@ -5332,11 +5332,11 @@
       "macos-arm64": true
     },
     "system": true,
-    "url": ["https://mac.r-project.org/"],
+    "url": ["https://mac.r-project.org/tools/"],
     "version": "12.2"
   },
   "r-xcode-openmp": {
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": true,
     "supported": {
       "linux-amd64": false,
@@ -5346,7 +5346,7 @@
     },
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
-    "version": "16.0.4"
+    "version": "18.1.8"
   },
   "radian": {
     "bin": ["radian"],
@@ -5624,11 +5624,11 @@
   "s5cmd": {
     "bin": ["s5cmd"],
     "build_dependencies": ["go"],
-    "date": "2024-08-01",
+    "date": "2024-12-30",
     "default": false,
     "prune": true,
-    "url": ["https://github.com/peak/s5cmd"],
-    "version": "2.2.2"
+    "url": ["https://github.com/peak/s5cmd/"],
+    "version": "2.3.0"
   },
   "salmon": {
     "bin": ["salmon"],
@@ -6028,16 +6028,16 @@
     },
     "bin": ["stow"],
     "build_dependencies": ["make"],
-    "date": "2023-08-30",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["perl"],
     "prune": true,
     "url": ["https://www.gnu.org/software/stow/"],
-    "version": "2.3.1"
+    "version": "2.4.1"
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2024-10-25",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6046,11 +6046,11 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.39.0"
+    "version": "1.41.1"
   },
   "subread": {
     "bin": ["featureCounts"],
-    "date": "2023-10-16",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -6064,7 +6064,7 @@
       "https://subread.sourceforge.net/",
       "https://bioconda.github.io/recipes/subread/README.html"
     ],
-    "version": "2.0.6"
+    "version": "2.0.8"
   },
   "subversion": {
     "aliases": {
@@ -6073,7 +6073,7 @@
     },
     "bin": ["svn"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-08-30",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "apr",
@@ -6089,7 +6089,7 @@
     "man1": ["svn.1"],
     "prune": false,
     "url": ["https://subversion.apache.org/"],
-    "version": "1.14.2"
+    "version": "1.14.5"
   },
   "swig": {
     "aliases": {
@@ -6097,12 +6097,12 @@
     },
     "bin": ["swig"],
     "build_dependencies": ["make"],
-    "date": "2023-04-11",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["pcre2"],
     "prune": false,
     "url": ["http://www.swig.org/"],
-    "version": "4.1.1"
+    "version": "4.3.0"
   },
   "taglib": {
     "aliases": {
