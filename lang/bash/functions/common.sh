@@ -22794,7 +22794,7 @@ lib/pkgconfig"
             then
                 ldflags+=('-Wl,-ld_classic')
             fi
-            if [[ "${bool['use_openmp']}" -eq 1 ]]
+            if [[ "${bool['system']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')
             fi
