@@ -2832,7 +2832,11 @@
     "notes": ["76 release series doesn't work with libxml2 yet."],
     "outdated": true,
     "prune": false,
-    "url": ["https://icu.unicode.org/"],
+    "url": [
+      "https://icu.unicode.org/",
+      "https://icu.unicode.org/download/75",
+      "https://icu.unicode.org/download/76"
+    ],
     "version": "75.1"
   },
   "imagemagick": {
