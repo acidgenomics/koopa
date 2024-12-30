@@ -3660,7 +3660,13 @@
       "homebrew": true
     },
     "bin": ["xml2-config"],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": [
+      "autoconf",
+      "automake",
+      "libtool",
+      "make",
+      "pkg-config"
+    ],
     "date": "2024-12-30",
     "default": false,
     "dependencies": ["icu4c", "readline", "xz", "zlib"],
@@ -3674,7 +3680,7 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["icu4c", "libgcrypt", "libxml2"],
     "prune": false,
@@ -3682,7 +3688,7 @@
       "http://xmlsoft.org/XSLT/",
       "https://gitlab.gnome.org/GNOME/libxslt/-/releases"
     ],
-    "version": "1.1.39"
+    "version": "1.1.42"
   },
   "libyaml": {
     "aliases": {
@@ -3707,12 +3713,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2022-08-31",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["bzip2", "nettle", "openssl3", "perl", "zlib", "zstd"],
     "prune": false,
     "url": ["https://libzip.org/"],
-    "version": "1.10.1"
+    "version": "1.11.2"
   },
   "llama": {
     "bin": ["llama"],
@@ -3801,11 +3807,11 @@
     },
     "bin": ["luajit"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-09-09",
+    "date": "2024-12-30",
     "default": false,
     "prune": false,
     "url": ["https://luajit.org/", "https://github.com/LuaJIT/LuaJIT"],
-    "version": "2.1.0-beta3"
+    "version": "f73e649a954b599fc184726c376476e7a5c439ca"
   },
   "luarocks": {
     "aliases": {
@@ -4220,7 +4226,7 @@
       "tset"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2024-12-30",
     "default": false,
     "man1": [
       "captoinfo.1",
@@ -4237,7 +4243,7 @@
     ],
     "prune": false,
     "url": ["https://ftp.gnu.org/pub/gnu/ncurses/?C=M;O=D"],
-    "version": "6.4"
+    "version": "6.5"
   },
   "neofetch": {
     "aliases": {
