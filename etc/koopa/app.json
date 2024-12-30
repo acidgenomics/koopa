@@ -6370,7 +6370,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["libtool", "make", "pkg-config"],
+    "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
     "prune": false,
@@ -6440,7 +6440,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-11-19",
+    "date": "2024-12-30",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": [
@@ -6455,14 +6455,14 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1.0850"
+    "version": "9.1.0950"
   },
   "visidata": {
     "aliases": {
       "debian": true
     },
     "bin": ["vd", "visidata"],
-    "date": "2024-10-19",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["python3.12"],
     "man1": ["vd.1", "visidata.1"],
@@ -6471,7 +6471,7 @@
       "https://pypi.org/project/visidata/",
       "https://github.com/saulpw/visidata/"
     ],
-    "version": "3.1"
+    "version": "3.1.1"
   },
   "vulture": {
     "aliases": {
@@ -6505,7 +6505,7 @@
     },
     "bin": ["wget"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2023-05-30",
+    "date": "2024-12-30",
     "default": true,
     "dependencies": [
       "gettext",
@@ -6522,7 +6522,7 @@
       "https://www.gnu.org/software/wget/",
       "https://ftp.gnu.org/gnu/wget/?C=M;O=D"
     ],
-    "version": "1.21.4"
+    "version": "1.24.5"
   },
   "wget2": {
     "aliases": {
@@ -6532,7 +6532,7 @@
     },
     "bin": ["wget2"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "brotli",
@@ -6554,7 +6554,7 @@
     ],
     "prune": false,
     "url": ["https://gitlab.com/gnuwget/wget2"],
-    "version": "2.1.0"
+    "version": "2.2.0"
   },
   "which": {
     "aliases": {
@@ -6584,7 +6584,7 @@
       "homebrew": "libice"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["xorg-xorgproto", "xorg-xtrans"],
     "prune": false,
@@ -6592,7 +6592,7 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libice/-/tags"
     ],
-    "version": "1.1.1"
+    "version": "1.1.2"
   },
   "xorg-libpthread-stubs": {
     "aliases": {
@@ -6613,7 +6613,7 @@
       "homebrew": "libsm"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["xorg-libice", "xorg-xorgproto", "xorg-xtrans"],
     "prune": false,
@@ -6621,14 +6621,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libsm/-/tags"
     ],
-    "version": "1.2.4"
+    "version": "1.2.5"
   },
   "xorg-libx11": {
     "aliases": {
       "homebrew": "libx11"
     },
     "build_dependencies": ["make", "pkg-config", "sed"],
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6643,14 +6643,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libx11/-/tags"
     ],
-    "version": "1.8.7"
+    "version": "1.8.10"
   },
   "xorg-libxau": {
     "aliases": {
       "homebrew": "libxau"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["xorg-xorgproto"],
     "prune": false,
@@ -6658,14 +6658,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxau/-/tags"
     ],
-    "version": "1.0.11"
+    "version": "1.0.12"
   },
   "xorg-libxcb": {
     "aliases": {
       "homebrew": "libxcb"
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2023-08-31",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6679,14 +6679,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxcb/-/tags"
     ],
-    "version": "1.16"
+    "version": "1.17.0"
   },
   "xorg-libxdmcp": {
     "aliases": {
       "homebrew": "libxdmcp"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-01-03",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["xorg-xorgproto"],
     "prune": false,
@@ -6694,14 +6694,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxdmcp/-/tags"
     ],
-    "version": "1.1.4"
+    "version": "1.1.5"
   },
   "xorg-libxext": {
     "aliases": {
       "homebrew": "libxext"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-11-08",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6716,7 +6716,7 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxext/-/tags"
     ],
-    "version": "1.3.5"
+    "version": "1.3.6"
   },
   "xorg-libxrandr": {
     "aliases": {
@@ -6747,7 +6747,7 @@
       "homebrew": "libxrender"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-11-08",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "xorg-libpthread-stubs",
@@ -6762,14 +6762,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxrender/-/tags"
     ],
-    "version": "0.9.11"
+    "version": "0.9.12"
   },
   "xorg-libxt": {
     "aliases": {
       "homebrew": "libxt"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-05-08",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": [
       "xorg-libice",
@@ -6786,14 +6786,14 @@
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxt/-/tags"
     ],
-    "version": "1.3.0"
+    "version": "1.3.1"
   },
   "xorg-xcb-proto": {
     "aliases": {
       "homebrew": "xcb-proto"
     },
     "build_dependencies": ["make", "pkg-config", "python3.12"],
-    "date": "2023-08-31",
+    "date": "2024-12-30",
     "default": false,
     "notes": ["This must match xorg-libxcb version."],
     "prune": false,
@@ -6801,38 +6801,37 @@
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/proto/xcbproto/-/tags"
     ],
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   "xorg-xorgproto": {
     "aliases": {
       "homebrew": "xorgproto"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-12-30",
     "default": false,
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/proto/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/proto/xorgproto/-/tags"
     ],
-    "version": "2023.2"
+    "version": "2024.1"
   },
   "xorg-xtrans": {
     "aliases": {
       "homebrew": "xtrans"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["xorg-xorgproto"],
-    "notes": ["1.5.0 fails to build on macOS due to missing stropts.h."],
     "outdated": true,
     "prune": false,
     "url": [
       "https://www.x.org/archive/individual/lib/?C=M;O=D",
       "https://gitlab.freedesktop.org/xorg/lib/libxtrans/-/tags"
     ],
-    "version": "1.4.0"
+    "version": "1.5.2"
   },
   "xsv": {
     "aliases": {
@@ -6853,11 +6852,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2024-12-30",
     "default": false,
     "prune": false,
     "url": ["https://github.com/Cyan4973/xxHash/"],
-    "version": "0.8.2"
+    "version": "0.8.3"
   },
   "xz": {
     "aliases": {
@@ -6891,7 +6890,7 @@
       "xzmore"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-04-01",
+    "date": "2024-12-30",
     "default": true,
     "man1": [
       "lzcat.1",
@@ -6919,8 +6918,11 @@
       "xzmore.1"
     ],
     "prune": false,
-    "url": ["https://tukaani.org/xz/"],
-    "version": "5.4.6"
+    "url": [
+      "https://tukaani.org/xz/",
+      "https://github.com/tukaani-project/xz"
+    ],
+    "version": "5.6.3"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -6935,7 +6937,7 @@
       "homebrew": true
     },
     "bin": ["yapf"],
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6943,7 +6945,7 @@
       "https://pypi.org/project/yapf/",
       "https://github.com/google/yapf/"
     ],
-    "version": "0.40.2"
+    "version": "0.43.0"
   },
   "yq": {
     "aliases": {
