@@ -2829,6 +2829,7 @@
       "pkgdata.1",
       "uconv.1"
     ],
+    "notes": ["76 release series doesn't work with libxml2 yet."],
     "outdated": true,
     "prune": false,
     "url": ["https://icu.unicode.org/"],
@@ -3661,13 +3662,7 @@
       "homebrew": true
     },
     "bin": ["xml2-config"],
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "libtool",
-      "make",
-      "pkg-config"
-    ],
+    "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
     "dependencies": ["icu4c", "readline", "xz", "zlib"],
