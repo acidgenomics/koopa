@@ -3,7 +3,7 @@
 main() {
     # """
     # Install nmap.
-    # @note Updated 2023-10-19.
+    # @note Updated 2024-12-30.
     #
     # May need to include libcap and liblinear here.
     #
@@ -25,28 +25,27 @@ main() {
         'libpcap'
         'libssh2'
         'openssl3'
-        'pcre'
+        'pcre2'
         'zlib'
     )
     koopa_is_macos && deps+=('lua')
     koopa_activate_app --build-only "${deps[@]}"
     koopa_activate_app "${deps[@]}"
-    dict['libpcap']="$(koopa_app_prefix 'libpcap')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
-    dict['pcre']="$(koopa_app_prefix 'pcre')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['libpcap']="$(koopa_app_prefix 'libpcap')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    conf_args=(
-        # Recommended options from Homebrew:
-        # > '--disable-universal'
-        # > '--without-nmap-update'
-        # > '--without-zenmap'
+    conf_args+=(
+        '--disable-universal'
         "--prefix=${dict['prefix']}"
         "--with-libpcap=${dict['libpcap']}"
-        "--with-libpcre=${dict['pcre']}"
+        "--with-libpcre=${dict['pcre2']}"
         "--with-libz=${dict['zlib']}"
         "--with-openssl=${dict['openssl']}"
+        '--without-nmap-update'
+        '--without-zenmap'
     )
     if koopa_is_macos
     then

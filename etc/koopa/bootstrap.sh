@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2024-12-13.
+# @note Updated 2024-12-24.
 # """
 
 # Can debug with:
@@ -86,10 +86,10 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://ftp.gnu.org/gnu/bash/bash-5.2.32.tar.gz' \
+        'https://ftp.gnu.org/gnu/bash/bash-5.2.37.tar.gz' \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'bash-5.2.32' || return 1
+    cd 'bash-5.2.37' || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install

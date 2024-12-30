@@ -3,11 +3,7 @@
 main() {
     # """
     # Install xz.
-    # @note Updated 2024-04-01.
-    #
-    # Don't use 5.6 release series, which has an SSH exploit backdoor:
-    # - https://tukaani.org/xz-backdoor/
-    # - https://github.com/orgs/Homebrew/discussions/5243
+    # @note Updated 2024-12-30.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/xz.rb
