@@ -7,7 +7,7 @@
 main() {
     # """
     # Install OpenSSH.
-    # @note Updated 2023-10-19.
+    # @note Updated 2024-12-30.
     #
     # @section Privilege separation:
     #
@@ -76,8 +76,8 @@ main() {
             "--with-privsep-path=${dict['prefix']}/var/lib/sshd"
         )
     fi
-    dict['url']="https://cloudflare.cdn.openbsd.org/pub/OpenBSD/OpenSSH/\
-portable/openssh-${dict['version']}.tar.gz"
+    dict['url']="https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/\
+openssh-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
