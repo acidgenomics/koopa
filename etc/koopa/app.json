@@ -6371,11 +6371,11 @@
       "homebrew": true
     },
     "build_dependencies": ["libtool", "make", "pkg-config"],
-    "date": "2022-09-22",
+    "date": "2024-12-30",
     "default": false,
     "prune": false,
     "url": ["https://github.com/neovim/unibilium/"],
-    "version": "2.1.1"
+    "version": "2.1.2"
   },
   "units": {
     "aliases": {
@@ -6383,7 +6383,7 @@
     },
     "bin": ["gunits"],
     "build_dependencies": ["make"],
-    "date": "2022-09-30",
+    "date": "2024-12-30",
     "default": true,
     "dependencies": ["readline"],
     "man1": ["gunits.1"],
@@ -6392,7 +6392,7 @@
       "https://www.gnu.org/software/units/",
       "https://ftp.gnu.org/gnu/units/?C=M;O=D"
     ],
-    "version": "2.22"
+    "version": "2.24"
   },
   "unzip": {
     "aliases": {
