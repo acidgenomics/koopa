@@ -5,10 +5,11 @@
 main() {
     # """
     # Install xorg-libx11.
-    # @note Updated 2023-08-31.
+    # @note Updated 2024-12-30.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libxcb.rb
+    # - https://github.com/Homebrew/homebrew-core/pull/133898
     # """
     local -A dict
     local -a conf_args
@@ -24,13 +25,11 @@ main() {
         'xorg-libxcb'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    conf_args=(
-        '--disable-dependency-tracking'
+    conf_args+=(
         '--disable-silent-rules'
         '--disable-static'
         '--enable-ipv6'
         '--enable-loadable-i18n'
-        '--enable-local-transport'
         '--enable-specs=no'
         '--enable-tcp-transport'
         '--enable-unix-transport'
