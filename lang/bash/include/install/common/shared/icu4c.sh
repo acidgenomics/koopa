@@ -1,20 +1,22 @@
 #!/usr/bin/env bash
 
-# Details regarding broken LICENSE file in 74.2 update:
+# NOTE Details regarding broken LICENSE file in 74.2 update:
 # - https://github.com/unicode-org/icu/pull/2749#issuecomment-1858570143
 # - https://github.com/Homebrew/homebrew-core/pull/153108
-
-# FIXME Error if user is attempting to compile with GCC 4.
+# NOTE Need to error here if user is attempting to compile with GCC 4.
+# NOTE 76 release series doesn't build libxml2 currently.
 
 main() {
     # """
     # Install ICU4C.
-    # @note Updated 2023-12-22.
+    # @note Updated 2024-12-30.
     #
     # @seealso
     # - https://unicode-org.github.io/icu/userguide/icu4c/build.html
     # - https://github.com/unicode-org/icu/
-    # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/icu4c.rb
+    # - https://github.com/conda-forge/icu-feedstock/
+    # - https://formulae.brew.sh/formula/icu4c@76
+    # - https://formulae.brew.sh/formula/icu4c@75
     # """
     local -A dict
     local -a conf_args
