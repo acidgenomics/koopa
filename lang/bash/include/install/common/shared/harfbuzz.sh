@@ -47,7 +47,7 @@ ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    meson_args=(
+    meson_args+=(
         '--buildtype=release'
         '--default-library=shared'
         "--prefix=${dict['prefix']}"

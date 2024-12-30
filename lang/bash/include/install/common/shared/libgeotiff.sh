@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libgeotiff.
-    # @note Updated 2023-04-10.
+    # @note Updated 2024-12-30.
     #
     # @seealso
     # - https://github.com/OSGeo/libgeotiff
@@ -11,18 +11,21 @@ main() {
     #     libgeotiff.rb
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only \
-        'libtool' \
-        'pkg-config'
-    koopa_activate_app \
-        'curl' \
-        'zlib' \
-        'zstd' \
-        'libjpeg-turbo' \
-        'libtiff' \
-        'sqlite' \
+    local -a build_deps conf_args deps
+    build_deps=('libtool' 'pkg-config')
+    deps=(
+        'zlib'
+        'zstd'
+        'openssl3'
+        'libssh2'
+        'curl'
+        'libjpeg-turbo'
+        'libtiff'
+        'sqlite'
         'proj'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
+    koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(

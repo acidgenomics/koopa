@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LuaJIT.
-    # @note Updated 2023-06-01.
+    # @note Updated 2024-12-30.
     #
     # @seealso
     # - https://luajit.org/download.html
@@ -17,7 +17,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://luajit.org/download/LuaJIT-${dict['version']}.tar.gz"
+    dict['url']="https://github.com/LuaJIT/LuaJIT/archive/\
+${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'

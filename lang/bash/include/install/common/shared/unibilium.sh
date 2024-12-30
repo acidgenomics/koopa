@@ -16,11 +16,7 @@ main() {
     # """
     local -A app dict
     local -a build_deps
-    build_deps+=('libtool' 'make' 'pkg-config')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    app['libtool']="$(koopa_locate_libtool)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
+    build_deps+=('pkg-config')
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/neovim/unibilium/archive/\
@@ -29,11 +25,6 @@ v${dict['version']}.tar.gz"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
     koopa_print_env
-    "${app['make']}" \
-        LIBTOOL="${app['libtool']}" \
-        PREFIX="${dict['prefix']}"
-    "${app['make']}" install \
-        LIBTOOL="${app['libtool']}" \
-        PREFIX="${dict['prefix']}"
+    koopa_cmake_build --prefix="${dict['prefix']}"
     return 0
 }
