@@ -24,9 +24,6 @@ main() {
     local -A app dict
     local -a build_deps conf_args deps
     build_deps=(
-        'autoconf'
-        'automake'
-        'libtool'
         'make'
         'pkg-config'
     )
@@ -46,6 +43,7 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    dict['libtool']="$(koopa_app_prefix 'libtool')"
     dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
@@ -69,8 +67,14 @@ ${dict['maj_min_ver']}/libxml2-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    koopa_cp \
+        "${dict['libtool']}/share/libtool/build-aux/config.guess" \
+        'config.guess'
+    koopa_cp \
+        "${dict['libtool']}/share/libtool/build-aux/config.sub" \
+        'config.sub'
     # > NOCONFIGURE=1 ./autogen.sh
-    "${app['autoreconf']}" --force --install --verbose
+    # > "${app['autoreconf']}" --force --install --verbose
     koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -2829,9 +2829,10 @@
       "pkgdata.1",
       "uconv.1"
     ],
+    "outdated": true,
     "prune": false,
     "url": ["https://icu.unicode.org/"],
-    "version": "76.1"
+    "version": "75.1"
   },
   "imagemagick": {
     "aliases": {
