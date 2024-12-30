@@ -3815,12 +3815,12 @@
     },
     "bin": ["luarocks"],
     "build_dependencies": ["make", "unzip"],
-    "date": "2023-02-08",
+    "date": "2024-12-30",
     "default": false,
     "dependencies": ["lua"],
     "prune": false,
     "url": ["https://github.com/luarocks/luarocks/"],
-    "version": "3.9.2"
+    "version": "3.11.1"
   },
   "luigi": {
     "bin": ["luigi"],
@@ -3857,7 +3857,7 @@
     },
     "bin": ["lzip"],
     "build_dependencies": ["make"],
-    "date": "2023-03-22",
+    "date": "2024-12-30",
     "default": false,
     "man1": ["lzip.1"],
     "prune": false,
@@ -3865,7 +3865,7 @@
       "https://www.nongnu.org/lzip/",
       "http://download.savannah.gnu.org/releases/lzip/?C=M&O=D"
     ],
-    "version": "1.23"
+    "version": "1.24.1"
   },
   "lzo": {
     "aliases": {
@@ -3925,7 +3925,7 @@
     },
     "bin": ["gman"],
     "build_dependencies": ["make"],
-    "date": "2023-12-22",
+    "date": "2024-12-30",
     "default": true,
     "dependencies": ["gdbm", "libpipeline"],
     "man1": ["gman.1"],
@@ -3934,7 +3934,7 @@
       "https://man-db.nongnu.org/",
       "https://gitlab.com/man-db/man-db/-/releases"
     ],
-    "version": "2.12.0"
+    "version": "2.13.0"
   },
   "markdownlint-cli": {
     "aliases": {
