@@ -1442,12 +1442,12 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2024-12-19",
+    "date": "2025-12-02",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "639813bf3891b3f0f56a2e260db2c4bb4454ba4f"
+    "version": "9162e67edd001bd1183feaf1de996a50a7149970"
   },
   "du-dust": {
     "aliases": {
