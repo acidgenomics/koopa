@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2024-12-13.
+    # @note Updated 2025-01-02.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -116,6 +116,7 @@ _koopa_complete() {
                         'bamtools'
                         'bandwhich'
                         'bash'
+                        'bash-completion'
                         'bash-language-server'
                         'bashcov'
                         'bat'
