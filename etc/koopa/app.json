@@ -415,6 +415,18 @@
     ],
     "version": "5.2.37"
   },
+  "bash-completion": {
+    "aliases": {
+      "homebrew": "bash-completion@2"
+    },
+    "build_dependencies": ["make"],
+    "date": "2025-01-02",
+    "default": true,
+    "dependencies": ["bash"],
+    "prune": true,
+    "url": ["https://github.com/scop/bash-completion"],
+    "version": "2.16.0"
+  },
   "bash-language-server": {
     "aliases": {
       "homebrew": true
