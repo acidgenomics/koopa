@@ -1447,7 +1447,7 @@
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "9162e67edd001bd1183feaf1de996a50a7149970"
+    "version": "de4e82696178b6341d364653080773819e6dfada"
   },
   "du-dust": {
     "aliases": {
