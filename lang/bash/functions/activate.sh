@@ -11,12 +11,25 @@ _koopa_activate_bash_aliases() {
     return 0
 }
 
+_koopa_activate_bash_completion() {
+    local -A dict
+    dict['opt_prefix']="$(_koopa_opt_prefix)"
+    dict['completion_file']="${dict['opt_prefix']}/bash-completion/etc/\
+profile.d/bash_completion.sh"
+    if [[ -f "${dict['completion_file']}" ]]
+    then
+        source "${dict['completion_file']}"
+    fi
+    return 0
+}
+
 _koopa_activate_bash_extras() {
     _koopa_is_interactive || return 0
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
+    _koopa_activate_bash_completion
     _koopa_activate_completion
     return 0
 }
