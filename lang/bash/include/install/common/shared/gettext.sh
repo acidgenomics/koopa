@@ -76,7 +76,9 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    koopa_install_gnu_app \
+        --compress-ext='xz' \
+        "${install_args[@]}"
     koopa_assert_is_file \
         "${dict['prefix']}/include/libintl.h" \
         "${dict['prefix']}/lib/libintl.${dict['shared_ext']}"
