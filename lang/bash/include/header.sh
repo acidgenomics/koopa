@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME Migrate bashrc source code from ~/.bashrc to here, to ensure consistent
+# TODO Migrate bashrc source code from ~/.bashrc to here, to ensure consistent
 # performance between ~/.bashrc and ~/.bash_profile
-# FIXME Can we check /etc/bashrc has already been loaded?
-# FIXME Add support for sourcing:
+# TODO Can we check /etc/bashrc has already been loaded?
+# TODO Add support for sourcing:
 # ~/.bashrc.d/
 # ~/.bashrc-personal
 # ~/.bashrc-work

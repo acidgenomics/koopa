@@ -12737,6 +12737,13 @@ koopa_install_bandwhich() {
         "$@"
 }
 
+koopa_install_bash_completion() {
+    koopa_install_app \
+        --name='bash-completion' \
+        "$@"
+    return 0
+}
+
 koopa_install_bash_language_server() {
     koopa_install_app \
         --installer='node-package' \
@@ -29113,6 +29120,12 @@ koopa_uninstall_bamtools() {
 koopa_uninstall_bandwhich() {
     koopa_uninstall_app \
         --name='bandwhich' \
+        "$@"
+}
+
+koopa_uninstall_bash_completion() {
+    koopa_uninstall_app \
+        --name='bash-completion' \
         "$@"
 }
 
