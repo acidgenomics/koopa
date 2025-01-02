@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2024-12-03.
+    # @note Updated 2025-01-02.
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -19,6 +19,8 @@ main() {
         'zlib'
         'gettext'
         'openssl3'
+        'zstd' # curl
+        'libssh2' # curl
         'curl'
         'pcre2'
         'libiconv'
@@ -114,5 +116,9 @@ git-manpages-${dict['version']}.tar.xz"
 # >             --file="${dict['gitconfig_file']}" \
 # >             --string="${dict['gitconfig_string']}"
 # >     fi
+    koopa_alert 'Installing completions.'
+    koopa_cp \
+        --target-directory="${dict['prefix']}/share" \
+        'contrib/completion'
     return 0
 }

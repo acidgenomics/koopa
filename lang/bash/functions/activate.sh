@@ -11,12 +11,31 @@ _koopa_activate_bash_aliases() {
     return 0
 }
 
+_koopa_activate_bash_completion() {
+    local -A dict
+    dict['opt_prefix']="$(_koopa_opt_prefix)"
+    dict['bash_completion_file']="${dict['opt_prefix']}/bash-completion/etc/\
+profile.d/bash_completion.sh"
+    dict['git_completion_file']="${dict['opt_prefix']}/git/share/\
+completion/git-completion.bash"
+    if [[ -f "${dict['bash_completion_file']}" ]]
+    then
+        source "${dict['bash_completion_file']}"
+    fi
+    if [[ -f "${dict['git_completion_file']}" ]]
+    then
+        source "${dict['git_completion_file']}"
+    fi
+    return 0
+}
+
 _koopa_activate_bash_extras() {
     _koopa_is_interactive || return 0
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
     _koopa_activate_bash_reverse_search
+    _koopa_activate_bash_completion
     _koopa_activate_completion
     return 0
 }
