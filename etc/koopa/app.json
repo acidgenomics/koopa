@@ -700,7 +700,7 @@
     },
     "bin": ["broot"],
     "build_dependencies": ["rust"],
-    "date": "2024-12-30",
+    "date": "2025-01-02",
     "default": false,
     "outdated": true,
     "prune": true,
@@ -708,7 +708,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.44.3"
+    "version": "1.44.5"
   },
   "brotli": {
     "aliases": {
@@ -961,11 +961,11 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-12-19",
+    "date": "2024-12-30",
     "default": true,
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.56.0"
+    "version": "2.57.0"
   },
   "cli11": {
     "aliases": {
@@ -1630,14 +1630,14 @@
     },
     "bin": ["eza"],
     "build_dependencies": ["rust"],
-    "date": "2024-12-30",
+    "date": "2025-01-02",
     "default": false,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.14"
+    "version": "0.20.15"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2171,7 +2171,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2024-12-30",
+    "date": "2025-01-02",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -2179,7 +2179,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.0"
+    "version": "4.3.0.6"
   },
   "glib": {
     "aliases": {
@@ -2614,14 +2614,14 @@
     },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
-    "date": "2024-07-12",
+    "date": "2025-01-02",
     "default": false,
     "prune": true,
     "url": [
       "https://www.haskell.org/ghcup/",
       "https://github.com/haskell/ghcup-hs/"
     ],
-    "version": "0.1.30.0"
+    "version": "0.1.40.0"
   },
   "haskell-stack": {
     "aliases": {
@@ -4440,11 +4440,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2023-12-22",
+    "date": "2025-01-02",
     "default": false,
     "prune": false,
     "url": ["https://github.com/kkos/oniguruma/"],
-    "version": "6.9.9"
+    "version": "6.9.10"
   },
   "ont-bonito": {
     "bin": ["bonito"],
@@ -5585,12 +5585,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2024-12-19",
+    "date": "2025-01-02",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.8.4"
+    "version": "0.8.5"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6414,14 +6414,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2023-10-23",
+    "date": "2025-01-02",
     "default": false,
     "prune": false,
     "url": [
       "https://juliastrings.github.io/utf8proc/",
       "https://github.com/JuliaStrings/utf8proc/"
     ],
-    "version": "2.9.0"
+    "version": "2.10.0"
   },
   "uv": {
     "bin": ["uv"],
