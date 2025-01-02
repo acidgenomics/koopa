@@ -961,11 +961,11 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-12-19",
+    "date": "2024-12-30",
     "default": true,
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.56.0"
+    "version": "2.57.0"
   },
   "cli11": {
     "aliases": {
