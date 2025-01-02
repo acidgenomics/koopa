@@ -2043,7 +2043,7 @@
       "fedora": true,
       "homebrew": true
     },
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "xz"],
     "date": "2024-12-24",
     "default": false,
     "dependencies": [
