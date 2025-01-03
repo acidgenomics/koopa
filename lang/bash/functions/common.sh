@@ -16230,7 +16230,7 @@ koopa_install_tmux() {
 
 koopa_install_tokei() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='tokei' \
         "$@"
 }
@@ -16263,6 +16263,7 @@ koopa_install_tryceratops() {
 
 koopa_install_tuc() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='tuc' \
         "$@"
 }
@@ -16487,7 +16488,7 @@ koopa_install_xorg_xtrans() {
 
 koopa_install_xsv() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='xsv' \
         "$@"
 }
@@ -16531,13 +16532,14 @@ koopa_install_yt_dlp() {
 
 koopa_install_zellij() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='zellij' \
         "$@"
 }
 
 koopa_install_zenith() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='zenith' \
         "$@"
 }
