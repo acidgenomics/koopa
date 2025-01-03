@@ -1430,6 +1430,12 @@
     "dependencies": ["conda"],
     "outdated": true,
     "prune": true,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": true
+    },
     "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.61.0"
   },
