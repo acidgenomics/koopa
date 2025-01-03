@@ -432,7 +432,7 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2024-12-24",
+    "date": "2025-01-03",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
@@ -440,7 +440,7 @@
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "5.4.2"
+    "version": "5.4.3"
   },
   "bashcov": {
     "bin": ["bashcov"],
@@ -2183,7 +2183,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-01-02",
+    "date": "2025-01-03",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -2191,7 +2191,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.0.6"
+    "version": "4.3.0.7"
   },
   "glib": {
     "aliases": {
@@ -6024,9 +6024,9 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "build_dependencies": ["cmake", "rust"],
     "date": "2024-07-27",
-    "default": false,
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.21.1"
@@ -6432,12 +6432,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-12-30",
+    "date": "2025-01-03",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.13"
+    "version": "0.5.14"
   },
   "vim": {
     "aliases": {

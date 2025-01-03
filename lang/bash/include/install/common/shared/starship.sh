@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_rust() {
     # Install starship.
     # @note Updated 2024-03-22.
     # ""
@@ -12,5 +17,10 @@ main() {
     koopa_install_rust_package \
         --git="${dict['git']}" \
         --tag="${dict['tag']}"
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }
