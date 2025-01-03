@@ -15991,6 +15991,7 @@ koopa_install_shared_apps() {
 
 koopa_install_shellcheck() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='shellcheck' \
         "$@"
 }
@@ -16076,6 +16077,7 @@ koopa_install_star() {
 
 koopa_install_starship() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='starship' \
         "$@"
 }
