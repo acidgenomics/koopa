@@ -14,7 +14,7 @@ main() {
     #
     local -A app dict
     local -a includes libs
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_activate_app 'zlib'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"

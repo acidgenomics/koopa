@@ -51,7 +51,7 @@ main() {
         # Build dependencies ---------------------------------------------------
         # > "-DLLVM_ROOT=${dict['llvm_root']}"
     )
-    if ! koopa_is_aarch64
+    if ! koopa_is_arm64
     then
         cmake_args+=('-DARROW_MIMALLOC=ON')
     fi
