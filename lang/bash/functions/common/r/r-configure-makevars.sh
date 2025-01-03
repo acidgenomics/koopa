@@ -160,10 +160,10 @@ lib/pkgconfig"
             # The new ld linker in Xcode CLT 15 breaks a lot of stuff, so
             # reverting to classic mode here.
             dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-            then
-                ldflags+=('-Wl,-ld_classic')
-            fi
+            # > if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+            # > then
+            # >     ldflags+=('-Wl,-ld_classic')
+            # > fi
             if [[ "${bool['system']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')

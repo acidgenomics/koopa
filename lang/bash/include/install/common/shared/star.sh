@@ -84,14 +84,14 @@ install_from_source() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/alexdobin/STAR/archive/\
 ${dict['version']}.tar.gz"
-    if koopa_is_macos
-    then
-        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-        then
-            koopa_append_ldflags '-Wl,-ld_classic'
-        fi
-    fi
+    # > if koopa_is_macos
+    # > then
+    # >     dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+    # >     if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+    # >     then
+    # >         koopa_append_ldflags '-Wl,-ld_classic'
+    # >     fi
+    # > fi
     make_args+=(
         "--jobs=${dict['jobs']}"
         "CPPFLAGS=${CPPFLAGS:?}"

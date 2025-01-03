@@ -22797,10 +22797,6 @@ lib/pkgconfig"
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
             dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-            if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-            then
-                ldflags+=('-Wl,-ld_classic')
-            fi
             if [[ "${bool['system']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')
