@@ -3,7 +3,7 @@
 main() {
     # """
     # Install zip.
-    # @note Updated 2024-11-04.
+    # @note Updated 2025-01-03.
     #
     # Upstream is unmaintained so we use the Debian patchset:
     # https://packages.debian.org/sid/zip
@@ -33,18 +33,8 @@ main() {
             koopa_stop 'Unsupported version.'
             ;;
     esac
-    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-    dict['version2']="$( \
-        koopa_gsub \
-            --fixed \
-            --pattern='.' \
-            --replacement='' \
-            "${dict['version']}"
-    )"
-# >     dict['url']="https://downloads.sourceforge.net/project/infozip/\
-# > Zip%20${dict['maj_ver']}.x%20%28latest%29/${dict['version']}/\
-# > zip${dict['version2']}.tar.gz"
-    dict['url']="koopa.acidgenomics.com/src/zip/${dict['version']}.tar.gz"
+    dict['url']="https://koopa.acidgenomics.com/src/zip/\
+${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_apply_debian_patch_set \

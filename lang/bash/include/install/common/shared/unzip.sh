@@ -3,7 +3,7 @@
 main() {
     # """
     # Install unzip.
-    # @note Updated 2023-10-17.
+    # @note Updated 2025-01-03.
     #
     # Upstream is unmaintained so we use the Ubuntu patchset:
     # https://packages.ubuntu.com/kinetic/unzip
@@ -32,17 +32,6 @@ main() {
             koopa_stop 'Unsupported version.'
             ;;
     esac
-    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
-    dict['version2']="$( \
-        koopa_gsub \
-            --fixed \
-            --pattern='.' \
-            --replacement='' \
-            "${dict['version']}"
-    )"
-# >     dict['url']="https://downloads.sourceforge.net/project/infozip/\
-# > UnZip%20${dict['maj_ver']}.x%20%28latest%29/UnZip%20${dict['version']}/\
-# > unzip${dict['version2']}.tar.gz"
     dict['url']="https://koopa.acidgenomics.com/src/unzip/\
 ${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"

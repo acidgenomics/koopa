@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PCRE.
-    # @note Updated 2023-04-11.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://www.pcre.org/
@@ -33,8 +33,8 @@ main() {
         '--enable-utf8'
         "--prefix=${dict['prefix']}"
     )
-    dict['url']="https://downloads.sourceforge.net/project/pcre/pcre/\
-${dict['version']}/pcre-${dict['version']}.tar.bz2"
+    dict['url']="https://koopa.acidgenomics.com/src/pcre/\
+${dict['version']}.tar.bz2"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'

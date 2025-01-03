@@ -3,7 +3,7 @@
 main() {
     # """
     # Install LAME.
-    # @note Updated 2023-04-10.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/lame.rb
@@ -19,8 +19,8 @@ main() {
         '--enable-nasm'
         "--prefix=${dict['prefix']}"
     )
-    dict['url']="https://downloads.sourceforge.net/project/lame/lame/\
-${dict['version']}/lame-${dict['version']}.tar.gz"
+    dict['url']="https://koopa.acidgenomics.com/src/lame/\
+${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'

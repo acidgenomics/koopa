@@ -3,7 +3,7 @@
 main() {
     # """
     # Install swig.
-    # @note Updated 2023-04-11.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://github.com/conda-forge/swig-feedstock
@@ -21,8 +21,8 @@ main() {
         "--with-pcre2-prefix=${dict['pcre2']}"
         '--without-alllang'
     )
-    dict['url']="https://downloads.sourceforge.net/project/swig/swig/\
-swig-${dict['version']}/swig-${dict['version']}.tar.gz"
+    dict['url']="https://koopa.acidgenomics.com/src/swig/\
+${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
