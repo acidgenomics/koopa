@@ -13699,7 +13699,7 @@ koopa_install_grep() {
 
 koopa_install_grex() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='grex' \
         "$@"
 }
@@ -13963,6 +13963,7 @@ koopa_install_hugo() {
 
 koopa_install_hyperfine() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='hyperfine' \
         "$@"
 }
@@ -14603,12 +14604,14 @@ koopa_install_markdownlint_cli() {
 
 koopa_install_mcfly() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='mcfly' \
         "$@"
 }
 
 koopa_install_mdcat() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='mdcat' \
         "$@"
 }
@@ -14868,6 +14871,7 @@ koopa_install_npth() {
 
 koopa_install_nushell() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='nushell' \
         "$@"
 }
@@ -15227,7 +15231,7 @@ koopa_install_private_ont_guppy() {
 
 koopa_install_procs() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='procs' \
         "$@"
 }
@@ -15588,6 +15592,7 @@ koopa_install_ripgrep_all() {
 
 koopa_install_ripgrep() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='ripgrep' \
         "$@"
 }
