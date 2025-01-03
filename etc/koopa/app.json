@@ -7080,7 +7080,7 @@
     },
     "bin": ["zsh"],
     "date": "2025-01-03",
-    "default": true,
+    "default": false,
     "dependencies": ["conda"],
     "man1": ["zsh.1"],
     "prune": false,
