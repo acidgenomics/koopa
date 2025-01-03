@@ -12767,7 +12767,7 @@ koopa_install_bashcov() {
 
 koopa_install_bat() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='bat' \
         "$@"
 }
