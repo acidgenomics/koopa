@@ -12848,7 +12848,7 @@ koopa_install_boost() {
 
 koopa_install_bottom() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='bottom' \
         "$@"
 }
@@ -12870,7 +12870,7 @@ koopa_install_bpytop() {
 
 koopa_install_broot() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='broot' \
         "$@"
 }
@@ -13166,7 +13166,7 @@ koopa_install_diff_so_fancy() {
 
 koopa_install_difftastic() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='difftastic' \
         "$@"
 }
@@ -13185,7 +13185,6 @@ koopa_install_dotfiles() {
 
 koopa_install_du_dust() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='du-dust' \
         "$@"
 }
@@ -13242,6 +13241,7 @@ koopa_install_expat() {
 
 koopa_install_eza() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='eza' \
         "$@"
 }
@@ -16532,7 +16532,7 @@ koopa_install_zopfli() {
 
 koopa_install_zoxide() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='zoxide' \
         "$@"
 }
