@@ -1429,6 +1429,7 @@
     "default": true,
     "dependencies": ["conda"],
     "outdated": true,
+    "notes": ["0.61 is failing to install on amd64."],
     "prune": true,
     "supported": {
       "linux-amd64": true,
