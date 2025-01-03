@@ -5818,14 +5818,9 @@
       "homebrew": true
     },
     "bin": ["shellcheck"],
-    "build_dependencies": [
-      "git",
-      "haskell-cabal",
-      "haskell-ghcup",
-      "pkg-config"
-    ],
-    "date": "2024-03-08",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/koalaman/shellcheck/"],
     "version": "0.10.0"
