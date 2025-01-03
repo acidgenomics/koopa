@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Zsh.
-    # @note Updated 2024-06-12.
+    # @note Updated 2025-01-03.
     #
     # Need to configure Zsh to support system-wide config files in '/etc/zsh'.
     # Note that RHEL 7 locates these to '/etc' by default instead.
@@ -51,8 +51,8 @@ main() {
     then
         koopa_append_cflags '-Wno-implicit-function-declaration'
     fi
-    dict['url']="https://downloads.sourceforge.net/project/zsh/zsh/\
-${dict['version']}/zsh-${dict['version']}.tar.xz"
+    dict['url']="https://koopa.acidgenomics.com/src/zsh/\
+${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
