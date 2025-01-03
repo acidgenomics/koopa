@@ -728,7 +728,7 @@ koopa_debian_install_system_r() {
 }
 
 koopa_debian_install_system_rstudio_server() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='rstudio-server' \
         --platform='debian' \
@@ -737,7 +737,7 @@ koopa_debian_install_system_rstudio_server() {
 }
 
 koopa_debian_install_system_shiny_server() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='shiny-server' \
         --platform='debian' \

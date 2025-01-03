@@ -10,7 +10,7 @@ main() {
     # - https://github.com/Xinglab/rmats-turbo/issues/36
     # """
     local -A app dict
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     koopa_install_conda_package
     koopa_rm "${dict['prefix']}/bin"

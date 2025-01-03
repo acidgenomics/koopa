@@ -124,7 +124,7 @@ koopa_r_configure_environ() {
     fi
     dict['arch']="$(koopa_arch)"
     # Apple Silicon convention is 'arm64' but RStudio expects 'aarch64'.
-    if koopa_is_macos && koopa_is_aarch64
+    if koopa_is_macos && koopa_is_arm64
     then
         dict['arch']='aarch64'
     fi

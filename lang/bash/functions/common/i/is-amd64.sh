@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-koopa_is_aarch64() {
+koopa_is_amd64() {
     # """
-    # Is the architecture ARM 64-bit?
-    # @note Updated 2023-03-19.
+    # Is the architecture AMD 64-bit (Intel x86 64-bit)?
+    # @note Updated 2025-01-03.
     # """
     case "$(koopa_arch)" in
-        'aarch64' | 'arm64')
+        'amd64' | 'x86_64')
             return 0
             ;;
         *)

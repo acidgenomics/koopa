@@ -8,7 +8,7 @@ main() {
     local -A app dict
     if koopa_is_macos
     then
-        koopa_assert_is_not_aarch64
+        koopa_assert_is_not_arm64
     fi
     app['aws']="$(koopa_locate_aws --allow-system)"
     koopa_assert_is_executable "${app[@]}"
