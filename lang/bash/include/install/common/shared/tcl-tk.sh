@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Tcl/Tk.
-    # @note Updated 2023-06-02.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://www.tcl.tk/software/tcltk/download.html
@@ -33,29 +33,33 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     conf_args=(
-        '--disable-static'
         '--enable-shared'
-        '--enable-threads'
         "--prefix=${dict['prefix']}"
     )
-    dict['tcl_url']="https://downloads.sourceforge.net/project/tcl/Tcl/\
-${dict['version']}/tcl${dict['version']}-src.tar.gz"
-    dict['tk_url']="https://downloads.sourceforge.net/project/tcl/Tcl/\
-${dict['version']}/tk${dict['version']}-src.tar.gz"
-    koopa_download "${dict['tcl_url']}"
-    koopa_download "${dict['tk_url']}"
-    koopa_extract "$(koopa_basename "${dict['tcl_url']}")" 'tcl-src'
-    koopa_extract "$(koopa_basename "${dict['tk_url']}")" 'tk-src'
+    dict['tcl_url']="https://koopa.acidgenomics.com/src/tcl/\
+${dict['version']}.tar.gz"
+    dict['tk_url']="https://koopa.acidgenomics.com/src/tk/\
+${dict['version']}.tar.gz"
+    koopa_download "${dict['tcl_url']}" 'tcl.tar.gz'
+    koopa_download "${dict['tk_url']}" 'tk.tar.gz'
+    koopa_extract 'tcl.tar.gz' 'tcl-src'
+    koopa_extract 'tk.tar.gz' 'tk-src'
     (
         koopa_cd 'tcl-src/unix'
+        local -a tcl_conf_args
+        tcl_conf_args+=(
+            "${conf_args[@]}"
+            '--disable-static'
+            '--enable-threads'
+        )
         koopa_make_build \
             --target='install' \
             --target='install-private-headers' \
-            "${conf_args[@]}"
+            "${tcl_conf_args[@]}"
     )
     (
-        local tk_conf_args
-        tk_conf_args=(
+        local -a tk_conf_args
+        tk_conf_args+=(
             "${conf_args[@]}"
             "--with-tcl=${dict['prefix']}/lib"
         )
