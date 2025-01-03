@@ -1684,9 +1684,9 @@
       "homebrew": "fd"
     },
     "bin": ["fd"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-09",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/fd/"],
     "version": "10.2.0"
@@ -1852,9 +1852,15 @@
   },
   "fq": {
     "bin": ["fq"],
-    "build_dependencies": ["rust"],
-    "date": "2024-07-12",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
@@ -2178,9 +2184,9 @@
       "homebrew": true
     },
     "bin": ["gitui"],
-    "build_dependencies": ["rust"],
-    "date": "2024-6-13",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://github.com/extrawurst/gitui/",
