@@ -1750,10 +1750,9 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-03-19",
+    "date": "2025-01-03",
     "default": false,
-    "dependencies": ["ncurses", "pcre2"],
+    "dependencies": ["conda"],
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
