@@ -3,7 +3,7 @@
 main() {
     # """
     # Install isl.
-    # @note Updated 2023-04-10.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://libisl.sourceforge.io/
@@ -24,7 +24,8 @@ main() {
         '--with-gmp=system'
         "--with-gmp-prefix=${dict['gmp']}"
     )
-    dict['url']="https://libisl.sourceforge.io/isl-${dict['version']}.tar.xz"
+    dict['url']="https://koopa.acidgenomics.com/src/isl/\
+${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
