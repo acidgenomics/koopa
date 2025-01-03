@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Switch to installing from conda, when possible:
+# https://github.com/conda-forge/staged-recipes/pull/14581
+
 main() {
     # """
     # Install hadolint.
