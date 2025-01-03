@@ -15586,6 +15586,7 @@ koopa_install_reproc() {
 
 koopa_install_ripgrep_all() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='ripgrep-all' \
         "$@"
 }
@@ -15914,7 +15915,7 @@ koopa_install_screen() {
 
 koopa_install_sd() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='sd' \
         "$@"
 }
@@ -16192,7 +16193,7 @@ koopa_install_tcl_tk() {
 
 koopa_install_tealdeer() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='tealdeer' \
         "$@"
 }
