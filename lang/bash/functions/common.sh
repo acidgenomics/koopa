@@ -13278,7 +13278,7 @@ koopa_install_fastqc() {
 
 koopa_install_fd_find() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='fd-find' \
         "$@"
 }
@@ -13356,7 +13356,9 @@ koopa_install_fontconfig() {
 }
 
 koopa_install_fq() {
+    koopa_assert_is_not_arm64
     koopa_install_app \
+        --installer='conda-package' \
         --name='fq' \
         "$@"
 }
@@ -13472,7 +13474,7 @@ koopa_install_git() {
 
 koopa_install_gitui() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='gitui' \
         "$@"
 }
