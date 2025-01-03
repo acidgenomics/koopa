@@ -5491,9 +5491,9 @@
       "homebrew": true
     },
     "bin": ["rga"],
-    "build_dependencies": ["rust"],
-    "date": "2024-12-30",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/phiresky/ripgrep-all/"],
     "version": "0.10.6"
@@ -5775,9 +5775,9 @@
       "homebrew": true
     },
     "bin": ["sd"],
-    "build_dependencies": ["rust"],
-    "date": "2023-11-08",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/chmln/sd/"],
     "version": "1.0.0"
@@ -6197,9 +6197,9 @@
       "homebrew": true
     },
     "bin": ["tldr"],
-    "build_dependencies": ["rust"],
-    "date": "2024-11-18",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dbrgn/tealdeer/"],
     "version": "1.7.1"
