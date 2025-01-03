@@ -2,7 +2,7 @@
 
 koopa_install_grex() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='grex' \
         "$@"
 }
