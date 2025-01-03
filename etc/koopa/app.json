@@ -459,9 +459,9 @@
       "homebrew": true
     },
     "bin": ["bat"],
-    "build_dependencies": ["rust"],
-    "date": "2023-10-11",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/bat"],
     "version": "0.24.0"

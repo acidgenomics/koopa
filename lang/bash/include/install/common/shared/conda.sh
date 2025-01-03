@@ -7,7 +7,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2024-10-21.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
