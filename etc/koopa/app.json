@@ -7079,10 +7079,9 @@
       "homebrew": true
     },
     "bin": ["zsh"],
-    "build_dependencies": ["make"],
-    "date": "2022-09-26",
-    "default": false,
-    "dependencies": ["ncurses", "pcre", "texinfo"],
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "man1": ["zsh.1"],
     "prune": false,
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],
