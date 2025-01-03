@@ -45,14 +45,14 @@ main() {
     # - https://github.com/HDFGroup/hdf5/issues/3571
     # - https://community.intel.com/t5/Intel-Fortran-Compiler/
     #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
-    if koopa_is_macos
-    then
-        dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
-        if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-        then
-            koopa_append_ldflags '-Wl,-ld_classic'
-        fi
-    fi
+    # > if koopa_is_macos
+    # > then
+    # >     dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+    # >     if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
+    # >     then
+    # >         koopa_append_ldflags '-Wl,-ld_classic'
+    # >     fi
+    # > fi
     dict['url']="https://github.com/HDFGroup/hdf5/releases/download/\
 hdf5_${dict['version2']}/hdf5-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
