@@ -915,6 +915,7 @@ _koopa_activate_ssh_key() {
 }
 
 _koopa_activate_starship() {
+    [ -n "${STARSHIP_SHELL:-}" ] && return 0
     __kvar_starship="$(_koopa_bin_prefix)/starship"
     if [ ! -x "$__kvar_starship" ]
     then

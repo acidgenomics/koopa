@@ -62,7 +62,7 @@ _koopa_activate_zsh_editor() {
 _koopa_activate_zsh_extras() {
     # """
     # Activate Zsh extras.
-    # @note Updated 2021-06-16.
+    # @note Updated 2025-01-03.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -92,19 +92,13 @@ _koopa_activate_zsh_extras() {
 _koopa_activate_zsh_fpath() {
     # """
     # Activate Zsh FPATH.
-    # @note Updated 2024-09-10.
+    # @note Updated 2025-01-03.
     # """
     local -a prefixes
     local koopa_prefix maj_min_ver version
     koopa_prefix="$(_koopa_koopa_prefix)"
-    version="${ZSH_VERSION:?}"
-    maj_min_ver="$(_koopa_major_minor_version "$version")"
     prefixes+=(
-        "/usr/share/zsh/${maj_min_ver}/functions"
-        '/usr/share/zsh/site-functions'
-        "${koopa_prefix}/app/zsh/${version}/share/zsh/${maj_min_ver}/functions"
-        "${koopa_prefix}/app/zsh/${version}/share/zsh/site-functions"
-        '/usr/local/share/zsh/site-functions'
+        # > '/usr/local/share/zsh/site-functions'
         "${koopa_prefix}/lang/zsh/functions"
     )
     _koopa_add_to_fpath_start "${prefixes[@]}"
@@ -147,7 +141,7 @@ _koopa_activate_zsh_plugins() {
 _koopa_activate_zsh_prompt() {
     # """
     # Activate Zsh prompt.
-    # Updated 2023-03-09.
+    # Updated 2025-01-03.
     #
     # See also:
     # - https://github.com/sindresorhus/pure

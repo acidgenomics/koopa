@@ -1,9 +1,11 @@
 #!/bin/sh
 
+# FIXME This is failing to load for zsh loaded inside bash shell.
+
 _koopa_activate_starship() {
     # """
     # Activate starship prompt.
-    # @note Updated 2022-05-12.
+    # @note Updated 2025-01-03.
     #
     # Note that 'starship.bash' script has unbound PREEXEC_READY.
     # https://github.com/starship/starship/blob/master/src/init/starship.bash
@@ -11,6 +13,7 @@ _koopa_activate_starship() {
     # See also:
     # https://starship.rs/
     # """
+    [ -n "${STARSHIP_SHELL:-}" ] && return 0
     __kvar_starship="$(_koopa_bin_prefix)/starship"
     if [ ! -x "$__kvar_starship" ]
     then
