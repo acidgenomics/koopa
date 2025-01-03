@@ -2378,9 +2378,9 @@
       "homebrew": true
     },
     "bin": ["grex"],
-    "build_dependencies": ["rust"],
-    "date": "2024-03-06",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/pemistahl/grex/"],
     "version": "1.4.5"
@@ -2485,6 +2485,7 @@
     "date": "2024-11-18",
     "default": false,
     "dependencies": ["python3.12"],
+    "notes": ["Can switch this to a conda install for amd64."],
     "prune": true,
     "url": [
       "https://gseapy.readthedocs.io/",
@@ -2718,6 +2719,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-12-30",
     "default": false,
+    "notes": ["Currently outdated on conda."],
     "prune": true,
     "url": ["https://github.com/sharkdp/hexyl/"],
     "version": "0.16.0"
@@ -2815,9 +2817,9 @@
       "homebrew": true
     },
     "bin": ["hyperfine"],
-    "build_dependencies": ["rust"],
-    "date": "2023-11-18",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/hyperfine/"],
     "version": "1.19.0"
@@ -3003,6 +3005,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "notes": ["Available on conda only for amd64."],
     "prune": true,
     "url": [
       "https://jless.io/",
@@ -3812,9 +3815,9 @@
       "homebrew": true
     },
     "bin": ["lsd"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-09",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/lsd-rs/lsd/"],
     "version": "1.1.5"
@@ -3988,9 +3991,9 @@
       "homebrew": true
     },
     "bin": ["mcfly"],
-    "build_dependencies": ["rust"],
-    "date": "2024-08-19",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.9.2"
@@ -4000,13 +4003,13 @@
       "homebrew": true
     },
     "bin": ["mdcat"],
-    "build_dependencies": ["rust"],
-    "date": "2024-12-19",
-    "default": false,
-    "dependencies": ["openssl3"],
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.7.1"
+    "version": "2.7.0"
   },
   "meson": {
     "aliases": {
@@ -4448,10 +4451,9 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-12-23",
+    "date": "2025-01-03",
     "default": false,
-    "dependencies": ["openssl3"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
     "version": "0.101.0"
@@ -4896,9 +4898,9 @@
       "homebrew": true
     },
     "bin": ["procs"],
-    "build_dependencies": ["rust"],
-    "date": "2024-10-25",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dalance/procs/"],
     "version": "0.14.8"
@@ -5477,10 +5479,9 @@
       "homebrew": true
     },
     "bin": ["rg"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-09",
-    "default": false,
-    "dependencies": ["pcre2"],
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/BurntSushi/ripgrep/"],
     "version": "14.1.1"
