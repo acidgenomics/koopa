@@ -6198,7 +6198,7 @@
     },
     "bin": ["tldr"],
     "date": "2025-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dbrgn/tealdeer/"],
@@ -6286,9 +6286,9 @@
       "homebrew": true
     },
     "bin": ["tokei"],
-    "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/XAMPPRocky/tokei/"],
     "version": "12.1.2"
@@ -6347,9 +6347,9 @@
       "homebrew": true
     },
     "bin": ["tuc"],
-    "build_dependencies": ["rust"],
-    "date": "2024-01-02",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.2.0"
@@ -6862,9 +6862,9 @@
       "homebrew": true
     },
     "bin": ["xsv"],
-    "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/BurntSushi/xsv/"],
     "version": "0.13.0"
@@ -7003,9 +7003,9 @@
       "homebrew": true
     },
     "bin": ["zellij"],
-    "build_dependencies": ["rust"],
-    "date": "2024-11-25",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/zellij-org/zellij/"],
     "version": "0.41.2"
@@ -7015,9 +7015,9 @@
       "homebrew": true
     },
     "bin": ["zenith"],
-    "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/bvaisvil/zenith/"],
     "version": "0.14.1"
