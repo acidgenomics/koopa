@@ -3,7 +3,7 @@
 _koopa_activate_mcfly() {
     # """
     # Activate mcfly.
-    # @note Updated 2023-03-10.
+    # @note Updated 2025-01-04.
     #
     # Use "mcfly search 'query'" to query directly.
     #
@@ -34,15 +34,18 @@ _koopa_activate_mcfly() {
     __kvar_color_mode="$(_koopa_color_mode)"
     [ "$__kvar_color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
-        'emacs' | \
-        'vim')
-            export MCFLY_KEY_SCHEME="${EDITOR:?}"
-        ;;
+        'nvim' | *'/nvim' | \
+        'vim' | *'/vim')
+            export MCFLY_KEY_SCHEME='vim'
+            ;;
+        'emacs' | *'/emacs')
+            export MCFLY_KEY_SCHEME='emacs'
+            ;;
     esac
+    export MCFLY_DISABLE_MENU=true
     export MCFLY_FUZZY=2
     export MCFLY_HISTORY_LIMIT=10000
     export MCFLY_INTERFACE_VIEW='TOP' # or 'BOTTOM'
-    export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
     __kvar_nounset="$(_koopa_boolean_nounset)"
