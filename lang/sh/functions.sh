@@ -918,7 +918,6 @@ _koopa_activate_ssh_key() {
 }
 
 _koopa_activate_starship() {
-    [ -n "${STARSHIP_SHELL:-}" ] && return 0
     __kvar_starship="$(_koopa_bin_prefix)/starship"
     if [ ! -x "$__kvar_starship" ]
     then
@@ -931,10 +930,19 @@ _koopa_activate_starship() {
         'zsh')
             ;;
         *)
-            unset -v __kvar_shell
+            unset -v \
+                __kvar_shell \
+                __kvar_starship
             return 0
             ;;
     esac
+    if [ -n "${STARSHIP_SHELL:-}" ] && [ "$STARSHIP_SHELL" != "$__kvar_shell" ]
+    then
+        unset -v \
+            __kvar_shell \
+         __kvar_starship
+        return 0
+    fi
     __kvar_nounset="$(_koopa_boolean_nounset)"
     if [ "$__kvar_nounset" -eq 1 ]
     then
