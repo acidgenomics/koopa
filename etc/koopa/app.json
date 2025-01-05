@@ -1462,12 +1462,12 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2025-01-03",
+    "date": "2025-01-05",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "f364c8b9ee4fccb9839429469ce65e81ea212e00"
+    "version": "3306c38f759580d2fe3a4d039f72a32263e9a534"
   },
   "du-dust": {
     "aliases": {
@@ -4844,12 +4844,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-12-10",
+    "date": "2025-01-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.5"
+    "version": "2.0.0"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
