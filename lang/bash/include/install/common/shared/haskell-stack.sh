@@ -43,7 +43,7 @@ main() {
     # """
     local -A app dict
     local -a stack_args
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -432,7 +432,7 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2024-12-24",
+    "date": "2025-01-03",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
@@ -440,7 +440,7 @@
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "5.4.2"
+    "version": "5.4.3"
   },
   "bashcov": {
     "bin": ["bashcov"],
@@ -459,9 +459,9 @@
       "homebrew": true
     },
     "bin": ["bat"],
-    "build_dependencies": ["rust"],
-    "date": "2023-10-11",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/bat"],
     "version": "0.24.0"
@@ -666,9 +666,9 @@
       "homebrew": true
     },
     "bin": ["btm"],
-    "build_dependencies": ["rust"],
-    "date": "2024-12-24",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/ClementTsang/bottom/"],
     "version": "0.10.2"
@@ -711,16 +711,16 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "build_dependencies": ["rust"],
     "date": "2025-01-02",
     "default": false,
+    "dependencies": ["conda"],
     "outdated": true,
     "prune": true,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.44.5"
+    "version": "1.44.3"
   },
   "brotli": {
     "aliases": {
@@ -1402,9 +1402,9 @@
       "homebrew": "git-delta"
     },
     "bin": ["delta"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-22",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.18.2"
@@ -1425,12 +1425,20 @@
       "homebrew": true
     },
     "bin": ["difft"],
-    "build_dependencies": ["rust"],
-    "date": "2024-12-23",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
+    "outdated": true,
+    "notes": ["0.61 is failing to install on amd64."],
     "prune": true,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": true
+    },
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.62.0"
+    "version": "0.61.0"
   },
   "docker-credential-helpers": {
     "aliases": {
@@ -1454,21 +1462,23 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2025-01-03",
+    "date": "2025-01-05",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "d6441097f28166fbcb604815b1df20c8c67e220a"
+    "version": "3306c38f759580d2fe3a4d039f72a32263e9a534"
   },
   "du-dust": {
     "aliases": {
-      "homebrew": "dust"
+      "homebrew": "dust",
+      "cargo": true,
+      "conda": "dust"
     },
     "bin": ["dust"],
-    "build_dependencies": ["rust"],
-    "date": "2024-07-19",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://github.com/bootandy/dust/",
@@ -1641,9 +1651,9 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "build_dependencies": ["rust"],
-    "date": "2025-01-02",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
@@ -1674,9 +1684,9 @@
       "homebrew": "fd"
     },
     "bin": ["fd"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-09",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/fd/"],
     "version": "10.2.0"
@@ -1740,10 +1750,9 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-03-19",
+    "date": "2025-01-03",
     "default": false,
-    "dependencies": ["ncurses", "pcre2"],
+    "dependencies": ["conda"],
     "man1": ["fish.1"],
     "url": [
       "https://fishshell.com/",
@@ -1842,9 +1851,15 @@
   },
   "fq": {
     "bin": ["fq"],
-    "build_dependencies": ["rust"],
-    "date": "2024-07-12",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
     "url": [
       "https://github.com/stjude-rust-labs/fq/",
       "https://bioconda.github.io/recipes/fq/README.html"
@@ -2168,9 +2183,9 @@
       "homebrew": true
     },
     "bin": ["gitui"],
-    "build_dependencies": ["rust"],
-    "date": "2024-6-13",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://github.com/extrawurst/gitui/",
@@ -2183,7 +2198,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-01-02",
+    "date": "2025-01-05",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -2191,7 +2206,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.0.6"
+    "version": "4.3.0.8"
   },
   "glib": {
     "aliases": {
@@ -2362,9 +2377,9 @@
       "homebrew": true
     },
     "bin": ["grex"],
-    "build_dependencies": ["rust"],
-    "date": "2024-03-06",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/pemistahl/grex/"],
     "version": "1.4.5"
@@ -2469,6 +2484,7 @@
     "date": "2024-11-18",
     "default": false,
     "dependencies": ["python3.12"],
+    "notes": ["Can switch this to a conda install for amd64."],
     "prune": true,
     "url": [
       "https://gseapy.readthedocs.io/",
@@ -2702,6 +2718,7 @@
     "build_dependencies": ["rust"],
     "date": "2024-12-30",
     "default": false,
+    "notes": ["Currently outdated on conda."],
     "prune": true,
     "url": ["https://github.com/sharkdp/hexyl/"],
     "version": "0.16.0"
@@ -2799,9 +2816,9 @@
       "homebrew": true
     },
     "bin": ["hyperfine"],
-    "build_dependencies": ["rust"],
-    "date": "2023-11-18",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/hyperfine/"],
     "version": "1.19.0"
@@ -2987,6 +3004,7 @@
       "xorg-libxdmcp",
       "xorg-xorgproto"
     ],
+    "notes": ["Available on conda only for amd64."],
     "prune": true,
     "url": [
       "https://jless.io/",
@@ -3796,9 +3814,9 @@
       "homebrew": true
     },
     "bin": ["lsd"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-09",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/lsd-rs/lsd/"],
     "version": "1.1.5"
@@ -3972,9 +3990,9 @@
       "homebrew": true
     },
     "bin": ["mcfly"],
-    "build_dependencies": ["rust"],
-    "date": "2024-08-19",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cantino/mcfly/"],
     "version": "0.9.2"
@@ -3984,13 +4002,13 @@
       "homebrew": true
     },
     "bin": ["mdcat"],
-    "build_dependencies": ["rust"],
-    "date": "2024-12-19",
-    "default": false,
-    "dependencies": ["openssl3"],
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/lunaryorn/mdcat/"],
-    "version": "2.7.1"
+    "version": "2.7.0"
   },
   "meson": {
     "aliases": {
@@ -4432,10 +4450,9 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "build_dependencies": ["pkg-config", "rust"],
-    "date": "2024-12-23",
+    "date": "2025-01-03",
     "default": false,
-    "dependencies": ["openssl3"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
     "version": "0.101.0"
@@ -4827,12 +4844,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2024-12-10",
+    "date": "2025-01-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "1.8.5"
+    "version": "2.0.0"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
@@ -4880,9 +4897,9 @@
       "homebrew": true
     },
     "bin": ["procs"],
-    "build_dependencies": ["rust"],
-    "date": "2024-10-25",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dalance/procs/"],
     "version": "0.14.8"
@@ -4984,12 +5001,12 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2024-05-06",
+    "date": "2025-01-05",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.18.0"
+    "version": "2.19.0"
   },
   "pylint": {
     "aliases": {
@@ -5461,10 +5478,9 @@
       "homebrew": true
     },
     "bin": ["rg"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-09",
-    "default": false,
-    "dependencies": ["pcre2"],
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/BurntSushi/ripgrep/"],
     "version": "14.1.1"
@@ -5474,9 +5490,9 @@
       "homebrew": true
     },
     "bin": ["rga"],
-    "build_dependencies": ["rust"],
-    "date": "2024-12-30",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/phiresky/ripgrep-all/"],
     "version": "0.10.6"
@@ -5597,12 +5613,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-01-02",
+    "date": "2025-01-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.8.5"
+    "version": "0.8.6"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5758,9 +5774,9 @@
       "homebrew": true
     },
     "bin": ["sd"],
-    "build_dependencies": ["rust"],
-    "date": "2023-11-08",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/chmln/sd/"],
     "version": "1.0.0"
@@ -6024,9 +6040,9 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "build_dependencies": ["cmake", "rust"],
     "date": "2024-07-27",
-    "default": false,
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.21.1"
@@ -6180,9 +6196,9 @@
       "homebrew": true
     },
     "bin": ["tldr"],
-    "build_dependencies": ["rust"],
-    "date": "2024-11-18",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dbrgn/tealdeer/"],
     "version": "1.7.1"
@@ -6269,9 +6285,9 @@
       "homebrew": true
     },
     "bin": ["tokei"],
-    "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/XAMPPRocky/tokei/"],
     "version": "12.1.2"
@@ -6330,9 +6346,9 @@
       "homebrew": true
     },
     "bin": ["tuc"],
-    "build_dependencies": ["rust"],
-    "date": "2024-01-02",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.2.0"
@@ -6432,12 +6448,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2024-12-30",
+    "date": "2025-01-03",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.13"
+    "version": "0.5.14"
   },
   "vim": {
     "aliases": {
@@ -6845,9 +6861,9 @@
       "homebrew": true
     },
     "bin": ["xsv"],
-    "build_dependencies": ["rust"],
-    "date": "2022-09-26",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/BurntSushi/xsv/"],
     "version": "0.13.0"
@@ -6986,9 +7002,9 @@
       "homebrew": true
     },
     "bin": ["zellij"],
-    "build_dependencies": ["rust"],
-    "date": "2024-11-25",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/zellij-org/zellij/"],
     "version": "0.41.2"
@@ -6998,9 +7014,9 @@
       "homebrew": true
     },
     "bin": ["zenith"],
-    "build_dependencies": ["rust"],
-    "date": "2024-05-06",
+    "date": "2025-01-03",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/bvaisvil/zenith/"],
     "version": "0.14.1"
@@ -7048,9 +7064,9 @@
       "homebrew": true
     },
     "bin": ["zoxide"],
-    "build_dependencies": ["rust"],
-    "date": "2024-09-22",
-    "default": false,
+    "date": "2025-01-03",
+    "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
     "version": "0.9.6"
@@ -7062,10 +7078,9 @@
       "homebrew": true
     },
     "bin": ["zsh"],
-    "build_dependencies": ["make"],
-    "date": "2022-09-26",
+    "date": "2025-01-03",
     "default": false,
-    "dependencies": ["ncurses", "pcre", "texinfo"],
+    "dependencies": ["conda"],
     "man1": ["zsh.1"],
     "prune": false,
     "url": ["http://zsh.sourceforge.net/Arc/source.html"],

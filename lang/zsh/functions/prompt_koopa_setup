@@ -3,7 +3,7 @@
 _koopa_zsh_prompt() {
     # """
     # Koopa ZSH prompt.
-    # @note Updated 2023-03-09.
+    # @note Updated 2025-01-03.
     # """
     _koopa_activate_starship
     [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
