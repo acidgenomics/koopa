@@ -125,7 +125,7 @@ v${dict['version']}.tar.gz"
 }
 
 main() {
-    if koopa_is_aarch64
+    if koopa_is_arm64
     then
         install_from_source
     else

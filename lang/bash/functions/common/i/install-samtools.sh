@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 koopa_install_samtools() {
-    if koopa_is_macos && koopa_is_aarch64
+    if koopa_is_macos && koopa_is_arm64
     then
         koopa_install_app \
             --name='samtools' \

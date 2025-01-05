@@ -1211,15 +1211,6 @@ koopa_assert_has_private_access() {
     return 0
 }
 
-koopa_assert_is_aarch64() {
-    koopa_assert_has_no_args "$#"
-    if ! koopa_is_aarch64
-    then
-        koopa_stop 'Architecture is not aarch64 (ARM 64-bit).'
-    fi
-    return 0
-}
-
 koopa_assert_is_admin() {
     koopa_assert_has_no_args "$#"
     if ! koopa_is_admin
@@ -1227,6 +1218,24 @@ koopa_assert_is_admin() {
         koopa_stop \
             'Administrator account is required.' \
             "You may need to run 'sudo -v' to elevate current user."
+    fi
+    return 0
+}
+
+koopa_assert_is_amd64() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_amd64
+    then
+        koopa_stop 'Architecture is not AMD 64-bit (amd64, x86_64).'
+    fi
+    return 0
+}
+
+koopa_assert_is_arm64() {
+    koopa_assert_has_no_args "$#"
+    if ! koopa_is_arm64
+    then
+        koopa_stop 'Architecture is not ARM 64-bit (arm64, aarch64).'
     fi
     return 0
 }
@@ -1588,11 +1597,20 @@ koopa_assert_is_nonzero_file() {
     return 0
 }
 
-koopa_assert_is_not_aarch64() {
+koopa_assert_is_not_amd64() {
     koopa_assert_has_no_args "$#"
-    if koopa_is_aarch64
+    if koopa_is_amd64
     then
-        koopa_stop 'ARM (aarch64) is not supported.'
+        koopa_stop 'AMD 64-bit (amd64, x86_64) architecture is not supported.'
+    fi
+    return 0
+}
+
+koopa_assert_is_not_arm64() {
+    koopa_assert_has_no_args "$#"
+    if koopa_is_arm64
+    then
+        koopa_stop 'ARM 64-bit architecture (arm64, aarch64) is not supported.'
     fi
     return 0
 }
@@ -11925,7 +11943,7 @@ koopa_install_ack() {
 }
 
 koopa_install_agat() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='agat' \
         "$@"
@@ -12663,21 +12681,21 @@ koopa_install_autoconf() {
 }
 
 koopa_install_autodock_adfr() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='autodock-adfr' \
         "$@"
 }
 
 koopa_install_autodock_vina() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='autodock-vina' \
         "$@"
 }
 
 koopa_install_autodock() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='autodock' \
@@ -12723,7 +12741,7 @@ koopa_install_azure_cli() {
 }
 
 koopa_install_bamtools() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='bamtools' \
@@ -12767,7 +12785,7 @@ koopa_install_bashcov() {
 
 koopa_install_bat() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='bat' \
         "$@"
 }
@@ -12779,7 +12797,7 @@ koopa_install_bc() {
 }
 
 koopa_install_bedtools() {
-    if koopa_is_macos && koopa_is_aarch64
+    if koopa_is_macos && koopa_is_arm64
     then
         koopa_install_app \
             --name='bedtools' \
@@ -12805,7 +12823,7 @@ koopa_install_binutils() {
 }
 
 koopa_install_bioawk() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='bioawk' \
@@ -12813,7 +12831,7 @@ koopa_install_bioawk() {
 }
 
 koopa_install_bioconda_utils() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='bioconda-utils' \
@@ -12833,7 +12851,7 @@ koopa_install_black() {
 }
 
 koopa_install_blast() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='blast' \
@@ -12848,13 +12866,13 @@ koopa_install_boost() {
 
 koopa_install_bottom() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='bottom' \
         "$@"
 }
 
 koopa_install_bowtie2() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='bowtie2' \
@@ -12870,7 +12888,7 @@ koopa_install_bpytop() {
 
 koopa_install_broot() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='broot' \
         "$@"
 }
@@ -12882,7 +12900,7 @@ koopa_install_brotli() {
 }
 
 koopa_install_bustools() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='bustools' \
@@ -13139,7 +13157,7 @@ koopa_install_dash() {
 }
 
 koopa_install_deeptools() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='deeptools' \
@@ -13165,8 +13183,12 @@ koopa_install_diff_so_fancy() {
 }
 
 koopa_install_difftastic() {
+    if koopa_is_macos
+    then
+        koopa_assert_is_not_amd64
+    fi
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='difftastic' \
         "$@"
 }
@@ -13185,7 +13207,6 @@ koopa_install_dotfiles() {
 
 koopa_install_du_dust() {
     koopa_install_app \
-        --installer='rust-package' \
         --name='du-dust' \
         "$@"
 }
@@ -13221,7 +13242,7 @@ koopa_install_ensembl_perl_api() {
 }
 
 koopa_install_entrez_direct() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='entrez-direct' \
@@ -13242,12 +13263,13 @@ koopa_install_expat() {
 
 koopa_install_eza() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='eza' \
         "$@"
 }
 
 koopa_install_fastqc() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='fastqc' \
@@ -13256,7 +13278,7 @@ koopa_install_fastqc() {
 
 koopa_install_fd_find() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='fd-find' \
         "$@"
 }
@@ -13269,7 +13291,7 @@ koopa_install_ffmpeg() {
 }
 
 koopa_install_ffq() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='ffq' \
@@ -13291,9 +13313,9 @@ koopa_install_findutils() {
 
 koopa_install_fish() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fish' \
         "$@"
-    return 0
 }
 
 koopa_install_flac() {
@@ -13334,13 +13356,15 @@ koopa_install_fontconfig() {
 }
 
 koopa_install_fq() {
+    koopa_assert_is_not_arm64
     koopa_install_app \
+        --installer='conda-package' \
         --name='fq' \
         "$@"
 }
 
 koopa_install_fqtk() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='fqtk' \
@@ -13366,7 +13390,7 @@ koopa_install_fzf() {
 }
 
 koopa_install_gatk() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='gatk' \
         "$@"
@@ -13409,7 +13433,7 @@ koopa_install_gettext() {
 }
 
 koopa_install_gffutils() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='gffutils' \
@@ -13417,7 +13441,7 @@ koopa_install_gffutils() {
 }
 
 koopa_install_gget() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='gget' \
@@ -13450,7 +13474,7 @@ koopa_install_git() {
 
 koopa_install_gitui() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='gitui' \
         "$@"
 }
@@ -13675,7 +13699,7 @@ koopa_install_grep() {
 
 koopa_install_grex() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='grex' \
         "$@"
 }
@@ -13718,7 +13742,7 @@ koopa_install_gzip() {
 }
 
 koopa_install_hadolint() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='hadolint' \
         "$@"
@@ -13877,7 +13901,7 @@ koopa_install_haskell_package() {
 }
 
 koopa_install_haskell_stack() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='haskell-stack' \
         "$@"
@@ -13897,7 +13921,7 @@ koopa_install_hexyl() {
 }
 
 koopa_install_hisat2() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='hisat2' \
@@ -13911,7 +13935,7 @@ koopa_install_htop() {
 }
 
 koopa_install_htseq() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='htseq' \
@@ -13939,6 +13963,7 @@ koopa_install_hugo() {
 
 koopa_install_hyperfine() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='hyperfine' \
         "$@"
 }
@@ -14006,7 +14031,7 @@ koopa_install_jq() {
 }
 
 koopa_install_julia() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='julia' \
@@ -14579,12 +14604,14 @@ koopa_install_markdownlint_cli() {
 
 koopa_install_mcfly() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='mcfly' \
         "$@"
 }
 
 koopa_install_mdcat() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='mdcat' \
         "$@"
 }
@@ -14615,7 +14642,7 @@ koopa_install_minimap2() {
 }
 
 koopa_install_misopy() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='misopy' \
@@ -14679,7 +14706,7 @@ koopa_install_nano() {
 }
 
 koopa_install_nanopolish() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='nanopolish' \
@@ -14844,6 +14871,7 @@ koopa_install_npth() {
 
 koopa_install_nushell() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='nushell' \
         "$@"
 }
@@ -15135,7 +15163,7 @@ koopa_install_perl() {
 }
 
 koopa_install_picard() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='picard' \
         "$@"
@@ -15203,7 +15231,7 @@ koopa_install_private_ont_guppy() {
 
 koopa_install_procs() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='procs' \
         "$@"
 }
@@ -15267,7 +15295,7 @@ koopa_install_pylint() {
 }
 
 koopa_install_pymol() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='pymol' \
         "$@"
@@ -15558,12 +15586,14 @@ koopa_install_reproc() {
 
 koopa_install_ripgrep_all() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='ripgrep-all' \
         "$@"
 }
 
 koopa_install_ripgrep() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='ripgrep' \
         "$@"
 }
@@ -15576,7 +15606,7 @@ koopa_install_rmate() {
 }
 
 koopa_install_rmats() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='rmats' \
         "$@"
@@ -15590,7 +15620,7 @@ koopa_install_ronn_ng() {
 }
 
 koopa_install_rsem() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='rsem' \
@@ -15836,7 +15866,7 @@ koopa_install_salmon() {
 }
 
 koopa_install_sambamba() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='sambamba' \
@@ -15844,7 +15874,7 @@ koopa_install_sambamba() {
 }
 
 koopa_install_samtools() {
-    if koopa_is_macos && koopa_is_aarch64
+    if koopa_is_macos && koopa_is_arm64
     then
         koopa_install_app \
             --name='samtools' \
@@ -15885,7 +15915,7 @@ koopa_install_screen() {
 
 koopa_install_sd() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='sd' \
         "$@"
 }
@@ -15897,7 +15927,7 @@ koopa_install_sed() {
 }
 
 koopa_install_seqkit() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='seqkit' \
@@ -15991,6 +16021,7 @@ koopa_install_shared_apps() {
 
 koopa_install_shellcheck() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='shellcheck' \
         "$@"
 }
@@ -16061,7 +16092,7 @@ koopa_install_staden_io_lib() {
 }
 
 koopa_install_star_fusion() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='star-fusion' \
@@ -16076,6 +16107,7 @@ koopa_install_star() {
 
 koopa_install_starship() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='starship' \
         "$@"
 }
@@ -16094,7 +16126,7 @@ koopa_install_streamlit() {
 }
 
 koopa_install_subread() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='subread' \
@@ -16161,7 +16193,7 @@ koopa_install_tcl_tk() {
 
 koopa_install_tealdeer() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='tealdeer' \
         "$@"
 }
@@ -16198,7 +16230,7 @@ koopa_install_tmux() {
 
 koopa_install_tokei() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='tokei' \
         "$@"
 }
@@ -16231,6 +16263,7 @@ koopa_install_tryceratops() {
 
 koopa_install_tuc() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='tuc' \
         "$@"
 }
@@ -16242,7 +16275,7 @@ koopa_install_udunits() {
 }
 
 koopa_install_umis() {
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --installer='conda-package' \
         --name='umis' \
@@ -16455,7 +16488,7 @@ koopa_install_xorg_xtrans() {
 
 koopa_install_xsv() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='xsv' \
         "$@"
 }
@@ -16499,13 +16532,14 @@ koopa_install_yt_dlp() {
 
 koopa_install_zellij() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='zellij' \
         "$@"
 }
 
 koopa_install_zenith() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='zenith' \
         "$@"
 }
@@ -16530,14 +16564,17 @@ koopa_install_zopfli() {
 
 koopa_install_zoxide() {
     koopa_install_app \
-        --installer='rust-package' \
+        --installer='conda-package' \
         --name='zoxide' \
         "$@"
 }
 
 koopa_install_zsh() {
     local -A dict
-    koopa_install_app --name='zsh' "$@"
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='zsh' \
+        "$@"
     dict['zsh']="$(koopa_app_prefix 'zsh')"
     koopa_chmod --recursive 'g-w' "${dict['zsh']}/share/zsh"
     return 0
@@ -16625,17 +16662,6 @@ koopa_ip_info() {
     return 0
 }
 
-koopa_is_aarch64() {
-    case "$(koopa_arch)" in
-        'aarch64' | 'arm64')
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
-}
-
 koopa_is_admin() {
     local -A app dict
     koopa_assert_has_no_args "$#"
@@ -16670,8 +16696,30 @@ koopa_is_alpine() {
     _koopa_is_alpine "$@"
 }
 
+koopa_is_amd64() {
+    case "$(koopa_arch)" in
+        'amd64' | 'x86_64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 koopa_is_arch() {
     _koopa_is_arch "$@"
+}
+
+koopa_is_arm64() {
+    case "$(koopa_arch)" in
+        'aarch64' | 'arm64')
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
 }
 
 koopa_is_array_empty() {
@@ -17213,17 +17261,6 @@ koopa_is_variable_defined() {
     done
     [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
     return 0
-}
-
-koopa_is_x86_64() {
-    case "$(koopa_arch)" in
-        'x86_64')
-            return 0
-            ;;
-        *)
-            return 1
-            ;;
-    esac
 }
 
 koopa_jekyll_deploy_to_aws() {
@@ -22183,7 +22220,7 @@ koopa_r_configure_environ() {
         dict['udunits2']="$(koopa_app_prefix 'udunits')"
     fi
     dict['arch']="$(koopa_arch)"
-    if koopa_is_macos && koopa_is_aarch64
+    if koopa_is_macos && koopa_is_arm64
     then
         dict['arch']='aarch64'
     fi
