@@ -689,15 +689,18 @@ _koopa_activate_mcfly() {
     __kvar_color_mode="$(_koopa_color_mode)"
     [ "$__kvar_color_mode" = 'light' ] && export MCFLY_LIGHT=true
     case "${EDITOR:-}" in
-        'emacs' | \
-        'vim')
-            export MCFLY_KEY_SCHEME="${EDITOR:?}"
-        ;;
+        'nvim' | *'/nvim' | \
+        'vim' | *'/vim')
+            export MCFLY_KEY_SCHEME='vim'
+            ;;
+        'emacs' | *'/emacs')
+            export MCFLY_KEY_SCHEME='emacs'
+            ;;
     esac
+    export MCFLY_DISABLE_MENU=true
     export MCFLY_FUZZY=2
     export MCFLY_HISTORY_LIMIT=10000
     export MCFLY_INTERFACE_VIEW='TOP' # or 'BOTTOM'
-    export MCFLY_KEY_SCHEME='vim'
     export MCFLY_RESULTS=50
     export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
     __kvar_nounset="$(_koopa_boolean_nounset)"
@@ -927,10 +930,19 @@ _koopa_activate_starship() {
         'zsh')
             ;;
         *)
-            unset -v __kvar_shell
+            unset -v \
+                __kvar_shell \
+                __kvar_starship
             return 0
             ;;
     esac
+    if [ -n "${STARSHIP_SHELL:-}" ] && [ "$STARSHIP_SHELL" != "$__kvar_shell" ]
+    then
+        unset -v \
+            __kvar_shell \
+         __kvar_starship
+        return 0
+    fi
     __kvar_nounset="$(_koopa_boolean_nounset)"
     if [ "$__kvar_nounset" -eq 1 ]
     then
@@ -950,20 +962,11 @@ _koopa_activate_starship() {
 
 _koopa_activate_tealdeer() {
     [ -x "$(_koopa_bin_prefix)/tldr" ] || return 0
-    if [ -z "${TEALDEER_CACHE_DIR:-}" ]
-    then
-        TEALDEER_CACHE_DIR="$(_koopa_xdg_cache_home)/tealdeer"
-    fi
     if [ -z "${TEALDEER_CONFIG_DIR:-}" ]
     then
         TEALDEER_CONFIG_DIR="$(_koopa_xdg_config_home)/tealdeer"
     fi
-    if [ ! -d "${TEALDEER_CACHE_DIR:?}" ]
-    then
-        _koopa_is_alias 'mkdir' && unalias 'mkdir'
-        mkdir -p "${TEALDEER_CACHE_DIR:?}" >/dev/null
-    fi
-    export TEALDEER_CACHE_DIR TEALDEER_CONFIG_DIR
+    export TEALDEER_CONFIG_DIR
     return 0
 }
 

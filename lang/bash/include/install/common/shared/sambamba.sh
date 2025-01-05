@@ -13,7 +13,7 @@ main() {
     # """
     local -A app dict
     local -a build_deps deps
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     build_deps=('ldc' 'make' 'python3.12')
     ! koopa_is_macos && deps+=('bzip2')
     deps+=('lz4' 'xz' 'zlib')
@@ -52,7 +52,7 @@ v${dict['version']}.tar.gz"
         LIBRARY_PATH="$LIBRARY_PATH" \
         VERBOSE=1 \
         release
-    if ! koopa_is_aarch64
+    if ! koopa_is_arm64
     then
         "${app['make']}" check
     fi

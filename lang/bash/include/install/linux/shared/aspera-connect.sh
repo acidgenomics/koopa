@@ -11,7 +11,7 @@ main() {
     # - https://www.ibm.com/aspera/connect/
     # """
     local -A dict
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     dict['arch']="$(koopa_arch)"
     dict['aspera_user_prefix']="${HOME}/.aspera"
     dict['platform']='linux'

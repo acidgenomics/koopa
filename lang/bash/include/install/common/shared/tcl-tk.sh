@@ -49,7 +49,6 @@ ${dict['version']}.tar.gz"
         local -a tcl_conf_args
         tcl_conf_args+=(
             "${conf_args[@]}"
-            '--disable-static'
             '--enable-threads'
         )
         koopa_make_build \

@@ -3,7 +3,7 @@
 main() {
     # """
     # Install ONT dorado basecaller.
-    # @note Updated 2023-10-24.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://github.com/nanoporetech/dorado/blob/master/CMakeLists.txt
@@ -15,7 +15,7 @@ main() {
     dict['arch']="$(koopa_arch)"
     if koopa_is_macos
     then
-        koopa_assert_is_aarch64
+        koopa_assert_is_arm64
         dict['ext']='zip'
         dict['platform']='osx'
     else

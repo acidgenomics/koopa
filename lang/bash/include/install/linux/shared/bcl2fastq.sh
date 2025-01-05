@@ -46,7 +46,7 @@ main() {
     then
         koopa_stop 'System zlib is required.'
     fi
-    koopa_assert_is_not_aarch64
+    koopa_assert_is_not_arm64
     build_deps=('cmake' 'make')
     ! koopa_is_macos && deps+=('bzip2')
     deps+=('icu4c' 'xz' 'zlib' 'zstd')

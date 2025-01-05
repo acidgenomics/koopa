@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Dash shell.
-    # @note Updated 2023-04-12.
+    # @note Updated 2025-01-03.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/dash.rb
@@ -18,7 +18,7 @@ main() {
         "--prefix=${dict['prefix']}"
         '--with-libedit'
     )
-    if koopa_is_aarch64
+    if koopa_is_arm64
     then
         export ac_cv_func_stat64='no'
     fi
