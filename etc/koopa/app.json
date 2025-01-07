@@ -1048,11 +1048,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-11-25",
+    "date": "2025-01-07",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.9.2-0"
+    "version": "24.11.1-0"
   },
   "convmv": {
     "aliases": {
