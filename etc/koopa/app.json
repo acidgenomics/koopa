@@ -459,12 +459,12 @@
       "homebrew": true
     },
     "bin": ["bat"],
-    "date": "2025-01-03",
+    "date": "2025-01-08",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/bat"],
-    "version": "0.24.0"
+    "version": "0.25.0"
   },
   "bc": {
     "aliases": {
@@ -1048,11 +1048,11 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2024-11-25",
+    "date": "2025-01-07",
     "default": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "24.9.2-0"
+    "version": "24.11.1-0"
   },
   "convmv": {
     "aliases": {
@@ -1462,12 +1462,12 @@
   },
   "dotfiles": {
     "build_dependencies": ["git"],
-    "date": "2025-01-05",
+    "date": "2025-01-08",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "3306c38f759580d2fe3a4d039f72a32263e9a534"
+    "version": "099d58bbbfddb5455a5a511b1c4ddfb52cf5edb4"
   },
   "du-dust": {
     "aliases": {
@@ -2119,11 +2119,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2024-12-23",
+    "date": "2025-01-08",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.64.0"
+    "version": "2.65.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3135,14 +3135,14 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-11-27",
+    "date": "2025-01-08",
     "default": false,
     "notes": [
       "LAPACK is written in Fortran, which is why we require system gfortran."
     ],
     "prune": false,
     "url": ["https://www.netlib.org/lapack/"],
-    "version": "3.12.0"
+    "version": "3.12.1"
   },
   "latch": {
     "bin": ["latch"],
@@ -5001,12 +5001,12 @@
       "homebrew": true
     },
     "bin": ["pygmentize"],
-    "date": "2025-01-05",
+    "date": "2025-01-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
-    "version": "2.19.0"
+    "version": "2.19.1"
   },
   "pylint": {
     "aliases": {
@@ -5408,11 +5408,11 @@
       "homebrew": true
     },
     "bin": ["rbenv"],
-    "date": "2024-07-05",
+    "date": "2025-01-08",
     "default": false,
     "prune": false,
     "url": ["https://github.com/rbenv/rbenv/"],
-    "version": "1.3.0"
+    "version": "1.3.1"
   },
   "rclone": {
     "aliases": {
@@ -5896,7 +5896,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2024-12-23",
+    "date": "2025-01-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5905,7 +5905,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.26.0"
+    "version": "8.27.0"
   },
   "sox": {
     "aliases": {
@@ -6448,12 +6448,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-01-03",
+    "date": "2025-01-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.14"
+    "version": "0.5.15"
   },
   "vim": {
     "aliases": {
