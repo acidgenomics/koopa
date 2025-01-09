@@ -1651,7 +1651,7 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "date": "2025-01-03",
+    "date": "2025-01-09",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -1659,7 +1659,7 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.15"
+    "version": "0.20.16"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4090,12 +4090,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2024-12-19",
+    "date": "2025-01-09",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.35.1"
+    "version": "2.36.0"
   },
   "mpc": {
     "aliases": {
@@ -5613,21 +5613,21 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-01-05",
+    "date": "2025-01-09",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.8.6"
+    "version": "0.9.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
-    "date": "2024-11-25",
+    "date": "2025-01-09",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
-    "version": "0.0.59"
+    "version": "0.0.60"
   },
   "rust": {
     "aliases": {
@@ -5645,11 +5645,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2024-12-03",
+    "date": "2025-01-09",
     "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.83.0"
+    "version": "1.84.0"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
@@ -5896,7 +5896,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-01-08",
+    "date": "2025-01-09",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5905,7 +5905,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "8.27.0"
+    "version": "8.27.1"
   },
   "sox": {
     "aliases": {
@@ -6448,12 +6448,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-01-08",
+    "date": "2025-01-09",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.15"
+    "version": "0.5.16"
   },
   "vim": {
     "aliases": {
