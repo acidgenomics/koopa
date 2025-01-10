@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME This now successfully prompts on macOS Sequoia but the command errors
+# before the install is allowed to proceed.
+
 main() {
     # """
     # Install Xcode CLT.
