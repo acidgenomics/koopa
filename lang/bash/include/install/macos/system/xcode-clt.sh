@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 
-# FIXME This now successfully prompts on macOS Sequoia but the command errors
-# before the install is allowed to proceed.
+# TODO Consider removing old versions so we don't run into this error:
+# error: redefinition of module 'SwiftBridging'
+#
+# See also:
+# - https://github.com/orgs/Homebrew/discussions/5723
+# - https://github.com/orgs/Homebrew/discussions/5596
 
 main() {
     # """
     # Install Xcode CLT.
-    # @note Updated 2023-05-01.
+    # @note Updated 2025-01-10.
     #
     # This currently requires user interaction.
     #
@@ -33,14 +37,15 @@ main() {
     if [[ -d "${dict['prefix']}" ]]
     then
         koopa_alert "Removing previous install at '${dict['prefix']}'."
-        koopa_rm --sudo "${dict['prefix']}"
+        koopa_rm --sudo --verbose "${dict['prefix']}"
     fi
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
     "${app['xcode_select']}" --install
     koopa_sudo "${app['xcodebuild']}" -license 'accept'
     koopa_sudo "${app['xcode_select']}" -r
-    prefix="$("${app['xcode_select']}" -p)"
+    dict['prefix']="$("${app['xcode_select']}" -p)"
     koopa_assert_is_dir "${dict['prefix']}"
+    koopa_alert "Xcode CLT installed at '${dict['prefix']}'."
     return 0
 }
