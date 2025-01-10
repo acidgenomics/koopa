@@ -2,8 +2,8 @@
 
 koopa_macos_sdk_prefix() {
     # """
-    # MacOS CLT SDK prefix.
-    # @note Updated 2022-06-23.
+    # Xcode CLT SDK prefix.
+    # @note Updated 2025-01-10.
     # """
     koopa_print '/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk'
     return 0
