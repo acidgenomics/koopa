@@ -5613,12 +5613,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-01-09",
+    "date": "2025-01-10",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.9.0"
+    "version": "0.9.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6448,12 +6448,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-01-09",
+    "date": "2025-01-10",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.16"
+    "version": "0.5.17"
   },
   "vim": {
     "aliases": {
