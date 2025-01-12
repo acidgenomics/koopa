@@ -1,24 +1,22 @@
 #!/usr/bin/env bash
 
-# FIXME Consider erroring if compiler is too old (e.g. GCC 4).
+# TODO Consider erroring if compiler is too old (e.g. GCC 4).
 # We should run compiler checks before allowing the install to proceed.
-# FIXME Ensure we error if conda environment is active.
-# FIXME Ensure we error if python virtual environment is active.
 
-# FIXME Need to check that app is supported by parsing app.json file with
+# TODO Need to check that app is supported by parsing app.json file with
 # Python, instead of just checking if function is defined in Bash library.
 # We may be able to define this as 'koopa_is_app_supported'.
 # With this approach, add support for platform-specific exclusion, such as
 # 'ubuntu-22-amd64' for programs that fail to build only on a specific platform.
-# FIXME For builder machines that push app binaries, make sure we also build
+# TODO For builder machines that push app binaries, make sure we also build
 # reverse dependencies after app update.
-# FIXME Our installer should drop an invisible build file into the directory
+# TODO Our installer should drop an invisible build file into the directory
 # that contains build number and date, for easy checking during updates.
-# FIXME Instead of erroring on an unsupported app, remove it when it exists
+# TODO Instead of erroring on an unsupported app, remove it when it exists
 # and has been removed (e.g. 'llama', 'python3.10').
-# FIXME Alternatively, in the 'install --all' situation, just ignore existing
+# TODO Alternatively, in the 'install --all' situation, just ignore existing
 # directories from removed apps that are no longer supported.
-# FIXME We need to add a trap so the installer cleans up on failure.
+# TODO We need to add a trap so the installer cleans up on failure.
 
 koopa_install_app() {
     # """
