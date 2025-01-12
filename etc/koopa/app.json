@@ -711,7 +711,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-01-02",
+    "date": "2025-01-12",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -720,7 +720,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.44.3"
+    "version": "1.44.5"
   },
   "brotli": {
     "aliases": {
@@ -1829,11 +1829,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-01-12",
     "default": false,
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "11.1.1"
+    "version": "11.1.2"
   },
   "fontconfig": {
     "aliases": {
@@ -2609,7 +2609,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2024-11-05",
+    "date": "2025-01-12",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2622,7 +2622,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "10.1.0"
+    "version": "10.2.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -4535,11 +4535,11 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-08-19",
+    "date": "2025-01-12",
     "default": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.28"
+    "version": "0.3.29"
   },
   "openjpeg": {
     "aliases": {
@@ -4844,12 +4844,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2025-01-05",
+    "date": "2025-01-12",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "2.0.0"
+    "version": "2.0.1"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
@@ -5420,12 +5420,12 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2024-11-18",
+    "date": "2025-0-12",
     "default": false,
     "man1": ["rclone.1"],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.68.2"
+    "version": "1.69.0"
   },
   "readline": {
     "aliases": {
@@ -6040,12 +6040,12 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "date": "2024-07-27",
+    "date": "2025-01-12",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.21.1"
+    "version": "1.22.1"
   },
   "stow": {
     "aliases": {
@@ -6976,11 +6976,11 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2024-12-10",
+    "date": "2025-01-12",
     "default": true,
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.44.6"
+    "version": "4.45.1"
   },
   "yt-dlp": {
     "aliases": {
