@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
+# FIXME Prompt the user to continue when interactive, as this is destructive.
+
 main() {
     # """
     # Uninstall Homebrew.
-    # @note Updated 2023-03-24.
+    # @note Updated 2025-01-11.
     #
     # Important! Homebrew uninstaller will currently attempt to delete the
     # parent directory containing 'brew', so make sure we remove our symlink
