@@ -14,10 +14,19 @@
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2024-09-23.
+    # @note Updated 2025-01-10.
     # """
-    local -A app ver1 ver2
+    local -A app dict ver1 ver2
     koopa_assert_has_no_args "$#"
+    if koopa_is_macos
+    then
+        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        if [[ ! -d "${dict['sdk_prefix']}" ]]
+        then
+            koopa_stop "Xcode CLT not installed at '${dict['prefix']}.\
+Run 'xcode-select --install' to resolve."
+        fi
+    fi
     koopa_assert_conda_env_is_not_active
     # > koopa_assert_python_venv_is_not_active
     app['cc']="$(koopa_locate_cc --only-system)"

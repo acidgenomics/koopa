@@ -4391,8 +4391,17 @@ koopa_cd() {
 }
 
 koopa_check_build_system() {
-    local -A app ver1 ver2
+    local -A app dict ver1 ver2
     koopa_assert_has_no_args "$#"
+    if koopa_is_macos
+    then
+        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        if [[ ! -d "${dict['sdk_prefix']}" ]]
+        then
+            koopa_stop "Xcode CLT not installed at '${dict['prefix']}.\
+Run 'xcode-select --install' to resolve."
+        fi
+    fi
     koopa_assert_conda_env_is_not_active
     app['cc']="$(koopa_locate_cc --only-system)"
     app['git']="$(koopa_locate_git --allow-system)"
