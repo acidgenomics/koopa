@@ -5423,6 +5423,7 @@
     "date": "2025-01-12",
     "default": false,
     "man1": ["rclone.1"],
+    "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
     "version": "1.69.0"
@@ -6978,6 +6979,7 @@
     "build_dependencies": ["go"],
     "date": "2025-01-12",
     "default": true,
+    "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
     "version": "4.45.1"
