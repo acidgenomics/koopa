@@ -21,7 +21,7 @@ main() {
         'podman-docker'
         'runc'
     )
-    koopa_debian_apt_remove "${pkgs[@]}"
+    koopa_debian_apt_remove "${pkgs[@]}" || true
     koopa_debian_apt_delete_repo 'docker'
     return 0
 }
