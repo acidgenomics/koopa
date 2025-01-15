@@ -375,6 +375,11 @@ ca-certificates"
     fi
     if [ ! -f "$__kvar_file" ]
     then
+        __kvar_prefix='/etc/ssl/certs'
+        __kvar_file="${__kvar_prefix}/ca-certificates.crt"
+    fi
+    if [ ! -f "$__kvar_file" ]
+    then
         unset -v __kvar_file __kvar_prefix
         return 0
     fi
