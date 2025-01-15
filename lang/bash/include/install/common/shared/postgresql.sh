@@ -3,14 +3,19 @@
 main() {
     # """
     # Install PostgreSQL.
-    # @note 2024-05-17.
+    # @note 2025-01-15.
     #
     # @seealso
     # - https://formulae.brew.sh/formula/postgresql@16
     # - https://formulae.brew.sh/formula/postgresql@14
     # """
     local -A dict
-    local -a deps
+    local -a build_deps deps
+    build_deps+=(
+        'bison'
+        'flex'
+        'pkg-config'
+    )
     deps+=(
         'icu4c'
         'libxml2'
@@ -20,7 +25,7 @@ main() {
         'perl'
         'readline'
     )
-    koopa_activate_app --build-only 'pkg-config'
+    koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
