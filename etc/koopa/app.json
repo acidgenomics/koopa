@@ -277,6 +277,7 @@
     "date": "2023-12-22",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -973,11 +974,11 @@
     },
     "bin": ["chezmoi"],
     "build_dependencies": ["go"],
-    "date": "2024-12-30",
+    "date": "2025-01-15",
     "default": true,
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.57.0"
+    "version": "2.58.0"
   },
   "cli11": {
     "aliases": {
@@ -1685,7 +1686,7 @@
     },
     "bin": ["fd"],
     "date": "2025-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/fd/"],
@@ -1983,7 +1984,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2024-11-08",
+    "date": "2025-01-15",
     "default": false,
     "dependencies": [
       "bison",
@@ -2012,7 +2013,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.10.0"
+    "version": "3.10.1"
   },
   "gdbm": {
     "aliases": {
@@ -2183,8 +2184,9 @@
       "homebrew": true
     },
     "bin": ["gitui"],
-    "date": "2025-01-03",
+    "date": "2025-01-15",
     "default": true,
+    "outdated": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": [
@@ -2529,12 +2531,12 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2024-09-09",
+    "date": "2025-01-15",
     "default": false,
     "man1": ["gum.1"],
     "prune": true,
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.14.5"
+    "version": "0.15.0"
   },
   "gzip": {
     "aliases": {
@@ -3686,11 +3688,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-01-15",
     "default": false,
     "prune": false,
     "url": ["https://github.com/besser82/libxcrypt/"],
-    "version": "4.4.37"
+    "version": "4.4.38"
   },
   "libxml2": {
     "aliases": {
@@ -4634,12 +4636,12 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2024-12-30",
+    "date": "2025-01-15",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.6.1"
+    "version": "3.6.2"
   },
   "parallel": {
     "aliases": {
@@ -5037,7 +5039,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2024-12-19",
+    "date": "2025-01-15",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5045,7 +5047,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.391"
+    "version": "1.1.392"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -6324,14 +6326,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-01-15",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.24.6"
+    "version": "0.24.7"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6989,7 +6991,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2024-12-23",
+    "date": "2025-01-15",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -6997,7 +6999,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2024.12.23"
+    "version": "2025.1.12"
   },
   "zellij": {
     "aliases": {
