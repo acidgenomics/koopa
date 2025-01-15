@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Rework to use this general approach:
-# > apt update
-# > snap install docker
-# > apt install -y docker.io
-# > groupadd -f docker
-# > usermod -aG docker "$USER"
-# > newgrp docker
-# > service docker start
-
 main() {
     # """
     # Install Docker.
@@ -17,6 +8,10 @@ main() {
     # Currently supports overlay2, aufs and btrfs storage drivers.
     #
     # Configures at '/var/lib/docker/'.
+    #
+    # Snap approach for Ubuntu:
+    # > snap install docker
+    # > apt install -y docker.io
     #
     # @seealso
     # - https://docs.docker.com/install/linux/docker-ce/debian/
@@ -37,6 +32,10 @@ main() {
     )
     koopa_debian_apt_install "${pkgs[@]}"
     koopa_linux_add_user_to_group 'docker'
+    # Alternative approach to create 'docker' group and add current user:
+    # > groupadd -f docker
+    # > usermod -aG docker "$USER"
+    # > newgrp docker
     "${app['service']}" docker start
     return 0
 }
