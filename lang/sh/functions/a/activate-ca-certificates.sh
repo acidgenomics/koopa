@@ -1,12 +1,9 @@
 #!/bin/sh
 
-# FIXME Add fallback support for system certs:
-# /etc/ssl/certs/ca-certificates.crt
-
 _koopa_activate_ca_certificates() {
     # """
     # Activate CA certificates for OpenSSL.
-    # @note Updated 2024-12-04.
+    # @note Updated 2025-01-15.
     #
     # @seealso
     # - https://stackoverflow.com/questions/51925384/
@@ -24,6 +21,11 @@ _koopa_activate_ca_certificates() {
         __kvar_prefix="$(_koopa_opt_prefix)/ca-certificates/share/\
 ca-certificates"
         __kvar_file="${__kvar_prefix}/cacert.pem"
+    fi
+    if [ ! -f "$__kvar_file" ]
+    then
+        __kvar_prefix='/etc/ssl/certs'
+        __kvar_file="${__kvar_prefix}/ca-certificates.crt"
     fi
     if [ ! -f "$__kvar_file" ]
     then
