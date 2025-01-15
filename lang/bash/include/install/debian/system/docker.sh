@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 
-# TODO Look into installing with snap on Ubuntu 22+.
+# FIXME Rework to use this general approach:
+# > apt update
+# > snap install docker
+# > apt install -y docker.io
+# > groupadd -f docker
+# > usermod -aG docker "$USER"
+# > newgrp docker
+# > service docker start
 
 main() {
     # """
     # Install Docker.
-    # @note Updated 2021-12-09.
+    # @note Updated 2025-01-15.
     #
     # @seealso
     # - https://docs.docker.com/install/linux/docker-ce/debian/
