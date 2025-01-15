@@ -21,10 +21,40 @@ completion/git-completion.bash"
     if [[ -f "${dict['bash_completion_file']}" ]]
     then
         source "${dict['bash_completion_file']}"
+    else
+        if [[ -f '/usr/share/bash-completion/bash_completion' ]]
+        then
+            source '/usr/share/bash-completion/bash_completion'
+        elif [[ -f '/etc/bash_completion' ]]
+        then
+            source '/etc/bash_completion'
+        fi
     fi
     if [[ -f "${dict['git_completion_file']}" ]]
     then
         source "${dict['git_completion_file']}"
+    fi
+    if [[ -d '/etc/bash_completion.d' ]]
+    then
+        local rc_file
+        for rc_file in '/etc/bash_completion.d/'*
+        do
+            if [[ -f "$rc_file" ]]
+            then
+                source "$rc_file"
+            fi
+        done
+    fi
+    if [[ -d '/usr/local/etc/bash_completion.d' ]]
+    then
+        local rc_file
+        for rc_file in '/usr/local/etc/bash_completion.d/'*
+        do
+            if [[ -f "$rc_file" ]]
+            then
+                source "$rc_file"
+            fi
+        done
     fi
     return 0
 }
