@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# FIXME Add fallback support for system certs:
+# /etc/ssl/certs/ca-certificates.crt
+
 _koopa_activate_ca_certificates() {
     # """
     # Activate CA certificates for OpenSSL.
