@@ -36,6 +36,6 @@ main() {
     # > groupadd -f docker
     # > usermod -aG docker "$USER"
     # > newgrp docker
-    "${app['service']}" docker start
+    koopa_sudo "${app['service']}" docker start
     return 0
 }
