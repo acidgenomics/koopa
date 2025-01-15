@@ -31,7 +31,6 @@ main() {
         'zlib'
         'zstd'
         'bison'
-        'curl'
         'expat'
         'geos'
         'hdf5'
@@ -50,6 +49,8 @@ main() {
         'xz'
         'zlib'
         'zstd'
+        'libssh2' # curl
+        'curl'
         'proj'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
