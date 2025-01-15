@@ -11,7 +11,11 @@ main() {
     # """
     local -A dict
     local -a build_deps deps
-    build_deps+=('bison' 'pkg-config')
+    build_deps+=(
+        'bison'
+        'flex'
+        'pkg-config'
+    )
     deps+=(
         'icu4c'
         'libxml2'
