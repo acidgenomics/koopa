@@ -4855,7 +4855,7 @@
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
-    "build_dependencies": ["bison", "make", "pkg-config"],
+    "build_dependencies": ["bison", "flex", "make", "pkg-config"],
     "date": "2025-01-15",
     "default": false,
     "dependencies": [
