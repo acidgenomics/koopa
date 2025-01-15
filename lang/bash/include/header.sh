@@ -412,7 +412,7 @@ __koopa_bash_header() {
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
-            if koopa_is_shared_install && koopa_is_admin
+            if koopa_is_admin
             then
                 export KOOPA_ADMIN=1
             else
