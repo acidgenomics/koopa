@@ -95,7 +95,7 @@ __koopa_warn() { # {{{1
 main() {
     # """
     # Main koopa CLI function.
-    # @note Updated 2022-11-28.
+    # @note Updated 2025-01-16.
     # """
     # Check for Bash 4+.
     case "${BASH_VERSION:-}" in
@@ -106,14 +106,24 @@ main() {
             return 1
             ;;
     esac
-    local bash_source
-    bash_source="${BASH_SOURCE[0]}"
-    [[ -L "$bash_source" ]] && bash_source="$(__koopa_realpath "$bash_source")"
-    [[ -x "$bash_source" ]] || return 1
+    local -A dict
+    dict['bash_source']="${BASH_SOURCE[0]}"
+    if [[ -L "${dict['bash_source']}" ]]
+    then
+        dict['bash_source']="$(__koopa_realpath "${dict['bash_source']}")"
+    fi
+    [[ -x "${dict['bash_source']}" ]] || return 1
+    dict['koopa_prefix']="$( \
+        __koopa_realpath "$(dirname "${dict['bash_source']}")/.." \
+    )"
+    [[ -d "${dict['koopa_prefix']}" ]] || return 1
+    dict['header_script']="${dict['koopa_prefix']}/lang/bash/include/header.sh"
+    [[ -f "${dict['header_script']}" ]] || return 1
     export KOOPA_ACTIVATE=0
     export KOOPA_HELP=0
+    export KOOPA_PREFIX="${dict['koopa_prefix']}"
     # shellcheck source=/dev/null
-    source "$(dirname "$bash_source")/../lang/bash/include/header.sh"
+    source "${dict['header_script']}"
     koopa_cli "$@"
     return 0
 }
