@@ -1653,7 +1653,7 @@
     },
     "bin": ["eza"],
     "date": "2025-01-09",
-    "default": false,
+    "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": [
