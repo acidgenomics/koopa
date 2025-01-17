@@ -36,13 +36,13 @@ koopa_reinstall_all_revdeps() {
     do
         local -a install_args revdeps
         install_args=()
-        if koopa_is_array_non_empty "${flags[@]}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
         then
             install_args+=("${flags[@]}")
         fi
         install_args+=("$app_name")
         readarray -t revdeps <<< "$(koopa_app_reverse_dependencies "$app_name")"
-        if koopa_is_array_non_empty "${revdeps[@]}"
+        if koopa_is_array_non_empty "${revdeps[@]:-}"
         then
             install_args+=("${revdeps[@]}")
             koopa_dl \
