@@ -159,6 +159,8 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
             "${dict['libexec']}/bin/${bin_name}" \
             "${dict['prefix']}/bin/${bin_name}"
     done
+    # FIXME Seeing this error with gentropy, but that may be bash 4.2
+    # specific? Need to reproduce.
     if koopa_is_array_non_empty "${man1_names[@]:-}"
     then
         for man1_name in "${man1_names[@]}"
