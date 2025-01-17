@@ -184,7 +184,7 @@ END
     dict['lib_prefix']="${dict['prefix']}/lib/perl${dict['perl_maj_ver']}"
     export PERL5LIB="${dict['lib_prefix']}"
     koopa_print_env
-    if koopa_is_array_non_empty "${deps[@]}"
+    if koopa_is_array_non_empty "${deps[@]:-}"
     then
         "${app['cpan']}" \
             -j "${dict['cpan_config_file']}" \
