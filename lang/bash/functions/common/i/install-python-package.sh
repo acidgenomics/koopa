@@ -155,16 +155,21 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
     koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"
     do
+        # Hardening against Bash 4.2 empty array weirdness here.
+        [[ -n "$bin_name" ]] || continue
+        [[ -f "${dict['libexec']}/bin/${bin_name}" ]] || continue
         koopa_ln \
             "${dict['libexec']}/bin/${bin_name}" \
             "${dict['prefix']}/bin/${bin_name}"
     done
-    # FIXME Seeing this error with gentropy, but that may be bash 4.2
-    # specific? Need to reproduce.
     if koopa_is_array_non_empty "${man1_names[@]:-}"
     then
         for man1_name in "${man1_names[@]}"
         do
+            # Hardening against Bash 4.2 empty array weirdness here.
+            [[ -n "$man1_name" ]] || continue
+            [[ -f "${dict['libexec']}/share/man/man1/${man1_name}" ]] \
+                || continue
             koopa_ln \
                 "${dict['libexec']}/share/man/man1/${man1_name}" \
                 "${dict['prefix']}/share/man/man1/${man1_name}"
