@@ -116,7 +116,7 @@ koopa_install_haskell_package() {
     dict['cabal_config_file']="${dict['cabal_dir']}/config"
     koopa_assert_is_file "${dict['cabal_config_file']}"
     conf_args+=("store-dir: ${dict['cabal_store_dir']}")
-    if koopa_is_array_non_empty "${deps[@]}"
+    if koopa_is_array_non_empty "${deps[@]:-}"
     then
         for dep in "${deps[@]}"
         do
@@ -143,7 +143,7 @@ koopa_install_haskell_package() {
         '--verbose'
         "${dict['name']}-${dict['version']}"
     )
-    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    if koopa_is_array_non_empty "${extra_pkgs[@]:-}"
     then
         install_args+=("${extra_pkgs[@]}")
     fi

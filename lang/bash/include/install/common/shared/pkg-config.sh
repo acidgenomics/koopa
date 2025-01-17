@@ -59,7 +59,7 @@ main() {
         '--with-internal-glib'
         "--with-system-include-path=${dict['sys_inc']}"
     )
-    if koopa_is_array_non_empty "${pc_path[@]}"
+    if koopa_is_array_non_empty "${pc_path[@]:-}"
     then
         koopa_assert_is_dir "${pc_path[@]}"
         dict['pc_path']="$(koopa_paste --sep=':' "${pc_path[@]}")"

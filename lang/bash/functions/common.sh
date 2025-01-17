@@ -88,12 +88,12 @@ koopa_activate_app() {
                 --type='d' \
             || true \
         )"
-        if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
+        if koopa_is_array_non_empty "${pkgconfig_dirs[@]:-}"
         then
             koopa_add_to_pkg_config_path "${pkgconfig_dirs[@]}"
         fi
         [[ "${dict['build_only']}" -eq 1 ]] && continue
-        if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
+        if koopa_is_array_non_empty "${pkgconfig_dirs[@]:-}"
         then
             if [[ ! -x "${app['pkg_config']}" ]]
             then
@@ -4329,7 +4329,7 @@ koopa_camel_case() {
             --replacement='\U\2' \
             "$@" \
     )"
-    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_is_array_non_empty "${out[@]:-}" || return 1
     koopa_print "${out[@]}"
     return 0
 }
@@ -7996,7 +7996,7 @@ koopa_dot_clean() {
                 ;;
         esac
     done
-    if koopa_is_array_non_empty "${cruft[@]}"
+    if koopa_is_array_non_empty "${cruft[@]:-}"
     then
         koopa_alert_note "Dot files remaining in '${dict['prefix']}'."
         koopa_print "${cruft[@]}"
@@ -13874,7 +13874,7 @@ koopa_install_haskell_package() {
     dict['cabal_config_file']="${dict['cabal_dir']}/config"
     koopa_assert_is_file "${dict['cabal_config_file']}"
     conf_args+=("store-dir: ${dict['cabal_store_dir']}")
-    if koopa_is_array_non_empty "${deps[@]}"
+    if koopa_is_array_non_empty "${deps[@]:-}"
     then
         for dep in "${deps[@]}"
         do
@@ -13901,7 +13901,7 @@ koopa_install_haskell_package() {
         '--verbose'
         "${dict['name']}-${dict['version']}"
     )
-    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    if koopa_is_array_non_empty "${extra_pkgs[@]:-}"
     then
         install_args+=("${extra_pkgs[@]}")
     fi
@@ -14856,7 +14856,7 @@ koopa_install_node_package() {
         '--no-fund'
         "${dict['name']}@${dict['version']}"
     )
-    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    if koopa_is_array_non_empty "${extra_pkgs[@]:-}"
     then
         install_args+=("${extra_pkgs[@]}")
     fi
@@ -15135,7 +15135,7 @@ END
     dict['lib_prefix']="${dict['prefix']}/lib/perl${dict['perl_maj_ver']}"
     export PERL5LIB="${dict['lib_prefix']}"
     koopa_print_env
-    if koopa_is_array_non_empty "${deps[@]}"
+    if koopa_is_array_non_empty "${deps[@]:-}"
     then
         "${app['cpan']}" \
             -j "${dict['cpan_config_file']}" \
@@ -15442,7 +15442,7 @@ koopa_install_python_package() {
         venv_args+=('--no-binary')
     fi
     venv_args+=("${dict['pip_name']}==${dict['version']}")
-    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    if koopa_is_array_non_empty "${extra_pkgs[@]:-}"
     then
         venv_args+=("${extra_pkgs[@]}")
     fi
@@ -18052,7 +18052,7 @@ koopa_kebab_case() {
             "$@" \
         | koopa_lowercase \
     )"
-    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_is_array_non_empty "${out[@]:-}" || return 1
     koopa_print "${out[@]}"
     return 0
 }
@@ -23495,13 +23495,13 @@ koopa_reinstall_all_revdeps() {
     do
         local -a install_args revdeps
         install_args=()
-        if koopa_is_array_non_empty "${flags[@]}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
         then
             install_args+=("${flags[@]}")
         fi
         install_args+=("$app_name")
         readarray -t revdeps <<< "$(koopa_app_reverse_dependencies "$app_name")"
-        if koopa_is_array_non_empty "${revdeps[@]}"
+        if koopa_is_array_non_empty "${revdeps[@]:-}"
         then
             install_args+=("${revdeps[@]}")
             koopa_dl \
@@ -23540,7 +23540,7 @@ koopa_reinstall_only_revdeps() {
     do
         local -a install_args revdeps
         install_args=()
-        if koopa_is_array_non_empty "${flags[@]}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
         then
             install_args+=("${flags[@]}")
         fi
@@ -26231,7 +26231,7 @@ koopa_snake_case() {
             "$@" \
         | koopa_lowercase \
     )"
-    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_is_array_non_empty "${out[@]:-}" || return 1
     koopa_print "${out[@]}"
     return 0
 }

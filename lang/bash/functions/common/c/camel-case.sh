@@ -29,7 +29,7 @@ koopa_camel_case() {
             --replacement='\U\2' \
             "$@" \
     )"
-    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_is_array_non_empty "${out[@]:-}" || return 1
     koopa_print "${out[@]}"
     return 0
 }
