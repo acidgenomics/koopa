@@ -74,7 +74,7 @@ koopa_install_node_package() {
         '--no-fund'
         "${dict['name']}@${dict['version']}"
     )
-    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    if koopa_is_array_non_empty "${extra_pkgs[@]:-}"
     then
         install_args+=("${extra_pkgs[@]}")
     fi

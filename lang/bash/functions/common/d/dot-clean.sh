@@ -50,7 +50,7 @@ koopa_dot_clean() {
                 ;;
         esac
     done
-    if koopa_is_array_non_empty "${cruft[@]}"
+    if koopa_is_array_non_empty "${cruft[@]:-}"
     then
         koopa_alert_note "Dot files remaining in '${dict['prefix']}'."
         koopa_print "${cruft[@]}"

@@ -3,7 +3,7 @@
 koopa_install_python_package() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2023-10-19.
+    # @note Updated 2025-01-17.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -124,7 +124,7 @@ koopa_install_python_package() {
         venv_args+=('--no-binary')
     fi
     venv_args+=("${dict['pip_name']}==${dict['version']}")
-    if koopa_is_array_non_empty "${extra_pkgs[@]}"
+    if koopa_is_array_non_empty "${extra_pkgs[@]:-}"
     then
         venv_args+=("${extra_pkgs[@]}")
     fi

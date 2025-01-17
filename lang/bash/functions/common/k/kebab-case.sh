@@ -30,7 +30,7 @@ koopa_kebab_case() {
             "$@" \
         | koopa_lowercase \
     )"
-    koopa_is_array_non_empty "${out[@]}" || return 1
+    koopa_is_array_non_empty "${out[@]:-}" || return 1
     koopa_print "${out[@]}"
     return 0
 }

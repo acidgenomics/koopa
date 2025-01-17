@@ -36,7 +36,7 @@ koopa_reinstall_only_revdeps() {
     do
         local -a install_args revdeps
         install_args=()
-        if koopa_is_array_non_empty "${flags[@]}"
+        if koopa_is_array_non_empty "${flags[@]:-}"
         then
             install_args+=("${flags[@]}")
         fi
