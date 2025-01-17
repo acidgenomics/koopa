@@ -115,12 +115,12 @@ koopa_activate_app() {
                 --type='d' \
             || true \
         )"
-        if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
+        if koopa_is_array_non_empty "${pkgconfig_dirs[@]:-}"
         then
             koopa_add_to_pkg_config_path "${pkgconfig_dirs[@]}"
         fi
         [[ "${dict['build_only']}" -eq 1 ]] && continue
-        if koopa_is_array_non_empty "${pkgconfig_dirs:-}"
+        if koopa_is_array_non_empty "${pkgconfig_dirs[@]:-}"
         then
             if [[ ! -x "${app['pkg_config']}" ]]
             then
