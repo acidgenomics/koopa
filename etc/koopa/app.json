@@ -331,7 +331,7 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-01-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -339,7 +339,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.22.23"
+    "version": "2.23.5"
   },
   "axel": {
     "aliases": {
@@ -1380,7 +1380,7 @@
   },
   "deeptools": {
     "bin": ["deeptools"],
-    "date": "2024-12-24",
+    "date": "2025-01-24",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1396,7 +1396,7 @@
       "https://deeptools.readthedocs.io/",
       "https://github.com/deeptools/deepTools/"
     ],
-    "version": "3.5.5"
+    "version": "3.5.6"
   },
   "delta": {
     "aliases": {
@@ -1652,7 +1652,7 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "date": "2025-01-16",
+    "date": "2025-01-24",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -1660,7 +1660,7 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.20.17"
+    "version": "0.20.18"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1916,11 +1916,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2024-11-18",
+    "date": "2025-01-24",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.57.0"
+    "version": "0.58.0"
   },
   "gatk": {
     "aliases": {
@@ -2531,12 +2531,12 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2025-01-15",
+    "date": "2025-01-24",
     "default": false,
     "man1": ["gum.1"],
     "prune": true,
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.15.0"
+    "version": "0.15.1"
   },
   "gzip": {
     "aliases": {
@@ -2806,12 +2806,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2025-01-16",
+    "date": "2025-01-24",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.141.0"
+    "version": "0.142.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3748,12 +3748,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-01-24",
     "default": false,
     "dependencies": ["bzip2", "nettle", "openssl3", "perl", "zlib", "zstd"],
     "prune": false,
     "url": ["https://libzip.org/"],
-    "version": "1.11.2"
+    "version": "1.11.3"
   },
   "llama": {
     "bin": ["llama"],
@@ -4152,7 +4152,7 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2024-12-23",
+    "date": "2025-01-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -4160,7 +4160,7 @@
       "https://pypi.org/project/multiqc/",
       "https://bioconda.github.io/recipes/multiqc/README.html"
     ],
-    "version": "1.26"
+    "version": "1.27"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4327,7 +4327,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2024-12-30",
+    "date": "2025-01-24",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4336,7 +4336,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "24.10.3"
+    "version": "24.10.4"
   },
   "nghttp2": {
     "aliases": {
@@ -4494,7 +4494,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2024-12-19",
+    "date": "2025-01-24",
     "default": false,
     "prune": true,
     "supported": {
@@ -4504,7 +4504,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.9.0"
+    "version": "0.9.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4899,12 +4899,12 @@
       "homebrew": true
     },
     "bin": ["procs"],
-    "date": "2025-01-03",
+    "date": "2025-01-24",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/dalance/procs/"],
-    "version": "0.14.8"
+    "version": "0.14.9"
   },
   "proj": {
     "aliases": {
@@ -4979,12 +4979,12 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2024-12-23",
+    "date": "2025-01-24",
     "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.5.0"
+    "version": "2.5.1"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5616,12 +5616,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-01-16",
+    "date": "2025-01-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.9.2"
+    "version": "0.9.3"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6451,12 +6451,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-01-15",
+    "date": "2025-01-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.20"
+    "version": "0.5.24"
   },
   "vim": {
     "aliases": {
@@ -6916,7 +6916,7 @@
       "xzmore"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-01-24",
     "default": true,
     "man1": [
       "lzcat.1",
@@ -6948,7 +6948,7 @@
       "https://tukaani.org/xz/",
       "https://github.com/tukaani-project/xz"
     ],
-    "version": "5.6.3"
+    "version": "5.6.4"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
