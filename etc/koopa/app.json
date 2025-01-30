@@ -973,9 +973,9 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "build_dependencies": ["go"],
     "date": "2025-01-15",
     "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
     "version": "2.58.0"
@@ -1481,7 +1481,7 @@
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "a83078a8b687457dd109fbe48999a2be365161f7"
+    "version": "b95a492b4f2883a5aa551399582f64248728c4ac"
   },
   "du-dust": {
     "aliases": {
