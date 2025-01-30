@@ -1490,7 +1490,7 @@
     },
     "bin": ["dust"],
     "date": "2025-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": [
