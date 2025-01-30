@@ -18,7 +18,6 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-
     dict['url']="https://github.com/direnv/direnv/archive/refs/tags/\
 v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
