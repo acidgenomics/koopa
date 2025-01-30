@@ -1441,6 +1441,19 @@
     "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.61.0"
   },
+  "direnv": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["direnv"],
+    "build_dependencies": ["go", "make"],
+    "date": "2025-01-30",
+    "default": true,
+    "dependencies": ["bash"],
+    "prune": true,
+    "url": ["https://github.com/direnv/direnv"],
+    "version": "2.35.0"
+  },
   "docker-credential-helpers": {
     "aliases": {
       "homebrew": "docker-credential-helper"

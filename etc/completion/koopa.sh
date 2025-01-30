@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-01-02.
+    # @note Updated 2025-01-30.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -159,6 +159,7 @@ _koopa_complete() {
                         'delta'
                         'diff-so-fancy'
                         'difftastic'
+                        'direnv'
                         'docker-credential-helpers'
                         'dotfiles'
                         'du-dust'
