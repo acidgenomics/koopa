@@ -1475,7 +1475,6 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "build_dependencies": ["git"],
     "date": "2025-01-30",
     "default": true,
     "dependencies": ["chezmoi"],
