@@ -712,8 +712,8 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-01-12",
-    "default": true,
+    "date": "2025-01-30",
+    "default": false,
     "dependencies": ["conda"],
     "outdated": true,
     "prune": true,
