@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure system sshd.
-    # @note Updated 2023-05-14.
+    # @note Updated 2025-01-30.
     #
     # Creates a 'koopa.conf' file, which contains passthrough support of
     # 'KOOPA_COLOR_MODE' environment variable.
@@ -33,5 +33,6 @@ END
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
+    koopa_chmod --sudo 0644 "${dict['file']}"
     return 0
 }
