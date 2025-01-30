@@ -32,7 +32,7 @@ main() {
         --file="${dict['sshd_file']}" \
         --pattern='^Include /etc/ssh/sshd_config.d/*.conf$'
     then
-        koopa_alert_note "Modifying '${dict['sshd_file']}' to include \
+        koopa_alert "Modifying '${dict['sshd_file']}' to include \
 'sshd_config.d'."
         read -r -d '' "dict[sshd_string]" << END || true
 Include /etc/ssh/sshd_config.d/*.conf
