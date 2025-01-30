@@ -712,7 +712,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-01-12",
+    "date": "2025-01-30",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -973,9 +973,9 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "build_dependencies": ["go"],
     "date": "2025-01-15",
     "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
     "version": "2.58.0"
@@ -1441,6 +1441,19 @@
     "url": ["https://github.com/Wilfred/difftastic/"],
     "version": "0.61.0"
   },
+  "direnv": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["direnv"],
+    "build_dependencies": ["go", "make"],
+    "date": "2025-01-30",
+    "default": true,
+    "dependencies": ["bash"],
+    "prune": true,
+    "url": ["https://github.com/direnv/direnv"],
+    "version": "2.35.0"
+  },
   "docker-credential-helpers": {
     "aliases": {
       "homebrew": "docker-credential-helper"
@@ -1462,13 +1475,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "build_dependencies": ["git"],
-    "date": "2025-01-12",
+    "date": "2025-01-30",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "c04150e5631bd7b8d9621ee45aef6fd15c464659"
+    "version": "b95a492b4f2883a5aa551399582f64248728c4ac"
   },
   "du-dust": {
     "aliases": {
@@ -1478,7 +1490,7 @@
     },
     "bin": ["dust"],
     "date": "2025-01-03",
-    "default": false,
+    "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": [
@@ -6211,13 +6223,13 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2024-12-30",
+    "date": "2025-01-24",
     "default": false,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21.0.5+11"
+    "version": "21.0.6+7"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],

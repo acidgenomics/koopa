@@ -12960,6 +12960,7 @@ koopa_install_cheat() {
 
 koopa_install_chezmoi() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='chezmoi' \
         "$@"
 }
@@ -13199,6 +13200,12 @@ koopa_install_difftastic() {
     koopa_install_app \
         --installer='conda-package' \
         --name='difftastic' \
+        "$@"
+}
+
+koopa_install_direnv() {
+    koopa_install_app \
+        --name='direnv' \
         "$@"
 }
 
@@ -15471,6 +15478,8 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
     koopa_assert_is_array_non_empty "${bin_names[@]:-}"
     for bin_name in "${bin_names[@]}"
     do
+        [[ -n "$bin_name" ]] || continue
+        [[ -f "${dict['libexec']}/bin/${bin_name}" ]] || continue
         koopa_ln \
             "${dict['libexec']}/bin/${bin_name}" \
             "${dict['prefix']}/bin/${bin_name}"
@@ -15479,6 +15488,9 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
     then
         for man1_name in "${man1_names[@]}"
         do
+            [[ -n "$man1_name" ]] || continue
+            [[ -f "${dict['libexec']}/share/man/man1/${man1_name}" ]] \
+                || continue
             koopa_ln \
                 "${dict['libexec']}/share/man/man1/${man1_name}" \
                 "${dict['prefix']}/share/man/man1/${man1_name}"
@@ -29438,6 +29450,12 @@ koopa_uninstall_diff_so_fancy() {
 koopa_uninstall_difftastic() {
     koopa_uninstall_app \
         --name='difftastic' \
+        "$@"
+}
+
+koopa_uninstall_direnv() {
+    koopa_uninstall_app \
+        --name='direnv' \
         "$@"
 }
 
