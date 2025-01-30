@@ -713,7 +713,7 @@
     },
     "bin": ["broot"],
     "date": "2025-01-12",
-    "default": false,
+    "default": true,
     "dependencies": ["conda"],
     "outdated": true,
     "prune": true,
