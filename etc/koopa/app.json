@@ -331,7 +331,7 @@
     },
     "bin": ["aws"],
     "build_dependencies": ["make"],
-    "date": "2025-01-24",
+    "date": "2025-01-31",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -339,7 +339,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.23.5"
+    "version": "2.23.6"
   },
   "axel": {
     "aliases": {
