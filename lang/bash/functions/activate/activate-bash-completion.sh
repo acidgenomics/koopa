@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME Work on consolidating these scripts into a single directory managed
+# in koopa.
+
 _koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
