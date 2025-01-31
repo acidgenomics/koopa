@@ -21768,9 +21768,11 @@ ${dict2['name']}/${dict2['version']}.tar.gz"
             -f "${dict2['local_tar']}" \
             "${dict2['prefix']}/"
         koopa_alert "Copying to S3 at '${dict2['remote_tar']}'."
-        "${app['aws']}" s3 cp \
-            --profile "${dict['profile']}" \
-            "${dict2['local_tar']}" "${dict2['remote_tar']}"
+        "${app['aws']}" s3 \
+            --profile="${dict['profile']}" \
+            cp \
+                "${dict2['local_tar']}" \
+                "${dict2['remote_tar']}"
     done
     koopa_rm "${dict['tmp_dir']}"
     return 0
