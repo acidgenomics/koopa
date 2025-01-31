@@ -875,11 +875,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2024-12-24",
+    "date": "2025-01-31",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2024-11-26"
+    "version": "2024-12-31"
   },
   "cairo": {
     "aliases": {
