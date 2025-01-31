@@ -1,8 +1,5 @@
 #!/usr/bin/env zsh
 
-# FIXME Need to set zsh completion:
-# zsh_completion.install "contrib/completion/git-completion.zsh" => "_git"
-
 _koopa_activate_zsh_aliases() {
     # """
     # Activate Zsh aliases.
