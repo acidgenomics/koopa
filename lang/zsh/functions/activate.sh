@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# FIXME Improve support for app-specific Zsh autocompletion. Consolidate
+# these functions into 'site-functions', similar to Homebrew approach.
+
 _koopa_activate_zsh_aliases() {
     # """
     # Activate Zsh aliases.
