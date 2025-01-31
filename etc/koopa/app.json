@@ -1446,10 +1446,9 @@
       "homebrew": true
     },
     "bin": ["direnv"],
-    "build_dependencies": ["go", "make"],
+    "build_dependencies": ["go"],
     "date": "2025-01-30",
     "default": true,
-    "dependencies": ["bash"],
     "prune": true,
     "url": ["https://github.com/direnv/direnv"],
     "version": "2.35.0"
