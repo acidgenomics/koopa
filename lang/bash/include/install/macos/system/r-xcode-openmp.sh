@@ -28,7 +28,7 @@ main() {
             dict['platform_version']='17'
             ;;
         *)
-            koopa_stop "Unsupported version: '${dict['version']}'."
+            koopa_stop "Unsupported LLVM version: '${dict['version']}'."
             ;;
     esac
     dict['url']="https://mac.r-project.org/openmp/openmp-${dict['version']}-\
