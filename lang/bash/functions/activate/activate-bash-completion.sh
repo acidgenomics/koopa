@@ -3,63 +3,53 @@
 _koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
-    # @note Updated 2025-01-15.
+    # @note Updated 2025-01-31.
     #
     # System Bash completion paths:
     # - /usr/share/bash-completion/bash_completion
     # - /etc/bash_completion
-    #
-    # May want to source all files in '/etc/bash_completion.d'.
     # """
     local -A dict
+    local -a completion_dirs completion_files
+    local completion_dir completion_file
     dict['opt_prefix']="$(_koopa_opt_prefix)"
-    dict['bash_completion_file']="${dict['opt_prefix']}/bash-completion/etc/\
-profile.d/bash_completion.sh"
-    dict['git_completion_file']="${dict['opt_prefix']}/git/share/\
-completion/git-completion.bash"
-    if [[ -f "${dict['bash_completion_file']}" ]]
-    then
-        # shellcheck source=/dev/null
-        source "${dict['bash_completion_file']}"
-    else
-        if [[ -f '/usr/share/bash-completion/bash_completion' ]]
+    completion_files+=(
+        # > '/usr/share/bash-completion/bash_completion'
+        # > '/etc/bash_completion'
+        "${dict['opt_prefix']}/bash-completion/etc/profile.d/bash_completion.sh"
+        "${dict['opt_prefix']}/git/share/completion/git-completion.bash"
+    )
+    for completion_file in "${completion_files[@]}"
+    do
+        if [[ -f "$completion_file" ]]
         then
             # shellcheck source=/dev/null
-            source '/usr/share/bash-completion/bash_completion'
-        elif [[ -f '/etc/bash_completion' ]]
-        then
-            # shellcheck source=/dev/null
-            source '/etc/bash_completion'
+            source "$completion_file"
         fi
-    fi
-    if [[ -f "${dict['git_completion_file']}" ]]
-    then
-        # shellcheck source=/dev/null
-        source "${dict['git_completion_file']}"
-    fi
-    if [[ -d '/etc/bash_completion.d' ]]
-    then
-        local rc_file
-        for rc_file in '/etc/bash_completion.d/'*
-        do
-            if [[ -f "$rc_file" ]]
-            then
-                # shellcheck source=/dev/null
-                source "$rc_file"
-            fi
-        done
-    fi
-    if [[ -d '/usr/local/etc/bash_completion.d' ]]
-    then
-        local rc_file
-        for rc_file in '/usr/local/etc/bash_completion.d/'*
-        do
-            if [[ -f "$rc_file" ]]
-            then
-                # shellcheck source=/dev/null
-                source "$rc_file"
-            fi
-        done
-    fi
+    done
+    completion_dirs+=(
+        '/etc/bash_completion.d'
+        "${dict['opt_prefix']}/chezmoi/libexec/etc/bash_completion.d"
+        "${dict['opt_prefix']}/eza/libexec/etc/bash_completion.d"
+        "${dict['opt_prefix']}/gum/etc/bash_completion.d"
+        "${dict['opt_prefix']}/rust/etc/bash_completion.d"
+        "${dict['opt_prefix']}/tealdeer/libexec/etc/bash_completion.d"
+        '/usr/local/etc/bash_completion.d'
+    )
+    for completion_dir in "${completion_dirs[@]}"
+    do
+        if [[ -d "$completion_dir" ]]
+        then
+            local rc_file
+            for rc_file in "${completion_dir}/"*
+            do
+                if [[ -f "$rc_file" ]]
+                then
+                    # shellcheck source=/dev/null
+                    source "$rc_file"
+                fi
+            done
+        fi
+    done
     return 0
 }
