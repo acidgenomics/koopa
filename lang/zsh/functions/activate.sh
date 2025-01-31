@@ -95,8 +95,8 @@ _koopa_activate_zsh_fpath() {
     # @note Updated 2025-01-31.
     #
     # Zsh completion scripts should go into 'share/zsh/site-functions'. We can
-    # optionally support aws, docker, git, etc. completion here. Refer to
-    # Homebrew install approach for details.
+    # optionally support aws, docker, git completion here. Refer to Homebrew
+    # install and linkage approach for details.
     # """
     local -A dict
     local -a prefixes
