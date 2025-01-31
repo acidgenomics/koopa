@@ -1,5 +1,8 @@
 #!/usr/bin/env zsh
 
+# FIXME Need to set zsh completion:
+# zsh_completion.install "contrib/completion/git-completion.zsh" => "_git"
+
 _koopa_activate_zsh_aliases() {
     # """
     # Activate Zsh aliases.
@@ -62,7 +65,7 @@ _koopa_activate_zsh_editor() {
 _koopa_activate_zsh_extras() {
     # """
     # Activate Zsh extras.
-    # @note Updated 2025-01-03.
+    # @note Updated 2025-01-31.
     #
     # Note on path (and also fpath) arrays in Zsh:
     # https://www.zsh.org/mla/users/2012/msg00785.html
@@ -92,14 +95,20 @@ _koopa_activate_zsh_extras() {
 _koopa_activate_zsh_fpath() {
     # """
     # Activate Zsh FPATH.
-    # @note Updated 2025-01-03.
+    # @note Updated 2025-01-31.
+    #
+    # Zsh completion scripts should go into 'share/zsh/site-functions'. We can
+    # optionally support aws, docker, git, etc. completion here. Refer to
+    # Homebrew install approach for details.
     # """
+    local -A dict
     local -a prefixes
-    local koopa_prefix maj_min_ver version
-    koopa_prefix="$(_koopa_koopa_prefix)"
+    # > dict['homebrew_prefix']="$(_koopa_homebrew_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     prefixes+=(
+        "${dict['koopa_prefix']}/lang/zsh/functions"
+        # > "${dict['homebrew_prefix']}/lang/zsh/site-functions"
         # > '/usr/local/share/zsh/site-functions'
-        "${koopa_prefix}/lang/zsh/functions"
     )
     _koopa_add_to_fpath_start "${prefixes[@]}"
     return 0
