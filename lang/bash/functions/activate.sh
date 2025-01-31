@@ -12,7 +12,7 @@ _koopa_activate_bash_aliases() {
 }
 
 _koopa_activate_bash_completion() {
-    local -A dict
+    local -A app dict
     local -a completion_dirs completion_files
     local completion_dir completion_file
     dict['opt_prefix']="$(_koopa_opt_prefix)"
@@ -29,12 +29,12 @@ _koopa_activate_bash_completion() {
     done
     completion_dirs+=(
         '/etc/bash_completion.d'
+        '/usr/local/etc/bash_completion.d'
         "${dict['opt_prefix']}/chezmoi/libexec/etc/bash_completion.d"
         "${dict['opt_prefix']}/eza/libexec/etc/bash_completion.d"
         "${dict['opt_prefix']}/gum/etc/bash_completion.d"
         "${dict['opt_prefix']}/rust/etc/bash_completion.d"
         "${dict['opt_prefix']}/tealdeer/libexec/etc/bash_completion.d"
-        '/usr/local/etc/bash_completion.d'
     )
     for completion_dir in "${completion_dirs[@]}"
     do
@@ -50,6 +50,11 @@ _koopa_activate_bash_completion() {
             done
         fi
     done
+    app['aws_completer']="${dict['opt_prefix']}/aws-cli/bin/aws_completer"
+    if [[ -x "${app['aws_completer']}" ]]
+    then
+        complete -C "${app['aws_completer']}" 'aws'
+    fi
     return 0
 }
 
