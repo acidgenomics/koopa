@@ -41,6 +41,93 @@ koopa_linux_add_user_to_group() {
     return 0
 }
 
+koopa_linux_aws_ec2_instance_id() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    app['ec2_metadata']="$(koopa_linux_locate_ec2_metadata)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['string']="$("${app['ec2_metadata']}" --instance-id)"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
+koopa_linux_aws_ec2_instance_type() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    app['ec2_metadata']="$(koopa_linux_locate_ec2_metadata)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['string']="$("${app['ec2_metadata']}" --instance-type)"
+    [[ -n "${dict['string']}" ]] || return 1
+    koopa_print "${dict['string']}"
+    return 0
+}
+
+koopa_linux_aws_ec2_stop() {
+    local -A app dict
+    app['aws']="$(koopa_locate_aws)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['id']="$(koopa_linux_aws_ec2_instance_id)"
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['profile']="${AWS_PROFILE:-default}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
+    koopa_alert "Stopping EC2 instance '${dict['id']}'."
+    "${app['aws']}" ec2 stop-instances \
+        --instance-ids "${dict['id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --profile "${dict['profile']}"
+    return 0
+}
+
+koopa_linux_aws_ec2_terminate() {
+    local -A app dict
+    app['aws']="$(koopa_locate_aws)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['id']="$(koopa_linux_aws_ec2_instance_id)"
+    [[ -n "${dict['id']}" ]] || return 1
+    dict['profile']="${AWS_PROFILE:-default}"
+    while (("$#"))
+    do
+        case "$1" in
+            '--profile='*)
+                dict['profile']="${1#*=}"
+                shift 1
+                ;;
+            '--profile')
+                dict['profile']="${2:?}"
+                shift 2
+                ;;
+            *)
+                koopa_invalid_arg "$1"
+                ;;
+        esac
+    done
+    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
+    "${app['aws']}" ec2 terminate-instances \
+        --instance-ids "${dict['id']}" \
+        --no-cli-pager \
+        --output 'text' \
+        --profile "${dict['profile']}"
+    return 0
+}
+
 koopa_linux_bcl2fastq_indrops() {
     local -A app dict
     koopa_assert_has_no_args "$#"
@@ -218,6 +305,17 @@ koopa_linux_locate_bcl2fastq() {
         --app-name='bcl2fastq' \
         --bin-name='bcl2fastq' \
         "$@"
+}
+
+koopa_linux_locate_ec2_metadata() {
+    local app
+    if koopa_is_ubuntu_like
+    then
+        app='/usr/bin/ec2metadata'
+    else
+        app='/usr/bin/ec2-metadata'
+    fi
+    koopa_locate_app "$app" "$@"
 }
 
 koopa_linux_locate_getconf() {

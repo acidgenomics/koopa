@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-01-30.
+    # @note Updated 2025-02-04.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -25,7 +25,7 @@ _koopa_complete() {
     COMPREPLY=()
     case "${COMP_CWORD:-}" in
         '1')
-            args=(
+            args+=(
                 '--help'
                 '--version'
                 'app'
@@ -44,7 +44,7 @@ _koopa_complete() {
         '2')
             case "${COMP_WORDS[COMP_CWORD-1]}" in
                 'app')
-                    args=(
+                    args+=(
                         'aws'
                         'bioconda'
                         'bowtie2'
@@ -71,10 +71,10 @@ _koopa_complete() {
                     )
                     ;;
                 'configure')
-                    args=('system' 'user')
+                    args+=('system' 'user')
                     ;;
                 'develop')
-                    args=(
+                    args+=(
                         'cache-functions'
                         'edit-app-json'
                         'log'
@@ -85,12 +85,12 @@ _koopa_complete() {
                     )
                     ;;
                 'header')
-                    args=('bash' 'posix' 'zsh')
+                    args+=('bash' 'posix' 'zsh')
                     ;;
                 'install' | \
                 'reinstall' | \
                 'uninstall')
-                    args=(
+                    args+=(
                         'ack'
                         'agat'
                         'anaconda'
@@ -522,7 +522,7 @@ _koopa_complete() {
                     esac
                     ;;
                 'system')
-                    args=(
+                    args+=(
                         'check'
                         'disable-passwordless-sudo'
                         'enable-passwordless-sudo'
@@ -554,7 +554,7 @@ _koopa_complete() {
                     fi
                     ;;
                 'update')
-                    args=('koopa' 'system')
+                    args+=('koopa' 'system')
                     ;;
                 *)
                     ;;
@@ -659,7 +659,7 @@ _koopa_complete() {
                 'system')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'list')
-                            args=(
+                            args+=(
                                 'app-versions'
                                 'dotfiles'
                                 'path-priority'
@@ -675,18 +675,18 @@ _koopa_complete() {
                 'app')
                     case "${COMP_WORDS[COMP_CWORD-1]}" in
                         'aws')
-                            args=('batch' 'codecommit' 'ec2' 'ecr' 's3')
+                            args+=('batch' 'codecommit' 'ec2' 'ecr' 's3')
                             ;;
                         'bioconda')
-                            args=('autobump-recipe')
+                            args+=('autobump-recipe')
                             ;;
                         'bowtie2' | \
                         'hisat2' | \
                         'star')
-                            args=('align' 'index')
+                            args+=('align' 'index')
                             ;;
                         'brew')
-                            args=(
+                            args+=(
                                 'cleanup'
                                 'dump-brewfile'
                                 'outdated'
@@ -698,10 +698,10 @@ _koopa_complete() {
                             )
                             ;;
                         'conda')
-                            args=('create-env' 'remove-env')
+                            args+=('create-env' 'remove-env')
                             ;;
                         'docker')
-                            args=(
+                            args+=(
                                 'build'
                                 'build-all-tags'
                                 'prune-all-images'
@@ -711,10 +711,10 @@ _koopa_complete() {
                             )
                             ;;
                         'ftp')
-                            args=('mirror')
+                            args+=('mirror')
                             ;;
                         'git')
-                            args=(
+                            args+=(
                                 'pull'
                                 'push-submodules'
                                 'rename-master-to-main'
@@ -725,29 +725,29 @@ _koopa_complete() {
                             )
                             ;;
                         'gpg')
-                            args=('prompt' 'reload' 'restart')
+                            args+=('prompt' 'reload' 'restart')
                             ;;
                         'jekyll')
-                            args=('serve')
+                            args+=('serve')
                             ;;
                         'kallisto' | \
                         'rsem')
-                            args=('index' 'quant')
+                            args+=('index' 'quant')
                             ;;
                         'md5sum')
-                            args=('check-to-new-md5-file')
+                            args+=('check-to-new-md5-file')
                             ;;
                         'miso')
-                            args=('index' 'run')
+                            args+=('index' 'run')
                             ;;
                         'r')
-                            args=('bioconda-check' 'check')
+                            args+=('bioconda-check' 'check')
                             ;;
                         'salmon')
-                            args=('detect-fastq-library-type' 'index' 'quant')
+                            args+=('detect-fastq-library-type' 'index' 'quant')
                             ;;
                         'sra')
-                            args=(
+                            args+=(
                                 'download-accession-list'
                                 'download-run-info-table'
                                 'fastq-dump'
@@ -755,10 +755,10 @@ _koopa_complete() {
                             )
                             ;;
                         'ssh')
-                            args=('generate-key')
+                            args+=('generate-key')
                             ;;
                         'wget')
-                            args=('recursive')
+                            args+=('recursive')
                             ;;
                     esac
                     ;;
@@ -771,24 +771,29 @@ _koopa_complete() {
                         'aws')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'batch')
-                                    args=('fetch-and-run' 'list-jobs')
+                                    args+=('fetch-and-run' 'list-jobs')
                                     ;;
                                 'codecommit')
-                                    args=('list-repositories')
+                                    args+=('list-repositories')
                                     ;;
                                 'ec2')
-                                    args=(
-                                        'instance-id'
+                                    args+=(
                                         'list-running-instances'
                                         'map-instance-ids-to-names'
-                                        'stop'
                                     )
+                                    if _koopa_is_linux
+                                    then
+                                        args+=(
+                                            'instance-id'
+                                            'stop'
+                                        )
+                                    fi
                                     ;;
                                 'ecr')
-                                    args=('login-public' 'login-private')
+                                    args+=('login-public' 'login-private')
                                     ;;
                                 's3')
-                                    args=(
+                                    args+=(
                                         'delete-versioned-glacier-objects'
                                         'delete-versioned-objects'
                                         'dot-clean'
@@ -804,7 +809,7 @@ _koopa_complete() {
                         'bowtie2')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'align')
-                                    args=('paired-end')
+                                    args+=('paired-end')
                                     ;;
                             esac
                             ;;
@@ -812,28 +817,28 @@ _koopa_complete() {
                         'star')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'align')
-                                    args=('paired-end' 'single-end')
+                                    args+=('paired-end' 'single-end')
                                     ;;
                             esac
                             ;;
                         'kallisto')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
-                                    args=('paired-end' 'single-end')
+                                    args+=('paired-end' 'single-end')
                                     ;;
                             esac
                             ;;
                         'rsem')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
-                                    args=('bam')
+                                    args+=('bam')
                                     ;;
                             esac
                             ;;
                         'salmon')
                             case "${COMP_WORDS[COMP_CWORD-1]}" in
                                 'quant')
-                                    args=('bam' 'paired-end' 'single-end')
+                                    args+=('bam' 'paired-end' 'single-end')
                                     ;;
                             esac
                             ;;
