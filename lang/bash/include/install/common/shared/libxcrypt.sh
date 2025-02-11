@@ -6,6 +6,7 @@ main() {
     # @note Updated 2025-02-11.
     #
     # @seealso
+    # - https://github.com/besser82/libxcrypt
     # - https://github.com/conda-forge/libxcrypt-feedstock
     # - https://formulae.brew.sh/formula/libxcrypt
     # """
@@ -22,6 +23,7 @@ v${dict['version']}/libxcrypt-${dict['version']}.tar.xz"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-failure-tokens'
+        '--disable-hashes'
         '--disable-static'
         # > '--disable-obsolete-api'
         # > '--disable-valgrind'
