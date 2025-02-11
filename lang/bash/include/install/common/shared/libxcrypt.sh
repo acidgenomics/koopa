@@ -11,8 +11,13 @@ main() {
     # - https://formulae.brew.sh/formula/libxcrypt
     # """
     local -A dict
-    local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
+    local -a build_deps conf_args
+    build_deps+=(
+        'perl'
+        'pkg-config'
+        'python3.12'
+    )
+    koopa_activate_app --build-only "${build_deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/besser82/libxcrypt/releases/download/\
