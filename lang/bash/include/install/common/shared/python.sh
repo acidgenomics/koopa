@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2024-09-23.
+    # @note Updated 2025-02-11.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -66,8 +66,10 @@ main() {
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
+    app['cc']="$(koopa_locate_cc)"
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
+    dict['cc_version']="$(koopa_get_version "${app['cc']}")"
     dict['jobs']="$(koopa_cpu_count)"
     dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -83,7 +85,6 @@ main() {
         # > '--enable-lto'
         '--enable-ipv6'
         '--enable-loadable-sqlite-extensions'
-        '--enable-optimizations'
         '--enable-shared'
         "--prefix=${dict['prefix']}"
         '--with-computed-gotos'
@@ -97,6 +98,14 @@ main() {
         'py_cv_module__gdbm=disabled'
         'py_cv_module__tkinter=disabled'
     )
+    if [[ "$(koopa_basename "${app['cc']}")" == 'gcc' ]] && \
+        [[ "$(koopa_major_version "${dict['cc_version']}")" == 4 ]]
+    then
+        koopa_alert_note "${app['cc']} ${dict['cc_version']} does not \
+support '--enable-optimizations' flag."
+    else
+        conf_args+=('--enable-optimizations')
+    fi
     if koopa_is_macos
     then
         app['dtrace']='/usr/sbin/dtrace'
