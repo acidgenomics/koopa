@@ -3698,7 +3698,7 @@
     "aliases": {
       "homebrew": true
     },
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "perl", "pkg-config"],
     "date": "2025-01-15",
     "default": false,
     "prune": false,
