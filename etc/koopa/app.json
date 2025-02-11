@@ -5434,7 +5434,7 @@
     "bin": ["rclone"],
     "build_dependencies": ["go"],
     "date": "2025-01-12",
-    "default": false,
+    "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
