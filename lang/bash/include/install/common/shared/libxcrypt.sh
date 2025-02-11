@@ -12,11 +12,7 @@ main() {
     # """
     local -A dict
     local -a build_deps conf_args
-    build_deps+=(
-        'perl'
-        'pkg-config'
-        'python3.12'
-    )
+    build_deps+=('perl' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
