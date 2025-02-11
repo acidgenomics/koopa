@@ -23,12 +23,11 @@ v${dict['version']}/libxcrypt-${dict['version']}.tar.xz"
     conf_args=(
         "--prefix=${dict['prefix']}"
         '--disable-failure-tokens'
-        '--disable-hashes'
         '--disable-static'
+        '--enable-hashes=strong'
         # > '--disable-obsolete-api'
         # > '--disable-valgrind'
         # > '--disable-xcrypt-compat-files'
-        # > '--enable-hashes=strong,glibc'
     )
     koopa_make_build "${conf_args[@]}"
     return 0
