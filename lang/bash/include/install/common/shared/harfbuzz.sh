@@ -32,7 +32,7 @@ main() {
         'pcre2'
         'glib'
         'freetype'
-        'icu4c'
+        'icu4c75'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
