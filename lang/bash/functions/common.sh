@@ -13887,17 +13887,9 @@ koopa_install_hyperfine() {
         "$@"
 }
 
-koopa_install_icu4c75() {
+koopa_install_icu4c() {
     koopa_install_app \
-        --installer='icu4c' \
-        --name='icu4c75' \
-        "$@"
-}
-
-koopa_install_icu4c76() {
-    koopa_install_app \
-        --installer='icu4c' \
-        --name='icu4c76' \
+        --name='icu4c' \
         "$@"
 }
 
@@ -19157,7 +19149,7 @@ koopa_locate_hostname() {
 
 koopa_locate_icu_config() {
     koopa_locate_app \
-        --app-name='icu4c75' \
+        --app-name='icu4c' \
         --bin-name='icu-config' \
         "$@"
 }
@@ -22222,7 +22214,7 @@ tools/${dict['arch']}"
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c75' # libxml2
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -22519,7 +22511,7 @@ libexec/lib/server}")
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c75' # libxml2
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -22684,7 +22676,7 @@ koopa_r_configure_makevars() {
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c75' # libxml2
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -29836,19 +29828,7 @@ koopa_uninstall_hyperfine() {
 
 koopa_uninstall_icu4c() {
     koopa_uninstall_app \
-        --name='icu4c75' \
-        "$@"
-}
-
-koopa_uninstall_icu4c75() {
-    koopa_uninstall_app \
-        --name='icu4c75' \
-        "$@"
-}
-
-koopa_uninstall_icu4c76() {
-    koopa_uninstall_app \
-        --name='icu4c76' \
+        --name='icu4c' \
         "$@"
 }
 

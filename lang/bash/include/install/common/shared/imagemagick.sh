@@ -45,7 +45,7 @@ main() {
         'libpng'
         'libtiff'
         'libtool'
-        'icu4c75' # libxml2
+        'icu4c' # libxml2
         'libxml2'
         'libzip'
         'fontconfig'

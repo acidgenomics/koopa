@@ -136,7 +136,7 @@
     "default": false,
     "dependencies": [
       "gettext",
-      "icu4c75",
+      "icu4c",
       "libssh2",
       "libxml2",
       "openssl3",
@@ -494,7 +494,7 @@
     "build_dependencies": ["cmake", "make"],
     "date": "2023-05-24",
     "default": false,
-    "dependencies": ["bzip2", "icu4c75", "xz", "zlib", "zstd"],
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "private": true,
     "prune": true,
     "supported": {
@@ -657,7 +657,7 @@
     },
     "date": "2024-12-24",
     "default": false,
-    "dependencies": ["bzip2", "icu4c75", "xz", "zlib", "zstd"],
+    "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.boost.org/"],
     "version": "1.87.0"
@@ -896,7 +896,7 @@
       "freetype",
       "gettext",
       "glib",
-      "icu4c75",
+      "icu4c",
       "libffi",
       "libpng",
       "libxml2",
@@ -1574,7 +1574,7 @@
     "dependencies": [
       "gmp",
       "gnutls",
-      "icu4c75",
+      "icu4c",
       "libtasn1",
       "libunistring",
       "libxml2",
@@ -2003,7 +2003,7 @@
       "expat",
       "geos",
       "hdf5",
-      "icu4c75",
+      "icu4c",
       "libdeflate",
       "libiconv",
       "libjpeg-turbo",
@@ -2075,7 +2075,7 @@
     "default": false,
     "dependencies": [
       "bison",
-      "icu4c75",
+      "icu4c",
       "libiconv",
       "libunistring",
       "libxml2",
@@ -2628,7 +2628,7 @@
       "freetype",
       "gettext",
       "glib",
-      "icu4c75",
+      "icu4c",
       "libffi",
       "pcre2",
       "zlib"
@@ -2837,10 +2837,6 @@
     "version": "1.19.0"
   },
   "icu4c": {
-    "date": "2025-02-12",
-    "removed": true
-  },
-  "icu4c75": {
     "aliases": {
       "fedora": "libicu-devel",
       "homebrew": "icu4c@75"
@@ -2875,27 +2871,17 @@
       "pkgdata.1",
       "uconv.1"
     ],
+    "notes": [
+      "Pinning to conda-forge version.",
+      "libxml2 currently doesn't support ICU 76."
+    ],
+    "outdated": true,
     "prune": false,
     "url": [
       "https://icu.unicode.org/",
       "https://icu.unicode.org/download/75"
     ],
     "version": "75.1"
-  },
-  "icu4c76": {
-    "aliases": {
-      "fedora": "libicu-devel",
-      "homebrew": "icu4c@76"
-    },
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-02-12",
-    "default": false,
-    "prune": false,
-    "url": [
-      "https://icu.unicode.org/",
-      "https://icu.unicode.org/download/76"
-    ],
-    "version": "76.1"
   },
   "imagemagick": {
     "aliases": {
@@ -2916,7 +2902,7 @@
       "bzip2",
       "fontconfig",
       "freetype",
-      "icu4c75",
+      "icu4c",
       "jpeg",
       "libheif",
       "libpng",
@@ -3728,7 +3714,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["icu4c75", "readline", "xz", "zlib"],
+    "dependencies": ["icu4c", "readline", "xz", "zlib"],
     "man1": ["xml2-config.1"],
     "prune": false,
     "url": ["https://gitlab.gnome.org/GNOME/libxml2/-/releases"],
@@ -3741,7 +3727,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["icu4c75", "libgcrypt", "libxml2"],
+    "dependencies": ["icu4c", "libgcrypt", "libxml2"],
     "prune": false,
     "url": [
       "http://xmlsoft.org/XSLT/",
@@ -3804,7 +3790,7 @@
     "dependencies": [
       "binutils",
       "elfutils",
-      "icu4c75",
+      "icu4c",
       "libedit",
       "libffi",
       "libxml2",
@@ -4448,7 +4434,7 @@
     "dependencies": [
       "ca-certificates",
       "c-ares",
-      "icu4c75",
+      "icu4c",
       "libuv",
       "openssl3",
       "python3.11",
@@ -4883,7 +4869,7 @@
     "date": "2025-01-15",
     "default": false,
     "dependencies": [
-      "icu4c75",
+      "icu4c",
       "libxml2",
       "libxslt",
       "lz4",
@@ -5248,7 +5234,7 @@
       "graphviz",
       "harfbuzz",
       "hdf5",
-      "icu4c75",
+      "icu4c",
       "imagemagick",
       "less",
       "libffi",
@@ -5321,7 +5307,7 @@
       "graphviz",
       "harfbuzz",
       "hdf5",
-      "icu4c75",
+      "icu4c",
       "imagemagick",
       "less",
       "libffi",
@@ -6584,7 +6570,7 @@
       "bzip2",
       "gettext",
       "gnutls",
-      "icu4c75",
+      "icu4c",
       "libassuan",
       "libgpg-error",
       "libidn",
