@@ -19157,7 +19157,7 @@ koopa_locate_hostname() {
 
 koopa_locate_icu_config() {
     koopa_locate_app \
-        --app-name='icu4c' \
+        --app-name='icu4c75' \
         --bin-name='icu-config' \
         "$@"
 }
@@ -22222,7 +22222,7 @@ tools/${dict['arch']}"
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c75' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -22519,7 +22519,7 @@ libexec/lib/server}")
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c75' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -22684,7 +22684,7 @@ koopa_r_configure_makevars() {
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c75' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'

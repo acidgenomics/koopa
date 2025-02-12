@@ -19,7 +19,7 @@ main() {
         'gettext'
         'openssl3'
         'libssh2'
-        'icu4c'
+        'icu4c75' # libxml2
         'libxml2'
         'sqlite'
     )

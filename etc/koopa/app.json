@@ -136,7 +136,7 @@
     "default": false,
     "dependencies": [
       "gettext",
-      "icu4c76",
+      "icu4c75",
       "libssh2",
       "libxml2",
       "openssl3",
@@ -494,7 +494,7 @@
     "build_dependencies": ["cmake", "make"],
     "date": "2023-05-24",
     "default": false,
-    "dependencies": ["bzip2", "icu4c76", "xz", "zlib", "zstd"],
+    "dependencies": ["bzip2", "icu4c75", "xz", "zlib", "zstd"],
     "private": true,
     "prune": true,
     "supported": {
@@ -657,7 +657,7 @@
     },
     "date": "2024-12-24",
     "default": false,
-    "dependencies": ["bzip2", "icu4c76", "xz", "zlib", "zstd"],
+    "dependencies": ["bzip2", "icu4c75", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.boost.org/"],
     "version": "1.87.0"
@@ -896,7 +896,7 @@
       "freetype",
       "gettext",
       "glib",
-      "icu4c76",
+      "icu4c75",
       "libffi",
       "libpng",
       "libxml2",
@@ -1574,7 +1574,7 @@
     "dependencies": [
       "gmp",
       "gnutls",
-      "icu4c76",
+      "icu4c75",
       "libtasn1",
       "libunistring",
       "libxml2",
@@ -2003,7 +2003,7 @@
       "expat",
       "geos",
       "hdf5",
-      "icu4c76",
+      "icu4c75",
       "libdeflate",
       "libiconv",
       "libjpeg-turbo",
@@ -2075,7 +2075,7 @@
     "default": false,
     "dependencies": [
       "bison",
-      "icu4c76",
+      "icu4c75",
       "libiconv",
       "libunistring",
       "libxml2",
@@ -2628,7 +2628,7 @@
       "freetype",
       "gettext",
       "glib",
-      "icu4c76",
+      "icu4c75",
       "libffi",
       "pcre2",
       "zlib"
@@ -2841,21 +2841,6 @@
       "fedora": "libicu-devel",
       "homebrew": "icu4c@75"
     },
-    "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-02-12",
-    "default": false,
-    "prune": false,
-    "url": [
-      "https://icu.unicode.org/",
-      "https://icu.unicode.org/download/75"
-    ],
-    "version": "75.1"
-  },
-  "icu4c76": {
-    "aliases": {
-      "fedora": "libicu-devel",
-      "homebrew": true
-    },
     "bin": [
       "derb",
       "genbrk",
@@ -2889,6 +2874,21 @@
     "prune": false,
     "url": [
       "https://icu.unicode.org/",
+      "https://icu.unicode.org/download/75"
+    ],
+    "version": "75.1"
+  },
+  "icu4c76": {
+    "aliases": {
+      "fedora": "libicu-devel",
+      "homebrew": "icu4c@76"
+    },
+    "build_dependencies": ["make", "pkg-config"],
+    "date": "2025-02-12",
+    "default": false,
+    "prune": false,
+    "url": [
+      "https://icu.unicode.org/",
       "https://icu.unicode.org/download/76"
     ],
     "version": "76.1"
@@ -2912,7 +2912,7 @@
       "bzip2",
       "fontconfig",
       "freetype",
-      "icu4c76",
+      "icu4c75",
       "jpeg",
       "libheif",
       "libpng",
@@ -3737,7 +3737,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["icu4c76", "libgcrypt", "libxml2"],
+    "dependencies": ["icu4c75", "libgcrypt", "libxml2"],
     "prune": false,
     "url": [
       "http://xmlsoft.org/XSLT/",
@@ -3800,7 +3800,7 @@
     "dependencies": [
       "binutils",
       "elfutils",
-      "icu4c76",
+      "icu4c75",
       "libedit",
       "libffi",
       "libxml2",
@@ -4444,7 +4444,7 @@
     "dependencies": [
       "ca-certificates",
       "c-ares",
-      "icu4c76",
+      "icu4c75",
       "libuv",
       "openssl3",
       "python3.11",
@@ -4879,7 +4879,7 @@
     "date": "2025-01-15",
     "default": false,
     "dependencies": [
-      "icu4c76",
+      "icu4c75",
       "libxml2",
       "libxslt",
       "lz4",
@@ -5244,7 +5244,7 @@
       "graphviz",
       "harfbuzz",
       "hdf5",
-      "icu4c76",
+      "icu4c75",
       "imagemagick",
       "less",
       "libffi",
@@ -5317,7 +5317,7 @@
       "graphviz",
       "harfbuzz",
       "hdf5",
-      "icu4c76",
+      "icu4c75",
       "imagemagick",
       "less",
       "libffi",
@@ -6580,7 +6580,7 @@
       "bzip2",
       "gettext",
       "gnutls",
-      "icu4c76",
+      "icu4c75",
       "libassuan",
       "libgpg-error",
       "libidn",

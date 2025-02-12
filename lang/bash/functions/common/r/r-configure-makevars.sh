@@ -74,7 +74,7 @@ koopa_r_configure_makevars() {
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c75' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'

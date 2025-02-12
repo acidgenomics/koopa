@@ -49,7 +49,7 @@ main() {
     koopa_assert_is_not_arm64
     build_deps=('cmake' 'make')
     ! koopa_is_macos && deps+=('bzip2')
-    deps+=('icu4c' 'xz' 'zlib' 'zstd')
+    deps+=('icu4c75' 'xz' 'zlib' 'zstd')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['aws']="$(koopa_locate_aws --allow-system)"
@@ -57,7 +57,7 @@ main() {
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c75')"
     dict['installers_base']="$(koopa_private_installers_s3_uri)"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
