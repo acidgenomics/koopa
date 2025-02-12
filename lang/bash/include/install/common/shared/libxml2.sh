@@ -21,7 +21,7 @@ main() {
     )
     deps=(
         'zlib'
-        'icu4c75'
+        'icu4c'
         'readline'
         'xz'
         'libiconv'
@@ -31,7 +31,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c75')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['xz']="$(koopa_app_prefix 'xz')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"

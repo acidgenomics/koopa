@@ -13,7 +13,7 @@ main() {
     local -a build_deps conf_args deps
     build_deps=('pkg-config')
     deps=(
-        'icu4c75' # libxml2
+        'icu4c' # libxml2
         'libxml2'
         'libgpg-error' # libgcrypt
         'libgcrypt'

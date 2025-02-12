@@ -31,7 +31,7 @@ main() {
         'openssl3'
         'pcre2'
         'gnutls'
-        'icu4c75'
+        'icu4c'
         'libgpg-error'
         'libassuan'
         'nghttp2'

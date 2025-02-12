@@ -28,7 +28,7 @@ main() {
         'libiconv'
         'libunistring'
         'ncurses'
-        'icu4c75'
+        'icu4c'
     )
     if ! koopa_is_macos
     then

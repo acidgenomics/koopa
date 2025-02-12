@@ -38,7 +38,7 @@ main() {
     deps=(
         'ca-certificates'
         'zlib'
-        'icu4c75'
+        'icu4c'
         'libuv'
         'openssl3'
         'python3.11'

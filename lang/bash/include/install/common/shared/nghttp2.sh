@@ -21,7 +21,7 @@ main() {
         'c-ares'
         'jemalloc'
         'libev'
-        'icu4c75' # libxml2
+        'icu4c' # libxml2
         'libxml2'
         'openssl3'
         'zlib'
