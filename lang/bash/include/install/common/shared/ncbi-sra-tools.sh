@@ -29,7 +29,7 @@ install_from_source() {
     local -a build_deps cmake_args cmake_std_args
     build_deps+=('bison' 'flex' 'python3.12')
     koopa_activate_app --build-only "${build_deps[@]}"
-    # > deps+=('icu4c75' 'libxml2')
+    # > deps+=('icu4c' 'libxml2')
     # > koopa_activate_app "${deps[@]}"
     app['cmake']="$(koopa_locate_cmake)"
     app['python']="$(koopa_locate_python312 --realpath)"

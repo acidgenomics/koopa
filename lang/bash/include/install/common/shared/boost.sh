@@ -13,11 +13,11 @@ main() {
     local -A app dict
     local -a b2_args bootstrap_args deps
     ! koopa_is_macos && deps+=('bzip2')
-    deps+=('icu4c75' 'xz' 'zlib' 'zstd')
+    deps+=('icu4c' 'xz' 'zlib' 'zstd')
     koopa_activate_app "${deps[@]}"
     app['cc']="$(koopa_locate_cc --only-system)"
     koopa_assert_is_executable "${app[@]}"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c75')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['toolset']="$(koopa_basename "${app['cc']}")"

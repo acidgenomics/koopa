@@ -83,7 +83,7 @@ libexec/lib/server}")
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c75' # libxml2
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
