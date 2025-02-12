@@ -13887,9 +13887,17 @@ koopa_install_hyperfine() {
         "$@"
 }
 
-koopa_install_icu4c() {
+koopa_install_icu4c75() {
     koopa_install_app \
-        --name='icu4c' \
+        --installer='icu4c' \
+        --name='icu4c75' \
+        "$@"
+}
+
+koopa_install_icu4c76() {
+    koopa_install_app \
+        --installer='icu4c' \
+        --name='icu4c76' \
         "$@"
 }
 
@@ -29826,9 +29834,15 @@ koopa_uninstall_hyperfine() {
         "$@"
 }
 
-koopa_uninstall_icu4c() {
+koopa_uninstall_icu4c75() {
     koopa_uninstall_app \
-        --name='icu4c' \
+        --name='icu4c75' \
+        "$@"
+}
+
+koopa_uninstall_icu4c76() {
+    koopa_uninstall_app \
+        --name='icu4c76' \
         "$@"
 }
 
