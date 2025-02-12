@@ -29,7 +29,7 @@ install_from_source() {
         'openssl3' # curl
         'libssh2' # curl
         'curl'
-        'icu4c'
+        'icu4c75'
         'jemalloc'
         'libiconv'
         'staden-io-lib'
@@ -42,7 +42,7 @@ install_from_source() {
     app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
+    dict['icu4c']="$(koopa_app_prefix 'icu4c75')"
     dict['jemalloc']="$(koopa_app_prefix 'jemalloc')"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -75,7 +75,7 @@ main() {
         'zlib' # libpng
         'zstd' # libtiff
         'gettext'
-        'icu4c'
+        'icu4c75' # libxml2
         'readline'
         'openssl3' # curl
         'libssh2' # curl
