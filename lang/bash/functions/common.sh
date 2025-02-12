@@ -29834,6 +29834,12 @@ koopa_uninstall_hyperfine() {
         "$@"
 }
 
+koopa_uninstall_icu4c() {
+    koopa_uninstall_app \
+        --name='icu4c75' \
+        "$@"
+}
+
 koopa_uninstall_icu4c75() {
     koopa_uninstall_app \
         --name='icu4c75' \

@@ -2836,6 +2836,10 @@
     "url": ["https://github.com/sharkdp/hyperfine/"],
     "version": "1.19.0"
   },
+  "icu4c": {
+    "date": "2025-02-12",
+    "removed": true
+  },
   "icu4c75": {
     "aliases": {
       "fedora": "libicu-devel",
