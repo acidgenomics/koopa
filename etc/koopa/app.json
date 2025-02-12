@@ -2856,7 +2856,7 @@
       "uconv"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-02-12",
     "default": false,
     "man1": [
       "derb.1",
@@ -2882,7 +2882,7 @@
       "https://icu.unicode.org/download/75",
       "https://icu.unicode.org/download/76"
     ],
-    "version": "75.1"
+    "version": "76.1"
   },
   "imagemagick": {
     "aliases": {
