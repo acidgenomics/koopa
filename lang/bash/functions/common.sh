@@ -10475,7 +10475,11 @@ koopa_gpg_download_key_from_keyserver() {
         "${dict['key']}"
     )
     "${app['gpg']}" "${gpg_args[@]}"
-    koopa_assert_is_file "${dict['tmp_file']}"
+    if [[ ! -f "${dict['tmp_file']}" ]]
+    then
+        koopa_warn "Failed to export '${dict['key']}' to '${dict['file']}'."
+        return 1
+    fi
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"
