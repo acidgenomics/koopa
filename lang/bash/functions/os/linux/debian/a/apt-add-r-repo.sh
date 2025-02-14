@@ -3,7 +3,7 @@
 koopa_debian_apt_add_r_repo() {
     # """
     # Add R apt repo.
-    # @note Updated 2024-07-17.
+    # @note Updated 2025-02-14.
     # """
     local -A dict
     koopa_assert_has_args_le "$#" 1
@@ -38,7 +38,7 @@ koopa_debian_apt_add_r_repo() {
     )"
     dict['url']="https://cloud.r-project.org/bin/linux/${dict['os_id']}"
     dict['distribution']="${dict['os_codename']}-cran${dict['version2']}/"
-    koopa_debian_apt_add_r_key
+    koopa_debian_apt_add_r_key || true
     koopa_debian_apt_add_repo \
         --distribution="${dict['distribution']}" \
         --name="${dict['name']}" \
