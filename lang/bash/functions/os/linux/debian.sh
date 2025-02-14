@@ -101,7 +101,8 @@ koopa_debian_apt_add_r_key() {
         --file="${dict['file']}" \
         --key="${dict['key']}" \
         --keyserver="${dict['keyserver']}" \
-        --sudo
+        --sudo \
+        || true
     return 0
 }
 
