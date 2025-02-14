@@ -5580,7 +5580,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2024-12-30",
+    "date": "2025-02-14",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5590,7 +5590,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2024.12.0+467"
+    "version": "2024.12.1+563"
   },
   "rsync": {
     "aliases": {
