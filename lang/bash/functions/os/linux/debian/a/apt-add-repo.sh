@@ -166,7 +166,7 @@ signed-by=${dict['signed_by']}] ${dict['url']} ${dict['distribution']} \
 ${components[*]}"
     else
         koopa_alert_note "GPG key does not exist at '${dict['signed_by']}'."
-        dict['string']="deb [arch=${dict['arch']} ${dict['url']} \
+        dict['string']="deb [arch=${dict['arch']}] ${dict['url']} \
 ${dict['distribution']} ${components[*]}"
     fi
     if [[ -f "${dict['file']}" ]]
