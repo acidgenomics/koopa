@@ -3,7 +3,7 @@
 koopa_debian_apt_add_repo() {
     # """
     # Add an apt repo.
-    # @note Updated 2023-04-06.
+    # @note Updated 2025-02-14.
     #
     # @section Debian Repository Format:
     #
@@ -158,10 +158,17 @@ koopa_debian_apt_add_repo() {
         "${dict['key_prefix']}" \
         "${dict['prefix']}"
     dict['signed_by']="${dict['key_prefix']}/koopa-${dict['key_name']}.gpg"
-    koopa_assert_is_file "${dict['signed_by']}"
     dict['file']="${dict['prefix']}/koopa-${dict['name']}.list"
-    dict['string']="deb [arch=${dict['arch']} signed-by=${dict['signed_by']}] \
-${dict['url']} ${dict['distribution']} ${components[*]}"
+    if [[ -f "${dict['signed_by']}" ]]
+    then
+        dict['string']="deb [arch=${dict['arch']} \
+signed-by=${dict['signed_by']}] ${dict['url']} ${dict['distribution']} \
+${components[*]}"
+    else
+        koopa_alert_note "GPG key does not exist at '${dict['signed_by']}'."
+        dict['string']="deb [arch=${dict['arch']} ${dict['url']} \
+${dict['distribution']} ${components[*]}"
+    fi
     if [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "'${dict['name']}' repo exists at '${dict['file']}'."
