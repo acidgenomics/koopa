@@ -10460,19 +10460,21 @@ koopa_gpg_download_key_from_keyserver() {
         )
     fi
     gpg_args+=(
-        --quiet
         --recv-keys "${dict['key']}"
     )
     "${app['gpg']}" "${gpg_args[@]}"
-    "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
+    gpg_args=(
+        --homedir "${dict['tmp_dir']}"
         --list-public-keys "${dict['key']}"
-    "${app['gpg']}" \
-        --export \
-        --homedir "${dict['tmp_dir']}" \
-        --output "${dict['tmp_file']}" \
-        --quiet \
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    gpg_args=(
+        --export
+        --homedir "${dict['tmp_dir']}"
+        --output "${dict['tmp_file']}"
         "${dict['key']}"
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
     koopa_assert_is_file "${dict['tmp_file']}"
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
     koopa_rm "${dict['tmp_dir']}"
