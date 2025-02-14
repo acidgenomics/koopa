@@ -5432,13 +5432,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2025-01-12",
+    "date": "2025-02-14",
     "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.69.0"
+    "version": "1.69.1"
   },
   "readline": {
     "aliases": {
@@ -6461,7 +6461,7 @@
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.31"
+    "version": "0.6.0"
   },
   "vim": {
     "aliases": {
