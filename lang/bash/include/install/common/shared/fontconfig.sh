@@ -21,7 +21,7 @@ main() {
     deps+=(
         'gperf'
         'freetype'
-        'icu4c'
+        'icu4c' # libxml2
         'libxml2'
     )
     koopa_activate_app --build-only 'pkg-config'

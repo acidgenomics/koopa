@@ -1,24 +1,18 @@
 #!/usr/bin/env bash
 
-koopa_aws_ec2_instance_type() {
+koopa_linux_aws_ec2_instance_type() {
     # """
     # AWS EC2 current instance type.
-    # @note Updated 2024-09-24.
+    # @note Updated 2025-02-04.
     #
     # @seealso
     # - https://stackoverflow.com/questions/51486405/
     # """
     local -A app dict
     koopa_assert_has_no_args "$#"
-    if koopa_is_ubuntu_like
-    then
-        app['ec2metadata']='/usr/bin/ec2metadata'
-    else
-        # e.g. Amazon Linux 2.
-        app['ec2metadata']='/usr/bin/ec2-metadata'
-    fi
+    app['ec2_metadata']="$(koopa_linux_locate_ec2_metadata)"
     koopa_assert_is_executable "${app[@]}"
-    dict['string']="$("${app['ec2metadata']}" --instance-type)"
+    dict['string']="$("${app['ec2_metadata']}" --instance-type)"
     [[ -n "${dict['string']}" ]] || return 1
     koopa_print "${dict['string']}"
     return 0

@@ -21,7 +21,7 @@ main() {
         'zlib'
         'gettext'
         'freetype'
-        'icu4c'
+        'icu4c' # libxml2
         'libxml2'
         'fontconfig'
         'libffi'

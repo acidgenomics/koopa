@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenMP for Xcode library.
-    # @note Updated 2023-04-11.
+    # @note Updated 2025-01-31.
     #
     # Useful for optimizing performance of 'data.table' package.
     #
@@ -18,24 +18,17 @@ main() {
     dict['release']='Release' # or 'Debug'.
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
-        '13.0.0')
-            dict['platform_version']='21'
-            ;;
-        '16.0.4' | \
-        '15.0.7' | \
-        '14.0.6' | \
-        '12.0.1' | \
-        '11.0.1')
+        '11.'* | '12.'* | '14.'* | '15.'* | '16.'* | '17.'* | '18.'* | '19.'*)
             dict['platform_version']='20'
             ;;
-        '10.0.0' | \
-        '9.0.1' | \
-        '8.0.1' | \
-        '7.1.0')
+        '13.'*)
+            dict['platform_version']='21'
+            ;;
+        '7.'* | '8.'* | '9.'* | '10.'*)
             dict['platform_version']='17'
             ;;
         *)
-            koopa_stop "Unsupported version: '${dict['version']}'."
+            koopa_stop "Unsupported LLVM version: '${dict['version']}'."
             ;;
     esac
     dict['url']="https://mac.r-project.org/openmp/openmp-${dict['version']}-\

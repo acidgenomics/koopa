@@ -197,7 +197,7 @@ tools/${dict['arch']}"
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c' # libxml2
             'imagemagick'
             # > 'jpeg'
             'libffi'

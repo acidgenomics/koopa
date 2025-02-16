@@ -17,7 +17,7 @@ main() {
         'pkg-config'
     )
     deps+=(
-        'icu4c'
+        'icu4c' # libxml2
         'libxml2'
         'libxslt'
         'lz4'
