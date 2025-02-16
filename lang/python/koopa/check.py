@@ -13,7 +13,7 @@ from koopa.os import koopa_opt_prefix
 def check_installed_apps() -> bool:
     """
     Check system integrity.
-    Updated 2024-07-08.
+    Updated 2025-02-12.
     """
     ok = True
     opt_prefix = koopa_opt_prefix()
@@ -21,7 +21,9 @@ def check_installed_apps() -> bool:
     names = installed_apps()
     for name in names:
         if name not in json_data.keys():
-            raise ValueError(f"Unsupported app: {name!r}.")
+            ok = False
+            print(f"{name} (unsupported)")
+            continue
         path = join(opt_prefix, name)
         if not islink(path):
             ok = False
