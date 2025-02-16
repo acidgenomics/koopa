@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
 
-koopa_aws_ec2_stop() {
+koopa_linux_aws_ec2_terminate() {
     # """
-    # Stop (suspend) current AWS EC2 instance.
-    # @note Updated 2024-06-28.
+    # Terminate current AWS EC2 instance.
+    # @note Updated 2024-02-04.
+    #
+    # Since this is a destructive action, don't make available in the koopa CLI.
     #
     # @seealso
-    # - aws ec2 stop-instances help
+    # - aws ec2 terminate-instances help
     # """
     local -A app dict
     app['aws']="$(koopa_locate_aws)"
     koopa_assert_is_executable "${app[@]}"
-    dict['id']="$(koopa_aws_ec2_instance_id)"
+    dict['id']="$(koopa_linux_aws_ec2_instance_id)"
     [[ -n "${dict['id']}" ]] || return 1
     dict['profile']="${AWS_PROFILE:-default}"
     while (("$#"))
@@ -33,8 +35,7 @@ koopa_aws_ec2_stop() {
         esac
     done
     koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    koopa_alert "Stopping EC2 instance '${dict['id']}'."
-    "${app['aws']}" ec2 stop-instances \
+    "${app['aws']}" ec2 terminate-instances \
         --instance-ids "${dict['id']}" \
         --no-cli-pager \
         --output 'text' \

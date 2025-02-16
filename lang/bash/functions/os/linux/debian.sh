@@ -101,7 +101,8 @@ koopa_debian_apt_add_r_key() {
         --file="${dict['file']}" \
         --key="${dict['key']}" \
         --keyserver="${dict['keyserver']}" \
-        --sudo
+        --sudo \
+        || true
     return 0
 }
 
@@ -139,7 +140,7 @@ koopa_debian_apt_add_r_repo() {
     )"
     dict['url']="https://cloud.r-project.org/bin/linux/${dict['os_id']}"
     dict['distribution']="${dict['os_codename']}-cran${dict['version2']}/"
-    koopa_debian_apt_add_r_key
+    koopa_debian_apt_add_r_key || true
     koopa_debian_apt_add_repo \
         --distribution="${dict['distribution']}" \
         --name="${dict['name']}" \
@@ -248,10 +249,17 @@ koopa_debian_apt_add_repo() {
         "${dict['key_prefix']}" \
         "${dict['prefix']}"
     dict['signed_by']="${dict['key_prefix']}/koopa-${dict['key_name']}.gpg"
-    koopa_assert_is_file "${dict['signed_by']}"
     dict['file']="${dict['prefix']}/koopa-${dict['name']}.list"
-    dict['string']="deb [arch=${dict['arch']} signed-by=${dict['signed_by']}] \
-${dict['url']} ${dict['distribution']} ${components[*]}"
+    if [[ -f "${dict['signed_by']}" ]]
+    then
+        dict['string']="deb [arch=${dict['arch']} \
+signed-by=${dict['signed_by']}] ${dict['url']} ${dict['distribution']} \
+${components[*]}"
+    else
+        koopa_alert_note "GPG key does not exist at '${dict['signed_by']}'."
+        dict['string']="deb [arch=${dict['arch']}] ${dict['url']} \
+${dict['distribution']} ${components[*]}"
+    fi
     if [[ -f "${dict['file']}" ]]
     then
         koopa_alert_info "'${dict['name']}' repo exists at '${dict['file']}'."

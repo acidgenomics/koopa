@@ -2033,38 +2033,6 @@ koopa_aws_codecommit_list_repositories() {
     return 0
 }
 
-koopa_aws_ec2_instance_id() {
-    local -A app dict
-    koopa_assert_has_no_args "$#"
-    if koopa_is_ubuntu_like
-    then
-        app['ec2metadata']='/usr/bin/ec2metadata'
-    else
-        app['ec2metadata']='/usr/bin/ec2-metadata'
-    fi
-    koopa_assert_is_executable "${app[@]}"
-    dict['string']="$("${app['ec2metadata']}" --instance-id)"
-    [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
-    return 0
-}
-
-koopa_aws_ec2_instance_type() {
-    local -A app dict
-    koopa_assert_has_no_args "$#"
-    if koopa_is_ubuntu_like
-    then
-        app['ec2metadata']='/usr/bin/ec2metadata'
-    else
-        app['ec2metadata']='/usr/bin/ec2-metadata'
-    fi
-    koopa_assert_is_executable "${app[@]}"
-    dict['string']="$("${app['ec2metadata']}" --instance-type)"
-    [[ -n "${dict['string']}" ]] || return 1
-    koopa_print "${dict['string']}"
-    return 0
-}
-
 koopa_aws_ec2_list_running_instances() {
     local -A app bool dict
     local -a filters
@@ -2162,71 +2130,6 @@ koopa_aws_ec2_map_instance_ids_to_names() {
         out+=("${ids[$i]} : ${names[$i]}")
     done
     koopa_print "${out[@]}"
-    return 0
-}
-
-koopa_aws_ec2_stop() {
-    local -A app dict
-    app['aws']="$(koopa_locate_aws)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['id']="$(koopa_aws_ec2_instance_id)"
-    [[ -n "${dict['id']}" ]] || return 1
-    dict['profile']="${AWS_PROFILE:-default}"
-    while (("$#"))
-    do
-        case "$1" in
-            '--profile='*)
-                dict['profile']="${1#*=}"
-                shift 1
-                ;;
-            '--profile')
-                dict['profile']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    koopa_alert "Stopping EC2 instance '${dict['id']}'."
-    "${app['aws']}" ec2 stop-instances \
-        --instance-ids "${dict['id']}" \
-        --no-cli-pager \
-        --output 'text' \
-        --profile "${dict['profile']}"
-    return 0
-}
-
-koopa_aws_ec2_terminate() {
-    local -A app dict
-    app['aws']="$(koopa_locate_aws)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['id']="$(koopa_aws_ec2_instance_id)"
-    [[ -n "${dict['id']}" ]] || return 1
-    dict['profile']="${AWS_PROFILE:-default}"
-    while (("$#"))
-    do
-        case "$1" in
-            '--profile='*)
-                dict['profile']="${1#*=}"
-                shift 1
-                ;;
-            '--profile')
-                dict['profile']="${2:?}"
-                shift 2
-                ;;
-            *)
-                koopa_invalid_arg "$1"
-                ;;
-        esac
-    done
-    koopa_assert_is_set '--profile or AWS_PROFILE' "${dict['profile']}"
-    "${app['aws']}" ec2 terminate-instances \
-        --instance-ids "${dict['id']}" \
-        --no-cli-pager \
-        --output 'text' \
-        --profile "${dict['profile']}"
     return 0
 }
 
@@ -10499,7 +10402,7 @@ koopa_gnu_mirror_url() {
 
 koopa_gpg_download_key_from_keyserver() {
     local -A app dict
-    local -a cp
+    local -a cp gpg_args
     koopa_assert_has_args "$#"
     app['gpg']="$(koopa_locate_gpg --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -10546,22 +10449,37 @@ koopa_gpg_download_key_from_keyserver() {
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
-    "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
-        --keyserver "hkp://${dict['keyserver']}:80" \
-        --keyserver-options "http-proxy=${http_proxy:-}" \
-        --quiet \
+    gpg_args=(
+        --homedir "${dict['tmp_dir']}"
+        --keyserver "hkp://${dict['keyserver']}:80"
+    )
+    if [[ -n "${http_proxy:-}" ]]
+    then
+        gpg_args+=(
+            --keyserver-options "http-proxy=${http_proxy:-}"
+        )
+    fi
+    gpg_args+=(
         --recv-keys "${dict['key']}"
-    "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    gpg_args=(
+        --homedir "${dict['tmp_dir']}"
         --list-public-keys "${dict['key']}"
-    "${app['gpg']}" \
-        --export \
-        --homedir "${dict['tmp_dir']}" \
-        --output "${dict['tmp_file']}" \
-        --quiet \
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    gpg_args=(
+        --export
+        --homedir "${dict['tmp_dir']}"
+        --output "${dict['tmp_file']}"
         "${dict['key']}"
-    koopa_assert_is_file "${dict['tmp_file']}"
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    if [[ ! -f "${dict['tmp_file']}" ]]
+    then
+        koopa_warn "Failed to export '${dict['key']}' to '${dict['file']}'."
+        return 1
+    fi
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"
@@ -22311,7 +22229,7 @@ tools/${dict['arch']}"
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -22608,7 +22526,7 @@ libexec/lib/server}")
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
@@ -22773,7 +22691,7 @@ koopa_r_configure_makevars() {
             'graphviz'
             'harfbuzz'
             'hdf5'
-            'icu4c'
+            'icu4c' # libxml2
             'imagemagick'
             'libffi'
             'libgit2'
