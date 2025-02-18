@@ -20,12 +20,6 @@ main() {
     local -a dep_pkgs pkgs
     bool['std_umask']=1
     ! koopa_has_standard_umask && bool['std_umask']=0
-    if [[ "${bool['std_umask']}" -eq 0 ]]
-    then
-        app['umask']="$(koopa_locate_umask)"
-        koopa_assert_is_executable "${app[@]}"
-        dict['default_umask']="$("${app['umask']}")"
-    fi
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dep_pkgs=(
         'autoconf'
@@ -99,7 +93,8 @@ main() {
     )
     if [[ "${bool['std_umask']}" -eq 0 ]]
     then
-        "${app['umask']}" 0022
+        dict['default_umask']="$(umask)"
+        umask 0022
     fi
     koopa_debian_apt_install "${dep_pkgs[@]}"
     koopa_debian_apt_add_r_repo "${dict['version']}"
@@ -110,7 +105,7 @@ main() {
     koopa_configure_r "${app['r']}"
     if [[ "${bool['std_umask']}" -eq 0 ]]
     then
-        "${app['umask']}" "${dict['default_umask']}"
+        umask "${dict['default_umask']}"
     fi
     return 0
 }
