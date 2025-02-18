@@ -10402,7 +10402,7 @@ koopa_gnu_mirror_url() {
 
 koopa_gpg_download_key_from_keyserver() {
     local -A app dict
-    local -a cp
+    local -a cp gpg_args
     koopa_assert_has_args "$#"
     app['gpg']="$(koopa_locate_gpg --allow-system)"
     koopa_assert_is_executable "${app[@]}"
@@ -10449,22 +10449,37 @@ koopa_gpg_download_key_from_keyserver() {
     koopa_alert "Exporting GPG key '${dict['key']}' at '${dict['file']}'."
     cp=('koopa_cp')
     [[ "${dict['sudo']}" -eq 1 ]] && cp+=('--sudo')
-    "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
-        --keyserver "hkp://${dict['keyserver']}:80" \
-        --keyserver-options "http-proxy=${http_proxy:-}" \
-        --quiet \
+    gpg_args=(
+        --homedir "${dict['tmp_dir']}"
+        --keyserver "hkp://${dict['keyserver']}:80"
+    )
+    if [[ -n "${http_proxy:-}" ]]
+    then
+        gpg_args+=(
+            --keyserver-options "http-proxy=${http_proxy:-}"
+        )
+    fi
+    gpg_args+=(
         --recv-keys "${dict['key']}"
-    "${app['gpg']}" \
-        --homedir "${dict['tmp_dir']}" \
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    gpg_args=(
+        --homedir "${dict['tmp_dir']}"
         --list-public-keys "${dict['key']}"
-    "${app['gpg']}" \
-        --export \
-        --homedir "${dict['tmp_dir']}" \
-        --output "${dict['tmp_file']}" \
-        --quiet \
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    gpg_args=(
+        --export
+        --homedir "${dict['tmp_dir']}"
+        --output "${dict['tmp_file']}"
         "${dict['key']}"
-    koopa_assert_is_file "${dict['tmp_file']}"
+    )
+    "${app['gpg']}" "${gpg_args[@]}"
+    if [[ ! -f "${dict['tmp_file']}" ]]
+    then
+        koopa_warn "Failed to export '${dict['key']}' to '${dict['file']}'."
+        return 1
+    fi
     "${cp[@]}" "${dict['tmp_file']}" "${dict['file']}"
     koopa_rm "${dict['tmp_dir']}"
     koopa_assert_is_file "${dict['file']}"
