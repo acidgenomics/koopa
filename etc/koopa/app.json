@@ -5432,13 +5432,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2025-01-12",
+    "date": "2025-02-14",
     "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.69.0"
+    "version": "1.69.1"
   },
   "readline": {
     "aliases": {
@@ -5580,7 +5580,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2024-12-30",
+    "date": "2025-02-14",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5590,7 +5590,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2024.12.0+467"
+    "version": "2024.12.1+563"
   },
   "rsync": {
     "aliases": {
@@ -6461,7 +6461,7 @@
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.5.31"
+    "version": "0.6.0"
   },
   "vim": {
     "aliases": {
