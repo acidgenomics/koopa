@@ -84,6 +84,7 @@ Skipping configuration."
         r_cmd=("${app['r']}")
     fi
     koopa_assert_is_executable "${app[@]}"
+    stat /usr/lib/R/etc/Makeconf # FIXME
     stat /usr/lib/R/etc/ldpaths # FIXME
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
     #if [[ "${bool['system']}" -eq 1 ]]
@@ -91,6 +92,7 @@ Skipping configuration."
     #    # FIXME Need to set permissions on /usr/lib/R/etc/ldpaths
     #    koopa_stop 'FIXME'
     #fi
+    stat /usr/lib/R/etc/Makeconf # FIXME
     stat /usr/lib/R/etc/ldpaths # FIXME
     koopa_stop 'FIXME HELLO THERE'
     return 0
