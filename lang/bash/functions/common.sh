@@ -22420,6 +22420,7 @@ koopa_r_configure_java() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     if [[ "${bool['system']}" -eq 1 ]]
     then
+        koopa_is_macos || return 0
         koopa_has_standard_umask || return 0
         bool['use_apps']=0
     fi
@@ -22465,12 +22466,7 @@ Skipping configuration."
         r_cmd=("${app['r']}")
     fi
     koopa_assert_is_executable "${app[@]}"
-    stat /usr/lib/R/etc/Makeconf # FIXME
-    stat /usr/lib/R/etc/ldpaths # FIXME
     "${r_cmd[@]}" --vanilla CMD javareconf "${java_args[@]}"
-    stat /usr/lib/R/etc/Makeconf # FIXME
-    stat /usr/lib/R/etc/ldpaths # FIXME
-    koopa_stop 'FIXME HELLO THERE'
     return 0
 }
 
