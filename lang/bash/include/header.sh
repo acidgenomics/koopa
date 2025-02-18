@@ -13,14 +13,14 @@
 # > __koopa_check_umask() {
 # >     # """
 # >     # Return with error on overly restrictive umask.
-# >     # @note Updated 2024-06-27.
+# >     # @note Updated 2025-02-18.
 # >     #
 # >     # Ensure scripts create files with expected permissions. This is
 # >     # standard on Debian and macOS. Systems that change from this default to
 # >     # a more restrictive setting (i.e. 0077) can break install scripts.
 # >     # """
 # >     local umask_var
-# >     umask_var="$(umask)"
+# >     umask_var="$(/usr/bin/umask)"
 # >     case "$umask_var" in
 # >         '0002' | '002' | \
 # >         '0022' | '022')
