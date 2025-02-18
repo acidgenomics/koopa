@@ -95,6 +95,13 @@ main() {
     koopa_debian_apt_install "${pkgs[@]}"
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
+    dict['actual_version']="$(koopa_get_version "${app['r']}")"
+    if [[ "${dict['actual_version']}" != "${dict['version']}" ]]
+    then
+        koopa_stop \
+            "Incorrect R version installed." \
+            "Expected: ${dict['version']}. Actual: ${dict['actual_version']}"
+    fi
     koopa_configure_r "${app['r']}"
     return 0
 }
