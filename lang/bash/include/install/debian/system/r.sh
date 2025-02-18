@@ -18,8 +18,8 @@ main() {
     # """
     local -A app bool dict
     local -a dep_pkgs pkgs
-    bool['std_umask']=1
-    ! koopa_has_standard_umask && bool['std_umask']=0
+    # > bool['std_umask']=1
+    # > ! koopa_has_standard_umask && bool['std_umask']=0
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dep_pkgs=(
         'autoconf'
@@ -91,11 +91,11 @@ main() {
         'xz-utils'
         'zlib1g-dev'
     )
-    if [[ "${bool['std_umask']}" -eq 0 ]]
-    then
-        dict['default_umask']="$(umask)"
-        umask 0022
-    fi
+    # > if [[ "${bool['std_umask']}" -eq 0 ]]
+    # > then
+    # >     dict['default_umask']="$(umask)"
+    # >     umask 0022
+    # > fi
     koopa_debian_apt_install "${dep_pkgs[@]}"
     koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
@@ -103,9 +103,9 @@ main() {
     app['r']='/usr/bin/R'
     koopa_assert_is_executable "${app['r']}"
     koopa_configure_r "${app['r']}"
-    if [[ "${bool['std_umask']}" -eq 0 ]]
-    then
-        umask "${dict['default_umask']}"
-    fi
+    # > if [[ "${bool['std_umask']}" -eq 0 ]]
+    # > then
+    # >     umask "${dict['default_umask']}"
+    # > fi
     return 0
 }
