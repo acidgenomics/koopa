@@ -100,7 +100,7 @@ main() {
     then
         koopa_stop \
             "Incorrect R version installed." \
-            "Expected: ${dict['version']}. Actual: ${dict['actual_version']}"
+            "Expected: ${dict['version']}. Actual: ${dict['actual_version']}."
     fi
     koopa_configure_r "${app['r']}"
     return 0
