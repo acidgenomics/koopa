@@ -20,7 +20,7 @@
 # >     # a more restrictive setting (i.e. 0077) can break install scripts.
 # >     # """
 # >     local umask_var
-# >     umask_var="$(/usr/bin/umask)"
+# >     umask_var="$(umask)"
 # >     case "$umask_var" in
 # >         '0002' | '002' | \
 # >         '0022' | '022')

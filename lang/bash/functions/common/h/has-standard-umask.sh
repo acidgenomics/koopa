@@ -9,10 +9,8 @@ koopa_has_standard_umask() {
     # standard on Debian and macOS. Systems that change from this default to a
     # more restrictive setting (i.e. 0077) can break install scripts.
     # """
-    local -A app dict
-    app['umask']="$(koopa_locate_umask)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['default_umask']="$("${app['umask']}")"
+    local -A dict
+    dict['default_umask']="$(umask)"
     case "${dict['default_umask']}" in
         '0002' | '002' | \
         '0022' | '022')
