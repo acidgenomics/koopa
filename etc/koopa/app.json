@@ -1366,7 +1366,7 @@
       "homebrew": true
     },
     "bin": ["dash"],
-    "build_dependencies": ["make"],
+    "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2023-04-12",
     "default": false,
     "dependencies": ["libedit"],
