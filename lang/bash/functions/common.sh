@@ -22228,7 +22228,6 @@ tools/${dict['arch']}"
             'gdal'
             'geos'
             'glib'
-            'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2
@@ -22526,7 +22525,6 @@ libexec/lib/server}")
             'gdal'
             'geos'
             'glib'
-            'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2
@@ -22691,7 +22689,6 @@ koopa_r_configure_makevars() {
             'gdal'
             'geos'
             'glib'
-            'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2
