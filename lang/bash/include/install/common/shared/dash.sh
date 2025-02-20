@@ -22,10 +22,11 @@ main() {
     then
         export ac_cv_func_stat64='no'
     fi
-# >     dict['url']="http://gondor.apana.org.au/~herbert/dash/files/\
-# > dash-${dict['version']}.tar.gz"
-    dict['url']="https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/\
+    # FIXME Need to switch to HTTPS here.
+    dict['url']="http://gondor.apana.org.au/~herbert/dash/files/\
 dash-${dict['version']}.tar.gz"
+# >     dict['url']="https://git.kernel.org/pub/scm/utils/dash/dash.git/snapshot/\
+# > dash-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
