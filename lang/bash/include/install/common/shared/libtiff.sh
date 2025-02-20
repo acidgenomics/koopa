@@ -27,7 +27,7 @@ main() {
         "--prefix=${dict['prefix']}"
         '--without-x'
     )
-    dict['url']="http://download.osgeo.org/libtiff/\
+    dict['url']="https://download.osgeo.org/libtiff/\
 tiff-${dict['version']}.tar.xz"
 # >     dict['url']="https://fossies.org/linux/misc/tiff-${dict['version']}.tar.gz"
 # >     dict['url']="https://gitlab.com/libtiff/libtiff/-/archive/\
