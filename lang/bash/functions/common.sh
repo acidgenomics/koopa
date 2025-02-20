@@ -7982,8 +7982,9 @@ koopa_download() {
     app['curl']="$(koopa_locate_curl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['progress']=1
-    dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
-rv:120.0) Gecko/20100101 Firefox/120.0"
+    dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
+AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 \
+Edg/131.0.0.0"
     dict['url']="${1:?}"
     dict['file']="${2:-}"
     curl_args+=(
