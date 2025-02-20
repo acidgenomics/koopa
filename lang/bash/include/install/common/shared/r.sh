@@ -64,8 +64,7 @@ main() {
     # - https://svn.r-project.org/R/trunk/configure
     # """
     local -A app bool conf_dict dict
-    local -a build_deps conf_args deps r_pkgs
-    local r_pkg
+    local -a build_deps conf_args deps
     bool['devel']=0
     build_deps=('autoconf' 'automake' 'libtool' 'make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -105,7 +104,7 @@ main() {
         'xorg-libxrender'
         'xorg-libxt'
         'cairo'
-        # > 'tcl-tk'
+        'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     app['ar']="$(koopa_locate_ar --only-system)"
@@ -139,7 +138,7 @@ main() {
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    # > dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
+    dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
@@ -230,13 +229,13 @@ main() {
     conf_dict['with_readline']="$( \
         "${app['pkg_config']}" --libs 'readline' \
     )"
-    # > conf_dict['with_tcl_config']="${dict['tcl_tk']}/lib/tclConfig.sh"
-    # > conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
+    conf_dict['with_tcl_config']="${dict['tcl_tk']}/lib/tclConfig.sh"
+    conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
-    # > koopa_assert_is_file \
-    # >     "${conf_dict['with_tcl_config']}" \
-    # >     "${conf_dict['with_tk_config']}"
+    koopa_assert_is_file \
+        "${conf_dict['with_tcl_config']}" \
+        "${conf_dict['with_tk_config']}"
     ! koopa_is_macos && conf_args+=("R_BZIPCMD=${conf_dict['r_bzipcmd']}")
     conf_args+=(
         '--disable-static'
@@ -256,8 +255,8 @@ main() {
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
         "--with-readline=${conf_dict['with_readline']}"
-        # > "--with-tcl-config=${conf_dict['with_tcl_config']}"
-        # > "--with-tk-config=${conf_dict['with_tk_config']}"
+        "--with-tcl-config=${conf_dict['with_tcl_config']}"
+        "--with-tk-config=${conf_dict['with_tk_config']}"
         '--with-static-cairo=no'
         '--with-x'
         '--without-recommended-packages'
