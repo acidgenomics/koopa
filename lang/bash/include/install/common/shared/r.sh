@@ -19,7 +19,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2024-07-08.
+    # @note Updated 2025-02-20.
     #
     # @section Compiler settings:
     #
@@ -105,7 +105,7 @@ main() {
         'xorg-libxrender'
         'xorg-libxt'
         'cairo'
-        'tcl-tk'
+        # > 'tcl-tk'
     )
     koopa_activate_app "${deps[@]}"
     app['ar']="$(koopa_locate_ar --only-system)"
@@ -139,7 +139,7 @@ main() {
     dict['jobs']="$(koopa_cpu_count)"
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
+    # > dict['tcl_tk']="$(koopa_app_prefix 'tcl-tk')"
     dict['temurin']="$(koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     [[ "${dict['name']}" == 'r-devel' ]] && bool['devel']=1
@@ -230,13 +230,13 @@ main() {
     conf_dict['with_readline']="$( \
         "${app['pkg_config']}" --libs 'readline' \
     )"
-    conf_dict['with_tcl_config']="${dict['tcl_tk']}/lib/tclConfig.sh"
-    conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
+    # > conf_dict['with_tcl_config']="${dict['tcl_tk']}/lib/tclConfig.sh"
+    # > conf_dict['with_tk_config']="${dict['tcl_tk']}/lib/tkConfig.sh"
     # Alternatively, can use 'bison -y'.
     conf_dict['yacc']="${app['yacc']}"
-    koopa_assert_is_file \
-        "${conf_dict['with_tcl_config']}" \
-        "${conf_dict['with_tk_config']}"
+    # > koopa_assert_is_file \
+    # >     "${conf_dict['with_tcl_config']}" \
+    # >     "${conf_dict['with_tk_config']}"
     ! koopa_is_macos && conf_args+=("R_BZIPCMD=${conf_dict['r_bzipcmd']}")
     conf_args+=(
         '--disable-static'
@@ -256,8 +256,8 @@ main() {
         "--with-libtiff=${conf_dict['with_libtiff']}"
         "--with-pcre2=${conf_dict['with_pcre2']}"
         "--with-readline=${conf_dict['with_readline']}"
-        "--with-tcl-config=${conf_dict['with_tcl_config']}"
-        "--with-tk-config=${conf_dict['with_tk_config']}"
+        # > "--with-tcl-config=${conf_dict['with_tcl_config']}"
+        # > "--with-tk-config=${conf_dict['with_tk_config']}"
         '--with-static-cairo=no'
         '--with-x'
         '--without-recommended-packages'
@@ -319,7 +319,7 @@ main() {
         koopa_assert_is_executable "${app['svn']}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
-        # FIXME Rework this as an array and then paste with ','.
+        # TODO Rework this as an array and then paste with ','.
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
         # Can debug subversion linkage with:
         # > "${app['svn']}" --version --verbose
