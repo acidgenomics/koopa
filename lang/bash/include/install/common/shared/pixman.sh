@@ -32,6 +32,7 @@ pixman-${dict['version']}.tar.gz"
     meson_args+=(
         '--buildtype=release'
         '--default-library=shared'
+        '--libdir=lib' # FIXME
         "--prefix=${dict['prefix']}"
     )
     # FIXME Rework this to use koopa_meson_ninja_build.
@@ -39,5 +40,6 @@ pixman-${dict['version']}.tar.gz"
     "${app['meson']}" setup "${meson_args[@]}" 'build'
     "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build'
     "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build' install
+    koopa_assert_is_dir "${dict['prefix']}/lib/pkgconfig"
     return 0
 }
