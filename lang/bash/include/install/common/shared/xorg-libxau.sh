@@ -23,7 +23,7 @@ main() {
 # >     dict['url']="https://www.x.org/archive/individual/lib/\
 # > libXau-${dict['version']}.tar.xz"
     dict['url']="https://xorg.freedesktop.org/archive/individual/lib/\
-libXau-${dict['version']}.tar.gz"
+libXau-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
