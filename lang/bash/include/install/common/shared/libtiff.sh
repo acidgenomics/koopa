@@ -30,8 +30,10 @@ main() {
 # >     dict['url']="http://download.osgeo.org/libtiff/\
 # > tiff-${dict['version']}.tar.gz"
 # >     dict['url']="https://fossies.org/linux/misc/tiff-${dict['version']}.tar.gz"
-    dict['url']="https://gitlab.com/libtiff/libtiff/-/archive/\
-v${dict['version']}/libtiff-v${dict['version']}.tar.gz"
+# >     dict['url']="https://gitlab.com/libtiff/libtiff/-/archive/\
+# > v${dict['version']}/libtiff-v${dict['version']}.tar.gz"
+    dict['url']="https://github.com/libsdl-org/libtiff/archive/refs/tags/\
+v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
