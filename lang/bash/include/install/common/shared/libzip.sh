@@ -66,7 +66,7 @@ libzstd.${dict['shared_ext']}"
         "-DZstd_INCLUDE_DIR=${cmake['zstd_include_dir']}"
         "-DZstd_LIBRARY=${cmake['zstd_library']}"
     )
-    dict['url']="https://libzip.org/download/libzip-${dict['version']}.tar.gz"
+    dict['url']="https://libzip.org/download/libzip-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
