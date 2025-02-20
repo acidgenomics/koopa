@@ -16,7 +16,8 @@ main() {
     local -A dict
     deps=(
         'zlib'
-        'zstd'
+        'zstd' # curl
+        'libssh2' # curl
         'curl'
         'libjpeg-turbo'
         'libtiff'
