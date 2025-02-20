@@ -522,7 +522,10 @@ _koopa_activate_delta() {
         fi
     fi
     _koopa_is_alias 'ln' && unalias 'ln'
-    ln -fns "$__kvar_source_file" "$__kvar_target_file" >/dev/null
+    ln -fns \
+        "$__kvar_source_file" \
+        "$__kvar_target_file" \
+        >/dev/null 2>&1
     unset -v \
         __kvar_prefix \
         __kvar_source_bn \
