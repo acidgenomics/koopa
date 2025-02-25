@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package --name='awscli'
+    return 0
+}
+
+install_from_source() {
     # """
     # Install AWS CLI.
-    # @note Updated 2024-09-22.
+    # @note Updated 2025-02-25.
     #
     # @seealso
     # - https://github.com/aws/aws-cli/tree/v2/
@@ -41,5 +46,10 @@ ${dict['version']}.tar.gz"
     app['aws']="${dict['prefix']}/bin/aws"
     koopa_assert_is_executable "${app['aws']}"
     "${app['aws']}" --version
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }

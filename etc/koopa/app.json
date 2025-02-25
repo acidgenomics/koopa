@@ -330,16 +330,15 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "build_dependencies": ["make"],
-    "date": "2025-02-14",
+    "date": "2025-02-25",
     "default": true,
-    "dependencies": ["python3.12"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.24.4"
+    "version": "2.24.11"
   },
   "axel": {
     "aliases": {
