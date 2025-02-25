@@ -19,7 +19,7 @@
 main() {
     # """
     # Install R.
-    # @note Updated 2024-07-08.
+    # @note Updated 2025-02-20.
     #
     # @section Compiler settings:
     #
@@ -64,8 +64,7 @@ main() {
     # - https://svn.r-project.org/R/trunk/configure
     # """
     local -A app bool conf_dict dict
-    local -a build_deps conf_args deps r_pkgs
-    local r_pkg
+    local -a build_deps conf_args deps
     bool['devel']=0
     build_deps=('autoconf' 'automake' 'libtool' 'make' 'pkg-config')
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -319,7 +318,7 @@ main() {
         koopa_assert_is_executable "${app['svn']}"
         dict['rtop']="$(koopa_init_dir 'svn/r')"
         dict['svn_url']='https://svn.r-project.org/R/trunk'
-        # FIXME Rework this as an array and then paste with ','.
+        # TODO Rework this as an array and then paste with ','.
         dict['trust_cert']='unknown-ca,cn-mismatch,expired,not-yet-valid,other'
         # Can debug subversion linkage with:
         # > "${app['svn']}" --version --verbose
