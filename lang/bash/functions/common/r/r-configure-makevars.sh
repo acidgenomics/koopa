@@ -71,7 +71,7 @@ koopa_r_configure_makevars() {
             'gdal'
             'geos'
             'glib'
-            'graphviz'
+            # > 'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2

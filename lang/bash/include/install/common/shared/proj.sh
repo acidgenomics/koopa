@@ -5,7 +5,7 @@
 main() {
     # """
     # Install PROJ.
-    # @note Updated 2023-03-31.
+    # @note Updated 2025-02-20.
     #
     # @seealso
     # - https://proj.org/install.html#cmake-configure-options
@@ -15,9 +15,10 @@ main() {
     local cmake_args deps dict
     local -A dict
     deps=(
-        'curl'
         'zlib'
-        'zstd'
+        'zstd' # curl
+        'libssh2' # curl
+        'curl'
         'libjpeg-turbo'
         'libtiff'
         'python3.12'

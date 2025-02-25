@@ -13,7 +13,7 @@
 # > __koopa_check_umask() {
 # >     # """
 # >     # Return with error on overly restrictive umask.
-# >     # @note Updated 2024-06-27.
+# >     # @note Updated 2025-02-18.
 # >     #
 # >     # Ensure scripts create files with expected permissions. This is
 # >     # standard on Debian and macOS. Systems that change from this default to

@@ -7982,8 +7982,9 @@ koopa_download() {
     app['curl']="$(koopa_locate_curl --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['progress']=1
-    dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
-rv:120.0) Gecko/20100101 Firefox/120.0"
+    dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
+AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 \
+Edg/131.0.0.0"
     dict['url']="${1:?}"
     dict['file']="${2:-}"
     curl_args+=(
@@ -10841,7 +10842,9 @@ koopa_has_private_access() {
 }
 
 koopa_has_standard_umask() {
-    case "$(umask)" in
+    local -A dict
+    dict['default_umask']="$(umask)"
+    case "${dict['default_umask']}" in
         '0002' | '002' | \
         '0022' | '022')
             return 0
@@ -22226,7 +22229,6 @@ tools/${dict['arch']}"
             'gdal'
             'geos'
             'glib'
-            'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2
@@ -22418,6 +22420,7 @@ koopa_r_configure_java() {
     ! koopa_is_koopa_app "${app['r']}" && bool['system']=1
     if [[ "${bool['system']}" -eq 1 ]]
     then
+        koopa_is_macos || return 0
         koopa_has_standard_umask || return 0
         bool['use_apps']=0
     fi
@@ -22523,7 +22526,6 @@ libexec/lib/server}")
             'gdal'
             'geos'
             'glib'
-            'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2
@@ -22688,7 +22690,6 @@ koopa_r_configure_makevars() {
             'gdal'
             'geos'
             'glib'
-            'graphviz'
             'harfbuzz'
             'hdf5'
             'icu4c' # libxml2
