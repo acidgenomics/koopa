@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xorg-xtrans.
-    # @note Updated 2023-08-31.
+    # @note Updated 2025-02-20.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/xtrans.rb
@@ -21,9 +21,10 @@ main() {
         '--enable-docs=no'
         "--prefix=${dict['prefix']}"
     )
-    # TODO Switch to 'xz' with next update.
-    dict['url']="https://www.x.org/archive/individual/lib/\
-xtrans-${dict['version']}.tar.gz"
+# >     dict['url']="https://www.x.org/archive/individual/lib/\
+# > xtrans-${dict['version']}.tar.gz"
+    dict['url']="https://xorg.freedesktop.org/archive/individual/lib/\
+xtrans-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'

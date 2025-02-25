@@ -3,7 +3,7 @@
 main() {
     # """
     # Install xcb-proto.
-    # @note Updated 2023-08-31.
+    # @note Updated 2025-02-20.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/
@@ -21,7 +21,9 @@ main() {
         "--prefix=${dict['prefix']}"
         "PYTHON=${app['python']}"
     )
-    dict['url']="https://www.x.org/archive/individual/proto/\
+# >     dict['url']="https://www.x.org/archive/individual/proto/\
+# > xcb-proto-${dict['version']}.tar.xz"
+    dict['url']="https://xorg.freedesktop.org/archive/individual/proto/\
 xcb-proto-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'

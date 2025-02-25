@@ -3,7 +3,7 @@
 main() {
     # """
     # Install libtiff.
-    # @note Updated 2023-04-10.
+    # @note Updated 2025-02-20.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/libtiff.rb
@@ -27,8 +27,13 @@ main() {
         "--prefix=${dict['prefix']}"
         '--without-x'
     )
-    dict['url']="http://download.osgeo.org/libtiff/\
-tiff-${dict['version']}.tar.gz"
+    dict['url']="https://download.osgeo.org/libtiff/\
+tiff-${dict['version']}.tar.xz"
+# >     dict['url']="https://fossies.org/linux/misc/tiff-${dict['version']}.tar.gz"
+# >     dict['url']="https://gitlab.com/libtiff/libtiff/-/archive/\
+# > v${dict['version']}/libtiff-v${dict['version']}.tar.gz"
+# >     dict['url']="https://github.com/libsdl-org/libtiff/archive/refs/tags/\
+# > v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
