@@ -2813,6 +2813,15 @@
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.4"
   },
+  "huggingface-hub": {
+    "bin": ["huggingface-cli"],
+    "date": "2025-02-26",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/huggingface-hub/", "https://huggingface.co/"],
+    "version": "0.29.1"
+  },
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
