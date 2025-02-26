@@ -13892,6 +13892,12 @@ koopa_install_httpie() {
         "$@"
 }
 
+koopa_install_huggingface_hub() {
+    koopa_install_app \
+        --name='huggingface-hub' \
+        "$@"
+}
+
 koopa_install_hugo() {
     koopa_install_app \
         --name='hugo' \
@@ -29827,6 +29833,12 @@ koopa_uninstall_htslib() {
 koopa_uninstall_httpie() {
     koopa_uninstall_app \
         --name='httpie' \
+        "$@"
+}
+
+koopa_uninstall_huggingface_hub() {
+    koopa_uninstall_app \
+        --name='huggingface-hub' \
         "$@"
 }
 
