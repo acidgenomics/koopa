@@ -2320,7 +2320,7 @@
     "bin": ["gcloud", "gsutil"],
     "date": "2025-02-27",
     "default": false,
-    "dependencies": ["conda"],
+    "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
     "version": "512.0.0"
