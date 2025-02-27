@@ -73,7 +73,7 @@ ${dict['arch2']}.tar.gz"
     koopa_assert_is_executable "${app['gsutil']}"
     conf_args=(
         "export CLOUDSDK_PYTHON=${app['python']}"
-        'export CLOUDSDK_PYTHON_SITEPACKAGES=1'
+        'export CLOUDSDK_PYTHON_SITEPACKAGES=0'
         "export PYTHONPATH=${dict['libexec']}/lib"
         'unset -v PYTHONSAFEPATH'
     )
