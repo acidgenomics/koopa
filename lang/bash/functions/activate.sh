@@ -19,6 +19,8 @@ _koopa_activate_bash_completion() {
     completion_files+=(
         "${dict['opt_prefix']}/bash-completion/etc/profile.d/bash_completion.sh"
         "${dict['opt_prefix']}/git/share/completion/git-completion.bash"
+        "${dict['opt_prefix']}/google-cloud-sdk/libexec/gcloud/\
+completion.bash.inc"
     )
     for completion_file in "${completion_files[@]}"
     do
