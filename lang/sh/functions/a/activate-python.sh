@@ -3,7 +3,7 @@
 _koopa_activate_python() {
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2023-03-10.
+    # @note Updated 2025-02-27.
     #
     # Configures:
     # - Site packages library.
@@ -33,10 +33,12 @@ _koopa_activate_python() {
         export PYTHONDONTWRITEBYTECODE=1
     fi
     # Added in Python 3.11.
-    if [ -z "${PYTHONSAFEPATH:-}" ]
-    then
-        export PYTHONSAFEPATH=1
-    fi
+    # This messes with Google Cloud SDK currently, so disabling.
+    # https://github.com/GoogleCloudPlatform/gsutil/issues/1735
+    # > if [ -z "${PYTHONSAFEPATH:-}" ]
+    # > then
+    # >     export PYTHONSAFEPATH=1
+    # > fi
     if [ -z "${PYTHONSTARTUP:-}" ]
     then
         __kvar_startup_file="${HOME:?}/.pyrc"
