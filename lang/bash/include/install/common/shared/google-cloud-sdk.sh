@@ -61,10 +61,25 @@ ${dict['arch2']}.tar.gz"
         "export CLOUDSDK_PYTHON=${app['python']}"
         'export CLOUDSDK_PYTHON_SITEPACKAGES=0'
         "export PYTHONPATH=${dict['libexec']}/lib"
+        'unset -v PYTHONSAFEPATH'
     )
     dict['conf_string']="$(koopa_print "${conf_args[@]}")"
     koopa_insert_at_line_number \
         --file="${app['gcloud']}" \
+        --line-number=2 \
+        --string="${dict['conf_string']}"
+
+    app['gsutil']="${dict['libexec']}/bin/gsutil"
+    koopa_assert_is_executable "${app['gsutil']}"
+    conf_args=(
+        "export CLOUDSDK_PYTHON=${app['python']}"
+        'export CLOUDSDK_PYTHON_SITEPACKAGES=1'
+        "export PYTHONPATH=${dict['libexec']}/lib"
+        'unset -v PYTHONSAFEPATH'
+    )
+    dict['conf_string']="$(koopa_print "${conf_args[@]}")"
+    koopa_insert_at_line_number \
+        --file="${app['gsutil']}" \
         --line-number=2 \
         --string="${dict['conf_string']}"
     (
@@ -76,6 +91,6 @@ ${dict['arch2']}.tar.gz"
 }
 
 main() {
-    install_from_conda
+    install_from_source
     return 0
 }

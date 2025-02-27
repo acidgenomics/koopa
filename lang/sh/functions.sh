@@ -854,10 +854,6 @@ _koopa_activate_python() {
     then
         export PYTHONDONTWRITEBYTECODE=1
     fi
-    if [ -z "${PYTHONSAFEPATH:-}" ]
-    then
-        export PYTHONSAFEPATH=1
-    fi
     if [ -z "${PYTHONSTARTUP:-}" ]
     then
         __kvar_startup_file="${HOME:?}/.pyrc"
