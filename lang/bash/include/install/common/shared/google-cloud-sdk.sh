@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_source() {
     # """
     # Install Google Cloud SDK.
     # @note Updated 2024-11-05.
@@ -67,5 +72,10 @@ ${dict['arch2']}.tar.gz"
         koopa_ln 'libexec/bin' 'bin'
     )
     "${app['gcloud']}" --version
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }
