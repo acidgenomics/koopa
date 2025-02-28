@@ -590,9 +590,11 @@ koopa_linux_update_profile_d() {
     koopa_alert "Adding koopa activation to '${dict['file']}'."
     koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
-
 _koopa_activate_shared_profile() {
-    . "${dict['koopa_prefix']}/activate"
+    if [ -x '${dict['koopa_prefix']}/activate' ]
+    then
+        . '${dict['koopa_prefix']}/activate'
+    fi
     return 0
 }
 
