@@ -3,7 +3,7 @@
 koopa_linux_update_profile_d() {
     # """
     # Link shared koopa configuration file into '/etc/profile.d/'.
-    # @note Updated 2024-07-05.
+    # @note Updated 2025-02-28.
     # """
     local -A dict
     koopa_assert_has_no_args "$#"
@@ -21,17 +21,11 @@ koopa_linux_update_profile_d() {
     koopa_alert "Adding koopa activation to '${dict['file']}'."
     koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
-#!/bin/sh
-
 _koopa_activate_shared_profile() {
-    # """
-    # Activate koopa shell for all users.
-    # @note Updated ${dict['today']}.
-    # @seealso
-    # - https://koopa.acidgenomics.com/
-    # """
-    # shellcheck source=/dev/null
-    . "${dict['koopa_prefix']}/activate"
+    if [ -x '${dict['koopa_prefix']}/activate' ]
+    then
+        . '${dict['koopa_prefix']}/activate'
+    fi
     return 0
 }
 

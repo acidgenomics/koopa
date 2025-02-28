@@ -367,16 +367,16 @@ _koopa_activate_ca_certificates() {
     [ -n "${SSL_CERT_FILE:-}" ] && return 0
     __kvar_prefix="$(_koopa_xdg_data_home)/ca-certificates"
     __kvar_file="${__kvar_prefix}/cacert.pem"
+    if [ ! -f "$__kvar_file" ] && _koopa_is_linux
+    then
+        __kvar_prefix='/etc/ssl/certs'
+        __kvar_file="${__kvar_prefix}/ca-certificates.crt"
+    fi
     if [ ! -f "$__kvar_file" ]
     then
         __kvar_prefix="$(_koopa_opt_prefix)/ca-certificates/share/\
 ca-certificates"
         __kvar_file="${__kvar_prefix}/cacert.pem"
-    fi
-    if [ ! -f "$__kvar_file" ]
-    then
-        __kvar_prefix='/etc/ssl/certs'
-        __kvar_file="${__kvar_prefix}/ca-certificates.crt"
     fi
     if [ ! -f "$__kvar_file" ]
     then
