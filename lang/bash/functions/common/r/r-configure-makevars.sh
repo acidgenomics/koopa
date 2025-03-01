@@ -3,7 +3,7 @@
 koopa_r_configure_makevars() {
     # """
     # Configure 'Makevars.site' file with compiler settings.
-    # @note Updated 2024-12-10.
+    # @note Updated 2025-03-01.
     #
     # Consider setting 'TCLTK_CPPFLAGS' and 'TCLTK_LIBS' for extra hardened
     # configuration in the future.
@@ -159,7 +159,8 @@ lib/pkgconfig"
             ldflags+=("-L${dict['gettext']}/lib")
             # The new ld linker in Xcode CLT 15 breaks a lot of stuff, so
             # reverting to classic mode here.
-            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+            # > dict['clt_ver']="$(koopa_macos_xcode_clt_version)"
+            # > dict['clt_maj_ver']="$(koopa_major_version "${dict['clt_ver']}")"
             # > if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
             # > then
             # >     ldflags+=('-Wl,-ld_classic')
