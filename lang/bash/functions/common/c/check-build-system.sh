@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Don't allow GCC 4 on Linux.
+
 # FIXME On macOS check for Xcode CLT and error: unsupported system.
 #
 # FIXME Don't allow CLT:
@@ -14,7 +16,7 @@
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2025-01-10.
+    # @note Updated 2025-03-01.
     # """
     local -A app dict ver1 ver2
     koopa_assert_has_no_args "$#"
@@ -28,7 +30,7 @@ Run 'xcode-select --install' to resolve."
         fi
     fi
     koopa_assert_conda_env_is_not_active
-    # > koopa_assert_python_venv_is_not_active
+    koopa_assert_python_venv_is_not_active
     app['cc']="$(koopa_locate_cc --only-system)"
     app['git']="$(koopa_locate_git --allow-system)"
     app['ld']="$(koopa_locate_ld --only-system)"
