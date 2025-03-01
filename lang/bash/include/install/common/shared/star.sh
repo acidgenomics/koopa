@@ -3,7 +3,7 @@
 install_from_conda() {
     # """
     # Install STAR from bioconda.
-    # @note Updated 2024-07-15.
+    # @note Updated 2025-03-01.
     # """
     local -A app dict
     app['patch']="$(koopa_locate_patch)"
@@ -86,7 +86,8 @@ install_from_source() {
 ${dict['version']}.tar.gz"
     # > if koopa_is_macos
     # > then
-    # >     dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+    # >     dict['clt_ver']="$(koopa_macos_xcode_clt_version)"
+    # >     dict['clt_maj_ver']="$(koopa_major_version "${dict['clt_ver']}")"
     # >     if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
     # >     then
     # >         koopa_append_ldflags '-Wl,-ld_classic'
