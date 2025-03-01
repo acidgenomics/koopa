@@ -3,7 +3,7 @@
 koopa_linux_update_profile_d() {
     # """
     # Link shared koopa configuration file into '/etc/profile.d/'.
-    # @note Updated 2025-02-28.
+    # @note Updated 2025-03-01.
     # """
     local -A dict
     koopa_assert_has_no_args "$#"
@@ -22,7 +22,7 @@ koopa_linux_update_profile_d() {
     koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 _koopa_activate_shared_profile() {
-    if [ -x '${dict['koopa_prefix']}/activate' ]
+    if [ -f '${dict['koopa_prefix']}/activate' ]
     then
         . '${dict['koopa_prefix']}/activate'
     fi
