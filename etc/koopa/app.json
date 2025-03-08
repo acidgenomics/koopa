@@ -338,7 +338,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.24.11"
+    "version": "2.24.20"
   },
   "axel": {
     "aliases": {
@@ -419,7 +419,7 @@
     "aliases": {
       "homebrew": "bash-completion@2"
     },
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "xz"],
     "date": "2025-01-02",
     "default": true,
     "dependencies": ["bash"],
