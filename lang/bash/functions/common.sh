@@ -15938,7 +15938,15 @@ koopa_install_shared_apps() {
     fi
     if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
     then
-        koopa_install_aws_cli --no-dependencies
+        koopa_install_aws_cli
+        if [[ "${bool['builder']}" -eq 1 ]]
+        then
+            readarray -t app_names <<< "$( \
+                koopa_app_dependencies 'aws-cli' \
+            )"
+            app_names+=('aws-cli')
+            koopa_push_app_build "${app_names[@]}"
+        fi
     fi
     if [[ "${bool['all']}" -eq 1 ]]
     then
@@ -15957,14 +15965,6 @@ koopa_install_shared_apps() {
         [[ -f "${prefix}/.koopa-install-stdout.log" ]] && continue
         koopa_cli_install "$app_name"
     done
-    if [[ "${bool['aws_bootstrap']}" -eq 1 ]]
-    then
-        koopa_cli_install --reinstall 'aws-cli'
-        if [[ "${bool['binary']}" -eq 1 ]]
-        then
-            koopa_push_app_build 'aws-cli'
-        fi
-    fi
     return 0
 }
 
