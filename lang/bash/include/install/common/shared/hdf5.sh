@@ -3,7 +3,7 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2024-06-12.
+    # @note Updated 2025-03-01.
     #
     # @seealso
     # - https://www.hdfgroup.org/downloads/hdf5/source-code/
@@ -47,7 +47,8 @@ main() {
     #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
     # > if koopa_is_macos
     # > then
-    # >     dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
+    # >     dict['clt_ver']="$(koopa_macos_xcode_clt_version)"
+    # >     dict['clt_maj_ver']="$(koopa_major_version "${dict['clt_ver']}")"
     # >     if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
     # >     then
     # >         koopa_append_ldflags '-Wl,-ld_classic'

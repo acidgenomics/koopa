@@ -4306,6 +4306,7 @@ Run 'xcode-select --install' to resolve."
         fi
     fi
     koopa_assert_conda_env_is_not_active
+    koopa_assert_python_venv_is_not_active
     app['cc']="$(koopa_locate_cc --only-system)"
     app['git']="$(koopa_locate_git --allow-system)"
     app['ld']="$(koopa_locate_ld --only-system)"
@@ -22781,7 +22782,6 @@ lib/pkgconfig"
         then
             cppflags+=("-I${dict['gettext']}/include")
             ldflags+=("-L${dict['gettext']}/lib")
-            dict['clt_maj_ver']="$(koopa_macos_xcode_clt_major_version)"
             if [[ "${bool['system']}" -eq 1 ]]
             then
                 ldflags+=('-lomp')

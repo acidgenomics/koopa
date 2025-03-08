@@ -591,7 +591,7 @@ koopa_linux_update_profile_d() {
     koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 _koopa_activate_shared_profile() {
-    if [ -x '${dict['koopa_prefix']}/activate' ]
+    if [ -f '${dict['koopa_prefix']}/activate' ]
     then
         . '${dict['koopa_prefix']}/activate'
     fi
