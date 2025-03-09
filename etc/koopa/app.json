@@ -1012,7 +1012,7 @@
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
     "date": "2024-12-24",
-    "default": true,
+    "default": false,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
@@ -3167,7 +3167,7 @@
   "latch": {
     "bin": ["latch"],
     "date": "2024-12-30",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.11"],
     "prune": true,
     "url": [
