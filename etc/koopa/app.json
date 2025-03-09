@@ -1516,7 +1516,7 @@
       "homebrew": true
     },
     "bin": ["ed"],
-    "build_dependencies": ["lzip", "make", "pkg-config"],
+    "build_dependencies": ["lzip", "make", "pkg-config", "tar"],
     "date": "2024-12-24",
     "default": false,
     "man1": ["ed.1"],
@@ -3913,7 +3913,7 @@
       "homebrew": true
     },
     "bin": ["lzip"],
-    "build_dependencies": ["make"],
+    "build_dependencies": ["make", "tar"],
     "date": "2024-12-30",
     "default": false,
     "man1": ["lzip.1"],
