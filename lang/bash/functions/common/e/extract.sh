@@ -3,7 +3,7 @@
 koopa_extract() {
     # """
     # Extract an archive file.
-    # @note Updated 2023-11-07.
+    # @note Updated 2025-03-09.
     #
     # See also:
     # - Mendel Cooper's Advanced Bash Scripting Guide.
@@ -151,7 +151,7 @@ koopa_extract() {
                         ;;
                     *)
                         # e.g. lzip not supported here.
-                        koopa_stop 'Unsupported file.'
+                        koopa_stop "Unsupported file: '${dict['tmpfile']}'."
                         ;;
                 esac
             fi
