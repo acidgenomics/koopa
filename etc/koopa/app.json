@@ -2760,13 +2760,13 @@
     },
     "bin": ["htop"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2024-01-10",
+    "date": "2025-03-10",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": ["htop.1"],
     "prune": true,
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
-    "version": "3.3.0"
+    "version": "3.4.0"
   },
   "htseq": {
     "bin": ["htseq-count"],
