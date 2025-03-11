@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Don't allow GCC 4 on Linux.
-
 # FIXME On macOS check for Xcode CLT and error: unsupported system.
 #
 # FIXME Don't allow CLT:
