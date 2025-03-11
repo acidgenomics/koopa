@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 
+# FIXME How to define the operator here?
+# Need to work on this.
+
 koopa_compare_versions() {
     # """
     # Compare 2 version strings with an operator.
-    # @note Updated 2024-09-19.
+    # @note Updated 2025-03-01.
     #
     # @seealso
+    # - https://github.com/awslabs/amazon-eks-ami/blob/main/templates/al2/
+    #   runtime/bin/vercmp
     # - https://stackoverflow.com/questions/4023830
     #
     # @examples
