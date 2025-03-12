@@ -39,32 +39,32 @@ koopa_compare_versions() {
     # return: 0 = true; 1 = false.
     dict['return']=1
     case "${dict['operator']}" in
-        '<' | '-lt' | 'lt')
-            if [[ "${dict['comparison']}" -eq -1 ]]
-            then
-                dict['return']=0
-            fi
-            ;;
-        '<=' | '-lteq' | 'lteq')
-            if [[ "${dict['comparison']}" -lt 1 ]]
-            then
-                dict['return']=0
-            fi
-            ;;
-        '=' | '==' | '-eq' | 'eq')
+        '-eq')
             if [[ "${dict['comparison']}" -eq 0 ]]
             then
                 dict['return']=0
             fi
             ;;
-        '>=' | '-gteq' | 'gteq')
+        '-ge')
             if [[ "${dict['comparison']}" -gt -1 ]]
             then
                 dict['return']=0
             fi
             ;;
-        '>' | '-gt' | 'gt')
+        '-gt')
             if [[ "${dict['comparison']}" -eq 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-le')
+            if [[ "${dict['comparison']}" -lt 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-lt')
+            if [[ "${dict['comparison']}" -eq -1 ]]
             then
                 dict['return']=0
             fi
