@@ -11,9 +11,9 @@ test_gsub() {
         'aaa-aaa-ccc-ccc'
 }
 
-test_kebab_case_simple() {
+test_kebab_case() {
     assertEquals \
-        "$(koopa_kebab_case_simple 'hello world')" \
+        "$(koopa_kebab_case 'hello world')" \
         'hello-world'
 }
 
@@ -23,9 +23,9 @@ test_sanitize_version() {
         '2.7.1'
 }
 
-test_snake_case_simple() {
+test_snake_case() {
     assertEquals \
-        "$(koopa_snake_case_simple 'hello world')" \
+        "$(koopa_snake_case 'hello world')" \
         'hello_world'
 }
 
