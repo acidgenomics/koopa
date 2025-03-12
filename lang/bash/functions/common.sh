@@ -4295,6 +4295,7 @@ koopa_cd() {
 
 koopa_check_build_system() {
     local -A app dict ver1 ver2
+    local key
     koopa_assert_has_no_args "$#"
     if koopa_is_macos
     then
@@ -4321,6 +4322,11 @@ Run 'xcode-select --install' to resolve."
     ver1['python']="$(koopa_get_version "${app['python']}")"
     if koopa_is_macos
     then
+        case "${ver1['cc']}" in
+            '16.0.0.0.1.1724870825')
+                koopa_stop "Unsupported cc: ${app['cc']} ${ver1['cc']}."
+                ;;
+        esac
         ver2['cc']='14.0'
     elif koopa_is_linux
     then
@@ -4330,6 +4336,14 @@ Run 'xcode-select --install' to resolve."
     ver2['make']='3.8'
     ver2['perl']='5.16'
     ver2['python']='3.6'
+    for key in "${!ver1[@]}"
+    do
+        if ! koopa_compare_versions "${ver1[$key]}" -ge "${ver2[$key]}"
+        then
+            koopa_stop "Unsupported ${key}: ${app[$key]} \
+(${ver1[$key]} < ${ver2[$key]})."
+        fi
+    done
     return 0
 }
 
@@ -5722,31 +5736,66 @@ koopa_cmake_std_args() {
 }
 
 koopa_compare_versions() {
-    if [[ "$1" == "$2" ]]
+    local -A app dict
+    local -a sorted
+    koopa_assert_has_args_eq "$#" 3
+    app['sort']="$(koopa_locate_sort --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['left']="${1:?}"
+    dict['operator']="${2:?}"
+    dict['right']="${3:?}"
+    if [[ "${dict['left']}" == "${dict['right']}" ]]
     then
-        return 0
+        dict['comparison']=0
+    else
+        readarray -t sorted <<< "$( \
+            koopa_print "${dict['left']}" "${dict['right']}" \
+            | "${app['sort']}" -V \
+        )"
+        if [[ "${sorted[0]}" == "${dict['left']}" ]]
+        then
+            dict['comparison']=-1
+        else
+            dict['comparison']=1
+        fi
     fi
-    local -a ver1 ver2
-    local IFS=.
-    local i
-    ver1=($1)
-    ver2=($2)
-    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
-    do
-        ver1[i]=0
-    done
-    for ((i=0; i<${#ver1[@]}; i++))
-    do
-        if ((10#${ver1[i]:=0} >= 10#${ver2[i]:=0}))
-        then
-            return 1
-        fi
-        if ((10#${ver1[i]} <= 10#${ver2[i]}))
-        then
-            return 2
-        fi
-    done
-    return 0
+    dict['return']=1
+    case "${dict['operator']}" in
+        '-eq')
+            if [[ "${dict['comparison']}" -eq 0 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-ge')
+            if [[ "${dict['comparison']}" -gt -1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-gt')
+            if [[ "${dict['comparison']}" -eq 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-le')
+            if [[ "${dict['comparison']}" -lt 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-lt')
+            if [[ "${dict['comparison']}" -eq -1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        *)
+            koopa_stop "Invalid operator: '${dict['operator']}'."
+            ;;
+    esac
+    return "${dict['return']}"
 }
 
 koopa_compress_ext_pattern() {
@@ -8374,7 +8423,7 @@ koopa_extract() {
                         cmd_args+=('-J')
                         ;;
                     *)
-                        koopa_stop 'Unsupported file.'
+                        koopa_stop "Unsupported file: '${dict['tmpfile']}'."
                         ;;
                 esac
             fi
