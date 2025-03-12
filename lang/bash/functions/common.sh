@@ -4295,6 +4295,7 @@ koopa_cd() {
 
 koopa_check_build_system() {
     local -A app dict ver1 ver2
+    local key
     koopa_assert_has_no_args "$#"
     if koopa_is_macos
     then
@@ -4321,6 +4322,11 @@ Run 'xcode-select --install' to resolve."
     ver1['python']="$(koopa_get_version "${app['python']}")"
     if koopa_is_macos
     then
+        case "${ver1['cc']}" in
+            '16.0.0.0.1.1724870825')
+                koopa_stop "Unsupported compiler: ${app['cc']} ${ver1['cc']}."
+                ;;
+        esac
         ver2['cc']='14.0'
     elif koopa_is_linux
     then
@@ -4330,6 +4336,14 @@ Run 'xcode-select --install' to resolve."
     ver2['make']='3.8'
     ver2['perl']='5.16'
     ver2['python']='3.6'
+    for key in "${!ver1[@]}"
+    do
+        if ! koopa_compare_versions "${ver1[$key]}" -ge "${ver2[$key]}"
+        then
+            koopa_stop "Unsupported ${key}: ${app[$key]} \
+(${ver1[$key]} < ${ver2[$key]})."
+        fi
+    done
     return 0
 }
 
@@ -5747,38 +5761,38 @@ koopa_compare_versions() {
     fi
     dict['return']=1
     case "${dict['operator']}" in
-        '<' | 'lt')
-            if [[ "${dict['comparison']}" -eq -1 ]]
-            then
-                dict['return']=0
-            fi
-            ;;
-        '<=' | 'lteq')
-            if [[ "${dict['comparison']}" -lt 1 ]]
-            then
-                dict['return']=0
-            fi
-            ;;
-        '=' | '==' | 'eq')
+        '-eq')
             if [[ "${dict['comparison']}" -eq 0 ]]
             then
                 dict['return']=0
             fi
             ;;
-        '>=' | 'gteq')
+        '-ge')
             if [[ "${dict['comparison']}" -gt -1 ]]
             then
                 dict['return']=0
             fi
             ;;
-        '>' | 'gt')
+        '-gt')
             if [[ "${dict['comparison']}" -eq 1 ]]
             then
                 dict['return']=0
             fi
             ;;
+        '-le')
+            if [[ "${dict['comparison']}" -lt 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '-lt')
+            if [[ "${dict['comparison']}" -eq -1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
         *)
-            koopa_stop 'Invalid operator.'
+            koopa_stop "Invalid operator: '${dict['operator']}'."
             ;;
     esac
     return "${dict['return']}"
