@@ -5722,31 +5722,66 @@ koopa_cmake_std_args() {
 }
 
 koopa_compare_versions() {
-    if [[ "$1" == "$2" ]]
+    local -A app dict
+    local -a sorted
+    koopa_assert_has_args_eq "$#" 3
+    app['sort']="$(koopa_locate_sort --allow-system)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['left']="${1:?}"
+    dict['operator']="${2:?}"
+    dict['right']="${3:?}"
+    if [[ "${dict['left']}" == "${dict['right']}" ]]
     then
-        return 0
+        dict['comparison']=0
+    else
+        readarray -t sorted <<< "$( \
+            koopa_print "${dict['left']}" "${dict['right']}" \
+            | "${app['sort']}" -V \
+        )"
+        if [[ "${sorted[0]}" == "${dict['left']}" ]]
+        then
+            dict['comparison']=-1
+        else
+            dict['comparison']=1
+        fi
     fi
-    local -a ver1 ver2
-    local IFS=.
-    local i
-    ver1=($1)
-    ver2=($2)
-    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
-    do
-        ver1[i]=0
-    done
-    for ((i=0; i<${#ver1[@]}; i++))
-    do
-        if ((10#${ver1[i]:=0} >= 10#${ver2[i]:=0}))
-        then
-            return 1
-        fi
-        if ((10#${ver1[i]} <= 10#${ver2[i]}))
-        then
-            return 2
-        fi
-    done
-    return 0
+    dict['return']=1
+    case "${dict['operator']}" in
+        '<' | 'lt')
+            if [[ "${dict['comparison']}" -eq -1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '<=' | 'lteq')
+            if [[ "${dict['comparison']}" -lt 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '=' | '==' | 'eq')
+            if [[ "${dict['comparison']}" -eq 0 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '>=' | 'gteq')
+            if [[ "${dict['comparison']}" -gt -1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        '>' | 'gt')
+            if [[ "${dict['comparison']}" -eq 1 ]]
+            then
+                dict['return']=0
+            fi
+            ;;
+        *)
+            koopa_stop 'Invalid operator.'
+            ;;
+    esac
+    return "${dict['return']}"
 }
 
 koopa_compress_ext_pattern() {
