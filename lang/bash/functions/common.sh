@@ -4324,7 +4324,7 @@ Run 'xcode-select --install' to resolve."
     then
         case "${ver1['cc']}" in
             '16.0.0.0.1.1724870825')
-                koopa_stop "Unsupported compiler: ${app['cc']} ${ver1['cc']}."
+                koopa_stop "Unsupported cc: ${app['cc']} ${ver1['cc']}."
                 ;;
         esac
         ver2['cc']='14.0'
