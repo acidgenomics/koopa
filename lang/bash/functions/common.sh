@@ -8374,7 +8374,7 @@ koopa_extract() {
                         cmd_args+=('-J')
                         ;;
                     *)
-                        koopa_stop 'Unsupported file.'
+                        koopa_stop "Unsupported file: '${dict['tmpfile']}'."
                         ;;
                 esac
             fi
