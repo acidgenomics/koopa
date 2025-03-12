@@ -501,10 +501,9 @@ koopa_macos_enable_spotlight_indexing() {
 }
 
 koopa_macos_enable_touch_id_sudo() {
-    local dict
+    local -A app dict
     koopa_assert_has_no_args "$#"
     koopa_assert_is_admin
-    local -A dict
     dict['file']='/etc/pam.d/sudo'
     if [[ -f "${dict['file']}" ]] && \
         koopa_file_detect_fixed \
@@ -514,6 +513,9 @@ koopa_macos_enable_touch_id_sudo() {
         koopa_alert_note "Touch ID already enabled in '${dict['file']}'."
         return 0
     fi
+    app['chflags']="$(koopa_macos_locate_chflags)"
+    app['sudo']="$(koopa_locate_sudo)"
+    koopa_assert_is_executable "${app[@]}"
     koopa_alert "Enabling Touch ID in '${dict['file']}'."
     read -r -d '' "dict[string]" << END || true
 auth       sufficient     pam_tid.so
@@ -523,10 +525,12 @@ account    required       pam_permit.so
 password   required       pam_deny.so
 session    required       pam_permit.so
 END
+    "${app['sudo']}" "${app['chflags']}" noschg "${dict['file']}"
     koopa_sudo_write_string \
         --file="${dict['file']}" \
         --string="${dict['string']}"
     koopa_chmod --sudo '0444' "${dict['file']}"
+    "${app['sudo']}" "${app['chflags']}" schg "${dict['file']}"
     koopa_alert_success 'Touch ID enabled for sudo.'
     return 0
 }
