@@ -3,7 +3,6 @@
 # FIXME On macOS check for Xcode CLT and error: unsupported system.
 #
 # FIXME Don't allow CLT:
-# 16.0.0.0.1.1724870825
 
 # FIXME Need to add a koopa_compare_versions function here.
 # https://stackoverflow.com/questions/4023830
@@ -14,9 +13,10 @@
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2025-03-01.
+    # @note Updated 2025-03-12.
     # """
     local -A app dict ver1 ver2
+    local key
     koopa_assert_has_no_args "$#"
     if koopa_is_macos
     then
@@ -43,6 +43,11 @@ Run 'xcode-select --install' to resolve."
     ver1['python']="$(koopa_get_version "${app['python']}")"
     if koopa_is_macos
     then
+        case "${ver1['cc']}" in
+            '16.0.0.0.1.1724870825')
+                koopa_stop "Unsupported cc: ${app['cc']} ${ver1['cc']}."
+                ;;
+        esac
         # Clang.
         ver2['cc']='14.0'
     elif koopa_is_linux
@@ -54,6 +59,13 @@ Run 'xcode-select --install' to resolve."
     ver2['make']='3.8'
     ver2['perl']='5.16'
     ver2['python']='3.6'
-    # FIXME Loop across ver1 and ver2 and run koopa_compare_versions script.
+    for key in "${!ver1[@]}"
+    do
+        if ! koopa_compare_versions "${ver1[$key]}" -ge "${ver2[$key]}"
+        then
+            koopa_stop "Unsupported ${key}: ${app[$key]} \
+(${ver1[$key]} < ${ver2[$key]})."
+        fi
+    done
     return 0
 }
