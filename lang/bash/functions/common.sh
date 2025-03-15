@@ -8374,7 +8374,7 @@ koopa_extract() {
                         cmd_args+=('-J')
                         ;;
                     *)
-                        koopa_stop 'Unsupported file.'
+                        koopa_stop "Unsupported file: '${dict['tmpfile']}'."
                         ;;
                 esac
             fi
@@ -18632,7 +18632,7 @@ koopa_locate_brotli() {
 
 koopa_locate_bundle() {
     koopa_locate_app \
-        --app-name='ruby-packages' \
+        --app-name='ruby' \
         --bin-name='bundle' \
         "$@"
 }
