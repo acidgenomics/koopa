@@ -18681,7 +18681,7 @@ koopa_locate_brotli() {
 
 koopa_locate_bundle() {
     koopa_locate_app \
-        --app-name='ruby-packages' \
+        --app-name='ruby' \
         --bin-name='bundle' \
         "$@"
 }
