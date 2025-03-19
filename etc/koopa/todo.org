@@ -1,6 +1,7 @@
 #+TITLE: koopa
 #+STARTUP: content
 * High priority
+** TODO Add a script for converting CRLF to LF.
 ** TODO Rework the shared install approach. This concept breaks down a bit when installed on a shared file system in a space where user without sudo access has write permissions.
 ** TODO Remove install support for bcbio-nextgen.
 ** TODO Improve build support for applications on Apple Silicon and Linux ARM:
