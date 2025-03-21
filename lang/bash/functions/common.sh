@@ -31761,6 +31761,7 @@ koopa_update_system_homebrew() {
     koopa_brew_upgrade_brews
     koopa_alert 'Cleaning up.'
     taps=(
+        'homebrew/bundle'
         'homebrew/cask'
         'homebrew/cask-drivers'
         'homebrew/cask-fonts'
