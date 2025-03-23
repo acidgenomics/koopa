@@ -19701,6 +19701,13 @@ koopa_locate_pkg_config() {
         "$@"
 }
 
+koopa_locate_prettier() {
+    koopa_locate_app \
+        --app-name='prettier' \
+        --bin-name='prettier' \
+        "$@"
+}
+
 koopa_locate_proj() {
     koopa_locate_app \
         --app-name='proj' \
