@@ -1,20 +1,24 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-# prettier v3 currently isn't detecting global plugins correctly.
+# NOTE prettier v3 currently isn't detecting global plugins correctly.
 # https://github.com/prettier/prettier/issues/15141
 
-set -o errexit
-set -o nounset
+# shellcheck source=/dev/null
+source "$(koopa header bash)"
 
 main() {
-    plugin="${KOOPA_PREFIX:?}/opt/prettier/lib/node_modules/\
+    local -A app dict
+    app['prettier']="$(koopa_locate_prettier)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['plugin']="${KOOPA_PREFIX:?}/opt/prettier/lib/node_modules/\
 prettier-plugin-sort-json/dist/index.js"
-    prettier \
-        --plugin="$plugin" \
+    koopa_assert_is_file "${dict['plugin']}"
+    "${app['prettier']}" \
+        --plugin="${dict['plugin']}" \
         --json-recursive-sort \
-        app.json > app.json.tmp
-    rm app.json
-    mv app.json.tmp app.json
+        'app.json' > 'app.json.tmp'
+    rm 'app.json'
+    mv 'app.json.tmp' 'app.json'
     return 0
 }
 
