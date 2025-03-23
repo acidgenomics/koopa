@@ -6216,9 +6216,10 @@
     "date": "2025-03-21",
     "default": true,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/dbrgn/tealdeer/"],
-    "version": "1.7.2"
+    "version": "1.7.1"
   },
   "temurin": {
     "aliases": {
