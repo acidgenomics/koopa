@@ -2211,7 +2211,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-01-05",
+    "date": "2025-03-23",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -2219,7 +2219,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.0.8"
+    "version": "4.3.1"
   },
   "glib": {
     "aliases": {
@@ -5665,11 +5665,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2025-02-20",
+    "date": "2025-03-23",
     "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.85.0"
+    "version": "1.85.1"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
