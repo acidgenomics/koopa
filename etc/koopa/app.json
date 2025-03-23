@@ -2820,7 +2820,10 @@
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://pypi.org/project/huggingface-hub/", "https://huggingface.co/"],
+    "url": [
+      "https://pypi.org/project/huggingface-hub/",
+      "https://huggingface.co/"
+    ],
     "version": "0.29.1"
   },
   "hugo": {
@@ -2886,10 +2889,7 @@
     ],
     "outdated": true,
     "prune": false,
-    "url": [
-      "https://icu.unicode.org/",
-      "https://icu.unicode.org/download/75"
-    ],
+    "url": ["https://icu.unicode.org/", "https://icu.unicode.org/download/75"],
     "version": "75.1"
   },
   "imagemagick": {
