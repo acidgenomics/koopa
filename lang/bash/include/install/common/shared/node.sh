@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2023-10-02.
+    # @note Updated 2025-03-22.
     #
     # Corepack configuration gets saved to '~/.cache/node/corepack'.
     #
@@ -41,7 +41,7 @@ main() {
         'icu4c'
         'libuv'
         'openssl3'
-        'python3.11'
+        'python3.12'
         'c-ares'
         # Hitting an nghttp2 build issue on Ubuntu 22, so disabling here.
         # > 'nghttp2'
@@ -49,7 +49,7 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
-    app['python']="$(koopa_locate_python311 --realpath)"
+    app['python']="$(koopa_locate_python312 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['cares']="$(koopa_app_prefix 'c-ares')"

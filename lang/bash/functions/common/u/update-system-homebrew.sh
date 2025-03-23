@@ -8,7 +8,7 @@
 koopa_update_system_homebrew() {
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2024-05-16.
+    # @note Updated 2025-03-21.
     #
     # @seealso
     # - brew linkage --test
@@ -48,6 +48,7 @@ koopa_update_system_homebrew() {
     koopa_brew_upgrade_brews
     koopa_alert 'Cleaning up.'
     taps=(
+        'homebrew/bundle'
         'homebrew/cask'
         'homebrew/cask-drivers'
         'homebrew/cask-fonts'
