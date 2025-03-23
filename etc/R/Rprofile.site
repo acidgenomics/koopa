@@ -1,0 +1,722 @@
+#!/usr/bin/env R
+
+#' Shared R profile configuration.
+#'
+#' @note Updated 2024-09-24.
+#'
+#' @section Restarting R:
+#'
+#' Restart with a clean R session inside RStudio:
+#' Session -> Restart R (Ctrl + Shift + F10).
+#'
+#' `.rs.restartR()` will reload but not detach packages, which isn't helpful.
+#'
+#' @section Checking configuration:
+#'
+#' Don't set `options(stringsAsFactors = FALSE)` here.
+#' Code will be non-portable.
+#'
+#' Check floating point (decimal) handling with `str(.Machine)`.
+#'
+#' @section Base environment locking:
+#'
+#' Starting with R 4.1, the base environment and its namespace are now locked
+#' (so one can no longer add bindings to these or remove from these).
+#'
+#' @section Example configurations:
+#'
+#' - Stephen Turner's profile
+#'   http://gettinggeneticsdone.blogspot.com/2013/07/customize-rprofile.html
+#' - Jim Hester's profile
+#'   https://github.com/jimhester/dotfiles/blob/master/R/Rprofile
+#' - Mike Love's profile
+#'   https://gist.github.com/mikelove/c3f7ff05ce18541b8b92
+#' - Efficient R programming
+#'   https://csgillespie.github.io/efficientR/set-up.html
+#' - Debian example config file by Dirk Eddelbuettel.
+#-
+#' @seealso
+#' - https://cran.r-project.org/doc/manuals/r-devel/NEWS.html
+#' - `help(topic = "Rprofile")`
+#' - `help(topic = "Startup")`
+#' - `.libPaths()`
+
+## Initialization at start of an R session {{{1
+## =============================================================================
+
+local({
+    Sys.setenv("KOOPA_RPROFILE_SITE" = 1L) # nolint
+    stopifnot(requireNamespace("utils", quietly = TRUE))
+    ## Create our named dictionary and boolean flag lists.
+    dict <- list()
+    dict[["koopaPrefix"]] <- Sys.getenv("KOOPA_PREFIX")
+    dict[["osVersion"]] <- utils::osVersion
+    dict[["secretsFile"]] <- file.path("~", ".Rsecrets")
+    dict[["seed"]] <- 1123581321L  # Fibonacci sequence.
+    dict[["sysname"]] <- Sys.info()[["sysname"]]
+    dict[["condaBinary"]] <- file.path(dict[["koopaPrefix"]], "bin", "conda")
+    flag <- list()
+    flag[["conda"]] <- isTRUE(as.integer(Sys.getenv("CONDA_SHLVL")) > 0L)
+    flag[["cranBinary"]] <- FALSE
+    flag[["interactive"]] <- isTRUE(interactive())
+    flag[["linux"]] <- identical(dict[["sysname"]], "Linux")
+    flag[["macos"]] <- identical(dict[["sysname"]], "Darwin")
+    flag[["rstudio"]] <- isTRUE(nzchar(Sys.getenv("RSTUDIO_USER_IDENTITY")))
+    flag[["vscode"]] <- isTRUE(nzchar(Sys.getenv("VSCODE_INIT_R")))
+    if (isTRUE(flag[["linux"]])) {
+        flag[["cranBinary"]] <- identical(
+            x = R.home(),
+            y = file.path("", "usr", "lib", "R")
+        )
+    } else if (isTRUE(flag[["macos"]])) {
+        flag[["cranBinary"]] <- identical(
+            x = R.home(),
+            y = file.path(
+                "",
+                "Library",
+                "Frameworks",
+                "R.framework",
+                "Resources"
+            )
+        )
+    }
+    ## Secrets {{{2
+    ## -------------------------------------------------------------------------
+    ## Load per-user secrets that we don't want to save in a shared Renviron.
+    if (isTRUE(file.exists(dict[["secretsFile"]]))) {
+        source(dict[["secretsFile"]]) # nolint
+    }
+    ## Functions {{{2
+    ## -------------------------------------------------------------------------
+    isInstalled <- function(pkg) {
+        pkg %in% .packages(all.available = TRUE)
+    }
+    ## Seed value {{{2
+    ## -------------------------------------------------------------------------
+    ## Set seed for reproducibility.
+    set.seed(dict[["seed"]])
+    ## R version strings {{{2
+    ## -------------------------------------------------------------------------
+    ## Get the full R version, including patch (e.g. 3.6.1).
+    dict[["rVersionFull"]] <-
+        numeric_version(paste(
+            R.version[["major"]],
+            R.version[["minor"]],
+            sep = "."
+        ))
+    ## Get the short R version without patch (e.g. 3.6).
+    ## Use "devel" instead for development release.
+    if (identical(
+        x = R.version[["status"]],
+        y = "Under development (unstable)"
+    )) {
+        dict[["rVersionShort"]] <- "devel"
+    } else {
+        dict[["rVersionShort"]] <-
+            numeric_version(paste(
+                R.version[["major"]],
+                substr(x = R.version[["minor"]], start = 1L, stop = 1L),
+                sep = "."
+            ))
+    }
+    ## Compiler settings {{{2
+    ## -------------------------------------------------------------------------
+    ## Warn on active conda environment.
+    ## Conda can cause compilation issues due to GCC version mismatch.
+    if (isTRUE(flag[["conda"]]) && isTRUE(flag[["interactive"]])) {
+        message(sprintf(
+            fmt = paste(
+                "conda '%s' environment detected.",
+                "Don't install packages from source with conda active.",
+                sep = "\n"
+            ),
+            Sys.getenv("CONDA_DEFAULT_ENV")
+        ))
+    }
+    ## Check macOS configuration, if applicable.
+    if (isTRUE(flag[["macos"]])) {
+        if (isFALSE(dir.exists(file.path(
+            "",
+            "Library",
+            "Developer",
+            "CommandLineTools",
+            "SDKs",
+            "MacOSX.sdk"
+        )))) {
+            stop(paste(
+                "Xcode CLT is not installed.",
+                "Run 'koopa install system xcode-clt' to resolve.",
+                sep = "\n"
+            ))
+        }
+        if (isFALSE(all(file.exists(file.path(
+            "", "usr", "local",
+            c(
+                file.path("include", "omp-tools.h"),
+                file.path("include", "omp.h"),
+                file.path("include", "ompt.h"),
+                file.path("lib", "libomp.dylib")
+            )
+        ))))) {
+            stop(paste(
+                "OpenMP for Xcode is not installed.",
+                "Run 'koopa install system xcode-openmp' to resolve.",
+                sep = "\n"
+            ))
+        }
+    }
+    ## Package installation {{{2
+    ## -------------------------------------------------------------------------
+    ## Using a versioned Posit Package Manager CRAN snapshot on Linux for
+    ## increased reproducibility.
+    ##
+    ## Note that this approach does not support binary packages for macOS.
+    ##
+    ## See also:
+    ## - https://packagemanager.posit.co/
+    ## - https://mran.microsoft.com/
+    ## - https://hub.docker.com/r/rocker/r-ver/dockerfile
+    ##
+    ## CRAN latest options:
+    ## - https://cloud.r-project.org
+    ## - https://cran.posit.co
+    ## - https://packagemanager.posit.co/all/latest
+    ##
+    ## Date-pinned repo configuration:
+    ## - https://packagemanager.posit.co/client/#/repos/2/overview
+    ## - https://packagemanager.posit.co/client/#/repos/4/overview
+    ##
+    ## Alternatively, can use these CRAN latest mirrors:
+    ## - https://cloud.r-project.org
+    ## - https://cran.posit.co
+    ## - https://packagemanager.posit.co/cran/latest
+    ## - https://repo.miserver.it.umich.edu/cran
+    snapshot <- "latest"  # or "YYYY-MM-DD"
+    ## nolint start
+    cran <- paste(
+        "https://packagemanager.posit.co",
+        "cran",
+        snapshot,
+        sep = "/"
+    )
+    ## nolint end
+    ## nolint start
+    options(
+        "install.packages.check.source" = "yes",
+        "install.packages.compile.from.source" = "always"
+    )
+    ## nolint end
+    if (isTRUE(flag[["linux"]]) && isTRUE(flag[["cranBinary"]])) {
+        ## Configure the Debian/Ubuntu Posit binary CRAN snapshot.
+        ## On Debian/Ubuntu, can access distro codename with 'lsb_release -cs'.
+        distro <- character()
+        if (isTRUE(grepl(
+            pattern = "Debian",
+            x = dict[["osVersion"]],
+            fixed = TRUE
+        ))) {
+            x <- strsplit(
+                x = dict[["osVersion"]],
+                split = " ",
+                fixed = TRUE
+            )[[1L]][[3L]]
+            x <- strsplit(
+                x = x,
+                split = ".",
+                fixed = TRUE
+            )[[1L]][[1L]]
+            distro <- switch(
+                EXPR = x,
+                "11" = "bullseye",
+                "12" = "bookworm"
+            )
+        } else if (isTRUE(grepl(
+            pattern = "Ubuntu",
+            x = dict[["osVersion"]],
+            fixed = TRUE
+        ))) {
+            x <- strsplit(
+                x = dict[["osVersion"]],
+                split = " ",
+                fixed = TRUE
+            )[[1L]][[2L]]
+            x <- strsplit(
+                x = x,
+                split = ".",
+                fixed = TRUE
+            )[[1L]][[1L]]
+            distro <- switch(
+                EXPR = x,
+                "18" = "bionic",
+                "20" = "focal",
+                "22" = "jammy"
+            )
+        }
+        if (!identical(distro, character())) {
+            ## nolint start
+            cran <- paste(
+                "https://packagemanager.posit.co",
+                "cran",
+                "__linux__",
+                distro,
+                snapshot,
+                sep = "/"
+            )
+            ## nolint end
+            ## nolint start
+            options(
+                "install.packages.check.source" = "no",
+                "install.packages.compile.from.source" = "never"
+            )
+            ## nolint end
+            ## Debug configuration issues with:
+            ## > source(paste(
+            ## >     "https://docs.rstudio.com",
+            ## >     "rspm",
+            ## >     "admin",
+            ## >     "check-user-agent.R",
+            ## >     sep = "/"
+            ## > ))
+            ## nolint start
+            options("HTTPUserAgent" = sprintf(
+                "R/%s R (%s)",
+                getRversion(),
+                paste(
+                    getRversion(),
+                    R.version[["platform"]],
+                    R.version[["arch"]],
+                    R.version[["os"]]
+                )
+            ))
+            ## nolint end
+        }
+    }
+    ## Prefer binary installs on macOS for CRAN R. Otherwise default to
+    ## installing from source. Note that RSPM doesn't currently support macOS
+    ## binaries. Additionally, can set 'R_COMPILE_AND_INSTALL_PACKAGES=never'
+    ## environment variable in 'Renviron'.
+    if (isTRUE(flag[["macos"]]) && isTRUE(flag[["cranBinary"]])) {
+        ## > cran <- "https://packagemanager.posit.co/cran/latest"
+        cran <- "https://cloud.r-project.org"
+        ## nolint start
+        options(
+            "install.packages.check.source" = "no",
+            "install.packages.compile.from.source" = "never",
+            "pkgType" = "both"
+        )
+        ## nolint end
+    }
+    repos <- getOption("repos")
+    repos[["CRAN"]] <- cran
+    ## Always include our Acid Genomics repo.
+    repos[["AcidGenomics"]] <- "https://r.acidgenomics.com"
+    options("repos" = repos) # nolint
+    ## Enable Posit Bioconductor mirror on Linux.
+    if (isFALSE(flag[["macos"]])) {
+        ## nolint start
+        options(
+            "BIOCONDUCTOR_CONFIG_FILE" = "https://packagemanager.posit.co/bioconductor/config.yaml",
+            "BioC_mirror" = "https://packagemanager.posit.co/bioconductor"
+        )
+        ## nolint end
+    }
+    ## Default packages {{{2
+    ## -------------------------------------------------------------------------
+    if (isTRUE(flag[["interactive"]])) {
+        if (isInstalled("AcidDevTools")) {
+            ## nolint start
+            options(
+                "defaultPackages" = c(
+                    getOption("defaultPackages"),
+                    "AcidDevTools"
+                )
+            )
+            ## nolint end
+        }
+    }
+    ## Console and interface {{{2
+    ## -------------------------------------------------------------------------
+    ## nolint start
+    options(
+        "browserNLdisabled" = TRUE,
+        ## Remove "+" line prefix in output, making code easier to copy.
+        "continue" = " ",
+        "max.print" = 1000L,
+        "menu.graphics" = FALSE,
+        "show.signif.stars" = FALSE,
+        "verbose" = FALSE,
+        "width" = 80L
+    )
+    ## nolint end
+    if (isFALSE(flag[["rstudio"]])) {
+        options("prompt" = "> ") # nolint
+    }
+    if (isTRUE(flag[["interactive"]])) {
+        ## Turn on auto-completion of installed package names.
+        utils::rc.settings(ipck = TRUE)
+    }
+    ## Configure graphics for Visual Studio Code.
+    ## See also:
+    ## - https://code.visualstudio.com/docs/languages/r
+    ## - https://aeturrell.github.io/markov-wanderer/posts/
+    ##     setting-up-r-in-vscode/
+    ## - https://www.milesmcbain.com/posts/alt-r-with-vscode/
+    ## - https://www.milesmcbain.com/posts/adding-addins-to-vscode/
+    ## > if (isTRUE(flag[["vscode"]])) {
+    ## >     if (isInstalled("httpgd")) {
+    ## >         options("vsc.plot" = FALSE)
+    ## >         options("device" = function(...) {
+    ## >             httpgd::hgd(silent = TRUE)
+    ## >             .vsc.browser(
+    ## >                 httpgd::hgd_url(history = FALSE),
+    ## >                 viewer = "Beside"
+    ## >             )
+    ## >         })
+    ## >     }
+    ## > }
+    ## Debugging {{{2
+    ## -------------------------------------------------------------------------
+    options("warn" = 1L) # nolint
+    ## Improve the verbosity of errors and/or warnings.
+    ## nolint start
+    options(
+        "deparse.max.lines" = 3L,
+        "showErrorCalls" = TRUE,
+        "showWarnCalls" = TRUE,
+        ## Set to maximum supported length.
+        "warning.length" = 8170L
+    )
+    ## nolint end
+    ## Note that edgeR and pheatmap currently fail these checks.
+    ## nolint start
+    options(
+        "warnPartialMatchAttr" = TRUE,
+        "warnPartialMatchDollar" = TRUE
+    )
+    ## nolint end
+    ## Timeouts default to 60 seconds (1 minute), which can be too short for
+    ## some large file downloads.
+    options("timeout" = 10000L) # nolint
+    ## Improve stack traces for error messages.
+    ##
+    ## Use either:
+    ## - `rlang::entrace` (recommended)
+    ## - `utils::recover`
+    ##
+    ## See also:
+    ## - https://twitter.com/krlmlr/status/1086995664591044608
+    ## - https://gist.github.com/krlmlr/33ec72d196b1542b9c4f9497d981de49
+    ##
+    ## Verbose error debugging is currently crashing RStudio 1.2 unless
+    ## `rstudio.errors.suppressed` is defined.
+    ##
+    ## Related issues:
+    ## - https://github.com/rstudio/rstudio/issues/4723
+    ## - https://github.com/rstudio/rstudio/pull/4726
+    if (isInstalled("rlang")) {
+        ## nolint start
+        options(
+            "error" = quote(rlang::entrace()),
+            "rlang_backtrace_on_error" = "full",
+            "rstudio.errors.suppressed" = FALSE
+        )
+        ## nolint end
+    }
+    ## Quiet down about registered S3 method collisons.
+    ## See also:
+    ## - https://svn.r-project.org/R/trunk/src/library/base/R/namespace.R
+    ## - https://github.com/wch/r-source/blob/master/src/library/base/R/
+    ##       namespace.R
+    Sys.setenv("_R_S3_METHOD_REGISTRATION_NOTE_OVERWRITES_" = "0") # nolint
+    ## Package-specific options {{{2
+    ## -------------------------------------------------------------------------
+    ## > if (isInstalled("AcidPlots")) {
+    ## >     ## Use of a function here slows down R session too much.
+    ## >     ## Note that wrapping function in `quote()` doesn't work.
+    ## >     ##
+    ## >     ## Character strings "gradient" and "viridis" are supported.
+    ## >     ##
+    ## >     ## See also:
+    ## >     ## - https://ggplot2.tidyverse.org/reference/
+    ## >     ##       scale_colour_continuous.html
+    ## >     ## - https://ggplot2.tidyverse.org/reference/
+    ## >     ##       scale_colour_discrete.html
+    ## >     options(
+    ## >         "ggplot2.continuous.colour" =
+    ## >             AcidPlots::scale_color_synesthesia_c,
+    ## >         "ggplot2.continuous.fill" =
+    ## >             AcidPlots::scale_fill_synesthesia_c,
+    ## >         "ggplot2.discrete.colour" =
+    ## >             AcidPlots::scale_color_synesthesia_d,
+    ## >         "ggplot2.discrete.fill" =
+    ## >             AcidPlots::scale_fill_synesthesia_d
+    ## >     )
+    ## > }
+    if (isInstalled("BiocManager")) {
+        ## Overriding the annoying message about manual CRAN configuration.
+        ## Check BiocManager repo config with `BiocManager::repositories()`.
+        options("BiocManager.check_repositories" = FALSE) # nolint
+        ## Enable use of historical snapshots ('MRAN' or 'RSPM') via
+        ## `options(BiocManager.snapshot = "RSPM")` to install CRAN packages for
+        ## out-of-date Bioconductor versions.
+    }
+    if (isInstalled("cli")) {
+        ## Refer to `cli::ansi_has_hyperlink_support` for hyperlink details.
+        ## nolint start
+        options(
+            "cli.hyperlink" = FALSE,
+            "cli.unicode" = TRUE
+        )
+        ## nolint end
+    }
+    if (isInstalled("crayon")) {
+        ## nolint start
+        options(
+            "crayon.colors" = 256L,
+            "crayon.enabled" = TRUE,
+            "crayon.hyperlink" = FALSE
+        )
+        ## nolint end
+    }
+    if (isInstalled("data.table")) {
+        ## nolint start
+        options(
+            "datatable.print.class" = TRUE,
+            "datatable.print.keys" = TRUE,
+            "datatable.quiet" = FALSE
+        )
+        ## nolint end
+    }
+    if (isInstalled("formatR")) {
+        ## nolint start
+        options(
+            "formatR.args.newline" = FALSE,
+            "formatR.arrow" = TRUE,
+            "formatR.blank" = TRUE,
+            "formatR.brace.newline" = FALSE,
+            "formatR.comment" = TRUE,
+            "formatR.indent" = 4L,
+            "formatR.width" = I(80L),
+            "formatR.wrap" = TRUE
+        )
+        ## nolint end
+    }
+    if (isInstalled("future")) {
+        ## If we have a large dataset, then we might need to adjust the limit
+        ## for allowable object sizes within R.
+        ##
+        ## (Default is 500 * 1024 ^ 2 = 500 Mb)
+        ##
+        ## See also:
+        ## - https://hbctraining.github.io/scRNA-seq/lessons/
+        ##     06_SC_SCT_and_integration.html
+        ##
+        ## Increase default limit to 4 GB.
+        options("future.globals.maxSize" = 4000L * (1024L ^ 2L)) # nolint
+    }
+    if (isInstalled("ggrepel")) {
+        options("ggrepel.max.overlaps" = Inf) # nolint
+    }
+    if (isInstalled("httr")) {
+        ## Enable OAuth token generation using httr on a remote R server.
+        ## This is used by googlesheets, for example.
+        options("httr_oob_default" = TRUE) # nolint
+    }
+    if (isInstalled("parallel")) {
+        ## Improve the default multi-core settings.
+        ## `BiocParallel::MulticoreParam()` should inherit this setting.
+        cores <- Sys.getenv("CPU_COUNT")
+        if (!isTRUE(nzchar(cores))) {
+            ## Using "n-1" cores instead:
+            ## > cores <- max(1L, parallel::detectCores() - 1L)
+            cores <- parallel::detectCores()
+        }
+        cores <- as.integer(cores)
+        ## `install.packages()` looks for "Ncpus" global.
+        ## nolint start
+        options(
+            "Ncpus" = cores,
+            "mc.cores" = cores
+        )
+        ## nolint end
+    }
+    ## > if (isInstalled("pipette")) {
+    ## >     ## Ensure we load and save RDS files from a nested dated
+    ## >     ## directory by default.
+    ## >     options("acid.save.ext" = "rds")
+    ## >     options(
+    ## >         "acid.save.dir" = file.path(
+    ## >             getOption("acid.save.ext"), Sys.Date()
+    ## >         )
+    ## >     )
+    ## >     options("acid.load.dir" = getOption("acid.save.dir"))
+    ## > }
+    if (isInstalled("readr")) {
+        ## nolint start
+        options(
+            "readr.num_columns" = 0L,
+            "readr.show_progress" = FALSE
+        )
+        ## nolint end
+    }
+    if (isInstalled("Seurat")) {
+        options("Seurat.object.assay.version" = "v5") # nolint
+    }
+    if (isInstalled("styler")) {
+        options("styler.cache_root" = "styler") # nolint
+    }
+    if (isInstalled("reticulate")) {
+        ## https://rstudio.github.io/reticulate/reference/conda-tools.html
+        ## https://rstudio.github.io/reticulate/articles/versions.html
+        options("reticulate.conda_binary" = dict[["condaBinary"]]) # nolint
+    }
+    ## > if (isInstalled("styler")) {
+    ## >     ## https://styler.r-lib.org/reference/styler_addins.html
+    ## >     options(
+    ## >         "styler.addins_style_transformer" =
+    ## >             "AcidDevTools::acid_style()",
+    ## >         "styler.save_after_styling" = TRUE
+    ## >     )
+    ## > }
+    if (isInstalled("testthat")) {
+        ## nolint start
+        options(
+            "testthat.progress.max_fails" = 1L,
+            "testthat.progress.verbose_skips" = TRUE
+        )
+        ## nolint end
+    }
+    if (isInstalled("tidyverse")) {
+        options("tidyverse.quiet" = TRUE) # nolint
+    }
+    ## Quartz {{{2
+    ## -------------------------------------------------------------------------
+    ## https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/quartz.html
+    ## If you hit this cryptic error with ggplot2 during unit testing:
+    ## > no applicable method for 'depth' applied to an object of class "NULL"
+    ## Refer to this thread on GitHub:
+    ## https://github.com/tidyverse/ggplot2/issues/2514
+    ## May simply need to make the viewport larger.
+    if (isTRUE(flag[["macos"]]) && isInstalled("grDevices")) {
+        setHook(
+            hookName = packageEvent("grDevices", "onLoad"),
+            function(...) {
+                grDevices::quartz.options(
+                    width = 10L,
+                    height = 10L,
+                    pointsize = 12L,
+                    family = "Helvetica",
+                    antialias = TRUE,
+                    type = "native",
+                    bg = "transparent",
+                    canvas = "white"
+                )
+            }
+        )
+    }
+    ## RStudio {{{2
+    ## -------------------------------------------------------------------------
+    ## Fix file permissions. RStudio doesn't pick up the system umask.
+    ## Note that we're allowing group write here by default.
+    ## > if (isTRUE(flag[["rstudio"]])) {
+    ## >     Sys.umask("0002")
+    ## > }
+    ## Improve PATH consistency with base R {{{3
+    ## -------------------------------------------------------------------------
+    ## RStudio PATH is now inconsistent with system R due to breaking changes in
+    ## internal 'SessionPath.cpp'.
+    ## See also:
+    ## - https://community.rstudio.com/t/how-to-get-rstudio-ide-to-use-the-
+    ##     correct-terminal-path-in-mac-os-x/131528
+    ## - https://github.com/rstudio/rstudio/issues/10551
+    ## - https://github.com/rstudio/rstudio/issues/10311
+    ## nolint start
+    if (
+        isTRUE(flag[["rstudio"]]) &&
+            isTRUE(flag[["macos"]]) &&
+            isInstalled("later")
+    ) {
+        Sys.setenv("_PATH" = Sys.getenv("PATH"))
+        restoreDefaultPath <- function() {
+            Sys.setenv("RSTUDIO_PATH" = Sys.getenv("PATH"))
+            Sys.setenv("PATH" = Sys.getenv("_PATH"))
+            Sys.unsetenv("_PATH")
+        }
+        later::later(func = restoreDefaultPath, delay = 1L)
+    }
+    ## nolint end
+    ## Automatic dark/light theme handling {{{3
+    ## -------------------------------------------------------------------------
+    ## See also:
+    ## - https://github.com/gadenbuie/rsthemes
+    ## - https://github.com/gadenbuie/rsthemes/issues/6
+    ## These values are currently defined in secrets file.
+    dict[["theme_dark"]] <- Sys.getenv("RSTUDIO_THEME_DARK")
+    dict[["theme_light"]] <- Sys.getenv("RSTUDIO_THEME_LIGHT")
+    if (
+        isTRUE(flag[["interactive"]]) &&
+            isTRUE(flag[["rstudio"]]) &&
+            isTRUE(flag[["macos"]]) &&
+            isTRUE(nzchar(dict[["theme_dark"]])) &&
+            isTRUE(nzchar(dict[["theme_light"]])) &&
+            all(isInstalled(c("later", "rstudioapi")))
+    ) {
+        autoDark <- function() {
+            themes <- c(
+                "dark" = dict[["theme_dark"]],
+                "light" = dict[["theme_light"]]
+            )
+            ## This returns "Dark" for Dark Mode; errors for Light Mode.
+            colorMode <- try({
+                suppressWarnings({
+                    system2(
+                        command = "defaults",
+                        args = c(
+                            "read",
+                            "NSGlobalDomain",
+                            "AppleInterfaceStyle"
+                        ),
+                        stdout = TRUE,
+                        stderr = FALSE
+                    )
+                })
+            })
+            colorMode <- ifelse(
+                test = identical(colorMode, "Dark"),
+                yes = "dark",
+                no = "light"
+            )
+            rstudioapi::applyTheme(themes[[colorMode]])
+            invisible(colorMode)
+        }
+        later::later(func = autoDark, delay = 1L)
+    }
+    ## Session info {{{2
+    ## -------------------------------------------------------------------------
+    ## Only display session information when R is running interactively
+    ## and not in quiet mode.
+    if (
+        isTRUE(flag[["interactive"]]) &&
+            isFALSE(length(intersect(
+                x = commandArgs(),
+                y = c("-q", "--quiet", "--silent")
+            )) > 0L)
+    ) {
+        pathString <- paste0("  %.", getOption("width") - 2L, "s")
+        msg <- sprintf(
+            fmt = paste(
+                "%s",
+                "Home:", pathString,
+                "Package Library:", pathString,
+                "Working Directory:", pathString,
+                "",
+                sep = "\n"
+            ),
+            R.version[["version.string"]],
+            normalizePath(R.home(), mustWork = TRUE),
+            normalizePath(.libPaths()[[1L]], mustWork = TRUE), # nolint
+            normalizePath(getwd(), mustWork = TRUE)
+        )
+        cat(msg)
+    }
+})

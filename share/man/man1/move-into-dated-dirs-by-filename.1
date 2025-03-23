@@ -1,0 +1,22 @@
+.TH MOVE-INTO-DATED-DIRS-BY-FILENAME 1 2019-12-12 Bash
+.SH NAME
+move-into-dated-dirs-by-filename \-
+Move files into dated subdirectories by file name
+.SH SYNOPSIS
+.B move-into-dated-dirs-by-filename
+.I files ...
+.SH OPTIONS
+.TP
+.B ...
+File paths.
+Assuming we're matching inside current working directory.
+Supports glob matching, but try to keep it simple.
+.SH DESCRIPTION
+Useful for organizing photos, scans, and videos.
+.SH SEE ALSO
+https://unix.stackexchange.com/questions/9496
+.SH EXAMPLES
+.IP
+\(bu 20190101_010101_0001.mov
+.IP
+\(bu 2019-01-01-01-01-01.pdf

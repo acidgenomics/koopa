@@ -1,0 +1,21 @@
+.TH DELETE-NAMED-SUBDIRS 1 2019-11-10 Bash
+.SH NAME
+delete-named-subdirs \-
+Delete named subdirectories
+.SH SYNOPSIS
+.B delete-named-subdirs
+[dir=\fI"."\fP]
+.I subdir_name
+.SH OPTIONS
+.TP
+.B dir
+Directory path where to perform search.
+.TP
+.B subdir_name
+Subdirectory name to delete.
+.SH DESCRIPTION
+Calls 'find' internally to recursively scan for a subdirectory name and removes those nested directories. Useful for removing bcbio "work/" directories, for example.
+.SH EXAMPLE
+.nf
+.B delete-named-subdirs "rnaseq-data/" "work"
+.fi

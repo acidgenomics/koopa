@@ -1,0 +1,63 @@
+#!/usr/bin/env zsh
+
+_koopa_zsh_prompt() {
+    # """
+    # Koopa ZSH prompt.
+    # @note Updated 2025-01-03.
+    # """
+    _koopa_activate_starship
+    [[ -n "${STARSHIP_SHELL:-}" ]] && return 0
+    PROMPT="$(_koopa_zsh_prompt_string)"
+    return 0
+}
+
+_koopa_zsh_prompt_string() {
+    # """
+    # Zsh prompt string (PS1).
+    # @note Updated 2024-09-24.
+    #
+    # This is a modified, lighter version of Pure, by Sindre Sorhus.
+    #
+    # Subshell exec need to be escaped here, so they are evaluated dynamically
+    # when the prompt is refreshed.
+    #
+    # Unicode characters don't work well with some Windows fonts.
+    #
+    # Conda environment activation is messing up '%m'/'%M' flag on macOS.
+    # This seems to be specific to macOS and doesn't happen on Linux.
+    #
+    # Prompt variables:
+    # - %* : time
+    # - %F : color dict
+    # - %M : machine (host) name (full)
+    # - %f : reset color
+    # - %m : machine (host) name (up to first '.')
+    # - %n : user name
+    # - %~ : current path
+    # - %(?..) : prompt conditional - %(condition.true.false)
+    #
+    # See also:
+    # - https://github.com/sindresorhus/pure/
+    # - https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/
+    #       robbyrussell.zsh-theme
+    # """
+    local -A dict
+    [[ "$#" -eq 0 ]] || return 1
+    dict['newline']=$'\n'
+    dict['prompt']='❯' # default is '%%'.
+    dict['prompt_color']="${fg['magenta']}"
+    dict['user']='%n@%m'
+    dict['user_color']="${fg['cyan']}"
+    dict['wd']='%~'
+    dict['wd_color']="${fg['blue']}"
+    printf '%s%s%s%s%s%s ' \
+        "${dict['newline']}" \
+        "%F%{${dict['user_color']}%}${dict['user']}%f" \
+        "${dict['newline']}" \
+        "%F%{${dict['wd_color']}%}${dict['wd']}%f" \
+        "${dict['newline']}" \
+        "%F%{${dict['prompt_color']}%}${dict['prompt']}%f"
+    return 0
+}
+
+_koopa_zsh_prompt "$@"

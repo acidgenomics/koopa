@@ -1,0 +1,10 @@
+.koopa-binary
+.koopa-install.log
+.vscode/
+/app/
+/bin/
+/bootstrap/
+/coverage/
+/libexec/
+/opt/
+/share/man/man1/
