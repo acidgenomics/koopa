@@ -5401,10 +5401,13 @@
   "radian": {
     "bin": ["radian"],
     "date": "2024-08-22",
-    "default": false,
+    "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://github.com/randy3k/radian/"],
+    "url": [
+      "https://github.com/randy3k/radian/",
+      "https://pypi.org/project/radian/"
+    ],
     "version": "0.6.13"
   },
   "ranger-fm": {
