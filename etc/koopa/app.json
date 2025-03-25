@@ -6468,7 +6468,7 @@
   "uv": {
     "bin": ["uv"],
     "date": "2025-03-21",
-    "default": false,
+    "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
