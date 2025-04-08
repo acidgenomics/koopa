@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Check for OpenMP headers and warn user that R cask install isn't supported here.
+
 main() {
     # """
     # Configure R.
