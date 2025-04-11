@@ -1474,12 +1474,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-03-25",
+    "date": "2025-04-11",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "75b08a75ff04166aecd269188c61687a9d4a9b29"
+    "version": "1b41fe0e04cc70a2ad9358a2456292597258e043"
   },
   "du-dust": {
     "aliases": {
@@ -4498,7 +4498,7 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2024-05-21",
+    "date": "2025-04-11",
     "default": false,
     "dependencies": ["python3.11", "zlib"],
     "prune": true,
@@ -4509,7 +4509,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "0.8.1"
+    "version": "0.9.0"
   },
   "ont-dorado": {
     "bin": ["dorado"],
