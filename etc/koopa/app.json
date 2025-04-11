@@ -4498,7 +4498,7 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2024-05-21",
+    "date": "2025-04-11",
     "default": false,
     "dependencies": ["python3.11", "zlib"],
     "prune": true,
@@ -4509,7 +4509,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "0.8.1"
+    "version": "0.9.0"
   },
   "ont-dorado": {
     "bin": ["dorado"],
