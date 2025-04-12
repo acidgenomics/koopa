@@ -5373,7 +5373,7 @@
     "version": "87492"
   },
   "r-gfortran": {
-    "date": "2023-10-16",
+    "date": "2025-04-12",
     "default": true,
     "supported": {
       "linux-amd64": false,
@@ -5383,10 +5383,10 @@
     },
     "system": true,
     "url": ["https://mac.r-project.org/tools/"],
-    "version": "12.2"
+    "version": "14.2"
   },
   "r-xcode-openmp": {
-    "date": "2024-12-30",
+    "date": "2025-04-12",
     "default": true,
     "supported": {
       "linux-amd64": false,
@@ -5396,7 +5396,7 @@
     },
     "system": true,
     "url": ["https://mac.r-project.org/openmp/"],
-    "version": "18.1.8"
+    "version": "19.1.0"
   },
   "radian": {
     "bin": ["radian"],
