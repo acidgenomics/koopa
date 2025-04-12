@@ -1449,7 +1449,7 @@
     "build_dependencies": ["go"],
     "date": "2025-04-11",
     "default": true,
-    "prune": true,
+    "prune": false,
     "url": ["https://github.com/direnv/direnv"],
     "version": "2.36.0"
   },
@@ -4317,7 +4317,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-04-12",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4330,7 +4330,7 @@
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.10.3"
+    "version": "0.11.0"
   },
   "nettle": {
     "aliases": {
@@ -6063,7 +6063,7 @@
     "date": "2025-01-12",
     "default": true,
     "dependencies": ["conda"],
-    "prune": true,
+    "prune": false,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
     "version": "1.22.1"
   },
@@ -6482,7 +6482,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-04-12",
     "default": true,
     "dependencies": ["ncurses", "python3.12"],
     "man1": [
@@ -6497,7 +6497,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1.0950"
+    "version": "9.1.1250"
   },
   "visidata": {
     "aliases": {
