@@ -4515,23 +4515,29 @@ koopa_chgrp() {
 }
 
 koopa_chmod() {
-    local -A app dict
+    local -A app bool
     local -a chmod pos
     app['chmod']="$(koopa_locate_chmod)"
-    dict['recursive']=0
-    dict['sudo']=0
+    bool['recursive']=0
+    bool['sudo']=0
+    bool['verbose']=0
     pos=()
     while (("$#"))
     do
         case "$1" in
             '--recursive' | \
             '-R')
-                dict['recursive']=1
+                bool['recursive']=1
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict['sudo']=1
+                bool['sudo']=1
+                shift 1
+                ;;
+            '--verbose' | \
+            '-v')
+                bool['verbose']=1
                 shift 1
                 ;;
             '-'*)
@@ -4545,15 +4551,19 @@ koopa_chmod() {
     done
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
-    if [[ "${dict['sudo']}" -eq 1 ]]
+    if [[ "${bool['sudo']}" -eq 1 ]]
     then
         chmod=('koopa_sudo' "${app['chmod']}")
     else
         chmod=("${app['chmod']}")
     fi
-    if [[ "${dict['recursive']}" -eq 1 ]]
+    if [[ "${bool['recursive']}" -eq 1 ]]
     then
         chmod+=('-R')
+    fi
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        chmod+=('-v')
     fi
     koopa_assert_is_executable "${app[@]}"
     "${chmod[@]}" "$@"
@@ -14024,9 +14034,7 @@ koopa_install_jq() {
 }
 
 koopa_install_julia() {
-    koopa_assert_is_not_arm64
     koopa_install_app \
-        --installer='conda-package' \
         --name='julia' \
         "$@"
 }
@@ -32092,7 +32100,7 @@ koopa_zsh_compaudit_set_permissions() {
                 ;;
             *)
                 koopa_alert "Fixing write access at '${prefix}'."
-                koopa_chmod --recursive 'g-w' "$prefix"
+                koopa_chmod --recursive --verbose 'go-w' "$prefix"
                 ;;
         esac
     done

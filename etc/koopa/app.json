@@ -432,7 +432,7 @@
       "homebrew": true
     },
     "bin": ["bash-language-server"],
-    "date": "2025-01-03",
+    "date": "2025-04-15",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
@@ -440,7 +440,7 @@
       "https://www.npmjs.com/package/bash-language-server/",
       "https://github.com/bash-lsp/bash-language-server/"
     ],
-    "version": "5.4.3"
+    "version": "5.6.0"
   },
   "bashcov": {
     "bin": ["bashcov"],
@@ -2131,11 +2131,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-03-21",
+    "date": "2025-04-15",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.69.0"
+    "version": "2.70.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3071,23 +3071,16 @@
       "homebrew-cask": true
     },
     "bin": ["julia"],
-    "date": "2024-09-09",
+    "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
+    "date": "2025-04-15",
     "default": false,
-    "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
-    },
     "url": [
       "https://anaconda.org/conda-forge/julia",
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.10.4"
+    "version": "1.11.5"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -4770,16 +4763,16 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2024-09-22",
+    "date": "2025-04-14",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.40.0"
+    "version": "5.40.1"
   },
   "picard": {
     "bin": ["picard"],
-    "date": "2024-10-14",
+    "date": "2025-04-15",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4794,7 +4787,7 @@
       "https://broadinstitute.github.io/picard/",
       "https://github.com/broadinstitute/picard/"
     ],
-    "version": "3.3.0"
+    "version": "3.4.0"
   },
   "pigz": {
     "bin": ["pigz", "unpigz"],
@@ -5625,14 +5618,14 @@
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2025-04-14",
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.4.1"
+    "version": "3.4.2"
   },
   "ruff": {
     "bin": ["ruff"],
@@ -5919,7 +5912,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-11",
+    "date": "2025-04-15",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5928,7 +5921,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.1.9"
+    "version": "9.2.0"
   },
   "sox": {
     "aliases": {
@@ -7019,12 +7012,12 @@
       "homebrew": true
     },
     "bin": ["zellij"],
-    "date": "2025-03-21",
+    "date": "2025-04-15",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/zellij-org/zellij/"],
-    "version": "0.42.1"
+    "version": "0.42.2"
   },
   "zenith": {
     "aliases": {
