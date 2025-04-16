@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-02-26.
+    # @note Updated 2025-04-16.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -432,6 +432,7 @@ _koopa_complete() {
                         'sox'
                         'spdlog'
                         'sphinx'
+                        'sqlfluff'
                         'sqlite'
                         'staden-io-lib'
                         'star'

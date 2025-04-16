@@ -5982,6 +5982,18 @@
     ],
     "version": "8.2.3"
   },
+  "sqlfluff": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["sqlfluff"],
+    "date": "2025-04-16",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": "https://docs.sqlfluff.com/",
+    "version": "3.3.1"
+  },
   "sqlite": {
     "aliases": {
       "debian": "sqlite3",
