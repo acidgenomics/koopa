@@ -4111,6 +4111,15 @@
     "url": ["https://github.com/rui314/mold/"],
     "version": "2.37.1"
   },
+  "mosaicml-cli": {
+    "bin": ["mcli"],
+    "date": "2025-04-17",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/mosaicml-cli/"],
+    "version": "0.7.2"
+  },
   "mpc": {
     "aliases": {
       "debian": "libmpc-dev",

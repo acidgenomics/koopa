@@ -11956,6 +11956,7 @@ to 'https://www.anaconda.com/pricing' for details."
 
 koopa_install_apache_airflow() {
     koopa_install_app \
+        --installer='python-package' \
         --name='apache-airflow' \
         "$@"
 }
@@ -12726,6 +12727,7 @@ koopa_install_axel() {
 
 koopa_install_azure_cli() {
     koopa_install_app \
+        --installer='python-package' \
         --name='azure-cli' \
         "$@"
 }
@@ -12836,7 +12838,9 @@ koopa_install_bison() {
 
 koopa_install_black() {
     koopa_install_app \
+        --installer='python-package' \
         --name='black' \
+        -D --pip-name='black[d]' \
         "$@"
 }
 
@@ -13413,7 +13417,9 @@ koopa_install_gdbm() {
 
 koopa_install_gentropy() {
     koopa_install_app \
+        --installer='python-package' \
         --name='gentropy' \
+        -D --python-version='3.10' \
         "$@"
 }
 
@@ -13478,7 +13484,9 @@ koopa_install_gitui() {
 
 koopa_install_glances() {
     koopa_install_app \
+        --installer='python-package' \
         --name='glances' \
+        -D --egg-name='Glances' \
         "$@"
 }
 
@@ -13954,7 +13962,10 @@ koopa_install_httpie() {
 
 koopa_install_huggingface_hub() {
     koopa_install_app \
+        --installer='python-package' \
         --name='huggingface-hub' \
+        -D --egg-name='huggingface_hub' \
+        -D --pip-name='huggingface_hub[cli]' \
         "$@"
 }
 
@@ -14248,7 +14259,9 @@ koopa_install_lapack() {
 
 koopa_install_latch() {
     koopa_install_app \
+        --installer='python-package' \
         --name='latch' \
+        -D --python-version='3.11' \
         "$@"
 }
 
@@ -14548,7 +14561,9 @@ koopa_install_luarocks() {
 
 koopa_install_luigi() {
     koopa_install_app \
+        --installer='python-package' \
         --name='luigi' \
+        -D --pip-name='luigi[toml]' \
         "$@"
 }
 
@@ -14656,6 +14671,13 @@ koopa_install_mold() {
         "$@"
 }
 
+koopa_install_mosaicml_cli() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='mosaicml-cli' \
+        "$@"
+}
+
 koopa_install_mpc() {
     koopa_install_app \
         --name='mpc' \
@@ -14689,7 +14711,9 @@ koopa_install_multiqc() {
 
 koopa_install_mutagen() {
     koopa_install_app \
+        --installer='python-package' \
         --name='mutagen' \
+        -D --extra-package='tqdm' \
         "$@"
 }
 
@@ -14807,7 +14831,7 @@ koopa_install_node_package() {
                 extra_pkgs+=("${1#*=}")
                 shift 1
                 ;;
-            '--extra-packages')
+            '--extra-package')
                 extra_pkgs+=("${2:?}")
                 shift 2
                 ;;
@@ -15251,6 +15275,7 @@ koopa_install_pup() {
 
 koopa_install_py_spy() {
     koopa_install_app \
+        --installer='python-package' \
         --name='py-spy' \
         "$@"
 }
@@ -15317,7 +15342,9 @@ koopa_install_pytaglib() {
 
 koopa_install_pytest() {
     koopa_install_app \
+        --installer='python-package' \
         --name='pytest' \
+        -D --extra-package='pytest-cov' \
         "$@"
 }
 
@@ -15329,6 +15356,7 @@ koopa_install_python_package() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
+    bool['egg_name']=0
     dict['egg_name']=''
     dict['locate_python']='koopa_locate_python312'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
@@ -15352,7 +15380,7 @@ koopa_install_python_package() {
                 extra_pkgs+=("${1#*=}")
                 shift 1
                 ;;
-            '--extra-packages')
+            '--extra-package')
                 extra_pkgs+=("${2:?}")
                 shift 2
                 ;;
@@ -15397,8 +15425,20 @@ koopa_install_python_package() {
                 ;;
         esac
     done
-    [[ -z "${dict['egg_name']}" ]] && dict['egg_name']="${dict['name']}"
-    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['egg_name']}"
+    if [[ -n "${dict['egg_name']}" ]]
+    then
+        bool['egg_name']=1
+    else
+        dict['egg_name']="${dict['name']}"
+    fi
+    if [[ -z "${dict['pip_name']}" ]]
+    then
+        dict['pip_name']="${dict['egg_name']}"
+    fi
+    if [[ "${bool['egg_name']}" -eq 0 ]]
+    then
+        dict['egg_name']="$(koopa_snake_case "${dict['egg_name']}")"
+    fi
     koopa_assert_is_set \
         '--egg-name' "${dict['egg_name']}" \
         '--name' "${dict['name']}" \
@@ -15556,6 +15596,7 @@ koopa_install_radian() {
 
 koopa_install_ranger_fm() {
     koopa_install_app \
+        --installer='python-package' \
         --name='ranger-fm' \
         "$@"
 }
@@ -15720,6 +15761,7 @@ koopa_install_ruby() {
 
 koopa_install_ruff_lsp() {
     koopa_install_app \
+        --installer='python-package' \
         --name='ruff-lsp' \
         "$@"
 }
@@ -15909,7 +15951,9 @@ koopa_install_scanpy() {
 
 koopa_install_scons() {
     koopa_install_app \
+        --installer='python-package' \
         --name='scons' \
+        -D --egg-name='SCons' \
         "$@"
 }
 
@@ -16539,6 +16583,7 @@ koopa_install_yq() {
 
 koopa_install_yt_dlp() {
     koopa_install_app \
+        --installer='python-package' \
         --name='yt-dlp' \
         "$@"
 }
@@ -30478,6 +30523,12 @@ koopa_uninstall_misopy() {
 koopa_uninstall_mold() {
     koopa_uninstall_app \
         --name='mold' \
+        "$@"
+}
+
+koopa_uninstall_mosaicml_cli() {
+    koopa_uninstall_app \
+        --name='mosaicml-cli' \
         "$@"
 }
 
