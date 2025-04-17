@@ -186,6 +186,12 @@ koopa_linux_delete_cache() {
     return 0
 }
 
+koopa_linux_disable_root_password_expiration() {
+    koopa_assert_has_no_args "$#"
+    koopa_sudo -i chage -M 99999 root
+    return 0
+}
+
 koopa_linux_fix_sudo_setrlimit_error() {
     local -A dict
     koopa_assert_has_no_args "$#"
