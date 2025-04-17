@@ -3,7 +3,7 @@
 koopa_install_python_package() {
     # """
     # Install a Python package as a virtual environment application.
-    # @note Updated 2025-01-17.
+    # @note Updated 2025-04-17.
     #
     # @seealso
     # - https://adamj.eu/tech/2019/03/11/pip-install-from-a-git-repository/
@@ -15,6 +15,7 @@ koopa_install_python_package() {
     app['cut']="$(koopa_locate_cut --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['binary']=1
+    bool['egg_name']=0
     dict['egg_name']=''
     dict['locate_python']='koopa_locate_python312'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
@@ -39,7 +40,7 @@ koopa_install_python_package() {
                 extra_pkgs+=("${1#*=}")
                 shift 1
                 ;;
-            '--extra-packages')
+            '--extra-package')
                 extra_pkgs+=("${2:?}")
                 shift 2
                 ;;
@@ -86,8 +87,20 @@ koopa_install_python_package() {
                 ;;
         esac
     done
-    [[ -z "${dict['egg_name']}" ]] && dict['egg_name']="${dict['name']}"
-    [[ -z "${dict['pip_name']}" ]] && dict['pip_name']="${dict['egg_name']}"
+    if [[ -n "${dict['egg_name']}" ]]
+    then
+        bool['egg_name']=1
+    else
+        dict['egg_name']="${dict['name']}"
+    fi
+    if [[ -z "${dict['pip_name']}" ]]
+    then
+        dict['pip_name']="${dict['egg_name']}"
+    fi
+    if [[ "${bool['egg_name']}" -eq 0 ]]
+    then
+        dict['egg_name']="$(koopa_snake_case "${dict['egg_name']}")"
+    fi
     koopa_assert_is_set \
         '--egg-name' "${dict['egg_name']}" \
         '--name' "${dict['name']}" \
