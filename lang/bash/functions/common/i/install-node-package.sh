@@ -3,7 +3,7 @@
 koopa_install_node_package() {
     # """
     # Install Node.js package using npm.
-    # @note Updated 2023-08-29.
+    # @note Updated 2025-04-15.
     #
     # @seealso
     # - npm help config
@@ -32,7 +32,7 @@ koopa_install_node_package() {
                 extra_pkgs+=("${1#*=}")
                 shift 1
                 ;;
-            '--extra-packages')
+            '--extra-package')
                 extra_pkgs+=("${2:?}")
                 shift 2
                 ;;

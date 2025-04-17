@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 
-koopa_install_glances() {
+koopa_install_mosaicml_cli() {
     koopa_install_app \
         --installer='python-package' \
-        --name='glances' \
-        -D --egg-name='Glances' \
+        --name='mosaicml-cli' \
         "$@"
 }
