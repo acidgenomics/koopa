@@ -16793,6 +16793,13 @@ koopa_is_array_non_empty() {
     return 0
 }
 
+koopa_is_aws_ec2_instance() {
+    local -A app
+    koopa_is_linux || return 1
+    app['ec2_metadata']="$(koopa_linux_locate_ec2_metadata --allow-missing)"
+    [[ -x "${app['ec2_metadata']}" ]]
+}
+
 koopa_is_aws_s3_uri() {
     local pattern string
     koopa_assert_has_args "$#"

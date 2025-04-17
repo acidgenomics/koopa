@@ -76,6 +76,7 @@ _koopa_activate_aliases() {
     alias u='clear; cd ../; pwd; l'
     alias variable-bodies='typeset -p'
     alias variable-names='compgen -A variable | sort'
+    alias venv='_koopa_alias_venv'
     alias week='_koopa_alias_week'
     if [ -x "${__kvar_bin_prefix}/asdf" ]
     then
@@ -1356,6 +1357,26 @@ _koopa_alias_tmux_vanilla() {
 
 _koopa_alias_today() {
     date '+%Y-%m-%d'
+}
+
+_koopa_alias_venv() {
+    if [ -f '.venv/bin/activate' ]
+    then
+        source '.venv/bin/activate'
+    elif [ -f "venv/bin/activate" ]
+    then
+        source "venv/bin/activate"
+    elif [ -f "${HOME}/.venv/bin/activate" ]
+    then
+        source "${HOME}/.venv/bin/activate"
+    elif [ -f "${HOME}/venv/bin/activate" ]
+    then
+        source "${HOME}/venv/bin/activate"
+    else
+        _koopa_print 'Failed to locate Python virtual environment.'
+        return 1
+    fi
+    return 0
 }
 
 _koopa_alias_vim_fzf() {
