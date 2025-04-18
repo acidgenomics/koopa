@@ -3,13 +3,13 @@
 koopa_rm() {
     # """
     # Remove files/directories quietly with GNU rm.
-    # @note Updated 2024-09-22.
+    # @note Updated 2025-04-18.
     # """
-    local -A app dict
+    local -A app bool
     local -a pos rm rm_args
     app['rm']="$(koopa_locate_rm --allow-system --realpath)"
-    dict['sudo']=0
-    dict['verbose']=0
+    bool['sudo']=0
+    bool['verbose']=0
     pos=()
     while (("$#"))
     do
@@ -17,17 +17,17 @@ koopa_rm() {
             # Flags ------------------------------------------------------------
             '--quiet' | \
             '-q')
-                dict['verbose']=0
+                bool['verbose']=0
                 shift 1
                 ;;
             '--sudo' | \
             '-S')
-                dict['sudo']=1
+                bool['sudo']=1
                 shift 1
                 ;;
             '--verbose' | \
             '-v')
-                dict['verbose']=1
+                bool['verbose']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -43,8 +43,8 @@ koopa_rm() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     rm_args=('-f' '-r')
-    [[ "${dict['verbose']}" -eq 1 ]] && rm_args+=('-v')
-    if [[ "${dict['sudo']}" -eq 1 ]]
+    [[ "${bool['verbose']}" -eq 1 ]] && rm_args+=('-v')
+    if [[ "${bool['sudo']}" -eq 1 ]]
     then
         rm+=('koopa_sudo' "${app['rm']}")
     else
