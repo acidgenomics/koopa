@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2024-06-15.
+    # @note Updated 2025-04-17.
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -36,6 +36,7 @@ _koopa_activate_aliases() {
     alias u='clear; cd ../; pwd; l'
     alias variable-bodies='typeset -p'
     alias variable-names='compgen -A variable | sort'
+    alias venv='_koopa_alias_venv'
     alias week='_koopa_alias_week'
     # Application aliases ------------------------------------------------------
     # asdf.

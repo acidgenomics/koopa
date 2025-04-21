@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2024-12-24.
+# @note Updated 2025-04-21.
 # """
 
 # Can debug with:
@@ -76,6 +76,7 @@ cpu_count() {
 }
 
 install_bash() {
+    __kvar_version='5.2.37'
     printf 'Installing bash.\n'
     mkdir -p "${PREFIX}/src/bash"
     cd "${PREFIX}/src/bash" || return 1
@@ -86,18 +87,20 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://ftp.gnu.org/gnu/bash/bash-5.2.37.tar.gz' \
+        "https://ftp.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'bash-5.2.37' || return 1
+    cd "bash-${__kvar_version}" || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install
     [ -x "${PREFIX}/bin/bash" ] || return 1
+    unset -v __kvar_version
     return 0
 }
 
 install_coreutils() {
+    __kvar_version='9.6'
     printf 'Installing coreutils.\n'
     mkdir -p "${PREFIX}/src/coreutils"
     cd "${PREFIX}/src/coreutils" || return 1
@@ -108,10 +111,10 @@ install_coreutils() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://ftp.gnu.org/gnu/coreutils/coreutils-9.5.tar.gz' \
+        "https://ftp.gnu.org/gnu/coreutils/coreutils-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'coreutils-9.5' || return 1
+    cd "coreutils-${__kvar_version}" || return 1
     if is_root
     then
         export FORCE_UNSAFE_CONFIGURE=1
@@ -120,10 +123,12 @@ install_coreutils() {
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install
     [ -x "${PREFIX}/bin/gcp" ] || return 1
+    unset -v __kvar_version
     return 0
 }
 
 install_openssl3() {
+    __kvar_version='3.5.0'
     printf 'Installing openssl3.\n'
     mkdir -p "${PREFIX}/src/openssl3"
     cd "${PREFIX}/src/openssl3" || return 1
@@ -134,10 +139,10 @@ install_openssl3() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://www.openssl.org/source/openssl-3.3.2.tar.gz' \
+        "https://www.openssl.org/source/openssl-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'openssl-3.3.2' || return 1
+    cd "openssl-${__kvar_version}" || return 1
     ./config \
         --libdir='lib' \
         --openssldir="$PREFIX" \
@@ -149,10 +154,12 @@ install_openssl3() {
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install_sw
     [ -x "${PREFIX}/bin/openssl" ] || return 1
+    unset -v __kvar_version
     return 0
 }
 
 install_python() {
+    __kvar_version='3.12.10'
     printf 'Installing python.\n'
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
@@ -163,10 +170,11 @@ install_python() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://www.python.org/ftp/python/3.12.6/Python-3.12.6.tgz' \
+        "https://www.python.org/ftp/python/${__kvar_version}/\
+Python-${__kvar_version}.tgz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'Python-3.12.6' || return 1
+    cd "Python-${__kvar_version}" || return 1
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --prefix="$PREFIX" \
@@ -175,10 +183,12 @@ install_python() {
     make install
     unset -v LDLIBS
     [ -x "${PREFIX}/bin/python3" ] || return 1
+    unset -v __kvar_version
     return 0
 }
 
 install_zlib() {
+    __kvar_version='1.3.1'
     printf 'Installing zlib.\n'
     mkdir -p "${PREFIX}/src/zlib"
     cd "${PREFIX}/src/zlib"
@@ -189,13 +199,14 @@ install_zlib() {
         --retry 5 \
         --show-error \
         --verbose \
-        'https://www.zlib.net/zlib-1.3.1.tar.gz' \
+        "https://www.zlib.net/zlib-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd 'zlib-1.3.1' || return 1
+    cd "zlib-${__kvar_version}" || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install
+    unset -v __kvar_version
     return 0
 }
 
