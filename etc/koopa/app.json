@@ -330,7 +330,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -338,7 +338,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.25.13"
+    "version": "2.26.5"
   },
   "axel": {
     "aliases": {
@@ -711,7 +711,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -720,7 +720,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.45.1"
+    "version": "1.46.1"
   },
   "brotli": {
     "aliases": {
@@ -972,13 +972,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": true,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.61.0"
+    "version": "2.62.2"
   },
   "cli11": {
     "aliases": {
@@ -1182,7 +1181,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2024-09-22",
+    "date": "2025-04-21",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1296,7 +1295,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.5"
+    "version": "9.6"
   },
   "cpufetch": {
     "aliases": {
@@ -1474,12 +1473,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-04-17",
+    "date": "2025-04-21",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "f1e29c0773fe477c44371c854ef7ad9c4e2b5c73"
+    "version": "eacf13c88d3858a8d40d2f11f83764d77bf53e04"
   },
   "du-dust": {
     "aliases": {
@@ -1663,7 +1662,7 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -1671,7 +1670,7 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.21.0"
+    "version": "0.21.1"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1766,6 +1765,7 @@
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
+    "outdated": true,
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
@@ -1927,11 +1927,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.61.1"
+    "version": "0.61.2"
   },
   "gatk": {
     "aliases": {
@@ -2622,7 +2622,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-05-21",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2635,7 +2635,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "11.0.1"
+    "version": "11.1.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -4066,22 +4066,15 @@
   },
   "minimap2": {
     "bin": ["minimap2"],
-    "build_dependencies": ["make"],
-    "date": "2024-03-27",
+    "date": "2025-04-21",
     "default": false,
-    "dependencies": ["zlib"],
+    "dependencies": ["conda"],
     "prune": true,
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
-    },
     "url": [
       "https://github.com/lh3/minimap2/",
       "https://bioconda.github.io/recipes/minimap2/README.html"
     ],
-    "version": "2.28"
+    "version": "2.29"
   },
   "misopy": {
     "bin": ["miso"],
@@ -4515,7 +4508,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": false,
     "prune": true,
     "supported": {
@@ -4525,7 +4518,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "0.9.5"
+    "version": "0.9.6"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -5638,12 +5631,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-04-11",
+    "date": "2025-04-21",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.5"
+    "version": "0.11.6"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5921,7 +5914,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-15",
+    "date": "2025-04-21",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5930,7 +5923,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.2.0"
+    "version": "9.3.0"
   },
   "sox": {
     "aliases": {

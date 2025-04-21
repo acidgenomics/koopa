@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_source() {
     # """
     # Install minimap2.
     # @note Updated 2023-05-04.
@@ -42,5 +47,10 @@ v${dict['version']}.tar.gz"
         LIBS="${libs[*]}" \
         VERBOSE=1
     koopa_cp --target-directory="${dict['prefix']}/bin" 'minimap2'
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }
