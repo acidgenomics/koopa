@@ -11939,6 +11939,12 @@ koopa_install_agat() {
         "$@"
 }
 
+koopa_install_air() {
+    koopa_install_app \
+        --name='air' \
+        "$@"
+}
+
 koopa_install_all_apps() {
     koopa_assert_has_no_args "$#"
     koopa_install_shared_apps --all "$@"
@@ -28913,6 +28919,12 @@ koopa_uninstall_ack() {
 koopa_uninstall_agat() {
     koopa_uninstall_app \
         --name='agat' \
+        "$@"
+}
+
+koopa_uninstall_air() {
+    koopa_uninstall_app \
+        --name='air' \
         "$@"
 }
 
