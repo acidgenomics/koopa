@@ -2,7 +2,7 @@
 
 #' Shared R profile configuration.
 #'
-#' @note Updated 2024-09-24.
+#' @note Updated 2025-04-22.
 #'
 #' @section Restarting R:
 #'
@@ -619,7 +619,7 @@ local({
     ## Fix file permissions. RStudio doesn't pick up the system umask.
     ## Note that we're allowing group write here by default.
     ## > if (isTRUE(flag[["rstudio"]])) {
-    ## >     Sys.umask("0002")
+    ## >     Sys.umask("0022")
     ## > }
     ## Improve PATH consistency with base R {{{3
     ## -------------------------------------------------------------------------
