@@ -64,12 +64,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2025-02-14",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.10.5"
+    "version": "3.0.0"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -445,7 +445,7 @@
     },
     "bin": ["bash-language-server"],
     "date": "2025-04-15",
-    "default": false,
+    "default": true,
     "dependencies": ["node"],
     "prune": true,
     "url": [
@@ -1485,12 +1485,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-04-22",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "6247b908112db5e7211273900b2a75ceb2ae6862"
+    "version": "d57222aec6d12a70eee05a0a9cf0bf8d6d701a03"
   },
   "du-dust": {
     "aliases": {
@@ -1773,7 +1773,7 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "date": "2025-03-21",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
@@ -1782,7 +1782,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.0.1"
+    "version": "4.0.2"
   },
   "flac": {
     "aliases": {
@@ -1939,11 +1939,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2025-04-21",
+    "date": "2025-04-24",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.61.2"
+    "version": "0.61.3"
   },
   "gatk": {
     "aliases": {
@@ -2143,11 +2143,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-04-15",
+    "date": "2025-04-24",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.70.0"
+    "version": "2.71.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3096,12 +3096,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-04-11",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.0"
+    "version": "4.4.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -5064,8 +5064,13 @@
     "version": "2.5.7"
   },
   "pyright": {
-    "bin": ["pyright"],
-    "date": "2025-04-11",
+    "bin": [
+      "pyright",
+      "pyright-langserver",
+      "pyright-python",
+      "pyright-python-langserver"
+    ],
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6486,12 +6491,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-04-11",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.6.14"
+    "version": "0.6.16"
   },
   "vim": {
     "aliases": {
