@@ -64,12 +64,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2025-02-14",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "2.10.5"
+    "version": "3.0.0"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -1773,7 +1773,7 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "date": "2025-03-21",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
@@ -1782,7 +1782,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.0.1"
+    "version": "4.0.2"
   },
   "flac": {
     "aliases": {
@@ -1939,11 +1939,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2025-04-21",
+    "date": "2025-04-24",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.61.2"
+    "version": "0.61.3"
   },
   "gatk": {
     "aliases": {
@@ -2143,11 +2143,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-04-15",
+    "date": "2025-04-24",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.70.0"
+    "version": "2.71.0"
   },
   "ghostscript": {
     "aliases": {
@@ -3096,12 +3096,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-04-11",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.0"
+    "version": "4.4.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -5065,7 +5065,7 @@
   },
   "pyright": {
     "bin": ["pyright"],
-    "date": "2025-04-11",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5073,7 +5073,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.399"
+    "version": "1.1.400"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -6486,12 +6486,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-04-11",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.6.14"
+    "version": "0.6.16"
   },
   "vim": {
     "aliases": {
