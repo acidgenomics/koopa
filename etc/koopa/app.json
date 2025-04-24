@@ -445,7 +445,7 @@
     },
     "bin": ["bash-language-server"],
     "date": "2025-04-15",
-    "default": true,
+    "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": [
