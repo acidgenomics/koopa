@@ -4777,12 +4777,12 @@
     },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2025-04-14",
+    "date": "2025-04-25",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.40.1"
+    "version": "5.40.2"
   },
   "picard": {
     "bin": ["picard"],
@@ -5637,23 +5637,23 @@
     },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-14",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["libyaml", "openssl3", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.4.2"
+    "version": "3.4.3"
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-04-21",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.6"
+    "version": "0.11.7"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5931,7 +5931,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-21",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5940,7 +5940,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.0"
+    "version": "9.3.1"
   },
   "sox": {
     "aliases": {
