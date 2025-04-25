@@ -1737,6 +1737,17 @@ _koopa_export_koopa_shell() {
     return 0
 }
 
+_koopa_export_manpager() {
+    [ -n "${MANPAGER:-}" ] && return 0
+    __kvar_nvim="$(_koopa_bin_prefix)/nvim"
+    if [ -x "$__kvar_nvim" ]
+    then
+        export MANPAGER="${__kvar_nvim} +Man!"
+    fi
+    unset -v __kvar_nvim
+    return 0
+}
+
 _koopa_export_pager() {
     [ -n "${PAGER:-}" ] && return 0
     __kvar_less="$(_koopa_bin_prefix)/less"
