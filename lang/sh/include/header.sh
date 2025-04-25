@@ -47,7 +47,7 @@ __koopa_posix_header() {
 __koopa_activate_koopa() {
     # """
     # Activate koopa.
-    # @note Updated 2024-10-04.
+    # @note Updated 2025-04-24.
     # """
     if [ "${KOOPA_MINIMAL:-0}" -eq 0 ]
     then
@@ -65,6 +65,7 @@ __koopa_activate_koopa() {
     _koopa_export_editor || return 1
     _koopa_export_gnupg || return 1
     _koopa_export_history || return 1
+    _koopa_export_manpager || return 1
     _koopa_export_pager || return 1
     _koopa_activate_ca_certificates || return 1
     _koopa_activate_ruby || return 1

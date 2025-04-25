@@ -1490,7 +1490,7 @@
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "53a1d32073a55f5e71b24d6d486b44f2ae3d7ac7"
+    "version": "ad14b2e838ae2e95b5cec90633fc89557fd16a0c"
   },
   "du-dust": {
     "aliases": {
@@ -5648,12 +5648,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-04-21",
+    "date": "2025-04-24",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.6"
+    "version": "0.11.7"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5931,7 +5931,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-21",
+    "date": "2025-04-24",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5940,7 +5940,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.0"
+    "version": "9.3.1"
   },
   "sox": {
     "aliases": {
