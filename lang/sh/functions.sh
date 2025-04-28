@@ -72,6 +72,7 @@ _koopa_activate_aliases() {
     alias ll='l -l'
     alias lt='l | tail'
     alias q='exit'
+    alias rcd='_koopa_alias_rcd'
     alias today='_koopa_alias_today'
     alias u='clear; cd ../; pwd; l'
     alias variable-bodies='typeset -p'
@@ -1345,6 +1346,15 @@ _koopa_alias_nvim_vanilla() {
 
 _koopa_alias_python3_dev() {
     PYTHONPATH="$(pwd)" python3
+}
+
+_koopa_alias_rcd() {
+    __kvar_dir="${1:-}"
+    [ -z "$__kvar_dir" ] && __kvar_dir="$(pwd)"
+    __kvar_dir="$(_koopa_realpath "$__kvar_dir")"
+    cd "$__kvar_dir" || return 1
+    unset -v __kvar_dir
+    return 0
 }
 
 _koopa_alias_sha256() {
