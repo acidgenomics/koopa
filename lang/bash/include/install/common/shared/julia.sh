@@ -46,6 +46,8 @@ END
     koopa_print "${dict['make_user_string']}"
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
-    # FIXME Ensure that Julia installed correctly here.
+    app['julia']="${dict['prefix']}/bin/julia"
+    koopa_assert_is_executable "${app['julia']}"
+    "${app['julia']}" --version
     return 0
 }
