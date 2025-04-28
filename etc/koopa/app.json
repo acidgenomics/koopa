@@ -79,12 +79,12 @@
       "pkg-config",
       "python3.12"
     ],
-    "date": "2025-02-20",
+    "date": "2025-04-27",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": true,
     "url": ["https://arrow.apache.org/"],
-    "version": "19.0.1"
+    "version": "20.0.0"
   },
   "apache-spark": {
     "aliases": {
@@ -4109,12 +4109,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2025-03-21",
+    "date": "2025-04-27",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.37.1"
+    "version": "2.38.0"
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
@@ -5931,7 +5931,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-24",
+    "date": "2025-04-27",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5940,7 +5940,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.1"
+    "version": "9.3.2"
   },
   "sox": {
     "aliases": {
