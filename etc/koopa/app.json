@@ -723,7 +723,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-04-21",
+    "date": "2025-04-28",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -732,7 +732,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.46.1"
+    "version": "1.46.2"
   },
   "brotli": {
     "aliases": {
@@ -1674,7 +1674,7 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "date": "2025-04-21",
+    "date": "2025-04-28",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -1682,7 +1682,7 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.21.1"
+    "version": "0.21.2"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -2143,11 +2143,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-04-24",
+    "date": "2025-04-28",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.71.0"
+    "version": "2.71.2"
   },
   "ghostscript": {
     "aliases": {
@@ -2841,12 +2841,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2025-04-11",
+    "date": "2025-04-28",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.146.1"
+    "version": "0.147.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3449,7 +3449,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-03-08",
+    "date": "2025-04-28",
     "default": false,
     "dependencies": ["libde265", "libjpeg-turbo", "libpng", "zlib"],
     "prune": false,
@@ -3457,7 +3457,7 @@
       "https://www.libde265.org/",
       "https://github.com/strukturag/libheif"
     ],
-    "version": "1.19.7"
+    "version": "1.19.8"
   },
   "libiconv": {
     "aliases": {
@@ -4108,12 +4108,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2025-04-27",
+    "date": "2025-04-28",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.38.0"
+    "version": "2.38.1"
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
@@ -6490,12 +6490,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-04-24",
+    "date": "2025-04-28",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.6.16"
+    "version": "0.6.17"
   },
   "vim": {
     "aliases": {
