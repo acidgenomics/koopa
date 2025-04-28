@@ -39,6 +39,9 @@ install_from_juliaup() {
 #!/bin/sh
 set -eu
 
+export JULIAUP_DEPOT_PATH="${dict['libexec_prefix']}"
+export JULIA_DEPOT_PATH="${dict['libexec_prefix']}"
+
 ${app['julia_real']} "\$@"
 END
     koopa_write_string \
