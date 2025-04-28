@@ -2634,7 +2634,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-05-21",
+    "date": "2025-05-28",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2647,7 +2647,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "11.1.0"
+    "version": "11.2.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -6083,12 +6083,12 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "date": "2025-01-12",
+    "date": "2025-04-28",
     "default": true,
     "dependencies": ["conda"],
     "prune": false,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.22.1"
+    "version": "1.23.0"
   },
   "stow": {
     "aliases": {
