@@ -31,13 +31,17 @@ install_from_juliaup() {
     koopa_assert_is_executable \
         "${dict['juliaup_prefix']}/bin/julia" \
         "${dict['juliaup_prefix']}/bin/juliaup"
-    koopa_mkdir "${dict['prefix']}/bin"
-    (
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln ../libexec/juliaup/bin/julia julia
-    )
     app['julia']="${dict['prefix']}/bin/julia"
-    koopa_assert_is_executable "${app['julia']}"
+    read -r -d '' "dict[julia_wrapper]" << END || true
+#!/bin/sh
+set -eu
+
+${dict['juliaup_prefix']}/bin/julia "\$@"
+END
+    koopa_write_string \
+        --file="${app['julia']}" \
+        --string="${dict['julia_wrapper']}"
+    koopa_chmod +x "${app['julia']}"
     "${app['julia']}" --version
     return 0
 }
