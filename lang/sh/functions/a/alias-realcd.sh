@@ -1,9 +1,9 @@
 #!/bin/sh
 
-_koopa_alias_rcd() {
+_koopa_alias_realcd() {
     # """
     # Change directory and automatically resolve realpath.
-    # @note Updated 2025-04-25.
+    # @note Updated 2025-04-27.
     #
     # Defaults to resolving current working directory.
     # """
