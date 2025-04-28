@@ -1,9 +1,53 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_juliaup() {
     # """
-    # Install Julia (from source).
-    # @note Updated 2023-06-01.
+    # Install Julia using juliaup (recommended default).
+    # @note Updatee 2025-04-28.
+    #
+    # @seealso
+    # - https://github.com/JuliaLang/juliaup
+    # - https://github.com/JuliaLang/julia
+    # - https://discourse.julialang.org/t/
+    #     custom-location-for-julia-using-juliaup/114724
+    # """
+    local -A app dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['juliaup_prefix']="${dict['prefix']}/libexec/juliaup"
+    export JULIAUP_DEPOT_PATH="${dict['juliaup_prefix']}"
+    export JULIA_DEPOT_PATH="${dict['juliaup_prefix']}"
+    koopa_download \
+        'https://install.julialang.org' \
+        'juliaup.sh'
+    koopa_chmod +x 'juliaup.sh'
+    ./juliaup.sh \
+        --add-to-path no \
+        --background-selfupdate 0 \
+        --default-channel "${dict['version']}" \
+        --path "${dict['juliaup_prefix']}" \
+        --startup-selfupdate 0 \
+        --yes
+    koopa_assert_is_executable \
+        "${dict['juliaup_prefix']}/bin/julia" \
+        "${dict['juliaup_prefix']}/bin/juliaup"
+    koopa_mkdir "${dict['prefix']}/bin"
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln ../libexec/juliaup/bin/julia julia
+    )
+    app['julia']="${dict['prefix']}/bin/julia"
+    koopa_assert_is_executable "${app['julia']}"
+    "${app['julia']}" --version
+    return 0
+}
+
+install_from_source_with_binary_builder() {
+    # """
+    # Install Julia from source with binary builder.
+    # @note Updated 2025-04-28.
+    #
+    # Currently buggy on Apple Silicon, so not using by default.
     #
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
@@ -49,5 +93,10 @@ END
     app['julia']="${dict['prefix']}/bin/julia"
     koopa_assert_is_executable "${app['julia']}"
     "${app['julia']}" --version
+    return 0
+}
+
+main() {
+    install_from_juliaup "$@"
     return 0
 }

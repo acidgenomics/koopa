@@ -3083,8 +3083,7 @@
       "homebrew-cask": true
     },
     "bin": ["julia"],
-    "build_dependencies": ["bzip2", "cmake", "make", "tar", "xz"],
-    "date": "2025-04-15",
+    "date": "2025-04-28",
     "default": false,
     "prune": true,
     "url": [
