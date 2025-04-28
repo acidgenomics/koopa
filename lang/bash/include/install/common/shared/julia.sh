@@ -14,9 +14,9 @@ install_from_juliaup() {
     local -A app dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['juliaup_prefix']="${dict['prefix']}/libexec/juliaup"
-    export JULIAUP_DEPOT_PATH="${dict['juliaup_prefix']}"
-    export JULIA_DEPOT_PATH="${dict['juliaup_prefix']}"
+    dict['libexec_prefix']="${dict['prefix']}/libexec"
+    export JULIAUP_DEPOT_PATH="${dict['libexec_prefix']}"
+    export JULIA_DEPOT_PATH="${dict['libexec_prefix']}"
     koopa_download \
         'https://install.julialang.org' \
         'juliaup.sh'
@@ -25,18 +25,18 @@ install_from_juliaup() {
         --add-to-path no \
         --background-selfupdate 0 \
         --default-channel "${dict['version']}" \
-        --path "${dict['juliaup_prefix']}" \
+        --path "${dict['libexec_prefix']}" \
         --startup-selfupdate 0 \
         --yes
     koopa_assert_is_executable \
-        "${dict['juliaup_prefix']}/bin/julia" \
-        "${dict['juliaup_prefix']}/bin/juliaup"
+        "${dict['libexec_prefix']}/bin/julia" \
+        "${dict['libexec_prefix']}/bin/juliaup"
     app['julia']="${dict['prefix']}/bin/julia"
     read -r -d '' "dict[julia_wrapper]" << END || true
 #!/bin/sh
 set -eu
 
-${dict['juliaup_prefix']}/bin/julia "\$@"
+${dict['libexec_prefix']}/bin/julia "\$@"
 END
     koopa_write_string \
         --file="${app['julia']}" \
