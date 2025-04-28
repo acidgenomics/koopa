@@ -1,9 +1,57 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_juliaup() {
     # """
-    # Install Julia (from source).
-    # @note Updated 2023-06-01.
+    # Install Julia using juliaup (recommended default).
+    # @note Updatee 2025-04-28.
+    #
+    # @seealso
+    # - https://github.com/JuliaLang/juliaup
+    # - https://github.com/JuliaLang/julia
+    # - https://discourse.julialang.org/t/
+    #     custom-location-for-julia-using-juliaup/114724
+    # """
+    local -A app dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['libexec_prefix']="${dict['prefix']}/libexec"
+    export JULIAUP_DEPOT_PATH="${dict['libexec_prefix']}"
+    export JULIA_DEPOT_PATH="${dict['libexec_prefix']}"
+    koopa_download \
+        'https://install.julialang.org' \
+        'juliaup.sh'
+    koopa_chmod +x 'juliaup.sh'
+    ./juliaup.sh \
+        --add-to-path no \
+        --background-selfupdate 0 \
+        --default-channel "${dict['version']}" \
+        --path "${dict['libexec_prefix']}" \
+        --startup-selfupdate 0 \
+        --yes
+    koopa_assert_is_executable \
+        "${dict['libexec_prefix']}/bin/julia" \
+        "${dict['libexec_prefix']}/bin/juliaup"
+    app['julia']="${dict['prefix']}/bin/julia"
+    read -r -d '' "dict[julia_wrapper]" << END || true
+#!/bin/sh
+set -eu
+
+${dict['libexec_prefix']}/bin/julia "\$@"
+END
+    koopa_write_string \
+        --file="${app['julia']}" \
+        --string="${dict['julia_wrapper']}"
+    koopa_chmod +x "${app['julia']}"
+    "${app['julia']}" --version
+    return 0
+}
+
+install_from_source_with_binary_builder() {
+    # """
+    # Install Julia from source with binary builder.
+    # @note Updated 2025-04-28.
+    #
+    # Currently buggy on Apple Silicon, so not using by default.
     #
     # @seealso
     # - https://github.com/JuliaLang/julia/blob/master/doc/build/build.md
@@ -46,6 +94,13 @@ END
     koopa_print "${dict['make_user_string']}"
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install
-    # FIXME Ensure that Julia installed correctly here.
+    app['julia']="${dict['prefix']}/bin/julia"
+    koopa_assert_is_executable "${app['julia']}"
+    "${app['julia']}" --version
+    return 0
+}
+
+main() {
+    install_from_juliaup "$@"
     return 0
 }

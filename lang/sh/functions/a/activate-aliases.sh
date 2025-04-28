@@ -3,7 +3,7 @@
 _koopa_activate_aliases() {
     # """
     # Activate (non-shell-specific) aliases.
-    # @note Updated 2025-04-17.
+    # @note Updated 2025-04-27.
     # """
     _koopa_is_interactive || return 0
     _koopa_activate_coreutils_aliases
@@ -32,6 +32,7 @@ _koopa_activate_aliases() {
     alias ll='l -l'
     alias lt='l | tail'
     alias q='exit'
+    alias realcd='_koopa_alias_realcd'
     alias today='_koopa_alias_today'
     alias u='clear; cd ../; pwd; l'
     alias variable-bodies='typeset -p'
