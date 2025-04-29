@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# FIXME Consider installing this per user instead of for all users.
+
 main() {
     # """
     # Install pyenv.
