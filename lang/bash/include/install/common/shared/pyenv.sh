@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pyenv.
-    # @note Updated 2023-10-23.
+    # @note Updated 2025-04-29.
     # """
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -14,5 +14,11 @@ v${dict['version']}.tar.gz"
     koopa_extract \
         "$(koopa_basename "${dict['url']}")" \
         "${dict['prefix']}"
+    koopa_mkdir \
+        "${dict['prefix']}/shims" \
+        "${dict['prefix']}/versions"
+    koopa_chmod 0777 \
+        "${dict['prefix']}/shims" \
+        "${dict['prefix']}/versions"
     return 0
 }
