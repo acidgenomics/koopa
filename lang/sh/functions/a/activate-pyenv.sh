@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# FIXME Consider setting PYENV_ROOT shims and versions folders outside of
+# koopa opt, so we can manage multiple users more efficiently? Can we set
+# this to user home instead?
+
 _koopa_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
