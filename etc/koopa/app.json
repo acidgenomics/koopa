@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-04-21",
+    "date": "2025-05-01",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.26.5"
+    "version": "2.27.4"
   },
   "axel": {
     "aliases": {
@@ -1485,12 +1485,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-04-24",
+    "date": "2025-05-01",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "ad14b2e838ae2e95b5cec90633fc89557fd16a0c"
+    "version": "468f4b4e1d97fe884e3f0ab6874f9487b56229d1"
   },
   "du-dust": {
     "aliases": {
@@ -2143,11 +2143,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-04-28",
+    "date": "2025-05-01",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.71.2"
+    "version": "2.72.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2343,11 +2343,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-02-14",
+    "date": "2025-05-01",
     "default": false,
     "prune": true,
     "url": ["https://github.com/google/googletest/"],
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   "gperf": {
     "aliases": {
@@ -3291,14 +3291,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2023-08-17",
+    "date": "2025-05-01",
     "default": false,
     "prune": false,
     "url": [
       "https://hyperrealm.github.io/libconfig/",
       "https://github.com/hyperrealm/libconfig/"
     ],
-    "version": "1.7.3"
+    "version": "1.8"
   },
   "libde265": {
     "build_dependencies": ["make"],
@@ -3820,7 +3820,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-03-08",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "outdated": true,
@@ -3832,7 +3832,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.59"
+    "version": "8.7.60"
   },
   "lsd": {
     "aliases": {
@@ -4042,12 +4042,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-04-11",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.7.2"
+    "version": "1.8.0"
   },
   "miller": {
     "aliases": {
@@ -4477,12 +4477,12 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2025-03-21",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.103.0"
+    "version": "0.104.0"
   },
   "oniguruma": {
     "aliases": {
@@ -5930,7 +5930,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-27",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5939,7 +5939,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.2"
+    "version": "9.3.3"
   },
   "sox": {
     "aliases": {
@@ -6490,12 +6490,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-04-28",
+    "date": "2025-05-01",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.6.17"
+    "version": "0.7.2"
   },
   "vim": {
     "aliases": {
@@ -7027,7 +7027,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-04-11",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -7035,7 +7035,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.3.31"
+    "version": "2025.4.30"
   },
   "zellij": {
     "aliases": {
