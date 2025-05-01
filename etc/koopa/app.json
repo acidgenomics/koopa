@@ -4248,7 +4248,7 @@
       "homebrew": "sratoolkit"
     },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
-    "date": "2024-07-06",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4258,8 +4258,11 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.1.1"
+    "url": [
+      "https://bioconda.github.io/recipes/sra-tools/README.html",
+      "https://github.com/ncbi/sra-tools/"
+    ],
+    "version": "3.2.1"
   },
   "ncbi-vdb": {
     "date": "2024-05-31",
