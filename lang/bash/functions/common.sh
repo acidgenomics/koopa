@@ -16549,6 +16549,13 @@ koopa_install_xorg_xtrans() {
         "$@"
 }
 
+koopa_install_xsra() {
+    koopa_install_app \
+        --installer='rust-package' \
+        --name='xsra' \
+        "$@"
+}
+
 koopa_install_xsv() {
     koopa_install_app \
         --installer='conda-package' \
@@ -31619,6 +31626,12 @@ koopa_uninstall_xorg_xorgproto() {
 koopa_uninstall_xorg_xtrans() {
     koopa_uninstall_app \
         --name='xorg-xtrans' \
+        "$@"
+}
+
+koopa_uninstall_xsra() {
+    koopa_uninstall_app \
+        --name='xsra' \
         "$@"
 }
 
