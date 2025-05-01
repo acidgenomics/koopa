@@ -6898,6 +6898,18 @@
     ],
     "version": "1.5.2"
   },
+  "xsra": {
+    "bin": ["xsra"],
+    "build_dependencies": ["rust"],
+    "date": "2025-05-01",
+    "default": false,
+    "prune": true,
+    "url": [
+      "https://github.com/arcInstitute/xsra",
+      "https://crates.io/crates/xsra"
+    ],
+    "version": "0.2.16"
+  },
   "xsv": {
     "aliases": {
       "homebrew": true
