@@ -13469,6 +13469,13 @@ koopa_install_ghostscript() {
         "$@"
 }
 
+koopa_install_git_filter_repo() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='git-filter-repo' \
+        "$@"
+}
+
 koopa_install_git_lfs() {
     koopa_install_app \
         --name='git-lfs' \
@@ -29790,6 +29797,12 @@ koopa_uninstall_gh() {
 koopa_uninstall_ghostscript() {
     koopa_uninstall_app \
         --name='ghostscript' \
+        "$@"
+}
+
+koopa_uninstall_git_filter_repo() {
+    koopa_uninstall_app \
+        --name='git-filter-repo' \
         "$@"
 }
 

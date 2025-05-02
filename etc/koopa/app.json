@@ -2198,6 +2198,18 @@
     "url": ["https://git-scm.com/"],
     "version": "2.49.0"
   },
+  "git-filter-repo": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["git-filter-repo"],
+    "date": "2025-05-02",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/git-filter-repo/"],
+    "version": "2.47.0"
+  },
   "git-lfs": {
     "aliases": {
       "homebrew": true
