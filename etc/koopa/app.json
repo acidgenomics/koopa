@@ -550,12 +550,12 @@
       "homebrew": true
     },
     "bin": ["bfg"],
-    "date": "2022-09-22",
+    "date": "2025-05-02",
     "default": false,
     "dependencies": ["temurin"],
     "prune": true,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "binutils": {
     "aliases": {
