@@ -2168,9 +2168,17 @@
       "fedora": true,
       "homebrew": true
     },
-    "bin": ["git"],
+    "bin": [
+      "git",
+      "git-cvsserver",
+      "git-receive-pack",
+      "git-shell",
+      "git-subtree",
+      "git-upload-archive",
+      "git-upload-pack"
+    ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2025-02-13",
+    "date": "2025-05-02",
     "default": true,
     "dependencies": [
       "bash",
@@ -2188,7 +2196,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.48.1"
+    "version": "2.49.0"
   },
   "git-lfs": {
     "aliases": {
