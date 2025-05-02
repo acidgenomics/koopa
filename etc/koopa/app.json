@@ -6255,13 +6255,13 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2025-01-24",
+    "date": "2025-05-02",
     "default": false,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21.0.6+7"
+    "version": "21.0.7+6"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
