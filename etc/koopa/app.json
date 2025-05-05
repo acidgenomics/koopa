@@ -5028,7 +5028,7 @@
     },
     "bin": ["pyenv"],
     "date": "2025-04-11",
-    "default": true,
+    "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
