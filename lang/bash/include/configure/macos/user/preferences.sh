@@ -35,6 +35,7 @@ main() {
     #       main/macos-config.sh
     # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
     # - https://people.cs.rutgers.edu/~pxk/cs/macos-setup.html
+    # - https://github.com/jeffpaul/homebrew-brewfile
     # """
     local -A app dict
     local -a app_names
