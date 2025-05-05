@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2025-04-21.
+# @note Updated 2025-05-05.
 # """
 
 # Can debug with:
@@ -100,7 +100,7 @@ install_bash() {
 }
 
 install_coreutils() {
-    __kvar_version='9.6'
+    __kvar_version='9.7'
     printf 'Installing coreutils.\n'
     mkdir -p "${PREFIX}/src/coreutils"
     cd "${PREFIX}/src/coreutils" || return 1
