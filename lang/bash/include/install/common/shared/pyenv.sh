@@ -54,7 +54,7 @@ refs/tags/v${dict['virtualenv_version']}.tar.gz"
     koopa_alert 'Configuring pyenv-multiuser plugin.'
     export PYENV_ROOT="${dict['prefix']}"
     "${app['pyenv']}" multiuser setup
-    koopa_rm --verbose "${dict['prefix']}/plugins/pyenv-multiuser/backup"
+    koopa_rm --verbose "${dict['prefix']}/plugins/pyenv-multiuser/backup/"*
     "${app['pyenv']}" multiuser status
     return 0
 
