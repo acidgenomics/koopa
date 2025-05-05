@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-05-02.
+    # @note Updated 2025-05-05.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -115,6 +115,7 @@ _koopa_complete() {
                         'aws-cli'
                         'azure-cli'
                         'bamtools'
+                        'bandit'
                         'bandwhich'
                         'bash'
                         'bash-completion'

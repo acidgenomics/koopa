@@ -397,6 +397,18 @@
     ],
     "version": "2.5.2"
   },
+  "bandit": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["bandit"],
+    "date": "2025-05-05",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://bandit.readthedocs.io/en/latest/", "https://github.com/PyCQA/bandit/"],
+    "version": "1.8.3"
+  },
   "bandwhich": {
     "aliases": {
       "homebrew": true
