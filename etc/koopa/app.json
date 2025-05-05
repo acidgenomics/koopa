@@ -4001,7 +4001,7 @@
   },
   "mamba": {
     "bin": ["mamba"],
-    "date": "2025-04-11",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["conda"],
     "prune": false,
@@ -4009,7 +4009,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.1.0"
+    "version": "2.1.1"
   },
   "man-db": {
     "aliases": {
