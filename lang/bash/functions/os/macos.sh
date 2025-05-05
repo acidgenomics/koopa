@@ -78,6 +78,20 @@ koopa_macos_brew_cask_quarantine_fix() {
     return 0
 }
 
+koopa_macos_brew_cask_quarantine_support() {
+    local -A app dict
+    app['brew']="$(koopa_locate_brew)"
+    app['swift']="$(koopa_locate_swift)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['repo']="$("${app['brew']}" --repo)"
+    koopa_assert_is_dir "${dict['repo']}"
+    dict['file']="${dict['repo']}/Library/Homebrew/cask/utils/quarantine.swift"
+    koopa_assert_is_file "${dict['file']}"
+    koopa_alert "Running swift script at '${dict['file']}'."
+    "${app['swift']}" "${dict['file']}"
+    return 0
+}
+
 koopa_macos_brew_upgrade_casks() {
     local -A app
     local -a casks

@@ -20151,6 +20151,12 @@ koopa_locate_svn() {
         "$@"
 }
 
+koopa_locate_swift() {
+    koopa_locate_app \
+        '/usr/bin/swift' \
+        "$@"
+}
+
 koopa_locate_swig() {
     koopa_locate_app \
         --app-name='swig' \
