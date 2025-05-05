@@ -279,6 +279,10 @@ koopa_activate_pkg_config() {
     return 0
 }
 
+koopa_activate_pyenv() {
+    _koopa_activate_pyenv "$@"
+}
+
 koopa_add_conda_env_to_path() {
     local name
     koopa_assert_has_args "$#"
