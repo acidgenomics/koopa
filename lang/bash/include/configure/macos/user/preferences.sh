@@ -6,7 +6,7 @@
 main() {
     # """
     # Configure macOS user defaults.
-    # @note Updated 2024-12-18.
+    # @note Updated 2025-05-05.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -1318,6 +1318,12 @@ WebKit2AllowsInlineMediaPlayback" \
     "${app['defaults']}" -currentHost write \
         'com.apple.ImageCapture' \
         'disableHotPlug' \
+        -bool true
+    koopa_h2 'Preview'
+    # Hide the sidebar in Preview when opening a file.
+    "${app['defaults']}" write \
+        'com.apple.Preview' \
+        'PVPDFSuppressSidebarOnOpening' \
         -bool true
     koopa_h2 'TextEdit'
     # Use plain text mode for new TextEdit documents.
