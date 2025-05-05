@@ -1193,7 +1193,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2025-04-21",
+    "date": "2025-05-05",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1307,7 +1307,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.6"
+    "version": "9.7"
   },
   "cpufetch": {
     "aliases": {
@@ -1986,7 +1986,7 @@
     },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
@@ -1997,7 +1997,7 @@
       "macos-arm64": false
     },
     "url": ["https://gcc.gnu.org/"],
-    "version": "14.2.0"
+    "version": "15.1.0"
   },
   "gdal": {
     "aliases": {
