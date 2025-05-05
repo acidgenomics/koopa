@@ -12750,6 +12750,13 @@ koopa_install_bamtools() {
         "$@"
 }
 
+koopa_install_bandit() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='bandit' \
+        "$@"
+}
+
 koopa_install_bandwhich() {
     koopa_install_app \
         --installer='rust-package' \
@@ -29261,6 +29268,12 @@ koopa_uninstall_azure_cli() {
 koopa_uninstall_bamtools() {
     koopa_uninstall_app \
         --name='bamtools' \
+        "$@"
+}
+
+koopa_uninstall_bandit() {
+    koopa_uninstall_app \
+        --name='bandit' \
         "$@"
 }
 
