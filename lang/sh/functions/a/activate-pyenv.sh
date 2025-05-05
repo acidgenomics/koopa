@@ -1,13 +1,14 @@
 #!/bin/sh
 
-# FIXME Consider setting PYENV_ROOT shims and versions folders outside of
-# koopa opt, so we can manage multiple users more efficiently? Can we set
-# this to user home instead?
-
 _koopa_activate_pyenv() {
     # """
     # Activate Python version manager (pyenv).
-    # @note Updated 2023-06-29.
+    # @note Updated 2025-05-05.
+    #
+    # Supporting multi-user config here.
+    #
+    # @seealso
+    # - https://github.com/macdub/pyenv-multiuser
     # """
     [ -n "${PYENV_ROOT:-}" ] && return 0
     __kvar_prefix="$(_koopa_pyenv_prefix)"
@@ -26,9 +27,16 @@ _koopa_activate_pyenv() {
     fi
     _koopa_is_alias 'pyenv' && unalias 'pyenv'
     export PYENV_ROOT="$__kvar_prefix"
+    export PYENV_LOCAL_SHIM="${HOME:?}/.pyenv_local_shim"
+    if [ ! -d "$PYENV_LOCAL_SHIM" ]
+    then
+        mkdir -p "$PYENV_LOCAL_SHIM"
+    fi
+    _koopa_add_to_path_start "$PYENV_LOCAL_SHIM"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$("$__kvar_pyenv" init -)"
+    # > eval "$("$__kvar_pyenv" init -)"
+    eval "$("$__kvar_pyenv" virtualenv-init -)"
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_nounset \

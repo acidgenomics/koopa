@@ -5027,6 +5027,7 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
+    "build_dependencies": ["sed"],
     "date": "2025-05-05",
     "default": true,
     "man1": ["pyenv.1"],

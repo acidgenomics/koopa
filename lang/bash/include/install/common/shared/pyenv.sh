@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Consider installing this per user instead of for all users.
-
-# FIXME Use pyenv-multiuser for this:
-# https://github.com/macdub/pyenv-multiuser
-# PYENV_LOCAL_SHIM needs to be set during activation.
-# > pyenv multiuser setup
-# > pyenv multiuser init [PATH]
 
 main() {
     # """
@@ -15,9 +8,10 @@ main() {
     #
     # @seealso
     # - https://github.com/pyenv/pyenv
+    # - https://github.com/pyenv/pyenv-virtualenv
     # - https://github.com/macdub/pyenv-multiuser
     # """
-    local -A dict
+    local -A app dict
     local -a dirs
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -39,5 +33,29 @@ refs/tags/${dict['multiuser_version']}.tar.gz"
     koopa_extract \
         'multiuser-src.tar.gz' \
         "${dict['prefix']}/plugins/pyenv-multiuser"
+    # Install pyenv-virtualenv plugin.
+    dict['virtualenv_version']='1.2.4'
+    dict['virtualenv_url']="https://github.com/pyenv/pyenv-virtualenv/archive/\
+refs/tags/v${dict['virtualenv_version']}.tar.gz"
+    koopa_download "${dict['virtualenv_url']}" 'virtualenv-src.tar.gz'
+    koopa_extract \
+        'virtualenv-src.tar.gz' \
+        "${dict['prefix']}/plugins/pyenv-virtualenv"
+    app['pyenv']="${dict['prefix']}/bin/pyenv"
+    app['sed']="$(koopa_locate_sed)"
+    koopa_assert_is_executable "${app[@]}"
+    koopa_mkdir 'bin'
+    (
+        koopa_cd 'bin'
+        koopa_ln "${app['sed']}" 'sed'
+    )
+    koopa_add_to_path_start 'bin'
+    "${app['pyenv']}" --version
+    koopa_alert 'Configuring pyenv-multiuser plugin.'
+    export PYENV_ROOT="${dict['prefix']}"
+    "${app['pyenv']}" multiuser setup
+    koopa_rm --verbose "${dict['prefix']}/plugins/pyenv-multiuser/backup"
+    "${app['pyenv']}" multiuser status
     return 0
+
 }
