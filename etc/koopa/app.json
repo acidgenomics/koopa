@@ -6097,7 +6097,7 @@
   },
   "star-fusion": {
     "bin": ["STAR-Fusion"],
-    "date": "2024-12-30",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -6112,7 +6112,7 @@
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
     ],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "starship": {
     "aliases": {
