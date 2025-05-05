@@ -2,6 +2,12 @@
 
 # FIXME Consider installing this per user instead of for all users.
 
+# FIXME Use pyenv-multiuser for this:
+# https://github.com/macdub/pyenv-multiuser
+# PYENV_LOCAL_SHIM needs to be set during activation.
+# > pyenv multiuser setup
+# > pyenv multiuser init [PATH]
+
 main() {
     # """
     # Install pyenv.

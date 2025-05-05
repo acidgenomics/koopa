@@ -5027,8 +5027,8 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2025-04-11",
-    "default": false,
+    "date": "2025-05-05",
+    "default": true,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
