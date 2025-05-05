@@ -34,6 +34,7 @@ main() {
     # - https://github.com/tech-otaku/macos-config-big-sur/blob/
     #       main/macos-config.sh
     # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
+    # - https://people.cs.rutgers.edu/~pxk/cs/macos-setup.html
     # """
     local -A app dict
     local -a app_names
@@ -1003,11 +1004,11 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.commerce' \
         'AutoUpdateRestartRequired' \
         -bool true
-    # Check for software updates weekly.
+    # Check for software updates daily.
     "${app['defaults']}" write \
         'com.apple.SoftwareUpdate' \
         'ScheduleFrequency' \
-        -int 7
+        -int 1
     koopa_h2 'Activity Monitor'
     # Show the main window when launching Activity Monitor.
     "${app['defaults']}" write \
