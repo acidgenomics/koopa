@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2025-01-30.
+    # @note Updated 2025-05-06.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -85,6 +85,7 @@ __koopa_activate_koopa() {
     _koopa_activate_gcc_colors || return 1
     _koopa_activate_kitty || return 1
     _koopa_activate_lesspipe || return 1
+    _koopa_activate_pyright || return 1
     _koopa_activate_ripgrep || return 1
     # This is problematic for keys with a passkey, so disabling at the moment.
     # > _koopa_activate_ssh_key || return 1
