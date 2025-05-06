@@ -5288,11 +5288,11 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2025-04-11",
+    "date": "2025-05-06",
     "default": true,
     "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.7.23"
+    "version": "1.7.30"
   },
   "r": {
     "aliases": {
