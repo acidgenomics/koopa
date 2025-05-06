@@ -403,10 +403,13 @@
     },
     "bin": ["bandit"],
     "date": "2025-05-05",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://bandit.readthedocs.io/en/latest/", "https://github.com/PyCQA/bandit/"],
+    "url": [
+      "https://bandit.readthedocs.io/en/latest/",
+      "https://github.com/PyCQA/bandit/"
+    ],
     "version": "1.8.3"
   },
   "bandwhich": {
@@ -2867,7 +2870,11 @@
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://pypi.org/project/httpx/", "https://www.python-httpx.org", "https://github.com/encode/httpx"],
+    "url": [
+      "https://pypi.org/project/httpx/",
+      "https://www.python-httpx.org",
+      "https://github.com/encode/httpx"
+    ],
     "version": "0.28.1"
   },
   "huggingface-hub": {
@@ -5116,7 +5123,10 @@
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
-    "url": ["https://pypi.org/project/pyrefly/", "https://github.com/facebook/pyrefly/"],
+    "url": [
+      "https://pypi.org/project/pyrefly/",
+      "https://github.com/facebook/pyrefly/"
+    ],
     "version": "0.14.0"
   },
   "pyright": {
