@@ -15359,6 +15359,13 @@ koopa_install_pymol() {
         "$@"
 }
 
+koopa_install_pyrefly() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='pyrefly' \
+        "$@"
+}
+
 koopa_install_pyright() {
     koopa_install_app \
         --installer='python-package' \
@@ -30982,6 +30989,12 @@ koopa_uninstall_pylint() {
 koopa_uninstall_pymol() {
     koopa_uninstall_app \
         --name='pymol' \
+        "$@"
+}
+
+koopa_uninstall_pyrefly() {
+    koopa_uninstall_app \
+        --name='pyrefly' \
         "$@"
 }
 

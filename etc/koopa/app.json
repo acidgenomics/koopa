@@ -2864,7 +2864,7 @@
     },
     "bin": ["httpx"],
     "date": "2025-05-06",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/httpx/", "https://www.python-httpx.org", "https://github.com/encode/httpx"],
@@ -5109,6 +5109,15 @@
     },
     "url": ["https://pymol.org/conda/"],
     "version": "2.5.7"
+  },
+  "pyrefly": {
+    "bin": ["pyrefly"],
+    "date": "2025-05-06",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/pyrefly/", "https://github.com/facebook/pyrefly/"],
+    "version": "0.14.0"
   },
   "pyright": {
     "bin": [
