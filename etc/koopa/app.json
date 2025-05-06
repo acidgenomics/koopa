@@ -4935,7 +4935,7 @@
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
-    "date": "2025-01-15",
+    "date": "2025-05-06",
     "default": false,
     "dependencies": [
       "icu4c",
@@ -4951,7 +4951,7 @@
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "17.2"
+    "version": "17.4"
   },
   "prelude-emacs": {
     "date": "2024-12-30",
