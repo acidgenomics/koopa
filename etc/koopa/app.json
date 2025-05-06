@@ -2858,6 +2858,18 @@
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.4"
   },
+  "httpx": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["httpx"],
+    "date": "2025-05-06",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/httpx/", "https://www.python-httpx.org", "https://github.com/encode/httpx"],
+    "version": "0.28.1"
+  },
   "huggingface-hub": {
     "bin": ["huggingface-cli"],
     "date": "2025-04-21",

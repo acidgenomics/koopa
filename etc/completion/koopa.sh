@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-05-05.
+    # @note Updated 2025-05-06.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -237,6 +237,7 @@ _koopa_complete() {
                         'htseq'
                         'htslib'
                         'httpie'
+                        'httpx'
                         'huggingface-hub'
                         'hugo'
                         'hyperfine'
