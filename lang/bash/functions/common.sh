@@ -13984,6 +13984,14 @@ koopa_install_httpie() {
         "$@"
 }
 
+koopa_install_httpx() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='httpx' \
+        -D --pip-name='httpx[cli]' \
+        "$@"
+}
+
 koopa_install_huggingface_hub() {
     koopa_install_app \
         --installer='python-package' \
@@ -30024,6 +30032,12 @@ koopa_uninstall_htslib() {
 koopa_uninstall_httpie() {
     koopa_uninstall_app \
         --name='httpie' \
+        "$@"
+}
+
+koopa_uninstall_httpx() {
+    koopa_uninstall_app \
+        --name='httpx' \
         "$@"
 }
 
