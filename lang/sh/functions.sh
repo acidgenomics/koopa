@@ -836,14 +836,26 @@ _koopa_activate_pyenv() {
     fi
     _koopa_is_alias 'pyenv' && unalias 'pyenv'
     export PYENV_ROOT="$__kvar_prefix"
+    export PYENV_LOCAL_SHIM="${HOME:?}/.pyenv_local_shim"
+    if [ ! -d "$PYENV_LOCAL_SHIM" ]
+    then
+        mkdir -p "$PYENV_LOCAL_SHIM"
+    fi
+    _koopa_add_to_path_start "$PYENV_LOCAL_SHIM"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$("$__kvar_pyenv" init -)"
+    eval "$("$__kvar_pyenv" virtualenv-init -)"
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
     unset -v \
         __kvar_nounset \
         __kvar_prefix \
         __kvar_pyenv
+    return 0
+}
+
+_koopa_activate_pyright() {
+    [ -x "$(_koopa_bin_prefix)/pyright" ] || return 0
+    export PYRIGHT_PYTHON_FORCE_VERSION='latest'
     return 0
 }
 
