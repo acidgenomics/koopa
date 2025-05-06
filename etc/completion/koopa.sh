@@ -387,6 +387,7 @@ _koopa_complete() {
                         'pygments'
                         'pylint'
                         'pymol'
+                        'pyrefly'
                         'pyright'
                         'pytaglib'
                         'pytest'
