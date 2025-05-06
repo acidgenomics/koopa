@@ -5126,7 +5126,7 @@
       "pyright-python",
       "pyright-python-langserver"
     ],
-    "date": "2025-04-24",
+    "date": "2025-05-06",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5134,7 +5134,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.399"
+    "version": "1.1.400"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
