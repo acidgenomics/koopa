@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-04-21",
+    "date": "2025-05-01",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.26.5"
+    "version": "2.27.4"
   },
   "axel": {
     "aliases": {
@@ -396,6 +396,21 @@
       "https://github.com/pezmaster31/bamtools"
     ],
     "version": "2.5.2"
+  },
+  "bandit": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["bandit"],
+    "date": "2025-05-05",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": [
+      "https://bandit.readthedocs.io/en/latest/",
+      "https://github.com/PyCQA/bandit/"
+    ],
+    "version": "1.8.3"
   },
   "bandwhich": {
     "aliases": {
@@ -550,12 +565,12 @@
       "homebrew": true
     },
     "bin": ["bfg"],
-    "date": "2022-09-22",
+    "date": "2025-05-02",
     "default": false,
     "dependencies": ["temurin"],
     "prune": true,
     "url": ["https://rtyley.github.io/bfg-repo-cleaner/"],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "binutils": {
     "aliases": {
@@ -1193,7 +1208,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2025-04-21",
+    "date": "2025-05-05",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1307,7 +1322,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.6"
+    "version": "9.7"
   },
   "cpufetch": {
     "aliases": {
@@ -1485,12 +1500,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-04-24",
+    "date": "2025-05-02",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "ad14b2e838ae2e95b5cec90633fc89557fd16a0c"
+    "version": "0fb8dbd0d4122f873bc7317fd3b5bf2c4b9b10ad"
   },
   "du-dust": {
     "aliases": {
@@ -1674,7 +1689,7 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "date": "2025-04-28",
+    "date": "2025-05-05",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -1682,7 +1697,7 @@
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.21.2"
+    "version": "0.21.3"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -1853,11 +1868,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-03-08",
+    "date": "2025-05-05",
     "default": false,
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "11.1.4"
+    "version": "11.2.0"
   },
   "fontconfig": {
     "aliases": {
@@ -1939,11 +1954,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2025-04-24",
+    "date": "2025-05-05",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.61.3"
+    "version": "0.62.0"
   },
   "gatk": {
     "aliases": {
@@ -1986,7 +2001,7 @@
     },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["gmp", "mpc", "mpfr"],
     "prune": false,
@@ -1997,7 +2012,7 @@
       "macos-arm64": false
     },
     "url": ["https://gcc.gnu.org/"],
-    "version": "14.2.0"
+    "version": "15.1.0"
   },
   "gdal": {
     "aliases": {
@@ -2143,11 +2158,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-04-28",
+    "date": "2025-05-01",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.71.2"
+    "version": "2.72.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2168,9 +2183,17 @@
       "fedora": true,
       "homebrew": true
     },
-    "bin": ["git"],
+    "bin": [
+      "git",
+      "git-cvsserver",
+      "git-receive-pack",
+      "git-shell",
+      "git-subtree",
+      "git-upload-archive",
+      "git-upload-pack"
+    ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2025-02-13",
+    "date": "2025-05-02",
     "default": true,
     "dependencies": [
       "bash",
@@ -2188,7 +2211,19 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.48.1"
+    "version": "2.49.0"
+  },
+  "git-filter-repo": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["git-filter-repo"],
+    "date": "2025-05-02",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/git-filter-repo/"],
+    "version": "2.47.0"
   },
   "git-lfs": {
     "aliases": {
@@ -2343,11 +2378,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-02-14",
+    "date": "2025-05-01",
     "default": false,
     "prune": true,
     "url": ["https://github.com/google/googletest/"],
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   "gperf": {
     "aliases": {
@@ -2826,6 +2861,22 @@
     "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
     "version": "3.2.4"
   },
+  "httpx": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["httpx"],
+    "date": "2025-05-06",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": [
+      "https://pypi.org/project/httpx/",
+      "https://www.python-httpx.org",
+      "https://github.com/encode/httpx"
+    ],
+    "version": "0.28.1"
+  },
   "huggingface-hub": {
     "bin": ["huggingface-cli"],
     "date": "2025-04-21",
@@ -3291,22 +3342,22 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2023-08-17",
+    "date": "2025-05-01",
     "default": false,
     "prune": false,
     "url": [
       "https://hyperrealm.github.io/libconfig/",
       "https://github.com/hyperrealm/libconfig/"
     ],
-    "version": "1.7.3"
+    "version": "1.8"
   },
   "libde265": {
     "build_dependencies": ["make"],
-    "date": "2023-12-20",
+    "date": "2025-05-05",
     "default": false,
     "prune": false,
     "url": ["https://github.com/strukturag/libde265/"],
-    "version": "1.0.15"
+    "version": "1.0.16"
   },
   "libdeflate": {
     "aliases": {
@@ -3820,7 +3871,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-03-08",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "outdated": true,
@@ -3832,7 +3883,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "8.7.59"
+    "version": "8.7.60"
   },
   "lsd": {
     "aliases": {
@@ -3969,7 +4020,7 @@
   },
   "mamba": {
     "bin": ["mamba"],
-    "date": "2025-04-11",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["conda"],
     "prune": false,
@@ -3977,7 +4028,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.1.0"
+    "version": "2.1.1"
   },
   "man-db": {
     "aliases": {
@@ -4042,12 +4093,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-04-11",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.7.2"
+    "version": "1.8.0"
   },
   "miller": {
     "aliases": {
@@ -4108,12 +4159,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2025-04-28",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.38.1"
+    "version": "2.39.0"
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
@@ -4248,7 +4299,7 @@
       "homebrew": "sratoolkit"
     },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
-    "date": "2024-07-06",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4258,8 +4309,11 @@
       "macos-amd64": true,
       "macos-arm64": false
     },
-    "url": ["https://github.com/ncbi/sra-tools/"],
-    "version": "3.1.1"
+    "url": [
+      "https://bioconda.github.io/recipes/sra-tools/README.html",
+      "https://github.com/ncbi/sra-tools/"
+    ],
+    "version": "3.2.1"
   },
   "ncbi-vdb": {
     "date": "2024-05-31",
@@ -4477,12 +4531,12 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2025-03-21",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.103.0"
+    "version": "0.104.0"
   },
   "oniguruma": {
     "aliases": {
@@ -4871,12 +4925,12 @@
       "homebrew": true
     },
     "bin": ["poetry"],
-    "date": "2025-04-11",
+    "date": "2025-05-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
-    "version": "2.1.2"
+    "version": "2.1.3"
   },
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
@@ -5004,8 +5058,9 @@
       "homebrew": true
     },
     "bin": ["pyenv"],
-    "date": "2025-04-11",
-    "default": true,
+    "build_dependencies": ["sed"],
+    "date": "2025-05-05",
+    "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
@@ -5040,12 +5095,12 @@
       "homebrew": true
     },
     "bin": ["pylint"],
-    "date": "2025-03-21",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
-    "version": "3.3.6"
+    "version": "3.3.7"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -5062,6 +5117,18 @@
     "url": ["https://pymol.org/conda/"],
     "version": "2.5.7"
   },
+  "pyrefly": {
+    "bin": ["pyrefly"],
+    "date": "2025-05-06",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": [
+      "https://pypi.org/project/pyrefly/",
+      "https://github.com/facebook/pyrefly/"
+    ],
+    "version": "0.14.0"
+  },
   "pyright": {
     "bin": [
       "pyright",
@@ -5069,7 +5136,7 @@
       "pyright-python",
       "pyright-python-langserver"
     ],
-    "date": "2025-04-24",
+    "date": "2025-05-06",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5077,7 +5144,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.399"
+    "version": "1.1.400"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5221,11 +5288,11 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2025-04-11",
+    "date": "2025-05-06",
     "default": true,
     "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.7.23"
+    "version": "1.7.30"
   },
   "r": {
     "aliases": {
@@ -5453,13 +5520,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2025-02-14",
+    "date": "2025-05-05",
     "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.69.1"
+    "version": "1.69.2"
   },
   "readline": {
     "aliases": {
@@ -5647,12 +5714,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-04-24",
+    "date": "2025-05-05",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.7"
+    "version": "0.11.8"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5930,7 +5997,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-04-27",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5939,7 +6006,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.2"
+    "version": "9.3.3"
   },
   "sox": {
     "aliases": {
@@ -6061,7 +6128,7 @@
   },
   "star-fusion": {
     "bin": ["STAR-Fusion"],
-    "date": "2024-12-30",
+    "date": "2025-05-05",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -6076,7 +6143,7 @@
       "https://github.com/STAR-Fusion/STAR-Fusion/",
       "https://bioconda.github.io/recipes/star-fusion/README.html"
     ],
-    "version": "1.14.0"
+    "version": "1.15.0"
   },
   "starship": {
     "aliases": {
@@ -6252,13 +6319,13 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2025-01-24",
+    "date": "2025-05-02",
     "default": false,
     "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21.0.6+7"
+    "version": "21.0.7+6"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
@@ -6490,12 +6557,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-04-28",
+    "date": "2025-05-01",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.6.17"
+    "version": "0.7.2"
   },
   "vim": {
     "aliases": {
@@ -6898,6 +6965,18 @@
     ],
     "version": "1.5.2"
   },
+  "xsra": {
+    "bin": ["xsra"],
+    "build_dependencies": ["rust"],
+    "date": "2025-05-01",
+    "default": false,
+    "prune": true,
+    "url": [
+      "https://github.com/arcInstitute/xsra",
+      "https://crates.io/crates/xsra"
+    ],
+    "version": "0.2.16"
+  },
   "xsv": {
     "aliases": {
       "homebrew": true
@@ -7015,19 +7094,19 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2025-01-12",
+    "date": "2025-05-05",
     "default": true,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.45.1"
+    "version": "4.45.2"
   },
   "yt-dlp": {
     "aliases": {
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-04-11",
+    "date": "2025-05-01",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -7035,7 +7114,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.3.31"
+    "version": "2025.4.30"
   },
   "zellij": {
     "aliases": {

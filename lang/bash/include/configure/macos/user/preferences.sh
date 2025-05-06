@@ -6,7 +6,7 @@
 main() {
     # """
     # Configure macOS user defaults.
-    # @note Updated 2024-12-18.
+    # @note Updated 2025-05-05.
     #
     # How to read current value:
     # defaults read 'com.apple.AppleMultitouchTrackpad'
@@ -34,6 +34,8 @@ main() {
     # - https://github.com/tech-otaku/macos-config-big-sur/blob/
     #       main/macos-config.sh
     # - https://github.com/hkloudou/macstarter/blob/main/system/screenshot.sh
+    # - https://people.cs.rutgers.edu/~pxk/cs/macos-setup.html
+    # - https://github.com/jeffpaul/homebrew-brewfile
     # """
     local -A app dict
     local -a app_names
@@ -1003,11 +1005,11 @@ write defaults, ensure that your terminal app has full disk access enabled." \
         'com.apple.commerce' \
         'AutoUpdateRestartRequired' \
         -bool true
-    # Check for software updates weekly.
+    # Check for software updates daily.
     "${app['defaults']}" write \
         'com.apple.SoftwareUpdate' \
         'ScheduleFrequency' \
-        -int 7
+        -int 1
     koopa_h2 'Activity Monitor'
     # Show the main window when launching Activity Monitor.
     "${app['defaults']}" write \
@@ -1318,6 +1320,12 @@ WebKit2AllowsInlineMediaPlayback" \
     "${app['defaults']}" -currentHost write \
         'com.apple.ImageCapture' \
         'disableHotPlug' \
+        -bool true
+    koopa_h2 'Preview'
+    # Hide the sidebar in Preview when opening a file.
+    "${app['defaults']}" write \
+        'com.apple.Preview' \
+        'PVPDFSuppressSidebarOnOpening' \
         -bool true
     koopa_h2 'TextEdit'
     # Use plain text mode for new TextEdit documents.

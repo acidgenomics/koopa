@@ -279,6 +279,10 @@ koopa_activate_pkg_config() {
     return 0
 }
 
+koopa_activate_pyenv() {
+    _koopa_activate_pyenv "$@"
+}
+
 koopa_add_conda_env_to_path() {
     local name
     koopa_assert_has_args "$#"
@@ -12746,6 +12750,13 @@ koopa_install_bamtools() {
         "$@"
 }
 
+koopa_install_bandit() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='bandit' \
+        "$@"
+}
+
 koopa_install_bandwhich() {
     koopa_install_app \
         --installer='rust-package' \
@@ -13469,6 +13480,13 @@ koopa_install_ghostscript() {
         "$@"
 }
 
+koopa_install_git_filter_repo() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='git-filter-repo' \
+        "$@"
+}
+
 koopa_install_git_lfs() {
     koopa_install_app \
         --name='git-lfs' \
@@ -13963,6 +13981,14 @@ koopa_install_httpie() {
     koopa_install_app \
         --installer='python-package' \
         --name='httpie' \
+        "$@"
+}
+
+koopa_install_httpx() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='httpx' \
+        -D --pip-name='httpx[cli]' \
         "$@"
 }
 
@@ -15333,6 +15359,13 @@ koopa_install_pymol() {
         "$@"
 }
 
+koopa_install_pyrefly() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='pyrefly' \
+        "$@"
+}
+
 koopa_install_pyright() {
     koopa_install_app \
         --installer='python-package' \
@@ -16546,6 +16579,12 @@ koopa_install_xorg_xorgproto() {
 koopa_install_xorg_xtrans() {
     koopa_install_app \
         --name='xorg-xtrans' \
+        "$@"
+}
+
+koopa_install_xsra() {
+    koopa_install_app \
+        --name='xsra' \
         "$@"
 }
 
@@ -20124,6 +20163,12 @@ koopa_locate_svn() {
     koopa_locate_app \
         --app-name='subversion' \
         --bin-name='svn' \
+        "$@"
+}
+
+koopa_locate_swift() {
+    koopa_locate_app \
+        '/usr/bin/swift' \
         "$@"
 }
 
@@ -29247,6 +29292,12 @@ koopa_uninstall_bamtools() {
         "$@"
 }
 
+koopa_uninstall_bandit() {
+    koopa_uninstall_app \
+        --name='bandit' \
+        "$@"
+}
+
 koopa_uninstall_bandwhich() {
     koopa_uninstall_app \
         --name='bandwhich' \
@@ -29787,6 +29838,12 @@ koopa_uninstall_ghostscript() {
         "$@"
 }
 
+koopa_uninstall_git_filter_repo() {
+    koopa_uninstall_app \
+        --name='git-filter-repo' \
+        "$@"
+}
+
 koopa_uninstall_git_lfs() {
     koopa_uninstall_app \
         --name='git-lfs' \
@@ -29982,6 +30039,12 @@ koopa_uninstall_htslib() {
 koopa_uninstall_httpie() {
     koopa_uninstall_app \
         --name='httpie' \
+        "$@"
+}
+
+koopa_uninstall_httpx() {
+    koopa_uninstall_app \
+        --name='httpx' \
         "$@"
 }
 
@@ -30929,6 +30992,12 @@ koopa_uninstall_pymol() {
         "$@"
 }
 
+koopa_uninstall_pyrefly() {
+    koopa_uninstall_app \
+        --name='pyrefly' \
+        "$@"
+}
+
 koopa_uninstall_pyright() {
     koopa_uninstall_app \
         --name='pyright' \
@@ -31619,6 +31688,12 @@ koopa_uninstall_xorg_xorgproto() {
 koopa_uninstall_xorg_xtrans() {
     koopa_uninstall_app \
         --name='xorg-xtrans' \
+        "$@"
+}
+
+koopa_uninstall_xsra() {
+    koopa_uninstall_app \
+        --name='xsra' \
         "$@"
 }
 

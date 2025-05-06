@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-04-22.
+    # @note Updated 2025-05-06.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -115,6 +115,7 @@ _koopa_complete() {
                         'aws-cli'
                         'azure-cli'
                         'bamtools'
+                        'bandit'
                         'bandwhich'
                         'bash'
                         'bash-completion'
@@ -203,6 +204,7 @@ _koopa_complete() {
                         'gh'
                         'ghostscript'
                         'git'
+                        'git-filter-repo'
                         'git-lfs'
                         'gitui'
                         'glances'
@@ -235,6 +237,7 @@ _koopa_complete() {
                         'htseq'
                         'htslib'
                         'httpie'
+                        'httpx'
                         'huggingface-hub'
                         'hugo'
                         'hyperfine'
@@ -384,6 +387,7 @@ _koopa_complete() {
                         'pygments'
                         'pylint'
                         'pymol'
+                        'pyrefly'
                         'pyright'
                         'pytaglib'
                         'pytest'
@@ -488,6 +492,7 @@ _koopa_complete() {
                         'xorg-xcb-proto'
                         'xorg-xorgproto'
                         'xorg-xtrans'
+                        'xsra'
                         'xsv'
                         'xxhash'
                         'xz'
