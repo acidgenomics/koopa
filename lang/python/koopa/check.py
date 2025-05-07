@@ -30,6 +30,8 @@ def check_installed_apps() -> bool:
             print(f"{name} not linked at {path}")
             continue
         path = realpath(path)
+        if not isdir(path):
+            raise OSError(f"Invalid path at '{path}'.")
         assert isdir(path)
         linked_ver = basename(path)
         if "removed" in json_data[name].keys() and json_data[name]["removed"]:
