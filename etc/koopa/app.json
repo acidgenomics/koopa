@@ -999,12 +999,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-04-21",
+    "date": "2025-05-07",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.62.2"
+    "version": "2.62.3"
   },
   "cli11": {
     "aliases": {
@@ -3146,12 +3146,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-04-24",
+    "date": "2025-05-07",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.1"
+    "version": "4.4.2"
   },
   "kallisto": {
     "bin": ["kallisto"],
