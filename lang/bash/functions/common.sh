@@ -2398,9 +2398,6 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -2641,9 +2638,6 @@ koopa_aws_s3_dot_clean() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -2896,9 +2890,6 @@ koopa_aws_s3_list_large_files() {
         '--num' "${dict['num']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -6343,6 +6334,9 @@ koopa_configure_app() {
         'system')
             koopa_assert_is_owner
             koopa_assert_is_admin
+            ;;
+        'user')
+            koopa_assert_is_not_root
             ;;
     esac
     dict['config_file']="$(koopa_bash_prefix)/include/configure/\

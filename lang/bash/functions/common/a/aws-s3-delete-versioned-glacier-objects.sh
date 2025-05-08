@@ -2,14 +2,15 @@
 
 # TODO Rework this to use 'delete-objects', which requires JSON input but
 # only uses a single call to AWS.
-# TODO Improve CLI message to show current n out of total n.
-# TODO Rework to take bucket as first positional argument.
-# TODO Support parameterization of multiple buckets in a loop.
+
+# FIXME Rework using this script approach:
+# https://gist.github.com/sdarwin/dcb4afc68f0952ded62d864a6f720ccb
+# This covers the objects and delete markers.
 
 koopa_aws_s3_delete_versioned_glacier_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
-    # @note Updated 2023-11-16.
+    # @note Updated 2025-05-08.
     #
     # @seealso
     # - aws s3api list-object-versions help
@@ -88,9 +89,6 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \

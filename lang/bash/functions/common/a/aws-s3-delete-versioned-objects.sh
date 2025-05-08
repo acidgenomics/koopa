@@ -2,14 +2,14 @@
 
 # TODO Rework this to use 'delete-objects', which requires JSON input but
 # only uses a single call to AWS.
-# FIXME Improve CLI message to show current n out of total n.
-# FIXME Rework to take bucket as first positional argument.
-# FIXME Support parameterization of multiple buckets in a loop.
+
+# How to delete object versions and delete markers with 'delete-objects':
+# https://gist.github.com/sdarwin/dcb4afc68f0952ded62d864a6f720ccb
 
 koopa_aws_s3_delete_versioned_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
-    # @note Updated 2023-11-16.
+    # @note Updated 2025-05-08.
     #
     # @seealso
     # - aws s3api list-object-versions help
@@ -17,6 +17,7 @@ koopa_aws_s3_delete_versioned_objects() {
     #     DeletingObjectVersions.html
     # - https://github.com/swoodford/aws/blob/master/
     #     s3-remove-glacier-objects.sh
+    # - https://gist.github.com/sdarwin/dcb4afc68f0952ded62d864a6f720ccb
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \

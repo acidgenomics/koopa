@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure dotfiles for current user.
-    # @note Updated 2024-12-03.
+    # @note Updated 2025-05-08.
     #
     # This also configures chezmoi to use our koopa managed dotfiles repo.
     #
@@ -23,6 +23,7 @@ main() {
     # """
     local -A app bool dict
     koopa_assert_has_args_le "$#" 1
+    koopa_assert_is_not_root
     app['bash']="$(koopa_locate_bash --allow-bootstrap --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     bool['auto_config']=0
