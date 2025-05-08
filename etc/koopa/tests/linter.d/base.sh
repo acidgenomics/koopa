@@ -6,7 +6,7 @@ source "$(koopa header bash)"
 main() {
     # """
     # Base lint checks.
-    # @note Updated 2020-07-08.
+    # @note Updated 2025-05-08.
     # """
     local files
     koopa_assert_has_no_args "$#"
@@ -16,25 +16,23 @@ main() {
     return 0
 }
 
-# FIXME The usage of pattern concatenation with '|' sep here is problematic.
-# FIXME Allow usage of multiple patterns to koopa_test_grep_call.
-
 test_illegal_strings() {
-    local array pattern
+    local -a patterns
     koopa_assert_has_args "$#"
-    array=(
-        # > '<<<<<<<'
-        # > '>>>>>>>'
+    patterns=(
+        '<<<<<<<'
+        '>>>>>>>'
         '\bFIXME\b'
-        # > '\bTODO\b'
+        '\bTODO\b'
     )
-    pattern="$(koopa_paste --sep='|' "${array[@]}")"
-    # FIXME Rework this...
-    koopa_test_grep \
-        --ignore='illegal-strings' \
-        --name='base-illegal-strings' \
-        --pattern='FIXME' \
-        "$@"
+    for pattern in "${patterns[@]}"
+    do
+        koopa_test_grep \
+            --ignore='illegal-strings' \
+            --name='base-illegal-strings' \
+            --pattern="$pattern" \
+            "$@"
+    done
     return 0
 }
 
