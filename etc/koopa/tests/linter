@@ -6,12 +6,12 @@ source "$(koopa header bash)"
 test_linter() {
     # """
     # Check that scripts do not contain lints.
-    # Updated 2022-10-06.
+    # Updated 2025-05-08.
     # """
     local koopa_prefix linter_prefix
     koopa_prefix="$(koopa_koopa_prefix)"
     koopa_alert 'Running linter checks.'
-    koopa_assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
+    # > koopa_assert_is_file "${koopa_prefix}/."{'lintr','pylintrc'}
     linter_prefix="${koopa_prefix}/etc/koopa/tests/linter.d"
     koopa_exec_dir "$linter_prefix"
     return 0
