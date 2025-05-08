@@ -3,7 +3,7 @@
 koopa_aws_s3_list_large_files() {
     # """
     # List large files in an S3 bucket.
-    # @note Updated 2023-07-18.
+    # @note Updated 2025-05-08.
     #
     # @examples
     # > koopa_aws_s3_list_large_files \
@@ -71,9 +71,6 @@ koopa_aws_s3_list_large_files() {
         '--num' "${dict['num']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \

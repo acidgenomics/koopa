@@ -51,7 +51,7 @@ koopa_miso_run() {
     # The insert length distribution gives the range of sizes of fragments
     # sequenced in the paired-end RNA-Seq run. This is used to assign reads to
     # isoforms probabilistically. The insert length distribution can be computed
-    # by aligning read pairs to long, constitutive exons (like 3’ UTRs) and
+    # by aligning read pairs to long, constitutive exons (like 3' UTRs) and
     # measuring the distance between the read mates. The mean and standard
     # deviation of this distribution would then be given as arguments to
     # '--paired-end'. For example, to run on a paired-end sample where the mean
