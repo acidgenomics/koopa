@@ -2554,7 +2554,7 @@ koopa_aws_s3_delete_versioned_objects() {
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Deleting non-latest versioned objects in \
+    koopa_alert "Deleting outdated versioned objects in \
 's3://${dict['bucket']}/${dict['prefix']}/'."
     dict['json_file']="$(koopa_tmp_file)"
     if [[ "${bool['glacier']}" -eq 1 ]]
@@ -2592,7 +2592,7 @@ koopa_aws_s3_delete_versioned_objects() {
             --file="${dict['json_file']}" \
             --pattern='"Objects": []'
         then
-            koopa_alert_note 'No versioned objected detected.'
+            koopa_alert_note 'No outdated versioned objects detected.'
             koopa_rm "${dict['json_file']}"
             break
         fi
