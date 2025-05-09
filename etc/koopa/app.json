@@ -5059,12 +5059,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-05-05",
+    "date": "2025-05-09",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.5.5"
+    "version": "2.5.7"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5997,7 +5997,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-05-01",
+    "date": "2025-05-09",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6006,7 +6006,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.3"
+    "version": "9.3.4"
   },
   "sox": {
     "aliases": {
@@ -6043,13 +6043,13 @@
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-05-09",
     "default": false,
     "dependencies": ["fmt"],
     "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
-    "version": "1.15.2"
+    "version": "1.15.3"
   },
   "sphinx": {
     "bin": [
@@ -6557,12 +6557,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-05-01",
+    "date": "2025-05-09",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.7.2"
+    "version": "0.7.3"
   },
   "vim": {
     "aliases": {
@@ -7094,12 +7094,12 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2025-05-05",
+    "date": "2025-05-09",
     "default": true,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.45.2"
+    "version": "4.45.3"
   },
   "yt-dlp": {
     "aliases": {
