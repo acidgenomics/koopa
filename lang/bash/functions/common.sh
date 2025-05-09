@@ -2523,9 +2523,6 @@ koopa_aws_s3_delete_versioned_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
