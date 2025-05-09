@@ -3,7 +3,7 @@
 koopa_cli_app() {
     # """
     # Parse user input to 'koopa app'.
-    # @note Updated 2023-11-17.
+    # @note Updated 2025-05-09.
     #
     # @examples
     # > koopa_cli_app 'aws' 'batch' 'fetch-and-run'
@@ -73,6 +73,7 @@ koopa_cli_app() {
                     ;;
                 's3')
                     case "${3:-}" in
+                        'delete-markers' | \
                         'delete-versioned-glacier-objects' | \
                         'delete-versioned-objects' | \
                         'dot-clean' | \
