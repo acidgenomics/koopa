@@ -2432,7 +2432,12 @@ koopa_aws_s3_delete_markers() {
             --query="${dict['query']}" \
             2> /dev/null \
             > "${dict['json_file']}"
-        if grep -q '"Objects": null' "${dict['json_file']}"
+        if koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": null' \
+        || koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": []'
         then
             koopa_alert_note 'No deletion markers detected.'
             koopa_rm "${dict['json_file']}"
@@ -2582,7 +2587,10 @@ koopa_aws_s3_delete_versioned_objects() {
         koopa_assert_is_file "${dict['json_file']}"
         if koopa_file_detect_fixed \
             --file="${dict['json_file']}" \
-            --pattern='"Objects": null'
+            --pattern='"Objects": null' \
+        || koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": []'
         then
             koopa_alert_note 'No versioned objected detected.'
             koopa_rm "${dict['json_file']}"
