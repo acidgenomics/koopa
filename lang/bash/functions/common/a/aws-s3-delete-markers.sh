@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Use jq to get the count of items in the JSON here.
-# FIXME Print out the path of the temporary file for debugging.
-
 koopa_aws_s3_delete_markers() {
     # """
     # Clean up delete markers in S3 bucket.
@@ -11,9 +8,9 @@ koopa_aws_s3_delete_markers() {
     local -A app bool dict
     local i
     app['aws']="$(koopa_locate_aws)"
-    # FIXME head
-    # FIXME cut
-    # FIXME wc
+    app['cut']="$(koopa_locate_cut)"
+    app['head']="$(koopa_locate_head)"
+    app['wc']="$(koopa_locate_wc)"
     koopa_assert_is_executable "${app[@]}"
     bool['dry_run']=0
     dict['bucket']=''
@@ -83,13 +80,15 @@ koopa_aws_s3_delete_markers() {
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Removing deletion markers in '${dict['bucket']}' at \
-'${dict['prefix']}'."
-    dict['objects_file']="$(koopa_tmp_file)"
+    koopa_alert "Removing deletion markers in \
+'s3://${dict['bucket']}/${dict['prefix']}/'."
+    dict['json_file']="$(koopa_tmp_file)"
     dict['query']='{Objects: DeleteMarkers[].{Key:Key,VersionId:VersionId}}'
-    koopa_dl 'Query' "${dict['query']}"
+    koopa_dl \
+        'JSON file' "${dict['json_file']}" \
+        'Query' "${dict['query']}"
     i=0
-    while [[ -f "${dict['objects_file']}" ]]
+    while [[ -f "${dict['json_file']}" ]]
     do
         i=$((i+1))
         koopa_alert_info "Batch ${i}"
@@ -102,31 +101,42 @@ koopa_aws_s3_delete_markers() {
             --profile "${dict['profile']}" \
             --query="${dict['query']}" \
             2> /dev/null \
-            > "${dict['objects_file']}"
-        if grep -q '"Objects": null' "${dict['objects_file']}"
+            > "${dict['json_file']}"
+        if grep -q '"Objects": null' "${dict['json_file']}"
         then
             koopa_alert_note 'No deletion markers detected.'
-            koopa_rm "${dict['objects_file']}"
+            koopa_rm "${dict['json_file']}"
             break
         fi
         dict['lines']="$( \
-            "${app['wc']}" -l "${dict['objects_file']}" \
+            "${app['wc']}" -l "${dict['json_file']}" \
             | "${app['cut']}" -d ' ' -f 1 \
         )"
         if [[ "${dict['lines']}" -gt 3997 ]]
         then
-            # FIXME Rework this approach.
-            "${app['head']}" -n 3997 output.tmp > output.json
-            # FIXME Use koopa_append_string here instead.
-            echo "        } ] }" >> output.json
-            # FIXME Move back to original object.
+            dict['tmp_file']="$(koopa_tmp_file)"
+            "${app['head']}" \
+                -n 3997 \
+                "${dict['json_file']}" \
+                > "${dict['tmp_file']}"
+            koopa_append_string \
+                --file="${dict['tmp_file']}" \
+                --string='        } ] }'
+            koopa_mv "${dict['tmp_file']}" "${dict['json_file']}"
         fi
-        # FIXME If dry-run, just show the objects file here instead.
-        # FIXME Need to pass more parameters here.
+        if [[ "${bool['dry_run']}" -eq 1 ]]
+        then
+            app['less']="$(koopa_locate_less)"
+            koopa_assert_is_executable "${app['less']}"
+            "${app['less']}" "${dict['json_file']}"
+            break
+        fi
         "${app['aws']}" s3api delete-objects \
             --bucket "${dict['bucket']}" \
-            --delete "file://${dict['objects_file']}" \
-            --profile "${dict['profile']}"
+            --delete "file://${dict['json_file']}" \
+            --no-cli-pager \
+            --profile "${dict['profile']}" \
+            --region "${dict['region']}"
     done
     return 0
 }

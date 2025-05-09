@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Use jq to get the count of items in the JSON here.
-# FIXME Print out the path of the temporary file for debugging.
-
 koopa_aws_s3_delete_versioned_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
@@ -29,7 +26,6 @@ koopa_aws_s3_delete_versioned_objects() {
     local -A app bool dict
     local i
     app['aws']="$(koopa_locate_aws)"
-    app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
     bool['dry_run']=0
     bool['glacier']=0
@@ -103,8 +99,8 @@ koopa_aws_s3_delete_versioned_objects() {
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Deleting non-canonical versioned objects in \
-'${dict['bucket']}' at '${dict['prefix']}'."
+    koopa_alert "Deleting non-latest versioned objects in \
+'s3://${dict['bucket']}/${dict['prefix']}/'."
     dict['json_file']="$(koopa_tmp_file)"
     if [[ "${bool['glacier']}" -eq 1 ]]
     then
@@ -115,7 +111,7 @@ koopa_aws_s3_delete_versioned_objects() {
     dict['query']="{Objects: Versions[?${dict['version_query']}].\
 {Key:Key,VersionId:VersionId}}"
     koopa_dl \
-        'JSON' "${dict['json_file']}" \
+        'JSON file' "${dict['json_file']}" \
         'Query' "${dict['query']}"
     i=0
     while [[ -f "${dict['json_file']}" ]]
@@ -142,7 +138,6 @@ koopa_aws_s3_delete_versioned_objects() {
             koopa_rm "${dict['json_file']}"
             break
         fi
-        # FIXME Use jq here to get the number of elements in the JSON file.
         if [[ "${bool['dry_run']}" -eq 1 ]]
         then
             app['less']="$(koopa_locate_less)"
