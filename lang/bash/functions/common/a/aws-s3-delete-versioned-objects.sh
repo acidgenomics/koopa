@@ -1,15 +1,9 @@
 #!/usr/bin/env bash
 
-# TODO Rework this to use 'delete-objects', which requires JSON input but
-# only uses a single call to AWS.
-
-# How to delete object versions and delete markers with 'delete-objects':
-# https://gist.github.com/sdarwin/dcb4afc68f0952ded62d864a6f720ccb
-
 koopa_aws_s3_delete_versioned_objects() {
     # """
     # Delete all non-canonical versioned glacier objects for an S3 bucket.
-    # @note Updated 2025-05-08.
+    # @note Updated 2025-05-09.
     #
     # @seealso
     # - aws s3api list-object-versions help
@@ -21,19 +15,17 @@ koopa_aws_s3_delete_versioned_objects() {
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \
-    # >     --bucket='s3://example-bucket/' \
+    # >     --bucket='example-bucket' \
     # >     --dry-run \
     # >     --prefix='subdir' \
     # >     --profile='default' \
     # >     --region='us-east-1'
     # """
     local -A app bool dict
-    local -a keys version_ids
     local i
     app['aws']="$(koopa_locate_aws)"
-    app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
-    bool['dryrun']=0
+    bool['dry_run']=0
     dict['bucket']=''
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
@@ -77,7 +69,7 @@ koopa_aws_s3_delete_versioned_objects() {
             # Flags ------------------------------------------------------------
             '--dry-run' | \
             '--dryrun')
-                bool['dryrun']=1
+                bool['dry_run']=1
                 shift 1
                 ;;
             # Other ------------------------------------------------------------
@@ -100,57 +92,51 @@ koopa_aws_s3_delete_versioned_objects() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
-    if [[ "${bool['dryrun']}" -eq 1 ]]
+    if [[ "${bool['dry_run']}" -eq 1 ]]
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Fetching versioned objects in '${dict['bucket']}'."
-    dict['json']="$( \
+    koopa_alert "Deleting versioned objects in '${dict['bucket']}'."
+    dict['objects_file']="$(koopa_tmp_file)"
+    dict['query']="{Objects: Versions[?IsLatest==\`false\`].\
+{Key:Key,VersionId:VersionId}}"
+    i=0
+    while [[ -f "${dict['objects_file']}" ]]
+    do
+        i=$((i+1))
+        koopa_alert_info "Batch ${i}"
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
+            --max-items 1000 \
             --no-cli-pager \
             --output 'json' \
             --prefix "${dict['prefix']}" \
             --profile "${dict['profile']}" \
-            --query "Versions[?IsLatest==\`false\`]" \
+            --query "${dict['query']}" \
             --region "${dict['region']}" \
-    )"
-    if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
-    then
-        koopa_alert_note "No versioned objects in '${dict['bucket']}'."
-        return 0
-    fi
-    readarray -t keys <<< "$( \
-        koopa_print "${dict['json']}" \
-            | "${app['jq']}" --raw-output '.[].Key' \
-    )"
-    readarray -t version_ids <<< "$( \
-        koopa_print "${dict['json']}" \
-            | "${app['jq']}" --raw-output '.[].VersionId' \
-    )"
-    koopa_alert_info "$(koopa_ngettext \
-        --num="${#keys[@]}" \
-        --msg1='object' \
-        --msg2='objects' \
-        --suffix=' detected.' \
-    )"
-    for i in "${!keys[@]}"
-    do
-        local -A dict2
-        dict2['key']="${keys[$i]}"
-        dict2['version_id']="${version_ids[$i]}"
-        koopa_alert "Deleting 's3://${dict['bucket']}/${dict2['key']}' \
-(${dict2['version_id']})."
-        [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" s3api delete-object \
+            2> /dev/null \
+            > "${dict['objects_file']}"
+        koopa_assert_is_file "${dict['objects_file']}"
+        if koopa_file_detect_fixed \
+            --file="${dict['objects_file']}" \
+            --pattern='"Objects": null'
+        then
+            koopa_alert_note 'No versioned objected detected.'
+            koopa_rm "${dict['objects_file']}"
+            break
+        fi
+        if [[ "${bool['dry_run']}" -eq 1 ]]
+        then
+            app['pager']="$(koopa_locate_pager)"
+            koopa_dl 'Objects file' "${dict['objects_file']}"
+            "${app['pager']}" "${dict['objects_file']}"
+            break
+        fi
+        "${app['aws']}" s3api delete-objects \
             --bucket "${dict['bucket']}" \
-            --key "${dict2['key']}" \
+            --delete "file://${dict['objects_file']}" \
             --no-cli-pager \
-            --output 'text' \
-            --profile "${dict['profile']}" \
-            --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}" \
-        > /dev/null
+            --profile "${dict['profile']}"
     done
     return 0
 }
