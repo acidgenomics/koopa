@@ -12,6 +12,8 @@ koopa_aws_s3_delete_versioned_objects() {
     # - https://github.com/swoodford/aws/blob/master/
     #     s3-remove-glacier-objects.sh
     # - https://gist.github.com/sdarwin/dcb4afc68f0952ded62d864a6f720ccb
+    # - https://github.com/swoodford/aws/blob/master/
+    #     s3-remove-glacier-objects.sh
     #
     # @examples
     # > koopa_aws_s3_delete_versioned_glacier_objects \
@@ -26,6 +28,7 @@ koopa_aws_s3_delete_versioned_objects() {
     app['aws']="$(koopa_locate_aws)"
     koopa_assert_is_executable "${app[@]}"
     bool['dry_run']=0
+    bool['glacier']=0
     dict['bucket']=''
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
@@ -72,6 +75,9 @@ koopa_aws_s3_delete_versioned_objects() {
                 bool['dry_run']=1
                 shift 1
                 ;;
+            '--glacier')
+                bool['glacier']=1
+                ;;
             # Other ------------------------------------------------------------
             *)
                 koopa_invalid_arg "$1"
@@ -95,8 +101,15 @@ koopa_aws_s3_delete_versioned_objects() {
     fi
     koopa_alert "Deleting versioned objects in '${dict['bucket']}'."
     dict['objects_file']="$(koopa_tmp_file)"
-    dict['query']="{Objects: Versions[?IsLatest==\`false\`].\
+    if [[ "${bool['glacier']}" -eq 1 ]]
+    then
+        dict['version_query']="StorageClass=='GLACIER'"
+    else
+        dict['version_query']="IsLatest==\`false\`"
+    fi
+    dict['query']="{Objects: Versions[?${dict['version_query']}].\
 {Key:Key,VersionId:VersionId}}"
+    koopa_dl 'Query' "${dict['query']}"
     i=0
     while [[ -f "${dict['objects_file']}" ]]
     do
