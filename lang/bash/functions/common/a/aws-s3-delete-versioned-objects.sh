@@ -124,9 +124,10 @@ koopa_aws_s3_delete_versioned_objects() {
         fi
         if [[ "${bool['dry_run']}" -eq 1 ]]
         then
-            app['pager']="$(koopa_locate_pager)"
+            app['less']="$(koopa_locate_less)"
+            koopa_assert_is_executable "${app['less']}"
             koopa_dl 'Objects file' "${dict['objects_file']}"
-            "${app['pager']}" "${dict['objects_file']}"
+            "${app['less']}" "${dict['objects_file']}"
             break
         fi
         "${app['aws']}" s3api delete-objects \
