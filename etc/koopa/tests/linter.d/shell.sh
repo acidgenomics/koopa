@@ -7,7 +7,7 @@ source "$(koopa header bash)"
 main() {
     # """
     # Shell script checks.
-    # Updated 2022-10-07.
+    # Updated 2025-05-08.
     # """
     test_all
     test_posix
@@ -18,8 +18,7 @@ main() {
 }
 
 test_all() {
-    local files
-    koopa_assert_has_no_args "$#"
+    local -a files
     readarray -t files <<< \
         "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash|sh|zsh)$')"
     test_all_quoting "${files[@]}"
@@ -86,7 +85,6 @@ test_bash() {
     # @note Updated 2022-10-07.
     # """
     local files
-    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
        "$(koopa_test_find_files_by_shebang '^#!/.+\b(bash)$')"
     test_bash_illegal_strings "${files[@]}"
@@ -118,7 +116,6 @@ test_posix() {
     # @note Updated 2020-07-08.
     # """
     local files
-    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
         "$(koopa_test_find_files_by_shebang '^#!/bin/sh$')"
     test_posix_illegal_strings "${files[@]}"
@@ -152,7 +149,6 @@ test_zsh() {
     # @note Updated 2022-10-07.
     # """
     local files
-    koopa_assert_has_no_args "$#"
     readarray -t files <<< \
         "$(koopa_test_find_files_by_shebang '^#!/.+\b(zsh)$')"
     test_zsh_illegal_strings "${files[@]}"
@@ -186,7 +182,6 @@ test_shellcheck() {
     # Only Bash and POSIX (but not Zsh) are supported.
     # """
     local app
-    koopa_assert_has_no_args "$#"
     declare -A app=(
         ['shellcheck']="$(koopa_locate_shellcheck)"
     )

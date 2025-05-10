@@ -2337,14 +2337,15 @@ koopa_aws_s3_cp_regex() {
     return 0
 }
 
-koopa_aws_s3_delete_versioned_glacier_objects() {
+koopa_aws_s3_delete_markers() {
     local -A app bool dict
-    local -a keys version_ids
     local i
     app['aws']="$(koopa_locate_aws)"
-    app['jq']="$(koopa_locate_jq)"
+    app['cut']="$(koopa_locate_cut)"
+    app['head']="$(koopa_locate_head)"
+    app['wc']="$(koopa_locate_wc)"
     koopa_assert_is_executable "${app[@]}"
-    bool['dryrun']=0
+    bool['dry_run']=0
     dict['bucket']=''
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
@@ -2386,7 +2387,7 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
                 ;;
             '--dry-run' | \
             '--dryrun')
-                bool['dryrun']=1
+                bool['dry_run']=1
                 shift 1
                 ;;
             *)
@@ -2398,9 +2399,6 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -2408,69 +2406,87 @@ koopa_aws_s3_delete_versioned_glacier_objects() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
-    if [[ "${bool['dryrun']}" -eq 1 ]]
+    if [[ "${bool['dry_run']}" -eq 1 ]]
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Fetching versioned Glacier objects in '${dict['bucket']}'."
-    dict['json']="$( \
+    koopa_alert "Removing deletion markers in \
+'s3://${dict['bucket']}/${dict['prefix']}/'."
+    dict['json_file']="$(koopa_tmp_file)"
+    dict['query']='{Objects: DeleteMarkers[].{Key:Key,VersionId:VersionId}}'
+    koopa_dl \
+        'JSON file' "${dict['json_file']}" \
+        'Query' "${dict['query']}"
+    i=0
+    while [[ -f "${dict['json_file']}" ]]
+    do
+        i=$((i+1))
+        koopa_alert_info "Batch ${i}"
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
+            --max-items 1000 \
             --no-cli-pager \
             --output 'json' \
             --prefix "${dict['prefix']}" \
             --profile "${dict['profile']}" \
-            --query "Versions[?StorageClass=='GLACIER']" \
-            --region "${dict['region']}" \
-    )"
-    if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
-    then
-        koopa_alert_note "No versioned Glacier objects in '${dict['bucket']}'."
-        return 0
-    fi
-    readarray -t keys <<< "$( \
-        koopa_print "${dict['json']}" \
-            | "${app['jq']}" --raw-output '.[].Key' \
-    )"
-    readarray -t version_ids <<< "$( \
-        koopa_print "${dict['json']}" \
-            | "${app['jq']}" --raw-output '.[].VersionId' \
-    )"
-    koopa_alert_info "$(koopa_ngettext \
-        --num="${#keys[@]}" \
-        --msg1='object' \
-        --msg2='objects' \
-        --suffix=' detected.' \
-    )"
-    for i in "${!keys[@]}"
-    do
-        local -A dict2
-        dict2['key']="${keys[$i]}"
-        dict2['version_id']="${version_ids[$i]}"
-        koopa_alert "Deleting 's3://${dict['bucket']}/${dict2['key']}' \
-(${dict2['version_id']})."
-        [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" s3api delete-object \
+            --query="${dict['query']}" \
+            2> /dev/null \
+            > "${dict['json_file']}"
+        if koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": null' \
+        || koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": []'
+        then
+            koopa_alert_note 'No deletion markers detected.'
+            koopa_rm "${dict['json_file']}"
+            break
+        fi
+        dict['lines']="$( \
+            "${app['wc']}" -l "${dict['json_file']}" \
+            | "${app['cut']}" -d ' ' -f 1 \
+        )"
+        if [[ "${dict['lines']}" -gt 3997 ]]
+        then
+            dict['tmp_file']="$(koopa_tmp_file)"
+            "${app['head']}" \
+                -n 3997 \
+                "${dict['json_file']}" \
+                > "${dict['tmp_file']}"
+            koopa_append_string \
+                --file="${dict['tmp_file']}" \
+                --string='        } ] }'
+            koopa_mv "${dict['tmp_file']}" "${dict['json_file']}"
+        fi
+        if [[ "${bool['dry_run']}" -eq 1 ]]
+        then
+            app['less']="$(koopa_locate_less)"
+            koopa_assert_is_executable "${app['less']}"
+            "${app['less']}" "${dict['json_file']}"
+            break
+        fi
+        "${app['aws']}" s3api delete-objects \
             --bucket "${dict['bucket']}" \
-            --key "${dict2['key']}" \
+            --delete "file://${dict['json_file']}" \
             --no-cli-pager \
-            --output 'text' \
             --profile "${dict['profile']}" \
-            --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}" \
-        > /dev/null
+            --region "${dict['region']}"
     done
     return 0
 }
 
+koopa_aws_s3_delete_versioned_glacier_objects() {
+    koopa_aws_s3_delete_versioned_objects --glacier "$@"
+}
+
 koopa_aws_s3_delete_versioned_objects() {
     local -A app bool dict
-    local -a keys version_ids
     local i
     app['aws']="$(koopa_locate_aws)"
-    app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
-    bool['dryrun']=0
+    bool['dry_run']=0
+    bool['glacier']=0
     dict['bucket']=''
     dict['prefix']=''
     dict['profile']="${AWS_PROFILE:-default}"
@@ -2512,8 +2528,11 @@ koopa_aws_s3_delete_versioned_objects() {
                 ;;
             '--dry-run' | \
             '--dryrun')
-                bool['dryrun']=1
+                bool['dry_run']=1
                 shift 1
+                ;;
+            '--glacier')
+                bool['glacier']=1
                 ;;
             *)
                 koopa_invalid_arg "$1"
@@ -2524,9 +2543,6 @@ koopa_aws_s3_delete_versioned_objects() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -2534,57 +2550,65 @@ koopa_aws_s3_delete_versioned_objects() {
             "${dict['bucket']}" \
     )"
     dict['bucket']="$(koopa_strip_trailing_slash "${dict['bucket']}")"
-    if [[ "${bool['dryrun']}" -eq 1 ]]
+    if [[ "${bool['dry_run']}" -eq 1 ]]
     then
         koopa_alert_info 'Dry run mode enabled.'
     fi
-    koopa_alert "Fetching versioned objects in '${dict['bucket']}'."
-    dict['json']="$( \
+    koopa_alert "Deleting outdated versioned objects in \
+'s3://${dict['bucket']}/${dict['prefix']}/'."
+    dict['json_file']="$(koopa_tmp_file)"
+    if [[ "${bool['glacier']}" -eq 1 ]]
+    then
+        dict['version_query']="StorageClass=='GLACIER'"
+    else
+        dict['version_query']="IsLatest==\`false\`"
+    fi
+    dict['query']="{Objects: Versions[?${dict['version_query']}].\
+{Key:Key,VersionId:VersionId}}"
+    koopa_dl \
+        'JSON file' "${dict['json_file']}" \
+        'Query' "${dict['query']}"
+    i=0
+    while [[ -f "${dict['json_file']}" ]]
+    do
+        i=$((i+1))
+        koopa_alert_info "Batch ${i}"
         "${app['aws']}" s3api list-object-versions \
             --bucket "${dict['bucket']}" \
+            --max-items 1000 \
             --no-cli-pager \
             --output 'json' \
             --prefix "${dict['prefix']}" \
             --profile "${dict['profile']}" \
-            --query "Versions[?IsLatest==\`false\`]" \
+            --query "${dict['query']}" \
             --region "${dict['region']}" \
-    )"
-    if [[ -z "${dict['json']}" ]] || [[ "${dict['json']}" == '[]' ]]
-    then
-        koopa_alert_note "No versioned objects in '${dict['bucket']}'."
-        return 0
-    fi
-    readarray -t keys <<< "$( \
-        koopa_print "${dict['json']}" \
-            | "${app['jq']}" --raw-output '.[].Key' \
-    )"
-    readarray -t version_ids <<< "$( \
-        koopa_print "${dict['json']}" \
-            | "${app['jq']}" --raw-output '.[].VersionId' \
-    )"
-    koopa_alert_info "$(koopa_ngettext \
-        --num="${#keys[@]}" \
-        --msg1='object' \
-        --msg2='objects' \
-        --suffix=' detected.' \
-    )"
-    for i in "${!keys[@]}"
-    do
-        local -A dict2
-        dict2['key']="${keys[$i]}"
-        dict2['version_id']="${version_ids[$i]}"
-        koopa_alert "Deleting 's3://${dict['bucket']}/${dict2['key']}' \
-(${dict2['version_id']})."
-        [[ "${bool['dryrun']}" -eq 1 ]] && continue
-        "${app['aws']}" s3api delete-object \
+            2> /dev/null \
+            > "${dict['json_file']}"
+        koopa_assert_is_file "${dict['json_file']}"
+        if koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": null' \
+        || koopa_file_detect_fixed \
+            --file="${dict['json_file']}" \
+            --pattern='"Objects": []'
+        then
+            koopa_alert_note 'No outdated versioned objects detected.'
+            koopa_rm "${dict['json_file']}"
+            break
+        fi
+        if [[ "${bool['dry_run']}" -eq 1 ]]
+        then
+            app['less']="$(koopa_locate_less)"
+            koopa_assert_is_executable "${app['less']}"
+            "${app['less']}" "${dict['json_file']}"
+            break
+        fi
+        "${app['aws']}" s3api delete-objects \
             --bucket "${dict['bucket']}" \
-            --key "${dict2['key']}" \
+            --delete "file://${dict['json_file']}" \
             --no-cli-pager \
-            --output 'text' \
             --profile "${dict['profile']}" \
-            --region "${dict['region']}" \
-            --version-id "${dict2['version_id']}" \
-        > /dev/null
+            --region "${dict['region']}"
     done
     return 0
 }
@@ -2641,9 +2665,6 @@ koopa_aws_s3_dot_clean() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -2896,9 +2917,6 @@ koopa_aws_s3_list_large_files() {
         '--num' "${dict['num']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
@@ -4699,6 +4717,7 @@ koopa_cli_app() {
                     ;;
                 's3')
                     case "${3:-}" in
+                        'delete-markers' | \
                         'delete-versioned-glacier-objects' | \
                         'delete-versioned-objects' | \
                         'dot-clean' | \
@@ -6343,6 +6362,9 @@ koopa_configure_app() {
         'system')
             koopa_assert_is_owner
             koopa_assert_is_admin
+            ;;
+        'user')
+            koopa_assert_is_not_root
             ;;
     esac
     dict['config_file']="$(koopa_bash_prefix)/include/configure/\
@@ -9867,13 +9889,13 @@ koopa_getent() {
     app['grep']="$(koopa_locate_grep --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    if [[ "${1:?}" = 'hosts' ]]
+    if [[ "${1:?}" == 'hosts' ]]
     then
         dict['str']="$( \
             "${app['sed']}" 's/#.*//' "/etc/${1:?}" \
             | "${app['grep']}" -w "${2:?}" \
         )"
-    elif [[ "${2:?}" = '<->' ]]
+    elif [[ "${2:?}" == '<->' ]]
     then
         dict['str']="$( \
             "${app['grep']}" ":${2:?}:[^:]*$" "/etc/${1:?}" \
