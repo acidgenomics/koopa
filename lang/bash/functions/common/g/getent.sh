@@ -20,13 +20,13 @@ koopa_getent() {
     app['grep']="$(koopa_locate_grep --allow-system)"
     app['sed']="$(koopa_locate_sed --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    if [[ "${1:?}" = 'hosts' ]]
+    if [[ "${1:?}" == 'hosts' ]]
     then
         dict['str']="$( \
             "${app['sed']}" 's/#.*//' "/etc/${1:?}" \
             | "${app['grep']}" -w "${2:?}" \
         )"
-    elif [[ "${2:?}" = '<->' ]]
+    elif [[ "${2:?}" == '<->' ]]
     then
         dict['str']="$( \
             "${app['grep']}" ":${2:?}:[^:]*$" "/etc/${1:?}" \

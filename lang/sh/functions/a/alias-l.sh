@@ -9,10 +9,10 @@ _koopa_alias_l() {
     # * -F, --classify
     #         Displays file type indicators by file names.
     # * -a, --all
-    #         Shows hidden and ‘dot’ files.
+    #         Shows hidden and 'dot' files.
     #         Use this twice to also show the . and .. directories.
     # * -g, --group
-    #         Lists each file’s group.
+    #         Lists each file's group.
     # * -l, --long
     #         Displays files in a table along with their metadata.
     # * -s, --sort=SORT_FIELD

@@ -71,6 +71,9 @@ koopa_configure_app() {
             koopa_assert_is_owner
             koopa_assert_is_admin
             ;;
+        'user')
+            koopa_assert_is_not_root
+            ;;
     esac
     dict['config_file']="$(koopa_bash_prefix)/include/configure/\
 ${dict['platform']}/${dict['mode']}/${dict['name']}.sh"

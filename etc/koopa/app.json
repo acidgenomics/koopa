@@ -999,12 +999,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-04-21",
+    "date": "2025-05-07",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.62.2"
+    "version": "2.62.3"
   },
   "cli11": {
     "aliases": {
@@ -1500,12 +1500,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-05-02",
+    "date": "2025-05-08",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "0fb8dbd0d4122f873bc7317fd3b5bf2c4b9b10ad"
+    "version": "14fbd82631a10a39f128778a70b96fa42c87b6eb"
   },
   "du-dust": {
     "aliases": {
@@ -3146,12 +3146,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-04-24",
+    "date": "2025-05-07",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.1"
+    "version": "4.4.2"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4935,7 +4935,7 @@
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
-    "date": "2025-01-15",
+    "date": "2025-05-06",
     "default": false,
     "dependencies": [
       "icu4c",
@@ -4951,7 +4951,7 @@
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "17.2"
+    "version": "17.4"
   },
   "prelude-emacs": {
     "date": "2024-12-30",
@@ -5059,12 +5059,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-05-05",
+    "date": "2025-05-09",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.5.5"
+    "version": "2.5.7"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5668,7 +5668,7 @@
     "version": "1.3.3"
   },
   "rstudio-server": {
-    "date": "2025-02-14",
+    "date": "2025-05-08",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5678,7 +5678,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/rstudio/download-server/"],
-    "version": "2024.12.1+563"
+    "version": "2025.05.0+496"
   },
   "rsync": {
     "aliases": {
@@ -5943,7 +5943,7 @@
     "version": "0.10.0"
   },
   "shiny-server": {
-    "date": "2024-12-30",
+    "date": "2025-05-08",
     "default": false,
     "supported": {
       "linux-amd64": true,
@@ -5953,7 +5953,7 @@
     },
     "system": true,
     "url": ["https://www.rstudio.com/products/shiny/download-server/"],
-    "version": "1.5.22.1017"
+    "version": "1.5.23.1030"
   },
   "shunit2": {
     "aliases": {
@@ -5997,7 +5997,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-05-01",
+    "date": "2025-05-09",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6006,7 +6006,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.3.3"
+    "version": "9.3.4"
   },
   "sox": {
     "aliases": {
@@ -6043,13 +6043,13 @@
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-05-09",
     "default": false,
     "dependencies": ["fmt"],
     "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
-    "version": "1.15.2"
+    "version": "1.15.3"
   },
   "sphinx": {
     "bin": [
@@ -6172,7 +6172,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2024-12-30",
+    "date": "2025-05-08",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6181,7 +6181,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.41.1"
+    "version": "1.45.0"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6557,12 +6557,12 @@
   },
   "uv": {
     "bin": ["uv"],
-    "date": "2025-05-01",
+    "date": "2025-05-09",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.7.2"
+    "version": "0.7.3"
   },
   "vim": {
     "aliases": {
@@ -7094,12 +7094,12 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2025-05-05",
+    "date": "2025-05-09",
     "default": true,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.45.2"
+    "version": "4.45.3"
   },
   "yt-dlp": {
     "aliases": {
