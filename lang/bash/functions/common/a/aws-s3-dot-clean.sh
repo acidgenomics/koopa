@@ -3,7 +3,7 @@
 koopa_aws_s3_dot_clean() {
     # """
     # Delete dot files accidentally stored in an S3 bucket.
-    # @note Updated 2023-07-18.
+    # @note Updated 2025-05-08.
     #
     # This also intentionally deletes git repos, which should be stored at
     # CodeCommit.
@@ -65,9 +65,6 @@ koopa_aws_s3_dot_clean() {
         '--bucket' "${dict['bucket']}" \
         '--profile or AWS_PROFILE' "${dict['profile']}" \
         '--region or AWS_REGION' "${dict['region']}"
-    koopa_assert_is_matching_regex \
-        --pattern='^s3://.+/$' \
-        --string="${dict['bucket']}"
     dict['bucket']="$( \
         koopa_sub \
             --pattern='s3://' \
