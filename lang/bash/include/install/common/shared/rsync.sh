@@ -5,7 +5,7 @@
 main() {
     # """
     # Install rsync.
-    # @note Updated 2023-04-06.
+    # @note Updated 2025-05-12.
     #
     # @seealso
     # - https://download.samba.org/pub/rsync/INSTALL
@@ -41,7 +41,7 @@ main() {
     else
         conf_args+=('--enable-zstd')
     fi
-    dict['url']="https://download.samba.org/pub/rsync/src/\
+    dict['url']="https://rsync.samba.org/ftp/rsync/\
 rsync-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
