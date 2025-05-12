@@ -41,7 +41,9 @@ main() {
     else
         conf_args+=('--enable-zstd')
     fi
-    dict['url']="https://rsync.samba.org/ftp/rsync/\
+# >     dict['url']="https://rsync.samba.org/ftp/rsync/\
+# > rsync-${dict['version']}.tar.gz"
+    dict['url']="https://www.mirrorservice.org/sites/rsync.samba.org/\
 rsync-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
