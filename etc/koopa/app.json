@@ -5687,13 +5687,13 @@
     },
     "bin": ["rsync"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-05-12",
     "default": true,
     "dependencies": ["lz4", "openssl3", "xxhash", "zlib", "zstd"],
     "man1": ["rsync.1"],
     "prune": true,
     "url": ["https://download.samba.org/pub/rsync/src/?C=M;O=D"],
-    "version": "3.3.0"
+    "version": "3.4.1"
   },
   "ruby": {
     "aliases": {
