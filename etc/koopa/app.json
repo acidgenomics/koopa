@@ -6471,6 +6471,15 @@
     "url": ["https://github.com/riquito/tuc/"],
     "version": "1.2.0"
   },
+  "ty": {
+    "bin": ["ty"],
+    "date": "2025-05-14",
+    "default": false,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
+    "version": "0.0.1a1"
+  },
   "udunits": {
     "aliases": {
       "debian": "libudunits2-dev",
@@ -6565,8 +6574,8 @@
     "version": "2.10.0"
   },
   "uv": {
-    "bin": ["uv"],
-    "date": "2025-05-09",
+    "bin": ["uv", "uvx"],
+    "date": "2025-05-14",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
