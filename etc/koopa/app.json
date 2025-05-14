@@ -999,12 +999,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-05-07",
+    "date": "2025-05-14",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.62.3"
+    "version": "2.62.4"
   },
   "cli11": {
     "aliases": {
@@ -2022,7 +2022,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2025-02-14",
+    "date": "2025-05-14",
     "default": false,
     "dependencies": [
       "bison",
@@ -2051,7 +2051,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.10.2"
+    "version": "3.11.0"
   },
   "gdbm": {
     "aliases": {
@@ -3373,11 +3373,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2024-12-19",
+    "date": "2025-05-14",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.23"
+    "version": "1.24"
   },
   "libedit": {
     "aliases": {
@@ -4168,12 +4168,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2025-05-05",
+    "date": "2025-05-14",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.39.0"
+    "version": "2.39.1"
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
@@ -5723,12 +5723,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-05-05",
+    "date": "2025-05-14",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.8"
+    "version": "0.11.9"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6441,14 +6441,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-03-08",
+    "date": "2025-05-14",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.25.3"
+    "version": "0.25.4"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -7103,12 +7103,12 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2025-05-09",
+    "date": "2025-05-14",
     "default": true,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.45.3"
+    "version": "4.45.4"
   },
   "yt-dlp": {
     "aliases": {
