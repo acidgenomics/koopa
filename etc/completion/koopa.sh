@@ -465,6 +465,7 @@ _koopa_complete() {
                         'tree-sitter'
                         'tryceratops'
                         'tuc'
+                        'ty'
                         'udunits'
                         'umis'
                         'unibilium'
