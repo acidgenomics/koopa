@@ -2065,6 +2065,15 @@
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.24"
   },
+  "genomepy": {
+    "bin": ["genomepy"],
+    "date": "2025-05-14",
+    "default": false,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": ["https://github.com/vanheeringen-lab/genomepy/"],
+    "version": "0.16.2"
+  },
   "gentropy": {
     "bin": ["gentropy"],
     "date": "2024-12-24",
@@ -2669,7 +2678,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-05-28",
+    "date": "2025-05-14",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2682,7 +2691,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "11.2.0"
+    "version": "11.2.1"
   },
   "haskell-cabal": {
     "aliases": {
@@ -4406,7 +4415,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2025-03-08",
+    "date": "2025-05-14",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4415,7 +4424,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "24.10.5"
+    "version": "25.04.1"
   },
   "nghttp2": {
     "aliases": {
@@ -6172,7 +6181,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-05-08",
+    "date": "2025-05-14",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6181,7 +6190,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.45.0"
+    "version": "1.45.1"
   },
   "subread": {
     "bin": ["featureCounts"],

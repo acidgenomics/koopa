@@ -13454,6 +13454,13 @@ koopa_install_gdbm() {
         "$@"
 }
 
+koopa_install_genomepy() {
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='genomepy' \
+        "$@"
+}
+
 koopa_install_gentropy() {
     koopa_install_app \
         --installer='python-package' \
@@ -29815,6 +29822,12 @@ koopa_uninstall_gdal() {
 koopa_uninstall_gdbm() {
     koopa_uninstall_app \
         --name='gdbm' \
+        "$@"
+}
+
+koopa_uninstall_genomepy() {
+    koopa_uninstall_app \
+        --name='genomepy' \
         "$@"
 }
 
