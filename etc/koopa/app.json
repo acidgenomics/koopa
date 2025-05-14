@@ -6565,8 +6565,8 @@
     "version": "2.10.0"
   },
   "uv": {
-    "bin": ["uv"],
-    "date": "2025-05-09",
+    "bin": ["uv", "uvx"],
+    "date": "2025-05-14",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
