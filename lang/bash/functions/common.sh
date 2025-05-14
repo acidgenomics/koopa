@@ -16393,6 +16393,13 @@ koopa_install_tuc() {
         "$@"
 }
 
+koopa_install_ty() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='ty' \
+        "$@"
+}
+
 koopa_install_udunits() {
     koopa_install_app \
         --name='udunits' \
@@ -31509,6 +31516,12 @@ koopa_uninstall_tryceratops() {
 koopa_uninstall_tuc() {
     koopa_uninstall_app \
         --name='tuc' \
+        "$@"
+}
+
+koopa_uninstall_ty() {
+    koopa_uninstall_app \
+        --name='ty' \
         "$@"
 }
 
