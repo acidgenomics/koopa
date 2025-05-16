@@ -5128,7 +5128,7 @@
   },
   "pyrefly": {
     "bin": ["pyrefly"],
-    "date": "2025-05-06",
+    "date": "2025-05-16",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5136,7 +5136,7 @@
       "https://pypi.org/project/pyrefly/",
       "https://github.com/facebook/pyrefly/"
     ],
-    "version": "0.14.0"
+    "version": "0.15.2"
   },
   "pyright": {
     "bin": [
