@@ -3,7 +3,7 @@
 koopa_r_configure_environ() {
     # """
     # Configure 'Renviron.site' file.
-    # @note Updated 2024-12-10.
+    # @note Updated 2025-05-18.
     #
     # @section Package library location:
     #
@@ -257,14 +257,18 @@ tools/${dict['arch']}"
         if [[ "${bool['system']}" -eq 1 ]]
         then
             local -a sys_pc_path_arr
-            # NOTE Likely want to include '/usr/bin/pkg-config' here also.
+            # NOTE Likely want to include '/usr/bin/pkg-config' here also for
+            # Linux if it doesn't get detected automatically.
             readarray -t sys_pc_path_arr <<< "$( \
                 "${app['pkg_config']}" --variable 'pc_path' 'pkg-config' \
             )"
             pc_path_arr+=("${sys_pc_path_arr[@]}")
         fi
         conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
-        ! koopa_is_macos && lines+=("R_BZIPCMD=${app['bzip2']}")
+        if ! koopa_is_macos
+        then
+            lines+=("R_BZIPCMD=${app['bzip2']}")
+        fi
         lines+=(
             "EDITOR=${app['vim']}"
             "LN_S=${app['ln']} -s"
@@ -324,12 +328,17 @@ tools/${dict['arch']}"
     lines+=(
         # Default path to virtual environments.
         # Check with 'virtualenv_list()'.
-        # https://rstudio.github.io/reticulate/reference/conda-tools.html
-        # https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
-        # https://rstudio.github.io/reticulate/articles/versions.html
+        # - https://rstudio.github.io/reticulate/reference/conda-tools.html
+        # - https://rstudio.github.io/reticulate/reference/virtualenv-tools.html
+        # - https://rstudio.github.io/reticulate/articles/versions.html
+        # - https://github.com/rstudio/reticulate/issues/1669
+        # - https://blog.stephenturner.us/p/uv-part-3-python-in-r-
+        #   with-reticulate
         "RETICULATE_CONDA=${app['conda']}"
-        "RETICULATE_PYTHON=\${HOME}/venv/r-reticulate/bin/python3"
-        "WORKON_HOME=\${HOME}/venv"
+        "RETICULATE_PYTHON=\${HOME}/.venv/bin/python3"
+        'RETICULATE_USE_MANAGED_VENV=no'
+        'UV_PYTHON_PREFERENCE=only-system'
+        "WORKON_HOME=\${HOME}/.venv"
     )
     # stringi
     # --------------------------------------------------------------------------
@@ -363,6 +372,10 @@ tools/${dict['arch']}"
     # - https://community.rstudio.com/t/
     #     vroom-connection-size-needs-increasing/34560/6
     lines+=("VROOM_CONNECTION_SIZE=524288")
+    # ROracle
+    # --------------------------------------------------------------------------
+    # This requires installation of the Oracle Database Instant Client.
+    # Install with 'koopa install system oracle-instant-client'.
     if koopa_is_fedora_like
     then
         dict['oracle_ver']="$( \
@@ -371,10 +384,6 @@ tools/${dict['arch']}"
         dict['oracle_ver']="$( \
             koopa_major_minor_version "${dict['oracle_ver']}" \
         )"
-        # ROracle
-        # ----------------------------------------------------------------------
-        # This requires installation of the Oracle Database Instant Client.
-        # Install with 'koopa install system oracle-instant-client'.
         lines+=(
             "OCI_VERSION=${dict['oracle_ver']}"
             "ORACLE_HOME=/usr/lib/oracle/\${OCI_VERSION}/client64"
@@ -405,28 +414,24 @@ abort,verbose"
     )
     # Additional useful build environment variables.
     lines+=(
-        # Avoid issue with file timestamp check:
-        #     > N  checking for future file timestamps
-        #     >    unable to verify current time
-        # https://stackoverflow.com/questions/63613301/
+        # Avoid issue with file timestamp check.
+        # - https://stackoverflow.com/questions/63613301/
         '_R_CHECK_SYSTEM_CLOCK_=0'
         # Don't truncate R CMD check output.
-        # See also:
         # - https://twitter.com/michael_chirico/status/1193831562724331520
         # - https://yihui.name/en/2017/12/last-13-lines-of-output/
         '_R_CHECK_TESTS_NLINES_=0'
     )
-    if koopa_is_linux
+    # Debian (and its derivatives) impose a set of compiler flags to prevent
+    # some known security issues with compiled code. These flags then become
+    # defaults for R as well (see eg '/etc/R/Makeconf'), but nevertheless
+    # confuse R as warnings get triggered.  Users, on the other hand, are ofte
+    # stumped about these. So with this variable we declare these options as
+    # known for the local checks on the machine this file is on. See Section 8
+    # of the R Internals manual for many more options.
+    if koopa_is_debian_like
     then
         lines+=(
-            # Debian (and its derivatives) impose a set of compiler flags to
-            # prevent some known security issues with compiled code. These flags
-            # then become defaults for R as well (see eg '/etc/R/Makeconf'), but
-            # nevertheless confuse R as warnings get triggered.  Users, on the
-            # other hand, are often stumped about these. So with this variable
-            # we declare these options as known for the local checks on the
-            # machine this file is on. See Section 8 of the R Internals manual
-            # for many more options.
             "_R_CHECK_COMPILATION_FLAGS_KNOWN_=-Wformat \
 -Werror=format-security -Wdate-time"
         )
