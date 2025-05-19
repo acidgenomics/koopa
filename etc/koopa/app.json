@@ -4507,7 +4507,7 @@
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2025-03-22",
+    "date": "2025-05-19",
     "default": false,
     "dependencies": [
       "ca-certificates",
@@ -4522,7 +4522,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "22.14.0"
+    "version": "22.15.1"
   },
   "npth": {
     "aliases": {
