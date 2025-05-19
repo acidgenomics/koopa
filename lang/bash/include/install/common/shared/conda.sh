@@ -1,19 +1,22 @@
 #!/usr/bin/env bash
 
-# FIXME Rework this to not change default channels to conda-forge and bioconda.
-# Instead, set this in the 'conda-package' recipes, reworking as 'conda-forge'
-# and 'bioconda' packages instead.
-
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2025-01-03.
+    # @note Updated 2025-05-18.
+    #
+    # Consider switching primary installer from miniconda to miniforge, which
+    # is the recommended default for conda-forge builds and doesn't attempt
+    # to use proprietary Anaconda channels by default.
     #
     # @seealso
     # - https://www.anaconda.com/blog/conda-is-fast-now
     # - https://www.anaconda.com/blog/a-faster-conda-for-a-growing-community
+    # - https://conda-forge.org/download/
     # - https://github.com/conda/conda-libmamba-solver
     # - https://github.com/mamba-org/mamba
+    # - https://stackoverflow.com/questions/60532678
+    # - https://www.sens.buffalo.edu/software/conda
     # """
     local -A app dict
     app['bash']="$(koopa_locate_bash --allow-system)"
@@ -22,7 +25,7 @@ main() {
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['os_type']="$(koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['py_version']='3.12'
+    dict['py_version']='3.13'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in
@@ -75,6 +78,7 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
     dict['url']="https://repo.anaconda.com/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
+    # Note that this step configures conda to not use Anaconda channels.
     koopa_cp \
         "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
