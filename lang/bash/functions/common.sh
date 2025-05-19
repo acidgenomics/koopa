@@ -22524,7 +22524,10 @@ tools/${dict['arch']}"
             pc_path_arr+=("${sys_pc_path_arr[@]}")
         fi
         conf_dict['pkg_config_path']="$(printf '%s:' "${pc_path_arr[@]}")"
-        ! koopa_is_macos && lines+=("R_BZIPCMD=${app['bzip2']}")
+        if ! koopa_is_macos
+        then
+            lines+=("R_BZIPCMD=${app['bzip2']}")
+        fi
         lines+=(
             "EDITOR=${app['vim']}"
             "LN_S=${app['ln']} -s"
@@ -22556,8 +22559,10 @@ tools/${dict['arch']}"
     )
     lines+=(
         "RETICULATE_CONDA=${app['conda']}"
-        "RETICULATE_PYTHON=\${HOME}/venv/r-reticulate/bin/python3"
-        "WORKON_HOME=\${HOME}/venv"
+        "RETICULATE_PYTHON=\${HOME}/.venv/bin/python3"
+        'RETICULATE_USE_MANAGED_VENV=no'
+        'UV_PYTHON_PREFERENCE=only-system'
+        "WORKON_HOME=\${HOME}/.venv"
     )
     lines+=(
         'STRINGI_DISABLE_ICU_BUNDLE=1'
@@ -22606,7 +22611,7 @@ abort,verbose"
         '_R_CHECK_SYSTEM_CLOCK_=0'
         '_R_CHECK_TESTS_NLINES_=0'
     )
-    if koopa_is_linux
+    if koopa_is_debian_like
     then
         lines+=(
             "_R_CHECK_COMPILATION_FLAGS_KNOWN_=-Wformat \
