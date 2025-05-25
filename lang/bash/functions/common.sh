@@ -22559,9 +22559,6 @@ tools/${dict['arch']}"
     )
     lines+=(
         "RETICULATE_CONDA=${app['conda']}"
-        "RETICULATE_PYTHON=\${HOME}/.venv/bin/python3"
-        'RETICULATE_USE_MANAGED_VENV=no'
-        'UV_PYTHON_PREFERENCE=only-system'
         "WORKON_HOME=\${HOME}/.venv"
     )
     lines+=(
