@@ -3,13 +3,16 @@
 _koopa_activate_ca_certificates() {
     # """
     # Activate CA certificates for OpenSSL.
-    # @note Updated 2025-02-28.
+    # @note Updated 2025-05-27.
     #
     # @seealso
     # - https://stackoverflow.com/questions/51925384/
     # - https://curl.se/docs/caextract.html
+    # - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
+    #   download.file.html
     # """
     [ -n "${AWS_CA_BUNDLE:-}" ] && return 0
+    [ -n "${CURL_CA_BUNDLE:-}" ] && return 0
     [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
     [ -n "${NODE_EXTRA_CA_CERTS:-}" ] && return 0
     [ -n "${REQUESTS_CA_BUNDLE:-}" ] && return 0
@@ -33,6 +36,7 @@ ca-certificates"
         return 0
     fi
     export AWS_CA_BUNDLE="$__kvar_file"
+    export CURL_CA_BUNDLE="$__kvar_file"
     export DEFAULT_CA_BUNDLE_PATH="$__kvar_prefix"
     export NODE_EXTRA_CA_CERTS="$__kvar_file"
     export REQUESTS_CA_BUNDLE="$__kvar_file"
