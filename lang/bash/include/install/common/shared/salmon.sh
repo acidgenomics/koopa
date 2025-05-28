@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
+    # """
+    # Details on arm64 build support:
+    # https://github.com/bioconda/bioconda-recipes/pull/54092
+    # """
     koopa_install_conda_package
     return 0
 }
@@ -125,11 +129,6 @@ v${dict['version']}.tar.gz"
 }
 
 main() {
-    if koopa_is_arm64
-    then
-        install_from_source
-    else
-        install_from_conda
-    fi
+    install_from_conda
     return 0
 }
