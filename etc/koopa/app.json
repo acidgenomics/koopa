@@ -1038,12 +1038,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-05-31",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.31.3"
+    "version": "4.0.2"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1692,12 +1692,13 @@
     "date": "2025-05-30",
     "default": true,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
       "https://crates.io/crates/eza/"
     ],
-    "version": "0.21.4"
+    "version": "0.21.3"
   },
   "fastqc": {
     "bin": ["fastqc"],
@@ -4929,6 +4930,19 @@
     "url": ["https://pkg-config.freedesktop.org/"],
     "version": "0.29.2"
   },
+  "pkgconf": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["pkgconf"],
+    "build_dependencies": ["make", "xz"],
+    "date": "2025-05-31",
+    "default": false,
+    "man1": ["pkgconf.1"],
+    "prune": false,
+    "url": ["https://github.com/pkgconf/pkgconf"],
+    "version": "2.4.3"
+  },
   "poetry": {
     "aliases": {
       "homebrew": true
@@ -6248,12 +6262,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "pkg-config"],
-    "date": "2024-09-09",
+    "date": "2025-05-31",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "2.0.2"
+    "version": "2.1"
   },
   "tar": {
     "aliases": {
