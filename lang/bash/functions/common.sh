@@ -15286,6 +15286,12 @@ koopa_install_pkg_config() {
         "$@"
 }
 
+koopa_install_pkgconf() {
+    koopa_install_app \
+        --name='pkgconf' \
+        "$@"
+}
+
 koopa_install_poetry() {
     koopa_install_app \
         --installer='python-package' \
@@ -30943,6 +30949,12 @@ koopa_uninstall_pixman() {
 koopa_uninstall_pkg_config() {
     koopa_uninstall_app \
         --name='pkg-config' \
+        "$@"
+}
+
+koopa_uninstall_pkgconf() {
+    koopa_uninstall_app \
+        --name='pkgconf' \
         "$@"
 }
 
