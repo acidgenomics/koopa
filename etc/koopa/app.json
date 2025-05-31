@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-05-01",
+    "date": "2025-05-31",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.27.4"
+    "version": "2.27.25"
   },
   "axel": {
     "aliases": {
@@ -738,7 +738,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-05-22",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -747,7 +747,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.46.4"
+    "version": "1.46.5"
   },
   "brotli": {
     "aliases": {
@@ -999,12 +999,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-05-14",
+    "date": "2025-05-30",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.62.4"
+    "version": "2.62.5"
   },
   "cli11": {
     "aliases": {
@@ -1038,12 +1038,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-05-31",
     "default": false,
     "dependencies": ["openssl3"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "3.31.3"
+    "version": "4.0.2"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1689,9 +1689,10 @@
       "homebrew": true
     },
     "bin": ["eza"],
-    "date": "2025-05-05",
+    "date": "2025-05-30",
     "default": true,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": [
       "https://github.com/eza-community/eza/",
@@ -2167,11 +2168,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-05-22",
+    "date": "2025-05-30",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.73.0"
+    "version": "2.74.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2598,12 +2599,12 @@
     },
     "bin": ["gum"],
     "build_dependencies": ["go"],
-    "date": "2025-03-22",
+    "date": "2025-05-30",
     "default": false,
     "man1": ["gum.1"],
     "prune": true,
     "url": ["https://github.com/charmbracelet/gum/"],
-    "version": "0.16.0"
+    "version": "0.16.1"
   },
   "gzip": {
     "aliases": {
@@ -2901,12 +2902,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2025-04-28",
+    "date": "2025-05-30",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.147.0"
+    "version": "0.147.6"
   },
   "hyperfine": {
     "aliases": {
@@ -3155,12 +3156,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-05-07",
+    "date": "2025-05-30",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.2"
+    "version": "4.4.3"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3351,14 +3352,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2025-05-01",
+    "date": "2025-05-30",
     "default": false,
     "prune": false,
     "url": [
       "https://hyperrealm.github.io/libconfig/",
       "https://github.com/hyperrealm/libconfig/"
     ],
-    "version": "1.8"
+    "version": "1.8.1"
   },
   "libde265": {
     "build_dependencies": ["make"],
@@ -3831,12 +3832,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2025-01-24",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["bzip2", "nettle", "openssl3", "perl", "zlib", "zstd"],
     "prune": false,
     "url": ["https://libzip.org/"],
-    "version": "1.11.3"
+    "version": "1.11.4"
   },
   "llama": {
     "bin": ["llama"],
@@ -4102,12 +4103,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-05-01",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.8.0"
+    "version": "1.8.1"
   },
   "miller": {
     "aliases": {
@@ -4168,12 +4169,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2025-05-14",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.39.1"
+    "version": "2.40.0"
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
@@ -4540,12 +4541,12 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2025-05-01",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.104.0"
+    "version": "0.104.1"
   },
   "oniguruma": {
     "aliases": {
@@ -4724,12 +4725,12 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2025-05-22",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.7.0.1"
+    "version": "3.7.0.2"
   },
   "parallel": {
     "aliases": {
@@ -4929,6 +4930,19 @@
     "url": ["https://pkg-config.freedesktop.org/"],
     "version": "0.29.2"
   },
+  "pkgconf": {
+    "aliases": {
+      "homebrew": true
+    },
+    "bin": ["pkgconf"],
+    "build_dependencies": ["make", "xz"],
+    "date": "2025-05-31",
+    "default": false,
+    "man1": ["pkgconf.1"],
+    "prune": false,
+    "url": ["https://github.com/pkgconf/pkgconf"],
+    "version": "2.4.3"
+  },
   "poetry": {
     "aliases": {
       "homebrew": true
@@ -5068,12 +5082,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-05-09",
+    "date": "2025-05-30",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.5.7"
+    "version": "2.6.0"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5723,12 +5737,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-05-22",
+    "date": "2025-05-30",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.11"
+    "version": "0.11.12"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6000,7 +6014,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-05-22",
+    "date": "2025-05-30",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6009,7 +6023,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.5.0"
+    "version": "9.5.1"
   },
   "sox": {
     "aliases": {
@@ -6248,12 +6262,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "git", "pkg-config"],
-    "date": "2024-09-09",
+    "date": "2025-05-31",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "2.0.2"
+    "version": "2.1"
   },
   "tar": {
     "aliases": {
@@ -6435,14 +6449,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-05-14",
+    "date": "2025-05-30",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.25.4"
+    "version": "0.25.5"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6569,12 +6583,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-05-22",
+    "date": "2025-05-30",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.7.7"
+    "version": "0.7.8"
   },
   "vim": {
     "aliases": {
@@ -7195,12 +7209,12 @@
       "homebrew": true
     },
     "bin": ["zoxide"],
-    "date": "2025-02-14",
+    "date": "2025-05-30",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/ajeetdsouza/zoxide/"],
-    "version": "0.9.7"
+    "version": "0.9.8"
   },
   "zsh": {
     "aliases": {
