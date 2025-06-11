@@ -14672,6 +14672,13 @@ koopa_install_man_db() {
         "$@"
 }
 
+koopa_install_marimo() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='marimo' \
+        "$@"
+}
+
 koopa_install_markdownlint_cli() {
     koopa_install_app \
         --installer='node-package' \
@@ -30601,6 +30608,12 @@ koopa_uninstall_mamba() {
 koopa_uninstall_man_db() {
     koopa_uninstall_app \
         --name='man-db' \
+        "$@"
+}
+
+koopa_uninstall_marimo() {
+    koopa_uninstall_app \
+        --name='marimo' \
         "$@"
 }
 
