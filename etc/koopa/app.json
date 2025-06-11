@@ -4059,6 +4059,15 @@
     ],
     "version": "2.13.0"
   },
+  "marimo": {
+    "bin": ["marimo"],
+    "date": "2025-06-11",
+    "default": true,
+    "dependencies": ["python3.12"],
+    "prune": true,
+    "url": ["https://marimo.io/"],
+    "version": "0.13.15"
+  },
   "markdownlint-cli": {
     "aliases": {
       "homebrew": true
@@ -5311,11 +5320,11 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2025-05-06",
+    "date": "2025-06-11",
     "default": true,
     "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.7.30"
+    "version": "1.7.31"
   },
   "r": {
     "aliases": {
