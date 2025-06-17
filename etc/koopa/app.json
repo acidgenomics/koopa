@@ -5744,7 +5744,7 @@
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.11.13"
+    "version": "0.12.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
