@@ -5209,7 +5209,7 @@
     },
     "bin": ["python3.10", "python3.10-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-06-17",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -5229,7 +5229,7 @@
     "man1": ["python3.10.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.10.17"
+    "version": "3.10.18"
   },
   "python3.11": {
     "aliases": {
@@ -5237,7 +5237,7 @@
     },
     "bin": ["python3.11", "python3.11-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-06-17",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -5257,7 +5257,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.12"
+    "version": "3.11.13"
   },
   "python3.12": {
     "aliases": {
@@ -5265,7 +5265,7 @@
     },
     "bin": ["python3.12", "python3.12-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-06-17",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -5285,7 +5285,7 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.10"
+    "version": "3.12.11"
   },
   "python3.13": {
     "aliases": {
@@ -5293,7 +5293,7 @@
     },
     "bin": ["python3.13", "python3.13-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-06-11",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -5313,18 +5313,18 @@
     "man1": ["python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.13.3"
+    "version": "3.13.5"
   },
   "quarto": {
     "aliases": {
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2025-06-11",
+    "date": "2025-06-17",
     "default": true,
     "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.7.31"
+    "version": "1.7.32"
   },
   "r": {
     "aliases": {
@@ -5332,7 +5332,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-06-17",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -5400,7 +5400,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.5.0"
+    "version": "4.5.1"
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
