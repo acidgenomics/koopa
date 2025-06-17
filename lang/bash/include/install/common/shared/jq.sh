@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_source() {
     # """
     # Install jq.
     # @note Updated 2023-04-10.
@@ -56,5 +61,10 @@ jq-${dict['version']}/jq-${dict['version']}.tar.gz"
     "${app['libtoolize']}"
     "${app['autoreconf']}" --force --install --verbose
     koopa_make_build "${conf_args[@]}"
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }
