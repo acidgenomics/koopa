@@ -410,7 +410,7 @@
       "https://bandit.readthedocs.io/en/latest/",
       "https://github.com/PyCQA/bandit/"
     ],
-    "version": "1.8.4"
+    "version": "1.8.5"
   },
   "bandwhich": {
     "aliases": {
@@ -1465,7 +1465,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.64.0"
+    "version": "0.63.0"
   },
   "direnv": {
     "aliases": {
@@ -3124,16 +3124,9 @@
       "homebrew": true
     },
     "bin": ["jq"],
-    "build_dependencies": [
-      "autoconf",
-      "automake",
-      "libtool",
-      "make",
-      "pkg-config"
-    ],
     "date": "2025-06-17",
     "default": true,
-    "dependencies": ["gettext", "m4", "oniguruma"],
+    "dependencies": ["conda"],
     "man1": ["jq.1"],
     "prune": true,
     "url": ["https://github.com/stedolan/jq/"],
