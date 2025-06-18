@@ -655,7 +655,7 @@ koopa_macos_ifactive() {
 koopa_macos_install_system_python() {
     koopa_install_app \
         --installer='python' \
-        --name='python3.12' \
+        --name='python3.13' \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \
@@ -1191,7 +1191,7 @@ koopa_macos_uninstall_system_oracle_java() {
 
 koopa_macos_uninstall_system_python() {
     koopa_uninstall_app \
-        --name='python3.12' \
+        --name='python3.13' \
         --platform='macos' \
         --system \
         --uninstaller='python' \
