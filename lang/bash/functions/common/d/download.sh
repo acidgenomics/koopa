@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2025-02-20.
+    # @note Updated 2025-06-18.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -48,6 +48,7 @@ Edg/131.0.0.0"
     # Inclusion of '--progress' shows a simpler progress bar.
     curl_args+=(
         # > '--disable' # Ignore '~/.curlrc'. Must come first.
+        '--continue-at' '-'
         '--create-dirs'
         '--fail'
         '--location'
