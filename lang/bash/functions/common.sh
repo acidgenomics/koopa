@@ -8074,6 +8074,7 @@ Edg/131.0.0.0"
     dict['url']="${1:?}"
     dict['file']="${2:-}"
     curl_args+=(
+        '--continue-at' '-'
         '--create-dirs'
         '--fail'
         '--location'
