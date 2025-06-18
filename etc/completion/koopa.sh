@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-05-31.
+    # @note Updated 2025-06-11.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -316,6 +316,7 @@ _koopa_complete() {
                         'make'
                         'mamba'
                         'man-db'
+                        'marimo'
                         'markdownlint-cli'
                         'mcfly'
                         'mdcat'
