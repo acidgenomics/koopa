@@ -57,10 +57,10 @@ koopa_macos_brew_upgrade_casks() {
             # >     "${app['brew']}" unlink 'emacs'
             # >     "${app['brew']}" link 'emacs'
             # >     ;;
-            'google-'*)
-                # Currently in 'google-chrome' and 'google-drive' recipes.
-                koopa_macos_disable_google_keystone
-                ;;
+            # > 'google-'*)
+            # >     # Currently in 'google-chrome' and 'google-drive' recipes.
+            # >     koopa_macos_disable_google_keystone
+            # >     ;;
             'gpg-suite'*)
                 koopa_macos_disable_gpg_updater
                 ;;
