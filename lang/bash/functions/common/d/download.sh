@@ -48,7 +48,6 @@ Edg/131.0.0.0"
     # Inclusion of '--progress' shows a simpler progress bar.
     curl_args+=(
         # > '--disable' # Ignore '~/.curlrc'. Must come first.
-        '--continue-at' '-'
         '--create-dirs'
         '--fail'
         '--location'
@@ -112,7 +111,10 @@ Edg/131.0.0.0"
         then
             dict['file']="${PWD:?}/${dict['file']}"
         fi
-        curl_args+=('--output' "${dict['file']}")
+        curl_args+=(
+            '--continue-at' '-'
+            '--output' "${dict['file']}"
+        )
         koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
     else
         dict['output_dir']="${PWD:?}"
