@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-05-31",
+    "date": "2025-06-19",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.27.25"
+    "version": "2.27.38"
   },
   "axel": {
     "aliases": {
@@ -2168,11 +2168,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-06-17",
+    "date": "2025-06-19",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.74.1"
+    "version": "2.74.2"
   },
   "ghostscript": {
     "aliases": {
@@ -4628,11 +4628,11 @@
       "fedora": "openblas-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-01-12",
+    "date": "2025-06-19",
     "default": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.29"
+    "version": "0.3.30"
   },
   "openjpeg": {
     "aliases": {
@@ -5084,12 +5084,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-06-17",
+    "date": "2025-06-19",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.2"
+    "version": "2.6.3"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5185,7 +5185,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2025-06-17",
+    "date": "2025-06-19",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -5194,7 +5194,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "8.4.0"
+    "version": "8.4.1"
   },
   "python3.10": {
     "aliases": {
@@ -5545,13 +5545,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2025-05-22",
+    "date": "2025-06-19",
     "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.69.3"
+    "version": "1.70.1"
   },
   "readline": {
     "aliases": {
@@ -6191,7 +6191,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-05-14",
+    "date": "2025-06-19",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6200,7 +6200,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.45.1"
+    "version": "1.46.0"
   },
   "subread": {
     "bin": ["featureCounts"],
