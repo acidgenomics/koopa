@@ -8135,7 +8135,6 @@ Edg/131.0.0.0"
             dict['file']="${PWD:?}/${dict['file']}"
         fi
         curl_args+=(
-            '--continue-at' '-'
             '--output' "${dict['file']}"
         )
         koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
