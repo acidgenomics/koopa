@@ -1004,7 +1004,7 @@
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.63.0"
+    "version": "2.62.7"
   },
   "cli11": {
     "aliases": {
