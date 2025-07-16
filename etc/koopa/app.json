@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-06-19",
+    "date": "2025-07-16",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.27.38"
+    "version": "2.27.46"
   },
   "axel": {
     "aliases": {
@@ -2168,11 +2168,11 @@
     },
     "bin": ["gh"],
     "build_dependencies": ["go"],
-    "date": "2025-06-19",
-    "default": false,
+    "date": "2025-07-16",
+    "default": true,
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.74.2"
+    "version": "2.75.1"
   },
   "ghostscript": {
     "aliases": {
