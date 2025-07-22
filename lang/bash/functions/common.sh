@@ -8134,7 +8134,9 @@ Edg/131.0.0.0"
         then
             dict['file']="${PWD:?}/${dict['file']}"
         fi
-        curl_args+=('--output' "${dict['file']}")
+        curl_args+=(
+            '--output' "${dict['file']}"
+        )
         koopa_alert "Downloading '${dict['url']}' to '${dict['file']}'."
     else
         dict['output_dir']="${PWD:?}"
