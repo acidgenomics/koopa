@@ -132,9 +132,6 @@ koopa_macos_brew_upgrade_casks() {
             "$cask" \
             || true
         case "$cask" in
-            'google-'*)
-                koopa_macos_disable_google_keystone
-                ;;
             'gpg-suite'*)
                 koopa_macos_disable_gpg_updater
                 ;;
