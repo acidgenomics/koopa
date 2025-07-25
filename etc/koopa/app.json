@@ -2167,12 +2167,12 @@
       "homebrew": true
     },
     "bin": ["gh"],
-    "build_dependencies": ["go"],
-    "date": "2025-07-16",
+    "date": "2025-07-25",
     "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.75.1"
+    "version": "2.76.1"
   },
   "ghostscript": {
     "aliases": {
