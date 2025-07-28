@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-06-11.
+    # @note Updated 2025-07-28.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -137,6 +137,7 @@ _koopa_complete() {
                         'bpytop'
                         'broot'
                         'brotli'
+                        'btop'
                         'bustools'
                         'byobu'
                         'bzip2'
