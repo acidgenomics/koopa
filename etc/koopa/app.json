@@ -762,6 +762,15 @@
     "url": ["https://github.com/google/brotli/"],
     "version": "1.1.0"
   },
+  "btop": {
+    "bin": ["btop"],
+    "date": "2025-07-28",
+    "default": true,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": ["https://github.com/aristocratos/btop"],
+    "version": "1.4.4"
+  },
   "bustools": {
     "bin": ["bustools"],
     "date": "2024-12-24",
@@ -2167,12 +2176,12 @@
       "homebrew": true
     },
     "bin": ["gh"],
-    "build_dependencies": ["go"],
-    "date": "2025-07-16",
+    "date": "2025-07-25",
     "default": true,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.75.1"
+    "version": "2.76.1"
   },
   "ghostscript": {
     "aliases": {

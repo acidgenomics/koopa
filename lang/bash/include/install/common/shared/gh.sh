@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_source() {
     # """
     # Install GitHub CLI (gh).
     # @note Updated 2023-06-01.
@@ -36,5 +41,10 @@ refs/tags/v${dict['version']}.tar.gz"
         --target-directory="${dict['prefix']}" \
         'bin' 'share'
     koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }
