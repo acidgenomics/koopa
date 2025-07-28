@@ -12934,6 +12934,13 @@ koopa_install_brotli() {
         "$@"
 }
 
+koopa_install_btop() {
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='btop' \
+        "$@"
+}
+
 koopa_install_bustools() {
     koopa_assert_is_not_arm64
     koopa_install_app \
@@ -29474,6 +29481,12 @@ koopa_uninstall_broot() {
 koopa_uninstall_brotli() {
     koopa_uninstall_app \
         --name='brotli' \
+        "$@"
+}
+
+koopa_uninstall_btop() {
+    koopa_uninstall_app \
+        --name='btop' \
         "$@"
 }
 
