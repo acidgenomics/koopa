@@ -18,6 +18,7 @@ _koopa_activate_bash_completion() {
     dict['opt_prefix']="$(_koopa_opt_prefix)"
     completion_files+=(
         "${dict['opt_prefix']}/bash-completion/etc/profile.d/bash_completion.sh"
+        "${dict['opt_prefix']}/gh/share/bash-completion/completions/gh"
         "${dict['opt_prefix']}/git/share/completion/git-completion.bash"
         "${dict['opt_prefix']}/google-cloud-sdk/libexec/gcloud/\
 completion.bash.inc"
