@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-# TODO Work on consolidating these scripts into a single directory managed
+# FIXME Work on consolidating these scripts into a single directory managed
 # in koopa.
 
 _koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
-    # @note Updated 2025-02-27.
+    # @note Updated 2025-08-04.
     #
     # System Bash completion paths:
     # - /usr/share/bash-completion/bash_completion
@@ -16,10 +16,12 @@ _koopa_activate_bash_completion() {
     local -a completion_dirs completion_files
     local completion_dir completion_file
     dict['opt_prefix']="$(_koopa_opt_prefix)"
+    # FIXME Rework these to standardize 'share/bash-completion/completions'.
     completion_files+=(
         # > '/usr/share/bash-completion/bash_completion'
         # > '/etc/bash_completion'
         "${dict['opt_prefix']}/bash-completion/etc/profile.d/bash_completion.sh"
+        "${dict['opt_prefix']}/gh/share/bash-completion/completions/gh"
         "${dict['opt_prefix']}/git/share/completion/git-completion.bash"
         "${dict['opt_prefix']}/google-cloud-sdk/libexec/gcloud/\
 completion.bash.inc"
@@ -32,6 +34,8 @@ completion.bash.inc"
             source "$completion_file"
         fi
     done
+    # FIXME Consider reworking this to only source individual files, rather
+    # than looping across directories.
     completion_dirs+=(
         '/etc/bash_completion.d'
         '/usr/local/etc/bash_completion.d'
