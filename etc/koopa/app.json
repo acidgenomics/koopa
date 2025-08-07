@@ -5322,11 +5322,11 @@
       "homebrew-cask": true
     },
     "bin": ["quarto"],
-    "date": "2025-06-17",
+    "date": "2025-08-07",
     "default": true,
     "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.7.32"
+    "version": "1.7.33"
   },
   "r": {
     "aliases": {
