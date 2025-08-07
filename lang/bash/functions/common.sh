@@ -17291,7 +17291,7 @@ koopa_is_powerful_machine() {
 }
 
 koopa_is_python_venv_active() {
-    [[ -n "${VIRTUAL_ENV:-}" ]]
+    [[ -n "${VIRTUAL_ENV:-}" ]] && [[ -n "${VIRTUAL_ENV_PROMPT:-}" ]]
 }
 
 koopa_is_r_package_installed() {
