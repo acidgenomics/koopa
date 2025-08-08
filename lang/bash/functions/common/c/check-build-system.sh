@@ -1,19 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME On macOS check for Xcode CLT and error: unsupported system.
-#
-# FIXME Don't allow CLT:
-
-# FIXME Need to add a koopa_compare_versions function here.
-# https://stackoverflow.com/questions/4023830
-# koopa_compare_versions AAA OP BBB
-# e.g. koopa_compare_versions 2.0 >= 1.0
-# Need to support these ops: =, >, >=, <, <=
-
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2025-03-12.
+    # @note Updated 2025-08-08.
     # """
     local -A app dict ver1 ver2
     local key
@@ -53,7 +43,7 @@ Run 'xcode-select --install' to resolve."
     elif koopa_is_linux
     then
         # GCC.
-        ver2['cc']='4.8'
+        ver2['cc']='8.0'
     fi
     ver2['git']='1.8'
     ver2['make']='3.8'
