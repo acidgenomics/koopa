@@ -43,7 +43,7 @@ Run 'xcode-select --install' to resolve."
     elif koopa_is_linux
     then
         # GCC.
-        ver2['cc']='8.0'
+        ver2['cc']='7.0'
     fi
     ver2['git']='1.8'
     ver2['make']='3.8'
