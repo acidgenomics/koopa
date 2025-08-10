@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# FIXME CC (e.g. "gcc") check will currently fail on Linux systems with a
+# custom compiler defined in PATH. Need to figure out a solution for this.
+
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
