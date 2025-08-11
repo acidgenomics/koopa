@@ -1086,6 +1086,8 @@
     "bin": ["conda"],
     "date": "2025-08-10",
     "default": true,
+    "notes": ["25.5.1 release has buggy certifi SSL_CERT_FILE issue."],
+    "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "25.3.1-1"
