@@ -45,6 +45,14 @@ refs/tags/v${dict['version']}.tar.gz"
 }
 
 main() {
+    local -A app dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    app['gh']="${dict['prefix']}/bin/gh"
     install_from_conda
+    koopa_assert_is_executable "${app['gh']}"
+    dict['bc']="${dict['prefix']}/share/bash-completion/completions/gh"
+    koopa_alert "Adding bash completion at '${dict['bc']}'."
+    koopa_touch "${dict['bc']}"
+    "${app['gh']}" completion -s bash > "${dict['bc']}"
     return 0
 }
