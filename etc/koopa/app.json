@@ -910,11 +910,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2025-04-11",
+    "date": "2025-08-11",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2025-02-25"
+    "version": "2025-07-15"
   },
   "cairo": {
     "aliases": {
