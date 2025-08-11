@@ -5966,9 +5966,10 @@
     "date": "2025-08-10",
     "default": true,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/koalaman/shellcheck/"],
-    "version": "0.11.0"
+    "version": "0.10.0"
   },
   "shiny-server": {
     "date": "2025-05-08",
