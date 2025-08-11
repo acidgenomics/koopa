@@ -4352,7 +4352,7 @@ Run 'xcode-select --install' to resolve."
         ver2['cc']='14.0'
     elif koopa_is_linux
     then
-        ver2['cc']='4.8'
+        ver2['cc']='7.0'
     fi
     ver2['git']='1.8'
     ver2['make']='3.8'
@@ -17291,7 +17291,7 @@ koopa_is_powerful_machine() {
 }
 
 koopa_is_python_venv_active() {
-    [[ -n "${VIRTUAL_ENV:-}" ]]
+    [[ -n "${VIRTUAL_ENV:-}" ]] && [[ -n "${VIRTUAL_ENV_PROMPT:-}" ]]
 }
 
 koopa_is_r_package_installed() {
