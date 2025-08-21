@@ -3,7 +3,7 @@
 koopa_app_prefix() {
     # """
     # Application prefix.
-    # @note Updated 2023-07-28.
+    # @note Updated 2025-08-21.
     #
     # @examples
     # > koopa_app_prefix
@@ -30,8 +30,14 @@ koopa_app_prefix() {
                 dict['allow_missing']=1
                 shift 1
                 ;;
+            # App version overrides --------------------------------------------
+            'python')
+                dict['python_version']="$(koopa_python_major_minor_version)"
+                pos+=("python${dict['python_version']}")
+                shift 1
+                ;;
             # Other ------------------------------------------------------------
-            '--'*)
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
