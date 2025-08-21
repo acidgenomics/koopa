@@ -30900,6 +30900,12 @@ koopa_uninstall_openssl() {
         "$@"
 }
 
+koopa_uninstall_openssl3() {
+    koopa_uninstall_app \
+        --name='openssl3' \
+        "$@"
+}
+
 koopa_uninstall_p7zip() {
     koopa_uninstall_app \
         --name='p7zip' \
