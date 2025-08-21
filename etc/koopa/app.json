@@ -5206,7 +5206,13 @@
     "aliases": {
       "homebrew": "python@3.10"
     },
-    "bin": ["python3.10", "python3.10-config"],
+    "bin": [
+      "idle3.10",
+      "pip3.10",
+      "pydoc3.10",
+      "python3.10",
+      "python3.10-config"
+    ],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-06-17",
     "default": false,
@@ -5235,7 +5241,13 @@
     "aliases": {
       "homebrew": "python@3.11"
     },
-    "bin": ["python3.11", "python3.11-config"],
+    "bin": [
+      "idle3.11",
+      "pip3.11",
+      "pydoc3.11",
+      "python3.11",
+      "python3.11-config"
+    ],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-06-17",
     "default": false,
@@ -5263,7 +5275,13 @@
     "aliases": {
       "homebrew": "python@3.12"
     },
-    "bin": ["python3.12", "python3.12-config"],
+    "bin": [
+      "idle3.12",
+      "pip3.12",
+      "pydoc3.12",
+      "python3.12",
+      "python3.12-config"
+    ],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-06-17",
     "default": true,
