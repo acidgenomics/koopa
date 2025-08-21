@@ -64,12 +64,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2025-07-16",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "3.0.3"
+    "version": "3.0.5"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.28.6"
+    "version": "2.28.13"
   },
   "axel": {
     "aliases": {
@@ -910,11 +910,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2025-08-11",
+    "date": "2025-08-20",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2025-07-15"
+    "version": "2025-08-12"
   },
   "cairo": {
     "aliases": {
@@ -1390,13 +1390,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-08-20",
     "default": true,
     "dependencies": ["ca-certificates", "libssh2", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.13.0"
+    "version": "8.15.0"
   },
   "dash": {
     "aliases": {
@@ -1606,7 +1606,7 @@
     },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-08-18",
     "default": false,
     "dependencies": [
       "gmp",
@@ -1622,7 +1622,7 @@
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "29.4"
+    "version": "30.2"
   },
   "ensembl-perl-api": {
     "date": "2024-12-24",
@@ -1772,11 +1772,11 @@
     "version": "0.3.1"
   },
   "fgbio": {
-    "date": "2025-04-11",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["conda"],
     "url": ["https://bioconda.github.io/recipes/fgbio/README.html"],
-    "version": "2.5.21"
+    "version": "3.0.0"
   },
   "findutils": {
     "aliases": {
@@ -2690,7 +2690,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2703,7 +2703,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "11.3.3"
+    "version": "11.4.2"
   },
   "haskell-cabal": {
     "aliases": {
@@ -3160,12 +3160,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.5"
+    "version": "4.4.6"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4116,12 +4116,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.8.3"
+    "version": "1.8.4"
   },
   "miller": {
     "aliases": {
@@ -4129,14 +4129,14 @@
     },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2025-07-16",
+    "date": "2025-08-21",
     "default": false,
     "prune": true,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.14.0"
+    "version": "6.15.0"
   },
   "mimalloc": {
     "aliases": {
@@ -4182,12 +4182,12 @@
   },
   "mold": {
     "build_dependencies": ["cmake", "make"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["mimalloc", "tbb", "zlib", "zstd"],
     "prune": false,
     "url": ["https://github.com/rui314/mold/"],
-    "version": "2.40.3"
+    "version": "2.40.4"
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
@@ -4596,7 +4596,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "prune": true,
     "supported": {
@@ -4606,7 +4606,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "1.1.0"
+    "version": "1.1.1"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -5095,12 +5095,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.6"
+    "version": "2.6.7"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5750,12 +5750,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.12.8"
+    "version": "0.12.9"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5930,7 +5930,7 @@
   },
   "seqkit": {
     "bin": ["seqkit"],
-    "date": "2025-03-21",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -5945,7 +5945,7 @@
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.10.0"
+    "version": "2.10.1"
   },
   "serf": {
     "aliases": {
@@ -6204,7 +6204,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["python3.12"],
     "prune": true,
@@ -6213,7 +6213,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.48.0"
+    "version": "1.48.1"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6598,12 +6598,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": true,
     "dependencies": ["python3.12"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.8.8"
+    "version": "0.8.12"
   },
   "vim": {
     "aliases": {
@@ -7147,7 +7147,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-08-10",
+    "date": "2025-08-21",
     "default": false,
     "dependencies": ["ffmpeg", "python3.12"],
     "prune": true,
@@ -7155,7 +7155,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.7.21"
+    "version": "2025.8.20"
   },
   "zellij": {
     "aliases": {
