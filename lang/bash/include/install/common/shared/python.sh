@@ -165,13 +165,13 @@ Python-${dict['version']}.tar.xz"
     koopa_alert 'Adding unversioned symlinks.'
     (
         koopa_cd "${dict['prefix']}/bin"
-        koopa_ln 'idle3' 'idle'
-        koopa_ln 'pip3' 'pip'
-        koopa_ln 'pydoc3' 'pydoc'
-        koopa_ln 'python3' 'python'
-        koopa_ln 'python3-config' 'python-config'
+        koopa_ln --verbose 'idle3' 'idle'
+        koopa_ln --verbose 'pip3' 'pip'
+        koopa_ln --verbose 'pydoc3' 'pydoc'
+        koopa_ln --verbose 'python3' 'python'
+        koopa_ln --verbose 'python3-config' 'python-config'
         koopa_cd "${dict['prefix']}/share/man/man1"
-        koopa_ln 'python3.1' 'python.1'
+        koopa_ln --verbose 'python3.1' 'python.1'
     )
     return 0
 }
