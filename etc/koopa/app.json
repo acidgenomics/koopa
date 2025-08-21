@@ -3236,16 +3236,16 @@
   },
   "latch": {
     "bin": ["latch"],
-    "date": "2024-12-30",
+    "date": "2025-08-21",
     "default": false,
-    "dependencies": ["python3.11"],
+    "dependencies": ["python3.12"],
     "prune": true,
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.55.1"
+    "version": "2.66.3"
   },
   "ldc": {
     "aliases": {
@@ -4581,9 +4581,9 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2025-05-22",
+    "date": "2025-08-21",
     "default": false,
-    "dependencies": ["python3.11", "zlib"],
+    "dependencies": ["python3.13", "zlib"],
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -4592,7 +4592,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "0.9.1"
+    "version": "0.9.0"
   },
   "ont-dorado": {
     "bin": ["dorado"],
@@ -5231,6 +5231,7 @@
       "zlib"
     ],
     "man1": ["python3.10.1"],
+    "notes": ["Still including here to support gentropy."],
     "prune": false,
     "url": ["https://www.python.org/"],
     "version": "3.10.18"
