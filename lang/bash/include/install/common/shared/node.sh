@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE Consider using bundled openssl with:
+# --shared-openssl=no
+
 main() {
     # """
     # Install Node.js.
@@ -31,23 +34,24 @@ main() {
     #     recipe/build.sh
     # - https://github.com/nodejs/gyp-next/actions/runs/711098809/workflow
     # - https://github.com/nodejs/corepack
+    # - https://www.linuxfromscratch.org/blfs/view/svn/general/nodejs.html
     # """
     local -A app dict
     local -a build_deps conf_args deps
     build_deps=('make' 'ninja' 'pkg-config')
-    deps=(
-        'ca-certificates'
-        'zlib'
-        'icu4c'
-        'libuv'
-        'openssl'
-        'python'
-        'c-ares'
-        # Hitting an nghttp2 build issue on Ubuntu 22, so disabling here.
-        # > 'nghttp2'
-    )
+    # > deps=(
+    # >     'ca-certificates'
+    # >     'zlib'
+    # >     'icu4c'
+    # >     'libuv'
+    # >     'openssl'
+    # >     'python'
+    # >     'c-ares'
+    # >     # Hitting an nghttp2 build issue on Ubuntu 22, so disabling here.
+    # >     # > 'nghttp2'
+    # > )
     koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    # > koopa_activate_app "${deps[@]}"
     app['make']="$(koopa_locate_make)"
     app['python']="$(koopa_locate_python --realpath)"
     koopa_assert_is_executable "${app[@]}"
@@ -66,30 +70,33 @@ cacert.pem"
     koopa_assert_is_file "${dict['cacerts']}"
     conf_args=(
         '--ninja'
-        "--openssl-system-ca-path=${dict['cacerts']}"
-        '--openssl-use-def-ca-store'
+        # > "--openssl-system-ca-path=${dict['cacerts']}"
+        # > '--openssl-use-def-ca-store'
         "--prefix=${dict['prefix']}"
-        '--shared'
-        '--shared-cares'
-        "--shared-cares-includes=${dict['cares']}/include"
-        "--shared-cares-libpath=${dict['cares']}/lib"
-        '--shared-libuv'
-        "--shared-libuv-includes=${dict['libuv']}/include"
-        "--shared-libuv-libpath=${dict['libuv']}/lib"
+        # > '--shared'
+        # > '--shared-cares'
+        # > "--shared-cares-includes=${dict['cares']}/include"
+        # > "--shared-cares-libpath=${dict['cares']}/lib"
+        # > '--shared-libuv'
+        # > "--shared-libuv-includes=${dict['libuv']}/include"
+        # > "--shared-libuv-libpath=${dict['libuv']}/lib"
         # > '--shared-nghttp2'
         # > "--shared-nghttp2-includes=${dict['nghttp2']}/include"
         # > "--shared-nghttp2-libpath=${dict['nghttp2']}/lib"
-        '--shared-openssl'
-        "--shared-openssl-includes=${dict['openssl']}/include"
-        "--shared-openssl-libpath=${dict['openssl']}/lib"
-        '--shared-zlib'
-        "--shared-zlib-includes=${dict['zlib']}/include"
-        "--shared-zlib-libpath=${dict['zlib']}/lib"
-        '--with-intl=system-icu'
-        '--without-node-snapshot'
+        # > '--shared-openssl'
+        # > "--shared-openssl-includes=${dict['openssl']}/include"
+        # > "--shared-openssl-libpath=${dict['openssl']}/lib"
+        # > '--shared-zlib'
+        # > "--shared-zlib-includes=${dict['zlib']}/include"
+        # > "--shared-zlib-libpath=${dict['zlib']}/lib"
+        # > '--with-intl=system-icu'
+        # > '--without-node-snapshot'
         '--verbose'
     )
-    export LDFLAGS_host="${LDFLAGS:?}"
+    if [[ -n "${LDFLAGS:-}" ]]
+    then
+        export LDFLAGS_host="${LDFLAGS:?}"
+    fi
     export PYTHON="${app['python']}"
     # This is needed to put sysctl into PATH.
     koopa_is_macos && koopa_add_to_path_end '/usr/sbin'
