@@ -910,11 +910,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2025-08-11",
+    "date": "2025-08-20",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2025-07-15"
+    "version": "2025-08-12"
   },
   "cairo": {
     "aliases": {
@@ -1390,13 +1390,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2025-08-20",
     "default": true,
     "dependencies": ["ca-certificates", "libssh2", "openssl3", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.13.0"
+    "version": "8.15.0"
   },
   "dash": {
     "aliases": {
@@ -1606,7 +1606,7 @@
     },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
-    "date": "2024-12-24",
+    "date": "2025-08-18",
     "default": false,
     "dependencies": [
       "gmp",
@@ -1622,7 +1622,7 @@
     "man1": ["ebrowse.1.gz", "emacs.1.gz", "emacsclient.1.gz", "etags.1.gz"],
     "prune": false,
     "url": ["https://www.gnu.org/software/emacs/"],
-    "version": "29.4"
+    "version": "30.2"
   },
   "ensembl-perl-api": {
     "date": "2024-12-24",
