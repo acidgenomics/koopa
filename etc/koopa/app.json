@@ -4527,7 +4527,7 @@
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "24.6.0"
+    "version": "22.18.0"
   },
   "npth": {
     "aliases": {
