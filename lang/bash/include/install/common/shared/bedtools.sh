@@ -17,7 +17,7 @@ main() {
     local -a deps libs
     koopa_activate_app --build-only 'autoconf' 'automake' 'make'
     ! koopa_is_macos && deps+=('bzip2')
-    deps+=('curl' 'openssl3' 'xz' 'zlib')
+    deps+=('curl' 'openssl' 'xz' 'zlib')
     koopa_activate_app "${deps[@]}"
     app['autoreconf']="$(koopa_locate_autoreconf)"
     app['make']="$(koopa_locate_make)"
@@ -25,7 +25,7 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"

@@ -6,7 +6,7 @@
 koopa_install_koopa() {
     # """
     # Install koopa.
-    # @note Updated 2024-12-13.
+    # @note Updated 2025-08-21.
     # """
     local -A bool dict
     bool['add_to_user_profile']=1
@@ -170,10 +170,11 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
+        dict['python_version']="$(koopa_python_major_minor_version)"
         koopa_cli_install --bootstrap \
             'bash' \
             'coreutils' \
-            'python3.12'
+            "python${dict['python_version']}"
     fi
     return 0
 }

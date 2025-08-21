@@ -75,7 +75,7 @@ koopa_python_create_venv() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     pkgs=("$@")
     [[ -z "${app['python']}" ]] && \
-        app['python']="$(koopa_locate_python312 --realpath)"
+        app['python']="$(koopa_locate_python --realpath)"
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"

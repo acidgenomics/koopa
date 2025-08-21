@@ -22,7 +22,7 @@ main() {
         'zlib' \
         'apr' \
         'apr-util' \
-        'openssl3' \
+        'openssl' \
         'scons'
     app['patch']="$(koopa_locate_patch)"
     app['scons']="$(koopa_locate_scons)"
@@ -31,7 +31,7 @@ main() {
     dict['apu']="$(koopa_app_prefix 'apr-util')"
     dict['cflags']="${CFLAGS:-}"
     dict['linkflags']="${LDFLAGS:-}"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"

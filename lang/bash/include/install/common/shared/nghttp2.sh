@@ -5,7 +5,7 @@
 main() {
     # """
     # Install nghttp2.
-    # @note Updated 2024-07-05.
+    # @note Updated 2025-08-21.
     #
     # @seealso
     # - https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/nghttp2.rb
@@ -14,7 +14,7 @@ main() {
     # """
     local -A app dict
     local -a build_deps conf_args deps
-    build_deps=('pkg-config' 'python3.12')
+    build_deps=('pkg-config' 'python')
     # This fails to build with GCC 11 on Ubuntu 22, so requiring our GCC.
     koopa_is_linux && build_deps+=('gcc')
     deps=(
@@ -23,12 +23,12 @@ main() {
         'libev'
         'icu4c' # libxml2
         'libxml2'
-        'openssl3'
+        'openssl'
         'zlib'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
-    app['python']="$(koopa_locate_python312 --realpath)"
+    app['python']="$(koopa_locate_python --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

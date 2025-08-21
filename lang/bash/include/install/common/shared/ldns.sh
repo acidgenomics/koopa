@@ -11,8 +11,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app 'openssl3'
-    dict['openssl3']="$(koopa_app_prefix 'openssl3')"
+    koopa_activate_app 'openssl'
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://nlnetlabs.nl/downloads/ldns/\
@@ -22,7 +22,7 @@ ldns-${dict['version']}.tar.gz"
     koopa_cd 'src'
     conf_args=(
         "--prefix=${dict['prefix']}"
-        "--with-ssl=${dict['openssl3']}"
+        "--with-ssl=${dict['openssl']}"
         '--without-drill'
         '--without-examples'
         '--without-pyldns'

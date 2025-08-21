@@ -11,7 +11,7 @@ main() {
     # """
     local -A dict
     local -a build_deps cmake_args
-    build_deps+=('python3.12')
+    build_deps+=('python')
     koopa_activate_app --build-only "${build_deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

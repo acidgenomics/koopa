@@ -15,8 +15,8 @@ main() {
     local -A dict
     local -a conf_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'zlib' 'openssl3'
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    koopa_activate_app 'zlib' 'openssl'
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"

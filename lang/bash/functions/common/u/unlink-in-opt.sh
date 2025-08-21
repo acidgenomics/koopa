@@ -8,7 +8,7 @@ koopa_unlink_in_opt() {
     # @usage koopa_unlink_in_opt NAME...
     #
     # @examples
-    # > koopa_unlink_in_opt 'python3.12' 'r'
+    # > koopa_unlink_in_opt 'python3.13' 'r'
     # """
     koopa_unlink_in_dir \
         --allow-missing \

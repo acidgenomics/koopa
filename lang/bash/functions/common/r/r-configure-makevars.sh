@@ -59,7 +59,7 @@ koopa_r_configure_makevars() {
         app['yacc']="$(koopa_locate_yacc)"
         koopa_assert_is_executable "${app[@]}"
         koopa_is_macos && dict['gettext']="$(koopa_app_prefix 'gettext')"
-        dict['openssl3']="$(koopa_app_prefix 'openssl3')"
+        dict['openssl']="$(koopa_app_prefix 'openssl')"
         # Ensure these values are in sync with 'Renviron.site' file.
         ! koopa_is_macos && keys+=('bzip2')
         keys+=(
@@ -83,7 +83,7 @@ koopa_r_configure_makevars() {
             'libssh2'
             'libtiff'
             'libxml2'
-            'openssl3'
+            'openssl'
             'pcre'
             'pcre2'
             'pixman'
@@ -147,11 +147,11 @@ lib/pkgconfig"
         )
         cppflags+=(
             "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
-            "-I${dict['openssl3']}/include"
+            "-I${dict['openssl']}/include"
         )
         ldflags+=(
             "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
-            "-L${dict['openssl3']}/lib"
+            "-L${dict['openssl']}/lib"
         )
         if koopa_is_macos
         then
