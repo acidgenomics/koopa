@@ -25,7 +25,7 @@ main() {
         'ca-certificates'
         'zlib'
         'zstd'
-        'openssl3'
+        'openssl'
         'libssh2'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
@@ -33,7 +33,7 @@ main() {
     dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
     dict['libssh2']="$(koopa_app_prefix 'libssh2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['ssl']="$(koopa_app_prefix 'openssl3')"
+    dict['ssl']="$(koopa_app_prefix 'openssl')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['zstd']="$(koopa_app_prefix 'zstd')"

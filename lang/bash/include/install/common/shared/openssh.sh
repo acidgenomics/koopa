@@ -27,7 +27,7 @@ main() {
     build_deps+=('pkg-config')
     deps+=(
         'zlib'
-        'openssl3'
+        'openssl'
         'ldns'
         'libedit'
         'libfido2'
@@ -40,7 +40,7 @@ main() {
     dict['krb5']="$(koopa_app_prefix 'krb5')"
     dict['ldns']="$(koopa_app_prefix 'ldns')"
     dict['libedit']="$(koopa_app_prefix 'libedit')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"

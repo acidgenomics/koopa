@@ -101,8 +101,8 @@ koopa_install_rust_package() {
     export RUST_BACKTRACE='full'
     if [[ "${bool['openssl']}" -eq 1 ]]
     then
-        koopa_activate_app 'openssl3'
-        dict['openssl']="$(koopa_app_prefix 'openssl3')"
+        koopa_activate_app 'openssl'
+        dict['openssl']="$(koopa_app_prefix 'openssl')"
         export OPENSSL_DIR="${dict['openssl']}"
     fi
     if [[ -n "${LDFLAGS:-}" ]]

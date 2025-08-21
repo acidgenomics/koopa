@@ -17,7 +17,7 @@ main() {
         'zlib'
         'zstd'
         'nettle'
-        'openssl3'
+        'openssl'
         'perl'
     )
     koopa_activate_app "${deps[@]}"

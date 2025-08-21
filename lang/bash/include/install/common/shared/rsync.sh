@@ -19,7 +19,7 @@ main() {
         'zlib'
         'zstd'
         'lz4'
-        'openssl3'
+        'openssl'
         'xxhash'
     )
     koopa_activate_app  "${deps[@]}"

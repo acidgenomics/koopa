@@ -14,7 +14,7 @@ main() {
     local -a conf_args deps
     deps=(
         'zlib'
-        'openssl3'
+        'openssl'
         'readline'
         'libyaml'
         'libffi'
@@ -23,7 +23,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     dict['libffi']="$(koopa_app_prefix 'libffi')"
     dict['libyaml']="$(koopa_app_prefix 'libyaml')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['readline']="$(koopa_app_prefix 'readline')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"

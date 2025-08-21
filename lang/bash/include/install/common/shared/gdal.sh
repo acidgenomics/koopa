@@ -43,7 +43,7 @@ main() {
         'libxml2'
         'lz4'
         'openjpeg'
-        'openssl3'
+        'openssl'
         'pcre2'
         'sqlite'
         'xz'

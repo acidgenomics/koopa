@@ -24,7 +24,7 @@ main() {
         'liblinear'
         'libpcap'
         'libssh2'
-        'openssl3'
+        'openssl'
         'pcre2'
         'zlib'
     )
@@ -34,7 +34,7 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libpcap']="$(koopa_app_prefix 'libpcap')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     conf_args+=(

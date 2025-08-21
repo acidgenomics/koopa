@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2025-05-05.
+# @note Updated 2025-08-21.
 # """
 
 # Can debug with:
@@ -76,7 +76,7 @@ cpu_count() {
 }
 
 install_bash() {
-    __kvar_version='5.2.37'
+    __kvar_version='5.3'
     printf 'Installing bash.\n'
     mkdir -p "${PREFIX}/src/bash"
     cd "${PREFIX}/src/bash" || return 1
@@ -127,8 +127,8 @@ install_coreutils() {
     return 0
 }
 
-install_openssl3() {
-    __kvar_version='3.5.0'
+install_openssl() {
+    __kvar_version='3.5.2'
     printf 'Installing openssl3.\n'
     mkdir -p "${PREFIX}/src/openssl3"
     cd "${PREFIX}/src/openssl3" || return 1
@@ -159,7 +159,7 @@ install_openssl3() {
 }
 
 install_python() {
-    __kvar_version='3.12.10'
+    __kvar_version='3.13.7'
     printf 'Installing python.\n'
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
@@ -244,7 +244,7 @@ main() {
         export LIBRARY_PATH="${PREFIX:?}/lib:/usr/lib"
         export PKG_CONFIG_PATH="${PREFIX:?}/lib/pkgconfig"
         # > declare -x | sort
-        install_openssl3
+        install_openssl
         install_zlib
         install_bash
         install_python
