@@ -3,7 +3,7 @@
 koopa_system_info() {
     # """
     # System information.
-    # @note Updated 2024-07-05.
+    # @note Updated 2025-08-21.
     # """
     local -A app dict
     local -a info nf_info
@@ -13,7 +13,7 @@ koopa_system_info() {
     )"
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['python']="$( \
-        koopa_locate_python3 --allow-bootstrap --allow-system --realpath \
+        koopa_locate_python --allow-bootstrap --allow-system --realpath \
     )"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"

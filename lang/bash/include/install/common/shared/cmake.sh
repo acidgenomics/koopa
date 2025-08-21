@@ -13,14 +13,14 @@ main() {
     local -A app dict
     local -a bootstrap_args cmake_args
     koopa_activate_app --build-only 'make'
-    koopa_activate_app 'openssl3'
+    koopa_activate_app 'openssl'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     koopa_is_linux && dict['jobs']=1
     dict['mem_gb']="$(koopa_mem_gb)"
     dict['mem_gb_cutoff']=7
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     readarray -t cmake_args <<< "$( \

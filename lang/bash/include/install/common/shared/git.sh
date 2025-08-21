@@ -18,7 +18,7 @@ main() {
         'expat'
         'zlib'
         'gettext'
-        'openssl3'
+        'openssl'
         'zstd' # curl
         'libssh2' # curl
         'curl'
@@ -31,14 +31,14 @@ main() {
     app['less']="$(koopa_locate_less)"
     app['make']="$(koopa_locate_make)"
     app['perl']="$(koopa_locate_perl)"
-    app['python']="$(koopa_locate_python312)"
+    app['python']="$(koopa_locate_python)"
     app['vim']="$(koopa_locate_vim)"
     koopa_assert_is_executable "${app[@]}"
     dict['curl']="$(koopa_app_prefix 'curl')"
     dict['expat']="$(koopa_app_prefix 'expat')"
     dict['jobs']="$(koopa_cpu_count)"
     dict['libiconv']="$(koopa_app_prefix 'libiconv')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['pcre2']="$(koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url_base']='https://mirrors.edge.kernel.org/pub/software/scm/git'

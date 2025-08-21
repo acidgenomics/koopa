@@ -359,7 +359,7 @@ _koopa_complete() {
                         'openjpeg'
                         'openldap'
                         'openssh'
-                        'openssl3'
+                        'openssl'
                         'p7zip'
                         'pandoc'
                         'parallel'

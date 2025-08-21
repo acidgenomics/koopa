@@ -44,7 +44,7 @@ main() {
         'libedit'
         'libffi'
         'ncurses'
-        'python3.12'
+        'python'
     )
     if koopa_is_linux
     then
@@ -56,14 +56,14 @@ main() {
     app['git']="$(koopa_locate_git --realpath)"
     app['perl']="$(koopa_locate_perl --realpath)"
     app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
-    app['python']="$(koopa_locate_python312 --realpath)"
+    app['python']="$(koopa_locate_python --realpath)"
     app['swig']="$(koopa_locate_swig --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['libedit']="$(koopa_app_prefix 'libedit')"
     dict['libffi']="$(koopa_app_prefix 'libffi')"
     dict['ncurses']="$(koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['python']="$(koopa_app_prefix 'python3.12')"
+    dict['python']="$(koopa_app_prefix 'python')"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['xz']="$(koopa_app_prefix 'xz')"

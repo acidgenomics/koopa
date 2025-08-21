@@ -9,7 +9,7 @@ koopa_reinstall_all_revdeps() {
     # ability to push a koopa binary is not required.
     #
     # @examples
-    # > koopa_reinstall_all_revdeps --push 'node' 'python3.12'
+    # > koopa_reinstall_all_revdeps --push 'node' 'python3.13'
     # """
     local -a flags pos
     local app_name

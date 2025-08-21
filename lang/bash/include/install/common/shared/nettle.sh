@@ -14,7 +14,7 @@ main() {
     # """
     local -a conf_args deps install_args
     local conf_arg
-    deps+=('gmp' 'm4' 'openssl3')
+    deps+=('gmp' 'm4' 'openssl')
     koopa_activate_app "${deps[@]}"
     conf_args+=(
         '--disable-dependency-tracking'
