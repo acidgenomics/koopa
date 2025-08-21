@@ -4710,7 +4710,6 @@
   },
   "openssl3": {
     "date": "2025-08-21",
-    "notes": ["Renamed to openssl."],
     "removed": true
   },
   "oracle-instant-client": {
