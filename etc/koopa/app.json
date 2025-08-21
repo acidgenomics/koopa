@@ -440,7 +440,7 @@
       "https://www.gnu.org/software/bash/",
       "https://ftp.gnu.org/gnu/bash/?C=M;O=D"
     ],
-    "version": "5.3.3"
+    "version": "5.3"
   },
   "bash-completion": {
     "aliases": {
