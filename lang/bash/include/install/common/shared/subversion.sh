@@ -25,9 +25,9 @@ main() {
         'zlib' \
         'apr' \
         'apr-util' \
-        'openssl3' \
+        'openssl' \
         'perl' \
-        'python3.12' \
+        'python' \
         'ruby' \
         'serf' \
         'sqlite'

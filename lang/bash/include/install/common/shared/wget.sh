@@ -19,10 +19,10 @@ main() {
         'libidn' \
         'libtasn1' \
         'nettle' \
-        'openssl3' \
+        'openssl' \
         'pcre2' \
         'gnutls'
-    dict['ssl']="$(koopa_app_prefix 'openssl3')"
+    dict['ssl']="$(koopa_app_prefix 'openssl')"
     conf_args=(
         '--disable-debug'
         "--with-libssl-prefix=${dict['ssl']}"

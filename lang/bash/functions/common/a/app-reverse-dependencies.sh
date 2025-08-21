@@ -6,7 +6,7 @@ koopa_app_reverse_dependencies() {
     # @note Updated 2023-12-11.
     #
     # @examples
-    # koopa_app_reverse_dependencies 'python3.12'
+    # koopa_app_reverse_dependencies 'python3.13'
     # """
     koopa_assert_has_args_eq "$#" 1
     koopa_python_script 'app-reverse-dependencies.py' "$@"

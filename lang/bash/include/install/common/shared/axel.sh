@@ -21,7 +21,7 @@ main() {
     local -A dict
     local -a build_deps conf_args deps
     build_deps+=('gawk' 'pkg-config')
-    deps+=('gettext' 'openssl3')
+    deps+=('gettext' 'openssl')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

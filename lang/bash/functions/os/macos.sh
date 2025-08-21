@@ -650,9 +650,11 @@ koopa_macos_ifactive() {
 }
 
 koopa_macos_install_system_python() {
+    local -A dict
+    dict['python_version']="$(koopa_python_major_minor_version)"
     koopa_install_app \
         --installer='python' \
-        --name='python3.13' \
+        --name="python${dict['python_version']}" \
         --platform='macos' \
         --prefix="$(koopa_macos_python_prefix)" \
         --system \
@@ -1187,8 +1189,10 @@ koopa_macos_uninstall_system_oracle_java() {
 }
 
 koopa_macos_uninstall_system_python() {
+    local -A dict
+    dict['python_version']="$(koopa_python_major_minor_version)"
     koopa_uninstall_app \
-        --name='python3.13' \
+        --name="python${dict['python_version']}" \
         --platform='macos' \
         --system \
         --uninstaller='python' \

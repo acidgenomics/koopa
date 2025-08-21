@@ -11,7 +11,7 @@ main() {
     local -A dict
     local -a cmake_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'libcbor' 'openssl3' 'zlib'
+    koopa_activate_app 'libcbor' 'openssl' 'zlib'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/Yubico/libfido2/archive/\

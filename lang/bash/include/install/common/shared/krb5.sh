@@ -12,7 +12,7 @@ main() {
     local -A dict
     local -a conf_args
     koopa_activate_app --build-only 'bison' 'pkg-config'
-    koopa_activate_app 'libedit' 'openssl3'
+    koopa_activate_app 'libedit' 'openssl'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
