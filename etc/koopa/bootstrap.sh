@@ -76,7 +76,7 @@ cpu_count() {
 }
 
 install_bash() {
-    __kvar_version='5.3.3'
+    __kvar_version='5.3'
     printf 'Installing bash.\n'
     mkdir -p "${PREFIX}/src/bash"
     cd "${PREFIX}/src/bash" || return 1
