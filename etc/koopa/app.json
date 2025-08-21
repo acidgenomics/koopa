@@ -3752,11 +3752,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2025-01-16",
+    "date": "2025-08-21",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.50.0"
+    "version": "1.51.0"
   },
   "libvterm": {
     "aliases": {
@@ -4520,18 +4520,9 @@
       "homebrew": true
     },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
-    "build_dependencies": ["make", "ninja", "pkg-config"],
-    "date": "2025-05-19",
+    "build_dependencies": ["make", "ninja", "pkg-config", "python3.13"],
+    "date": "2025-08-21",
     "default": false,
-    "dependencies": [
-      "ca-certificates",
-      "c-ares",
-      "icu4c",
-      "libuv",
-      "openssl",
-      "python3.13",
-      "zlib"
-    ],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
