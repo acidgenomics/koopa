@@ -734,7 +734,12 @@ koopa_app_prefix() {
                 dict['allow_missing']=1
                 shift 1
                 ;;
-            '--'*)
+            'python')
+                dict['python_version']="$(koopa_python_major_minor_version)"
+                pos+=("python${dict['python_version']}")
+                shift 1
+                ;;
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
