@@ -17,7 +17,7 @@ main() {
     deps+=(
         'zlib'
         'gettext'
-        'openssl3'
+        'openssl'
         'libssh2'
         'icu4c' # libxml2
         'libxml2'

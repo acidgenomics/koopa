@@ -13,10 +13,10 @@ main() {
     local -A dict
     local -a conf_args
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'apr' 'expat' 'openssl3'
+    koopa_activate_app 'apr' 'expat' 'openssl'
     dict['apr']="$(koopa_app_prefix 'apr')"
     dict['expat']="$(koopa_app_prefix 'expat')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(

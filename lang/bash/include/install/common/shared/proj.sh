@@ -21,7 +21,7 @@ main() {
         'curl'
         'libjpeg-turbo'
         'libtiff'
-        'python3.12'
+        'python'
         'sqlite'
     )
     koopa_activate_app --build-only 'pkg-config'

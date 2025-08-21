@@ -33,6 +33,11 @@ koopa_activate_app() {
                 dict['build_only']=1
                 shift 1
                 ;;
+            'python')
+                dict['python_version']="$(koopa_python_major_minor_version)"
+                pos+=("python${dict['python_version']}")
+                shift 1
+                ;;
             '-'*)
                 koopa_invalid_arg "$1"
                 ;;
@@ -729,7 +734,12 @@ koopa_app_prefix() {
                 dict['allow_missing']=1
                 shift 1
                 ;;
-            '--'*)
+            'python')
+                dict['python_version']="$(koopa_python_major_minor_version)"
+                pos+=("python${dict['python_version']}")
+                shift 1
+                ;;
+            '-'*)
                 koopa_invalid_arg "$1"
                 ;;
             *)
@@ -4335,7 +4345,7 @@ Run 'xcode-select --install' to resolve."
     app['ld']="$(koopa_locate_ld --only-system)"
     app['make']="$(koopa_locate_make --only-system)"
     app['perl']="$(koopa_locate_perl --only-system)"
-    app['python']="$(koopa_locate_python3 --allow-system)"
+    app['python']="$(koopa_locate_python --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     ver1['cc']="$(koopa_get_version "${app['cc']}")"
     ver1['git']="$(koopa_get_version "${app['git']}")"
@@ -14294,10 +14304,11 @@ koopa_install_koopa() {
     koopa_add_config_link "${dict['prefix']}/activate" 'activate'
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
+        dict['python_version']="$(koopa_python_major_minor_version)"
         koopa_cli_install --bootstrap \
             'bash' \
             'coreutils' \
-            'python3.12'
+            "python${dict['python_version']}"
     fi
     return 0
 }
@@ -14331,7 +14342,7 @@ koopa_install_latch() {
     koopa_install_app \
         --installer='python-package' \
         --name='latch' \
-        -D --python-version='3.11' \
+        -D --python-version='3.12' \
         "$@"
 }
 
@@ -15020,9 +15031,9 @@ koopa_install_openssh() {
         "$@"
 }
 
-koopa_install_openssl3() {
+koopa_install_openssl() {
     koopa_install_app \
-        --name='openssl3' \
+        --name='openssl' \
         "$@"
 }
 
@@ -15448,7 +15459,7 @@ koopa_install_python_package() {
     bool['binary']=1
     bool['egg_name']=0
     dict['egg_name']=''
-    dict['locate_python']='koopa_locate_python312'
+    dict['locate_python']='koopa_locate_python'
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['pip_name']=''
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -15629,6 +15640,13 @@ koopa_install_python311() {
 }
 
 koopa_install_python312() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.12' \
+        "$@"
+}
+
+koopa_install_python313() {
     local -A dict
     dict['app_prefix']="$(koopa_app_prefix)"
     dict['bin_prefix']="$(koopa_bin_prefix)"
@@ -15636,27 +15654,17 @@ koopa_install_python312() {
     dict['opt_prefix']="$(koopa_opt_prefix)"
     koopa_install_app \
         --installer='python' \
-        --name='python3.12' \
+        --name='python3.13' \
         "$@"
     (
         koopa_cd "${dict['bin_prefix']}"
-        koopa_ln 'python3.12' 'python3'
-        koopa_ln 'python3.12' 'python'
+        koopa_ln 'python3.13' 'python3'
+        koopa_ln 'python3.13' 'python'
         koopa_cd "${dict['man1_prefix']}"
-        koopa_ln 'python3.12.1' 'python3.1'
-        koopa_ln 'python3.12.1' 'python.1'
+        koopa_ln 'python3.13.1' 'python3.1'
+        koopa_ln 'python3.13.1' 'python.1'
     )
-    koopa_rm \
-        "${dict['app_prefix']}/python" \
-        "${dict['opt_prefix']}/python"
     return 0
-}
-
-koopa_install_python313() {
-    koopa_install_app \
-        --installer='python' \
-        --name='python3.13' \
-        "$@"
 }
 
 koopa_install_quarto() {
@@ -15940,8 +15948,8 @@ koopa_install_rust_package() {
     export RUST_BACKTRACE='full'
     if [[ "${bool['openssl']}" -eq 1 ]]
     then
-        koopa_activate_app 'openssl3'
-        dict['openssl']="$(koopa_app_prefix 'openssl3')"
+        koopa_activate_app 'openssl'
+        dict['openssl']="$(koopa_app_prefix 'openssl')"
         export OPENSSL_DIR="${dict['openssl']}"
     fi
     if [[ -n "${LDFLAGS:-}" ]]
@@ -19796,7 +19804,7 @@ koopa_locate_open() {
 
 koopa_locate_openssl() {
     koopa_locate_app \
-        --app-name='openssl3' \
+        --app-name='openssl' \
         --bin-name='openssl' \
         "$@"
 }
@@ -19913,10 +19921,12 @@ koopa_locate_pytest() {
         "$@"
 }
 
-koopa_locate_python3() {
+koopa_locate_python() {
+    local -A dict
+    dict['python_version']="$(koopa_python_major_minor_version)"
     koopa_locate_app \
-        --app-name='python3.12' \
-        --bin-name='python3' \
+        --app-name="python${dict['python_version']}" \
+        --bin-name="python${dict['python_version']}" \
         "$@"
 }
 
@@ -20237,7 +20247,7 @@ koopa_locate_swig() {
         "$@"
 }
 
-koopa_locate_system_python3() {
+koopa_locate_system_python() {
     koopa_locate_app \
         --only-system \
         --system-bin-name='python3' \
@@ -22015,7 +22025,7 @@ koopa_python_create_venv() {
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     pkgs=("$@")
     [[ -z "${app['python']}" ]] && \
-        app['python']="$(koopa_locate_python312 --realpath)"
+        app['python']="$(koopa_locate_python --realpath)"
     koopa_assert_is_set --python "${app['python']}"
     koopa_assert_is_installed "${app['python']}"
     dict['py_version']="$(koopa_get_version "${app['python']}")"
@@ -22089,6 +22099,11 @@ koopa_python_deactivate_venv() {
     return 0
 }
 
+koopa_python_major_minor_version() {
+    koopa_print '3.13'
+    return 0
+}
+
 koopa_python_pip_install() {
     local -A app dict
     local -a dl_args pos
@@ -22132,7 +22147,7 @@ koopa_python_pip_install() {
         esac
     done
     [[ -z "${app['python']}" ]] && \
-        app['python']="$(koopa_locate_python312 --realpath)"
+        app['python']="$(koopa_locate_python --realpath)"
     [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
     koopa_assert_has_args "$#"
     koopa_assert_is_executable "${app[@]}"
@@ -22189,7 +22204,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python3 --allow-system)"
+        app['python']="$(koopa_locate_python --allow-system)"
     fi
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="$(koopa_python_scripts_prefix)"
@@ -22493,7 +22508,7 @@ tools/${dict['arch']}"
             'libssh2'
             'libtiff'
             'libxml2'
-            'openssl3'
+            'openssl'
             'pcre'
             'pcre2'
             'pixman'
@@ -22793,7 +22808,7 @@ libexec/lib/server}")
             'libssh2'
             'libtiff'
             'libxml2'
-            'openssl3'
+            'openssl'
             'pcre'
             'pcre2'
             'pixman'
@@ -22934,7 +22949,7 @@ koopa_r_configure_makevars() {
         app['yacc']="$(koopa_locate_yacc)"
         koopa_assert_is_executable "${app[@]}"
         koopa_is_macos && dict['gettext']="$(koopa_app_prefix 'gettext')"
-        dict['openssl3']="$(koopa_app_prefix 'openssl3')"
+        dict['openssl']="$(koopa_app_prefix 'openssl')"
         ! koopa_is_macos && keys+=('bzip2')
         keys+=(
             'cairo'
@@ -22956,7 +22971,7 @@ koopa_r_configure_makevars() {
             'libssh2'
             'libtiff'
             'libxml2'
-            'openssl3'
+            'openssl'
             'pcre'
             'pcre2'
             'pixman'
@@ -23020,11 +23035,11 @@ lib/pkgconfig"
         )
         cppflags+=(
             "$("${app['pkg_config']}" --cflags "${pkg_config[@]}")"
-            "-I${dict['openssl3']}/include"
+            "-I${dict['openssl']}/include"
         )
         ldflags+=(
             "$("${app['pkg_config']}" --libs-only-L "${pkg_config[@]}")"
-            "-L${dict['openssl3']}/lib"
+            "-L${dict['openssl']}/lib"
         )
         if koopa_is_macos
         then
@@ -28505,7 +28520,7 @@ koopa_system_info() {
     )"
     app['cat']="$(koopa_locate_cat --allow-system)"
     app['python']="$( \
-        koopa_locate_python3 --allow-bootstrap --allow-system --realpath \
+        koopa_locate_python --allow-bootstrap --allow-system --realpath \
     )"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
@@ -30884,6 +30899,12 @@ koopa_uninstall_openssh() {
         "$@"
 }
 
+koopa_uninstall_openssl() {
+    koopa_uninstall_app \
+        --name='openssl' \
+        "$@"
+}
+
 koopa_uninstall_openssl3() {
     koopa_uninstall_app \
         --name='openssl3' \
@@ -32089,7 +32110,7 @@ koopa_user_name() {
 koopa_validate_json() {
     local -A app dict
     koopa_assert_has_args_eq "$#" 1
-    app['python']="$(koopa_locate_python312)"
+    app['python']="$(koopa_locate_python)"
     dict['file']="${1:?}"
     "${app['python']}" -m 'json.tool' "${dict['file']}" >/dev/null
 }

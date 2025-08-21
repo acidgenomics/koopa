@@ -28,7 +28,7 @@ main() {
         'libidn'
         'libtasn1'
         'nettle'
-        'openssl3'
+        'openssl'
         'pcre2'
         'gnutls'
         'icu4c'
@@ -46,7 +46,7 @@ main() {
     koopa_activate_app "${deps[@]}"
     dict['gettext']="$(koopa_app_prefix 'gettext')"
     dict['sed']="$(koopa_app_prefix 'sed')"
-    dict['ssl']="$(koopa_app_prefix 'openssl3')"
+    dict['ssl']="$(koopa_app_prefix 'openssl')"
     # > dict['lzlib']="$(koopa_app_prefix 'lzlib')"
     # > export LZIP_CFLAGS="-I${dict['lzlib']}/include"
     # > export LZIP_LIBS="-L${dict['lzlib']}/lib -llz"

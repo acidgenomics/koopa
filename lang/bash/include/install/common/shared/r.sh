@@ -79,7 +79,7 @@ main() {
         'gettext'
         'icu4c' # libxml2
         'readline'
-        'openssl3' # curl
+        'openssl' # curl
         'libssh2' # curl
         'curl'
         'libjpeg-turbo'

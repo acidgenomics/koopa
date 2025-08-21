@@ -30,7 +30,7 @@ install_from_source() {
         'cereal'
         'zlib'
         'zstd' # curl
-        'openssl3' # curl
+        'openssl' # curl
         'libssh2' # curl
         'curl'
         'icu4c'

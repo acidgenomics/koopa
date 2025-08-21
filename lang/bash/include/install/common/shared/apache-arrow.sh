@@ -18,11 +18,11 @@ main() {
     build_deps+=(
         'curl'
         'pkg-config'
-        'python3.12'
+        'python'
     )
     deps+=(
         # > 'llvm'
-        'openssl3'
+        'openssl'
     )
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"

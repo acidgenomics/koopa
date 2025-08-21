@@ -14,7 +14,7 @@ main() {
     local -A app dict
     local -a build_deps deps
     koopa_assert_is_not_arm64
-    build_deps=('ldc' 'make' 'python3.12')
+    build_deps=('ldc' 'make' 'python')
     ! koopa_is_macos && deps+=('bzip2')
     deps+=('lz4' 'xz' 'zlib')
     koopa_activate_app --build-only "${build_deps[@]}"

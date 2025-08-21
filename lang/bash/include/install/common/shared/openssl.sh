@@ -3,7 +3,7 @@
 main() {
     # """
     # Install OpenSSL.
-    # @note Updated 2024-09-17.
+    # @note Updated 2025-08-21.
     #
     # Check supported platforms with:
     # > ./Configure LIST

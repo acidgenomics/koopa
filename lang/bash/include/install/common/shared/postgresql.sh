@@ -21,7 +21,7 @@ main() {
         'libxml2'
         'libxslt'
         'lz4'
-        'openssl3'
+        'openssl'
         'perl'
         'readline'
     )
