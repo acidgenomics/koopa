@@ -1,6 +1,6 @@
 """
 Application management functions.
-Updated 2025-05-28.
+Updated 2025-08-21.
 """
 
 from datetime import datetime
@@ -312,7 +312,7 @@ def prune_app_binaries(dry_run=False) -> None:
 def shared_apps(mode: str) -> list:
     """
     Return names of shared apps.
-    Updated 2023-12-14.
+    Updated 2025-08-21.
     """
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
@@ -321,20 +321,20 @@ def shared_apps(mode: str) -> list:
     names = json_data.keys()
     out = []
     for val in names:
+        json = json_data[val]
+        keys = json.keys()
+        if "removed" in keys:
+            if json["removed"]:
+                continue
         if isdir(join(sys_dict["opt_prefix"], val)):
             out.append(val)
             continue
-        json = json_data[val]
-        keys = json.keys()
         if "supported" in json:
             if sys_dict["os_id"] in json["supported"].keys():
                 if not json["supported"][sys_dict["os_id"]]:
                     continue
         if "default" in keys and mode != "all":
             if not json["default"]:
-                continue
-        if "removed" in keys:
-            if json["removed"]:
                 continue
         if "private" in keys:
             if json["private"]:
