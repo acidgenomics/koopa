@@ -14,11 +14,11 @@ main() {
     local -A cmake dict
     local -a build_deps cmake_args deps
     build_deps=('cmake' 'pkg-config')
-    deps=('zlib' 'pcre' 'openssl3' 'libssh2')
+    deps=('zlib' 'pcre' 'openssl' 'libssh2')
     koopa_activate_app --build-only "${build_deps[@]}"
     koopa_activate_app "${deps[@]}"
     dict['libssh2']="$(koopa_app_prefix 'libssh2')"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['pcre']="$(koopa_app_prefix 'pcre')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"

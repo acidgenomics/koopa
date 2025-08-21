@@ -32,9 +32,9 @@ main() {
     # - Installing multiple versions:
     #   https://github.com/python/cpython#installing-multiple-versions
     # - Latest configuration recipe:
-    #   https://github.com/python/cpython/blob/3.12/configure
+    #   https://github.com/python/cpython/blob/3.13/configure
     # - macOS install recipes:
-    #   https://formulae.brew.sh/formula/python@3.12
+    #   https://formulae.brew.sh/formula/python@3.13
     #   https://ports.macports.org/port/python312/
     # - OpenSSL configuration issues:
     #   https://stackoverflow.com/questions/45954528/
@@ -60,7 +60,7 @@ main() {
     deps+=(
         'expat'
         'mpdecimal'
-        'openssl3'
+        'openssl'
         'sqlite'
         'xz'
     )
@@ -71,7 +71,7 @@ main() {
     koopa_assert_is_executable "${app[@]}"
     dict['cc_version']="$(koopa_get_version "${app['cc']}")"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['openssl']="$(koopa_app_prefix 'openssl3')"
+    dict['openssl']="$(koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"

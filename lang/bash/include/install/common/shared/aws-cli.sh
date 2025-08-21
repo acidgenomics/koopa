@@ -8,7 +8,7 @@ install_from_conda() {
 install_from_source() {
     # """
     # Install AWS CLI.
-    # @note Updated 2025-02-25.
+    # @note Updated 2025-08-21.
     #
     # @seealso
     # - https://github.com/aws/aws-cli/tree/v2/
@@ -19,10 +19,10 @@ install_from_source() {
     # """
     local -A app dict
     local -a conf_args
-    app['python']="$(koopa_locate_python312 --allow-missing)"
+    app['python']="$(koopa_locate_python --allow-missing)"
     if [[ ! -x "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python312 --allow-bootstrap)"
+        app['python']="$(koopa_locate_python --allow-bootstrap)"
     fi
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

@@ -3,7 +3,7 @@
 koopa_activate_app() {
     # """
     # Activate koopa application for inclusion during compilation.
-    # @note Updated 2023-10-11.
+    # @note Updated 2025-08-21.
     #
     # Consider using 'pkg-config' to manage CFLAGS, CPPFLAGS, and LDFLAGS:
     # > pkg-config --libs PKG_CONFIG_NAME...
@@ -54,6 +54,12 @@ koopa_activate_app() {
             # Flags ------------------------------------------------------------
             '--build-only')
                 dict['build_only']=1
+                shift 1
+                ;;
+            # App version overrides --------------------------------------------
+            'python')
+                dict['python_version']="$(koopa_python_major_minor_version)"
+                pos+=("python${dict['python_version']}")
                 shift 1
                 ;;
             # Other ------------------------------------------------------------

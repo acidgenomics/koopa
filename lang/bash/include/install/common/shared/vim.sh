@@ -13,13 +13,13 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'ncurses' 'python3.12'
-    app['python']="$(koopa_locate_python312 --realpath)"
+    koopa_activate_app 'ncurses' 'python'
+    app['python']="$(koopa_locate_python --realpath)"
     app['python_config']="${app['python']}-config"
     koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['python']="$(koopa_app_prefix 'python3.12')"
+    dict['python']="$(koopa_app_prefix 'python')"
     dict['python_config_dir']="$("${app['python_config']}" --configdir)"
     dict['python_rpath']="${dict['python']}/lib"
     dict['vim_rpath']="${dict['prefix']}/lib"
