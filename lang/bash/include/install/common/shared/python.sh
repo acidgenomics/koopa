@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2025-02-11.
+    # @note Updated 2025-08-21.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -162,5 +162,16 @@ Python-${dict['version']}.tar.xz"
     "${app['python']}" -c 'import zlib'
     koopa_alert 'Checking pip configuration.'
     "${app['python']}" -m pip list --format='columns'
+    koopa_alert 'Adding unversioned symlinks.'
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln 'idle3' 'idle'
+        koopa_ln 'pip3' 'pip'
+        koopa_ln 'pydoc3' 'pydoc'
+        koopa_ln 'python3' 'python'
+        koopa_ln 'python3-config' 'python-config'
+        koopa_cd "${dict['prefix']}/share/man/man1"
+        koopa_ln 'python3.1' 'python.1'
+    )
     return 0
 }
