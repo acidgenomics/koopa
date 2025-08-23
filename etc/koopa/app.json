@@ -2690,7 +2690,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-08-21",
+    "date": "2025-08-23",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2703,7 +2703,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "11.4.2"
+    "version": "11.4.3"
   },
   "haskell-cabal": {
     "aliases": {
@@ -5063,11 +5063,11 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.13"],
-    "date": "2025-07-16",
+    "date": "2025-08-23",
     "default": false,
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "pycodestyle": {
     "aliases": {
@@ -5590,13 +5590,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2025-07-16",
+    "date": "2025-08-22",
     "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.70.3"
+    "version": "1.71.0"
   },
   "readline": {
     "aliases": {
@@ -7181,7 +7181,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-08-21",
+    "date": "2025-08-23",
     "default": false,
     "dependencies": ["ffmpeg", "python3.13"],
     "prune": true,
@@ -7189,7 +7189,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.8.20"
+    "version": "2025.8.22"
   },
   "zellij": {
     "aliases": {
