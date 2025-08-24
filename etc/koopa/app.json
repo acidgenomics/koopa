@@ -5344,11 +5344,7 @@
       "xz",
       "zlib"
     ],
-    "man1": [
-      "python.1",
-      "python3.1",
-      "python3.13.1"
-    ],
+    "man1": ["python.1", "python3.1", "python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
     "version": "3.13.7"
