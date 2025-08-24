@@ -4277,7 +4277,7 @@
   "mypy": {
     "bin": ["dmypy", "mypy", "mypyc"],
     "date": "2025-08-24",
-    "default": true,
+    "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": [
