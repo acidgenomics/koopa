@@ -9964,7 +9964,12 @@ koopa_git_clone() {
     local -A app dict
     local -a clone_args
     koopa_assert_has_args "$#"
-    app['git']="$(koopa_locate_git --allow-system)"
+    if koopa_is_install_subshell
+    then
+        app['git']="$(koopa_locate_git --only-system)"
+    else
+        app['git']="$(koopa_locate_git --allow-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     dict['branch']=''
     dict['commit']=''
