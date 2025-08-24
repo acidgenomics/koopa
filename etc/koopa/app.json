@@ -4116,12 +4116,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-08-21",
+    "date": "2025-08-24",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.8.4"
+    "version": "1.9.0"
   },
   "miller": {
     "aliases": {
