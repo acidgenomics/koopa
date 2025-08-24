@@ -1511,12 +1511,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-08-06",
+    "date": "2025-08-21",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "2fa67e6b4927eb2153df199bc9d119dfef4c2139"
+    "version": "2a946baa1e994de12d604da40df990a3d04a2ae6"
   },
   "du-dust": {
     "aliases": {
@@ -2106,11 +2106,11 @@
     },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2025-03-08",
+    "date": "2025-08-22",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.13.1"
+    "version": "3.14.0"
   },
   "gettext": {
     "aliases": {
@@ -2178,12 +2178,12 @@
       "homebrew": true
     },
     "bin": ["gh"],
-    "date": "2025-08-10",
+    "date": "2025-08-22",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.76.2"
+    "version": "2.78.0"
   },
   "ghostscript": {
     "aliases": {
@@ -2214,7 +2214,7 @@
       "git-upload-pack"
     ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2025-05-02",
+    "date": "2025-08-23",
     "default": true,
     "dependencies": [
       "bash",
@@ -2232,7 +2232,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.49.0"
+    "version": "2.51.0"
   },
   "git-filter-repo": {
     "aliases": {
@@ -2690,7 +2690,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-08-21",
+    "date": "2025-08-23",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2703,7 +2703,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "11.4.2"
+    "version": "11.4.3"
   },
   "haskell-cabal": {
     "aliases": {
@@ -4116,12 +4116,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-08-21",
+    "date": "2025-08-24",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.8.4"
+    "version": "1.9.0"
   },
   "miller": {
     "aliases": {
@@ -4400,7 +4400,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2025-04-12",
+    "date": "2025-08-23",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4413,7 +4413,7 @@
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.11.0"
+    "version": "0.11.3"
   },
   "nettle": {
     "aliases": {
@@ -5063,11 +5063,11 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.13"],
-    "date": "2025-07-16",
+    "date": "2025-08-23",
     "default": false,
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "3.0.0"
+    "version": "3.0.1"
   },
   "pycodestyle": {
     "aliases": {
@@ -5167,7 +5167,7 @@
       "pyright-python",
       "pyright-python-langserver"
     ],
-    "date": "2025-07-16",
+    "date": "2025-08-22",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5175,7 +5175,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.403"
+    "version": "1.1.404"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5344,11 +5344,7 @@
       "xz",
       "zlib"
     ],
-    "man1": [
-      "python.1",
-      "python3.1",
-      "python3.13.1"
-    ],
+    "man1": ["python.1", "python3.1", "python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
     "version": "3.13.7"
@@ -5590,13 +5586,13 @@
     },
     "bin": ["rclone"],
     "build_dependencies": ["go"],
-    "date": "2025-07-16",
+    "date": "2025-08-22",
     "default": true,
     "man1": ["rclone.1"],
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.70.3"
+    "version": "1.71.0"
   },
   "readline": {
     "aliases": {
@@ -5784,12 +5780,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-08-21",
+    "date": "2025-08-22",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.12.9"
+    "version": "0.12.10"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6632,12 +6628,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-08-21",
+    "date": "2025-08-22",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.8.12"
+    "version": "0.8.13"
   },
   "vim": {
     "aliases": {
@@ -6647,7 +6643,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-12",
+    "date": "2025-08-23",
     "default": true,
     "dependencies": ["ncurses", "python3.13"],
     "man1": [
@@ -6662,7 +6658,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1.1250"
+    "version": "9.1.1650"
   },
   "visidata": {
     "aliases": {
@@ -7181,7 +7177,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-08-21",
+    "date": "2025-08-23",
     "default": false,
     "dependencies": ["ffmpeg", "python3.13"],
     "prune": true,
@@ -7189,7 +7185,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.8.20"
+    "version": "2025.8.22"
   },
   "zellij": {
     "aliases": {

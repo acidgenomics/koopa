@@ -8075,7 +8075,12 @@ koopa_download() {
     local -A app bool dict
     local -a curl_args
     koopa_assert_has_args_le "$#" 2
-    app['curl']="$(koopa_locate_curl --allow-system)"
+    if koopa_is_install_subshell
+    then
+        app['curl']="$(koopa_locate_curl --only-system)"
+    else
+        app['curl']="$(koopa_locate_curl --allow-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     bool['progress']=1
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
@@ -9959,7 +9964,12 @@ koopa_git_clone() {
     local -A app dict
     local -a clone_args
     koopa_assert_has_args "$#"
-    app['git']="$(koopa_locate_git --allow-system)"
+    if koopa_is_install_subshell
+    then
+        app['git']="$(koopa_locate_git --only-system)"
+    else
+        app['git']="$(koopa_locate_git --allow-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     dict['branch']=''
     dict['commit']=''
