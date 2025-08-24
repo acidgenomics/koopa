@@ -3,7 +3,7 @@
 koopa_git_clone() {
     # """
     # Quietly clone a git repository.
-    # @note Updated 2023-04-06.
+    # @note Updated 2025-08-24.
     #
     # @seealso
     # - https://github.blog/2020-12-21-get-up-to-speed-with-partial-clone-
@@ -14,7 +14,12 @@ koopa_git_clone() {
     local -A app dict
     local -a clone_args
     koopa_assert_has_args "$#"
-    app['git']="$(koopa_locate_git --allow-system)"
+    if koopa_is_install_subshell
+    then
+        app['git']="$(koopa_locate_git --only-system)"
+    else
+        app['git']="$(koopa_locate_git --allow-system)"
+    fi
     koopa_assert_is_executable "${app[@]}"
     dict['branch']=''
     dict['commit']=''
