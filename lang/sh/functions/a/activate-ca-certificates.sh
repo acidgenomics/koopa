@@ -13,7 +13,7 @@ _koopa_activate_ca_certificates() {
     # """
     # > [ -n "${AWS_CA_BUNDLE:-}" ] && return 0
     # > [ -n "${CURL_CA_BUNDLE:-}" ] && return 0
-    # > [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
+    [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
     # > [ -n "${NODE_EXTRA_CA_CERTS:-}" ] && return 0
     # > [ -n "${REQUESTS_CA_BUNDLE:-}" ] && return 0
     [ -n "${SSL_CERT_FILE:-}" ] && return 0
