@@ -1071,7 +1071,7 @@
       "homebrew": true
     },
     "bin": ["cz", "git-cz"],
-    "date": "2024-12-24",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -1080,7 +1080,7 @@
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.1.0"
+    "version": "4.8.3"
   },
   "conda": {
     "bin": ["conda"],
@@ -1511,12 +1511,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-08-21",
+    "date": "2025-08-25",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "2a946baa1e994de12d604da40df990a3d04a2ae6"
+    "version": "b71152aa18577e1682339c2f39b00ea590257834"
   },
   "du-dust": {
     "aliases": {
@@ -3036,12 +3036,12 @@
       "homebrew": true
     },
     "bin": ["ipython"],
-    "date": "2023-12-30",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "8.31.0"
+    "version": "9.4.0"
   },
   "isl": {
     "aliases": {
@@ -4065,12 +4065,12 @@
   },
   "marimo": {
     "bin": ["marimo"],
-    "date": "2025-06-11",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://marimo.io/"],
-    "version": "0.13.15"
+    "version": "0.15.0"
   },
   "markdownlint-cli": {
     "aliases": {
@@ -4276,8 +4276,8 @@
   },
   "mypy": {
     "bin": ["dmypy", "mypy", "mypyc"],
-    "date": "2024-12-30",
-    "default": true,
+    "date": "2025-08-24",
+    "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": [
@@ -4285,7 +4285,7 @@
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "1.14.0"
+    "version": "1.17.1"
   },
   "nano": {
     "aliases": {
@@ -4479,12 +4479,12 @@
       "homebrew": true
     },
     "bin": ["ninja"],
-    "date": "2024-12-30",
+    "date": "2025-08-24",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": false,
     "url": ["https://ninja-build.org/", "https://pypi.org/project/ninja/"],
-    "version": "1.12.1"
+    "version": "1.13.0"
   },
   "nlohmann-json": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -5099,7 +5099,7 @@
   },
   "pyflakes": {
     "bin": ["pyflakes"],
-    "date": "2024-12-30",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5107,7 +5107,7 @@
       "https://pypi.org/project/pyflakes/",
       "https://github.com/PyCQA/pyflakes/"
     ],
-    "version": "3.2.0"
+    "version": "3.4.0"
   },
   "pygments": {
     "aliases": {
@@ -5544,7 +5544,7 @@
   },
   "radian": {
     "bin": ["radian"],
-    "date": "2024-08-22",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5552,7 +5552,7 @@
       "https://github.com/randy3k/radian/",
       "https://pypi.org/project/radian/"
     ],
-    "version": "0.6.13"
+    "version": "0.6.15"
   },
   "ranger-fm": {
     "aliases": {
@@ -6046,7 +6046,7 @@
   },
   "snakefmt": {
     "bin": ["snakefmt"],
-    "date": "2024-12-30",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -6054,7 +6054,7 @@
       "https://github.com/snakemake/snakefmt/",
       "https://bioconda.github.io/recipes/snakefmt/README.html"
     ],
-    "version": "0.10.2"
+    "version": "0.11.0"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -6133,12 +6133,12 @@
       "homebrew": true
     },
     "bin": ["sqlfluff"],
-    "date": "2025-04-16",
+    "date": "2025-08-24",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": "https://docs.sqlfluff.com/",
-    "version": "3.3.1"
+    "version": "3.4.2"
   },
   "sqlite": {
     "aliases": {
@@ -6643,7 +6643,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-08-23",
+    "date": "2025-08-25",
     "default": true,
     "dependencies": ["ncurses", "python3.13"],
     "man1": [
@@ -6658,7 +6658,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1.1650"
+    "version": "9.1.0"
   },
   "visidata": {
     "aliases": {
