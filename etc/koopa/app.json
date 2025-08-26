@@ -6658,7 +6658,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/vim/vim/"],
-    "version": "9.1"
+    "version": "9.1.0"
   },
   "visidata": {
     "aliases": {
