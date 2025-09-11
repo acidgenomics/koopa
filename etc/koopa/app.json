@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-08-21",
+    "date": "2025-09-11",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.28.13"
+    "version": "2.28.21"
   },
   "axel": {
     "aliases": {
@@ -5780,12 +5780,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-08-22",
+    "date": "2025-09-11",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.12.10"
+    "version": "0.13.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6628,12 +6628,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-08-22",
+    "date": "2025-09-11",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.8.13"
+    "version": "0.8.17"
   },
   "vim": {
     "aliases": {
