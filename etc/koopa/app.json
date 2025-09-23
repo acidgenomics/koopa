@@ -6628,12 +6628,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-09-11",
+    "date": "2025-09-18",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.8.17"
+    "version": "0.8.18"
   },
   "vim": {
     "aliases": {
