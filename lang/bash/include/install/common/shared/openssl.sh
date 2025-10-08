@@ -55,7 +55,7 @@ openssl-${dict['version']}/openssl-${dict['version']}.tar.gz"
     koopa_cd 'src'
     koopa_print_env
     koopa_dl 'configure args' "${conf_args[*]}"
-    ./config --help
+    ./config --help || true
     ./config "${conf_args[@]}"
     "${app['make']}" --jobs=1 depend
     "${app['make']}" --jobs="${dict['jobs']}"
