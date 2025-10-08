@@ -15663,6 +15663,13 @@ koopa_install_python313() {
         "$@"
 }
 
+koopa_install_python314() {
+    koopa_install_app \
+        --installer='python' \
+        --name='python3.14' \
+        "$@"
+}
+
 koopa_install_quarto() {
     koopa_install_app \
         --name='quarto' \
@@ -16507,6 +16514,7 @@ koopa_install_uv() {
     koopa_install_app \
         --installer='python-package' \
         --name='uv' \
+        -D --python-version='3.14' \
         "$@"
 }
 
@@ -19951,6 +19959,13 @@ koopa_locate_python313() {
     koopa_locate_app \
         --app-name='python3.13' \
         --bin-name='python3.13' \
+        "$@"
+}
+
+koopa_locate_python314() {
+    koopa_locate_app \
+        --app-name='python3.14' \
+        --bin-name='python3.14' \
         "$@"
 }
 
@@ -31148,6 +31163,12 @@ koopa_uninstall_python312() {
 koopa_uninstall_python313() {
     koopa_uninstall_app \
         --name='python3.13' \
+        "$@"
+}
+
+koopa_uninstall_python314() {
+    koopa_uninstall_app \
+        --name='python3.14' \
         "$@"
 }
 
