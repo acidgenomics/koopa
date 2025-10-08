@@ -1084,13 +1084,12 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2025-08-10",
+    "date": "2025-10-08",
     "default": true,
     "notes": ["25.5.1 release has buggy certifi SSL_CERT_FILE issue."],
-    "outdated": true,
     "prune": false,
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "25.3.1-1"
+    "version": "25.7.0-2"
   },
   "convmv": {
     "aliases": {
