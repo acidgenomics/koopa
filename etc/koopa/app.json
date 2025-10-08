@@ -5318,7 +5318,7 @@
     ],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-10-08",
-    "default": false,
+    "default": true,
     "dependencies": [
       "bzip2",
       "expat",
