@@ -1574,12 +1574,13 @@
     "date": "2025-10-08",
     "default": true,
     "dependencies": ["pcre2"],
+    "notes": ["0.12.10 has build error on Ubuntu 22."],
     "prune": true,
     "url": [
       "https://editorconfig.org/",
       "https://github.com/editorconfig/editorconfig-core-c/"
     ],
-    "version": "0.12.10"
+    "version": "0.12.9"
   },
   "elfutils": {
     "aliases": {
