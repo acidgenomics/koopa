@@ -3135,13 +3135,13 @@
       "homebrew": true
     },
     "bin": ["jq"],
-    "date": "2025-06-17",
+    "date": "2025-10-08",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["jq.1"],
     "prune": true,
     "url": ["https://github.com/stedolan/jq/"],
-    "version": "1.8.0"
+    "version": "1.8.1"
   },
   "julia": {
     "aliases": {
