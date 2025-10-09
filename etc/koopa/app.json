@@ -2088,7 +2088,7 @@
   },
   "gentropy": {
     "bin": ["gentropy"],
-    "date": "2024-12-24",
+    "date": "2025-10-09",
     "default": false,
     "dependencies": ["python3.10"],
     "prune": true,
@@ -2096,7 +2096,7 @@
       "https://pypi.org/project/gentropy/",
       "https://github.com/opentargets/gentropy"
     ],
-    "version": "2.0.1"
+    "version": "2.4.1"
   },
   "geos": {
     "aliases": {
