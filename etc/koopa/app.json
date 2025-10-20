@@ -1510,12 +1510,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-09-26",
+    "date": "2025-10-20",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "b6f54cb1ef439d4293f6d8180f71b2362c82f10e"
+    "version": "4ed1992a03413c78a43ad8884508f27585f913f3"
   },
   "du-dust": {
     "aliases": {
@@ -2279,7 +2279,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-07-16",
+    "date": "2025-10-12",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -2287,7 +2287,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.2"
+    "version": "4.3.3"
   },
   "glib": {
     "aliases": {
@@ -3060,7 +3060,7 @@
       "homebrew": true
     },
     "bin": ["isort"],
-    "date": "2025-10-08",
+    "date": "2025-10-12",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -3068,7 +3068,7 @@
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
     ],
-    "version": "6.1.0"
+    "version": "7.0.0"
   },
   "jemalloc": {
     "aliases": {
@@ -3904,12 +3904,12 @@
       "homebrew": true
     },
     "bin": ["lsd"],
-    "date": "2025-01-03",
+    "date": "2025-10-12",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/lsd-rs/lsd/"],
-    "version": "1.1.5"
+    "version": "1.2.0"
   },
   "lua": {
     "aliases": {
@@ -6138,13 +6138,13 @@
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-05-09",
+    "date": "2025-10-12",
     "default": false,
     "dependencies": ["fmt"],
     "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
-    "version": "1.15.3"
+    "version": "1.16.0"
   },
   "sphinx": {
     "bin": [
@@ -7199,12 +7199,12 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2025-10-08",
+    "date": "2025-10-12",
     "default": true,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.47.2"
+    "version": "4.48.1"
   },
   "yt-dlp": {
     "aliases": {
