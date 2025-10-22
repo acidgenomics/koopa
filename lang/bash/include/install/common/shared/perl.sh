@@ -56,7 +56,7 @@ main() {
     # All Perl 5 releases are currently organized under '5.0'.
     dict['src_maj_min_ver']="$(koopa_major_version "${dict['version']}").0"
     dict['url']="https://www.cpan.org/src/${dict['src_maj_min_ver']}/\
-perl-${dict['version']}.tar.gz"
+perl-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
