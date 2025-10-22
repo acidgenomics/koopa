@@ -4847,8 +4847,8 @@
       "homebrew": true
     },
     "bin": ["cpan", "perl"],
-    "build_dependencies": ["make"],
-    "date": "2025-10-20",
+    "build_dependencies": ["make", "xz"],
+    "date": "2025-10-22",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
