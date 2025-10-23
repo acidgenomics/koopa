@@ -1510,12 +1510,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-10-20",
+    "date": "2025-10-21",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "4ed1992a03413c78a43ad8884508f27585f913f3"
+    "version": "497c2fbfe47eb674c0cae5877bc738c416b6f3ae"
   },
   "du-dust": {
     "aliases": {
@@ -4847,8 +4847,8 @@
       "homebrew": true
     },
     "bin": ["cpan", "perl"],
-    "build_dependencies": ["make"],
-    "date": "2025-10-20",
+    "build_dependencies": ["make", "xz"],
+    "date": "2025-10-22",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
@@ -5214,7 +5214,7 @@
       "python3.10-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-06-17",
+    "date": "2025-10-21",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -5235,7 +5235,7 @@
     "notes": ["Still including here to support gentropy."],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.10.18"
+    "version": "3.10.19"
   },
   "python3.11": {
     "aliases": {
@@ -5249,7 +5249,7 @@
       "python3.11-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-06-17",
+    "date": "2025-10-21",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -5269,7 +5269,7 @@
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.11.13"
+    "version": "3.11.14"
   },
   "python3.12": {
     "aliases": {
@@ -5283,7 +5283,7 @@
       "python3.12-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-06-17",
+    "date": "2025-10-21",
     "default": false,
     "dependencies": [
       "bzip2",
@@ -5303,7 +5303,7 @@
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.12.11"
+    "version": "3.12.12"
   },
   "python3.13": {
     "aliases": {
@@ -5317,7 +5317,7 @@
       "python3.13-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-10-21",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -5337,7 +5337,7 @@
     "man1": ["python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.13.8"
+    "version": "3.13.9"
   },
   "python3.14": {
     "aliases": {
