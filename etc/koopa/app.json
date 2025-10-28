@@ -64,12 +64,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2025-10-08",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "3.1.0"
+    "version": "3.1.1"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -79,12 +79,12 @@
       "pkg-config",
       "python3.13"
     ],
-    "date": "2025-08-10",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": ["openssl"],
     "prune": true,
     "url": ["https://arrow.apache.org/"],
-    "version": "21.0.0"
+    "version": "22.0.0"
   },
   "apache-spark": {
     "aliases": {
@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-09-11",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.28.21"
+    "version": "2.31.23"
   },
   "axel": {
     "aliases": {
@@ -756,11 +756,11 @@
     },
     "bin": ["brotli"],
     "build_dependencies": ["cmake", "make"],
-    "date": "2023-08-31",
+    "date": "2025-10-28",
     "default": false,
     "prune": false,
     "url": ["https://github.com/google/brotli/"],
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
   "btop": {
     "bin": ["btop"],
@@ -1966,11 +1966,11 @@
     },
     "bin": ["fzf"],
     "build_dependencies": ["go"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": true,
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.66.0"
+    "version": "0.66.1"
   },
   "gatk": {
     "aliases": {
@@ -2106,11 +2106,11 @@
     },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2025-08-22",
+    "date": "2025-10-28",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libgeos/geos/"],
-    "version": "3.14.0"
+    "version": "3.14.1"
   },
   "gettext": {
     "aliases": {
@@ -2178,12 +2178,12 @@
       "homebrew": true
     },
     "bin": ["gh"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.82.0"
+    "version": "2.82.1"
   },
   "ghostscript": {
     "aliases": {
@@ -3160,12 +3160,12 @@
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-10-08",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.4.9"
+    "version": "4.4.10"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -4251,7 +4251,7 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2025-10-08",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -4259,7 +4259,7 @@
       "https://pypi.org/project/multiqc/",
       "https://bioconda.github.io/recipes/multiqc/README.html"
     ],
-    "version": "1.31"
+    "version": "1.32"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -4429,7 +4429,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2025-10-08",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -4438,7 +4438,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "25.04.8"
+    "version": "25.10.0"
   },
   "nghttp2": {
     "aliases": {
@@ -4446,7 +4446,7 @@
       "homebrew": true
     },
     "build_dependencies": ["gcc", "make", "pkg-config", "python3.13"],
-    "date": "2025-06-17",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": [
       "c-ares",
@@ -4458,7 +4458,7 @@
     ],
     "prune": false,
     "url": ["https://nghttp2.org/", "https://github.com/nghttp2/nghttp2"],
-    "version": "1.66.0"
+    "version": "1.68.0"
   },
   "nim": {
     "aliases": {
@@ -4587,7 +4587,7 @@
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2025-08-21",
+    "date": "2025-10-28",
     "default": false,
     "prune": true,
     "supported": {
@@ -4597,7 +4597,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "1.1.1"
+    "version": "1.2.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -5167,7 +5167,7 @@
       "pyright-python",
       "pyright-python-langserver"
     ],
-    "date": "2025-10-08",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5175,7 +5175,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.406"
+    "version": "1.1.407"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -5679,12 +5679,12 @@
       "homebrew": true
     },
     "bin": ["rg"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/BurntSushi/ripgrep/"],
-    "version": "15.0.0"
+    "version": "15.1.0"
   },
   "ripgrep-all": {
     "aliases": {
@@ -5814,12 +5814,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.14.1"
+    "version": "0.14.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6092,7 +6092,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -6101,7 +6101,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.13.3"
+    "version": "9.13.4"
   },
   "sox": {
     "aliases": {
@@ -6246,12 +6246,12 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "date": "2025-04-28",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["conda"],
     "prune": false,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.23.0"
+    "version": "1.24.0"
   },
   "stow": {
     "aliases": {
@@ -6662,12 +6662,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.4"
+    "version": "0.9.5"
   },
   "vim": {
     "aliases": {
@@ -7211,7 +7211,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-10-20",
+    "date": "2025-10-28",
     "default": false,
     "dependencies": ["ffmpeg", "python3.13"],
     "prune": true,
@@ -7219,7 +7219,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.10.14"
+    "version": "2025.10.22"
   },
   "zellij": {
     "aliases": {
