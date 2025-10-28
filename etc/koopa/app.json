@@ -3148,7 +3148,7 @@
       "homebrew-cask": true
     },
     "bin": ["julia"],
-    "date": "2025-07-16",
+    "date": "2025-10-28",
     "default": false,
     "prune": true,
     "url": [
@@ -3156,7 +3156,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.11.6"
+    "version": "1.12.1"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
