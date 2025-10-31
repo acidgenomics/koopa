@@ -5846,11 +5846,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2025-10-08",
+    "date": "2025-10-31",
     "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.90.0"
+    "version": "1.91.0"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
