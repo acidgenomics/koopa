@@ -1218,7 +1218,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2025-05-05",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1332,7 +1332,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.7"
+    "version": "9.8"
   },
   "cpufetch": {
     "aliases": {
@@ -2214,7 +2214,7 @@
       "git-upload-pack"
     ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2025-10-20",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": [
       "bash",
@@ -2232,7 +2232,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.51.1"
+    "version": "2.51.2"
   },
   "git-filter-repo": {
     "aliases": {
@@ -5400,7 +5400,7 @@
       "homebrew-cask": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-06-17",
+    "date": "2025-10-31",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -5468,7 +5468,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.5.1"
+    "version": "4.5.2"
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
