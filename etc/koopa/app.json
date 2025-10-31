@@ -2214,7 +2214,7 @@
       "git-upload-pack"
     ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2025-10-20",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": [
       "bash",
@@ -2232,7 +2232,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.51.1"
+    "version": "2.51.2"
   },
   "git-filter-repo": {
     "aliases": {
