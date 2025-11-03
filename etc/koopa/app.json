@@ -738,7 +738,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-10-08",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -747,7 +747,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "brotli": {
     "aliases": {
@@ -1008,12 +1008,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-10-20",
+    "date": "2025-11-03",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.66.2"
+    "version": "2.67.0"
   },
   "cli11": {
     "aliases": {
@@ -1047,12 +1047,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2025-05-31",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "4.0.2"
+    "version": "4.1.2"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1340,12 +1340,12 @@
     },
     "bin": ["cpufetch"],
     "build_dependencies": ["make"],
-    "date": "2024-08-19",
+    "date": "2025-11-03",
     "default": false,
     "man1": ["cpufetch.1"],
     "prune": true,
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
-    "version": "1.06"
+    "version": "1.07"
   },
   "csvkit": {
     "bin": [
@@ -2279,7 +2279,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-10-12",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -2287,7 +2287,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.3"
+    "version": "4.4.0"
   },
   "glib": {
     "aliases": {
@@ -3378,11 +3378,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2025-05-14",
+    "date": "2025-11-03",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.24"
+    "version": "1.25"
   },
   "libedit": {
     "aliases": {
@@ -5090,12 +5090,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-10-20",
+    "date": "2025-11-03",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.11"
+    "version": "2.6.12"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
