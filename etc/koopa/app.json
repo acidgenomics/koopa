@@ -738,7 +738,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-10-08",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -747,7 +747,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "brotli": {
     "aliases": {
@@ -1008,12 +1008,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-10-20",
+    "date": "2025-11-03",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.66.2"
+    "version": "2.67.0"
   },
   "cli11": {
     "aliases": {
@@ -1047,12 +1047,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2025-05-31",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "4.0.2"
+    "version": "4.1.2"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1340,12 +1340,12 @@
     },
     "bin": ["cpufetch"],
     "build_dependencies": ["make"],
-    "date": "2024-08-19",
+    "date": "2025-11-03",
     "default": false,
     "man1": ["cpufetch.1"],
     "prune": true,
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
-    "version": "1.06"
+    "version": "1.07"
   },
   "csvkit": {
     "bin": [
@@ -1510,12 +1510,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-10-28",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "f9bce8f16ccf60b038d1a2d70a483f9944200b23"
+    "version": "25140c48aada8ce129da9d9ac3bb2585421263c4"
   },
   "du-dust": {
     "aliases": {
@@ -2279,7 +2279,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-10-12",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -2287,7 +2287,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.3"
+    "version": "4.4.0"
   },
   "glib": {
     "aliases": {
@@ -3378,11 +3378,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2025-05-14",
+    "date": "2025-11-03",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.24"
+    "version": "1.25"
   },
   "libedit": {
     "aliases": {
@@ -4944,12 +4944,12 @@
     },
     "bin": ["pkgconf"],
     "build_dependencies": ["make", "xz"],
-    "date": "2025-05-31",
+    "date": "2025-11-05",
     "default": false,
     "man1": ["pkgconf.1"],
     "prune": false,
     "url": ["https://github.com/pkgconf/pkgconf"],
-    "version": "2.4.3"
+    "version": "2.5.1"
   },
   "poetry": {
     "aliases": {
@@ -4966,7 +4966,7 @@
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
-    "date": "2025-05-06",
+    "date": "2025-11-05",
     "default": false,
     "dependencies": [
       "icu4c",
@@ -4982,7 +4982,7 @@
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "17.4"
+    "version": "18.0"
   },
   "prelude-emacs": {
     "date": "2024-12-30",
@@ -5090,12 +5090,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-10-20",
+    "date": "2025-11-03",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.11"
+    "version": "2.6.12"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
