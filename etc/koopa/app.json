@@ -4944,12 +4944,12 @@
     },
     "bin": ["pkgconf"],
     "build_dependencies": ["make", "xz"],
-    "date": "2025-05-31",
+    "date": "2025-11-05",
     "default": false,
     "man1": ["pkgconf.1"],
     "prune": false,
     "url": ["https://github.com/pkgconf/pkgconf"],
-    "version": "2.4.3"
+    "version": "2.5.1"
   },
   "poetry": {
     "aliases": {
@@ -4966,7 +4966,7 @@
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
-    "date": "2025-05-06",
+    "date": "2025-11-05",
     "default": false,
     "dependencies": [
       "icu4c",
@@ -4982,7 +4982,7 @@
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "17.4"
+    "version": "18.0"
   },
   "prelude-emacs": {
     "date": "2024-12-30",
