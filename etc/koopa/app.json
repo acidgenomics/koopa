@@ -100,7 +100,7 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-10-31",
     "default": false,
     "prune": true,
     "supported": {
@@ -110,7 +110,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.4.3"
+    "version": "1.4.4"
   },
   "apr": {
     "aliases": {
@@ -447,12 +447,12 @@
       "homebrew": "bash-completion@2"
     },
     "build_dependencies": ["make", "xz"],
-    "date": "2025-01-02",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": ["bash"],
     "prune": true,
     "url": ["https://github.com/scop/bash-completion"],
-    "version": "2.16.0"
+    "version": "2.17.0"
   },
   "bash-language-server": {
     "aliases": {
@@ -738,7 +738,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-10-08",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -747,7 +747,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "brotli": {
     "aliases": {
@@ -1008,12 +1008,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-10-20",
+    "date": "2025-11-03",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.66.2"
+    "version": "2.67.0"
   },
   "cli11": {
     "aliases": {
@@ -1047,12 +1047,12 @@
     },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2025-05-31",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "4.0.2"
+    "version": "4.1.2"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1340,12 +1340,12 @@
     },
     "bin": ["cpufetch"],
     "build_dependencies": ["make"],
-    "date": "2024-08-19",
+    "date": "2025-11-03",
     "default": false,
     "man1": ["cpufetch.1"],
     "prune": true,
     "url": ["https://github.com/Dr-Noob/cpufetch/"],
-    "version": "1.06"
+    "version": "1.07"
   },
   "csvkit": {
     "bin": [
@@ -1510,12 +1510,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-10-31",
+    "date": "2025-11-06",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "25140c48aada8ce129da9d9ac3bb2585421263c4"
+    "version": "ea6b76e559ddd473bfb81b9d673a10014e8e3b7a"
   },
   "du-dust": {
     "aliases": {
@@ -1880,11 +1880,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-10-31",
     "default": false,
     "prune": false,
     "url": ["https://fmt.dev/", "https://github.com/fmtlib/fmt/"],
-    "version": "12.0.0"
+    "version": "12.1.0"
   },
   "fontconfig": {
     "aliases": {
@@ -2076,6 +2076,18 @@
     "prune": false,
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.24"
+  },
+  "gdc-client": {
+    "bin": ["gdc-client"],
+    "date": "2025-11-06",
+    "default": false,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": [
+      "https://gdc.cancer.gov/access-data/gdc-data-transfer-tool",
+      "https://github.com/NCI-GDC/gdc-client"
+    ],
+    "version": "2.3"
   },
   "genomepy": {
     "bin": ["genomepy"],
@@ -2279,7 +2291,7 @@
       "homebrew": true
     },
     "bin": ["glances"],
-    "date": "2025-10-12",
+    "date": "2025-11-03",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -2287,7 +2299,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.3.3"
+    "version": "4.4.0"
   },
   "glib": {
     "aliases": {
@@ -3378,11 +3390,11 @@
       "conda": true
     },
     "build_dependencies": ["cmake"],
-    "date": "2025-05-14",
+    "date": "2025-11-03",
     "default": false,
     "prune": false,
     "url": ["https://github.com/ebiggers/libdeflate/"],
-    "version": "1.24"
+    "version": "1.25"
   },
   "libedit": {
     "aliases": {
@@ -4944,12 +4956,12 @@
     },
     "bin": ["pkgconf"],
     "build_dependencies": ["make", "xz"],
-    "date": "2025-05-31",
+    "date": "2025-11-05",
     "default": false,
     "man1": ["pkgconf.1"],
     "prune": false,
     "url": ["https://github.com/pkgconf/pkgconf"],
-    "version": "2.4.3"
+    "version": "2.5.1"
   },
   "poetry": {
     "aliases": {
@@ -4966,7 +4978,7 @@
   "postgresql": {
     "bin": ["pg_ctl", "psql"],
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
-    "date": "2025-05-06",
+    "date": "2025-11-05",
     "default": false,
     "dependencies": [
       "icu4c",
@@ -4982,7 +4994,7 @@
       "https://www.postgresql.org/",
       "https://ftp.postgresql.org/pub/source/"
     ],
-    "version": "17.4"
+    "version": "18.0"
   },
   "prelude-emacs": {
     "date": "2024-12-30",
@@ -5090,12 +5102,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-10-20",
+    "date": "2025-11-03",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.11"
+    "version": "2.6.12"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5814,12 +5826,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-10-28",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.14.2"
+    "version": "0.14.3"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5846,11 +5858,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2025-10-08",
+    "date": "2025-10-31",
     "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.90.0"
+    "version": "1.91.0"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
@@ -6268,7 +6280,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-08-21",
+    "date": "2025-10-31",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -6277,7 +6289,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.50.0"
+    "version": "1.51.0"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6370,11 +6382,11 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2025-07-16",
+    "date": "2025-10-31",
     "default": false,
     "prune": false,
     "url": ["https://github.com/oneapi-src/oneTBB"],
-    "version": "2022.2.0"
+    "version": "2022.3.0"
   },
   "tcl-tk": {
     "aliases": {
@@ -6662,12 +6674,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-10-28",
+    "date": "2025-10-31",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.5"
+    "version": "0.9.7"
   },
   "vim": {
     "aliases": {

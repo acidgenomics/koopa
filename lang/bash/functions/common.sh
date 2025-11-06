@@ -13483,6 +13483,13 @@ koopa_install_gdbm() {
         "$@"
 }
 
+koopa_install_gdc_client() {
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='gdc-client' \
+        "$@"
+}
+
 koopa_install_genomepy() {
     koopa_install_app \
         --installer='conda-package' \
@@ -29885,6 +29892,12 @@ koopa_uninstall_gdal() {
 koopa_uninstall_gdbm() {
     koopa_uninstall_app \
         --name='gdbm' \
+        "$@"
+}
+
+koopa_uninstall_gdc_client() {
+    koopa_uninstall_app \
+        --name='gdc-client' \
         "$@"
 }
 
