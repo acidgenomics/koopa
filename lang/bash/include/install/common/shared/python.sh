@@ -91,7 +91,7 @@ main() {
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
         # > '--with-system-expat'
-        '--with-system-libmpdec'
+        # > '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
         'ac_cv_working_openssl_hashlib=yes'
         'ac_cv_working_openssl_ssl=yes'
