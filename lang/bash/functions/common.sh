@@ -16285,7 +16285,6 @@ koopa_install_stow() {
 
 koopa_install_streamlit() {
     koopa_install_app \
-        --installer='python-package' \
         --name='streamlit' \
         "$@"
 }
