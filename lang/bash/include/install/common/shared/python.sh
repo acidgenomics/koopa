@@ -27,6 +27,7 @@ main() {
     #
     # See also:
     # - https://devguide.python.org/
+    # - https://devguide.python.org/contrib/workflows/install-dependencies/
     # - https://docs.python.org/3/using/unix.html
     # - https://docs.brew.sh/Homebrew-and-Python
     # - Installing multiple versions:
