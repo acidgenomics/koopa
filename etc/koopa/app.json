@@ -6280,7 +6280,6 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "build_dependencies": ["cmake"],
     "date": "2025-10-31",
     "default": false,
     "dependencies": ["python3.13"],
