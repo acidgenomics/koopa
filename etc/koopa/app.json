@@ -2077,6 +2077,18 @@
     "url": ["https://www.gnu.org.ua/software/gdbm/download.html"],
     "version": "1.24"
   },
+  "gdc-client": {
+    "bin": ["gdc-client"],
+    "date": "2025-11-06",
+    "default": false,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": [
+      "https://gdc.cancer.gov/access-data/gdc-data-transfer-tool",
+      "https://github.com/NCI-GDC/gdc-client"
+    ],
+    "version": "2.3"
+  },
   "genomepy": {
     "bin": ["genomepy"],
     "date": "2025-05-14",

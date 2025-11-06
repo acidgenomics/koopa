@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-10-08.
+    # @note Updated 2025-11-06.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -197,6 +197,7 @@ _koopa_complete() {
                         'gawk'
                         'gdal'
                         'gdbm'
+                        'gdc-client'
                         'genomepy'
                         'gentropy'
                         'geos'
