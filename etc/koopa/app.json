@@ -1510,12 +1510,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-10-31",
+    "date": "2025-11-06",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "25140c48aada8ce129da9d9ac3bb2585421263c4"
+    "version": "ea6b76e559ddd473bfb81b9d673a10014e8e3b7a"
   },
   "du-dust": {
     "aliases": {
