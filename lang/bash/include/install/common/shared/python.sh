@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Python.
-    # @note Updated 2025-08-21.
+    # @note Updated 2025-11-06.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -47,7 +47,6 @@ main() {
     then
         deps+=(
             'bzip2'
-            # > 'expat'
             'libedit'
             'libffi'
             'libxcrypt'
@@ -58,7 +57,7 @@ main() {
         )
     fi
     deps+=(
-        'expat'
+        # > 'expat'
         'mpdecimal'
         'openssl'
         'sqlite'
@@ -90,7 +89,7 @@ main() {
         '--with-computed-gotos'
         '--with-ensurepip=install'
         "--with-openssl=${dict['openssl']}"
-        '--with-system-expat'
+        # > '--with-system-expat'
         '--with-system-libmpdec'
         'PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1'
         'ac_cv_working_openssl_hashlib=yes'
