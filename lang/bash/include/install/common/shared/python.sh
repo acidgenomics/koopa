@@ -57,7 +57,7 @@ main() {
         )
     fi
     deps+=(
-        # > 'expat'
+        'expat'
         'mpdecimal'
         'openssl'
         'sqlite'
