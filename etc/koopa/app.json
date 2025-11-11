@@ -2792,8 +2792,8 @@
       "h5unjam",
       "h5watch"
     ],
-    "build_dependencies": ["make"],
-    "date": "2025-02-14",
+    "build_dependencies": ["cmake"],
+    "date": "2025-11-11",
     "default": false,
     "dependencies": ["libaec", "zlib"],
     "prune": false,
@@ -2801,7 +2801,7 @@
       "https://www.hdfgroup.org/downloads/hdf5/",
       "https://support.hdfgroup.org/downloads/index.html"
     ],
-    "version": "1.14.6"
+    "version": "2.0.0"
   },
   "hexyl": {
     "aliases": {
@@ -3788,11 +3788,11 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "perl", "pkg-config"],
-    "date": "2025-11-10",
+    "date": "2025-11-11",
     "default": false,
     "prune": false,
     "url": ["https://github.com/besser82/libxcrypt/"],
-    "version": "4.5.1"
+    "version": "4.5.2"
   },
   "libxml2": {
     "aliases": {
@@ -5858,11 +5858,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2025-10-31",
+    "date": "2025-11-11",
     "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.91.0"
+    "version": "1.91.1"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
@@ -6414,13 +6414,13 @@
       "homebrew": true
     },
     "bin": ["tldr"],
-    "date": "2025-10-08",
+    "date": "2025-11-11",
     "default": true,
     "dependencies": ["conda"],
     "outdated": true,
     "prune": true,
     "url": ["https://github.com/dbrgn/tealdeer/"],
-    "version": "1.7.2"
+    "version": "1.8.1"
   },
   "temurin": {
     "aliases": {
