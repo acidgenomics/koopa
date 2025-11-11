@@ -51,6 +51,10 @@ hdf5_${dict['version2']}/hdf5-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    koopa_cmake_build \
+        --include-dir='include' \
+        --lib-dir='lib' \
+        --prefix="${dict['prefix']}" \
+        "${cmake_args[@]}"
     return 0
 }
