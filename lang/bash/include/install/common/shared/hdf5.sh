@@ -42,7 +42,7 @@ hdf5_${dict['version2']}/hdf5-${dict['version']}.tar.gz"
         # > '-DHDF5_BUILD_FORTRAN:BOOL=ON'
         '-DHDF5_BUILD_CPP_LIB:BOOL=ON'
         # > '-DHDF5_ENABLE_NONSTANDARD_FEATURE_FLOAT16:BOOL=OFF'
-        '-DHDF5_ENABLE_SZIP_SUPPORT:BOOL=ON'
+        '-DHDF5_ENABLE_SZIP_SUPPORT:BOOL=ON' # libaec
         '-DHDF5_INSTALL_CMAKE_DIR=lib/cmake/hdf5'
         '-DHDF5_USE_GNU_DIRS:BOOL=ON'
         "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
