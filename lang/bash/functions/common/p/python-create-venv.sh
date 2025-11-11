@@ -3,7 +3,7 @@
 koopa_python_create_venv() {
     # """
     # Create Python virtual environment.
-    # @note Updated 2024-11-05.
+    # @note Updated 2025-11-11.
     #
     # In the future, consider adding support for 'requirements.txt' input.
     #
@@ -118,19 +118,29 @@ ${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
     if [[ "${bool['pip']}" -eq 1 ]]
     then
-        pip_args+=(
-            "--python=${app['venv_python']}"
-            'pip' 'setuptools' 'wheel'
-        )
+        pip_args+=("--python=${app['venv_python']}")
+        case "${bool['binary']}" in
+            '0')
+                pip_args+=('--no-binary=:all:')
+                ;;
+            '1')
+                pip_args+=('--only-binary=:all:')
+                ;;
+        esac
+        pip_args+=('pip' 'setuptools' 'wheel')
         koopa_python_pip_install "${pip_args[@]}"
     fi
     if koopa_is_array_non_empty "${pkgs[@]:-}"
     then
         pip_args+=("--python=${app['venv_python']}")
-        if [[ "${bool['binary']}" -eq 0 ]]
-        then
-            pip_args+=('--no-binary=:all:')
-        fi
+        case "${bool['binary']}" in
+            '0')
+                pip_args+=('--no-binary=:all:')
+                ;;
+            '1')
+                pip_args+=('--only-binary=:all:')
+                ;;
+        esac
         pip_args+=("${pkgs[@]}")
         koopa_python_pip_install "${pip_args[@]}"
     fi
