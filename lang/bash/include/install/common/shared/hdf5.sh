@@ -3,9 +3,10 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2025-03-01.
+    # @note Updated 2025-11-11.
     #
     # @seealso
+    # - https://github.com/HDFGroup/hdf5/
     # - https://www.hdfgroup.org/downloads/hdf5/source-code/
     # - https://docs.hdfgroup.org/archive/support/HDF5/release/cmakebuild.html
     # - https://docs.hdfgroup.org/archive/support/HDF5/release/chgcmkbuild.html
@@ -13,12 +14,13 @@ main() {
     # - https://formulae.brew.sh/formula/hdf5
     # - https://github.com/mokus0/bindings-hdf5/blob/master/doc/hdf5.pc
     # """
-    local -A dict
-    local -a conf_args deps
+    local -A cmake dict
+    local -a cmake_args deps
     deps=('libaec' 'zlib')
     koopa_activate_app "${deps[@]}"
     dict['libaec']="$(koopa_app_prefix 'libaec')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
     dict['version2']="$( \
@@ -28,61 +30,27 @@ main() {
             --replacement='.' \
             "${dict['version']}" \
     )"
-    conf_args=(
-        '--disable-dependency-tracking'
-        '--disable-fortran'
-        '--disable-silent-rules'
-        '--disable-static'
-        '--enable-build-mode=production'
-        '--enable-cxx'
-        "--prefix=${dict['prefix']}"
-        "--with-szlib=${dict['libaec']}"
-        "--with-zlib=${dict['zlib']}"
-    )
-    # Work around incompatibility with new linker (FB13194355).
-    # > ld: unknown options: -commons
-    # See also:
-    # - https://github.com/HDFGroup/hdf5/issues/3571
-    # - https://community.intel.com/t5/Intel-Fortran-Compiler/
-    #     Mac-Xcode-15-0-unknown-options-commons/td-p/1526357
-    # > if koopa_is_macos
-    # > then
-    # >     dict['clt_ver']="$(koopa_macos_xcode_clt_version)"
-    # >     dict['clt_maj_ver']="$(koopa_major_version "${dict['clt_ver']}")"
-    # >     if [[ "${dict['clt_maj_ver']}" -ge 15 ]]
-    # >     then
-    # >         koopa_append_ldflags '-Wl,-ld_classic'
-    # >     fi
-    # > fi
     dict['url']="https://github.com/HDFGroup/hdf5/releases/download/\
 hdf5_${dict['version2']}/hdf5-${dict['version']}.tar.gz"
+    cmake['zlib_include_dir']="${dict['zlib']}/include"
+    cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
+    koopa_assert_is_dir \
+        "${cmake['zlib_include_dir']}"
+    koopa_assert_is_file \
+        "${cmake['zlib_library']}"
+    cmake_args=(
+        # > '-DHDF5_ENABLE_NONSTANDARD_FEATURE_FLOAT16:BOOL=OFF'
+        # > '-DHDF5_INSTALL_CMAKE_DIR=lib/cmake/hdf5'
+        # > '-DHDF5_BUILD_CPP_LIB:BOOL=ON'
+        # > '-DHDF5_BUILD_FORTRAN:BOOL=ON'
+        # > '-DHDF5_ENABLE_SZIP_SUPPORT:BOOL=ON'
+        # > '-DHDF5_USE_GNU_DIRS:BOOL=ON'
+        "-DZLIB_INCLUDE_DIR=${cmake['zlib_include_dir']}"
+        "-DZLIB_LIBRARY=${cmake['zlib_library']}"
+    )
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
-    # Create pkg-config file.
-    dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/hdf5.pc"
-    read -r -d '' "dict[pkg_config_string]" << END || true
-prefix=${dict['prefix']}
-exec_prefix=\${prefix}
-bindir=\${exec_prefix}/bin
-libdir=\${exec_prefix}/lib
-includedir=\${prefix}/include
-
-Name: hdf5
-Description: HDF5 library
-Version: ${dict['version']}
-
-Requires.private: zlib
-Libs: -L\${libdir} -lhdf5
-Cflags: -I\${includedir}
-END
-    if [[ ! -f "${dict['pkg_config_file']}" ]]
-    then
-        koopa_alert 'Adding pkg-config support.'
-        koopa_write_string \
-            --file="${dict['pkg_config_file']}" \
-            --string="${dict['pkg_config_string']}"
-    fi
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
