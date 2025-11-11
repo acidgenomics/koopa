@@ -3,7 +3,7 @@
 koopa_python_pip_install() {
     # """
     # Internal pip install command.
-    # @note Updated 2023-05-16.
+    # @note Updated 2025-11-11.
     #
     # The pip '--isolated' flag ignores the user 'pip.conf' file.
     #
@@ -23,11 +23,13 @@ koopa_python_pip_install() {
     do
         case "$1" in
             # Key-value pairs --------------------------------------------------
-            '--no-binary='*)
+            '--no-binary='* | \
+            '--only-binary='*)
                 pos=("$1")
                 shift 1
                 ;;
-            '--no-binary')
+            '--no-binary' | \
+            '--only-binary')
                 pos=("$1" "${2:?}")
                 shift 2
                 ;;
