@@ -2771,8 +2771,6 @@
       "homebrew": true
     },
     "bin": [
-      "h5c++",
-      "h5cc",
       "h5clear",
       "h5copy",
       "h5debug",
@@ -2785,7 +2783,6 @@
       "h5ls",
       "h5mkgrp",
       "h5perf_serial",
-      "h5redeploy",
       "h5repack",
       "h5repart",
       "h5stat",
