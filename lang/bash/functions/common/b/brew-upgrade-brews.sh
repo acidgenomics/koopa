@@ -3,7 +3,7 @@
 koopa_brew_upgrade_brews() {
     # """
     # Upgrade outdated Homebrew brews.
-    # @note Updated 2023-05-09.
+    # @note Updated 2025-11-12.
     # """
     local -A app
     local -a brews
@@ -22,21 +22,6 @@ koopa_brew_upgrade_brews() {
             --msg2='brews' \
         )" \
         "$(koopa_to_string "${brews[@]}")"
-    for brew in "${brews[@]}"
-    do
-        "${app['brew']}" reinstall --force "$brew" || true
-        # Ensure specific brews are properly linked on macOS.
-        if koopa_is_macos
-        then
-            case "$brew" in
-                'gcc' | \
-                'gpg' | \
-                'python@3.11' | \
-                'vim')
-                    "${app['brew']}" link --overwrite "$brew" || true
-                    ;;
-            esac
-        fi
-    done
+    "${app['brew']}" reinstall --force "${brews[@]}"
     return 0
 }
