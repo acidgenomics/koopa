@@ -3,7 +3,7 @@
 koopa_macos_brew_upgrade_casks() {
     # """
     # Upgrade Homebrew casks.
-    # @note Updated 2024-10-21.
+    # @note Updated 2025-11-12.
     #
     # Note that additional cask flags are set globally using the
     # 'HOMEBREW_CASK_OPTS' global, declared in our main Homebrew activation
@@ -29,33 +29,16 @@ koopa_macos_brew_upgrade_casks() {
         )" \
         "$(koopa_to_string "${casks[@]}")"
     koopa_sudo_trigger
+    # Potentially useful flags:
+    # * --display-times
+    # * --require-sha
+    # * --skip-cask-deps
+    # * --verbose
+    # * --zap
+    "${app['brew']}" reinstall --cask --force "${casks[@]}"
     for cask in "${casks[@]}"
     do
         case "$cask" in
-            'docker')
-                cask='homebrew/cask/docker'
-                ;;
-            'macvim')
-                cask='homebrew/cask/macvim'
-                ;;
-        esac
-        # Potentially useful flags:
-        # * --require-sha
-        # * --skip-cask-deps
-        # * --zap
-        "${app['brew']}" \
-            reinstall \
-            --cask \
-            --display-times \
-            --force \
-            --verbose \
-            "$cask" \
-            || true
-        case "$cask" in
-            # > 'emacs')
-            # >     "${app['brew']}" unlink 'emacs'
-            # >     "${app['brew']}" link 'emacs'
-            # >     ;;
             # > 'google-'*)
             # >     # Currently in 'google-chrome' and 'google-drive' recipes.
             # >     koopa_macos_disable_google_keystone
