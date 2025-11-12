@@ -1,14 +1,9 @@
 #!/usr/bin/env bash
 
-# TODO Need to improve cleanup of deprecated / removed casks:
-# brew uninstall --cask font-ibm-plex 2>/dev/null || true
-# To do this, parse the cask list output and only run the uninstall command
-# if installed.
-
 koopa_update_system_homebrew() {
     # """
     # Updated outdated Homebrew brews and casks.
-    # @note Updated 2025-03-21.
+    # @note Updated 2025-11-12.
     #
     # @seealso
     # - brew linkage --test
@@ -65,9 +60,9 @@ koopa_update_system_homebrew() {
             "${app['brew']}" untap "$tap"
         fi
     done
-    "${app['brew']}" cleanup -s || true
+    "${app['brew']}" cleanup -s
     koopa_rm "$("${app['brew']}" --cache)"
-    "${app['brew']}" autoremove || true
+    "${app['brew']}" autoremove
     koopa_brew_doctor
     koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
     return 0
