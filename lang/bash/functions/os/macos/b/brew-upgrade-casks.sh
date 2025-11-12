@@ -40,7 +40,6 @@ koopa_macos_brew_upgrade_casks() {
                 ;;
         esac
         # Potentially useful flags:
-        # * --no-quarantine
         # * --require-sha
         # * --skip-cask-deps
         # * --zap
