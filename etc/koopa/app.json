@@ -1540,11 +1540,11 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.13"],
-    "date": "2025-10-08",
+    "date": "2025-11-12",
     "default": false,
     "prune": true,
     "url": ["https://duckdb.org/", "https://github.com/duckdb/duckdb/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "ed": {
     "aliases": {
@@ -5200,7 +5200,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2025-11-10",
+    "date": "2025-11-12",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5209,7 +5209,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "9.0.0"
+    "version": "9.0.1"
   },
   "python3.10": {
     "aliases": {
@@ -7220,7 +7220,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-10-28",
+    "date": "2025-11-12",
     "default": false,
     "dependencies": ["ffmpeg", "python3.13"],
     "prune": true,
@@ -7228,7 +7228,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.10.22"
+    "version": "2025.11.12"
   },
   "zellij": {
     "aliases": {
