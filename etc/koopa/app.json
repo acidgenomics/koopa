@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-10-28",
+    "date": "2025-11-19",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.31.23"
+    "version": "2.31.39"
   },
   "axel": {
     "aliases": {
