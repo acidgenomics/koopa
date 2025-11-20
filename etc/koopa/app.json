@@ -2399,12 +2399,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud", "gsutil"],
-    "date": "2025-09-05",
+    "date": "2025-11-20",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "537.0.0"
+    "version": "548.0.0"
   },
   "googletest": {
     "aliases": {

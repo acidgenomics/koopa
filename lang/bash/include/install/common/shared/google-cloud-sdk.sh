@@ -8,7 +8,7 @@ install_from_conda() {
 install_from_source() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2025-02-27.
+    # @note Updated 2025-11-20.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -71,6 +71,7 @@ ${dict['arch2']}.tar.gz"
         "${app['gcloud']}" \
         "${app['gsutil']}"
     conf_args=(
+        # > "export CLOUDSDK_GSUTIL_PYTHON=${app['venv_python']}"
         "export CLOUDSDK_PYTHON=${app['venv_python']}"
         'export CLOUDSDK_PYTHON_SITEPACKAGES=1'
         "export PYTHONPATH=${dict['libexec']}/lib"
