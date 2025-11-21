@@ -113,24 +113,9 @@ koopa_macos_brew_upgrade_casks() {
         )" \
         "$(koopa_to_string "${casks[@]}")"
     koopa_sudo_trigger
+    "${app['brew']}" reinstall --cask --force "${casks[@]}"
     for cask in "${casks[@]}"
     do
-        case "$cask" in
-            'docker')
-                cask='homebrew/cask/docker'
-                ;;
-            'macvim')
-                cask='homebrew/cask/macvim'
-                ;;
-        esac
-        "${app['brew']}" \
-            reinstall \
-            --cask \
-            --display-times \
-            --force \
-            --verbose \
-            "$cask" \
-            || true
         case "$cask" in
             'gpg-suite'*)
                 koopa_macos_disable_gpg_updater

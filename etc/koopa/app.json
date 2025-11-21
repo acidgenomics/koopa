@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-10-28",
+    "date": "2025-11-19",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.31.23"
+    "version": "2.31.39"
   },
   "axel": {
     "aliases": {
@@ -1510,12 +1510,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2025-11-06",
+    "date": "2025-11-17",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "ea6b76e559ddd473bfb81b9d673a10014e8e3b7a"
+    "version": "5f842fbc829cf8c0b7d099a624a58c88d8098bd6"
   },
   "du-dust": {
     "aliases": {
@@ -1540,11 +1540,11 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.13"],
-    "date": "2025-10-08",
+    "date": "2025-11-12",
     "default": false,
     "prune": true,
     "url": ["https://duckdb.org/", "https://github.com/duckdb/duckdb/"],
-    "version": "1.4.1"
+    "version": "1.4.2"
   },
   "ed": {
     "aliases": {
@@ -2399,12 +2399,12 @@
       "homebrew-cask": true
     },
     "bin": ["gcloud", "gsutil"],
-    "date": "2025-09-05",
+    "date": "2025-11-20",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "537.0.0"
+    "version": "548.0.0"
   },
   "googletest": {
     "aliases": {
@@ -5200,7 +5200,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2025-11-10",
+    "date": "2025-11-12",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5209,7 +5209,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "9.0.0"
+    "version": "9.0.1"
   },
   "python3.10": {
     "aliases": {
@@ -7220,7 +7220,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-10-28",
+    "date": "2025-11-12",
     "default": false,
     "dependencies": ["ffmpeg", "python3.13"],
     "prune": true,
@@ -7228,7 +7228,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.10.22"
+    "version": "2025.11.12"
   },
   "zellij": {
     "aliases": {
