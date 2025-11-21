@@ -3995,21 +3995,7 @@ koopa_brew_upgrade_brews() {
             --msg2='brews' \
         )" \
         "$(koopa_to_string "${brews[@]}")"
-    for brew in "${brews[@]}"
-    do
-        "${app['brew']}" reinstall --force "$brew" || true
-        if koopa_is_macos
-        then
-            case "$brew" in
-                'gcc' | \
-                'gpg' | \
-                'python@3.11' | \
-                'vim')
-                    "${app['brew']}" link --overwrite "$brew" || true
-                    ;;
-            esac
-        fi
-    done
+    "${app['brew']}" reinstall --force "${brews[@]}"
     return 0
 }
 
@@ -19937,7 +19923,7 @@ koopa_locate_python() {
     dict['python_version']="$(koopa_python_major_minor_version)"
     koopa_locate_app \
         --app-name="python${dict['python_version']}" \
-        --bin-name='python3' \
+        --bin-name="python${dict['python_version']}" \
         "$@"
 }
 
@@ -32118,9 +32104,9 @@ koopa_update_system_homebrew() {
             "${app['brew']}" untap "$tap"
         fi
     done
-    "${app['brew']}" cleanup -s || true
+    "${app['brew']}" cleanup -s
     koopa_rm "$("${app['brew']}" --cache)"
-    "${app['brew']}" autoremove || true
+    "${app['brew']}" autoremove
     koopa_brew_doctor
     koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
     return 0
