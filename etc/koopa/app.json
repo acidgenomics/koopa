@@ -1474,7 +1474,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.67.0"
+    "version": "0.65.0"
   },
   "direnv": {
     "aliases": {
@@ -6102,7 +6102,8 @@
     "bin": ["snakemake"],
     "date": "2025-11-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": [
       "https://github.com/snakemake/snakemake/",

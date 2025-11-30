@@ -16198,7 +16198,7 @@ koopa_install_snakefmt() {
 
 koopa_install_snakemake() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='snakemake' \
         "$@"
 }
