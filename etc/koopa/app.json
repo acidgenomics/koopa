@@ -2387,11 +2387,11 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2024-12-24",
+    "date": "2025-11-30",
     "default": false,
     "prune": true,
     "url": ["https://golang.org/dl/"],
-    "version": "1.23.4"
+    "version": "1.25.4"
   },
   "google-cloud-sdk": {
     "aliases": {
