@@ -1,10 +1,7 @@
-"""
-Utility functions for datatype handling/coercion.
-Updated 2024-05-15.
-"""
+"""Utility functions for datatype handling/coercion."""
 
 
-def argsort(object: list, reverse=False) -> list:
+def argsort(object: list, reverse: bool = False) -> list:
     """Return the indices that would sort an array.
 
     See Also
@@ -33,7 +30,7 @@ def argsort(object: list, reverse=False) -> list:
     return out
 
 
-def flatten(items: list, seqtypes=(list, tuple)) -> list:
+def flatten(items: list, seqtypes: type | tuple[type, ...] = (list, tuple)) -> list:
     """Flatten an arbitrarily nested list.
 
     See Also
@@ -47,10 +44,9 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
     ['a', 'b', 'c', 'd']
     """
     try:
-        for i, x in enumerate(items):
-            while isinstance(x, seqtypes):
-                items[i : i + 1] = x
-                x = items[i]
+        for i, _ in enumerate(items):
+            while isinstance(items[i], seqtypes):
+                items[i : i + 1] = items[i]
     except IndexError:
         pass
     return items
