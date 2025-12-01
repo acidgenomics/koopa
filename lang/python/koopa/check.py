@@ -1,7 +1,4 @@
-"""
-System check functions.
-Updated 2025-05-08.
-"""
+"""System check functions."""
 
 from os.path import basename, isdir, islink, join, realpath
 
@@ -11,10 +8,7 @@ from koopa.os import koopa_opt_prefix
 
 
 def check_installed_apps() -> bool:
-    """
-    Check system integrity.
-    Updated 2025-05-08.
-    """
+    """Check system integrity."""
     ok = True
     opt_prefix = koopa_opt_prefix()
     json_data = import_app_json()
