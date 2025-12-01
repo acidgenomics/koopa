@@ -4,7 +4,8 @@
 Parse conda JSON metadata for files to link in 'bin'.
 Updated 2024-05-16.
 
-Examples:
+Examples
+--------
 ./conda-bin-names.py \
     /opt/koopa/opt/star/libexec/conda-meta/star-*.json
 """
@@ -28,7 +29,6 @@ def main(json_file: str) -> None:
     Updated 2023-12-14.
     """
     print_conda_bin_names(json_file=json_file)
-    return None
 
 
 if __name__ == "__main__":
