@@ -7208,7 +7208,7 @@
     "bin": ["yq"],
     "build_dependencies": ["go"],
     "date": "2025-11-30",
-    "default": true,
+    "default": false,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
