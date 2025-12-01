@@ -105,8 +105,21 @@ def filter_app_deps(names: list, json_data: dict) -> list:
         supported = json.get("supported", {})
         if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
             continue
-        if json.get("private") or json.get("system") or json.get("user"):
-            continue
+        # FIXME Need to check that key exists and is set to True here.
+        keys = json.keys()
+        if "supported" in keys:
+            if sys_dict["os_id"] in json["supported"]:
+                if not json["supported"][sys_dict["os_id"]]:
+                    continue
+        if "private" in keys:
+            if json["private"]:
+                continue
+        if "system" in keys:
+            if json["system"]:
+                continue
+        if "user" in keys:
+            if json["user"]:
+                continue
         lst.append(val)
     return lst
 
