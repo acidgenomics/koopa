@@ -3306,8 +3306,8 @@
       "homebrew": true
     },
     "bin": ["lesspipe.sh"],
-    "build_dependencies": ["make"],
-    "date": "2025-11-30",
+    "build_dependencies": ["bash", "make"],
+    "date": "2025-12-01",
     "default": true,
     "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
