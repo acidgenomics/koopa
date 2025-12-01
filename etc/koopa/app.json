@@ -1373,9 +1373,9 @@
   },
   "csvtk": {
     "bin": ["csvtk"],
-    "build_dependencies": ["go"],
     "date": "2025-11-30",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/shenwei356/csvtk/"],
     "version": "0.36.0"
