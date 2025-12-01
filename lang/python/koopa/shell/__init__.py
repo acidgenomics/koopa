@@ -1,3 +1,1 @@
-"""
-Shell parsing functions that rely upon subprocess.
-"""
+"""Shell parsing functions that rely upon subprocess."""

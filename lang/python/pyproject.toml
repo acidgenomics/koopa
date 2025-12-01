@@ -15,17 +15,18 @@ quote-style = "double"
 [tool.ruff.lint]
 # List of rules: https://docs.astral.sh/ruff/rules/
 select = [
-  "B",   # flake8-bugbear
+  "ANN", # flake8-annotations
+  "B", # flake8-bugbear
   "C90", # mccabe
-  "D",   # pydocstyle
-  "E",   # pycodestyle
-  "F",   # PyFlakes
-  "I",   # isort
-  "NPY", # NumPy-specific rules,
+  "D", # pydocstyle
+  "E", # pycodestyle
+  "F", # PyFlakes
+  "I", # isort
+  "NPY", # NumPy-specific rules
   "PL",  # pylint
   "SIM", # flake8-simplify
-  "UP",  # pyupgrade
-  "W",   # pycodestyle
+  "UP", # pyupgrade
+  "W", # pycodestyle
 ]
 ignore = [
   "D203", # one-blank-line-before-class
