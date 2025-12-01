@@ -14,7 +14,7 @@ def check_installed_apps() -> bool:
     json_data = import_app_json()
     names = installed_apps()
     for name in names:
-        if name not in json_data.keys():
+        if name not in json_data:
             ok = False
             print(f"{name} is an unsupported app")
             continue
@@ -30,7 +30,7 @@ def check_installed_apps() -> bool:
             continue
         assert isdir(path)
         linked_ver = basename(path)
-        if "removed" in json_data[name].keys() and json_data[name]["removed"]:
+        if "removed" in json_data[name] and json_data[name]["removed"]:
             ok = False
             print(f"{name} is a removed app")
             continue
