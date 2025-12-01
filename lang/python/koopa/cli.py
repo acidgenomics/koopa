@@ -14,7 +14,6 @@ def print_app_deps(name: str) -> None:
     """
     lst = app_deps(name=name)
     print_list(lst)
-    return None
 
 
 def print_app_json(name: str, key: str) -> None:
@@ -35,7 +34,6 @@ def print_app_json(name: str, key: str) -> None:
             print(i)
     else:
         print(value)
-    return None
 
 
 def print_app_revdeps(name: str, mode: str) -> None:
@@ -45,7 +43,6 @@ def print_app_revdeps(name: str, mode: str) -> None:
     """
     lst = app_revdeps(name=name, mode=mode)
     print_list(lst)
-    return None
 
 
 def print_conda_bin_names(json_file: str) -> None:
@@ -55,7 +52,6 @@ def print_conda_bin_names(json_file: str) -> None:
     """
     lst = extract_conda_bin_names(json_file=json_file)
     print_list(lst)
-    return None
 
 
 def print_list(obj) -> None:
@@ -66,7 +62,6 @@ def print_list(obj) -> None:
     if any(obj):
         for val in obj:
             print(val)
-    return None
 
 
 def print_shared_apps(mode: str) -> None:
@@ -76,4 +71,3 @@ def print_shared_apps(mode: str) -> None:
     """
     lst = shared_apps(mode=mode)
     print_list(lst)
-    return None

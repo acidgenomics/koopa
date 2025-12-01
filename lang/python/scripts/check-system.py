@@ -4,7 +4,8 @@
 Check system integrity, including outdated apps.
 Updated 2024-05-28.
 
-Examples:
+Examples
+--------
 ./check-system.py
 """
 
@@ -24,7 +25,6 @@ def main() -> None:
     ok = check_installed_apps()
     if not ok:
         exit(1)
-    return None
 
 
 if __name__ == "__main__":

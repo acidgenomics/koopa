@@ -18,7 +18,8 @@ def fd_find(prefix: str, pattern: str) -> list:
     Uses regular expressions for pattern matching.
     Does not return sorted.
 
-    Examples:
+    Examples
+    --------
     >>> fd_find(prefix="/opt/koopa/lang/python", pattern="\\.py$")
     """
     if not which("fd"):

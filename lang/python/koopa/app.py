@@ -64,9 +64,7 @@ def app_revdeps(name: str, mode: str) -> list:
         raise NameError(f"Unsupported app: {name!r}.")
     all_deps = []
     for key in keys:
-        key_deps = extract_app_deps(
-            name=key, json_data=json_data, include_build_deps=False
-        )
+        key_deps = extract_app_deps(name=key, json_data=json_data, include_build_deps=False)
         all_deps.append(key_deps)
     lst = []
     i = 0
@@ -80,9 +78,7 @@ def app_revdeps(name: str, mode: str) -> list:
     return lst
 
 
-def extract_app_deps(
-    name: str, json_data: dict, include_build_deps=True
-) -> list:
+def extract_app_deps(name: str, json_data: dict, include_build_deps=True) -> list:
     """
     Extract unique build dependencies and dependencies in an ordered list.
     Updated 2024-05-05.
@@ -189,9 +185,7 @@ def installed_apps() -> list:
     Updated 2024-05-28.
     """
     app_prefix = koopa_app_prefix()
-    names = list_subdirs(
-        path=app_prefix, recursive=False, sort=True, basename_only=True
-    )
+    names = list_subdirs(path=app_prefix, recursive=False, sort=True, basename_only=True)
     return names
 
 
@@ -233,7 +227,6 @@ def prune_apps(dry_run=False) -> None:
                 continue
             print(f"Pruning {subdir!r}.")
             rmtree(subdir)
-    return None
 
 
 def prune_app_binaries(dry_run=False) -> None:
@@ -241,7 +234,8 @@ def prune_app_binaries(dry_run=False) -> None:
     Prune app binaries.
     Updated 2024-05-16.
 
-    See also:
+    See Also
+    --------
     - https://stackoverflow.com/questions/27274996/
     """
     dict = {

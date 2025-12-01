@@ -7,9 +7,7 @@ from os import scandir, walk
 from os.path import basename, join
 
 
-def list_subdirs(
-    path: str, recursive=False, sort=False, basename_only=False
-) -> list:
+def list_subdirs(path: str, recursive=False, sort=False, basename_only=False) -> list:
     """
     List subdirectories in a directory.
     Updated 2024-05-28.
@@ -17,12 +15,14 @@ def list_subdirs(
     For recursive listing, consider using a merge sort approach:
     https://www.freecodecamp.org/news/how-to-sort-recursively-in-python/
 
-    See also:
+    See Also
+    --------
     - https://stackoverflow.com/questions/141291/
     - https://stackoverflow.com/questions/800197/
     - https://www.techiedelight.com/list-all-subdirectories-in-directory-python/
 
-    Examples:
+    Examples
+    --------
     >>> list_subdirs(path="/opt/koopa", recursive=False, basename_only=True)
     """
     if recursive:

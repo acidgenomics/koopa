@@ -21,9 +21,7 @@ def build_all_tags(local: str, remote: str) -> bool:
     """
     local = abspath(expanduser(local))
     assert isdir(local)
-    tags = list_subdirs(
-        path=local, recursive=False, sort=True, basename_only=True
-    )
+    tags = list_subdirs(path=local, recursive=False, sort=True, basename_only=True)
     for tag in tags:
         local2 = join(local, tag)
         assert isdir(tag)
@@ -37,7 +35,8 @@ def build_tag(local: str, remote: str) -> bool:
     Build a Docker tag.
     Updated 2023-12-11.
 
-    Examples:
+    Examples
+    --------
     local = "~/monorepo/docker/acidgenomics/koopa/ubuntu"
     remote = "public.ecr.aws/acidgenomics/koopa:ubuntu"
     build_tag(local=local, remote=remote)

@@ -58,7 +58,8 @@ def remove_accents(string: str) -> str:
     Remove accents from file metadata.
     Updated 2024-04-19.
 
-    See also:
+    See Also
+    --------
     - https://stackoverflow.com/a/517974
     """
     nfkd_form = normalize("NFKD", string)

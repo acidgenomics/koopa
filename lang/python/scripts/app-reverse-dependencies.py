@@ -4,7 +4,8 @@
 Solve app reverse dependencies defined in 'app.json' file.
 Updated 2024-05-16.
 
-Examples:
+Examples
+--------
 ./app-reverse-dependencies.py 'python3.11'
 """
 
@@ -33,7 +34,6 @@ def main(name: str, mode: str) -> None:
     Updated 2023-12-14.
     """
     print_app_revdeps(name=name, mode=mode)
-    return None
 
 
 if __name__ == "__main__":

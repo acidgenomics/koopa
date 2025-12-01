@@ -4,7 +4,8 @@
 Solve app dependencies defined in 'app.json' file.
 Updated 2024-05-05.
 
-Examples:
+Examples
+--------
 ./app-dependencies.py 'python3.11'
 """
 
@@ -27,7 +28,6 @@ def main(name: str) -> None:
     Updated 2023-12-14.
     """
     print_app_deps(name)
-    return None
 
 
 if __name__ == "__main__":

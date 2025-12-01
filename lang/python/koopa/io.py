@@ -15,7 +15,8 @@ def extract_conda_bin_names(json_file: str) -> list:
     Extract the conda bin names from JSON metadata file.
     Updated 2024-05-03.
 
-    Examples:
+    Examples
+    --------
     json_file='/opt/koopa/opt/anaconda/conda-meta/conda-*.json'
     conda_bin_names(json_file=json_file)
     """

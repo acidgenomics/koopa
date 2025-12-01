@@ -4,7 +4,8 @@
 Parse koopa 'app.json' file.
 Updated 2024-05-05.
 
-Examples:
+Examples
+--------
 ./app-json.py \
     --app-name='coreutils' \
     --key='bin'
@@ -30,7 +31,6 @@ def main(name: str, key: str) -> None:
     Updated 2023-12-14.
     """
     print_app_json(name=name, key=key)
-    return None
 
 
 if __name__ == "__main__":
