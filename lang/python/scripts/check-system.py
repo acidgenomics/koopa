@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Check system integrity, including outdated apps.
-Updated 2024-05-28.
+"""Check system integrity, including outdated apps.
 
 Examples
 --------
-./check-system.py
+$ ./check-system.py
 """
 
 from os.path import dirname, join
@@ -18,10 +16,7 @@ from koopa.check import check_installed_apps
 
 
 def main() -> None:
-    """
-    Main function.
-    Updated 2024-05-28.
-    """
+    """Main function."""
     ok = check_installed_apps()
     if not ok:
         exit(1)

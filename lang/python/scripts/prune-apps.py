@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Prune apps.
-Updated 2024-05-16.
+"""Prune apps.
 
 Examples
 --------
-./prune-apps.py
+$ ./prune-apps.py
 """
 
 from argparse import ArgumentParser, BooleanOptionalAction
@@ -23,10 +21,7 @@ args = parser.parse_args()
 
 
 def main(dry_run=False) -> None:
-    """
-    Main function.
-    Updated 2024-05-16.
-    """
+    """Main function."""
     prune_apps(dry_run=dry_run)
 
 

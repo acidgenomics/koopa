@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Parse conda JSON metadata for files to link in 'bin'.
-Updated 2024-05-16.
+"""Parse conda JSON metadata for files to link in 'bin'.
 
 Examples
 --------
-./conda-bin-names.py \
-    /opt/koopa/opt/star/libexec/conda-meta/star-*.json
+$ ./conda-bin-names.py /opt/koopa/opt/star/libexec/conda-meta/star-*.json
 """
 
 from argparse import ArgumentParser
@@ -24,10 +21,7 @@ from koopa.cli import print_conda_bin_names
 
 
 def main(json_file: str) -> None:
-    """
-    Main function.
-    Updated 2023-12-14.
-    """
+    """Main function."""
     print_conda_bin_names(json_file=json_file)
 
 

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Solve app reverse dependencies defined in 'app.json' file.
-Updated 2024-05-16.
+"""Solve app reverse dependencies defined in 'app.json' file.
 
 Examples
 --------
-./app-reverse-dependencies.py 'python3.11'
+$ ./app-reverse-dependencies.py 'python3.11'
 """
 
 from argparse import ArgumentParser
@@ -29,10 +27,7 @@ args = parser.parse_args()
 
 
 def main(name: str, mode: str) -> None:
-    """
-    Main function.
-    Updated 2023-12-14.
-    """
+    """Main function."""
     print_app_revdeps(name=name, mode=mode)
 
 

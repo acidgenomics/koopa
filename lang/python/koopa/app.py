@@ -83,14 +83,14 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps=True) -> lis
     if include_build_deps and "build_dependencies" in json_data[name]:
         build_deps = json_data[name]["build_dependencies"]
         if isinstance(build_deps, dict):
-            if sys_dict["os_id"] in build_deps.keys():
+            if sys_dict["os_id"] in build_deps:
                 build_deps = build_deps[sys_dict["os_id"]]
             else:
                 build_deps = build_deps["noarch"]
     if "dependencies" in json_data[name]:
         deps = json_data[name]["dependencies"]
         if isinstance(deps, dict):
-            if sys_dict["os_id"] in deps.keys():
+            if sys_dict["os_id"] in deps:
                 deps = deps[sys_dict["os_id"]]
             else:
                 deps = deps["noarch"]
@@ -107,7 +107,7 @@ def filter_app_deps(names: list, json_data: dict) -> list:
         json = json_data[val]
         keys = json.keys()
         if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"].keys():
+            if sys_dict["os_id"] in json["supported"]:
                 if not json["supported"][sys_dict["os_id"]]:
                     continue
         if "private" in keys:
@@ -181,7 +181,7 @@ def prune_apps(dry_run=False) -> None:
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
         json = json_data[name]
-        if "prune" in json.keys():
+        if "prune" in json:
             if not json["prune"]:
                 prune = False
         if not prune:

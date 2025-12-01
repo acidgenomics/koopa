@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Prune app binaries.
-Updated 2024-05-16.
+"""Prune app binaries.
 
 Examples
 --------
-./prune-app-binaries.py
+$ ./prune-app-binaries.py
 """
 
 from argparse import ArgumentParser, BooleanOptionalAction
@@ -23,10 +21,7 @@ args = parser.parse_args()
 
 
 def main(dry_run=False) -> None:
-    """
-    Main function.
-    Updated 2024-05-16.
-    """
+    """Main function."""
     prune_app_binaries(dry_run=dry_run)
 
 
