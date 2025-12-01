@@ -1,17 +1,11 @@
-"""
-Syntactically valid names.
-Updated 2024-05-03.
-"""
+"""Syntactically valid names."""
 
 from re import sub
 from unicodedata import combining, normalize
 
 
 def _syntactic_engine(string: str) -> str:
-    """
-    Reformat string into syntactically valid kebab case.
-    Updated 2024-05-03.
-    """
+    """Reformat string into syntactically valid kebab case."""
     assert len(string) > 0
     string = remove_accents(string)
     string = string.lower()
@@ -44,19 +38,14 @@ def _syntactic_engine(string: str) -> str:
     return string
 
 
-def kebab_case(string):
-    """
-    Kebab case.
-    Updated 2025-05-03.
-    """
+def kebab_case(string: str) -> str:
+    """Kebab case."""
     string = _syntactic_engine(string=string)
     return string
 
 
 def remove_accents(string: str) -> str:
-    """
-    Remove accents from file metadata.
-    Updated 2024-04-19.
+    """Remove accents from file metadata.
 
     See Also
     --------
@@ -67,11 +56,8 @@ def remove_accents(string: str) -> str:
     return out
 
 
-def snake_case(string):
-    """
-    Snake case.
-    Updated 2024-05-03.
-    """
+def snake_case(string: str) -> str:
+    """Snake case."""
     string = _syntactic_engine(string=string)
     string = string.replace("-", "_")
     return string

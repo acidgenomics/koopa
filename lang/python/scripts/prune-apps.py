@@ -20,7 +20,7 @@ parser.add_argument("--dry-run", action=BooleanOptionalAction)
 args = parser.parse_args()
 
 
-def main(dry_run=False) -> None:
+def main(dry_run: bool = False) -> None:
     """Main function."""
     prune_apps(dry_run=dry_run)
 

@@ -17,7 +17,7 @@ def print_app_json(name: str, key: str) -> None:
     if name not in keys:
         raise NameError(f"Unsupported app: {name!r}.")
     app_dict = json_data[name]
-    if key not in app_dict.keys():
+    if key not in app_dict():
         raise ValueError(f"Invalid key: {key!r}.")
     value = app_dict[key]
     if isinstance(value, list):
@@ -39,7 +39,7 @@ def print_conda_bin_names(json_file: str) -> None:
     print_list(lst)
 
 
-def print_list(obj) -> None:
+def print_list(obj: list) -> None:
     """Loop across a list and print elements to console."""
     if any(obj):
         for val in obj:
