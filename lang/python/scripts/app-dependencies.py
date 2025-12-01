@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Solve app dependencies defined in 'app.json' file.
-Updated 2024-05-05.
+"""Solve app dependencies defined in 'app.json' file.
 
 Examples
 --------
-./app-dependencies.py 'python3.11'
+$ ./app-dependencies.py 'python3.11'
 """
 
 from argparse import ArgumentParser
@@ -23,10 +21,7 @@ args = parser.parse_args()
 
 
 def main(name: str) -> None:
-    """
-    Main function.
-    Updated 2023-12-14.
-    """
+    """Main function."""
     print_app_deps(name)
 
 
