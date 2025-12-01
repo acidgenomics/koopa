@@ -1,7 +1,4 @@
-"""
-Application management functions.
-Updated 2025-08-21.
-"""
+"""Application management functions."""
 
 from datetime import datetime
 from json import loads
@@ -16,10 +13,7 @@ from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
 
 
 def app_deps(name: str) -> list:
-    """
-    Get application dependencies.
-    Updated 2024-05-16.
-    """
+    """Get application dependencies."""
     json_data = import_app_json()
     keys = json_data.keys()
     if name not in keys:
@@ -54,10 +48,7 @@ def app_deps(name: str) -> list:
 
 
 def app_revdeps(name: str, mode: str) -> list:
-    """
-    Get reverse application dependencies.
-    Updated 2024-05-05.
-    """
+    """Get reverse application dependencies."""
     json_data = import_app_json()
     keys = list(json_data.keys())
     if name not in keys:
@@ -79,9 +70,7 @@ def app_revdeps(name: str, mode: str) -> list:
 
 
 def extract_app_deps(name: str, json_data: dict, include_build_deps=True) -> list:
-    """
-    Extract unique build dependencies and dependencies in an ordered list.
-    Updated 2024-05-05.
+    """Extract unique build dependencies and dependencies in an ordered list.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
@@ -111,10 +100,7 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps=True) -> lis
 
 
 def filter_app_deps(names: list, json_data: dict) -> list:
-    """
-    Filter supported app dependencies.
-    Updated 2023-12-14.
-    """
+    """Filter supported app dependencies."""
     sys_dict = {"os_id": os_id()}
     lst = []
     for val in names:
@@ -138,10 +124,7 @@ def filter_app_deps(names: list, json_data: dict) -> list:
 
 
 def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
-    """
-    Filter supported app reverse dependencies.
-    Updated 2023-12-14.
-    """
+    """Filter supported app reverse dependencies."""
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {
@@ -180,20 +163,14 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
 
 
 def installed_apps() -> list:
-    """
-    Installed apps.
-    Updated 2024-05-28.
-    """
+    """List installed apps."""
     app_prefix = koopa_app_prefix()
     names = list_subdirs(path=app_prefix, recursive=False, sort=True, basename_only=True)
     return names
 
 
 def prune_apps(dry_run=False) -> None:
-    """
-    Prune apps.
-    Updated 2024-05-28.
-    """
+    """Prune apps."""
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
     supported_names = json_data.keys()
@@ -230,9 +207,7 @@ def prune_apps(dry_run=False) -> None:
 
 
 def prune_app_binaries(dry_run=False) -> None:
-    """
-    Prune app binaries.
-    Updated 2024-05-16.
+    """Prune app binaries.
 
     See Also
     --------
@@ -304,10 +279,7 @@ def prune_app_binaries(dry_run=False) -> None:
 
 
 def shared_apps(mode: str) -> list:
-    """
-    Return names of shared apps.
-    Updated 2025-08-21.
-    """
+    """Return names of shared apps."""
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}

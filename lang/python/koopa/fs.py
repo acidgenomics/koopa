@@ -1,16 +1,11 @@
-"""
-File system functions.
-Updated 2024-05-05.
-"""
+"""File system functions."""
 
 from os import scandir, walk
 from os.path import basename, join
 
 
 def list_subdirs(path: str, recursive=False, sort=False, basename_only=False) -> list:
-    """
-    List subdirectories in a directory.
-    Updated 2024-05-28.
+    """List subdirectories in a directory.
 
     For recursive listing, consider using a merge sort approach:
     https://www.freecodecamp.org/news/how-to-sort-recursively-in-python/

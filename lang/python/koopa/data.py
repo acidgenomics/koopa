@@ -5,9 +5,7 @@ Updated 2024-05-15.
 
 
 def argsort(object: list, reverse=False) -> list:
-    """
-    Return the indices that would sort an array.
-    Updated 2024-05-15.
+    """Return the indices that would sort an array.
 
     See Also
     --------
@@ -36,9 +34,7 @@ def argsort(object: list, reverse=False) -> list:
 
 
 def flatten(items: list, seqtypes=(list, tuple)) -> list:
-    """
-    Flatten an arbitrarily nested list.
-    Updated 2023-12-14.
+    """Flatten an arbitrarily nested list.
 
     See Also
     --------
@@ -61,9 +57,7 @@ def flatten(items: list, seqtypes=(list, tuple)) -> list:
 
 
 def unique_pos(object: list) -> list:
-    """
-    Return the position index of unique values.
-    Updated 2024-04-15.
+    """Return the position index of unique values.
 
     See Also
     --------

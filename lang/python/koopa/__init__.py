@@ -1,3 +1,1 @@
-"""
-Koopa modules.
-"""
+"""Koopa Python modules."""
