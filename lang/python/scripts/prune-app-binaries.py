@@ -4,7 +4,8 @@
 Prune app binaries.
 Updated 2024-05-16.
 
-Examples:
+Examples
+--------
 ./prune-app-binaries.py
 """
 
@@ -27,7 +28,6 @@ def main(dry_run=False) -> None:
     Updated 2024-05-16.
     """
     prune_app_binaries(dry_run=dry_run)
-    return None
 
 
 if __name__ == "__main__":

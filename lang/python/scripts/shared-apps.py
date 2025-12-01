@@ -4,7 +4,8 @@
 Return shared apps defined in 'app.json' file.
 Updated 2024-05-05.
 
-Examples:
+Examples
+--------
 ./shared-apps.py
 """
 
@@ -32,7 +33,6 @@ def main(mode: str) -> None:
     Updated 2023-12-14.
     """
     print_shared_apps(mode=mode)
-    return None
 
 
 if __name__ == "__main__":

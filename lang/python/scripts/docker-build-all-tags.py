@@ -30,7 +30,6 @@ def main(local: str, remote: str) -> None:
     Updated 2024-04-19.
     """
     build_all_tags(local=local, remote=remote)
-    return None
 
 
 if __name__ == "__main__":
