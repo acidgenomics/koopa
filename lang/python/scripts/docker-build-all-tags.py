@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Build all Docker tags.
-Updated 2024-04-19.
+"""Build all Docker tags.
 
-Example:
-./docker-build-all-tags.py \
+Examples
+--------
+$ ./docker-build-all-tags.py \
     --local="${HOME}/monorepo/docker/acidgenomics/koopa" \
     --remote='public.ecr.aws/acidgenomics/koopa'
 """
@@ -25,10 +24,7 @@ args = parser.parse_args()
 
 
 def main(local: str, remote: str) -> None:
-    """
-    Main function.
-    Updated 2024-04-19.
-    """
+    """Main function."""
     build_all_tags(local=local, remote=remote)
 
 

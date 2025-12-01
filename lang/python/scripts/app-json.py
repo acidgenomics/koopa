@@ -2,13 +2,10 @@
 
 """
 Parse koopa 'app.json' file.
-Updated 2024-05-05.
 
 Examples
 --------
-./app-json.py \
-    --app-name='coreutils' \
-    --key='bin'
+$ ./app-json.py --app-name='coreutils' --key='bin'
 """
 
 from argparse import ArgumentParser
@@ -26,10 +23,7 @@ from koopa.cli import print_app_json
 
 
 def main(name: str, key: str) -> None:
-    """
-    Main function.
-    Updated 2023-12-14.
-    """
+    """Main function."""
     print_app_json(name=name, key=key)
 
 
