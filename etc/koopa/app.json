@@ -5627,11 +5627,10 @@
       "homebrew": true
     },
     "bin": ["rclone"],
-    "build_dependencies": ["go"],
-    "date": "2025-11-30",
+    "date": "2025-12-01",
     "default": true,
+    "dependencies": ["conda"],
     "man1": ["rclone.1"],
-    "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
     "version": "1.72.0"
