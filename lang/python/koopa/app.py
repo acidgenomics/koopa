@@ -69,7 +69,7 @@ def app_revdeps(name: str, mode: str) -> list:
     return lst
 
 
-def extract_app_deps(name: str, json_data: dict, include_build_deps=True) -> list:
+def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True) -> list:
     """Extract unique build dependencies and dependencies in an ordered list.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
@@ -90,10 +90,7 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps=True) -> lis
     if "dependencies" in json_data[name]:
         deps = json_data[name]["dependencies"]
         if isinstance(deps, dict):
-            if sys_dict["os_id"] in deps:
-                deps = deps[sys_dict["os_id"]]
-            else:
-                deps = deps["noarch"]
+            deps = deps[sys_dict["os_id"]] if sys_dict["os_id"] else deps["noarch"]
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
@@ -105,20 +102,11 @@ def filter_app_deps(names: list, json_data: dict) -> list:
     lst = []
     for val in names:
         json = json_data[val]
-        keys = json.keys()
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"]:
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        supported = json.get("supported", {})
+        if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
+            continue
+        if json.get("private") or json.get("system") or json.get("user"):
+            continue
         lst.append(val)
     return lst
 
