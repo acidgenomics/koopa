@@ -6,7 +6,7 @@
 _koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
-    # @note Updated 2025-08-04.
+    # @note Updated 2025-12-01.
     #
     # System Bash completion paths:
     # - /usr/share/bash-completion/bash_completion
@@ -42,6 +42,7 @@ completion.bash.inc"
         "${dict['opt_prefix']}/chezmoi/libexec/etc/bash_completion.d"
         "${dict['opt_prefix']}/eza/libexec/etc/bash_completion.d"
         "${dict['opt_prefix']}/gum/etc/bash_completion.d"
+        "${dict['opt_prefix']}/lesspipe/etc/bash_completion.d"
         "${dict['opt_prefix']}/rust/etc/bash_completion.d"
         "${dict['opt_prefix']}/tealdeer/libexec/etc/bash_completion.d"
     )

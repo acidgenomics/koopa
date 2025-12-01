@@ -36,6 +36,7 @@ completion.bash.inc"
         "${dict['opt_prefix']}/chezmoi/libexec/etc/bash_completion.d"
         "${dict['opt_prefix']}/eza/libexec/etc/bash_completion.d"
         "${dict['opt_prefix']}/gum/etc/bash_completion.d"
+        "${dict['opt_prefix']}/lesspipe/etc/bash_completion.d"
         "${dict['opt_prefix']}/rust/etc/bash_completion.d"
         "${dict['opt_prefix']}/tealdeer/libexec/etc/bash_completion.d"
     )
