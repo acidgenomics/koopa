@@ -17,7 +17,7 @@ def print_app_json(name: str, key: str) -> None:
     if name not in keys:
         raise NameError(f"Unsupported app: {name!r}.")
     app_dict = json_data[name]
-    if key not in app_dict():
+    if key not in app_dict:
         raise ValueError(f"Invalid key: {key!r}.")
     value = app_dict[key]
     if isinstance(value, list):
