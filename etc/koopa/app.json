@@ -461,7 +461,7 @@
     "bin": ["bash-language-server"],
     "date": "2025-04-15",
     "default": false,
-    "dependencies": ["node"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
