@@ -90,7 +90,7 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True
     if "dependencies" in json_data[name]:
         deps = json_data[name]["dependencies"]
         if isinstance(deps, dict):
-            deps = deps[sys_dict["os_id"]] if sys_dict["os_id"] else deps["noarch"]
+            deps = deps[sys_dict["os_id"]] if sys_dict["os_id"] in deps else deps["noarch"]
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
@@ -105,21 +105,19 @@ def filter_app_deps(names: list, json_data: dict) -> list:
         supported = json.get("supported", {})
         if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
             continue
-        # FIXME Need to check that key exists and is set to True here.
         keys = json.keys()
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"]:
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        if (
+            "supported" in keys
+            and sys_dict["os_id"] in json["supported"]
+            and not json["supported"][sys_dict["os_id"]]
+        ):
+            continue
+        if "private" in keys and json["private"]:
+            continue
+        if "system" in keys and json["system"]:
+            continue
+        if "user" in keys and json["user"]:
+            continue
         lst.append(val)
     return lst
 
@@ -140,25 +138,22 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
             continue
         json = json_data[val]
         keys = json.keys()
-        if "default" in keys and mode != "all":
-            if not json["default"]:
-                continue
-        if "removed" in keys:
-            if json["removed"]:
-                continue
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        if "default" in keys and mode != "all" and not json["default"]:
+            continue
+        if "removed" in keys and json["removed"]:
+            continue
+        if (
+            "supported" in keys
+            and sys_dict["os_id"] in json["supported"]
+            and not json["supported"][sys_dict["os_id"]]
+        ):
+            continue
+        if "private" in keys and json["private"]:
+            continue
+        if "system" in keys and json["system"]:
+            continue
+        if "user" in keys and json["user"]:
+            continue
         lst.append(val)
     return lst
 
@@ -170,7 +165,7 @@ def installed_apps() -> list:
     return names
 
 
-def prune_apps(dry_run=False) -> None:
+def prune_apps(dry_run: bool = False) -> None:
     """Prune apps."""
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
@@ -182,9 +177,8 @@ def prune_apps(dry_run=False) -> None:
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
         json = json_data[name]
-        if "prune" in json:
-            if not json["prune"]:
-                prune = False
+        if "prune" in json and not json["prune"]:
+            prune = False
         if not prune:
             continue
         opt_path = join(opt_prefix, name)
@@ -207,7 +201,7 @@ def prune_apps(dry_run=False) -> None:
             rmtree(subdir)
 
 
-def prune_app_binaries(dry_run=False) -> None:
+def prune_app_binaries(dry_run: bool = False) -> None:
     """Prune app binaries.
 
     See Also
@@ -290,27 +284,24 @@ def shared_apps(mode: str) -> list:
     for val in names:
         json = json_data[val]
         keys = json.keys()
-        if "removed" in keys:
-            if json["removed"]:
-                continue
+        if "removed" in keys and json["removed"]:
+            continue
         if isdir(join(sys_dict["opt_prefix"], val)):
             out.append(val)
             continue
-        if "supported" in json:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "default" in keys and mode != "all":
-            if not json["default"]:
-                continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        if (
+            "supported" in json
+            and sys_dict["os_id"] in json["supported"]
+            and not json["supported"][sys_dict["os_id"]]
+        ):
+            continue
+        if "default" in keys and mode != "all" and not json["default"]:
+            continue
+        if "private" in keys and json["private"]:
+            continue
+        if "system" in keys and json["system"]:
+            continue
+        if "user" in keys and json["user"]:
+            continue
         out.append(val)
     return out
