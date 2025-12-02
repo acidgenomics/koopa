@@ -13442,6 +13442,7 @@ koopa_install_fribidi() {
 
 koopa_install_fzf() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fzf' \
         "$@"
 }
