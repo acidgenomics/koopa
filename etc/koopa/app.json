@@ -1481,9 +1481,9 @@
       "homebrew": true
     },
     "bin": ["direnv"],
-    "build_dependencies": ["go"],
-    "date": "2025-08-10",
+    "date": "2025-12-02",
     "default": true,
+    "dependencies": ["conda"],
     "prune": false,
     "url": ["https://github.com/direnv/direnv"],
     "version": "2.37.1"
