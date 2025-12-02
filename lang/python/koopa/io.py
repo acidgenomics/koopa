@@ -1,7 +1,4 @@
-"""
-Input/output functions.
-Updated 2025-05-03.
-"""
+"""Input/output functions."""
 
 from json import load
 from os.path import isfile, join
@@ -11,11 +8,10 @@ from koopa.os import koopa_prefix
 
 
 def extract_conda_bin_names(json_file: str) -> list:
-    """
-    Extract the conda bin names from JSON metadata file.
-    Updated 2024-05-03.
+    """Extract the conda bin names from JSON metadata file.
 
-    Examples:
+    Examples
+    --------
     json_file='/opt/koopa/opt/anaconda/conda-meta/conda-*.json'
     conda_bin_names(json_file=json_file)
     """
@@ -35,10 +31,7 @@ def extract_conda_bin_names(json_file: str) -> list:
 
 
 def import_app_json() -> dict:
-    """
-    Import 'app.json' data file.
-    Updated 2023-12-14.
-    """
+    """Import 'app.json' data file."""
     file = join(koopa_prefix(), "etc/koopa/app.json")
     assert isfile(file)
     data = import_json(file)
@@ -46,10 +39,7 @@ def import_app_json() -> dict:
 
 
 def import_json(file: str) -> dict:
-    """
-    Import a JSON file.
-    Updated 2023-12-14.
-    """
+    """Import a JSON file."""
     with open(file, encoding="utf-8") as con:
         data = load(con)
     return data

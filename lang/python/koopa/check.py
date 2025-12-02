@@ -1,7 +1,4 @@
-"""
-System check functions.
-Updated 2025-05-08.
-"""
+"""System check functions."""
 
 from os.path import basename, isdir, islink, join, realpath
 
@@ -11,16 +8,13 @@ from koopa.os import koopa_opt_prefix
 
 
 def check_installed_apps() -> bool:
-    """
-    Check system integrity.
-    Updated 2025-05-08.
-    """
+    """Check system integrity."""
     ok = True
     opt_prefix = koopa_opt_prefix()
     json_data = import_app_json()
     names = installed_apps()
     for name in names:
-        if name not in json_data.keys():
+        if name not in json_data:
             ok = False
             print(f"{name} is an unsupported app")
             continue
@@ -36,7 +30,7 @@ def check_installed_apps() -> bool:
             continue
         assert isdir(path)
         linked_ver = basename(path)
-        if "removed" in json_data[name].keys() and json_data[name]["removed"]:
+        if "removed" in json_data[name] and json_data[name]["removed"]:
             ok = False
             print(f"{name} is a removed app")
             continue

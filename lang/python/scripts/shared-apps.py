@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 
-"""
-Return shared apps defined in 'app.json' file.
-Updated 2024-05-05.
+"""Return shared apps defined in 'app.json' file.
 
-Examples:
-./shared-apps.py
+Examples
+--------
+$ ./shared-apps.py
 """
 
 from argparse import ArgumentParser
@@ -27,12 +26,8 @@ args = parser.parse_args()
 
 
 def main(mode: str) -> None:
-    """
-    Main function.
-    Updated 2023-12-14.
-    """
+    """Main function."""
     print_shared_apps(mode=mode)
-    return None
 
 
 if __name__ == "__main__":

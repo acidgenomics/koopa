@@ -4,14 +4,57 @@
 
 [tool.ruff]
 indent-width = 4
-line-length = 80
-target-version = "py38"
+line-length = 100
+target-version = "py313"
 
 [tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 100
 quote-style = "double"
 
-# > [tool.ruff.lint]
-# > ignore = ["E402"]
+[tool.ruff.lint]
+# List of rules: https://docs.astral.sh/ruff/rules/
+select = [
+  "ANN", # flake8-annotations
+  "B", # flake8-bugbear
+  "C90", # mccabe
+  "D", # pydocstyle
+  "E", # pycodestyle
+  "F", # PyFlakes
+  "I", # isort
+  "NPY", # NumPy-specific rules
+  "PL",  # pylint
+  "SIM", # flake8-simplify
+  "UP", # pyupgrade
+  "W", # pycodestyle
+]
+ignore = [
+  "D203", # one-blank-line-before-class
+  "D213", # multi-line-summary-second-line
+  "D401", # non-imperative-mood
+]
+
+[tool.ruff.lint.isort]
+extra-standard-library = ["typing"]
+known-first-party = []
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 100
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.pylint]
+allow-magic-value-types = ["bytes", "int", "str"]
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/*.py" = ["E402"]
