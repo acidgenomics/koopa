@@ -47,7 +47,7 @@ def app_deps(name: str) -> list:
     return lst
 
 
-def app_revdeps(name: str, mode: str) -> list:
+def app_revdeps(name: str, mode: str, include_build_deps: bool = True) -> list:
     """Get reverse application dependencies."""
     json_data = import_app_json()
     keys = list(json_data.keys())
@@ -55,7 +55,9 @@ def app_revdeps(name: str, mode: str) -> list:
         raise NameError(f"Unsupported app: {name!r}.")
     all_deps = []
     for key in keys:
-        key_deps = extract_app_deps(name=key, json_data=json_data, include_build_deps=False)
+        key_deps = extract_app_deps(
+            name=key, json_data=json_data, include_build_deps=include_build_deps
+        )
         all_deps.append(key_deps)
     lst = []
     i = 0
