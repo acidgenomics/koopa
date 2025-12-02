@@ -1,7 +1,4 @@
-"""
-Application management functions.
-Updated 2025-08-21.
-"""
+"""Application management functions."""
 
 from datetime import datetime
 from json import loads
@@ -16,10 +13,7 @@ from koopa.os import arch2, koopa_app_prefix, koopa_opt_prefix, os_id
 
 
 def app_deps(name: str) -> list:
-    """
-    Get application dependencies.
-    Updated 2024-05-16.
-    """
+    """Get application dependencies."""
     json_data = import_app_json()
     keys = json_data.keys()
     if name not in keys:
@@ -53,11 +47,8 @@ def app_deps(name: str) -> list:
     return lst
 
 
-def app_revdeps(name: str, mode: str) -> list:
-    """
-    Get reverse application dependencies.
-    Updated 2024-05-05.
-    """
+def app_revdeps(name: str, mode: str, include_build_deps: bool = True) -> list:
+    """Get reverse application dependencies."""
     json_data = import_app_json()
     keys = list(json_data.keys())
     if name not in keys:
@@ -65,7 +56,7 @@ def app_revdeps(name: str, mode: str) -> list:
     all_deps = []
     for key in keys:
         key_deps = extract_app_deps(
-            name=key, json_data=json_data, include_build_deps=False
+            name=key, json_data=json_data, include_build_deps=include_build_deps
         )
         all_deps.append(key_deps)
     lst = []
@@ -80,12 +71,8 @@ def app_revdeps(name: str, mode: str) -> list:
     return lst
 
 
-def extract_app_deps(
-    name: str, json_data: dict, include_build_deps=True
-) -> list:
-    """
-    Extract unique build dependencies and dependencies in an ordered list.
-    Updated 2024-05-05.
+def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True) -> list:
+    """Extract unique build dependencies and dependencies in an ordered list.
 
     This makes list unique but keeps order intact, whereas usage of 'set()'
     can rearrange.
@@ -98,54 +85,47 @@ def extract_app_deps(
     if include_build_deps and "build_dependencies" in json_data[name]:
         build_deps = json_data[name]["build_dependencies"]
         if isinstance(build_deps, dict):
-            if sys_dict["os_id"] in build_deps.keys():
+            if sys_dict["os_id"] in build_deps:
                 build_deps = build_deps[sys_dict["os_id"]]
             else:
                 build_deps = build_deps["noarch"]
     if "dependencies" in json_data[name]:
         deps = json_data[name]["dependencies"]
         if isinstance(deps, dict):
-            if sys_dict["os_id"] in deps.keys():
-                deps = deps[sys_dict["os_id"]]
-            else:
-                deps = deps["noarch"]
+            deps = deps[sys_dict["os_id"]] if sys_dict["os_id"] in deps else deps["noarch"]
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps
 
 
 def filter_app_deps(names: list, json_data: dict) -> list:
-    """
-    Filter supported app dependencies.
-    Updated 2023-12-14.
-    """
+    """Filter supported app dependencies."""
     sys_dict = {"os_id": os_id()}
     lst = []
     for val in names:
         json = json_data[val]
+        supported = json.get("supported", {})
+        if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
+            continue
         keys = json.keys()
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        if (
+            "supported" in keys
+            and sys_dict["os_id"] in json["supported"]
+            and not json["supported"][sys_dict["os_id"]]
+        ):
+            continue
+        if "private" in keys and json["private"]:
+            continue
+        if "system" in keys and json["system"]:
+            continue
+        if "user" in keys and json["user"]:
+            continue
         lst.append(val)
     return lst
 
 
 def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
-    """
-    Filter supported app reverse dependencies.
-    Updated 2023-12-14.
-    """
+    """Filter supported app reverse dependencies."""
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {
@@ -160,46 +140,35 @@ def filter_app_revdeps(names: list, json_data: dict, mode: str) -> list:
             continue
         json = json_data[val]
         keys = json.keys()
-        if "default" in keys and mode != "all":
-            if not json["default"]:
-                continue
-        if "removed" in keys:
-            if json["removed"]:
-                continue
-        if "supported" in keys:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        if "default" in keys and mode != "all" and not json["default"]:
+            continue
+        if "removed" in keys and json["removed"]:
+            continue
+        if (
+            "supported" in keys
+            and sys_dict["os_id"] in json["supported"]
+            and not json["supported"][sys_dict["os_id"]]
+        ):
+            continue
+        if "private" in keys and json["private"]:
+            continue
+        if "system" in keys and json["system"]:
+            continue
+        if "user" in keys and json["user"]:
+            continue
         lst.append(val)
     return lst
 
 
 def installed_apps() -> list:
-    """
-    Installed apps.
-    Updated 2024-05-28.
-    """
+    """List installed apps."""
     app_prefix = koopa_app_prefix()
-    names = list_subdirs(
-        path=app_prefix, recursive=False, sort=True, basename_only=True
-    )
+    names = list_subdirs(path=app_prefix, recursive=False, sort=True, basename_only=True)
     return names
 
 
-def prune_apps(dry_run=False) -> None:
-    """
-    Prune apps.
-    Updated 2024-05-28.
-    """
+def prune_apps(dry_run: bool = False) -> None:
+    """Prune apps."""
     app_prefix = koopa_app_prefix()
     json_data = import_app_json()
     supported_names = json_data.keys()
@@ -210,9 +179,8 @@ def prune_apps(dry_run=False) -> None:
         if name not in supported_names:
             raise ValueError(f"{name!r} is not a supported app.")
         json = json_data[name]
-        if "prune" in json.keys():
-            if not json["prune"]:
-                prune = False
+        if "prune" in json and not json["prune"]:
+            prune = False
         if not prune:
             continue
         opt_path = join(opt_prefix, name)
@@ -233,15 +201,13 @@ def prune_apps(dry_run=False) -> None:
                 continue
             print(f"Pruning {subdir!r}.")
             rmtree(subdir)
-    return None
 
 
-def prune_app_binaries(dry_run=False) -> None:
-    """
-    Prune app binaries.
-    Updated 2024-05-16.
+def prune_app_binaries(dry_run: bool = False) -> None:
+    """Prune app binaries.
 
-    See also:
+    See Also
+    --------
     - https://stackoverflow.com/questions/27274996/
     """
     dict = {
@@ -310,10 +276,7 @@ def prune_app_binaries(dry_run=False) -> None:
 
 
 def shared_apps(mode: str) -> list:
-    """
-    Return names of shared apps.
-    Updated 2025-08-21.
-    """
+    """Return names of shared apps."""
     if mode not in ["all", "default"]:
         raise ValueError("Invalid mode.")
     sys_dict = {"os_id": os_id(), "opt_prefix": koopa_opt_prefix()}
@@ -323,27 +286,24 @@ def shared_apps(mode: str) -> list:
     for val in names:
         json = json_data[val]
         keys = json.keys()
-        if "removed" in keys:
-            if json["removed"]:
-                continue
+        if "removed" in keys and json["removed"]:
+            continue
         if isdir(join(sys_dict["opt_prefix"], val)):
             out.append(val)
             continue
-        if "supported" in json:
-            if sys_dict["os_id"] in json["supported"].keys():
-                if not json["supported"][sys_dict["os_id"]]:
-                    continue
-        if "default" in keys and mode != "all":
-            if not json["default"]:
-                continue
-        if "private" in keys:
-            if json["private"]:
-                continue
-        if "system" in keys:
-            if json["system"]:
-                continue
-        if "user" in keys:
-            if json["user"]:
-                continue
+        if (
+            "supported" in json
+            and sys_dict["os_id"] in json["supported"]
+            and not json["supported"][sys_dict["os_id"]]
+        ):
+            continue
+        if "default" in keys and mode != "all" and not json["default"]:
+            continue
+        if "private" in keys and json["private"]:
+            continue
+        if "system" in keys and json["system"]:
+            continue
+        if "user" in keys and json["user"]:
+            continue
         out.append(val)
     return out

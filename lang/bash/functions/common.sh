@@ -12803,7 +12803,7 @@ koopa_install_bash_completion() {
 
 koopa_install_bash_language_server() {
     koopa_install_app \
-        --installer='node-package' \
+        --installer='conda-package' \
         --name='bash-language-server' \
         "$@"
 }
@@ -13188,6 +13188,7 @@ koopa_install_csvkit() {
 
 koopa_install_csvtk() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='csvtk' \
         "$@"
 }
@@ -13244,6 +13245,7 @@ koopa_install_difftastic() {
 
 koopa_install_direnv() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='direnv' \
         "$@"
 }
@@ -13440,6 +13442,7 @@ koopa_install_fribidi() {
 
 koopa_install_fzf() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='fzf' \
         "$@"
 }
@@ -15703,6 +15706,7 @@ koopa_install_rbenv() {
 
 koopa_install_rclone() {
     koopa_install_app \
+        --installer='conda-package' \
         --name='rclone' \
         "$@"
 }

@@ -1,7 +1,4 @@
-"""
-Find functions that return subprocess output.
-Updated 2024-04-14.
-"""
+"""Find functions that return subprocess output."""
 
 from multiprocessing import cpu_count
 from os.path import expanduser, isdir, realpath
@@ -11,14 +8,13 @@ from sys import stderr
 
 
 def fd_find(prefix: str, pattern: str) -> list:
-    """
-    Find files quickly using fd.
-    Updated 2023-05-25.
+    r"""Find files quickly using fd.
 
     Uses regular expressions for pattern matching.
     Does not return sorted.
 
-    Examples:
+    Examples
+    --------
     >>> fd_find(prefix="/opt/koopa/lang/python", pattern="\\.py$")
     """
     if not which("fd"):

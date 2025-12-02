@@ -46,14 +46,14 @@
   "air": {
     "bin": ["air"],
     "build_dependencies": ["rust"],
-    "date": "2025-04-22",
+    "date": "2025-12-02",
     "default": false,
     "prune": true,
     "url": [
       "https://posit-dev.github.io/air/",
       "https://github.com/posit-dev/air"
     ],
-    "version": "0.5.0"
+    "version": "0.8.0"
   },
   "anaconda": {
     "date": "2025-08-10",
@@ -461,7 +461,7 @@
     "bin": ["bash-language-server"],
     "date": "2025-04-15",
     "default": false,
-    "dependencies": ["node"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://www.npmjs.com/package/bash-language-server/",
@@ -1373,9 +1373,9 @@
   },
   "csvtk": {
     "bin": ["csvtk"],
-    "build_dependencies": ["go"],
     "date": "2025-11-30",
     "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/shenwei356/csvtk/"],
     "version": "0.36.0"
@@ -1481,9 +1481,9 @@
       "homebrew": true
     },
     "bin": ["direnv"],
-    "build_dependencies": ["go"],
-    "date": "2025-08-10",
+    "date": "2025-12-02",
     "default": true,
+    "dependencies": ["conda"],
     "prune": false,
     "url": ["https://github.com/direnv/direnv"],
     "version": "2.37.1"
@@ -1964,9 +1964,9 @@
       "homebrew": true
     },
     "bin": ["fzf"],
-    "build_dependencies": ["go"],
-    "date": "2025-11-30",
+    "date": "2025-12-02",
     "default": true,
+    "dependencies": ["conda"],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
     "version": "0.67.0"
@@ -3306,8 +3306,8 @@
       "homebrew": true
     },
     "bin": ["lesspipe.sh"],
-    "build_dependencies": ["make"],
-    "date": "2025-11-30",
+    "build_dependencies": ["bash", "make"],
+    "date": "2025-12-01",
     "default": true,
     "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
@@ -5627,11 +5627,10 @@
       "homebrew": true
     },
     "bin": ["rclone"],
-    "build_dependencies": ["go"],
-    "date": "2025-11-30",
+    "date": "2025-12-01",
     "default": true,
+    "dependencies": ["conda"],
     "man1": ["rclone.1"],
-    "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://rclone.org/"],
     "version": "1.72.0"
@@ -7209,7 +7208,7 @@
     "bin": ["yq"],
     "build_dependencies": ["go"],
     "date": "2025-11-30",
-    "default": true,
+    "default": false,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
