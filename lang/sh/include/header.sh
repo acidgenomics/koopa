@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2025-05-06.
+    # @note Updated 2025-12-03.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
@@ -100,8 +100,10 @@ __koopa_activate_koopa() {
     _koopa_add_to_path_start \
         '/usr/local/sbin' \
         '/usr/local/bin' \
-        "$(_koopa_xdg_local_home)/bin" \
         "$(_koopa_scripts_private_prefix)/bin" \
+        "$(_koopa_xdg_local_home)/bin" \
+        "${HOME:?}/.bin" \
+        "${HOME:?}/bin" \
         || return 1
     _koopa_add_to_manpath_start \
         '/usr/local/man' \
