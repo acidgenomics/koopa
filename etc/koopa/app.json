@@ -100,7 +100,7 @@
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2025-10-31",
+    "date": "2025-12-05",
     "default": false,
     "prune": true,
     "supported": {
@@ -110,7 +110,7 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/apptainer/apptainer/"],
-    "version": "1.4.4"
+    "version": "1.4.5"
   },
   "apr": {
     "aliases": {
@@ -486,12 +486,12 @@
       "homebrew": true
     },
     "bin": ["bat"],
-    "date": "2025-10-20",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/sharkdp/bat"],
-    "version": "0.26.0"
+    "version": "0.26.1"
   },
   "bc": {
     "aliases": {
@@ -738,7 +738,7 @@
       "homebrew": true
     },
     "bin": ["broot"],
-    "date": "2025-11-10",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -747,7 +747,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.53.0"
+    "version": "1.54.0"
   },
   "brotli": {
     "aliases": {
@@ -1008,12 +1008,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-11-03",
+    "date": "2025-12-05",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.67.0"
+    "version": "2.68.0"
   },
   "cli11": {
     "aliases": {
@@ -4124,12 +4124,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-10-08",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.9.1"
+    "version": "1.9.2"
   },
   "miller": {
     "aliases": {
@@ -4553,12 +4553,12 @@
       "homebrew": true
     },
     "bin": ["nu"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/nushell/nushell/"],
-    "version": "0.109.0"
+    "version": "0.109.1"
   },
   "oniguruma": {
     "aliases": {
@@ -4741,12 +4741,12 @@
       "homebrew": true
     },
     "bin": ["pandoc"],
-    "date": "2025-10-08",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.8.2"
+    "version": "3.8.3"
   },
   "parallel": {
     "aliases": {
@@ -5005,12 +5005,12 @@
       "homebrew": true
     },
     "bin": ["prettier"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": ["https://prettier.io/", "https://www.npmjs.com/package/prettier/"],
-    "version": "3.7.3"
+    "version": "3.7.4"
   },
   "procs": {
     "aliases": {
@@ -5032,7 +5032,7 @@
     },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": [
       "curl",
@@ -5046,7 +5046,7 @@
     "man1": ["proj.1", "projinfo.1"],
     "prune": false,
     "url": ["https://proj.org/", "https://github.com/OSGeo/PROJ/"],
-    "version": "9.7.0"
+    "version": "9.7.1"
   },
   "pup": {
     "bin": ["pup"],
@@ -5098,12 +5098,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.13"
+    "version": "2.6.15"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5821,12 +5821,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.14.7"
+    "version": "0.14.8"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -6001,7 +6001,7 @@
   },
   "seqkit": {
     "bin": ["seqkit"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -6016,7 +6016,7 @@
       "https://github.com/shenwei356/seqkit/",
       "https://bioconda.github.io/recipes/seqkit/README.html"
     ],
-    "version": "2.11.0"
+    "version": "2.12.0"
   },
   "serf": {
     "aliases": {
@@ -6099,7 +6099,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -6109,7 +6109,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.14.0"
+    "version": "9.14.1"
   },
   "sox": {
     "aliases": {
@@ -6161,14 +6161,14 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "dependencies": ["python3.13"],
     "prune": true,
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "9.0.0"
+    "version": "9.0.4"
   },
   "sqlfluff": {
     "aliases": {
@@ -6276,7 +6276,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-10-31",
+    "date": "2025-12-05",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -6285,7 +6285,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6670,12 +6670,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.13"
+    "version": "0.9.15"
   },
   "vim": {
     "aliases": {
