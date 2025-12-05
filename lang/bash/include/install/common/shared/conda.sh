@@ -68,11 +68,8 @@ main() {
     if [[ "${dict['os_type2']}" == 'MacOSX' ]] && \
         [[ "${dict['arch2']}" == 'x86_64' ]]
     then
-        dict['py_version']='3.13'
-        dict['version']='25.7.0-2'
-        koopa_alert_note \
-            'Conda build support for Intel Macs was deprecated on 2025-08-15.' \
-            "Intentionally pinning to ${dict['version']}."
+        koopa_stop "Conda build support for Intel Macs was deprecated \
+on 2025-08-15."
     fi
     dict['py_version']="$(koopa_major_minor_version "${dict['py_version']}")"
     dict['py_major_version']="$(koopa_major_version "${dict['py_version']}")"
