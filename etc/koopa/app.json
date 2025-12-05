@@ -6487,13 +6487,13 @@
     },
     "bin": ["tmux"],
     "build_dependencies": ["bison", "make", "pkg-config"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": true,
     "dependencies": ["libevent", "ncurses", "utf8proc"],
     "man1": ["tmux.1"],
     "prune": false,
     "url": ["https://github.com/tmux/tmux/"],
-    "version": "3.6"
+    "version": "3.6a"
   },
   "tokei": {
     "aliases": {
