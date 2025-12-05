@@ -1084,9 +1084,15 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2025-11-30",
+    "date": "2025-12-05",
     "default": true,
     "prune": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": true
+    },
     "url": ["https://repo.anaconda.com/miniconda/"],
     "version": "25.9.1-3"
   },
