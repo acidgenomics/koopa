@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Add deprecation support for macOS x86 64.
-
 main() {
     # """
     # Install Miniconda.
@@ -64,13 +62,6 @@ main() {
                 ;;
         esac
     done
-    # Handle deprecation of macOS Intel support.
-    if [[ "${dict['os_type2']}" == 'MacOSX' ]] && \
-        [[ "${dict['arch2']}" == 'x86_64' ]]
-    then
-        koopa_stop "Conda build support for Intel Macs was deprecated \
-on 2025-08-15."
-    fi
     dict['py_version']="$(koopa_major_minor_version "${dict['py_version']}")"
     dict['py_major_version']="$(koopa_major_version "${dict['py_version']}")"
     dict['py_version2']="$( \
