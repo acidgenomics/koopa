@@ -10935,6 +10935,10 @@ koopa_has_private_access() {
         --pattern='^\[acidgenomics\]$'
 }
 
+koopa_has_ssl_cert_file() {
+    [[ -n "${SSL_CERT_FILE:-}" ]]
+}
+
 koopa_has_standard_umask() {
     local -A dict
     dict['default_umask']="$(umask)"
@@ -14085,6 +14089,7 @@ koopa_install_icu4c() {
 }
 
 koopa_install_illumina_ica_cli() {
+    koopa_assert_is_not_arm64
     koopa_install_app \
         --name='illumina-ica-cli' \
         "$@"
