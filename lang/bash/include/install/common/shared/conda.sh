@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2025-05-18.
+    # @note Updated 2025-12-05.
     #
     # Consider switching primary installer from miniconda to miniforge, which
     # is the recommended default for conda-forge builds and doesn't attempt
@@ -25,10 +25,7 @@ main() {
     dict['koopa_prefix']="$(koopa_koopa_prefix)"
     dict['os_type']="$(koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    # 3.13 has some breaking changes with SSL that doesn't work well with
-    # Zscaler on EC2 (Ubuntu 22).
-    # https://discuss.python.org/t/python-3-13-x-ssl-security-changes/91266/13
-    dict['py_version']='3.12'
+    dict['py_version']='3.13'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in
@@ -67,7 +64,6 @@ main() {
     done
     dict['py_version']="$(koopa_major_minor_version "${dict['py_version']}")"
     dict['py_major_version']="$(koopa_major_version "${dict['py_version']}")"
-    # FIXME Rework this to not depend on Perl. Problematic on some HPCs.
     dict['py_version2']="$( \
         koopa_gsub \
             --fixed \
