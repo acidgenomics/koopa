@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Miniconda.
-    # @note Updated 2025-12-05.
+    # @note Updated 2025-12-08.
     #
     # Consider switching primary installer from miniconda to miniforge, which
     # is the recommended default for conda-forge builds and doesn't attempt
@@ -26,6 +26,10 @@ main() {
     dict['os_type']="$(koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_version']='3.13'
+    if koopa_has_ssl_cert_file
+    then
+        dict['py_version']='3.12'
+    fi
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['arch2']="${dict['arch']}"
     case "${dict['os_type']}" in
