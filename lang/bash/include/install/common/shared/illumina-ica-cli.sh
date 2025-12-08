@@ -9,7 +9,7 @@ main() {
     # - https://help.ica.illumina.com/command-line-interface/cli-installation
     # """
     local -A dict
-    dict['arch']="$(koopa_arch)"
+    dict['arch']="$(koopa_arch2)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     if koopa_is_macos
@@ -24,6 +24,6 @@ amazonaws.com/cli/${dict['version']}/ica-${dict['os']}-${dict['arch']}.zip"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_cp --target-directory="${dict['prefix']}" 'bin'
+    koopa_cp --target-directory="${dict['prefix']}/bin" 'icav2'
     return 0
 }
