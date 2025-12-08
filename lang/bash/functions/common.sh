@@ -12798,7 +12798,6 @@ koopa_install_bash_completion() {
     koopa_install_app \
         --name='bash-completion' \
         "$@"
-    return 0
 }
 
 koopa_install_bash_language_server() {
@@ -13204,6 +13203,13 @@ koopa_install_dash() {
         --name='dash' \
         "$@"
     return 0
+}
+
+koopa_install_databricks_cli() {
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='databricks-cli' \
+        "$@"
 }
 
 koopa_install_deeptools() {
@@ -14071,6 +14077,12 @@ koopa_install_hyperfine() {
 koopa_install_icu4c() {
     koopa_install_app \
         --name='icu4c' \
+        "$@"
+}
+
+koopa_install_illumina_ica_cli() {
+    koopa_install_app \
+        --name='illumina-ica-cli' \
         "$@"
 }
 
@@ -29657,6 +29669,12 @@ koopa_uninstall_dash() {
         "$@"
 }
 
+koopa_uninstall_databricks_cli() {
+    koopa_uninstall_app \
+        --name='databricks-cli' \
+        "$@"
+}
+
 koopa_uninstall_deeptools() {
     koopa_uninstall_app \
         --name='deeptools' \
@@ -30182,6 +30200,12 @@ koopa_uninstall_hyperfine() {
 koopa_uninstall_icu4c() {
     koopa_uninstall_app \
         --name='icu4c' \
+        "$@"
+}
+
+koopa_uninstall_illumina_ica_cli() {
+    koopa_uninstall_app \
+        --name='illumina-ica-cli' \
         "$@"
 }
 

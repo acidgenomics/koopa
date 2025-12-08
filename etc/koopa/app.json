@@ -1413,6 +1413,17 @@
     ],
     "version": "0.5.12"
   },
+  "databricks-cli": {
+    "bin": ["databricks"],
+    "date": "2025-12-05",
+    "default": false,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": [
+      "https://docs.databricks.com/aws/en/dev-tools/cli/"
+    ],
+    "version": "0.279.0"
+  },
   "deeptools": {
     "bin": ["deeptools"],
     "date": "2025-01-24",
@@ -2983,6 +2994,20 @@
     "prune": false,
     "url": ["https://icu.unicode.org/", "https://icu.unicode.org/download/75"],
     "version": "75.1"
+  },
+  "illumina-ica-cli": {
+    "bin": ["icav2"],
+    "date": "2025-12-08",
+    "default": false,
+    "prune": true,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
+    "url": ["https://help.ica.illumina.com/command-line-interface/"],
+    "version": "2.40"
   },
   "imagemagick": {
     "aliases": {
