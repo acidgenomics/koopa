@@ -80,6 +80,7 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
 -${dict['arch2']}.sh"
     dict['url']="https://repo.anaconda.com/miniconda/${dict['script']}"
     koopa_download "${dict['url']}" "${dict['script']}"
+    koopa_print_env
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
     # Note that this step configures conda to not use Anaconda channels.
     koopa_cp \
