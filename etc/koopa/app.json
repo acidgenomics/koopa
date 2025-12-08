@@ -3013,7 +3013,7 @@
       "macos-arm64": false
     },
     "url": ["https://help.ica.illumina.com/command-line-interface/"],
-    "version": "2.40"
+    "version": "2.40.0"
   },
   "imagemagick": {
     "aliases": {
