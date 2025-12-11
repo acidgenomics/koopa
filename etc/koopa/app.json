@@ -64,12 +64,12 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2025-11-30",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "3.1.3"
+    "version": "3.1.4"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -642,12 +642,12 @@
       "homebrew": true
     },
     "bin": ["black", "blackd"],
-    "date": "2025-11-10",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
-    "version": "25.11.0"
+    "version": "25.12.0"
   },
   "blast": {
     "bin": ["blastn", "blastp"],
@@ -958,7 +958,7 @@
   },
   "cellranger": {
     "bin": ["cellranger"],
-    "date": "2025-02-14",
+    "date": "2025-12-11",
     "default": false,
     "outdated": true,
     "private": true,
@@ -972,7 +972,7 @@
     "url": [
       "https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest"
     ],
-    "version": "9.0.1"
+    "version": "10.0.0"
   },
   "cereal": {
     "aliases": {
@@ -1008,12 +1008,12 @@
       "homebrew": true
     },
     "bin": ["chezmoi"],
-    "date": "2025-12-05",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.68.0"
+    "version": "2.68.1"
   },
   "cli11": {
     "aliases": {
@@ -1419,6 +1419,17 @@
     ],
     "version": "0.5.12"
   },
+  "databricks-cli": {
+    "bin": ["databricks"],
+    "date": "2025-12-05",
+    "default": false,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": [
+      "https://docs.databricks.com/aws/en/dev-tools/cli/"
+    ],
+    "version": "0.279.0"
+  },
   "deeptools": {
     "bin": ["deeptools"],
     "date": "2025-01-24",
@@ -1545,11 +1556,11 @@
     },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.13"],
-    "date": "2025-11-12",
+    "date": "2025-12-11",
     "default": false,
     "prune": true,
     "url": ["https://duckdb.org/", "https://github.com/duckdb/duckdb/"],
-    "version": "1.4.2"
+    "version": "1.4.3"
   },
   "ed": {
     "aliases": {
@@ -2195,12 +2206,12 @@
       "homebrew": true
     },
     "bin": ["gh"],
-    "date": "2025-11-30",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.83.1"
+    "version": "2.83.2"
   },
   "ghostscript": {
     "aliases": {
@@ -2231,7 +2242,7 @@
       "git-upload-pack"
     ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2025-10-31",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": [
       "bash",
@@ -2249,7 +2260,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.51.2"
+    "version": "2.52.0"
   },
   "git-filter-repo": {
     "aliases": {
@@ -2990,6 +3001,20 @@
     "url": ["https://icu.unicode.org/", "https://icu.unicode.org/download/75"],
     "version": "75.1"
   },
+  "illumina-ica-cli": {
+    "bin": ["icav2"],
+    "date": "2025-12-08",
+    "default": false,
+    "prune": true,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": false,
+      "macos-amd64": true,
+      "macos-arm64": false
+    },
+    "url": ["https://help.ica.illumina.com/command-line-interface/"],
+    "version": "2.40.0"
+  },
   "imagemagick": {
     "aliases": {
       "debian": ["imagemagick", "libmagick++-dev"],
@@ -3508,12 +3533,12 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-06-17",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["libssh2", "openssl", "pcre", "zlib"],
     "prune": false,
     "url": ["https://github.com/libgit2/libgit2/"],
-    "version": "1.9.1"
+    "version": "1.9.2"
   },
   "libgpg-error": {
     "aliases": {
@@ -3573,7 +3598,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-12-11",
     "default": false,
     "prune": false,
     "url": [
@@ -3581,7 +3606,7 @@
       "https://github.com/libjpeg-turbo/libjpeg-turbo/",
       "https://sourceforge.net/projects/libjpeg-turbo/files/"
     ],
-    "version": "3.1.2"
+    "version": "3.1.3"
   },
   "libksba": {
     "aliases": {
@@ -4091,12 +4116,12 @@
       "homebrew": true
     },
     "bin": ["markdownlint"],
-    "date": "2025-11-30",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": ["https://www.npmjs.com/package/markdownlint-cli/"],
-    "version": "0.46.0"
+    "version": "0.47.0"
   },
   "mcfly": {
     "aliases": {
@@ -4130,12 +4155,12 @@
       "homebrew": true
     },
     "bin": ["meson"],
-    "date": "2025-12-05",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": false,
     "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
-    "version": "1.9.2"
+    "version": "1.10.0"
   },
   "miller": {
     "aliases": {
@@ -4265,7 +4290,7 @@
   },
   "multiqc": {
     "bin": ["multiqc"],
-    "date": "2025-10-28",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -4273,7 +4298,7 @@
       "https://pypi.org/project/multiqc/",
       "https://bioconda.github.io/recipes/multiqc/README.html"
     ],
-    "version": "1.32"
+    "version": "1.33"
   },
   "mutagen": {
     "bin": ["mutagen-inspect"],
@@ -5104,12 +5129,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-12-05",
+    "date": "2025-12-11",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.15"
+    "version": "2.6.16"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5205,7 +5230,7 @@
   },
   "pytest": {
     "bin": ["pytest"],
-    "date": "2025-11-12",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -5214,7 +5239,7 @@
       "https://docs.pytest.org/",
       "https://github.com/pytest-dev/pytest/"
     ],
-    "version": "9.0.1"
+    "version": "9.0.2"
   },
   "python3.10": {
     "aliases": {
@@ -5633,13 +5658,13 @@
       "homebrew": true
     },
     "bin": ["rclone"],
-    "date": "2025-12-01",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["rclone.1"],
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.72.0"
+    "version": "1.72.1"
   },
   "readline": {
     "aliases": {
@@ -6105,7 +6130,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-12-05",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -6115,7 +6140,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.14.1"
+    "version": "9.14.3"
   },
   "sox": {
     "aliases": {
@@ -6282,7 +6307,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-12-05",
+    "date": "2025-12-11",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -6291,7 +6316,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.52.0"
+    "version": "1.52.1"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6542,14 +6567,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-12-11",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.25.10"
+    "version": "0.26.2"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6676,12 +6701,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-12-05",
+    "date": "2025-12-11",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.15"
+    "version": "0.9.17"
   },
   "vim": {
     "aliases": {
@@ -7225,7 +7250,7 @@
       "homebrew": true
     },
     "bin": ["yt-dlp"],
-    "date": "2025-11-12",
+    "date": "2025-12-14",
     "default": false,
     "dependencies": ["ffmpeg", "python3.13"],
     "prune": true,
@@ -7233,7 +7258,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.11.12"
+    "version": "2025.12.8"
   },
   "zellij": {
     "aliases": {
