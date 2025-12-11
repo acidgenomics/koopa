@@ -4331,7 +4331,7 @@ Run 'xcode-select --install' to resolve."
     app['ld']="$(koopa_locate_ld --only-system)"
     app['make']="$(koopa_locate_make --only-system)"
     app['perl']="$(koopa_locate_perl --only-system)"
-    app['python']="$(koopa_locate_python --allow-system)"
+    app['python']="$(koopa_locate_python --allow-bootstrap)"
     koopa_assert_is_executable "${app[@]}"
     ver1['cc']="$(koopa_get_version "${app['cc']}")"
     ver1['git']="$(koopa_get_version "${app['git']}")"
@@ -22245,7 +22245,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python --allow-system)"
+        app['python']="$(koopa_locate_python --allow-bootstrap)"
     fi
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="$(koopa_python_scripts_prefix)"
@@ -28556,13 +28556,9 @@ koopa_system_info() {
     local -A app dict
     local -a info nf_info
     koopa_assert_has_no_args "$#"
-    app['bash']="$( \
-        koopa_locate_bash --allow-bootstrap --allow-system --realpath \
-    )"
+    app['bash']="$(koopa_locate_bash --allow-bootstrap --realpath)"
     app['cat']="$(koopa_locate_cat --allow-system)"
-    app['python']="$( \
-        koopa_locate_python --allow-bootstrap --allow-system --realpath \
-    )"
+    app['python']="$(koopa_locate_python --allow-bootstrap --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['arch2']="$(koopa_arch2)"
