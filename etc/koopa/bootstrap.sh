@@ -87,7 +87,7 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://ftp.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
+        "https://ftpmirror.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "bash-${__kvar_version}" || return 1
