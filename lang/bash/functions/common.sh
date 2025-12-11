@@ -4331,7 +4331,7 @@ Run 'xcode-select --install' to resolve."
     app['ld']="$(koopa_locate_ld --only-system)"
     app['make']="$(koopa_locate_make --only-system)"
     app['perl']="$(koopa_locate_perl --only-system)"
-    app['python']="$(koopa_locate_python --allow-system)"
+    app['python']="$(koopa_locate_python --allow-bootstrap)"
     koopa_assert_is_executable "${app[@]}"
     ver1['cc']="$(koopa_get_version "${app['cc']}")"
     ver1['git']="$(koopa_get_version "${app['git']}")"
@@ -10935,6 +10935,10 @@ koopa_has_private_access() {
         --pattern='^\[acidgenomics\]$'
 }
 
+koopa_has_ssl_cert_file() {
+    [[ -n "${SSL_CERT_FILE:-}" ]]
+}
+
 koopa_has_standard_umask() {
     local -A dict
     dict['default_umask']="$(umask)"
@@ -12798,7 +12802,6 @@ koopa_install_bash_completion() {
     koopa_install_app \
         --name='bash-completion' \
         "$@"
-    return 0
 }
 
 koopa_install_bash_language_server() {
@@ -13208,6 +13211,13 @@ koopa_install_dash() {
         --name='dash' \
         "$@"
     return 0
+}
+
+koopa_install_databricks_cli() {
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='databricks-cli' \
+        "$@"
 }
 
 koopa_install_deeptools() {
@@ -14075,6 +14085,13 @@ koopa_install_hyperfine() {
 koopa_install_icu4c() {
     koopa_install_app \
         --name='icu4c' \
+        "$@"
+}
+
+koopa_install_illumina_ica_cli() {
+    koopa_assert_is_not_arm64
+    koopa_install_app \
+        --name='illumina-ica-cli' \
         "$@"
 }
 
@@ -22228,7 +22245,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python --allow-system)"
+        app['python']="$(koopa_locate_python --allow-bootstrap)"
     fi
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="$(koopa_python_scripts_prefix)"
@@ -28539,13 +28556,9 @@ koopa_system_info() {
     local -A app dict
     local -a info nf_info
     koopa_assert_has_no_args "$#"
-    app['bash']="$( \
-        koopa_locate_bash --allow-bootstrap --allow-system --realpath \
-    )"
+    app['bash']="$(koopa_locate_bash --allow-bootstrap --realpath)"
     app['cat']="$(koopa_locate_cat --allow-system)"
-    app['python']="$( \
-        koopa_locate_python --allow-bootstrap --allow-system --realpath \
-    )"
+    app['python']="$(koopa_locate_python --allow-bootstrap --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['arch2']="$(koopa_arch2)"
@@ -29661,6 +29674,12 @@ koopa_uninstall_dash() {
         "$@"
 }
 
+koopa_uninstall_databricks_cli() {
+    koopa_uninstall_app \
+        --name='databricks-cli' \
+        "$@"
+}
+
 koopa_uninstall_deeptools() {
     koopa_uninstall_app \
         --name='deeptools' \
@@ -30186,6 +30205,12 @@ koopa_uninstall_hyperfine() {
 koopa_uninstall_icu4c() {
     koopa_uninstall_app \
         --name='icu4c' \
+        "$@"
+}
+
+koopa_uninstall_illumina_ica_cli() {
+    koopa_uninstall_app \
+        --name='illumina-ica-cli' \
         "$@"
 }
 
