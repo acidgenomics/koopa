@@ -7258,7 +7258,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2025.12.08"
+    "version": "2025.12.8"
   },
   "zellij": {
     "aliases": {
