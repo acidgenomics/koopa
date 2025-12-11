@@ -139,7 +139,8 @@ install_openssl() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://www.openssl.org/source/openssl-${__kvar_version}.tar.gz" \
+        "https://github.com/openssl/openssl/releases/download/\
+openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "openssl-${__kvar_version}" || return 1
