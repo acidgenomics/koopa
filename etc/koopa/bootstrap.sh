@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2025-08-21.
+# @note Updated 2025-12-11.
 # """
 
 # Can debug with:
@@ -87,7 +87,8 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://ftpmirror.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
+        "https://ftpmirror.gnu.org/gnu/bash/\
+bash-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "bash-${__kvar_version}" || return 1
@@ -111,7 +112,8 @@ install_coreutils() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://ftp.gnu.org/gnu/coreutils/coreutils-${__kvar_version}.tar.gz" \
+        "https://ftpmirror.gnu.org/gnu/coreutils/\
+coreutils-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "coreutils-${__kvar_version}" || return 1
