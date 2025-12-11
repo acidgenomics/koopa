@@ -6140,7 +6140,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.14.4"
+    "version": "9.14.3"
   },
   "sox": {
     "aliases": {
