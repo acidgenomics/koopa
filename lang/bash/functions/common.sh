@@ -8069,6 +8069,11 @@ koopa_download() {
     fi
     koopa_assert_is_executable "${app[@]}"
     bool['progress']=1
+    bool['verbose']=0
+    if koopa_is_verbose
+    then
+        bool['verbose']=1
+    fi
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 \
 Edg/131.0.0.0"
@@ -8080,7 +8085,6 @@ Edg/131.0.0.0"
         '--location'
         '--retry' 5
         '--show-error'
-        '--verbose'
     )
     if [[ -n "${http_proxy:-}" ]]
     then
@@ -8097,36 +8101,44 @@ Edg/131.0.0.0"
             curl_args+=('--user-agent' "${dict['user_agent']}")
             ;;
     esac
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        curl_args+=('--verbose')
+    fi
     if [[ -z "${dict['file']}" ]]
     then
-        dict['bn']="$(koopa_basename "${dict['url']}")"
-        if koopa_str_detect_fixed --string="${dict['bn']}" --pattern='.'
+        dict['file']="$(koopa_basename "${dict['url']}")"
+        if koopa_str_detect_fixed --string="${dict['file']}" --pattern='?'
         then
-            dict['file']="${dict['bn']}"
-            if koopa_str_detect_fixed \
-                --pattern='%' \
-                --string="${dict['file']}"
-            then
-                dict['file']="$( \
-                    koopa_print "${dict['file']}" \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%2D' \
-                        --replacement='-' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%2E' \
-                        --replacement='.' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%5F' \
-                        --replacement='_' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%20' \
-                        --replacement='_' \
-                )"
-            fi
+            dict['file']="$( \
+                koopa_sub \
+                    --pattern='\?.+$' \
+                    --regex \
+                    --replacement='' \
+                    "${dict['file']}" \
+            )"
+        fi
+        if koopa_str_detect_fixed --pattern='%' --string="${dict['file']}"
+        then
+            dict['file']="$( \
+                koopa_print "${dict['file']}" \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%2D' \
+                    --replacement='-' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%2E' \
+                    --replacement='.' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%5F' \
+                    --replacement='_' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%20' \
+                    --replacement='_' \
+            )"
         fi
     fi
     if [[ -n "${dict['file']}" ]]
@@ -17459,6 +17471,10 @@ koopa_is_variable_defined() {
     done
     [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
     return 0
+}
+
+koopa_is_verbose() {
+    [[ "${KOOPA_VERBOSE:-0}" -eq 1 ]]
 }
 
 koopa_jekyll_deploy_to_aws() {
