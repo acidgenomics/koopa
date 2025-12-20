@@ -6599,12 +6599,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2025-05-14",
+    "date": "2025-12-20",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.1a1"
+    "version": "0.0.5"
   },
   "udunits": {
     "aliases": {
