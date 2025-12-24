@@ -48,7 +48,12 @@ main() {
     local -A app dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     app['gh']="${dict['prefix']}/bin/gh"
-    install_from_conda
+    if koopa_is_macos && koopa_is_amd64
+    then
+        install_from_source
+    else
+        install_from_conda
+    fi
     koopa_assert_is_executable "${app['gh']}"
     dict['bc']="${dict['prefix']}/share/bash-completion/completions/gh"
     koopa_alert "Adding bash completion at '${dict['bc']}'."
