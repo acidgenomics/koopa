@@ -2404,11 +2404,11 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2025-11-30",
+    "date": "2025-12-24",
     "default": false,
     "prune": true,
     "url": ["https://golang.org/dl/"],
-    "version": "1.25.4"
+    "version": "1.25.5"
   },
   "google-cloud-sdk": {
     "aliases": {
