@@ -6822,19 +6822,17 @@ koopa_current_pypi_package_version() {
     local -A app
     local name
     koopa_assert_has_args "$#"
-    app['awk']="$(koopa_locate_awk)"
     app['curl']="$(koopa_locate_curl)"
-    app['pup']="$(koopa_locate_pup)"
+    app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
     for name in "$@"
     do
         local -A dict
         dict['name']="$name"
-        dict['url']="https://pypi.org/project/${dict['name']}/"
+        dict['url']="https://pypi.org/pypi/${dict['name']}/json"
         dict['version']="$( \
             "${app['curl']}" -s "${dict['url']}" \
-                | "${app['pup']}" 'h1 text{}' \
-                | "${app['awk']}" 'NF {$1=$1; print $2}' \
+                | "${app['jq']}" --raw-output '.info.version' \
         )"
         [[ -n "${dict['version']}" ]] || return 1
         koopa_print "${dict['version']}"
