@@ -101,7 +101,7 @@ bash-${__kvar_version}.tar.gz" \
 }
 
 install_coreutils() {
-    __kvar_version='9.8'
+    __kvar_version='9.9'
     printf 'Installing coreutils.\n'
     mkdir -p "${PREFIX}/src/coreutils"
     cd "${PREFIX}/src/coreutils" || return 1
