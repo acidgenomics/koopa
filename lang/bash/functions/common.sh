@@ -22113,7 +22113,7 @@ koopa_python_create_venv() {
     koopa_assert_has_args "$#"
     app['python']=''
     bool['binary']=1
-    bool['pip']=1
+    bool['pip']=0
     bool['system_site_packages']=1
     dict['name']=''
     dict['prefix']=''
@@ -22145,12 +22145,28 @@ koopa_python_create_venv() {
                 app['python']="${2:?}"
                 shift 2
                 ;;
+            '--binary')
+                bool['binary']=1
+                shift 1
+                ;;
             '--no-binary')
                 bool['binary']=0
                 shift 1
                 ;;
-            '--without-pip')
+            '--no-pip')
                 bool['pip']=0
+                shift 1
+                ;;
+            '--no-system-site-packages')
+                bool['system_site_packages']=0
+                shift 1
+                ;;
+            '--pip')
+                bool['pip']=1
+                shift 1
+                ;;
+            '--system-site-packages')
+                bool['system_site_packages']=1
                 shift 1
                 ;;
             '-'*)
