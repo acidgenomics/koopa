@@ -3842,12 +3842,13 @@
   },
   "node": {
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
-    "build_dependencies": ["make", "ninja", "pkg-config", "python3.14"],
+    "build_dependencies": ["make", "ninja", "pkg-config", "python3.13"],
     "date": "2026-01-02",
     "default": false,
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
+    "python_version_pin": true,
     "url": ["https://nodejs.org/"],
     "version": "24.12.0"
   },
