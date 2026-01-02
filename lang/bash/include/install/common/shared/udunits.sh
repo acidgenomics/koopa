@@ -3,7 +3,7 @@
 main() {
     # """
     # Install udunits.
-    # @note Updated 2023-04-11.
+    # @note Updated 2026-01-02.
     # """
     local -A dict
     local -a conf_args
@@ -14,8 +14,8 @@ main() {
         '--disable-static'
         "--prefix=${dict['prefix']}"
     )
-    dict['url']="https://artifacts.unidata.ucar.edu/repository/\
-downloads-udunits/${dict['version']}/udunits-${dict['version']}.tar.gz"
+    dict['url']="https://downloads.unidata.ucar.edu/udunits/\
+${dict['version']}/udunits-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
