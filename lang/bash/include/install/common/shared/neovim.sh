@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package --name='nvim'
+    return 0
+}
+
+install_from_source() {
     # """
     # Install Neovim.
     # @note Updated 2023-09-01.
@@ -106,5 +111,10 @@ v${dict['version']}.tar.gz"
     koopa_write_string --file='local.mk' --string="${dict['local_mk']}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }

@@ -26,7 +26,7 @@
   "agat": {
     "bin": ["agat"],
     "build_dependencies": ["patch"],
-    "date": "2025-08-10",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -41,7 +41,7 @@
       "https://bioconda.github.io/recipes/agat/README.html",
       "https://github.com/NBISweden/AGAT/"
     ],
-    "version": "1.5.1"
+    "version": "1.6.0"
   },
   "air": {
     "bin": ["air"],
@@ -342,7 +342,7 @@
       "homebrew": "awscli"
     },
     "bin": ["aws"],
-    "date": "2025-11-19",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
@@ -350,7 +350,7 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.31.39"
+    "version": "2.32.26"
   },
   "axel": {
     "aliases": {
@@ -1004,13 +1004,17 @@
     "removed": true
   },
   "chezmoi": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["chezmoi"],
-    "date": "2025-12-11",
+    "build_dependencies": {
+      "macos-amd64": ["go"],
+      "noarch": []
+    },
+    "date": "2026-01-02",
     "default": true,
-    "dependencies": ["conda"],
+    "dependencies": {
+      "macos-amd64": [],
+      "noarch": ["conda"]
+    },
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
     "version": "2.68.1"
@@ -1084,7 +1088,7 @@
   },
   "conda": {
     "bin": ["conda"],
-    "date": "2025-12-05",
+    "date": "2026-01-02",
     "default": true,
     "prune": false,
     "supported": {
@@ -1094,7 +1098,7 @@
       "macos-arm64": true
     },
     "url": ["https://repo.anaconda.com/miniconda/"],
-    "version": "25.9.1-3"
+    "version": "25.11.1-1"
   },
   "convmv": {
     "aliases": {
@@ -1123,7 +1127,6 @@
       "gbasename",
       "gbasenc",
       "gcat",
-      "gchcon",
       "gchgrp",
       "gchmod",
       "gchown",
@@ -1183,7 +1186,6 @@
       "grealpath",
       "grm",
       "grmdir",
-      "gruncon",
       "gseq",
       "gsha1sum",
       "gsha224sum",
@@ -1196,6 +1198,7 @@
       "gsort",
       "gsplit",
       "gstat",
+      "gstdbuf",
       "gstty",
       "gsum",
       "gsync",
@@ -1223,7 +1226,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2025-10-31",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1233,7 +1236,6 @@
       "gbasename.1",
       "gbasenc.1",
       "gcat.1",
-      "gchcon.1",
       "gchgrp.1",
       "gchmod.1",
       "gchown.1",
@@ -1293,7 +1295,6 @@
       "grealpath.1",
       "grm.1",
       "grmdir.1",
-      "gruncon.1",
       "gseq.1",
       "gsha1sum.1",
       "gsha224sum.1",
@@ -1306,6 +1307,7 @@
       "gsort.1",
       "gsplit.1",
       "gstat.1",
+      "gstdbuf.1",
       "gstty.1",
       "gsum.1",
       "gsync.1",
@@ -1337,7 +1339,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.8"
+    "version": "9.9"
   },
   "cpufetch": {
     "aliases": {
@@ -1816,7 +1818,7 @@
       "homebrew": true
     },
     "bin": ["fish"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
@@ -1825,7 +1827,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.2.1"
+    "version": "4.3.2"
   },
   "flac": {
     "aliases": {
@@ -2050,7 +2052,7 @@
     },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2025-11-10",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": [
       "bison",
@@ -2079,7 +2081,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.12.0"
+    "version": "3.12.1"
   },
   "gdbm": {
     "aliases": {
@@ -2404,11 +2406,11 @@
       "homebrew": true
     },
     "bin": ["go"],
-    "date": "2025-11-30",
+    "date": "2025-12-24",
     "default": false,
     "prune": true,
     "url": ["https://golang.org/dl/"],
-    "version": "1.25.4"
+    "version": "1.25.5"
   },
   "google-cloud-sdk": {
     "aliases": {
@@ -2718,7 +2720,7 @@
       "homebrew": true
     },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2025-11-10",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2731,7 +2733,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "12.2.0"
+    "version": "12.3.0"
   },
   "haskell-cabal": {
     "aliases": {
@@ -2884,7 +2886,7 @@
   "htslib": {
     "bin": ["bgzip", "htsfile", "tabix"],
     "build_dependencies": ["make"],
-    "date": "2025-07-16",
+    "date": "206-01-02",
     "default": false,
     "dependencies": ["bzip2", "curl", "libdeflate", "openssl", "xz", "zlib"],
     "man1": ["bgzip.1", "htsfile.1", "tabix.1"],
@@ -2893,7 +2895,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.22.1"
+    "version": "1.23"
   },
   "httpie": {
     "aliases": {
@@ -2938,12 +2940,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2025-10-08",
+    "date": "2026-01-02",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.151.0"
+    "version": "0.154.0"
   },
   "hyperfine": {
     "aliases": {
@@ -3183,11 +3185,8 @@
     "version": "1.8.1"
   },
   "julia": {
-    "aliases": {
-      "homebrew-cask": true
-    },
     "bin": ["julia"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": false,
     "prune": true,
     "url": [
@@ -3195,16 +3194,16 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.12.2"
+    "version": "1.12.3"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.5.0"
+    "version": "4.5.1"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3284,7 +3283,7 @@
       "https://github.com/latchbio/latch/",
       "https://docs.latch.bio/"
     ],
-    "version": "2.66.3"
+    "version": "2.67.1"
   },
   "ldc": {
     "aliases": {
@@ -3333,16 +3332,13 @@
     "version": "668"
   },
   "lesspipe": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["bash", "make"],
-    "date": "2025-12-01",
+    "date": "2026-01-02",
     "default": true,
     "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.21"
+    "version": "2.22"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3395,14 +3391,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make"],
-    "date": "2025-05-30",
+    "date": "2026-01-02",
     "default": false,
     "prune": false,
     "url": [
       "https://hyperrealm.github.io/libconfig/",
       "https://github.com/hyperrealm/libconfig/"
     ],
-    "version": "1.8.1"
+    "version": "1.8.2"
   },
   "libde265": {
     "build_dependencies": ["make"],
@@ -3553,7 +3549,7 @@
   },
   "libheif": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-08-10",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["libde265", "libjpeg-turbo", "libpng", "zlib"],
     "prune": false,
@@ -3561,7 +3557,7 @@
       "https://www.libde265.org/",
       "https://github.com/strukturag/libheif"
     ],
-    "version": "1.20.2"
+    "version": "1.21.1"
   },
   "libiconv": {
     "aliases": {
@@ -3957,11 +3953,11 @@
     },
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-07-16",
+    "date": "2026-01-02",
     "default": false,
     "prune": false,
     "url": ["http://www.lua.org/", "https://github.com/lua/lua/"],
-    "version": "5.4.8"
+    "version": "5.5.0"
   },
   "luajit": {
     "aliases": {
@@ -4128,12 +4124,12 @@
       "homebrew": true
     },
     "bin": ["mcfly"],
-    "date": "2025-02-14",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cantino/mcfly/"],
-    "version": "0.9.3"
+    "version": "0.9.4"
   },
   "mdcat": {
     "aliases": {
@@ -4438,21 +4434,13 @@
       "homebrew": true
     },
     "bin": ["nvim"],
-    "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2025-08-23",
+    "date": "2026-01-02",
     "default": true,
-    "dependencies": [
-      "gettext",
-      "libiconv",
-      "m4",
-      "ncurses",
-      "python3.13",
-      "zlib"
-    ],
+    "dependencies": ["conda"],
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.11.3"
+    "version": "0.11.5"
   },
   "nettle": {
     "aliases": {
@@ -5129,12 +5117,12 @@
     },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2025-12-11",
+    "date": "2026-01-02",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.16"
+    "version": "2.6.17"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5356,7 +5344,7 @@
       "python3.13-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-21",
+    "date": "2025-12-22",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -5376,7 +5364,7 @@
     "man1": ["python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.13.9"
+    "version": "3.13.11"
   },
   "python3.14": {
     "aliases": {
@@ -5400,7 +5388,7 @@
       "python3.14-config"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2025-12-22",
     "default": true,
     "dependencies": [
       "bzip2",
@@ -5420,7 +5408,7 @@
     "man1": ["python.1", "python3.1", "python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.14.0"
+    "version": "3.14.2"
   },
   "quarto": {
     "aliases": {
@@ -5852,12 +5840,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2025-12-05",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.14.8"
+    "version": "0.14.10"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5936,7 +5924,7 @@
       "macos-arm64": ["make"],
       "noarch": []
     },
-    "date": "2025-07-16",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": {
       "macos-arm64": ["htslib", "ncurses", "zlib"],
@@ -5954,7 +5942,7 @@
       "https://github.com/samtools/samtools/",
       "https://bioconda.github.io/recipes/samtools/README.html"
     ],
-    "version": "1.22.1"
+    "version": "1.23"
   },
   "scalene": {
     "bin": ["scalene"],
@@ -6130,7 +6118,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2025-12-11",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -6140,7 +6128,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.14.3"
+    "version": "9.14.5"
   },
   "sox": {
     "aliases": {
@@ -6192,14 +6180,14 @@
       "sphinx-build",
       "sphinx-quickstart"
     ],
-    "date": "2025-12-05",
+    "date": "2026-01-02",
     "dependencies": ["python3.13"],
     "prune": true,
     "url": [
       "https://www.sphinx-doc.org/",
       "https://github.com/sphinx-doc/sphinx/"
     ],
-    "version": "9.0.4"
+    "version": "9.1.0"
   },
   "sqlfluff": {
     "aliases": {
@@ -6285,12 +6273,12 @@
       "homebrew": true
     },
     "bin": ["starship"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["conda"],
     "prune": false,
     "url": ["https://starship.rs/", "https://github.com/starship/starship/"],
-    "version": "1.24.1"
+    "version": "1.24.2"
   },
   "stow": {
     "aliases": {
@@ -6307,7 +6295,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2025-12-11",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
@@ -6316,7 +6304,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.52.1"
+    "version": "1.52.2"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -6531,12 +6519,12 @@
       "homebrew": true
     },
     "bin": ["tokei"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/XAMPPRocky/tokei/"],
-    "version": "13.0.0"
+    "version": "14.0.0"
   },
   "tqdm": {
     "bin": ["tqdm"],
@@ -6567,14 +6555,14 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-12-11",
+    "date": "2026-01-02",
     "default": false,
     "prune": false,
     "url": [
       "https://tree-sitter.github.io/tree-sitter/",
       "https://github.com/tree-sitter/tree-sitter/"
     ],
-    "version": "0.26.2"
+    "version": "0.26.3"
   },
   "tryceratops": {
     "bin": ["tryceratops"],
@@ -6599,12 +6587,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2025-05-14",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.1a1"
+    "version": "0.0.8"
   },
   "udunits": {
     "aliases": {
@@ -6690,23 +6678,23 @@
       "homebrew": true
     },
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": false,
     "prune": false,
     "url": [
       "https://juliastrings.github.io/utf8proc/",
       "https://github.com/JuliaStrings/utf8proc/"
     ],
-    "version": "2.11.2"
+    "version": "2.11.3"
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2025-12-11",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.17"
+    "version": "0.9.21"
   },
   "vim": {
     "aliases": {
@@ -6716,7 +6704,7 @@
     },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-08-25",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["ncurses", "python3.13"],
     "man1": [
@@ -7178,7 +7166,7 @@
       "xzmore"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-04-11",
+    "date": "2026-01-02",
     "default": true,
     "man1": [
       "lzcat.1",
@@ -7207,7 +7195,7 @@
     ],
     "prune": false,
     "url": ["https://tukaani.org/xz/", "https://github.com/tukaani-project/xz"],
-    "version": "5.8.1"
+    "version": "5.8.2"
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -7238,12 +7226,12 @@
     },
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2025-11-30",
+    "date": "2026-01-02",
     "default": false,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.49.2"
+    "version": "4.50.1"
   },
   "yt-dlp": {
     "aliases": {
@@ -7277,12 +7265,12 @@
       "homebrew": true
     },
     "bin": ["zenith"],
-    "date": "2025-01-03",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/bvaisvil/zenith/"],
-    "version": "0.14.1"
+    "version": "0.14.2"
   },
   "zip": {
     "aliases": {

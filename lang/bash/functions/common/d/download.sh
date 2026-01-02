@@ -3,7 +3,7 @@
 koopa_download() {
     # """
     # Download a file.
-    # @note Updated 2025-08-24.
+    # @note Updated 2025-12-15.
     #
     # Some web servers may fail unless we appear to be a web browser.
     #
@@ -43,6 +43,11 @@ koopa_download() {
     fi
     koopa_assert_is_executable "${app[@]}"
     bool['progress']=1
+    bool['verbose']=0
+    if koopa_is_verbose
+    then
+        bool['verbose']=1
+    fi
 # >     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; \
 # > rv:120.0) Gecko/20100101 Firefox/120.0"
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
@@ -58,7 +63,6 @@ Edg/131.0.0.0"
         '--location'
         '--retry' 5
         '--show-error'
-        '--verbose'
     )
     # If running through proxy server, set insecure to ignore self-signed
     # certificate error.
@@ -78,36 +82,45 @@ Edg/131.0.0.0"
             curl_args+=('--user-agent' "${dict['user_agent']}")
             ;;
     esac
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        curl_args+=('--verbose')
+    fi
     if [[ -z "${dict['file']}" ]]
     then
-        dict['bn']="$(koopa_basename "${dict['url']}")"
-        if koopa_str_detect_fixed --string="${dict['bn']}" --pattern='.'
+        dict['file']="$(koopa_basename "${dict['url']}")"
+        # Remove query string from local file name.
+        if koopa_str_detect_fixed --string="${dict['file']}" --pattern='?'
         then
-            dict['file']="${dict['bn']}"
-            if koopa_str_detect_fixed \
-                --pattern='%' \
-                --string="${dict['file']}"
-            then
-                dict['file']="$( \
-                    koopa_print "${dict['file']}" \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%2D' \
-                        --replacement='-' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%2E' \
-                        --replacement='.' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%5F' \
-                        --replacement='_' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%20' \
-                        --replacement='_' \
-                )"
-            fi
+            dict['file']="$( \
+                koopa_sub \
+                    --pattern='\?.+$' \
+                    --regex \
+                    --replacement='' \
+                    "${dict['file']}" \
+            )"
+        fi
+        if koopa_str_detect_fixed --pattern='%' --string="${dict['file']}"
+        then
+            dict['file']="$( \
+                koopa_print "${dict['file']}" \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%2D' \
+                    --replacement='-' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%2E' \
+                    --replacement='.' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%5F' \
+                    --replacement='_' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%20' \
+                    --replacement='_' \
+            )"
         fi
     fi
     if [[ -n "${dict['file']}" ]]

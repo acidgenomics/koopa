@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2025-08-21.
+# @note Updated 2025-12-11.
 # """
 
 # Can debug with:
@@ -87,7 +87,8 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://ftp.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
+        "https://ftpmirror.gnu.org/gnu/bash/\
+bash-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "bash-${__kvar_version}" || return 1
@@ -100,7 +101,7 @@ install_bash() {
 }
 
 install_coreutils() {
-    __kvar_version='9.8'
+    __kvar_version='9.9'
     printf 'Installing coreutils.\n'
     mkdir -p "${PREFIX}/src/coreutils"
     cd "${PREFIX}/src/coreutils" || return 1
@@ -111,7 +112,8 @@ install_coreutils() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://ftp.gnu.org/gnu/coreutils/coreutils-${__kvar_version}.tar.gz" \
+        "https://ftpmirror.gnu.org/gnu/coreutils/\
+coreutils-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "coreutils-${__kvar_version}" || return 1
@@ -139,7 +141,8 @@ install_openssl() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://www.openssl.org/source/openssl-${__kvar_version}.tar.gz" \
+        "https://github.com/openssl/openssl/releases/download/\
+openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
     cd "openssl-${__kvar_version}" || return 1
