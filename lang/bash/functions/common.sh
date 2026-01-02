@@ -14767,9 +14767,8 @@ koopa_install_luarocks() {
 
 koopa_install_luigi() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='luigi' \
-        -D --pip-name='luigi[toml]' \
         "$@"
 }
 
@@ -15808,14 +15807,14 @@ koopa_install_r() {
 
 koopa_install_radian() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='radian' \
         "$@"
 }
 
 koopa_install_ranger_fm() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='ranger-fm' \
         "$@"
 }

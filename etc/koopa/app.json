@@ -2823,6 +2823,7 @@
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
+    "python_version_pin": true,
     "url": [
       "https://pypi.org/project/latch/",
       "https://github.com/latchbio/latch/",
@@ -3300,7 +3301,7 @@
       "pkg-config",
       "swig"
     ],
-    "date": "2025-03-08",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": [
       "binutils",
@@ -3310,15 +3311,14 @@
       "libffi",
       "libxml2",
       "ncurses",
-      "python3.13",
+      "python3.14",
       "xz",
       "zlib",
       "zstd"
     ],
-    "outdated": true,
     "prune": true,
     "url": ["https://llvm.org/"],
-    "version": "20.1.0"
+    "version": "21.1.8"
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3375,9 +3375,9 @@
   },
   "luigi": {
     "bin": ["luigi"],
-    "date": "2024-12-06",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://github.com/spotify/luigi/",
@@ -3466,10 +3466,13 @@
     "bin": ["marimo"],
     "date": "2025-08-24",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": ["https://marimo.io/"],
-    "version": "0.15.0"
+    "url": [
+      "https://marimo.io/",
+      "https://pypi.org/project/marimo/"
+    ],
+    "version": "0.18.4"
   },
   "markdownlint-cli": {
     "bin": ["markdownlint"],
@@ -3503,9 +3506,13 @@
     "bin": ["meson"],
     "date": "2025-12-11",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": false,
-    "url": ["https://mesonbuild.com/", "https://github.com/mesonbuild/meson/"],
+    "url": [
+      "https://mesonbuild.com/",
+      "https://github.com/mesonbuild/meson/",
+      "https://pypi.org/project/meson/"
+    ],
     "version": "1.10.0"
   },
   "miller": {
@@ -3570,12 +3577,12 @@
   },
   "mosaicml-cli": {
     "bin": ["mcli"],
-    "date": "2025-04-17",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/mosaicml-cli/"],
-    "version": "0.7.2"
+    "version": "0.8.3"
   },
   "mpc": {
     "build_dependencies": ["make"],
@@ -3616,7 +3623,7 @@
     "bin": ["multiqc"],
     "date": "2025-12-11",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/multiqc/",
@@ -3628,27 +3635,28 @@
     "bin": ["mutagen-inspect"],
     "date": "2023-09-05",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "man1": ["mutagen-inspect.1"],
     "prune": true,
     "url": [
       "https://mutagen.readthedocs.io/",
-      "https://github.com/quodlibet/mutagen/"
+      "https://github.com/quodlibet/mutagen/",
+      "https://pypi.org/project/mutagen/"
     ],
     "version": "1.47.0"
   },
   "mypy": {
     "bin": ["dmypy", "mypy", "mypyc"],
-    "date": "2025-08-24",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://www.mypy-lang.org/",
       "https://github.com/python/mypy/",
       "https://pypi.org/project/mypy/"
     ],
-    "version": "1.17.1"
+    "version": "1.19.1"
   },
   "nano": {
     "bin": ["nano"],
@@ -3774,7 +3782,7 @@
     "version": "25.10.0"
   },
   "nghttp2": {
-    "build_dependencies": ["gcc", "make", "pkg-config", "python3.13"],
+    "build_dependencies": ["gcc", "make", "pkg-config", "python3.14"],
     "date": "2025-10-28",
     "default": false,
     "dependencies": [
@@ -3801,7 +3809,7 @@
     "bin": ["ninja"],
     "date": "2025-08-24",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": false,
     "url": ["https://ninja-build.org/", "https://pypi.org/project/ninja/"],
     "version": "1.13.0"
@@ -3834,14 +3842,14 @@
   },
   "node": {
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
-    "build_dependencies": ["make", "ninja", "pkg-config", "python3.13"],
-    "date": "2025-08-21",
+    "build_dependencies": ["make", "ninja", "pkg-config", "python3.14"],
+    "date": "2026-01-02",
     "default": false,
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://nodejs.org/"],
-    "version": "22.18.0"
+    "version": "24.12.0"
   },
   "npth": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3879,7 +3887,7 @@
     "bin": ["bonito"],
     "date": "2025-11-30",
     "default": false,
-    "dependencies": ["python3.13", "zlib"],
+    "dependencies": ["python3.14", "zlib"],
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -4156,10 +4164,13 @@
     "bin": ["pipx"],
     "date": "2025-10-08",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "outdated": true,
     "prune": false,
-    "url": ["https://github.com/pypa/pipx/"],
+    "url": [
+      "https://github.com/pypa/pipx/",
+      "https://pypi.org/project/pipx/"
+    ],
     "version": "1.8.0"
   },
   "pixman": {
@@ -4197,7 +4208,7 @@
     "bin": ["poetry"],
     "date": "2025-10-08",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": false,
     "url": ["https://python-poetry.org/", "https://pypi.org/project/poetry/"],
     "version": "2.2.1"
@@ -4258,7 +4269,7 @@
       "curl",
       "libjpeg-turbo",
       "libtiff",
-      "python3.13",
+      "python3.14",
       "sqlite",
       "zlib",
       "zstd"
@@ -4281,13 +4292,16 @@
     "bin": ["py-spy"],
     "date": "2025-08-10",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": ["https://github.com/benfred/py-spy/"],
+    "url": [
+      "https://github.com/benfred/py-spy/",
+      "https://pypi.org/project/py-spy/"
+    ],
     "version": "0.4.1"
   },
   "pybind11": {
-    "build_dependencies": ["cmake", "python3.13"],
+    "build_dependencies": ["cmake", "python3.14"],
     "date": "2025-08-23",
     "default": false,
     "prune": false,
@@ -4298,13 +4312,13 @@
     "bin": ["pycodestyle"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pycodestyle.pycqa.org/",
       "https://pypi.org/project/pycodestyle/"
     ],
-    "version": "2.12.1"
+    "version": "2.14.0"
   },
   "pyenv": {
     "bin": ["pyenv"],
@@ -4320,7 +4334,7 @@
     "bin": ["pyflakes"],
     "date": "2025-08-24",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/pyflakes/",
@@ -4332,18 +4346,26 @@
     "bin": ["pygmentize"],
     "date": "2025-07-16",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": ["https://pygments.org/", "https://github.com/pygments/pygments/"],
+    "url": [
+      "https://pygments.org/",
+      "https://github.com/pygments/pygments/",
+      "https://pypi.org/project/Pygments/"
+    ],
     "version": "2.19.2"
   },
   "pylint": {
     "bin": ["pylint"],
     "date": "2025-11-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": ["https://pylint.pycqa.org/", "https://github.com/PyCQA/pylint/"],
+    "url": [
+      "https://pylint.pycqa.org/",
+      "https://github.com/PyCQA/pylint/",
+      "https://pypi.org/project/pylint/"
+    ],
     "version": "4.0.4"
   },
   "pymol": {
@@ -4363,15 +4385,16 @@
   },
   "pyrefly": {
     "bin": ["pyrefly"],
-    "date": "2025-05-16",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/pyrefly/",
-      "https://github.com/facebook/pyrefly/"
+      "https://github.com/facebook/pyrefly/",
+      "https://pypi.org/project/pyrefly/"
     ],
-    "version": "0.15.2"
+    "version": "0.46.3"
   },
   "pyright": {
     "bin": [
@@ -4382,7 +4405,7 @@
     ],
     "date": "2025-10-28",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/pyright/",
@@ -4394,7 +4417,7 @@
     "bin": ["pyprinttags"],
     "date": "2025-11-30",
     "default": false,
-    "dependencies": ["python3.13", "taglib"],
+    "dependencies": ["python3.14", "taglib"],
     "prune": true,
     "url": [
       "https://github.com/supermihi/pytaglib/",
@@ -4406,7 +4429,7 @@
     "bin": ["pytest"],
     "date": "2025-12-11",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/pytest/",
@@ -4771,7 +4794,7 @@
     "bin": ["radian"],
     "date": "2025-08-24",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://github.com/randy3k/radian/",
@@ -4781,15 +4804,15 @@
   },
   "ranger-fm": {
     "bin": ["ranger"],
-    "date": "2024-12-30",
-    "default": true,
-    "dependencies": ["python3.13"],
+    "date": "2026-01-02",
+    "default": false,
+    "dependencies": ["conda"],
     "prune": true,
     "url": [
       "https://pypi.org/project/ranger-fm/",
       "https://github.com/ranger/ranger/"
     ],
-    "version": "1.9.4"
+    "version": "1.9.3"
   },
   "rbenv": {
     "bin": ["rbenv"],
@@ -4971,7 +4994,7 @@
     "bin": ["ruff"],
     "date": "2026-01-02",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
     "version": "0.14.10"
@@ -4980,7 +5003,7 @@
     "bin": ["ruff-lsp"],
     "date": "2025-02-14",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff-lsp/"],
     "version": "0.0.62"
@@ -5074,30 +5097,30 @@
     "bin": ["scalene"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://github.com/plasma-umass/scalene/",
       "https://pypi.org/project/scalene/"
     ],
-    "version": "1.5.49"
+    "version": "2.0.1"
   },
   "scanpy": {
     "bin": ["scanpy"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://scanpy.readthedocs.io/"],
-    "version": "1.10.4"
+    "version": "1.11.5"
   },
   "scons": {
-    "date": "2024-12-30",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": false,
     "url": ["https://scons.org/", "https://pypi.org/project/SCons/"],
-    "version": "4.8.1"
+    "version": "4.10.1"
   },
   "screen": {
     "bin": ["screen"],
@@ -5198,9 +5221,12 @@
     "bin": ["shyaml"],
     "date": "2023-12-13",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": ["https://github.com/0k/shyaml/"],
+    "url": [
+      "https://github.com/0k/shyaml/",
+      "https://pypi.org/project/shyaml/"
+    ],
     "version": "0.6.2"
   },
   "simdjson": {
@@ -5213,15 +5239,16 @@
   },
   "snakefmt": {
     "bin": ["snakefmt"],
-    "date": "2025-08-24",
+    "date": "2026-01-02",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://github.com/snakemake/snakefmt/",
-      "https://bioconda.github.io/recipes/snakefmt/README.html"
+      "https://bioconda.github.io/recipes/snakefmt/README.html",
+      "https://pypi.org/project/snakefmt/"
     ],
-    "version": "0.11.0"
+    "version": "0.11.2"
   },
   "snakemake": {
     "bin": ["snakemake"],
@@ -5285,22 +5312,26 @@
       "sphinx-quickstart"
     ],
     "date": "2026-01-02",
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://www.sphinx-doc.org/",
-      "https://github.com/sphinx-doc/sphinx/"
+      "https://github.com/sphinx-doc/sphinx/",
+      "https://pypi.org/project/Sphinx/"
     ],
     "version": "9.1.0"
   },
   "sqlfluff": {
     "bin": ["sqlfluff"],
-    "date": "2025-08-24",
+    "date": "2026-01-02",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": "https://docs.sqlfluff.com/",
-    "version": "3.4.2"
+    "url": [
+      "https://docs.sqlfluff.com/",
+      "https://pypi.org/project/sqlfluff/"
+    ],
+    "version": "3.5.0"
   },
   "sqlite": {
     "bin": ["sqlite3"],
@@ -5384,7 +5415,7 @@
     "bin": ["streamlit"],
     "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/streamlit/",
@@ -5421,7 +5452,7 @@
       "apr-util",
       "openssl",
       "perl",
-      "python3.13",
+      "python3.14",
       "ruby",
       "serf",
       "sqlite",
@@ -5576,7 +5607,7 @@
     "bin": ["tqdm"],
     "date": "2024-12-30",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/tqdm/"],
     "version": "4.67.1"
@@ -5606,7 +5637,7 @@
     "bin": ["tryceratops"],
     "date": "2024-11-01",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/tryceratops/"],
     "version": "2.4.1"
@@ -5717,7 +5748,7 @@
     "build_dependencies": ["make", "pkg-config"],
     "date": "2026-01-02",
     "default": true,
-    "dependencies": ["ncurses", "python3.13"],
+    "dependencies": ["ncurses", "python3.14"],
     "man1": [
       "ex.1",
       "rview.1",
@@ -5736,7 +5767,7 @@
     "bin": ["vd", "visidata"],
     "date": "2025-10-08",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "man1": ["vd.1", "visidata.1"],
     "prune": true,
     "url": [
@@ -5749,7 +5780,7 @@
     "bin": ["vulture"],
     "date": "2024-12-10",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/vulture/",
@@ -5901,7 +5932,7 @@
     "version": "1.0.12"
   },
   "xorg-libxcb": {
-    "build_dependencies": ["make", "pkg-config", "python3.13"],
+    "build_dependencies": ["make", "pkg-config", "python3.14"],
     "date": "2024-12-30",
     "default": false,
     "dependencies": [
@@ -6011,7 +6042,7 @@
     "version": "1.3.1"
   },
   "xorg-xcb-proto": {
-    "build_dependencies": ["make", "pkg-config", "python3.13"],
+    "build_dependencies": ["make", "pkg-config", "python3.14"],
     "date": "2024-12-30",
     "default": false,
     "notes": ["This must match xorg-libxcb version."],
