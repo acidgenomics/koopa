@@ -66,7 +66,7 @@
     "bin": ["airflow"],
     "date": "2025-12-11",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
     "version": "3.1.4"
@@ -910,11 +910,11 @@
       "debian": true,
       "homebrew": true
     },
-    "date": "2025-10-08",
+    "date": "2026-01-02",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2025-09-09"
+    "version": "2025-12-02"
   },
   "cairo": {
     "aliases": {
@@ -1396,13 +1396,13 @@
     },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["ca-certificates", "libssh2", "openssl", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.16.0"
+    "version": "8.17.0"
   },
   "dash": {
     "aliases": {
@@ -3079,7 +3079,7 @@
     "bin": ["ipython"],
     "date": "2026-01-02",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
     "version": "9.8.0"
