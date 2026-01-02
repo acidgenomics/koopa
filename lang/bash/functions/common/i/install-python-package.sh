@@ -165,7 +165,10 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
         | "${app['cut']}" -d ',' -f '1' \
         | "${app['cut']}" -d '/' -f '7' \
     )"
-    koopa_assert_is_array_non_empty "${bin_names[@]:-}"
+    if koopa_is_array_empty "${bin_names[@]:-}"
+    then
+        koopa_stop "Failed to parse '${dict['record_file']}' for bin."
+    fi
     for bin_name in "${bin_names[@]}"
     do
         # Hardening against Bash 4.2 empty array weirdness here.
