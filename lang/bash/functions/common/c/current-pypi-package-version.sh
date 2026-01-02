@@ -3,34 +3,31 @@
 koopa_current_pypi_package_version() {
     # """
     # Current Python package version at PyPi.
-    # @note Updated 2023-12-22.
+    # @note Updated 2025-12-30.
     #
     # Our awk command removes empty lines with NF, trims whitespace, and then
     # prints the second column in the string, which contains the version.
     #
     # @examples
-    # > koopa_current_pypi_package_version 'pip' 'setuptools' 'wheel'
-    # # 23.3.2
-    # # 69.0.2
-    # # 0.42.0
+    # > koopa_current_pypi_package_version 'setuptools' 'wheel'
+    # # 80.9.0
+    # # 0.45.1
     # """
     local -A app
     local name
     koopa_assert_has_args "$#"
-    app['awk']="$(koopa_locate_awk)"
     app['curl']="$(koopa_locate_curl)"
-    app['pup']="$(koopa_locate_pup)"
+    app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
     for name in "$@"
     do
         local -A dict
         dict['name']="$name"
-        dict['url']="https://pypi.org/project/${dict['name']}/"
+        dict['url']="https://pypi.org/pypi/${dict['name']}/json"
         # shellcheck disable=SC2016
         dict['version']="$( \
             "${app['curl']}" -s "${dict['url']}" \
-                | "${app['pup']}" 'h1 text{}' \
-                | "${app['awk']}" 'NF {$1=$1; print $2}' \
+                | "${app['jq']}" --raw-output '.info.version' \
         )"
         [[ -n "${dict['version']}" ]] || return 1
         koopa_print "${dict['version']}"

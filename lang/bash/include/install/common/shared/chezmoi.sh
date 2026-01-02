@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package
+    return 0
+}
+
+install_from_source() {
     # """
     # Install chezmoi.
     # @note Updated 2023-12-22.
@@ -20,5 +25,15 @@ v${dict['version']}.tar.gz"
         --ldflags="${dict['ldflags']}" \
         --url="${dict['url']}" \
         --version="${dict['version']}"
+    return 0
+}
+
+main() {
+    if koopa_is_macos && koopa_is_amd64
+    then
+        install_from_source
+    else
+        install_from_conda
+    fi
     return 0
 }

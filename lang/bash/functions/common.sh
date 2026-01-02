@@ -6744,6 +6744,32 @@ koopa_current_gencode_version() {
     return 0
 }
 
+koopa_current_git_version() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    app['curl']="$(koopa_locate_curl)"
+    app['cut']="$(koopa_locate_cut)"
+    app['grep']="$(koopa_locate_grep)"
+    app['rev']="$(koopa_locate_rev)"
+    app['sort']="$(koopa_locate_sort)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['url']='https://mirrors.edge.kernel.org/pub/software/scm/git/'
+    dict['grep_string']='git-[.0-9]+\.tar\.xz'
+    dict['version']="$( \
+        "${app['curl']}" -s "${dict['url']}" \
+            | "${app['grep']}" -Eo "${dict['grep_string']}" \
+            | "${app['sort']}" -u \
+            | "${app['tail']}" -n 1 \
+            | "${app['cut']}" -d '-' -f '2' \
+            | "${app['rev']}" \
+            | "${app['cut']}" -d '.' -f '3-' \
+            | "${app['rev']}" \
+    )"
+    koopa_print "${dict['version']}"
+    return 0
+}
+
 koopa_current_github_release_version() {
     local -A app
     local repo
@@ -6796,6 +6822,31 @@ koopa_current_github_tag_version() {
     return 0
 }
 
+koopa_current_gnu_ftp_version() {
+    local -A app dict
+    koopa_assert_has_args_eq "$#" 1
+    app['curl']="$(koopa_locate_curl)"
+    app['cut']="$(koopa_locate_cut)"
+    app['grep']="$(koopa_locate_grep)"
+    app['head']="$(koopa_locate_head)"
+    app['rev']="$(koopa_locate_rev)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['name']="${1:?}"
+    dict['url']="https://ftp.gnu.org/gnu/${dict['name']}/?C=M;O=D"
+    dict['grep_string']="${dict['name']}-[.0-9a-z]+.tar"
+    dict['version']="$( \
+        "${app['curl']}" -s "${dict['url']}" \
+            | "${app['grep']}" -Eo "${dict['grep_string']}" \
+            | "${app['head']}" -n 1 \
+            | "${app['cut']}" -d '-' -f '2' \
+            | "${app['rev']}" \
+            | "${app['cut']}" -d '.' -f '2-' \
+            | "${app['rev']}" \
+    )"
+    koopa_print "${dict['version']}"
+    return 0
+}
+
 koopa_current_google_cloud_sdk_version() {
     local -A app dict
     koopa_assert_has_no_args "$#"
@@ -6822,23 +6873,45 @@ koopa_current_pypi_package_version() {
     local -A app
     local name
     koopa_assert_has_args "$#"
-    app['awk']="$(koopa_locate_awk)"
     app['curl']="$(koopa_locate_curl)"
-    app['pup']="$(koopa_locate_pup)"
+    app['jq']="$(koopa_locate_jq)"
     koopa_assert_is_executable "${app[@]}"
     for name in "$@"
     do
         local -A dict
         dict['name']="$name"
-        dict['url']="https://pypi.org/project/${dict['name']}/"
+        dict['url']="https://pypi.org/pypi/${dict['name']}/json"
         dict['version']="$( \
             "${app['curl']}" -s "${dict['url']}" \
-                | "${app['pup']}" 'h1 text{}' \
-                | "${app['awk']}" 'NF {$1=$1; print $2}' \
+                | "${app['jq']}" --raw-output '.info.version' \
         )"
         [[ -n "${dict['version']}" ]] || return 1
         koopa_print "${dict['version']}"
     done
+    return 0
+}
+
+koopa_current_python_version() {
+    local -A app dict
+    koopa_assert_has_no_args "$#"
+    app['curl']="$(koopa_locate_curl)"
+    app['cut']="$(koopa_locate_cut)"
+    app['grep']="$(koopa_locate_grep)"
+    app['head']="$(koopa_locate_head)"
+    app['sort']="$(koopa_locate_sort)"
+    app['tail']="$(koopa_locate_tail)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['url']='https://www.python.org/ftp/python/'
+    dict['grep_string']='3\.[0-9]+\.[0-9]+/'
+    dict['version']="$( \
+        "${app['curl']}" -s "${dict['url']}" \
+            | "${app['grep']}" -Eo "${dict['grep_string']}" \
+            | "${app['cut']}" -d '/' -f 1 \
+            | "${app['sort']}" -Vu \
+            | "${app['tail']}" -n 2 \
+            | "${app['head']}" -n 1 \
+    )"
+    koopa_print "${dict['version']}"
     return 0
 }
 
@@ -8069,6 +8142,11 @@ koopa_download() {
     fi
     koopa_assert_is_executable "${app[@]}"
     bool['progress']=1
+    bool['verbose']=0
+    if koopa_is_verbose
+    then
+        bool['verbose']=1
+    fi
     dict['user_agent']="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 \
 Edg/131.0.0.0"
@@ -8080,7 +8158,6 @@ Edg/131.0.0.0"
         '--location'
         '--retry' 5
         '--show-error'
-        '--verbose'
     )
     if [[ -n "${http_proxy:-}" ]]
     then
@@ -8097,36 +8174,44 @@ Edg/131.0.0.0"
             curl_args+=('--user-agent' "${dict['user_agent']}")
             ;;
     esac
+    if [[ "${bool['verbose']}" -eq 1 ]]
+    then
+        curl_args+=('--verbose')
+    fi
     if [[ -z "${dict['file']}" ]]
     then
-        dict['bn']="$(koopa_basename "${dict['url']}")"
-        if koopa_str_detect_fixed --string="${dict['bn']}" --pattern='.'
+        dict['file']="$(koopa_basename "${dict['url']}")"
+        if koopa_str_detect_fixed --string="${dict['file']}" --pattern='?'
         then
-            dict['file']="${dict['bn']}"
-            if koopa_str_detect_fixed \
-                --pattern='%' \
-                --string="${dict['file']}"
-            then
-                dict['file']="$( \
-                    koopa_print "${dict['file']}" \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%2D' \
-                        --replacement='-' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%2E' \
-                        --replacement='.' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%5F' \
-                        --replacement='_' \
-                    | koopa_gsub \
-                        --fixed \
-                        --pattern='%20' \
-                        --replacement='_' \
-                )"
-            fi
+            dict['file']="$( \
+                koopa_sub \
+                    --pattern='\?.+$' \
+                    --regex \
+                    --replacement='' \
+                    "${dict['file']}" \
+            )"
+        fi
+        if koopa_str_detect_fixed --pattern='%' --string="${dict['file']}"
+        then
+            dict['file']="$( \
+                koopa_print "${dict['file']}" \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%2D' \
+                    --replacement='-' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%2E' \
+                    --replacement='.' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%5F' \
+                    --replacement='_' \
+                | koopa_gsub \
+                    --fixed \
+                    --pattern='%20' \
+                    --replacement='_' \
+            )"
         fi
     fi
     if [[ -n "${dict['file']}" ]]
@@ -10936,7 +11021,18 @@ koopa_has_private_access() {
 }
 
 koopa_has_ssl_cert_file() {
-    [[ -n "${SSL_CERT_FILE:-}" ]]
+    local -A dict
+    dict['ssl_cert_file']="${SSL_CERT_FILE:-}"
+    if [[ -z "${dict['ssl_cert_file']}" ]]
+    then
+        return 1
+    fi
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
+    then
+        return 1
+    fi
+    return 0
 }
 
 koopa_has_standard_umask() {
@@ -13002,7 +13098,6 @@ koopa_install_cheat() {
 
 koopa_install_chezmoi() {
     koopa_install_app \
-        --installer='conda-package' \
         --name='chezmoi' \
         "$@"
 }
@@ -17461,6 +17556,10 @@ koopa_is_variable_defined() {
     return 0
 }
 
+koopa_is_verbose() {
+    [[ "${KOOPA_VERBOSE:-0}" -eq 1 ]]
+}
+
 koopa_jekyll_deploy_to_aws() {
     local -A app dict
     koopa_assert_has_args "$#"
@@ -20028,6 +20127,12 @@ koopa_locate_rename() {
     koopa_locate_app \
         --app-name='rename' \
         --bin-name='rename' \
+        "$@"
+}
+
+koopa_locate_rev() {
+    koopa_locate_app \
+        '/usr/bin/rev' \
         "$@"
 }
 
