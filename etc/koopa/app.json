@@ -4439,7 +4439,7 @@
     },
     "bin": ["nvim"],
     "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
-    "date": "2025-08-23",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": [
       "gettext",
@@ -4452,7 +4452,7 @@
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.11.3"
+    "version": "0.11.5"
   },
   "nettle": {
     "aliases": {
