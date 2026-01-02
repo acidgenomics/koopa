@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Node.js.
-    # @note Updated 2025-08-21.
+    # @note Updated 2026-01-02.
     #
     # Corepack configuration gets saved to '~/.cache/node/corepack'.
     #
@@ -30,10 +30,10 @@ main() {
     # """
     local -A app dict
     local -a build_deps conf_args
-    build_deps=('make' 'ninja' 'pkg-config' 'python')
+    build_deps=('make' 'ninja' 'pkg-config' 'python3.13')
     koopa_activate_app --build-only "${build_deps[@]}"
     app['make']="$(koopa_locate_make)"
-    app['python']="$(koopa_locate_python --realpath)"
+    app['python']="$(koopa_locate_python313 --realpath)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

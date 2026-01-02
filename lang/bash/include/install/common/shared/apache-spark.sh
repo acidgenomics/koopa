@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Apache Spark.
-    # @note Updated 2023-06-12.
+    # @note Updated 2026-01-02.
     #
     # Consider including 'JAVA_HOME' in our binary wrappers.
     #
@@ -16,7 +16,7 @@ main() {
     dict['libexec']="${dict['prefix']}/libexec"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['url']="https://dlcdn.apache.org/spark/spark-${dict['version']}/\
-spark-${dict['version']}-bin-hadoop${dict['maj_ver']}.tgz"
+spark-${dict['version']}-bin-hadoop3.tgz"
     koopa_download "${dict['url']}"
     koopa_extract \
         "$(koopa_basename "${dict['url']}")" \
