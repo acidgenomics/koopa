@@ -11021,7 +11021,15 @@ koopa_has_private_access() {
 }
 
 koopa_has_ssl_cert_file() {
-    [[ -n "${SSL_CERT_FILE:-}" ]]
+    if [[ -z "${SSL_CERT_FILE:-}" ]]
+    then
+        return 1
+    fi
+    if [[ "${SSL_CERT_FILE:?}" == "${KOOPA_PREFIX:?}/"* ]]
+    then
+        return 1
+    fi
+    return 0
 }
 
 koopa_has_standard_umask() {
