@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Adoptium Eclipse Temurin JDK.
-    # @note Updated 2023-06-02.
+    # @note Updated 2026-01-02.
     #
     # Don't early return if directory exists here.
     # We need to ensure alternatives code runs (see below).
@@ -77,7 +77,12 @@ jdk_${dict['arch2']}_${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
         else
             libexec='libexec'
         fi
-        names=('bin' 'include' 'lib' 'man')
+        names=(
+            'bin'
+            'include'
+            'lib'
+            # > 'man'
+        )
         for name in "${names[@]}"
         do
             koopa_ln "${libexec}/${name}" "$name"

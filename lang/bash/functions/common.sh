@@ -12098,6 +12098,8 @@ koopa_install_apache_airflow() {
     koopa_install_app \
         --installer='python-package' \
         --name='apache-airflow' \
+        -D --egg-name='apache_airflow_core' \
+        -D --python-version='3.13' \
         "$@"
 }
 
@@ -12869,6 +12871,7 @@ koopa_install_azure_cli() {
     koopa_install_app \
         --installer='python-package' \
         --name='azure-cli' \
+        -D --python-version='3.13' \
         "$@"
 }
 
@@ -14764,9 +14767,8 @@ koopa_install_luarocks() {
 
 koopa_install_luigi() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='luigi' \
-        -D --pip-name='luigi[toml]' \
         "$@"
 }
 
@@ -15723,7 +15725,10 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
         | "${app['cut']}" -d ',' -f '1' \
         | "${app['cut']}" -d '/' -f '7' \
     )"
-    koopa_assert_is_array_non_empty "${bin_names[@]:-}"
+    if koopa_is_array_empty "${bin_names[@]:-}"
+    then
+        koopa_stop "Failed to parse '${dict['record_file']}' for bin."
+    fi
     for bin_name in "${bin_names[@]}"
     do
         [[ -n "$bin_name" ]] || continue
@@ -15802,14 +15807,14 @@ koopa_install_r() {
 
 koopa_install_radian() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='radian' \
         "$@"
 }
 
 koopa_install_ranger_fm() {
     koopa_install_app \
-        --installer='python-package' \
+        --installer='conda-package' \
         --name='ranger-fm' \
         "$@"
 }
@@ -22107,7 +22112,7 @@ koopa_python_create_venv() {
     koopa_assert_has_args "$#"
     app['python']=''
     bool['binary']=1
-    bool['pip']=1
+    bool['bootstrap']=0
     bool['system_site_packages']=1
     dict['name']=''
     dict['prefix']=''
@@ -22139,12 +22144,12 @@ koopa_python_create_venv() {
                 app['python']="${2:?}"
                 shift 2
                 ;;
-            '--no-binary')
-                bool['binary']=0
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
-            '--without-pip')
-                bool['pip']=0
+            '--no-binary')
+                bool['binary']=0
                 shift 1
                 ;;
             '-'*)
@@ -22188,7 +22193,7 @@ ${dict['py_maj_min_ver']}"
     koopa_mkdir "${dict['prefix']}"
     unset -v PYTHONPATH
     venv_args=()
-    if [[ "${bool['pip']}" -eq 0 ]]
+    if [[ "${bool['bootstrap']}" -eq 0 ]]
     then
         venv_args+=('--without-pip')
     fi
@@ -22200,7 +22205,7 @@ ${dict['py_maj_min_ver']}"
     "${app['python']}" -m venv "${venv_args[@]}"
     app['venv_python']="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
-    if [[ "${bool['pip']}" -eq 1 ]]
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
         pip_args+=("--python=${app['venv_python']}")
         case "${bool['binary']}" in
@@ -22244,7 +22249,7 @@ koopa_python_deactivate_venv() {
 }
 
 koopa_python_major_minor_version() {
-    koopa_print '3.13'
+    koopa_print '3.14'
     return 0
 }
 

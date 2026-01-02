@@ -3,8 +3,8 @@
 koopa_python_major_minor_version() {
     # """
     # Current Python version used in koopa.
-    # Updated 2025-10-08.
+    # Updated 2026-01-02.
     # """
-    koopa_print '3.13'
+    koopa_print '3.14'
     return 0
 }
