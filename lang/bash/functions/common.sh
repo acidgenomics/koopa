@@ -22112,7 +22112,7 @@ koopa_python_create_venv() {
     koopa_assert_has_args "$#"
     app['python']=''
     bool['binary']=1
-    bool['pip']=0
+    bool['bootstrap']=0
     bool['system_site_packages']=1
     dict['name']=''
     dict['prefix']=''
@@ -22144,28 +22144,12 @@ koopa_python_create_venv() {
                 app['python']="${2:?}"
                 shift 2
                 ;;
-            '--binary')
-                bool['binary']=1
+            '--bootstrap')
+                bool['bootstrap']=1
                 shift 1
                 ;;
             '--no-binary')
                 bool['binary']=0
-                shift 1
-                ;;
-            '--no-pip')
-                bool['pip']=0
-                shift 1
-                ;;
-            '--no-system-site-packages')
-                bool['system_site_packages']=0
-                shift 1
-                ;;
-            '--pip')
-                bool['pip']=1
-                shift 1
-                ;;
-            '--system-site-packages')
-                bool['system_site_packages']=1
                 shift 1
                 ;;
             '-'*)
@@ -22209,7 +22193,7 @@ ${dict['py_maj_min_ver']}"
     koopa_mkdir "${dict['prefix']}"
     unset -v PYTHONPATH
     venv_args=()
-    if [[ "${bool['pip']}" -eq 0 ]]
+    if [[ "${bool['bootstrap']}" -eq 0 ]]
     then
         venv_args+=('--without-pip')
     fi
@@ -22221,7 +22205,7 @@ ${dict['py_maj_min_ver']}"
     "${app['python']}" -m venv "${venv_args[@]}"
     app['venv_python']="${dict['prefix']}/bin/python${dict['py_maj_min_ver']}"
     koopa_assert_is_installed "${app['venv_python']}"
-    if [[ "${bool['pip']}" -eq 1 ]]
+    if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
         pip_args+=("--python=${app['venv_python']}")
         case "${bool['binary']}" in
