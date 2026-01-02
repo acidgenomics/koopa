@@ -322,12 +322,12 @@
   },
   "azure-cli": {
     "bin": ["az"],
-    "date": "2024-12-24",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
-    "version": "2.67.0"
+    "version": "2.81.0"
   },
   "bamtools": {
     "bin": ["bamtools"],
@@ -351,7 +351,7 @@
     "bin": ["bandit"],
     "date": "2025-11-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://bandit.readthedocs.io/en/latest/",
@@ -6157,7 +6157,7 @@
     "bin": ["yt-dlp"],
     "date": "2025-12-14",
     "default": false,
-    "dependencies": ["ffmpeg", "python3.13"],
+    "dependencies": ["ffmpeg", "python3.14"],
     "prune": true,
     "url": [
       "https://github.com/yt-dlp/yt-dlp/",
