@@ -107,9 +107,6 @@
     "version": "1.4.5"
   },
   "apr": {
-    "aliases": {
-      "fedora": "apr-devel"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -118,10 +115,6 @@
     "version": "1.7.5"
   },
   "apr-util": {
-    "aliases": {
-      "debian": "libaprutil1-dev",
-      "fedora": "apr-util-devel"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-02-08",
     "default": false,
@@ -176,9 +169,6 @@
     "version": "0.60.8.1"
   },
   "aspera-connect": {
-    "aliases": {
-      "homebrew": "ibm-aspera-connect"
-    },
     "bin": ["ascp"],
     "date": "2024-12-24",
     "default": false,
@@ -197,10 +187,6 @@
     "version": "4.2.12.780"
   },
   "attr": {
-    "aliases": {
-      "debian": ["attr", "libattr1-dev"],
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -215,10 +201,6 @@
     "version": "2.5.2"
   },
   "autoconf": {
-    "aliases": {
-      "debian": true,
-      "fedora": true
-    },
     "bin": [
       "autoconf",
       "autoheader",
@@ -296,9 +278,6 @@
     "version": "2.3.1"
   },
   "automake": {
-    "aliases": {
-      "fedora": true
-    },
     "bin": ["aclocal", "aclocal-1.17", "automake", "automake-1.17"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
@@ -318,9 +297,6 @@
     "version": "3.6.4"
   },
   "aws-cli": {
-    "aliases": {
-      "homebrew": "awscli"
-    },
     "bin": ["aws"],
     "date": "2026-01-02",
     "default": true,
@@ -333,9 +309,6 @@
     "version": "2.32.26"
   },
   "axel": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["axel"],
     "build_dependencies": ["gawk", "pkg-config", "xz"],
     "date": "2024-04-08",
@@ -375,9 +348,6 @@
     "version": "2.5.3"
   },
   "bandit": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["bandit"],
     "date": "2025-11-30",
     "default": false,
@@ -390,9 +360,6 @@
     "version": "1.9.2"
   },
   "bandwhich": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["bandwhich"],
     "build_dependencies": ["rust"],
     "date": "2024-10-14",
@@ -402,11 +369,6 @@
     "version": "0.23.1"
   },
   "bash": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["bash"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-08-21",
@@ -420,9 +382,6 @@
     "version": "5.3"
   },
   "bash-completion": {
-    "aliases": {
-      "homebrew": "bash-completion@2"
-    },
     "build_dependencies": ["make", "xz"],
     "date": "2025-10-31",
     "default": true,
@@ -432,9 +391,6 @@
     "version": "2.17.0"
   },
   "bash-language-server": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["bash-language-server"],
     "date": "2025-04-15",
     "default": false,
@@ -459,9 +415,6 @@
     "version": "3.1.3"
   },
   "bat": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["bat"],
     "date": "2025-12-05",
     "default": false,
@@ -471,11 +424,6 @@
     "version": "0.26.1"
   },
   "bc": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["bc"],
     "build_dependencies": ["make", "texinfo"],
     "date": "2022-08-30",
@@ -538,9 +486,6 @@
     "version": "2.31.1"
   },
   "bfg": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["bfg"],
     "date": "2025-05-02",
     "default": false,
@@ -550,9 +495,6 @@
     "version": "1.15.0"
   },
   "binutils": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["bison", "flex"],
     "date": "2024-12-24",
     "default": false,
@@ -598,11 +540,6 @@
     "version": "3.6.1"
   },
   "bison": {
-    "aliases": {
-      "debian": "libbison-dev",
-      "fedora": "bison-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
     "default": false,
@@ -615,9 +552,6 @@
     "version": "3.8.2"
   },
   "black": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["black", "blackd"],
     "date": "2025-12-11",
     "default": true,
@@ -645,19 +579,6 @@
     "version": "2.16.0"
   },
   "boost": {
-    "aliases": {
-      "debian": [
-        "libboost-chrono-dev",
-        "libboost-date-time-dev",
-        "libboost-dev",
-        "libboost-filesystem-dev",
-        "libboost-iostreams-dev",
-        "libboost-program-options-dev",
-        "libboost-thread-dev",
-        "libboost-timer-dev"
-      ],
-      "homebrew": true
-    },
     "date": "2024-12-24",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
@@ -666,9 +587,6 @@
     "version": "1.87.0"
   },
   "bottom": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["btm"],
     "date": "2025-01-03",
     "default": false,
@@ -696,9 +614,6 @@
     "version": "2.5.4"
   },
   "bpytop": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["bpytop"],
     "date": "2022-09-26",
     "default": true,
@@ -711,9 +626,6 @@
     "version": "1.0.68"
   },
   "broot": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["broot"],
     "date": "2025-12-05",
     "default": false,
@@ -727,10 +639,6 @@
     "version": "1.54.0"
   },
   "brotli": {
-    "aliases": {
-      "debian": "libbrotli-dev",
-      "homebrew": true
-    },
     "bin": ["brotli"],
     "build_dependencies": ["cmake", "make"],
     "date": "2025-10-28",
@@ -835,11 +743,6 @@
     "version": "5.133"
   },
   "bzip2": {
-    "aliases": {
-      "debian": "libbz2-dev",
-      "fedora": "bzip2-devel",
-      "homebrew": true
-    },
     "bin": [
       "bunzip2",
       "bzcat",
@@ -871,10 +774,6 @@
     "version": "1.0.8"
   },
   "c-ares": {
-    "aliases": {
-      "debian": "libc-ares-dev",
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -883,10 +782,6 @@
     "version": "1.34.4"
   },
   "ca-certificates": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "date": "2026-01-02",
     "default": false,
     "prune": false,
@@ -894,11 +789,6 @@
     "version": "2025-12-02"
   },
   "cairo": {
-    "aliases": {
-      "debian": "libcairo2-dev",
-      "fedora": "cairo-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["meson", "ninja", "pkg-config"],
     "date": "2026-01-02",
     "default": false,
@@ -952,9 +842,6 @@
     "version": "10.0.0"
   },
   "cereal": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make"],
     "default": false,
     "prune": false,
@@ -965,9 +852,6 @@
     "version": "1.3.2"
   },
   "cheat": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["cheat"],
     "build_dependencies": ["go"],
     "date": "2022-12-15",
@@ -997,9 +881,6 @@
     "version": "2.68.1"
   },
   "cli11": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -1021,11 +902,6 @@
     "version": "cd1b727402e20f3b2c98a9bd116724ebdde83181"
   },
   "cmake": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
     "date": "2025-11-03",
@@ -1048,9 +924,6 @@
     "version": "1.5.0"
   },
   "commitizen": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["cz", "git-cz"],
     "date": "2025-08-24",
     "default": true,
@@ -1078,10 +951,6 @@
     "version": "25.11.1-1"
   },
   "convmv": {
-    "aliases": {
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["convmv"],
     "build_dependencies": ["make"],
     "date": "2022-09-26",
@@ -1091,11 +960,6 @@
     "version": "2.05"
   },
   "coreutils": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": [
       "g[",
       "gb2sum",
@@ -1319,9 +1183,6 @@
     "version": "9.9"
   },
   "cpufetch": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["cpufetch"],
     "build_dependencies": ["make"],
     "date": "2025-11-03",
@@ -1366,11 +1227,6 @@
     "version": "0.36.0"
   },
   "curl": {
-    "aliases": {
-      "debian": ["curl", "libcurl4-openssl-dev"],
-      "fedora": ["curl", "curl-minimal", "libcurl-devel"],
-      "homebrew": true
-    },
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2026-01-02",
@@ -1382,9 +1238,6 @@
     "version": "8.17.0"
   },
   "dash": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["dash"],
     "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2023-04-12",
@@ -1404,9 +1257,7 @@
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
-    "url": [
-      "https://docs.databricks.com/aws/en/dev-tools/cli/"
-    ],
+    "url": ["https://docs.databricks.com/aws/en/dev-tools/cli/"],
     "version": "0.279.0"
   },
   "deeptools": {
@@ -1430,9 +1281,6 @@
     "version": "3.5.6"
   },
   "delta": {
-    "aliases": {
-      "homebrew": "git-delta"
-    },
     "bin": ["delta"],
     "date": "2025-01-03",
     "default": true,
@@ -1442,9 +1290,6 @@
     "version": "0.18.2"
   },
   "diff-so-fancy": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["diff-so-fancy"],
     "date": "2023-06-12",
     "default": true,
@@ -1453,9 +1298,6 @@
     "version": "1.4.4"
   },
   "difftastic": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["difft"],
     "date": "2025-11-30",
     "default": true,
@@ -1473,9 +1315,6 @@
     "version": "0.65.0"
   },
   "direnv": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["direnv"],
     "date": "2025-12-02",
     "default": true,
@@ -1485,9 +1324,6 @@
     "version": "2.37.1"
   },
   "docker-credential-helpers": {
-    "aliases": {
-      "homebrew": "docker-credential-helper"
-    },
     "build_dependencies": ["go", "make", "pkg-config"],
     "date": "2025-10-08",
     "default": false,
@@ -1513,11 +1349,6 @@
     "version": "8f61a494506ab2cf98137050c09e45c05cb48cb8"
   },
   "du-dust": {
-    "aliases": {
-      "cargo": true,
-      "conda": "dust",
-      "homebrew": "dust"
-    },
     "bin": ["dust"],
     "date": "2025-08-10",
     "default": true,
@@ -1530,9 +1361,6 @@
     "version": "1.2.3"
   },
   "duckdb": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["duckdb"],
     "build_dependencies": ["cmake", "python3.13"],
     "date": "2025-12-11",
@@ -1542,11 +1370,6 @@
     "version": "1.4.3"
   },
   "ed": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["ed"],
     "build_dependencies": ["lzip", "make", "pkg-config", "tar"],
     "date": "2024-12-24",
@@ -1560,9 +1383,6 @@
     "version": "1.20.2"
   },
   "editorconfig": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["editorconfig"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2025-10-08",
@@ -1577,9 +1397,6 @@
     "version": "0.12.9"
   },
   "elfutils": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["m4", "make"],
     "date": "2024-12-24",
     "default": false,
@@ -1595,10 +1412,6 @@
     "version": "0.192"
   },
   "emacs": {
-    "aliases": {
-      "fedora": "emacs",
-      "homebrew": true
-    },
     "bin": ["ebrowse", "emacs", "emacsclient", "etags"],
     "build_dependencies": ["make"],
     "date": "2025-08-18",
@@ -1651,9 +1464,6 @@
     "url": ["https://github.com/ogham/exa/"]
   },
   "exiftool": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["exiftool"],
     "build_dependencies": [
       "bash",
@@ -1679,10 +1489,6 @@
     "version": "13.10"
   },
   "expat": {
-    "aliases": {
-      "fedora": "expat-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2024-12-24",
     "default": false,
@@ -1691,9 +1497,6 @@
     "version": "2.6.4"
   },
   "eza": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["eza"],
     "date": "2025-10-08",
     "default": true,
@@ -1725,9 +1528,6 @@
     "version": "0.12.1"
   },
   "fd-find": {
-    "aliases": {
-      "homebrew": "fd"
-    },
     "bin": ["fd"],
     "date": "2025-10-08",
     "default": true,
@@ -1737,9 +1537,6 @@
     "version": "10.3.0"
   },
   "ffmpeg": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["ffmpeg", "ffprobe"],
     "date": "2024-12-24",
     "default": false,
@@ -1774,11 +1571,6 @@
     "version": "3.1.0"
   },
   "findutils": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["gfind", "glocate", "gupdatedb", "gxargs"],
     "build_dependencies": ["make"],
     "date": "2024-12-24",
@@ -1791,9 +1583,6 @@
     "version": "4.10.0"
   },
   "fish": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["fish"],
     "date": "2026-01-02",
     "default": false,
@@ -1807,9 +1596,6 @@
     "version": "4.3.2"
   },
   "flac": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["flac"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
@@ -1819,9 +1605,6 @@
     "version": "1.4.3"
   },
   "flake8": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["flake8"],
     "date": "2024-12-24",
     "default": false,
@@ -1834,10 +1617,6 @@
     "version": "7.1.1"
   },
   "flex": {
-    "aliases": {
-      "fedora": "flex-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["bison", "make"],
     "date": "2022-09-26",
     "default": false,
@@ -1847,9 +1626,6 @@
     "version": "2.6.4"
   },
   "fltk": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -1871,9 +1647,6 @@
     "version": "1.4.1"
   },
   "fmt": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2025-10-31",
     "default": false,
@@ -1882,11 +1655,6 @@
     "version": "12.1.0"
   },
   "fontconfig": {
-    "aliases": {
-      "debian": "libfontconfig-dev",
-      "fedora": "fontconfig-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-02-08",
     "default": false,
@@ -1930,11 +1698,6 @@
     "version": "0.3.1"
   },
   "freetype": {
-    "aliases": {
-      "debian": "libfreetype-dev",
-      "fedora": "freetype-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -1943,11 +1706,6 @@
     "version": "2.13.3"
   },
   "fribidi": {
-    "aliases": {
-      "debian": "libfribidi-dev",
-      "fedora": "fribidi-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-09-27",
     "default": false,
@@ -1956,9 +1714,6 @@
     "version": "1.0.16"
   },
   "fzf": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["fzf"],
     "date": "2025-12-02",
     "default": true,
@@ -1968,9 +1723,6 @@
     "version": "0.67.0"
   },
   "gatk": {
-    "aliases": {
-      "conda": "gatk4"
-    },
     "bin": ["gatk"],
     "date": "2024-11-01",
     "default": false,
@@ -1989,9 +1741,6 @@
     "version": "4.6.1.0"
   },
   "gawk": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["awk", "gawk"],
     "build_dependencies": ["make"],
     "date": "2024-12-24",
@@ -2003,9 +1752,6 @@
     "version": "5.3.1"
   },
   "gcc": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gfortran"],
     "build_dependencies": ["make"],
     "date": "2025-05-05",
@@ -2022,11 +1768,6 @@
     "version": "15.1.0"
   },
   "gdal": {
-    "aliases": {
-      "debian": "libgdal-dev",
-      "fedora": "gdal-devel",
-      "homebrew": true
-    },
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
     "date": "2026-01-02",
@@ -2061,9 +1802,6 @@
     "version": "3.12.1"
   },
   "gdbm": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2024-12-24",
     "default": false,
@@ -2106,11 +1844,6 @@
     "version": "2.4.1"
   },
   "geos": {
-    "aliases": {
-      "debian": "libgeos-dev",
-      "fedora": "geos-devel",
-      "homebrew": true
-    },
     "bin": ["geos-config"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2025-10-28",
@@ -2120,11 +1853,6 @@
     "version": "3.14.1"
   },
   "gettext": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "build_dependencies": ["make", "xz"],
     "date": "2024-12-24",
     "default": false,
@@ -2181,9 +1909,6 @@
     "version": "0.29.0"
   },
   "gh": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gh"],
     "date": "2025-12-11",
     "default": true,
@@ -2193,9 +1918,6 @@
     "version": "2.83.2"
   },
   "ghostscript": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gs"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-10-08",
@@ -2206,11 +1928,6 @@
     "version": "10.06.0"
   },
   "git": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": [
       "git",
       "git-cvsserver",
@@ -2242,9 +1959,6 @@
     "version": "2.52.0"
   },
   "git-filter-repo": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["git-filter-repo"],
     "date": "2025-05-02",
     "default": false,
@@ -2254,9 +1968,6 @@
     "version": "2.47.0"
   },
   "git-lfs": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["git-lfs"],
     "build_dependencies": ["go", "make"],
     "date": "2024-12-24",
@@ -2266,9 +1977,6 @@
     "version": "3.6.0"
   },
   "gitui": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gitui"],
     "date": "2025-01-15",
     "default": true,
@@ -2282,9 +1990,6 @@
     "version": "0.26.3"
   },
   "glances": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["glances"],
     "date": "2025-11-10",
     "default": false,
@@ -2297,11 +2002,6 @@
     "version": "4.4.1"
   },
   "glib": {
-    "aliases": {
-      "debian": "libglib2.0-dev",
-      "fedora": "glib2-devel",
-      "homebrew": true
-    },
     "build_dependencies": [
       "cmake",
       "meson",
@@ -2320,11 +2020,6 @@
     "version": "2.82.4"
   },
   "gmp": {
-    "aliases": {
-      "debian": "libgmp-dev",
-      "fedora": "gmp-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "default": false,
@@ -2334,11 +2029,6 @@
     "version": "6.3.0"
   },
   "gnupg": {
-    "aliases": {
-      "debian": true,
-      "fedora": "gnupg2",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config", "sed"],
     "date": "2024-12-24",
     "default": true,
@@ -2364,11 +2054,6 @@
     "version": "2.4.7"
   },
   "gnutls": {
-    "aliases": {
-      "debian": "libgnutls-dev",
-      "fedora": "gnutls-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-06-12",
     "default": false,
@@ -2378,10 +2063,6 @@
     "version": "3.8.4"
   },
   "go": {
-    "aliases": {
-      "fedora": "golang",
-      "homebrew": true
-    },
     "bin": ["go"],
     "date": "2025-12-24",
     "default": false,
@@ -2390,9 +2071,6 @@
     "version": "1.25.5"
   },
   "google-cloud-sdk": {
-    "aliases": {
-      "homebrew-cask": true
-    },
     "bin": ["gcloud", "gsutil"],
     "date": "2025-11-20",
     "default": false,
@@ -2402,9 +2080,6 @@
     "version": "548.0.0"
   },
   "googletest": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2025-05-01",
     "default": false,
@@ -2413,10 +2088,6 @@
     "version": "1.17.0"
   },
   "gperf": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2022-08-29",
     "default": false,
@@ -2428,10 +2099,6 @@
     "version": "3.1"
   },
   "graphviz": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -2444,9 +2111,6 @@
     "version": "12.2.1"
   },
   "grep": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gegrep", "gfgrep", "ggrep"],
     "build_dependencies": ["make"],
     "date": "2023-05-30",
@@ -2461,9 +2125,6 @@
     "version": "3.11"
   },
   "grex": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["grex"],
     "date": "2025-11-30",
     "default": false,
@@ -2473,10 +2134,6 @@
     "version": "1.4.6"
   },
   "groff": {
-    "aliases": {
-      "debian": "groff-base",
-      "homebrew": true
-    },
     "bin": [
       "addftinfo",
       "afmtodit",
@@ -2581,11 +2238,6 @@
     "version": "1.1.11"
   },
   "gsl": {
-    "aliases": {
-      "debian": "libgsl-dev",
-      "fedora": "gsl-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -2597,9 +2249,6 @@
     "version": "2.8"
   },
   "gtop": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gtop"],
     "date": "2023-08-11",
     "default": false,
@@ -2612,9 +2261,6 @@
     "version": "1.1.5"
   },
   "gum": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["gum"],
     "build_dependencies": ["go"],
     "date": "2025-10-08",
@@ -2625,9 +2271,6 @@
     "version": "0.17.0"
   },
   "gzip": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": [
       "gunzip",
       "gzexe",
@@ -2668,9 +2311,6 @@
     "version": "1.13"
   },
   "hadolint": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["hadolint"],
     "build_dependencies": [
       "git",
@@ -2691,11 +2331,6 @@
     "version": "2.14.0"
   },
   "harfbuzz": {
-    "aliases": {
-      "debian": "libharfbuzz-dev",
-      "fedora": "harfbuzz-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
     "date": "2026-01-02",
     "default": false,
@@ -2713,9 +2348,6 @@
     "version": "12.3.0"
   },
   "haskell-cabal": {
-    "aliases": {
-      "homebrew": "cabal-install"
-    },
     "bin": ["cabal"],
     "build_dependencies": ["haskell-ghcup"],
     "date": "2024-12-30",
@@ -2725,9 +2357,6 @@
     "version": "3.12.1.0"
   },
   "haskell-ghcup": {
-    "aliases": {
-      "homebrew": "ghcup"
-    },
     "bin": ["ghcup"],
     "build_dependencies": ["curl"],
     "date": "2025-05-22",
@@ -2740,9 +2369,6 @@
     "version": "0.1.50.2"
   },
   "haskell-stack": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["stack"],
     "date": "2025-07-16",
     "default": false,
@@ -2760,11 +2386,6 @@
     "version": "3.7.1"
   },
   "hdf5": {
-    "aliases": {
-      "debian": "libhdf5-dev",
-      "fedora": "hdf5-devel",
-      "homebrew": true
-    },
     "bin": [
       "h5clear",
       "h5copy",
@@ -2796,9 +2417,6 @@
     "version": "2.0.0"
   },
   "hexyl": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["hexyl"],
     "build_dependencies": ["rust"],
     "date": "2024-12-30",
@@ -2827,10 +2445,6 @@
     "version": "2.2.1"
   },
   "htop": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["htop"],
     "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2025-04-11",
@@ -2875,9 +2489,6 @@
     "version": "1.23"
   },
   "httpie": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["http", "https"],
     "date": "2024-11-01",
     "default": false,
@@ -2887,9 +2498,6 @@
     "version": "3.2.4"
   },
   "httpx": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["httpx"],
     "date": "2025-05-06",
     "default": false,
@@ -2925,9 +2533,6 @@
     "version": "0.154.0"
   },
   "hyperfine": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["hyperfine"],
     "date": "2025-11-30",
     "default": false,
@@ -2937,10 +2542,6 @@
     "version": "1.20.0"
   },
   "icu4c": {
-    "aliases": {
-      "fedora": "libicu-devel",
-      "homebrew": "icu4c@75"
-    },
     "bin": [
       "derb",
       "genbrk",
@@ -2995,10 +2596,6 @@
     "version": "2.40.0"
   },
   "imagemagick": {
-    "aliases": {
-      "debian": ["imagemagick", "libmagick++-dev"],
-      "homebrew": true
-    },
     "bin": [
       "Magick++-config",
       "MagickCore-config",
@@ -3050,9 +2647,6 @@
     "version": "7.1.1-43"
   },
   "ipython": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["ipython"],
     "date": "2026-01-02",
     "default": true,
@@ -3062,9 +2656,6 @@
     "version": "9.8.0"
   },
   "isl": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3074,9 +2665,6 @@
     "version": "0.27"
   },
   "isort": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["isort"],
     "date": "2025-10-12",
     "default": false,
@@ -3089,9 +2677,6 @@
     "version": "7.0.0"
   },
   "jemalloc": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-09-26",
     "default": false,
@@ -3100,9 +2685,6 @@
     "version": "5.3.0"
   },
   "jfrog-cli": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["jf"],
     "date": "2024-12-30",
     "default": false,
@@ -3114,9 +2696,6 @@
     "version": "2.72.5"
   },
   "jless": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["jless"],
     "build_dependencies": ["rust"],
     "date": "2023-07-17",
@@ -3136,9 +2715,6 @@
     "version": "0.9.0"
   },
   "jpeg": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3147,11 +2723,6 @@
     "version": "9f"
   },
   "jq": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["jq"],
     "date": "2025-10-08",
     "default": true,
@@ -3197,9 +2768,6 @@
     "version": "0.51.1"
   },
   "krb5": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["bison", "make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3209,9 +2777,6 @@
     "version": "1.21.3"
   },
   "ksh93": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["ksh"],
     "build_dependencies": ["make"],
     "date": "2024-08-19",
@@ -3222,9 +2787,6 @@
     "version": "1.0.10"
   },
   "lame": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["lame"],
     "build_dependencies": ["make"],
     "date": "2022-08-30",
@@ -3235,10 +2797,6 @@
     "version": "3.100"
   },
   "lapack": {
-    "aliases": {
-      "debian": "liblapack-dev",
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2025-01-08",
     "default": false,
@@ -3263,9 +2821,6 @@
     "version": "2.67.1"
   },
   "ldc": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["gnupg", "libarchive", "xz"],
     "date": "2025-06-17",
     "default": false,
@@ -3277,9 +2832,6 @@
     "version": "1.41.0"
   },
   "ldns": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2024-12-30",
     "default": false,
@@ -3289,11 +2841,6 @@
     "version": "1.8.4"
   },
   "less": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["less"],
     "build_dependencies": ["autoconf", "groff", "make"],
     "date": "2024-11-04",
@@ -3329,9 +2876,6 @@
     "version": "1.1.4"
   },
   "libarchive": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-11-30",
     "default": false,
@@ -3341,9 +2885,6 @@
     "version": "3.8.3"
   },
   "libassuan": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -3353,9 +2894,6 @@
     "version": "3.0.1"
   },
   "libcbor": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make"],
     "date": "2024-12-30",
     "default": false,
@@ -3364,9 +2902,6 @@
     "version": "0.11.0"
   },
   "libconfig": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2026-01-02",
     "default": false,
@@ -3386,9 +2921,6 @@
     "version": "1.0.16"
   },
   "libdeflate": {
-    "aliases": {
-      "conda": true
-    },
     "build_dependencies": ["cmake"],
     "date": "2025-11-03",
     "default": false,
@@ -3397,10 +2929,6 @@
     "version": "1.25"
   },
   "libedit": {
-    "aliases": {
-      "debian": "libedit-dev",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3410,9 +2938,6 @@
     "version": "20240808-3.1"
   },
   "libev": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2022-09-26",
     "default": false,
@@ -3424,11 +2949,6 @@
     "version": "4.33"
   },
   "libevent": {
-    "aliases": {
-      "debian": "libevent-dev",
-      "fedora": "libevent-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
     "default": false,
@@ -3438,11 +2958,6 @@
     "version": "2.1.12"
   },
   "libffi": {
-    "aliases": {
-      "debian": "libffi-dev",
-      "fedora": "libffi-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-08-10",
     "default": false,
@@ -3454,9 +2969,6 @@
     "version": "3.5.2"
   },
   "libfido2": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make"],
     "date": "2024-12-30",
     "default": false,
@@ -3466,9 +2978,6 @@
     "version": "1.15.0"
   },
   "libgcrypt": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -3478,9 +2987,6 @@
     "version": "1.11.0"
   },
   "libgeotiff": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["libtool", "make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3500,11 +3006,6 @@
     "version": "1.7.3"
   },
   "libgit2": {
-    "aliases": {
-      "debian": "libgit2-dev",
-      "fedora": "libgit2-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2025-12-11",
     "default": false,
@@ -3514,9 +3015,6 @@
     "version": "1.9.2"
   },
   "libgpg-error": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["bzip2", "make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -3537,9 +3035,6 @@
     "version": "1.21.1"
   },
   "libiconv": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2024-12-30",
     "default": false,
@@ -3551,9 +3046,6 @@
     "version": "1.18"
   },
   "libidn": {
-    "aliases": {
-      "homebrew": "libidn2"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3565,11 +3057,6 @@
     "version": "2.3.7"
   },
   "libjpeg-turbo": {
-    "aliases": {
-      "debian": "libjpeg-dev",
-      "fedora": "libjpeg-turbo-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2025-12-11",
     "default": false,
@@ -3582,9 +3069,6 @@
     "version": "3.1.3"
   },
   "libksba": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -3594,9 +3078,6 @@
     "version": "1.6.7"
   },
   "liblinear": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "patch"],
     "date": "2023-10-19",
     "default": false,
@@ -3605,9 +3086,6 @@
     "version": "2.47"
   },
   "libluv": {
-    "aliases": {
-      "homebrew": "luv"
-    },
     "build_dependencies": ["cmake"],
     "date": "2024-12-30",
     "default": false,
@@ -3617,9 +3095,6 @@
     "version": "1.48.0-2"
   },
   "libpcap": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["bison", "flex", "make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3628,9 +3103,6 @@
     "version": "1.10.5"
   },
   "libpipeline": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3642,11 +3114,6 @@
     "version": "1.5.8"
   },
   "libpng": {
-    "aliases": {
-      "debian": "libpng-dev",
-      "fedora": "libpng-devel",
-      "homebrew": true
-    },
     "bin": ["libpng-config", "libpng16-config"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -3666,11 +3133,6 @@
     "version": "0.7.31"
   },
   "libssh2": {
-    "aliases": {
-      "debian": "libssh2-1-dev",
-      "fedora": "libssh2-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3680,9 +3142,6 @@
     "version": "1.11.1"
   },
   "libtasn1": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-30",
     "default": false,
@@ -3694,9 +3153,6 @@
     "version": "4.19.0"
   },
   "libtermkey": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["libtool", "make", "pkg-config"],
     "date": "2022-09-09",
     "default": false,
@@ -3706,11 +3162,6 @@
     "version": "0.22"
   },
   "libtiff": {
-    "aliases": {
-      "debian": "libtiff5-dev",
-      "fedora": "libtiff-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3723,11 +3174,6 @@
     "version": "4.7.0"
   },
   "libtool": {
-    "aliases": {
-      "debian": ["libtool", "libtool-bin"],
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["glibtool", "glibtoolize", "libtool", "libtoolize"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -3739,9 +3185,6 @@
     "version": "2.5.4"
   },
   "libunistring": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2024-12-30",
     "default": false,
@@ -3753,9 +3196,6 @@
     "version": "1.3"
   },
   "libuv": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": [
       "autoconf",
       "automake",
@@ -3771,9 +3211,6 @@
     "version": "1.51.0"
   },
   "libvterm": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["libtool", "make", "pkg-config"],
     "date": "2022-09-29",
     "default": false,
@@ -3784,9 +3221,6 @@
     "version": "0.1.4"
   },
   "libxcrypt": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "perl", "pkg-config"],
     "date": "2025-11-11",
     "default": false,
@@ -3795,11 +3229,6 @@
     "version": "4.5.2"
   },
   "libxml2": {
-    "aliases": {
-      "debian": "libxml2-dev",
-      "fedora": "libxml2-devel",
-      "homebrew": true
-    },
     "bin": ["xml2-config"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -3811,9 +3240,6 @@
     "version": "2.13.5"
   },
   "libxslt": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -3826,9 +3252,6 @@
     "version": "1.1.42"
   },
   "libyaml": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": [
       "autoconf",
       "automake",
@@ -3844,9 +3267,6 @@
     "version": "0.2.5"
   },
   "libzip": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2025-05-30",
     "default": false,
@@ -3862,11 +3282,6 @@
     "removed": true
   },
   "llvm": {
-    "aliases": {
-      "debian": "libclang-dev",
-      "fedora": "llvm-devel",
-      "homebrew": true
-    },
     "build_dependencies": [
       "cmake",
       "git",
@@ -3912,9 +3327,6 @@
     "version": "9.0.4"
   },
   "lsd": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["lsd"],
     "date": "2025-10-12",
     "default": false,
@@ -3924,10 +3336,6 @@
     "version": "1.2.0"
   },
   "lua": {
-    "aliases": {
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["lua", "luac"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2026-01-02",
@@ -3937,9 +3345,6 @@
     "version": "5.5.0"
   },
   "luajit": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["luajit"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -3949,9 +3354,6 @@
     "version": "f73e649a954b599fc184726c376476e7a5c439ca"
   },
   "luarocks": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["luarocks"],
     "build_dependencies": ["make", "unzip"],
     "date": "2025-07-16",
@@ -3974,11 +3376,6 @@
     "version": "3.6.0"
   },
   "lz4": {
-    "aliases": {
-      "debian": "liblz4-dev",
-      "fedora": "lz4-devel",
-      "homebrew": true
-    },
     "bin": ["lz4", "lz4c", "lz4cat", "unlz4"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-07-22",
@@ -3989,11 +3386,6 @@
     "version": "1.10.0"
   },
   "lzip": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["lzip"],
     "build_dependencies": ["make", "tar"],
     "date": "2024-12-30",
@@ -4007,9 +3399,6 @@
     "version": "1.24.1"
   },
   "lzo": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-29",
     "default": false,
@@ -4018,9 +3407,6 @@
     "version": "2.10"
   },
   "m4": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["xz"],
     "date": "2022-08-29",
     "default": false,
@@ -4032,10 +3418,6 @@
     "version": "1.4.19"
   },
   "make": {
-    "aliases": {
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["gmake"],
     "date": "2023-03-07",
     "default": true,
@@ -4057,11 +3439,6 @@
     "version": "2.4.0"
   },
   "man-db": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["gman"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -4085,9 +3462,6 @@
     "version": "0.15.0"
   },
   "markdownlint-cli": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["markdownlint"],
     "date": "2025-12-11",
     "default": false,
@@ -4097,9 +3471,6 @@
     "version": "0.47.0"
   },
   "mcfly": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["mcfly"],
     "date": "2026-01-02",
     "default": true,
@@ -4109,9 +3480,6 @@
     "version": "0.9.4"
   },
   "mdcat": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["mdcat"],
     "date": "2025-01-03",
     "default": true,
@@ -4122,11 +3490,6 @@
     "version": "2.7.0"
   },
   "meson": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["meson"],
     "date": "2025-12-11",
     "default": false,
@@ -4136,9 +3499,6 @@
     "version": "1.10.0"
   },
   "miller": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["mlr"],
     "build_dependencies": ["go"],
     "date": "2025-08-21",
@@ -4151,9 +3511,6 @@
     "version": "6.15.0"
   },
   "mimalloc": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -4211,11 +3568,6 @@
     "version": "0.7.2"
   },
   "mpc": {
-    "aliases": {
-      "debian": "libmpc-dev",
-      "fedora": "libmpc-devel",
-      "homebrew": "libmpc"
-    },
     "build_dependencies": ["make"],
     "date": "2023-01-03",
     "default": false,
@@ -4225,9 +3577,6 @@
     "version": "1.3.1"
   },
   "mpdecimal": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make"],
     "date": "2024-06-12",
     "default": false,
@@ -4236,11 +3585,6 @@
     "version": "4.0.0"
   },
   "mpfr": {
-    "aliases": {
-      "debian": "libmpfr-dev",
-      "fedora": "mpfr-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "default": false,
@@ -4250,9 +3594,6 @@
     "version": "4.2.1"
   },
   "msgpack": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake"],
     "date": "2024-08-19",
     "default": false,
@@ -4300,10 +3641,6 @@
     "version": "1.17.1"
   },
   "nano": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["nano"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -4329,10 +3666,6 @@
     "version": "0.14.0"
   },
   "ncbi-sra-tools": {
-    "aliases": {
-      "bioconda": "sra-tools",
-      "homebrew": "sratoolkit"
-    },
     "bin": ["fasterq-dump", "prefetch", "sam-dump", "vdb-config"],
     "date": "2025-05-01",
     "default": false,
@@ -4355,11 +3688,6 @@
     "removed": true
   },
   "ncurses": {
-    "aliases": {
-      "debian": "libncurses-dev",
-      "fedora": "ncurses-devel",
-      "homebrew": true
-    },
     "bin": [
       "captoinfo",
       "clear",
@@ -4395,9 +3723,6 @@
     "version": "6.5"
   },
   "neofetch": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["neofetch"],
     "date": "2022-08-30",
     "default": false,
@@ -4407,9 +3732,6 @@
     "version": "7.1.0"
   },
   "neovim": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["nvim"],
     "date": "2026-01-02",
     "default": true,
@@ -4420,9 +3742,6 @@
     "version": "0.11.5"
   },
   "nettle": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -4445,10 +3764,6 @@
     "version": "25.10.0"
   },
   "nghttp2": {
-    "aliases": {
-      "debian": "libnghttp2-dev",
-      "homebrew": true
-    },
     "build_dependencies": ["gcc", "make", "pkg-config", "python3.13"],
     "date": "2025-10-28",
     "default": false,
@@ -4465,11 +3780,6 @@
     "version": "1.68.0"
   },
   "nim": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["nim"],
     "date": "2024-12-30",
     "default": false,
@@ -4478,10 +3788,6 @@
     "version": "2.2.0"
   },
   "ninja": {
-    "aliases": {
-      "debian": "ninja-build",
-      "homebrew": true
-    },
     "bin": ["ninja"],
     "date": "2025-08-24",
     "default": false,
@@ -4499,9 +3805,6 @@
     "version": "3.12.0"
   },
   "nmap": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["nmap"],
     "build_dependencies": ["bison", "flex", "make"],
     "date": "2024-12-30",
@@ -4520,9 +3823,6 @@
     "version": "7.95"
   },
   "node": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["corepack", "node", "npm", "npx", "yarn"],
     "build_dependencies": ["make", "ninja", "pkg-config", "python3.13"],
     "date": "2025-08-21",
@@ -4534,9 +3834,6 @@
     "version": "22.18.0"
   },
   "npth": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -4545,9 +3842,6 @@
     "version": "1.8"
   },
   "nushell": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["nu"],
     "date": "2025-12-05",
     "default": false,
@@ -4557,9 +3851,6 @@
     "version": "0.109.1"
   },
   "oniguruma": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": [
       "autoconf",
       "automake",
@@ -4629,10 +3920,6 @@
     "removed": true
   },
   "openblas": {
-    "aliases": {
-      "debian": ["libblas-dev", "libopenblas-base", "libopenblas-dev"],
-      "fedora": "openblas-devel"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-06-19",
     "default": false,
@@ -4641,9 +3928,6 @@
     "version": "0.3.30"
   },
   "openjpeg": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -4653,9 +3937,6 @@
     "version": "2.5.3"
   },
   "openldap": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["groff", "make"],
     "date": "2024-12-30",
     "default": false,
@@ -4665,9 +3946,6 @@
     "version": "2.6.9"
   },
   "openssh": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -4689,11 +3967,6 @@
     "version": "9.9p1"
   },
   "openssl": {
-    "aliases": {
-      "debian": "libssl-dev",
-      "fedora": "openssl3-devel",
-      "homebrew": "openssl@3"
-    },
     "bin": ["openssl"],
     "build_dependencies": ["make", "perl", "pkg-config"],
     "date": "2025-10-08",
@@ -4732,10 +4005,6 @@
     "version": "17.05"
   },
   "pandoc": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["pandoc"],
     "date": "2025-12-05",
     "default": false,
@@ -4745,10 +4014,6 @@
     "version": "3.8.3"
   },
   "parallel": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["parallel"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -4762,9 +4027,6 @@
     "version": "20241222"
   },
   "password-store": {
-    "aliases": {
-      "homebrew": "pass"
-    },
     "bin": ["pass"],
     "build_dependencies": ["make"],
     "date": "2022-08-30",
@@ -4775,10 +4037,6 @@
     "version": "1.7.4"
   },
   "patch": {
-    "aliases": {
-      "fedora": true,
-      "homebrew": "gpatch"
-    },
     "bin": ["patch"],
     "build_dependencies": ["make"],
     "date": "2022-08-29",
@@ -4802,11 +4060,6 @@
     "version": "1.1.13"
   },
   "pcre": {
-    "aliases": {
-      "debian": "libpcre16-dev",
-      "fedora": "pcre-devel",
-      "homebrew": true
-    },
     "bin": ["pcre-config", "pcregrep", "pcretest"],
     "build_dependencies": [
       "autoconf",
@@ -4824,11 +4077,6 @@
     "version": "8.45"
   },
   "pcre2": {
-    "aliases": {
-      "debian": "libpcre2-dev",
-      "fedora": "pcre2-devel",
-      "homebrew": true
-    },
     "bin": ["pcre2-config", "pcre2grep", "pcre2test"],
     "build_dependencies": [
       "autoconf",
@@ -4846,10 +4094,6 @@
     "version": "10.44"
   },
   "perl": {
-    "aliases": {
-      "debian": ["libperl-dev", "perl"],
-      "homebrew": true
-    },
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make", "xz"],
     "date": "2025-10-22",
@@ -4890,9 +4134,6 @@
     "version": "2.8"
   },
   "pinentry": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
     "default": false,
@@ -4902,9 +4143,6 @@
     "version": "1.3.1"
   },
   "pipx": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pipx"],
     "date": "2025-10-08",
     "default": false,
@@ -4915,9 +4153,6 @@
     "version": "1.8.0"
   },
   "pixman": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["meson", "ninja", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -4929,10 +4164,6 @@
     "version": "0.44.2"
   },
   "pkg-config": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["pkg-config"],
     "build_dependencies": ["make"],
     "date": "2022-08-29",
@@ -4943,9 +4174,6 @@
     "version": "0.29.2"
   },
   "pkgconf": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pkgconf"],
     "build_dependencies": ["make", "xz"],
     "date": "2025-11-05",
@@ -4956,9 +4184,6 @@
     "version": "2.5.1"
   },
   "poetry": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["poetry"],
     "date": "2025-10-08",
     "default": true,
@@ -4997,9 +4222,6 @@
     "version": "9106aea3413c92bc8c4e9c3421efc980e1dcb6e3"
   },
   "prettier": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["prettier"],
     "date": "2025-12-05",
     "default": false,
@@ -5009,9 +4231,6 @@
     "version": "3.7.4"
   },
   "procs": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["procs"],
     "date": "2025-04-11",
     "default": false,
@@ -5021,11 +4240,6 @@
     "version": "0.14.10"
   },
   "proj": {
-    "aliases": {
-      "debian": "libproj-dev",
-      "fedora": "proj-devel",
-      "homebrew": true
-    },
     "bin": ["proj", "projinfo"],
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2025-12-05",
@@ -5054,9 +4268,6 @@
     "version": "0.4.0"
   },
   "py-spy": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["py-spy"],
     "date": "2025-08-10",
     "default": false,
@@ -5074,9 +4285,6 @@
     "version": "3.0.1"
   },
   "pycodestyle": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pycodestyle"],
     "date": "2024-12-30",
     "default": false,
@@ -5089,9 +4297,6 @@
     "version": "2.12.1"
   },
   "pyenv": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
     "date": "2026-01-02",
@@ -5114,9 +4319,6 @@
     "version": "3.4.0"
   },
   "pygments": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pygmentize"],
     "date": "2025-07-16",
     "default": false,
@@ -5126,9 +4328,6 @@
     "version": "2.19.2"
   },
   "pylint": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pylint"],
     "date": "2025-11-30",
     "default": false,
@@ -5207,9 +4406,6 @@
     "version": "9.0.2"
   },
   "python3.10": {
-    "aliases": {
-      "homebrew": "python@3.10"
-    },
     "bin": [
       "idle3.10",
       "pip3.10",
@@ -5242,9 +4438,6 @@
     "version": "3.10.19"
   },
   "python3.11": {
-    "aliases": {
-      "homebrew": "python@3.11"
-    },
     "bin": [
       "idle3.11",
       "pip3.11",
@@ -5276,9 +4469,6 @@
     "version": "3.11.14"
   },
   "python3.12": {
-    "aliases": {
-      "homebrew": "python@3.12"
-    },
     "bin": [
       "idle3.12",
       "pip3.12",
@@ -5310,9 +4500,6 @@
     "version": "3.12.12"
   },
   "python3.13": {
-    "aliases": {
-      "homebrew": "python@3.13"
-    },
     "bin": [
       "idle3.13",
       "pip3.13",
@@ -5344,9 +4531,6 @@
     "version": "3.13.11"
   },
   "python3.14": {
-    "aliases": {
-      "homebrew": "python@3.14"
-    },
     "bin": [
       "idle",
       "idle3",
@@ -5388,9 +4572,6 @@
     "version": "3.14.2"
   },
   "quarto": {
-    "aliases": {
-      "homebrew-cask": true
-    },
     "bin": ["quarto"],
     "date": "2025-08-07",
     "default": true,
@@ -5399,10 +4580,6 @@
     "version": "1.7.33"
   },
   "r": {
-    "aliases": {
-      "fedora": "R",
-      "homebrew-cask": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-10-31",
     "default": false,
@@ -5593,9 +4770,6 @@
     "version": "0.6.15"
   },
   "ranger-fm": {
-    "aliases": {
-      "homebrew": "ranger"
-    },
     "bin": ["ranger"],
     "date": "2024-12-30",
     "default": true,
@@ -5608,9 +4782,6 @@
     "version": "1.9.4"
   },
   "rbenv": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["rbenv"],
     "date": "2025-01-08",
     "default": false,
@@ -5619,9 +4790,6 @@
     "version": "1.3.1"
   },
   "rclone": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["rclone"],
     "date": "2025-12-11",
     "default": true,
@@ -5632,11 +4800,6 @@
     "version": "1.72.1"
   },
   "readline": {
-    "aliases": {
-      "debian": "libreadline-dev",
-      "fedora": "readline-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-11-08",
     "default": false,
@@ -5667,9 +4830,6 @@
     "version": "2.02"
   },
   "reproc": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-03-27",
     "default": false,
@@ -5678,9 +4838,6 @@
     "version": "14.2.5"
   },
   "ripgrep": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["rg"],
     "date": "2025-10-28",
     "default": true,
@@ -5690,9 +4847,6 @@
     "version": "15.1.0"
   },
   "ripgrep-all": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["rga"],
     "date": "2025-01-03",
     "default": false,
@@ -5702,9 +4856,6 @@
     "version": "0.10.6"
   },
   "rmate": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["rmate"],
     "date": "2022-09-30",
     "default": false,
@@ -5784,10 +4935,6 @@
     "version": "2025.05.0+496"
   },
   "rsync": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["rsync"],
     "build_dependencies": ["make"],
     "date": "2025-05-12",
@@ -5799,11 +4946,6 @@
     "version": "3.4.1"
   },
   "ruby": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2025-10-28",
@@ -5834,9 +4976,6 @@
     "version": "0.0.62"
   },
   "rust": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": [
       "cargo",
       "cargo-clippy",
@@ -5943,9 +5082,6 @@
     "version": "1.10.4"
   },
   "scons": {
-    "aliases": {
-      "homebrew": true
-    },
     "date": "2024-12-30",
     "default": false,
     "dependencies": ["python3.13"],
@@ -5968,9 +5104,6 @@
     "version": "5.0.0"
   },
   "sd": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["sd"],
     "date": "2025-01-03",
     "default": false,
@@ -5980,9 +5113,6 @@
     "version": "1.0.0"
   },
   "sed": {
-    "aliases": {
-      "homebrew": "gnu-sed"
-    },
     "bin": ["gsed"],
     "build_dependencies": ["make"],
     "date": "2022-11-08",
@@ -6015,10 +5145,6 @@
     "version": "2.12.0"
   },
   "serf": {
-    "aliases": {
-      "debian": "libserf-dev",
-      "homebrew": false
-    },
     "build_dependencies": ["patch", "pkg-config"],
     "date": "2023-06-12",
     "default": false,
@@ -6028,9 +5154,6 @@
     "version": "1.3.10"
   },
   "shellcheck": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["shellcheck"],
     "date": "2025-08-10",
     "default": true,
@@ -6054,9 +5177,6 @@
     "version": "1.5.23.1030"
   },
   "shunit2": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["shunit2"],
     "date": "2022-08-30",
     "default": false,
@@ -6108,9 +5228,6 @@
     "version": "9.14.5"
   },
   "sox": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["sox"],
     "date": "2022-08-30",
     "default": false,
@@ -6167,9 +5284,6 @@
     "version": "9.1.0"
   },
   "sqlfluff": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["sqlfluff"],
     "date": "2025-08-24",
     "default": true,
@@ -6179,11 +5293,6 @@
     "version": "3.4.2"
   },
   "sqlite": {
-    "aliases": {
-      "debian": "sqlite3",
-      "fedora": "sqlite-devel",
-      "homebrew": true
-    },
     "bin": ["sqlite3"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -6196,9 +5305,6 @@
     "version": "3.47.2"
   },
   "staden-io-lib": {
-    "aliases": {
-      "conda": "staden_io_lib"
-    },
     "build_dependencies": ["make"],
     "date": "2025-07-16",
     "default": false,
@@ -6246,9 +5352,6 @@
     "version": "1.15.0"
   },
   "starship": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["starship"],
     "date": "2026-01-02",
     "default": true,
@@ -6258,9 +5361,6 @@
     "version": "1.24.2"
   },
   "stow": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["stow"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -6302,10 +5402,6 @@
     "version": "2.0.8"
   },
   "subversion": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": ["svn"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -6327,9 +5423,6 @@
     "version": "1.14.5"
   },
   "swig": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["swig"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -6340,10 +5433,6 @@
     "version": "4.3.0"
   },
   "taglib": {
-    "aliases": {
-      "fedora": "taglib-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "git", "pkg-config"],
     "date": "2025-07-16",
     "default": false,
@@ -6353,10 +5442,6 @@
     "version": "2.1.1"
   },
   "tar": {
-    "aliases": {
-      "fedora": true,
-      "homebrew": "gnu-tar"
-    },
     "bin": ["gtar"],
     "build_dependencies": ["make"],
     "date": "2023-08-31",
@@ -6370,9 +5455,6 @@
     "version": "1.35"
   },
   "tbb": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2025-10-31",
     "default": false,
@@ -6381,10 +5463,6 @@
     "version": "2022.3.0"
   },
   "tcl-tk": {
-    "aliases": {
-      "debian": ["tcl-dev", "tcl8.6-dev", "tk-dev", "tk8.6-dev"],
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6402,9 +5480,6 @@
     "version": "9.0.1"
   },
   "tealdeer": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["tldr"],
     "date": "2025-11-11",
     "default": true,
@@ -6415,9 +5490,6 @@
     "version": "1.7.2"
   },
   "temurin": {
-    "aliases": {
-      "homebrew-cask": "temurin"
-    },
     "bin": ["jar", "java", "javac"],
     "date": "2026-01-02",
     "default": false,
@@ -6438,10 +5510,6 @@
     "version": "2.1.0"
   },
   "texinfo": {
-    "aliases": {
-      "debian": true,
-      "homebrew": true
-    },
     "bin": [
       "pdftexi2dvi",
       "pod2texi",
@@ -6475,11 +5543,6 @@
     "version": "1.3.1"
   },
   "tmux": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["tmux"],
     "build_dependencies": ["bison", "make", "pkg-config"],
     "date": "2025-12-05",
@@ -6491,9 +5554,6 @@
     "version": "3.6a"
   },
   "tokei": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["tokei"],
     "date": "2026-01-02",
     "default": false,
@@ -6512,11 +5572,6 @@
     "version": "4.67.1"
   },
   "tree": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["tree"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -6527,9 +5582,6 @@
     "version": "2.2.1"
   },
   "tree-sitter": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2026-01-02",
     "default": false,
@@ -6550,9 +5602,6 @@
     "version": "2.4.1"
   },
   "tuc": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["tuc"],
     "date": "2025-10-08",
     "default": false,
@@ -6571,11 +5620,6 @@
     "version": "0.0.8"
   },
   "udunits": {
-    "aliases": {
-      "debian": "libudunits2-dev",
-      "fedora": "udunits2-devel",
-      "homebrew": true
-    },
     "bin": ["udunits2"],
     "build_dependencies": ["make"],
     "date": "2022-08-30",
@@ -6607,9 +5651,6 @@
     "version": "1.0.9"
   },
   "unibilium": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6618,9 +5659,6 @@
     "version": "2.1.2"
   },
   "units": {
-    "aliases": {
-      "homebrew": "gnu-units"
-    },
     "bin": ["gunits"],
     "build_dependencies": ["make"],
     "date": "2024-12-30",
@@ -6635,11 +5673,6 @@
     "version": "2.24"
   },
   "unzip": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["funzip", "unzip", "unzipsfx", "zipgrep", "zipinfo"],
     "build_dependencies": ["make", "patch"],
     "date": "2023-04-06",
@@ -6650,9 +5683,6 @@
     "version": "6.0"
   },
   "utf8proc": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2026-01-02",
     "default": false,
@@ -6673,11 +5703,6 @@
     "version": "0.9.21"
   },
   "vim": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2026-01-02",
@@ -6698,9 +5723,6 @@
     "version": "9.1.0"
   },
   "visidata": {
-    "aliases": {
-      "debian": true
-    },
     "bin": ["vd", "visidata"],
     "date": "2025-10-08",
     "default": false,
@@ -6714,9 +5736,6 @@
     "version": "3.3"
   },
   "vulture": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["vulture"],
     "date": "2024-12-10",
     "default": false,
@@ -6738,11 +5757,6 @@
     "version": "1.13.0"
   },
   "wget": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["wget"],
     "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2024-12-30",
@@ -6765,11 +5779,6 @@
     "version": "1.24.5"
   },
   "wget2": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["wget2"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
@@ -6797,10 +5806,6 @@
     "version": "2.2.0"
   },
   "which": {
-    "aliases": {
-      "fedora": true,
-      "homebrew": "gnu-which"
-    },
     "bin": ["gwhich"],
     "build_dependencies": ["make", "pkg-config"],
     "date": "2022-08-25",
@@ -6820,9 +5825,6 @@
     "version": "1.0.2"
   },
   "xorg-libice": {
-    "aliases": {
-      "homebrew": "libice"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6835,9 +5837,6 @@
     "version": "1.1.2"
   },
   "xorg-libpthread-stubs": {
-    "aliases": {
-      "homebrew": "libpthread-stubs"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-08-31",
     "default": false,
@@ -6849,9 +5848,6 @@
     "version": "0.5"
   },
   "xorg-libsm": {
-    "aliases": {
-      "homebrew": "libsm"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6864,9 +5860,6 @@
     "version": "1.2.5"
   },
   "xorg-libx11": {
-    "aliases": {
-      "homebrew": "libx11"
-    },
     "build_dependencies": ["make", "pkg-config", "sed"],
     "date": "2024-12-30",
     "default": false,
@@ -6886,9 +5879,6 @@
     "version": "1.8.10"
   },
   "xorg-libxau": {
-    "aliases": {
-      "homebrew": "libxau"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6901,9 +5891,6 @@
     "version": "1.0.12"
   },
   "xorg-libxcb": {
-    "aliases": {
-      "homebrew": "libxcb"
-    },
     "build_dependencies": ["make", "pkg-config", "python3.13"],
     "date": "2024-12-30",
     "default": false,
@@ -6922,9 +5909,6 @@
     "version": "1.17.0"
   },
   "xorg-libxdmcp": {
-    "aliases": {
-      "homebrew": "libxdmcp"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6937,9 +5921,6 @@
     "version": "1.1.5"
   },
   "xorg-libxext": {
-    "aliases": {
-      "homebrew": "libxext"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -6959,9 +5940,6 @@
     "version": "1.3.6"
   },
   "xorg-libxrandr": {
-    "aliases": {
-      "homebrew": "libxrandr"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-12-22",
     "default": false,
@@ -6983,9 +5961,6 @@
     "version": "1.5.4"
   },
   "xorg-libxrender": {
-    "aliases": {
-      "homebrew": "libxrender"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -7005,9 +5980,6 @@
     "version": "0.9.12"
   },
   "xorg-libxt": {
-    "aliases": {
-      "homebrew": "libxt"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -7029,9 +6001,6 @@
     "version": "1.3.1"
   },
   "xorg-xcb-proto": {
-    "aliases": {
-      "homebrew": "xcb-proto"
-    },
     "build_dependencies": ["make", "pkg-config", "python3.13"],
     "date": "2024-12-30",
     "default": false,
@@ -7044,9 +6013,6 @@
     "version": "1.17.0"
   },
   "xorg-xorgproto": {
-    "aliases": {
-      "homebrew": "xorgproto"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -7058,9 +6024,6 @@
     "version": "2024.1"
   },
   "xorg-xtrans": {
-    "aliases": {
-      "homebrew": "xtrans"
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -7086,9 +6049,6 @@
     "version": "0.2.16"
   },
   "xsv": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["xsv"],
     "date": "2025-01-03",
     "default": false,
@@ -7098,11 +6058,6 @@
     "version": "0.13.0"
   },
   "xxhash": {
-    "aliases": {
-      "debian": "libxxhash-dev",
-      "fedora": "xxhash-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-30",
     "default": false,
@@ -7111,11 +6066,6 @@
     "version": "0.8.3"
   },
   "xz": {
-    "aliases": {
-      "debian": "xz-utils",
-      "fedora": "xz-devel",
-      "homebrew": true
-    },
     "bin": [
       "lzcat",
       "lzcmp",
@@ -7182,9 +6132,6 @@
     "version": "0.8.0"
   },
   "yapf": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["yapf"],
     "date": "2024-12-30",
     "default": false,
@@ -7197,9 +6144,6 @@
     "version": "0.43.0"
   },
   "yq": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["yq"],
     "build_dependencies": ["go"],
     "date": "2026-01-02",
@@ -7210,9 +6154,6 @@
     "version": "4.50.1"
   },
   "yt-dlp": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["yt-dlp"],
     "date": "2025-12-14",
     "default": false,
@@ -7225,9 +6166,6 @@
     "version": "2025.12.8"
   },
   "zellij": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["zellij"],
     "date": "2025-08-10",
     "default": false,
@@ -7237,9 +6175,6 @@
     "version": "0.43.1"
   },
   "zenith": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["zenith"],
     "date": "2026-01-02",
     "default": false,
@@ -7249,11 +6184,6 @@
     "version": "0.14.2"
   },
   "zip": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["zip"],
     "build_dependencies": ["make", "patch"],
     "date": "2023-10-09",
@@ -7265,11 +6195,6 @@
     "version": "3.0"
   },
   "zlib": {
-    "aliases": {
-      "debian": ["libz-dev", "zlib1g-dev"],
-      "fedora": "zlib-devel",
-      "homebrew": true
-    },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-05-23",
     "default": false,
@@ -7287,9 +6212,6 @@
     "version": "1.0.3"
   },
   "zoxide": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["zoxide"],
     "date": "2025-05-30",
     "default": true,
@@ -7299,11 +6221,6 @@
     "version": "0.9.8"
   },
   "zsh": {
-    "aliases": {
-      "debian": true,
-      "fedora": true,
-      "homebrew": true
-    },
     "bin": ["zsh"],
     "date": "2025-01-03",
     "default": false,
@@ -7314,10 +6231,6 @@
     "version": "5.9"
   },
   "zstd": {
-    "aliases": {
-      "debian": "libzstd-dev",
-      "fedora": "libzstd-devel"
-    },
     "bin": [
       "pzstd",
       "unzstd",
