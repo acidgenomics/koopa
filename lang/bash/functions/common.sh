@@ -22244,7 +22244,7 @@ koopa_python_deactivate_venv() {
 }
 
 koopa_python_major_minor_version() {
-    koopa_print '3.13'
+    koopa_print '3.14'
     return 0
 }
 
