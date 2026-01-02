@@ -4434,17 +4434,9 @@
       "homebrew": true
     },
     "bin": ["nvim"],
-    "build_dependencies": ["cmake", "libtool", "make", "ninja", "pkg-config"],
     "date": "2026-01-02",
     "default": true,
-    "dependencies": [
-      "gettext",
-      "libiconv",
-      "m4",
-      "ncurses",
-      "python3.13",
-      "zlib"
-    ],
+    "dependencies": ["conda"],
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
