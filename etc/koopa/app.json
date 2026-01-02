@@ -65,6 +65,7 @@
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
+    "python_version_pin": true,
     "url": ["https://airflow.apache.org/"],
     "version": "3.1.5"
   },
@@ -80,6 +81,7 @@
     "default": false,
     "dependencies": ["openssl"],
     "prune": true,
+    "python_version_pin": true,
     "url": ["https://arrow.apache.org/"],
     "version": "22.0.0"
   },
@@ -326,6 +328,7 @@
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
+    "python_version_pin": true,
     "url": ["https://learn.microsoft.com/en-us/cli/azure/install-azure-cli"],
     "version": "2.81.0"
   },
@@ -555,7 +558,7 @@
     "bin": ["black", "blackd"],
     "date": "2025-12-11",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/black/", "https://github.com/psf/black/"],
     "version": "25.12.0"
@@ -616,8 +619,8 @@
   "bpytop": {
     "bin": ["bpytop"],
     "date": "2022-09-26",
-    "default": true,
-    "dependencies": ["python3.13"],
+    "default": false,
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/bpytop/",
@@ -925,16 +928,16 @@
   },
   "commitizen": {
     "bin": ["cz", "git-cz"],
-    "date": "2025-08-24",
+    "date": "2026-01-02",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/commitizen/",
       "https://github.com/commitizen-tools/commitizen/",
       "https://commitizen-tools.github.io/commitizen/"
     ],
-    "version": "4.8.3"
+    "version": "4.11.0"
   },
   "conda": {
     "bin": ["conda"],
@@ -1209,13 +1212,16 @@
       "in2csv",
       "sql2csv"
     ],
-    "date": "2024-12-24",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "homebrew": true,
     "prune": true,
-    "url": ["https://csvkit.readthedocs.io/"],
-    "version": "2.0.1"
+    "url": [
+      "https://csvkit.readthedocs.io/",
+      "https://pypi.org/project/csvkit/"
+    ],
+    "version": "2.2.0"
   },
   "csvtk": {
     "bin": ["csvtk"],
@@ -1362,7 +1368,7 @@
   },
   "duckdb": {
     "bin": ["duckdb"],
-    "build_dependencies": ["cmake", "python3.13"],
+    "build_dependencies": ["cmake", "python3.14"],
     "date": "2025-12-11",
     "default": false,
     "prune": true,
@@ -1606,15 +1612,15 @@
   },
   "flake8": {
     "bin": ["flake8"],
-    "date": "2024-12-24",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "url": [
       "https://pypi.org/project/flake8/",
       "https://flake8.pycqa.org/",
       "https://github.com/PyCQA/flake8/"
     ],
-    "version": "7.1.1"
+    "version": "7.3.0"
   },
   "flex": {
     "build_dependencies": ["bison", "make"],
@@ -1950,7 +1956,7 @@
       "openssl",
       "pcre2",
       "perl",
-      "python3.13",
+      "python3.14",
       "vim",
       "zlib"
     ],
@@ -1962,7 +1968,7 @@
     "bin": ["git-filter-repo"],
     "date": "2025-05-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/git-filter-repo/"],
     "version": "2.47.0"
@@ -1993,7 +1999,7 @@
     "bin": ["glances"],
     "date": "2025-11-10",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://github.com/nicolargo/glances/",
@@ -2007,7 +2013,7 @@
       "meson",
       "ninja",
       "pkg-config",
-      "python3.13"
+      "python3.14"
     ],
     "date": "2024-12-24",
     "default": false,
@@ -2072,12 +2078,13 @@
   },
   "google-cloud-sdk": {
     "bin": ["gcloud", "gsutil"],
-    "date": "2025-11-20",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
+    "python_version_pin": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "548.0.0"
+    "version": "550.0.0"
   },
   "googletest": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -2228,8 +2235,7 @@
     "build_dependencies": ["rust"],
     "date": "2025-11-30",
     "default": false,
-    "dependencies": ["python3.13"],
-    "notes": ["Can switch this to a conda install for amd64."],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://gseapy.readthedocs.io/",
@@ -2449,7 +2455,7 @@
     "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2025-04-11",
     "default": true,
-    "dependencies": ["ncurses", "python3.13"],
+    "dependencies": ["ncurses", "python3.14"],
     "man1": ["htop.1"],
     "prune": true,
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
@@ -2492,16 +2498,20 @@
     "bin": ["http", "https"],
     "date": "2024-11-01",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
-    "url": ["https://httpie.io/", "https://github.com/httpie/httpie/"],
+    "url": [
+      "https://httpie.io/",
+      "https://github.com/httpie/httpie/",
+      "https://pypi.org/project/httpie/"
+    ],
     "version": "3.2.4"
   },
   "httpx": {
     "bin": ["httpx"],
     "date": "2025-05-06",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/httpx/",
@@ -2511,16 +2521,16 @@
     "version": "0.28.1"
   },
   "huggingface-hub": {
-    "bin": ["huggingface-cli"],
+    "bin": ["hf"],
     "date": "2025-04-21",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/huggingface-hub/",
       "https://huggingface.co/"
     ],
-    "version": "0.30.2"
+    "version": "1.2.3"
   },
   "hugo": {
     "bin": ["hugo"],
@@ -2668,7 +2678,7 @@
     "bin": ["isort"],
     "date": "2025-10-12",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/isort/",
@@ -2748,7 +2758,7 @@
     "bin": ["jupyter-lab"],
     "date": "2026-01-02",
     "default": true,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
     "version": "4.5.1"
@@ -5614,7 +5624,7 @@
     "bin": ["ty"],
     "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
     "version": "0.0.8"
@@ -6135,7 +6145,7 @@
     "bin": ["yapf"],
     "date": "2024-12-30",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/yapf/",
