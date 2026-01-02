@@ -900,7 +900,7 @@
       "homebrew": true
     },
     "build_dependencies": ["meson", "ninja", "pkg-config"],
-    "date": "2024-12-24",
+    "date": "2026-01-02",
     "default": false,
     "dependencies": [
       "expat",
@@ -931,7 +931,7 @@
       "https://cairographics.org/",
       "https://gitlab.freedesktop.org/cairo/cairo"
     ],
-    "version": "1.18.2"
+    "version": "1.18.4"
   },
   "cellranger": {
     "bin": ["cellranger"],
