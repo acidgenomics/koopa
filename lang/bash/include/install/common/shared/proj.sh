@@ -17,6 +17,7 @@ main() {
     deps=(
         'zlib'
         'zstd' # curl
+        'openssl'
         'libssh2' # curl
         'curl'
         'libjpeg-turbo'

@@ -12098,6 +12098,8 @@ koopa_install_apache_airflow() {
     koopa_install_app \
         --installer='python-package' \
         --name='apache-airflow' \
+        -D --egg-name='apache_airflow_core' \
+        -D --python-version='3.13' \
         "$@"
 }
 
@@ -15723,7 +15725,10 @@ ${dict['egg_name']}-${dict['version']}.dist-info/RECORD"
         | "${app['cut']}" -d ',' -f '1' \
         | "${app['cut']}" -d '/' -f '7' \
     )"
-    koopa_assert_is_array_non_empty "${bin_names[@]:-}"
+    if koopa_is_array_empty "${bin_names[@]:-}"
+    then
+        koopa_stop "Failed to parse '${dict['record_file']}' for bin."
+    fi
     for bin_name in "${bin_names[@]}"
     do
         [[ -n "$bin_name" ]] || continue

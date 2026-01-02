@@ -1,8 +1,5 @@
 {
   "ack": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["ack"],
     "build_dependencies": [
       "bash",
@@ -66,10 +63,10 @@
     "bin": ["airflow"],
     "date": "2025-12-11",
     "default": false,
-    "dependencies": ["python3.14"],
+    "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "3.1.4"
+    "version": "3.1.5"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -87,16 +84,13 @@
     "version": "22.0.0"
   },
   "apache-spark": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["pyspark", "sparkR"],
-    "date": "2024-12-24",
+    "date": "2026-01-02",
     "default": false,
-    "dependencies": ["python3.13", "r", "temurin"],
+    "dependencies": ["python3.14", "r", "temurin"],
     "prune": true,
     "url": ["https://spark.apache.org/"],
-    "version": "3.5.4"
+    "version": "4.1.0"
   },
   "apptainer": {
     "build_dependencies": ["go", "make", "pkg-config"],
@@ -114,8 +108,7 @@
   },
   "apr": {
     "aliases": {
-      "fedora": "apr-devel",
-      "homebrew": true
+      "fedora": "apr-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2024-12-24",
@@ -127,8 +120,7 @@
   "apr-util": {
     "aliases": {
       "debian": "libaprutil1-dev",
-      "fedora": "apr-util-devel",
-      "homebrew": true
+      "fedora": "apr-util-devel"
     },
     "build_dependencies": ["make", "pkg-config"],
     "date": "2023-02-08",
@@ -139,9 +131,6 @@
     "version": "1.6.3"
   },
   "aria2": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["aria2c"],
     "build_dependencies": ["pkg-config"],
     "date": "2023-11-15",
@@ -160,9 +149,6 @@
     "version": "1.37.0"
   },
   "armadillo": {
-    "aliases": {
-      "homebrew": true
-    },
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-12-23",
     "default": false,
@@ -172,9 +158,6 @@
     "version": "14.2.2"
   },
   "asdf": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["asdf"],
     "date": "2025-06-17",
     "default": false,
@@ -183,9 +166,6 @@
     "version": "0.18.0"
   },
   "aspell": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["aspell"],
     "build_dependencies": ["make"],
     "date": "2023-12-22",
@@ -307,7 +287,7 @@
     "bin": ["autoflake"],
     "date": "2024-03-14",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["python3.14"],
     "prune": true,
     "url": [
       "https://pypi.org/project/autoflake/",
@@ -368,9 +348,6 @@
     "version": "2.17.14"
   },
   "azure-cli": {
-    "aliases": {
-      "homebrew": true
-    },
     "bin": ["az"],
     "date": "2024-12-24",
     "default": false,
@@ -6442,13 +6419,12 @@
       "homebrew-cask": "temurin"
     },
     "bin": ["jar", "java", "javac"],
-    "date": "2025-05-02",
+    "date": "2026-01-02",
     "default": false,
-    "man1": ["jar.1", "java.1", "javac.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
     "url": ["https://adoptium.net/"],
-    "version": "21.0.7+6"
+    "version": "25.0.1+8"
   },
   "termcolor": {
     "build_dependencies": ["cmake"],
@@ -7340,8 +7316,7 @@
   "zstd": {
     "aliases": {
       "debian": "libzstd-dev",
-      "fedora": "libzstd-devel",
-      "homebrew": true
+      "fedora": "libzstd-devel"
     },
     "bin": [
       "pzstd",
