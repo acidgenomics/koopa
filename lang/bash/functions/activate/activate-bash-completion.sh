@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# FIXME Work on consolidating these scripts into a single directory managed
-# in koopa.
-
 _koopa_activate_bash_completion() {
     # """
     # Activate Bash completion.
@@ -16,7 +13,6 @@ _koopa_activate_bash_completion() {
     local -a completion_dirs completion_files
     local completion_dir completion_file
     dict['opt_prefix']="$(_koopa_opt_prefix)"
-    # FIXME Rework these to standardize 'share/bash-completion/completions'.
     completion_files+=(
         # > '/usr/share/bash-completion/bash_completion'
         # > '/etc/bash_completion'
@@ -34,8 +30,6 @@ completion.bash.inc"
             source "$completion_file"
         fi
     done
-    # FIXME Consider reworking this to only source individual files, rather
-    # than looping across directories.
     completion_dirs+=(
         '/etc/bash_completion.d'
         '/usr/local/etc/bash_completion.d'
