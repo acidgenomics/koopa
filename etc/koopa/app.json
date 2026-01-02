@@ -3077,12 +3077,12 @@
       "homebrew": true
     },
     "bin": ["ipython"],
-    "date": "2025-08-24",
+    "date": "2026-01-02",
     "default": true,
     "dependencies": ["python3.13"],
     "prune": true,
     "url": ["https://ipython.org/", "https://pypi.org/project/ipython/"],
-    "version": "9.4.0"
+    "version": "9.8.0"
   },
   "isl": {
     "aliases": {
