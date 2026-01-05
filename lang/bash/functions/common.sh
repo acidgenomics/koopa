@@ -22358,7 +22358,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python --allow-bootstrap)"
+        app['python']="$(koopa_locate_python --allow-bootstrap --allow-system)"
     fi
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="$(koopa_python_scripts_prefix)"
