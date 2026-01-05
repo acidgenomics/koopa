@@ -3,7 +3,7 @@
 koopa_install_conda_package() {
     # """
     # Install a conda environment as an application.
-    # @note Updated 2024-07-15.
+    # @note Updated 2026-01-05.
     #
     # Be sure to excluded nested directories that may exist in 'libexec' 'bin',
     # such as 'bin/scripts' for bowtie2.
@@ -95,8 +95,11 @@ koopa_install_conda_package() {
         create_args+=("${dict['name']}==${dict['version']}")
     fi
     koopa_dl 'conda create env args' "${create_args[*]}"
-    "${app['conda']}" config --json --show
-    "${app['conda']}" config --json --show-sources
+    if koopa_is_verbose
+    then
+        "${app['conda']}" config --json --show
+        "${app['conda']}" config --json --show-sources
+    fi
     koopa_conda_create_env "${create_args[@]}"
     dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
