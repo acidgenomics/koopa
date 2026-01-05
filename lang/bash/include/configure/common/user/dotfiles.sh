@@ -3,7 +3,7 @@
 main() {
     # """
     # Configure dotfiles for current user.
-    # @note Updated 2025-05-08.
+    # @note Updated 2026-01-05.
     #
     # This also configures chezmoi to use our koopa managed dotfiles repo.
     #
@@ -21,50 +21,30 @@ main() {
     # - https://www.chezmoi.io/reference/configuration-file/variables/
     # - https://blog.lazkani.io/posts/dotfiles-with-chezmoi/
     # """
-    local -A app bool dict
-    koopa_assert_has_args_le "$#" 1
+    local -A app dict
+    koopa_assert_has_no_args "$#"
     koopa_assert_is_not_root
     app['bash']="$(koopa_locate_bash --allow-bootstrap --allow-system)"
     koopa_assert_is_executable "${app[@]}"
-    bool['auto_config']=0
-    dict['cm_prefix']="$(koopa_xdg_data_home)/chezmoi"
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    dict['activate_script']="${dict['koopa_prefix']}/activate"
-    dict['prefix']="${1:-}"
-    if [[ -z "${dict['prefix']}" ]]
-    then
-        bool['auto_config']=1
-        dict['prefix']="$(koopa_dotfiles_prefix)"
-    fi
-    koopa_assert_is_dir "${dict['prefix']}"
+    dict['opt_prefix']="$(koopa_opt_prefix)/dotfiles"
+    dict['df_prefix']="$(koopa_dotfiles_prefix)"
+    dict['df_work_prefix']="$(koopa_dotfiles_work_prefix)"
+    dict['df_private_prefix']="$(koopa_dotfiles_private_prefix)"
+    koopa_assert_is_dir "${dict['opt_prefix']}"
     dict['install_script']="${dict['prefix']}/install"
-    koopa_assert_is_file \
-        "${dict['activate_script']}" \
-        "${dict['install_script']}"
-    # Link chezmoi to koopa dotfiles, when appropriate.
-    if [[ ! -d "${dict['cm_prefix']}" ]]
-    then
-        koopa_ln "${dict['prefix']}" "${dict['cm_prefix']}"
-    fi
-    koopa_add_config_link \
-        "${dict['activate_script']}" 'activate' \
-        "${dict['prefix']}" 'dotfiles'
+    dict['work_install_script']="${dict['work_prefix']}/install"
+    dict['private_install_script']="${dict['private_prefix']}/install"
+    koopa_assert_is_file "${dict['install_script']}"
+    koopa_ln "${dict['opt_prefix']}" "${dict['df_prefix']}"
     koopa_add_to_path_start "$(koopa_dirname "${app['bash']}")"
     "${app['bash']}" "${dict['install_script']}"
-    if [[ "${bool['auto_config']}" -eq 1 ]]
+    if [[ -f "${dict['work_install_script']}" ]]
     then
-        dict['work_prefix']="$(koopa_dotfiles_work_prefix)"
-        dict['work_install_script']="${dict['work_prefix']}/install"
-        if [[ -f "${dict['work_install_script']}" ]]
-        then
-            "${app['bash']}" "${dict['work_install_script']}"
-        fi
-        dict['private_prefix']="$(koopa_dotfiles_private_prefix)"
-        dict['private_install_script']="${dict['private_prefix']}/install"
-        if [[ -f "${dict['private_install_script']}" ]]
-        then
-            "${app['bash']}" "${dict['private_install_script']}"
-        fi
+        "${app['bash']}" "${dict['work_install_script']}"
+    fi
+    if [[ -f "${dict['private_install_script']}" ]]
+    then
+        "${app['bash']}" "${dict['private_install_script']}"
     fi
     return 0
 }
