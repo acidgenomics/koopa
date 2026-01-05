@@ -6,7 +6,7 @@
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2025-12-11.
+    # @note Updated 2026-01-05.
     # """
     local -A app dict ver1 ver2
     local key
@@ -27,7 +27,7 @@ Run 'xcode-select --install' to resolve."
     app['ld']="$(koopa_locate_ld --only-system)"
     app['make']="$(koopa_locate_make --only-system)"
     app['perl']="$(koopa_locate_perl --only-system)"
-    app['python']="$(koopa_locate_python --allow-bootstrap)"
+    app['python']="$(koopa_locate_python --allow-bootstrap --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     ver1['cc']="$(koopa_get_version "${app['cc']}")"
     ver1['git']="$(koopa_get_version "${app['git']}")"
