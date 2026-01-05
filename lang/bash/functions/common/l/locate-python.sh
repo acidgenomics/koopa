@@ -6,5 +6,6 @@ koopa_locate_python() {
     koopa_locate_app \
         --app-name="python${dict['python_version']}" \
         --bin-name="python${dict['python_version']}" \
+        --system-bin-name='python3' \
         "$@"
 }
