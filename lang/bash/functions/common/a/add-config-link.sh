@@ -18,7 +18,7 @@ koopa_add_config_link() {
         # Error if source file is cloned inside koopa config.
         if koopa_str_detect_fixed \
             --pattern="${dict['config_prefix']}" \
-            "${dict2['source_file']}"
+            --string="${dict2['source_file']}"
         then
             koopa_stop "${dict2['source_file']} is sourced \
 inside '${dict['config_prefix']}'."

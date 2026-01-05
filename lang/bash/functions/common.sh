@@ -319,7 +319,7 @@ koopa_add_config_link() {
         koopa_assert_is_existing "${dict2['source_file']}"
         if koopa_str_detect_fixed \
             --pattern="${dict['config_prefix']}" \
-            "${dict2['source_file']}"
+            --string="${dict2['source_file']}"
         then
             koopa_stop "${dict2['source_file']} is sourced \
 inside '${dict['config_prefix']}'."
