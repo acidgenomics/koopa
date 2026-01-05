@@ -317,6 +317,13 @@ koopa_add_config_link() {
         dict2['dest_name']="${2:?}"
         shift 2
         koopa_assert_is_existing "${dict2['source_file']}"
+        if koopa_str_detect_fixed \
+            --pattern="${dict['config_prefix']}" \
+            --string="${dict2['source_file']}"
+        then
+            koopa_stop "${dict2['source_file']} is sourced \
+inside '${dict['config_prefix']}'."
+        fi
         dict2['dest_file']="${dict['config_prefix']}/${dict2['dest_name']}"
         koopa_is_symlink "${dict2['dest_file']}" && continue
         koopa_ln --verbose "${dict2['source_file']}" "${dict2['dest_file']}"
@@ -8063,14 +8070,9 @@ koopa_dot_clean() {
     return 0
 }
 
-koopa_dotfiles_config_link() {
-    koopa_assert_has_no_args "$#"
+koopa_dotfiles_prefix() {
     koopa_print "$(koopa_config_prefix)/dotfiles"
     return 0
-}
-
-koopa_dotfiles_prefix() {
-    _koopa_dotfiles_prefix "$@"
 }
 
 koopa_dotfiles_private_prefix() {
