@@ -512,7 +512,6 @@ _koopa_complete() {
                         'zenith'
                         'zip'
                         'zlib'
-                        'zopfli'
                         'zoxide'
                         'zsh'
                         'zstd'
