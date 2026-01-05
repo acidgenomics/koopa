@@ -8063,14 +8063,9 @@ koopa_dot_clean() {
     return 0
 }
 
-koopa_dotfiles_config_link() {
-    koopa_assert_has_no_args "$#"
+koopa_dotfiles_prefix() {
     koopa_print "$(koopa_config_prefix)/dotfiles"
     return 0
-}
-
-koopa_dotfiles_prefix() {
-    _koopa_dotfiles_prefix "$@"
 }
 
 koopa_dotfiles_private_prefix() {
