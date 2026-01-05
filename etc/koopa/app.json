@@ -3841,14 +3841,13 @@
     "version": "7.95"
   },
   "node": {
-    "bin": ["corepack", "node", "npm", "npx", "yarn"],
-    "build_dependencies": ["make", "ninja", "pkg-config", "python3.13"],
+    "bin": ["corepack", "node", "npm", "npx"],
     "date": "2026-01-02",
     "default": false,
+    "dependencies": ["conda"],
     "man1": ["node.1", "npm.1", "npx.1"],
     "notes": ["Tracking the LTS release series."],
     "prune": false,
-    "python_version_pin": true,
     "url": ["https://nodejs.org/"],
     "version": "24.12.0"
   },
