@@ -17,7 +17,7 @@ koopa_add_config_link() {
         koopa_assert_is_existing "${dict2['source_file']}"
         # Error if source file is cloned inside koopa config.
         if koopa_str_detect_fixed \
-            --patern="${dict['config_prefix']}" \
+            --pattern="${dict['config_prefix']}" \
             "${dict2['source_file']}"
         then
             koopa_stop "${dict2['source_file']} is sourced \
