@@ -3,7 +3,7 @@
 main() {
     # """
     # Install pigz.
-    # @note Updated 2023-05-25.
+    # @note Updated 2026-01-05.
     #
     # @seealso
     # - https://zlib.net/pigz/
@@ -12,17 +12,14 @@ main() {
     # """
     local -A app dict
     koopa_activate_app --build-only 'make'
-    koopa_activate_app 'zlib' 'zopfli'
+    koopa_activate_app 'zlib'
     app['make']="$(koopa_locate_make)"
     koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zopfli']="$(koopa_app_prefix 'zopfli')"
     dict['url']="https://zlib.net/pigz/pigz-${dict['version']}.tar.gz"
-    dict['zop']="${dict['zopfli']}/lib/libzopfli.${dict['shared_ext']}"
-    koopa_assert_is_file "${dict['zop']}"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
@@ -34,8 +31,7 @@ main() {
         CPPFLAGS="${CPPFLAGS:-}" \
         LDFLAGS="${LDFLAGS:-}" \
         PREFIX="${dict['prefix']}" \
-        VERBOSE=1 \
-        ZOP="${dict['zop']}"
+        VERBOSE=1
     koopa_cp \
         --target-directory="${dict['prefix']}/bin" \
         'pigz' \
