@@ -1589,16 +1589,6 @@ _koopa_doom_emacs() {
     return 0
 }
 
-_koopa_dotfiles_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/dotfiles"
-    return 0
-}
-
-_koopa_dotfiles_private_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/dotfiles-private"
-    return 0
-}
-
 _koopa_duration_start() {
     __kvar_date="$(_koopa_bin_prefix)/gdate"
     if [ ! -x "$__kvar_date" ]
