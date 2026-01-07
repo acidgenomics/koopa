@@ -17,7 +17,7 @@ install_from_source() {
     # """
     local -A app dict
     app['python']="$(koopa_locate_python312)"
-    koopa_assert_is_exectuable "${app[@]}"
+    koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="${dict['prefix']}/libexec"
@@ -31,8 +31,13 @@ tags/${dict['version']}.tar.gz"
         --python="${app['python']}"
     app['venv_python']="${dict['libexec']}/bin/python3"
     koopa_assert_is_executable "${app['venv_python']}"
+    "${app['venv_python']}" -m pip install setuptools \
+        -vvv --no-cache-dir
     "${app['venv_python']}" -m pip install . \
         -vvv --no-deps --no-build-isolation --no-cache-dir --use-pep517
+    koopa_mkdir "${dict['prefix']}/bin"
+    koopa_cd "${dict['prefix']}/bin"
+    koopa_ln ../libexec/bin/gdc-client gdc-client
     return 0
 
 }
