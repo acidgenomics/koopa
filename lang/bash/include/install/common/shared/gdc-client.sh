@@ -31,13 +31,14 @@ tags/${dict['version']}.tar.gz"
         --python="${app['python']}"
     app['venv_python']="${dict['libexec']}/bin/python3"
     koopa_assert_is_executable "${app['venv_python']}"
-    "${app['venv_python']}" -m pip install setuptools \
-        -vvv --no-cache-dir
-    "${app['venv_python']}" -m pip install . \
-        -vvv --no-deps --no-build-isolation --no-cache-dir --use-pep517
+    export SETUPTOOLS_SCM_PRETEND_VERSION="${dict['version']}"
+    "${app['venv_python']}" -m pip install \
+        --no-cache-dir --no-deps -r requirements.txt
+    "${app['venv_python']}" -m pip install \
+        --no-cache-dir --no-deps .
     koopa_mkdir "${dict['prefix']}/bin"
     koopa_cd "${dict['prefix']}/bin"
-    koopa_ln ../libexec/bin/gdc-client gdc-client
+    koopa_ln '../libexec/bin/gdc-client' 'gdc-client'
     return 0
 
 }
