@@ -33,9 +33,9 @@ tags/${dict['version']}.tar.gz"
     koopa_assert_is_executable "${app['venv_python']}"
     export SETUPTOOLS_SCM_PRETEND_VERSION="${dict['version']}"
     "${app['venv_python']}" -m pip install \
-        --no-cache-dir --no-deps -r requirements.txt
+        --no-cache-dir -r requirements.txt
     "${app['venv_python']}" -m pip install \
-        --no-cache-dir --no-deps .
+        --no-cache-dir --no-deps --use-pep517 .
     koopa_mkdir "${dict['prefix']}/bin"
     koopa_cd "${dict['prefix']}/bin"
     koopa_ln '../libexec/bin/gdc-client' 'gdc-client'
