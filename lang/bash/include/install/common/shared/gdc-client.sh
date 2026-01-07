@@ -5,7 +5,7 @@ install_from_conda() {
     return 0
 }
 
-install_from_source() {
+install_from_conda_python312() {
     # """
     # Install GDC client pinned against Python 3.12 for Zscaler compatibility.
     # @updated 2026-01-07.
@@ -15,27 +15,22 @@ install_from_source() {
     #- https://github.com/bioconda/bioconda-recipes/blob/master/recipes/
     #  gdc-client/meta.yaml
     # """
-    local -A app dict
-    app['python']="$(koopa_locate_python312)"
-    koopa_assert_is_executable "${app[@]}"
+    local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['libexec']="${dict['prefix']}/libexec"
-    dict['url']="https://github.com/NCI-GDC/gdc-client/archive/refs/\
-tags/${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}" 'src.tar.gz'
-    koopa_extract 'src.tar.gz' 'src'
-    koopa_cd 'src'
-    koopa_python_create_venv \
-        --prefix="${dict['libexec']}" \
-        --python="${app['python']}"
-    app['venv_python']="${dict['libexec']}/bin/python3"
-    koopa_assert_is_executable "${app['venv_python']}"
-    export SETUPTOOLS_SCM_PRETEND_VERSION="${dict['version']}"
-    "${app['venv_python']}" -m pip install \
-        --no-cache-dir -r requirements.txt
-    "${app['venv_python']}" -m pip install \
-        --no-cache-dir --no-deps --use-pep517 .
+    set -x
+    koopa_mkdir "${dict['libexec']}"
+    koopa_conda_create_env --prefix="${dict['libexec']}" \
+        --channel='conda-forge' \
+        python==3.12
+    koopa_conda_activate_env "${dict['libexec']}"
+    conda install \
+        --yes \
+        --channel='conda-forge' \
+        --channel='bioconda' \
+        "gdc-client==${dict['version']}"
+    koopa_conda_deactivate
     koopa_mkdir "${dict['prefix']}/bin"
     koopa_cd "${dict['prefix']}/bin"
     koopa_ln '../libexec/bin/gdc-client' 'gdc-client'
@@ -46,7 +41,7 @@ tags/${dict['version']}.tar.gz"
 main() {
     if koopa_has_ssl_cert_file
     then
-        install_from_source
+        install_from_conda_python312
     else
         install_from_conda
     fi
