@@ -3,7 +3,7 @@
 main() {
     # """
     # Install PyMOL.
-    # @note Updated 2023-11-02.
+    # @note Updated 2026-01-05.
     #
     # @seealso
     # - https://pymol.org/conda/
@@ -28,14 +28,6 @@ END
     koopa_write_string \
         --file="${dict['conda_env_file']}" \
         --string="${dict['conda_env_string']}"
-    koopa_print_env
-    koopa_conda_create_env \
-        --file="${dict['conda_env_file']}" \
-        --prefix="${dict['libexec']}"
-    koopa_mkdir "${dict['prefix']}/bin"
-    (
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln '../libexec/bin/pymol' 'pymol'
-    )
+    koopa_install_conda_package --file="${dict['conda_env_file']}"
     return 0
 }
