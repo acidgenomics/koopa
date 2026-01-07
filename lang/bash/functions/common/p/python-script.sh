@@ -3,7 +3,7 @@
 koopa_python_script() {
     # """
     # Run a Python script.
-    # @note Updated 2024-05-28.
+    # @note Updated 2026-01-05.
     # """
     local -A app dict
     local -a pos
@@ -32,7 +32,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python --allow-bootstrap)"
+        app['python']="$(koopa_locate_python --allow-bootstrap --allow-system)"
     fi
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="$(koopa_python_scripts_prefix)"
