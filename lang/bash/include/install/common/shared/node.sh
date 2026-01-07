@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_conda() {
+    koopa_install_conda_package --name='nodejs'
+    return 0
+}
+
+install_from_source() {
     # """
     # Install Node.js.
     # @note Updated 2026-01-02.
@@ -78,5 +83,10 @@ node-v${dict['version']}.tar.xz"
             '../../../lib/node_modules/npm/man/man1/npx.1' \
             'npx.1'
     )
+    return 0
+}
+
+main() {
+    install_from_conda
     return 0
 }

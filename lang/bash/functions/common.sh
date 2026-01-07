@@ -4338,7 +4338,7 @@ Run 'xcode-select --install' to resolve."
     app['ld']="$(koopa_locate_ld --only-system)"
     app['make']="$(koopa_locate_make --only-system)"
     app['perl']="$(koopa_locate_perl --only-system)"
-    app['python']="$(koopa_locate_python --allow-bootstrap)"
+    app['python']="$(koopa_locate_python --allow-bootstrap --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     ver1['cc']="$(koopa_get_version "${app['cc']}")"
     ver1['git']="$(koopa_get_version "${app['git']}")"
@@ -13214,8 +13214,11 @@ koopa_install_conda_package() {
         create_args+=("${dict['name']}==${dict['version']}")
     fi
     koopa_dl 'conda create env args' "${create_args[*]}"
-    "${app['conda']}" config --json --show
-    "${app['conda']}" config --json --show-sources
+    if koopa_is_verbose
+    then
+        "${app['conda']}" config --json --show
+        "${app['conda']}" config --json --show-sources
+    fi
     koopa_conda_create_env "${create_args[@]}"
     dict['json_pattern']="${dict['name']}-${dict['version']}-*.json"
     case "${dict['name']}" in
@@ -13588,7 +13591,6 @@ koopa_install_gdbm() {
 
 koopa_install_gdc_client() {
     koopa_install_app \
-        --installer='conda-package' \
         --name='gdc-client' \
         "$@"
 }
@@ -16846,12 +16848,6 @@ koopa_install_zip() {
 koopa_install_zlib() {
     koopa_install_app \
         --name='zlib' \
-        "$@"
-}
-
-koopa_install_zopfli() {
-    koopa_install_app \
-        --name='zopfli' \
         "$@"
 }
 
@@ -22358,7 +22354,7 @@ koopa_python_script() {
     koopa_assert_has_args "$#"
     if [[ -z "${app['python']}" ]]
     then
-        app['python']="$(koopa_locate_python --allow-bootstrap)"
+        app['python']="$(koopa_locate_python --allow-bootstrap --allow-system)"
     fi
     koopa_assert_is_installed "${app[@]}"
     dict['prefix']="$(koopa_python_scripts_prefix)"
