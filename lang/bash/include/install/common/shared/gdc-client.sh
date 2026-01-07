@@ -32,11 +32,6 @@ END
         --file="${dict['conda_env_file']}" \
         --string="${dict['conda_env_string']}"
     koopa_install_conda_package --file="${dict['conda_env_file']}"
-    koopa_mkdir "${dict['prefix']}/bin"
-    (
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln '../libexec/bin/gdc-client' 'gdc-client'
-    )
     return 0
 
 }
