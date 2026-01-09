@@ -2350,11 +2350,11 @@
   "haskell-cabal": {
     "bin": ["cabal"],
     "build_dependencies": ["haskell-ghcup"],
-    "date": "2024-12-30",
+    "date": "2026-01-09",
     "default": false,
     "prune": true,
     "url": ["https://www.haskell.org/cabal/download.html"],
-    "version": "3.12.1.0"
+    "version": "3.16.1.0"
   },
   "haskell-ghcup": {
     "bin": ["ghcup"],
