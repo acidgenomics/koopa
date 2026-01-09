@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# FIXME The Perl scripts in bin currently don't work unless we activate the
+# NOTE The Perl scripts in bin currently don't work unless we activate the
 # conda environment. Need to rework this to patch.
 
 main() {
