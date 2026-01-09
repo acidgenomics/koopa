@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Haskell Stack.
-    # @note Updated 2023-06-12.
+    # @note Updated 2026-01-09.
     #
     # @section Required system dependencies:
     #
@@ -43,12 +43,16 @@ main() {
     # """
     local -A app dict
     local -a stack_args
-    koopa_assert_is_not_arm64
     dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
     dict['jobs']="$(koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     app['stack']="${dict['prefix']}/bin/stack"
+    case "${dict['arch']}" in
+        'arm64')
+            dict['arch']='aarch64'
+            ;;
+    esac
     if koopa_is_linux
     then
         dict['platform']='linux'
