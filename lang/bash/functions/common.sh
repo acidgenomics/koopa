@@ -16216,6 +16216,10 @@ koopa_install_shared_apps() {
     local -a app_names
     local app_name
     koopa_assert_is_owner
+    if koopa_is_macos && koopa_is_amd64
+    then
+        koopa_stop 'No longer supported for Intel Macs.'
+    fi
     bool['all']=0
     bool['aws_bootstrap']=0
     bool['binary']=0
