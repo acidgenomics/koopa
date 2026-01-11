@@ -5251,7 +5251,7 @@
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.14.6"
+    "version": "9.14.5"
   },
   "sox": {
     "bin": ["sox"],
