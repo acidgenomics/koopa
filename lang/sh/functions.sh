@@ -388,6 +388,10 @@ ca-certificates"
     export NODE_EXTRA_CA_CERTS="$__kvar_file"
     export REQUESTS_CA_BUNDLE="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
+    if _koopa_is_linux
+    then
+        export SSL_CERT_DIR='/etc/ssl/certs'
+    fi
     unset -v __kvar_file __kvar_prefix
     return 0
 }
