@@ -23,22 +23,15 @@
   "agat": {
     "bin": ["agat"],
     "build_dependencies": ["patch"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
-    },
     "url": [
       "https://bioconda.github.io/recipes/agat/README.html",
       "https://github.com/NBISweden/AGAT/"
     ],
-    "version": "1.6.0"
+    "version": "1.6.1"
   },
   "air": {
     "bin": ["air"],
@@ -873,7 +866,7 @@
       "macos-amd64": ["go"],
       "noarch": []
     },
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": true,
     "dependencies": {
       "macos-amd64": [],
@@ -881,7 +874,7 @@
     },
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.68.1"
+    "version": "2.69.0"
   },
   "cli11": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -1331,11 +1324,11 @@
   },
   "docker-credential-helpers": {
     "build_dependencies": ["go", "make", "pkg-config"],
-    "date": "2025-10-08",
+    "date": "2026-01-09",
     "default": false,
     "prune": true,
     "url": ["https://github.com/docker/docker-credential-helpers/"],
-    "version": "0.9.4"
+    "version": "0.9.5"
   },
   "doom-emacs": {
     "date": "2024-12-24",
@@ -1359,6 +1352,7 @@
     "date": "2025-08-10",
     "default": true,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": [
       "https://github.com/bootandy/dust/",
@@ -1590,7 +1584,7 @@
   },
   "fish": {
     "bin": ["fish"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
@@ -1599,7 +1593,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.3.2"
+    "version": "4.3.3"
   },
   "flac": {
     "bin": ["flac"],
@@ -2356,11 +2350,11 @@
   "haskell-cabal": {
     "bin": ["cabal"],
     "build_dependencies": ["haskell-ghcup"],
-    "date": "2024-12-30",
+    "date": "2026-01-09",
     "default": false,
     "prune": true,
     "url": ["https://www.haskell.org/cabal/download.html"],
-    "version": "3.12.1.0"
+    "version": "3.16.1.0"
   },
   "haskell-ghcup": {
     "bin": ["ghcup"],
@@ -2376,20 +2370,14 @@
   },
   "haskell-stack": {
     "bin": ["stack"],
-    "date": "2025-07-16",
+    "date": "2026-01-09",
     "default": false,
     "prune": true,
-    "supported": {
-      "linux-amd64": true,
-      "linux-arm64": false,
-      "macos-amd64": true,
-      "macos-arm64": false
-    },
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "3.7.1"
+    "version": "3.9.1"
   },
   "hdf5": {
     "bin": [
@@ -2744,7 +2732,7 @@
   },
   "julia": {
     "bin": ["julia"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": false,
     "prune": true,
     "url": [
@@ -2752,7 +2740,7 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.12.3"
+    "version": "1.12.4"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
@@ -2888,12 +2876,12 @@
   },
   "libarchive": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-11-30",
+    "date": "2026-01-09",
     "default": false,
     "dependencies": ["bzip2", "expat", "lz4", "xz", "zlib", "zstd"],
     "prune": false,
     "url": ["https://www.libarchive.org/"],
-    "version": "3.8.3"
+    "version": "3.8.5"
   },
   "libassuan": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3441,6 +3429,7 @@
     "date": "2025-11-30",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": false,
     "url": [
       "https://mamba.readthedocs.io/",
@@ -3518,14 +3507,14 @@
   "miller": {
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2025-08-21",
+    "date": "2026-01-09",
     "default": false,
     "prune": true,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.15.0"
+    "version": "6.16.0"
   },
   "mimalloc": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -4403,7 +4392,7 @@
       "pyright-python",
       "pyright-python-langserver"
     ],
-    "date": "2025-10-28",
+    "date": "2026-01-09",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -4411,7 +4400,7 @@
       "https://pypi.org/project/pyright/",
       "https://github.com/microsoft/pyright"
     ],
-    "version": "1.1.407"
+    "version": "1.1.408"
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
@@ -4992,12 +4981,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.14.10"
+    "version": "0.14.11"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5252,7 +5241,7 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -5296,13 +5285,12 @@
   },
   "spdlog": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2025-10-12",
+    "date": "2026-01-09",
     "default": false,
     "dependencies": ["fmt"],
-    "notes": ["spdlog fails to build with fmt 11."],
     "prune": false,
     "url": ["https://github.com/gabime/spdlog/"],
-    "version": "1.16.0"
+    "version": "1.17.0"
   },
   "sphinx": {
     "bin": [
@@ -5653,12 +5641,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.8"
+    "version": "0.0.10"
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -5736,12 +5724,12 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-01-02",
+    "date": "2026-01-09",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.21"
+    "version": "0.9.23"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
@@ -6220,6 +6208,7 @@
     "date": "2026-01-02",
     "default": false,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/bvaisvil/zenith/"],
     "version": "0.14.2"
