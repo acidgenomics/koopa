@@ -11,8 +11,6 @@ _koopa_activate_ca_certificates() {
     # - https://stat.ethz.ch/R-manual/R-devel/library/utils/html/
     #   download.file.html
     # """
-    [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
-    [ -n "${SSL_CERT_FILE:-}" ] && return 0
     __kvar_prefix="$(_koopa_xdg_data_home)/ca-certificates"
     __kvar_file="${__kvar_prefix}/cacert.pem"
     if [ ! -f "$__kvar_file" ] && _koopa_is_linux
