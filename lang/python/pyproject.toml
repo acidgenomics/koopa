@@ -5,7 +5,7 @@
 [tool.ruff]
 indent-width = 4
 line-length = 100
-target-version = "py313"
+target-version = "py314"
 
 [tool.ruff.format]
 docstring-code-format = true

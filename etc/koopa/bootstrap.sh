@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2025-12-11.
+# @note Updated 2026-01-11.
 # """
 
 # Can debug with:
@@ -162,7 +162,7 @@ openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
 }
 
 install_python() {
-    __kvar_version='3.13.9'
+    __kvar_version='3.14.2'
     printf 'Installing python.\n'
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
