@@ -4434,7 +4434,7 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4466,7 +4466,7 @@
       "python3.11",
       "python3.11-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4497,7 +4497,7 @@
       "python3.12",
       "python3.12-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4528,7 +4528,7 @@
       "python3.13",
       "python3.13-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-12-22",
     "default": true,
     "dependencies": [
@@ -4569,7 +4569,7 @@
       "python3.14",
       "python3.14-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-12-22",
     "default": true,
     "dependencies": [
