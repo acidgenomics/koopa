@@ -68,13 +68,12 @@
       "curl",
       "ninja",
       "pkg-config",
-      "python3.13"
+      "python3.14"
     ],
     "date": "2026-02-02",
     "default": false,
     "dependencies": ["openssl"],
     "prune": true,
-    "python_version_pin": true,
     "url": ["https://arrow.apache.org/"],
     "version": "23.0.0"
   },
