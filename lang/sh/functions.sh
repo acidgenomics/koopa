@@ -362,8 +362,6 @@ _koopa_activate_broot() {
 }
 
 _koopa_activate_ca_certificates() {
-    [ -n "${DEFAULT_CA_BUNDLE_PATH:-}" ] && return 0
-    [ -n "${SSL_CERT_FILE:-}" ] && return 0
     __kvar_prefix="$(_koopa_xdg_data_home)/ca-certificates"
     __kvar_file="${__kvar_prefix}/cacert.pem"
     if [ ! -f "$__kvar_file" ] && _koopa_is_linux
@@ -388,6 +386,10 @@ ca-certificates"
     export NODE_EXTRA_CA_CERTS="$__kvar_file"
     export REQUESTS_CA_BUNDLE="$__kvar_file"
     export SSL_CERT_FILE="$__kvar_file"
+    if _koopa_is_linux
+    then
+        export SSL_CERT_DIR='/etc/ssl/certs'
+    fi
     unset -v __kvar_file __kvar_prefix
     return 0
 }
