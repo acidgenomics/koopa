@@ -4817,9 +4817,10 @@
     "default": true,
     "dependencies": ["conda"],
     "man1": ["rclone.1"],
+    "outdated": true,
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.73.0"
+    "version": "1.72.1"
   },
   "readline": {
     "build_dependencies": ["make", "pkg-config"],
