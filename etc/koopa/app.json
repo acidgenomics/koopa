@@ -73,7 +73,7 @@
     "date": "2026-02-02",
     "default": false,
     "dependencies": ["openssl"],
-    "prune": true,
+    "prune": false,
     "url": ["https://arrow.apache.org/"],
     "version": "23.0.0"
   },
