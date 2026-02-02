@@ -1339,12 +1339,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-01-22",
+    "date": "2026-02-02",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "240d68263a42e551e81e2b52e94d80141ade5aeb"
+    "version": "a19d0f266c17a10154659167596ef87591274418"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -4434,7 +4434,7 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4466,7 +4466,7 @@
       "python3.11",
       "python3.11-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4497,7 +4497,7 @@
       "python3.12",
       "python3.12-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4528,7 +4528,7 @@
       "python3.13",
       "python3.13-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-12-22",
     "default": true,
     "dependencies": [
@@ -4569,7 +4569,7 @@
       "python3.14",
       "python3.14-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-12-22",
     "default": true,
     "dependencies": [
