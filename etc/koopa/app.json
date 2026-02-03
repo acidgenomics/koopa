@@ -68,13 +68,12 @@
       "curl",
       "ninja",
       "pkg-config",
-      "python3.13"
+      "python3.14"
     ],
     "date": "2026-02-02",
     "default": false,
     "dependencies": ["openssl"],
-    "prune": true,
-    "python_version_pin": true,
+    "prune": false,
     "url": ["https://arrow.apache.org/"],
     "version": "23.0.0"
   },
@@ -1340,7 +1339,7 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-01-22",
+    "date": "2026-02-02",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
@@ -4435,7 +4434,7 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4467,7 +4466,7 @@
       "python3.11",
       "python3.11-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4498,7 +4497,7 @@
       "python3.12",
       "python3.12-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-10-21",
     "default": false,
     "dependencies": [
@@ -4529,7 +4528,7 @@
       "python3.13",
       "python3.13-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-12-22",
     "default": true,
     "dependencies": [
@@ -4570,7 +4569,7 @@
       "python3.14",
       "python3.14-config"
     ],
-    "build_dependencies": ["make", "pkg-config"],
+    "build_dependencies": ["make", "pkg-config", "xz"],
     "date": "2025-12-22",
     "default": true,
     "dependencies": [
