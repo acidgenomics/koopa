@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-main() {
+install_from_source() {
     # """
     # Install Python.
     # @note Updated 2025-11-06.
@@ -173,5 +173,68 @@ Python-${dict['version']}.tar.xz"
         koopa_cd "${dict['prefix']}/share/man/man1"
         koopa_ln --verbose 'python3.1' 'python.1'
     )
+    return 0
+}
+
+install_from_uv() {
+    # """
+    # Install Python using uv.
+    # Updated 2026-02-06.
+    # """
+    local -A app dict
+    app['uv']="$(koopa_locate_uv)"
+    koopa_assert_is_executable "${app[@]}"
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
+    dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+    dict['uv_install_dir']='uv'
+    # > export UV_PYTHON_BIN_DIR="${dict['prefix']}/bin"
+    koopa_print_env
+    "${app['uv']}" python install \
+        --install-dir "${dict['uv_install_dir']}" \
+        --no-bin \
+        --no-cache \
+        --no-config \
+        --verbose \
+        "${dict['version']}"
+    # Find the extracted cpython directory and move to install prefix.
+    dict['source_dir']="$( \
+        koopa_find --prefix='uv' --type=d --min-depth=1 --max-depth=1 \
+    )"
+    koopa_assert_is_dir "${dict['source_dir']}"
+    koopa_mv "${dict['source_dir']}" "${dict['prefix']}"
+    app['python']="${dict['prefix']}/bin/python${dict['maj_min_ver']}"
+    koopa_assert_is_installed "${app['python']}"
+    "${app['python']}" -m sysconfig
+    koopa_check_shared_object --file="${app['python']}"
+    koopa_alert 'Checking module integrity.'
+    "${app['python']}" -c 'import _bz2'
+    "${app['python']}" -c 'import _ctypes'
+    "${app['python']}" -c 'import _decimal'
+    "${app['python']}" -c 'import hashlib'
+    "${app['python']}" -c 'import pyexpat'
+    "${app['python']}" -c 'import readline'
+    "${app['python']}" -c 'import sqlite3'
+    "${app['python']}" -c 'import ssl'
+    "${app['python']}" -c 'import zlib'
+    koopa_alert 'Checking pip configuration.'
+    "${app['python']}" -m pip list --format='columns'
+    koopa_alert 'Adding unversioned symlinks.'
+    (
+        koopa_cd "${dict['prefix']}/bin"
+        koopa_ln --verbose 'idle3' 'idle'
+        koopa_ln --verbose 'pip3' 'pip'
+        koopa_ln --verbose 'pydoc3' 'pydoc'
+        koopa_ln --verbose 'python3' 'python'
+        koopa_ln --verbose 'python3-config' 'python-config'
+        koopa_cd "${dict['prefix']}/share/man/man1"
+        koopa_ln --verbose 'python3.1' 'python.1'
+    )
+    return 0
+}
+
+main() {
+    install_from_uv
     return 0
 }
