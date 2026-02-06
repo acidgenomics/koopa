@@ -16636,9 +16636,7 @@ koopa_install_utf8proc() {
 
 koopa_install_uv() {
     koopa_install_app \
-        --installer='python-package' \
         --name='uv' \
-        -D --python-version='3.14' \
         "$@"
 }
 
@@ -20522,6 +20520,13 @@ koopa_locate_unzip() {
         --app-name='unzip' \
         --bin-name='unzip' \
         --system-bin-name='unzip' \
+        "$@"
+}
+
+koopa_locate_uv() {
+    koopa_locate_app \
+        --app-name='uv' \
+        --bin-name='uv' \
         "$@"
 }
 

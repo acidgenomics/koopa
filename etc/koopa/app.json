@@ -54,13 +54,13 @@
   },
   "apache-airflow": {
     "bin": ["airflow"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["python3.13"],
     "prune": true,
     "python_version_pin": true,
     "url": ["https://airflow.apache.org/"],
-    "version": "3.1.6"
+    "version": "3.1.7"
   },
   "apache-arrow": {
     "build_dependencies": [
@@ -1344,7 +1344,7 @@
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "a19d0f266c17a10154659167596ef87591274418"
+    "version": "5cf924eeb1970007150be6137a58bb85d56c68a1"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -1583,16 +1583,15 @@
   },
   "fish": {
     "bin": ["fish"],
-    "date": "2026-01-09",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
-    "outdated": true,
     "url": [
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.3.3"
+    "version": "4.4.0"
   },
   "flac": {
     "bin": ["flac"],
@@ -4012,12 +4011,12 @@
   },
   "pandoc": {
     "bin": ["pandoc"],
-    "date": "2025-12-05",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.8.3"
+    "version": "3.9"
   },
   "parallel": {
     "bin": ["parallel"],
@@ -4311,12 +4310,12 @@
   "pyenv": {
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.20"
+    "version": "2.6.22"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4403,7 +4402,7 @@
   },
   "pytaglib": {
     "bin": ["pyprinttags"],
-    "date": "2025-11-30",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["python3.14", "taglib"],
     "prune": true,
@@ -4411,7 +4410,7 @@
       "https://github.com/supermihi/pytaglib/",
       "https://pypi.org/project/pytaglib/"
     ],
-    "version": "3.1.0"
+    "version": "3.2.0"
   },
   "pytest": {
     "bin": ["pytest"],
@@ -4434,26 +4433,10 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": ["make", "pkg-config", "xz"],
-    "date": "2025-10-21",
+    "build_dependencies": ["uv"],
+    "date": "2026-02-06",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "libedit",
-      "libffi",
-      "libxcrypt",
-      "mpdecimal",
-      "ncurses",
-      "openssl",
-      "readline",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
     "man1": ["python3.10.1"],
-    "notes": ["Still including here to support gentropy."],
     "prune": false,
     "url": ["https://www.python.org/"],
     "version": "3.10.19"
@@ -4466,24 +4449,9 @@
       "python3.11",
       "python3.11-config"
     ],
-    "build_dependencies": ["make", "pkg-config", "xz"],
-    "date": "2025-10-21",
+    "build_dependencies": ["uv"],
+    "date": "2026-02-06",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "libedit",
-      "libffi",
-      "libxcrypt",
-      "mpdecimal",
-      "ncurses",
-      "openssl",
-      "readline",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4497,24 +4465,9 @@
       "python3.12",
       "python3.12-config"
     ],
-    "build_dependencies": ["make", "pkg-config", "xz"],
-    "date": "2025-10-21",
+    "build_dependencies": ["uv"],
+    "date": "2026-02-06",
     "default": false,
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "libedit",
-      "libffi",
-      "libxcrypt",
-      "mpdecimal",
-      "ncurses",
-      "openssl",
-      "readline",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4528,28 +4481,13 @@
       "python3.13",
       "python3.13-config"
     ],
-    "build_dependencies": ["make", "pkg-config", "xz"],
-    "date": "2025-12-22",
+    "build_dependencies": ["uv"],
+    "date": "2026-02-06",
     "default": true,
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "libedit",
-      "libffi",
-      "libxcrypt",
-      "mpdecimal",
-      "ncurses",
-      "openssl",
-      "readline",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
     "man1": ["python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
-    "version": "3.13.11"
+    "version": "3.13.12"
   },
   "python3.14": {
     "bin": [
@@ -4569,24 +4507,9 @@
       "python3.14",
       "python3.14-config"
     ],
-    "build_dependencies": ["make", "pkg-config", "xz"],
+    "build_dependencies": ["uv"],
     "date": "2025-12-22",
     "default": true,
-    "dependencies": [
-      "bzip2",
-      "expat",
-      "libedit",
-      "libffi",
-      "libxcrypt",
-      "mpdecimal",
-      "ncurses",
-      "openssl",
-      "readline",
-      "sqlite",
-      "unzip",
-      "xz",
-      "zlib"
-    ],
     "man1": ["python.1", "python3.1", "python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4981,12 +4904,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.14.14"
+    "version": "0.15.0"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5241,17 +5164,16 @@
   },
   "snakemake": {
     "bin": ["snakemake"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "url": [
       "https://github.com/snakemake/snakemake/",
       "https://pypi.org/project/snakemake/",
       "https://bioconda.github.io/recipes/snakemake/README.html"
     ],
-    "version": "9.16.2"
+    "version": "9.16.3"
   },
   "sox": {
     "bin": ["sox"],
@@ -5401,7 +5323,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -5410,7 +5332,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.53.1"
+    "version": "1.54.0"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -5641,12 +5563,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.14"
+    "version": "0.0.15"
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -5724,12 +5646,11 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": true,
-    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.9.28"
+    "version": "0.10.0"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
@@ -6154,11 +6075,11 @@
   },
   "yaml-cpp": {
     "build_dependencies": ["cmake", "pkg-config"],
-    "date": "2023-08-31",
+    "date": "2026-02-06",
     "default": false,
     "prune": false,
     "url": ["https://github.com/jbeder/yaml-cpp/"],
-    "version": "0.8.0"
+    "version": "0.9.0"
   },
   "yapf": {
     "bin": ["yapf"],
@@ -6184,7 +6105,7 @@
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
-    "date": "2026-02-02",
+    "date": "2026-02-06",
     "default": false,
     "dependencies": ["ffmpeg", "python3.14"],
     "prune": true,
@@ -6192,7 +6113,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2026.1.31"
+    "version": "2026.2.4"
   },
   "zellij": {
     "bin": ["zellij"],
