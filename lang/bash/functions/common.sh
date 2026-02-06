@@ -20523,6 +20523,13 @@ koopa_locate_unzip() {
         "$@"
 }
 
+koopa_locate_uv() {
+    koopa_locate_app \
+        --app-name='uv' \
+        --bin-name='uv' \
+        "$@"
+}
+
 koopa_locate_vim() {
     koopa_locate_app \
         --app-name='vim' \
