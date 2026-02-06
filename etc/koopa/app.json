@@ -5724,7 +5724,6 @@
     "bin": ["uv", "uvx"],
     "date": "2026-02-06",
     "default": true,
-    "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
     "version": "0.10.0"
