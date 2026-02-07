@@ -6081,6 +6081,14 @@
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.9.0"
   },
+  "yamllint": {
+    "bin": ["yamllint"],
+    "date": "2026-02-07",
+    "default": false,
+    "dependencies": ["python3.14"],
+    "prune": true,
+    "version": "1.38.0"
+  },
   "yapf": {
     "bin": ["yapf"],
     "date": "2024-12-30",
