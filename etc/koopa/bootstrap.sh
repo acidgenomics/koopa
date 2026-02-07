@@ -101,7 +101,7 @@ bash-${__kvar_version}.tar.gz" \
 }
 
 install_coreutils() {
-    __kvar_version='9.9'
+    __kvar_version='9.10'
     printf 'Installing coreutils.\n'
     mkdir -p "${PREFIX}/src/coreutils"
     cd "${PREFIX}/src/coreutils" || return 1
@@ -130,7 +130,7 @@ coreutils-${__kvar_version}.tar.gz" \
 }
 
 install_openssl() {
-    __kvar_version='3.6.0'
+    __kvar_version='3.6.1'
     printf 'Installing openssl3.\n'
     mkdir -p "${PREFIX}/src/openssl3"
     cd "${PREFIX}/src/openssl3" || return 1
@@ -162,7 +162,7 @@ openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
 }
 
 install_python() {
-    __kvar_version='3.14.2'
+    __kvar_version='3.14.3'
     printf 'Installing python.\n'
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
