@@ -4893,14 +4893,14 @@
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-28",
+    "date": "2026-02-07",
     "default": false,
     "dependencies": ["libyaml", "openssl", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.4.7"
+    "version": "4.0.1"
   },
   "ruff": {
     "bin": ["ruff"],
