@@ -4747,7 +4747,7 @@
     "dependencies": ["ncurses"],
     "prune": false,
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
-    "version": "8.3.3"
+    "version": "8.3"
   },
   "rename": {
     "bin": ["rename"],
