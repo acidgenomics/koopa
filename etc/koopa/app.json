@@ -1339,12 +1339,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-02-02",
+    "date": "2026-02-07",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "5cf924eeb1970007150be6137a58bb85d56c68a1"
+    "version": "b060c67de61ad9ea7aee546cdb780a67517d594d"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -6080,6 +6080,14 @@
     "prune": false,
     "url": ["https://github.com/jbeder/yaml-cpp/"],
     "version": "0.9.0"
+  },
+  "yamllint": {
+    "bin": ["yamllint"],
+    "date": "2026-02-07",
+    "default": false,
+    "dependencies": ["python3.14"],
+    "prune": true,
+    "version": "1.38.0"
   },
   "yapf": {
     "bin": ["yapf"],
