@@ -4,7 +4,7 @@
 _koopa_complete() {
     # """
     # Bash/Zsh TAB completion for primary 'koopa' program.
-    # @note Updated 2025-12-08.
+    # @note Updated 2026-02-07.
     #
     # Keep all of these commands in a single file.
     # Sourcing multiple scripts doesn't work reliably.
@@ -506,6 +506,7 @@ _koopa_complete() {
                         'xxhash'
                         'xz'
                         'yaml-cpp'
+                        'yamllint'
                         'yapf'
                         'yt-dlp'
                         'zellij'

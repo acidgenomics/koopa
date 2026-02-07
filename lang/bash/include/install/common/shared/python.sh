@@ -189,7 +189,6 @@ install_from_uv() {
     dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
     dict['uv_install_dir']='uv'
-    # > export UV_PYTHON_BIN_DIR="${dict['prefix']}/bin"
     koopa_print_env
     "${app['uv']}" python install \
         --install-dir "${dict['uv_install_dir']}" \
