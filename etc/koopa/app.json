@@ -1175,7 +1175,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.9"
+    "version": "9.10"
   },
   "cpufetch": {
     "bin": ["cpufetch"],
