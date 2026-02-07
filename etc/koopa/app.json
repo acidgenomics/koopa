@@ -993,7 +993,6 @@
       "gid",
       "ginstall",
       "gjoin",
-      "gkill",
       "glink",
       "gln",
       "glogname",
@@ -1053,7 +1052,6 @@
       "gunexpand",
       "guniq",
       "gunlink",
-      "guptime",
       "gusers",
       "gvdir",
       "gwc",
@@ -1062,7 +1060,7 @@
       "gyes"
     ],
     "build_dependencies": ["gperf", "make"],
-    "date": "2026-01-02",
+    "date": "2026-02-07",
     "default": true,
     "dependencies": ["attr", "gmp"],
     "man1": [
@@ -1102,7 +1100,6 @@
       "gid.1",
       "ginstall.1",
       "gjoin.1",
-      "gkill.1",
       "glink.1",
       "gln.1",
       "glogname.1",
@@ -1162,7 +1159,6 @@
       "gunexpand.1",
       "guniq.1",
       "gunlink.1",
-      "guptime.1",
       "gusers.1",
       "gvdir.1",
       "gwc.1",
@@ -1175,7 +1171,7 @@
       "https://www.gnu.org/software/coreutils/",
       "https://ftp.gnu.org/gnu/coreutils/?C=M;O=D"
     ],
-    "version": "9.9"
+    "version": "9.10"
   },
   "cpufetch": {
     "bin": ["cpufetch"],
@@ -2088,14 +2084,14 @@
   },
   "gperf": {
     "build_dependencies": ["make"],
-    "date": "2022-08-29",
+    "date": "2026-02-07",
     "default": false,
     "prune": false,
     "url": [
       "https://www.gnu.org/software/gperf/",
       "https://ftp.gnu.org/pub/gnu/gperf/?C=M;O=D"
     ],
-    "version": "3.1"
+    "version": "3.3"
   },
   "graphviz": {
     "build_dependencies": ["make", "pkg-config"],
@@ -3708,7 +3704,7 @@
       "tset"
     ],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2026-02-07",
     "default": false,
     "man1": [
       "captoinfo.1",
@@ -3725,7 +3721,7 @@
     ],
     "prune": false,
     "url": ["https://ftp.gnu.org/pub/gnu/ncurses/?C=M;O=D"],
-    "version": "6.5"
+    "version": "6.6"
   },
   "neofetch": {
     "bin": ["neofetch"],
@@ -4746,12 +4742,12 @@
   },
   "readline": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2022-11-08",
+    "date": "2026-02-07",
     "default": false,
     "dependencies": ["ncurses"],
     "prune": false,
     "url": ["https://tiswww.cwru.edu/php/chet/readline/rltop.html"],
-    "version": "8.2"
+    "version": "8.3"
   },
   "rename": {
     "bin": ["rename"],
@@ -4893,14 +4889,14 @@
   "ruby": {
     "bin": ["bundle", "bundler", "gem", "ruby"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-28",
+    "date": "2026-02-07",
     "default": false,
     "dependencies": ["libyaml", "openssl", "zlib"],
     "man1": ["ruby.1"],
     "outdated": true,
     "prune": false,
     "url": ["https://www.ruby-lang.org/en/downloads/releases/"],
-    "version": "3.4.7"
+    "version": "4.0.1"
   },
   "ruff": {
     "bin": ["ruff"],
