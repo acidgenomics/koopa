@@ -1885,7 +1885,7 @@
   },
   "gget": {
     "bin": ["gget"],
-    "date": "2026-02-02",
+    "date": "2026-02-08",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -1900,7 +1900,7 @@
       "https://bioconda.github.io/recipes/gget/README.html",
       "https://github.com/pachterlab/gget"
     ],
-    "version": "0.30.0"
+    "version": "0.30.2"
   },
   "gh": {
     "bin": ["gh"],
@@ -1985,7 +1985,7 @@
   },
   "glances": {
     "bin": ["glances"],
-    "date": "2025-11-10",
+    "date": "2026-02-08",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -1993,7 +1993,7 @@
       "https://github.com/nicolargo/glances/",
       "https://pypi.org/project/Glances/"
     ],
-    "version": "4.4.1"
+    "version": "4.5.0"
   },
   "glib": {
     "build_dependencies": [
