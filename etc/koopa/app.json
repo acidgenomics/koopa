@@ -4513,11 +4513,11 @@
   },
   "quarto": {
     "bin": ["quarto"],
-    "date": "2025-08-07",
+    "date": "2026-02-10",
     "default": true,
     "prune": true,
     "url": ["https://quarto.org/", "https://github.com/quarto-dev/quarto-cli/"],
-    "version": "1.7.33"
+    "version": "1.8.27"
   },
   "r": {
     "build_dependencies": ["make", "pkg-config"],
