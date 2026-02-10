@@ -19613,6 +19613,12 @@ koopa_locate_lesspipe() {
         "$@"
 }
 
+koopa_locate_lfs() {
+    koopa_locate_app \
+        '/usr/bin/lfs' \
+        "$@"
+}
+
 koopa_locate_libtool() {
     koopa_locate_app \
         --app-name='libtool' \
@@ -19823,6 +19829,12 @@ koopa_locate_mktemp() {
         --app-name='coreutils' \
         --bin-name='gmktemp' \
         --system-bin-name='mktemp' \
+        "$@"
+}
+
+koopa_locate_mount_s3() {
+    koopa_locate_app \
+        '/usr/bin/mount-s3' \
         "$@"
 }
 
