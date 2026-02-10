@@ -16805,6 +16805,13 @@ koopa_install_yaml_cpp() {
         "$@"
 }
 
+koopa_install_yamllint() {
+    koopa_install_app \
+        --installer='python-package' \
+        --name='yamllint' \
+        "$@"
+}
+
 koopa_install_yapf() {
     koopa_install_app \
         --installer='python-package' \
@@ -32018,6 +32025,12 @@ koopa_uninstall_xz() {
 koopa_uninstall_yaml_cpp() {
     koopa_uninstall_app \
         --name='yaml-cpp' \
+        "$@"
+}
+
+koopa_uninstall_yamllint() {
+    koopa_uninstall_app \
+        --name='yamllint' \
         "$@"
 }
 
