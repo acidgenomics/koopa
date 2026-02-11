@@ -20512,6 +20512,12 @@ koopa_locate_tr() {
         "$@"
 }
 
+koopa_locate_umount() {
+    koopa_locate_app \
+        '/usr/bin/umount' \
+        "$@"
+}
+
 koopa_locate_uname() {
     koopa_locate_app \
         --app-name='coreutils' \
