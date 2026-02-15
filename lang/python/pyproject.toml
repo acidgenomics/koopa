@@ -58,3 +58,6 @@ allow-magic-value-types = ["bytes", "int", "str"]
 
 [tool.ruff.lint.per-file-ignores]
 "scripts/*.py" = ["E402"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
