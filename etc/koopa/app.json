@@ -36,14 +36,14 @@
   "air": {
     "bin": ["air"],
     "build_dependencies": ["rust"],
-    "date": "2025-12-02",
+    "date": "2026-02-13",
     "default": false,
     "prune": true,
     "url": [
       "https://posit-dev.github.io/air/",
       "https://github.com/posit-dev/air"
     ],
-    "version": "0.8.0"
+    "version": "0.8.1"
   },
   "anaconda": {
     "date": "2025-08-10",
