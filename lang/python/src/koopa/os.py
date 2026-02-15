@@ -34,7 +34,7 @@ def koopa_opt_prefix() -> str:
 
 def koopa_prefix() -> str:
     """Koopa prefix."""
-    prefix = abspath(join(dirname(__file__), "../../.."))
+    prefix = abspath(join(dirname(__file__), "../../../.."))
     assert isdir(prefix)
     return prefix
 
