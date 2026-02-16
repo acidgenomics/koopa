@@ -70,12 +70,12 @@
       "pkg-config",
       "python3.14"
     ],
-    "date": "2026-02-02",
+    "date": "2026-02-16",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://arrow.apache.org/"],
-    "version": "23.0.0"
+    "version": "23.0.1"
   },
   "apache-spark": {
     "bin": ["pyspark", "sparkR"],
@@ -622,7 +622,7 @@
   },
   "broot": {
     "bin": ["broot"],
-    "date": "2025-12-05",
+    "date": "2026-02-16",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -631,7 +631,7 @@
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.54.0"
+    "version": "1.55.0"
   },
   "brotli": {
     "bin": ["brotli"],
@@ -849,11 +849,11 @@
   "cheat": {
     "bin": ["cheat"],
     "build_dependencies": ["go"],
-    "date": "2022-12-15",
+    "date": "2026-02-16",
     "default": false,
     "prune": true,
     "url": ["https://github.com/cheat/cheat/"],
-    "version": "4.4.2"
+    "version": "5.1.0"
   },
   "chemacs": {
     "date": "2023-09-13",
@@ -865,7 +865,7 @@
       "macos-amd64": ["go"],
       "noarch": []
     },
-    "date": "2026-02-02",
+    "date": "2026-02-16",
     "default": true,
     "dependencies": {
       "macos-amd64": [],
@@ -873,7 +873,7 @@
     },
     "prune": true,
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
-    "version": "2.69.3"
+    "version": "2.69.4"
   },
   "cli11": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -1764,7 +1764,7 @@
   "gdal": {
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2026-01-02",
+    "date": "2026-02-16",
     "default": false,
     "dependencies": [
       "bison",
@@ -1793,7 +1793,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.12.1"
+    "version": "3.12.2"
   },
   "gdbm": {
     "build_dependencies": ["make"],
@@ -2407,12 +2407,12 @@
   "hexyl": {
     "bin": ["hexyl"],
     "build_dependencies": ["rust"],
-    "date": "2024-12-30",
+    "date": "2026-02-16",
     "default": false,
     "notes": ["Currently outdated on conda."],
     "prune": true,
     "url": ["https://github.com/sharkdp/hexyl/"],
-    "version": "0.16.0"
+    "version": "0.17.0"
   },
   "hisat2": {
     "bin": ["hisat2"],
@@ -2726,7 +2726,7 @@
   },
   "julia": {
     "bin": ["julia"],
-    "date": "2026-01-09",
+    "date": "2026-02-16",
     "default": false,
     "prune": true,
     "url": [
@@ -2734,16 +2734,16 @@
       "https://julialang.org/",
       "https://github.com/JuliaLang/julia/"
     ],
-    "version": "1.12.4"
+    "version": "1.12.5"
   },
   "jupyterlab": {
     "bin": ["jupyter-lab"],
-    "date": "2026-02-02",
+    "date": "2026-02-16",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
-    "version": "4.5.3"
+    "version": "4.5.4"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3197,11 +3197,11 @@
       "make",
       "pkg-config"
     ],
-    "date": "2025-08-21",
+    "date": "2026-02-16",
     "default": false,
     "prune": false,
     "url": ["https://github.com/libuv/libuv/"],
-    "version": "1.51.0"
+    "version": "1.52.0"
   },
   "libvterm": {
     "build_dependencies": ["libtool", "make", "pkg-config"],
@@ -3304,7 +3304,7 @@
   },
   "lmod": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2026-02-02",
+    "date": "2026-02-16",
     "default": false,
     "dependencies": ["lua", "luarocks", "tcl-tk", "zlib"],
     "outdated": true,
@@ -3316,7 +3316,7 @@
       "macos-arm64": false
     },
     "url": ["https://lmod.readthedocs.io/", "https://github.com/TACC/Lmod/"],
-    "version": "9.0.6"
+    "version": "9.1.1"
   },
   "lsd": {
     "bin": ["lsd"],
@@ -3365,7 +3365,7 @@
       "https://github.com/spotify/luigi/",
       "https://pypi.org/project/luigi/"
     ],
-    "version": "3.7.2"
+    "version": "3.7.3"
   },
   "lz4": {
     "bin": ["lz4", "lz4c", "lz4cat", "unlz4"],
@@ -4900,12 +4900,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2026-02-06",
+    "date": "2026-02-16",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.15.0"
+    "version": "0.15.1"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -4929,11 +4929,11 @@
       "rustdoc",
       "rustfmt"
     ],
-    "date": "2026-02-02",
+    "date": "2026-02-16",
     "default": false,
     "prune": true,
     "url": ["https://www.rust-lang.org/"],
-    "version": "1.93.0"
+    "version": "1.93.1"
   },
   "s5cmd": {
     "bin": ["s5cmd"],
@@ -5559,12 +5559,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2026-02-06",
+    "date": "2026-02-16",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.15"
+    "version": "0.0.17"
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -5642,11 +5642,11 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-02-06",
+    "date": "2026-02-16",
     "default": true,
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.10.0"
+    "version": "0.10.3"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
@@ -6100,12 +6100,12 @@
   "yq": {
     "bin": ["yq"],
     "build_dependencies": ["go"],
-    "date": "2026-02-02",
+    "date": "2026-02-16",
     "default": false,
     "notes": ["Switch to conda recipe in the future."],
     "prune": true,
     "url": ["https://github.com/mikefarah/yq/"],
-    "version": "4.52.2"
+    "version": "4.52.4"
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
