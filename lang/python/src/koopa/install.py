@@ -21,8 +21,6 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, BinaryIO, TextIO
 
-import psutil
-
 # -- Data classes -------------------------------------------------------------
 
 
@@ -1382,11 +1380,15 @@ def install_shared_apps(
     if _is_macos() and _arch2() == "amd64":
         msg = "No longer supported for Intel Macs."
         raise RuntimeError(msg)
-    mem_gb = psutil.virtual_memory().total / (1024**3)
-    mem_gb_cutoff = 6
-    if mem_gb < mem_gb_cutoff:
-        msg = f"{mem_gb_cutoff} GB of RAM is required."
-        raise RuntimeError(msg)
+    try:
+        import psutil  # noqa: PLC0415
+        mem_gb = psutil.virtual_memory().total / (1024**3)
+        mem_gb_cutoff = 6
+        if mem_gb < mem_gb_cutoff:
+            msg = f"{mem_gb_cutoff} GB of RAM is required."
+            raise RuntimeError(msg)
+    except ImportError:
+        pass
     # Get app names from app.json.
     data = _import_app_json()
     if all_apps:
