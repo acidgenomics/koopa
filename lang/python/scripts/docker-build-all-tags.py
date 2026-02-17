@@ -13,7 +13,7 @@ from argparse import ArgumentParser
 from os.path import dirname, join
 from sys import path, version_info
 
-path.insert(0, join(dirname(__file__), ".."))
+path.insert(0, join(dirname(__file__), "../src"))
 
 from koopa.shell.docker import build_all_tags
 

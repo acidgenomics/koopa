@@ -1,0 +1,94 @@
+[project]
+name = "koopa"
+version = "0.0.1"
+authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
+classifiers = ["Programming Language :: Python :: 3.14"]
+dependencies = ["pandas", "pathlib", "psutil", "requests", "tqdm"]
+description = "Shell bootloader for data science."
+keywords = ["bioinformatics", "config", "data science", "ngs", "shell"]
+readme = "README.md"
+requires-python = ">=3.14"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.optional-dependencies]
+develop = [
+  "isort",
+  "pyright",
+  "pytest",
+  "ruff",
+  "uv",
+]
+
+[tool.pyright]
+verbose = true
+
+[tool.ruff]
+indent-width = 4
+line-length = 100
+target-version = "py314"
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 100
+quote-style = "double"
+
+[tool.ruff.lint]
+# List of rules: https://docs.astral.sh/ruff/rules/
+select = [
+  "ANN", # flake8-annotations
+  "B",   # flake8-bugbear
+  "C90", # mccabe
+  "D",   # pydocstyle
+  "E",   # pycodestyle
+  "F",   # PyFlakes
+  "FIX", # flake8-fixme
+  "I",   # isort
+  "N",   # pep8-naming
+  "NPY", # NumPy-specific rules,
+  "PL",  # pylint
+  "SIM", # flake8-simplify
+  "UP",  # pyupgrade
+  "W",   # pycodestyle
+]
+ignore = [
+  "D203", # one-blank-line-before-class
+  "D213", # multi-line-summary-second-line
+  "D401", # non-imperative-mood
+]
+
+[tool.ruff.lint.isort]
+extra-standard-library = ["typing"]
+known-first-party = []
+order-by-type = true
+relative-imports-order = "closest-to-furthest"
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 30
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 100
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.pylint]
+allow-magic-value-types = ["bytes", "int", "str"]
+max-args = 10
+max-branches = 30
+max-returns = 10
+
+[tool.ruff.lint.per-file-ignores]
+"lang/python/scripts/*.py" = ["E402"]
+
+[tool.setuptools.packages.find]
+where = ["lang/python/src"]
