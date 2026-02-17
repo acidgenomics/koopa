@@ -6,7 +6,7 @@
 koopa_check_build_system() {
     # """
     # Assert that current environment supports building from source.
-    # @note Updated 2026-01-05.
+    # @note Updated 2026-02-17.
     # """
     local -A app dict ver1 ver2
     local key
@@ -20,8 +20,8 @@ koopa_check_build_system() {
 Run 'xcode-select --install' to resolve."
         fi
     fi
-    koopa_assert_conda_env_is_not_active
-    koopa_assert_python_venv_is_not_active
+    # > koopa_assert_conda_env_is_not_active
+    # > koopa_assert_python_venv_is_not_active
     app['cc']="$(koopa_locate_cc --only-system)"
     app['git']="$(koopa_locate_git --allow-system)"
     app['ld']="$(koopa_locate_ld --only-system)"
