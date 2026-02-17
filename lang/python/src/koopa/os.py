@@ -1,48 +1,22 @@
-"""Operative system (platform)-specific variables."""
+"""Operating system (platform)-specific variables.
 
-from os.path import abspath, dirname, isdir, join
-from platform import machine, system
+.. deprecated::
+    This module is retained for backward compatibility. Use
+    :mod:`koopa.system` and :mod:`koopa.prefix` instead.
+"""
 
-
-def arch() -> str:
-    """Architecture string."""
-    string = machine()
-    if string == "x86_64":
-        string = "amd64"
-    return string
-
-
-def arch2() -> str:
-    """Architecture string 2."""
-    string = arch()
-    if string == "x86_64":
-        string = "amd64"
-    return string
-
-
-def koopa_app_prefix() -> str:
-    """Koopa app prefix."""
-    prefix = join(koopa_prefix(), "app")
-    return prefix
-
-
-def koopa_opt_prefix() -> str:
-    """Koopa opt prefix."""
-    prefix = join(koopa_prefix(), "opt")
-    return prefix
-
-
-def koopa_prefix() -> str:
-    """Koopa prefix."""
-    prefix = abspath(join(dirname(__file__), "../../../.."))
-    assert isdir(prefix)
-    return prefix
+from koopa.prefix import app_prefix as koopa_app_prefix  # noqa: F401
+from koopa.prefix import koopa_prefix  # noqa: F401
+from koopa.prefix import opt_prefix as koopa_opt_prefix  # noqa: F401
+from koopa.system import arch, arch2, os_string  # noqa: F401
 
 
 def os_id() -> str:
-    """Platform and architecture-specific identifier."""
-    string = system().lower()
-    if string == "darwin":
-        string = "macos"
-    string = string + "-" + arch()
-    return string
+    """Platform and architecture-specific identifier.
+
+    Returns
+    -------
+    str
+        Platform-architecture string (e.g. 'macos-amd64').
+    """
+    return os_string()
