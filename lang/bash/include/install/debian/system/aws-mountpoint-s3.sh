@@ -21,10 +21,11 @@ main() {
         dict['arch']='x86_64'
     fi
     dict['url']="https://s3.amazonaws.com/mountpoint-s3-release/\
-${dict['version']}/${dict['arch']}/mount-s3.deb"
-    dict['deb_file']="$(koopa_basename "${dict['url']}")"
-    koopa_download "${dict['url']}" "${dict['deb_file']}"
-    koopa_debian_install_from_deb "${dict['deb_file']}"
-    koopa_rm "${dict['deb_file']}"
+${dict['version']}/${dict['arch']}/mount-s3-${dict['version']}-\
+${dict['arch']}.deb"
+    dict['file']="$(koopa_basename "${dict['url']}")"
+    koopa_download "${dict['url']}" "${dict['file']}"
+    koopa_debian_install_from_deb "${dict['file']}"
+    koopa_rm "${dict['file']}"
     return 0
 }
