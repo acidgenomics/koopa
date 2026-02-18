@@ -640,7 +640,7 @@ _koopa_complete() {
                                 fi
                                 if _koopa_is_debian_like
                                 then
-                                    args+=('docker' 'r')
+                                    args+=('aws-mountpoint-s3' 'docker' 'r')
                                 elif _koopa_is_fedora_like
                                 then
                                     args+=('oracle-instant-client')

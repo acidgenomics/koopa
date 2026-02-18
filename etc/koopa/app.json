@@ -302,6 +302,22 @@
     ],
     "version": "2.33.8"
   },
+  "aws-mountpoint-s3": {
+    "date": "2026-02-18",
+    "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
+    "system": true,
+    "url": [
+      "https://aws.amazon.com/s3/features/mountpoint/",
+      "https://github.com/awslabs/mountpoint-s3"
+    ],
+    "version": "1.22.0"
+  },
   "axel": {
     "bin": ["axel"],
     "build_dependencies": ["gawk", "pkg-config", "xz"],

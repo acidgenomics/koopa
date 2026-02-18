@@ -718,6 +718,14 @@ koopa_debian_install_from_deb() {
     return 0
 }
 
+koopa_debian_install_system_aws_mountpoint_s3() {
+    koopa_install_app \
+        --name='aws-mountpoint-s3' \
+        --platform='debian' \
+        --system \
+        "$@"
+}
+
 koopa_debian_install_system_docker() {
     koopa_install_app \
         --name='docker' \
