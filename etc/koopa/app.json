@@ -1239,13 +1239,13 @@
   "curl": {
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2026-01-02",
+    "date": "2026-02-19",
     "default": true,
     "dependencies": ["ca-certificates", "libssh2", "openssl", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.17.0"
+    "version": "8.18.0"
   },
   "dash": {
     "bin": ["dash"],
