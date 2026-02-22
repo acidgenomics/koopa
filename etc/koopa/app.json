@@ -2767,7 +2767,7 @@
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
-    "url": ["https://k9scli.io/", "https://github.com/derailed/k9s"]
+    "url": ["https://k9scli.io/", "https://github.com/derailed/k9s"],
     "version": "0.50.18"
   },
   "kallisto": {
