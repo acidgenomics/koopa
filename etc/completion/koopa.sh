@@ -258,6 +258,7 @@ _koopa_complete() {
                         'jq'
                         'julia'
                         'jupyterlab'
+                        'k9s'
                         'kallisto'
                         'koopa'
                         'krb5'

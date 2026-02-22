@@ -14262,6 +14262,13 @@ koopa_install_jupyterlab() {
         "$@"
 }
 
+koopa_install_k9s() {
+    koopa_install_app \
+        --installer='conda-package' \
+        --name='k9s' \
+        "$@"
+}
+
 koopa_install_kallisto() {
     koopa_install_app \
         --installer='conda-package' \
@@ -30416,6 +30423,12 @@ koopa_uninstall_julia() {
 koopa_uninstall_jupyterlab() {
     koopa_uninstall_app \
         --name='jupyterlab' \
+        "$@"
+}
+
+koopa_uninstall_k9s() {
+    koopa_uninstall_app \
+        --name='k9s' \
         "$@"
 }
 
