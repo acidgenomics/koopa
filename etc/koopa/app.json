@@ -3476,10 +3476,7 @@
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
-    "url": [
-      "https://marimo.io/",
-      "https://pypi.org/project/marimo/"
-    ],
+    "url": ["https://marimo.io/", "https://pypi.org/project/marimo/"],
     "version": "0.18.4"
   },
   "markdownlint-cli": {
@@ -4175,10 +4172,7 @@
     "dependencies": ["python3.14"],
     "outdated": true,
     "prune": false,
-    "url": [
-      "https://github.com/pypa/pipx/",
-      "https://pypi.org/project/pipx/"
-    ],
+    "url": ["https://github.com/pypa/pipx/", "https://pypi.org/project/pipx/"],
     "version": "1.8.0"
   },
   "pixman": {
@@ -5258,10 +5252,7 @@
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
-    "url": [
-      "https://docs.sqlfluff.com/",
-      "https://pypi.org/project/sqlfluff/"
-    ],
+    "url": ["https://docs.sqlfluff.com/", "https://pypi.org/project/sqlfluff/"],
     "version": "3.5.0"
   },
   "sqlite": {
