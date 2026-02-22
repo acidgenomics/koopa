@@ -46,11 +46,11 @@
     "version": "0.8.1"
   },
   "anaconda": {
-    "date": "2025-08-10",
+    "date": "2026-02-22",
     "default": false,
     "prune": true,
     "url": ["https://repo.anaconda.com/archive/"],
-    "version": "2025.06-1"
+    "version": "2025.12-2"
   },
   "apache-airflow": {
     "bin": ["airflow"],
@@ -261,7 +261,7 @@
   },
   "autoflake": {
     "bin": ["autoflake"],
-    "date": "2024-03-14",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -269,7 +269,7 @@
       "https://pypi.org/project/autoflake/",
       "https://github.com/PyCQA/autoflake/"
     ],
-    "version": "2.3.1"
+    "version": "2.3.3"
   },
   "automake": {
     "bin": ["aclocal", "aclocal-1.17", "automake", "automake-1.17"],
@@ -300,7 +300,23 @@
       "https://aws.amazon.com/cli/",
       "https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html"
     ],
-    "version": "2.33.22"
+    "version": "2.33.8"
+  },
+  "aws-mountpoint-s3": {
+    "date": "2026-02-18",
+    "default": false,
+    "supported": {
+      "linux-amd64": true,
+      "linux-arm64": true,
+      "macos-amd64": false,
+      "macos-arm64": false
+    },
+    "system": true,
+    "url": [
+      "https://aws.amazon.com/s3/features/mountpoint/",
+      "https://github.com/awslabs/mountpoint-s3"
+    ],
+    "version": "1.22.0"
   },
   "axel": {
     "bin": ["axel"],
@@ -399,7 +415,7 @@
   },
   "bashcov": {
     "bin": ["bashcov"],
-    "date": "2024-12-24",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["ruby"],
     "prune": true,
@@ -407,7 +423,7 @@
       "https://rubygems.org/gems/bashcov/",
       "https://github.com/infertux/bashcov/"
     ],
-    "version": "3.1.3"
+    "version": "3.3.0"
   },
   "bat": {
     "bin": ["bat"],
@@ -592,7 +608,7 @@
   },
   "bowtie2": {
     "bin": ["bowtie2"],
-    "date": "2024-12-24",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -606,7 +622,7 @@
       "https://bioconda.github.io/recipes/bowtie2/README.html",
       "https://bowtie-bio.sourceforge.net/bowtie2/index.shtml"
     ],
-    "version": "2.5.4"
+    "version": "2.5.5"
   },
   "bpytop": {
     "bin": ["bpytop"],
@@ -1223,13 +1239,13 @@
   "curl": {
     "bin": ["curl", "curl-config"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2026-01-02",
+    "date": "2026-02-19",
     "default": true,
     "dependencies": ["ca-certificates", "libssh2", "openssl", "zlib", "zstd"],
     "man1": ["curl.1", "curl-config.1"],
     "prune": false,
     "url": ["https://curl.se/"],
-    "version": "8.17.0"
+    "version": "8.18.0"
   },
   "dash": {
     "bin": ["dash"],
@@ -1579,7 +1595,7 @@
   },
   "fish": {
     "bin": ["fish"],
-    "date": "2026-02-06",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["conda"],
     "man1": ["fish.1"],
@@ -1587,7 +1603,7 @@
       "https://fishshell.com/",
       "https://github.com/fish-shell/fish-shell/"
     ],
-    "version": "4.4.0"
+    "version": "4.5.0"
   },
   "flac": {
     "bin": ["flac"],
@@ -1709,12 +1725,12 @@
   },
   "fzf": {
     "bin": ["fzf"],
-    "date": "2025-12-02",
+    "date": "2026-02-22",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.67.0"
+    "version": "0.68.0"
   },
   "gatk": {
     "bin": ["gatk"],
@@ -1904,12 +1920,12 @@
   },
   "gh": {
     "bin": ["gh"],
-    "date": "2026-02-02",
+    "date": "2026-02-22",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.86.0"
+    "version": "2.87.2"
   },
   "ghostscript": {
     "bin": ["gs"],
@@ -2364,14 +2380,14 @@
   },
   "haskell-stack": {
     "bin": ["stack"],
-    "date": "2026-01-09",
+    "date": "2026-02-22",
     "default": false,
     "prune": true,
     "url": [
       "https://haskellstack.org/",
       "https://github.com/commercialhaskell/stack/"
     ],
-    "version": "3.9.1"
+    "version": "3.9.3"
   },
   "hdf5": {
     "bin": [
@@ -2517,12 +2533,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2026-02-02",
+    "date": "2026-02-22",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.155.0"
+    "version": "0.156.0"
   },
   "hyperfine": {
     "bin": ["hyperfine"],
@@ -2658,7 +2674,7 @@
   },
   "isort": {
     "bin": ["isort"],
-    "date": "2025-10-12",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -2666,7 +2682,7 @@
       "https://pypi.org/project/isort/",
       "https://pycqa.github.io/isort/"
     ],
-    "version": "7.0.0"
+    "version": "8.0.0"
   },
   "jemalloc": {
     "build_dependencies": ["make", "pkg-config"],
@@ -2744,6 +2760,15 @@
     "prune": true,
     "url": ["https://jupyter.org/", "https://pypi.org/project/jupyterlab/"],
     "version": "4.5.4"
+  },
+  "k9s": {
+    "bin": ["k9s"],
+    "date": "2026-02-22",
+    "default": false,
+    "dependencies": ["conda"],
+    "prune": true,
+    "url": ["https://k9scli.io/", "https://github.com/derailed/k9s"],
+    "version": "0.50.18"
   },
   "kallisto": {
     "bin": ["kallisto"],
@@ -3451,10 +3476,7 @@
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
-    "url": [
-      "https://marimo.io/",
-      "https://pypi.org/project/marimo/"
-    ],
+    "url": ["https://marimo.io/", "https://pypi.org/project/marimo/"],
     "version": "0.18.4"
   },
   "markdownlint-cli": {
@@ -3501,14 +3523,14 @@
   "miller": {
     "bin": ["mlr"],
     "build_dependencies": ["go"],
-    "date": "2026-01-09",
+    "date": "2026-02-22",
     "default": false,
     "prune": true,
     "url": [
       "https://miller.readthedocs.io/",
       "https://github.com/johnkerl/miller/"
     ],
-    "version": "6.16.0"
+    "version": "6.17.0"
   },
   "mimalloc": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -3868,7 +3890,7 @@
   },
   "ont-bonito": {
     "bin": ["bonito"],
-    "date": "2026-02-02",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["python3.14", "zlib"],
     "prune": true,
@@ -3879,11 +3901,11 @@
       "macos-arm64": false
     },
     "url": ["https://github.com/nanoporetech/bonito/"],
-    "version": "1.0.1"
+    "version": "1.1.0"
   },
   "ont-dorado": {
     "bin": ["dorado"],
-    "date": "2026-02-",
+    "date": "2026-02-22",
     "default": false,
     "prune": true,
     "supported": {
@@ -3893,7 +3915,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/nanoporetech/dorado/"],
-    "version": "1.3.1"
+    "version": "1.4.0"
   },
   "ont-guppy": {
     "bin": ["guppy_basecaller"],
@@ -4150,10 +4172,7 @@
     "dependencies": ["python3.14"],
     "outdated": true,
     "prune": false,
-    "url": [
-      "https://github.com/pypa/pipx/",
-      "https://pypi.org/project/pipx/"
-    ],
+    "url": ["https://github.com/pypa/pipx/", "https://pypi.org/project/pipx/"],
     "version": "1.8.0"
   },
   "pixman": {
@@ -4285,11 +4304,11 @@
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.14"],
-    "date": "2025-08-23",
+    "date": "2026-02-22",
     "default": false,
     "prune": false,
     "url": ["https://pybind11.readthedocs.io/"],
-    "version": "3.0.1"
+    "version": "3.0.2"
   },
   "pycodestyle": {
     "bin": ["pycodestyle"],
@@ -4306,12 +4325,12 @@
   "pyenv": {
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2026-02-06",
+    "date": "2026-02-22",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.22"
+    "version": "2.6.23"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -4340,7 +4359,7 @@
   },
   "pylint": {
     "bin": ["pylint"],
-    "date": "2025-11-30",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -4349,7 +4368,7 @@
       "https://github.com/PyCQA/pylint/",
       "https://pypi.org/project/pylint/"
     ],
-    "version": "4.0.4"
+    "version": "4.0.5"
   },
   "pymol": {
     "bin": ["pymol"],
@@ -4731,14 +4750,14 @@
   },
   "rclone": {
     "bin": ["rclone"],
-    "date": "2026-02-02",
+    "date": "2026-02-22",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["rclone.1"],
     "outdated": true,
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.72.1"
+    "version": "1.73.1"
   },
   "readline": {
     "build_dependencies": ["make", "pkg-config"],
@@ -4900,12 +4919,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2026-02-16",
+    "date": "2026-02-22",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.15.1"
+    "version": "0.15.2"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5233,10 +5252,7 @@
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
-    "url": [
-      "https://docs.sqlfluff.com/",
-      "https://pypi.org/project/sqlfluff/"
-    ],
+    "url": ["https://docs.sqlfluff.com/", "https://pypi.org/project/sqlfluff/"],
     "version": "3.5.0"
   },
   "sqlite": {
@@ -5381,12 +5397,12 @@
   },
   "taglib": {
     "build_dependencies": ["cmake", "git", "pkg-config"],
-    "date": "2025-07-16",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["zlib"],
     "prune": false,
     "url": ["https://github.com/taglib/taglib/"],
-    "version": "2.1.1"
+    "version": "2.2"
   },
   "tar": {
     "bin": ["gtar"],
@@ -5559,12 +5575,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2026-02-16",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.17"
+    "version": "0.0.18"
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -5642,11 +5658,11 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-02-16",
+    "date": "2026-02-22",
     "default": true,
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.10.3"
+    "version": "0.10.4"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
@@ -6109,7 +6125,7 @@
   },
   "yt-dlp": {
     "bin": ["yt-dlp"],
-    "date": "2026-02-06",
+    "date": "2026-02-22",
     "default": false,
     "dependencies": ["ffmpeg", "python3.14"],
     "prune": true,
@@ -6117,7 +6133,7 @@
       "https://github.com/yt-dlp/yt-dlp/",
       "https://pypi.org/project/yt-dlp/"
     ],
-    "version": "2026.2.4"
+    "version": "2026.2.21"
   },
   "zellij": {
     "bin": ["zellij"],
