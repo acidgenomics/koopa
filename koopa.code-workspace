@@ -18,9 +18,6 @@
         ],
         "python.analysis.extraPaths": [
             "./lang/python"
-        ],
-        "terminal.integrated.env.osx": {
-            "PYTHONPATH": "${workspaceFolder}/lang/python"
-        }
+        ]
     }
 }
