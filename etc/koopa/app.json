@@ -1268,7 +1268,7 @@
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://docs.databricks.com/aws/en/dev-tools/cli/"],
-    "version": "0.292.0"
+    "version": "0.283.0"
   },
   "deeptools": {
     "bin": ["deeptools"],
