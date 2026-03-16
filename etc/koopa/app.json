@@ -4540,7 +4540,7 @@
   },
   "r": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2025-10-31",
+    "date": "2026-03-16",
     "default": false,
     "dependencies": [
       "autoconf",
@@ -4608,7 +4608,7 @@
       "https://www.r-project.org/",
       "https://cloud.r-project.org/src/base/R-4/"
     ],
-    "version": "4.5.2"
+    "version": "4.5.3"
   },
   "r-devel": {
     "build_dependencies": ["make", "pkg-config", "subversion"],
