@@ -9,10 +9,14 @@ main() {
     # - https://github.com/conda-forge/databricks-cli-feedstock/
     # """
     local -A dict
+    dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="github.com/databricks/cli@v${dict['version']}"
-    koopa_install_go_package \
+    dict['url']="https://github.com/databricks/cli/archive/\
+v${dict['version']}.tar.gz"
+    koopa_build_go_package \
         --bin-name='databricks' \
-        --url="${dict['url']}"
+        --prefix="${dict['prefix']}" \
+        --url="${dict['url']}" \
+        --version="${dict['version']}"
     return 0
 }
