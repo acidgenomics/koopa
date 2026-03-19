@@ -11,25 +11,19 @@ main() {
     # - https://github.com/strukturag/libde265/issues/284
     # """
     local -A dict
-    local -a conf_args
+    local -a cmake_args
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    # Note that Homebrew sets '-DCMAKE_INSTALL_RPATH' here.
     conf_args+=(
-        '--disable-dec265'
-        '--disable-dependency-tracking'
-        '--disable-sherlock265'
-        '--disable-silent-rules'
-        "--prefix=${dict['prefix']}"
+        '-DENABLE_DECODER=OFF'
+        '-DENABLE_TOOLS=ON'
     )
-    if koopa_is_macos
-    then
-        conf_args+=('--disable-arm')
-    fi
     dict['url']="https://github.com/strukturag/libde265/releases/download/\
 v${dict['version']}/libde265-${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

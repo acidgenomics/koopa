@@ -2930,7 +2930,7 @@
     "version": "1.8.2"
   },
   "libde265": {
-    "build_dependencies": ["make"],
+    "build_dependencies": ["cmake"],
     "date": "2026-03-19",
     "default": false,
     "prune": false,
