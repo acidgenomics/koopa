@@ -3,7 +3,7 @@
 main() {
     # """
     # Install HDF5.
-    # @note Updated 2025-11-11.
+    # @note Updated 2026-03-19.
     #
     # @seealso
     # - https://github.com/HDFGroup/hdf5/
@@ -23,15 +23,8 @@ main() {
     dict['shared_ext']="$(koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['zlib']="$(koopa_app_prefix 'zlib')"
-    dict['version2']="$( \
-        koopa_gsub \
-            --fixed \
-            --pattern='-' \
-            --replacement='.' \
-            "${dict['version']}" \
-    )"
     dict['url']="https://github.com/HDFGroup/hdf5/releases/download/\
-hdf5_${dict['version2']}/hdf5-${dict['version']}.tar.gz"
+${dict['version']}/hdf5-${dict['version']}.tar.gz"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     koopa_assert_is_dir \
