@@ -11,10 +11,13 @@ main() {
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['ldflags']="-X github.com/databricks/cli/internal/\
+build.buildVersion=${dict['version']}"
     dict['url']="https://github.com/databricks/cli/archive/\
 v${dict['version']}.tar.gz"
     koopa_build_go_package \
         --bin-name='databricks' \
+        --ldflags="${dict['ldflags']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}" \
         --version="${dict['version']}"
