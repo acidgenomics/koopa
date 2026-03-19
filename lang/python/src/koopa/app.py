@@ -107,18 +107,11 @@ def filter_app_deps(names: list, json_data: dict) -> list:
         supported = json.get("supported", {})
         if sys_dict["os_id"] in supported and not supported[sys_dict["os_id"]]:
             continue
-        keys = json.keys()
-        if (
-            "supported" in keys
-            and sys_dict["os_id"] in json["supported"]
-            and not json["supported"][sys_dict["os_id"]]
-        ):
+        if "private" in json and json["private"]:
             continue
-        if "private" in keys and json["private"]:
+        if "system" in json and json["system"]:
             continue
-        if "system" in keys and json["system"]:
-            continue
-        if "user" in keys and json["user"]:
+        if "user" in json and json["user"]:
             continue
         lst.append(val)
     return lst
