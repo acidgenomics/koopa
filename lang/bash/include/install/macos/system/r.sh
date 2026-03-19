@@ -73,8 +73,14 @@ ${dict['os']}-${dict['arch']}/base/R-${dict['version']}-${dict['arch']}.pkg"
     fi
     app['r']="${dict['prefix']}/bin/R"
     koopa_assert_is_installed "${app['r']}"
-    koopa_macos_install_system_r_gfortran
-    koopa_macos_install_system_r_xcode_openmp
+    if [[ ! -d '/opt/gfortran' ]]
+    then
+        koopa_macos_install_system_r_gfortran
+    fi
+    if [[ ! -f '/usr/local/include/omp.h' ]]
+    then
+        koopa_macos_install_system_r_xcode_openmp
+    fi
     koopa_configure_r "${app['r']}"
     return 0
 }
