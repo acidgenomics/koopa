@@ -3,7 +3,7 @@
 main() {
     # """
     # Install duckdb.
-    # @note Updated 2024-04-17.
+    # @note Updated 2026-03-19.
     #
     # @seealso
     # - https://github.com/duckdb/duckdb
@@ -15,10 +15,10 @@ main() {
     koopa_activate_app --build-only "${build_deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['url']="https://github.com/duckdb/duckdb/archive/refs/tags/\
-v${dict['version']}.zip"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    koopa_git_clone \
+        --prefix='src' \
+        --tag="v${dict['version']}" \
+        --url='https://github.com/duckdb/duckdb.git'
     koopa_cd 'src'
     cmake_args=(
         '-DBUILD_EXTENSIONS=autocomplete;icu;parquet;json'
