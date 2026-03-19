@@ -4756,7 +4756,7 @@
     "outdated": true,
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.73.2"
+    "version": "1.73.1"
   },
   "readline": {
     "build_dependencies": ["make", "pkg-config"],
