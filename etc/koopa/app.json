@@ -1263,12 +1263,12 @@
   },
   "databricks-cli": {
     "bin": ["databricks"],
-    "date": "2026-03-09",
+    "build_dependencies": ["go"],
+    "date": "2026-03-19",
     "default": false,
-    "dependencies": ["conda"],
     "prune": true,
     "url": ["https://docs.databricks.com/aws/en/dev-tools/cli/"],
-    "version": "0.283.0"
+    "version": "0.295.0"
   },
   "deeptools": {
     "bin": ["deeptools"],
