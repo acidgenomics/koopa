@@ -1309,10 +1309,9 @@
   },
   "difftastic": {
     "bin": ["difft"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": true,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -1321,7 +1320,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.65.0"
+    "version": "0.68.0"
   },
   "direnv": {
     "bin": ["direnv"],
