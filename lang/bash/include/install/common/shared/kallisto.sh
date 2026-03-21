@@ -64,7 +64,7 @@ install_from_source() {
         "-DZLIB_LIBRARY=${cmake['zlib_library']}"
     )
     dict['url']="https://github.com/pachterlab/kallisto/archive/refs/tags/\
-V${dict['version']}.tar.gz"
+v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
