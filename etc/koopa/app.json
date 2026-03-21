@@ -4116,12 +4116,12 @@
   "perl": {
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make", "xz"],
-    "date": "2025-10-22",
+    "date": "2026-03-21",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.42.0"
+    "version": "5.42.1"
   },
   "picard": {
     "bin": ["picard"],
