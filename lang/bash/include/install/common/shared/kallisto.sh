@@ -88,13 +88,6 @@ v${dict['version']}.tar.gz"
 }
 
 main() {
-    install_from_source
-    return 0 # FIXME
-    if koopa_is_arm64
-    then
-        install_from_source
-    else
-        install_from_conda
-    fi
+    install_from_conda
     return 0
 }
