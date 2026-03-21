@@ -3,15 +3,17 @@
 @@ -1 +1 @@
 -cmake_minimum_required(VERSION 3.0.0)
 +cmake_minimum_required(VERSION 3.5...3.29)
-# > @@ -13 +12,0 @@
-# > -add_compile_options(-Wno-subobject-linkage) # Suppress bifrost warning
-# > +add_compile_options() # Suppress bifrost warning
 @@ -45,3 +45,3 @@
  #add_compile_options(-Wall -Wno-unused-function)
 -add_compile_options(-Wno-deprecated-declarations -Wno-subobject-linkage) # Suppress bifrost warning
 -set(PROJECT_BIFROST_CMAKE_CXX_FLAGS "-Wno-subobject-linkage -Wno-return-type") # Suppress bifrost warning
 +add_compile_options(-Wno-deprecated-declarations) # Suppress bifrost warning
 +set(PROJECT_BIFROST_CMAKE_CXX_FLAGS "-Wno-return-type") # Suppress bifrost warning
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -13 +13 @@
+-add_compile_options(-Wno-subobject-linkage) # Suppress bifrost warning
++# Suppress bifrost warning (removed -Wno-subobject-linkage, GCC-only)
 --- a/ext/bifrost/CMakeLists.txt
 +++ b/ext/bifrost/CMakeLists.txt
 @@ -1 +1 @@
