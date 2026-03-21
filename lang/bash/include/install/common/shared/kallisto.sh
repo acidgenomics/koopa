@@ -8,7 +8,7 @@ install_from_conda() {
 install_from_source() {
     # """
     # Install kallisto from source.
-    # @note updated 2024-07-22.
+    # @note updated 2026-03-21.
     #
     # @seealso
     # - https://github.com/pachterlab/kallisto
@@ -67,27 +67,6 @@ install_from_source() {
 V${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-# >     # This patch step is needed for bifrost to pick up zlib correctly.
-# >     # https://github.com/pachterlab/kallisto/issues/385
-# >     dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
-# >     dict['patch_file']="${dict['patch_prefix']}/cmakelists.patch"
-# >     koopa_assert_is_file "${dict['patch_file']}"
-# >     "${app['patch']}" \
-# >         --unified \
-# >         --verbose \
-# >         'src/CMakeLists.txt' \
-# >         "${dict['patch_file']}"
-# >     # This patch step is needed for autoconf 2.69 compatibility.
-# >     # https://github.com/pachterlab/kallisto/issues/303#issuecomment-884612169
-# >     (
-# >         koopa_cd 'src/ext/htslib'
-# >         "${app['sed']}" \
-# >             -i.bak \
-# >             '/AC_PROG_CC/a AC_CANONICAL_HOST\nAC_PROG_INSTALL' \
-# >             'configure.ac'
-# >         "${app['autoreconf']}" --force --install --verbose
-# >         ./configure
-# >     )
     koopa_cd 'src'
     export KOOPA_CPU_COUNT=1
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
@@ -95,6 +74,8 @@ V${dict['version']}.tar.gz"
 }
 
 main() {
+    install_from_source
+    return 0 # FIXME
     if koopa_is_arm64
     then
         install_from_source

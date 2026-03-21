@@ -2771,7 +2771,7 @@
   },
   "kallisto": {
     "bin": ["kallisto"],
-    "date": "2024-12-30",
+    "date": "2026-03-21",
     "default": false,
     "dependencies": ["conda"],
     "outdated": true,
@@ -2781,7 +2781,7 @@
       "https://github.com/pachterlab/kallisto/",
       "https://bioconda.github.io/recipes/kallisto/README.html"
     ],
-    "version": "0.51.1"
+    "version": "0.52.0"
   },
   "krb5": {
     "build_dependencies": ["bison", "make", "pkg-config"],
