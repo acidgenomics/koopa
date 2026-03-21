@@ -80,7 +80,7 @@ v${dict['version']}.tar.gz"
         koopa_assert_is_executable "${app['patch']}"
         dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
         koopa_assert_is_dir "${dict['patch_prefix']}"
-        dict['patch_file']="${dict['patch_prefix']}/2026-03-21-macos-.patch"
+        dict['patch_file']="${dict['patch_prefix']}/2026-03-21-macos.patch"
         "${app['patch']}" -p1 < "${dict['patch_file']}"
     fi
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
