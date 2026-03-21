@@ -54,9 +54,13 @@ install_from_source() {
         "${cmake['bzip2_libraries']}" \
         "${cmake['zlib_library']}"
     cmake_args=(
+        # CMake options --------------------------------------------------------
+        '-DCMAKE_POLICY_VERSION_MINIMUM=3.5'
         # Build options --------------------------------------------------------
-        '-DUSE_BAM=ON'
-        '-DUSE_HDF5=ON'
+        '-DCOMPILATION_ARCH=OFF'
+        '-DENABLE_AVX2=OFF'
+        '-DUSE_BAM=OFF'
+        '-DUSE_HDF5=OFF'
         # Dependency paths -----------------------------------------------------
         "-DBZIP2_INCLUDE_DIR=${cmake['bzip2_include_dir']}"
         "-DBZIP2_LIBRARIES=${cmake['bzip2_libraries']}"
@@ -68,7 +72,18 @@ v${dict['version']}.tar.gz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
     koopa_cd 'src'
+    export CMAKE_POLICY_VERSION_MINIMUM=3.5
     export KOOPA_CPU_COUNT=1
+    if koopa_is_macos
+    then
+        app['patch']="$(koopa_locate_patch)"
+        koopa_assert_is_executable "${app['patch']}"
+        dict['patch_prefix']="$(koopa_patch_prefix)/common/kallisto"
+        koopa_assert_is_dir "${dict['patch_prefix']}"
+        dict['patch_file']="${dict['patch_prefix']}/2026-03-21-kallisto-macos-\
+arm64.patch"
+        "${app['patch']}" -p1 < "${dict['patch_file']}"
+    fi
     koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }
