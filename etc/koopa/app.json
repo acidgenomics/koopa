@@ -638,16 +638,15 @@
   },
   "broot": {
     "bin": ["broot"],
-    "date": "2026-02-16",
+    "date": "2026-03-20",
     "default": false,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "url": [
       "https://crates.io/crates/broot/",
       "https://github.com/Canop/broot/"
     ],
-    "version": "1.55.0"
+    "version": "1.56.0"
   },
   "brotli": {
     "bin": ["brotli"],
@@ -1292,9 +1291,10 @@
   },
   "delta": {
     "bin": ["delta"],
-    "date": "2025-01-03",
+    "date": "2025-03-20",
     "default": true,
     "dependencies": ["conda"],
+    "outdated": true,
     "prune": true,
     "url": ["https://github.com/dandavison/delta/"],
     "version": "0.18.2"
@@ -1309,10 +1309,9 @@
   },
   "difftastic": {
     "bin": ["difft"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": true,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "supported": {
       "linux-amd64": true,
@@ -1321,7 +1320,7 @@
       "macos-arm64": true
     },
     "url": ["https://github.com/Wilfred/difftastic/"],
-    "version": "0.65.0"
+    "version": "0.68.0"
   },
   "direnv": {
     "bin": ["direnv"],
@@ -2341,7 +2340,7 @@
   },
   "harfbuzz": {
     "build_dependencies": ["cmake", "meson", "ninja", "pkg-config"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": false,
     "dependencies": [
       "freetype",
@@ -2354,7 +2353,7 @@
     ],
     "prune": false,
     "url": ["https://github.com/harfbuzz/harfbuzz/"],
-    "version": "13.2.0"
+    "version": "13.2.1"
   },
   "haskell-cabal": {
     "bin": ["cabal"],
@@ -4028,12 +4027,12 @@
   },
   "pandoc": {
     "bin": ["pandoc"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://pandoc.org/", "https://github.com/jgm/pandoc/"],
-    "version": "3.9.0.1"
+    "version": "3.9.0.2"
   },
   "parallel": {
     "bin": ["parallel"],
@@ -4918,12 +4917,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.15.6"
+    "version": "0.15.7"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5574,12 +5573,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.23"
+    "version": "0.0.24"
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -5657,11 +5656,11 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-03-19",
+    "date": "2026-03-20",
     "default": true,
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.10.11"
+    "version": "0.10.12"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
