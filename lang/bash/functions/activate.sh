@@ -64,6 +64,7 @@ completion.bash.inc"
 
 _koopa_activate_bash_extras() {
     _koopa_is_interactive || return 0
+    _koopa_activate_bashrc_files
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
@@ -92,6 +93,33 @@ _koopa_activate_bash_readline() {
 
 _koopa_activate_bash_reverse_search() {
     _koopa_activate_mcfly
+    return 0
+}
+
+_koopa_activate_bashrc_files() {
+    if [[ -f '/etc/bashrc' ]]
+    then
+        source '/etc/bashrc'
+    fi
+    if [[ -d "${HOME}/.bashrc.d" ]]
+    then
+        local rc_file
+        for rc_file in "${HOME}/.bashrc.d/"*
+        do
+            if [[ -f "$rc_file" ]]
+            then
+                source "$rc_file"
+            fi
+        done
+    fi
+    if [[ -f "${HOME}/.bashrc-personal" ]]
+    then
+        source "${HOME}/.bashrc-personal"
+    fi
+    if [[ -f "${HOME}/.bashrc-work" ]]
+    then
+        source "${HOME}/.bashrc-work"
+    fi
     return 0
 }
 
