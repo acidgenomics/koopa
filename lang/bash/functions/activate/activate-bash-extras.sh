@@ -3,9 +3,10 @@
 _koopa_activate_bash_extras() {
     # """
     # Activate Bash extras.
-    # @note Updated 2025-01-02.
+    # @note Updated 2026-03-23.
     # """
     _koopa_is_interactive || return 0
+    _koopa_activate_bashrc_files
     _koopa_activate_bash_readline
     _koopa_activate_bash_aliases
     _koopa_activate_bash_prompt
