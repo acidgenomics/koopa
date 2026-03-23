@@ -1291,13 +1291,12 @@
   },
   "delta": {
     "bin": ["delta"],
-    "date": "2025-03-20",
+    "date": "2025-03-21",
     "default": true,
     "dependencies": ["conda"],
-    "outdated": true,
     "prune": true,
     "url": ["https://github.com/dandavison/delta/"],
-    "version": "0.18.2"
+    "version": "0.19.0"
   },
   "diff-so-fancy": {
     "bin": ["diff-so-fancy"],
@@ -1778,7 +1777,7 @@
   "gdal": {
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2026-02-16",
+    "date": "2026-03-21",
     "default": false,
     "dependencies": [
       "bison",
@@ -1807,7 +1806,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.12.2"
+    "version": "3.12.3"
   },
   "gdbm": {
     "build_dependencies": ["make"],
@@ -4116,8 +4115,8 @@
   },
   "perl": {
     "bin": ["cpan", "perl"],
-    "build_dependencies": ["make", "xz"],
-    "date": "2025-10-22",
+    "build_dependencies": ["make"],
+    "date": "2026-03-21",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
@@ -4165,13 +4164,13 @@
   },
   "pipx": {
     "bin": ["pipx"],
-    "date": "2026-03-19",
+    "date": "2026-03-21",
     "default": false,
     "dependencies": ["python3.14"],
     "outdated": true,
     "prune": false,
     "url": ["https://github.com/pypa/pipx/", "https://pypi.org/project/pipx/"],
-    "version": "1.10.0"
+    "version": "1.10.1"
   },
   "pixman": {
     "build_dependencies": ["meson", "ninja", "pkg-config"],
