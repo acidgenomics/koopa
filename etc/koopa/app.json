@@ -1348,12 +1348,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-03-23",
+    "date": "2026-04-09",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "13012a29fa68bb9b3d1981b36864b54f53e90eba"
+    "version": "27fc5511a7ccaf128e4fd287de080571c89bcaa9"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -3753,13 +3753,13 @@
   },
   "neovim": {
     "bin": ["nvim"],
-    "date": "2026-01-02",
+    "date": "2026-04-09",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.11.5"
+    "version": "0.12.1"
   },
   "nettle": {
     "build_dependencies": ["make", "pkg-config"],
