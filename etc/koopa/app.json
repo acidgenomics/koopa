@@ -890,6 +890,15 @@
     "url": ["https://www.chezmoi.io/", "https://github.com/twpayne/chezmoi"],
     "version": "2.70.0"
   },
+  "claude-code": {
+    "bin": ["claude"],
+    "date": "2026-04-14",
+    "default": false,
+    "dependencies": ["node"],
+    "prune": true,
+    "url": ["https://www.npmjs.com/package/@anthropic-ai/claude-code"],
+    "version": "2.1.107"
+  },
   "cli11": {
     "build_dependencies": ["cmake", "pkg-config"],
     "date": "2024-12-24",
