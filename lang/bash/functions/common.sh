@@ -13104,6 +13104,12 @@ koopa_install_chezmoi() {
         "$@"
 }
 
+koopa_install_claude_code() {
+    koopa_install_app \
+        --name='claude-code' \
+        "$@"
+}
+
 koopa_install_cli11() {
     koopa_install_app \
         --name='cli11' \
@@ -29743,6 +29749,12 @@ koopa_uninstall_chemacs() {
 koopa_uninstall_chezmoi() {
     koopa_uninstall_app \
         --name='chezmoi' \
+        "$@"
+}
+
+koopa_uninstall_claude_code() {
+    koopa_uninstall_app \
+        --name='claude-code' \
         "$@"
 }
 
