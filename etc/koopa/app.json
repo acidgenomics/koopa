@@ -1357,7 +1357,7 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-04-09",
+    "date": "2026-04-14",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
