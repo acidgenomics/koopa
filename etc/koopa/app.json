@@ -1931,7 +1931,7 @@
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.89.0"
+    "version": "2.88.1"
   },
   "ghostscript": {
     "bin": ["gs"],
