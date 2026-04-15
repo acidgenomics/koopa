@@ -792,11 +792,11 @@
     "version": "1.34.4"
   },
   "ca-certificates": {
-    "date": "2026-01-02",
+    "date": "2026-04-15",
     "default": false,
     "prune": false,
     "url": ["https://curl.se/docs/caextract.html"],
-    "version": "2025-12-02"
+    "version": "2026-03-19"
   },
   "cairo": {
     "build_dependencies": ["meson", "ninja", "pkg-config"],
@@ -3998,12 +3998,12 @@
   "openssl": {
     "bin": ["openssl"],
     "build_dependencies": ["make", "perl", "pkg-config"],
-    "date": "2026-02-02",
+    "date": "2026-04-15",
     "default": false,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
-    "version": "3.6.1"
+    "version": "4.0.0"
   },
   "openssl3": {
     "date": "2025-08-21",
