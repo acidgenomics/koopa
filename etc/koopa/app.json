@@ -3762,13 +3762,13 @@
   },
   "neovim": {
     "bin": ["nvim"],
-    "date": "2026-04-09",
+    "date": "2026-04-15",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["nvim.1"],
     "prune": true,
     "url": ["https://github.com/neovim/neovim/"],
-    "version": "0.12.1"
+    "version": "0.11.6"
   },
   "nettle": {
     "build_dependencies": ["make", "pkg-config"],
