@@ -18,7 +18,6 @@ install_from_conda_python312() {
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['libexec']="${dict['prefix']}/libexec"
     dict['conda_env_file']='conda.yaml'
     read -r -d '' "dict[conda_env_string]" << END || true
 channels:
