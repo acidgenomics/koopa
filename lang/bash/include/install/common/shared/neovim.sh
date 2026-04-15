@@ -1,23 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    local -A dict
-    dict['name']='nvim'
-    dict['conda_env_file']='conda.yaml'
-    dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    read -r -d '' "dict[conda_env_string]" << END || true
-channels:
-  - conda-forge
-dependencies:
-  - ${dict['name']} =${dict['version']}
-  - gettext
-END
-    koopa_write_string \
-        --file="${dict['conda_env_file']}" \
-        --string="${dict['conda_env_string']}"
-    koopa_install_conda_package \
-        --file="${dict['conda_env_file']}" \
-        --name="${dict['name']}"
+    koopa_install_conda_package --name='nvim'
     return 0
 }
 
