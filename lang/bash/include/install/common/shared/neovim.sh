@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# NOTE: There is currently a libintl / gettext linkage bug for 0.12.1:
+# https://github.com/conda-forge/nvim-feedstock/issues/50
+
 install_from_conda() {
     koopa_install_conda_package --name='nvim'
     return 0
