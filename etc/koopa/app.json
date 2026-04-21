@@ -5664,11 +5664,11 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-04-15",
+    "date": "2026-04-20",
     "default": true,
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.11.6"
+    "version": "0.11.7"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
