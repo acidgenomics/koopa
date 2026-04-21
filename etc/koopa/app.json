@@ -4756,14 +4756,14 @@
   },
   "rclone": {
     "bin": ["rclone"],
-    "date": "2026-04-15",
+    "date": "2026-04-21",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["rclone.1"],
     "outdated": true,
     "prune": true,
     "url": ["https://rclone.org/"],
-    "version": "1.73.4"
+    "version": "1.73.5"
   },
   "readline": {
     "build_dependencies": ["make", "pkg-config"],
