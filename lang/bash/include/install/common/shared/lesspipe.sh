@@ -3,7 +3,7 @@
 main() {
     # """
     # Install lesspipe.
-    # @note Updated 2025-12-01.
+    # @note Updated 2026-04-15.
     #
     # @seealso
     # - https://github.com/wofr06/lesspipe
@@ -12,6 +12,7 @@ main() {
     # """
     local -A app dict
     local -a conf_args
+    koopa_activate_app --build-only 'bash'
     app['bash']="$(koopa_locate_bash)"
     koopa_assert_is_executable "${app['bash']}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"

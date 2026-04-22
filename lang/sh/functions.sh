@@ -594,10 +594,16 @@ _koopa_activate_direnv() {
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    unset -v \
+        DIRENV_DIFF \
+        DIRENV_DIR \
+        DIRENV_FILE \
+        DIRENV_WATCHES
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
             eval "$("$__kvar_direnv" hook "$__kvar_shell")"
+            eval "$("$__kvar_direnv" export "$__kvar_shell")"
             ;;
     esac
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
@@ -980,10 +986,7 @@ _koopa_activate_starship() {
     esac
     if [ -n "${STARSHIP_SHELL:-}" ] && [ "$STARSHIP_SHELL" != "$__kvar_shell" ]
     then
-        unset -v \
-            __kvar_shell \
-         __kvar_starship
-        return 0
+        unset -v STARSHIP_SHELL
     fi
     __kvar_nounset="$(_koopa_boolean_nounset)"
     if [ "$__kvar_nounset" -eq 1 ]
