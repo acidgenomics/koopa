@@ -29,14 +29,11 @@ _koopa_activate_starship() {
             return 0
             ;;
     esac
-    # Don't active starship when launching a different shell as a subshell.
-    # This helps avoid some weirdness with spawing zsh inside of bash.
+    # STARSHIP_SHELL can be inherited from a parent shell (e.g. zsh -> bash).
+    # Reset stale value so init runs for the current shell.
     if [ -n "${STARSHIP_SHELL:-}" ] && [ "$STARSHIP_SHELL" != "$__kvar_shell" ]
     then
-        unset -v \
-            __kvar_shell \
-         __kvar_starship
-        return 0
+        unset -v STARSHIP_SHELL
     fi
     __kvar_nounset="$(_koopa_boolean_nounset)"
     if [ "$__kvar_nounset" -eq 1 ]
