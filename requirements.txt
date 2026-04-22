@@ -16,7 +16,7 @@ psutil==7.2.2
     # via koopa (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via pandas
-requests==2.32.5
+requests==2.33.0
     # via koopa (pyproject.toml)
 six==1.17.0
     # via python-dateutil
