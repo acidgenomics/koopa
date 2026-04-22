@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
+# FIXME We need to debug our ssl module building:
+# Is this due to incompatibility with 4.0.0 release?
+#
+# Failed to build these modules:
+# _ssl
+#
+# Could not build the ssl module!
+# Python requires a OpenSSL 1.1.1 or newer
+# Custom linker flags may require --with-openssl-rpath=auto
+
 install_from_source() {
     # """
     # Install Python.
