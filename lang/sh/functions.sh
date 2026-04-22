@@ -980,10 +980,7 @@ _koopa_activate_starship() {
     esac
     if [ -n "${STARSHIP_SHELL:-}" ] && [ "$STARSHIP_SHELL" != "$__kvar_shell" ]
     then
-        unset -v \
-            __kvar_shell \
-         __kvar_starship
-        return 0
+        unset -v STARSHIP_SHELL
     fi
     __kvar_nounset="$(_koopa_boolean_nounset)"
     if [ "$__kvar_nounset" -eq 1 ]
