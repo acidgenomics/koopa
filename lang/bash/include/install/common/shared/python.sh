@@ -1,19 +1,9 @@
 #!/usr/bin/env bash
 
-# FIXME We need to debug our ssl module building:
-# Is this due to incompatibility with 4.0.0 release?
-#
-# Failed to build these modules:
-# _ssl
-#
-# Could not build the ssl module!
-# Python requires a OpenSSL 1.1.1 or newer
-# Custom linker flags may require --with-openssl-rpath=auto
-
 install_from_source() {
     # """
     # Install Python.
-    # @note Updated 2025-11-06.
+    # @note Updated 2026-04-22.
     #
     # 'make altinstall' target prevents the installation of files with only
     # Python's major version in its name. This allows us to link multiple
@@ -70,7 +60,7 @@ install_from_source() {
     deps+=(
         'expat'
         'mpdecimal'
-        'openssl'
+        'openssl3'
         'sqlite'
         'xz'
     )
@@ -81,7 +71,7 @@ install_from_source() {
     koopa_assert_is_executable "${app[@]}"
     dict['cc_version']="$(koopa_get_version "${app['cc']}")"
     dict['jobs']="$(koopa_cpu_count)"
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
+    dict['openssl']="$(koopa_app_prefix 'openssl3')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
