@@ -234,6 +234,11 @@ install_from_uv() {
 }
 
 main() {
-    install_from_uv
+    if koopa_has_ssl_cert_file
+    then
+        install_from_source
+    else
+        install_from_uv
+    fi
     return 0
 }
