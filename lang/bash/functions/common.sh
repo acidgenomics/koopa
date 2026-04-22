@@ -15174,6 +15174,13 @@ koopa_install_openssl() {
         "$@"
 }
 
+koopa_install_openssl3() {
+    koopa_install_app \
+        --installer='openssl' \
+        --name='openssl3' \
+        "$@"
+}
+
 koopa_install_p7zip() {
     koopa_install_app \
         --name='p7zip' \

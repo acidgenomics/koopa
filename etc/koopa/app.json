@@ -3999,15 +3999,20 @@
     "bin": ["openssl"],
     "build_dependencies": ["make", "perl", "pkg-config"],
     "date": "2026-04-15",
-    "default": false,
+    "default": true,
     "dependencies": ["ca-certificates"],
     "prune": false,
     "url": ["https://www.openssl.org/source/"],
     "version": "4.0.0"
   },
   "openssl3": {
-    "date": "2025-08-21",
-    "removed": true
+    "build_dependencies": ["make", "perl", "pkg-config"],
+    "date": "2026-04-22",
+    "default": false,
+    "dependencies": ["ca-certificates"],
+    "prune": false,
+    "url": ["https://www.openssl.org/source/"],
+    "version": "3.6.2"
   },
   "oracle-instant-client": {
     "date": "2023-12-22",
