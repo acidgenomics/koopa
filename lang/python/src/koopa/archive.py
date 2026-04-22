@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import bz2
 import gzip
-import lzma
 import os
 import shutil
 import subprocess
@@ -65,6 +64,10 @@ def decompress(path: str, output: str | None = None) -> str:
         with bz2.open(path, "rb") as f_in, open(output, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
     elif name.endswith((".xz", ".lzma")):
+        try:
+            import lzma  # noqa: PLC0415
+        except ImportError as err:
+            raise ImportError("lzma package is required.") from err
         with lzma.open(path, "rb") as f_in, open(output, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
     elif name.endswith((".zst", ".zstd")):
@@ -120,6 +123,10 @@ def compress(
         with open(path, "rb") as f_in, bz2.open(output, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
     elif method == "xz":
+        try:
+            import lzma  # noqa: PLC0415
+        except ImportError as err:
+            raise ImportError("lzma package is required.") from err
         with open(path, "rb") as f_in, lzma.open(output, "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
     elif method == "zstd":

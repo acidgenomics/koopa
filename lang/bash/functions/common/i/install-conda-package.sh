@@ -22,6 +22,7 @@ koopa_install_conda_package() {
     dict['name']="${KOOPA_INSTALL_NAME:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
+    dict['channels']=''
     dict['yaml_file']=''
     pos=()
     while (("$#"))
@@ -77,21 +78,22 @@ koopa_install_conda_package() {
         '--version' "${dict['name']}"
     create_args=()
     dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    dict['channels']="$("${app['conda']}" config --show channels)"
-    if ! koopa_str_detect_fixed \
-            --pattern='conda-forge' \
-            --string="${dict['channels']}"
-    then
-        create_args+=(
-            '--channel=conda-forge'
-            '--channel=bioconda'
-        )
-    fi
     create_args+=("--prefix=${dict['libexec']}")
     if [[ -n "${dict['yaml_file']}" ]]
     then
+        koopa_assert_is_file "${dict['yaml_file']}"
         create_args+=("--file=${dict['yaml_file']}")
     else
+        dict['channels']="$("${app['conda']}" config --show channels)"
+        if ! koopa_str_detect_fixed \
+                --pattern='conda-forge' \
+                --string="${dict['channels']}"
+        then
+            create_args+=(
+                '--channel=conda-forge'
+                '--channel=bioconda'
+            )
+        fi
         create_args+=("${dict['name']}==${dict['version']}")
     fi
     koopa_dl 'conda create env args' "${create_args[*]}"
