@@ -594,10 +594,16 @@ _koopa_activate_direnv() {
     __kvar_shell="$(_koopa_shell_name)"
     __kvar_nounset="$(_koopa_boolean_nounset)"
     [ "$__kvar_nounset" -eq 1 ] && set +o nounset
+    unset -v \
+        DIRENV_DIFF \
+        DIRENV_DIR \
+        DIRENV_FILE \
+        DIRENV_WATCHES
     case "$__kvar_shell" in
         'bash' | \
         'zsh')
             eval "$("$__kvar_direnv" hook "$__kvar_shell")"
+            eval "$("$__kvar_direnv" export "$__kvar_shell")"
             ;;
     esac
     [ "$__kvar_nounset" -eq 1 ] && set -o nounset
