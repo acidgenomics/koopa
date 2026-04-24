@@ -2534,7 +2534,7 @@ _koopa_xdg_cache_home() {
 
 _koopa_xdg_config_dirs() {
     __kvar_string="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$__kvar_string" ]
+    if [ -z "$__kvar_string" ] 
     then
         __kvar_string='/etc/xdg'
     fi
