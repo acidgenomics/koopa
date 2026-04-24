@@ -11,8 +11,9 @@ koopa_check_system() {
     # Check system.
     # @note Updated 2026-04-24.
     # """
-    local -A dict
+    local -A bool dict
     koopa_assert_has_no_args "$#"
+    bool['warnings']=0
     koopa_check_build_system
     dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
     if [[ -d "${dict['bootstrap_prefix']}" ]]
@@ -35,10 +36,12 @@ bootstrap-version.txt"
                 koopa_warn "koopa bootstrap is out of date: \
 ${dict['installed_version']} != ${dict['expected_version']}."
                 koopa_warn "Run 'koopa install user bootstrap' to update."
+                bool['warnings']=1
             fi
         else
             koopa_warn 'koopa bootstrap is out of date.'
             koopa_warn "Run 'koopa install user bootstrap' to update."
+            bool['warnings']=1
         fi
     fi
     if koopa_is_macos
@@ -60,6 +63,7 @@ ${dict['installed_version']} != ${dict['expected_version']}."
             then
                 koopa_warn "System R is out of date at '${r_bin}': \
 ${dict['installed_r_version']} != ${dict['expected_r_version']}."
+                bool['warnings']=1
             fi
         done
         dict['py_maj_min_ver']="$( \
@@ -84,12 +88,18 @@ ${dict['installed_r_version']} != ${dict['expected_r_version']}."
                 koopa_warn "System Python is out of date \
 at '${python_bin}': ${dict['installed_python_version']} \
 != ${dict['expected_python_version']}."
+                bool['warnings']=1
             fi
         done
     fi
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
     # > koopa_check_exports
+    if [[ "${bool['warnings']}" -eq 1 ]]
+    then
+        koopa_warn 'System checks completed with warnings.'
+        return 1
+    fi
     koopa_alert_success 'System passed all checks.'
     return 0
 }
