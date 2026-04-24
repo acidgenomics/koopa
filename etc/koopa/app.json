@@ -923,12 +923,12 @@
   "cmake": {
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2025-11-03",
+    "date": "2026-04-24",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "4.1.2"
+    "version": "4.3.2"
   },
   "colorls": {
     "bin": ["colorls"],
