@@ -96,8 +96,20 @@ koopa_activate_app() {
         fi
         if [[ "${dict2['current_ver']}" != "${dict2['expected_ver']}" ]]
         then
-            koopa_stop "'${dict2['app_name']}' version mismatch at \
-'${dict2['prefix']}' (${dict2['current_ver']} != ${dict2['expected_ver']})."
+            koopa_alert_note "'${dict2['app_name']}' version mismatch \
+(${dict2['current_ver']} != ${dict2['expected_ver']}). \
+Reinstalling to update."
+            koopa_cli_install --reinstall "${dict2['app_name']}" || \
+                koopa_stop "Failed to reinstall '${dict2['app_name']}'."
+            dict2['current_ver']="$( \
+                koopa_app_version "${dict2['app_name']}" \
+            )"
+            if [[ "${dict2['current_ver']}" != "${dict2['expected_ver']}" ]]
+            then
+                koopa_stop "'${dict2['app_name']}' version mismatch \
+persists after reinstall at '${dict2['prefix']}' \
+(${dict2['current_ver']} != ${dict2['expected_ver']})."
+            fi
         fi
         if koopa_is_empty_dir "${dict2['prefix']}"
         then
