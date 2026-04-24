@@ -17095,6 +17095,11 @@ koopa_is_broken_symlink() {
     return 0
 }
 
+
+koopa_is_bootstrap_current() {
+    _koopa_is_bootstrap_current "$@"
+}
+
 koopa_is_compressed_file() {
     local pattern string
     koopa_assert_has_args "$#"

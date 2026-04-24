@@ -270,6 +270,11 @@ _koopa_activate_bootstrap() {
         unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
         return 0
     fi
+    if ! _koopa_is_bootstrap_current
+    then
+        printf 'Warning: koopa bootstrap is out of date.\n' >&2
+        printf 'Run bootstrap installer to update.\n' >&2
+    fi
     _koopa_add_to_path_start "${__kvar_bootstrap_prefix}/bin"
     unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
     return 0
@@ -1863,6 +1868,47 @@ _koopa_is_aws_ec2() {
     return 1
 }
 
+_koopa_is_bootstrap_current() {
+    __kvar_bootstrap_prefix="$(_koopa_bootstrap_prefix)"
+    __kvar_installed_version_file="${__kvar_bootstrap_prefix}/VERSION"
+    __kvar_expected_version_file="${KOOPA_PREFIX:?}/etc/koopa/bootstrap-version.txt"
+    if [ ! -f "$__kvar_expected_version_file" ]
+    then
+        unset -v \
+            __kvar_bootstrap_prefix \
+            __kvar_expected_version_file \
+            __kvar_installed_version_file
+        return 1
+    fi
+    if [ ! -f "$__kvar_installed_version_file" ]
+    then
+        unset -v \
+            __kvar_bootstrap_prefix \
+            __kvar_expected_version_file \
+            __kvar_installed_version_file
+        return 1
+    fi
+    __kvar_expected_version="$(cat "$__kvar_expected_version_file")"
+    __kvar_installed_version="$(cat "$__kvar_installed_version_file")"
+    if [ "$__kvar_installed_version" = "$__kvar_expected_version" ]
+    then
+        unset -v \
+            __kvar_bootstrap_prefix \
+            __kvar_expected_version \
+            __kvar_expected_version_file \
+            __kvar_installed_version \
+            __kvar_installed_version_file
+        return 0
+    fi
+    unset -v \
+        __kvar_bootstrap_prefix \
+        __kvar_expected_version \
+        __kvar_expected_version_file \
+        __kvar_installed_version \
+        __kvar_installed_version_file
+    return 1
+}
+
 _koopa_is_debian_like() {
     _koopa_is_os_like 'debian'
 }
@@ -2488,7 +2534,7 @@ _koopa_xdg_cache_home() {
 
 _koopa_xdg_config_dirs() {
     __kvar_string="${XDG_CONFIG_DIRS:-}"
-    if [ -z "$__kvar_string" ] 
+    if [ -z "$__kvar_string" ]
     then
         __kvar_string='/etc/xdg'
     fi

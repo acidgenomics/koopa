@@ -6,7 +6,7 @@
 _koopa_activate_bootstrap() {
     # """
     # Conditionally activate koopa bootstrap in current path.
-    # @note Updated 2024-10-14.
+    # @note Updated 2026-04-24.
     # """
     __kvar_bootstrap_prefix="$(_koopa_bootstrap_prefix)"
     if [ ! -d "$(_koopa_bootstrap_prefix)" ]
@@ -23,6 +23,11 @@ _koopa_activate_bootstrap() {
     then
         unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
         return 0
+    fi
+    if ! _koopa_is_bootstrap_current
+    then
+        printf 'Warning: koopa bootstrap is out of date.\n' >&2
+        printf 'Run bootstrap installer to update.\n' >&2
     fi
     _koopa_add_to_path_start "${__kvar_bootstrap_prefix}/bin"
     unset -v __kvar_bootstrap_prefix __kvar_opt_prefix

@@ -221,6 +221,9 @@ is_root() {
     [ "$(id -u)" -eq 0 ]
 }
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BOOTSTRAP_VERSION="$(cat "${SCRIPT_DIR}/bootstrap-version.txt")"
+
 PREFIX="${PREFIX:-}"
 if [ -z "$PREFIX" ]
 then
@@ -254,7 +257,8 @@ main() {
         install_coreutils
     )
     rm -fr "${PREFIX}/src"
-    printf 'Bootstrap installation was successful.\n'
+    printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
+    printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
     return 0
 }
 
