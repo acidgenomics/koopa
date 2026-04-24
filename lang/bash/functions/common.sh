@@ -4505,8 +4505,26 @@ koopa_check_shared_object() {
 }
 
 koopa_check_system() {
+    local -A dict
     koopa_assert_has_no_args "$#"
     koopa_check_build_system
+    dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
+    if [[ -d "${dict['bootstrap_prefix']}" ]]
+    then
+        dict['expected_version_file']="${KOOPA_PREFIX:?}/etc/koopa/bootstrap-version.txt"
+        dict['installed_version_file']="${dict['bootstrap_prefix']}/VERSION"
+        if [[ -f "${dict['expected_version_file']}" ]] \
+            && [[ -f "${dict['installed_version_file']}" ]]
+        then
+            dict['expected_version']="$(cat "${dict['expected_version_file']}")"
+            dict['installed_version']="$(cat "${dict['installed_version_file']}")"
+            if [[ "${dict['installed_version']}" != "${dict['expected_version']}" ]]
+            then
+                koopa_warn "koopa bootstrap is out of date: ${dict['installed_version']} != ${dict['expected_version']}."
+                koopa_warn "Run 'koopa install user bootstrap' to update."
+            fi
+        fi
+    fi
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
     koopa_alert_success 'System passed all checks.'
@@ -17082,7 +17100,15 @@ koopa_is_aws_s3_uri() {
 }
 
 koopa_is_bootstrap_current() {
-    _koopa_is_bootstrap_current "$@"
+    local -A dict
+    dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
+    dict['installed_version_file']="${dict['bootstrap_prefix']}/VERSION"
+    dict['expected_version_file']="${KOOPA_PREFIX:?}/etc/koopa/bootstrap-version.txt"
+    [[ -f "${dict['expected_version_file']}" ]] || return 1
+    [[ -f "${dict['installed_version_file']}" ]] || return 1
+    dict['expected_version']="$(cat "${dict['expected_version_file']}")"
+    dict['installed_version']="$(cat "${dict['installed_version_file']}")"
+    [[ "${dict['installed_version']}" == "${dict['expected_version']}" ]]
 }
 
 koopa_is_broken_symlink() {
