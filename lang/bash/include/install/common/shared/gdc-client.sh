@@ -36,7 +36,7 @@ END
 }
 
 main() {
-    if koopa_has_ssl_cert_file
+    if koopa_has_firewall
     then
         install_from_conda_python312
     else
