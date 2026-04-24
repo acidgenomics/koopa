@@ -130,7 +130,7 @@ coreutils-${__kvar_version}.tar.gz" \
 }
 
 install_openssl() {
-    __kvar_version='4.0.0'
+    __kvar_version='3.6.2'
     printf 'Installing openssl.\n'
     mkdir -p "${PREFIX}/src/openssl"
     cd "${PREFIX}/src/openssl" || return 1
