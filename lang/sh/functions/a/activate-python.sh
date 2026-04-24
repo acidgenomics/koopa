@@ -3,7 +3,7 @@
 _koopa_activate_python() {
     # """
     # Activate Python, including custom installed packages.
-    # @note Updated 2025-02-27.
+    # @note Updated 2026-04-24.
     #
     # Configures:
     # - Site packages library.
@@ -47,6 +47,12 @@ _koopa_activate_python() {
             export PYTHONSTARTUP="$__kvar_startup_file"
         fi
         unset -v __kvar_startup_file
+    fi
+    # 2026-04-24: Harden aws CLI against SyntaxWarning spamming console:
+    # https://github.com/conda-forge/awscli-feedstock/issues/2087
+    if [ -z "${PYTHONWARNINGS:-}" ]
+    then
+        export PYTHONWARNINGS='ignore::SyntaxWarning'
     fi
     if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
     then
