@@ -4511,22 +4511,75 @@ koopa_check_system() {
     dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
     if [[ -d "${dict['bootstrap_prefix']}" ]]
     then
-        dict['expected_version_file']="${KOOPA_PREFIX:?}/etc/koopa/bootstrap-version.txt"
+        dict['expected_version_file']="${KOOPA_PREFIX:?}/etc/koopa/\
+bootstrap-version.txt"
         dict['installed_version_file']="${dict['bootstrap_prefix']}/VERSION"
         if [[ -f "${dict['expected_version_file']}" ]] \
             && [[ -f "${dict['installed_version_file']}" ]]
         then
-            dict['expected_version']="$(cat "${dict['expected_version_file']}")"
-            dict['installed_version']="$(cat "${dict['installed_version_file']}")"
-            if [[ "${dict['installed_version']}" != "${dict['expected_version']}" ]]
+            dict['expected_version']="$( \
+                cat "${dict['expected_version_file']}" \
+            )"
+            dict['installed_version']="$( \
+                cat "${dict['installed_version_file']}" \
+            )"
+            if [[ "${dict['installed_version']}" \
+                != "${dict['expected_version']}" ]]
             then
-                koopa_warn "koopa bootstrap is out of date: ${dict['installed_version']} != ${dict['expected_version']}."
+                koopa_warn "koopa bootstrap is out of date: \
+${dict['installed_version']} != ${dict['expected_version']}."
                 koopa_warn "Run 'koopa install user bootstrap' to update."
             fi
         else
             koopa_warn 'koopa bootstrap is out of date.'
             koopa_warn "Run 'koopa install user bootstrap' to update."
         fi
+    fi
+    if koopa_is_macos
+    then
+        dict['expected_r_version']="$( \
+            koopa_app_json_version 'r' \
+        )"
+        local r_bin
+        for r_bin in \
+            '/usr/local/bin/R' \
+            '/Library/Frameworks/R.framework/Resources/bin/R'
+        do
+            [[ -x "$r_bin" ]] || continue
+            dict['installed_r_version']="$( \
+                koopa_r_version "$r_bin" \
+            )"
+            if [[ "${dict['installed_r_version']}" \
+                != "${dict['expected_r_version']}" ]]
+            then
+                koopa_warn "System R is out of date at '${r_bin}': \
+${dict['installed_r_version']} != ${dict['expected_r_version']}."
+            fi
+        done
+        dict['py_maj_min_ver']="$( \
+            koopa_python_major_minor_version \
+        )"
+        dict['expected_python_version']="$( \
+            koopa_app_json_version \
+                "python${dict['py_maj_min_ver']}" \
+        )"
+        local python_bin
+        for python_bin in \
+            '/usr/local/bin/python3' \
+            '/Library/Frameworks/Python.framework/Versions/Current/bin/python3'
+        do
+            [[ -x "$python_bin" ]] || continue
+            dict['installed_python_version']="$( \
+                koopa_get_version "$python_bin" \
+            )"
+            if [[ "${dict['installed_python_version']}" \
+                != "${dict['expected_python_version']}" ]]
+            then
+                koopa_warn "System Python is out of date \
+at '${python_bin}': ${dict['installed_python_version']} \
+!= ${dict['expected_python_version']}."
+            fi
+        done
     fi
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
