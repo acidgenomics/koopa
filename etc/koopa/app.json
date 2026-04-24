@@ -3967,12 +3967,12 @@
   },
   "openldap": {
     "build_dependencies": ["groff", "make"],
-    "date": "2024-12-30",
+    "date": "2026-04-24",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://www.openldap.org/software/"],
-    "version": "2.6.9"
+    "version": "2.6.13"
   },
   "openssh": {
     "build_dependencies": ["make", "pkg-config"],
