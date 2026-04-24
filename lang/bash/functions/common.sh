@@ -10979,6 +10979,21 @@ koopa_has_file_ext() {
     return 0
 }
 
+koopa_has_firewall() {
+    local -A dict
+    dict['ssl_cert_file']="${SSL_CERT_FILE:-}"
+    if [[ -z "${dict['ssl_cert_file']}" ]]
+    then
+        return 1
+    fi
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
+    then
+        return 1
+    fi
+    return 0
+}
+
 koopa_has_large_system_disk() {
     local -A dict
     koopa_assert_has_args_le "$#" 1
@@ -11018,21 +11033,6 @@ koopa_has_private_access() {
     koopa_file_detect_regex \
         --file="$file" \
         --pattern='^\[acidgenomics\]$'
-}
-
-koopa_has_ssl_cert_file() {
-    local -A dict
-    dict['ssl_cert_file']="${SSL_CERT_FILE:-}"
-    if [[ -z "${dict['ssl_cert_file']}" ]]
-    then
-        return 1
-    fi
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
-    then
-        return 1
-    fi
-    return 0
 }
 
 koopa_has_standard_umask() {
