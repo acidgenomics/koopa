@@ -973,6 +973,9 @@ koopa_macos_os_codename() {
     local -A dict
     dict['version']="$(koopa_macos_os_version)"
     case "${dict['version']}" in
+        '26.'*)
+            dict['string']='Tahoe'
+            ;;
         '15.'*)
             dict['string']='Sequoia'
             ;;

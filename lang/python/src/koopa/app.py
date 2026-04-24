@@ -71,6 +71,41 @@ def app_revdeps(name: str, mode: str, include_build_deps: bool = True) -> list:
     return lst
 
 
+def _resolve_dep_dict(dep_dict: dict, sys_dict: dict) -> list:
+    """Resolve a dependency dictionary to a list of dependency names.
+
+    Supports three dispatch strategies, checked in order:
+
+    1. **firewall** conditional – keys such as ``"firewall"``,
+       ``"firewall_linux"``, ``"firewall_macos"`` combined with a
+       ``"default"`` fallback.  When ``SSL_CERT_FILE`` is set externally the
+       firewall-prefixed key matching the current platform is used;
+       otherwise the ``"default"`` key is used.
+    2. **os_id** dispatch – e.g. ``"macos-arm64"``, ``"linux-amd64"`` with a
+       ``"noarch"`` fallback (existing behaviour).
+    3. Plain list (not a dict) – returned as-is by the caller before this
+       function is reached.
+    """
+    from koopa.system import has_firewall, is_macos
+
+    # Strategy 1: firewall conditional.
+    has_fw_keys = any(k.startswith("firewall") for k in dep_dict)
+    if has_fw_keys:
+        if has_firewall():
+            platform_key = "firewall_macos" if is_macos() else "firewall_linux"
+            if platform_key in dep_dict:
+                return list(dep_dict[platform_key])
+            if "firewall" in dep_dict:
+                return list(dep_dict["firewall"])
+        return list(dep_dict.get("default", []))
+
+    # Strategy 2: os_id / noarch dispatch (existing behaviour).
+    os_key = sys_dict["os_id"]
+    if os_key in dep_dict:
+        return list(dep_dict[os_key])
+    return list(dep_dict.get("noarch", []))
+
+
 def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True) -> list:
     """Extract unique build dependencies and dependencies in an ordered list.
 
@@ -85,14 +120,11 @@ def extract_app_deps(name: str, json_data: dict, include_build_deps: bool = True
     if include_build_deps and "build_dependencies" in json_data[name]:
         build_deps = json_data[name]["build_dependencies"]
         if isinstance(build_deps, dict):
-            if sys_dict["os_id"] in build_deps:
-                build_deps = build_deps[sys_dict["os_id"]]
-            else:
-                build_deps = build_deps["noarch"]
+            build_deps = _resolve_dep_dict(build_deps, sys_dict)
     if "dependencies" in json_data[name]:
         deps = json_data[name]["dependencies"]
         if isinstance(deps, dict):
-            deps = deps[sys_dict["os_id"]] if sys_dict["os_id"] in deps else deps["noarch"]
+            deps = _resolve_dep_dict(deps, sys_dict)
     all_deps = build_deps + deps
     all_deps = list(dict.fromkeys(all_deps))
     return all_deps

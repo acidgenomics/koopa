@@ -1,4 +1,63 @@
-# Release notes
+# Changelog
+
+## koopa 0.15.0 (2026-04-24)
+
+Major changes:
+
+- Significantly streamlined the app catalog, reducing from 308 to 162 managed
+  apps. Removed many rarely used and specialized apps (e.g., `anaconda`,
+  `apache-airflow`, `apache-spark`, `azure-cli`, `emacs`, `gcc`, `julia`,
+  `llvm`, `rust`, `salmon`, `samtools`, and many others) to focus on a curated
+  core set of tools.
+- Ported core Bash functions to a new Python package (`koopa`), located under
+  `lang/python/src/koopa/`. This includes modules for app management, system
+  checks, configuration, installation, downloads, and more.
+- Added `pyproject.toml` with Python 3.14 as the minimum required version.
+- Restructured app installer definitions from
+  `lang/bash/include/install/common/shared/` into a top-level `app/` directory,
+  with each app in its own versioned subdirectory.
+- Removed support for macOS Intel (x86_64). ARM64 (Apple Silicon) is now the
+  only supported macOS architecture.
+- Added a bootstrap install mode for initial system setup.
+- Reworked the system bootstrap approach for improved reliability.
+- Migrated from `openssl3` to `openssl` as the primary OpenSSL build, with
+  initial `openssl4` build support.
+- Updated default Python from 3.11 to 3.14, with migration through 3.12 and
+  3.13 intermediate versions.
+- Reworked Python installer to use `uv` for package management.
+- Removed `chemacs` dependency; reworked Emacs distribution handling.
+
+New apps:
+
+- `aws-azure-login`, `bandit`, `bash-completion`, `bash-language-server`,
+  `bpytop`, `btop`, `claude-code`, `commitizen`, `databricks-cli`,
+  `difftastic`, `direnv`, `du-dust`, `eza`, `fd-find`, `gdc-client`, `gitui`,
+  `gperf`, `httpx`, `huggingface-hub`, `ipython`, `jupyterlab`, `m4`, `mcfly`,
+  `mosaicml-cli`, `mypy`, `openssl`, `poetry`, `postgresql`, `pyflakes`,
+  `pylint`, `pyrefly`, `pyright`, `pytest`, `python3.13`, `python3.14`,
+  `radian`, `ruff`, `snakefmt`, `sphinx`, `sqlfluff`, `tealdeer`, `tqdm`, `ty`,
+  `uv`, and `zoxide`.
+
+Minor changes:
+
+- Hardened direnv activation for macOS VS Code.
+- Improved starship shell activation.
+- Improved conditional firewall handling for environments with restricted
+  network access.
+- Added self-healing support for stale app installations.
+- Built `databricks-cli` with Go instead of Python.
+- Reworked `kallisto` build to compile from source.
+- Fixed `os_id` error that led to incorrect platform-specific app filtering.
+- Reworked Node.js to build using bundled dependencies; pinned to LTS version
+  for better Linux support.
+- Improved `hdf5` to provide pkg-config files.
+- Reworked `gfortran` support for macOS.
+- Migrated some Rust apps to Conda where possible.
+- Switched Perl installer to updated URL.
+- Added `direnv` support for project environments.
+- Added Python virtual environment pinning.
+- Reworked dotfiles configuration and integration.
+- Numerous app version updates across the entire catalog.
 
 ## koopa 0.14.0 (2023-09-01)
 
@@ -36,7 +95,7 @@ Minor changes:
   `spacevim`, `sqlite`, `star`, `subread`, `tar`, `temurin`, `tree`, `vim`,
   `vulture`, `walk`, `wget2`, `xorg-libpthread-stubs`, `xorg-libx11`,
   `xorg-libxcb`, `xorg-xcb-proto`, `xorg-xorgproto`, `xxhash`, `xz`, `yaml-cpp`,
-  `yapf`, `zellij`, and `zlib`. 
+  `yapf`, `zellij`, and `zlib`.
 - Added app locator functions for `CC`, `CXX`, pbzip2, and pigz.
 - Reworked app subshell handling.
 - Reworked temporary CMake build location to be consistency out of the source

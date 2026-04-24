@@ -12,12 +12,16 @@ from sys import exit, path, version_info
 
 path.insert(0, join(dirname(__file__), "../src"))
 
-from koopa.check import check_installed_apps
+from koopa.check import check_bootstrap_version, check_installed_apps
 
 
 def main() -> None:
     """Main function."""
-    ok = check_installed_apps()
+    ok = True
+    if not check_bootstrap_version():
+        ok = False
+    if not check_installed_apps():
+        ok = False
     if not ok:
         exit(1)
 

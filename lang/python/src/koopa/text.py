@@ -172,6 +172,6 @@ def find_files_without_line_ending(dir_path: str) -> list[str]:
                 data = Path(full).read_bytes()
                 if data and not data.endswith(b"\n"):
                     result.append(full)
-            except (OSError, UnicodeDecodeError):
+            except OSError, UnicodeDecodeError:
                 pass
     return result

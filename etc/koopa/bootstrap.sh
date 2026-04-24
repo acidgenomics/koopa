@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-01-11.
+# @note Updated 2026-04-24.
 # """
 
 # Can debug with:
@@ -130,10 +130,10 @@ coreutils-${__kvar_version}.tar.gz" \
 }
 
 install_openssl() {
-    __kvar_version='3.6.1'
-    printf 'Installing openssl3.\n'
-    mkdir -p "${PREFIX}/src/openssl3"
-    cd "${PREFIX}/src/openssl3" || return 1
+    __kvar_version='3.6.2'
+    printf 'Installing openssl.\n'
+    mkdir -p "${PREFIX}/src/openssl"
+    cd "${PREFIX}/src/openssl" || return 1
     curl \
         --create-dirs \
         --fail \
@@ -162,7 +162,7 @@ openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
 }
 
 install_python() {
-    __kvar_version='3.14.3'
+    __kvar_version='3.14.4'
     printf 'Installing python.\n'
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
@@ -191,7 +191,7 @@ Python-${__kvar_version}.tgz" \
 }
 
 install_zlib() {
-    __kvar_version='1.3.1'
+    __kvar_version='1.3.2'
     printf 'Installing zlib.\n'
     mkdir -p "${PREFIX}/src/zlib"
     cd "${PREFIX}/src/zlib"
@@ -220,6 +220,9 @@ is_macos() {
 is_root() {
     [ "$(id -u)" -eq 0 ]
 }
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BOOTSTRAP_VERSION="$(cat "${SCRIPT_DIR}/bootstrap-version.txt")"
 
 PREFIX="${PREFIX:-}"
 if [ -z "$PREFIX" ]
@@ -254,7 +257,8 @@ main() {
         install_coreutils
     )
     rm -fr "${PREFIX}/src"
-    printf 'Bootstrap installation was successful.\n'
+    printf '%s\n' "${BOOTSTRAP_VERSION:?}" > "${PREFIX}/VERSION"
+    printf 'Bootstrap version %s installed successfully.\n' "$BOOTSTRAP_VERSION"
     return 0
 }
 

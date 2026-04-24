@@ -3,12 +3,21 @@
 main() {
     # """
     # Install Perl.
-    # @note Updated 2024-09-17.
+    # @note Updated 2026-04-24.
     #
-    # Consider installing from https://github.com/Perl/perl5
-    # if you hit download issues from main cpan.org server.
+    # @section Alterative URLs if blocked by corporate firewall:
+    #
+    # MetaCPAN CDN: https://cpan.metacpan.org/src/5.0/perl-5.42.0.tar.gz
+    # Fastly CDN: https://fastapi.metacpan.org/source/RJBS/perl-5.42.0.tar.gz
+    # GitHub: https://github.com/Perl/perl5/archive/refs/tags/v5.42.0.tar.gz
+    #
+    # Note: The GitHub tarball extracts to 'perl5-<VERSION>/' instead of
+    # 'perl-<VERSION>/', so it would require additional changes.
+    #
+    # The MetaCPAN mirror is a drop-in replacement.
     #
     # @section Regarding parallel build failures on Ubunutu:
+    #
     # make can error at this step when running in parallel.
     # # Updating 'mktables.lst'
     # - https://www.nntp.perl.org/group/perl.perl5.porters/2016/
