@@ -2,7 +2,7 @@
 
 # """
 # Bootstrap core dependencies.
-# @note Updated 2026-01-11.
+# @note Updated 2026-04-24.
 # """
 
 # Can debug with:
@@ -130,10 +130,10 @@ coreutils-${__kvar_version}.tar.gz" \
 }
 
 install_openssl() {
-    __kvar_version='3.6.1'
-    printf 'Installing openssl3.\n'
-    mkdir -p "${PREFIX}/src/openssl3"
-    cd "${PREFIX}/src/openssl3" || return 1
+    __kvar_version='4.0.0'
+    printf 'Installing openssl.\n'
+    mkdir -p "${PREFIX}/src/openssl"
+    cd "${PREFIX}/src/openssl" || return 1
     curl \
         --create-dirs \
         --fail \
@@ -162,7 +162,7 @@ openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
 }
 
 install_python() {
-    __kvar_version='3.14.3'
+    __kvar_version='3.14.4'
     printf 'Installing python.\n'
     mkdir -p "${PREFIX}/src/python"
     cd "${PREFIX}/src/python"
