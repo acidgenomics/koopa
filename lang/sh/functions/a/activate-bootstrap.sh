@@ -24,11 +24,6 @@ _koopa_activate_bootstrap() {
         unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
         return 0
     fi
-    if ! _koopa_is_bootstrap_current
-    then
-        printf 'Warning: koopa bootstrap is out of date.\n' >&2
-        printf 'Run bootstrap installer to update.\n' >&2
-    fi
     _koopa_add_to_path_start "${__kvar_bootstrap_prefix}/bin"
     unset -v __kvar_bootstrap_prefix __kvar_opt_prefix
     return 0
