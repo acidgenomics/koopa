@@ -32,7 +32,7 @@ def download(
     Path(os.path.dirname(output) or ".").mkdir(parents=True, exist_ok=True)
     try:
         _download_curl(url, output)
-    except (FileNotFoundError, subprocess.CalledProcessError):
+    except FileNotFoundError, subprocess.CalledProcessError:
         _download_urllib(url, output)
     if decompress:
         output = archive.decompress(output)
