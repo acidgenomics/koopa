@@ -4459,9 +4459,31 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": false,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.10.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4475,9 +4497,31 @@
       "python3.11",
       "python3.11-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": false,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4491,9 +4535,31 @@
       "python3.12",
       "python3.12-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": false,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4507,9 +4573,31 @@
       "python3.13",
       "python3.13-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": true,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4533,9 +4621,31 @@
       "python3.14",
       "python3.14-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": true,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python.1", "python3.1", "python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],

@@ -358,7 +358,7 @@ def mem_gb() -> float:
                 check=True,
             )
             return round(int(result.stdout.strip()) / (1024**3), 1)
-        except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
+        except FileNotFoundError, subprocess.CalledProcessError, ValueError:
             pass
     meminfo = "/proc/meminfo"
     if os.path.isfile(meminfo):
@@ -385,6 +385,30 @@ def color_mode() -> str:
 def today() -> str:
     """Get today's date in ISO format."""
     return datetime.now(tz=UTC).strftime("%Y-%m-%d")
+
+
+def has_firewall() -> bool:
+    """Check if the system is behind a corporate firewall.
+
+    This mirrors the Bash ``koopa_has_firewall`` function. Returns ``True``
+    when the ``SSL_CERT_FILE`` environment variable is set to a path that does
+    *not* reside under the koopa prefix (i.e. it was provided externally, such
+    as by a corporate firewall).
+
+    Returns
+    -------
+    bool
+        ``True`` when a non-koopa SSL_CERT_FILE is configured.
+    """
+    from koopa.prefix import koopa_prefix
+
+    ssl_cert_file = os.environ.get("SSL_CERT_FILE", "")
+    if not ssl_cert_file:
+        return False
+    kp = koopa_prefix()
+    if ssl_cert_file.startswith(kp + "/"):
+        return False
+    return True
 
 
 def boolean_nounset(value: str | bool | int | None) -> bool:
