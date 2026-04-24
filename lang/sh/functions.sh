@@ -883,6 +883,10 @@ _koopa_activate_python() {
         fi
         unset -v __kvar_startup_file
     fi
+    if [ -z "${PYTHONWARNINGS:-}" ]
+    then
+        export PYTHONWARNINGS='ignore::SyntaxWarning'
+    fi
     if [ -z "${VIRTUAL_ENV_DISABLE_PROMPT:-}" ]
     then
         export VIRTUAL_ENV_DISABLE_PROMPT=1
