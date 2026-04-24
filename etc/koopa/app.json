@@ -5842,7 +5842,7 @@
   "wget": {
     "bin": ["wget"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2024-12-30",
+    "date": "2026-04-24",
     "default": true,
     "dependencies": [
       "gettext",
@@ -5859,12 +5859,12 @@
       "https://www.gnu.org/software/wget/",
       "https://ftp.gnu.org/gnu/wget/?C=M;O=D"
     ],
-    "version": "1.24.5"
+    "version": "1.25.0"
   },
   "wget2": {
     "bin": ["wget2"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2026-04-24",
     "default": false,
     "dependencies": [
       "brotli",
@@ -5886,7 +5886,7 @@
     ],
     "prune": false,
     "url": ["https://gitlab.com/gnuwget/wget2"],
-    "version": "2.2.0"
+    "version": "2.2.1"
   },
   "which": {
     "bin": ["gwhich"],
