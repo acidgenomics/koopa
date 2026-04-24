@@ -3,7 +3,7 @@
 koopa_install_node_package() {
     # """
     # Install Node.js package using npm.
-    # @note Updated 2025-04-15.
+    # @note Updated 2026-04-24.
     #
     # @seealso
     # - npm help config
@@ -66,7 +66,6 @@ koopa_install_node_package() {
     export NPM_CONFIG_UPDATE_NOTIFIER=false
     koopa_is_root && install_args+=('--unsafe-perm')
     install_args+=(
-        '--build-from-source'
         "--cache=${dict['cache_prefix']}"
         '--global'
         '--loglevel=silly' # -ddd

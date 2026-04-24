@@ -15101,7 +15101,6 @@ koopa_install_node_package() {
     export NPM_CONFIG_UPDATE_NOTIFIER=false
     koopa_is_root && install_args+=('--unsafe-perm')
     install_args+=(
-        '--build-from-source'
         "--cache=${dict['cache_prefix']}"
         '--global'
         '--loglevel=silly' # -ddd
