@@ -191,7 +191,7 @@ Python-${__kvar_version}.tgz" \
 }
 
 install_zlib() {
-    __kvar_version='1.3.1'
+    __kvar_version='1.3.2'
     printf 'Installing zlib.\n'
     mkdir -p "${PREFIX}/src/zlib"
     cd "${PREFIX}/src/zlib"
