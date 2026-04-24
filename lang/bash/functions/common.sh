@@ -17081,6 +17081,10 @@ koopa_is_aws_s3_uri() {
     return 0
 }
 
+koopa_is_bootstrap_current() {
+    _koopa_is_bootstrap_current "$@"
+}
+
 koopa_is_broken_symlink() {
     local file
     koopa_assert_has_args "$#"
@@ -17093,11 +17097,6 @@ koopa_is_broken_symlink() {
         return 1
     done
     return 0
-}
-
-
-koopa_is_bootstrap_current() {
-    _koopa_is_bootstrap_current "$@"
 }
 
 koopa_is_compressed_file() {
