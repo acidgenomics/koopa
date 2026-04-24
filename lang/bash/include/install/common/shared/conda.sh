@@ -26,7 +26,7 @@ main() {
     dict['os_type']="$(koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_version']='3.13'
-    if koopa_has_ssl_cert_file
+    if koopa_has_firewall
     then
         dict['py_version']='3.12'
     fi

@@ -6,7 +6,7 @@
 _koopa_activate_bootstrap() {
     # """
     # Conditionally activate koopa bootstrap in current path.
-    # @note Updated 2024-10-14.
+    # @note Updated 2026-04-24.
     # """
     __kvar_bootstrap_prefix="$(_koopa_bootstrap_prefix)"
     if [ ! -d "$(_koopa_bootstrap_prefix)" ]

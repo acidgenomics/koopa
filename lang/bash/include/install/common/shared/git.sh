@@ -3,7 +3,7 @@
 main() {
     # """
     # Install Git.
-    # @note Updated 2025-01-02.
+    # @note Updated 2026-04-24.
     #
     # @seealso
     # - https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
@@ -84,9 +84,11 @@ git-manpages-${dict['version']}.tar.xz"
     ./configure "${conf_args[@]}"
     "${app['make']}" \
         --jobs="${dict['jobs']}" \
+        NO_IMAP_SEND='YesPlease' \
         NO_INSTALL_HARDLINKS='YesPlease' \
         VERBOSE=1
     "${app['make']}" \
+        NO_IMAP_SEND='YesPlease' \
         NO_INSTALL_HARDLINKS='YesPlease' \
         install
     koopa_alert 'Installing subtree.'

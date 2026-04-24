@@ -1382,6 +1382,7 @@ def install_shared_apps(
         raise RuntimeError(msg)
     try:
         import psutil  # noqa: PLC0415
+
         mem_gb = psutil.virtual_memory().total / (1024**3)
         mem_gb_cutoff = 6
         if mem_gb < mem_gb_cutoff:

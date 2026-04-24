@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-koopa_has_ssl_cert_file() {
+koopa_has_firewall() {
     # """
-    # Does the current environment have custom CA certificates loaded?
-    # @note Updated 2026-01-02.
+    # Is the current environment behind a corporate firewall?
+    # @note Updated 2026-04-24.
     # """
     local -A dict
     dict['ssl_cert_file']="${SSL_CERT_FILE:-}"

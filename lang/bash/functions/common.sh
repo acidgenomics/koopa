@@ -70,8 +70,20 @@ koopa_activate_app() {
         fi
         if [[ "${dict2['current_ver']}" != "${dict2['expected_ver']}" ]]
         then
-            koopa_stop "'${dict2['app_name']}' version mismatch at \
-'${dict2['prefix']}' (${dict2['current_ver']} != ${dict2['expected_ver']})."
+            koopa_alert_note "'${dict2['app_name']}' version mismatch \
+(${dict2['current_ver']} != ${dict2['expected_ver']}). \
+Reinstalling to update."
+            koopa_cli_install --reinstall "${dict2['app_name']}" || \
+                koopa_stop "Failed to reinstall '${dict2['app_name']}'."
+            dict2['current_ver']="$( \
+                koopa_app_version "${dict2['app_name']}" \
+            )"
+            if [[ "${dict2['current_ver']}" != "${dict2['expected_ver']}" ]]
+            then
+                koopa_stop "'${dict2['app_name']}' version mismatch \
+persists after reinstall at '${dict2['prefix']}' \
+(${dict2['current_ver']} != ${dict2['expected_ver']})."
+            fi
         fi
         if koopa_is_empty_dir "${dict2['prefix']}"
         then
@@ -4493,10 +4505,94 @@ koopa_check_shared_object() {
 }
 
 koopa_check_system() {
+    local -A bool dict
     koopa_assert_has_no_args "$#"
+    bool['warnings']=0
     koopa_check_build_system
+    dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
+    if [[ -d "${dict['bootstrap_prefix']}" ]]
+    then
+        dict['expected_version_file']="${KOOPA_PREFIX:?}/etc/koopa/\
+bootstrap-version.txt"
+        dict['installed_version_file']="${dict['bootstrap_prefix']}/VERSION"
+        if [[ -f "${dict['expected_version_file']}" ]] \
+            && [[ -f "${dict['installed_version_file']}" ]]
+        then
+            dict['expected_version']="$( \
+                cat "${dict['expected_version_file']}" \
+            )"
+            dict['installed_version']="$( \
+                cat "${dict['installed_version_file']}" \
+            )"
+            if [[ "${dict['installed_version']}" \
+                != "${dict['expected_version']}" ]]
+            then
+                koopa_warn "koopa bootstrap is out of date: \
+${dict['installed_version']} != ${dict['expected_version']}."
+                koopa_warn "Run 'koopa install user bootstrap' to update."
+                bool['warnings']=1
+            fi
+        else
+            koopa_warn 'koopa bootstrap is out of date.'
+            koopa_warn "Run 'koopa install user bootstrap' to update."
+            bool['warnings']=1
+        fi
+    fi
+    if koopa_is_macos
+    then
+        dict['expected_r_version']="$( \
+            koopa_app_json_version 'r' \
+        )"
+        local r_bin
+        for r_bin in \
+            '/usr/local/bin/R' \
+            '/Library/Frameworks/R.framework/Resources/bin/R'
+        do
+            [[ -x "$r_bin" ]] || continue
+            dict['installed_r_version']="$( \
+                koopa_r_version "$r_bin" \
+            )"
+            if [[ "${dict['installed_r_version']}" \
+                != "${dict['expected_r_version']}" ]]
+            then
+                koopa_warn "System R is out of date at '${r_bin}': \
+${dict['installed_r_version']} != ${dict['expected_r_version']}."
+                bool['warnings']=1
+            fi
+        done
+        dict['py_maj_min_ver']="$( \
+            koopa_python_major_minor_version \
+        )"
+        dict['expected_python_version']="$( \
+            koopa_app_json_version \
+                "python${dict['py_maj_min_ver']}" \
+        )"
+        local python_bin
+        for python_bin in \
+            '/usr/local/bin/python3' \
+            '/Library/Frameworks/Python.framework/Versions/Current/bin/python3'
+        do
+            [[ -x "$python_bin" ]] || continue
+            dict['installed_python_version']="$( \
+                koopa_get_version "$python_bin" \
+            )"
+            if [[ "${dict['installed_python_version']}" \
+                != "${dict['expected_python_version']}" ]]
+            then
+                koopa_warn "System Python is out of date \
+at '${python_bin}': ${dict['installed_python_version']} \
+!= ${dict['expected_python_version']}."
+                bool['warnings']=1
+            fi
+        done
+    fi
     koopa_python_script 'check-system.py'
     koopa_check_disk '/'
+    if [[ "${bool['warnings']}" -eq 1 ]]
+    then
+        koopa_warn 'System checks completed with warnings.'
+        return 1
+    fi
     koopa_alert_success 'System passed all checks.'
     return 0
 }
@@ -10979,6 +11075,21 @@ koopa_has_file_ext() {
     return 0
 }
 
+koopa_has_firewall() {
+    local -A dict
+    dict['ssl_cert_file']="${SSL_CERT_FILE:-}"
+    if [[ -z "${dict['ssl_cert_file']}" ]]
+    then
+        return 1
+    fi
+    dict['koopa_prefix']="$(koopa_koopa_prefix)"
+    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
+    then
+        return 1
+    fi
+    return 0
+}
+
 koopa_has_large_system_disk() {
     local -A dict
     koopa_assert_has_args_le "$#" 1
@@ -11018,21 +11129,6 @@ koopa_has_private_access() {
     koopa_file_detect_regex \
         --file="$file" \
         --pattern='^\[acidgenomics\]$'
-}
-
-koopa_has_ssl_cert_file() {
-    local -A dict
-    dict['ssl_cert_file']="${SSL_CERT_FILE:-}"
-    if [[ -z "${dict['ssl_cert_file']}" ]]
-    then
-        return 1
-    fi
-    dict['koopa_prefix']="$(koopa_koopa_prefix)"
-    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
-    then
-        return 1
-    fi
-    return 0
 }
 
 koopa_has_standard_umask() {
@@ -15089,7 +15185,6 @@ koopa_install_node_package() {
     export NPM_CONFIG_UPDATE_NOTIFIER=false
     koopa_is_root && install_args+=('--unsafe-perm')
     install_args+=(
-        '--build-from-source'
         "--cache=${dict['cache_prefix']}"
         '--global'
         '--loglevel=silly' # -ddd
@@ -17068,6 +17163,18 @@ koopa_is_aws_s3_uri() {
         || return 1
     done
     return 0
+}
+
+koopa_is_bootstrap_current() {
+    local -A dict
+    dict['bootstrap_prefix']="$(koopa_bootstrap_prefix)"
+    dict['installed_version_file']="${dict['bootstrap_prefix']}/VERSION"
+    dict['expected_version_file']="${KOOPA_PREFIX:?}/etc/koopa/bootstrap-version.txt"
+    [[ -f "${dict['expected_version_file']}" ]] || return 1
+    [[ -f "${dict['installed_version_file']}" ]] || return 1
+    dict['expected_version']="$(cat "${dict['expected_version_file']}")"
+    dict['installed_version']="$(cat "${dict['installed_version_file']}")"
+    [[ "${dict['installed_version']}" == "${dict['expected_version']}" ]]
 }
 
 koopa_is_broken_symlink() {

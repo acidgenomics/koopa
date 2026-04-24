@@ -1357,12 +1357,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-04-22",
+    "date": "2026-04-24",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "862d2a7245985c6d892eb645763cc18ea5b93fe1"
+    "version": "6fe8646a9da73288c1875054c5f581471cd86c7f"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -1954,7 +1954,7 @@
       "git-upload-pack"
     ],
     "build_dependencies": ["autoconf", "make", "xz"],
-    "date": "2026-03-19",
+    "date": "2026-04-24",
     "default": true,
     "dependencies": [
       "bash",
@@ -1972,7 +1972,7 @@
     ],
     "prune": false,
     "url": ["https://git-scm.com/"],
-    "version": "2.53.0"
+    "version": "2.54.0"
   },
   "git-filter-repo": {
     "bin": ["git-filter-repo"],
@@ -2459,7 +2459,7 @@
     "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2026-04-15",
     "default": true,
-    "dependencies": ["ncurses", "python3.14"],
+    "dependencies": ["ncurses"],
     "man1": ["htop.1"],
     "prune": true,
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
@@ -4130,12 +4130,12 @@
   "perl": {
     "bin": ["cpan", "perl"],
     "build_dependencies": ["make"],
-    "date": "2026-03-21",
+    "date": "2026-04-24",
     "default": true,
     "man1": ["cpan.1", "perl.1"],
     "prune": false,
     "url": ["https://www.perl.org/get.html"],
-    "version": "5.42.0"
+    "version": "5.42.2"
   },
   "picard": {
     "bin": ["picard"],
@@ -4459,9 +4459,31 @@
       "python3.10",
       "python3.10-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": false,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.10.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4475,9 +4497,31 @@
       "python3.11",
       "python3.11-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": false,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.11.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4491,9 +4535,31 @@
       "python3.12",
       "python3.12-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": false,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.12.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4507,9 +4573,31 @@
       "python3.13",
       "python3.13-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": true,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -4533,9 +4621,31 @@
       "python3.14",
       "python3.14-config"
     ],
-    "build_dependencies": ["uv"],
+    "build_dependencies": {
+      "default": ["uv"],
+      "firewall": ["make", "pkg-config"]
+    },
     "date": "2026-04-15",
     "default": true,
+    "dependencies": {
+      "default": [],
+      "firewall_linux": [
+        "bzip2",
+        "expat",
+        "libedit",
+        "libffi",
+        "libxcrypt",
+        "mpdecimal",
+        "ncurses",
+        "openssl3",
+        "readline",
+        "sqlite",
+        "unzip",
+        "xz",
+        "zlib"
+      ],
+      "firewall_macos": ["expat", "mpdecimal", "openssl3", "sqlite", "xz"]
+    },
     "man1": ["python.1", "python3.1", "python3.13.1"],
     "prune": false,
     "url": ["https://www.python.org/"],
@@ -6178,11 +6288,11 @@
   },
   "zlib": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-05-23",
+    "date": "2026-04-24",
     "default": false,
     "prune": false,
     "url": ["https://www.zlib.net/"],
-    "version": "1.3.1"
+    "version": "1.3.2"
   },
   "zopfli": {
     "date": "2026-01-05",
