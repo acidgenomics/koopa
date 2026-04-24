@@ -4523,6 +4523,9 @@ koopa_check_system() {
                 koopa_warn "koopa bootstrap is out of date: ${dict['installed_version']} != ${dict['expected_version']}."
                 koopa_warn "Run 'koopa install user bootstrap' to update."
             fi
+        else
+            koopa_warn 'koopa bootstrap is out of date.'
+            koopa_warn "Run 'koopa install user bootstrap' to update."
         fi
     fi
     koopa_python_script 'check-system.py'
