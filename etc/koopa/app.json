@@ -2459,7 +2459,7 @@
     "build_dependencies": ["autoconf", "automake", "make"],
     "date": "2026-04-15",
     "default": true,
-    "dependencies": ["ncurses", "python3.14"],
+    "dependencies": ["ncurses"],
     "man1": ["htop.1"],
     "prune": true,
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
