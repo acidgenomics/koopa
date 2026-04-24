@@ -23,6 +23,9 @@ main() {
         'pcre2' \
         'gnutls'
     dict['ssl']="$(koopa_app_prefix 'openssl')"
+    # OpenSSL >= 4.0 removed 'SSLv3_client_method' without defining
+    # 'OPENSSL_NO_SSL3_METHOD', which wget checks with '#ifndef'.
+    koopa_append_cppflags '-DOPENSSL_NO_SSL3_METHOD'
     conf_args=(
         '--disable-debug'
         "--with-libssl-prefix=${dict['ssl']}"
