@@ -10,5 +10,4 @@ koopa_app_dependencies() {
     # """
     koopa_assert_has_args_eq "$#" 1
     koopa_python_script 'app-dependencies.py' "$@"
-    return 0
 }
