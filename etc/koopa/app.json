@@ -892,12 +892,12 @@
   },
   "claude-code": {
     "bin": ["claude"],
-    "date": "2026-04-14",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": ["https://www.npmjs.com/package/@anthropic-ai/claude-code"],
-    "version": "2.1.107"
+    "version": "2.1.123"
   },
   "cli11": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -1837,6 +1837,18 @@
       "https://github.com/NCI-GDC/gdc-client"
     ],
     "version": "2.3"
+  },
+  "gemini-cli": {
+    "bin": ["gemini"],
+    "date": "2026-04-29",
+    "default": false,
+    "dependencies": ["node"],
+    "prune": true,
+    "url": [
+      "https://geminicli.com/",
+      "https://www.npmjs.com/package/@google/gemini-cli"
+    ],
+    "version": "0.40.0"
   },
   "genomepy": {
     "bin": ["genomepy"],
