@@ -1,5 +1,49 @@
 # Changelog
 
+## koopa 0.15.1 (2026-04-29)
+
+New apps:
+
+- `gemini-cli`.
+
+Minor changes:
+
+- Switched `google-cloud-sdk` installer to Conda.
+- Improved `nextflow` installer to correctly define Java path.
+- Fixed OpenSSL 4 build errors with `openldap`.
+- Improved error catching from Python scripts.
+- Hardened Python against spurious `SyntaxWarning` messages triggered by the
+  AWS CLI.
+- Wired in Python and R system checks.
+- Improved bootstrap messaging and version tracking.
+
+App version updates:
+
+- `asdf` 0.19.0.
+- `claude-code` 2.1.123.
+- `cmake` 4.3.2.
+- `fzf` 0.72.0.
+- `gdal` 3.12.4.
+- `gh` 2.92.0.
+- `google-cloud-sdk` 566.0.0.
+- `gseapy` 1.2.1.
+- `htop` 3.5.1.
+- `hugo` 0.161.0.
+- `lesspipe` 2.25.
+- `nextflow` 25.10.4.
+- `openblas` 0.3.33.
+- `openldap` 2.6.13.
+- `perl` 5.42.2.
+- `py-spy` 0.4.2.
+- `pyenv` 2.6.28.
+- `ruff` 0.15.12.
+- `streamlit` 1.57.0.
+- `ty` 0.0.33.
+- `uv` 0.11.8.
+- `wget` 1.25.0.
+- `wget2` 2.2.1.
+- `zlib` 1.3.2.
+
 ## koopa 0.15.0 (2026-04-24)
 
 Major changes:
