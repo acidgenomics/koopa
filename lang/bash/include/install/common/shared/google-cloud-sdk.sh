@@ -96,6 +96,6 @@ ${dict['arch2']}.tar.gz"
 }
 
 main() {
-    install_from_source
+    install_from_conda
     return 0
 }
