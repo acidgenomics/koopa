@@ -694,7 +694,6 @@ koopa_ansi_escape() {
 koopa_app_dependencies() {
     koopa_assert_has_args_eq "$#" 1
     koopa_python_script 'app-dependencies.py' "$@"
-    return 0
 }
 
 koopa_app_json_bin() {
@@ -12576,8 +12575,10 @@ ${dict['version2']}"
     fi
     if [[ "${bool['deps']}" -eq 1 ]]
     then
-        local dep deps
-        readarray -t deps <<< "$(koopa_app_dependencies "${dict['name']}")"
+        local dep deps deps_str
+        deps_str="$(koopa_app_dependencies "${dict['name']}")" || \
+            koopa_stop "Failed to resolve dependencies for '${dict['name']}'."
+        readarray -t deps <<< "$deps_str"
         if koopa_is_array_non_empty "${deps[@]:-}"
         then
             koopa_dl \
@@ -22526,7 +22527,6 @@ koopa_python_script() {
     dict['script']="${dict['prefix']}/${dict['cmd_name']}"
     koopa_assert_is_executable "${dict['script']}"
     "${app['python']}" "${dict['script']}" "$@"
-    return 0
 }
 
 koopa_python_scripts_prefix() {

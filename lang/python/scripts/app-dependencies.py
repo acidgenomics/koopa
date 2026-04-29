@@ -9,7 +9,7 @@ $ ./app-dependencies.py 'python3.11'
 
 from argparse import ArgumentParser
 from os.path import dirname, join
-from sys import path, version_info
+from sys import exit, path, stderr, version_info
 
 path.insert(0, join(dirname(__file__), "../src"))
 
@@ -22,7 +22,11 @@ args = parser.parse_args()
 
 def main(name: str) -> None:
     """Main function."""
-    print_app_deps(name)
+    try:
+        print_app_deps(name)
+    except NameError as e:
+        print(f"ERROR: {e}", file=stderr)
+        exit(1)
 
 
 if __name__ == "__main__":
