@@ -42,5 +42,4 @@ koopa_python_script() {
     dict['script']="${dict['prefix']}/${dict['cmd_name']}"
     koopa_assert_is_executable "${dict['script']}"
     "${app['python']}" "${dict['script']}" "$@"
-    return 0
 }

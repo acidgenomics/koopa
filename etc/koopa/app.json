@@ -146,11 +146,11 @@
   },
   "asdf": {
     "bin": ["asdf"],
-    "date": "2026-03-19",
+    "date": "2026-04-29",
     "default": false,
     "prune": false,
     "url": ["https://github.com/asdf-vm/asdf/"],
-    "version": "0.18.1"
+    "version": "0.19.0"
   },
   "aspell": {
     "bin": ["aspell"],
@@ -892,12 +892,12 @@
   },
   "claude-code": {
     "bin": ["claude"],
-    "date": "2026-04-14",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["node"],
     "prune": true,
     "url": ["https://www.npmjs.com/package/@anthropic-ai/claude-code"],
-    "version": "2.1.107"
+    "version": "2.1.123"
   },
   "cli11": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -923,12 +923,12 @@
   "cmake": {
     "bin": ["cmake", "cpack", "ctest"],
     "build_dependencies": ["make"],
-    "date": "2025-11-03",
+    "date": "2026-04-24",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
-    "version": "4.1.2"
+    "version": "4.3.2"
   },
   "colorls": {
     "bin": ["colorls"],
@@ -1357,12 +1357,12 @@
     "version": "ba1dca322f9a07bc2b7bec6a98f2c3c55c0bbd77"
   },
   "dotfiles": {
-    "date": "2026-04-24",
+    "date": "2026-04-27",
     "default": true,
     "dependencies": ["chezmoi"],
     "prune": true,
     "url": ["https://github.com/acidgenomics/dotfiles/"],
-    "version": "6fe8646a9da73288c1875054c5f581471cd86c7f"
+    "version": "4d938d366bc9c112460329043323fd4346a97c7f"
   },
   "du-dust": {
     "bin": ["dust"],
@@ -1731,12 +1731,12 @@
   },
   "fzf": {
     "bin": ["fzf"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": true,
     "dependencies": ["conda"],
     "man1": ["fzf.1"],
     "url": ["https://github.com/junegunn/fzf/"],
-    "version": "0.71.0"
+    "version": "0.72.0"
   },
   "gatk": {
     "bin": ["gatk"],
@@ -1786,7 +1786,7 @@
   "gdal": {
     "bin": ["gdal-config"],
     "build_dependencies": ["cmake", "libtool", "pkg-config"],
-    "date": "2026-03-21",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": [
       "bison",
@@ -1815,7 +1815,7 @@
     "man1": ["gdal-config.1"],
     "prune": false,
     "url": ["https://gdal.org/"],
-    "version": "3.12.3"
+    "version": "3.12.4"
   },
   "gdbm": {
     "build_dependencies": ["make"],
@@ -1837,6 +1837,18 @@
       "https://github.com/NCI-GDC/gdc-client"
     ],
     "version": "2.3"
+  },
+  "gemini-cli": {
+    "bin": ["gemini"],
+    "date": "2026-04-29",
+    "default": false,
+    "dependencies": ["node"],
+    "prune": true,
+    "url": [
+      "https://geminicli.com/",
+      "https://www.npmjs.com/package/@google/gemini-cli"
+    ],
+    "version": "0.40.0"
   },
   "genomepy": {
     "bin": ["genomepy"],
@@ -1926,12 +1938,12 @@
   },
   "gh": {
     "bin": ["gh"],
-    "date": "2026-04-22",
+    "date": "2026-04-29",
     "default": true,
     "dependencies": ["conda"],
     "prune": true,
     "url": ["https://github.com/cli/cli/"],
-    "version": "2.90.0"
+    "version": "2.92.0"
   },
   "ghostscript": {
     "bin": ["gs"],
@@ -2088,13 +2100,13 @@
   },
   "google-cloud-sdk": {
     "bin": ["gcloud", "gsutil"],
-    "date": "2026-01-02",
+    "date": "2026-04-29",
     "default": false,
-    "dependencies": ["python3.13"],
+    "dependencies": ["conda"],
     "prune": true,
     "python_version_pin": true,
     "url": ["https://cloud.google.com/sdk/docs/install-sdk"],
-    "version": "550.0.0"
+    "version": "566.0.0"
   },
   "googletest": {
     "build_dependencies": ["cmake", "pkg-config"],
@@ -2243,7 +2255,7 @@
   "gseapy": {
     "bin": ["gseapy"],
     "build_dependencies": ["rust"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -2251,7 +2263,7 @@
       "https://gseapy.readthedocs.io/",
       "https://github.com/zqfang/GSEApy/"
     ],
-    "version": "1.1.13"
+    "version": "1.2.1"
   },
   "gsl": {
     "build_dependencies": ["make", "pkg-config"],
@@ -2457,13 +2469,13 @@
   "htop": {
     "bin": ["htop"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": true,
     "dependencies": ["ncurses"],
     "man1": ["htop.1"],
     "prune": true,
     "url": ["https://hisham.hm/htop/", "https://github.com/htop-dev/htop/"],
-    "version": "3.5.0"
+    "version": "3.5.1"
   },
   "htseq": {
     "bin": ["htseq-count"],
@@ -2539,12 +2551,12 @@
   "hugo": {
     "bin": ["hugo"],
     "build_dependencies": ["go"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": false,
     "notes": ["Bump on minor release update only."],
     "prune": true,
     "url": ["https://gohugo.io/", "https://github.com/gohugoio/hugo/"],
-    "version": "0.160.1"
+    "version": "0.161.0"
   },
   "hyperfine": {
     "bin": ["hyperfine"],
@@ -2882,11 +2894,11 @@
   "lesspipe": {
     "bin": ["lesspipe.sh"],
     "build_dependencies": ["bash", "make"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": true,
     "prune": true,
     "url": ["https://github.com/wofr06/lesspipe/"],
-    "version": "2.24"
+    "version": "2.25"
   },
   "libaec": {
     "build_dependencies": ["cmake", "make"],
@@ -3781,7 +3793,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2026-02-02",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -3790,7 +3802,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "25.10.3"
+    "version": "25.10.4"
   },
   "nghttp2": {
     "build_dependencies": ["gcc", "make", "pkg-config", "python3.14"],
@@ -3950,11 +3962,11 @@
   },
   "openblas": {
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": false,
     "prune": false,
     "url": ["https://www.openblas.net/", "https://github.com/xianyi/OpenBLAS/"],
-    "version": "0.3.32"
+    "version": "0.3.33"
   },
   "openjpeg": {
     "build_dependencies": ["cmake", "make", "pkg-config"],
@@ -3967,12 +3979,12 @@
   },
   "openldap": {
     "build_dependencies": ["groff", "make"],
-    "date": "2024-12-30",
+    "date": "2026-04-24",
     "default": false,
     "dependencies": ["openssl"],
     "prune": false,
     "url": ["https://www.openldap.org/software/"],
-    "version": "2.6.9"
+    "version": "2.6.13"
   },
   "openssh": {
     "build_dependencies": ["make", "pkg-config"],
@@ -4303,7 +4315,7 @@
   },
   "py-spy": {
     "bin": ["py-spy"],
-    "date": "2025-08-10",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -4311,7 +4323,7 @@
       "https://github.com/benfred/py-spy/",
       "https://pypi.org/project/py-spy/"
     ],
-    "version": "0.4.1"
+    "version": "0.4.2"
   },
   "pybind11": {
     "build_dependencies": ["cmake", "python3.14"],
@@ -4336,12 +4348,12 @@
   "pyenv": {
     "bin": ["pyenv"],
     "build_dependencies": ["sed"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": false,
     "man1": ["pyenv.1"],
     "prune": false,
     "url": ["https://github.com/pyenv/pyenv/"],
-    "version": "2.6.27"
+    "version": "2.6.28"
   },
   "pyflakes": {
     "bin": ["pyflakes"],
@@ -5040,12 +5052,12 @@
   },
   "ruff": {
     "bin": ["ruff"],
-    "date": "2026-04-22",
+    "date": "2026-04-29",
     "default": true,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ruff/"],
-    "version": "0.15.11"
+    "version": "0.15.12"
   },
   "ruff-lsp": {
     "bin": ["ruff-lsp"],
@@ -5456,7 +5468,7 @@
   },
   "streamlit": {
     "bin": ["streamlit"],
-    "date": "2026-04-15",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
@@ -5465,7 +5477,7 @@
       "https://streamlit.io/",
       "https://github.com/streamlit/streamlit"
     ],
-    "version": "1.56.0"
+    "version": "1.57.0"
   },
   "subread": {
     "bin": ["featureCounts"],
@@ -5696,12 +5708,12 @@
   },
   "ty": {
     "bin": ["ty"],
-    "date": "2026-04-22",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["python3.14"],
     "prune": true,
     "url": ["https://pypi.org/project/ty/", "https://github.com/astral-sh/ty/"],
-    "version": "0.0.32"
+    "version": "0.0.33"
   },
   "udunits": {
     "bin": ["udunits2"],
@@ -5779,11 +5791,11 @@
   },
   "uv": {
     "bin": ["uv", "uvx"],
-    "date": "2026-04-20",
+    "date": "2026-04-29",
     "default": true,
     "prune": true,
     "url": ["https://pypi.org/project/uv/"],
-    "version": "0.11.7"
+    "version": "0.11.8"
   },
   "vim": {
     "bin": ["ex", "rview", "rvim", "view", "vim", "vimdiff", "vimtutor", "xxd"],
@@ -5842,7 +5854,7 @@
   "wget": {
     "bin": ["wget"],
     "build_dependencies": ["autoconf", "automake", "make"],
-    "date": "2024-12-30",
+    "date": "2026-04-24",
     "default": true,
     "dependencies": [
       "gettext",
@@ -5859,12 +5871,12 @@
       "https://www.gnu.org/software/wget/",
       "https://ftp.gnu.org/gnu/wget/?C=M;O=D"
     ],
-    "version": "1.24.5"
+    "version": "1.25.0"
   },
   "wget2": {
     "bin": ["wget2"],
     "build_dependencies": ["make", "pkg-config"],
-    "date": "2024-12-30",
+    "date": "2026-04-24",
     "default": false,
     "dependencies": [
       "brotli",
@@ -5886,7 +5898,7 @@
     ],
     "prune": false,
     "url": ["https://gitlab.com/gnuwget/wget2"],
-    "version": "2.2.0"
+    "version": "2.2.1"
   },
   "which": {
     "bin": ["gwhich"],
