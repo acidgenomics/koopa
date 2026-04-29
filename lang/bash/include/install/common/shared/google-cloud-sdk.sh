@@ -8,7 +8,7 @@ install_from_conda() {
 install_from_source() {
     # """
     # Install Google Cloud SDK.
-    # @note Updated 2025-11-20.
+    # @note Updated 2026-04-29.
     #
     # @seealso
     # - https://cloud.google.com/sdk/docs/install
@@ -19,8 +19,8 @@ install_from_source() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'python3.13'
-    app['python']="$(koopa_locate_python313)"
+    koopa_activate_app --build-only 'python3.14'
+    app['python']="$(koopa_locate_python314)"
     koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
@@ -96,6 +96,6 @@ ${dict['arch2']}.tar.gz"
 }
 
 main() {
-    install_from_source
+    install_from_conda
     return 0
 }

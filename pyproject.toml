@@ -1,6 +1,6 @@
 [project]
 name = "koopa"
-version = "0.15.0"
+version = "0.15.1"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = ["Programming Language :: Python :: 3.14"]
 dependencies = ["pandas", "pathlib", "psutil", "requests", "tqdm"]
