@@ -3781,7 +3781,7 @@
   },
   "nextflow": {
     "bin": ["nextflow"],
-    "date": "2026-02-02",
+    "date": "2026-04-29",
     "default": false,
     "dependencies": ["conda"],
     "prune": true,
@@ -3790,7 +3790,7 @@
       "https://github.com/nextflow-io/nextflow/",
       "https://bioconda.github.io/recipes/nextflow/README.html"
     ],
-    "version": "25.10.3"
+    "version": "25.10.4"
   },
   "nghttp2": {
     "build_dependencies": ["gcc", "make", "pkg-config", "python3.14"],
