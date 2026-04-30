@@ -3,67 +3,42 @@
 koopa_cache_functions_dir() {
     # """
     # Cache a koopa function library directory.
-    # @note Updated 2022-10-07.
-    #
-    # @section Alternate tr approach for duplicate newlines removal:
-    # > "${app['tr']}" -s '\n' '\n' \
-    # >     < "${dict['target_file']}" \
-    # >     > "${dict['tmp_target_file']}"
+    # @note Updated 2026-04-30.
     # """
     local -A app
     local prefix
     koopa_assert_has_args "$#"
+    app['cat']="$(koopa_locate_cat --allow-system)"
+    app['find']="$(koopa_locate_find --allow-system)"
     app['grep']="$(koopa_locate_grep --allow-system)"
-    app['perl']="$(koopa_locate_perl --allow-system)"
+    app['sort']="$(koopa_locate_sort --allow-system)"
+    app['xargs']="$(koopa_locate_xargs --allow-system)"
     koopa_assert_is_executable "${app[@]}"
     for prefix in "$@"
     do
         local -A dict
-        local -a files header
-        local file
         dict['prefix']="$prefix"
         koopa_assert_is_dir "${dict['prefix']}"
         dict['target_file']="${dict['prefix']}.sh"
         koopa_alert "Caching functions at '${dict['prefix']}' \
 in '${dict['target_file']}'."
-        readarray -t files <<< "$( \
-            koopa_find \
-                --pattern='*.sh' \
-                --prefix="${dict['prefix']}" \
-                --sort \
-        )"
-        koopa_assert_is_array_non_empty "${files[@]:-}"
-        header=()
         if koopa_str_detect_fixed \
             --pattern='/bash/' \
             --string="${dict['prefix']}"
         then
-            header+=('#!/usr/bin/env bash')
+            dict['shebang']='#!/usr/bin/env bash'
         else
-            header+=('#!/bin/sh')
+            dict['shebang']='#!/bin/sh'
         fi
-        header+=('# shellcheck disable=all')
-        dict['header_string']="$(printf '%s\n' "${header[@]}")"
-        koopa_write_string \
-            --file="${dict['target_file']}" \
-            --string="${dict['header_string']}"
-        for file in "${files[@]}"
-        do
-            # This can be useful for more verbose debugging, but is slower.
-            # > koopa_alert "$file"
-            # Consider switching to 'koopa_grep' here in a future update.
-            "${app['grep']}" -Eiv '^(\s+)?#' "$file" \
-            >> "${dict['target_file']}"
-        done
-        dict['tmp_target_file']="${dict['target_file']}.tmp"
-        # Remove extra line breaks.
-        "${app['perl']}" \
-            -0pe 's/\n\n\n+/\n\n/g' \
-            "${dict['target_file']}" \
-            > "${dict['tmp_target_file']}"
-        koopa_mv \
-            "${dict['tmp_target_file']}" \
-            "${dict['target_file']}"
+        {
+            printf '%s\n' "${dict['shebang']}"
+            printf '%s\n' '# shellcheck disable=all'
+            "${app['find']}" "${dict['prefix']}" \
+                -type 'f' -name '*.sh' -print0 \
+            | "${app['sort']}" -z \
+            | "${app['xargs']}" -0 "${app['cat']}" \
+            | "${app['grep']}" -Eiv '^(\s+)?#'
+        } | "${app['cat']}" -s > "${dict['target_file']}"
     done
     return 0
 }
