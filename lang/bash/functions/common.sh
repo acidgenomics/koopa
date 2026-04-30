@@ -12355,9 +12355,9 @@ koopa_install_app() {
     bool['inherit_env']=0
     koopa_is_lmod_active && bool['inherit_env']=1
     bool['isolate']=1
-    bool['link_in_bin']=''
-    bool['link_in_man1']=''
-    bool['link_in_opt']=''
+    bool['link_in_bin']=0
+    bool['link_in_man1']=0
+    bool['link_in_opt']=0
     bool['prefix_check']=1
     bool['private']=0
     bool['push']=0
@@ -12497,15 +12497,11 @@ koopa_install_app() {
                 dict['prefix']="${dict['app_prefix']}/${dict['name']}/\
 ${dict['version2']}"
             fi
-            if [[ "${dict['version']}" != "${dict['current_version']}" ]]
+            if [[ "${dict['version']}" == "${dict['current_version']}" ]]
             then
-                bool['link_in_bin']=0
-                bool['link_in_man1']=0
-                bool['link_in_opt']=0
-            else
-                [[ -z "${bool['link_in_bin']}" ]] && bool['link_in_bin']=1
-                [[ -z "${bool['link_in_man1']}" ]] && bool['link_in_man1']=1
-                [[ -z "${bool['link_in_opt']}" ]] && bool['link_in_opt']=1
+                bool['link_in_bin']=1
+                bool['link_in_man1']=1
+                bool['link_in_opt']=1
             fi
             ;;
         'system')
@@ -12645,6 +12641,7 @@ ${dict['version2']}"
             dict['path']="${PATH:?}"
             env_vars+=(
                 "CC=${CC:-}"
+                "CPATH=${CPATH:-}"
                 "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
                 "CXX=${CXX:-}"
                 "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
@@ -12653,6 +12650,7 @@ ${dict['version2']}"
                 "INCLUDE=${INCLUDE:-}"
                 "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
                 "LIBRARY_PATH=${LIBRARY_PATH:-}"
+                "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
             )
         else
             path_arr+=('/usr/bin' '/usr/sbin' '/bin' '/sbin')
@@ -12694,40 +12692,24 @@ ${dict['version2']}"
             env_vars+=("GOPROXY=${GOPROXY:-}")
         [[ -n "${PYTHON_BUILD_MIRROR_URL:-}" ]] && \
             env_vars+=("PYTHON_BUILD_MIRROR_URL=${PYTHON_BUILD_MIRROR_URL:-}")
-        if [[ "${dict['mode']}" == 'shared' ]]
+        if [[ "${dict['mode']}" == 'shared' ]] \
+            && [[ "${bool['inherit_env']}" -eq 0 ]]
         then
-            if [[ "${bool['inherit_env']}" -eq 1 ]]
+            PKG_CONFIG_PATH=''
+            app['pkg_config']="$( \
+                koopa_locate_pkg_config --allow-missing --only-system \
+            )"
+            if [[ -x "${app['pkg_config']}" ]]
             then
-                env_vars+=(
-                    "CC=${CC:-}"
-                    "CPATH=${CPATH:-}"
-                    "CPLUS_INCLUDE_PATH=${CPLUS_INCLUDE_PATH:-}"
-                    "CXX=${CXX:-}"
-                    "C_INCLUDE_PATH=${C_INCLUDE_PATH:-}"
-                    "F77=${F77:-}"
-                    "FC=${FC:-}"
-                    "INCLUDE=${INCLUDE:-}"
-                    "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
-                    "LIBRARY_PATH=${LIBRARY_PATH:-}"
-                    "PKG_CONFIG_PATH=${PKG_CONFIG_PATH:-}"
-                )
-            else
-                PKG_CONFIG_PATH=''
-                app['pkg_config']="$( \
-                    koopa_locate_pkg_config --allow-missing --only-system \
-                )"
-                if [[ -x "${app['pkg_config']}" ]]
-                then
-                    koopa_activate_pkg_config "${app['pkg_config']}"
-                fi
-                env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
-                unset -v PKG_CONFIG_PATH
+                koopa_activate_pkg_config "${app['pkg_config']}"
             fi
-            if [[ -d "${dict['prefix']}" ]] && \
-                [[ "${dict['mode']}" != 'system' ]]
-            then
-                bool['copy_log_files']=1
-            fi
+            env_vars+=("PKG_CONFIG_PATH=${PKG_CONFIG_PATH}")
+            unset -v PKG_CONFIG_PATH
+        fi
+        if [[ "${dict['mode']}" == 'shared' ]] \
+            && [[ -d "${dict['prefix']}" ]]
+        then
+            bool['copy_log_files']=1
         fi
         dict['header_file']="$(koopa_bash_prefix)/include/header.sh"
         dict['stderr_file']="$(koopa_tmp_log_file)"
@@ -12736,6 +12718,10 @@ ${dict['version2']}"
             "${dict['header_file']}" \
             "${dict['stderr_file']}" \
             "${dict['stdout_file']}"
+        trap "koopa_rm \
+            '${dict['stderr_file']}' \
+            '${dict['stdout_file']}'" \
+            EXIT
         bash_vars=(
             '--noprofile'
             '--norc'
@@ -12748,19 +12734,27 @@ ${dict['version2']}"
         then
             bash_vars+=('-o' 'verbose')
         fi
+        local -a subshell_args
+        subshell_args=(
+            "--installer='${dict['installer']}'"
+            "--mode='${dict['mode']}'"
+            "--name='${dict['name']}'"
+            "--platform='${dict['platform']}'"
+            "--prefix='${dict['prefix']}'"
+            "--version='${dict['version']}'"
+        )
+        local arg
+        for arg in "$@"
+        do
+            subshell_args+=("'${arg}'")
+        done
         "${app['env']}" -i \
             "${env_vars[@]}" \
             "${app['bash']}" \
                 "${bash_vars[@]}" \
                 -c "source '${dict['header_file']}'; \
                     koopa_install_app_subshell \
-                        --installer=${dict['installer']} \
-                        --mode=${dict['mode']} \
-                        --name=${dict['name']} \
-                        --platform=${dict['platform']} \
-                        --prefix=${dict['prefix']} \
-                        --version=${dict['version']} \
-                        ${*}" \
+                        ${subshell_args[*]}" \
             > >("${app['tee']}" "${dict['stdout_file']}") \
             2> >("${app['tee']}" "${dict['stderr_file']}" >&2)
         if [[ "${bool['copy_log_files']}" -eq 1 ]] && \
@@ -12776,6 +12770,7 @@ ${dict['version2']}"
         koopa_rm \
             "${dict['stderr_file']}" \
             "${dict['stdout_file']}"
+        trap - EXIT
     fi
     case "${dict['mode']}" in
         'shared')
