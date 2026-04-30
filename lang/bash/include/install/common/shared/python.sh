@@ -112,7 +112,8 @@ support '--enable-optimizations' flag."
         koopa_assert_is_executable "${app['dtrace']}"
         conf_args+=("--with-dtrace=${app['dtrace']}")
     fi
-    dict['url']="https://www.python.org/ftp/python/${dict['version']}/\
+    dict['base_url']="${PYTHON_BUILD_MIRROR_URL:-https://www.python.org/ftp/python}"
+    dict['url']="${dict['base_url']}/${dict['version']}/\
 Python-${dict['version']}.tar.xz"
     koopa_download "${dict['url']}"
     koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
