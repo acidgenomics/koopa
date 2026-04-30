@@ -408,6 +408,8 @@ ${dict['version2']}"
         # Application-specific variables ---------------------------------------
         [[ -n "${GOPROXY:-}" ]] && \
             env_vars+=("GOPROXY=${GOPROXY:-}")
+        [[ -n "${PYTHON_BUILD_MIRROR_URL:-}" ]] && \
+            env_vars+=("PYTHON_BUILD_MIRROR_URL=${PYTHON_BUILD_MIRROR_URL:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             if [[ "${bool['inherit_env']}" -eq 1 ]]

@@ -12708,6 +12708,8 @@ ${dict['version2']}"
             env_vars+=("https_proxy=${https_proxy:?}")
         [[ -n "${GOPROXY:-}" ]] && \
             env_vars+=("GOPROXY=${GOPROXY:-}")
+        [[ -n "${PYTHON_BUILD_MIRROR_URL:-}" ]] && \
+            env_vars+=("PYTHON_BUILD_MIRROR_URL=${PYTHON_BUILD_MIRROR_URL:-}")
         if [[ "${dict['mode']}" == 'shared' ]]
         then
             if [[ "${bool['inherit_env']}" -eq 1 ]]
