@@ -666,6 +666,15 @@
     "url": ["https://github.com/aristocratos/btop"],
     "version": "1.4.4"
   },
+  "bumpver": {
+    "bin": ["bumpver"],
+    "date": "2026-05-01",
+    "default": true,
+    "dependencies": ["python3.14"],
+    "prune": true,
+    "url": ["https://pypi.org/project/bumpver/", "https://github.com/mbarkhau/bumpver/"],
+    "version": "2025.1131"
+  },
   "bustools": {
     "bin": ["bustools"],
     "date": "2024-12-24",
