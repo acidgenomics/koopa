@@ -1,105 +1,67 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-set -o errexit  # -e
-set -o errtrace  # -E
-set -o nounset  # -u
-set -o pipefail
-
-__koopa_print() {
-    local string
-    [[ "$#" -gt 0 ]] || return 1
-    for string in "$@"
-    do
-        printf '%b\n' "$string"
-    done
-    return 0
-}
+set -eu
 
 __koopa_realpath() {
-    local arg string
-    for arg in "$@"
-    do
-        string="$( \
-            readlink -f "$arg" \
+    _rp_out="$(readlink -f "$1" 2>/dev/null || true)"
+    if [ -z "$_rp_out" ]; then
+        _rp_out="$( \
+            perl -MCwd -le \
+                'print Cwd::abs_path shift' \
+                "$1" \
             2>/dev/null \
             || true \
         )"
-        if [[ -z "$string" ]]
-        then
-            string="$( \
-                perl -MCwd -le \
-                    'print Cwd::abs_path shift' \
-                    "$arg" \
-                2>/dev/null \
-                || true \
-            )"
-        fi
-        if [[ -z "$string" ]]
-        then
-            string="$( \
-                python3 -c \
-                    "import os; print(os.path.realpath('${arg}'))" \
-                2>/dev/null \
-                || true \
-            )"
-        fi
-        [[ -n "$string" ]] || return 1
-        __koopa_print "$string"
-    done
-    return 0
+    fi
+    if [ -z "$_rp_out" ]; then
+        _rp_out="$( \
+            python3 -c \
+                "import os; print(os.path.realpath('$1'))" \
+            2>/dev/null \
+            || true \
+        )"
+    fi
+    [ -n "$_rp_out" ] || return 1
+    printf '%s\n' "$_rp_out"
 }
 
 main() {
-    case "${BASH_VERSION:-}" in
-        '1.'* | '2.'* | '3.'*)
-            printf '%s\n' 'Bash 4+ is required.' >&2
-            return 1
-            ;;
-    esac
-    local -A dict
-    dict['bash_source']="${BASH_SOURCE[0]}"
-    if [[ -L "${dict['bash_source']}" ]]
-    then
-        dict['bash_source']="$(__koopa_realpath "${dict['bash_source']}")"
+    _koopa_bin="$0"
+    if [ -L "$_koopa_bin" ]; then
+        _koopa_bin="$(__koopa_realpath "$_koopa_bin")"
     fi
-    [[ -x "${dict['bash_source']}" ]] || return 1
-    dict['_koopa_prefix']="$( \
-        __koopa_realpath "$(dirname "${dict['bash_source']}")/.." \
-    )"
-    [[ -d "${dict['_koopa_prefix']}" ]] || return 1
-    dict['python_src']="${dict['_koopa_prefix']}/lang/python/src"
-    dict['python']=''
-    if [[ -d "${dict['python_src']}" ]]
-    then
-        dict['python']="${dict['_koopa_prefix']}/opt/python3.14/bin/python3.14"
-        if [[ ! -x "${dict['python']}" ]]
-        then
-            dict['python']="$(command -v python3.14 2>/dev/null || true)"
-            if [[ -z "${dict['python']}" ]]
-            then
-                dict['python']="$(command -v python3 2>/dev/null || true)"
-                if [[ -n "${dict['python']}" ]] && \
-                    ! "${dict['python']}" -c \
+    [ -x "$_koopa_bin" ] || return 1
+    _koopa_prefix="$(__koopa_realpath "$(dirname "$_koopa_bin")/..")"
+    [ -d "$_koopa_prefix" ] || return 1
+    _python_src="${_koopa_prefix}/lang/python/src"
+    _python=''
+    if [ -d "$_python_src" ]; then
+        _python="${_koopa_prefix}/opt/python3.14/bin/python3.14"
+        if [ ! -x "$_python" ]; then
+            _python="$(command -v python3.14 2>/dev/null || true)"
+            if [ -z "$_python" ]; then
+                _python="$(command -v python3 2>/dev/null || true)"
+                if [ -n "$_python" ] && \
+                    ! "$_python" -c \
                         'import sys; sys.exit(0 if sys.version_info >= (3, 14) else 1)' \
                         2>/dev/null
                 then
-                    dict['python']=''
+                    _python=''
                 fi
             fi
         fi
     fi
-    if [[ -x "${dict['python']}" ]]
-    then
-        export KOOPA_PREFIX="${dict['_koopa_prefix']}"
-        PYTHONPATH="${dict['python_src']}${PYTHONPATH:+:${PYTHONPATH}}" \
-            exec "${dict['python']}" -m koopa.cli_main "$@"
+    if [ -x "$_python" ]; then
+        export KOOPA_PREFIX="$_koopa_prefix"
+        PYTHONPATH="${_python_src}${PYTHONPATH:+:${PYTHONPATH}}" \
+            exec "$_python" -m koopa.cli_main "$@"
     fi
-    dict['bootstrap']="${dict['_koopa_prefix']}/etc/koopa/bootstrap.sh"
+    _bootstrap="${_koopa_prefix}/etc/koopa/bootstrap.sh"
     printf '%s\n' \
         'Error: Python 3.14+ is required but not found.' \
         '' \
         'To bootstrap Python and core dependencies from source, run:' \
-        "  sh '${dict['bootstrap']}'" \
+        "  sh '${_bootstrap}'" \
         '' \
         'Then retry your command.' \
         >&2
