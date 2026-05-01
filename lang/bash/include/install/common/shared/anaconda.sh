@@ -12,7 +12,7 @@ main() {
     app['bash']="$(_koopa_locate_bash --allow-system)"
     _koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(_koopa_arch)"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['os_type']="$(_koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_maj_ver']='3'
@@ -37,7 +37,7 @@ ${dict['os_type']}-${dict['arch']}.sh"
     _koopa_print_env
     "${app['bash']}" "${dict['file']}" -bf -p "${dict['prefix']}"
     _koopa_cp \
-        "${dict['_koopa_prefix']}/etc/conda/condarc" \
+        "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
     return 0
 }

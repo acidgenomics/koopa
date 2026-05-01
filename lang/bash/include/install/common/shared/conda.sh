@@ -22,7 +22,7 @@ main() {
     app['bash']="$(_koopa_locate_bash --allow-system)"
     _koopa_assert_is_executable "${app[@]}"
     dict['arch']="$(_koopa_arch)" # e.g. 'x86_64'.
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['os_type']="$(_koopa_os_type)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['py_version']='3.13'
@@ -84,7 +84,7 @@ py${dict['py_version2']}_${dict['version']}-${dict['os_type2']}\
     "${app['bash']}" "${dict['script']}" -bf -p "${dict['prefix']}"
     # Note that this step configures conda to not use Anaconda channels.
     _koopa_cp \
-        "${dict['_koopa_prefix']}/etc/conda/condarc" \
+        "${dict['koopa_prefix']}/etc/conda/condarc" \
         "${dict['prefix']}/.condarc"
     app['conda']="${dict['prefix']}/bin/conda"
     _koopa_assert_is_installed "${app['conda']}"
