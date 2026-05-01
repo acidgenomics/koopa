@@ -12011,7 +12011,6 @@ _koopa_merge_pdf() {
 
 _koopa_miso_index() {
     local -A app bool dict
-    _koopa_activate_app_conda_env 'misopy'
     app['exon_utils']="$(_koopa_locate_miso_exon_utils --realpath)"
     app['index_gff']="$(_koopa_locate_miso_index_gff --realpath)"
     app['tee']="$(_koopa_locate_tee --allow-system)"
@@ -12106,8 +12105,6 @@ _koopa_miso_index() {
 _koopa_miso_run() {
     local -A app bool dict
     local -a miso_args
-    _koopa_activate_app_conda_env 'misopy'
-    _koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(_koopa_locate_cut --allow-system)"
     app['head']="$(_koopa_locate_head --allow-system)"
     app['miso']="$(_koopa_locate_miso --realpath)"
@@ -17635,21 +17632,6 @@ _koopa_update_system_homebrew() {
     "${app['brew']}" autoremove
     _koopa_brew_doctor
     _koopa_alert_update_success 'Homebrew' "${dict['prefix']}"
-    return 0
-}
-
-_koopa_update_system_tex_packages() {
-    local -A app
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_is_admin
-    app['tlmgr']="$(_koopa_locate_tlmgr)"
-    _koopa_assert_is_executable "${app[@]}"
-    (
-        _koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
-        _koopa_sudo "${app['tlmgr']}" update --self
-        _koopa_sudo "${app['tlmgr']}" update --list
-        _koopa_sudo "${app['tlmgr']}" update --all
-    )
     return 0
 }
 
