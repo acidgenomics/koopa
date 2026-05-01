@@ -1,6 +1,7 @@
 .koopa-binary
 .koopa-install.log
 .vscode/
+/.claude/settings.local.json
 /app/
 /bin/
 /bootstrap/
