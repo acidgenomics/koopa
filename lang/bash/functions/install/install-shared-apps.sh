@@ -3,10 +3,7 @@
 _koopa_install_shared_apps() {
     # """
     # Build and install multiple shared apps from source.
-    # @note Updated 2026-01-11.
-    #
-    # The approach calling '_koopa_cli_install' internally on apps array
-    # can run into weird compilation issues on macOS.
+    # @note Updated 2026-05-01.
     # """
     local -A app bool dict
     local -a app_names
@@ -92,7 +89,7 @@ _koopa_install_shared_apps() {
         then
             continue
         fi
-        _koopa_cli_install "$app_name"
+        _koopa_install_app "--name=${app_name}"
     done
     return 0
 }
