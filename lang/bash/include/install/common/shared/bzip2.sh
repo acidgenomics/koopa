@@ -25,25 +25,25 @@ main() {
     # - https://mjtsai.com/blog/2020/06/26/reverse-engineering-macos-11-0/
     # """
     local -A app dict
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'make'
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_mkdir "${dict['prefix']}/lib"
+    _koopa_mkdir "${dict['prefix']}/lib"
     dict['url']="https://sourceware.org/pub/bzip2/\
 bzip2-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     dict['makefile_shared']="Makefile-libbz2_${dict['shared_ext']}"
     # Create missing dylib Makefile for macOS.
     # https://gist.github.com/obihill/3278c17bcee41c0c8b59a41ada8c0d35
-    if [[ ! -f "${dict['makefile_shared']}" ]] && koopa_is_macos
+    if [[ ! -f "${dict['makefile_shared']}" ]] && _koopa_is_macos
     then
-        koopa_alert "Adding '${dict['makefile_shared']}'."
+        _koopa_alert "Adding '${dict['makefile_shared']}'."
         read -r -d '' "dict[makefile_string]" << END || true
 PKG_VERSION?=${dict['version']}
 PREFIX?=${dict['prefix']}
@@ -84,53 +84,53 @@ decompress.o: decompress.c
 bzlib.o: bzlib.c
 	\$(CC) \$(CFLAGS) -c bzlib.c
 END
-        koopa_write_string \
+        _koopa_write_string \
             --file="${dict['makefile_shared']}" \
             --string="${dict['makefile_string']}"
     fi
-    koopa_print_env
+    _koopa_print_env
     "${app['make']}" install "PREFIX=${dict['prefix']}"
     if [[ -f "${dict['makefile_shared']}" ]]
     then
         "${app['make']}" -f "${dict['makefile_shared']}" 'clean'
         "${app['make']}" -f "${dict['makefile_shared']}"
     fi
-    if koopa_is_linux
+    if _koopa_is_linux
     then
-        koopa_cp \
+        _koopa_cp \
             --target-directory="${dict['prefix']}/lib" \
             "libbz2.${dict['shared_ext']}.${dict['version']}"
         (
-            koopa_cd "${dict['prefix']}/lib"
-            koopa_ln \
+            _koopa_cd "${dict['prefix']}/lib"
+            _koopa_ln \
                 "libbz2.${dict['shared_ext']}.${dict['version']}" \
                 "libbz2.${dict['shared_ext']}.${dict['maj_min_ver']}"
-            koopa_ln \
+            _koopa_ln \
                 "libbz2.${dict['shared_ext']}.${dict['version']}" \
                 "libbz2.${dict['shared_ext']}"
         )
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
-        koopa_cp \
+        _koopa_cp \
             --target-directory="${dict['prefix']}/lib" \
             "libbz2.${dict['version']}.${dict['shared_ext']}"
         (
-            koopa_cd "${dict['prefix']}/lib"
-            koopa_ln \
+            _koopa_cd "${dict['prefix']}/lib"
+            _koopa_ln \
                 "libbz2.${dict['version']}.${dict['shared_ext']}" \
                 "libbz2.${dict['maj_min_ver']}.${dict['shared_ext']}"
-            koopa_ln \
+            _koopa_ln \
                 "libbz2.${dict['version']}.${dict['shared_ext']}" \
                 "libbz2.${dict['shared_ext']}"
         )
     fi
     # Remove the unwanted static file.
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
+    _koopa_rm "${dict['prefix']}/lib/"*'.a'
     # Create pkg-config file, if necessary.
     dict['pkg_config_file']="${dict['prefix']}/lib/pkgconfig/bzip2.pc"
     if [[ ! -f "${dict['pkg_config_file']}" ]]
     then
-        koopa_alert 'Adding pkg-config support.'
+        _koopa_alert 'Adding pkg-config support.'
         read -r -d '' "dict[pkg_config_string]" << END || true
 prefix=${dict['prefix']}
 exec_prefix=\${prefix}
@@ -144,7 +144,7 @@ Version: ${dict['version']}
 Libs: -L\${libdir} -lbz2
 Cflags: -I\${includedir}
 END
-        koopa_write_string \
+        _koopa_write_string \
             --file="${dict['pkg_config_file']}" \
             --string="${dict['pkg_config_string']}"
     fi

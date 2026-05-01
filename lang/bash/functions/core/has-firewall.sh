@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+_koopa_has_firewall() {
+    # """
+    # Is the current environment behind a corporate firewall?
+    # @note Updated 2026-04-24.
+    # """
+    local -A dict
+    dict['ssl_cert_file']="${SSL_CERT_FILE:-}"
+    if [[ -z "${dict['ssl_cert_file']}" ]]
+    then
+        return 1
+    fi
+    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    if [[ "${dict['ssl_cert_file']}" == "${dict['_koopa_prefix']}/"* ]]
+    then
+        return 1
+    fi
+    return 0
+}

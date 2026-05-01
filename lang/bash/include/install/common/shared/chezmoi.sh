@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -21,7 +21,7 @@ install_from_source() {
     dict['ldflags']="-X main.version=${dict['version']}"
     dict['url']="https://github.com/twpayne/chezmoi/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_build_go_package \
+    _koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --url="${dict['url']}" \
         --version="${dict['version']}"
@@ -29,7 +29,7 @@ v${dict['version']}.tar.gz"
 }
 
 main() {
-    if koopa_is_macos && koopa_is_amd64
+    if _koopa_is_macos && _koopa_is_amd64
     then
         install_from_source
     else

@@ -16,18 +16,18 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'pcre2'
-    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'pcre2'
+    dict['pcre2']="$(_koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake['cmake_library_path']="${dict['pcre2']}/lib"
     cmake['pcre2_include_dir']="${dict['pcre2']}/include"
     cmake['pcre2_library']="${dict['pcre2']}/lib/\
 libpcre2-8.${dict['shared_ext']}"
-    koopa_assert_is_dir "${cmake['pcre2_include_dir']}"
-    koopa_assert_is_file "${cmake['pcre2_library']}"
+    _koopa_assert_is_dir "${cmake['pcre2_include_dir']}"
+    _koopa_assert_is_file "${cmake['pcre2_library']}"
     cmake_args=(
         # Standard CMake arguments ---------------------------------------------
         "-DCMAKE_LIBRARY_PATH=${cmake['cmake_library_path']}"
@@ -37,9 +37,9 @@ libpcre2-8.${dict['shared_ext']}"
     )
     dict['url']="https://github.com/editorconfig/editorconfig-core-c/\
 archive/v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

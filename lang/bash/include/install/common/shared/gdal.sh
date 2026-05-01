@@ -53,28 +53,28 @@ main() {
         'curl'
         'proj'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    dict['curl']="$(koopa_app_prefix 'curl')"
-    dict['expat']="$(koopa_app_prefix 'expat')"
-    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
-    dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
-    dict['libpng']="$(koopa_app_prefix 'libpng')"
-    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
-    dict['libxml2']="$(koopa_app_prefix 'libxml2')"
-    dict['lz4']="$(koopa_app_prefix 'lz4')"
-    dict['openjpeg']="$(koopa_app_prefix 'openjpeg')"
-    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    dict['curl']="$(_koopa_app_prefix 'curl')"
+    dict['expat']="$(_koopa_app_prefix 'expat')"
+    dict['hdf5']="$(_koopa_app_prefix 'hdf5')"
+    dict['libdeflate']="$(_koopa_app_prefix 'libdeflate')"
+    dict['libiconv']="$(_koopa_app_prefix 'libiconv')"
+    dict['libpng']="$(_koopa_app_prefix 'libpng')"
+    dict['libtiff']="$(_koopa_app_prefix 'libtiff')"
+    dict['libxml2']="$(_koopa_app_prefix 'libxml2')"
+    dict['lz4']="$(_koopa_app_prefix 'lz4')"
+    dict['openjpeg']="$(_koopa_app_prefix 'openjpeg')"
+    dict['pcre2']="$(_koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['proj']="$(koopa_app_prefix 'proj')"
-    dict['shared_ext']="$(koopa_shared_ext)"
-    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
-    dict['temurin']="$(koopa_app_prefix 'temurin')"
+    dict['proj']="$(_koopa_app_prefix 'proj')"
+    dict['shared_ext']="$(_koopa_shared_ext)"
+    dict['sqlite']="$(_koopa_app_prefix 'sqlite')"
+    dict['temurin']="$(_koopa_app_prefix 'temurin')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['xz']="$(koopa_app_prefix 'xz')"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
+    dict['xz']="$(_koopa_app_prefix 'xz')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
+    dict['zstd']="$(_koopa_app_prefix 'zstd')"
     cmake['curl_include_dir']="${dict['curl']}/include"
     cmake['curl_library']="${dict['curl']}/lib/\
 libcurl.${dict['shared_ext']}"
@@ -114,7 +114,7 @@ libtiff.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
     cmake['zstd_dir']="${dict['zstd']}/lib/cmake/zstd"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${cmake['curl_include_dir']}" \
         "${cmake['deflate_include_dir']}" \
         "${cmake['expat_dir']}" \
@@ -132,7 +132,7 @@ libtiff.${dict['shared_ext']}"
         "${cmake['tiff_include_dir']}" \
         "${cmake['zlib_include_dir']}" \
         "${cmake['zstd_dir']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${cmake['curl_library']}" \
         "${cmake['deflate_library']}" \
         "${cmake['iconv_library']}" \
@@ -256,10 +256,10 @@ libtiff.${dict['shared_ext']}"
     )
     dict['url']="https://github.com/OSGeo/gdal/releases/download/\
 v${dict['version']}/gdal-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_mkdir "${dict['prefix']}/include"
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_mkdir "${dict['prefix']}/include"
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

@@ -34,16 +34,16 @@ main() {
         'libxcrypt'
         'krb5'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['krb5']="$(koopa_app_prefix 'krb5')"
-    dict['ldns']="$(koopa_app_prefix 'ldns')"
-    dict['libedit']="$(koopa_app_prefix 'libedit')"
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
+    dict['krb5']="$(_koopa_app_prefix 'krb5')"
+    dict['ldns']="$(_koopa_app_prefix 'ldns')"
+    dict['libedit']="$(_koopa_app_prefix 'libedit')"
+    dict['openssl']="$(_koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     conf_args=(
         "--mandir=${dict['prefix']}/share/man"
         "--prefix=${dict['prefix']}"
@@ -59,7 +59,7 @@ main() {
         '--without-xauth'
         '--without-zlib-version-check'
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         conf_args+=(
             # > '--with-audit=bsm'
@@ -69,7 +69,7 @@ main() {
             '--with-privsep-path=/var/empty'
         )
     fi
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         conf_args+=(
             '--with-libedit'
@@ -78,15 +78,15 @@ main() {
     fi
     dict['url']="https://cdn.openbsd.org/pub/OpenBSD/OpenSSH/portable/\
 openssh-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build \
         --target='install-nokeys' \
         "${conf_args[@]}"
     (
-        koopa_cd "${dict['prefix']}/bin"
-        koopa_ln 'ssh' 'slogin'
+        _koopa_cd "${dict['prefix']}/bin"
+        _koopa_ln 'ssh' 'slogin'
     )
     return 0
 }

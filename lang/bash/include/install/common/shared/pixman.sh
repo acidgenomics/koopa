@@ -17,30 +17,30 @@ main() {
         'ninja'
         'pkg-config'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    app['meson']="$(koopa_locate_meson)"
-    app['ninja']="$(koopa_locate_ninja)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    app['meson']="$(_koopa_locate_meson)"
+    app['ninja']="$(_koopa_locate_ninja)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://cairographics.org/releases/\
 pixman-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     meson_args+=(
         '--buildtype=release'
         '--default-library=shared'
         '--libdir=lib'
         "--prefix=${dict['prefix']}"
     )
-    # FIXME Rework this to use koopa_meson_ninja_build.
+    # FIXME Rework this to use _koopa_meson_ninja_build.
     # Refer to harfbuzz installer for shared code.
     # https://mesonbuild.com/Builtin-options.html
     "${app['meson']}" setup "${meson_args[@]}" 'build'
     "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build'
     "${app['ninja']}" -v -j "${dict['jobs']}" -C 'build' install
-    koopa_assert_is_dir "${dict['prefix']}/lib/pkgconfig"
+    _koopa_assert_is_dir "${dict['prefix']}/lib/pkgconfig"
     return 0
 }

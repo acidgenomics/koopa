@@ -5,10 +5,10 @@ main() {
     # Install patch.
     # @note Updated 2023-08-30.
     # """
-    if koopa_is_linux
+    if _koopa_is_linux
     then
-        koopa_activate_app 'attr'
+        _koopa_activate_app 'attr'
     fi
-    koopa_install_gnu_app
+    _koopa_install_gnu_app
     return 0
 }

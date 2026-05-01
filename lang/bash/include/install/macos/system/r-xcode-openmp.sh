@@ -12,8 +12,8 @@ main() {
     # - https://github.com/Rdatatable/data.table/wiki/Installation
     # """
     local -A app dict
-    app['tar']="$(koopa_locate_tar --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
+    app['tar']="$(_koopa_locate_tar --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['platform']='darwin'
     dict['release']='Release' # or 'Debug'.
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -28,18 +28,18 @@ main() {
             dict['platform_version']='17'
             ;;
         *)
-            koopa_stop "Unsupported LLVM version: '${dict['version']}'."
+            _koopa_stop "Unsupported LLVM version: '${dict['version']}'."
             ;;
     esac
     dict['url']="https://mac.r-project.org/openmp/openmp-${dict['version']}-\
 ${dict['platform']}${dict['platform_version']}-${dict['release']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_sudo \
+    _koopa_download "${dict['url']}"
+    _koopa_sudo \
         "${app['tar']}" \
             -vxz \
-            -f "$(koopa_basename "${dict['url']}")" \
+            -f "$(_koopa_basename "${dict['url']}")" \
             -C '/'
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         '/usr/local/include/omp-tools.h' \
         '/usr/local/include/omp.h' \
         '/usr/local/include/ompt.h' \

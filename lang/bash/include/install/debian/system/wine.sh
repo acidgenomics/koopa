@@ -24,15 +24,15 @@ main() {
     # - https://gist.github.com/paul-krohn/e45f96181b1cf5e536325d1bdee6c949
     # """
     local -A app
-    app['dpkg']="$(koopa_debian_locate_dpkg)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_add_wine_repo
+    app['dpkg']="$(_koopa_debian_locate_dpkg)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_debian_apt_add_wine_repo
     # This is required to install missing libaudio0 dependency.
-    koopa_debian_apt_add_wine_obs_repo
+    _koopa_debian_apt_add_wine_obs_repo
     # Enable 32-bit packages.
-    koopa_sudo "${app['dpkg']}" --add-architecture 'i386'
+    _koopa_sudo "${app['dpkg']}" --add-architecture 'i386'
     # Old stable version: Use wine, wine32 here.
-    koopa_debian_apt_get install \
+    _koopa_debian_apt_get install \
         'winbind' \
         'x11-apps' \
         'xauth' \

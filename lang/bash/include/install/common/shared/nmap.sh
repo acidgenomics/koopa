@@ -28,15 +28,15 @@ main() {
         'pcre2'
         'zlib'
     )
-    koopa_is_macos && deps+=('lua')
-    koopa_activate_app --build-only "${deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    _koopa_is_macos && deps+=('lua')
+    _koopa_activate_app --build-only "${deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['libpcap']="$(koopa_app_prefix 'libpcap')"
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
-    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['libpcap']="$(_koopa_app_prefix 'libpcap')"
+    dict['openssl']="$(_koopa_app_prefix 'openssl')"
+    dict['pcre2']="$(_koopa_app_prefix 'pcre2')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     conf_args+=(
         '--disable-universal'
         "--prefix=${dict['prefix']}"
@@ -47,17 +47,17 @@ main() {
         '--without-nmap-update'
         '--without-zenmap'
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
-        dict['liblua']="$(koopa_app_prefix 'lua')"
+        dict['liblua']="$(_koopa_app_prefix 'lua')"
         conf_args+=("--with-liblua=${dict['liblua']}")
     else
         conf_args+=('--with-liblua=included')
     fi
     dict['url']="https://nmap.org/dist/nmap-${dict['version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

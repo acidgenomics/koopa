@@ -7,6 +7,6 @@ main() {
     #
     # Consider deleting 'rstudio-server' user.
     # """
-    koopa_debian_apt_remove 'rstudio-server'
+    _koopa_debian_apt_remove 'rstudio-server'
     return 0
 }

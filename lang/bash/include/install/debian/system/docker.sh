@@ -20,9 +20,9 @@ main() {
     # """
     local -A app
     local pkgs
-    app['service']="$(koopa_debian_locate_service)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_debian_apt_add_docker_repo
+    app['service']="$(_koopa_debian_locate_service)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_debian_apt_add_docker_repo
     pkgs=(
         'containerd.io'
         'docker-buildx-plugin'
@@ -30,12 +30,12 @@ main() {
         'docker-ce-cli'
         'docker-compose-plugin'
     )
-    koopa_debian_apt_install "${pkgs[@]}"
-    koopa_linux_add_user_to_group 'docker'
+    _koopa_debian_apt_install "${pkgs[@]}"
+    _koopa_linux_add_user_to_group 'docker'
     # Alternative approach to create 'docker' group and add current user:
     # > groupadd -f docker
     # > usermod -aG docker "$USER"
     # > newgrp docker
-    koopa_sudo "${app['service']}" docker start
+    _koopa_sudo "${app['service']}" docker start
     return 0
 }

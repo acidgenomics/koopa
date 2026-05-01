@@ -22,10 +22,10 @@ main() {
     # - https://www.oracle.com/technetwork/java/javase/downloads/index.html
     # """
     local -A dict
-    dict['arch']="$(koopa_arch)"
+    dict['arch']="$(_koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         dict['platform']='mac'
     else
@@ -43,10 +43,10 @@ main() {
             # e.g. 'aarch64'.
             dict['arch2']="${dict['arch']}"
     esac
-    dict['maj_ver']="$(koopa_major_version "${dict['version']}")"
+    dict['maj_ver']="$(_koopa_major_version "${dict['version']}")"
     # e.g. '17.0.3+7' to '17.0.3_7'.
     dict['version2']="$( \
-        koopa_sub \
+        _koopa_sub \
             --fixed \
             --pattern='+' \
             --replacement='_' \
@@ -54,7 +54,7 @@ main() {
     )"
     # e.g. '17.0.3+7' to '17.0.3%2B7'.
     dict['version3']="$( \
-        koopa_sub \
+        _koopa_sub \
             --fixed \
             --pattern='+' \
             --replacement='%2B' \
@@ -63,15 +63,15 @@ main() {
     dict['url']="https://github.com/adoptium/temurin${dict['maj_ver']}-\
 binaries/releases/download/jdk-${dict['version3']}/OpenJDK${dict['maj_ver']}U-\
 jdk_${dict['arch2']}_${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" \
+    _koopa_download "${dict['url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" \
         "${dict['prefix']}/libexec"
     (
         local -a names
         local libexec name
-        koopa_cd "${dict['prefix']}"
-        if koopa_is_macos
+        _koopa_cd "${dict['prefix']}"
+        if _koopa_is_macos
         then
             libexec='libexec/Contents/Home'
         else
@@ -85,7 +85,7 @@ jdk_${dict['arch2']}_${dict['platform']}_hotspot_${dict['version2']}.tar.gz"
         )
         for name in "${names[@]}"
         do
-            koopa_ln "${libexec}/${name}" "$name"
+            _koopa_ln "${libexec}/${name}" "$name"
         done
     )
     return 0

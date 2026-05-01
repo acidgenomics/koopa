@@ -14,11 +14,11 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/rbenv/rbenv/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" \
+    _koopa_download "${dict['url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" \
         "${dict['prefix']}"
-    koopa_git_clone \
+    _koopa_git_clone \
         --prefix="${dict['prefix']}/plugins/ruby-build" \
         --tag='v20220713' \
         --url='https://github.com/rbenv/ruby-build.git'

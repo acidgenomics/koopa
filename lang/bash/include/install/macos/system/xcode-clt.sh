@@ -30,22 +30,22 @@ main() {
     #     878b5a18b89ff73f2f221392ecaabd03c1e69c3f/install#L297
     # """
     local -A app dict
-    app['xcode_select']="$(koopa_macos_locate_xcode_select)"
-    app['xcodebuild']="$(koopa_macos_locate_xcodebuild)"
-    koopa_assert_is_executable "${app[@]}"
+    app['xcode_select']="$(_koopa_macos_locate_xcode_select)"
+    app['xcodebuild']="$(_koopa_macos_locate_xcodebuild)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="$("${app['xcode_select']}" -p 2>/dev/null || true)"
     if [[ -d "${dict['prefix']}" ]]
     then
-        koopa_alert "Removing previous install at '${dict['prefix']}'."
-        koopa_rm --sudo --verbose "${dict['prefix']}"
+        _koopa_alert "Removing previous install at '${dict['prefix']}'."
+        _koopa_rm --sudo --verbose "${dict['prefix']}"
     fi
     # This step will prompt interactively, which is annoying. See above for
     # alternative workarounds that are more complicated, but may improve this.
     "${app['xcode_select']}" --install
-    koopa_sudo "${app['xcodebuild']}" -license 'accept'
-    koopa_sudo "${app['xcode_select']}" -r
+    _koopa_sudo "${app['xcodebuild']}" -license 'accept'
+    _koopa_sudo "${app['xcode_select']}" -r
     dict['prefix']="$("${app['xcode_select']}" -p)"
-    koopa_assert_is_dir "${dict['prefix']}"
-    koopa_alert "Xcode CLT installed at '${dict['prefix']}'."
+    _koopa_assert_is_dir "${dict['prefix']}"
+    _koopa_alert "Xcode CLT installed at '${dict['prefix']}'."
     return 0
 }

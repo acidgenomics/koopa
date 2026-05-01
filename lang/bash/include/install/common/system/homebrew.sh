@@ -19,25 +19,25 @@ main() {
     # Creates a new linuxbrew user and installs to /home/linuxbrew/.linuxbrew.
     # """
     local -A app dict
-    app['brew']="$(koopa_locate_brew --allow-missing)"
+    app['brew']="$(_koopa_locate_brew --allow-missing)"
     if [[ -x "${app['brew']}" ]]
     then
-        koopa_stop 'Homebrew is already installed.'
+        _koopa_stop 'Homebrew is already installed.'
     fi
-    if koopa_is_macos
+    if _koopa_is_macos
     then
-        koopa_macos_assert_is_xcode_clt_installed
+        _koopa_macos_assert_is_xcode_clt_installed
     fi
     dict['file']='install.sh'
     dict['url']="https://raw.githubusercontent.com/Homebrew/install/\
 master/${dict['file']}"
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_chmod 'u+x' "${dict['file']}"
-    koopa_sudo_trigger
+    _koopa_download "${dict['url']}" "${dict['file']}"
+    _koopa_chmod 'u+x' "${dict['file']}"
+    _koopa_sudo_trigger
     NONINTERACTIVE=1 "./${dict['file']}"
-    app['brew']="$(koopa_locate_brew)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_brew_reset_permissions
-    koopa_brew_doctor
+    app['brew']="$(_koopa_locate_brew)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_brew_reset_permissions
+    _koopa_brew_doctor
     return 0
 }

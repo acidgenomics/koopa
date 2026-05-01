@@ -3,4 +3,4 @@
 # shellcheck source=/dev/null
 . "$(dirname "${BASH_SOURCE[0]}")/../lang/bash/include/header.sh"
 
-koopa_rg_sort "$@"
+_koopa_rg_sort "$@"

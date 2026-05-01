@@ -44,39 +44,39 @@ main() {
     local -a build_deps cmake_args cmake_std_args conf_args deps
     if [[ ! -f '/usr/include/zlib.h' ]]
     then
-        koopa_stop 'System zlib is required.'
+        _koopa_stop 'System zlib is required.'
     fi
-    koopa_assert_is_not_arm64
+    _koopa_assert_is_not_arm64
     build_deps=('cmake' 'make')
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('icu4c' 'xz' 'zlib' 'zstd')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['aws']="$(koopa_locate_aws --allow-system)"
-    app['cmake']="$(koopa_locate_cmake)"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
-    dict['icu4c']="$(koopa_app_prefix 'icu4c')"
-    dict['installers_base']="$(koopa_private_installers_s3_uri)"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['aws']="$(_koopa_locate_aws --allow-system)"
+    app['cmake']="$(_koopa_locate_cmake)"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(_koopa_arch)"
+    dict['icu4c']="$(_koopa_app_prefix 'icu4c')"
+    dict['installers_base']="$(_koopa_private_installers_s3_uri)"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['c_include_path']="/usr/include/${dict['arch']}-linux-gnu"
-    koopa_assert_is_dir "${dict['c_include_path']}"
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    _koopa_assert_is_dir "${dict['c_include_path']}"
+    dict['libexec']="$(_koopa_init_dir "${dict['prefix']}/libexec")"
     dict['url']="${dict['installers_base']}/bcl2fastq/src/\
 ${dict['version']}.tar.zip"
     "${app['aws']}" --profile='acidgenomics' s3 cp \
-        "${dict['url']}" "$(koopa_basename "${dict['url']}")"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'unzip'
-    koopa_extract 'unzip/'*'.tar.gz' 'src'
-    koopa_rm 'unzip'
-    koopa_cd 'src'
-    koopa_mkdir 'build'
-    koopa_cd 'build'
+        "${dict['url']}" "$(_koopa_basename "${dict['url']}")"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'unzip'
+    _koopa_extract 'unzip/'*'.tar.gz' 'src'
+    _koopa_rm 'unzip'
+    _koopa_cd 'src'
+    _koopa_mkdir 'build'
+    _koopa_cd 'build'
     readarray -t cmake_std_args <<< "$( \
-        koopa_cmake_std_args --prefix="${dict['prefix']}"
+        _koopa_cmake_std_args --prefix="${dict['prefix']}"
     )"
     for arg in "${cmake_std_args[@]}"
     do
@@ -96,7 +96,7 @@ ${dict['version']}.tar.zip"
     export BOOST_ROOT="${dict['libexec']}/boost"
     export CMAKE_OPTIONS="${cmake_args[*]}"
     export C_INCLUDE_PATH="${dict['c_include_path']}"
-    koopa_print_env
+    _koopa_print_env
     conf_args=(
         '--build-type=Release'
         "--parallel=${dict['jobs']}"

@@ -11,16 +11,16 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'bison' 'pkg-config'
-    koopa_activate_app 'libedit' 'openssl'
+    _koopa_activate_app --build-only 'bison' 'pkg-config'
+    _koopa_activate_app 'libedit' 'openssl'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['maj_min_ver']="$(koopa_major_minor_version "${dict['version']}")"
+    dict['maj_min_ver']="$(_koopa_major_minor_version "${dict['version']}")"
     dict['url']="https://kerberos.org/dist/krb5/${dict['maj_min_ver']}/\
 krb5-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'krb5'
-    koopa_cd 'krb5/src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'krb5'
+    _koopa_cd 'krb5/src'
     conf_args=(
         '--disable-nls'
         "--prefix=${dict['prefix']}"
@@ -30,6 +30,6 @@ krb5-${dict['version']}.tar.gz"
         '--without-readline'
         '--without-system-verto'
     )
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

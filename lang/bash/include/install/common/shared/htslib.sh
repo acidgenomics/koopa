@@ -10,9 +10,9 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('curl' 'libdeflate' 'openssl' 'xz' 'zlib')
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -25,9 +25,9 @@ main() {
     )
     dict['url']="https://github.com/samtools/htslib/releases/download/\
 ${dict['version']}/htslib-${dict['version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

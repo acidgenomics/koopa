@@ -17,11 +17,11 @@ main() {
     # """
     local -A app dict
     local -a make_args make_install_args
-    koopa_activate_app --build-only 'make'
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['make']="$(koopa_locate_make)"
-    app['patch']="$(koopa_locate_patch)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'make'
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['make']="$(_koopa_locate_make)"
+    app['patch']="$(_koopa_locate_patch)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     case "${dict['version']}" in
@@ -30,29 +30,29 @@ main() {
             dict['patch_version']='13'
             ;;
         *)
-            koopa_stop 'Unsupported version.'
+            _koopa_stop 'Unsupported version.'
             ;;
     esac
     dict['url']="https://koopa.acidgenomics.com/src/zip/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_apply_debian_patch_set \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_apply_debian_patch_set \
         --name='zip' \
         --patch-version="${dict['patch_version']}" \
         --target='src' \
         --version="${dict['version']}"
-    koopa_cd 'src'
-    if koopa_is_macos
+    _koopa_cd 'src'
+    if _koopa_is_macos
     then
         # Fix compile with clang 15. Otherwise configure thinks 'memset()' and
         # others are missing.
         # See also:
         # - https://github.com/Homebrew/formula-patches/blob/master/
         #     zip/xcode15.diff
-        dict['patch_prefix']="$(koopa_patch_prefix)"
+        dict['patch_prefix']="$(_koopa_patch_prefix)"
         dict['patch_file']="${dict['patch_prefix']}/macos/zip/xcode15.diff"
-        koopa_assert_is_file "${dict['patch_file']}"
+        _koopa_assert_is_file "${dict['patch_file']}"
         "${app['patch']}" \
             --input="${dict['patch_file']}" \
             --strip=1 \
@@ -69,14 +69,14 @@ ${dict['version']}.tar.gz"
         "BINDIR=${dict['prefix']}/bin"
         "MANDIR=${dict['prefix']}/share/man/man1"
     )
-    koopa_print_env
+    _koopa_print_env
     "${app['make']}" "${make_args[@]}"
     "${app['make']}" "${make_install_args[@]}" install
-    koopa_cd '..'
-    koopa_mkdir 'test'
-    koopa_cd 'test'
+    _koopa_cd '..'
+    _koopa_mkdir 'test'
+    _koopa_cd 'test'
     app['zip']="${dict['prefix']}/bin/zip"
-    koopa_assert_is_executable "${app['zip']}"
+    _koopa_assert_is_executable "${app['zip']}"
     "${app['zip']}" -v
     return 0
 }

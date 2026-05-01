@@ -14,6 +14,6 @@ main() {
     # - https://formulae.brew.sh/formula/hadolint
     # - https://github.com/hadolint/hadolint/issues/904
     # """
-    koopa_install_haskell_package --ghc-version='9.2.8'
+    _koopa_install_haskell_package --ghc-version='9.2.8'
     return 0
 }

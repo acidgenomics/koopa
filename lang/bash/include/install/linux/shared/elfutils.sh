@@ -10,18 +10,18 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('xz' 'zlib' 'zstd')
-    koopa_is_macos && deps+=('gettext')
+    _koopa_is_macos && deps+=('gettext')
     deps+=('libiconv')
-    koopa_activate_app --build-only 'm4'
-    koopa_activate_app "${deps[@]}"
-    dict['gettext']="$(koopa_app_prefix 'gettext')"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    _koopa_activate_app --build-only 'm4'
+    _koopa_activate_app "${deps[@]}"
+    dict['gettext']="$(_koopa_app_prefix 'gettext')"
+    dict['jobs']="$(_koopa_cpu_count)"
+    dict['libiconv']="$(_koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${dict['gettext']}" \
         "${dict['libiconv']}"
     conf_args=(
@@ -41,7 +41,7 @@ main() {
         '--with-zlib'
         '--with-zstd'
     )
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         conf_args+=(
             "--with-libintl-prefix=${dict['gettext']}"
@@ -49,9 +49,9 @@ main() {
     fi
     dict['url']="https://sourceware.org/elfutils/ftp/\
 ${dict['version']}/elfutils-${dict['version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

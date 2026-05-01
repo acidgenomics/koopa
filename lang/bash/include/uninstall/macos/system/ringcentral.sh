@@ -5,9 +5,9 @@ main() {
     # Uninstall RingCentral.
     # @note Updated 2021-10-30.
     # """
-    koopa_rm --sudo \
+    _koopa_rm --sudo \
         '/Applications/RingCentral Meetings.app'
-    koopa_rm \
+    _koopa_rm \
         "${HOME}/Library/Application Support/RingCentral Meetings" \
         "${HOME}/Library/Caches/us.zoom.ringcentral" \
         "${HOME}/Library/Internet Plug-Ins/RingCentralMeetings.plugin" \

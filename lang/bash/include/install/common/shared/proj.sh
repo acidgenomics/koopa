@@ -25,13 +25,13 @@ main() {
         'python'
         'sqlite'
     )
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app "${deps[@]}"
-    dict['curl']="$(koopa_app_prefix 'curl')"
-    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app "${deps[@]}"
+    dict['curl']="$(_koopa_app_prefix 'curl')"
+    dict['libtiff']="$(_koopa_app_prefix 'libtiff')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
-    dict['sqlite']="$(koopa_app_prefix 'sqlite')"
+    dict['shared_ext']="$(_koopa_shared_ext)"
+    dict['sqlite']="$(_koopa_app_prefix 'sqlite')"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
         # Build options --------------------------------------------------------
@@ -56,9 +56,9 @@ libtiff.${dict['shared_ext']}"
     )
     dict['url']="https://github.com/OSGeo/PROJ/releases/download/\
 ${dict['version']}/proj-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

@@ -16,7 +16,7 @@ main() {
     local -a build_deps conf_args deps
     build_deps=('pkg-config' 'python')
     # This fails to build with GCC 11 on Ubuntu 22, so requiring our GCC.
-    koopa_is_linux && build_deps+=('gcc')
+    _koopa_is_linux && build_deps+=('gcc')
     deps=(
         'c-ares'
         'jemalloc'
@@ -26,10 +26,10 @@ main() {
         'openssl'
         'zlib'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['python']="$(koopa_locate_python --realpath)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['python']="$(_koopa_locate_python --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -50,9 +50,9 @@ main() {
     )
     dict['url']="https://github.com/nghttp2/nghttp2/releases/download/\
 v${dict['version']}/nghttp2-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

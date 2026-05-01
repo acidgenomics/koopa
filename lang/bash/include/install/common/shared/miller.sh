@@ -12,9 +12,9 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'go'
-    dict['gocache']="$(koopa_init_dir 'gocache')"
-    dict['gopath']="$(koopa_init_dir 'go')"
+    _koopa_activate_app --build-only 'go'
+    dict['gocache']="$(_koopa_init_dir 'gocache')"
+    dict['gopath']="$(_koopa_init_dir 'go')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=("--prefix=${dict['prefix']}")
@@ -22,10 +22,10 @@ main() {
     export GOPATH="${dict['gopath']}"
     dict['url']="https://github.com/johnkerl/miller/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
-    koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
+    _koopa_chmod --recursive 'u+rw' "${dict['gopath']}"
     return 0
 }

@@ -11,10 +11,10 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    koopa_activate_app --build-only 'pkg-config'
-    ! koopa_is_macos && deps+=('bzip2')
+    _koopa_activate_app --build-only 'pkg-config'
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('expat' 'lz4' 'xz' 'zlib' 'zstd')
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -28,14 +28,14 @@ main() {
     )
     dict['url']="https://www.libarchive.org/downloads/\
 libarchive-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     # Fix for breaking change introduced in 3.6.2.
-    koopa_find_and_replace_in_file \
+    _koopa_find_and_replace_in_file \
         --pattern='Requires.private: @LIBSREQUIRED@' \
         --replacement='' \
         'build/pkgconfig/libarchive.pc.in'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

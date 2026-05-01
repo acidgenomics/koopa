@@ -20,7 +20,7 @@ v${dict['version']}.tar.gz"
     ldflags+=('-s' '-w')
     ldflags+=("-X=github.com/peak/s5cmd/v2/version.Version=${dict['version']}")
     dict['ldflags']="${ldflags[*]}"
-    koopa_build_go_package \
+    _koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --url="${dict['url']}"
     return 0

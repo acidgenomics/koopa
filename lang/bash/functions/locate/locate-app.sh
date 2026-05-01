@@ -1,0 +1,209 @@
+#!/usr/bin/env bash
+
+_koopa_locate_app() {
+    # """
+    # Locate file system path to an application.
+    # @note Updated 2024-09-19.
+    #
+    # Mode 1: direct executable file path input.
+    # Mode 2: '--app-name' and '--bin-name' input.
+    #
+    # App locator prioritization:
+    # 1. Direct file path input of an executable.
+    # 2. Check for linked program in koopa bin.
+    # 3. Check for linked program in in koopa opt.
+    #
+    # Resolving the full executable path can cause BusyBox coreutils to error.
+    # """
+    local -A bool dict
+    local -a pos
+    bool['allow_bootstrap']=0
+    bool['allow_koopa_bin']=1
+    bool['allow_missing']=0
+    bool['allow_opt_bin']=1
+    bool['allow_system']=0
+    bool['only_bootstrap']=0
+    bool['only_system']=0
+    bool['realpath']=0
+    dict['app']=''
+    dict['app_name']=''
+    dict['bin_name']=''
+    dict['system_bin_name']=''
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Key-value pairs --------------------------------------------------
+            '--app-name='*)
+                dict['app_name']="${1#*=}"
+                shift 1
+                ;;
+            '--app-name')
+                dict['app_name']="${2:?}"
+                shift 2
+                ;;
+            '--bin-name='*)
+                dict['bin_name']="${1#*=}"
+                shift 1
+                ;;
+            '--bin-name')
+                dict['bin_name']="${2:?}"
+                shift 2
+                ;;
+            '--system-bin-name='*)
+                dict['system_bin_name']="${1#*=}"
+                shift 1
+                ;;
+            '--system-bin-name')
+                dict['system_bin_name']="${2:?}"
+                shift 2
+                ;;
+            # Flags ------------------------------------------------------------
+            '--allow-bootstrap')
+                bool['allow_bootstrap']=1
+                shift 1
+                ;;
+            '--allow-missing')
+                bool['allow_missing']=1
+                shift 1
+                ;;
+            '--allow-system')
+                bool['allow_system']=1
+                shift 1
+                ;;
+            '--no-allow-koopa-bin')
+                bool['allow_koopa_bin']=0
+                shift 1
+                ;;
+            '--only-system')
+                bool['only_system']=1
+                shift 1
+                ;;
+            '--realpath')
+                bool['realpath']=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    if [[ "${bool['only_system']}" -eq 1 ]]
+    then
+        bool['allow_bootstrap']=0
+        bool['allow_koopa_bin']=0
+        bool['allow_system']=1
+    fi
+    if [[ "${#pos[@]}" -gt 0 ]]
+    then
+        set -- "${pos[@]}"
+        [[ "$#" -eq 1 ]] || return 1
+        dict['app']="${1:?}"
+        if [[ -x "${dict['app']}" ]] && \
+            _koopa_is_installed "${dict['app']}"
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(_koopa_realpath "${dict['app']}")"
+            fi
+            _koopa_print "${dict['app']}"
+            return 0
+        fi
+        [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
+        _koopa_stop "Failed to locate '${dict['app']}'."
+    fi
+    [[ -n "${dict['app_name']}" ]] || return 1
+    [[ -n "${dict['bin_name']}" ]] || return 1
+    if [[ -z "${dict['system_bin_name']}" ]]
+    then
+        dict['system_bin_name']="${dict['bin_name']}"
+    fi
+    if [[ "${bool['only_system']}" -eq 1 ]]
+    then
+        dict['path']="${PATH:?}"
+        dict['bin_prefix']="$(_koopa_bin_prefix)"
+        _koopa_remove_from_path "${dict['bin_prefix']}"
+        dict['app']="$(_koopa_which "${dict['system_bin_name']}" || true)"
+        export PATH="${dict['path']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(_koopa_realpath "${dict['app']}")"
+            fi
+            _koopa_print "${dict['app']}"
+            return 0
+        fi
+    fi
+    if [[ "${bool['allow_bootstrap']}" -eq 1 ]]
+    then
+        dict['bs_prefix']="$(_koopa_bootstrap_prefix)"
+        dict['app']="${dict['bs_prefix']}/bin/${dict['bin_name']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(_koopa_realpath "${dict['app']}")"
+            fi
+            _koopa_print "${dict['app']}"
+            return 0
+        fi
+    fi
+    if [[ "${bool['allow_koopa_bin']}" -eq 1 ]]
+    then
+        dict['bin_prefix']="$(_koopa_bin_prefix)"
+        dict['app']="${dict['bin_prefix']}/${dict['bin_name']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(_koopa_realpath "${dict['app']}")"
+            fi
+            _koopa_print "${dict['app']}"
+            return 0
+        fi
+    fi
+    if [[ "${bool['allow_opt_bin']}" -eq 1 ]]
+    then
+        dict['opt_prefix']="$(_koopa_opt_prefix)"
+        dict['app']="${dict['opt_prefix']}/${dict['app_name']}/\
+bin/${dict['bin_name']}"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(_koopa_realpath "${dict['app']}")"
+            fi
+            _koopa_print "${dict['app']}"
+            return 0
+        fi
+    fi
+    if [[ "${bool['allow_system']}" -eq 1 ]]
+    then
+        dict['app']="$(_koopa_which "${dict['system_bin_name']}" || true)"
+        if [[ -x "${dict['app']}" ]]
+        then
+            if [[ "${bool['realpath']}" -eq 1 ]]
+            then
+                dict['app']="$(_koopa_realpath "${dict['app']}")"
+            fi
+            _koopa_print "${dict['app']}"
+            return 0
+        fi
+    fi
+    [[ "${bool['allow_missing']}" -eq 1 ]] && return 0
+    if [[ "${bool['allow_system']}" -eq 1 ]]
+    then
+        _koopa_stop \
+            "Failed to locate '${dict['system_bin_name']}'."
+    else
+        _koopa_stop \
+            "Failed to locate '${dict['bin_name']}'." \
+            "Run 'koopa install ${dict['app_name']}' to resolve."
+    fi
+}

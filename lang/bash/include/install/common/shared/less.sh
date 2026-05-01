@@ -13,10 +13,10 @@ main() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'autoconf' 'groff'
-    koopa_activate_app 'ncurses' 'pcre2'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
+    _koopa_activate_app --build-only 'autoconf' 'groff'
+    _koopa_activate_app 'ncurses' 'pcre2'
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args+=(
@@ -27,10 +27,10 @@ main() {
 # > less-${dict['version']}.tar.gz"
     dict['url']="https://github.com/gwsw/less/archive/refs/tags/\
 v${dict['version']}-rel.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     "${app['make']}" -f 'Makefile.aut' 'distfiles'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

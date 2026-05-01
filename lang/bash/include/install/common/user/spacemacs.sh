@@ -12,7 +12,7 @@ main() {
     dict['commit']="${KOOPA_INSTALL_VERSION:?}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url']='https://github.com/syl20bnr/spacemacs.git'
-    koopa_git_clone \
+    _koopa_git_clone \
         --commit="${dict['commit']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}"

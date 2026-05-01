@@ -5,9 +5,9 @@ main() {
     # Uninstall Microsoft OneDrive.
     # @note Updated 2021-10-30.
     # """
-    koopa_rm --sudo \
+    _koopa_rm --sudo \
         '/Applications/OneDrive.app'
-    koopa_rm \
+    _koopa_rm \
         "${HOME}/Library/Containers/com.microsoft.OneDrive-mac.FinderSync" \
         "${HOME}/Library/Application Scripts/\
 com.microsoft.OneDrive-mac.FinderSync" \

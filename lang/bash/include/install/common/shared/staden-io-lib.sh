@@ -13,16 +13,16 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    ! koopa_is_macos && deps+=('bzip2')
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=('curl' 'libdeflate' 'xz' 'zlib' 'zstd')
-    koopa_activate_app "${deps[@]}"
-    dict['curl']="$(koopa_app_prefix 'curl')"
-    dict['libdeflate']="$(koopa_app_prefix 'libdeflate')"
+    _koopa_activate_app "${deps[@]}"
+    dict['curl']="$(_koopa_app_prefix 'curl')"
+    dict['libdeflate']="$(_koopa_app_prefix 'libdeflate')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['version2']="$(koopa_kebab_case "${dict['version']}")"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
+    dict['version2']="$(_koopa_kebab_case "${dict['version']}")"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
+    dict['zstd']="$(_koopa_app_prefix 'zstd')"
     conf_args=(
         '--disable-dependency-tracking'
         '--disable-silent-rules'
@@ -36,9 +36,9 @@ main() {
     )
     dict['url']="https://github.com/jkbonfield/io_lib/releases/download/\
 io_lib-${dict['version2']}/io_lib-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

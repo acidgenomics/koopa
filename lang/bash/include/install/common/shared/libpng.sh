@@ -11,8 +11,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app 'pkg-config'
-    koopa_activate_app 'zlib'
+    _koopa_activate_app 'pkg-config'
+    _koopa_activate_app 'zlib'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -24,9 +24,9 @@ main() {
     )
     dict['url']="https://koopa.acidgenomics.com/src/libpng/\
 ${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

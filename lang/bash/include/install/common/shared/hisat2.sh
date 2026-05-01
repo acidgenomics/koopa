@@ -11,33 +11,33 @@ main() {
     # - https://github.com/bioconda/bioconda-recipes/tree/master/recipes/hisat2
     # """
     local -A app dict
-    app['make']="$(koopa_locate_make)"
-    app['patch']="$(koopa_locate_patch)"
-    app['cc']="$(koopa_locate_cc --only-system)"
-    app['cxx']="$(koopa_locate_cxx --only-system)"
-    koopa_assert_is_installed "${app[@]}"
+    app['make']="$(_koopa_locate_make)"
+    app['patch']="$(_koopa_locate_patch)"
+    app['cc']="$(_koopa_locate_cc --only-system)"
+    app['cxx']="$(_koopa_locate_cxx --only-system)"
+    _koopa_assert_is_installed "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/DaehwanKimLab/hisat2/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    dict['patch_prefix']="$(koopa_patch_prefix)/common/hisat2"
-    koopa_assert_is_dir "${dict['patch_prefix']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    dict['patch_prefix']="$(_koopa_patch_prefix)/common/hisat2"
+    _koopa_assert_is_dir "${dict['patch_prefix']}"
     dict['patch_file']="${dict['patch_prefix']}/version.patch"
-    koopa_assert_is_file "${dict['patch_file']}"
+    _koopa_assert_is_file "${dict['patch_file']}"
     "${app['patch']}" \
         --input="${dict['patch_file']}" \
         --strip=1 \
         --verbose
-    koopa_print_env
+    _koopa_print_env
     "${app['make']}" \
         CC="${app['cc']}} ${CFLAGS:-} ${CPPFLAGS:-} ${LDFLAGS:-}" \
         CPP="${app['cxx']} ${CXXFLAGS:-} ${CPPFLAGS:-} ${LDFLAGS:-}"
     # Copy binaries and Python scripts.
-    koopa_mkdir "${dict['prefix']}/bin"
-    koopa_cp \
+    _koopa_mkdir "${dict['prefix']}/bin"
+    _koopa_cp \
         --target-directory="${dict['prefix']}/bin" \
         'hisat2' \
         'hisat2-align-l' \
@@ -49,6 +49,6 @@ v${dict['version']}.tar.gz"
         'hisat2-inspect-l' \
         'hisat2-inspect-s' \
         *'.py'
-    koopa_chmod +x "${dict['prefix']}/bin/"*
+    _koopa_chmod +x "${dict['prefix']}/bin/"*
     return 0
 }

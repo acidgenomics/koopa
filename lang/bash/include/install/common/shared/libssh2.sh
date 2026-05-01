@@ -14,12 +14,12 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'zlib' 'openssl'
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'zlib' 'openssl'
+    dict['openssl']="$(_koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     conf_args=(
         '--disable-examples-build'
         '--disable-silent-rules'
@@ -31,9 +31,9 @@ main() {
     )
     dict['url']="https://www.libssh2.org/download/\
 libssh2-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

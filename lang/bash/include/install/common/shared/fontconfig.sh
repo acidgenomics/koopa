@@ -24,8 +24,8 @@ main() {
         'icu4c' # libxml2
         'libxml2'
     )
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -34,9 +34,9 @@ main() {
     )
     dict['url']="https://www.freedesktop.org/software/fontconfig/release/\
 fontconfig-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

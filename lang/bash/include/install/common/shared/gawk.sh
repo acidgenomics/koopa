@@ -19,11 +19,11 @@ main() {
     # """
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    koopa_activate_app 'gettext' 'mpfr' 'readline'
-    koopa_install_gnu_app -D '--disable-pma'
+    _koopa_activate_app 'gettext' 'mpfr' 'readline'
+    _koopa_install_gnu_app -D '--disable-pma'
     (
-        koopa_cd "${dict['prefix']}/share/man/man1"
-        koopa_ln 'gawk.1' 'awk.1'
+        _koopa_cd "${dict['prefix']}/share/man/man1"
+        _koopa_ln 'gawk.1' 'awk.1'
     )
     return 0
 }

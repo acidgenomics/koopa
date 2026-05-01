@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+_koopa_debian_apt_add_microsoft_key() {
+    # """
+    # Add the Microsoft GPG key (for Azure CLI).
+    # @note Updated 2021-11-09.
+    # """
+    _koopa_assert_has_no_args "$#"
+    _koopa_debian_apt_add_key \
+        --name='microsoft' \
+        --url='https://packages.microsoft.com/keys/microsoft.asc'
+    return 0
+}

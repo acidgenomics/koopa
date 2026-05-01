@@ -15,18 +15,18 @@ main() {
     dict['ldflags']="-s -w -X main.Version=${dict['version']}"
     dict['url']="https://github.com/charmbracelet/gum/archive/\
 v${dict['version']}.tar.gz"
-    koopa_build_go_package \
+    _koopa_build_go_package \
         --ldflags="${dict['ldflags']}" \
         --prefix="${dict['prefix']}" \
         --url="${dict['url']}" \
         --version="${dict['version']}"
     app['gum']="${dict['prefix']}/bin/gum"
-    koopa_assert_is_executable "${app['gum']}"
+    _koopa_assert_is_executable "${app['gum']}"
     dict['bash_c']="${dict['prefix']}/etc/bash_completion.d/gum"
     dict['fish_c']="${dict['prefix']}/share/fish/vendor_completions.d/gum.fish"
     dict['zsh_c']="${dict['prefix']}/share/zsh/site-functions/_gum"
     dict['manfile']="${dict['prefix']}/share/man/man1/gum.1"
-    koopa_touch \
+    _koopa_touch \
         "${dict['bash_c']}" \
         "${dict['fish_c']}" \
         "${dict['zsh_c']}" \

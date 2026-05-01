@@ -43,8 +43,8 @@ main() {
     # """
     local -A app dict
     local -a stack_args
-    dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
-    dict['jobs']="$(koopa_cpu_count)"
+    dict['arch']="$(_koopa_arch)" # e.g. 'x86_64'.
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     app['stack']="${dict['prefix']}/bin/stack"
@@ -53,10 +53,10 @@ main() {
             dict['arch']='aarch64'
             ;;
     esac
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         dict['platform']='linux'
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
         dict['platform']='osx'
     fi
@@ -64,8 +64,8 @@ main() {
     dict['url']="https://github.com/commercialhaskell/stack/releases/download/\
 v${dict['version']}/stack-${dict['version']}-${dict['platform']}-\
 ${dict['arch']}-bin"
-    koopa_download "${dict['url']}" "${app['stack']}"
-    koopa_chmod 'u+x' "${app['stack']}"
+    _koopa_download "${dict['url']}" "${app['stack']}"
+    _koopa_chmod 'u+x' "${app['stack']}"
     stack_args=(
         "--jobs=${dict['jobs']}"
         "--stack-root=${dict['root']}"

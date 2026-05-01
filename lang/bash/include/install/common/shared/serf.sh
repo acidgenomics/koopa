@@ -17,29 +17,29 @@ main() {
     # """
     local -A app dict
     local -a scons_args
-    koopa_activate_app --build-only 'patch' 'pkg-config'
-    koopa_activate_app \
+    _koopa_activate_app --build-only 'patch' 'pkg-config'
+    _koopa_activate_app \
         'zlib' \
         'apr' \
         'apr-util' \
         'openssl' \
         'scons'
-    app['patch']="$(koopa_locate_patch)"
-    app['scons']="$(koopa_locate_scons)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['apr']="$(koopa_app_prefix 'apr')"
-    dict['apu']="$(koopa_app_prefix 'apr-util')"
+    app['patch']="$(_koopa_locate_patch)"
+    app['scons']="$(_koopa_locate_scons)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['apr']="$(_koopa_app_prefix 'apr')"
+    dict['apu']="$(_koopa_app_prefix 'apr-util')"
     dict['cflags']="${CFLAGS:-}"
     dict['linkflags']="${LDFLAGS:-}"
-    dict['openssl']="$(koopa_app_prefix 'openssl')"
+    dict['openssl']="$(_koopa_app_prefix 'openssl')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     dict['url']="https://www.apache.org/dist/serf/\
 serf-${dict['version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     # Patch diff created with:
     # > diff -u 'SConstruct-1' 'SConstruct-2' > 'patch-sconstruct.patch'
     dict['patch_file']='patch-sconstruct.patch'
@@ -56,7 +56,7 @@ serf-${dict['version']}.tar.bz2"
 
  # If build with gssapi, get its information and define SERF_HAVE_GSSAPI
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${dict['patch_file']}" \
         --string="${dict['patch_string']}"
     "${app['patch']}" \
@@ -76,6 +76,6 @@ END
     )
     "${app['scons']}" "${scons_args[@]}"
     "${app['scons']}" "${scons_args[@]}" install
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
+    _koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }
