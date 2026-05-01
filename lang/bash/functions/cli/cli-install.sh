@@ -3,25 +3,33 @@
 _koopa_cli_install() {
     # """
     # Parse user input to 'koopa install'.
-    # @note Updated 2024-07-12.
+    # @note Updated 2026-05-01.
     #
     # @examples
     # > _koopa_cli_install --reinstall --verbose 'tmux' 'vim'
-    # > _koopa_cli_install user 'doom-emacs' 'spacemacs'
+    # > _koopa_cli_install system 'homebrew'
     # """
     local -A dict
     local -a flags pos
     local app
     _koopa_assert_has_args "$#"
-    dict['stem']='install'
+    dict['mode']=''
     case "${1:-}" in
         'koopa')
             shift 1
             _koopa_install_koopa "$@"
             return 0
             ;;
-        'private' | 'system' | 'user')
-            dict['stem']="${dict['stem']}-${1:?}"
+        'private')
+            dict['mode']='private'
+            shift 1
+            ;;
+        'system')
+            dict['mode']='system'
+            shift 1
+            ;;
+        'user')
+            dict['mode']='user'
             shift 1
             ;;
         'app' | 'shared-apps')
@@ -52,20 +60,20 @@ _koopa_cli_install() {
     _koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local -A dict2
-        dict2['app']="$app"
-        dict2['key']="${dict['stem']}-${dict2['app']}"
-        dict2['fun']="$(_koopa_which_function "${dict2['key']}" || true)"
-        if ! _koopa_is_function "${dict2['fun']}"
-        then
-            _koopa_stop "Unsupported app: '${dict2['app']}'."
-        fi
-        if _koopa_is_array_non_empty "${flags[@]:-}"
-        then
-            "${dict2['fun']}" "${flags[@]}"
-        else
-            "${dict2['fun']}"
-        fi
+        local -a install_args
+        install_args=("--name=${app}")
+        case "${dict['mode']}" in
+            'private')
+                install_args+=('--private')
+                ;;
+            'system')
+                install_args+=('--system')
+                ;;
+            'user')
+                install_args+=('--user')
+                ;;
+        esac
+        _koopa_install_app "${install_args[@]}" "${flags[@]:-}"
     done
     return 0
 }

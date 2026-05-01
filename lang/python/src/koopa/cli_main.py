@@ -2,21 +2,118 @@
 
 Dispatches ``koopa install``, ``koopa reinstall``, ``koopa uninstall``,
 and ``koopa update`` subcommands to the Python install orchestrator.
+Reads app metadata from ``app.json`` to resolve installer, platform, and
+passthrough arguments — eliminating the need for per-app Bash wrappers.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
+import os
+import platform
 import sys
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from koopa.install import InstallConfig
+
+
+def _koopa_prefix() -> str:
+    """Return koopa installation prefix."""
+    return os.environ.get("KOOPA_PREFIX", "")
+
+
+def _import_app_json() -> dict[str, Any]:
+    """Import app.json data."""
+    json_path = os.path.join(_koopa_prefix(), "etc", "koopa", "app.json")
+    with open(json_path) as f:
+        return json.load(f)
+
+
+def _os_id() -> str:
+    """Return platform-architecture ID (e.g. 'macos-arm64')."""
+    machine = platform.machine()
+    arch_map = {"x86_64": "amd64", "aarch64": "arm64", "arm64": "arm64"}
+    arch = arch_map.get(machine, machine)
+    if sys.platform == "darwin":
+        return f"macos-{arch}"
+    return f"linux-{arch}"
+
+
+def _check_platform_support(name: str, app_meta: dict[str, Any]) -> None:
+    """Abort if the app is not supported on the current platform."""
+    supported = app_meta.get("supported", {})
+    os_key = _os_id()
+    if os_key in supported and not supported[os_key]:
+        msg = f"'{name}' is not supported on {os_key}."
+        raise RuntimeError(msg)
+
+
+def _build_passthrough_args(app_meta: dict[str, Any]) -> list[str]:
+    """Build passthrough -D args from app.json installer_args."""
+    installer_args = app_meta.get("installer_args", {})
+    if not installer_args:
+        return []
+    result: list[str] = []
+    for key, value in installer_args.items():
+        flag = key.replace("_", "-")
+        if isinstance(value, list):
+            for item in value:
+                result.append(f"--{flag}={item}")
+        else:
+            result.append(f"--{flag}={value}")
+    return result
+
+
+def _build_install_config(
+    name: str,
+    *,
+    mode: str = "shared",
+    reinstall: bool = False,
+    bootstrap: bool = False,
+    verbose: bool = False,
+    deps: bool = True,
+    private: bool = False,
+    extra_passthrough: list[str] | None = None,
+) -> InstallConfig:
+    """Build an InstallConfig from app.json metadata."""
+    from koopa.install import InstallConfig, _can_install_binary, _can_push_binary
+
+    app_data = _import_app_json()
+    app_meta = app_data.get(name, {})
+    _check_platform_support(name, app_meta)
+    installer = app_meta.get("installer", "")
+    installer_platform = app_meta.get("installer_platform", "common")
+    is_private = app_meta.get("private", False) or private
+    passthrough = _build_passthrough_args(app_meta)
+    if extra_passthrough:
+        passthrough.extend(extra_passthrough)
+    note = app_meta.get("install_note", "")
+    if note and not reinstall:
+        print(f"Note: {note}", file=sys.stderr)
+    return InstallConfig(
+        name=name,
+        mode=mode,
+        installer=installer,
+        platform=installer_platform,
+        bootstrap=bootstrap,
+        deps=deps,
+        private=is_private,
+        reinstall=reinstall,
+        verbose=verbose,
+        binary=_can_install_binary(),
+        push=_can_push_binary(),
+        passthrough_args=passthrough,
+    )
+
+
+# -- Argument parser ----------------------------------------------------------
 
 
 def _add_common_flags(parser: argparse.ArgumentParser) -> None:
     """Add flags shared across subcommands."""
-    parser.add_argument(
-        "--verbose",
-        action="store_true",
-        default=False,
-    )
+    parser.add_argument("--verbose", action="store_true", default=False)
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -27,7 +124,6 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     subparsers = parser.add_subparsers(dest="command")
 
-    # -- install --------------------------------------------------------------
     install_p = subparsers.add_parser("install")
     install_p.add_argument("apps", nargs="*")
     install_p.add_argument("--bootstrap", action="store_true", default=False)
@@ -36,29 +132,21 @@ def _build_parser() -> argparse.ArgumentParser:
     install_p.add_argument("--reinstall", action="store_true", default=False)
     install_p.add_argument("--system", action="store_true", default=False)
     install_p.add_argument("--user", action="store_true", default=False)
-    install_p.add_argument(
-        "-D",
-        dest="passthrough",
-        action="append",
-        default=[],
-    )
+    install_p.add_argument("-D", dest="passthrough", action="append", default=[])
     _add_common_flags(install_p)
 
-    # -- reinstall ------------------------------------------------------------
     reinstall_p = subparsers.add_parser("reinstall")
     reinstall_p.add_argument("apps", nargs="+")
     reinstall_p.add_argument("--all-revdeps", action="store_true", default=False)
     reinstall_p.add_argument("--only-revdeps", action="store_true", default=False)
     _add_common_flags(reinstall_p)
 
-    # -- uninstall ------------------------------------------------------------
     uninstall_p = subparsers.add_parser("uninstall")
     uninstall_p.add_argument("apps", nargs="*")
     uninstall_p.add_argument("--system", action="store_true", default=False)
     uninstall_p.add_argument("--user", action="store_true", default=False)
     _add_common_flags(uninstall_p)
 
-    # -- update ---------------------------------------------------------------
     update_p = subparsers.add_parser("update")
     update_p.add_argument("apps", nargs="*")
     update_p.add_argument("--system", action="store_true", default=False)
@@ -80,11 +168,7 @@ def _resolve_mode(args: argparse.Namespace) -> str:
 def _resolve_apps_and_mode(
     args: argparse.Namespace,
 ) -> tuple[list[str], str]:
-    """Handle the Bash convention of mode as first positional arg.
-
-    In Bash: ``koopa install system foo`` treats ``system`` as a mode,
-    not an app name. We replicate that here.
-    """
+    """Handle the Bash convention of mode as first positional arg."""
     apps = list(args.apps) if args.apps else []
     mode = _resolve_mode(args)
     if apps and apps[0] in ("system", "user", "private"):
@@ -94,15 +178,12 @@ def _resolve_apps_and_mode(
     return apps, mode
 
 
+# -- Subcommand handlers ------------------------------------------------------
+
+
 def _handle_install(args: argparse.Namespace) -> None:
     """Handle ``koopa install`` subcommand."""
-    from koopa.install import (
-        InstallConfig,
-        _can_install_binary,
-        _can_push_binary,
-        install_app,
-        install_koopa,
-    )
+    from koopa.install import install_app, install_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:
@@ -111,19 +192,17 @@ def _handle_install(args: argparse.Namespace) -> None:
     if apps == ["koopa"]:
         install_koopa(verbose=args.verbose)
         return
-    passthrough = [f"-D{p}" for p in args.passthrough] if args.passthrough else []
+    extra = [f"--{p}" for p in args.passthrough] if args.passthrough else []
     for app in apps:
-        config = InstallConfig(
-            name=app,
+        config = _build_install_config(
+            app,
             mode=mode,
             bootstrap=args.bootstrap,
             deps=not args.no_dependencies,
             private=getattr(args, "private", False),
             reinstall=args.reinstall,
             verbose=args.verbose,
-            binary=_can_install_binary(),
-            push=_can_push_binary(),
-            passthrough_args=passthrough,
+            extra_passthrough=extra,
         )
         install_app(config)
 
@@ -131,7 +210,7 @@ def _handle_install(args: argparse.Namespace) -> None:
 def _handle_reinstall(args: argparse.Namespace) -> None:
     """Handle ``koopa reinstall`` subcommand."""
     from koopa.app import stale_revdeps
-    from koopa.install import InstallConfig, _can_install_binary, _can_push_binary, install_app
+    from koopa.install import install_app
 
     apps = list(args.apps) if args.apps else []
     if not apps:
@@ -144,13 +223,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
         _reinstall_with_revdeps(apps, mode="only", verbose=args.verbose)
         return
     for app in apps:
-        config = InstallConfig(
-            name=app,
-            reinstall=True,
-            verbose=args.verbose,
-            binary=_can_install_binary(),
-            push=_can_push_binary(),
-        )
+        config = _build_install_config(app, reinstall=True, verbose=args.verbose)
         install_app(config)
     stale = stale_revdeps(apps)
     if stale:
@@ -159,13 +232,7 @@ def _handle_reinstall(args: argparse.Namespace) -> None:
             file=sys.stderr,
         )
         for dep in stale:
-            config = InstallConfig(
-                name=dep,
-                reinstall=True,
-                verbose=args.verbose,
-                binary=_can_install_binary(),
-                push=_can_push_binary(),
-            )
+            config = _build_install_config(dep, reinstall=True, verbose=args.verbose)
             install_app(config)
 
 
@@ -177,7 +244,7 @@ def _reinstall_with_revdeps(
 ) -> None:
     """Reinstall apps with reverse dependency handling."""
     from koopa.app import app_revdeps
-    from koopa.install import InstallConfig, _can_install_binary, _can_push_binary, install_app
+    from koopa.install import install_app
 
     all_targets: list[str] = []
     if mode != "only":
@@ -188,13 +255,7 @@ def _reinstall_with_revdeps(
             if rd not in all_targets:
                 all_targets.append(rd)
     for app in all_targets:
-        config = InstallConfig(
-            name=app,
-            reinstall=True,
-            verbose=verbose,
-            binary=_can_install_binary(),
-            push=_can_push_binary(),
-        )
+        config = _build_install_config(app, reinstall=True, verbose=verbose)
         install_app(config)
 
 
@@ -206,23 +267,13 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
     if not apps:
         apps = ["koopa"]
     for app in apps:
-        config = UninstallConfig(
-            name=app,
-            mode=mode,
-            verbose=args.verbose,
-        )
+        config = UninstallConfig(name=app, mode=mode, verbose=args.verbose)
         uninstall_app(config)
 
 
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
-    from koopa.install import (
-        InstallConfig,
-        _can_install_binary,
-        _can_push_binary,
-        install_app,
-        install_koopa,
-    )
+    from koopa.install import install_app, install_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:
@@ -231,15 +282,11 @@ def _handle_update(args: argparse.Namespace) -> None:
         install_koopa(verbose=args.verbose)
         return
     for app in apps:
-        config = InstallConfig(
-            name=app,
-            mode=mode,
-            reinstall=True,
-            verbose=args.verbose,
-            binary=_can_install_binary(),
-            push=_can_push_binary(),
-        )
+        config = _build_install_config(app, mode=mode, reinstall=True, verbose=args.verbose)
         install_app(config)
+
+
+# -- Entry point --------------------------------------------------------------
 
 
 def main() -> None:
