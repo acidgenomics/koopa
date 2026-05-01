@@ -9,6 +9,9 @@ keywords = ["bioinformatics", "config", "data science", "ngs", "shell"]
 readme = "README.md"
 requires-python = ">=3.14"
 
+[project.scripts]
+koopa-install = "koopa.cli_main:main"
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
@@ -95,6 +98,7 @@ max-returns = 10
 
 [tool.ruff.lint.per-file-ignores]
 "lang/python/scripts/*.py" = ["E402"]
+"lang/python/src/koopa/cli_main.py" = ["PLC0415"]
 
 [tool.setuptools.packages.find]
 where = ["lang/python/src"]

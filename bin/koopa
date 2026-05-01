@@ -117,6 +117,20 @@ main() {
         __koopa_realpath "$(dirname "${dict['bash_source']}")/.." \
     )"
     [[ -d "${dict['_koopa_prefix']}" ]] || return 1
+    # Dispatch install commands to Python when available.
+    case "${1:-}" in
+        'install' | 'reinstall' | 'uninstall' | 'update')
+            dict['python']="${dict['_koopa_prefix']}/opt/python3.14/bin/python3.14"
+            dict['python_src']="${dict['_koopa_prefix']}/lang/python/src"
+            if [[ -x "${dict['python']}" ]] && \
+                [[ -d "${dict['python_src']}" ]]
+            then
+                export KOOPA_PREFIX="${dict['_koopa_prefix']}"
+                PYTHONPATH="${dict['python_src']}${PYTHONPATH:+:${PYTHONPATH}}" \
+                    exec "${dict['python']}" -m koopa.cli_main "$@"
+            fi
+            ;;
+    esac
     dict['header_script']="${dict['_koopa_prefix']}/lang/bash/include/header.sh"
     [[ -f "${dict['header_script']}" ]] || return 1
     export KOOPA_ACTIVATE=0

@@ -573,11 +573,21 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         else:
             os.makedirs(config.prefix, exist_ok=True)
     # -- Dispatch to installer ------------------------------------------------
+    from koopa.installers import get_python_installer, has_python_installer  # noqa: PLC0415
+
     if config.binary:
         if config.mode != "shared" or not config.prefix:
             msg = "Binary install requires shared mode and a prefix."
             raise RuntimeError(msg)
         install_app_from_binary_package(config.prefix)
+    elif has_python_installer(config.name):
+        installer_fn = get_python_installer(config.name)
+        installer_fn(
+            name=config.name,
+            version=config.version,
+            prefix=config.prefix,
+            passthrough_args=config.passthrough_args,
+        )
     elif not config.isolate:
         os.environ["KOOPA_INSTALL_APP_SUBSHELL"] = "1"
         try:
@@ -616,7 +626,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                     stderr_file,
                     os.path.join(install_dir, "stderr.log"),
                 )
-                from koopa.install_info import write_install_info
+                from koopa.install_info import write_install_info  # noqa: PLC0415
 
                 write_install_info(
                     output_file=os.path.join(install_dir, "info.json"),
@@ -666,7 +676,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 # -- Isolated subshell runner -------------------------------------------------
 
 
-def _run_isolated_subshell(
+def _run_isolated_subshell(  # noqa: PLR0915
     *,
     config: InstallConfig,
     stdout_file: str,
@@ -738,7 +748,7 @@ def _run_isolated_subshell(
             env_vars[var] = val
     header_file = os.path.join(_bash_prefix(), "include", "header.sh")
     installer = config.installer or config.name
-    os.path.join(
+    installer_file = os.path.join(
         _bash_prefix(),
         "include",
         "install",
@@ -746,19 +756,19 @@ def _run_isolated_subshell(
         config.mode,
         f"{installer}.sh",
     )
+    if not os.path.isfile(installer_file):
+        msg = f"Installer script not found: {installer_file}"
+        raise FileNotFoundError(msg)
     passthrough = ""
     if config.passthrough_args:
         passthrough = " ".join(config.passthrough_args)
+    env_vars["KOOPA_INSTALL_NAME"] = config.name
+    env_vars["KOOPA_INSTALL_PREFIX"] = config.prefix
+    env_vars["KOOPA_INSTALL_VERSION"] = config.version
     bash_cmd = (
         f"source '{header_file}'; "
-        f"koopa_install_app_subshell "
-        f"--installer={installer} "
-        f"--mode={config.mode} "
-        f"--name={config.name} "
-        f"--platform={config.platform} "
-        f"--prefix={config.prefix} "
-        f"--version={config.version} "
-        f"{passthrough}"
+        f"source '{installer_file}'; "
+        f"main {passthrough}"
     )
     bash_args = [
         "--noprofile",
