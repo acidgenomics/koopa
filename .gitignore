@@ -9,3 +9,4 @@
 /libexec/
 /opt/
 /share/man/man1/
+__pycache__/
