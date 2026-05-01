@@ -53,15 +53,13 @@ def main(
         os.chmod(dest, 0o755)
     for f in ("linear.h", "tron.h"):
         if os.path.exists(f):
-            with open(f, "rb") as src_fh:
-                with open(os.path.join(inc_dir, f), "wb") as dst_fh:
-                    dst_fh.write(src_fh.read())
+            with open(f, "rb") as src_fh, open(os.path.join(inc_dir, f), "wb") as dst_fh:
+                dst_fh.write(src_fh.read())
     lib_name = f"liblinear.{ext}"
     for f in os.listdir("."):
         if f.startswith("liblinear.") and f.endswith(f".{ext}"):
-            with open(f, "rb") as src_fh:
-                with open(os.path.join(lib_dir, f), "wb") as dst_fh:
-                    dst_fh.write(src_fh.read())
+            with open(f, "rb") as src_fh, open(os.path.join(lib_dir, f), "wb") as dst_fh:
+                dst_fh.write(src_fh.read())
     if sys.platform == "darwin":
         ln(f"liblinear.{ext}", os.path.join(lib_dir, lib_name))
     else:

@@ -21,18 +21,8 @@ def main(
 ) -> None:
     """Install haskell-stack."""
     machine = arch()
-    if sys.platform == "darwin":
-        os_id = "osx"
-        if machine in ("aarch64", "arm64"):
-            arch_id = "aarch64"
-        else:
-            arch_id = "x86_64"
-    else:
-        os_id = "linux"
-        if machine in ("aarch64", "arm64"):
-            arch_id = "aarch64"
-        else:
-            arch_id = "x86_64"
+    os_id = "osx" if sys.platform == "darwin" else "linux"
+    arch_id = "aarch64" if machine in ("aarch64", "arm64") else "x86_64"
     url = (
         f"https://github.com/commercialhaskell/stack/releases/download/"
         f"v{version}/stack-{version}-{os_id}-{arch_id}.tar.gz"

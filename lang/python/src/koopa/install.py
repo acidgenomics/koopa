@@ -1599,7 +1599,7 @@ def install_koopa(
 
 def _zsh_compaudit_set_permissions() -> None:
     """Fix ZSH permissions to ensure compaudit checks pass during compinit."""
-    import stat as stat_mod
+    import stat as stat_mod  # noqa: PLC0415
 
     uid = os.getuid()
     prefixes = [
@@ -1620,8 +1620,8 @@ def _zsh_compaudit_set_permissions() -> None:
 
 def update_koopa(*, verbose: bool = False) -> None:
     """Update koopa installation via git pull."""
-    from koopa.alert import alert_note
-    from koopa.git import git_pull, is_git_repo
+    from koopa.alert import alert_note  # noqa: PLC0415
+    from koopa.git import git_pull, is_git_repo  # noqa: PLC0415
 
     if verbose:
         os.environ["KOOPA_VERBOSE"] = "1"

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 
@@ -137,20 +138,13 @@ def _install_from_uv(*, version: str, prefix: str) -> None:
     )
     uv_dir = "uv"
     entries = os.listdir(uv_dir)
-    if len(entries) == 1:
-        source_dir = os.path.join(uv_dir, entries[0])
-    else:
-        source_dir = uv_dir
+    source_dir = os.path.join(uv_dir, entries[0]) if len(entries) == 1 else uv_dir
     for item in os.listdir(source_dir):
         src = os.path.join(source_dir, item)
         dst = os.path.join(prefix, item)
         if os.path.isdir(src):
-            import shutil
-
             shutil.copytree(src, dst, dirs_exist_ok=True)
         else:
-            import shutil
-
             shutil.copy2(src, dst)
     python = os.path.join(prefix, "bin", f"python{maj_min_ver}")
     for mod in (
