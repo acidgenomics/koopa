@@ -197,18 +197,6 @@ _koopa_activate_aliases() {
     return 0
 }
 
-_koopa_activate_app_conda_env() {
-    local -A dict
-    _koopa_assert_has_args_eq "$#" 1
-    dict['app_name']="${1:?}"
-    dict['prefix']="$(_koopa_app_prefix "${dict['app_name']}")"
-    dict['libexec']="${dict['prefix']}/libexec"
-    _koopa_assert_is_dir "${dict['libexec']}"
-    _koopa_alert "Activating conda environment at '${dict['libexec']}'."
-    _koopa_conda_activate_env "${dict['libexec']}"
-    return 0
-}
-
 _koopa_activate_asdf() {
     local prefix
     prefix="${1:-}"
@@ -4021,7 +4009,7 @@ _koopa_ansi_escape() {
 
 _koopa_app_dependencies() {
     _koopa_assert_has_args_eq "$#" 1
-    _koopa_python_script 'app-dependencies.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal app-dependencies "$@"
 }
 
 _koopa_app_json_bin() {
@@ -4058,13 +4046,13 @@ _koopa_app_json_version() {
 }
 
 _koopa_app_json() {
-    _koopa_python_script 'app-json.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal app-json "$@"
     return 0
 }
 
 _koopa_app_reverse_dependencies() {
     _koopa_assert_has_args_eq "$#" 1
-    _koopa_python_script 'app-reverse-dependencies.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal app-reverse-dependencies "$@"
     return 0
 }
 
@@ -5616,7 +5604,7 @@ at '${python_bin}': ${dict['installed_python_version']} \
             fi
         done
     fi
-    _koopa_python_script 'check-system.py'
+    "${KOOPA_PREFIX:?}/bin/koopa" internal check-system
     _koopa_check_disk '/'
     if [[ "${bool['warnings']}" -eq 1 ]]
     then
@@ -6148,7 +6136,7 @@ _koopa_conda_activate_env() { # {{{1
 
 _koopa_conda_bin_names() {
     _koopa_assert_has_args_eq "$#" 1
-    _koopa_python_script 'conda-bin-names.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal conda-bin-names "$@"
     return 0
 }
 
@@ -14776,7 +14764,7 @@ _koopa_script_source() {
 }
 
 _koopa_shared_apps() {
-    _koopa_python_script 'shared-apps.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal shared-apps "$@"
     return 0
 }
 
@@ -15368,7 +15356,7 @@ _koopa_stack_trace() {
 
 _koopa_stale_revdeps() {
     _koopa_assert_has_args "$#"
-    _koopa_python_script 'stale-revdeps.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal stale-revdeps "$@"
     return 0
 }
 
@@ -19104,7 +19092,7 @@ _koopa_debian_set_timezone() {
 
 _koopa_docker_build_all_tags() {
     _koopa_assert_has_args "$#"
-    _koopa_python_script 'docker-build-all-tags.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal docker-build-all-tags "$@"
     return 0
 }
 
@@ -19720,7 +19708,7 @@ _koopa_fedora_set_locale() {
 
 _koopa_find_and_move_in_sequence() {
     _koopa_assert_has_args "$#"
-    _koopa_python_script 'find-and-move-in-sequence.py' "$@"
+    _koopa_stop 'Not yet implemented.'
     return 0
 }
 
@@ -25153,11 +25141,6 @@ _koopa_pyenv_prefix() {
     return 0
 }
 
-_koopa_python_scripts_prefix() {
-    _koopa_print "$(_koopa_koopa_prefix)/lang/python/scripts"
-    return 0
-}
-
 _koopa_python_system_packages_prefix() {
     local -A app dict
     _koopa_assert_has_args_le "$#" 1
@@ -25624,44 +25607,6 @@ _koopa_python_pip_install() {
     export PIP_REQUIRE_VIRTUALENV='false'
     "${app['python']}" -m pip --isolated install "${install_args[@]}"
     return 0
-}
-
-_koopa_python_script() {
-    local -A app dict
-    local -a pos
-    _koopa_assert_has_args "$#"
-    app['python']=''
-    while (("$#"))
-    do
-        case "$1" in
-            '--python='*)
-                app['python']="${1#*=}"
-                shift 1
-                ;;
-            '--python')
-                app['python']="${2:?}"
-                shift 2
-                ;;
-            *)
-                pos+=("${1:?}")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_args "$#"
-    if [[ -z "${app['python']}" ]]
-    then
-        app['python']="$(_koopa_locate_python --allow-bootstrap --allow-system)"
-    fi
-    _koopa_assert_is_installed "${app[@]}"
-    dict['prefix']="$(_koopa_python_scripts_prefix)"
-    _koopa_assert_is_dir "${dict['prefix']}"
-    dict['cmd_name']="${1:?}"
-    shift 1
-    dict['script']="${dict['prefix']}/${dict['cmd_name']}"
-    _koopa_assert_is_executable "${dict['script']}"
-    "${app['python']}" "${dict['script']}" "$@"
 }
 
 _koopa_python_update_venv() {

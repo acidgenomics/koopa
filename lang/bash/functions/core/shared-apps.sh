@@ -8,6 +8,6 @@ _koopa_shared_apps() {
     # @examples
     # _koopa_shared_apps
     # """
-    _koopa_python_script 'shared-apps.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal shared-apps "$@"
     return 0
 }
