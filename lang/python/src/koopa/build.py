@@ -451,6 +451,65 @@ def make_build(
         )
 
 
+# -- meson_build --------------------------------------------------------------
+
+
+def meson_build(
+    *,
+    prefix: str,
+    args: list[str] | None = None,
+    jobs: int | None = None,
+    env: BuildEnv | None = None,
+) -> None:
+    """Run ``meson setup``, ``ninja``, and ``ninja install``.
+
+    Parameters
+    ----------
+    prefix
+        Installation prefix.
+    args
+        Additional meson setup arguments.
+    jobs
+        Parallel build jobs (defaults to CPU count).
+    env
+        Build environment from ``activate_app``.
+    """
+    if jobs is None:
+        jobs = _cpu_count()
+    meson = shutil.which("meson")
+    ninja = shutil.which("ninja")
+    if meson is None:
+        msg = "meson not found."
+        raise FileNotFoundError(msg)
+    if ninja is None:
+        msg = "ninja not found."
+        raise FileNotFoundError(msg)
+    subprocess_env = env.to_env_dict() if env else os.environ.copy()
+    meson_args = [
+        "--buildtype=release",
+        "--default-library=shared",
+        "--libdir=lib",
+        f"--prefix={prefix}",
+    ]
+    if args:
+        meson_args.extend(args)
+    subprocess.run(
+        [meson, "setup", *meson_args, "build"],
+        env=subprocess_env,
+        check=True,
+    )
+    subprocess.run(
+        [ninja, "-v", "-j", str(jobs), "-C", "build"],
+        env=subprocess_env,
+        check=True,
+    )
+    subprocess.run(
+        [ninja, "-v", "-j", str(jobs), "-C", "build", "install"],
+        env=subprocess_env,
+        check=True,
+    )
+
+
 # -- Convenience re-exports ---------------------------------------------------
 
 
