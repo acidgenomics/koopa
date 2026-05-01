@@ -120,14 +120,31 @@ main() {
     # Dispatch install commands to Python when available.
     case "${1:-}" in
         'install' | 'reinstall' | 'uninstall' | 'update')
-            dict['python']="${dict['_koopa_prefix']}/opt/python3.14/bin/python3.14"
             dict['python_src']="${dict['_koopa_prefix']}/lang/python/src"
-            if [[ -x "${dict['python']}" ]] && \
-                [[ -d "${dict['python_src']}" ]]
+            if [[ -d "${dict['python_src']}" ]]
             then
-                export KOOPA_PREFIX="${dict['_koopa_prefix']}"
-                PYTHONPATH="${dict['python_src']}${PYTHONPATH:+:${PYTHONPATH}}" \
-                    exec "${dict['python']}" -m koopa.cli_main "$@"
+                dict['python']="${dict['_koopa_prefix']}/opt/python3.14/bin/python3.14"
+                if [[ ! -x "${dict['python']}" ]]
+                then
+                    dict['python']="$(command -v python3.14 2>/dev/null || true)"
+                    if [[ -z "${dict['python']}" ]]
+                    then
+                        dict['python']="$(command -v python3 2>/dev/null || true)"
+                        if [[ -n "${dict['python']}" ]] && \
+                            ! "${dict['python']}" -c \
+                                'import sys; sys.exit(0 if sys.version_info >= (3, 14) else 1)' \
+                                2>/dev/null
+                        then
+                            dict['python']=''
+                        fi
+                    fi
+                fi
+                if [[ -x "${dict['python']}" ]]
+                then
+                    export KOOPA_PREFIX="${dict['_koopa_prefix']}"
+                    PYTHONPATH="${dict['python_src']}${PYTHONPATH:+:${PYTHONPATH}}" \
+                        exec "${dict['python']}" -m koopa.cli_main "$@"
+                fi
             fi
             ;;
     esac

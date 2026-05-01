@@ -3,13 +3,15 @@
 _koopa_cli_uninstall() {
     # """
     # Parse user input to 'koopa uninstall'.
-    # @note Updated 2023-07-28.
+    # @note Updated 2026-05-01.
     #
     # @seealso
     # > _koopa_cli_uninstall 'tmux' 'vim'
     # """
+    local -A dict
     local -a flags pos
-    local app stem
+    local app
+    dict['mode']=''
     flags=()
     pos=()
     while (("$#"))
@@ -34,31 +36,33 @@ _koopa_cli_uninstall() {
     else
         set -- 'koopa'
     fi
-    stem='uninstall'
     case "$1" in
+        'koopa')
+            shift 1
+            _koopa_uninstall_koopa "$@"
+            return 0
+            ;;
         'private' | \
         'system' | \
         'user')
-            stem="${stem}-${1}"
+            dict['mode']="${1}"
             shift 1
             ;;
     esac
     _koopa_assert_has_args "$#"
     for app in "$@"
     do
-        local -A dict
-        dict['key']="${stem}-${app}"
-        dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-        if ! _koopa_is_function "${dict['fun']}"
-        then
-            _koopa_stop "Unsupported app: '${app}'."
-        fi
-        if _koopa_is_array_non_empty "${flags[@]:-}"
-        then
-            "${dict['fun']}" "${flags[@]:-}"
-        else
-            "${dict['fun']}"
-        fi
+        local -a uninstall_args
+        uninstall_args=("--name=${app}")
+        case "${dict['mode']}" in
+            'system')
+                uninstall_args+=('--system')
+                ;;
+            'user')
+                uninstall_args+=('--user')
+                ;;
+        esac
+        _koopa_uninstall_app "${uninstall_args[@]}" "${flags[@]:-}"
     done
     return 0
 }

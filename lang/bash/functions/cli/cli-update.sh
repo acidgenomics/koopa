@@ -3,7 +3,7 @@
 _koopa_cli_update() {
     # """
     # Parse user input to 'koopa update'.
-    # @note Updated 2022-07-14.
+    # @note Updated 2026-05-01.
     #
     # @examples
     # > _koopa_cli_update 'r-packages'
@@ -25,11 +25,12 @@ _koopa_cli_update() {
         local -A dict
         dict['key']="${stem}-${app}"
         dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-        if ! _koopa_is_function "${dict['fun']}"
+        if _koopa_is_function "${dict['fun']}"
         then
-            _koopa_stop "Unsupported app: '${app}'."
+            "${dict['fun']}"
+        else
+            _koopa_cli_install --reinstall "$app"
         fi
-        "${dict['fun']}"
     done
     return 0
 }
