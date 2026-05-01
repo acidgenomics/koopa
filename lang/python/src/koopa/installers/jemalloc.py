@@ -1,0 +1,31 @@
+"""Install jemalloc."""
+
+from __future__ import annotations
+
+from koopa.build import activate_app, make_build
+from koopa.installers._build_helper import download_extract_cd
+
+
+def main(
+    *,
+    name: str,
+    version: str,
+    prefix: str,
+    passthrough_args: list[str] | None = None,
+) -> None:
+    """Install jemalloc."""
+    env = activate_app("pkg-config", build_only=True)
+    url = (
+        f"https://github.com/jemalloc/jemalloc/releases/"
+        f"download/{version}/jemalloc-{version}.tar.bz2"
+    )
+    download_extract_cd(url)
+    make_build(
+        conf_args=[
+            "--disable-debug",
+            "--disable-static",
+            f"--prefix={prefix}",
+            "--with-jemalloc-prefix=",
+        ],
+        env=env,
+    )
