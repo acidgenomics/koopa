@@ -50,10 +50,7 @@ cpu_count() {
         __kvar_num="$("$__kvar_getconf" '_NPROCESSORS_ONLN')"
     elif [ -x "$__kvar_sysctl" ] && is_macos
     then
-        __kvar_num="$( \
-            "$__kvar_sysctl" -n 'hw.ncpu' \
-            | cut -d ' ' -f 2 \
-        )"
+        __kvar_num="$("$__kvar_sysctl" -n 'hw.ncpu')"
     elif [ -x "$__kvar_python" ]
     then
         __kvar_num="$( \
@@ -75,11 +72,12 @@ cpu_count() {
     return 0
 }
 
-install_bash() {
-    __kvar_version='5.3'
-    printf 'Installing bash.\n'
-    mkdir -p "${PREFIX}/src/bash"
-    cd "${PREFIX}/src/bash" || return 1
+download_and_extract() {
+    __kvar_name="${1:?}"
+    __kvar_url="${2:?}"
+    __kvar_dirname="${3:?}"
+    mkdir -p "${PREFIX}/src/${__kvar_name}"
+    cd "${PREFIX}/src/${__kvar_name}" || return 1
     curl \
         --create-dirs \
         --fail \
@@ -87,11 +85,25 @@ install_bash() {
         --retry 5 \
         --show-error \
         --verbose \
-        "https://ftpmirror.gnu.org/gnu/bash/\
-bash-${__kvar_version}.tar.gz" \
+        "$__kvar_url" \
         -o 'src.tar.gz'
     tar -xzf 'src.tar.gz'
-    cd "bash-${__kvar_version}" || return 1
+    cd "$__kvar_dirname" || return 1
+    unset -v \
+        __kvar_dirname \
+        __kvar_name \
+        __kvar_url
+    return 0
+}
+
+install_bash() {
+    __kvar_version='5.3'
+    printf 'Installing bash.\n'
+    download_and_extract \
+        'bash' \
+        "https://ftpmirror.gnu.org/gnu/bash/bash-${__kvar_version}.tar.gz" \
+        "bash-${__kvar_version}" \
+        || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install
@@ -103,20 +115,11 @@ bash-${__kvar_version}.tar.gz" \
 install_coreutils() {
     __kvar_version='9.10'
     printf 'Installing coreutils.\n'
-    mkdir -p "${PREFIX}/src/coreutils"
-    cd "${PREFIX}/src/coreutils" || return 1
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --retry 5 \
-        --show-error \
-        --verbose \
-        "https://ftpmirror.gnu.org/gnu/coreutils/\
-coreutils-${__kvar_version}.tar.gz" \
-        -o 'src.tar.gz'
-    tar -xzf 'src.tar.gz'
-    cd "coreutils-${__kvar_version}" || return 1
+    download_and_extract \
+        'coreutils' \
+        "https://ftpmirror.gnu.org/gnu/coreutils/coreutils-${__kvar_version}.tar.gz" \
+        "coreutils-${__kvar_version}" \
+        || return 1
     if is_root
     then
         export FORCE_UNSAFE_CONFIGURE=1
@@ -132,20 +135,11 @@ coreutils-${__kvar_version}.tar.gz" \
 install_openssl() {
     __kvar_version='3.6.2'
     printf 'Installing openssl.\n'
-    mkdir -p "${PREFIX}/src/openssl"
-    cd "${PREFIX}/src/openssl" || return 1
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --retry 5 \
-        --show-error \
-        --verbose \
-        "https://github.com/openssl/openssl/releases/download/\
-openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
-        -o 'src.tar.gz'
-    tar -xzf 'src.tar.gz'
-    cd "openssl-${__kvar_version}" || return 1
+    download_and_extract \
+        'openssl' \
+        "https://github.com/openssl/openssl/releases/download/openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
+        "openssl-${__kvar_version}" \
+        || return 1
     ./config \
         --libdir='lib' \
         --openssldir="$PREFIX" \
@@ -164,20 +158,11 @@ openssl-${__kvar_version}/openssl-${__kvar_version}.tar.gz" \
 install_python() {
     __kvar_version='3.14.4'
     printf 'Installing python.\n'
-    mkdir -p "${PREFIX}/src/python"
-    cd "${PREFIX}/src/python"
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --retry 5 \
-        --show-error \
-        --verbose \
-        "https://www.python.org/ftp/python/${__kvar_version}/\
-Python-${__kvar_version}.tgz" \
-        -o 'src.tar.gz'
-    tar -xzf 'src.tar.gz'
-    cd "Python-${__kvar_version}" || return 1
+    download_and_extract \
+        'python' \
+        "https://www.python.org/ftp/python/${__kvar_version}/Python-${__kvar_version}.tgz" \
+        "Python-${__kvar_version}" \
+        || return 1
     export LDLIBS='-lcrypto -lssl -lz'
     ./configure \
         --prefix="$PREFIX" \
@@ -193,22 +178,15 @@ Python-${__kvar_version}.tgz" \
 install_zlib() {
     __kvar_version='1.3.2'
     printf 'Installing zlib.\n'
-    mkdir -p "${PREFIX}/src/zlib"
-    cd "${PREFIX}/src/zlib"
-    curl \
-        --create-dirs \
-        --fail \
-        --location \
-        --retry 5 \
-        --show-error \
-        --verbose \
+    download_and_extract \
+        'zlib' \
         "https://www.zlib.net/zlib-${__kvar_version}.tar.gz" \
-        -o 'src.tar.gz'
-    tar -xzf 'src.tar.gz'
-    cd "zlib-${__kvar_version}" || return 1
+        "zlib-${__kvar_version}" \
+        || return 1
     ./configure --prefix="$PREFIX"
     make VERBOSE=1 --jobs="${CPU_COUNT:?}"
     make install
+    [ -f "${PREFIX}/lib/libz.a" ] || return 1
     unset -v __kvar_version
     return 0
 }
