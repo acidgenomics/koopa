@@ -24,6 +24,22 @@ def _handle_prune_app_binaries() -> None:
     prune_app_binaries()
 
 
+def _handle_format_app_json() -> None:
+    """Handle ``koopa develop format-app-json``."""
+    import json
+    from pathlib import Path
+
+    from koopa.prefix import koopa_prefix
+
+    json_path = Path(koopa_prefix()) / "etc" / "koopa" / "app.json"
+    data = json.loads(json_path.read_text())
+    sorted_data = dict(sorted(data.items()))
+    for key, value in sorted_data.items():
+        if isinstance(value, dict):
+            sorted_data[key] = dict(sorted(value.items()))
+    json_path.write_text(json.dumps(sorted_data, indent=2, ensure_ascii=False) + "\n")
+
+
 def handle_develop(remainder: list[str]) -> None:
     """Dispatch ``koopa develop ...`` commands."""
     if not remainder:
@@ -38,6 +54,9 @@ def handle_develop(remainder: list[str]) -> None:
     rest = remainder[1:]
     if subcmd == "prune-app-binaries":
         _handle_prune_app_binaries()
+        return
+    if subcmd == "format-app-json":
+        _handle_format_app_json()
         return
     key = _DEVELOP_COMMANDS.get(subcmd)
     if key is None:
