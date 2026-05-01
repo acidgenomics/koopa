@@ -21,8 +21,7 @@ def main(
     env = activate_app("go", "make", build_only=True)
     make = locate("make")
     url = (
-        f"https://github.com/git-lfs/git-lfs/releases/download/"
-        f"v{version}/git-lfs-v{version}.tar.gz"
+        f"https://github.com/git-lfs/git-lfs/releases/download/v{version}/git-lfs-v{version}.tar.gz"
     )
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()

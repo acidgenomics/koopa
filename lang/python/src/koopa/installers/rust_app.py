@@ -34,10 +34,7 @@ def main(
         check=True,
     )
     rustup = os.path.join(tmp_prefix, "bin", "rustup")
-    env["PATH"] = (
-        os.path.realpath(os.path.join(tmp_prefix, "bin"))
-        + ":" + env.get("PATH", "")
-    )
+    env["PATH"] = os.path.realpath(os.path.join(tmp_prefix, "bin")) + ":" + env.get("PATH", "")
     subprocess.run(
         [rustup, "--verbose", "install", version],
         env=env,
@@ -50,7 +47,9 @@ def main(
     )
     result = subprocess.run(
         [rustup, "toolchain", "list"],
-        capture_output=True, text=True, check=True,
+        capture_output=True,
+        text=True,
+        check=True,
         env=env,
     )
     toolchain = result.stdout.strip().split("\n")[0].split()[0]

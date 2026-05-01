@@ -16,16 +16,20 @@ def main(
     """Install libgeotiff."""
     env = activate_app("make", "pkg-config", build_only=True)
     env = activate_app(
-        "zlib", "zstd", "openssl", "libssh2", "curl",
-        "libjpeg-turbo", "libtiff", "sqlite", "proj",
+        "zlib",
+        "zstd",
+        "openssl",
+        "libssh2",
+        "curl",
+        "libjpeg-turbo",
+        "libtiff",
+        "sqlite",
+        "proj",
         env=env,
     )
     proj_prefix = app_prefix("proj")
     libtiff_prefix = app_prefix("libtiff")
-    url = (
-        f"https://download.osgeo.org/geotiff/libgeotiff/"
-        f"libgeotiff-{version}.tar.gz"
-    )
+    url = f"https://download.osgeo.org/geotiff/libgeotiff/libgeotiff-{version}.tar.gz"
     download_extract_cd(url)
     conf_args = [
         f"--prefix={prefix}",

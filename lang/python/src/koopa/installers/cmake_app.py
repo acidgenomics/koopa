@@ -21,10 +21,7 @@ def main(
     env = activate_app("make", "pkg-config", build_only=True)
     env = activate_app("zlib", "zstd", "openssl", "libssh2", "curl", env=env)
     make = locate("make")
-    url = (
-        f"https://github.com/Kitware/CMake/releases/download/"
-        f"v{version}/cmake-{version}.tar.gz"
-    )
+    url = f"https://github.com/Kitware/CMake/releases/download/v{version}/cmake-{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     jobs = os.cpu_count() or 1

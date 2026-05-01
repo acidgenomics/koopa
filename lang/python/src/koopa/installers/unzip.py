@@ -20,9 +20,7 @@ def main(
     """Install unzip."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = (
-        f"https://koopa.acidgenomics.com/src/unzip/unzip-{version}.tar.gz"
-    )
+    url = f"https://koopa.acidgenomics.com/src/unzip/unzip-{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     cflags = (
@@ -36,7 +34,7 @@ def main(
         "-DDATE_FORMAT=DF_YMD "
         "-DUSE_BZIP2 "
         "-DIZ_HAVE_STRDUP "
-        "-DLOCALEDIR=L\\\"/usr/share/locale\\\" "
+        '-DLOCALEDIR=L\\"/usr/share/locale\\" '
         "-DNO_WORKING_ISPRINT "
     )
     if sys.platform != "darwin":
@@ -52,7 +50,8 @@ def main(
     subprocess.run(
         [
             make,
-            "-f", "unix/Makefile",
+            "-f",
+            "unix/Makefile",
             "install",
             f"prefix={prefix}",
             f"MANDIR={prefix}/share/man/man1",

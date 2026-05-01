@@ -34,7 +34,8 @@ def main(
         dest = os.path.join(prefix, repo_name)
         subprocess.run(
             [
-                "git", "clone",
+                "git",
+                "clone",
                 "--depth=1",
                 f"--branch={branch}",
                 url,

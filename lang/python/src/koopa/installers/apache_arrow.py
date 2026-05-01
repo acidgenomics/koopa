@@ -19,10 +19,7 @@ def main(
     """Install apache-arrow."""
     env = activate_app("pkg-config", "python", build_only=True)
     env = activate_app("boost", "openssl", "curl", env=env)
-    url = (
-        f"https://archive.apache.org/dist/arrow/arrow-{version}/"
-        f"apache-arrow-{version}.tar.gz"
-    )
+    url = f"https://archive.apache.org/dist/arrow/arrow-{version}/apache-arrow-{version}.tar.gz"
     download_extract_cd(url)
     os.chdir("cpp")
     cmake_args = [

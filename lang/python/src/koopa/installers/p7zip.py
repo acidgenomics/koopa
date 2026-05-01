@@ -21,10 +21,7 @@ def main(
     """Install p7zip."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = (
-        f"https://github.com/p7zip-project/p7zip/archive/refs/tags/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/p7zip-project/p7zip/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     if sys.platform == "darwin":
         makefile = "makefile.macosx_llvm_64bits"

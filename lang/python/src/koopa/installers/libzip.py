@@ -25,10 +25,7 @@ def main(
     zstd_prefix = app_prefix("zstd")
     openssl_prefix = app_prefix("openssl")
     ext = shared_ext()
-    url = (
-        f"https://github.com/nih-at/libzip/releases/download/"
-        f"v{version}/libzip-{version}.tar.xz"
-    )
+    url = f"https://github.com/nih-at/libzip/releases/download/v{version}/libzip-{version}.tar.xz"
     download_extract_cd(url)
     cmake_args = [
         "-DENABLE_BZIP2=ON",
@@ -43,8 +40,10 @@ def main(
     ]
     if sys.platform != "darwin":
         bzip2_prefix = app_prefix("bzip2")
-        cmake_args.extend([
-            f"-DBZIP2_INCLUDE_DIR={bzip2_prefix}/include",
-            f"-DBZIP2_LIBRARY_RELEASE={bzip2_prefix}/lib/libbz2.{ext}",
-        ])
+        cmake_args.extend(
+            [
+                f"-DBZIP2_INCLUDE_DIR={bzip2_prefix}/include",
+                f"-DBZIP2_LIBRARY_RELEASE={bzip2_prefix}/lib/libbz2.{ext}",
+            ]
+        )
     cmake_build(prefix=prefix, args=cmake_args, env=env)

@@ -22,10 +22,7 @@ def main(
     env = activate_app("make", build_only=True)
     make = locate("make")
     ext = shared_ext()
-    url = (
-        f"https://github.com/cjlin1/liblinear/archive/refs/tags/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/cjlin1/liblinear/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     with open("Makefile") as fh:
         text = fh.read()

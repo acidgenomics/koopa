@@ -27,9 +27,7 @@ def main(
     )
     gum = os.path.join(prefix, "bin", "gum")
     bash_c = os.path.join(prefix, "etc", "bash_completion.d", "gum")
-    fish_c = os.path.join(
-        prefix, "share", "fish", "vendor_completions.d", "gum.fish"
-    )
+    fish_c = os.path.join(prefix, "share", "fish", "vendor_completions.d", "gum.fish")
     zsh_c = os.path.join(prefix, "share", "zsh", "site-functions", "_gum")
     manfile = os.path.join(prefix, "share", "man", "man1", "gum.1")
     for path in (bash_c, fish_c, zsh_c, manfile):

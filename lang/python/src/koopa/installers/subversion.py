@@ -16,17 +16,21 @@ def main(
     """Install subversion."""
     env = activate_app("make", "pkg-config", build_only=True)
     env = activate_app(
-        "zlib", "apr", "apr-util", "openssl", "perl", "python",
-        "ruby", "serf", "sqlite",
+        "zlib",
+        "apr",
+        "apr-util",
+        "openssl",
+        "perl",
+        "python",
+        "ruby",
+        "serf",
+        "sqlite",
         env=env,
     )
     apr_prefix = app_prefix("apr")
     apr_util_prefix = app_prefix("apr-util")
     serf_prefix = app_prefix("serf")
-    url = (
-        f"https://archive.apache.org/dist/subversion/"
-        f"subversion-{version}.tar.bz2"
-    )
+    url = f"https://archive.apache.org/dist/subversion/subversion-{version}.tar.bz2"
     download_extract_cd(url)
     conf_args = [
         f"--prefix={prefix}",

@@ -21,18 +21,13 @@ def main(
     """Install docker-credential-helpers."""
     env = activate_app("go", "make", "pkg-config", build_only=True)
     make = locate("make")
-    url = (
-        f"https://github.com/docker/docker-credential-helpers/archive/"
-        f"v{version}.tar.gz"
-    )
+    url = f"https://github.com/docker/docker-credential-helpers/archive/v{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     bin_dir = os.path.join(prefix, "bin")
     os.makedirs(bin_dir, exist_ok=True)
     if sys.platform == "darwin":
-        subprocess.run(
-            [make, "osxkeychain"], env=subprocess_env, check=True
-        )
+        subprocess.run([make, "osxkeychain"], env=subprocess_env, check=True)
         shutil.copy2(
             "bin/build/docker-credential-osxkeychain",
             os.path.join(bin_dir, "docker-credential-osxkeychain"),

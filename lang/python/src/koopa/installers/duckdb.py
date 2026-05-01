@@ -18,7 +18,8 @@ def main(
     env = activate_app("python", build_only=True)
     subprocess.run(
         [
-            "git", "clone",
+            "git",
+            "clone",
             "--depth=1",
             f"--branch=v{version}",
             "https://github.com/duckdb/duckdb.git",
@@ -27,6 +28,7 @@ def main(
         check=True,
     )
     import os
+
     os.chdir("src")
     cmake_build(
         prefix=prefix,
