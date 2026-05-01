@@ -118,7 +118,7 @@ _koopa_activate_aliases() {
     # python.
     if [ -x "${__kvar_bin_prefix}/python3" ]
     then
-        alias python3-dev='_koopa_alias_python3_dev'
+        alias python3-dev='PYTHONPATH="$(pwd)" python3'
     fi
     # r.
     if [ -x '/usr/local/bin/R' ] || [ -x '/usr/bin/R' ]
@@ -138,7 +138,7 @@ _koopa_activate_aliases() {
     # shasum.
     if [ -x '/usr/bin/shasum' ]
     then
-        alias sha256='_koopa_alias_sha256'
+        alias sha256='shasum -a 256'
     fi
     # tmux.
     if [ -x "${__kvar_bin_prefix}/tmux" ]

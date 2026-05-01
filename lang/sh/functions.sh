@@ -145,7 +145,7 @@ _koopa_activate_aliases() {
     fi
     if [ -x "${__kvar_bin_prefix}/python3" ]
     then
-        alias python3-dev='_koopa_alias_python3_dev'
+        alias python3-dev='PYTHONPATH="$(pwd)" python3'
     fi
     if [ -x '/usr/local/bin/R' ] || [ -x '/usr/bin/R' ]
     then
@@ -161,7 +161,7 @@ _koopa_activate_aliases() {
     fi
     if [ -x '/usr/bin/shasum' ]
     then
-        alias sha256='_koopa_alias_sha256'
+        alias sha256='shasum -a 256'
     fi
     if [ -x "${__kvar_bin_prefix}/tmux" ]
     then
@@ -405,29 +405,6 @@ _koopa_activate_color_mode() {
     else
         unset -v KOOPA_COLOR_MODE
     fi
-    return 0
-}
-
-_koopa_activate_completion() {
-    __kvar_shell="$(_koopa_shell_name)"
-    case "$__kvar_shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            unset -v __kvar_shell
-            return 0
-            ;;
-    esac
-    __kvar_koopa_prefix="$(_koopa_koopa_prefix)"
-    for __kvar_file in "${__kvar_koopa_prefix}/etc/completion/"*'.sh'
-    do
-        [ -f "$__kvar_file" ] && . "$__kvar_file"
-    done
-    unset -v \
-        __kvar_file \
-        __kvar_koopa_prefix \
-        __kvar_shell
     return 0
 }
 
@@ -705,56 +682,6 @@ _koopa_activate_lesspipe() {
     return 0
 }
 
-_koopa_activate_mcfly() {
-    [ "${__MCFLY_LOADED:-}" = 'loaded' ] && return 0
-    _koopa_is_root && return 0
-    __kvar_mcfly="$(_koopa_bin_prefix)/mcfly"
-    if [ ! -x "$__kvar_mcfly" ]
-    then
-        unset -v __kvar_mcfly
-        return 0
-    fi
-    __kvar_shell="$(_koopa_shell_name)"
-    case "$__kvar_shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            unset -v \
-                __kvar_mcfly \
-                __kvar_shell
-            return 0
-            ;;
-    esac
-    __kvar_color_mode="$(_koopa_color_mode)"
-    [ "$__kvar_color_mode" = 'light' ] && export MCFLY_LIGHT=true
-    case "${EDITOR:-}" in
-        'nvim' | *'/nvim' | \
-        'vim' | *'/vim')
-            export MCFLY_KEY_SCHEME='vim'
-            ;;
-        'emacs' | *'/emacs')
-            export MCFLY_KEY_SCHEME='emacs'
-            ;;
-    esac
-    export MCFLY_DISABLE_MENU=true
-    export MCFLY_FUZZY=2
-    export MCFLY_HISTORY_LIMIT=10000
-    export MCFLY_INTERFACE_VIEW='TOP' # or 'BOTTOM'
-    export MCFLY_RESULTS=50
-    export MCFLY_RESULTS_SORT='RANK' # or 'LAST_RUN'
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$("$__kvar_mcfly" init "$__kvar_shell")"
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
-    unset -v \
-        __kvar_color_mode \
-        __kvar_mcfly \
-        __kvar_nounset \
-        __kvar_shell
-    return 0
-}
-
 _koopa_activate_micromamba() {
     if [ -z "${MAMBA_ROOT_PREFIX:-}" ]
     then
@@ -940,72 +867,6 @@ _koopa_activate_ruby() {
     export GEM_HOME="$__kvar_prefix"
     _koopa_add_to_path_start "${__kvar_prefix}/bin"
     unset -v __kvar_prefix
-    return 0
-}
-
-_koopa_activate_ssh_key() {
-    _koopa_is_linux || return 0
-    __kvar_key="${1:-}"
-    if [ -z "$__kvar_key" ] && [ -n "${SSH_KEY:-}" ]
-    then
-        __kvar_key="${SSH_KEY:?}"
-    else
-        __kvar_key="${HOME:?}/.ssh/id_rsa"
-    fi
-    if [ ! -r "$__kvar_key" ]
-    then
-        unset -v __kvar_key
-        return 0
-    fi
-    _koopa_is_installed 'ssh-add' 'ssh-agent' || return 1
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    [ "$__kvar_nounset" -eq 1 ] && set +o nounset
-    eval "$(ssh-agent -s)" >/dev/null 2>&1
-    [ "$__kvar_nounset" -eq 1 ] && set -o nounset
-    ssh-add "$__kvar_key" >/dev/null 2>&1
-    unset -v \
-        __kvar_key \
-        __kvar_nounset
-    return 0
-}
-
-_koopa_activate_starship() {
-    __kvar_starship="$(_koopa_bin_prefix)/starship"
-    if [ ! -x "$__kvar_starship" ]
-    then
-        unset -v __kvar_starship
-        return 0
-    fi
-    __kvar_shell="$(_koopa_shell_name)"
-    case "$__kvar_shell" in
-        'bash' | \
-        'zsh')
-            ;;
-        *)
-            unset -v \
-                __kvar_shell \
-                __kvar_starship
-            return 0
-            ;;
-    esac
-    if [ -n "${STARSHIP_SHELL:-}" ] && [ "$STARSHIP_SHELL" != "$__kvar_shell" ]
-    then
-        unset -v STARSHIP_SHELL
-    fi
-    __kvar_nounset="$(_koopa_boolean_nounset)"
-    if [ "$__kvar_nounset" -eq 1 ]
-    then
-        unset -v \
-            __kvar_nounset \
-            __kvar_shell \
-            __kvar_starship
-        return 0
-    fi
-    eval "$("$__kvar_starship" init "$__kvar_shell")"
-    unset -v \
-            __kvar_nounset \
-            __kvar_shell \
-            __kvar_starship
     return 0
 }
 
@@ -1363,10 +1224,6 @@ _koopa_alias_nvim_vanilla() {
     nvim -u 'NONE' "$@"
 }
 
-_koopa_alias_python3_dev() {
-    PYTHONPATH="$(pwd)" python3
-}
-
 _koopa_alias_realcd() {
     __kvar_dir="${1:-}"
     [ -z "$__kvar_dir" ] && __kvar_dir="$(pwd)"
@@ -1374,10 +1231,6 @@ _koopa_alias_realcd() {
     cd "$__kvar_dir" || return 1
     unset -v __kvar_dir
     return 0
-}
-
-_koopa_alias_sha256() {
-    shasum -a 256 "$@"
 }
 
 _koopa_alias_tmux_vanilla() {
@@ -1429,11 +1282,6 @@ _koopa_arch() {
 
 _koopa_asdf_prefix() {
     _koopa_print "$(_koopa_opt_prefix)/asdf"
-    return 0
-}
-
-_koopa_aspera_connect_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/aspera-connect"
     return 0
 }
 
@@ -1566,20 +1414,6 @@ _koopa_cpu_count() {
     return 0
 }
 
-_koopa_default_shell_name() {
-    __kvar_shell="${SHELL:-sh}"
-    __kvar_shell="$(basename "$__kvar_shell")"
-    [ -n "$__kvar_shell" ] || return 1
-    _koopa_print "$__kvar_shell"
-    unset -v __kvar_shell
-    return 0
-}
-
-_koopa_docker_private_prefix() {
-    _koopa_print "$(_koopa_config_prefix)/docker-private"
-    return 0
-}
-
 _koopa_doom_emacs_prefix() {
     _koopa_print "$(_koopa_xdg_data_home)/doom"
     return 0
@@ -1643,11 +1477,6 @@ _koopa_duration_stop() {
         __kvar_duration \
         __kvar_start \
         __kvar_stop
-    return 0
-}
-
-_koopa_emacs_prefix() {
-    _koopa_print "${HOME:?}/.emacs.d"
     return 0
 }
 
@@ -1778,31 +1607,6 @@ _koopa_export_pager() {
     return 0
 }
 
-_koopa_expr() {
-    expr "${1:?}" : "${2:?}" 1>/dev/null
-}
-
-_koopa_go_prefix() {
-    _koopa_print "$(_koopa_opt_prefix)/go"
-    return 0
-}
-
-_koopa_group_id() {
-    __kvar_string="$(id -g)"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_group_name() {
-    __kvar_string="$(id -gn)"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
 _koopa_homebrew_prefix() {
     __kvar_string="${HOMEBREW_PREFIX:-}"
     if [ -z "$__kvar_string" ]
@@ -1853,26 +1657,10 @@ _koopa_is_alias() {
     return 0
 }
 
-_koopa_is_alpine() {
-    _koopa_is_os 'alpine'
-}
-
-_koopa_is_arch() {
-    _koopa_is_os 'arch'
-}
-
 _koopa_is_aws_ec2() {
     [ -x '/usr/bin/ec2metadata' ] && return 0
     [ "$(hostname -d)" = 'ec2.internal' ] && return 0
     return 1
-}
-
-_koopa_is_debian_like() {
-    _koopa_is_os_like 'debian'
-}
-
-_koopa_is_fedora_like() {
-    _koopa_is_os_like 'fedora'
 }
 
 _koopa_is_function() {
@@ -1931,49 +1719,6 @@ _koopa_is_macos() {
     [ "$(uname -s)" = 'Darwin' ]
 }
 
-_koopa_is_opensuse() {
-    _koopa_is_os 'opensuse'
-}
-
-_koopa_is_os_like() {
-    __kvar_id="${1:?}"
-    if _koopa_is_os "$__kvar_id"
-    then
-        unset __kvar_id
-        return 0
-    fi
-    __kvar_file='/etc/os-release'
-    if [ ! -r "$__kvar_file" ]
-    then
-        unset -v __kvar_file __kvar_id
-        return 1
-    fi
-    if grep 'ID=' "$__kvar_file" | grep -q "$__kvar_id"
-    then
-        unset -v __kvar_file __kvar_id
-        return 0
-    fi
-    if grep 'ID_LIKE=' "$__kvar_file" | grep -q "$__kvar_id"
-    then
-        unset -v __kvar_file __kvar_id
-        return 0
-    fi
-    unset -v __kvar_file __kvar_id
-    return 1
-}
-
-_koopa_is_os() {
-    [ "$(_koopa_os_id)" = "${1:?}" ]
-}
-
-_koopa_is_rhel_like() {
-    _koopa_is_os_like 'rhel'
-}
-
-_koopa_is_root() {
-    [ "$(_koopa_user_id)" -eq 0 ]
-}
-
 _koopa_is_set_nounset() {
     _koopa_str_detect_posix "$(set +o)" 'set -o nounset'
 }
@@ -1987,21 +1732,12 @@ _koopa_is_tty() {
     tty >/dev/null 2>&1 || false
 }
 
-_koopa_is_ubuntu_like() {
-    _koopa_is_os_like 'ubuntu'
-}
-
 _koopa_julia_packages_prefix() {
     _koopa_print "${HOME:?}/.julia"
 }
 
 _koopa_koopa_prefix() {
     _koopa_print "${KOOPA_PREFIX:?}"
-    return 0
-}
-
-_koopa_local_data_prefix() {
-    _koopa_print "$(_koopa_xdg_data_home)"
     return 0
 }
 
@@ -2133,134 +1869,8 @@ _koopa_macos_is_dark_mode() {
     ]
 }
 
-_koopa_macos_is_light_mode() {
-    ! _koopa_macos_is_dark_mode
-}
-
-_koopa_macos_os_version() {
-    __kvar_string="$(/usr/bin/sw_vers -productVersion)"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_major_minor_patch_version() {
-    _koopa_is_alias 'cut' && unalias 'cut'
-    for __kvar_string in "$@"
-    do
-        __kvar_string="$( \
-            _koopa_print "$__kvar_string" \
-            | cut -d '.' -f '1-3' \
-        )"
-        [ -n "$__kvar_string" ] || return 1
-        __kvar_string="$( \
-            _koopa_print "$__kvar_string" \
-            | cut -d '-' -f '1' \
-        )"
-        [ -n "$__kvar_string" ] || return 1
-        __kvar_string="$( \
-            _koopa_print "$__kvar_string" \
-            | cut -d 'p' -f '1' \
-        )"
-        [ -n "$__kvar_string" ] || return 1
-        _koopa_print "$__kvar_string"
-    done
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_major_minor_version() {
-    _koopa_is_alias 'cut' && unalias 'cut'
-    for __kvar_string in "$@"
-    do
-        __kvar_string="$( \
-            _koopa_print "$__kvar_string" \
-            | cut -d '.' -f '1-2' \
-        )"
-        [ -n "$__kvar_string" ] || return 1
-        _koopa_print "$__kvar_string"
-    done
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_major_version() {
-    _koopa_is_alias 'cut' && unalias 'cut'
-    for __kvar_string in "$@"
-    do
-        __kvar_string="$( \
-            _koopa_print "$__kvar_string" \
-            | cut -d '.' -f '1' \
-            | cut -d '-' -f '1' \
-            | cut -d '+' -f '1' \
-        )"
-        [ -n "$__kvar_string" ] || return 1
-        _koopa_print "$__kvar_string"
-    done
-    unset -v __kvar_string
-    return 0
-}
-
 _koopa_opt_prefix() {
     _koopa_print "$(_koopa_koopa_prefix)/opt"
-    return 0
-}
-
-_koopa_os_id() {
-    __kvar_string="$(_koopa_os_string | cut -d '-' -f 1)"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_os_string() {
-    __kvar_id=''
-    if _koopa_is_macos
-    then
-        __kvar_id='macos'
-        __kvar_version="$(_koopa_major_version "$(_koopa_macos_os_version)")"
-    elif _koopa_is_linux
-    then
-        __kvar_release_file='/etc/os-release'
-        if [ -r "$__kvar_release_file" ]
-        then
-            __kvar_id="$( \
-                awk -F= \
-                    "\$1==\"ID\" { print \$2 ;}" \
-                    "$__kvar_release_file" \
-                | tr -d '"' \
-            )"
-            __kvar_version="$( \
-                awk -F= \
-                    "\$1==\"VERSION_ID\" { print \$2 ;}" \
-                    "$__kvar_release_file" \
-                | tr -d '"' \
-            )"
-            if [ -n "$__kvar_version" ]
-            then
-                __kvar_version="$(_koopa_major_version "$__kvar_version")"
-            else
-                __kvar_version='rolling'
-            fi
-        else
-            __kvar_id='linux'
-            __kvar_version=''
-        fi
-    fi
-    [ -n "$__kvar_id" ] ||  return 1
-    __kvar_string="$__kvar_id"
-    if [ -n "$__kvar_version" ]
-    then
-        __kvar_string="${__kvar_string}-${__kvar_version}"
-    fi
-    _koopa_print "$__kvar_string"
-    unset -v \
-        __kvar_id \
-        __kvar_release_file \
-        __kvar_string \
-        __kvar_version
     return 0
 }
 
@@ -2368,18 +1978,6 @@ _koopa_remove_from_path_string() {
     return 0
 }
 
-_koopa_remove_from_path() {
-    PATH="${PATH:-}"
-    for __kvar_dir in "$@"
-    do
-        [ -d "$__kvar_dir" ] || continue
-        PATH="$(_koopa_remove_from_path_string "$PATH" "$__kvar_dir")"
-    done
-    export PATH
-    unset -v __kvar_dir
-    return 0
-}
-
 _koopa_scripts_private_prefix() {
     _koopa_print "$(_koopa_config_prefix)/scripts-private"
     return 0
@@ -2440,35 +2038,6 @@ _koopa_spacevim() {
 _koopa_str_detect_posix() {
     unset test
     test "${1#*"$2"}" != "$1"
-}
-
-_koopa_today() {
-    __kvar_string="$(date '+%Y-%m-%d')"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_umask() {
-    umask 0002
-    return 0
-}
-
-_koopa_user_id() {
-    __kvar_string="$(id -u)"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
-}
-
-_koopa_user_name() {
-    __kvar_string="$(id -un)"
-    [ -n "$__kvar_string" ] || return 1
-    _koopa_print "$__kvar_string"
-    unset -v __kvar_string
-    return 0
 }
 
 _koopa_walk() {
