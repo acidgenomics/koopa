@@ -4632,6 +4632,20 @@ _koopa_cli_reinstall() {
             ;;
         'default')
             _koopa_cli_install --reinstall "$@"
+            local -a stale_revdeps
+            local stale_str
+            stale_str="$(_koopa_stale_revdeps "$@")" || true
+            if [[ -n "$stale_str" ]]
+            then
+                readarray -t stale_revdeps <<< "$stale_str"
+                if _koopa_is_array_non_empty "${stale_revdeps[@]:-}"
+                then
+                    _koopa_dl \
+                        'stale reverse dependencies' \
+                        "$(_koopa_to_string "${stale_revdeps[@]}")"
+                    _koopa_cli_install --reinstall "${stale_revdeps[@]}"
+                fi
+            fi
             ;;
         'only-revdeps' | \
         'only-reverse-dependencies')
@@ -5101,6 +5115,12 @@ _koopa_app_json() {
 _koopa_app_reverse_dependencies() {
     _koopa_assert_has_args_eq "$#" 1
     _koopa_python_script 'app-reverse-dependencies.py' "$@"
+    return 0
+}
+
+_koopa_stale_revdeps() {
+    _koopa_assert_has_args "$#"
+    _koopa_python_script 'stale-revdeps.py' "$@"
     return 0
 }
 
@@ -22694,6 +22714,10 @@ ${dict['version2']}"
             for dep in "${deps[@]}"
             do
                 local -a dep_install_args
+                if [[ "$dep" == "${dict['name']}" ]]
+                then
+                    continue
+                fi
                 if [[ -d "$(_koopa_app_prefix --allow-missing "$dep")" ]]
                 then
                     continue

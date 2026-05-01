@@ -1,6 +1,6 @@
 """CLI functions intended for printing to console."""
 
-from koopa.app import app_deps, app_revdeps, shared_apps
+from koopa.app import app_deps, app_revdeps, shared_apps, stale_revdeps
 from koopa.io import extract_conda_bin_names, import_app_json
 
 
@@ -44,6 +44,12 @@ def print_list(obj: list) -> None:
     if any(obj):
         for val in obj:
             print(val)
+
+
+def print_stale_revdeps(names: list) -> None:
+    """Print installed apps with stale runtime dependencies."""
+    lst = stale_revdeps(names=names)
+    print_list(lst)
 
 
 def print_shared_apps(mode: str) -> None:
