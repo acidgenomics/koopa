@@ -8,13 +8,13 @@ source "$(koopa header bash)"
 
 main() {
     local -A app dict
-    app['prettier']="$(koopa_locate_prettier)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['prettier_prefix']="$(koopa_app_prefix 'prettier')"
-    koopa_assert_is_dir "${dict['prettier_prefix']}"
+    app['prettier']="$(_koopa_locate_prettier)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['prettier_prefix']="$(_koopa_app_prefix 'prettier')"
+    _koopa_assert_is_dir "${dict['prettier_prefix']}"
     dict['plugin']="${dict['prettier_prefix']}/lib/node_modules/\
 prettier-plugin-sort-json/dist/index.js"
-    koopa_assert_is_file "${dict['plugin']}"
+    _koopa_assert_is_file "${dict['plugin']}"
     "${app['prettier']}" \
         --plugin="${dict['plugin']}" \
         --json-recursive-sort \
