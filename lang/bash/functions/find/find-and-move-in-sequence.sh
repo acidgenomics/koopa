@@ -7,6 +7,6 @@ _koopa_find_and_move_in_sequence() {
     # """
     _koopa_assert_has_args "$#"
     # FIXME Add support for this.
-    _koopa_python_script 'find-and-move-in-sequence.py' "$@"
+    _koopa_stop 'Not yet implemented.'
     return 0
 }

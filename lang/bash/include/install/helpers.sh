@@ -781,8 +781,7 @@ ${dict['version2']}"
             _koopa_cp \
                 "${dict['stderr_file']}" \
                 "${install_dir}/stderr.log"
-            _koopa_python_script \
-                'write-install-info.py' \
+            "${KOOPA_PREFIX:?}/bin/koopa" internal write-install-info \
                 "${install_dir}/info.json" \
                 "${dict['name']}" \
                 "${dict['version']}"

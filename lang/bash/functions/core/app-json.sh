@@ -10,6 +10,6 @@ _koopa_app_json() {
     #     --app-name='coreutils' \
     #     --key='bin'
     # """
-    _koopa_python_script 'app-json.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal app-json "$@"
     return 0
 }

@@ -92,7 +92,7 @@ at '${python_bin}': ${dict['installed_python_version']} \
             fi
         done
     fi
-    _koopa_python_script 'check-system.py'
+    "${KOOPA_PREFIX:?}/bin/koopa" internal check-system
     _koopa_check_disk '/'
     # > _koopa_check_exports
     if [[ "${bool['warnings']}" -eq 1 ]]

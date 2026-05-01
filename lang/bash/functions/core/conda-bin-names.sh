@@ -10,6 +10,6 @@ _koopa_conda_bin_names() {
     #     /opt/koopa/opt/salmon/libexec/conda-meta/salmon-*.json
     # """
     _koopa_assert_has_args_eq "$#" 1
-    _koopa_python_script 'conda-bin-names.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal conda-bin-names "$@"
     return 0
 }
