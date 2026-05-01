@@ -40,7 +40,7 @@ supported environment variables:
 
 details:
     Bash or Zsh is currently recommended.
-    Also supports Ash, Busybox, and Dash POSIX shells.
+    Also supports Ash, Busybox, Dash, and Ksh93 POSIX shells.
 
     For system-wide configuration on Linux, this should be called inside
     '/etc/profile.d/zzz-koopa.sh', owned by root.
