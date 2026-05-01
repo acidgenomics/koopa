@@ -18,6 +18,9 @@ import sys
 import tempfile
 import threading
 from dataclasses import dataclass, field
+
+from koopa.archive import extract
+from koopa.download import download
 from pathlib import Path
 from typing import Any, BinaryIO, TextIO
 
@@ -884,6 +887,59 @@ def install_gnu_app(
 
 
 # -- Go package installer -----------------------------------------------------
+
+
+def build_go_package(
+    *,
+    url: str,
+    prefix: str = "",
+    name: str = "",
+    version: str = "",
+    bin_name: str = "",
+    build_cmd: str = "",
+    ldflags: str = "",
+    mod: str = "",
+    tags: str = "",
+) -> None:
+    """Build a Go package from source using ``go build``."""
+    if not prefix:
+        prefix = os.environ.get("KOOPA_INSTALL_PREFIX", "")
+    if not name:
+        name = os.environ.get("KOOPA_INSTALL_NAME", "")
+    if not version:
+        version = os.environ.get("KOOPA_INSTALL_VERSION", "")
+    go = shutil.which("go")
+    if go is None:
+        msg = "go not found."
+        raise FileNotFoundError(msg)
+    if not bin_name:
+        bin_name = name
+    gobin = os.path.join(prefix, "bin")
+    gocache = tempfile.mkdtemp(prefix="koopa-gocache-")
+    gopath = tempfile.mkdtemp(prefix="koopa-gopath-")
+    os.makedirs(gobin, exist_ok=True)
+    env = os.environ.copy()
+    env["GOBIN"] = gobin
+    env["GOCACHE"] = gocache
+    env["GOPATH"] = gopath
+    build_args: list[str] = []
+    if ldflags:
+        build_args.extend(["-ldflags", ldflags])
+    if mod:
+        build_args.extend(["-mod", mod])
+    if tags:
+        build_args.extend(["-tags", tags])
+    build_args.extend(["-o", os.path.join(prefix, "bin", bin_name)])
+    if build_cmd:
+        build_args.append(build_cmd)
+    tarball = download(url)
+    extract(tarball, "src")
+    os.chdir("src")
+    try:
+        subprocess.run([go, "build", *build_args], env=env, check=True)
+    finally:
+        shutil.rmtree(gocache, ignore_errors=True)
+        shutil.rmtree(gopath, ignore_errors=True)
 
 
 def install_go_package(
