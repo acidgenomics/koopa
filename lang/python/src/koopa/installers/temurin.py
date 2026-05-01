@@ -24,10 +24,7 @@ def main(
         os_id = "mac"
     else:
         os_id = "linux"
-    if machine in ("aarch64", "arm64"):
-        arch_id = "aarch64"
-    else:
-        arch_id = "x64"
+    arch_id = "aarch64" if machine in ("aarch64", "arm64") else "x64"
     ver_url = version.replace("+", "%2B")
     ver_file = version.replace("+", "_")
     url = (

@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import sys
 
-from koopa.build import activate_app, locate, make_build
+from koopa.build import activate_app, make_build
 from koopa.installers._build_helper import download_extract_cd
 
 
@@ -18,7 +18,6 @@ def main(
 ) -> None:
     """Install pkg-config."""
     env = activate_app("make", build_only=True)
-    make = locate("make")
     url = f"https://pkgconfig.freedesktop.org/releases/pkg-config-{version}.tar.gz"
     download_extract_cd(url)
     if sys.platform == "darwin":

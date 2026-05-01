@@ -16,7 +16,6 @@ def main(
     """Install libheif."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("zlib", "libde265", "libjpeg-turbo", "libpng", env=env)
-    libde265_prefix = app_prefix("libde265")
     libjpeg_prefix = app_prefix("libjpeg-turbo")
     libpng_prefix = app_prefix("libpng")
     ext = shared_ext()
