@@ -18,11 +18,11 @@ import sys
 import tempfile
 import threading
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, BinaryIO, TextIO
 
 from koopa.archive import extract
 from koopa.download import download
-from pathlib import Path
-from typing import Any, BinaryIO, TextIO
 
 # -- Data classes -------------------------------------------------------------
 

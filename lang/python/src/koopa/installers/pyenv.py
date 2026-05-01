@@ -6,7 +6,6 @@ import os
 
 from koopa.archive import extract
 from koopa.download import download
-from koopa.file_ops import ln
 
 
 def main(

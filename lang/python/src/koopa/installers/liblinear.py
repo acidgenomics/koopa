@@ -48,9 +48,8 @@ def main(
         os.makedirs(d, exist_ok=True)
     for f in ("predict", "train"):
         dest = os.path.join(bin_dir, f)
-        with open(f, "rb") as src_fh:
-            with open(dest, "wb") as dst_fh:
-                dst_fh.write(src_fh.read())
+        with open(f, "rb") as src_fh, open(dest, "wb") as dst_fh:
+            dst_fh.write(src_fh.read())
         os.chmod(dest, 0o755)
     for f in ("linear.h", "tron.h"):
         if os.path.exists(f):
