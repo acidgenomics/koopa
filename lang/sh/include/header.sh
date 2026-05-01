@@ -10,10 +10,10 @@ __koopa_posix_header() {
         printf '%s\n' "ERROR: Required 'KOOPA_PREFIX' is unset." >&2
         return 1
     fi
-    if [ -f "${KOOPA_PREFIX}/lang/sh/functions.sh" ]
+    if [ -f "${KOOPA_PREFIX}/lang/sh/include/functions.sh" ]
     then
         # shellcheck source=/dev/null
-        . "${KOOPA_PREFIX}/lang/sh/functions.sh"
+        . "${KOOPA_PREFIX}/lang/sh/include/functions.sh"
     else
         for __kvar_file in \
             "${KOOPA_PREFIX}/lang/sh/functions/"*'/'*'.sh'
