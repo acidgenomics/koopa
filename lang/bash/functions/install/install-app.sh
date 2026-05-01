@@ -277,6 +277,10 @@ ${dict['version2']}"
             for dep in "${deps[@]}"
             do
                 local -a dep_install_args
+                if [[ "$dep" == "${dict['name']}" ]]
+                then
+                    continue
+                fi
                 if [[ -d "$(_koopa_app_prefix --allow-missing "$dep")" ]]
                 then
                     continue

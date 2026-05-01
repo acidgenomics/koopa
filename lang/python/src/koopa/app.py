@@ -22,17 +22,24 @@ def app_deps(name: str) -> list:
     deps = extract_app_deps(name=name, json_data=json_data)
     if not deps:
         return lst
+    visited = {name}
     i = 0
     lst.append(deps)
-    while i <= len(deps):
+    while i < len(lst):
         lvl1 = []
         for lvl2 in lst[i]:
             if isinstance(lvl2, list):
                 for lvl3 in lvl2:
+                    if lvl3 in visited:
+                        continue
+                    visited.add(lvl3)
                     lvl4 = extract_app_deps(name=lvl3, json_data=json_data)
                     if lvl4:
                         lvl1.append(lvl4)
             else:
+                if lvl2 in visited:
+                    continue
+                visited.add(lvl2)
                 lvl3 = extract_app_deps(name=lvl2, json_data=json_data)
                 if lvl3:
                     lvl1.append(lvl3)
@@ -43,6 +50,8 @@ def app_deps(name: str) -> list:
     lst.reverse()
     lst = flatten(lst)
     lst = list(dict.fromkeys(lst))
+    if name in lst:
+        lst.remove(name)
     lst = filter_app_deps(names=lst, json_data=json_data)
     return lst
 
