@@ -87,7 +87,11 @@ _koopa_install_shared_apps() {
     do
         local prefix
         prefix="$(_koopa_app_prefix --allow-missing "$app_name")"
-        [[ -f "${prefix}/.koopa-install-stdout.log" ]] && continue
+        if [[ -f "${prefix}/.install/stdout.log" ]] \
+            || [[ -f "${prefix}/.koopa-install-stdout.log" ]]
+        then
+            continue
+        fi
         _koopa_cli_install "$app_name"
     done
     return 0
