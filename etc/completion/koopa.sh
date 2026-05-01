@@ -592,7 +592,7 @@ _koopa_complete() {
                             then
                                 args+=('lmod' 'rstudio-server' 'sshd')
                             fi
-                            if _koopa_is_debian_like
+                            if _koopa_is_linux && grep -q 'debian' /etc/os-release 2>/dev/null
                             then
                                 args+=('base')
                             elif _koopa_is_macos
@@ -637,15 +637,15 @@ _koopa_complete() {
                             if _koopa_is_linux
                             then
                                 args+=('pihole' 'pivpn' 'wine')
-                                if _koopa_is_debian_like || \
-                                   _koopa_is_fedora_like
+                                if grep -q 'debian' /etc/os-release 2>/dev/null || \
+                                   grep -q 'fedora' /etc/os-release 2>/dev/null
                                 then
                                     args+=('rstudio-server' 'shiny-server')
                                 fi
-                                if _koopa_is_debian_like
+                                if grep -q 'debian' /etc/os-release 2>/dev/null
                                 then
                                     args+=('aws-mountpoint-s3' 'docker' 'r')
-                                elif _koopa_is_fedora_like
+                                elif grep -q 'fedora' /etc/os-release 2>/dev/null
                                 then
                                     args+=('oracle-instant-client')
                                 fi
