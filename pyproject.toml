@@ -2,18 +2,25 @@
 name = "koopa"
 version = "0.16.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
-classifiers = ["Programming Language :: Python :: 3.14"]
+classifiers = [
+  "Private :: Do Not Upload",
+  "Programming Language :: Python :: 3.14",
+]
 description = "Shell bootloader for data science."
 keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
 requires-python = ">=3.14"
 
+# > [build-system]
+# > requires = ["setuptools"]
+# > build-backend = "setuptools.build_meta"
+
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+build-backend = "uv_build"
+requires = ["uv_build>=0.11,<1"]
 
 [project.scripts]
-koopa-install = "koopa.cli_main:main"
+koopa = "koopa.cli_main:main"
 
 [tool.bumpver]
 current_version = "0.16.0"
@@ -27,8 +34,36 @@ push = false
 "pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
 "VERSION" = ["{version}"]
 
+[tool.coverage.run]
+relative_files = true
+source = ["lang/python/src/kooa"]
+
+[tool.interrogate]
+fail-under = 80
+ignore-init-method = true
+ignore-init-module = true
+ignore-property-decorators = false
+ignore-setters = false
+verbose = 2
+
+[tool.numpydoc_validation]
+checks = [
+  "all",  # report on all checks, except
+  "GL01", # do not require docstring formatting that conflicts with ruff
+  "GL02", # ...
+  "GL03", # ...
+  "GL08", # nor require __init__ docstrings (params documented in class docstring)
+  "ES01", # nor require an extended summary
+  "EX01", # nor examples
+  "PR02", # nor require parameter docs for dataclasses (fields are self-documenting)
+  "SA01", # nor a see also section
+  "SS06", # nor require the summary to fit on one line
+]
+# Allow docstrings to start with these words.
+override_SS05 = ['^Access ', '^Assess ', '^Process ']
+
 [tool.pyright]
-verbose = true
+verboseOutput = true
 
 [tool.ruff]
 indent-width = 4
@@ -37,32 +72,43 @@ target-version = "py314"
 
 [tool.ruff.format]
 docstring-code-format = true
-docstring-code-line-length = 100
+docstring-code-line-length = 72
 quote-style = "double"
 
 [tool.ruff.lint]
 # List of rules: https://docs.astral.sh/ruff/rules/
-select = [
-  "ANN", # flake8-annotations
-  "B",   # flake8-bugbear
-  "C90", # mccabe
-  "D",   # pydocstyle
-  "E",   # pycodestyle
-  "F",   # PyFlakes
-  "FIX", # flake8-fixme
-  "I",   # isort
-  "N",   # pep8-naming
-  "NPY", # NumPy-specific rules,
-  "PL",  # pylint
-  "SIM", # flake8-simplify
-  "UP",  # pyupgrade
-  "W",   # pycodestyle
-]
 ignore = [
   "D203", # one-blank-line-before-class
   "D213", # multi-line-summary-second-line
   "D401", # non-imperative-mood
+  # > "PLC0415", # import-outside-top-level
 ]
+select = [
+  "ANN",  # flake8-annotations
+  "B",    # flake8-bugbear
+  "C90",  # mccabe
+  "D",    # pydocstyle
+  "E",    # pycodestyle
+  "F",    # PyFlakes
+  "FIX",  # flake8-fixme
+  "I",    # isort
+  "N",    # pep8-naming
+  "NPY",  # NumPy-specific rules,
+  "PL",   # pylint
+  "PT",   # flake8-pytest-style
+  "RUF",  # Ruff-specific rules
+  "SIM",  # flake8-simplify
+  "SLOT", # flake8-slots
+  "UP",   # pyupgrade
+  "W",    # pycodestyle
+]
+
+[tool.ruff.lint.per-file-ignores]
+"lang/python/scripts/*.py" = ["E402"]
+"lang/python/src/koopa/cli_main.py" = ["PLC0415"]
+"lang/python/src/koopa/cli_app.py" = ["PLC0415"]
+"lang/python/src/koopa/cli_system.py" = ["PLC0415"]
+"lang/python/src/koopa/cli_develop.py" = ["PLC0415"]
 
 [tool.ruff.lint.isort]
 extra-standard-library = ["typing"]
@@ -88,13 +134,13 @@ convention = "numpy"
 
 [tool.ruff.lint.pylint]
 allow-magic-value-types = ["bytes", "int", "str"]
-max-args = 10
+max-args = 30
 max-branches = 30
-max-returns = 10
-
-[tool.ruff.lint.per-file-ignores]
-"lang/python/scripts/*.py" = ["E402"]
-"lang/python/src/koopa/cli_main.py" = ["PLC0415"]
+max-positional-args = 2
+max-statements = 100
 
 [tool.setuptools.packages.find]
 where = ["lang/python/src"]
+
+[tool.ty.terminal]
+error-on-warning = true
