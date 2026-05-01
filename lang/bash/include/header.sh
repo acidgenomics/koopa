@@ -145,40 +145,6 @@ __koopa_realpath() {
     return 0
 }
 
-__koopa_source_functions() {
-    # """
-    # Source multiple Bash script files inside a directory.
-    # @note Updated 2022-05-20.
-    #
-    # Note that macOS ships with an ancient version of Bash by default that
-    # doesn't support readarray/mapfile.
-    # """
-    local -a files
-    local cache_file file prefix
-    prefix="$(_koopa_koopa_prefix)/lang/bash/functions/${1:?}"
-    [[ -d "$prefix" ]] || return 0
-    cache_file="${prefix}.sh"
-    if [[ -f "$cache_file" ]]
-    then
-        # shellcheck source=/dev/null
-        source "$cache_file"
-        return 0
-    fi
-    readarray -t files <<< "$( \
-        find -L "$prefix" \
-            -mindepth 1 \
-            -type 'f' \
-            -name '*.sh' \
-            -print \
-    )"
-    for file in "${files[@]}"
-    do
-        # shellcheck source=/dev/null
-        source "$file"
-    done
-    return 0
-}
-
 __koopa_warn() {
     # """
     # Print a warning message to the console.
@@ -427,23 +393,14 @@ __koopa_bash_header() {
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    if [[ -f "${KOOPA_PREFIX}/lang/bash/functions/activate.sh" ]]
+    if [[ -f "${KOOPA_PREFIX}/lang/bash/include/functions.sh" ]]
     then
-        source "${KOOPA_PREFIX}/lang/bash/functions/activate.sh"
+        source "${KOOPA_PREFIX}/lang/bash/include/functions.sh"
     else
         local __kvar_dir __kvar_file
-        for __kvar_dir in \
-            'activate' \
-            'alias' \
-            'core' \
-            'export' \
-            'is' \
-            'macos' \
-            'prefix' \
-            'xdg'
+        for __kvar_dir in "${KOOPA_PREFIX}"/lang/bash/functions/*/
         do
-            for __kvar_file in \
-                "${KOOPA_PREFIX}/lang/bash/functions/${__kvar_dir}/"*.sh
+            for __kvar_file in "${__kvar_dir}"*.sh
             do
                 [[ -f "$__kvar_file" ]] || continue
                 # shellcheck source=/dev/null
@@ -470,43 +427,6 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['activate']}" -eq 0 ]]
     then
-        # shellcheck source=/dev/null
-        if [[ -f "${KOOPA_PREFIX}/lang/bash/functions/common.sh" ]]
-        then
-            source "${KOOPA_PREFIX}/lang/bash/functions/common.sh"
-        else
-            local __kvar_dir __kvar_file
-            for __kvar_dir in "${KOOPA_PREFIX}"/lang/bash/functions/*/
-            do
-                [[ "$(basename "$__kvar_dir")" == 'os' ]] && continue
-                for __kvar_file in "${__kvar_dir}"*.sh
-                do
-                    [[ -f "$__kvar_file" ]] || continue
-                    # shellcheck source=/dev/null
-                    source "$__kvar_file"
-                done
-            done
-            unset __kvar_dir __kvar_file
-        fi
-        if _koopa_is_linux
-        then
-            dict['linux_prefix']='os/linux'
-            __koopa_source_functions "${dict['linux_prefix']}/common"
-            if _koopa_is_debian_like
-            then
-                __koopa_source_functions "${dict['linux_prefix']}/debian"
-            elif _koopa_is_fedora_like
-            then
-                __koopa_source_functions "${dict['linux_prefix']}/fedora"
-                _koopa_is_rhel_like && \
-                    __koopa_source_functions "${dict['linux_prefix']}/rhel"
-            fi
-            dict['os_id']="$(_koopa_os_id)"
-            __koopa_source_functions "${dict['linux_prefix']}/${dict['os_id']}"
-        elif _koopa_is_macos
-        then
-            __koopa_source_functions 'os/macos'
-        fi
         # Check if user is requesting help documentation.
         case "${1:-}" in
             '--help' | \
