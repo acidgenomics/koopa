@@ -226,9 +226,9 @@ __koopa_zsh_header() {
         )"
         export KOOPA_PREFIX
     fi
-    if [[ -f "${KOOPA_PREFIX}/lang/zsh/functions.zsh" ]]
+    if [[ -f "${KOOPA_PREFIX}/lang/zsh/functions.sh" ]]
     then
-        source "${KOOPA_PREFIX}/lang/zsh/functions.zsh"
+        source "${KOOPA_PREFIX}/lang/zsh/functions.sh"
     else
         local __kvar_file
         for __kvar_file in "${KOOPA_PREFIX}"/lang/zsh/functions/*/*.sh
@@ -251,7 +251,6 @@ __koopa_zsh_header() {
     fi
     if [[ "${bool['activate']}" -eq 1 ]] && [[ "${bool['minimal']}" -eq 0 ]]
     then
-        source "${KOOPA_PREFIX:?}/lang/zsh/functions/activate.sh"
         _koopa_activate_zsh_extras
     fi
     if [[ "${bool['test']}" -eq 1 ]]
