@@ -192,6 +192,77 @@ __koopa_warn() {
     return 0
 }
 
+__koopa_activate_koopa() {
+    if [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]]
+    then
+        _koopa_activate_path_helper || return 1
+    fi
+    _koopa_activate_bootstrap || return 1
+    _koopa_add_to_path_start "${KOOPA_PREFIX}/bin" || return 1
+    _koopa_add_to_manpath_start "${KOOPA_PREFIX}/share/man" || return 1
+    [[ "${KOOPA_MINIMAL:-0}" -eq 0 ]] || return 0
+    _koopa_export_home || return 1
+    _koopa_activate_profile_files || return 1
+    _koopa_export_koopa_cpu_count || return 1
+    _koopa_export_koopa_shell || return 1
+    _koopa_activate_xdg || return 1
+    _koopa_export_editor || return 1
+    _koopa_export_gnupg || return 1
+    _koopa_export_history || return 1
+    _koopa_export_manpager || return 1
+    _koopa_export_pager || return 1
+    _koopa_activate_ca_certificates || return 1
+    _koopa_activate_ruby || return 1
+    _koopa_activate_julia || return 1
+    _koopa_activate_python || return 1
+    _koopa_activate_pipx || return 1
+    _koopa_activate_color_mode || return 1
+    _koopa_activate_alacritty || return 1
+    _koopa_activate_bat || return 1
+    _koopa_activate_bottom || return 1
+    _koopa_activate_delta || return 1
+    _koopa_activate_difftastic || return 1
+    _koopa_activate_dircolors || return 1
+    _koopa_activate_direnv || return 1
+    _koopa_activate_docker || return 1
+    _koopa_activate_fzf || return 0
+    _koopa_activate_gcc_colors || return 1
+    _koopa_activate_kitty || return 1
+    _koopa_activate_lesspipe || return 1
+    _koopa_activate_pyright || return 1
+    _koopa_activate_ripgrep || return 1
+    _koopa_activate_tealdeer || return 1
+    if _koopa_is_macos
+    then
+        _koopa_macos_activate_cli_colors || return 1
+        _koopa_macos_activate_egnyte || return 1
+        _koopa_macos_activate_homebrew || return 1
+    fi
+    _koopa_activate_micromamba || return 1
+    _koopa_add_to_path_start \
+        '/usr/local/sbin' \
+        '/usr/local/bin' \
+        "$(_koopa_scripts_private_prefix)/bin" \
+        "$(_koopa_xdg_local_home)/bin" \
+        "${HOME:?}/.bin" \
+        "${HOME:?}/bin" \
+        || return 1
+    _koopa_add_to_manpath_start \
+        '/usr/local/man' \
+        '/usr/local/share/man' \
+        || return 1
+    _koopa_add_to_manpath_end \
+        '/usr/share/man' \
+        || return 1
+    if ! _koopa_is_subshell
+    then
+        _koopa_activate_today_bucket || return 1
+        _koopa_check_multiple_users || return 1
+    fi
+    _koopa_activate_aliases || return 1
+    return 0
+}
+
 __koopa_bash_header() {
     # """
     # Bash header.
@@ -356,14 +427,29 @@ __koopa_bash_header() {
         export KOOPA_PREFIX
     fi
     # shellcheck source=/dev/null
-    source "${KOOPA_PREFIX:?}/lang/sh/include/header.sh"
+    if [[ -f "${KOOPA_PREFIX}/lang/bash/functions/activate.sh" ]]
+    then
+        source "${KOOPA_PREFIX}/lang/bash/functions/activate.sh"
+    else
+        local __kvar_file
+        for __kvar_file in "${KOOPA_PREFIX}"/lang/bash/functions/activate/*.sh
+        do
+            # shellcheck source=/dev/null
+            source "$__kvar_file"
+        done
+        unset __kvar_file
+    fi
+    if [[ -z "${KOOPA_DEFAULT_SYSTEM_PATH:-}" ]]
+    then
+        export KOOPA_DEFAULT_SYSTEM_PATH="${PATH:-}"
+    fi
     if [[ "${bool['test']}" -eq 1 ]]
     then
         _koopa_duration_start || return 1
     fi
     if [[ "${bool['activate']}" -eq 1 ]]
     then
-        __koopa_source_functions 'activate'
+        __koopa_activate_koopa || return 1
         if [[ "${bool['minimal']}" -eq 0 ]]
         then
             _koopa_activate_bash_extras
@@ -372,26 +458,24 @@ __koopa_bash_header() {
     if [[ "${bool['activate']}" -eq 0 ]]
     then
         __koopa_source_functions 'common'
-        dict['os_id']="$(_koopa_os_id)"
         if _koopa_is_linux
         then
             dict['linux_prefix']='os/linux'
             __koopa_source_functions "${dict['linux_prefix']}/common"
-            if _koopa_is_debian_like
+            if koopa_is_debian_like
             then
                 __koopa_source_functions "${dict['linux_prefix']}/debian"
-                # > _koopa_is_ubuntu_like && \
-                # >     __koopa_source_functions \
-                # >         "${dict['linux_prefix']}/ubuntu"
-            elif _koopa_is_fedora_like
+            elif koopa_is_fedora_like
             then
                 __koopa_source_functions "${dict['linux_prefix']}/fedora"
-                _koopa_is_rhel_like && \
+                koopa_is_rhel_like && \
                     __koopa_source_functions "${dict['linux_prefix']}/rhel"
             fi
+            dict['os_id']="$(koopa_os_id)"
             __koopa_source_functions "${dict['linux_prefix']}/${dict['os_id']}"
-        else
-            __koopa_source_functions "os/${dict['os_id']}"
+        elif _koopa_is_macos
+        then
+            __koopa_source_functions 'os/macos'
         fi
         # Check if user is requesting help documentation.
         case "${1:-}" in
