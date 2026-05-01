@@ -12,9 +12,6 @@ requires-python = ">=3.14"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[project.optional-dependencies]
-dev = ["bumpver", "pyright", "pytest", "ruff", "ty", "uv"]
-
 [project.scripts]
 koopa-install = "koopa.cli_main:main"
 
