@@ -13,7 +13,7 @@ main() {
     local -A app dict
     local -a bootstrap_args cmake_args
     _koopa_activate_app --build-only 'make'
-    _koopa_activate_app 'openssl'
+    _koopa_activate_app 'curl' 'openssl' 'zlib'
     app['make']="$(_koopa_locate_make)"
     _koopa_assert_is_executable "${app[@]}"
     dict['jobs']="$(_koopa_cpu_count)"
@@ -32,17 +32,11 @@ main() {
     )
     bootstrap_args=(
         '--no-system-libs'
+        '--system-curl'
+        '--system-zlib'
         "--parallel=${dict['jobs']}"
         "--prefix=${dict['prefix']}"
     )
-    # > if _koopa_is_macos
-    # > then
-    # >     bootstrap_args+=(
-    # >         '--system-bzip2'
-    # >         '--system-curl'
-    # >         '--system-zlib'
-    # >     )
-    # > fi
     bootstrap_args+=('--' "${cmake_args[@]}")
     if [[ "${dict['mem_gb']}" -lt "${dict['mem_gb_cutoff']}" ]]
     then
@@ -53,41 +47,15 @@ v${dict['version']}/cmake-${dict['version']}.tar.gz"
     _koopa_download "${dict['url']}"
     _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
     _koopa_cd 'src'
-    # Fix bundled curl for OpenSSL 4 compatibility.
-    # OpenSSL 4 made ASN1_STRING an opaque type, so direct struct member
-    # access must be replaced with accessor functions.
-    if [[ -f 'Utilities/cmcurl/lib/vtls/openssl.c' ]]
-    then
-        _koopa_find_and_replace_in_file \
-            --regex \
-            --pattern='num->type' \
-            --replacement='ASN1_STRING_type(num)' \
-            'Utilities/cmcurl/lib/vtls/openssl.c'
-        _koopa_find_and_replace_in_file \
-            --regex \
-            --pattern='num->length' \
-            --replacement='ASN1_STRING_length(num)' \
-            'Utilities/cmcurl/lib/vtls/openssl.c'
-        _koopa_find_and_replace_in_file \
-            --regex \
-            --pattern='num->data' \
-            --replacement='ASN1_STRING_get0_data(num)' \
-            'Utilities/cmcurl/lib/vtls/openssl.c'
-        _koopa_find_and_replace_in_file \
-            --regex \
-            --pattern='psig->length' \
-            --replacement='ASN1_STRING_length(psig)' \
-            'Utilities/cmcurl/lib/vtls/openssl.c'
-        _koopa_find_and_replace_in_file \
-            --regex \
-            --pattern='psig->data' \
-            --replacement='ASN1_STRING_get0_data(psig)' \
-            'Utilities/cmcurl/lib/vtls/openssl.c'
-    fi
     ./bootstrap --help || true
     ./bootstrap "${bootstrap_args[@]}"
     _koopa_print_env
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
+    app['cmake']="${dict['prefix']}/bin/cmake"
+    if ! "${app['cmake']}" -E capabilities | grep -q '"tls":true\|"tls": true'
+    then
+        _koopa_stop 'CMake was built without TLS support.'
+    fi
     return 0
 }
