@@ -17,13 +17,13 @@ _koopa_update_koopa() {
     local prefix
     _koopa_assert_has_no_args "$#"
     _koopa_assert_is_owner
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    if ! _koopa_is_git_repo_top_level "${dict['_koopa_prefix']}"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    if ! _koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        _koopa_alert_note "Pinned release detected at '${dict['_koopa_prefix']}'."
+        _koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
         return 1
     fi
-    _koopa_git_pull "${dict['_koopa_prefix']}"
+    _koopa_git_pull "${dict['koopa_prefix']}"
     _koopa_zsh_compaudit_set_permissions
     return 0
 }

@@ -129,11 +129,11 @@ _koopa_r_configure_environ() {
         dict['arch']='aarch64'
     fi
     dict['bin_prefix']="$(_koopa_bin_prefix)"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['r_prefix']="$(_koopa_r_prefix "${app['r']}")"
     _koopa_assert_is_dir "${dict['r_prefix']}"
     lines+=(
-        "KOOPA_PREFIX=${dict['_koopa_prefix']}"
+        "KOOPA_PREFIX=${dict['koopa_prefix']}"
         'R_BATCHSAVE=--no-save --no-restore'
         "R_LIBS_SITE=\${R_HOME}/site-library"
         "R_LIBS_USER=\${R_LIBS_SITE}"

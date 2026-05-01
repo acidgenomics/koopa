@@ -934,7 +934,7 @@
     "build_dependencies": ["make"],
     "date": "2026-04-24",
     "default": false,
-    "dependencies": ["openssl"],
+    "dependencies": ["curl", "openssl", "zlib"],
     "prune": false,
     "url": ["https://cmake.org/download/"],
     "version": "4.3.2"
