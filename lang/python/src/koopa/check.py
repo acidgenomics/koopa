@@ -2,7 +2,7 @@
 
 from os.path import basename, isdir, isfile, islink, join, realpath
 
-from koopa.app import installed_apps
+from koopa.app import extract_app_deps, installed_apps
 from koopa.io import import_app_json
 from koopa.os import koopa_opt_prefix
 from koopa.prefix import bootstrap_prefix, koopa_prefix
@@ -44,6 +44,46 @@ def check_installed_apps() -> bool:
             print(f"{name} ({linked_ver} != {current_ver})")
             continue
     return ok
+
+
+def check_circular_deps() -> list:
+    """Check for circular dependencies in app.json.
+
+    Returns a list of cycles, where each cycle is a list of package names
+    forming the loop (e.g. ["curl", "zstd", "cmake", "curl"]).
+    """
+    json_data = import_app_json()
+    names = list(json_data.keys())
+    graph = {}
+    for name in names:
+        try:
+            deps = extract_app_deps(name=name, json_data=json_data)
+        except NameError:
+            deps = []
+        graph[name] = deps
+    cycles = []
+    white = set(names)
+    gray = set()
+    black = set()
+
+    def _dfs(node: str, path: list) -> None:
+        white.discard(node)
+        gray.add(node)
+        path.append(node)
+        for dep in graph.get(node, []):
+            if dep in gray:
+                cycle_start = path.index(dep)
+                cycles.append(path[cycle_start:] + [dep])
+            elif dep in white:
+                _dfs(dep, path)
+        path.pop()
+        gray.discard(node)
+        black.add(node)
+
+    for name in names:
+        if name in white:
+            _dfs(name, [])
+    return cycles
 
 
 def check_bootstrap_version() -> bool:
