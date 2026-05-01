@@ -5,32 +5,7 @@ set -o errtrace  # -E
 set -o nounset  # -u
 set -o pipefail
 
-__koopa_is_installed() { # {{{1
-    # """
-    # Are all of the requested programs installed?
-    # @note Updated 2021-05-07.
-    # """
-    local cmd
-    for cmd in "$@"
-    do
-        command -v "$cmd" >/dev/null || return 1
-    done
-    return 0
-}
-
-__koopa_is_macos() { # {{{1
-    # """
-    # Is the operating system macOS?
-    # @note Updated 2021-05-07.
-    # """
-    [[ "$(uname -s)" == 'Darwin' ]]
-}
-
-__koopa_print() { # {{{1
-    # """
-    # Print a string.
-    # @note Updated 2021-05-07.
-    # """
+__koopa_print() {
     local string
     [[ "$#" -gt 0 ]] || return 1
     for string in "$@"
@@ -41,10 +16,6 @@ __koopa_print() { # {{{1
 }
 
 __koopa_realpath() {
-    # """
-    # Resolve file path.
-    # @note Updated 2023-03-23.
-    # """
     local arg string
     for arg in "$@"
     do
@@ -78,31 +49,10 @@ __koopa_realpath() {
     return 0
 }
 
-__koopa_warn() { # {{{1
-    # """
-    # Print a warning message to the console.
-    # @note Updated 2021-05-14.
-    # """
-    local string
-    [[ "$#" -gt 0 ]] || return 1
-    for string in "$@"
-    do
-        printf '%b\n' "$string" >&2
-    done
-    return 0
-}
-
 main() {
-    # """
-    # Main koopa CLI function.
-    # @note Updated 2025-01-16.
-    # """
-    # Check for Bash 4+.
     case "${BASH_VERSION:-}" in
         '1.'* | '2.'* | '3.'*)
-            __koopa_warn \
-                'Bash 4+ is required.' \
-                "PATH: ${PATH:-}"
+            printf '%s\n' 'Bash 4+ is required.' >&2
             return 1
             ;;
     esac
@@ -117,8 +67,8 @@ main() {
         __koopa_realpath "$(dirname "${dict['bash_source']}")/.." \
     )"
     [[ -d "${dict['_koopa_prefix']}" ]] || return 1
-    # Dispatch all commands to Python when available.
     dict['python_src']="${dict['_koopa_prefix']}/lang/python/src"
+    dict['python']=''
     if [[ -d "${dict['python_src']}" ]]
     then
         dict['python']="${dict['_koopa_prefix']}/opt/python3.14/bin/python3.14"
@@ -137,23 +87,23 @@ main() {
                 fi
             fi
         fi
-        if [[ -x "${dict['python']}" ]]
-        then
-            export KOOPA_PREFIX="${dict['_koopa_prefix']}"
-            PYTHONPATH="${dict['python_src']}${PYTHONPATH:+:${PYTHONPATH}}" \
-                exec "${dict['python']}" -m koopa.cli_main "$@"
-        fi
     fi
-    # Bash fallback: only used during bootstrap when Python is unavailable.
-    dict['header_script']="${dict['_koopa_prefix']}/lang/bash/include/header.sh"
-    [[ -f "${dict['header_script']}" ]] || return 1
-    export KOOPA_ACTIVATE=0
-    export KOOPA_HELP=0
-    export KOOPA_PREFIX="${dict['_koopa_prefix']}"
-    # shellcheck source=/dev/null
-    source "${dict['header_script']}"
-    _koopa_cli "$@"
-    return 0
+    if [[ -x "${dict['python']}" ]]
+    then
+        export KOOPA_PREFIX="${dict['_koopa_prefix']}"
+        PYTHONPATH="${dict['python_src']}${PYTHONPATH:+:${PYTHONPATH}}" \
+            exec "${dict['python']}" -m koopa.cli_main "$@"
+    fi
+    dict['bootstrap']="${dict['_koopa_prefix']}/etc/koopa/bootstrap.sh"
+    printf '%s\n' \
+        'Error: Python 3.14+ is required but not found.' \
+        '' \
+        'To bootstrap Python and core dependencies from source, run:' \
+        "  sh '${dict['bootstrap']}'" \
+        '' \
+        'Then retry your command.' \
+        >&2
+    return 1
 }
 
 main "$@"
