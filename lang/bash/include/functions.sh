@@ -265,7 +265,8 @@ _koopa_activate_app() {
             _koopa_alert_note "'${dict2['app_name']}' version mismatch \
 (${dict2['current_ver']} != ${dict2['expected_ver']}). \
 Reinstalling to update."
-            _koopa_cli_install --reinstall "${dict2['app_name']}" || \
+            _koopa_install_app \
+                "--name=${dict2['app_name']}" --reinstall || \
                 _koopa_stop "Failed to reinstall '${dict2['app_name']}'."
             dict2['current_ver']="$( \
                 _koopa_app_version "${dict2['app_name']}" \
@@ -4034,231 +4035,6 @@ _koopa_aws_s3_sync() {
     return 0
 }
 
-_koopa_cli_install() {
-    local -A dict
-    local -a flags pos
-    local app
-    _koopa_assert_has_args "$#"
-    dict['mode']=''
-    case "${1:-}" in
-        'koopa')
-            shift 1
-            _koopa_install_koopa "$@"
-            return 0
-            ;;
-        'private')
-            dict['mode']='private'
-            shift 1
-            ;;
-        'system')
-            dict['mode']='system'
-            shift 1
-            ;;
-        'user')
-            dict['mode']='user'
-            shift 1
-            ;;
-        'app' | 'shared-apps')
-            _koopa_stop 'Unsupported command.'
-            ;;
-    esac
-    flags=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--bootstrap' | \
-            '--reinstall' | \
-            '--verbose')
-                flags+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                _koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_args "$#"
-    for app in "$@"
-    do
-        local -a install_args
-        install_args=("--name=${app}")
-        case "${dict['mode']}" in
-            'private')
-                install_args+=('--private')
-                ;;
-            'system')
-                install_args+=('--system')
-                ;;
-            'user')
-                install_args+=('--user')
-                ;;
-        esac
-        _koopa_install_app "${install_args[@]}" "${flags[@]:-}"
-    done
-    return 0
-}
-
-_koopa_cli_invalid_arg() {
-    if [[ "$#" -eq 0 ]]
-    then
-        _koopa_stop "Missing required argument. \
-Check autocompletion of supported arguments with <TAB>."
-    else
-        _koopa_stop "Invalid and/or incomplete argument: '${*}'.\n\
-Check autocompletion of supported arguments with <TAB>."
-    fi
-}
-
-_koopa_cli_reinstall() {
-    local -A dict
-    local -a pos
-    _koopa_assert_has_args "$#"
-    dict['mode']='default'
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--all')
-                _koopa_invalid_arg "$1"
-                ;;
-            '--all-revdeps')
-                dict['mode']='all-revdeps'
-                shift 1
-                ;;
-            '--only-revdeps')
-                dict['mode']='only-revdeps'
-                shift 1
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    case "${dict['mode']}" in
-        'all-revdeps' | \
-        'all-reverse-dependencies')
-            _koopa_reinstall_all_revdeps "$@"
-            ;;
-        'default')
-            _koopa_cli_install --reinstall "$@"
-            local -a stale_revdeps
-            local stale_str
-            stale_str="$(_koopa_stale_revdeps "$@")" || true
-            if [[ -n "$stale_str" ]]
-            then
-                readarray -t stale_revdeps <<< "$stale_str"
-                if _koopa_is_array_non_empty "${stale_revdeps[@]:-}"
-                then
-                    _koopa_dl \
-                        'stale reverse dependencies' \
-                        "$(_koopa_to_string "${stale_revdeps[@]}")"
-                    _koopa_cli_install --reinstall "${stale_revdeps[@]}"
-                fi
-            fi
-            ;;
-        'only-revdeps' | \
-        'only-reverse-dependencies')
-            _koopa_reinstall_only_revdeps "$@"
-            ;;
-    esac
-    return 0
-}
-
-_koopa_cli_uninstall() {
-    local -A dict
-    local -a flags pos
-    local app
-    dict['mode']=''
-    flags=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--verbose')
-                flags+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                _koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    if [[ "${#pos[@]}" -gt 0 ]]
-    then
-        set -- "${pos[@]}"
-    else
-        set -- 'koopa'
-    fi
-    case "$1" in
-        'koopa')
-            shift 1
-            _koopa_uninstall_koopa "$@"
-            return 0
-            ;;
-        'private' | \
-        'system' | \
-        'user')
-            dict['mode']="${1}"
-            shift 1
-            ;;
-    esac
-    _koopa_assert_has_args "$#"
-    for app in "$@"
-    do
-        local -a uninstall_args
-        uninstall_args=("--name=${app}")
-        case "${dict['mode']}" in
-            'system')
-                uninstall_args+=('--system')
-                ;;
-            'user')
-                uninstall_args+=('--user')
-                ;;
-        esac
-        _koopa_uninstall_app "${uninstall_args[@]}" "${flags[@]:-}"
-    done
-    return 0
-}
-
-_koopa_cli_update() {
-    local app stem
-    [[ "$#" -eq 0 ]] && set -- 'koopa'
-    stem='update'
-    case "$1" in
-        'system' | \
-        'user')
-            stem="${stem}-${1}"
-            shift 1
-            ;;
-    esac
-    _koopa_assert_has_args "$#"
-    for app in "$@"
-    do
-        local -A dict
-        dict['key']="${stem}-${app}"
-        dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-        if _koopa_is_function "${dict['fun']}"
-        then
-            "${dict['fun']}"
-        else
-            _koopa_cli_install --reinstall "$app"
-        fi
-    done
-    return 0
-}
-
 _koopa_acid_emoji() {
     _koopa_print '🧪'
 }
@@ -6375,64 +6151,6 @@ _koopa_chown() {
     fi
     _koopa_assert_is_executable "${app[@]}"
     "${chown[@]}" "$@"
-    return 0
-}
-
-_koopa_cli() {
-    local -A bool dict
-    _koopa_assert_has_args "$#"
-    bool['nested']=0
-    case "${!#}" in
-        '--help' | \
-        '-h')
-            set -- "${@:1:$(($#-1))}"
-            dict['key']="$(_koopa_paste --sep='/' "$@")"
-            dict['man_file']="$(_koopa_man_prefix)/man1/koopa/${dict['key']}.1"
-            _koopa_assert_is_file "${dict['man_file']}"
-            _koopa_help "${dict['man_file']}"
-            ;;
-    esac
-    case "${1:?}" in
-        '--version' | \
-        '-V' | \
-        'version')
-            dict['key']='koopa-version'
-            shift 1
-            ;;
-        'header' | \
-        'install-all-apps' | \
-        'install-default-apps')
-            dict['key']="$1"
-            shift 1
-            ;;
-        'app' | \
-        'configure' | \
-        'develop' | \
-        'install' | \
-        'reinstall' | \
-        'system' | \
-        'uninstall' | \
-        'update')
-            bool['nested']=1
-            dict['key']="cli-${1}"
-            shift 1
-            ;;
-        *)
-            _koopa_cli_invalid_arg "$@"
-            ;;
-    esac
-    if [[ "${bool['nested']}"  -eq 1 ]]
-    then
-        dict['fun']="_koopa_${dict['key']//-/_}"
-        _koopa_assert_is_function "${dict['fun']}"
-    else
-        dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-    fi
-    if ! _koopa_is_function "${dict['fun']}"
-    then
-        _koopa_stop 'Unsupported command.'
-    fi
-    "${dict['fun']}" "$@"
     return 0
 }
 
@@ -13946,18 +13664,6 @@ ${dict['percent_str']}% "
         printf '\n'
         _koopa_alert_success 'DONE!'
     fi
-    return 0
-}
-
-_koopa_prune_app_binaries() {
-    _koopa_assert_has_no_args "$#"
-    _koopa_assert_can_push_binary
-    _koopa_python_script 'prune-app-binaries.py'
-    return 0
-}
-
-_koopa_prune_apps() {
-    _koopa_python_script 'prune-apps.py'
     return 0
 }
 
@@ -21927,7 +21633,7 @@ ${dict['version2']}"
                 then
                     continue
                 fi
-                dep_install_args=()
+                dep_install_args=("--name=${dep}")
                 if [[ "${bool['bootstrap']}" -eq 1 ]]
                 then
                     dep_install_args+=('--bootstrap')
@@ -21936,8 +21642,7 @@ ${dict['version2']}"
                 then
                     dep_install_args+=('--verbose')
                 fi
-                dep_install_args+=("$dep")
-                _koopa_cli_install "${dep_install_args[@]}"
+                _koopa_install_app "${dep_install_args[@]}"
             done
         fi
     fi
@@ -22794,10 +22499,11 @@ _koopa_install_koopa() {
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
         dict['python_version']="$(_koopa_python_major_minor_version)"
-        _koopa_cli_install --bootstrap \
-            'bash' \
-            'coreutils' \
-            "python${dict['python_version']}"
+        _koopa_install_app --name='bash' --bootstrap
+        _koopa_install_app --name='coreutils' --bootstrap
+        _koopa_install_app \
+            "--name=python${dict['python_version']}" \
+            --bootstrap
     fi
     return 0
 }
@@ -23512,7 +23218,7 @@ _koopa_install_shared_apps() {
         then
             continue
         fi
-        _koopa_cli_install "$app_name"
+        _koopa_install_app "--name=${app_name}"
     done
     return 0
 }

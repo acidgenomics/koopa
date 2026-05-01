@@ -57,6 +57,13 @@ def _handle_list(args: list[str]) -> None:
     _run_bash(key, *rest)
 
 
+def _handle_prune_apps() -> None:
+    """Handle ``koopa system prune-apps``."""
+    from koopa.app import prune_apps
+
+    prune_apps()
+
+
 _SYSTEM_COMMANDS: dict[str, str] = {
     "check": "check-system",
     "info": "system-info",
@@ -64,7 +71,6 @@ _SYSTEM_COMMANDS: dict[str, str] = {
     "enable-passwordless-sudo": "enable-passwordless-sudo",
     "hostname": "hostname",
     "os-string": "os-string",
-    "prune-apps": "prune-apps",
     "switch-to-develop": "switch-to-develop",
     "test": "test",
     "zsh-compaudit-set-permissions": "zsh-compaudit-set-permissions",
@@ -115,6 +121,9 @@ def handle_system(remainder: list[str]) -> None:
         return
     if subcmd == "list":
         _handle_list(rest)
+        return
+    if subcmd == "prune-apps":
+        _handle_prune_apps()
         return
     key = _SYSTEM_COMMANDS.get(subcmd)
     if key is None:

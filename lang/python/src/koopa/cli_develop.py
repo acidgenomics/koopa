@@ -11,11 +11,17 @@ _DEVELOP_COMMANDS: dict[str, str] = {
     "log": "view-latest-tmp-log-file",
     "cache-functions": "cache-functions",
     "edit-app-json": "edit-app-json",
-    "prune-app-binaries": "prune-app-binaries",
     "push-all-app-builds": "push-all-app-builds",
     "push-app-build": "push-app-build",
     "roff": "roff",
 }
+
+
+def _handle_prune_app_binaries() -> None:
+    """Handle ``koopa develop prune-app-binaries``."""
+    from koopa.app import prune_app_binaries
+
+    prune_app_binaries()
 
 
 def handle_develop(remainder: list[str]) -> None:
@@ -30,6 +36,9 @@ def handle_develop(remainder: list[str]) -> None:
         return
     subcmd = remainder[0]
     rest = remainder[1:]
+    if subcmd == "prune-app-binaries":
+        _handle_prune_app_binaries()
+        return
     key = _DEVELOP_COMMANDS.get(subcmd)
     if key is None:
         print(f"Error: unknown develop command '{subcmd}'.", file=sys.stderr)

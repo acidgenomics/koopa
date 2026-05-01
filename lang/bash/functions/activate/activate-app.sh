@@ -99,7 +99,8 @@ _koopa_activate_app() {
             _koopa_alert_note "'${dict2['app_name']}' version mismatch \
 (${dict2['current_ver']} != ${dict2['expected_ver']}). \
 Reinstalling to update."
-            _koopa_cli_install --reinstall "${dict2['app_name']}" || \
+            _koopa_install_app \
+                "--name=${dict2['app_name']}" --reinstall || \
                 _koopa_stop "Failed to reinstall '${dict2['app_name']}'."
             dict2['current_ver']="$( \
                 _koopa_app_version "${dict2['app_name']}" \
