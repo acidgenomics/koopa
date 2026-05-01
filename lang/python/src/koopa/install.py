@@ -521,8 +521,13 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
         raise PermissionError(msg)
     # -- Handle existing prefix -----------------------------------------------
     if config.prefix and config.prefix_check and os.path.isdir(config.prefix):
-        stdout_log = os.path.join(config.prefix, ".koopa-install-stdout.log")
-        if not os.path.isfile(stdout_log):
+        stdout_log = os.path.join(config.prefix, ".install", "stdout.log")
+        stdout_log_legacy = os.path.join(
+            config.prefix, ".koopa-install-stdout.log"
+        )
+        if not os.path.isfile(stdout_log) and not os.path.isfile(
+            stdout_log_legacy
+        ):
             config.reinstall = True
         if config.reinstall:
             if not config.quiet:
@@ -597,17 +602,26 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
                 stdout_file=stdout_file,
                 stderr_file=stderr_file,
             )
-            # Copy log files into prefix.
+            # Copy log files and write metadata into prefix.
             if config.mode == "shared" and os.path.isdir(config.prefix):
                 config.copy_log_files = True
             if config.copy_log_files and os.path.isdir(config.prefix):
+                install_dir = os.path.join(config.prefix, ".install")
+                os.makedirs(install_dir, exist_ok=True)
                 shutil.copy2(
                     stdout_file,
-                    os.path.join(config.prefix, ".koopa-install-stdout.log"),
+                    os.path.join(install_dir, "stdout.log"),
                 )
                 shutil.copy2(
                     stderr_file,
-                    os.path.join(config.prefix, ".koopa-install-stderr.log"),
+                    os.path.join(install_dir, "stderr.log"),
+                )
+                from koopa.install_info import write_install_info
+
+                write_install_info(
+                    output_file=os.path.join(install_dir, "info.json"),
+                    name=config.name,
+                    version=config.version,
                 )
         finally:
             for f in (stdout_file, stderr_file):
@@ -1408,7 +1422,12 @@ def install_shared_apps(
             ]
             if any(
                 os.path.isfile(
-                    os.path.join(app_prefix, v, ".koopa-install-stdout.log"),
+                    os.path.join(app_prefix, v, ".install", "stdout.log"),
+                )
+                or os.path.isfile(
+                    os.path.join(
+                        app_prefix, v, ".koopa-install-stdout.log"
+                    ),
                 )
                 for v in versions
             ):
