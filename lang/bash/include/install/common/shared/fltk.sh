@@ -19,7 +19,7 @@ main() {
         'libpng'
         'freetype'
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         deps+=(
             'xorg-xorgproto'
@@ -31,8 +31,8 @@ main() {
             'xorg-libx11'
         )
     fi
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -40,9 +40,9 @@ main() {
         '--enable-threads'
         "--prefix=${dict['prefix']}"
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
-        dict['x11']="$(koopa_app_prefix 'xorg-libx11')"
+        dict['x11']="$(_koopa_app_prefix 'xorg-libx11')"
         conf_args+=(
             '--enable-x11'
             "--x-includes=${dict['x11']}/include"
@@ -51,10 +51,10 @@ main() {
     fi
     dict['url']="https://github.com/fltk/fltk/releases/download/\
 release-${dict['version']}/fltk-${dict['version']}-source.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
+    _koopa_rm "${dict['prefix']}/lib/"*'.a'
     return 0
 }

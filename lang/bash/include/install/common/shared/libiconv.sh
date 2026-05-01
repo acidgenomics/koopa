@@ -19,6 +19,6 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app "${install_args[@]}"
+    _koopa_install_gnu_app "${install_args[@]}"
     return 0
 }

@@ -11,8 +11,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app 'pcre2'
-    dict['pcre2']="$(koopa_app_prefix 'pcre2')"
+    _koopa_activate_app 'pcre2'
+    dict['pcre2']="$(_koopa_app_prefix 'pcre2')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -23,9 +23,9 @@ main() {
     )
     dict['url']="https://koopa.acidgenomics.com/src/swig/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

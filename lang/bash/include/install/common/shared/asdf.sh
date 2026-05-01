@@ -15,11 +15,11 @@ main() {
     dict['libexec']="${dict['prefix']}/libexec"
     dict['url']="https://github.com/asdf-vm/asdf/archive/refs/tags/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" \
+    _koopa_download "${dict['url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" \
         "${dict['libexec']}"
-    koopa_ln \
+    _koopa_ln \
         --target-directory="${dict['prefix']}/bin" \
         "${dict['libexec']}/bin/asdf"
     return 0

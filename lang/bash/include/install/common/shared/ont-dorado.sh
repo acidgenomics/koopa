@@ -12,10 +12,10 @@ main() {
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['arch']="$(koopa_arch)"
-    if koopa_is_macos
+    dict['arch']="$(_koopa_arch)"
+    if _koopa_is_macos
     then
-        koopa_assert_is_arm64
+        _koopa_assert_is_arm64
         dict['ext']='zip'
         dict['platform']='osx'
     else
@@ -32,9 +32,9 @@ main() {
     esac
     dict['url']="https://cdn.oxfordnanoportal.com/software/analysis/\
 dorado-${dict['version']}-${dict['platform']}-${dict['arch']}.${dict['ext']}"
-    koopa_download "${dict['url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" \
+    _koopa_download "${dict['url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" \
         "${dict['prefix']}"
     return 0
 }

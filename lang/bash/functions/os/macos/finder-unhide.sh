@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+_koopa_macos_finder_unhide() {
+    # """
+    # Unhide files from view in the Finder.
+    # @note Updated 2022-05-20.
+    # """
+    local -A app
+    _koopa_assert_has_args "$#"
+    app['setfile']="$(_koopa_macos_locate_setfile)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_assert_is_existing "$@"
+    "${app['setfile']}" -a v "$@"
+    return 0
+}

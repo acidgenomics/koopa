@@ -9,10 +9,10 @@ main() {
     # @note Updated 2023-08-30.
     # """
     local -A app dict
-    app['patch']="$(koopa_locate_patch)"
-    koopa_assert_is_executable "${app[@]}"
+    app['patch']="$(_koopa_locate_patch)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    koopa_install_conda_package
+    _koopa_install_conda_package
     # Generated using 'diff -u agat agat-1 > agat.patch'.
     dict['patch_file']='agat.patch'
     read -r -d '' "dict[patch_string]" << END || true
@@ -26,12 +26,12 @@ main() {
  use warnings;
  use experimental 'signatures';
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${dict['patch_file']}" \
         --string="${dict['patch_string']}"
-    dict['patch_file']="$(koopa_realpath "${dict['patch_file']}")"
+    dict['patch_file']="$(_koopa_realpath "${dict['patch_file']}")"
     (
-        koopa_cd "${dict['prefix']}/libexec/bin"
+        _koopa_cd "${dict['prefix']}/libexec/bin"
         "${app['patch']}" 'agat' "${dict['patch_file']}"
     )
     return 0

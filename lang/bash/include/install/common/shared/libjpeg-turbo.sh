@@ -16,7 +16,7 @@ main() {
     # """
     local -A dict
     local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app --build-only 'pkg-config'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     cmake_args=(
@@ -25,10 +25,10 @@ main() {
     )
     dict['url']="https://github.com/libjpeg-turbo/libjpeg-turbo/releases/\
 download/${dict['version']}/libjpeg-turbo-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"
     return 0

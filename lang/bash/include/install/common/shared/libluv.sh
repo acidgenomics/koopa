@@ -16,19 +16,19 @@ main() {
     local -A app cmake dict
     local -a cmake_args deps
     deps=('libuv' 'luajit')
-    koopa_activate_app "${deps[@]}"
-    app['luajit']="$(koopa_locate_luajit)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['libuv']="$(koopa_app_prefix 'libuv')"
-    dict['luajit']="$(koopa_app_prefix 'luajit')"
+    _koopa_activate_app "${deps[@]}"
+    app['luajit']="$(_koopa_locate_luajit)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['libuv']="$(_koopa_app_prefix 'libuv')"
+    dict['luajit']="$(_koopa_app_prefix 'luajit')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['luajit_ver']="$(koopa_get_version "${app['luajit']}")"
+    dict['luajit_ver']="$(_koopa_get_version "${app['luajit']}")"
     dict['luajit_maj_min_ver']="$( \
-        koopa_major_minor_version "${dict['luajit_ver']}" \
+        _koopa_major_minor_version "${dict['luajit_ver']}" \
     )"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${dict['libuv']}" \
         "${dict['luajit']}"
     cmake['libuv_include_dir']="${dict['libuv']}/include"
@@ -38,10 +38,10 @@ libuv.${dict['shared_ext']}"
 luajit-${dict['luajit_maj_min_ver']}"
     cmake['luajit_libraries']="${dict['luajit']}/lib/\
 libluajit.${dict['shared_ext']}"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${cmake['libuv_include_dir']}" \
         "${cmake['luajit_include_dir']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${cmake['libuv_libraries']}" \
         "${cmake['luajit_libraries']}"
     cmake_args=(
@@ -62,22 +62,22 @@ libluajit.${dict['shared_ext']}"
     # Download libluv source code.
     dict['luv_url']="https://github.com/luvit/luv/archive/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['luv_url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['luv_url']}")" \
+    _koopa_download "${dict['luv_url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['luv_url']}")" \
         'src'
     # Download 'lua-compat-5.3', which is required for LuaJIT.
     dict['lua_compat_url']="https://github.com/keplerproject/lua-compat-5.3/\
 archive/v0.10.tar.gz"
-    koopa_download "${dict['lua_compat_url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['lua_compat_url']}")" \
+    _koopa_download "${dict['lua_compat_url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['lua_compat_url']}")" \
         'lua-compat-src'
-    koopa_cp \
+    _koopa_cp \
         --target-directory='src/deps/lua-compat-5.3' \
         'lua-compat-src'/*
-    koopa_cd 'src'
-    koopa_mkdir "${dict['prefix']}/lib"
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_cd 'src'
+    _koopa_mkdir "${dict['prefix']}/lib"
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

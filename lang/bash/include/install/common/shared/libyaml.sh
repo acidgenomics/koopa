@@ -12,15 +12,15 @@ main() {
     # - https://superuser.com/questions/565988/
     # """
     local -A app dict
-    koopa_activate_app --build-only \
+    _koopa_activate_app --build-only \
         'autoconf' \
         'automake' \
         'libtool' \
         'm4' \
         'pkg-config'
-    app['autoreconf']="$(koopa_locate_autoreconf)"
-    app['autoupdate']="$(koopa_locate_autoupdate)"
-    dict['libtool']="$(koopa_app_prefix 'libtool')"
+    app['autoreconf']="$(_koopa_locate_autoreconf)"
+    app['autoupdate']="$(_koopa_locate_autoupdate)"
+    dict['libtool']="$(_koopa_app_prefix 'libtool')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -30,12 +30,12 @@ main() {
     )
     dict['url']="https://github.com/yaml/libyaml/archive/\
 ${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     "${app['autoupdate']}" --verbose
     ACLOCAL_PATH="${dict['libtool']}/share/aclocal" \
         "${app['autoreconf']}" --force --install --verbose
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -10,24 +10,24 @@ main() {
     #     software/downloads/latest
     # """
     local -A app dict
-    app['aws']="$(koopa_locate_aws --allow-system)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['installers_base']="$(koopa_private_installers_s3_uri)"
+    app['aws']="$(_koopa_locate_aws --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['installers_base']="$(_koopa_private_installers_s3_uri)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['libexec']="$(_koopa_init_dir "${dict['prefix']}/libexec")"
     dict['url']="${dict['installers_base']}/cellranger/\
 ${dict['version']}.tar.xz"
     "${app['aws']}" --profile='acidgenomics' \
         s3 cp \
         "${dict['url']}" \
-        "$(koopa_basename "${dict['url']}")"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" \
+        "$(_koopa_basename "${dict['url']}")"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" \
         "${dict['libexec']}"
     (
-        koopa_cd "${dict['prefix']}"
-        koopa_ln 'libexec/bin' 'bin'
+        _koopa_cd "${dict['prefix']}"
+        _koopa_ln 'libexec/bin' 'bin'
     )
     return 0
 }

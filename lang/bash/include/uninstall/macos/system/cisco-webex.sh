@@ -18,9 +18,9 @@ main() {
     # - https://help.webex.com/en-us/WBX38280/
     #       How-Do-I-Uninstall-Webex-Software-on-a-Mac
     # """
-    koopa_rm --sudo \
+    _koopa_rm --sudo \
         '/Applications/Cisco Webex Meetings.app'
-    koopa_rm \
+    _koopa_rm \
         "${HOME}/Library/Application Support/Cisco/WebEx Meetings" \
         "${HOME}/Library/Application Support/WebEx Folder" \
         "${HOME}/Library/Application Support/com.apple.sharedfilelist/\

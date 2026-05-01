@@ -20,10 +20,10 @@ main() {
     # """
     local -A app dict
     local -a conf_args pc_path
-    dict['arch']="$(koopa_arch)"
+    dict['arch']="$(_koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         dict['sys_inc']='/usr/include'
         if [[ -d "/usr/lib/${dict['arch']}-linux-gnu/pkgconfig" ]]
@@ -42,16 +42,16 @@ main() {
         then
             pc_path+=('/usr/share/pkgconfig')
         fi
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
-        dict['sdk_prefix']="$(koopa_macos_sdk_prefix)"
+        dict['sdk_prefix']="$(_koopa_macos_sdk_prefix)"
         dict['sys_inc']="${dict['sdk_prefix']}/usr/include"
         pc_path+=('/usr/lib/pkgconfig')
         # Workaround for build issue with Xcode 15.3.
         # https://gitlab.freedesktop.org/pkg-config/pkg-config/-/issues/81
-        koopa_append_cflags '-Wno-int-conversion'
+        _koopa_append_cflags '-Wno-int-conversion'
     fi
-    koopa_assert_is_dir "${dict['sys_inc']}"
+    _koopa_assert_is_dir "${dict['sys_inc']}"
     conf_args+=(
         '--disable-debug'
         '--disable-host-tool'
@@ -59,20 +59,20 @@ main() {
         '--with-internal-glib'
         "--with-system-include-path=${dict['sys_inc']}"
     )
-    if koopa_is_array_non_empty "${pc_path[@]:-}"
+    if _koopa_is_array_non_empty "${pc_path[@]:-}"
     then
-        koopa_assert_is_dir "${pc_path[@]}"
-        dict['pc_path']="$(koopa_paste --sep=':' "${pc_path[@]}")"
+        _koopa_assert_is_dir "${pc_path[@]}"
+        dict['pc_path']="$(_koopa_paste --sep=':' "${pc_path[@]}")"
         conf_args+=("--with-pc-path=${dict['pc_path']}")
     fi
     dict['url']="https://pkgconfig.freedesktop.org/releases/\
 pkg-config-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     app['pkg_config']="${dict['prefix']}/bin/pkg-config"
-    koopa_assert_is_executable "${app['pkg_config']}"
+    _koopa_assert_is_executable "${app['pkg_config']}"
     "${app['pkg_config']}" --variable 'pc_path' 'pkg-config'
     return 0
 }

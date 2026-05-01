@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+_koopa_conda_deactivate() {
+    # """
+    # Deactivate Conda environment.
+    # @note Updated 2023-03-09.
+    # """
+    local -A dict
+    _koopa_assert_has_no_args "$#"
+    dict['env_name']="${CONDA_DEFAULT_ENV:-}"
+    dict['nounset']="$(_koopa_boolean_nounset)"
+    if [[ -z "${dict['env_name']}" ]]
+    then
+        _koopa_stop 'conda is not active.'
+    fi
+    _koopa_assert_is_function 'conda'
+    [[ "${dict['nounset']}" -eq 1 ]] && set +o nounset
+    conda deactivate
+    [[ "${dict['nounset']}" -eq 1 ]] && set -o nounset
+    return 0
+}

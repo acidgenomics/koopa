@@ -11,10 +11,10 @@ main() {
     local -A app
     local -a pkgs
     local pkg
-    koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
-    app['tlmgr']="$(koopa_locate_tlmgr)"
-    koopa_assert_is_executable "${app[@]}"
-    koopa_sudo "${app['tlmgr']}" update --self
+    _koopa_activate_app --build-only 'curl' 'gnupg' 'wget'
+    app['tlmgr']="$(_koopa_locate_tlmgr)"
+    _koopa_assert_is_executable "${app[@]}"
+    _koopa_sudo "${app['tlmgr']}" update --self
     pkgs=(
         # Priority ----
         'collection-fontsrecommended'
@@ -52,8 +52,8 @@ main() {
     )
     for pkg in "${pkgs[@]}"
     do
-        koopa_alert "$pkg"
-        koopa_sudo "${app['tlmgr']}" install "$pkg"
+        _koopa_alert "$pkg"
+        _koopa_sudo "${app['tlmgr']}" install "$pkg"
     done
     return 0
 }

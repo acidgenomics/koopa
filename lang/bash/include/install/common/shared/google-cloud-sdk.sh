@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -19,16 +19,16 @@ install_from_source() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only 'python3.14'
-    app['python']="$(koopa_locate_python314)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['arch']="$(koopa_arch)"
+    _koopa_activate_app --build-only 'python3.14'
+    app['python']="$(_koopa_locate_python314)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['arch']="$(_koopa_arch)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         dict['os']='linux'
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
         dict['os']='darwin'
     fi
@@ -40,24 +40,24 @@ install_from_source() {
             dict['arch2']="${dict['arch']}"
             ;;
     esac
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
-    dict['gcloud_libexec']="$(koopa_init_dir "${dict['libexec']}/gcloud")"
-    dict['python_libexec']="$(koopa_init_dir "${dict['libexec']}/python")"
-    koopa_python_create_venv \
+    dict['libexec']="$(_koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['gcloud_libexec']="$(_koopa_init_dir "${dict['libexec']}/gcloud")"
+    dict['python_libexec']="$(_koopa_init_dir "${dict['libexec']}/python")"
+    _koopa_python_create_venv \
         --prefix="${dict['python_libexec']}" \
         --python="${app['python']}"
     app['venv_python']="${dict['python_libexec']}/bin/\
-$(koopa_basename "${app['python']}")"
-    koopa_assert_is_executable "${app['venv_python']}"
+$(_koopa_basename "${app['python']}")"
+    _koopa_assert_is_executable "${app['venv_python']}"
     "${app['venv_python']}" -m pip install crcmod
     dict['url']="https://dl.google.com/dl/cloudsdk/channels/rapid/\
 downloads/google-cloud-cli-${dict['version']}-${dict['os']}-\
 ${dict['arch2']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" "${dict['gcloud_libexec']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" "${dict['gcloud_libexec']}"
     (
-        koopa_cd "${dict['gcloud_libexec']}"
+        _koopa_cd "${dict['gcloud_libexec']}"
         ./install.sh \
             --bash-completion false \
             --install-python false \
@@ -67,7 +67,7 @@ ${dict['arch2']}.tar.gz"
     )
     app['gcloud']="${dict['gcloud_libexec']}/bin/gcloud"
     app['gsutil']="${dict['gcloud_libexec']}/bin/gsutil"
-    koopa_assert_is_executable \
+    _koopa_assert_is_executable \
         "${app['gcloud']}" \
         "${app['gsutil']}"
     conf_args=(
@@ -77,18 +77,18 @@ ${dict['arch2']}.tar.gz"
         "export PYTHONPATH=${dict['libexec']}/lib"
         'unset -v PYTHONSAFEPATH'
     )
-    dict['conf_string']="$(koopa_print "${conf_args[@]}")"
-    koopa_insert_at_line_number \
+    dict['conf_string']="$(_koopa_print "${conf_args[@]}")"
+    _koopa_insert_at_line_number \
         --file="${app['gcloud']}" \
         --line-number=2 \
         --string="${dict['conf_string']}"
-    koopa_insert_at_line_number \
+    _koopa_insert_at_line_number \
         --file="${app['gsutil']}" \
         --line-number=2 \
         --string="${dict['conf_string']}"
     (
-        koopa_cd "${dict['prefix']}"
-        koopa_ln 'libexec/gcloud/bin' 'bin'
+        _koopa_cd "${dict['prefix']}"
+        _koopa_ln 'libexec/gcloud/bin' 'bin'
     )
     "${app['gcloud']}" --version
     "${app['gsutil']}" version -l

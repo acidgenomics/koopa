@@ -16,12 +16,12 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://gitlab.dkrz.de/k202009/libaec/-/archive/\
 v${dict['version']}/libaec-v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}"
     # Delete legacy 'aec' from bin.
-    dict['bin_prefix']="$(koopa_bin_prefix)"
-    koopa_rm "${dict['bin_prefix']}/aec"
+    dict['bin_prefix']="$(_koopa_bin_prefix)"
+    _koopa_rm "${dict['bin_prefix']}/aec"
     return 0
 }

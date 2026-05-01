@@ -89,19 +89,19 @@ main() {
         'xz-utils'
         'zlib1g-dev'
     )
-    koopa_debian_apt_install "${dep_pkgs[@]}"
-    koopa_debian_apt_add_r_repo "${dict['version']}"
+    _koopa_debian_apt_install "${dep_pkgs[@]}"
+    _koopa_debian_apt_add_r_repo "${dict['version']}"
     pkgs=('r-base' 'r-base-dev')
-    koopa_debian_apt_install "${pkgs[@]}"
+    _koopa_debian_apt_install "${pkgs[@]}"
     app['r']='/usr/bin/R'
-    koopa_assert_is_executable "${app['r']}"
-    dict['actual_version']="$(koopa_get_version "${app['r']}")"
+    _koopa_assert_is_executable "${app['r']}"
+    dict['actual_version']="$(_koopa_get_version "${app['r']}")"
     if [[ "${dict['actual_version']}" != "${dict['version']}" ]]
     then
-        koopa_stop \
+        _koopa_stop \
             "Incorrect R version installed." \
             "Expected: ${dict['version']}. Actual: ${dict['actual_version']}."
     fi
-    koopa_configure_r "${app['r']}"
+    _koopa_configure_r "${app['r']}"
     return 0
 }

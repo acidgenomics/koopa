@@ -15,8 +15,8 @@ main() {
     local -A dict
     local -a conf_args install_args
     local conf_arg
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app \
         'groff' \
         'libpipeline' \
         'gdbm'
@@ -36,7 +36,7 @@ main() {
     do
         install_args+=('-D' "$conf_arg")
     done
-    koopa_install_gnu_app \
+    _koopa_install_gnu_app \
         --compress-ext='xz' \
         --non-gnu-mirror \
         "${install_args[@]}"

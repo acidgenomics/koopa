@@ -24,14 +24,14 @@ main() {
     # - https://github.com/rocker-org/rocker-versioned/tree/master/rstudio
     # """
     local -A app dict
-    app['r']="$(koopa_locate_system_r --realpath)"
-    koopa_assert_is_executable "${app[@]}"
+    app['r']="$(_koopa_locate_system_r --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_debian_like
+    if _koopa_is_debian_like
     then
-        dict['fun']='koopa_debian_install_from_deb'
-        dict['arch']="$(koopa_arch2)" # e.g 'amd64'.
-        dict['distro']="$(koopa_debian_os_codename)"
+        dict['fun']='_koopa_debian_install_from_deb'
+        dict['arch']="$(_koopa_arch2)" # e.g 'amd64'.
+        dict['distro']="$(_koopa_debian_os_codename)"
         case "${dict['distro']}" in
             # Ubuntu -----------------------------------------------------------
             'jammy' | 'focal')
@@ -45,26 +45,26 @@ main() {
                 ;;
             # Other ------------------------------------------------------------
             *)
-                koopa_stop "Unsupported distro: '${dict['distro']}'."
+                _koopa_stop "Unsupported distro: '${dict['distro']}'."
                 ;;
         esac
         dict['file_ext']='deb'
-    elif koopa_is_fedora_like
+    elif _koopa_is_fedora_like
     then
-        dict['fun']='koopa_fedora_install_from_rpm'
-        dict['arch']="$(koopa_arch)" # e.g. 'x86_64'.
+        dict['fun']='_koopa_fedora_install_from_rpm'
+        dict['arch']="$(_koopa_arch)" # e.g. 'x86_64'.
         dict['distro']='centos8'
         dict['file_ext']='rpm'
         dict['init_dir']='/etc/init.d'
         if [[ ! -d "${dict['init_dir']}" ]]
         then
-            koopa_mkdir --sudo "${dict['init_dir']}"
+            _koopa_mkdir --sudo "${dict['init_dir']}"
         fi
     else
-        koopa_stop 'Unsupported Linux distro.'
+        _koopa_stop 'Unsupported Linux distro.'
     fi
     dict['file_stem']='rstudio-server'
-    if koopa_is_fedora_like
+    if _koopa_is_fedora_like
     then
         dict['file_stem']="${dict['file_stem']}-rhel"
     fi
@@ -73,17 +73,17 @@ ${dict['arch']}/${dict['file_stem']}-${dict['version']}-${dict['arch']}.\
 ${dict['file_ext']}"
     # Ensure '+' gets converted to '-'.
     dict['url']="$( \
-        koopa_gsub \
+        _koopa_gsub \
             --fixed \
             --pattern='+' \
             --replacement='-' \
             "${dict['url']}" \
     )"
-    koopa_add_to_path_start "$(koopa_dirname "${app['r']}")"
-    koopa_add_to_path_end '/usr/sbin' '/sbin'
-    koopa_print_env
-    koopa_download "${dict['url']}"
-    "${dict['fun']}" "$(koopa_basename "${dict['url']}")"
-    koopa_linux_configure_system_rstudio_server
+    _koopa_add_to_path_start "$(_koopa_dirname "${app['r']}")"
+    _koopa_add_to_path_end '/usr/sbin' '/sbin'
+    _koopa_print_env
+    _koopa_download "${dict['url']}"
+    "${dict['fun']}" "$(_koopa_basename "${dict['url']}")"
+    _koopa_linux_configure_system_rstudio_server
     return 0
 }

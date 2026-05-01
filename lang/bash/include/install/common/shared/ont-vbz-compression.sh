@@ -12,18 +12,18 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args
-    koopa_activate_app 'zlib' 'zstd' 'hdf5'
-    dict['hdf5']="$(koopa_app_prefix 'hdf5')"
+    _koopa_activate_app 'zlib' 'zstd' 'hdf5'
+    dict['hdf5']="$(_koopa_app_prefix 'hdf5')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['streamvbyte_version']='0.5.2'
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
-    koopa_assert_is_dir "${dict['hdf5']}" "${dict['zstd']}"
+    dict['zstd']="$(_koopa_app_prefix 'zstd')"
+    _koopa_assert_is_dir "${dict['hdf5']}" "${dict['zstd']}"
     cmake['zstd_include_dir']="${dict['zstd']}/include"
     cmake['zstd_library']="${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
-    koopa_assert_is_dir "${cmake['zstd_include_dir']}"
-    koopa_assert_is_file "${cmake['zstd_library']}"
+    _koopa_assert_is_dir "${cmake['zstd_include_dir']}"
+    _koopa_assert_is_file "${cmake['zstd_library']}"
     cmake_args=(
         # Build options --------------------------------------------------------
         '-DENABLE_CONAN=OFF'
@@ -35,15 +35,15 @@ main() {
     )
     dict['url']="https://github.com/nanoporetech/vbz_compression/archive/\
 refs/tags/${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
     dict['streamvbyte_url']="https://github.com/lemire/streamvbyte/archive/\
 refs/tags/v${dict['streamvbyte_version']}.tar.gz"
-    koopa_download "${dict['streamvbyte_url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['streamvbyte_url']}")" \
+    _koopa_download "${dict['streamvbyte_url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['streamvbyte_url']}")" \
         'src/third_party/streamvbyte'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

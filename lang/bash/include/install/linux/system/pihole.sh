@@ -10,11 +10,11 @@ main() {
     # - https://github.com/pi-hole/pi-hole/#one-step-automated-install
     # """
     local -A dict
-    koopa_assert_is_interactive
+    _koopa_assert_is_interactive
     dict['file']='pihole.sh'
     dict['url']='https://install.pi-hole.net'
-    koopa_download "${dict['url']}" "${dict['file']}"
-    koopa_chmod 'u+x' "${dict['file']}"
+    _koopa_download "${dict['url']}" "${dict['file']}"
+    _koopa_chmod 'u+x' "${dict['file']}"
     "./${dict['file']}"
     return 0
 }

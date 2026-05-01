@@ -11,8 +11,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'xorg-xorgproto'
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'xorg-xorgproto'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -25,14 +25,14 @@ main() {
 # > xtrans-${dict['version']}.tar.gz"
     dict['url']="https://xorg.freedesktop.org/archive/individual/lib/\
 xtrans-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_find_and_replace_in_file \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_find_and_replace_in_file \
         --fixed \
         --pattern='# include <sys/stropts.h>' \
         --replacement='# include <sys/ioctl.h>' \
         'Xtranslcl.c'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

@@ -9,10 +9,10 @@ main() {
     # - https://github.com/Homebrew/homebrew-core/blob/master/Formula/go.rb
     # """
     local -A dict
-    dict['arch']="$(koopa_arch2)" # e.g. "amd64".
+    dict['arch']="$(_koopa_arch2)" # e.g. "amd64".
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    if koopa_is_macos
+    if _koopa_is_macos
     then
         dict['os_id']='darwin'
     else
@@ -20,10 +20,10 @@ main() {
     fi
     dict['url']="https://dl.google.com/go/\
 go${dict['version']}.${dict['os_id']}-${dict['arch']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract \
-        "$(koopa_basename "${dict['url']}")" \
+    _koopa_download "${dict['url']}"
+    _koopa_extract \
+        "$(_koopa_basename "${dict['url']}")" \
         "${dict['prefix']}"
-    koopa_assert_is_installed "${dict['prefix']}/bin/go"
+    _koopa_assert_is_installed "${dict['prefix']}/bin/go"
     return 0
 }

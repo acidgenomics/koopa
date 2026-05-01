@@ -83,14 +83,14 @@ main() {
     # """
     local -A app dict
     local -a conf_args langs
-    koopa_activate_app --build-only 'make'
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['gmp']="$(koopa_app_prefix 'gmp')"
-    dict['gnu_mirror']="$(koopa_gnu_mirror_url)"
-    dict['jobs']="$(koopa_cpu_count)"
-    dict['mpc']="$(koopa_app_prefix 'mpc')"
-    dict['mpfr']="$(koopa_app_prefix 'mpfr')"
+    _koopa_activate_app --build-only 'make'
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['gmp']="$(_koopa_app_prefix 'gmp')"
+    dict['gnu_mirror']="$(_koopa_gnu_mirror_url)"
+    dict['jobs']="$(_koopa_cpu_count)"
+    dict['mpc']="$(_koopa_app_prefix 'mpc')"
+    dict['mpfr']="$(_koopa_app_prefix 'mpfr')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     langs=(
@@ -100,7 +100,7 @@ main() {
         'objc'
         'obj-c++'
     )
-    dict['langs']="$(koopa_paste0 --sep=',' "${langs[@]}")"
+    dict['langs']="$(_koopa_paste0 --sep=',' "${langs[@]}")"
     conf_args=(
         '-v'
         '--disable-multilib'
@@ -113,12 +113,12 @@ main() {
     )
     dict['url']="${dict['gnu_mirror']}/gcc/gcc-${dict['version']}/\
 gcc-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_mkdir 'build'
-    koopa_cd 'build'
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_mkdir 'build'
+    _koopa_cd 'build'
+    _koopa_print_env
+    _koopa_dl 'configure args' "${conf_args[*]}"
     ../src/configure --help
     ../src/configure "${conf_args[@]}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"

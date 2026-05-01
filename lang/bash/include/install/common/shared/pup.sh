@@ -12,6 +12,6 @@ main() {
     local -A dict
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="github.com/ericchiang/pup@v${dict['version']}"
-    koopa_install_go_package --url="${dict['url']}"
+    _koopa_install_go_package --url="${dict['url']}"
     return 0
 }

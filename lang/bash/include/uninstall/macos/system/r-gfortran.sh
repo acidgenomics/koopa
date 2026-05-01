@@ -10,7 +10,7 @@ main() {
     # """
     local -A dict
     dict['prefix']='/opt/gfortran'
-    koopa_assert_is_dir "${dict['prefix']}"
-    koopa_rm --sudo "${dict['prefix']}"
+    _koopa_assert_is_dir "${dict['prefix']}"
+    _koopa_rm --sudo "${dict['prefix']}"
     return 0
 }

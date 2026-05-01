@@ -14,19 +14,19 @@ main() {
     # """
     local -A cmake dict
     local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app \
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app \
         'zlib' \
         'zstd' \
         'libjpeg-turbo' \
         'libpng' \
         'libtiff'
-    dict['libpng']="$(koopa_app_prefix 'libpng')"
-    dict['libtiff']="$(koopa_app_prefix 'libtiff')"
+    dict['libpng']="$(_koopa_app_prefix 'libpng')"
+    dict['libtiff']="$(_koopa_app_prefix 'libtiff')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     cmake['png_include_dir']="${dict['libpng']}/include"
     cmake['png_library']="${dict['libpng']}/lib/libpng.${dict['shared_ext']}"
     cmake['tiff_include_dir']="${dict['libtiff']}/include"
@@ -48,9 +48,9 @@ main() {
     )
     dict['url']="https://github.com/uclouvain/openjpeg/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

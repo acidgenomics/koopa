@@ -9,10 +9,10 @@ main() {
     # - https://formulae.brew.sh/formula/libgcrypt
     # """
     local -A dict
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'libgpg-error'
-    dict['gcrypt_url']="$(koopa_gcrypt_url)"
-    dict['libgpg_error']="$(koopa_app_prefix 'libgpg-error')"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'libgpg-error'
+    dict['gcrypt_url']="$(_koopa_gcrypt_url)"
+    dict['libgpg_error']="$(_koopa_app_prefix 'libgpg-error')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -25,9 +25,9 @@ main() {
     )
     dict['url']="${dict['gcrypt_url']}/libgcrypt/\
 libgcrypt-${dict['version']}.tar.bz2"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

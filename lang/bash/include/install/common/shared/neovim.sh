@@ -4,7 +4,7 @@
 # https://github.com/conda-forge/nvim-feedstock/issues/50
 
 install_from_conda() {
-    koopa_install_conda_package --name='nvim'
+    _koopa_install_conda_package --name='nvim'
     return 0
 }
 
@@ -51,18 +51,18 @@ install_from_source() {
         'ncurses'
         'python'
     )
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['gettext']="$(koopa_app_prefix 'gettext')"
-    dict['jobs']="$(koopa_cpu_count)"
-    koopa_is_linux && dict['jobs']=1
-    dict['libiconv']="$(koopa_app_prefix 'libiconv')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['gettext']="$(_koopa_app_prefix 'gettext')"
+    dict['jobs']="$(_koopa_cpu_count)"
+    _koopa_is_linux && dict['jobs']=1
+    dict['libiconv']="$(_koopa_app_prefix 'libiconv')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     cmake['iconv_include_dir']="${dict['libiconv']}/include"
     cmake['iconv_library']="${dict['libiconv']}/lib/\
 libiconv.${dict['shared_ext']}"
@@ -71,16 +71,16 @@ libiconv.${dict['shared_ext']}"
 libintl.${dict['shared_ext']}"
     cmake['zlib_include_dir']="${dict['zlib']}/include"
     cmake['zlib_library']="${dict['zlib']}/lib/libz.${dict['shared_ext']}"
-    koopa_assert_is_dir \
+    _koopa_assert_is_dir \
         "${cmake['iconv_include_dir']}" \
         "${cmake['libintl_include_dir']}" \
         "${cmake['zlib_include_dir']}"
-    koopa_assert_is_file \
+    _koopa_assert_is_file \
         "${cmake['iconv_library']}" \
         "${cmake['libintl_library']}" \
         "${cmake['zlib_library']}"
     readarray -t cmake_args <<< "$( \
-        koopa_cmake_std_args --prefix="${dict['prefix']}" \
+        _koopa_cmake_std_args --prefix="${dict['prefix']}" \
     )"
     cmake_args+=(
         "-DICONV_INCLUDE_DIR=${cmake['iconv_include_dir']}"
@@ -103,15 +103,15 @@ libintl.${dict['shared_ext']}"
         esac
         local_mk_lines+=("CMAKE_EXTRA_FLAGS += \"${arg}\"")
     done
-    dict['local_mk']="$(koopa_print "${local_mk_lines[@]}")"
+    dict['local_mk']="$(_koopa_print "${local_mk_lines[@]}")"
     dict['url']="https://github.com/neovim/neovim/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
-    koopa_print "${dict['local_mk']}"
-    koopa_write_string --file='local.mk' --string="${dict['local_mk']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
+    _koopa_print "${dict['local_mk']}"
+    _koopa_write_string --file='local.mk' --string="${dict['local_mk']}"
     "${app['make']}" VERBOSE=1 --jobs="${dict['jobs']}"
     "${app['make']}" install
     return 0

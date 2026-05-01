@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+_koopa_delete_dotfile() {
+    # """
+    # Delete a dot file.
+    # @note Updated 2023-04-05.
+    # """
+    local -A dict
+    local -a pos
+    local name
+    _koopa_assert_has_args "$#"
+    dict['config']=0
+    dict['xdg_config_home']="$(_koopa_xdg_config_home)"
+    pos=()
+    while (("$#"))
+    do
+        case "$1" in
+            # Flags ------------------------------------------------------------
+            '--config')
+                dict['config']=1
+                shift 1
+                ;;
+            # Other ------------------------------------------------------------
+            '-'*)
+                _koopa_invalid_arg "$1"
+                ;;
+            *)
+                pos+=("$1")
+                shift 1
+                ;;
+        esac
+    done
+    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
+    _koopa_assert_has_args "$#"
+    for name in "$@"
+    do
+        local filepath
+        if [[ "${dict['config']}" -eq 1 ]]
+        then
+            filepath="${dict['xdg_config_home']}/${name}"
+        else
+            filepath="${HOME:?}/.${name}"
+        fi
+        if [[ -L "$filepath" ]]
+        then
+            _koopa_alert "Removing '${filepath}'."
+            _koopa_rm "$filepath"
+        elif [[ -f "$filepath" ]] || [[ -d "$filepath" ]]
+        then
+            _koopa_warn "Not a symlink: '${filepath}'."
+        fi
+    done
+    return 0
+}

@@ -35,7 +35,7 @@ __koopa_error_trap() {
     # """
     local status
     status="$?"
-    # Alternatively, can use 'koopa_stop' here instead if we know our Bash
+    # Alternatively, can use '_koopa_stop' here instead if we know our Bash
     # library is properly sourced first. This will provide better stack trace
     # information.
     __koopa_print "Exit status ${status} at line ${BASH_LINENO[0]}."
@@ -431,13 +431,26 @@ __koopa_bash_header() {
     then
         source "${KOOPA_PREFIX}/lang/bash/functions/activate.sh"
     else
-        local __kvar_file
-        for __kvar_file in "${KOOPA_PREFIX}"/lang/bash/functions/activate/*.sh
+        local __kvar_dir __kvar_file
+        for __kvar_dir in \
+            'activate' \
+            'alias' \
+            'core' \
+            'export' \
+            'is' \
+            'macos' \
+            'prefix' \
+            'xdg'
         do
-            # shellcheck source=/dev/null
-            source "$__kvar_file"
+            for __kvar_file in \
+                "${KOOPA_PREFIX}/lang/bash/functions/${__kvar_dir}/"*.sh
+            do
+                [[ -f "$__kvar_file" ]] || continue
+                # shellcheck source=/dev/null
+                source "$__kvar_file"
+            done
         done
-        unset __kvar_file
+        unset __kvar_dir __kvar_file
     fi
     if [[ -z "${KOOPA_DEFAULT_SYSTEM_PATH:-}" ]]
     then
@@ -457,21 +470,38 @@ __koopa_bash_header() {
     fi
     if [[ "${bool['activate']}" -eq 0 ]]
     then
-        __koopa_source_functions 'common'
+        # shellcheck source=/dev/null
+        if [[ -f "${KOOPA_PREFIX}/lang/bash/functions/common.sh" ]]
+        then
+            source "${KOOPA_PREFIX}/lang/bash/functions/common.sh"
+        else
+            local __kvar_dir __kvar_file
+            for __kvar_dir in "${KOOPA_PREFIX}"/lang/bash/functions/*/
+            do
+                [[ "$(basename "$__kvar_dir")" == 'os' ]] && continue
+                for __kvar_file in "${__kvar_dir}"*.sh
+                do
+                    [[ -f "$__kvar_file" ]] || continue
+                    # shellcheck source=/dev/null
+                    source "$__kvar_file"
+                done
+            done
+            unset __kvar_dir __kvar_file
+        fi
         if _koopa_is_linux
         then
             dict['linux_prefix']='os/linux'
             __koopa_source_functions "${dict['linux_prefix']}/common"
-            if koopa_is_debian_like
+            if _koopa_is_debian_like
             then
                 __koopa_source_functions "${dict['linux_prefix']}/debian"
-            elif koopa_is_fedora_like
+            elif _koopa_is_fedora_like
             then
                 __koopa_source_functions "${dict['linux_prefix']}/fedora"
-                koopa_is_rhel_like && \
+                _koopa_is_rhel_like && \
                     __koopa_source_functions "${dict['linux_prefix']}/rhel"
             fi
-            dict['os_id']="$(koopa_os_id)"
+            dict['os_id']="$(_koopa_os_id)"
             __koopa_source_functions "${dict['linux_prefix']}/${dict['os_id']}"
         elif _koopa_is_macos
         then
@@ -481,12 +511,12 @@ __koopa_bash_header() {
         case "${1:-}" in
             '--help' | \
             '-h')
-                koopa_help_2
+                _koopa_help_2
                 ;;
         esac
         if [[ -z "${KOOPA_ADMIN:-}" ]]
         then
-            if koopa_is_admin
+            if _koopa_is_admin
             then
                 export KOOPA_ADMIN=1
             else
@@ -494,27 +524,27 @@ __koopa_bash_header() {
             fi
         fi
         # Require admin account to run 'sbin/' scripts.
-        if koopa_str_detect_fixed --string="$0" --pattern='/sbin'
+        if _koopa_str_detect_fixed --string="$0" --pattern='/sbin'
         then
-            koopa_assert_is_admin
+            _koopa_assert_is_admin
         fi
         export PS1='[koopa] '
     fi
     if [[ "${bool['verbose']}" -eq 1 ]]
     then
-        app['locale']="$(koopa_locate_locale --allow-missing --allow-system)"
-        koopa_alert_info 'Shell options'
+        app['locale']="$(_koopa_locate_locale --allow-missing --allow-system)"
+        _koopa_alert_info 'Shell options'
         set +o
         shopt
-        koopa_alert_info 'Shell variables'
-        koopa_dl \
+        _koopa_alert_info 'Shell variables'
+        _koopa_dl \
             '$' "${$}" \
             '-' "${-}" \
             'KOOPA_SHELL' "${KOOPA_SHELL:-}" \
             'SHELL' "${SHELL:-}"
         if [[ -x "${app['locale']}" ]]
         then
-            koopa_alert_info 'Locale'
+            _koopa_alert_info 'Locale'
             "${app['locale']}"
         fi
     fi

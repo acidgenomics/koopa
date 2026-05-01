@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+_koopa_is_koopa_app() {
+    # """
+    # Is a specific command installed in koopa app prefix?
+    # @note Updated 2023-10-11.
+    # """
+    local app_prefix str
+    _koopa_assert_has_args "$#"
+    app_prefix="$(_koopa_app_prefix)"
+    [[ -d "$app_prefix" ]] || return 1
+    for str in "$@"
+    do
+        [[ -e "$str" ]] || return 1
+        str="$(_koopa_realpath "$str")"
+        _koopa_str_detect_regex \
+            --string="$str" \
+            --pattern="^${app_prefix}" \
+            || return 1
+    done
+    return 0
+}

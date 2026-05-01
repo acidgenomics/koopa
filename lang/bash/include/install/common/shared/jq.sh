@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 install_from_conda() {
-    koopa_install_conda_package
+    _koopa_install_conda_package
     return 0
 }
 
@@ -21,18 +21,18 @@ install_from_source() {
     # """
     local -A app dict
     local -a conf_args
-    koopa_activate_app --build-only \
+    _koopa_activate_app --build-only \
         'autoconf' \
         'automake' \
         'libtool' \
         'pkg-config'
-    koopa_activate_app \
+    _koopa_activate_app \
         'm4' \
         'gettext' \
         'oniguruma'
-    app['autoreconf']="$(koopa_locate_autoreconf)"
-    app['libtoolize']="$(koopa_locate_libtoolize)"
-    koopa_assert_is_executable "${app[@]}"
+    app['autoreconf']="$(_koopa_locate_autoreconf)"
+    app['libtoolize']="$(_koopa_locate_libtoolize)"
+    _koopa_assert_is_executable "${app[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['url_stem']="https://github.com/stedolan/jq"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
@@ -55,12 +55,12 @@ install_from_source() {
 jq-${dict['version']}/jq-${dict['version']}.tar.gz"
             ;;
     esac
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
     "${app['libtoolize']}"
     "${app['autoreconf']}" --force --install --verbose
-    koopa_make_build "${conf_args[@]}"
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }
 

@@ -21,10 +21,10 @@ main() {
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['url']="https://github.com/neovim/unibilium/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
-    koopa_cmake_build --prefix="${dict['prefix']}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
+    _koopa_cmake_build --prefix="${dict['prefix']}"
     return 0
 }

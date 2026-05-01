@@ -13,8 +13,8 @@ main() {
     # """
     local -A dict
     local -a conf_args
-    koopa_activate_app --build-only 'bison'
-    koopa_activate_app 'gettext' 'm4'
+    _koopa_activate_app --build-only 'bison'
+    _koopa_activate_app 'gettext' 'm4'
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     conf_args=(
@@ -26,9 +26,9 @@ main() {
     )
     dict['url']="https://github.com/westes/flex/releases/download/\
 v${dict['version']}/flex-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

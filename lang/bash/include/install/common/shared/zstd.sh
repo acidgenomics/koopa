@@ -13,13 +13,13 @@ main() {
     # """
     local -A dict
     local -a cmake_args
-    koopa_activate_app --build-only 'pkg-config'
-    koopa_activate_app 'lz4' 'zlib'
-    dict['lz4']="$(koopa_app_prefix 'lz4')"
+    _koopa_activate_app --build-only 'pkg-config'
+    _koopa_activate_app 'lz4' 'zlib'
+    dict['lz4']="$(_koopa_app_prefix 'lz4')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
     cmake_args=(
         # CMake options --------------------------------------------------------
         '-DCMAKE_CXX_STANDARD=11'
@@ -39,9 +39,9 @@ main() {
     )
     dict['url']="https://github.com/facebook/zstd/archive/\
 v${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src/build/cmake'
-    koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src/build/cmake'
+    _koopa_cmake_build --prefix="${dict['prefix']}" "${cmake_args[@]}"
     return 0
 }

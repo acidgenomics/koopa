@@ -46,30 +46,30 @@ main() {
         'ncurses'
         'python'
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         deps+=('binutils' 'elfutils')
     fi
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['cmake']="$(koopa_locate_cmake)"
-    app['git']="$(koopa_locate_git --realpath)"
-    app['perl']="$(koopa_locate_perl --realpath)"
-    app['pkg_config']="$(koopa_locate_pkg_config --realpath)"
-    app['python']="$(koopa_locate_python --realpath)"
-    app['swig']="$(koopa_locate_swig --realpath)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['libedit']="$(koopa_app_prefix 'libedit')"
-    dict['libffi']="$(koopa_app_prefix 'libffi')"
-    dict['ncurses']="$(koopa_app_prefix 'ncurses')"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['cmake']="$(_koopa_locate_cmake)"
+    app['git']="$(_koopa_locate_git --realpath)"
+    app['perl']="$(_koopa_locate_perl --realpath)"
+    app['pkg_config']="$(_koopa_locate_pkg_config --realpath)"
+    app['python']="$(_koopa_locate_python --realpath)"
+    app['swig']="$(_koopa_locate_swig --realpath)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['libedit']="$(_koopa_app_prefix 'libedit')"
+    dict['libffi']="$(_koopa_app_prefix 'libffi')"
+    dict['ncurses']="$(_koopa_app_prefix 'ncurses')"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
-    dict['python']="$(koopa_app_prefix 'python')"
-    dict['shared_ext']="$(koopa_shared_ext)"
+    dict['python']="$(_koopa_app_prefix 'python')"
+    dict['shared_ext']="$(_koopa_shared_ext)"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['xz']="$(koopa_app_prefix 'xz')"
-    dict['zlib']="$(koopa_app_prefix 'zlib')"
-    dict['zstd']="$(koopa_app_prefix 'zstd')"
-    koopa_assert_is_dir \
+    dict['xz']="$(_koopa_app_prefix 'xz')"
+    dict['zlib']="$(_koopa_app_prefix 'zlib')"
+    dict['zstd']="$(_koopa_app_prefix 'zstd')"
+    _koopa_assert_is_dir \
         "${dict['libedit']}" \
         "${dict['libffi']}" \
         "${dict['ncurses']}" \
@@ -77,14 +77,14 @@ main() {
         "${dict['xz']}" \
         "${dict['zlib']}" \
         "${dict['zstd']}"
-    if koopa_is_linux
+    if _koopa_is_linux
     then
-        dict['binutils']="$(koopa_app_prefix 'binutils')"
-        dict['elfutils']="$(koopa_app_prefix 'elfutils')"
-        koopa_assert_is_dir "${dict['binutils']}" "${dict['elfutils']}"
+        dict['binutils']="$(_koopa_app_prefix 'binutils')"
+        dict['elfutils']="$(_koopa_app_prefix 'elfutils')"
+        _koopa_assert_is_dir "${dict['binutils']}" "${dict['elfutils']}"
     fi
-    dict['py_ver']="$(koopa_get_version "${app['python']}")"
-    dict['py_maj_min_ver']="$(koopa_major_minor_version "${dict['py_ver']}")"
+    dict['py_ver']="$(_koopa_get_version "${app['python']}")"
+    dict['py_maj_min_ver']="$(_koopa_major_minor_version "${dict['py_ver']}")"
     # NOTE Not all of these build currently on Ubuntu.
     projects+=(
         'clang'
@@ -101,9 +101,9 @@ main() {
         'libcxxabi'
         'libunwind'
     )
-    dict['projects']="$(koopa_paste --sep=';' "${projects[@]}")"
-    dict['runtimes']="$(koopa_paste --sep=';' "${runtimes[@]}")"
-    if koopa_is_macos
+    dict['projects']="$(_koopa_paste --sep=';' "${projects[@]}")"
+    dict['runtimes']="$(_koopa_paste --sep=';' "${runtimes[@]}")"
+    if _koopa_is_macos
     then
         cmake_args+=(
             "-DLLVM_ENABLE_PROJECTS=${dict['projects']}"
@@ -165,7 +165,7 @@ libncursesw.${dict['shared_ext']}"
         "-DZstd_INCLUDE_DIR=${dict['zstd']}/include"
         "-DZstd_LIBRARY=${dict['zstd']}/lib/libzstd.${dict['shared_ext']}"
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         cmake_args+=(
             "-DLIBOMPTARGET_DEP_LIBELF_INCLUDE_DIR=${dict['elfutils']}/include"
@@ -173,10 +173,10 @@ libncursesw.${dict['shared_ext']}"
 libelf.${dict['shared_ext']}"
             "-DLLVM_BINUTILS_INCDIR=${dict['binutils']}/include"
         )
-    elif koopa_is_macos
+    elif _koopa_is_macos
     then
-        dict['sysroot']="$(koopa_macos_sdk_prefix)"
-        koopa_assert_is_dir "${dict['sysroot']}"
+        dict['sysroot']="$(_koopa_macos_sdk_prefix)"
+        _koopa_assert_is_dir "${dict['sysroot']}"
         cmake_args+=(
             "-DDEFAULT_SYSROOT=${dict['sysroot']}"
             '-DLLVM_CREATE_XCODE_TOOLCHAIN=OFF'
@@ -184,10 +184,10 @@ libelf.${dict['shared_ext']}"
     fi
     dict['url']="https://github.com/llvm/llvm-project/releases/download/\
 llvmorg-${dict['version']}/llvm-project-${dict['version']}.src.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src/llvm'
-    koopa_cmake_build \
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src/llvm'
+    _koopa_cmake_build \
         --ninja \
         --prefix="${dict['prefix']}" \
         "${cmake_args[@]}"

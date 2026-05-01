@@ -25,16 +25,16 @@ main() {
         'perl'
     )
     deps+=('ca-certificates')
-    koopa_activate_app --build-only "${build_deps[@]}"
-    koopa_activate_app "${deps[@]}"
-    app['make']="$(koopa_locate_make)"
-    koopa_assert_is_executable "${app[@]}"
-    dict['ca_certificates']="$(koopa_app_prefix 'ca-certificates')"
-    dict['jobs']="$(koopa_cpu_count)"
+    _koopa_activate_app --build-only "${build_deps[@]}"
+    _koopa_activate_app "${deps[@]}"
+    app['make']="$(_koopa_locate_make)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['ca_certificates']="$(_koopa_app_prefix 'ca-certificates')"
+    dict['jobs']="$(_koopa_cpu_count)"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
     dict['cacert']="${dict['ca_certificates']}/share/ca-certificates/cacert.pem"
-    koopa_assert_is_file "${dict['cacert']}"
+    _koopa_assert_is_file "${dict['cacert']}"
     conf_args=(
         '--libdir=lib'
         "--openssldir=${dict['prefix']}"
@@ -43,31 +43,31 @@ main() {
         'no-zlib'
         'shared'
     )
-    if koopa_is_linux
+    if _koopa_is_linux
     then
         conf_args+=('-Wl,--enable-new-dtags')
     fi
-    koopa_append_cppflags '-fPIC'
+    _koopa_append_cppflags '-fPIC'
     dict['url']="https://github.com/openssl/openssl/releases/download/\
 openssl-${dict['version']}/openssl-${dict['version']}.tar.gz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_print_env
-    koopa_dl 'configure args' "${conf_args[*]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_print_env
+    _koopa_dl 'configure args' "${conf_args[*]}"
     ./config --help || true
     ./config "${conf_args[@]}"
     "${app['make']}" --jobs=1 depend
     "${app['make']}" --jobs="${dict['jobs']}"
     "${app['make']}" install_sw
     # Manually delete static libraries.
-    koopa_rm "${dict['prefix']}/lib/"*'.a'
-    koopa_ln \
+    _koopa_rm "${dict['prefix']}/lib/"*'.a'
+    _koopa_ln \
         "${dict['cacert']}" \
         "${dict['prefix']}/certs/cacert.pem"
     app['openssl']="${dict['prefix']}/bin/openssl"
-    koopa_assert_is_installed "${app['openssl']}"
+    _koopa_assert_is_installed "${app['openssl']}"
     "${app['openssl']}" version -d
-    koopa_check_shared_object --file="${dict['prefix']}/bin/openssl"
+    _koopa_check_shared_object --file="${dict['prefix']}/bin/openssl"
     return 0
 }

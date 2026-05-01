@@ -32,8 +32,8 @@ main() {
     # """
     local -A dict
     local -a conf_args deps
-    koopa_activate_app --build-only 'pkg-config'
-    ! koopa_is_macos && deps+=('bzip2')
+    _koopa_activate_app --build-only 'pkg-config'
+    ! _koopa_is_macos && deps+=('bzip2')
     deps+=(
         'zlib'
         'zstd'
@@ -62,10 +62,10 @@ main() {
         'xorg-libxrender'
         'xorg-libxt'
     )
-    koopa_activate_app "${deps[@]}"
+    _koopa_activate_app "${deps[@]}"
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['mmp_ver']="$(koopa_major_minor_patch_version "${dict['version']}")"
+    dict['mmp_ver']="$(_koopa_major_minor_patch_version "${dict['version']}")"
     conf_args=(
         '--disable-static'
         "--prefix=${dict['prefix']}"
@@ -74,9 +74,9 @@ main() {
     )
     dict['url']="https://imagemagick.org/archive/releases/\
 ImageMagick-${dict['version']}.tar.xz"
-    koopa_download "${dict['url']}"
-    koopa_extract "$(koopa_basename "${dict['url']}")" 'src'
-    koopa_cd 'src'
-    koopa_make_build "${conf_args[@]}"
+    _koopa_download "${dict['url']}"
+    _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
+    _koopa_cd 'src'
+    _koopa_make_build "${conf_args[@]}"
     return 0
 }

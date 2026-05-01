@@ -15,7 +15,7 @@ main() {
     local -A dict
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['libexec']="$(koopa_init_dir "${dict['prefix']}/libexec")"
+    dict['libexec']="$(_koopa_init_dir "${dict['prefix']}/libexec")"
     dict['conda_env_file']='conda.yaml'
     read -r -d '' "dict[conda_env_string]" << END || true
 channels:
@@ -25,9 +25,9 @@ dependencies:
   - pymol-bundle =${dict['version']}
   - pyqt
 END
-    koopa_write_string \
+    _koopa_write_string \
         --file="${dict['conda_env_file']}" \
         --string="${dict['conda_env_string']}"
-    koopa_install_conda_package --file="${dict['conda_env_file']}"
+    _koopa_install_conda_package --file="${dict['conda_env_file']}"
     return 0
 }
