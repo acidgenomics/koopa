@@ -14,13 +14,19 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
-develop = [
-  "isort",
-  "pyright",
-  "pytest",
-  "ruff",
-  "uv",
-]
+dev = ["bumpver", "isort", "pyright", "pytest", "ruff", "uv"]
+
+[tool.bumpver]
+current_version = "0.15.1"
+version_pattern = "MAJOR.MINOR.PATCH"
+commit_message = "Bump version to {new_version}."
+commit = true
+tag = true
+push = false
+
+[tool.bumpver.file_patterns]
+"pyproject.toml" = ['current_version = "{version}"', 'version = "{version}"']
+"VERSION" = ["{version}"]
 
 [tool.pyright]
 verbose = true
