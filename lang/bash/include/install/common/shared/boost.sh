@@ -22,9 +22,8 @@ main() {
     dict['prefix']="${KOOPA_INSTALL_PREFIX:?}"
     dict['toolset']="$(_koopa_basename "${app['cc']}")"
     dict['version']="${KOOPA_INSTALL_VERSION:?}"
-    dict['snake_version']="$(_koopa_snake_case "${dict['version']}")"
-    dict['url']="https://boostorg.jfrog.io/artifactory/main/release/\
-${dict['version']}/source/boost_${dict['snake_version']}.tar.bz2"
+    dict['url']="https://github.com/boostorg/boost/releases/download/\
+boost-${dict['version']}/boost-${dict['version']}-b2-nodocs.tar.gz"
     _koopa_download "${dict['url']}"
     _koopa_extract "$(_koopa_basename "${dict['url']}")" 'src'
     _koopa_cd 'src'

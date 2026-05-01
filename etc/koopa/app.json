@@ -590,12 +590,15 @@
     "version": "2.16.0"
   },
   "boost": {
-    "date": "2024-12-24",
+    "date": "2026-05-01",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
     "prune": false,
-    "url": ["https://www.boost.org/"],
-    "version": "1.87.0"
+    "url": [
+      "https://www.boost.org/",
+      "https://github.com/boostorg/boost/"
+    ],
+    "version": "1.88.0"
   },
   "bottom": {
     "bin": ["btm"],
