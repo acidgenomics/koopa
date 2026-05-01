@@ -1,6 +1,6 @@
 [project]
 name = "koopa"
-version = "0.15.1"
+version = "0.16.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = ["Programming Language :: Python :: 3.14"]
 dependencies = ["pandas", "pathlib", "psutil", "requests", "tqdm"]
@@ -17,7 +17,7 @@ build-backend = "setuptools.build_meta"
 dev = ["bumpver", "isort", "pyright", "pytest", "ruff", "uv"]
 
 [tool.bumpver]
-current_version = "0.15.1"
+current_version = "0.16.0"
 version_pattern = "MAJOR.MINOR.PATCH"
 commit_message = "Bump version to {new_version}."
 commit = true
