@@ -22679,7 +22679,8 @@ ${dict['version2']}"
     then
         if [[ -d "${dict['prefix']}" ]]
         then
-            if [[ ! -f "${dict['prefix']}/.koopa-install-stdout.log" ]]
+            if [[ ! -f "${dict['prefix']}/.install/stdout.log" ]] \
+                && [[ ! -f "${dict['prefix']}/.koopa-install-stdout.log" ]]
             then
                 bool['reinstall']=1
             fi
@@ -22911,12 +22912,20 @@ ${dict['version2']}"
         if [[ "${bool['copy_log_files']}" -eq 1 ]] && \
             [[ -d "${dict['prefix']}" ]]
         then
+            local install_dir
+            install_dir="${dict['prefix']}/.install"
+            _koopa_mkdir "$install_dir"
             _koopa_cp \
                 "${dict['stdout_file']}" \
-                "${dict['prefix']}/.koopa-install-stdout.log"
+                "${install_dir}/stdout.log"
             _koopa_cp \
                 "${dict['stderr_file']}" \
-                "${dict['prefix']}/.koopa-install-stderr.log"
+                "${install_dir}/stderr.log"
+            _koopa_python_script \
+                'write-install-info.py' \
+                "${install_dir}/info.json" \
+                "${dict['name']}" \
+                "${dict['version']}"
         fi
         _koopa_rm \
             "${dict['stderr_file']}" \
@@ -26546,7 +26555,11 @@ _koopa_install_shared_apps() {
     do
         local prefix
         prefix="$(_koopa_app_prefix --allow-missing "$app_name")"
-        [[ -f "${prefix}/.koopa-install-stdout.log" ]] && continue
+        if [[ -f "${prefix}/.install/stdout.log" ]] \
+            || [[ -f "${prefix}/.koopa-install-stdout.log" ]]
+        then
+            continue
+        fi
         _koopa_cli_install "$app_name"
     done
     return 0
