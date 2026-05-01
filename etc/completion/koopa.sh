@@ -138,6 +138,7 @@ _koopa_complete() {
                         'broot'
                         'brotli'
                         'btop'
+                        'bumpver'
                         'bustools'
                         'byobu'
                         'bzip2'
