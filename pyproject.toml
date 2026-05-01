@@ -144,3 +144,10 @@ where = ["lang/python/src"]
 
 [tool.ty.terminal]
 error-on-warning = true
+
+[tool.uv]
+package = true
+
+[tool.uv.build-backend]
+module-name = "koopa"
+module-root = "lang/python/src"
