@@ -311,13 +311,13 @@ def _handle_uninstall(args: argparse.Namespace) -> None:
 
 def _handle_update(args: argparse.Namespace) -> None:
     """Handle ``koopa update`` subcommand."""
-    from koopa.install import install_app, install_koopa
+    from koopa.install import install_app, update_koopa
 
     apps, mode = _resolve_apps_and_mode(args)
     if not apps:
         apps = ["koopa"]
     if apps == ["koopa"]:
-        install_koopa(verbose=args.verbose)
+        update_koopa(verbose=args.verbose)
         return
     for app in apps:
         config = _build_install_config(app, mode=mode, reinstall=True, verbose=args.verbose)

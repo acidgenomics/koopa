@@ -1541,6 +1541,45 @@ def install_koopa(
         cli_install("coreutils", bootstrap=True)
 
 
+def _zsh_compaudit_set_permissions() -> None:
+    """Fix ZSH permissions to ensure compaudit checks pass during compinit."""
+    import stat as stat_mod
+
+    uid = os.getuid()
+    prefixes = [
+        os.path.join(_koopa_prefix(), "lang", "zsh"),
+        os.path.join(_opt_prefix(), "zsh", "share", "zsh"),
+    ]
+    for prefix in prefixes:
+        if not os.path.isdir(prefix):
+            continue
+        st = os.stat(prefix)
+        if st.st_uid != uid:
+            _run("chown", "-R", str(uid), prefix, sudo=True)
+        mode = stat_mod.S_IMODE(st.st_mode)
+        access = oct(mode)[-3:]
+        if access not in ("700", "744", "755"):
+            _run("chmod", "-R", "go-w", prefix, sudo=(st.st_uid != uid))
+
+
+def update_koopa(*, verbose: bool = False) -> None:
+    """Update koopa installation via git pull."""
+    from koopa.alert import alert_note
+    from koopa.git import git_pull, is_git_repo
+
+    if verbose:
+        os.environ["KOOPA_VERBOSE"] = "1"
+    prefix = _koopa_prefix()
+    if not _is_owner():
+        msg = f"Current user does not own koopa installation at '{prefix}'."
+        raise PermissionError(msg)
+    if not is_git_repo(prefix):
+        alert_note(f"Pinned release detected at '{prefix}'.")
+        return
+    git_pull(prefix)
+    _zsh_compaudit_set_permissions()
+
+
 # -- Convenience CLI entry point ----------------------------------------------
 
 
