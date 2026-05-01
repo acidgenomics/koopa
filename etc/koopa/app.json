@@ -3579,7 +3579,7 @@
   },
   "mamba": {
     "bin": ["mamba"],
-    "date": "2026-04-22",
+    "date": "2026-05-01",
     "default": false,
     "dependencies": ["conda"],
     "installer": "conda-package",
@@ -3589,7 +3589,7 @@
       "https://mamba.readthedocs.io/",
       "https://github.com/mamba-org/mamba/"
     ],
-    "version": "2.5.0"
+    "version": "2.6.0"
   },
   "man-db": {
     "bin": ["gman"],
