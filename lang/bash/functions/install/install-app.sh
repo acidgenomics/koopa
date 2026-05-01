@@ -286,7 +286,7 @@ ${dict['version2']}"
                 then
                     continue
                 fi
-                dep_install_args=()
+                dep_install_args=("--name=${dep}")
                 if [[ "${bool['bootstrap']}" -eq 1 ]]
                 then
                     dep_install_args+=('--bootstrap')
@@ -295,8 +295,7 @@ ${dict['version2']}"
                 then
                     dep_install_args+=('--verbose')
                 fi
-                dep_install_args+=("$dep")
-                _koopa_cli_install "${dep_install_args[@]}"
+                _koopa_install_app "${dep_install_args[@]}"
             done
         fi
     fi

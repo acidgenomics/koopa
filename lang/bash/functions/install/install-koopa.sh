@@ -171,10 +171,11 @@ _koopa_install_koopa() {
     if [[ "${bool['bootstrap']}" -eq 1 ]]
     then
         dict['python_version']="$(_koopa_python_major_minor_version)"
-        _koopa_cli_install --bootstrap \
-            'bash' \
-            'coreutils' \
-            "python${dict['python_version']}"
+        _koopa_install_app --name='bash' --bootstrap
+        _koopa_install_app --name='coreutils' --bootstrap
+        _koopa_install_app \
+            "--name=python${dict['python_version']}" \
+            --bootstrap
     fi
     return 0
 }
