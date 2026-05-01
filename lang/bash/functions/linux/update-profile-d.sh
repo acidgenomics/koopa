@@ -9,7 +9,7 @@ _koopa_linux_update_profile_d() {
     _koopa_assert_has_no_args "$#"
     _koopa_is_shared_install || return 0
     _koopa_assert_is_admin
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['file']="$(_koopa_linux_profile_d_file)"
     dict['today']="$(_koopa_today)"
     # Early return if file exists and is not a symlink.
@@ -22,9 +22,9 @@ _koopa_linux_update_profile_d() {
     _koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 _koopa_activate_shared_profile() {
-    if [ -f '${dict['_koopa_prefix']}/activate' ]
+    if [ -f '${dict['koopa_prefix']}/activate' ]
     then
-        . '${dict['_koopa_prefix']}/activate'
+        . '${dict['koopa_prefix']}/activate'
     fi
     return 0
 }

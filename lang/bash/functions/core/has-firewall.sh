@@ -11,8 +11,8 @@ _koopa_has_firewall() {
     then
         return 1
     fi
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    if [[ "${dict['ssl_cert_file']}" == "${dict['_koopa_prefix']}/"* ]]
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
     then
         return 1
     fi

@@ -11,13 +11,13 @@ _koopa_add_make_prefix_link() {
     local -A dict
     _koopa_assert_has_args_le "$#" 1
     _koopa_assert_is_admin
-    dict['_koopa_prefix']="${1:-}"
+    dict['koopa_prefix']="${1:-}"
     dict['make_prefix']='/usr/local'
-    if [[ -z "${dict['_koopa_prefix']}" ]]
+    if [[ -z "${dict['koopa_prefix']}" ]]
     then
-        dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+        dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     fi
-    dict['source_link']="${dict['_koopa_prefix']}/bin/koopa"
+    dict['source_link']="${dict['koopa_prefix']}/bin/koopa"
     dict['target_link']="${dict['make_prefix']}/bin/koopa"
     [[ -d "${dict['make_prefix']}" ]] || return 0
     [[ -L "${dict['target_link']}" ]] && return 0

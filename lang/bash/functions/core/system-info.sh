@@ -16,24 +16,24 @@ _koopa_system_info() {
     dict['arch2']="$(_koopa_arch2)"
     dict['bash_version']="$(_koopa_get_version "${app['bash']}")"
     dict['config_prefix']="$(_koopa_config_prefix)"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    dict['_koopa_url']="$(_koopa_koopa_url)"
-    dict['_koopa_version']="$(_koopa_koopa_version)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_url']="$(_koopa_koopa_url)"
+    dict['koopa_version']="$(_koopa_koopa_version)"
     dict['python_version']="$(_koopa_get_version "${app['python']}")"
-    dict['ascii_turtle_file']="${dict['_koopa_prefix']}/etc/\
+    dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
 koopa/ascii-turtle.txt"
     _koopa_assert_is_file "${dict['ascii_turtle_file']}"
     info=(
-        "koopa ${dict['_koopa_version']}"
-        "URL: ${dict['_koopa_url']}"
+        "koopa ${dict['koopa_version']}"
+        "URL: ${dict['koopa_url']}"
     )
-    if _koopa_is_git_repo_top_level "${dict['_koopa_prefix']}"
+    if _koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        dict['git_remote']="$(_koopa_git_remote_url "${dict['_koopa_prefix']}")"
+        dict['git_remote']="$(_koopa_git_remote_url "${dict['koopa_prefix']}")"
         dict['git_commit']="$( \
-            _koopa_git_last_commit_local "${dict['_koopa_prefix']}" \
+            _koopa_git_last_commit_local "${dict['koopa_prefix']}" \
         )"
-        dict['git_date']="$(_koopa_git_commit_date "${dict['_koopa_prefix']}")"
+        dict['git_date']="$(_koopa_git_commit_date "${dict['koopa_prefix']}")"
         info+=(
             ''
             'Git repo'
@@ -47,7 +47,7 @@ koopa/ascii-turtle.txt"
         ''
         'Configuration'
         '-------------'
-        "Koopa Prefix: ${dict['_koopa_prefix']}"
+        "Koopa Prefix: ${dict['koopa_prefix']}"
         "Config Prefix: ${dict['config_prefix']}"
     )
     if _koopa_is_macos

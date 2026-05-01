@@ -19,8 +19,8 @@ _koopa_install_koopa() {
     dict['source_prefix']="$(_koopa_koopa_prefix)"
     dict['user_profile']="$(_koopa_find_user_profile)"
     dict['xdg_data_home']="$(_koopa_xdg_data_home)"
-    dict['_koopa_prefix_system']='/opt/koopa'
-    dict['_koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
+    dict['koopa_prefix_system']='/opt/koopa'
+    dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
     _koopa_is_admin && bool['shared']=1
     while (("$#"))
     do
@@ -100,9 +100,9 @@ _koopa_install_koopa() {
         then
             if [[ "${bool['shared']}" -eq 1 ]]
             then
-                dict['prefix']="${dict['_koopa_prefix_system']}"
+                dict['prefix']="${dict['koopa_prefix_system']}"
             else
-                dict['prefix']="${dict['_koopa_prefix_user']}"
+                dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
         dict['prefix']="$( \
@@ -131,9 +131,9 @@ _koopa_install_koopa() {
         then
             if [[ "${bool['shared']}" -eq 1 ]]
             then
-                dict['prefix']="${dict['_koopa_prefix_system']}"
+                dict['prefix']="${dict['koopa_prefix_system']}"
             else
-                dict['prefix']="${dict['_koopa_prefix_user']}"
+                dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
     fi
