@@ -1,15 +1,15 @@
 #!/bin/sh
 
-# Csh is not supported, primarily due to lack of functions.
+# Csh/Tcsh lack functions, so full activation is not possible.
+# Use 'activate.csh' instead for minimal activation.
 # > csh -l or csh -i
 [ "$0" = 'csh' ] && \
-    printf '%s\n' 'koopa does not support csh.' && \
+    printf '%s\n' "koopa: use 'activate.csh' for csh support." && \
     exit 1
 
-# Tcsh is not supported, primarily due to lack of functions.
 # > tcsh -l or tcsh -i
 [ "$0" = 'tcsh' ] && \
-    printf '%s\n' 'koopa does not support tcsh.' && \
+    printf '%s\n' "koopa: use 'activate.csh' for tcsh support." && \
     exit 1
 
 __koopa_activate_usage() {
@@ -266,6 +266,7 @@ __koopa_shell_name() {
     then
         __kvar_string='zsh'
     else
+        # ksh93, ash, busybox, dash all use the POSIX sh path.
         __kvar_string='sh'
     fi
     __koopa_print "$__kvar_string"
