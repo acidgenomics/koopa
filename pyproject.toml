@@ -4,14 +4,7 @@ version = "0.16.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = ["Programming Language :: Python :: 3.14"]
 description = "Shell bootloader for data science."
-keywords = [
-  "bioinformatics",
-  "config",
-  "data science",
-  "fair data",
-  "ngs",
-  "shell",
-]
+keywords = ["bioinformatics", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
 requires-python = ">=3.14"
 
