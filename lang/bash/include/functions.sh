@@ -4050,12 +4050,6 @@ _koopa_app_json() {
     return 0
 }
 
-_koopa_app_reverse_dependencies() {
-    _koopa_assert_has_args_eq "$#" 1
-    "${KOOPA_PREFIX:?}/bin/koopa" internal app-reverse-dependencies "$@"
-    return 0
-}
-
 _koopa_app_version() {
     local -A dict
     _koopa_assert_has_args_eq "$#" 1
@@ -14763,11 +14757,6 @@ _koopa_script_source() {
     return 0
 }
 
-_koopa_shared_apps() {
-    "${KOOPA_PREFIX:?}/bin/koopa" internal shared-apps "$@"
-    return 0
-}
-
 _koopa_shared_ext() {
     local str
     if _koopa_is_macos
@@ -15351,12 +15340,6 @@ _koopa_stack_trace() {
         printf '      file "%s" line %d\n' "${BASH_SOURCE[i]}" "${line}"
         (( i++ ))
     done
-    return 0
-}
-
-_koopa_stale_revdeps() {
-    _koopa_assert_has_args "$#"
-    "${KOOPA_PREFIX:?}/bin/koopa" internal stale-revdeps "$@"
     return 0
 }
 
