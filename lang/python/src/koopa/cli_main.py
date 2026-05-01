@@ -175,6 +175,10 @@ def _build_parser() -> argparse.ArgumentParser:
     develop_p = subparsers.add_parser("develop")
     develop_p.add_argument("remainder", nargs=argparse.REMAINDER)
 
+    # -- internal -------------------------------------------------------------
+    internal_p = subparsers.add_parser("internal")
+    internal_p.add_argument("remainder", nargs=argparse.REMAINDER)
+
     # -- simple commands ------------------------------------------------------
     subparsers.add_parser("version")
     subparsers.add_parser("header")
@@ -349,6 +353,13 @@ def _handle_app(args: argparse.Namespace) -> None:
     handle_app(args.remainder)
 
 
+def _handle_internal(args: argparse.Namespace) -> None:
+    """Handle ``koopa internal`` subcommand."""
+    from koopa.cli_internal import handle_internal
+
+    handle_internal(args.remainder)
+
+
 def _handle_system(args: argparse.Namespace) -> None:
     """Handle ``koopa system`` subcommand."""
     from koopa.cli_system import handle_system
@@ -419,6 +430,7 @@ def main() -> None:
         "update": _handle_update,
         "configure": _handle_configure,
         "app": _handle_app,
+        "internal": _handle_internal,
         "system": _handle_system,
         "develop": _handle_develop,
         "version": _handle_version,

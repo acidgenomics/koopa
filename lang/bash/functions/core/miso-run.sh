@@ -11,7 +11,7 @@
 _koopa_miso_run() {
     # """
     # Run MISO splicing event analysis.
-    # @note Updated 2023-11-20.
+    # @note Updated 2026-05-01.
     #
     # This expects a sorted, indexed BAM file as input.
     #
@@ -73,10 +73,6 @@ _koopa_miso_run() {
     # """
     local -A app bool dict
     local -a miso_args
-    _koopa_activate_app_conda_env 'misopy'
-    # Using our bedtools and samtools instead of the bundled variants in the
-    # misopy conda recipe, due to broken 'libncurses.so.5'.
-    _koopa_activate_app 'bedtools' 'samtools'
     app['cut']="$(_koopa_locate_cut --allow-system)"
     app['head']="$(_koopa_locate_head --allow-system)"
     app['miso']="$(_koopa_locate_miso --realpath)"

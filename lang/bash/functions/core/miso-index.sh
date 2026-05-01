@@ -3,10 +3,9 @@
 _koopa_miso_index() {
     # """
     # Generate a MISO index directory.
-    # @note Updated 2023-11-17.
+    # @note Updated 2026-05-01.
     # """
     local -A app bool dict
-    _koopa_activate_app_conda_env 'misopy'
     app['exon_utils']="$(_koopa_locate_miso_exon_utils --realpath)"
     app['index_gff']="$(_koopa_locate_miso_index_gff --realpath)"
     app['tee']="$(_koopa_locate_tee --allow-system)"
