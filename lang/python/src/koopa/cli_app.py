@@ -220,6 +220,25 @@ def _resolve_tree(
     return last_key, remainder[consumed:]
 
 
+def _handle_docker_build_all_tags(args: list[str]) -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        prog="koopa app docker build-all-tags",
+    )
+    parser.add_argument("--local", required=True)
+    parser.add_argument("--remote", required=True)
+    parsed = parser.parse_args(args)
+    from koopa.shell.docker import build_all_tags
+
+    build_all_tags(local=parsed.local, remote=parsed.remote)
+
+
+_PYTHON_HANDLERS: dict[str, Any] = {
+    "docker-build-all-tags": _handle_docker_build_all_tags,
+}
+
+
 def handle_app(remainder: list[str]) -> None:
     """Dispatch ``koopa app ...`` commands."""
     if not remainder:
@@ -231,4 +250,8 @@ def handle_app(remainder: list[str]) -> None:
         show_man_page("app", *remainder[:-1])
         return
     key, args = _resolve_tree(remainder)
+    handler = _PYTHON_HANDLERS.get(key)
+    if handler is not None:
+        handler(args)
+        return
     _run_bash_function(key, *args)

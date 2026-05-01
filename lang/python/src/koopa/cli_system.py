@@ -82,8 +82,17 @@ def _handle_update_tex_packages() -> None:
     subprocess.run(["sudo", tlmgr, "update", "--all"], check=True)
 
 
+def _handle_check(args: list[str]) -> None:
+    """Handle ``koopa system check``."""
+    import sys
+
+    from koopa.check import check_system
+
+    if not check_system():
+        sys.exit(1)
+
+
 _SYSTEM_COMMANDS: dict[str, str] = {
-    "check": "check-system",
     "info": "system-info",
     "disable-passwordless-sudo": "disable-passwordless-sudo",
     "enable-passwordless-sudo": "enable-passwordless-sudo",
@@ -128,6 +137,9 @@ def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
         replacement = _DEFUNCT_COMMANDS[subcmd]
         print(f"Defunct. Use '{replacement}' instead.", file=sys.stderr)
         sys.exit(1)
+    if subcmd == "check":
+        _handle_check(rest)
+        return
     if subcmd == "prefix":
         _handle_prefix(rest)
         return
