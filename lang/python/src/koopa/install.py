@@ -522,12 +522,8 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
     # -- Handle existing prefix -----------------------------------------------
     if config.prefix and config.prefix_check and os.path.isdir(config.prefix):
         stdout_log = os.path.join(config.prefix, ".install", "stdout.log")
-        stdout_log_legacy = os.path.join(
-            config.prefix, ".koopa-install-stdout.log"
-        )
-        if not os.path.isfile(stdout_log) and not os.path.isfile(
-            stdout_log_legacy
-        ):
+        stdout_log_legacy = os.path.join(config.prefix, ".koopa-install-stdout.log")
+        if not os.path.isfile(stdout_log) and not os.path.isfile(stdout_log_legacy):
             config.reinstall = True
         if config.reinstall:
             if not config.quiet:
@@ -765,11 +761,7 @@ def _run_isolated_subshell(  # noqa: PLR0915
     env_vars["KOOPA_INSTALL_NAME"] = config.name
     env_vars["KOOPA_INSTALL_PREFIX"] = config.prefix
     env_vars["KOOPA_INSTALL_VERSION"] = config.version
-    bash_cmd = (
-        f"source '{header_file}'; "
-        f"source '{installer_file}'; "
-        f"main {passthrough}"
-    )
+    bash_cmd = f"source '{header_file}'; source '{installer_file}'; main {passthrough}"
     bash_args = [
         "--noprofile",
         "--norc",
@@ -1435,9 +1427,7 @@ def install_shared_apps(
                     os.path.join(app_prefix, v, ".install", "stdout.log"),
                 )
                 or os.path.isfile(
-                    os.path.join(
-                        app_prefix, v, ".koopa-install-stdout.log"
-                    ),
+                    os.path.join(app_prefix, v, ".koopa-install-stdout.log"),
                 )
                 for v in versions
             ):

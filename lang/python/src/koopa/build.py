@@ -94,9 +94,7 @@ class BuildEnv:
             env["PKG_CONFIG_PATH"] = _merge_colon(self.pkg_config_path, existing)
         if self.cmake_prefix_path:
             existing = env.get("CMAKE_PREFIX_PATH", "")
-            env["CMAKE_PREFIX_PATH"] = _merge_semicolon(
-                self.cmake_prefix_path, existing
-            )
+            env["CMAKE_PREFIX_PATH"] = _merge_semicolon(self.cmake_prefix_path, existing)
         return env
 
     def apply(self) -> None:
@@ -397,7 +395,7 @@ def _macos_sdk_prefix() -> str:
             check=True,
         )
         return result.stdout.strip()
-    except (subprocess.CalledProcessError, FileNotFoundError):
+    except subprocess.CalledProcessError, FileNotFoundError:
         return ""
 
 

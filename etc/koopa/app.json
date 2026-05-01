@@ -479,6 +479,7 @@
     "date": "2023-05-24",
     "default": false,
     "dependencies": ["bzip2", "icu4c", "xz", "zlib", "zstd"],
+    "install_note": "Installation requires agreement to terms of service at: https://support.illumina.com/sequencing/sequencing_software/bcl2fastq-conversion-software/downloads.html",
     "installer_platform": "linux",
     "private": true,
     "prune": true,
@@ -887,6 +888,7 @@
     "bin": ["cellranger"],
     "date": "2025-12-11",
     "default": false,
+    "install_note": "Installation requires agreement to terms of service at: https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest",
     "installer_platform": "linux",
     "outdated": true,
     "private": true,
@@ -4070,6 +4072,7 @@
     "bin": ["guppy_basecaller"],
     "date": "2023-05-31",
     "default": false,
+    "install_note": "Installation requires agreement to terms of service at: https://nanoporetech.com/support/nanopore-sequencing-data-analysis",
     "private": true,
     "prune": true,
     "url": [
