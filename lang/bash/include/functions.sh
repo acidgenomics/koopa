@@ -23253,6 +23253,13 @@ _koopa_install_btop() {
         "$@"
 }
 
+_koopa_install_bumpver() {
+    _koopa_install_app \
+        --installer='python-package' \
+        --name='bumpver' \
+        "$@"
+}
+
 _koopa_install_bustools() {
     _koopa_assert_is_not_arm64
     _koopa_install_app \
@@ -35577,6 +35584,12 @@ _koopa_uninstall_brotli() {
 _koopa_uninstall_btop() {
     _koopa_uninstall_app \
         --name='btop' \
+        "$@"
+}
+
+_koopa_uninstall_bumpver() {
+    _koopa_uninstall_app \
+        --name='bumpver' \
         "$@"
 }
 
