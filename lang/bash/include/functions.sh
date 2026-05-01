@@ -1867,15 +1867,6 @@ _koopa_alias_week() {
     date '+%V'
 }
 
-_koopa_alpine_install_system_glibc() {
-    _koopa_install_app \
-        --name='glibc' \
-        --platform='alpine' \
-        --system \
-        --version='2.30-r0' \
-        "$@"
-}
-
 _koopa_alpine_locate_apk() {
     _koopa_locate_app \
         '/sbin/apk' \
@@ -4043,488 +4034,6 @@ _koopa_aws_s3_sync() {
     return 0
 }
 
-_koopa_cli_app() {
-    local -A dict
-    dict['key']=''
-    case "${1:-}" in
-        '--help' | \
-        '-h')
-            _koopa_help "$(_koopa_man_prefix)/man1/app.1"
-            ;;
-        'aws')
-            case "${2:-}" in
-                'batch')
-                    case "${3:-}" in
-                        'fetch-and-run' | \
-                        'list-jobs')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                'codecommit')
-                    case "${3:-}" in
-                        'list-repositories')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                'ec2')
-                    case "${3:-}" in
-                        'instance-id' | \
-                        'list-running-instances' | \
-                        'map-instance-ids-to-names' | \
-                        'stop')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        'suspend')
-                            _koopa_defunct 'ec2 stop'
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                'ecr')
-                    case "${3:-}" in
-                        'login-public' | \
-                        'login-private')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                's3')
-                    case "${3:-}" in
-                        'delete-markers' | \
-                        'delete-versioned-glacier-objects' | \
-                        'delete-versioned-objects' | \
-                        'dot-clean' | \
-                        'find' | \
-                        'list-large-files' | \
-                        'ls' | \
-                        'mv-to-parent' | \
-                        'sync')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'bioconda')
-            case "${2:-}" in
-                'autobump-recipe')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'bowtie2')
-            case "${2:-}" in
-                'align')
-                    case "${3:-}" in
-                        'paired-end')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                'index')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'brew')
-            case "${2:-}" in
-                'cleanup' | \
-                'dump-brewfile' | \
-                'outdated' | \
-                'reset-core-repo' | \
-                'reset-permissions' | \
-                'uninstall-all-brews' | \
-                'upgrade-brews' | \
-                'version')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'conda')
-            case "${2:-}" in
-                'create-env' | \
-                'remove-env')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'docker')
-            case "${2:-}" in
-                'build' | \
-                'build-all-tags' | \
-                'prune-all-images' | \
-                'prune-old-images' | \
-                'remove' | \
-                'run')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'ftp')
-            case "${2:-}" in
-                'mirror')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'git')
-            case "${2:-}" in
-                'pull' | \
-                'push-submodules' | \
-                'rename-master-to-main' | \
-                'reset' | \
-                'reset-fork-to-upstream' | \
-                'rm-submodule' | \
-                'rm-untracked')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'gpg')
-            case "${2:-}" in
-                'prompt' | \
-                'reload' | \
-                'restart')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'hisat2' | \
-        'star')
-            case "${2:-}" in
-                'align')
-                    case "${3:-}" in
-                        'paired-end' | \
-                        'single-end')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                'index')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'jekyll')
-            case "${2:-}" in
-                'serve')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'kallisto')
-            case "${2:-}" in
-                'index')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                'quant')
-                    case "${3:-}" in
-                        'paired-end' | \
-                        'single-end')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'md5sum')
-            case "${2:-}" in
-                'check-to-new-md5-file')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'miso')
-            case "${2:-}" in
-                'index' | \
-                'run')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'r')
-            case "${2:-}" in
-                'bioconda-check' | \
-                'check')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'rmats')
-            dict['key']="${1:?}"
-            shift 1
-            ;;
-        'rnaeditingindexer')
-            dict['key']="${1:?}"
-            shift 1
-            ;;
-        'rsem')
-            case "${2:-}" in
-                'index')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                'quant')
-                    case "${3:-}" in
-                        'bam')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'salmon')
-            case "${2:-}" in
-                'detect-fastq-library-type' | \
-                'index')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                'quant')
-                    case "${3:-}" in
-                        'bam' | \
-                        'paired-end' | \
-                        'single-end')
-                            dict['key']="${1:?}-${2:?}-${3:?}"
-                            shift 3
-                            ;;
-                        *)
-                            _koopa_cli_invalid_arg "$@"
-                        ;;
-                    esac
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'sra')
-            case "${2:-}" in
-                'download-accession-list' | \
-                'download-run-info-table' | \
-                'fastq-dump' | \
-                'prefetch')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'ssh')
-            case "${2:-}" in
-                'generate-key')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        'wget')
-            case "${2:-}" in
-                'recursive')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-                *)
-                    _koopa_cli_invalid_arg "$@"
-                    ;;
-            esac
-            ;;
-        *)
-            _koopa_cli_invalid_arg "$@"
-            ;;
-    esac
-    [[ -z "${dict['key']}" ]] && _koopa_cli_invalid_arg "$@"
-    dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-    if ! _koopa_is_function "${dict['fun']}"
-    then
-        _koopa_stop 'Unsupported command.'
-    fi
-    "${dict['fun']}" "$@"
-    return 0
-}
-
-_koopa_cli_configure() {
-    local -a flags pos
-    local app stem
-    flags=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--verbose')
-                flags+=("$1")
-                shift 1
-                ;;
-            '-'*)
-                _koopa_invalid_arg "$1"
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    stem='configure'
-    case "$1" in
-        'system' | \
-        'user')
-            stem="${stem}-${1}"
-            shift 1
-            ;;
-    esac
-    _koopa_assert_has_args "$#"
-    for app in "$@"
-    do
-        local -A dict
-        dict['key']="${stem}-${app}"
-        dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-        if ! _koopa_is_function "${dict['fun']}"
-        then
-            _koopa_stop "Unsupported app: '${app}'."
-        fi
-        if _koopa_is_array_non_empty "${flags[@]:-}"
-        then
-            "${dict['fun']}" "${flags[@]:-}"
-        else
-            "${dict['fun']}"
-        fi
-    done
-    return 0
-}
-
-_koopa_cli_develop() {
-    local -A dict
-    dict['key']=''
-    case "${1:-}" in
-        'log')
-            dict['key']='view-latest-tmp-log-file'
-            shift 1
-            ;;
-        'cache-functions' | \
-        'edit-app-json' | \
-        'prune-app-binaries' | \
-        'push-all-app-builds' | \
-        'push-app-build' | \
-        'roff')
-            dict['key']="${1:?}"
-            shift 1
-            ;;
-    esac
-    [[ -z "${dict['key']}" ]] && _koopa_cli_invalid_arg "$@"
-    dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-    if ! _koopa_is_function "${dict['fun']}"
-    then
-        _koopa_stop 'Unsupported command.'
-    fi
-    "${dict['fun']}" "$@"
-    return 0
-}
-
 _koopa_cli_install() {
     local -A dict
     local -a flags pos
@@ -4660,114 +4169,6 @@ _koopa_cli_reinstall() {
             _koopa_reinstall_only_revdeps "$@"
             ;;
     esac
-    return 0
-}
-
-_koopa_cli_system() {
-    local -A dict
-    dict['key']=''
-    case "${1:-}" in
-        'check')
-            dict['key']='check-system'
-            shift 1
-            ;;
-        'info')
-            dict['key']='system-info'
-            shift 1
-            ;;
-        'list')
-            case "${2:-}" in
-                'app-versions' | \
-                'dotfiles' | \
-                'launch-agents' | \
-                'path-priority' | \
-                'programs')
-                    dict['key']="${1:?}-${2:?}"
-                    shift 2
-                    ;;
-            esac
-            ;;
-        'prefix')
-            case "${2:-}" in
-                '')
-                    dict['key']='koopa-prefix'
-                    shift 1
-                    ;;
-                'koopa')
-                    dict['key']='koopa-prefix'
-                    shift 2
-                    ;;
-                *)
-                    dict['key']="${2}-prefix"
-                    shift 2
-                    ;;
-            esac
-            ;;
-        'version')
-            dict['key']='get-version'
-            shift 1
-            ;;
-        'which')
-            dict['key']='which-realpath'
-            shift 1
-            ;;
-        'disable-passwordless-sudo' | \
-        'enable-passwordless-sudo' | \
-        'hostname' | \
-        'os-string' | \
-        'prune-apps' | \
-        'switch-to-develop' | \
-        'test' | \
-        'zsh-compaudit-set-permissions')
-            dict['key']="${1:?}"
-            shift 1
-            ;;
-        'cache-functions' | \
-        'edit-app-json' | \
-        'prune-app-binaries')
-            _koopa_defunct "koopa develop ${1:?}"
-            ;;
-    esac
-    if [[ -z "${dict['key']}" ]]
-    then
-        if _koopa_is_linux
-        then
-            case "${1:-}" in
-                'delete-cache' | \
-                'fix-sudo-setrlimit-error')
-                    dict['key']="${1:?}"
-                    shift 1
-                    ;;
-            esac
-        elif _koopa_is_macos
-        then
-            case "${1:-}" in
-                'spotlight')
-                    dict['key']='spotlight-find'
-                    shift 1
-                    ;;
-                'clean-launch-services' | \
-                'create-dmg' | \
-                'disable-touch-id-sudo' | \
-                'enable-touch-id-sudo' | \
-                'flush-dns' | \
-                'force-eject' | \
-                'ifactive' | \
-                'list-launch-agents' | \
-                'reload-autofs')
-                    dict['key']="${1:?}"
-                    shift 1
-                    ;;
-            esac
-        fi
-    fi
-    [[ -z "${dict['key']}" ]] && _koopa_cli_invalid_arg "$@"
-    dict['fun']="$(_koopa_which_function "${dict['key']}" || true)"
-    if ! _koopa_is_function "${dict['fun']}"
-    then
-        _koopa_stop 'Unsupported command.'
-    fi
-    "${dict['fun']}" "$@"
     return 0
 }
 
@@ -7878,25 +7279,12 @@ ${dict['platform']}/${dict['mode']}/${dict['name']}.sh"
     return 0
 }
 
-_koopa_configure_r() {
-    _koopa_configure_app \
-        --name='r' \
-        "$@"
-}
-
 _koopa_configure_system_r() {
     local -A app
     app['r']="$(_koopa_locate_system_r)"
     _koopa_assert_is_executable "${app[@]}"
     _koopa_configure_r "${app['r']}"
     return 0
-}
-
-_koopa_configure_user_dotfiles() {
-    _koopa_configure_app \
-        --name='dotfiles' \
-        --user \
-        "$@"
 }
 
 _koopa_contains() {
@@ -20425,14 +19813,6 @@ _koopa_debian_apt_space_used_by() {
     return 0
 }
 
-_koopa_debian_configure_system_base() {
-    _koopa_configure_app \
-        --name='base' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
 _koopa_debian_debian_version() {
     local file x
     file='/etc/debian_version'
@@ -20468,57 +19848,6 @@ _koopa_debian_install_from_deb() {
     _koopa_assert_is_executable "${app[@]}"
     _koopa_sudo "${app['gdebi']}" --non-interactive "$@"
     return 0
-}
-
-_koopa_debian_install_system_aws_mountpoint_s3() {
-    _koopa_install_app \
-        --name='aws-mountpoint-s3' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_install_system_docker() {
-    _koopa_install_app \
-        --name='docker' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_install_system_r() {
-    _koopa_install_app \
-        --name='r' \
-        --platform='debian' \
-        --system \
-        --version-key='r' \
-        "$@"
-}
-
-_koopa_debian_install_system_rstudio_server() {
-    _koopa_assert_is_not_arm64
-    _koopa_install_app \
-        --name='rstudio-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_install_system_shiny_server() {
-    _koopa_assert_is_not_arm64
-    _koopa_install_app \
-        --name='shiny-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_install_system_wine() {
-    _koopa_install_app \
-        --name='wine' \
-        --platform='debian' \
-        --system \
-        "$@"
 }
 
 _koopa_debian_locate_apt_get() {
@@ -20664,46 +19993,6 @@ _koopa_debian_set_timezone() {
     _koopa_alert "Setting local timezone to '${dict['tz']}'."
     _koopa_sudo "${app['timedatectl']}" set-timezone "${dict['tz']}"
     return 0
-}
-
-_koopa_debian_uninstall_shiny_server() {
-    _koopa_uninstall_app \
-        --name='shiny-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_uninstall_system_docker() {
-    _koopa_uninstall_app \
-        --name='docker' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_uninstall_system_r() {
-    _koopa_uninstall_app \
-        --name='r' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_uninstall_system_rstudio_server() {
-    _koopa_uninstall_app \
-        --name='rstudio-server' \
-        --platform='debian' \
-        --system \
-        "$@"
-}
-
-_koopa_debian_uninstall_system_wine() {
-    _koopa_uninstall_app \
-        --name='wine' \
-        --platform='debian' \
-        --system \
-        "$@"
 }
 
 _koopa_docker_build_all_tags() {
@@ -21288,32 +20577,6 @@ _koopa_fedora_install_from_rpm() {
     return 0
 }
 
-_koopa_fedora_install_system_oracle_instant_client() {
-    _koopa_assert_is_arm64
-    _koopa_install_app \
-        --name='oracle-instant-client' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
-_koopa_fedora_install_system_rstudio_server() {
-    _koopa_assert_is_not_arm64
-    _koopa_install_app \
-        --name='rstudio-server' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
-_koopa_fedora_install_system_shiny_server() {
-    _koopa_install_app \
-        --name='shiny-server' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
 _koopa_fedora_locate_dnf() {
     _koopa_locate_app \
         '/usr/bin/dnf' \
@@ -21346,30 +20609,6 @@ _koopa_fedora_set_locale() {
     "${app['locale']}"
     _koopa_alert_success "Locale is defined as '${dict['lang_string']}'."
     return 0
-}
-
-_koopa_fedora_uninstall_system_oracle_instant_client() {
-    _koopa_uninstall_app \
-        --name='oracle-instant-client' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
-_koopa_fedora_uninstall_system_rstudio_server() {
-    _koopa_uninstall_app \
-        --name='rstudio-server' \
-        --platform='fedora' \
-        --system \
-        "$@"
-}
-
-_koopa_fedora_uninstall_system_shiny_server() {
-    _koopa_uninstall_app \
-        --name='shiny-server' \
-        --platform='fedora' \
-        --system \
-        "$@"
 }
 
 _koopa_find_and_move_in_sequence() {
@@ -25129,30 +24368,6 @@ _koopa_linux_bcl2fastq_indrops() {
     return 0
 }
 
-_koopa_linux_configure_system_lmod() {
-    _koopa_configure_app \
-        --name='lmod' \
-        --platform='linux' \
-        --system \
-        "$@"
-}
-
-_koopa_linux_configure_system_rstudio_server() {
-    _koopa_configure_app \
-        --name='rstudio-server' \
-        --platform='linux' \
-        --system \
-        "$@"
-}
-
-_koopa_linux_configure_system_sshd() {
-    _koopa_configure_app \
-        --name='sshd' \
-        --platform='linux' \
-        --system \
-        "$@"
-}
-
 _koopa_linux_delete_cache() {
     _koopa_assert_has_no_args "$#"
     if ! _koopa_is_docker
@@ -27434,6 +26649,29 @@ _koopa_macos_brew_cask_quarantine_support() {
     return 0
 }
 
+_koopa_macos_brew_uninstall_brewfile_casks() {
+    local -A app dict
+    local -a casks
+    local cask
+    _koopa_assert_has_args_eq "$#" 1
+    app['brew']="$(_koopa_locate_brew)"
+    app['cut']="$(_koopa_locate_cut --allow-system)"
+    _koopa_assert_is_executable "${app[@]}"
+    dict['brewfile']="${1:?}"
+    readarray -t casks <<< "$( \
+        _koopa_grep \
+            --file="${dict['brewfile']}" \
+            --pattern='^cask\s"' \
+            --regex \
+        | "${app['cut']}" -d '"' -f '2' \
+    )"
+    for cask in "${casks[@]}"
+    do
+        "${app['brew']}" uninstall --cask --force "$cask"
+    done
+    return 0
+}
+
 _koopa_macos_brew_upgrade_casks() {
     local -A app
     local -a casks
@@ -27501,22 +26739,6 @@ _koopa_macos_clean_launch_services() {
     _koopa_sudo "${app['kill_all']}" 'Dock'
     _koopa_alert_success 'Clean up was successful.'
     return 0
-}
-
-_koopa_macos_configure_system_preferences() {
-    _koopa_configure_app \
-        --name='preferences' \
-        --platform='macos' \
-        --system \
-        "$@"
-}
-
-_koopa_macos_configure_user_preferences() {
-    _koopa_configure_app \
-        --name='preferences' \
-        --platform='macos' \
-        --user \
-        "$@"
 }
 
 _koopa_macos_create_dmg() {
@@ -27983,27 +27205,6 @@ _koopa_macos_ifactive() {
     [[ -n "$str" ]] || return 1
     _koopa_print "$str"
     return 0
-}
-
-_koopa_macos_install_system_python() {
-    local -A dict
-    dict['python_version']="$(_koopa_python_major_minor_version)"
-    _koopa_install_app \
-        --installer='python' \
-        --name="python${dict['python_version']}" \
-        --platform='macos' \
-        --prefix="$(_koopa_macos_python_prefix)" \
-        --system \
-        "$@"
-}
-
-_koopa_macos_install_system_r() {
-    _koopa_install_app \
-        --name='r' \
-        --platform='macos' \
-        --prefix="$(_koopa_macos_r_prefix)" \
-        --system \
-        "$@"
 }
 
 _koopa_macos_install_system_rosetta() {
@@ -28511,40 +27712,6 @@ _koopa_macos_symlink_icloud_drive() {
         "${HOME}/Library/Mobile Documents/com~apple~CloudDocs" \
         "${HOME}/icloud"
     return 0
-}
-
-_koopa_macos_uninstall_brewfile_casks() {
-    local -A app dict
-    local -a casks
-    local cask
-    _koopa_assert_has_args_eq "$#" 1
-    app['brew']="$(_koopa_locate_brew)"
-    app['cut']="$(_koopa_locate_cut --allow-system)"
-    _koopa_assert_is_executable "${app[@]}"
-    dict['brewfile']="${1:?}"
-    readarray -t casks <<< "$( \
-        _koopa_grep \
-            --file="${dict['brewfile']}" \
-            --pattern='^cask\s"' \
-            --regex \
-        | "${app['cut']}" -d '"' -f '2' \
-    )"
-    for cask in "${casks[@]}"
-    do
-        "${app['brew']}" uninstall --cask --force "$cask"
-    done
-    return 0
-}
-
-_koopa_macos_uninstall_system_python() {
-    local -A dict
-    dict['python_version']="$(_koopa_python_major_minor_version)"
-    _koopa_uninstall_app \
-        --name="python${dict['python_version']}" \
-        --platform='macos' \
-        --system \
-        --uninstaller='python' \
-        "$@"
 }
 
 _koopa_macos_xcode_clt_version() {
@@ -30597,95 +29764,6 @@ _koopa_r_version() {
     fi
     [[ -n "$str" ]] || return 1
     _koopa_print "$str"
-    return 0
-}
-
-_koopa_reinstall_all_revdeps() {
-    local -a flags pos
-    local app_name
-    _koopa_assert_has_args "$#"
-    flags=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--'*)
-                flags+=("$1")
-                shift 1
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_args "$#"
-    for app_name in "$@"
-    do
-        local -a install_args revdeps
-        install_args=()
-        if _koopa_is_array_non_empty "${flags[@]:-}"
-        then
-            install_args+=("${flags[@]}")
-        fi
-        install_args+=("$app_name")
-        readarray -t revdeps <<< "$(_koopa_app_reverse_dependencies "$app_name")"
-        if _koopa_is_array_non_empty "${revdeps[@]:-}"
-        then
-            install_args+=("${revdeps[@]}")
-            _koopa_dl \
-                "${app_name} reverse dependencies" \
-                "$(_koopa_to_string "${revdeps[@]}")"
-        else
-            _koopa_alert_note "'${app_name}' has no reverse dependencies."
-        fi
-        _koopa_cli_reinstall "${install_args[@]}"
-    done
-    return 0
-}
-
-_koopa_reinstall_only_revdeps() {
-    local -a flags pos
-    local app_name
-    _koopa_assert_has_args "$#"
-    flags=()
-    pos=()
-    while (("$#"))
-    do
-        case "$1" in
-            '--'*)
-                flags+=("$1")
-                shift 1
-                ;;
-            *)
-                pos+=("$1")
-                shift 1
-                ;;
-        esac
-    done
-    [[ "${#pos[@]}" -gt 0 ]] && set -- "${pos[@]}"
-    _koopa_assert_has_args "$#"
-    for app_name in "$@"
-    do
-        local -a install_args revdeps
-        install_args=()
-        if _koopa_is_array_non_empty "${flags[@]:-}"
-        then
-            install_args+=("${flags[@]}")
-        fi
-        readarray -t revdeps <<< "$(_koopa_app_reverse_dependencies "$app_name")"
-        if _koopa_assert_is_array_non_empty "${revdeps[@]}"
-        then
-            install_args+=("${revdeps[@]}")
-            _koopa_dl \
-                "${app_name} reverse dependencies" \
-                "$(_koopa_to_string "${revdeps[@]}")"
-        else
-            _koopa_stop "'${app_name}' has no reverse dependencies."
-        fi
-        _koopa_cli_reinstall "${install_args[@]}"
-    done
     return 0
 }
 
