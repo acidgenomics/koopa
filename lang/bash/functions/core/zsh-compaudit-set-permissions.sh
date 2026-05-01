@@ -14,11 +14,11 @@ _koopa_zsh_compaudit_set_permissions() {
     local prefix
     _koopa_assert_has_no_args "$#"
     _koopa_assert_is_owner
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['opt_prefix']="$(_koopa_opt_prefix)"
     dict['user_id']="$(_koopa_user_id)"
     prefixes=(
-        "${dict['_koopa_prefix']}/lang/zsh"
+        "${dict['koopa_prefix']}/lang/zsh"
         "${dict['opt_prefix']}/zsh/share/zsh"
     )
     for prefix in "${prefixes[@]}"

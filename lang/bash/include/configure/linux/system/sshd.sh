@@ -25,10 +25,10 @@ main() {
     # """
     local -A dict
     _koopa_assert_has_no_args "$#"
-    dict['_koopa_file']='/etc/ssh/sshd_config.d/koopa.conf'
+    dict['koopa_file']='/etc/ssh/sshd_config.d/koopa.conf'
     dict['sshd_file']='/etc/ssh/sshd_config'
     _koopa_assert_is_file "${dict['sshd_file']}"
-    if ! _koopa_file_detect_regex \
+    if ! koopa_file_detect_regex \
         --file="${dict['sshd_file']}" \
         --pattern='^Include /etc/ssh/sshd_config.d/*.conf$'
     then
@@ -42,13 +42,13 @@ END
             --string="${dict['sshd_string']}"
     fi
     _koopa_chmod --sudo 0644 "${dict['sshd_file']}"
-    _koopa_alert "Modifying '${dict['_koopa_file']}'."
-    read -r -d '' "dict[_koopa_string]" << END || true
+    _koopa_alert "Modifying '${dict['koopa_file']}'."
+    read -r -d '' "dict[koopa_string]" << END || true
 AcceptEnv KOOPA_COLOR_MODE
 END
     _koopa_sudo_write_string \
-        --file="${dict['_koopa_file']}" \
-        --string="${dict['_koopa_string']}"
-    _koopa_chmod --sudo 0644 "${dict['_koopa_file']}"
+        --file="${dict['koopa_file']}" \
+        --string="${dict['koopa_string']}"
+    _koopa_chmod --sudo 0644 "${dict['koopa_file']}"
     return 0
 }

@@ -1468,13 +1468,13 @@ _koopa_add_make_prefix_link() {
     local -A dict
     _koopa_assert_has_args_le "$#" 1
     _koopa_assert_is_admin
-    dict['_koopa_prefix']="${1:-}"
+    dict['koopa_prefix']="${1:-}"
     dict['make_prefix']='/usr/local'
-    if [[ -z "${dict['_koopa_prefix']}" ]]
+    if [[ -z "${dict['koopa_prefix']}" ]]
     then
-        dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+        dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     fi
-    dict['source_link']="${dict['_koopa_prefix']}/bin/koopa"
+    dict['source_link']="${dict['koopa_prefix']}/bin/koopa"
     dict['target_link']="${dict['make_prefix']}/bin/koopa"
     [[ -d "${dict['make_prefix']}" ]] || return 0
     [[ -L "${dict['target_link']}" ]] && return 0
@@ -10898,8 +10898,8 @@ _koopa_has_firewall() {
     then
         return 1
     fi
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    if [[ "${dict['ssl_cert_file']}" == "${dict['_koopa_prefix']}/"* ]]
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    if [[ "${dict['ssl_cert_file']}" == "${dict['koopa_prefix']}/"* ]]
     then
         return 1
     fi
@@ -12868,8 +12868,8 @@ _koopa_koopa_version() {
     _koopa_assert_has_no_args "$#"
     app['cat']="$(_koopa_locate_cat --allow-system)"
     _koopa_assert_is_executable "${app[@]}"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    dict['version_file']="${dict['_koopa_prefix']}/VERSION"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['version_file']="${dict['koopa_prefix']}/VERSION"
     _koopa_assert_is_file "${dict['version_file']}"
     dict['version']="$("${app['cat']}" "${dict['version_file']}")"
     _koopa_print "${dict['version']}"
@@ -18399,24 +18399,24 @@ _koopa_system_info() {
     dict['arch2']="$(_koopa_arch2)"
     dict['bash_version']="$(_koopa_get_version "${app['bash']}")"
     dict['config_prefix']="$(_koopa_config_prefix)"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    dict['_koopa_url']="$(_koopa_koopa_url)"
-    dict['_koopa_version']="$(_koopa_koopa_version)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_url']="$(_koopa_koopa_url)"
+    dict['koopa_version']="$(_koopa_koopa_version)"
     dict['python_version']="$(_koopa_get_version "${app['python']}")"
-    dict['ascii_turtle_file']="${dict['_koopa_prefix']}/etc/\
+    dict['ascii_turtle_file']="${dict['koopa_prefix']}/etc/\
 koopa/ascii-turtle.txt"
     _koopa_assert_is_file "${dict['ascii_turtle_file']}"
     info=(
-        "koopa ${dict['_koopa_version']}"
-        "URL: ${dict['_koopa_url']}"
+        "koopa ${dict['koopa_version']}"
+        "URL: ${dict['koopa_url']}"
     )
-    if _koopa_is_git_repo_top_level "${dict['_koopa_prefix']}"
+    if _koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        dict['git_remote']="$(_koopa_git_remote_url "${dict['_koopa_prefix']}")"
+        dict['git_remote']="$(_koopa_git_remote_url "${dict['koopa_prefix']}")"
         dict['git_commit']="$( \
-            _koopa_git_last_commit_local "${dict['_koopa_prefix']}" \
+            _koopa_git_last_commit_local "${dict['koopa_prefix']}" \
         )"
-        dict['git_date']="$(_koopa_git_commit_date "${dict['_koopa_prefix']}")"
+        dict['git_date']="$(_koopa_git_commit_date "${dict['koopa_prefix']}")"
         info+=(
             ''
             'Git repo'
@@ -18430,7 +18430,7 @@ koopa/ascii-turtle.txt"
         ''
         'Configuration'
         '-------------'
-        "Koopa Prefix: ${dict['_koopa_prefix']}"
+        "Koopa Prefix: ${dict['koopa_prefix']}"
         "Config Prefix: ${dict['config_prefix']}"
     )
     if _koopa_is_macos
@@ -18988,13 +18988,13 @@ _koopa_update_koopa() {
     local prefix
     _koopa_assert_has_no_args "$#"
     _koopa_assert_is_owner
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
-    if ! _koopa_is_git_repo_top_level "${dict['_koopa_prefix']}"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
+    if ! _koopa_is_git_repo_top_level "${dict['koopa_prefix']}"
     then
-        _koopa_alert_note "Pinned release detected at '${dict['_koopa_prefix']}'."
+        _koopa_alert_note "Pinned release detected at '${dict['koopa_prefix']}'."
         return 1
     fi
-    _koopa_git_pull "${dict['_koopa_prefix']}"
+    _koopa_git_pull "${dict['koopa_prefix']}"
     _koopa_zsh_compaudit_set_permissions
     return 0
 }
@@ -19372,11 +19372,11 @@ _koopa_zsh_compaudit_set_permissions() {
     local prefix
     _koopa_assert_has_no_args "$#"
     _koopa_assert_is_owner
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['opt_prefix']="$(_koopa_opt_prefix)"
     dict['user_id']="$(_koopa_user_id)"
     prefixes=(
-        "${dict['_koopa_prefix']}/lang/zsh"
+        "${dict['koopa_prefix']}/lang/zsh"
         "${dict['opt_prefix']}/zsh/share/zsh"
     )
     for prefix in "${prefixes[@]}"
@@ -22330,14 +22330,14 @@ _koopa_install_app_from_binary_package() {
     dict['arch']="$(_koopa_arch2)" # e.g. 'amd64'.
     dict['aws_profile']='acidgenomics'
     dict['binary_prefix']='/opt/koopa'
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['os_string']="$(_koopa_os_string)"
     dict['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
     dict['tmp_dir']="$(_koopa_tmp_dir)"
-    if [[ "${dict['_koopa_prefix']}" != "${dict['binary_prefix']}" ]]
+    if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
     then
         _koopa_stop "Binary package installation not supported for koopa \
-install located at '${dict['_koopa_prefix']}'. Koopa must be installed at \
+install located at '${dict['koopa_prefix']}'. Koopa must be installed at \
 default '${dict['binary_prefix']}' location."
     fi
     _koopa_assert_is_dir "$@"
@@ -24512,8 +24512,8 @@ _koopa_install_koopa() {
     dict['source_prefix']="$(_koopa_koopa_prefix)"
     dict['user_profile']="$(_koopa_find_user_profile)"
     dict['xdg_data_home']="$(_koopa_xdg_data_home)"
-    dict['_koopa_prefix_system']='/opt/koopa'
-    dict['_koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
+    dict['koopa_prefix_system']='/opt/koopa'
+    dict['koopa_prefix_user']="${dict['xdg_data_home']}/koopa"
     _koopa_is_admin && bool['shared']=1
     while (("$#"))
     do
@@ -24590,9 +24590,9 @@ _koopa_install_koopa() {
         then
             if [[ "${bool['shared']}" -eq 1 ]]
             then
-                dict['prefix']="${dict['_koopa_prefix_system']}"
+                dict['prefix']="${dict['koopa_prefix_system']}"
             else
-                dict['prefix']="${dict['_koopa_prefix_user']}"
+                dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
         dict['prefix']="$( \
@@ -24621,9 +24621,9 @@ _koopa_install_koopa() {
         then
             if [[ "${bool['shared']}" -eq 1 ]]
             then
-                dict['prefix']="${dict['_koopa_prefix_system']}"
+                dict['prefix']="${dict['koopa_prefix_system']}"
             else
-                dict['prefix']="${dict['_koopa_prefix_user']}"
+                dict['prefix']="${dict['koopa_prefix_user']}"
             fi
         fi
     fi
@@ -28410,7 +28410,7 @@ _koopa_linux_update_profile_d() {
     _koopa_assert_has_no_args "$#"
     _koopa_is_shared_install || return 0
     _koopa_assert_is_admin
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['file']="$(_koopa_linux_profile_d_file)"
     dict['today']="$(_koopa_today)"
     if [[ -f "${dict['file']}" ]] && [[ ! -L "${dict['file']}" ]]
@@ -28421,9 +28421,9 @@ _koopa_linux_update_profile_d() {
     _koopa_rm --sudo "${dict['file']}"
     read -r -d '' "dict[string]" << END || true
 _koopa_activate_shared_profile() {
-    if [ -f '${dict['_koopa_prefix']}/activate' ]
+    if [ -f '${dict['koopa_prefix']}/activate' ]
     then
-        . '${dict['_koopa_prefix']}/activate'
+        . '${dict['koopa_prefix']}/activate'
     fi
     return 0
 }
@@ -32744,11 +32744,11 @@ _koopa_r_configure_environ() {
         dict['arch']='aarch64'
     fi
     dict['bin_prefix']="$(_koopa_bin_prefix)"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['r_prefix']="$(_koopa_r_prefix "${app['r']}")"
     _koopa_assert_is_dir "${dict['r_prefix']}"
     lines+=(
-        "KOOPA_PREFIX=${dict['_koopa_prefix']}"
+        "KOOPA_PREFIX=${dict['koopa_prefix']}"
         'R_BATCHSAVE=--no-save --no-restore'
         "R_LIBS_SITE=\${R_HOME}/site-library"
         "R_LIBS_USER=\${R_LIBS_SITE}"
@@ -36360,7 +36360,7 @@ _koopa_uninstall_koopa() {
     bool['uninstall_koopa']=1
     dict['bootstrap_prefix']="$(_koopa_bootstrap_prefix)"
     dict['config_prefix']="$(_koopa_config_prefix)"
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     if _koopa_is_interactive
     then
         bool['uninstall_koopa']="$( \
@@ -36380,9 +36380,9 @@ _koopa_uninstall_koopa() {
             dict['profile_d_file']="$(_koopa_linux_profile_d_file)"
             _koopa_rm --sudo --verbose "${dict['profile_d_file']}"
         fi
-        _koopa_rm --sudo --verbose "${dict['_koopa_prefix']}"
+        _koopa_rm --sudo --verbose "${dict['koopa_prefix']}"
     else
-        _koopa_rm --verbose "${dict['_koopa_prefix']}"
+        _koopa_rm --verbose "${dict['koopa_prefix']}"
     fi
     return 0
 }

@@ -19,14 +19,14 @@ _koopa_install_app_from_binary_package() {
     dict['arch']="$(_koopa_arch2)" # e.g. 'amd64'.
     dict['aws_profile']='acidgenomics'
     dict['binary_prefix']='/opt/koopa'
-    dict['_koopa_prefix']="$(_koopa_koopa_prefix)"
+    dict['koopa_prefix']="$(_koopa_koopa_prefix)"
     dict['os_string']="$(_koopa_os_string)"
     dict['s3_bucket']="s3://private.koopa.acidgenomics.com/binaries"
     dict['tmp_dir']="$(_koopa_tmp_dir)"
-    if [[ "${dict['_koopa_prefix']}" != "${dict['binary_prefix']}" ]]
+    if [[ "${dict['koopa_prefix']}" != "${dict['binary_prefix']}" ]]
     then
         _koopa_stop "Binary package installation not supported for koopa \
-install located at '${dict['_koopa_prefix']}'. Koopa must be installed at \
+install located at '${dict['koopa_prefix']}'. Koopa must be installed at \
 default '${dict['binary_prefix']}' location."
     fi
     _koopa_assert_is_dir "$@"
