@@ -371,10 +371,14 @@ def install_app_subshell(
         env["KOOPA_INSTALL_PREFIX"] = prefix
         env["KOOPA_INSTALL_VERSION"] = version
         header_file = os.path.join(_bash_prefix(), "include", "header.sh")
+        helpers_file = os.path.join(_bash_prefix(), "include", "install", "helpers.sh")
         passthrough_str = ""
         if passthrough_args:
             passthrough_str = " ".join(passthrough_args)
-        cmd_str = f"source '{header_file}'; source '{installer_file}'; main {passthrough_str}"
+        cmd_str = (
+            f"source '{header_file}'; source '{helpers_file}'; "
+            f"source '{installer_file}'; main {passthrough_str}"
+        )
         bash = shutil.which("bash")
         if bash is None:
             msg = "bash not found."
@@ -672,7 +676,7 @@ def install_app(  # noqa: C901, PLR0912, PLR0915
 # -- Isolated subshell runner -------------------------------------------------
 
 
-def _run_isolated_subshell(  # noqa: PLR0915
+def _run_isolated_subshell(
     *,
     config: InstallConfig,
     stdout_file: str,
@@ -743,6 +747,7 @@ def _run_isolated_subshell(  # noqa: PLR0915
         if val:
             env_vars[var] = val
     header_file = os.path.join(_bash_prefix(), "include", "header.sh")
+    helpers_file = os.path.join(_bash_prefix(), "include", "install", "helpers.sh")
     installer = config.installer or config.name
     installer_file = os.path.join(
         _bash_prefix(),
@@ -761,7 +766,10 @@ def _run_isolated_subshell(  # noqa: PLR0915
     env_vars["KOOPA_INSTALL_NAME"] = config.name
     env_vars["KOOPA_INSTALL_PREFIX"] = config.prefix
     env_vars["KOOPA_INSTALL_VERSION"] = config.version
-    bash_cmd = f"source '{header_file}'; source '{installer_file}'; main {passthrough}"
+    bash_cmd = (
+        f"source '{header_file}'; source '{helpers_file}'; "
+        f"source '{installer_file}'; main {passthrough}"
+    )
     bash_args = [
         "--noprofile",
         "--norc",
@@ -1480,7 +1488,7 @@ def install_user_app(name: str, **kwargs: str) -> None:
 # -- Koopa self-installer -----------------------------------------------------
 
 
-def install_koopa(  # noqa: PLR0912, PLR0915
+def install_koopa(
     *,
     prefix: str = "",
     shared: bool = False,
