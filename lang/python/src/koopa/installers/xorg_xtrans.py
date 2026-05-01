@@ -16,10 +16,7 @@ def main(
     """Install xorg-xtrans."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("xorg-xorgproto", env=env)
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"xtrans-{version}.tar.xz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/xtrans-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

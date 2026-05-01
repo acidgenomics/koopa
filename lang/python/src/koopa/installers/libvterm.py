@@ -24,10 +24,7 @@ def main(
     env = activate_app("libtool", "make", "pkg-config", build_only=True)
     make = locate("make")
     mm = _major_minor_version(version)
-    url = (
-        f"https://launchpad.net/libvterm/trunk/v{mm}/+download/"
-        f"libvterm-{version}.tar.gz"
-    )
+    url = f"https://launchpad.net/libvterm/trunk/v{mm}/+download/libvterm-{version}.tar.gz"
     download_extract_cd(url)
     subprocess.run(
         [make, "install", f"PREFIX={prefix}"],

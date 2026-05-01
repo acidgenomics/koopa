@@ -20,10 +20,7 @@ def main(
     if sys.platform != "darwin":
         deps.append("bzip2")
     env = activate_app(*deps, env=None)
-    url = (
-        f"https://github.com/samtools/htslib/releases/download/"
-        f"{version}/htslib-{version}.tar.bz2"
-    )
+    url = f"https://github.com/samtools/htslib/releases/download/{version}/htslib-{version}.tar.bz2"
     download_extract_cd(url)
     make_build(
         conf_args=[

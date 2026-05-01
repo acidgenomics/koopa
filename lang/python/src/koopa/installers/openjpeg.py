@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import os
-
 from koopa.build import activate_app, app_prefix, cmake_build, shared_ext
 from koopa.installers._build_helper import download_extract_cd
 
@@ -17,9 +15,7 @@ def main(
 ) -> None:
     """Install openjpeg."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app(
-        "zlib", "zstd", "libjpeg-turbo", "libpng", "libtiff", env=env
-    )
+    env = activate_app("zlib", "zstd", "libjpeg-turbo", "libpng", "libtiff", env=env)
     zlib_prefix = app_prefix("zlib")
     libpng_prefix = app_prefix("libpng")
     libtiff_prefix = app_prefix("libtiff")

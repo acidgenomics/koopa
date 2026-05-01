@@ -16,10 +16,7 @@ def main(
     """Install tmux."""
     env = activate_app("bison", "pkg-config", build_only=True)
     env = activate_app("libevent", "ncurses", "utf8proc", env=env)
-    url = (
-        f"https://github.com/tmux/tmux/releases/download/"
-        f"{version}/tmux-{version}.tar.gz"
-    )
+    url = f"https://github.com/tmux/tmux/releases/download/{version}/tmux-{version}.tar.gz"
     download_extract_cd(url)
     make_build(
         conf_args=[

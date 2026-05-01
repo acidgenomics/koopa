@@ -16,13 +16,16 @@ def main(
     """Install postgresql."""
     env = activate_app("bison", "flex", "pkg-config", build_only=True)
     env = activate_app(
-        "icu4c", "libxml2", "libxslt", "lz4", "openssl", "perl", "readline",
+        "icu4c",
+        "libxml2",
+        "libxslt",
+        "lz4",
+        "openssl",
+        "perl",
+        "readline",
         env=env,
     )
-    url = (
-        f"https://ftp.postgresql.org/pub/source/v{version}/"
-        f"postgresql-{version}.tar.bz2"
-    )
+    url = f"https://ftp.postgresql.org/pub/source/v{version}/postgresql-{version}.tar.bz2"
     download_extract_cd(url)
     make_build(
         conf_args=[

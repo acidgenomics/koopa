@@ -15,10 +15,7 @@ def main(
 ) -> None:
     """Install udunits."""
     env = activate_app("expat", env=None)
-    url = (
-        f"https://downloads.unidata.ucar.edu/udunits/"
-        f"{version}/udunits-{version}.tar.gz"
-    )
+    url = f"https://downloads.unidata.ucar.edu/udunits/{version}/udunits-{version}.tar.gz"
     download_extract_cd(url)
     make_build(
         conf_args=[

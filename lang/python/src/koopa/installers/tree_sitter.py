@@ -18,10 +18,7 @@ def main(
     """Install tree-sitter."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = (
-        f"https://github.com/tree-sitter/tree-sitter/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/tree-sitter/tree-sitter/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     subprocess.run(

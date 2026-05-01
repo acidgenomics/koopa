@@ -18,13 +18,17 @@ def main(
     """Install aria2."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app(
-        "zlib", "gettext", "openssl", "libssh2", "icu4c", "libxml2",
+        "zlib",
+        "gettext",
+        "openssl",
+        "libssh2",
+        "icu4c",
+        "libxml2",
         "sqlite",
         env=env,
     )
     url = (
-        f"https://github.com/aria2/aria2/releases/download/"
-        f"release-{version}/aria2-{version}.tar.xz"
+        f"https://github.com/aria2/aria2/releases/download/release-{version}/aria2-{version}.tar.xz"
     )
     download_extract_cd(url)
     conf_args = [
@@ -35,21 +39,25 @@ def main(
         f"--prefix={prefix}",
     ]
     if sys.platform == "darwin":
-        conf_args.extend([
-            "--with-appletls",
-            "--without-gnutls",
-            "--without-libgcrypt",
-            "--without-libgmp",
-            "--without-libnettle",
-            "--without-openssl",
-        ])
+        conf_args.extend(
+            [
+                "--with-appletls",
+                "--without-gnutls",
+                "--without-libgcrypt",
+                "--without-libgmp",
+                "--without-libnettle",
+                "--without-openssl",
+            ]
+        )
     else:
-        conf_args.extend([
-            "--with-openssl",
-            "--without-appletls",
-            "--without-gnutls",
-            "--without-libgcrypt",
-            "--without-libgmp",
-            "--without-libnettle",
-        ])
+        conf_args.extend(
+            [
+                "--with-openssl",
+                "--without-appletls",
+                "--without-gnutls",
+                "--without-libgcrypt",
+                "--without-libgmp",
+                "--without-libnettle",
+            ]
+        )
     make_build(conf_args=conf_args, env=env)

@@ -22,9 +22,7 @@ def main(
     env = activate_app("make", "pkg-config", "perl", build_only=True)
     env = activate_app("ca-certificates", env=env)
     ca_prefix = app_prefix("ca-certificates")
-    ca_bundle = os.path.join(
-        ca_prefix, "share", "ca-certificates", "cacert.pem"
-    )
+    ca_bundle = os.path.join(ca_prefix, "share", "ca-certificates", "cacert.pem")
     make = locate("make")
     url = (
         f"https://github.com/openssl/openssl/releases/download/"
@@ -33,7 +31,7 @@ def main(
     download_extract_cd(url)
     subprocess_env = env.to_env_dict()
     conf_args = [
-        f"--libdir=lib",
+        "--libdir=lib",
         f"--openssldir={prefix}",
         f"--prefix={prefix}",
         f"-Wl,-rpath,{prefix}/lib",

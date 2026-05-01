@@ -15,10 +15,7 @@ def main(
 ) -> None:
     """Install googletest."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://github.com/google/googletest/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/google/googletest/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,
