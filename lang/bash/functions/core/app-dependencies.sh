@@ -9,5 +9,5 @@ _koopa_app_dependencies() {
     # _koopa_app_dependencies 'python3.13'
     # """
     _koopa_assert_has_args_eq "$#" 1
-    _koopa_python_script 'app-dependencies.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal app-dependencies "$@"
 }

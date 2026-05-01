@@ -9,6 +9,6 @@ _koopa_stale_revdeps() {
     # _koopa_stale_revdeps 'curl' 'openssl'
     # """
     _koopa_assert_has_args "$#"
-    _koopa_python_script 'stale-revdeps.py' "$@"
+    "${KOOPA_PREFIX:?}/bin/koopa" internal stale-revdeps "$@"
     return 0
 }
