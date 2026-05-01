@@ -226,9 +226,9 @@ __koopa_zsh_header() {
         )"
         export KOOPA_PREFIX
     fi
-    if [[ -f "${KOOPA_PREFIX}/lang/zsh/functions.sh" ]]
+    if [[ -f "${KOOPA_PREFIX}/lang/zsh/include/functions.sh" ]]
     then
-        source "${KOOPA_PREFIX}/lang/zsh/functions.sh"
+        source "${KOOPA_PREFIX}/lang/zsh/include/functions.sh"
     else
         local __kvar_file
         for __kvar_file in "${KOOPA_PREFIX}"/lang/zsh/functions/*/*.sh
