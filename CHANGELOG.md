@@ -1,5 +1,30 @@
 # Changelog
 
+## koopa 0.16.0 (2026-05-01)
+
+Major changes:
+
+- Reworked Bash function library from a flat alphabetical layout (`common/a/`,
+  `common/b/`, etc.) to a semantic directory structure (`activate/`, `install/`,
+  `uninstall/`, `linux/`, `macos/`, `debian/`, `fedora/`, `alpine/`, `arch/`).
+- Reworked POSIX shell (`lang/sh`) function library to use semantic layout.
+- Made Zsh function library (`lang/zsh`) independent from POSIX shell. Zsh now
+  has its own `functions.sh` cache file and no longer depends on `lang/sh`.
+- Optimized shell activation and function caching. Split the monolithic
+  `activate.sh` file into individual function files.
+
+New apps:
+
+- `bumpver`.
+
+Minor changes:
+
+- Added `PYTHON_BUILD_MIRROR_URL` support in `install-app`.
+- Refactored and fixed `koopa_install_app` function.
+- Improved bootstrap script reliability.
+- Improved header consistency across shell includes.
+- Optimized OS handling in completion logic.
+
 ## koopa 0.15.1 (2026-04-29)
 
 New apps:
