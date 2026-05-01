@@ -12,6 +12,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -105,7 +106,7 @@ class UninstallConfig:
     unlink_in_opt: bool | None = None
 
 
-def uninstall_app(config: UninstallConfig) -> None:  # noqa: C901, PLR0912, PLR0915
+def uninstall_app(config: UninstallConfig) -> None:
     """Uninstall an application.
 
     Removes the app's prefix directory and symlinks from bin/, opt/, and
@@ -195,34 +196,46 @@ def _run_uninstaller_script(
     script_path: str,
     config: UninstallConfig,
 ) -> None:
-    """Run a Bash uninstaller script if one exists."""
+    """Run a Bash uninstaller script in an isolated subshell."""
     bash = shutil.which("bash")
     if bash is None:
         return
     header_file = os.path.join(_bash_prefix(), "include", "header.sh")
-    cmd = f"source '{header_file}'; source '{script_path}'; main"
-    env = os.environ.copy()
-    env["KOOPA_INSTALL_NAME"] = config.name
-    env["KOOPA_INSTALL_PREFIX"] = config.prefix
-    subprocess.run(
-        [
-            bash,
-            "--noprofile",
-            "--norc",
-            "-o",
-            "errexit",
-            "-o",
-            "errtrace",
-            "-o",
-            "nounset",
-            "-o",
-            "pipefail",
-            "-c",
-            cmd,
-        ],
-        env=env,
-        check=False,
-    )
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        parts = [
+            f"source '{header_file}'",
+            f"cd '{tmp_dir}'",
+            f"source '{script_path}'",
+            "main",
+        ]
+        if config.mode == "system":
+            parts.insert(1, 'PATH="${PATH}:/usr/sbin:/sbin"')
+        cmd = "; ".join(parts)
+        env = os.environ.copy()
+        env["KOOPA_INSTALL_NAME"] = config.name
+        env["KOOPA_INSTALL_PREFIX"] = config.prefix
+        subprocess.run(
+            [
+                bash,
+                "--noprofile",
+                "--norc",
+                "-o",
+                "errexit",
+                "-o",
+                "errtrace",
+                "-o",
+                "nounset",
+                "-o",
+                "pipefail",
+                "-c",
+                cmd,
+            ],
+            env=env,
+            check=False,
+        )
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def _unlink_in_opt(name: str) -> None:
@@ -244,3 +257,35 @@ def _unlink_in_man1(name: str) -> None:
     target = os.path.join(_man1_prefix(), name)
     if os.path.islink(target):
         os.unlink(target)
+
+
+def _is_shared_install() -> bool:
+    """Check if koopa is a shared (non-user-home) install."""
+    home = os.path.expanduser("~")
+    return not _koopa_prefix().startswith(home)
+
+
+def uninstall_koopa() -> None:
+    """Uninstall koopa itself."""
+    kp = _koopa_prefix()
+    bootstrap = os.path.join(kp, "bootstrap")
+    config = os.path.join(kp, "etc", "koopa")
+    if sys.stdin.isatty():
+        answer = input("Proceed with koopa uninstall? [Y/n] ").strip().lower()
+        if answer in ("n", "no"):
+            return
+    print("Removing bootstrap prefix.", file=sys.stderr)
+    shutil.rmtree(bootstrap, ignore_errors=True)
+    print("Removing config prefix.", file=sys.stderr)
+    shutil.rmtree(config, ignore_errors=True)
+    if _is_shared_install() and _is_admin():
+        if sys.platform == "linux":
+            profile_d = "/etc/profile.d/zzz-koopa.sh"
+            if os.path.exists(profile_d):
+                print(f"Removing {profile_d}.", file=sys.stderr)
+                subprocess.run(["sudo", "rm", "-f", profile_d], check=True)
+        print(f"Removing {kp}.", file=sys.stderr)
+        subprocess.run(["sudo", "rm", "-rf", kp], check=True)
+    else:
+        print(f"Removing {kp}.", file=sys.stderr)
+        shutil.rmtree(kp, ignore_errors=True)
