@@ -3,7 +3,7 @@
 __koopa_posix_header() {
     # """
     # POSIX shell header.
-    # @note Updated 2025-12-03.
+    # @note Updated 2026-04-30.
     # """
     if [ -z "${KOOPA_PREFIX:-}" ]
     then
