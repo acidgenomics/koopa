@@ -16,9 +16,7 @@ def main(
     """Install armadillo."""
     env = activate_app("pkg-config", build_only=True)
     env = activate_app("zlib", "hdf5", env=env)
-    url = (
-        f"https://koopa.acidgenomics.com/src/armadillo/{version}.tar.xz"
-    )
+    url = f"https://koopa.acidgenomics.com/src/armadillo/{version}.tar.xz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,

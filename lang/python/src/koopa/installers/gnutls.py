@@ -20,9 +20,7 @@ def main(
 ) -> None:
     """Install gnutls."""
     env = activate_app("pkg-config", build_only=True)
-    env = activate_app(
-        "gmp", "libtasn1", "libunistring", "nettle", env=env
-    )
+    env = activate_app("gmp", "libtasn1", "libunistring", "nettle", env=env)
     mm = _major_minor_version(version)
     gcrypt_url = "https://gnupg.org/ftp/gcrypt"
     url = f"{gcrypt_url}/gnutls/v{mm}/gnutls-{version}.tar.xz"

@@ -18,10 +18,7 @@ def main(
     """Install password-store."""
     env = activate_app("make", build_only=True)
     make = locate("make")
-    url = (
-        f"https://git.zx2c4.com/password-store/snapshot/"
-        f"password-store-{version}.tar.xz"
-    )
+    url = f"https://git.zx2c4.com/password-store/snapshot/password-store-{version}.tar.xz"
     download_extract_cd(url)
     subprocess.run(
         [make, "install", f"PREFIX={prefix}"],

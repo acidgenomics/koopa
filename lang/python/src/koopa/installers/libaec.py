@@ -15,9 +15,6 @@ def main(
 ) -> None:
     """Install libaec."""
     env = activate_app("pkg-config", build_only=True)
-    url = (
-        f"https://gitlab.dkrz.de/k202009/libaec/-/archive/"
-        f"v{version}/libaec-v{version}.tar.gz"
-    )
+    url = f"https://gitlab.dkrz.de/k202009/libaec/-/archive/v{version}/libaec-v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(prefix=prefix, env=env)

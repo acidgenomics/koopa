@@ -14,10 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install tl-expected."""
-    url = (
-        f"https://github.com/TartanLlama/expected/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/TartanLlama/expected/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,

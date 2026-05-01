@@ -26,10 +26,7 @@ def main(
         "xorg-libxrender",
         env=env,
     )
-    url = (
-        f"https://xorg.freedesktop.org/archive/individual/lib/"
-        f"libXrandr-{version}.tar.xz"
-    )
+    url = f"https://xorg.freedesktop.org/archive/individual/lib/libXrandr-{version}.tar.xz"
     download_extract_cd(url)
     make_build(
         conf_args=[

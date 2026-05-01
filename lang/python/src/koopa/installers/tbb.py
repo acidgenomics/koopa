@@ -14,10 +14,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install tbb."""
-    url = (
-        f"https://github.com/oneapi-src/oneTBB/archive/"
-        f"refs/tags/v{version}.tar.gz"
-    )
+    url = f"https://github.com/oneapi-src/oneTBB/archive/refs/tags/v{version}.tar.gz"
     download_extract_cd(url)
     cmake_build(
         prefix=prefix,
