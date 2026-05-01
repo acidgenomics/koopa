@@ -3,9 +3,9 @@ name = "koopa"
 version = "0.16.0"
 authors = [{ name = "Michael Steinbaugh", email = "mike@steinbaugh.com" }]
 classifiers = ["Programming Language :: Python :: 3.14"]
-dependencies = ["pandas", "pathlib", "psutil", "requests", "tqdm"]
+dependencies = ["pathlib"]
 description = "Shell bootloader for data science."
-keywords = ["bioinformatics", "config", "data science", "ngs", "shell"]
+keywords = ["bioinformatics", "config", "data science", "fair data", "ngs", "shell"]
 readme = "README.md"
 requires-python = ">=3.14"
 
@@ -14,7 +14,8 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
-dev = ["bumpver", "isort", "pyright", "pytest", "ruff", "uv"]
+dev = ["black", "bumpver", "isort", "pyright", "pytest", "ruff", "ty", "uv"]
+extra = ["pandas", "requests", "tqdm"]
 
 [project.scripts]
 koopa-install = "koopa.cli_main:main"
