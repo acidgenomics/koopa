@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import os
-import subprocess
 import stat
+import subprocess
 
 from koopa.build import activate_app
 from koopa.download import download

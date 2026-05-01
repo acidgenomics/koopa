@@ -5,7 +5,6 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
-from glob import glob
 
 from koopa.build import activate_app, locate, shared_ext
 from koopa.file_ops import ln

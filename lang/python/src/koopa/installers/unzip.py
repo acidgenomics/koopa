@@ -43,7 +43,7 @@ def main(
     jobs = os.cpu_count() or 1
     target = "macosx" if sys.platform == "darwin" else "generic"
     subprocess.run(
-        [make, f"--jobs={jobs}", f"-f", "unix/Makefile", target],
+        [make, f"--jobs={jobs}", "-f", "unix/Makefile", target],
         env=subprocess_env,
         check=True,
     )

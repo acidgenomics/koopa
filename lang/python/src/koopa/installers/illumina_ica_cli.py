@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import os
-import shutil
 import sys
 
-from koopa.archive import extract
 from koopa.download import download
 from koopa.system import arch
 

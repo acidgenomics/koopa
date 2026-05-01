@@ -10,7 +10,7 @@ from koopa.build import activate_app, app_prefix, locate
 from koopa.file_ops import ln
 from koopa.installers._build_helper import download_extract_cd
 from koopa.system import has_firewall
-from koopa.version import major_minor_version, major_version
+from koopa.version import major_minor_version
 
 
 def main(

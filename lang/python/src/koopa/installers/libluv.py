@@ -37,7 +37,7 @@ def main(
             "-DBUILD_MODULE=OFF",
             "-DBUILD_SHARED_LIBS=ON",
             "-DBUILD_STATIC_LIBS=OFF",
-            f"-DLUA_BUILD_TYPE=System",
+            "-DLUA_BUILD_TYPE=System",
             f"-DLUA_INCLUDE_DIR={luajit_prefix}/include/luajit-{luajit_maj_min}",
             f"-DLUA_LIBRARIES={luajit_prefix}/lib/libluajit-5.1.{ext}",
             f"-DLIBUV_INCLUDE_DIR={libuv_prefix}/include",

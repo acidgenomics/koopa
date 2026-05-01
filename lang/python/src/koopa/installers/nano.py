@@ -7,7 +7,7 @@ from koopa.installers._build_helper import download_extract_cd
 
 
 def _major_version(version: str) -> str:
-    return version.split(".")[0]
+    return version.split(".", maxsplit=1)[0]
 
 
 def main(

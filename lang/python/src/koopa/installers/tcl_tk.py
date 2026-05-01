@@ -6,9 +6,9 @@ import os
 import subprocess
 import sys
 
+from koopa.archive import extract
 from koopa.build import activate_app, locate
 from koopa.download import download
-from koopa.archive import extract
 from koopa.file_ops import ln
 from koopa.version import major_minor_version
 

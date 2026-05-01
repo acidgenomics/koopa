@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import subprocess
 
-from koopa.build import activate_app, locate, make_build
+from koopa.build import activate_app, locate
 from koopa.installers._build_helper import download_extract_cd
 
 
