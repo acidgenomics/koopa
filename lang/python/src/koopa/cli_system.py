@@ -64,6 +64,24 @@ def _handle_prune_apps() -> None:
     prune_apps()
 
 
+def _handle_update_tex_packages() -> None:
+    """Handle ``koopa system update-tex-packages``."""
+    import os
+    import shutil
+    import subprocess
+
+    if os.getuid() != 0:
+        msg = "Admin/root access is required."
+        raise PermissionError(msg)
+    tlmgr = shutil.which("tlmgr")
+    if tlmgr is None:
+        msg = "tlmgr is not installed."
+        raise FileNotFoundError(msg)
+    subprocess.run(["sudo", tlmgr, "update", "--self"], check=True)
+    subprocess.run(["sudo", tlmgr, "update", "--list"], check=True)
+    subprocess.run(["sudo", tlmgr, "update", "--all"], check=True)
+
+
 _SYSTEM_COMMANDS: dict[str, str] = {
     "check": "check-system",
     "info": "system-info",
@@ -94,7 +112,7 @@ _DEFUNCT_COMMANDS: dict[str, str] = {
 }
 
 
-def handle_system(remainder: list[str]) -> None:
+def handle_system(remainder: list[str]) -> None:  # noqa: PLR0911
     """Dispatch ``koopa system ...`` commands."""
     if not remainder:
         print("Error: no system command specified.", file=sys.stderr)
@@ -124,6 +142,9 @@ def handle_system(remainder: list[str]) -> None:
         return
     if subcmd == "prune-apps":
         _handle_prune_apps()
+        return
+    if subcmd == "update-tex-packages":
+        _handle_update_tex_packages()
         return
     key = _SYSTEM_COMMANDS.get(subcmd)
     if key is None:
