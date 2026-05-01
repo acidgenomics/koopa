@@ -1,9 +1,8 @@
-"""Primary CLI entry point for koopa install commands.
+"""Primary CLI entry point for koopa.
 
-Dispatches ``koopa install``, ``koopa reinstall``, ``koopa uninstall``,
-and ``koopa update`` subcommands to the Python install orchestrator.
+Dispatches all ``koopa`` subcommands to the Python orchestrator.
 Reads app metadata from ``app.json`` to resolve installer, platform, and
-passthrough arguments — eliminating the need for per-app Bash wrappers.
+passthrough arguments -- eliminating the need for per-app Bash wrappers.
 """
 
 from __future__ import annotations
@@ -117,13 +116,14 @@ def _add_common_flags(parser: argparse.ArgumentParser) -> None:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    """Build the argument parser for koopa install commands."""
+    """Build the argument parser for koopa CLI."""
     parser = argparse.ArgumentParser(
         prog="koopa",
         description="Shell bootloader for data science.",
     )
     subparsers = parser.add_subparsers(dest="command")
 
+    # -- install --------------------------------------------------------------
     install_p = subparsers.add_parser("install")
     install_p.add_argument("apps", nargs="*")
     install_p.add_argument("--bootstrap", action="store_true", default=False)
@@ -135,23 +135,51 @@ def _build_parser() -> argparse.ArgumentParser:
     install_p.add_argument("-D", dest="passthrough", action="append", default=[])
     _add_common_flags(install_p)
 
+    # -- reinstall ------------------------------------------------------------
     reinstall_p = subparsers.add_parser("reinstall")
     reinstall_p.add_argument("apps", nargs="+")
     reinstall_p.add_argument("--all-revdeps", action="store_true", default=False)
     reinstall_p.add_argument("--only-revdeps", action="store_true", default=False)
     _add_common_flags(reinstall_p)
 
+    # -- uninstall ------------------------------------------------------------
     uninstall_p = subparsers.add_parser("uninstall")
     uninstall_p.add_argument("apps", nargs="*")
     uninstall_p.add_argument("--system", action="store_true", default=False)
     uninstall_p.add_argument("--user", action="store_true", default=False)
     _add_common_flags(uninstall_p)
 
+    # -- update ---------------------------------------------------------------
     update_p = subparsers.add_parser("update")
     update_p.add_argument("apps", nargs="*")
     update_p.add_argument("--system", action="store_true", default=False)
     update_p.add_argument("--user", action="store_true", default=False)
     _add_common_flags(update_p)
+
+    # -- configure ------------------------------------------------------------
+    configure_p = subparsers.add_parser("configure")
+    configure_p.add_argument("apps", nargs="*")
+    configure_p.add_argument("--system", action="store_true", default=False)
+    configure_p.add_argument("--user", action="store_true", default=False)
+    _add_common_flags(configure_p)
+
+    # -- app ------------------------------------------------------------------
+    app_p = subparsers.add_parser("app")
+    app_p.add_argument("remainder", nargs=argparse.REMAINDER)
+
+    # -- system ---------------------------------------------------------------
+    system_p = subparsers.add_parser("system")
+    system_p.add_argument("remainder", nargs=argparse.REMAINDER)
+
+    # -- develop --------------------------------------------------------------
+    develop_p = subparsers.add_parser("develop")
+    develop_p.add_argument("remainder", nargs=argparse.REMAINDER)
+
+    # -- simple commands ------------------------------------------------------
+    subparsers.add_parser("version")
+    subparsers.add_parser("header")
+    subparsers.add_parser("install-all-apps")
+    subparsers.add_parser("install-default-apps")
 
     return parser
 
@@ -254,6 +282,9 @@ def _reinstall_with_revdeps(
         for rd in revdeps:
             if rd not in all_targets:
                 all_targets.append(rd)
+    if not all_targets:
+        msg = "No reverse dependencies found."
+        raise RuntimeError(msg)
     for app in all_targets:
         config = _build_install_config(app, reinstall=True, verbose=verbose)
         install_app(config)
@@ -286,13 +317,95 @@ def _handle_update(args: argparse.Namespace) -> None:
         install_app(config)
 
 
+def _handle_configure(args: argparse.Namespace) -> None:
+    """Handle ``koopa configure`` subcommand."""
+    from koopa.configure import ConfigureConfig, configure_app
+
+    apps = list(args.apps) if args.apps else []
+    mode = _resolve_mode(args)
+    if apps and apps[0] in ("system", "user"):
+        if mode == "shared":
+            mode = apps[0]
+        apps = apps[1:]
+    if not apps:
+        print("Error: no apps specified.", file=sys.stderr)
+        sys.exit(1)
+    for app in apps:
+        config = ConfigureConfig(
+            name=app,
+            mode=mode,
+            verbose=args.verbose,
+        )
+        configure_app(config)
+
+
+def _handle_app(args: argparse.Namespace) -> None:
+    """Handle ``koopa app`` subcommand."""
+    from koopa.cli_app import handle_app
+
+    handle_app(args.remainder)
+
+
+def _handle_system(args: argparse.Namespace) -> None:
+    """Handle ``koopa system`` subcommand."""
+    from koopa.cli_system import handle_system
+
+    handle_system(args.remainder)
+
+
+def _handle_develop(args: argparse.Namespace) -> None:
+    """Handle ``koopa develop`` subcommand."""
+    from koopa.cli_develop import handle_develop
+
+    handle_develop(args.remainder)
+
+
+def _handle_version(_args: argparse.Namespace) -> None:
+    """Handle ``koopa version`` subcommand."""
+    from koopa.version import koopa_version
+
+    print(koopa_version())
+
+
+def _handle_header(_args: argparse.Namespace) -> None:
+    """Handle ``koopa header`` subcommand."""
+    from koopa.prefix import bash_prefix
+
+    print(os.path.join(bash_prefix(), "include", "header.sh"))
+
+
+def _handle_install_all_apps(_args: argparse.Namespace) -> None:
+    """Handle ``koopa install-all-apps`` subcommand."""
+    from koopa.install import install_all_apps
+
+    install_all_apps()
+
+
+def _handle_install_default_apps(_args: argparse.Namespace) -> None:
+    """Handle ``koopa install-default-apps`` subcommand."""
+    from koopa.install import install_default_apps
+
+    install_default_apps()
+
+
 # -- Entry point --------------------------------------------------------------
 
 
 def main() -> None:
     """Primary CLI entry point."""
+    argv = sys.argv[1:]
+    if argv and argv[0] in ("--version", "-V"):
+        from koopa.version import koopa_version
+
+        print(koopa_version())
+        return
+    if len(argv) >= 2 and argv[-1] in ("--help", "-h"):
+        from koopa.cli_help import show_man_page
+
+        show_man_page(*argv[:-1])
+        return
     parser = _build_parser()
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     if args.command is None:
         parser.print_help()
         sys.exit(1)
@@ -301,6 +414,14 @@ def main() -> None:
         "reinstall": _handle_reinstall,
         "uninstall": _handle_uninstall,
         "update": _handle_update,
+        "configure": _handle_configure,
+        "app": _handle_app,
+        "system": _handle_system,
+        "develop": _handle_develop,
+        "version": _handle_version,
+        "header": _handle_header,
+        "install-all-apps": _handle_install_all_apps,
+        "install-default-apps": _handle_install_default_apps,
     }
     handler = handlers.get(args.command)
     if handler is None:
@@ -311,7 +432,7 @@ def main() -> None:
     except KeyboardInterrupt:
         print("\nInterrupted.", file=sys.stderr)
         sys.exit(130)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
         if getattr(args, "verbose", False):
             import traceback

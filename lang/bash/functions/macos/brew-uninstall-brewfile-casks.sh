@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_koopa_macos_uninstall_brewfile_casks() {
+_koopa_macos_brew_uninstall_brewfile_casks() {
     # """
     # Delete macOS applications installed by Homebrew cask.
     # @note 2023-04-05.
