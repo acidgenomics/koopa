@@ -5118,12 +5118,6 @@ _koopa_app_reverse_dependencies() {
     return 0
 }
 
-_koopa_stale_revdeps() {
-    _koopa_assert_has_args "$#"
-    _koopa_python_script 'stale-revdeps.py' "$@"
-    return 0
-}
-
 _koopa_app_version() {
     local -A dict
     _koopa_assert_has_args_eq "$#" 1
@@ -16846,6 +16840,12 @@ _koopa_stack_trace() {
         printf '      file "%s" line %d\n' "${BASH_SOURCE[i]}" "${line}"
         (( i++ ))
     done
+    return 0
+}
+
+_koopa_stale_revdeps() {
+    _koopa_assert_has_args "$#"
+    _koopa_python_script 'stale-revdeps.py' "$@"
     return 0
 }
 
