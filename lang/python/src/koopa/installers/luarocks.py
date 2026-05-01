@@ -24,6 +24,7 @@ def main(
         [lua, "-v"],
         capture_output=True,
         text=True,
+        check=False,
     )
     lua_ver_str = result.stdout.strip() or result.stderr.strip()
     parts = lua_ver_str.split()

@@ -17,7 +17,7 @@ def main(
     passthrough_args: list[str] | None = None,
 ) -> None:
     """Install bfg."""
-    env = activate_app("temurin")
+    activate_app("temurin")
     java = locate("java")
     libexec = os.path.join(prefix, "libexec")
     bin_dir = os.path.join(prefix, "bin")

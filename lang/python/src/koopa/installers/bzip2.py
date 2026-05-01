@@ -91,9 +91,9 @@ bzlib.o: bzlib.c
     if sys.platform != "darwin":
         real_lib = f"libbz2.{ext}.{version}"
         if os.path.exists(real_lib):
-            with open(real_lib, "rb") as src_fh:
-                with open(os.path.join(lib_dir, real_lib), "wb") as dst_fh:
-                    dst_fh.write(src_fh.read())
+            dst_path = os.path.join(lib_dir, real_lib)
+            with open(real_lib, "rb") as src_fh, open(dst_path, "wb") as dst_fh:
+                dst_fh.write(src_fh.read())
         ln(
             f"libbz2.{ext}.{version}",
             os.path.join(lib_dir, f"libbz2.{ext}.{maj_min_ver}"),
@@ -105,9 +105,9 @@ bzlib.o: bzlib.c
     else:
         real_lib = f"libbz2.{version}.{ext}"
         if os.path.exists(real_lib):
-            with open(real_lib, "rb") as src_fh:
-                with open(os.path.join(lib_dir, real_lib), "wb") as dst_fh:
-                    dst_fh.write(src_fh.read())
+            dst_path = os.path.join(lib_dir, real_lib)
+            with open(real_lib, "rb") as src_fh, open(dst_path, "wb") as dst_fh:
+                dst_fh.write(src_fh.read())
         ln(
             f"libbz2.{version}.{ext}",
             os.path.join(lib_dir, f"libbz2.{maj_min_ver}.{ext}"),

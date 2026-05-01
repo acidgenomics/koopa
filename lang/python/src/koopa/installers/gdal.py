@@ -55,7 +55,6 @@ def main(
     pcre2_prefix = app_prefix("pcre2")
     proj_prefix = app_prefix("proj")
     sqlite_prefix = app_prefix("sqlite")
-    xz_prefix = app_prefix("xz")
     zlib_prefix = app_prefix("zlib")
     ext = shared_ext()
     url = f"https://github.com/OSGeo/gdal/releases/download/v{version}/gdal-{version}.tar.gz"

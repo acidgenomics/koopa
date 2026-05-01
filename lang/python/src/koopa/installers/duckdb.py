@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 
 from koopa.build import activate_app, cmake_build
@@ -27,8 +28,6 @@ def main(
         ],
         check=True,
     )
-    import os
-
     os.chdir("src")
     cmake_build(
         prefix=prefix,

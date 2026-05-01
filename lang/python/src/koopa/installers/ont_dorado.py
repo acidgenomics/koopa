@@ -18,19 +18,12 @@ def main(
 ) -> None:
     """Install ont-dorado."""
     machine = arch()
+    arch_id = "arm64" if machine in ("aarch64", "arm64") else "x64"
     if sys.platform == "darwin":
         platform = "osx"
-        if machine in ("aarch64", "arm64"):
-            arch_id = "arm64"
-        else:
-            arch_id = "x64"
         ext = "zip"
     else:
         platform = "linux"
-        if machine in ("aarch64", "arm64"):
-            arch_id = "arm64"
-        else:
-            arch_id = "x64"
         ext = "tar.gz"
     url = (
         f"https://cdn.oxfordnanoportal.com/software/analysis/"

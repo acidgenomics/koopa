@@ -56,5 +56,6 @@ def main(
         [cmake, "--system-information"],
         capture_output=True,
         text=True,
+        check=False,
     )
     assert "CMAKE_USE_OPENSSL" in result.stdout, "CMake lacks TLS support"

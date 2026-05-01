@@ -28,7 +28,7 @@ def main(
         "--with-libedit",
     ]
     if platform.machine() in ("aarch64", "arm64"):
-        os.environ["ac_cv_func_stat64"] = "no"
+        os.environ["ac_cv_func_stat64"] = "no"  # noqa: SIM112
     subprocess_env = env.to_env_dict()
     subprocess.run(["./autogen.sh"], env=subprocess_env, check=True)
     make_build(conf_args=conf_args, env=env)
